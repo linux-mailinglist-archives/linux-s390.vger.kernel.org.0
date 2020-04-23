@@ -2,101 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62DDA1B57DA
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2020 11:10:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E86581B585A
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2020 11:39:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgDWJKi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 Apr 2020 05:10:38 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21428 "EHLO
+        id S1726958AbgDWJjx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 Apr 2020 05:39:53 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41750 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726796AbgDWJKf (ORCPT
+        by vger.kernel.org with ESMTP id S1726955AbgDWJjx (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:10:35 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03N92xfN061712
-        for <linux-s390@vger.kernel.org>; Thu, 23 Apr 2020 05:10:35 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrxmfsdf-1
+        Thu, 23 Apr 2020 05:39:53 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03N9XZRR099122
+        for <linux-s390@vger.kernel.org>; Thu, 23 Apr 2020 05:39:52 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30k09wd9sb-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 23 Apr 2020 05:10:34 -0400
+        for <linux-s390@vger.kernel.org>; Thu, 23 Apr 2020 05:39:52 -0400
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Thu, 23 Apr 2020 10:09:46 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <ubraun@linux.ibm.com>;
+        Thu, 23 Apr 2020 10:39:01 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 Apr 2020 10:09:42 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03N9ASEj65470900
+        Thu, 23 Apr 2020 10:38:56 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03N9ca9J64356722
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 09:10:28 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28FD94C052;
-        Thu, 23 Apr 2020 09:10:28 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6FA604C046;
-        Thu, 23 Apr 2020 09:10:27 +0000 (GMT)
-Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Apr 2020 09:10:27 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     thuth@redhat.com, linux-s390@vger.kernel.org, david@redhat.com,
-        borntraeger@de.ibm.com, cohuck@redhat.com
-Subject: [PATCH v2 10/10] s390x: Fix library constant definitions
-Date:   Thu, 23 Apr 2020 05:10:13 -0400
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200423091013.11587-1-frankja@linux.ibm.com>
-References: <20200423091013.11587-1-frankja@linux.ibm.com>
+        Thu, 23 Apr 2020 09:38:36 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 08E76A405B;
+        Thu, 23 Apr 2020 09:39:44 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 88239A4060;
+        Thu, 23 Apr 2020 09:39:43 +0000 (GMT)
+Received: from oc5311105230.ibm.com (unknown [9.145.18.72])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Apr 2020 09:39:43 +0000 (GMT)
+Subject: Re: [PATCH rdma-next] RDMA: Allow ib_client's to fail when add() is
+ called
+To:     Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org,
+        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
+        rds-devel@oss.oracle.com,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        target-devel@vger.kernel.org
+References: <20200421172440.387069-1-leon@kernel.org>
+From:   Ursula Braun <ubraun@linux.ibm.com>
+Date:   Thu, 23 Apr 2020 11:39:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200421172440.387069-1-leon@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20042309-4275-0000-0000-000003C51E03
+x-cbid: 20042309-0016-0000-0000-00000309C8DA
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042309-4276-0000-0000-000038DAA825
-Message-Id: <20200423091013.11587-11-frankja@linux.ibm.com>
+x-cbparentid: 20042309-0017-0000-0000-0000336DE989
+Message-Id: <8ee742d7-952b-b521-d05c-17de601f6e32@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-23_07:2020-04-22,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- spamscore=0 clxscore=1015 suspectscore=1 priorityscore=1501 phishscore=0
- lowpriorityscore=0 mlxlogscore=742 mlxscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 phishscore=0 clxscore=1011 adultscore=0 mlxlogscore=999
+ bulkscore=0 impostorscore=0 spamscore=0 mlxscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2004230070
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Seems like I uppercased the whole region instead of only the ULs when
-I added those definitions. Let's make the x lowercase again.
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
----
- lib/s390x/asm/arch_def.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-index 15a4d49..1b3bb0c 100644
---- a/lib/s390x/asm/arch_def.h
-+++ b/lib/s390x/asm/arch_def.h
-@@ -19,10 +19,10 @@ struct psw {
- #define PSW_MASK_DAT			0x0400000000000000UL
- #define PSW_MASK_PSTATE			0x0001000000000000UL
- 
--#define CR0_EXTM_SCLP			0X0000000000000200UL
--#define CR0_EXTM_EXTC			0X0000000000002000UL
--#define CR0_EXTM_EMGC			0X0000000000004000UL
--#define CR0_EXTM_MASK			0X0000000000006200UL
-+#define CR0_EXTM_SCLP			0x0000000000000200UL
-+#define CR0_EXTM_EXTC			0x0000000000002000UL
-+#define CR0_EXTM_EMGC			0x0000000000004000UL
-+#define CR0_EXTM_MASK			0x0000000000006200UL
- 
- struct lowcore {
- 	uint8_t		pad_0x0000[0x0080 - 0x0000];	/* 0x0000 */
--- 
-2.25.1
+On 4/21/20 7:24 PM, Leon Romanovsky wrote:
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> 
+> When a client is added it isn't allowed to fail, but all the client's have
+> various failure paths within their add routines.
+> 
+> This creates the very fringe condition where the client was added, failed
+> during add and didn't set the client_data. The core code will then still
+> call other client_data centric ops like remove(), rename(), get_nl_info(),
+> and get_net_dev_by_params() with NULL client_data - which is confusing and
+> unexpected.
+> 
+> If the add() callback fails, then do not call any more client ops for the
+> device, even remove.
+> 
+> Remove all the now redundant checks for NULL client_data in ops callbacks.
+> 
+> Update all the add() callbacks to return error codes
+> appropriately. EOPNOTSUPP is used for cases where the ULP does not support
+> the ib_device - eg because it only works with IB.
+> 
+> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+> ---
+>  drivers/infiniband/core/cm.c                  | 24 ++++++++++--------
+>  drivers/infiniband/core/cma.c                 | 23 +++++++++--------
+>  drivers/infiniband/core/device.c              | 16 ++++++++++--
+>  drivers/infiniband/core/mad.c                 | 17 ++++++++++---
+>  drivers/infiniband/core/multicast.c           | 12 ++++-----
+>  drivers/infiniband/core/sa_query.c            | 22 ++++++++--------
+>  drivers/infiniband/core/user_mad.c            | 22 ++++++++--------
+>  drivers/infiniband/core/uverbs_main.c         | 24 +++++++++---------
+>  drivers/infiniband/ulp/ipoib/ipoib_main.c     | 15 ++++-------
+>  .../infiniband/ulp/opa_vnic/opa_vnic_vema.c   | 12 ++++-----
+>  drivers/infiniband/ulp/srp/ib_srp.c           | 21 ++++++++--------
+>  drivers/infiniband/ulp/srpt/ib_srpt.c         | 25 ++++++++-----------
+>  include/rdma/ib_verbs.h                       |  2 +-
+>  net/rds/ib.c                                  | 21 ++++++++++------
+>  net/smc/smc_ib.c                              | 10 +++-----
+>  15 files changed, 142 insertions(+), 124 deletions(-)
+> 
+
+For the net/smc part:
+Acked-by: Ursula Braun <ubraun@linux.ibm.com>
 
