@@ -2,86 +2,143 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 675EC1B5A0A
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2020 13:07:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0639E1B5A18
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2020 13:11:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgDWLHq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 Apr 2020 07:07:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47186 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbgDWLHq (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 23 Apr 2020 07:07:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1DA16B0B8;
-        Thu, 23 Apr 2020 11:07:43 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 13:07:38 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Qian Cai <cai@lca.pw>, Jens Axboe <axboe@kernel.dk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: s390 boot woe due to "block: fix busy device checking in
- blk_drop_partitions"
-Message-ID: <20200423110738.GA102241@blackbook>
-References: <AD16A450-794F-4EEA-A7BF-42452F18294A@lca.pw>
- <20200410054544.GA17923@lst.de>
+        id S1727953AbgDWLLc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 Apr 2020 07:11:32 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:35822 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726805AbgDWLLc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 23 Apr 2020 07:11:32 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0TwQiqf0_1587640283;
+Received: from 30.27.118.66(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TwQiqf0_1587640283)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 23 Apr 2020 19:11:25 +0800
+Subject: Re: [PATCH v2 1/7] KVM: s390: clean up redundant 'kvm_run' parameters
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
+        mpe@ellerman.id.au, benh@kernel.crashing.org,
+        frankja@linux.ibm.com, david@redhat.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, sean.j.christopherson@intel.com,
+        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com, maz@kernel.org,
+        james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com, christoffer.dall@arm.com,
+        peterx@redhat.com, thuth@redhat.com, kvm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200422125810.34847-1-tianjia.zhang@linux.alibaba.com>
+ <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
+ <20200422154543.2efba3dd.cohuck@redhat.com>
+ <dc5e0fa3-558b-d606-bda9-ed281cf9e9ae@de.ibm.com>
+ <20200422180403.03f60b0c.cohuck@redhat.com>
+ <5e1e126d-f1b0-196c-594b-4289d0afb9a8@linux.alibaba.com>
+ <20200423123901.72a4c6a4.cohuck@redhat.com>
+ <71344f73-c34f-a373-49d1-5d839c6be5f6@linux.alibaba.com>
+ <1d73b700-4a20-3d7a-66d1-29b5afa03f4d@de.ibm.com>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <9a477117-7295-c4f4-097f-bfb146670435@linux.alibaba.com>
+Date:   Thu, 23 Apr 2020 19:11:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
-Content-Disposition: inline
-In-Reply-To: <20200410054544.GA17923@lst.de>
+In-Reply-To: <1d73b700-4a20-3d7a-66d1-29b5afa03f4d@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
---BOKacYhQ+x31HxR3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-Hi.
+On 2020/4/23 19:00, Christian Borntraeger wrote:
+> 
+> 
+> On 23.04.20 12:58, Tianjia Zhang wrote:
+>>
+>>
+>> On 2020/4/23 18:39, Cornelia Huck wrote:
+>>> On Thu, 23 Apr 2020 11:01:43 +0800
+>>> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
+>>>
+>>>> On 2020/4/23 0:04, Cornelia Huck wrote:
+>>>>> On Wed, 22 Apr 2020 17:58:04 +0200
+>>>>> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+>>>>>    
+>>>>>> On 22.04.20 15:45, Cornelia Huck wrote:
+>>>>>>> On Wed, 22 Apr 2020 20:58:04 +0800
+>>>>>>> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
+>>>>>>>       
+>>>>>>>> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
+>>>>>>>> structure. Earlier than historical reasons, many kvm-related function
+>>>>>>>
+>>>>>>> s/Earlier than/For/ ?
+>>>>>>>       
+>>>>>>>> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
+>>>>>>>> This patch does a unified cleanup of these remaining redundant parameters.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+>>>>>>>> ---
+>>>>>>>>     arch/s390/kvm/kvm-s390.c | 37 ++++++++++++++++++++++---------------
+>>>>>>>>     1 file changed, 22 insertions(+), 15 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+>>>>>>>> index e335a7e5ead7..d7bb2e7a07ff 100644
+>>>>>>>> --- a/arch/s390/kvm/kvm-s390.c
+>>>>>>>> +++ b/arch/s390/kvm/kvm-s390.c
+>>>>>>>> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
+>>>>>>>>         return rc;
+>>>>>>>>     }
+>>>>>>>>     -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>>>>>>>> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
+>>>>>>>>     {
+>>>>>>>> +    struct kvm_run *kvm_run = vcpu->run;
+>>>>>>>>         struct runtime_instr_cb *riccb;
+>>>>>>>>         struct gs_cb *gscb;
+>>>>>>>>     @@ -4235,7 +4236,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>>>>>>>>             }
+>>>>>>>>             if (vcpu->arch.gs_enabled) {
+>>>>>>>>                 current->thread.gs_cb = (struct gs_cb *)
+>>>>>>>> -                        &vcpu->run->s.regs.gscb;
+>>>>>>>> +                        &kvm_run->s.regs.gscb;
+>>>>>>>
+>>>>>>> Not sure if these changes (vcpu->run-> => kvm_run->) are really worth
+>>>>>>> it. (It seems they amount to at least as much as the changes advertised
+>>>>>>> in the patch description.)
+>>>>>>>
+>>>>>>> Other opinions?
+>>>>>>
+>>>>>> Agreed. It feels kind of random. Maybe just do the first line (move kvm_run from the
+>>>>>> function parameter list into the variable declaration)? Not sure if this is better.
+>>>>>>    
+>>>>>
+>>>>> There's more in this patch that I cut... but I think just moving
+>>>>> kvm_run from the parameter list would be much less disruptive.
+>>>>>     
+>>>>
+>>>> I think there are two kinds of code(`vcpu->run->` and `kvm_run->`), but
+>>>> there will be more disruptive, not less.
+>>>
+>>> I just fail to see the benefit; sure, kvm_run-> is convenient, but the
+>>> current code is just fine, and any rework should be balanced against
+>>> the cost (e.g. cluttering git annotate).
+>>>
+>>
+>> cluttering git annotate ? Does it mean Fix xxxx ("comment"). Is it possible to solve this problem by splitting this patch?
+> 
+> No its about breaking git blame (and bugfix backports) for just a cosmetic improvement.
+> And I agree with Conny: the cost is higher than the benefit.
+> 
 
-On Fri, Apr 10, 2020 at 07:45:44AM +0200, Christoph Hellwig <hch@lst.de> wrote:
-> @@ -496,7 +496,7 @@ int blk_drop_partitions(struct gendisk *disk, struct block_device *bdev)
-> -	if (bdev->bd_part_count || bdev->bd_openers)
-> +	if (bdev->bd_part_count || bdev->bd_openers > 1)
->  		return -EBUSY;
-I noticed this (and the previous patch) change unmasks race between
-ioctl(LOOP_SET_STATUS64, ... lo_flags=LO_FLAGS_PARTSCAN ...) and udev
-processing loop device uevents. See [1] for details.
-
-Should the condition be changed in the case of newly setup loop devices?
-(Or shouldn't the ioctl propagate EBUSY in its return value?)
+I will make a fix in the v3 version. Help to see if there are problems 
+with the next few patches.
 
 Thanks,
-Michal
-
-[1] https://bugzilla.opensuse.org/show_bug.cgi?id=1169932
-
---BOKacYhQ+x31HxR3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl6hdvAACgkQia1+riC5
-qSgT0A/9HF8wBP+q81PKssmN3OAiHSEBVgWuK2oRpZDemVZOk7Ju4HOdfgFW//7y
-3HREuHE2FTBMSvd+kp6B8PRSA8Qzw1GaJEHRCeh2+3nfUT4UmMDlJiw9mB7oN2pH
-fmVdjfTWhsdEx1FhOTvKnPWzwrWJIdhCyqB8xnRzosIdCaeXPM7HLwbSG64GZ/VE
-biTAGgAGXZGXexNVfi0UWbxll6td64pNFr+XMoToCzRNUvyxu9jMDBvyyAB7F5et
-pOGedkxdysYujjFle3o3Lw6ifJ+dZh3BLgZfFWAPW59J/b6ZTi1k4vzv40vPdSju
-fho2c4Q3QPPFC0o5SMws3Vu92woJfrzRbUdzqSpnCrXZY//8/0fyuuPyjgBEglDs
-daxWBKhAdrAb4tsIul+jc3nSY7KGCgy1Eef7rU7TC5rduJ0a65dco4POXHL1CGk6
-pppFxjAmupe6tevT/C7HtSWOaSvoWkaKPq7MQ0VSEMTyuErYhdv7402+IzSjLuxJ
-z6uG/k52yUce51P1z8LW57BRiHW0rBB4Qs6nSN3qu2O+Hul2OBZAgCp5qpzYcIBG
-qH0L4V39Q1U6PILsDkQYX9GLM3hEWf4LaSg7xCYcjYLn3YbXXMiUzmVvl/igXbBe
-zBFiBwslvrRk/71wSdK7xYT1NbnqSNcRJLe6ePYnCNP8p2i77dI=
-=pl+J
------END PGP SIGNATURE-----
-
---BOKacYhQ+x31HxR3--
+Tianjia
