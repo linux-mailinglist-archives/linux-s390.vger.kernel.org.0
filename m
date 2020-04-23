@@ -2,131 +2,76 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E86581B585A
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2020 11:39:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B0BB1B5937
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2020 12:32:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgDWJjx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 Apr 2020 05:39:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41750 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726955AbgDWJjx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 23 Apr 2020 05:39:53 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03N9XZRR099122
-        for <linux-s390@vger.kernel.org>; Thu, 23 Apr 2020 05:39:52 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30k09wd9sb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 23 Apr 2020 05:39:52 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <ubraun@linux.ibm.com>;
-        Thu, 23 Apr 2020 10:39:01 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 Apr 2020 10:38:56 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03N9ca9J64356722
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 09:38:36 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08E76A405B;
-        Thu, 23 Apr 2020 09:39:44 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88239A4060;
-        Thu, 23 Apr 2020 09:39:43 +0000 (GMT)
-Received: from oc5311105230.ibm.com (unknown [9.145.18.72])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Apr 2020 09:39:43 +0000 (GMT)
-Subject: Re: [PATCH rdma-next] RDMA: Allow ib_client's to fail when add() is
- called
-To:     Leon Romanovsky <leon@kernel.org>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org,
-        Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
-        rds-devel@oss.oracle.com,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        target-devel@vger.kernel.org
-References: <20200421172440.387069-1-leon@kernel.org>
-From:   Ursula Braun <ubraun@linux.ibm.com>
-Date:   Thu, 23 Apr 2020 11:39:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1726928AbgDWKcQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 Apr 2020 06:32:16 -0400
+Received: from mga05.intel.com ([192.55.52.43]:4641 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725863AbgDWKcP (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 23 Apr 2020 06:32:15 -0400
+IronPort-SDR: XoMvfqoXksFUn2hasl/uqQQGlt+7qs015ZYwg0/ihw5Kx6hK7QVu3jaQMBwSHdXp5O5w30y+sT
+ McyKaIJMdzGQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 03:32:15 -0700
+IronPort-SDR: Tbx4AP8Zju7uVt+bsFFBuorEKEDp+DufEyq0utUZQmn5wkfXhsC5SmipnzOBUDHfLSF+NGOyYH
+ O/V5r9IH1k5g==
+X-IronPort-AV: E=Sophos;i="5.73,307,1583222400"; 
+   d="scan'208";a="247718369"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2020 03:32:10 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 158F7204C6; Thu, 23 Apr 2020 13:32:08 +0300 (EEST)
+Date:   Thu, 23 Apr 2020 13:32:08 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/29] staging: media: ipu3: use vmap instead of
+ reimplementing it
+Message-ID: <20200423103207.GO5381@paasikivi.fi.intel.com>
+References: <20200414131348.444715-1-hch@lst.de>
+ <20200414131348.444715-5-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200421172440.387069-1-leon@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20042309-0016-0000-0000-00000309C8DA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042309-0017-0000-0000-0000336DE989
-Message-Id: <8ee742d7-952b-b521-d05c-17de601f6e32@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-23_07:2020-04-22,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 phishscore=0 clxscore=1011 adultscore=0 mlxlogscore=999
- bulkscore=0 impostorscore=0 spamscore=0 mlxscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004230070
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200414131348.444715-5-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Tue, Apr 14, 2020 at 03:13:23PM +0200, Christoph Hellwig wrote:
+> Just use vmap instead of messing with vmalloc internals.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
+Thanks!
 
-On 4/21/20 7:24 PM, Leon Romanovsky wrote:
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> 
-> When a client is added it isn't allowed to fail, but all the client's have
-> various failure paths within their add routines.
-> 
-> This creates the very fringe condition where the client was added, failed
-> during add and didn't set the client_data. The core code will then still
-> call other client_data centric ops like remove(), rename(), get_nl_info(),
-> and get_net_dev_by_params() with NULL client_data - which is confusing and
-> unexpected.
-> 
-> If the add() callback fails, then do not call any more client ops for the
-> device, even remove.
-> 
-> Remove all the now redundant checks for NULL client_data in ops callbacks.
-> 
-> Update all the add() callbacks to return error codes
-> appropriately. EOPNOTSUPP is used for cases where the ULP does not support
-> the ib_device - eg because it only works with IB.
-> 
-> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-> Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-> ---
->  drivers/infiniband/core/cm.c                  | 24 ++++++++++--------
->  drivers/infiniband/core/cma.c                 | 23 +++++++++--------
->  drivers/infiniband/core/device.c              | 16 ++++++++++--
->  drivers/infiniband/core/mad.c                 | 17 ++++++++++---
->  drivers/infiniband/core/multicast.c           | 12 ++++-----
->  drivers/infiniband/core/sa_query.c            | 22 ++++++++--------
->  drivers/infiniband/core/user_mad.c            | 22 ++++++++--------
->  drivers/infiniband/core/uverbs_main.c         | 24 +++++++++---------
->  drivers/infiniband/ulp/ipoib/ipoib_main.c     | 15 ++++-------
->  .../infiniband/ulp/opa_vnic/opa_vnic_vema.c   | 12 ++++-----
->  drivers/infiniband/ulp/srp/ib_srp.c           | 21 ++++++++--------
->  drivers/infiniband/ulp/srpt/ib_srpt.c         | 25 ++++++++-----------
->  include/rdma/ib_verbs.h                       |  2 +-
->  net/rds/ib.c                                  | 21 ++++++++++------
->  net/smc/smc_ib.c                              | 10 +++-----
->  15 files changed, 142 insertions(+), 124 deletions(-)
-> 
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-For the net/smc part:
-Acked-by: Ursula Braun <ubraun@linux.ibm.com>
-
+-- 
+Sakari Ailus
