@@ -2,91 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 785101B638E
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2020 20:27:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07A771B655C
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2020 22:25:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730392AbgDWS1Y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 Apr 2020 14:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730375AbgDWS1P (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 23 Apr 2020 14:27:15 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6667C09B042
-        for <linux-s390@vger.kernel.org>; Thu, 23 Apr 2020 11:27:13 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id u11so7547843iow.4
-        for <linux-s390@vger.kernel.org>; Thu, 23 Apr 2020 11:27:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
-        b=G0MearUWJO2XoX5WFWCbOSBM0KnomNOcLxBMKb36E56Tk8IIyFbWO7z4INTed1WkRU
-         qeMi1eRR7YsA+BDT6DQvUAii78YnzCjvNMVBKy4slcZy3/gJbFRS56rTYb2i1ZQ8vqn/
-         EOaplCA4N/rSu1DPvHSaWXp+qBo2gCjTbf/vDHta9DawS0nUkV5FYws7CV/zXlK/VYiG
-         COL+ehFclZxGMjmnJCFdgQT7XS8eBs73XeZW6OQ9vAUq0KfaGK/YZHActLVD5NzSJiie
-         gXxsbNT9IQMnd4wAzDKDPSrX8AkY/tvkHFQgBX+60qxPigWKusZrEf/ce5VP7zRF3LJ+
-         eYhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
-        b=peZi7fO15F0FadoLvNCI4EosR4Ukp8+RRPo3towra3nj6PXlivcLKdZQUF0v+f+S5e
-         T5kRtFzu5PGhY8fs8XoodKtFdORxces62Ny7VmQgRfWvp4NfwgMbm+KHWw0dVY8WrxJL
-         zeHo9xdwVvlt+BkOqrWwTIvdBo50m9a4JD6UefwxtvmQVwabozghkuph7eOAbyi9ZZcb
-         i2Gri4Ntgqc1ldDUgwJx23mc2Gc2X1I4zLhmq0NXcmPHNfGmeu49l1gBtTGXk3y50yxr
-         txE2ZBYY3lMlzKJSR226Gy4Ftuck/tPcsoWeyH93bFumJy3Wsw8zCc9pinEHvsoyesKr
-         4E4A==
-X-Gm-Message-State: AGi0PubNMNtqFxPnbhn3HfnpYHNKXre/azraXN7kGYXPRZQ7ZoHZPD5M
-        WxthQt00s1lcFpcAn/NT0k7erSQmFZ2AkNJTPQ==
-X-Google-Smtp-Source: APiQypKOhu0Ivyzu1MQANRLgnSM6D7f6PDwmOyOGFsy7UwOOUt5tM1gVxevJ7CcMC29eb2aYcjzRxadXayX+T6slpNc=
-X-Received: by 2002:a05:6602:d:: with SMTP id b13mr5025673ioa.176.1587666433220;
- Thu, 23 Apr 2020 11:27:13 -0700 (PDT)
+        id S1726057AbgDWUZp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 Apr 2020 16:25:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51594 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726002AbgDWUZo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 23 Apr 2020 16:25:44 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03NJWXuU047357;
+        Thu, 23 Apr 2020 16:25:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrj76a14-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 16:25:43 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03NJidh0079219;
+        Thu, 23 Apr 2020 16:25:43 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrj76a0y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 16:25:43 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03NKNJSM030716;
+        Thu, 23 Apr 2020 20:25:42 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma01wdc.us.ibm.com with ESMTP id 30fs66m8se-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 23 Apr 2020 20:25:42 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03NKPfxF54198716
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 Apr 2020 20:25:41 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 480E913604F;
+        Thu, 23 Apr 2020 20:25:41 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B103136053;
+        Thu, 23 Apr 2020 20:25:40 +0000 (GMT)
+Received: from [9.65.212.228] (unknown [9.65.212.228])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 23 Apr 2020 20:25:40 +0000 (GMT)
+Subject: Re: [PATCH 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200417182939.11460-1-jrossi@linux.ibm.com>
+ <20200417182939.11460-2-jrossi@linux.ibm.com>
+ <20200423155620.493cb7cb.pasic@linux.ibm.com>
+ <20200423171103.497dcd02.cohuck@redhat.com>
+From:   Eric Farman <farman@linux.ibm.com>
+Message-ID: <b6dc3d32-3e84-4ce1-59a2-d5de99716027@linux.ibm.com>
+Date:   Thu, 23 Apr 2020 16:25:39 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Received: by 2002:a02:c845:0:0:0:0:0 with HTTP; Thu, 23 Apr 2020 11:27:12
- -0700 (PDT)
-Reply-To: boa.benin107@yahoo.com
-From:   "Mrs. Angella Michelle" <info.zennitbankplcnigerian@gmail.com>
-Date:   Thu, 23 Apr 2020 20:27:12 +0200
-Message-ID: <CABHzvrnzZLe4Z0E4acOdcsDJTPa3wvp-Oz12f_M4TQ03PAGZkw@mail.gmail.com>
-Subject: Contact Eco bank-Benin to receive your payment funds transfer amount
- of $12.800.000,00 Million USD,approved this morning by IMF.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200423171103.497dcd02.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-23_13:2020-04-23,2020-04-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ malwarescore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
+ adultscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 clxscore=1011
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004230146
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Attn Dear.
-Contact Bank of Africa-Benin to receive your payment funds transfer amount =
-of
-$12.800.000,00 Million USD,approved this morning by IMF.
-Happy to inform you, we have finally deposited your payment funds
-$12.8 million us dollars with the Paying Bank of Africa-Benin
-to transfer the payment amount of $12.800,000,00 Million Us Dollars to you
-Contact the bank immediately you receive this email now.
-Director Bank of Africa-Benin: Dr. Festus Obiara
-Email id:  boa.benin107@yahoo.com
-Tel/mobile, (229) 62819378
-BOA-BENIN | GROUPE BANK OF AFRICA, boa-benin
-Avenue Jean-Paul II - 08 BP 0879 - Cotonou - B=C3=A9nin
-Phone:(229) 62819378.
-2020 GROUPE BANK OF AFRICA
-Be advised to re-confirm your bank details to this bank as listed.
-Your account Holder's name----------------
-Bank Name----------------------------------------------------------
-Bank address----------------------------------------------
-Account Numbers---------------------------------------
-Rounting-----------------------------------------------------------------
-Your direct Phone Numbers----------------------------------------------
-Note,I have paid the deposit and insurance fees for you
-But the only money you are to send to this bank is $150.00 us dollars
-Been for the wire transfer fees of your funds
-Contact Him now to receive your transfer deposited this morning
-I wait for your reply upon confirmation
-Mrs. Angella Michelle
-Editor, Zenith Bank- Companies Benin
-mrsa9389@gmail.com
+
+
+On 4/23/20 11:11 AM, Cornelia Huck wrote:
+> On Thu, 23 Apr 2020 15:56:20 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
+> 
+>> On Fri, 17 Apr 2020 14:29:39 -0400
+>> Jared Rossi <jrossi@linux.ibm.com> wrote:
+>>
+>>> Remove the explicit prefetch check when using vfio-ccw devices.
+>>> This check is not needed as all Linux channel programs are intended
+>>> to use prefetch and will be executed in the same way regardless.  
+>>
+>> Hm. This is a guest thing or? So you basically say, it is OK to do
+>> this, because you know that the guest is gonna be Linux and that it
+>> the channel program is intended to use prefetch -- but the ORB supplied
+>> by the guest that designates the channel program happens to state the
+>> opposite.
+>>
+>> Or am I missing something?
+> 
+> I see this as a kind of architecture compliance/ease of administration
+> tradeoff, as we none of the guests we currently support uses something
+> that breaks with prefetching outside of IPL (which has a different
+> workaround).>
+> One thing that still concerns me a bit is debuggability if a future
+> guest indeed does want to dynamically rewrite a channel program: the
+
++1 for some debuggability, just in general
+
+> guest thinks it instructed the device to not prefetch, and then
+> suddenly things do not work as expected. We can log when a guest
+> submits an orb without prefetch set, but we can't find out if the guest
+> actually does something that relies on non-prefetch.
+
+Without going too far down a non-prefetch rabbit-hole, can we use the
+cpa_within_range logic to see if the address of the CCW being fetched
+exists as the CDA of an earlier (non-TIC) CCW in the chain we're
+processing, and tracing/logging/messaging something about a possible
+conflict?
+
+(Jared, you did some level of this tracing with our real/synthetic tests
+some time ago.  Any chance something of it could be polished and made
+useful, without being overly heavy on the mainline path?)
+
+> 
+> The only correct way to handle this would be to actually implement
+> non-prefetch processing, where I would not really know where to even
+> start -- and then we'd only have synthetic test cases, for now. None of
+> the options are pleasant :(
+> 
+
+And even if we knew where to start, it's quite a bit of effort for the
+hypothetical.  From conversations I've had with long-time I/O folks,
+non-prefetch seems to be the significant minority these days, dating
+back to older CKD devices (and associated connectivity) in practice.
