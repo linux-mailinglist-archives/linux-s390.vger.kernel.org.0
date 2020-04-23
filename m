@@ -2,110 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16B891B57D1
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2020 11:10:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AF3C1B57D0
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2020 11:10:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgDWJKc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 Apr 2020 05:10:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:65086 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726541AbgDWJKb (ORCPT
+        id S1726783AbgDWJKb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 Apr 2020 05:10:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49312 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726764AbgDWJKb (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
         Thu, 23 Apr 2020 05:10:31 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03N93Wjs025953
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03N91vqd036168
         for <linux-s390@vger.kernel.org>; Thu, 23 Apr 2020 05:10:30 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30k3xu7bbj-1
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmvk2qvd-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
         for <linux-s390@vger.kernel.org>; Thu, 23 Apr 2020 05:10:30 -0400
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Thu, 23 Apr 2020 10:09:41 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 23 Apr 2020 10:10:03 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 Apr 2020 10:09:39 +0100
+        Thu, 23 Apr 2020 10:10:02 +0100
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03N9AOjj61276282
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03N9APaH61276398
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Apr 2020 09:10:24 GMT
+        Thu, 23 Apr 2020 09:10:25 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE9104C046;
-        Thu, 23 Apr 2020 09:10:24 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 9E56D4C052;
+        Thu, 23 Apr 2020 09:10:25 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 11E394C040;
+        by IMSVA (Postfix) with ESMTP id E586A4C044;
         Thu, 23 Apr 2020 09:10:24 +0000 (GMT)
 Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Apr 2020 09:10:23 +0000 (GMT)
+        Thu, 23 Apr 2020 09:10:24 +0000 (GMT)
 From:   Janosch Frank <frankja@linux.ibm.com>
 To:     kvm@vger.kernel.org
 Cc:     thuth@redhat.com, linux-s390@vger.kernel.org, david@redhat.com,
         borntraeger@de.ibm.com, cohuck@redhat.com
-Subject: [PATCH v2 06/10] s390x: smp: Remove unneeded cpu loops
-Date:   Thu, 23 Apr 2020 05:10:09 -0400
+Subject: [PATCH v2 07/10] s390x: smp: Use full PSW to bringup new cpu
+Date:   Thu, 23 Apr 2020 05:10:10 -0400
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200423091013.11587-1-frankja@linux.ibm.com>
 References: <20200423091013.11587-1-frankja@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20042309-4275-0000-0000-000003C51E01
+x-cbid: 20042309-0012-0000-0000-000003A9BF8A
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042309-4276-0000-0000-000038DAA823
-Message-Id: <20200423091013.11587-7-frankja@linux.ibm.com>
+x-cbparentid: 20042309-0013-0000-0000-000021E71330
+Message-Id: <20200423091013.11587-8-frankja@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-23_06:2020-04-22,2020-04-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- impostorscore=0 adultscore=0 priorityscore=1501 bulkscore=0 clxscore=1015
- malwarescore=0 mlxlogscore=823 lowpriorityscore=0 suspectscore=1
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 malwarescore=0 impostorscore=0 suspectscore=1 phishscore=0
+ adultscore=0 mlxlogscore=920 clxscore=1015 mlxscore=0 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2004230066
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Now that we have a loop which is executed after we return from the
-main function of a secondary cpu, we can remove the surplus loops.
+Up to now we ignored the psw mask and only used the psw address when
+bringing up a new cpu. For DAT we need to also load the mask, so let's
+do that.
 
 Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Acked-by: David Hildenbrand <david@redhat.com>
 ---
- s390x/smp.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ lib/s390x/smp.c  | 2 ++
+ s390x/cstart64.S | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/s390x/smp.c b/s390x/smp.c
-index a8e3dd7..7462211 100644
---- a/s390x/smp.c
-+++ b/s390x/smp.c
-@@ -35,15 +35,9 @@ static void set_flag(int val)
- 	mb();
- }
+diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
+index 3f86243..6ef0335 100644
+--- a/lib/s390x/smp.c
++++ b/lib/s390x/smp.c
+@@ -202,6 +202,8 @@ int smp_cpu_setup(uint16_t addr, struct psw psw)
+ 	cpu->stack = (uint64_t *)alloc_pages(2);
  
--static void cpu_loop(void)
--{
--	for (;;) {}
--}
--
- static void test_func(void)
- {
- 	set_flag(1);
--	cpu_loop();
- }
- 
- static void test_start(void)
-@@ -292,7 +286,7 @@ int main(void)
- 
- 	/* Setting up the cpu to give it a stack and lowcore */
- 	psw.mask = extract_psw_mask();
--	psw.addr = (unsigned long)cpu_loop;
-+	psw.addr = (unsigned long)test_func;
- 	smp_cpu_setup(1, psw);
- 	smp_cpu_stop(1);
+ 	/* Start without DAT and any other mask bits. */
++	cpu->lowcore->sw_int_psw.mask = psw.mask;
++	cpu->lowcore->sw_int_psw.addr = psw.addr;
+ 	cpu->lowcore->sw_int_grs[14] = psw.addr;
+ 	cpu->lowcore->sw_int_grs[15] = (uint64_t)cpu->stack + (PAGE_SIZE * 4);
+ 	lc->restart_new_psw.mask = 0x0000000180000000UL;
+diff --git a/s390x/cstart64.S b/s390x/cstart64.S
+index ecffbe0..e084f13 100644
+--- a/s390x/cstart64.S
++++ b/s390x/cstart64.S
+@@ -161,7 +161,8 @@ smp_cpu_setup_state:
+ 	lctlg   %c0, %c0, GEN_LC_SW_INT_CRS
+ 	/* We should only go once through cpu setup and not for every restart */
+ 	stg	%r14, GEN_LC_RESTART_NEW_PSW + 8
+-	brasl	%r14, %r14
++	larl	%r14, 0f
++	lpswe	GEN_LC_SW_INT_PSW
+ 	/* If the function returns, just loop here */
+ 0:	j	0
  
 -- 
 2.25.1
