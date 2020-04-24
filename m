@@ -2,152 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E965A1B6FE2
-	for <lists+linux-s390@lfdr.de>; Fri, 24 Apr 2020 10:39:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BCB31B70FD
+	for <lists+linux-s390@lfdr.de>; Fri, 24 Apr 2020 11:34:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgDXIjR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 24 Apr 2020 04:39:17 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52915 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726383AbgDXIjQ (ORCPT
+        id S1726787AbgDXJeH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 24 Apr 2020 05:34:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14012 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726770AbgDXJeH (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 24 Apr 2020 04:39:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587717555;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=NptoVTCg1iOLjGaLI+OUg0znbJeY07Rl++4dsQcQybs=;
-        b=D7yrRlzBy/SiCgFQLPdimSkXB1fO7//YZkk3EG8gretBhNWb8hkNCkecLnQO0c2IYpxLZn
-        Ig6ieapUEuzEig1J4jhv0wcluUGC8LRbvT1iE2hJIP19G6Y8Y0sLSLCZSQmHgnCDvmPTtV
-        aAvODFVVb1BI3wCQsH/X1tya0ucwblo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-278-ZV9INZU_NXymlgzHhRwgcw-1; Fri, 24 Apr 2020 04:39:13 -0400
-X-MC-Unique: ZV9INZU_NXymlgzHhRwgcw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1F06107B7CF;
-        Fri, 24 Apr 2020 08:39:11 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-138.ams2.redhat.com [10.36.113.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 28252605CF;
-        Fri, 24 Apr 2020 08:39:04 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-s390@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: [PATCH v2] s390: simplify memory notifier for protecting kdump crash kernel area
-Date:   Fri, 24 Apr 2020 10:39:04 +0200
-Message-Id: <20200424083904.8587-1-david@redhat.com>
+        Fri, 24 Apr 2020 05:34:07 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03O9Xm7S025353;
+        Fri, 24 Apr 2020 05:34:06 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30k7rd0dqf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 05:34:06 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03O9Y6aL028083;
+        Fri, 24 Apr 2020 05:34:06 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30k7rd0dpt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 05:34:06 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03O9PxKP001321;
+        Fri, 24 Apr 2020 09:34:03 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 30fs658ypv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Apr 2020 09:34:03 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03O9Y1wa57278508
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Apr 2020 09:34:01 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E38C142042;
+        Fri, 24 Apr 2020 09:34:00 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3E68D42045;
+        Fri, 24 Apr 2020 09:34:00 +0000 (GMT)
+Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 24 Apr 2020 09:34:00 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     thuth@redhat.com, linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com
+Subject: [PATCH v3] s390x: smp: Test all CRs on initial reset
+Date:   Fri, 24 Apr 2020 05:33:56 -0400
+Message-Id: <20200424093356.11931-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <2ebdf5d6-74ac-d9e5-d329-29611a5f87cd@redhat.com>
+References: <2ebdf5d6-74ac-d9e5-d329-29611a5f87cd@redhat.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-24_03:2020-04-23,2020-04-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ clxscore=1015 priorityscore=1501 mlxlogscore=999 impostorscore=0
+ mlxscore=0 phishscore=0 lowpriorityscore=0 adultscore=0 suspectscore=1
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004240072
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Assume we have a crashkernel area of 256MB reserved:
+All CRs are set to 0 and CRs 0 and 14 are set to pre-defined values,
+so we also need to test 1-13 and 15 for 0.
 
-root@vm0:~# cat /proc/iomem
-00000000-6fffffff : System RAM
-  0f258000-0fcfffff : Kernel code
-  0fd00000-101d10e3 : Kernel data
-  105b3000-1068dfff : Kernel bss
-70000000-7fffffff : Crash kernel
+And while we're at it, let's also set some values to cr 1, 7 and 13, so
+we can actually be sure that they will be zeroed.
 
-This exactly corresponds to memory block 7 (memory block size is 256MB).
-Trying to offline that memory block results in:
-
-root@vm0:~# echo "offline" > /sys/devices/system/memory/memory7/state
--bash: echo: write error: Device or resource busy
-
-[  128.458762] page:000003d081c00000 refcount:1 mapcount:0 mapping:000000=
-00d01cecd4 index:0x0
-[  128.458773] flags: 0x1ffff00000001000(reserved)
-[  128.458781] raw: 1ffff00000001000 000003d081c00008 000003d081c00008 00=
-00000000000000
-[  128.458781] raw: 0000000000000000 0000000000000000 ffffffff00000001 00=
-00000000000000
-[  128.458783] page dumped because: unmovable page
-
-The craskernel area is marked reserved in the bootmem allocator. This
-results in the memmap getting initialized (refcount=3D1, PG_reserved), bu=
-t
-the pages are never freed to the page allocator.
-
-So these pages look like allocated pages that are unmovable (esp.
-PG_reserved), and therefore, memory offlining fails early, when trying to
-isolate the page range.
-
-We only have to care about the exchange area, make that clear.
-
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Philipp Rudo <prudo@linux.ibm.com>
-Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
 ---
+ s390x/smp.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-Follow up of:
-- "[PATCH v1] s390: drop memory notifier for protecting kdump crash kerne=
-l
-   area"
-
-v1 -> v2:
-- Keep the notifier, check for exchange area only
-
----
- arch/s390/kernel/setup.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
-
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index 0f0b140b5558..c0881f0a3175 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -594,9 +594,10 @@ static void __init setup_memory_end(void)
- #ifdef CONFIG_CRASH_DUMP
-=20
- /*
-- * When kdump is enabled, we have to ensure that no memory from
-- * the area [0 - crashkernel memory size] and
-- * [crashk_res.start - crashk_res.end] is set offline.
-+ * When kdump is enabled, we have to ensure that no memory from the area
-+ * [0 - crashkernel memory size] is set offline - it will be exchanged w=
-ith
-+ * the crashkernel memory region when kdump is triggered. The crashkerne=
-l
-+ * memory region can never get offlined (pages are unmovable).
-  */
- static int kdump_mem_notifier(struct notifier_block *nb,
- 			      unsigned long action, void *data)
-@@ -607,11 +608,7 @@ static int kdump_mem_notifier(struct notifier_block =
-*nb,
- 		return NOTIFY_OK;
- 	if (arg->start_pfn < PFN_DOWN(resource_size(&crashk_res)))
- 		return NOTIFY_BAD;
--	if (arg->start_pfn > PFN_DOWN(crashk_res.end))
--		return NOTIFY_OK;
--	if (arg->start_pfn + arg->nr_pages - 1 < PFN_DOWN(crashk_res.start))
--		return NOTIFY_OK;
--	return NOTIFY_BAD;
-+	return NOTIFY_OK;
+diff --git a/s390x/smp.c b/s390x/smp.c
+index fa40753..7144c9b 100644
+--- a/s390x/smp.c
++++ b/s390x/smp.c
+@@ -182,16 +182,28 @@ static void test_emcall(void)
+ 	report_prefix_pop();
  }
-=20
- static struct notifier_block kdump_mem_nb =3D {
---=20
-2.25.3
+ 
++/* Used to dirty registers of cpu #1 before it is reset */
++static void test_func_initial(void)
++{
++	lctlg(1, 0x42000UL);
++	lctlg(7, 0x43000UL);
++	lctlg(13, 0x44000UL);
++	set_flag(1);
++}
++
+ static void test_reset_initial(void)
+ {
+ 	struct cpu_status *status = alloc_pages(0);
+ 	struct psw psw;
++	int i;
+ 
+ 	psw.mask = extract_psw_mask();
+-	psw.addr = (unsigned long)test_func;
++	psw.addr = (unsigned long)test_func_initial;
+ 
+ 	report_prefix_push("reset initial");
++	set_flag(0);
+ 	smp_cpu_start(1, psw);
++	wait_for_flag();
+ 
+ 	sigp_retry(1, SIGP_INITIAL_CPU_RESET, 0, NULL);
+ 	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
+@@ -202,6 +214,10 @@ static void test_reset_initial(void)
+ 	report(!status->fpc, "fpc");
+ 	report(!status->cputm, "cpu timer");
+ 	report(!status->todpr, "todpr");
++	for (i = 1; i <= 13; i++) {
++		report(status->crs[i] == 0, "cr%d == 0", i);
++	}
++	report(status->crs[15] == 0, "cr15 == 0");
+ 	report_prefix_pop();
+ 
+ 	report_prefix_push("initialized");
+-- 
+2.25.1
 
