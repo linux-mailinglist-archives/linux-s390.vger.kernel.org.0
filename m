@@ -2,59 +2,57 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3ACA1B731D
-	for <lists+linux-s390@lfdr.de>; Fri, 24 Apr 2020 13:31:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E87A1B734E
+	for <lists+linux-s390@lfdr.de>; Fri, 24 Apr 2020 13:40:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgDXLbK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 24 Apr 2020 07:31:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27268 "EHLO
+        id S1726707AbgDXLkk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 24 Apr 2020 07:40:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54088 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726668AbgDXLbJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726247AbgDXLkj (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 24 Apr 2020 07:31:09 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OB41ni119330;
-        Fri, 24 Apr 2020 07:31:09 -0400
+        Fri, 24 Apr 2020 07:40:39 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03OBXxCT191313;
+        Fri, 24 Apr 2020 07:40:38 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jtk3r97h-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrxnr15m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 07:31:08 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03OB4D1W120730;
-        Fri, 24 Apr 2020 07:31:08 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30jtk3r965-1
+        Fri, 24 Apr 2020 07:40:38 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03OBY2oH191381;
+        Fri, 24 Apr 2020 07:40:38 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30jrxnr14w-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 07:31:08 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03OBPfie004849;
-        Fri, 24 Apr 2020 11:31:06 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 30fs6590sj-1
+        Fri, 24 Apr 2020 07:40:37 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03OBZXJm009721;
+        Fri, 24 Apr 2020 11:40:35 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma01fra.de.ibm.com with ESMTP id 30fs658yst-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Apr 2020 11:31:06 +0000
+        Fri, 24 Apr 2020 11:40:35 +0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03OBV3in65667182
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03OBdPqb66453830
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Apr 2020 11:31:03 GMT
+        Fri, 24 Apr 2020 11:39:25 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E192A404D;
-        Fri, 24 Apr 2020 11:31:03 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 5152CA4057;
+        Fri, 24 Apr 2020 11:40:33 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3F496A4059;
-        Fri, 24 Apr 2020 11:31:03 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id EA36CA4040;
+        Fri, 24 Apr 2020 11:40:32 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.145.157.9])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 24 Apr 2020 11:31:03 +0000 (GMT)
-Subject: Re: [PATCH v2 07/10] s390x: smp: Use full PSW to bringup new cpu
+        Fri, 24 Apr 2020 11:40:32 +0000 (GMT)
+Subject: Re: [PATCH v2 08/10] s390x: smp: Wait for sigp completion
 To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
 Cc:     thuth@redhat.com, linux-s390@vger.kernel.org,
         borntraeger@de.ibm.com, cohuck@redhat.com
 References: <20200423091013.11587-1-frankja@linux.ibm.com>
- <20200423091013.11587-8-frankja@linux.ibm.com>
- <f13b31f6-80ef-9cfc-0cde-fe1c1601cf1f@redhat.com>
- <0f4ceb74-4ac4-4e26-3d2c-d8572b970cc8@linux.ibm.com>
- <03965ad8-c1e0-005a-b77a-9af740f0aa59@redhat.com>
+ <20200423091013.11587-9-frankja@linux.ibm.com>
+ <6084d368-86d6-b8fd-d4d3-5e0d72cef590@redhat.com>
 From:   Janosch Frank <frankja@linux.ibm.com>
 Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  mQINBFubpD4BEADX0uhkRhkj2AVn7kI4IuPY3A8xKat0ihuPDXbynUC77mNox7yvK3X5QBO6
@@ -98,111 +96,138 @@ Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
  Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
  phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
-Message-ID: <45d9fce9-124c-2099-283b-320a44610516@linux.ibm.com>
-Date:   Fri, 24 Apr 2020 13:31:02 +0200
+Message-ID: <18b6f022-81b7-6e0d-996d-3abcffceca41@linux.ibm.com>
+Date:   Fri, 24 Apr 2020 13:40:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <03965ad8-c1e0-005a-b77a-9af740f0aa59@redhat.com>
+In-Reply-To: <6084d368-86d6-b8fd-d4d3-5e0d72cef590@redhat.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="eTJISOPRBmzmZzu3V2zBKOepKZlMbW9LT"
+ boundary="1dtVzlnF2uFlVWdwk4H55XyK6gJkJS1ED"
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-24_04:2020-04-23,2020-04-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 bulkscore=0 clxscore=1015 lowpriorityscore=0
- priorityscore=1501 suspectscore=0 impostorscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004240087
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ spamscore=0 clxscore=1015 suspectscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004240091
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---eTJISOPRBmzmZzu3V2zBKOepKZlMbW9LT
-Content-Type: multipart/mixed; boundary="90qIhZiSELB1AkS0tCK9ut6siq1xqZASx"
+--1dtVzlnF2uFlVWdwk4H55XyK6gJkJS1ED
+Content-Type: multipart/mixed; boundary="tovXjwoxTzPIZOfSeoIVFjG4X6a1xCpIg"
 
---90qIhZiSELB1AkS0tCK9ut6siq1xqZASx
+--tovXjwoxTzPIZOfSeoIVFjG4X6a1xCpIg
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On 4/24/20 1:23 PM, David Hildenbrand wrote:
-> On 24.04.20 13:16, Janosch Frank wrote:
->> On 4/24/20 12:09 PM, David Hildenbrand wrote:
->>> On 23.04.20 11:10, Janosch Frank wrote:
->>>> Up to now we ignored the psw mask and only used the psw address when=
-
->>>> bringing up a new cpu. For DAT we need to also load the mask, so let=
-'s
->>>> do that.
->>>>
->>>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
->>>> ---
->>>>  lib/s390x/smp.c  | 2 ++
->>>>  s390x/cstart64.S | 3 ++-
->>>>  2 files changed, 4 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
->>>> index 3f86243..6ef0335 100644
->>>> --- a/lib/s390x/smp.c
->>>> +++ b/lib/s390x/smp.c
->>>> @@ -202,6 +202,8 @@ int smp_cpu_setup(uint16_t addr, struct psw psw)=
-
->>>>  	cpu->stack =3D (uint64_t *)alloc_pages(2);
->>>> =20
->>>>  	/* Start without DAT and any other mask bits. */
->>>> +	cpu->lowcore->sw_int_psw.mask =3D psw.mask;
->>>> +	cpu->lowcore->sw_int_psw.addr =3D psw.addr;
->>>>  	cpu->lowcore->sw_int_grs[14] =3D psw.addr;
->>>
->>> Do we still have to set sw_int_grs[14] ?
->>>
->> r14 is saved to restart_new so we don't go through setup twice.
->> We could instead copy cpu->lowcore->sw_int_psw.addr to restart new, bu=
-t
->> that means more changes than the removal of one line.
+On 4/24/20 12:11 PM, David Hildenbrand wrote:
+> On 23.04.20 11:10, Janosch Frank wrote:
+>> Sigp orders are not necessarily finished when the processor finished
+>> the sigp instruction. We need to poll if the order has been finished
+>> before we continue.
 >>
->> Also, what about backtraces or plain old debug?
->> Having r14 is a good backup to have IMHO.
+>> For (re)start and stop we already use sigp sense running and sigp
+>> sense loops. But we still lack completion checks for stop and store
+>> status, as well as the cpu resets.
 >>
+>> Let's add them.
+>>
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+>> ---
+>>  lib/s390x/smp.c | 8 ++++++++
+>>  lib/s390x/smp.h | 1 +
+>>  s390x/smp.c     | 4 ++++
+>>  3 files changed, 13 insertions(+)
+>>
+>> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
+>> index 6ef0335..2555bf4 100644
+>> --- a/lib/s390x/smp.c
+>> +++ b/lib/s390x/smp.c
+>> @@ -154,6 +154,14 @@ int smp_cpu_start(uint16_t addr, struct psw psw)
+>>  	return rc;
+>>  }
+>> =20
+>> +void smp_cpu_wait_for_completion(uint16_t addr)
+>> +{
+>> +	uint32_t status;
+>> +
+>> +	/* Loops when cc =3D=3D 2, i.e. when the cpu is busy with a sigp ord=
+er */
+>> +	sigp_retry(1, SIGP_SENSE, 0, &status);
+>> +}
+>> +
+>>  int smp_cpu_destroy(uint16_t addr)
+>>  {
+>>  	struct cpu *cpu;
+>> diff --git a/lib/s390x/smp.h b/lib/s390x/smp.h
+>> index ce63a89..a8b98c0 100644
+>> --- a/lib/s390x/smp.h
+>> +++ b/lib/s390x/smp.h
+>> @@ -45,6 +45,7 @@ int smp_cpu_restart(uint16_t addr);
+>>  int smp_cpu_start(uint16_t addr, struct psw psw);
+>>  int smp_cpu_stop(uint16_t addr);
+>>  int smp_cpu_stop_store_status(uint16_t addr);
+>> +void smp_cpu_wait_for_completion(uint16_t addr);
+>>  int smp_cpu_destroy(uint16_t addr);
+>>  int smp_cpu_setup(uint16_t addr, struct psw psw);
+>>  void smp_teardown(void);
+>> diff --git a/s390x/smp.c b/s390x/smp.c
+>> index 7462211..48321f4 100644
+>> --- a/s390x/smp.c
+>> +++ b/s390x/smp.c
+>> @@ -75,6 +75,7 @@ static void test_stop_store_status(void)
+>>  	lc->prefix_sa =3D 0;
+>>  	lc->grs_sa[15] =3D 0;
+>>  	smp_cpu_stop_store_status(1);
+>> +	smp_cpu_wait_for_completion(1);
+>>  	mb();
+>>  	report(lc->prefix_sa =3D=3D (uint32_t)(uintptr_t)cpu->lowcore, "pref=
+ix");
+>>  	report(lc->grs_sa[15], "stack");
+>> @@ -85,6 +86,7 @@ static void test_stop_store_status(void)
+>>  	lc->prefix_sa =3D 0;
+>>  	lc->grs_sa[15] =3D 0;
+>>  	smp_cpu_stop_store_status(1);
 >=20
-> Fine with me
+> Just curious: Would it make sense to add that inside
+> smp_cpu_stop_store_status() instead?
 >=20
-> Reviewed-by: David Hildenbrand <david@redhat.com>
->=20
 
-Thanks!
-Also we need that if the cpu returns from its assigned function, so it
-drops into the infinite loop.
+I think so, we also wait for stop and start to finish, so why not for
+this order code.
 
 
---90qIhZiSELB1AkS0tCK9ut6siq1xqZASx--
+--tovXjwoxTzPIZOfSeoIVFjG4X6a1xCpIg--
 
---eTJISOPRBmzmZzu3V2zBKOepKZlMbW9LT
+--1dtVzlnF2uFlVWdwk4H55XyK6gJkJS1ED
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl6izfYACgkQ41TmuOI4
-ufisqBAAyHytv2+evWGqpO319+SuvLpVWX112WwJs++wF8DBnQQ2rRgVkkMLPMrT
-1rSXcJu3e3SJkLLxwtZE31vLGDmXQu68ggTlNmBHUpdRQ+oEpOWOJ4HYe/moQp5z
-rBO9tKqtkLRzDtRpL3H6/kCvBBvxhuCY8qt8EhG3LAVedpVV3LOp3ngzS7O5VNvE
-R9BFUvoacW9hWHGNW6PIomoM0aIWXCbE1THfD+7iNhEMdJkobTzdbBV/I9EhAFBT
-jeuav9IH14yOrX71qWw2HrGu3lOBLDRNPawAP24+CEr3icXuJpLkkFLnB3R1d1BH
-PhbrZwJR3r76inJTH1Io7j31FUuuJsFBvAaevrdwCpPSFRsNj16FtSdnUxjIQTA3
-rlsqZo3pFxTlTTuFE5QHYvykcq7NgUNZaxjhLXnMDEwG6gshnarLCyVPaD5nl0Mg
-tARBm4bgAEyIr22lTIY1OlddHFSTGgvcvSoauWdGFvg/hztigFoojJSln1RYmXlh
-X3xsb8BostsHypPXgacS5thHzgOI49J8camuGk/to/zPDjI6oyPlVYQWBAK55fjX
-cUzi+0oLEyWiHjpk+2SkaaPkc6/zH3hj2N5E56gFK9vkahCXPTaQSXuByIKaODMU
-cagx+PH+V8jdjmXd0aWCQG2M0LRtRBCxgI8boctiP014QPvzpV8=
-=v04f
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl6i0DAACgkQ41TmuOI4
+ufhOixAArb9ADQysyIKH++SOnhOCz1mVzhon0t6G6Ca5WJYZd2g74NMzBA7mOw6u
+Qwv5Ma5iztVNQs8QM+U0v8UMVh8sIL5Vbi3MosfKo7GVAZmQ1/M9Qje//qEK2TNJ
+uhMtC0hCzW1NsS1bywDZVplJLfkIq7KXk6GkhBgVdS+mP83nkdH/yVNlz/4V5xVZ
+YOv3enjPTtu6KdXI0WG9mjJ1LcBpZIMlzHqafaBb6sE1wGV5x/LI2dZjqiITV3Jt
+VF6FfqP2l3sIahT5V0B0UKRCHZcNYugilHLDQAksHQJWdhnMXsDb+6Szd8r6Xut8
+DdE2DYyqxHfDiAI0sa1mdnjLm2iCdL5Wurg0O+/IJTbrVPChU43zCY38+p6QVIoj
+WXlBn4wjtSBR8NeACDT+QyCtpmWNH954AovZtJ7fhQXZ91j4BfItQ3M5GCrLjY/t
+FArNe/t0FdWTeqBdGc9BmUGGMA83cHtAmh4F8vROqsp4FD8OPPn3z/OdH3Af/qfp
+I+TkB4ureO6jaK4Zg9+aHusjeCs87RwOtOdD8nJMwkT/0uuLO51PutoX+Gm5Coyv
+Z0vu8yJoo4mYoM2vzY1RXSkbLpXw9BvvHjCKwRDbEEh4PirUq0udKXIxMgh1dc4P
+pQurCyXyeIolx8F/lZ4RUG4sw9qbxPJHiFSZ0Mfyip0pf6FcGi4=
+=xwZW
 -----END PGP SIGNATURE-----
 
---eTJISOPRBmzmZzu3V2zBKOepKZlMbW9LT--
+--1dtVzlnF2uFlVWdwk4H55XyK6gJkJS1ED--
 
