@@ -2,90 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 673D51B849E
-	for <lists+linux-s390@lfdr.de>; Sat, 25 Apr 2020 10:23:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 814431B85FF
+	for <lists+linux-s390@lfdr.de>; Sat, 25 Apr 2020 13:10:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbgDYIXK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 25 Apr 2020 04:23:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1800 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726059AbgDYIXK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 25 Apr 2020 04:23:10 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03P83BQW100356;
-        Sat, 25 Apr 2020 04:23:08 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhbx0cjq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 25 Apr 2020 04:23:08 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03P83Utl100760;
-        Sat, 25 Apr 2020 04:23:08 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhbx0cj1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 25 Apr 2020 04:23:08 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03P8KBYY021915;
-        Sat, 25 Apr 2020 08:23:05 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5g8yp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 25 Apr 2020 08:23:05 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03P8N2pm58589202
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 25 Apr 2020 08:23:03 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D0E7852050;
-        Sat, 25 Apr 2020 08:23:02 +0000 (GMT)
-Received: from localhost (unknown [9.145.167.115])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 4779C5204E;
-        Sat, 25 Apr 2020 08:23:02 +0000 (GMT)
-Date:   Sat, 25 Apr 2020 10:23:00 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, cohuck@redhat.com, david@redhat.com,
-        kbuild test robot <lkp@intel.com>,
-        Philipp Rudo <prudo@linux.ibm.com>
-Subject: Re: [PATCH v1 1/1] s390/protvirt: fix compilation issue
-Message-ID: <your-ad-here.call-01587802980-ext-8570@work.hours>
-References: <20200423120114.2027410-1-imbrenda@linux.ibm.com>
+        id S1726157AbgDYLIs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 25 Apr 2020 07:08:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42879 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726152AbgDYLIr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 25 Apr 2020 07:08:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587812926;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ofPRNPiKndJ+19yFksMsIFZm5zHoy/SE96l7lsxCjLM=;
+        b=Q88bnzeXb4V1VlyGp6qeHxLN6mMTrY2EVJcryu449QPgmTgdmwClTZGdvKeH7tPFhVxCXL
+        pXjTtH0goW8/nA2bPpYLP/YkjjFtqK3bcgYiEm0fH6hx7OvzRIXMyIYpCT/zCu6Wd0Bgw2
+        0Tpb8X2IzYpIIBIpDn8EcVdOptP7VDM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-AM4CndC3Nde2qH1gRdX33g-1; Sat, 25 Apr 2020 07:08:44 -0400
+X-MC-Unique: AM4CndC3Nde2qH1gRdX33g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 975C11005510;
+        Sat, 25 Apr 2020 11:08:43 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-114-29.rdu2.redhat.com [10.10.114.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 96014605D6;
+        Sat, 25 Apr 2020 11:08:41 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     live-patching@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com
+Subject: [PATCH v3 05/10] s390: Change s390_kernel_write() return type to match memcpy()
+Date:   Sat, 25 Apr 2020 06:07:25 -0500
+Message-Id: <6ddfa9a98db346f295249fbfdbf80e7a18fbabf0.1587812518.git.jpoimboe@redhat.com>
+In-Reply-To: <cover.1587812518.git.jpoimboe@redhat.com>
+References: <cover.1587812518.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200423120114.2027410-1-imbrenda@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-25_03:2020-04-24,2020-04-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1
- impostorscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
- spamscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
- malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004250063
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 02:01:14PM +0200, Claudio Imbrenda wrote:
-> The kernel fails to compile with CONFIG_PROTECTED_VIRTUALIZATION_GUEST
-> set but CONFIG_KVM unset.
-> 
-> This patch fixes the issue by making the needed variable always available.
-> 
-> Fixes: a0f60f8431999bf5 ("s390/protvirt: Add sysfs firmware interface for Ultravisor information")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Philipp Rudo <prudo@linux.ibm.com>
-> Suggested-by: Philipp Rudo <prudo@linux.ibm.com>
-> CC: Vasily Gorbik <gor@linux.ibm.com>
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> ---
->  arch/s390/boot/uv.c   | 2 --
->  arch/s390/kernel/uv.c | 3 ++-
->  2 files changed, 2 insertions(+), 3 deletions(-)
->
-Applied, thanks
+s390_kernel_write()'s function type is almost identical to memcpy().
+Change its return type to "void *" so they can be used interchangeably.
+
+Cc: linux-s390@vger.kernel.org
+Cc: heiko.carstens@de.ibm.com
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ arch/s390/include/asm/uaccess.h | 2 +-
+ arch/s390/mm/maccess.c          | 9 ++++++---
+ 2 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uacc=
+ess.h
+index a470f1fa9f2a..324438889fe1 100644
+--- a/arch/s390/include/asm/uaccess.h
++++ b/arch/s390/include/asm/uaccess.h
+@@ -276,6 +276,6 @@ static inline unsigned long __must_check clear_user(v=
+oid __user *to, unsigned lo
+ }
+=20
+ int copy_to_user_real(void __user *dest, void *src, unsigned long count)=
+;
+-void s390_kernel_write(void *dst, const void *src, size_t size);
++void *s390_kernel_write(void *dst, const void *src, size_t size);
+=20
+ #endif /* __S390_UACCESS_H */
+diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
+index de7ca4b6718f..22a0be655f27 100644
+--- a/arch/s390/mm/maccess.c
++++ b/arch/s390/mm/maccess.c
+@@ -55,19 +55,22 @@ static notrace long s390_kernel_write_odd(void *dst, =
+const void *src, size_t siz
+  */
+ static DEFINE_SPINLOCK(s390_kernel_write_lock);
+=20
+-void notrace s390_kernel_write(void *dst, const void *src, size_t size)
++notrace void *s390_kernel_write(void *dst, const void *src, size_t size)
+ {
++	void *tmp =3D dst;
+ 	unsigned long flags;
+ 	long copied;
+=20
+ 	spin_lock_irqsave(&s390_kernel_write_lock, flags);
+ 	while (size) {
+-		copied =3D s390_kernel_write_odd(dst, src, size);
+-		dst +=3D copied;
++		copied =3D s390_kernel_write_odd(tmp, src, size);
++		tmp +=3D copied;
+ 		src +=3D copied;
+ 		size -=3D copied;
+ 	}
+ 	spin_unlock_irqrestore(&s390_kernel_write_lock, flags);
++
++	return dst;
+ }
+=20
+ static int __no_sanitize_address __memcpy_real(void *dest, void *src, si=
+ze_t count)
+--=20
+2.21.1
+
