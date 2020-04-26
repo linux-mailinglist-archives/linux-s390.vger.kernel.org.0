@@ -2,141 +2,210 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BF1B1B8B84
-	for <lists+linux-s390@lfdr.de>; Sun, 26 Apr 2020 05:01:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBF6C1B8D8D
+	for <lists+linux-s390@lfdr.de>; Sun, 26 Apr 2020 09:39:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgDZDB3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 25 Apr 2020 23:01:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbgDZDB2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 25 Apr 2020 23:01:28 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6969B206D4;
-        Sun, 26 Apr 2020 03:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587870086;
-        bh=tCSwWc8iRTvfzhr9Bpi0vaaHrDRBHLwWGG3vKGlFHqg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UVpTWp7EJhgRsQXBhfo6AT4VrUdy1nNy8nOq/LfihYfu1NC4LJc05Iz8GAX1ZT5f3
-         axlF830cN9T/YdFik2zo+N3qO2F4mins96Mu5bgI3K/fB5ghL5mkLmCLUuWklYIKG9
-         HZl62/U2hyOlgj8km6aRA/b/nX2GmC3gaq8w7s7A=
-Date:   Sat, 25 Apr 2020 20:01:24 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        id S1726132AbgDZHja (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 26 Apr 2020 03:39:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64708 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726154AbgDZHj3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 26 Apr 2020 03:39:29 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03Q7Vobx017138;
+        Sun, 26 Apr 2020 03:39:28 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30n562s4ur-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Apr 2020 03:39:27 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03Q7Ze4e005122;
+        Sun, 26 Apr 2020 07:39:26 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5hcxy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 26 Apr 2020 07:39:26 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03Q7dNJ061604060
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 26 Apr 2020 07:39:23 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6080D5204F;
+        Sun, 26 Apr 2020 07:39:23 +0000 (GMT)
+Received: from localhost (unknown [9.145.15.30])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 072A552050;
+        Sun, 26 Apr 2020 07:39:22 +0000 (GMT)
+Date:   Sun, 26 Apr 2020 09:39:21 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] mm/hugetlb: Introduce
- HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS
-Message-Id: <20200425200124.20d0c75fcaef05d062d3667c@linux-foundation.org>
-In-Reply-To: <87d37591-caa2-b82b-392a-3a29b2c7e9a6@arm.com>
-References: <1586864670-21799-1-git-send-email-anshuman.khandual@arm.com>
-        <1586864670-21799-4-git-send-email-anshuman.khandual@arm.com>
-        <20200425175511.7a68efb5e2f4436fe0328c1d@linux-foundation.org>
-        <87d37591-caa2-b82b-392a-3a29b2c7e9a6@arm.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 updates for 5.7-rc3
+Message-ID: <your-ad-here.call-01587886761-ext-5453@work.hours>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-25_14:2020-04-24,2020-04-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ bulkscore=0 lowpriorityscore=0 suspectscore=2 clxscore=1015 malwarescore=0
+ phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004260064
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun, 26 Apr 2020 08:13:17 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+Hello Linus,
 
-> 
-> 
-> On 04/26/2020 06:25 AM, Andrew Morton wrote:
-> > On Tue, 14 Apr 2020 17:14:30 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> > 
-> >> There are multiple similar definitions for arch_clear_hugepage_flags() on
-> >> various platforms. This introduces HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS for those
-> >> platforms that need to define their own arch_clear_hugepage_flags() while
-> >> also providing a generic fallback definition for others to use. This help
-> >> reduce code duplication.
-> >>
-> >> ...
-> >>
-> >> --- a/include/linux/hugetlb.h
-> >> +++ b/include/linux/hugetlb.h
-> >> @@ -544,6 +544,10 @@ static inline int is_hugepage_only_range(struct mm_struct *mm,
-> >>  }
-> >>  #endif
-> >>  
-> >> +#ifndef HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS
-> >> +static inline void arch_clear_hugepage_flags(struct page *page) { }
-> >> +#endif
-> >> +
-> >>  #ifndef arch_make_huge_pte
-> >>  static inline pte_t arch_make_huge_pte(pte_t entry, struct vm_area_struct *vma,
-> >>  				       struct page *page, int writable)
-> > 
-> > This is the rather old-school way of doing it.  The Linus-suggested way is
-> > 
-> > #ifndef arch_clear_hugepage_flags
-> > static inline void arch_clear_hugepage_flags(struct page *page)
-> > {
-> > }
-> > #define arch_clear_hugepage_flags arch_clear_hugepage_flags
-> 
-> Do we need that above line here ? Is not that implicit.
+please pull s390 changes for 5.7-rc3.
 
-It depends if other header files want to test whether
-arch_clear_hugepage_flags is already defined.  If the header heorarchy
-is well-defined and working properly, they shouldn't need to, because
-we're reliably indluding the relevant arch header before (or early
-within) include/linux/hugetlb.h.
+Thank you,
+Vasily
 
-It would be nice if
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
 
-#define arch_clear_hugepage_flags arch_clear_hugepage_flags
-#define arch_clear_hugepage_flags arch_clear_hugepage_flags
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
 
-were to generate an compiler error but it doesn't.  If it did we could
-detect these incorrect inclusion orders.
+are available in the Git repository at:
 
-> > #endif
-> > 
-> > And the various arch headers do
-> > 
-> > static inline void arch_clear_hugepage_flags(struct page *page)
-> > {
-> > 	<some implementation>
-> > }
-> > #define arch_clear_hugepage_flags arch_clear_hugepage_flags
-> > 
-> > It's a small difference - mainly to avoid adding two variables to the
-> > overall namespace where one would do.
-> 
-> Understood, will change and resend.
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.7-3
 
-That's OK - I've queued up that fix.
+for you to fetch changes up to 673deb0beba5d39c2e0bc6536e00b03b6ef59cc0:
+
+  s390/protvirt: fix compilation issue (2020-04-25 10:17:24 +0200)
+
+----------------------------------------------------------------
+s390 fixes for 5.7-rc3
+
+- Add few notrace annotations to avoid potential crashes when switching
+  ftrace tracers.
+
+- Avoid setting affinity for floating irqs in pci code.
+
+- Fix build issue found by kbuild test robot.
+
+----------------------------------------------------------------
+Claudio Imbrenda (1):
+      s390/protvirt: fix compilation issue
+
+Niklas Schnelle (1):
+      s390/pci: do not set affinity for floating irqs
+
+Philipp Rudo (1):
+      s390/ftrace: fix potential crashes when switching tracers
+
+ arch/s390/boot/uv.c      | 2 --
+ arch/s390/kernel/diag.c  | 2 +-
+ arch/s390/kernel/smp.c   | 4 ++--
+ arch/s390/kernel/trace.c | 2 +-
+ arch/s390/kernel/uv.c    | 3 ++-
+ arch/s390/pci/pci_irq.c  | 5 +++--
+ 6 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/arch/s390/boot/uv.c b/arch/s390/boot/uv.c
+index 8fde561f1d07..f887a479cdc7 100644
+--- a/arch/s390/boot/uv.c
++++ b/arch/s390/boot/uv.c
+@@ -7,9 +7,7 @@
+ #ifdef CONFIG_PROTECTED_VIRTUALIZATION_GUEST
+ int __bootdata_preserved(prot_virt_guest);
+ #endif
+-#if IS_ENABLED(CONFIG_KVM)
+ struct uv_info __bootdata_preserved(uv_info);
+-#endif
+ 
+ void uv_query_info(void)
+ {
+diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
+index 61f2b0412345..ccba63aaeb47 100644
+--- a/arch/s390/kernel/diag.c
++++ b/arch/s390/kernel/diag.c
+@@ -133,7 +133,7 @@ void diag_stat_inc(enum diag_stat_enum nr)
+ }
+ EXPORT_SYMBOL(diag_stat_inc);
+ 
+-void diag_stat_inc_norecursion(enum diag_stat_enum nr)
++void notrace diag_stat_inc_norecursion(enum diag_stat_enum nr)
+ {
+ 	this_cpu_inc(diag_stat.counter[nr]);
+ 	trace_s390_diagnose_norecursion(diag_map[nr].code);
+diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
+index 7eaabbab2213..10dbb12eb14d 100644
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@ -403,7 +403,7 @@ int smp_find_processor_id(u16 address)
+ 	return -1;
+ }
+ 
+-bool arch_vcpu_is_preempted(int cpu)
++bool notrace arch_vcpu_is_preempted(int cpu)
+ {
+ 	if (test_cpu_flag_of(CIF_ENABLED_WAIT, cpu))
+ 		return false;
+@@ -413,7 +413,7 @@ bool arch_vcpu_is_preempted(int cpu)
+ }
+ EXPORT_SYMBOL(arch_vcpu_is_preempted);
+ 
+-void smp_yield_cpu(int cpu)
++void notrace smp_yield_cpu(int cpu)
+ {
+ 	if (!MACHINE_HAS_DIAG9C)
+ 		return;
+diff --git a/arch/s390/kernel/trace.c b/arch/s390/kernel/trace.c
+index 490b52e85014..11a669f3cc93 100644
+--- a/arch/s390/kernel/trace.c
++++ b/arch/s390/kernel/trace.c
+@@ -14,7 +14,7 @@ EXPORT_TRACEPOINT_SYMBOL(s390_diagnose);
+ 
+ static DEFINE_PER_CPU(unsigned int, diagnose_trace_depth);
+ 
+-void trace_s390_diagnose_norecursion(int diag_nr)
++void notrace trace_s390_diagnose_norecursion(int diag_nr)
+ {
+ 	unsigned long flags;
+ 	unsigned int *depth;
+diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
+index c86d654351d1..4c0677fc8904 100644
+--- a/arch/s390/kernel/uv.c
++++ b/arch/s390/kernel/uv.c
+@@ -23,10 +23,11 @@
+ int __bootdata_preserved(prot_virt_guest);
+ #endif
+ 
++struct uv_info __bootdata_preserved(uv_info);
++
+ #if IS_ENABLED(CONFIG_KVM)
+ int prot_virt_host;
+ EXPORT_SYMBOL(prot_virt_host);
+-struct uv_info __bootdata_preserved(uv_info);
+ EXPORT_SYMBOL(uv_info);
+ 
+ static int __init prot_virt_setup(char *val)
+diff --git a/arch/s390/pci/pci_irq.c b/arch/s390/pci/pci_irq.c
+index fbe97ab2e228..743f257cf2cb 100644
+--- a/arch/s390/pci/pci_irq.c
++++ b/arch/s390/pci/pci_irq.c
+@@ -115,7 +115,6 @@ static struct irq_chip zpci_irq_chip = {
+ 	.name = "PCI-MSI",
+ 	.irq_unmask = pci_msi_unmask_irq,
+ 	.irq_mask = pci_msi_mask_irq,
+-	.irq_set_affinity = zpci_set_irq_affinity,
+ };
+ 
+ static void zpci_handle_cpu_local_irq(bool rescan)
+@@ -276,7 +275,9 @@ int arch_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
+ 		rc = -EIO;
+ 		if (hwirq - bit >= msi_vecs)
+ 			break;
+-		irq = __irq_alloc_descs(-1, 0, 1, 0, THIS_MODULE, msi->affinity);
++		irq = __irq_alloc_descs(-1, 0, 1, 0, THIS_MODULE,
++				(irq_delivery == DIRECTED) ?
++				msi->affinity : NULL);
+ 		if (irq < 0)
+ 			return -ENOMEM;
+ 		rc = irq_set_msi_desc(irq, msi);
