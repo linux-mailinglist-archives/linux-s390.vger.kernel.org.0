@@ -2,131 +2,148 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 696E31BAF8E
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2020 22:32:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF57D1BB09D
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2020 23:36:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgD0Ucr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 Apr 2020 16:32:47 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37984 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgD0Ucr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 27 Apr 2020 16:32:47 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RKSxCl029276;
-        Mon, 27 Apr 2020 20:31:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=pOSG25qvqUqJ+z4S02r79fZiwo4gUeQybxg3JDBq6Zg=;
- b=HKzbYVZxairCzE7vdE2FUh+lRMalt1IgLwG62EZZLOrMDDiweMek4V/UQKTaD29jB+C3
- HhaguVAewckdZLwW+JeHsLxuqK7OFCyqGT+eNZPRqE8MoeyZG6xifNaVeevVI8zPyTph
- ecCkoVkAHGETiAylhjR5pXlAj6mQud8KB6cpUlp/3MArilZtrPgR8MPcKO0Qb8Lz7CC8
- qvVF13zrUX6sIfBnQhl9touKGipc7jilcG/GzjtjNfH6zyFs5dGhUwjoqsGGawh/jxvj
- rMXwCVFCCNaS5tC7N5Om8J27L1gCUE+1yL1IG9QLgGAFv8Yp3z4fnrNipQSt7lbsVwlC Xw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 30nucfuxfs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 20:31:14 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03RKRqKn111291;
-        Mon, 27 Apr 2020 20:31:14 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 30mxwwwt96-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 20:31:13 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03RKV9QE002577;
-        Mon, 27 Apr 2020 20:31:09 GMT
-Received: from [192.168.2.157] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 27 Apr 2020 13:31:09 -0700
-Subject: Re: [PATCH v3 2/4] hugetlbfs: move hugepagesz= parsing to arch
- independent code
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Sandipan Das <sandipan.osd@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S.Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Longpeng <longpeng2@huawei.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mina Almasry <almasrymina@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>
-References: <20200417185049.275845-1-mike.kravetz@oracle.com>
- <20200417185049.275845-3-mike.kravetz@oracle.com>
- <7583dfcc-62d8-2a54-6eef-bcb4e01129b3@gmail.com>
- <5a380060-38db-b690-1003-678ca0f28f07@oracle.com>
- <b1f04f9f-fa46-c2a0-7693-4a0679d2a1ee@oracle.com>
- <20200427131802.3d132055a59535a0e6780e9f@linux-foundation.org>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <b34270b7-fa9b-ce2c-20bc-84279ce6ea59@oracle.com>
-Date:   Mon, 27 Apr 2020 13:31:06 -0700
+        id S1726204AbgD0Vgg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 Apr 2020 17:36:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30994 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726030AbgD0Vgg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 27 Apr 2020 17:36:36 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RLW36a133533;
+        Mon, 27 Apr 2020 17:36:32 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mggtmmvj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 17:36:32 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03RLXVTr136727;
+        Mon, 27 Apr 2020 17:36:32 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mggtmmv3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 17:36:32 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03RLaPtf030139;
+        Mon, 27 Apr 2020 21:36:31 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma01dal.us.ibm.com with ESMTP id 30mcu6m3ac-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 21:36:31 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03RLaTf051970448
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Apr 2020 21:36:29 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1F482124055;
+        Mon, 27 Apr 2020 21:36:29 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D170124053;
+        Mon, 27 Apr 2020 21:36:28 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.200.21])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Apr 2020 21:36:28 +0000 (GMT)
+Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
+ resource in use
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+ <20200407192015.19887-4-akrowiak@linux.ibm.com>
+ <20200414145851.562867ae.cohuck@redhat.com>
+ <35d8c3cb-78bb-8f84-41d8-c6e59d201ba0@linux.ibm.com>
+ <20200416113721.124f9843.cohuck@redhat.com>
+ <20200424053338.658b2a05.pasic@linux.ibm.com>
+ <195d237d-c668-48ca-1125-08eafc0011db@linux.ibm.com>
+ <20200424202348.39bb2eaf.pasic@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <82433013-b132-4f1f-e224-cb2eb6cda98c@linux.ibm.com>
+Date:   Mon, 27 Apr 2020 17:36:28 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200427131802.3d132055a59535a0e6780e9f@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200424202348.39bb2eaf.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004270166
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9604 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270166
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-27_16:2020-04-27,2020-04-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ suspectscore=3 mlxscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ bulkscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004270172
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 4/27/20 1:18 PM, Andrew Morton wrote:
-> On Mon, 27 Apr 2020 12:09:47 -0700 Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> 
->> Previously, a check for hugepages_supported was added before processing
->> hugetlb command line parameters.  On some architectures such as powerpc,
->> hugepages_supported() is not set to true until after command line
->> processing.  Therefore, no hugetlb command line parameters would be
->> accepted.
+
+
+On 4/24/20 2:23 PM, Halil Pasic wrote:
+> On Fri, 24 Apr 2020 13:07:38 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
 >>
->> Remove the additional checks for hugepages_supported.  In hugetlb_init,
->> print a warning if !hugepages_supported and command line parameters were
->> specified.
-> 
-> This applies to [4/4] instead of fixing [2/4].  I guess you'll
-> straighten that out in v4?
+>> On 4/23/20 11:33 PM, Halil Pasic wrote:
+>>> On Thu, 16 Apr 2020 11:37:21 +0200
+>>> Cornelia Huck <cohuck@redhat.com> wrote:
+>>>
+>>>> On Wed, 15 Apr 2020 13:10:10 -0400
+>>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>>>>
+>>>>> On 4/14/20 8:58 AM, Cornelia Huck wrote:
+>>>>>> On Tue,  7 Apr 2020 15:20:03 -0400
+>>>>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>>>>>>> +
+>>>>>>> +	if (ap_drv->in_use)
+>>>>>>> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
+>>>>>> Can we log the offending apm somewhere, preferably with additional info
+>>>>>> that allows the admin to figure out why an error was returned?
+>>>>> One of the things on my TODO list is to add logging to the vfio_ap
+>>>>> module which will track all significant activity within the device
+>>>>> driver. I plan to do that with a patch or set of patches specifically
+>>>>> put together for that purpose. Having said that, the best place to
+>>>>> log this would be in the in_use callback in the vfio_ap device driver
+>>>>> (see next patch) where the APQNs that are in use can be identified.
+>>>>> For now, I will log a message to the dmesg log indicating which
+>>>>> APQNs are in use by the matrix mdev.
+>>>> Sounds reasonable. My main issue was what an admin was supposed to do
+>>>> until logging was in place :)
+>>> Logging may not be the right answer here. Imagine somebody wants to build
+>>> a nice web-tool for managing this stuff at scale -- e.g. something HMC. I
+>>> don't think the solution is to let this tool parse the kernel messages
+>>> and try to relate that to its own transactions.
+>> I don't believe there is no right or wrong answer here; I simply don't
+>> see the relevance of discussing a tool in this context. We are talking
+>> about a sysfs attribute interface here, so - correct me if I'm
+>> mistaken - our options for notifying the user that a queue is in use are
+>> limited to the return code from the sysfs interface and logging. I would
+>> expect that a tool would have to do something similar to the callback
+>> implemented in the vfio_ap device driver and check the APQNs
+>> removed against the APQNs assigned to the mdevs to determine which
+>> is in use.
+>>
+> We are talking interface design. The relevance of discussing a tool is
+> that any userspace tool must come by with whatever interface we come up
+> now. IMHO thinking about the usage (and the client code) is very helpful
+> in avoiding broken interface designs. AFAIK this is one of the basic
+> ideas behind test driven development.
 
-Yes.
+What can a sysfs interface, such as apmask/aqmask, do other than reply with
+a return code given sysfs attributes that store data can only return a 
+count?
+I'm sorry, but I still don't see the relevance.
 
-> btw, was
-> http://lkml.kernel.org/r/CADYN=9Koefrq9H1Y82Q8nMNbeyN4tzhEfvDu5u=sVFjFZCYorA@mail.gmail.com
-> addressed?
+>
+> Regards,
+> Halil
 
-Yes, you pulled a patch into your tree to address this.
-hugetlbfs-remove-hugetlb_add_hstate-warning-for-existing-hstate-fix.patch
-
-I'll send out a v4 with both these issues addressed.  Would like to wait
-until receiving confirmation from someone who can test on powerpc.
--- 
-Mike Kravetz
