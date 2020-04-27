@@ -2,188 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17FCC1B9F40
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2020 11:01:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A93991BA0D4
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Apr 2020 12:10:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726003AbgD0JB5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 Apr 2020 05:01:57 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24173 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726349AbgD0JB5 (ORCPT
+        id S1726898AbgD0KK2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 Apr 2020 06:10:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30032 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726604AbgD0KK2 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 27 Apr 2020 05:01:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587978115;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=fPRyAWSt+cMOeJ08eeHDfjQPpCs9b2/mC+ejEUKG9ik=;
-        b=TU0po+8LZmLFYTxMSMz6k/gFSraO7ghqcVXD7uhcF+ZqQWpghZ0XcXotqtPwlK+B006RV4
-        KhgzzWU8DDMD6NiTICEO7oNC83laDX62jZzsJA9UIxvCxyiAoJVf/lJXzXNvdgWS9O5Efs
-        K8hXappA2hHJKPpDVW7QiEr8dhje2Ko=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-x5qGC7BrMkalyoEG0S9DiQ-1; Mon, 27 Apr 2020 05:01:50 -0400
-X-MC-Unique: x5qGC7BrMkalyoEG0S9DiQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8527107ACCA;
-        Mon, 27 Apr 2020 09:01:49 +0000 (UTC)
-Received: from [10.36.114.127] (ovpn-114-127.ams2.redhat.com [10.36.114.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4393B5D70C;
-        Mon, 27 Apr 2020 09:01:48 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v6 02/10] s390x: Use PSW bits definitions
- in cstart
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        thuth@redhat.com, cohuck@redhat.com
-References: <1587725152-25569-1-git-send-email-pmorel@linux.ibm.com>
- <1587725152-25569-3-git-send-email-pmorel@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <231839f0-41f9-844c-efc4-34893e7b720f@redhat.com>
-Date:   Mon, 27 Apr 2020 11:01:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Mon, 27 Apr 2020 06:10:28 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RA23dD064766
+        for <linux-s390@vger.kernel.org>; Mon, 27 Apr 2020 06:10:28 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mggt01b2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 27 Apr 2020 06:10:27 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03RA2K27066244
+        for <linux-s390@vger.kernel.org>; Mon, 27 Apr 2020 06:10:27 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mggt01a0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 06:10:27 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03RA5EOX027830;
+        Mon, 27 Apr 2020 10:10:25 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma01fra.de.ibm.com with ESMTP id 30mcu8bnhh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Apr 2020 10:10:24 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03RAALdo5963836
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Apr 2020 10:10:21 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 97B6FA4062;
+        Mon, 27 Apr 2020 10:10:21 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 35C6EA405B;
+        Mon, 27 Apr 2020 10:10:19 +0000 (GMT)
+Received: from [9.163.51.206] (unknown [9.163.51.206])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Apr 2020 10:10:18 +0000 (GMT)
+Subject: Re: [RFD] uevent handling for subchannels
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Vineeth Vijayan <vneethv@linux.vnet.ibm.com>
+Cc:     Vineeth Vijayan <vneethv@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Boris Fiuczynski <fiuczy@linux.ibm.com>
+References: <20200403124032.5e70603d.cohuck@redhat.com>
+ <20200417143811.7e6ecb2c.cohuck@redhat.com>
+ <8649ea94-8617-07b6-170e-65c278d9383b@linux.vnet.ibm.com>
+ <c69da1c0-d151-257b-fe43-786e47a3cf9b@linux.vnet.ibm.com>
+ <20200423182001.40345df8.cohuck@redhat.com>
+From:   Peter Oberparleiter <oberpar@linux.ibm.com>
+Message-ID: <53d7d08d-c1d2-dad3-7f01-a165b24b0359@linux.ibm.com>
+Date:   Mon, 27 Apr 2020 12:10:17 +0200
 MIME-Version: 1.0
-In-Reply-To: <1587725152-25569-3-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200423182001.40345df8.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-27_05:2020-04-24,2020-04-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ suspectscore=1 mlxscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ bulkscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
+ mlxlogscore=653 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004270086
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 24.04.20 12:45, Pierre Morel wrote:
-> This patch defines the PSW bits EA/BA used to initialize the PSW masks
-> for exceptions.
+On 23.04.2020 18:20, Cornelia Huck wrote:
+> On Thu, 23 Apr 2020 16:52:24 +0200
+> Vineeth Vijayan <vneethv@linux.vnet.ibm.com> wrote:
+>> Then we could also change the way ccw_device_call_sch_unregister() 
+>> works, where
+>> the subchannel-unregister is happening from an upper layer.
 > 
-> Since some PSW mask definitions exist already in arch_def.h we add these
-> definitions there.
-> We move all PSW definitions together and protect assembler code against
-> C syntax.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->  lib/s390x/asm/arch_def.h | 16 ++++++++++++----
->  s390x/cstart64.S         | 15 ++++++++-------
->  2 files changed, 20 insertions(+), 11 deletions(-)
-> 
-> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-> index 15a4d49..c54409a 100644
-> --- a/lib/s390x/asm/arch_def.h
-> +++ b/lib/s390x/asm/arch_def.h
-> @@ -10,15 +10,22 @@
->  #ifndef _ASM_S390X_ARCH_DEF_H_
->  #define _ASM_S390X_ARCH_DEF_H_
->  
-> +#define PSW_MASK_EXT			0x0100000000000000UL
-> +#define PSW_MASK_DAT			0x0400000000000000UL
-> +#define PSW_MASK_SHORT_PSW		0x0008000000000000UL
-> +#define PSW_MASK_PSTATE			0x0001000000000000UL
-> +#define PSW_MASK_BA			0x0000000080000000UL
-> +#define PSW_MASK_EA			0x0000000100000000UL
-> +
-> +#define PSW_EXCEPTION_MASK	(PSW_MASK_EA | PSW_MASK_BA)
-> +#define PSW_RESET_MASK		(PSW_EXCEPTION_MASK | PSW_MASK_SHORT_PSW)
-> +
-> +#ifndef __ASSEMBLER__
->  struct psw {
->  	uint64_t	mask;
->  	uint64_t	addr;
->  };
->  
-> -#define PSW_MASK_EXT			0x0100000000000000UL
-> -#define PSW_MASK_DAT			0x0400000000000000UL
-> -#define PSW_MASK_PSTATE			0x0001000000000000UL
-> -
->  #define CR0_EXTM_SCLP			0X0000000000000200UL
->  #define CR0_EXTM_EXTC			0X0000000000002000UL
->  #define CR0_EXTM_EMGC			0X0000000000004000UL
-> @@ -297,4 +304,5 @@ static inline uint32_t get_prefix(void)
->  	return current_prefix;
->  }
->  
-> +#endif /* __ASSEMBLER */
->  #endif
-> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-> index ba2e67c..e394b3a 100644
-> --- a/s390x/cstart64.S
-> +++ b/s390x/cstart64.S
-> @@ -12,6 +12,7 @@
->   */
->  #include <asm/asm-offsets.h>
->  #include <asm/sigp.h>
-> +#include <asm/arch_def.h>
->  
->  .section .init
->  
-> @@ -225,19 +226,19 @@ svc_int:
->  
->  	.align	8
->  reset_psw:
-> -	.quad	0x0008000180000000
-> +	.quad	PSW_RESET_MASK
+> Hm, what's the problem here? This seems to be mostly a case of "we did
+> I/O to the device and it appeared not operational; so we go ahead and
+> unregister the subchannel"? Childless I/O subchannels are a bit useless.
 
-I'd really prefer
+Hey Conny,
 
-.quad	PSW_EXCEPTION_MASK | PSW_MASK_SHORT_PSW
+sparked by your proposal, Vineeth and myself looked at the corresponding
+CIO code and wondered if things couldn't be done in a generally
+better/cleaner way. So here we'd like to get your opinion.
 
-here instead and drop PSW_RESET_MASK. Makes it clearer that we are
-talking about a special short psw here.
+In particular, as it is currently, a child-driver (IO subchannel driver,
+vfio-ccw, etc.) unregisters a device owned by a parent-device-driver
+(CSS), which feels from a high-level-view like a layering violation:
+only the parent driver should register and unregister the parent device.
+Also in case no subchannel driver is available (e.g. due to
+driver_override=none), there would be no subchannel ADD event at all.
 
-Apart from that, looks good to me.
+So, tapping into you historical expertise about CIO, is there any reason
+for doing it this way beyond being nice to userspace tooling that
+subchannels with non-working CCW devices are automatically hidden by
+unregistering them?
 
+Removing the child-unregisters-parent logic this would also enable
+manual rebind of subchannels for which only a different driver than the
+default one can successfully talk to the child device, though I'm
+unaware of any current application for that.
+
+
+Regards,
+  Peter
 
 -- 
-Thanks,
-
-David / dhildenb
-
+Peter Oberparleiter
+Linux on Z Development - IBM Germany
