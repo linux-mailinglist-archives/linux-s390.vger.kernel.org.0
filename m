@@ -2,190 +2,198 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C2C81BC175
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2020 16:37:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CC401BCC0E
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2020 21:06:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgD1OhI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 28 Apr 2020 10:37:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3958 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727122AbgD1OhI (ORCPT
+        id S1728715AbgD1TFF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 Apr 2020 15:05:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728539AbgD1TFF (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 28 Apr 2020 10:37:08 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SEUlsr090684;
-        Tue, 28 Apr 2020 10:37:05 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh6ug458-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 10:37:04 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03SEUxfK091974;
-        Tue, 28 Apr 2020 10:37:04 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh6ug44g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 10:37:04 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03SEUQqq002130;
-        Tue, 28 Apr 2020 14:37:03 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma04dal.us.ibm.com with ESMTP id 30mcu6kua2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 14:37:03 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03SEb16r54395262
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 14:37:01 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4579112064;
-        Tue, 28 Apr 2020 14:37:01 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36E98112066;
-        Tue, 28 Apr 2020 14:37:01 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.144.216])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 28 Apr 2020 14:37:01 +0000 (GMT)
-Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
- resource in use
-To:     Harald Freudenberger <freude@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
-        pasic@linux.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com, jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
- <20200407192015.19887-4-akrowiak@linux.ibm.com>
- <75bcbc06-f38f-1aff-138f-5d2a2dd3f7b6@linux.ibm.com>
- <162f7dbc-9dd0-0a42-0d1a-8412a9a848e7@linux.ibm.com>
- <8646519e-a04d-341d-8197-944bf0a1ca4d@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <10913b5e-e6e2-81f5-5d4c-56ab01a8b5f4@linux.ibm.com>
-Date:   Tue, 28 Apr 2020 10:37:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 28 Apr 2020 15:05:05 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E4FC03C1AB;
+        Tue, 28 Apr 2020 12:05:04 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id e26so34682167otr.2;
+        Tue, 28 Apr 2020 12:05:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9mawD2gvz/eqn5BFKTza4oVQ2SByQxW/24pgvyCMUE8=;
+        b=Fdw7gz7MMVRw9oItUSWDsiTku21evW1zad4hFmvLnJEQYB25msghyg8QPQMeTxErrg
+         xfhyK4xVf2Nw5qnZLBngikg5i99Mzng3gvVBZlhV1MHkx36wpr0N9dsjmcGz7lKtkYlv
+         R1kPrvqAyfQlciybOZJB9mlsDpBAPp/bsb0/KxKz8fJXMmuP0kH6k+oVtaW8qPthLaJe
+         UMHLt5U8/mn9DQ0v843hXBGhWu5esf3JikvFUxMWgx8fZZP6c6O/Wvd8WLb5vpCDCAYp
+         bAT9VNr2S2TozkuextPiUIFVM0/0OV92JrJg+D61BG//01Yt4OdpMgM8SbiwR/dKn0hh
+         3uZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9mawD2gvz/eqn5BFKTza4oVQ2SByQxW/24pgvyCMUE8=;
+        b=aw/XSBb2UdUbRIoALJUzE+PTa4+rSYAcSqr4MQ9UnfZ19Noes4hmxJesYCwxBdX3Ba
+         Chp7PMw1ipxqFB1S4aBE0eWtwTHOKtbGJdUzg9MDn3vf+jyW0hNyiJdIWAWBUch3dXPF
+         4HWITmAG7bpEf6/SsWCDzIwYUaVy6fk80nCF/h78F4L1YS3Ezilcip4YnwPo/VygHGEo
+         M/PLYpom0KFdHmneaKpCDm6/uzpj3cptPVf7kZTj5zXwnCak+w680JzvEO8EJlzq4OIX
+         CaOQa5ys3t4J52R5rzR6/JqjmklfPBnxFYBUXIbwSp9DF8NqHdCmhdZqtcSJzLz4nFF2
+         UPIg==
+X-Gm-Message-State: AGi0PuYnxCjeVodmjPjX0nPddByziWXVhz80Kp5QaaMODDHzsqKmKosP
+        YP5yMiYeLMWGEJzFZDwYgyw=
+X-Google-Smtp-Source: APiQypKQbJq0XD420xh+OdLmBYlmBeL4TIoGxvn2rlBhDIrLX4rpFLBUzLsA6hEWYXqgEBS8v4qsAw==
+X-Received: by 2002:aca:488a:: with SMTP id v132mr4198275oia.166.1588100704232;
+        Tue, 28 Apr 2020 12:05:04 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id t10sm5186959oou.38.2020.04.28.12.05.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Apr 2020 12:05:01 -0700 (PDT)
+Date:   Tue, 28 Apr 2020 12:04:59 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org
+Subject: Re: linux-next: Tree for Apr 28
+Message-ID: <20200428190459.GA2299615@ubuntu-s3-xlarge-x86>
+References: <20200428181006.06b4e3bc@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <8646519e-a04d-341d-8197-944bf0a1ca4d@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_09:2020-04-28,2020-04-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- suspectscore=3 bulkscore=0 spamscore=0 mlxscore=0 impostorscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280107
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200428181006.06b4e3bc@canb.auug.org.au>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Tue, Apr 28, 2020 at 06:10:06PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20200424:
+> 
+> The qcom tree still had its build failure for which I reverted a commit.
+> 
+> The hwmon-staging tree gained a build failure for which I reverted
+> a commit.
+> 
+> The mac80211-next tree gained a build failure so I used the version
+> from next-20200424.
+> 
+> The drm-misc tree still had its build failure for which I disabled a
+> COMPILE_TEST setting.
+> 
+> The akpm-current tree gained a conflict against the risc-v tree.
+> 
+> The akpm tree lost a patch that turned up elsewhere.
+> 
+> Non-merge commits (relative to Linus' tree): 4451
+>  5474 files changed, 151275 insertions(+), 63274 deletions(-)
 
+I am seeing the following build error on s390 defconfig, caused by
+commit 743f242d65ec ("mm: support compat_sys_process_madvise").
+Apologies if it has already been reported, I did a search of lore and
+found nothing.
 
-On 4/28/20 7:07 AM, Harald Freudenberger wrote:
-> On 28.04.20 00:24, Tony Krowiak wrote:
->>
->> On 4/27/20 4:20 AM, Pierre Morel wrote:
->>>
->>> On 2020-04-07 21:20, Tony Krowiak wrote:
->>>> Introduces a new driver callback to prevent a root user from unbinding
->>>> an AP queue from its device driver if the queue is in use. The intent of
->>>> this callback is to provide a driver with the means to prevent a root user
->>>> from inadvertently taking a queue away from a guest and giving it to the
->>>> host while the guest is still using it.
->>> How can we know, at this point if the guest uses or not the queue?
->> The struct ap_matrix_mdev has a field, struct kvm *kvm, which holds a pointer to KVM when
->> the matrix mdev is in use by a guest. This patch series also introduces a shadow_crycb (soon to
->> be shadow_apcb) which holds the AP configuration for the guest. Between those two things,
->> the driver can detect when a queue is in use by a guest.
->>
->>> Do you want to say that this prevents to take away a queue when it is currently assigned to a VFIO device?
->>> and with a guest currently using this VFIO device?
->> No, I do not. The intent here is to enforce the proper procedure for giving up a queue so it is done
->> deliberately. Before taking a queue away from the matrix mdev, its APQN should be unassigned
->> from the matrix mdev. That is not to say that if there are major objections to this that we can't
->> base in_use upon the queue being in use by a guest at the time. Maybe that is preferable to
->> the community. I'll leave it to them to state their case.
->>
->>>> The callback will
->>>> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
->>>> attributes would result in one or more AP queues being removed from its
->>>> driver. If the callback responds in the affirmative for any driver
->>>> queried, the change to the apmask or aqmask will be rejected with a device
->>>> in use error.
->>> AFAIU you mean that Linux's driver's binding and unbinding mechanism is not sufficient to avoid this issue because unbind can not be refused by the driver.
->> Correct!
->>
->>>
->>> The reason why we do not want a single queue to be removed from the VFIO driver is because the VFIO drivers works on a matrix, not on queues, and for the matrix to be consistent it needs to acquire all queues defined by the cross product of all APID and AQID assigned to the matrix.
->> Not correct. The reason why is because we do not want a queue to be surreptitiously removed
->> without the guest administrator being aware of its removal.
->>
->>> This functionality is valid for the host as for the guests and is handled automatically by the firmware with the CRYCB.
->>> The AP bus uses QCI to retrieve the host CRYCB and build the hosts AP queues.
->>>
->>> If instead to mix VFIO CRYCB matrix handling and queues at the same level inside the AP bus we separate these different firmware entities in two different software entities.
->>>
->>> If we make the AP bus sit above a CRYCB/Matrix bus, and in the way virtualize the QCI and test AP queue instructions:
->>> - we can directly pass a matrix device to the guest though a VFIO matrix device
->>> - the consistence will be automatic
->>> - the VFIO device and parent device will be of the same kind which would make the design much more clearer.
->>> - there will be no need for these callback because the consistence of the matrix will be guaranteed by firmware
->> As stated in my response above, the issue here is not consistency. While the design you describe
->> may be reasonable, it is a major departure from what is out in the field. In other words, that ship
->> has sailed.
->>
->>>
->>>> For this patch, only non-default drivers will be queried. Currently,
->>>> there is only one non-default driver, the vfio_ap device driver.
->>> You mean that the admin may take queues away from the "default driver", while the queue is in use, to give it to an other driver?
->>> Why is it to avoid in one way and not in the other way?
->> Because the default drivers have direct control over the queues and can ensure they are empty
->> and reset before giving up control. The vfio driver does not have direct control over the queues
->> because they have been passed through to the guest.
-> No, that's not true. The 'default' drivers have no change to do anything with an APQN when it is removed
-> from the driver. They get the very same notification which is the remove() callback as the vfio dd gets
-> and have the very same change to do something here. The more interesting thing here is, that the remove()
-> callback invocation is usually because a hardware HAS BEEN GONE AWAY. Neither the 'default' drivers
-> nor the vfio dd can do a reset on a not-any-more existing APQN.
-> And it is also not true that the vfio dd has no direct control over the queue because they have been passed
-> through to the guest. It's the job of the vfio dd to modify the guest's APM, AQM, ADM masks to disable
-> the guest's access to the APQN and then the vfio can (try to) do a reset.
+Cheers,
+Nathan
 
-The context here is when a sysadmin deliberately takes one or more 
-queues away from a
-guest by changing the apmask or aqmask; we are not talking about the the 
-case where an
-adapter is deconfigured or disappears. The idea here is to prevent a 
-sysadmin for the host
-from taking a queue away from a KVM guest that is using it. IMHO, control
-over that queue should belong to the guest until such time as the guest 
-gives it up or the
-guest is terminated. Since the zcrypt drivers are directly responsible 
-for their AP queues,
-it is not necessary to implement this callback, although there is 
-nothing precluding that.
-
->>>> The
->>>> vfio_ap device driver manages AP queues passed through to one or more
->>>> guests
->>> I read this as if a queue may be passed to several guest...
->>> please, rephrase or explain.
->> AP queues is plural, so it is true that AP queues can be passed through
->> to more than one guest. I see your point, however, so I'll reword that
->> to be more clear.
->>
->>>> and we don't want to unexpectedly take AP resources away from
->>>> guests which are most likely independently administered.
->>> When you say "independently administered", you mean as a second admin inside the host, don't you?
->> I mean that a guest can be administered by a different person than the host administrator.
->> Again, I'll try to clarify this.
->>
->>>
->>> Regards,
->>> Pierre
->>>
-
+$ make -j$(nproc) -s ARCH=s390 CROSS_COMPILE=s390x-linux- defconfig all
+...
+mm/madvise.c: In function '__se_compat_sys_process_madvise':
+./include/linux/compiler.h:394:38: error: call to '__compiletime_assert_162' declared with attribute error: BUILD_BUG_ON failed: sizeof(unsigned long) > 4 && !__TYPE_IS_PTR(unsigned long)
+  394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |                                      ^
+./include/linux/compiler.h:375:4: note: in definition of macro '__compiletime_assert'
+  375 |    prefix ## suffix();    \
+      |    ^~~~~~
+./include/linux/compiler.h:394:2: note: in expansion of macro '_compiletime_assert'
+  394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+./arch/s390/include/asm/compat.h:18:2: note: in expansion of macro 'BUILD_BUG_ON'
+   18 |  BUILD_BUG_ON(sizeof(t) > 4 && !__TYPE_IS_PTR(t)); \
+      |  ^~~~~~~~~~~~
+./include/linux/syscalls.h:110:27: note: in expansion of macro '__SC_DELOUSE'
+  110 | #define __MAP3(m,t,a,...) m(t,a), __MAP2(m,__VA_ARGS__)
+      |                           ^
+./include/linux/syscalls.h:111:35: note: in expansion of macro '__MAP3'
+  111 | #define __MAP4(m,t,a,...) m(t,a), __MAP3(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:112:35: note: in expansion of macro '__MAP4'
+  112 | #define __MAP5(m,t,a,...) m(t,a), __MAP4(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:113:35: note: in expansion of macro '__MAP5'
+  113 | #define __MAP6(m,t,a,...) m(t,a), __MAP5(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:114:22: note: in expansion of macro '__MAP6'
+  114 | #define __MAP(n,...) __MAP##n(__VA_ARGS__)
+      |                      ^~~~~
+./arch/s390/include/asm/syscall_wrapper.h:80:36: note: in expansion of macro '__MAP'
+   80 |   long ret = __do_compat_sys##name(__MAP(x,__SC_DELOUSE,__VA_ARGS__));\
+      |                                    ^~~~~
+./include/linux/compat.h:66:2: note: in expansion of macro 'COMPAT_SYSCALL_DEFINEx'
+   66 |  COMPAT_SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
+      |  ^~~~~~~~~~~~~~~~~~~~~~
+mm/madvise.c:1314:1: note: in expansion of macro 'COMPAT_SYSCALL_DEFINE6'
+ 1314 | COMPAT_SYSCALL_DEFINE6(process_madvise, int, which, compat_pid_t, upid,
+      | ^~~~~~~~~~~~~~~~~~~~~~
+./include/linux/compiler.h:394:38: error: call to '__compiletime_assert_164' declared with attribute error: BUILD_BUG_ON failed: sizeof(unsigned long) > 4 && !__TYPE_IS_PTR(unsigned long)
+  394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |                                      ^
+./include/linux/compiler.h:375:4: note: in definition of macro '__compiletime_assert'
+  375 |    prefix ## suffix();    \
+      |    ^~~~~~
+./include/linux/compiler.h:394:2: note: in expansion of macro '_compiletime_assert'
+  394 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+      |  ^~~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+   39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+      |                                     ^~~~~~~~~~~~~~~~~~
+./include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+   50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+      |  ^~~~~~~~~~~~~~~~
+./arch/s390/include/asm/compat.h:18:2: note: in expansion of macro 'BUILD_BUG_ON'
+   18 |  BUILD_BUG_ON(sizeof(t) > 4 && !__TYPE_IS_PTR(t)); \
+      |  ^~~~~~~~~~~~
+./include/linux/syscalls.h:108:27: note: in expansion of macro '__SC_DELOUSE'
+  108 | #define __MAP1(m,t,a,...) m(t,a)
+      |                           ^
+./include/linux/syscalls.h:109:35: note: in expansion of macro '__MAP1'
+  109 | #define __MAP2(m,t,a,...) m(t,a), __MAP1(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:110:35: note: in expansion of macro '__MAP2'
+  110 | #define __MAP3(m,t,a,...) m(t,a), __MAP2(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:111:35: note: in expansion of macro '__MAP3'
+  111 | #define __MAP4(m,t,a,...) m(t,a), __MAP3(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:112:35: note: in expansion of macro '__MAP4'
+  112 | #define __MAP5(m,t,a,...) m(t,a), __MAP4(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:113:35: note: in expansion of macro '__MAP5'
+  113 | #define __MAP6(m,t,a,...) m(t,a), __MAP5(m,__VA_ARGS__)
+      |                                   ^~~~~~
+./include/linux/syscalls.h:114:22: note: in expansion of macro '__MAP6'
+  114 | #define __MAP(n,...) __MAP##n(__VA_ARGS__)
+      |                      ^~~~~
+./arch/s390/include/asm/syscall_wrapper.h:80:36: note: in expansion of macro '__MAP'
+   80 |   long ret = __do_compat_sys##name(__MAP(x,__SC_DELOUSE,__VA_ARGS__));\
+      |                                    ^~~~~
+./include/linux/compat.h:66:2: note: in expansion of macro 'COMPAT_SYSCALL_DEFINEx'
+   66 |  COMPAT_SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
+      |  ^~~~~~~~~~~~~~~~~~~~~~
+mm/madvise.c:1314:1: note: in expansion of macro 'COMPAT_SYSCALL_DEFINE6'
+ 1314 | COMPAT_SYSCALL_DEFINE6(process_madvise, int, which, compat_pid_t, upid,
+      | ^~~~~~~~~~~~~~~~~~~~~~
+make[2]: *** [scripts/Makefile.build:266: mm/madvise.o] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [Makefile:1723: mm] Error 2
+make[1]: *** Waiting for unfinished jobs....
+...
