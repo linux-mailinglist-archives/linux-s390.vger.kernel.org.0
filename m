@@ -2,493 +2,240 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 500971BCDCE
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2020 22:58:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 632171BCFFD
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2020 00:31:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgD1U6c (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 28 Apr 2020 16:58:32 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:50682 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbgD1U6c (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 28 Apr 2020 16:58:32 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SKqqwx036350;
-        Tue, 28 Apr 2020 20:56:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=TcR/3N1Umwt2ZLhtt7996sCLAl5ai2GiRInnwoKySSk=;
- b=XN2F5EtTvJ+WThIo726f0bMN3jaeFq/78DRWL/+UoEp9S9gMTISsHhBuSDFguiFHiohE
- u1zlNaPfsgRuuJlHqMq0LVBQEQ3/4r3sXoczuOMIQJyrq1zUg5CMI3J5oytKP7LkC6OM
- 87CQthCXTAf7p7lYhUIZqeIIyYG2iKhOEW0+WPwQlDscHIXikHPGFy1T5Vf4Y3om0/z8
- rPwe9YX1QnAsmajpeqGsUjoPPBLRaV0t6tDBI5yc2W8qnAYjolof7U1IXU1HxstcEh4u
- y17yc/Iy20rl+dtZFLKuxRIB5ZX9x4O1Xks1aAWGVC8kzZ7O81LIatuJveRcjvpGdGgP HQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 30nucg2bu0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 20:56:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03SKr0hx002847;
-        Tue, 28 Apr 2020 20:56:37 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 30my0ebv3d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 20:56:37 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03SKuYdJ026275;
-        Tue, 28 Apr 2020 20:56:34 GMT
-Received: from monkey.oracle.com (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 28 Apr 2020 13:56:33 -0700
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Longpeng <longpeng2@huawei.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mina Almasry <almasrymina@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>
-Subject: [PATCH v4 4/4] hugetlbfs: clean up command line processing
-Date:   Tue, 28 Apr 2020 13:56:14 -0700
-Message-Id: <20200428205614.246260-5-mike.kravetz@oracle.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200428205614.246260-1-mike.kravetz@oracle.com>
-References: <20200428205614.246260-1-mike.kravetz@oracle.com>
+        id S1726512AbgD1Wak (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 Apr 2020 18:30:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5266 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725934AbgD1Wak (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 28 Apr 2020 18:30:40 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SM2oeZ060650;
+        Tue, 28 Apr 2020 18:30:36 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh6ux3p1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 18:30:35 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03SMRrGi122875;
+        Tue, 28 Apr 2020 18:30:35 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh6ux3np-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 18:30:35 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03SMPPIj013332;
+        Tue, 28 Apr 2020 22:30:34 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02wdc.us.ibm.com with ESMTP id 30mcu6fqc8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Apr 2020 22:30:34 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03SMUX4714418608
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Apr 2020 22:30:33 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 51BB5AE063;
+        Tue, 28 Apr 2020 22:30:33 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C2E9DAE068;
+        Tue, 28 Apr 2020 22:30:32 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.144.216])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Apr 2020 22:30:32 +0000 (GMT)
+Subject: Re: [PATCH v7 01/15] s390/vfio-ap: store queue struct in hash table
+ for quick access
+To:     Harald Freudenberger <freude@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+ <20200407192015.19887-2-akrowiak@linux.ibm.com>
+ <20200424055732.7663896d.pasic@linux.ibm.com>
+ <d15b4a8e-66eb-e4ce-c8ac-6885519940aa@linux.ibm.com>
+ <20200427171739.76291a74.pasic@linux.ibm.com>
+ <6ea12752-d23f-abe4-8d5f-3e7738984576@linux.ibm.com>
+ <20200428120726.3f769ce3.pasic@linux.ibm.com>
+ <bc6ac9ef-f9ad-f41a-024d-db3d5c2ddd10@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <e3777193-2b9c-e04b-2d2e-c4337d706d93@linux.ibm.com>
+Date:   Tue, 28 Apr 2020 18:30:32 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <bc6ac9ef-f9ad-f41a-024d-db3d5c2ddd10@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
- suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9605 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- mlxlogscore=999 impostorscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004280163
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-28_14:2020-04-28,2020-04-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ suspectscore=3 bulkscore=0 spamscore=0 mlxscore=0 impostorscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280166
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-With all hugetlb page processing done in a single file clean up code.
-- Make code match desired semantics
-  - Update documentation with semantics
-- Make all warnings and errors messages start with 'HugeTLB:'.
-- Consistently name command line parsing routines.
-- Warn if !hugepages_supported() and command line parameters have
-  been specified.
-- Add comments to code
-  - Describe some of the subtle interactions
-  - Describe semantics of command line arguments
 
-This patch also fixes issues with implicitly setting the number of
-gigantic huge pages to preallocate.  Previously on X86 command line,
-        hugepages=2 default_hugepagesz=1G
-would result in zero 1G pages being preallocated and,
-        # grep HugePages_Total /proc/meminfo
-        HugePages_Total:       0
-        # sysctl -a | grep nr_hugepages
-        vm.nr_hugepages = 2
-        vm.nr_hugepages_mempolicy = 2
-        # cat /proc/sys/vm/nr_hugepages
-        2
-After this patch 2 gigantic pages will be preallocated and all the
-proc, sysfs, sysctl and meminfo files will accurately reflect this.
 
-To address the issue with gigantic pages, a small change in behavior
-was made to command line processing.  Previously the command line,
-        hugepages=128 default_hugepagesz=2M hugepagesz=2M hugepages=256
-would result in the allocation of 256 2M huge pages.  The value 128
-would be ignored without any warning.  After this patch, 128 2M pages
-will be allocated and a warning message will be displayed indicating
-the value of 256 is ignored.  This change in behavior is required
-because allocation of implicitly specified gigantic pages must be done
-when the default_hugepagesz= is encountered for gigantic pages.
-Previously the code waited until later in the boot process (hugetlb_init),
-to allocate pages of default size.  However the bootmem allocator required
-for gigantic allocations is not available at this time.
+On 4/28/20 6:57 AM, Harald Freudenberger wrote:
+> On 28.04.20 12:07, Halil Pasic wrote:
+>> On Mon, 27 Apr 2020 17:48:58 -0400
+>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>>
+>>> On 4/27/20 11:17 AM, Halil Pasic wrote:
+>>>> On Mon, 27 Apr 2020 15:05:23 +0200
+>>>> Harald Freudenberger <freude@linux.ibm.com> wrote:
+>>>>
+>>>>> On 24.04.20 05:57, Halil Pasic wrote:
+>>>>>> On Tue,  7 Apr 2020 15:20:01 -0400
+>>>>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>>>>>>    
+>>>>>>> Rather than looping over potentially 65535 objects, let's store the
+>>>>>>> structures for caching information about queue devices bound to the
+>>>>>>> vfio_ap device driver in a hash table keyed by APQN.
+>>>>>> @Harald:
+>>>>>> Would it make sense to make the efficient lookup of an apqueue base
+>>>>>> on its APQN core AP functionality instead of each driver figuring it out
+>>>>>> on it's own?
+>>>>>>
+>>>>>> If I'm not wrong the zcrypt device/driver(s) must the problem of
+>>>>>> looking up a queue based on its APQN as well.
+>>>>>>
+>>>>>> For instance struct ep11_cprb has a target_id filed
+>>>>>> (arch/s390/include/uapi/asm/zcrypt.h).
+>>>>>>
+>>>>>> Regards,
+>>>>>> Halil
+>>>>> Hi Halil
+>>>>>
+>>>>> no, the zcrypt drivers don't have this problem. They build up their own device object which
+>>>>> includes a pointer to the base ap device.
+>>>> I'm a bit confused. Doesn't your code loop first trough the ap_card
+>>>> objects to find the APID portion of the APQN, and then loop the queue
+>>>> list of the matching card to find the right ap_queue object? Or did I
+>>>> miss something? Isn't that what _zcrypt_send_ep11_cprb() does? Can you
+>>>> point me to the code that avoids the lookup (by apqn) for zcrypt?
+>>> The code you reference, _zcrypt_send_ep11_cprb(), does loop through
+>>> each queue associated with each card, but it doesn't appear to be
+>>> looking for
+>>> a queue with a particular APQN. It appears to be looking for a queue
+>>> meeting a specific set of conditions. At least that's my take after
+>>> taking a very
+>>> brief look at the code, so I'm not sure that applies here.
+>>>
+>> One of the possible conditions is that the APQN is in the targets array.
+>> Please have another look at the code below, is_desired_ep11_queue()
+>> and is_desired_ep11_card() do APQI and APID part of the check
+>> respectively:
+>>
+>>          for_each_zcrypt_card(zc) {
+>>                  /* Check for online EP11 cards */
+>>                  if (!zc->online || !(zc->card->functions & 0x04000000))
+>>                          continue;
+>>                  /* Check for user selected EP11 card */
+>>                  if (targets &&
+>>                      !is_desired_ep11_card(zc->card->id, target_num, targets))
+>>                          continue;
+>>                  /* check if device node has admission for this card */
+>>                  if (!zcrypt_check_card(perms, zc->card->id))
+>>                          continue;
+>>                  /* get weight index of the card device  */
+>>                  weight = speed_idx_ep11(func_code) * zc->speed_rating[SECKEY];
+>>                  if (zcrypt_card_compare(zc, pref_zc, weight, pref_weight))
+>>                          continue;
+>>                  for_each_zcrypt_queue(zq, zc) {
+>>                          /* check if device is online and eligible */
+>>                          if (!zq->online ||
+>>                              !zq->ops->send_ep11_cprb ||
+>>                              (targets &&
+>>                               !is_desired_ep11_queue(zq->queue->qid,
+>>                                                      target_num, targets)))
+>>
+>>
+>> Yes the size of targets may or may not be 1 (example for size == 1 is
+>> the invocation form ep11_cryptsingle()) and the respective costs
+>> depend on the usual size of the array. Since the goal of the whole
+>> exercise seems to be to pick a single queue, and we settle with the first
+>> suitable (first not in the input array, but in our lists) that is
+>> suitable, I assumed we wouldn't need many hashtable lookups.
+>>
+>> Regards,
+>> Halil
+> again, this is all code related to zcrypt card and queues and has nothing directly to do with ap queue and ap cards.
+> If you want to have a look how this works for ap devices, have a look into the scan routines for the ap bus in ap_bus.c
+> There you can find a bus_for_each_device() which would fit together with the right matching function for your needs.
+> And this is exactly what Tony implemented in the first shot. However, as written I can provide something like that
+> for you.
+> One note for the improvement via hash list with the argument about the max 65535 objects.
+> Think about a real big machine which has currently up to 30 crypto cards (z15 GA1.5) which when CEX7S are
+> plugged appear as 60 crypto adapters and have up to 85 domains each. When all these crypto resources
+> are assigned to one LPAR we end up in 60x85 = 5100 APQNs. Well, of course with a hash you can improve
+> the linear search through an array or list but can you measure the performance gain and then compare this
+> to the complexity.  ... just some thoughts about beautifying code ...
 
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Acked-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>  [s390]
-Acked-by: Will Deacon <will@kernel.org>
-Tested-by: Sandipan Das <sandipan@linux.ibm.com>
----
- .../admin-guide/kernel-parameters.txt         |  40 +++--
- Documentation/admin-guide/mm/hugetlbpage.rst  |  35 ++++
- mm/hugetlb.c                                  | 149 ++++++++++++++----
- 3 files changed, 179 insertions(+), 45 deletions(-)
+I set up a test case to compare searching using a hashtable verses using 
+a list.
+I created both a hashtable and a list of 5100 objects. Each structure 
+had a single
+APQN field. I then randomly searched both the hashtable and the list for
+each APQN. The following table contains the result of 5 test runs. The 
+elapsed
+times are in nanoseconds.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 7bc83f3d9bdf..cbe657b86d0e 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -834,12 +834,15 @@
- 			See also Documentation/networking/decnet.txt.
- 
- 	default_hugepagesz=
--			[same as hugepagesz=] The size of the default
--			HugeTLB page size. This is the size represented by
--			the legacy /proc/ hugepages APIs, used for SHM, and
--			default size when mounting hugetlbfs filesystems.
--			Defaults to the default architecture's huge page size
--			if not specified.
-+			[HW] The size of the default HugeTLB page. This is
-+			the size represented by the legacy /proc/ hugepages
-+			APIs.  In addition, this is the default hugetlb size
-+			used for shmget(), mmap() and mounting hugetlbfs
-+			filesystems.  If not specified, defaults to the
-+			architecture's default huge page size.  Huge page
-+			sizes are architecture dependent.  See also
-+			Documentation/admin-guide/mm/hugetlbpage.rst.
-+			Format: size[KMG]
- 
- 	deferred_probe_timeout=
- 			[KNL] Debugging option to set a timeout in seconds for
-@@ -1479,13 +1482,24 @@
- 			hugepages using the cma allocator. If enabled, the
- 			boot-time allocation of gigantic hugepages is skipped.
- 
--	hugepages=	[HW,X86-32,IA-64] HugeTLB pages to allocate at boot.
--	hugepagesz=	[HW,IA-64,PPC,X86-64] The size of the HugeTLB pages.
--			On x86-64 and powerpc, this option can be specified
--			multiple times interleaved with hugepages= to reserve
--			huge pages of different sizes. Valid pages sizes on
--			x86-64 are 2M (when the CPU supports "pse") and 1G
--			(when the CPU supports the "pdpe1gb" cpuinfo flag).
-+	hugepages=	[HW] Number of HugeTLB pages to allocate at boot.
-+			If this follows hugepagesz (below), it specifies
-+			the number of pages of hugepagesz to be allocated.
-+			If this is the first HugeTLB parameter on the command
-+			line, it specifies the number of pages to allocate for
-+			the default huge page size.  See also
-+			Documentation/admin-guide/mm/hugetlbpage.rst.
-+			Format: <integer>
-+
-+	hugepagesz=
-+			[HW] The size of the HugeTLB pages.  This is used in
-+			conjunction with hugepages (above) to allocate huge
-+			pages of a specific size at boot.  The pair
-+			hugepagesz=X hugepages=Y can be specified once for
-+			each supported huge page size. Huge page sizes are
-+			architecture dependent.  See also
-+			Documentation/admin-guide/mm/hugetlbpage.rst.
-+			Format: size[KMG]
- 
- 	hung_task_panic=
- 			[KNL] Should the hung task detector generate panics.
-diff --git a/Documentation/admin-guide/mm/hugetlbpage.rst b/Documentation/admin-guide/mm/hugetlbpage.rst
-index 1cc0bc78d10e..5026e58826e2 100644
---- a/Documentation/admin-guide/mm/hugetlbpage.rst
-+++ b/Documentation/admin-guide/mm/hugetlbpage.rst
-@@ -100,6 +100,41 @@ with a huge page size selection parameter "hugepagesz=<size>".  <size> must
- be specified in bytes with optional scale suffix [kKmMgG].  The default huge
- page size may be selected with the "default_hugepagesz=<size>" boot parameter.
- 
-+Hugetlb boot command line parameter semantics
-+hugepagesz - Specify a huge page size.  Used in conjunction with hugepages
-+	parameter to preallocate a number of huge pages of the specified
-+	size.  Hence, hugepagesz and hugepages are typically specified in
-+	pairs such as:
-+		hugepagesz=2M hugepages=512
-+	hugepagesz can only be specified once on the command line for a
-+	specific huge page size.  Valid huge page sizes are architecture
-+	dependent.
-+hugepages - Specify the number of huge pages to preallocate.  This typically
-+	follows a valid hugepagesz or default_hugepagesz parameter.  However,
-+	if hugepages is the first or only hugetlb command line parameter it
-+	implicitly specifies the number of huge pages of default size to
-+	allocate.  If the number of huge pages of default size is implicitly
-+	specified, it can not be overwritten by a hugepagesz,hugepages
-+	parameter pair for the default size.
-+	For example, on an architecture with 2M default huge page size:
-+		hugepages=256 hugepagesz=2M hugepages=512
-+	will result in 256 2M huge pages being allocated and a warning message
-+	indicating that the hugepages=512 parameter is ignored.  If a hugepages
-+	parameter is preceded by an invalid hugepagesz parameter, it will
-+	be ignored.
-+default_hugepagesz - Specify the default huge page size.  This parameter can
-+	only be specified once on the command line.  default_hugepagesz can
-+	optionally be followed by the hugepages parameter to preallocate a
-+	specific number of huge pages of default size.  The number of default
-+	sized huge pages to preallocate can also be implicitly specified as
-+	mentioned in the hugepages section above.  Therefore, on an
-+	architecture with 2M default huge page size:
-+		hugepages=256
-+		default_hugepagesz=2M hugepages=256
-+		hugepages=256 default_hugepagesz=2M
-+	will all result in 256 2M huge pages being allocated.  Valid default
-+	huge page size is architecture dependent.
-+
- When multiple huge page sizes are supported, ``/proc/sys/vm/nr_hugepages``
- indicates the current number of pre-allocated huge pages of the default size.
- Thus, one can use the following command to dynamically allocate/deallocate
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 2ae0e506cfc7..8852b0b12270 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -59,8 +59,8 @@ __initdata LIST_HEAD(huge_boot_pages);
- /* for command line parsing */
- static struct hstate * __initdata parsed_hstate;
- static unsigned long __initdata default_hstate_max_huge_pages;
--static unsigned long __initdata default_hstate_size;
- static bool __initdata parsed_valid_hugepagesz = true;
-+static bool __initdata parsed_default_hugepagesz;
- 
- /*
-  * Protects updates to hugepage_freelists, hugepage_activelist, nr_huge_pages,
-@@ -3060,7 +3060,7 @@ static void __init hugetlb_sysfs_init(void)
- 		err = hugetlb_sysfs_add_hstate(h, hugepages_kobj,
- 					 hstate_kobjs, &hstate_attr_group);
- 		if (err)
--			pr_err("Hugetlb: Unable to add hstate %s", h->name);
-+			pr_err("HugeTLB: Unable to add hstate %s", h->name);
- 	}
- }
- 
-@@ -3164,7 +3164,7 @@ static void hugetlb_register_node(struct node *node)
- 						nhs->hstate_kobjs,
- 						&per_node_hstate_attr_group);
- 		if (err) {
--			pr_err("Hugetlb: Unable to add hstate %s for node %d\n",
-+			pr_err("HugeTLB: Unable to add hstate %s for node %d\n",
- 				h->name, node->dev.id);
- 			hugetlb_unregister_node(node);
- 			break;
-@@ -3212,22 +3212,41 @@ static int __init hugetlb_init(void)
- {
- 	int i;
- 
--	if (!hugepages_supported())
-+	if (!hugepages_supported()) {
-+		if (hugetlb_max_hstate || default_hstate_max_huge_pages)
-+			pr_warn("HugeTLB: huge pages not supported, ignoring associated command-line parameters\n");
- 		return 0;
-+	}
- 
--	if (!size_to_hstate(default_hstate_size)) {
--		if (default_hstate_size != 0) {
--			pr_err("HugeTLB: unsupported default_hugepagesz %lu. Reverting to %lu\n",
--			       default_hstate_size, HPAGE_SIZE);
-+	/*
-+	 * Make sure HPAGE_SIZE (HUGETLB_PAGE_ORDER) hstate exists.  Some
-+	 * architectures depend on setup being done here.
-+	 */
-+	hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
-+	if (!parsed_default_hugepagesz) {
-+		/*
-+		 * If we did not parse a default huge page size, set
-+		 * default_hstate_idx to HPAGE_SIZE hstate. And, if the
-+		 * number of huge pages for this default size was implicitly
-+		 * specified, set that here as well.
-+		 * Note that the implicit setting will overwrite an explicit
-+		 * setting.  A warning will be printed in this case.
-+		 */
-+		default_hstate_idx = hstate_index(size_to_hstate(HPAGE_SIZE));
-+		if (default_hstate_max_huge_pages) {
-+			if (default_hstate.max_huge_pages) {
-+				char buf[32];
-+
-+				string_get_size(huge_page_size(&default_hstate),
-+					1, STRING_UNITS_2, buf, 32);
-+				pr_warn("HugeTLB: Ignoring hugepages=%lu associated with %s page size\n",
-+					default_hstate.max_huge_pages, buf);
-+				pr_warn("HugeTLB: Using hugepages=%lu for number of default huge pages\n",
-+					default_hstate_max_huge_pages);
-+			}
-+			default_hstate.max_huge_pages =
-+				default_hstate_max_huge_pages;
- 		}
--
--		default_hstate_size = HPAGE_SIZE;
--		hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
--	}
--	default_hstate_idx = hstate_index(size_to_hstate(default_hstate_size));
--	if (default_hstate_max_huge_pages) {
--		if (!default_hstate.max_huge_pages)
--			default_hstate.max_huge_pages = default_hstate_max_huge_pages;
- 	}
- 
- 	hugetlb_cma_check();
-@@ -3287,20 +3306,29 @@ void __init hugetlb_add_hstate(unsigned int order)
- 	parsed_hstate = h;
- }
- 
--static int __init hugetlb_nrpages_setup(char *s)
-+/*
-+ * hugepages command line processing
-+ * hugepages normally follows a valid hugepagsz or default_hugepagsz
-+ * specification.  If not, ignore the hugepages value.  hugepages can also
-+ * be the first huge page command line  option in which case it implicitly
-+ * specifies the number of huge pages for the default size.
-+ */
-+static int __init hugepages_setup(char *s)
- {
- 	unsigned long *mhp;
- 	static unsigned long *last_mhp;
- 
- 	if (!parsed_valid_hugepagesz) {
--		pr_warn("hugepages = %s preceded by "
--			"an unsupported hugepagesz, ignoring\n", s);
-+		pr_warn("HugeTLB: hugepages=%s does not follow a valid hugepagesz, ignoring\n", s);
- 		parsed_valid_hugepagesz = true;
--		return 1;
-+		return 0;
- 	}
-+
- 	/*
--	 * !hugetlb_max_hstate means we haven't parsed a hugepagesz= parameter yet,
--	 * so this hugepages= parameter goes to the "default hstate".
-+	 * !hugetlb_max_hstate means we haven't parsed a hugepagesz= parameter
-+	 * yet, so this hugepages= parameter goes to the "default hstate".
-+	 * Otherwise, it goes with the previously parsed hugepagesz or
-+	 * default_hugepagesz.
- 	 */
- 	else if (!hugetlb_max_hstate)
- 		mhp = &default_hstate_max_huge_pages;
-@@ -3308,8 +3336,8 @@ static int __init hugetlb_nrpages_setup(char *s)
- 		mhp = &parsed_hstate->max_huge_pages;
- 
- 	if (mhp == last_mhp) {
--		pr_warn("hugepages= specified twice without interleaving hugepagesz=, ignoring\n");
--		return 1;
-+		pr_warn("HugeTLB: hugepages= specified twice without interleaving hugepagesz=, ignoring hugepages=%s\n", s);
-+		return 0;
- 	}
- 
- 	if (sscanf(s, "%lu", mhp) <= 0)
-@@ -3327,42 +3355,99 @@ static int __init hugetlb_nrpages_setup(char *s)
- 
- 	return 1;
- }
--__setup("hugepages=", hugetlb_nrpages_setup);
-+__setup("hugepages=", hugepages_setup);
- 
-+/*
-+ * hugepagesz command line processing
-+ * A specific huge page size can only be specified once with hugepagesz.
-+ * hugepagesz is followed by hugepages on the command line.  The global
-+ * variable 'parsed_valid_hugepagesz' is used to determine if prior
-+ * hugepagesz argument was valid.
-+ */
- static int __init hugepagesz_setup(char *s)
- {
- 	unsigned long size;
-+	struct hstate *h;
- 
-+	parsed_valid_hugepagesz = false;
- 	size = (unsigned long)memparse(s, NULL);
- 
- 	if (!arch_hugetlb_valid_size(size)) {
--		parsed_valid_hugepagesz = false;
--		pr_err("HugeTLB: unsupported hugepagesz %s\n", s);
-+		pr_err("HugeTLB: unsupported hugepagesz=%s\n", s);
- 		return 0;
- 	}
- 
--	if (size_to_hstate(size)) {
--		pr_warn("HugeTLB: hugepagesz %s specified twice, ignoring\n", s);
--		return 0;
-+	h = size_to_hstate(size);
-+	if (h) {
-+		/*
-+		 * hstate for this size already exists.  This is normally
-+		 * an error, but is allowed if the existing hstate is the
-+		 * default hstate.  More specifically, it is only allowed if
-+		 * the number of huge pages for the default hstate was not
-+		 * previously specified.
-+		 */
-+		if (!parsed_default_hugepagesz ||  h != &default_hstate ||
-+		    default_hstate.max_huge_pages) {
-+			pr_warn("HugeTLB: hugepagesz=%s specified twice, ignoring\n", s);
-+			return 0;
-+		}
-+
-+		/*
-+		 * No need to call hugetlb_add_hstate() as hstate already
-+		 * exists.  But, do set parsed_hstate so that a following
-+		 * hugepages= parameter will be applied to this hstate.
-+		 */
-+		parsed_hstate = h;
-+		parsed_valid_hugepagesz = true;
-+		return 1;
- 	}
- 
- 	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
-+	parsed_valid_hugepagesz = true;
- 	return 1;
- }
- __setup("hugepagesz=", hugepagesz_setup);
- 
-+/*
-+ * default_hugepagesz command line input
-+ * Only one instance of default_hugepagesz allowed on command line.
-+ */
- static int __init default_hugepagesz_setup(char *s)
- {
- 	unsigned long size;
- 
-+	parsed_valid_hugepagesz = false;
-+	if (parsed_default_hugepagesz) {
-+		pr_err("HugeTLB: default_hugepagesz previously specified, ignoring %s\n", s);
-+		return 0;
-+	}
-+
- 	size = (unsigned long)memparse(s, NULL);
- 
- 	if (!arch_hugetlb_valid_size(size)) {
--		pr_err("HugeTLB: unsupported default_hugepagesz %s\n", s);
-+		pr_err("HugeTLB: unsupported default_hugepagesz=%s\n", s);
- 		return 0;
- 	}
- 
--	default_hstate_size = size;
-+	hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
-+	parsed_valid_hugepagesz = true;
-+	parsed_default_hugepagesz = true;
-+	default_hstate_idx = hstate_index(size_to_hstate(size));
-+
-+	/*
-+	 * The number of default huge pages (for this size) could have been
-+	 * specified as the first hugetlb parameter: hugepages=X.  If so,
-+	 * then default_hstate_max_huge_pages is set.  If the default huge
-+	 * page size is gigantic (>= MAX_ORDER), then the pages must be
-+	 * allocated here from bootmem allocator.
-+	 */
-+	if (default_hstate_max_huge_pages) {
-+		default_hstate.max_huge_pages = default_hstate_max_huge_pages;
-+		if (hstate_is_gigantic(&default_hstate))
-+			hugetlb_hstate_alloc_pages(&default_hstate);
-+		default_hstate_max_huge_pages = 0;
-+	}
-+
- 	return 1;
- }
- __setup("default_hugepagesz=", default_hugepagesz_setup);
--- 
-2.25.4
+Test:                              List Search    Hashtable Search
+------                              ----------- ----------------
+Avg. Per APQN:             11651           81
+Total per 5500 APQNs:  60164268     1085368
+
+Avg. Per APQN:              10925           78
+Total per 5500 APQNs:   56482780    1084590
+
+Avg. Per APQN:              10190           80
+Total per 5500 APQNs:   52714920    1123205
+
+Avg. Per APQN:              8431             76
+Total per 5500 APQNs:   43748838    1061414
+
+Avg. Per APQN:              9678             75
+Total per 5500 APQNs:   50103437    1044427
+-----------------------------------------------
+Per APQN Search Avg:   10175          78            Hashtable is 130 
+times faster
+Total Search 5500 Avg:  52642848    1079800  Hashtable is 49 times faster
+
+Note that the list search was just a straight search of an object in a 
+list, not
+a device attached to a bus. I don't know if that would add time, but it 
+seems
+that the savings using a hashtable are significant.
+
+So I have two questions:
+
+1. Would it make more sense to provide AP bus interfaces to search for
+     queue devices by APQN?
+
+2. If so, shall we store the queue devices in a hashtable to make the
+     searches more efficient?
+
+>>>> If you look at the new function of vfio_ap_get_queue(unsigned long apqn)
+>>>> it basically about finding the queue based on the apqn, with the
+>>>> difference that it is vfio specific.
+>>>>
+>>>> Regards,
+>>>> Halil
+>>>>
+>>>>> However, this is not a big issue, as the ap_bus holds a list of ap_card objects and within each
+>>>>> ap_card object there exists a list of ap_queues.
+>>>>
 
