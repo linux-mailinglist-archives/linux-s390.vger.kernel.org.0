@@ -2,216 +2,222 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCB471BB178
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2020 00:24:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A0861BB510
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Apr 2020 06:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgD0WY0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 Apr 2020 18:24:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5108 "EHLO
+        id S1726282AbgD1EUI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 Apr 2020 00:20:08 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29364 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726251AbgD0WY0 (ORCPT
+        by vger.kernel.org with ESMTP id S1725803AbgD1EUH (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 27 Apr 2020 18:24:26 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03RMCmmD022616;
-        Mon, 27 Apr 2020 18:24:23 -0400
+        Tue, 28 Apr 2020 00:20:07 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03S44aiX124128;
+        Tue, 28 Apr 2020 00:17:28 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh6tmxjf-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30pd53g8rh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 18:24:22 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03RMCvf9022847;
-        Mon, 27 Apr 2020 18:24:22 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh6tmxj6-1
+        Tue, 28 Apr 2020 00:17:28 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03S47gjm130005;
+        Tue, 28 Apr 2020 00:17:27 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30pd53g8pd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 18:24:22 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03RMKQ7u011028;
-        Mon, 27 Apr 2020 22:24:21 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01dal.us.ibm.com with ESMTP id 30mcu6me2u-1
+        Tue, 28 Apr 2020 00:17:26 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03S45tWP018939;
+        Tue, 28 Apr 2020 04:17:24 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 30mcu58gsm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Apr 2020 22:24:21 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03RMOJIK54133022
+        Tue, 28 Apr 2020 04:17:24 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03S4HLNp41943218
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Apr 2020 22:24:19 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B53A3124055;
-        Mon, 27 Apr 2020 22:24:19 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40107124052;
-        Mon, 27 Apr 2020 22:24:19 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.200.21])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Apr 2020 22:24:19 +0000 (GMT)
-Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
- resource in use
-To:     Pierre Morel <pmorel@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
- <20200407192015.19887-4-akrowiak@linux.ibm.com>
- <75bcbc06-f38f-1aff-138f-5d2a2dd3f7b6@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <162f7dbc-9dd0-0a42-0d1a-8412a9a848e7@linux.ibm.com>
-Date:   Mon, 27 Apr 2020 18:24:19 -0400
+        Tue, 28 Apr 2020 04:17:21 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79F1911C052;
+        Tue, 28 Apr 2020 04:17:21 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6834611C04A;
+        Tue, 28 Apr 2020 04:17:14 +0000 (GMT)
+Received: from [9.199.43.234] (unknown [9.199.43.234])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Apr 2020 04:17:14 +0000 (GMT)
+Subject: Re: [PATCH v3 2/4] hugetlbfs: move hugepagesz= parsing to arch
+ independent code
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S.Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200417185049.275845-1-mike.kravetz@oracle.com>
+ <20200417185049.275845-3-mike.kravetz@oracle.com>
+ <7583dfcc-62d8-2a54-6eef-bcb4e01129b3@gmail.com>
+ <5a380060-38db-b690-1003-678ca0f28f07@oracle.com>
+ <b1f04f9f-fa46-c2a0-7693-4a0679d2a1ee@oracle.com>
+From:   Sandipan Das <sandipan@linux.ibm.com>
+Message-ID: <9c82a0b1-db0e-9b34-88a1-bc810d6b5eec@linux.ibm.com>
+Date:   Tue, 28 Apr 2020 09:47:13 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <75bcbc06-f38f-1aff-138f-5d2a2dd3f7b6@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <b1f04f9f-fa46-c2a0-7693-4a0679d2a1ee@oracle.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-27_16:2020-04-27,2020-04-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- suspectscore=3 bulkscore=0 spamscore=0 mlxscore=0 impostorscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004270175
+ definitions=2020-04-27_17:2020-04-27,2020-04-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ suspectscore=0 phishscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999
+ bulkscore=0 lowpriorityscore=0 clxscore=1011 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004280027
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Mike,
 
-
-On 4/27/20 4:20 AM, Pierre Morel wrote:
->
->
-> On 2020-04-07 21:20, Tony Krowiak wrote:
->> Introduces a new driver callback to prevent a root user from unbinding
->> an AP queue from its device driver if the queue is in use. The intent of
->> this callback is to provide a driver with the means to prevent a root 
->> user
->> from inadvertently taking a queue away from a guest and giving it to the
->> host while the guest is still using it.
->
-> How can we know, at this point if the guest uses or not the queue?
-
-The struct ap_matrix_mdev has a field, struct kvm *kvm, which holds a 
-pointer to KVM when
-the matrix mdev is in use by a guest. This patch series also introduces 
-a shadow_crycb (soon to
-be shadow_apcb) which holds the AP configuration for the guest. Between 
-those two things,
-the driver can detect when a queue is in use by a guest.
-
-> Do you want to say that this prevents to take away a queue when it is 
-> currently assigned to a VFIO device?
-> and with a guest currently using this VFIO device?
-
-No, I do not. The intent here is to enforce the proper procedure for 
-giving up a queue so it is done
-deliberately. Before taking a queue away from the matrix mdev, its APQN 
-should be unassigned
-from the matrix mdev. That is not to say that if there are major 
-objections to this that we can't
-base in_use upon the queue being in use by a guest at the time. Maybe 
-that is preferable to
-the community. I'll leave it to them to state their case.
-
->
->> The callback will
->> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
->> attributes would result in one or more AP queues being removed from its
->> driver. If the callback responds in the affirmative for any driver
->> queried, the change to the apmask or aqmask will be rejected with a 
->> device
->> in use error.
->
-> AFAIU you mean that Linux's driver's binding and unbinding mechanism 
-> is not sufficient to avoid this issue because unbind can not be 
-> refused by the driver.
-
-Correct!
-
->
->
-> The reason why we do not want a single queue to be removed from the 
-> VFIO driver is because the VFIO drivers works on a matrix, not on 
-> queues, and for the matrix to be consistent it needs to acquire all 
-> queues defined by the cross product of all APID and AQID assigned to 
-> the matrix.
-
-Not correct. The reason why is because we do not want a queue to be 
-surreptitiously removed
-without the guest administrator being aware of its removal.
-
->
-> This functionality is valid for the host as for the guests and is 
-> handled automatically by the firmware with the CRYCB.
-> The AP bus uses QCI to retrieve the host CRYCB and build the hosts AP 
-> queues.
->
-> If instead to mix VFIO CRYCB matrix handling and queues at the same 
-> level inside the AP bus we separate these different firmware entities 
-> in two different software entities.
->
-> If we make the AP bus sit above a CRYCB/Matrix bus, and in the way 
-> virtualize the QCI and test AP queue instructions:
-> - we can directly pass a matrix device to the guest though a VFIO 
-> matrix device
-> - the consistence will be automatic
-> - the VFIO device and parent device will be of the same kind which 
-> would make the design much more clearer.
-> - there will be no need for these callback because the consistence of 
-> the matrix will be guaranteed by firmware
-
-As stated in my response above, the issue here is not consistency. While 
-the design you describe
-may be reasonable, it is a major departure from what is out in the 
-field. In other words, that ship
-has sailed.
-
->
->
+On 28/04/20 12:39 am, Mike Kravetz wrote:
+> On 4/27/20 10:25 AM, Mike Kravetz wrote:
+>> On 4/26/20 10:04 PM, Sandipan Das wrote:
+>>> On 18/04/20 12:20 am, Mike Kravetz wrote:
+>>>> Now that architectures provide arch_hugetlb_valid_size(), parsing
+>>>> of "hugepagesz=" can be done in architecture independent code.
+>>>
+>>> This isn't working as expected on powerpc64.
+>>>
+>>>   [    0.000000] Kernel command line: root=UUID=dc7b49cf-95a2-4996-8e7d-7c64ddc7a6ff hugepagesz=16G hugepages=2 
+>>>   [    0.000000] HugeTLB: huge pages not supported, ignoring hugepagesz = 16G
+>>>   [    0.000000] HugeTLB: huge pages not supported, ignoring hugepages = 2
+>>>   [    0.284177] HugeTLB registered 16.0 MiB page size, pre-allocated 0 pages
+>>>   [    0.284182] HugeTLB registered 16.0 GiB page size, pre-allocated 0 pages
+>>>   [    2.585062]     hugepagesz=16G
+>>>   [    2.585063]     hugepages=2
+>>>
 >>
->> For this patch, only non-default drivers will be queried. Currently,
->> there is only one non-default driver, the vfio_ap device driver.
->
-> You mean that the admin may take queues away from the "default 
-> driver", while the queue is in use, to give it to an other driver?
-> Why is it to avoid in one way and not in the other way?
+>> In the new arch independent version of hugepages_setup, I added the following
+>> code in patch 4 off this series:
+>>
+>>> +	if (!hugepages_supported()) {
+>>> +		pr_warn("HugeTLB: huge pages not supported, ignoring hugepages = %s\n", s);
+>>> +		return 0;
+>>> +	}
+>>> +
+>>
+>> The easy solution is to remove all the hugepages_supported() checks from
+>> command line parsing routines and rely on the later check in hugetlb_init().
+> 
+> Here is a patch to address the issue.  Sorry, as my series breaks all hugetlb
+> command line processing on powerpc.
+> 
+> Sandipan, can you test the following patch?
+> 
 
-Because the default drivers have direct control over the queues and can 
-ensure they are empty
-and reset before giving up control. The vfio driver does not have direct 
-control over the queues
-because they have been passed through to the guest.
+The following patch does fix the issue. Thanks.
 
->
->> The
->> vfio_ap device driver manages AP queues passed through to one or more
->> guests
->
-> I read this as if a queue may be passed to several guest...
-> please, rephrase or explain.
+Tested-by: Sandipan Das <sandipan@linux.ibm.com>
 
-AP queues is plural, so it is true that AP queues can be passed through
-to more than one guest. I see your point, however, so I'll reword that
-to be more clear.
 
->
->> and we don't want to unexpectedly take AP resources away from
->> guests which are most likely independently administered.
->
-> When you say "independently administered", you mean as a second admin 
-> inside the host, don't you?
-
-I mean that a guest can be administered by a different person than the 
-host administrator.
-Again, I'll try to clarify this.
-
->
->
-> Regards,
-> Pierre
->
-
+> From 480fe2847361e2a85aeec1fb39fe643bb7100a07 Mon Sep 17 00:00:00 2001
+> From: Mike Kravetz <mike.kravetz@oracle.com>
+> Date: Mon, 27 Apr 2020 11:37:30 -0700
+> Subject: [PATCH] hugetlbfs: fix changes to command line processing
+> 
+> Previously, a check for hugepages_supported was added before processing
+> hugetlb command line parameters.  On some architectures such as powerpc,
+> hugepages_supported() is not set to true until after command line
+> processing.  Therefore, no hugetlb command line parameters would be
+> accepted.
+> 
+> Remove the additional checks for hugepages_supported.  In hugetlb_init,
+> print a warning if !hugepages_supported and command line parameters were
+> specified.
+> 
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> ---
+>  mm/hugetlb.c | 20 ++++----------------
+>  1 file changed, 4 insertions(+), 16 deletions(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 1075abdb5717..5548e8851b93 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -3212,8 +3212,11 @@ static int __init hugetlb_init(void)
+>  {
+>  	int i;
+>  
+> -	if (!hugepages_supported())
+> +	if (!hugepages_supported()) {
+> +		if (hugetlb_max_hstate || default_hstate_max_huge_pages)
+> +			pr_warn("HugeTLB: huge pages not supported, ignoring associated command-line parameters\n");
+>  		return 0;
+> +	}
+>  
+>  	/*
+>  	 * Make sure HPAGE_SIZE (HUGETLB_PAGE_ORDER) hstate exists.  Some
+> @@ -3315,11 +3318,6 @@ static int __init hugepages_setup(char *s)
+>  	unsigned long *mhp;
+>  	static unsigned long *last_mhp;
+>  
+> -	if (!hugepages_supported()) {
+> -		pr_warn("HugeTLB: huge pages not supported, ignoring hugepages = %s\n", s);
+> -		return 0;
+> -	}
+> -
+>  	if (!parsed_valid_hugepagesz) {
+>  		pr_warn("HugeTLB: hugepages=%s does not follow a valid hugepagesz, ignoring\n", s);
+>  		parsed_valid_hugepagesz = true;
+> @@ -3372,11 +3370,6 @@ static int __init hugepagesz_setup(char *s)
+>  	struct hstate *h;
+>  
+>  	parsed_valid_hugepagesz = false;
+> -	if (!hugepages_supported()) {
+> -		pr_warn("HugeTLB: huge pages not supported, ignoring hugepagesz = %s\n", s);
+> -		return 0;
+> -	}
+> -
+>  	size = (unsigned long)memparse(s, NULL);
+>  
+>  	if (!arch_hugetlb_valid_size(size)) {
+> @@ -3424,11 +3417,6 @@ static int __init default_hugepagesz_setup(char *s)
+>  	unsigned long size;
+>  
+>  	parsed_valid_hugepagesz = false;
+> -	if (!hugepages_supported()) {
+> -		pr_warn("HugeTLB: huge pages not supported, ignoring default_hugepagesz = %s\n", s);
+> -		return 0;
+> -	}
+> -
+>  	if (parsed_default_hugepagesz) {
+>  		pr_err("HugeTLB: default_hugepagesz previously specified, ignoring %s\n", s);
+>  		return 0;
+> 
