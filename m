@@ -2,40 +2,52 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4DC31BD8DC
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2020 11:56:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F16F1BDA84
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2020 13:22:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgD2J4J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 29 Apr 2020 05:56:09 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35611 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726366AbgD2J4I (ORCPT
+        id S1726763AbgD2LWE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 29 Apr 2020 07:22:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3128 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726554AbgD2LWE (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 29 Apr 2020 05:56:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588154166;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=PTv1N3GDwYMQz8oxn0ONlic3WoFaVE/vI/jMWjQxhsA=;
-        b=H+MO4kFHYgaw5S2IJzlI2GSOS7j1gsW0SB1zs1Q0je/YB+8TqHx++s5rYcIuyDCyqlcRK+
-        UBFotxr523KpEaSG2cUC+ejv66hO8DLv/Ct3cEeUSxQYeq8IF/98wIAFK5bi4d8YzyTrv4
-        jfbv0oVJOLhNPkV0fsRW2yFPczWRjDM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-310-Bm8qkHT4PCmd7SVpBm4G0Q-1; Wed, 29 Apr 2020 05:56:02 -0400
-X-MC-Unique: Bm8qkHT4PCmd7SVpBm4G0Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7AF3464;
-        Wed, 29 Apr 2020 09:56:01 +0000 (UTC)
-Received: from [10.36.114.55] (ovpn-114-55.ams2.redhat.com [10.36.114.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 450D2282E3;
-        Wed, 29 Apr 2020 09:56:00 +0000 (UTC)
+        Wed, 29 Apr 2020 07:22:04 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TB5kSt102460;
+        Wed, 29 Apr 2020 07:22:01 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30q802h53m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 07:22:01 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03TB5mnF102512;
+        Wed, 29 Apr 2020 07:22:00 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30q802h537-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 07:22:00 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03TBFYCj004611;
+        Wed, 29 Apr 2020 11:21:58 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 30mcu70a0u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 11:21:58 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03TBLuNu66650550
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Apr 2020 11:21:56 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 97ACA4C040;
+        Wed, 29 Apr 2020 11:21:56 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A2144C044;
+        Wed, 29 Apr 2020 11:21:56 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.84.78])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 29 Apr 2020 11:21:56 +0000 (GMT)
 Subject: Re: [PATCH v2 08/10] s390x: smp: Wait for sigp completion
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
 Cc:     thuth@redhat.com, linux-s390@vger.kernel.org,
         borntraeger@de.ibm.com, cohuck@redhat.com
 References: <20200423091013.11587-1-frankja@linux.ibm.com>
@@ -45,203 +57,250 @@ References: <20200423091013.11587-1-frankja@linux.ibm.com>
  <be5ed01e-f4f6-6e3a-deb0-8f983e658e0f@linux.ibm.com>
  <8182df06-8190-001d-ad02-ae13fb99ec72@redhat.com>
  <802601e1-0bc0-faba-b802-2b0e24e3d96b@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <5ef08433-10fd-ccca-eb13-5a93bd462c4c@redhat.com>
-Date:   Wed, 29 Apr 2020 11:55:59 +0200
+ <5ef08433-10fd-ccca-eb13-5a93bd462c4c@redhat.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <cca03b19-4008-78c8-0528-e928b013b715@linux.ibm.com>
+Date:   Wed, 29 Apr 2020 13:21:55 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <802601e1-0bc0-faba-b802-2b0e24e3d96b@linux.ibm.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <5ef08433-10fd-ccca-eb13-5a93bd462c4c@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="AFkMIbYYyPMjYuJis6b3AjhZG5e2ItJvQ"
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_04:2020-04-29,2020-04-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 phishscore=0 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 spamscore=0 clxscore=1015 mlxlogscore=999
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004290089
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 29.04.20 11:37, Janosch Frank wrote:
-> On 4/29/20 11:06 AM, David Hildenbrand wrote:
->> On 29.04.20 10:57, Janosch Frank wrote:
->>> On 4/24/20 1:40 PM, Janosch Frank wrote:
->>>> On 4/24/20 12:11 PM, David Hildenbrand wrote:
->>>>> On 23.04.20 11:10, Janosch Frank wrote:
->>>>>> Sigp orders are not necessarily finished when the processor finish=
-ed
->>>>>> the sigp instruction. We need to poll if the order has been finish=
-ed
->>>>>> before we continue.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--AFkMIbYYyPMjYuJis6b3AjhZG5e2ItJvQ
+Content-Type: multipart/mixed; boundary="8Fu9ttuanlOsX3VIhRL4kTXL8NKMGftkD"
+
+--8Fu9ttuanlOsX3VIhRL4kTXL8NKMGftkD
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 4/29/20 11:55 AM, David Hildenbrand wrote:
+> On 29.04.20 11:37, Janosch Frank wrote:
+>> On 4/29/20 11:06 AM, David Hildenbrand wrote:
+>>> On 29.04.20 10:57, Janosch Frank wrote:
+>>>> On 4/24/20 1:40 PM, Janosch Frank wrote:
+>>>>> On 4/24/20 12:11 PM, David Hildenbrand wrote:
+>>>>>> On 23.04.20 11:10, Janosch Frank wrote:
+>>>>>>> Sigp orders are not necessarily finished when the processor finis=
+hed
+>>>>>>> the sigp instruction. We need to poll if the order has been finis=
+hed
+>>>>>>> before we continue.
+>>>>>>>
+>>>>>>> For (re)start and stop we already use sigp sense running and sigp=
+
+>>>>>>> sense loops. But we still lack completion checks for stop and sto=
+re
+>>>>>>> status, as well as the cpu resets.
+>>>>>>>
+>>>>>>> Let's add them.
+>>>>>>>
+>>>>>>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>>>>>>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+>>>>>>> ---
+>>>>>>>  lib/s390x/smp.c | 8 ++++++++
+>>>>>>>  lib/s390x/smp.h | 1 +
+>>>>>>>  s390x/smp.c     | 4 ++++
+>>>>>>>  3 files changed, 13 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
+>>>>>>> index 6ef0335..2555bf4 100644
+>>>>>>> --- a/lib/s390x/smp.c
+>>>>>>> +++ b/lib/s390x/smp.c
+>>>>>>> @@ -154,6 +154,14 @@ int smp_cpu_start(uint16_t addr, struct psw =
+psw)
+>>>>>>>  	return rc;
+>>>>>>>  }
+>>>>>>> =20
+>>>>>>> +void smp_cpu_wait_for_completion(uint16_t addr)
+>>>>>>> +{
+>>>>>>> +	uint32_t status;
+>>>>>>> +
+>>>>>>> +	/* Loops when cc =3D=3D 2, i.e. when the cpu is busy with a sig=
+p order */
+>>>>>>> +	sigp_retry(1, SIGP_SENSE, 0, &status);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>>  int smp_cpu_destroy(uint16_t addr)
+>>>>>>>  {
+>>>>>>>  	struct cpu *cpu;
+>>>>>>> diff --git a/lib/s390x/smp.h b/lib/s390x/smp.h
+>>>>>>> index ce63a89..a8b98c0 100644
+>>>>>>> --- a/lib/s390x/smp.h
+>>>>>>> +++ b/lib/s390x/smp.h
+>>>>>>> @@ -45,6 +45,7 @@ int smp_cpu_restart(uint16_t addr);
+>>>>>>>  int smp_cpu_start(uint16_t addr, struct psw psw);
+>>>>>>>  int smp_cpu_stop(uint16_t addr);
+>>>>>>>  int smp_cpu_stop_store_status(uint16_t addr);
+>>>>>>> +void smp_cpu_wait_for_completion(uint16_t addr);
+>>>>>>>  int smp_cpu_destroy(uint16_t addr);
+>>>>>>>  int smp_cpu_setup(uint16_t addr, struct psw psw);
+>>>>>>>  void smp_teardown(void);
+>>>>>>> diff --git a/s390x/smp.c b/s390x/smp.c
+>>>>>>> index 7462211..48321f4 100644
+>>>>>>> --- a/s390x/smp.c
+>>>>>>> +++ b/s390x/smp.c
+>>>>>>> @@ -75,6 +75,7 @@ static void test_stop_store_status(void)
+>>>>>>>  	lc->prefix_sa =3D 0;
+>>>>>>>  	lc->grs_sa[15] =3D 0;
+>>>>>>>  	smp_cpu_stop_store_status(1);
+>>>>>>> +	smp_cpu_wait_for_completion(1);
+>>>>>>>  	mb();
+>>>>>>>  	report(lc->prefix_sa =3D=3D (uint32_t)(uintptr_t)cpu->lowcore, =
+"prefix");
+>>>>>>>  	report(lc->grs_sa[15], "stack");
+>>>>>>> @@ -85,6 +86,7 @@ static void test_stop_store_status(void)
+>>>>>>>  	lc->prefix_sa =3D 0;
+>>>>>>>  	lc->grs_sa[15] =3D 0;
+>>>>>>>  	smp_cpu_stop_store_status(1);
 >>>>>>
->>>>>> For (re)start and stop we already use sigp sense running and sigp
->>>>>> sense loops. But we still lack completion checks for stop and stor=
-e
->>>>>> status, as well as the cpu resets.
+>>>>>> Just curious: Would it make sense to add that inside
+>>>>>> smp_cpu_stop_store_status() instead?
 >>>>>>
->>>>>> Let's add them.
->>>>>>
->>>>>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>>>>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
->>>>>> ---
->>>>>>  lib/s390x/smp.c | 8 ++++++++
->>>>>>  lib/s390x/smp.h | 1 +
->>>>>>  s390x/smp.c     | 4 ++++
->>>>>>  3 files changed, 13 insertions(+)
->>>>>>
->>>>>> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
->>>>>> index 6ef0335..2555bf4 100644
->>>>>> --- a/lib/s390x/smp.c
->>>>>> +++ b/lib/s390x/smp.c
->>>>>> @@ -154,6 +154,14 @@ int smp_cpu_start(uint16_t addr, struct psw p=
-sw)
->>>>>>  	return rc;
->>>>>>  }
->>>>>> =20
->>>>>> +void smp_cpu_wait_for_completion(uint16_t addr)
->>>>>> +{
->>>>>> +	uint32_t status;
->>>>>> +
->>>>>> +	/* Loops when cc =3D=3D 2, i.e. when the cpu is busy with a sigp=
- order */
->>>>>> +	sigp_retry(1, SIGP_SENSE, 0, &status);
->>>>>> +}
->>>>>> +
->>>>>>  int smp_cpu_destroy(uint16_t addr)
->>>>>>  {
->>>>>>  	struct cpu *cpu;
->>>>>> diff --git a/lib/s390x/smp.h b/lib/s390x/smp.h
->>>>>> index ce63a89..a8b98c0 100644
->>>>>> --- a/lib/s390x/smp.h
->>>>>> +++ b/lib/s390x/smp.h
->>>>>> @@ -45,6 +45,7 @@ int smp_cpu_restart(uint16_t addr);
->>>>>>  int smp_cpu_start(uint16_t addr, struct psw psw);
->>>>>>  int smp_cpu_stop(uint16_t addr);
->>>>>>  int smp_cpu_stop_store_status(uint16_t addr);
->>>>>> +void smp_cpu_wait_for_completion(uint16_t addr);
->>>>>>  int smp_cpu_destroy(uint16_t addr);
->>>>>>  int smp_cpu_setup(uint16_t addr, struct psw psw);
->>>>>>  void smp_teardown(void);
->>>>>> diff --git a/s390x/smp.c b/s390x/smp.c
->>>>>> index 7462211..48321f4 100644
->>>>>> --- a/s390x/smp.c
->>>>>> +++ b/s390x/smp.c
->>>>>> @@ -75,6 +75,7 @@ static void test_stop_store_status(void)
->>>>>>  	lc->prefix_sa =3D 0;
->>>>>>  	lc->grs_sa[15] =3D 0;
->>>>>>  	smp_cpu_stop_store_status(1);
->>>>>> +	smp_cpu_wait_for_completion(1);
->>>>>>  	mb();
->>>>>>  	report(lc->prefix_sa =3D=3D (uint32_t)(uintptr_t)cpu->lowcore, "=
-prefix");
->>>>>>  	report(lc->grs_sa[15], "stack");
->>>>>> @@ -85,6 +86,7 @@ static void test_stop_store_status(void)
->>>>>>  	lc->prefix_sa =3D 0;
->>>>>>  	lc->grs_sa[15] =3D 0;
->>>>>>  	smp_cpu_stop_store_status(1);
 >>>>>
->>>>> Just curious: Would it make sense to add that inside
->>>>> smp_cpu_stop_store_status() instead?
+>>>>> I think so, we also wait for stop and start to finish, so why not f=
+or
+>>>>> this order code.
 >>>>>
 >>>>
->>>> I think so, we also wait for stop and start to finish, so why not fo=
-r
->>>> this order code.
+>>>> I've moved the waiting into the smp library and now the prefix check=
+ for
+>>>> stop and store status fails every so often if executed repeatedly.
 >>>>
+>>>> I've tried making the lc ptr volatile, a print of the prefix before =
+the
+>>>> report seems to fix the issue, a print after the report still shows =
+the
+>>>> issue but according to the print both values are the same.
+>>>>
+>>>> I'm currently at a loss...
 >>>
->>> I've moved the waiting into the smp library and now the prefix check =
-for
->>> stop and store status fails every so often if executed repeatedly.
+>>> Are you missing a barrier() somewhere?
 >>>
->>> I've tried making the lc ptr volatile, a print of the prefix before t=
-he
->>> report seems to fix the issue, a print after the report still shows t=
-he
->>> issue but according to the print both values are the same.
->>>
->>> I'm currently at a loss...
 >>
->> Are you missing a barrier() somewhere?
+>> Maybe, but the question is where?
 >>
+>> There's already one before the report:
+>> smp_cpu_stop_store_status(1);
+>> mb();
+>> report(lc->prefix_sa =3D=3D (uint32_t)(uintptr_t)cpu->lowcore, "prefix=
+");
 >=20
-> Maybe, but the question is where?
+> The issue here is:
 >=20
-> There's already one before the report:
-> smp_cpu_stop_store_status(1);
-> mb();
-> report(lc->prefix_sa =3D=3D (uint32_t)(uintptr_t)cpu->lowcore, "prefix"=
-);
+> SIGP_SENSE is always handled in the kernel for KVM. Meaning, it will
+> complete even before the target CPU executed the stop and store (in QEM=
+U).
+>=20
+> Reading the PoP:
+>=20
+> "One of the following conditions exists at the
+> addressed CPU: ... A previously issued stop-
+> and-store-status ... has been accepted by the
+> addressed CPU, and execution of the func-
+> tion requested by the order has not yet been
+> completed.
+>=20
+> "If the currently specified order is sense ... then the order
+> is rejected, and condition code 2 is set."
+>=20
+> So, in case of KVM, SENSE does not wait for completion of the previous
+> order. I remember that was a performance improvements, because we wante=
+d
+> to avoid going to user space just to sense if another CPU is running.
+> (and I remember that the documentation was inconsistent)
 
-The issue here is:
+So, KVM is not architectural compliant when it comes to SIGP SENSE?
+I guess I need to go back to looping until the prefix is > 0
 
-SIGP_SENSE is always handled in the kernel for KVM. Meaning, it will
-complete even before the target CPU executed the stop and store (in QEMU)=
-.
+>=20
+> Let me guess, under TCG it works all the time?
+>=20
 
-Reading the PoP:
+Looks like it
 
-"One of the following conditions exists at the
-addressed CPU: ... A previously issued stop-
-and-store-status ... has been accepted by the
-addressed CPU, and execution of the func-
-tion requested by the order has not yet been
-completed.
 
-"If the currently specified order is sense ... then the order
-is rejected, and condition code 2 is set."
+--8Fu9ttuanlOsX3VIhRL4kTXL8NKMGftkD--
 
-So, in case of KVM, SENSE does not wait for completion of the previous
-order. I remember that was a performance improvements, because we wanted
-to avoid going to user space just to sense if another CPU is running.
-(and I remember that the documentation was inconsistent)
+--AFkMIbYYyPMjYuJis6b3AjhZG5e2ItJvQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Let me guess, under TCG it works all the time?
+-----BEGIN PGP SIGNATURE-----
 
---=20
-Thanks,
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl6pY1MACgkQ41TmuOI4
+ufhIDBAAg7ymSuk41BlKrPlv+yMw8Jxns4PcXKvT5D+FSiO2sBIgNEMgz2bvId/I
+0YHyQMlHGLzsmYrdurhnqqHNdQUql6xCU08IapBA0hQwdmclM/ky2EvfsX6cD0GT
+4krK19bYyHgX0f375lyYzrPRK9FZ1j2ipAC0WHhoXXeEdCyTJBLDQlbm+NbBnRXP
+3R+HZieRBz3yRuMI3XpMcNxF6g0aCzlkHbqC9HLnalQ/Kxfo9ZRRobIlyTJmM5bi
+u7koADLK8WcfVwZhV9ru8S9avQM7Cb5+QEY2/0XoyO7xGRHRq8V9/5Mwd34/Akli
+50HNsNKbeePebj1Pyfezb8IKDovTSAGfs82xooAlHamMCpmWJ6L7tEh+VYG3j5jK
++7k/L31G+v98B5J5i+UwPTF+EyKkK3kihiBpme5ENmv7lOsTZR3z1AgCavaVzU4I
+S2XXo7PJVxeApOpylMSUZZtgi9oEVuNrT7o6Jqi1uk/qaPm8dOGhkcLvlGiHVH5v
+919kQgBg/3QusevwtU6gcXg8kEFdAKjZyT0MCgjGPXI0BajTUva7itQcpK5nY1P3
+r5d1U9gV3f9bh7jU1UkIPJ+VIc+cLT5WlFSyJuVwM8piztZh1ovp0vF8mLwg2xC+
+hvnZ3LMoSCaBSaanL9m141RcWpK3GUyNzvcMHjJBI+Ngbu597IY=
+=a5Cu
+-----END PGP SIGNATURE-----
 
-David / dhildenb
+--AFkMIbYYyPMjYuJis6b3AjhZG5e2ItJvQ--
 
