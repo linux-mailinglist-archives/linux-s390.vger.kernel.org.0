@@ -2,115 +2,119 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26E791BE259
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2020 17:16:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA07A1BE28C
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2020 17:25:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgD2PQO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 29 Apr 2020 11:16:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24334 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726526AbgD2PQO (ORCPT
+        id S1727073AbgD2PZO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 29 Apr 2020 11:25:14 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59475 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726476AbgD2PZO (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 29 Apr 2020 11:16:14 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TF6Q5g018437;
-        Wed, 29 Apr 2020 11:16:00 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh9pwtq9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 11:16:00 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03TFBWDb012661;
-        Wed, 29 Apr 2020 15:15:58 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma05fra.de.ibm.com with ESMTP id 30mcu51w2d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Apr 2020 15:15:58 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03TFFucC64159790
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Apr 2020 15:15:56 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E70AEA4079;
-        Wed, 29 Apr 2020 15:15:55 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7DE61A4069;
-        Wed, 29 Apr 2020 15:15:55 +0000 (GMT)
-Received: from [9.145.35.37] (unknown [9.145.35.37])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 29 Apr 2020 15:15:55 +0000 (GMT)
-Subject: Re: [PATCH net-next] net/smc: remove unused inline function
- smc_curs_read
-To:     YueHaibing <yuehaibing@huawei.com>, ubraun@linux.ibm.com,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200429132623.48608-1-yuehaibing@huawei.com>
-From:   Karsten Graul <kgraul@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-Message-ID: <039d6d59-5dd5-c89a-c174-72f4de3d0098@linux.ibm.com>
-Date:   Wed, 29 Apr 2020 17:15:55 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 29 Apr 2020 11:25:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588173912;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sPXjVtqc214o8ubA6ZREyK/4uh96PCzZ+mk9a6forIA=;
+        b=gbiZRb5UMYv5kl0GtmECRdtUwVCDq1WRtt6HcuyFawySv8Lb8vdLH/N9cLmovidiQhX5Ee
+        KEazAFKvmRnKdHPz0VNTCK3YMG7sxs/t0yyJ2nFLbrd9y/AVj41uqODEnYP/4M2ot4pr/2
+        3Y8nnZZ6f3pSRF+eDWZnEysVAZnywlM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-256-0MB_1HNoOVyS8kdGLYXxeg-1; Wed, 29 Apr 2020 11:25:10 -0400
+X-MC-Unique: 0MB_1HNoOVyS8kdGLYXxeg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC8C01009628;
+        Wed, 29 Apr 2020 15:25:06 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-113-19.rdu2.redhat.com [10.10.113.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ABB1C605CB;
+        Wed, 29 Apr 2020 15:25:05 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     live-patching@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com
+Subject: [PATCH v4 05/11] s390: Change s390_kernel_write() return type to match memcpy()
+Date:   Wed, 29 Apr 2020 10:24:47 -0500
+Message-Id: <be5119b30920d2da6fca3f6d2b1aca5712a2fd30.1588173720.git.jpoimboe@redhat.com>
+In-Reply-To: <cover.1588173720.git.jpoimboe@redhat.com>
+References: <cover.1588173720.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200429132623.48608-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-29_07:2020-04-29,2020-04-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
- spamscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=843
- impostorscore=0 lowpriorityscore=0 mlxscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004290122
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 29/04/2020 15:26, YueHaibing wrote:
-> commit bac6de7b6370 ("net/smc: eliminate cursor read and write calls")
-> left behind this.
-> 
+s390_kernel_write()'s function type is almost identical to memcpy().
+Change its return type to "void *" so they can be used interchangeably.
 
-Thanks, good catch. Your patch will be part of our next patch submission.
+Cc: linux-s390@vger.kernel.org
+Cc: heiko.carstens@de.ibm.com
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
+Acked-by: Miroslav Benes <mbenes@suse.cz>
+---
+ arch/s390/include/asm/uaccess.h | 2 +-
+ arch/s390/mm/maccess.c          | 9 ++++++---
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-Regards, Karsten
+diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uacc=
+ess.h
+index a470f1fa9f2a..324438889fe1 100644
+--- a/arch/s390/include/asm/uaccess.h
++++ b/arch/s390/include/asm/uaccess.h
+@@ -276,6 +276,6 @@ static inline unsigned long __must_check clear_user(v=
+oid __user *to, unsigned lo
+ }
+=20
+ int copy_to_user_real(void __user *dest, void *src, unsigned long count)=
+;
+-void s390_kernel_write(void *dst, const void *src, size_t size);
++void *s390_kernel_write(void *dst, const void *src, size_t size);
+=20
+ #endif /* __S390_UACCESS_H */
+diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
+index de7ca4b6718f..22a0be655f27 100644
+--- a/arch/s390/mm/maccess.c
++++ b/arch/s390/mm/maccess.c
+@@ -55,19 +55,22 @@ static notrace long s390_kernel_write_odd(void *dst, =
+const void *src, size_t siz
+  */
+ static DEFINE_SPINLOCK(s390_kernel_write_lock);
+=20
+-void notrace s390_kernel_write(void *dst, const void *src, size_t size)
++notrace void *s390_kernel_write(void *dst, const void *src, size_t size)
+ {
++	void *tmp =3D dst;
+ 	unsigned long flags;
+ 	long copied;
+=20
+ 	spin_lock_irqsave(&s390_kernel_write_lock, flags);
+ 	while (size) {
+-		copied =3D s390_kernel_write_odd(dst, src, size);
+-		dst +=3D copied;
++		copied =3D s390_kernel_write_odd(tmp, src, size);
++		tmp +=3D copied;
+ 		src +=3D copied;
+ 		size -=3D copied;
+ 	}
+ 	spin_unlock_irqrestore(&s390_kernel_write_lock, flags);
++
++	return dst;
+ }
+=20
+ static int __no_sanitize_address __memcpy_real(void *dest, void *src, si=
+ze_t count)
+--=20
+2.21.1
 
-
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  net/smc/smc_cdc.h | 17 -----------------
->  1 file changed, 17 deletions(-)
-> 
-> diff --git a/net/smc/smc_cdc.h b/net/smc/smc_cdc.h
-> index 861dc24c588c..5a19e5e2280e 100644
-> --- a/net/smc/smc_cdc.h
-> +++ b/net/smc/smc_cdc.h
-> @@ -97,23 +97,6 @@ static inline void smc_curs_add(int size, union smc_host_cursor *curs,
->  	}
->  }
->  
-> -/* SMC cursors are 8 bytes long and require atomic reading and writing */
-> -static inline u64 smc_curs_read(union smc_host_cursor *curs,
-> -				struct smc_connection *conn)
-> -{
-> -#ifndef KERNEL_HAS_ATOMIC64
-> -	unsigned long flags;
-> -	u64 ret;
-> -
-> -	spin_lock_irqsave(&conn->acurs_lock, flags);
-> -	ret = curs->acurs;
-> -	spin_unlock_irqrestore(&conn->acurs_lock, flags);
-> -	return ret;
-> -#else
-> -	return atomic64_read(&curs->acurs);
-> -#endif
-> -}
-> -
->  /* Copy cursor src into tgt */
->  static inline void smc_curs_copy(union smc_host_cursor *tgt,
->  				 union smc_host_cursor *src,
-> 
