@@ -2,132 +2,119 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2B1B1BE1CD
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2020 16:56:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DB9D1BE22C
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2020 17:12:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgD2O4L (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 29 Apr 2020 10:56:11 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51907 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726481AbgD2O4K (ORCPT
+        id S1726911AbgD2PLi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 29 Apr 2020 11:11:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26842 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726476AbgD2PLi (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 29 Apr 2020 10:56:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588172169;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=wRbuQq5xPueNb09umHgwf8s+26OBQKDFrqXInNC03OA=;
-        b=D49hpp/3ThUyvP2vL+DQN6EsWj3eNUgE7c3VPVJ5wWi4eiwKn5toP7X7gIw+2hJvfvWo6Z
-        tfUnSIAyUyiBkC1VOoiPfr+swRgvd53NIyQp23ze/fEFuXvwHhPJ59W9WbC2qz1DtO1713
-        niKhaG4w8KhzkADk6WulTphSEahhCOk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-235-6IGzkqu6MCCHIIEfMmLs9g-1; Wed, 29 Apr 2020 10:56:00 -0400
-X-MC-Unique: 6IGzkqu6MCCHIIEfMmLs9g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93BC4100CCC2;
-        Wed, 29 Apr 2020 14:55:58 +0000 (UTC)
-Received: from [10.36.114.55] (ovpn-114-55.ams2.redhat.com [10.36.114.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 83D1E38E;
-        Wed, 29 Apr 2020 14:55:56 +0000 (UTC)
-Subject: Re: [PATCH RFC 0/2] s390/mm: don't set ARCH_KEEP_MEMBLOCK
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-s390@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Kirill Smelkov <kirr@nexedi.com>,
-        Michael Holzheu <holzheu@linux.vnet.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-References: <20200417150151.17239-1-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <4444ceef-14c7-0975-673f-6fdeefdc4dc0@redhat.com>
-Date:   Wed, 29 Apr 2020 16:55:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200417150151.17239-1-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Wed, 29 Apr 2020 11:11:38 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03TF34Vg028626;
+        Wed, 29 Apr 2020 11:11:33 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30q7qhsxtd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 11:11:33 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03TFAxHc015235;
+        Wed, 29 Apr 2020 15:11:32 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 30mcu70q0b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Apr 2020 15:11:32 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03TFBToQ63504530
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Apr 2020 15:11:29 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2418AAE057;
+        Wed, 29 Apr 2020 15:11:29 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D07E0AE05F;
+        Wed, 29 Apr 2020 15:11:28 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 29 Apr 2020 15:11:28 +0000 (GMT)
+From:   Karsten Graul <kgraul@linux.ibm.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com
+Subject: [PATCH net-next 00/13] net/smc: preparations for SMC-R link failover
+Date:   Wed, 29 Apr 2020 17:10:36 +0200
+Message-Id: <20200429151049.49979-1-kgraul@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-29_07:2020-04-29,2020-04-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 malwarescore=0 suspectscore=1
+ mlxlogscore=947 lowpriorityscore=0 phishscore=0 adultscore=0
+ impostorscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2004290126
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 17.04.20 17:01, David Hildenbrand wrote:
-> Looking into why we still create memblocks for hotplugged memory (via
-> add_memory()), I discovered that we might not need ARCH_KEEP_MEMBLOCK on
-> s390x after all.
-> 
-> After [1] we will no longer create memblocks for hotplugged memory in
-> case of !CONFIG_ARCH_KEEP_MEMBLOCK. With this series, the same will apply
-> to standby memory on s390x, added via add_memory().
-> 
-> [1] https://lkml.kernel.org/r/20200416104707.20219-1-david@redhat.com
-> 
-> David Hildenbrand (2):
->   s390/zcore: traverse resources instead of memblocks
->   s390/mm: don't set ARCH_KEEP_MEMBLOCK
-> 
->  arch/s390/Kconfig         |  1 -
->  drivers/s390/char/zcore.c | 61 ++++++++++++++++++++++++++++++---------
->  2 files changed, 48 insertions(+), 14 deletions(-)
-> 
+This patch series prepares the SMC code for the implementation of SMC-R link 
+failover capabilities which are still missing to reach full compliance with 
+RFC 7609.
+The code changes are separated into 65 patches which together form the new
+functionality. I tried to create meaningful patches which allow to follow the 
+implementation.
 
-Ping.
+Question: how to handle the remaining 52 patches? All of them are needed for 
+link failover to work and should make it into the same merge window. 
+Can I send them all together?
+
+The SMC-R implementation will transparently make use of the link failover 
+feature when matching RoCE devices are available, no special setup is required.
+All RoCE devices with the same PNET ID as the TCP device (hardware-defined or 
+user-defined via the smc_pnet tool) are candidates to get used to form a link 
+in a link group. When at least 2 RoCE devices are available on both 
+communication endpoints then a symmetric link group is formed, meaning the link 
+group has 2 independent links. If one RoCE device goes down then all connections 
+on this link are moved to the surviving link. Upon recovery of the failing 
+device or availability of a new one, the symmetric link group will be restored.
+
+Karsten Graul (13):
+  net/smc: rework pnet table to support SMC-R failover
+  net/smc: separate function for link initialization
+  net/smc: introduce link_idx for link group array
+  net/smc: convert static link ID to dynamic references
+  net/smc: convert static link ID instances to support multiple links
+  net/smc: multi-link support for smc_rmb_rtoken_handling()
+  net/smc: add new link state and related helpers
+  net/smc: move testlink work to system work queue
+  net/smc: simplify link deactivation
+  net/smc: use worker to process incoming llc messages
+  net/smc: process llc responses in tasklet context
+  net/smc: use mutex instead of rwlock_t to protect buffers
+  net/smc: move llc layer related init and clear into smc_llc.c
+
+ net/smc/af_smc.c   |  79 ++++---
+ net/smc/smc.h      |   1 +
+ net/smc/smc_cdc.c  |   8 +-
+ net/smc/smc_clc.c  |  12 +-
+ net/smc/smc_clc.h  |   1 +
+ net/smc/smc_core.c | 542 +++++++++++++++++++++++++++++----------------
+ net/smc/smc_core.h |  78 ++++---
+ net/smc/smc_ib.c   |  63 +++---
+ net/smc/smc_ib.h   |  10 +-
+ net/smc/smc_ism.c  |   3 +-
+ net/smc/smc_llc.c  | 396 ++++++++++++++++++---------------
+ net/smc/smc_llc.h  |  16 +-
+ net/smc/smc_pnet.c | 539 +++++++++++++++++++++++++-------------------
+ net/smc/smc_pnet.h |   2 +
+ net/smc/smc_tx.c   |  13 +-
+ net/smc/smc_wr.c   |   2 +-
+ 16 files changed, 1063 insertions(+), 702 deletions(-)
 
 -- 
-Thanks,
-
-David / dhildenb
+2.17.1
 
