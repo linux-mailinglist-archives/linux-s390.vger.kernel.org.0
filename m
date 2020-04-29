@@ -2,179 +2,129 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 079C81BD0A7
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2020 01:40:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4A8E1BD102
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Apr 2020 02:25:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgD1XkW convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Tue, 28 Apr 2020 19:40:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21630 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726042AbgD1XkV (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 28 Apr 2020 19:40:21 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03SNWmNr059304;
-        Tue, 28 Apr 2020 19:40:05 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhr7e0e7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 19:40:05 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03SNZdDf067260;
-        Tue, 28 Apr 2020 19:40:04 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhr7e0dm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 19:40:04 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03SNPQVZ019738;
-        Tue, 28 Apr 2020 23:40:02 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 30mcu6y6c9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 28 Apr 2020 23:40:02 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03SNdwjx64815162
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Apr 2020 23:39:58 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C884AA405F;
-        Tue, 28 Apr 2020 23:39:58 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F123BA405C;
-        Tue, 28 Apr 2020 23:39:57 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.4.15])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 28 Apr 2020 23:39:57 +0000 (GMT)
-Date:   Wed, 29 Apr 2020 01:39:55 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>, linux-next@vger.kernel.org,
-        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
+        id S1726363AbgD2AZS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 Apr 2020 20:25:18 -0400
+Received: from mga03.intel.com ([134.134.136.65]:2064 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726348AbgD2AZR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 28 Apr 2020 20:25:17 -0400
+IronPort-SDR: DevJyHBfffPTdrqWItjJtgdsYwIIZ/APyfET4MrOayZfClze82R3d89CEwSfv9gVKnd/9eOZIE
+ 4hqIsGh/e/Fw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2020 17:25:17 -0700
+IronPort-SDR: aQTA0+xoSyXfydgdHJLUaF+zekv+HZPBoNFdJfOSlKG9ZkrxCKL+8+2ZMSxcayAlzgkEuukuDz
+ nk/Uh6AlnXng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,328,1583222400"; 
+   d="scan'208";a="261268007"
+Received: from meis-mobl1.amr.corp.intel.com (HELO [10.255.231.186]) ([10.255.231.186])
+  by orsmga006.jf.intel.com with ESMTP; 28 Apr 2020 17:25:16 -0700
+Subject: Re: [PATCH v1 1/1] fs/splice: add missing callback for inaccessible
+ pages
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name
+Cc:     borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
         linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
         jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>, pasic@linux.ibm.com
-Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
- pages
-Message-ID: <20200429013955.2b59bd99@p-imbrenda>
-In-Reply-To: <42fccd01-7e16-b18f-cd81-4040857d80d4@intel.com>
-References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
-        <20200306132537.783769-3-imbrenda@linux.ibm.com>
-        <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
-        <20200415221754.GM2483@worktop.programming.kicks-ass.net>
-        <a7c2eb84-94c2-a608-4b04-a740fa9a389d@intel.com>
-        <20200416141547.29be5ea0@p-imbrenda>
-        <de56aa8e-9035-4b68-33cb-15682d073e26@intel.com>
-        <20200416165900.68bd4dba@p-imbrenda>
-        <a6b8728d-7382-9316-412d-dd48b5e7c41a@intel.com>
-        <20200416183431.7216e1d1@p-imbrenda>
-        <396a4ece-ec66-d023-2c7e-f09f84b358bc@intel.com>
-        <cbaddd28-c5d3-61a2-84d8-c883fb3d6290@intel.com>
-        <42fccd01-7e16-b18f-cd81-4040857d80d4@intel.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        linux-s390@vger.kernel.org, peterz@infradead.org,
+        sean.j.christopherson@intel.com
+References: <20200428225043.3091359-1-imbrenda@linux.ibm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <42cda753-a5df-9024-9076-11d75eec16c1@intel.com>
+Date:   Tue, 28 Apr 2020 17:25:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-28_15:2020-04-28,2020-04-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 spamscore=0 mlxscore=0 suspectscore=0 clxscore=1015
- priorityscore=1501 adultscore=0 phishscore=0 mlxlogscore=999
- impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004280177
+In-Reply-To: <20200428225043.3091359-1-imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 28 Apr 2020 12:43:45 -0700
-Dave Hansen <dave.hansen@intel.com> wrote:
+On 4/28/20 3:50 PM, Claudio Imbrenda wrote:
+> --- a/fs/splice.c
+> +++ b/fs/splice.c
+> @@ -106,6 +106,9 @@ static int page_cache_pipe_buf_confirm(struct pipe_inode_info *pipe,
+>  	struct page *page = buf->page;
+>  	int err;
+>  
+> +	if (arch_make_page_accessible(page))
+> +		return -EIO;
+> +
+>  	if (!PageUptodate(page)) {
+>  		lock_page(page);
 
-> On 4/21/20 2:31 PM, Dave Hansen wrote:
-> > On 4/16/20 12:02 PM, Dave Hansen wrote:  
-> >> On 4/16/20 9:34 AM, Claudio Imbrenda wrote:  
-> >>>> Ahh, so this is *just* intended to precede I/O done on the page,
-> >>>> when a non-host entity is touching the memory?  
-> >>> yep  
-> >> OK, so we've got to do an action that precedes *all* I/O to a page.
-> >> That's not too bad.
-> >>
-> >> I still don't understand how this could work generally, though
-> >> There are lots of places where I/O is done to a page without
-> >> either going through __test_set_page_writeback() or gup() with
-> >> FOLL_PIN set.
-> >>
-> >> sendfile() is probably the best example of this:
-> >>
-> >> 	fd = open("/normal/ext4/file", O_RDONLY);
-> >> 	sendfile(socket_fd, fd, &off, count);
-> >>
-> >> There's no gup in sight since the file doesn't have an address and
-> >> it's not being written to so there's no writeback.
-> >>
-> >> How does sendfile work?  
-> > 
-> > Did you manage to see if sendfile works (or any other operation that
-> > DMAs file-backed data without being preceded by a gup)?  
-> 
-> It's been a couple of weeks with no response on this.
+This is a cute fix, but doesn't it 100% depend on the internal
+implementation detail of page cache sendfile() being implemented with a
+pipe?  Depending on that seems rather fragile.  While I'm glad that you
+surgically plugged the one single, specific case that I pointed out, I
+can't help but suspect there are more of these.
 
-sorry, I've been busy with things
+For instance, I tried a file-to-file sendfile, basically:
 
-> From where I'm standing, we have a hook in the core VM that can't
-> possibly work with some existing kernel functionality and has
-> virtually no chance of getting used on a second architecture.
+	fd1 = open("file1");
+	fd2 = open("file2");
+	sendfile(fd1, fd2, ...);
 
-it seems to work at least for us, so it does possibly work :)
+ftrace showed page_cache_pipe_buf_confirm() getting called for the
+source pipe pages but not the receiver.  There were no calls to
+arch_make_page_accessible() outside of page_cache_pipe_buf_confirm() (I
+put a stub in for it on x86 so I could trace it).
 
-regarding second architectures: when we started sending these patches
-around, there has been interest from some other architectures, so
-just because nobody else needs them now, it doesn't mean nobody will
-use them ever. Moreover this is the only way for us to reasonably
-implement this (see below).
+That indicates to me that one side of this might be fixed (the sender),
+but the receiver is not.
 
-> It sounds like there may need to be some additional work here, but
-> should these hooks stay in for 5.7?  Or, should we revert this patch
-> and try again for 5.8?
-
-I don't see why we should revert a patch that works as intended and
-poses no overhead for non-users, whereas reverting it would break
-functionality.
-
-
-Now let me elaborate a little on the DMA API. There are some issues
-with some of the bus types used on s390 when it comes to the DMA API.
-Most I/O instructions on s390 need to allocate some small control blocks
-for each operation, and those need to be under 2GB. Those control blocks
-will be accessed directly by the hardware. The rest of the actual I/O
-buffers have no restriction and can be anywhere (64 bits). 
-Setting the DMA mask to 2GB means that all other buffers will be
-almost always bounced, which is unacceptable. Especially since there are
-no bounce buffers set up for s390x hosts anyway (they are set up only in
-protected guests (and not in normal guests), so this was also introduced
-quite recently).
-
-Also notice that, until now, there has been no actual need to use the
-DMA API on most s390 device drivers, hence why it's not being used
-there. I know that you are used to need the DMA API for DMA operations
-otherwise Bad Things™ happen, but this is not the case on s390 (for
-non-PCI devices at least).
-
-So until the DMA API is fixed, there is no way to convert all the
-drivers to the DMA API (which would be quite a lot of work in itself
-already, but that's not the point here). A fix for the DMA API was
-actually proposed by my colleague Halil several months ago now, but it
-did not go through. His proposal was to allow architectures to override
-the GFP flags for DMA allocations, to allow allocating some buffers
-from some areas and some other buffers from other areas.
-
-
-I hope this clarifies the matter a little :)
-
+This also doesn't even have the maintainer of fs/splice.c on cc.  The
+changelog about what this is trying to do probably also lacks enough
+context to bring Al up to speed about what this is trying to do.
