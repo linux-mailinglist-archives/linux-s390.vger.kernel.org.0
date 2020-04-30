@@ -2,157 +2,148 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 914201C0935
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 23:27:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BCED1C0A13
+	for <lists+linux-s390@lfdr.de>; Fri,  1 May 2020 00:08:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgD3V1g (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Apr 2020 17:27:36 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63866 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726654AbgD3V1f (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Apr 2020 17:27:35 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UL2uad075500;
-        Thu, 30 Apr 2020 17:27:35 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhqb9uyv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 17:27:35 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03UL35mS076513;
-        Thu, 30 Apr 2020 17:27:34 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhqb9uyc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 17:27:34 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03ULOWTx005915;
-        Thu, 30 Apr 2020 21:27:33 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma02wdc.us.ibm.com with ESMTP id 30mcu70mty-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 21:27:33 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03ULRWJQ18940256
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 21:27:32 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1D86278060;
-        Thu, 30 Apr 2020 21:27:32 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8096F7805C;
-        Thu, 30 Apr 2020 21:27:31 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.85.180.191])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Apr 2020 21:27:31 +0000 (GMT)
-From:   Jared Rossi <jrossi@linux.ibm.com>
-To:     Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
-Date:   Thu, 30 Apr 2020 17:29:59 -0400
-Message-Id: <20200430212959.13070-2-jrossi@linux.ibm.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200430212959.13070-1-jrossi@linux.ibm.com>
-References: <20200430212959.13070-1-jrossi@linux.ibm.com>
+        id S1726784AbgD3WHY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Apr 2020 18:07:24 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23209 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727930AbgD3WGt (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 30 Apr 2020 18:06:49 -0400
+IronPort-SDR: wFddU0H/qqyEsIFD2VY5QDn1+BVhIPD0+cLTNf1QHwEklus7DOtWRCJNnHk2Z/3pgAPPxq9Soa
+ ZyiuRkl6DnKA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 15:06:47 -0700
+IronPort-SDR: EKa0MD1KFBL+6pqaxJP2pWCwCBDSir+lBLyLu+xgV2xbsbFCzrH2Wc2b2lTCwSQqAlfvQPv9WU
+ oJNekRcfvZhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,337,1583222400"; 
+   d="scan'208";a="261926444"
+Received: from dnlloyd-mobl.amr.corp.intel.com (HELO [10.255.231.251]) ([10.255.231.251])
+  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 15:06:46 -0700
+Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
+ pages
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        viro@zeniv.linux.org.uk
+Cc:     david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, jack@suse.cz, kirill@shutemov.name,
+        peterz@infradead.org, sean.j.christopherson@intel.com,
+        Ulrich.Weigand@de.ibm.com
+References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
+ <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
+Date:   Thu, 30 Apr 2020 15:06:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_12:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 phishscore=0 clxscore=1015 adultscore=0 suspectscore=0
- spamscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004300156
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Remove the explicit prefetch check when using vfio-ccw devices.
-This check is not needed in practice as all Linux channel programs
-are intended to use prefetch.
+I was also wondering if Claudio was right about the debug patch having
+races.  I went to go look how the s390 code avoids races when pages go
+from accessible->inaccessible.
 
-It is expected that all ORBs issued by Linux will request prefetch.
-Although non-prefetching ORBs are not rejected, they will prefetch
-nonetheless. A warning is issued up to once per 5 seconds when a
-forced prefetch occurs.
+Because, if if all of the traps are in place to transform pages from
+inaccessible->accessible, the code *after* those traps is still
+vulnerable.  What *keeps* pages accessible?
 
-A non-prefetch ORB does not necessarily result in an error, however
-frequent encounters with non-prefetch ORBs indicates that channel
-programs are being executed in a way that is inconsistent with what
-the guest is requesting. While there are currently no known errors
-caused by forced prefetch, it is possible in theory that forced
-prefetch could result in an error if applied to a channel program
-that is dependent on non-prefetch.
+The race avoidance is this, basically:
 
-Signed-off-by: Jared Rossi <jrossi@linux.ibm.com>
----
- Documentation/s390/vfio-ccw.rst |  4 ++++
- drivers/s390/cio/vfio_ccw_cp.c  | 16 +++++++---------
- 2 files changed, 11 insertions(+), 9 deletions(-)
+	down_read(&gmap->mm->mmap_sem);
+	lock_page(page);
+        ptep = get_locked_pte(gmap->mm, uaddr, &ptelock);
+...
+>         expected = expected_page_refs(page);
+>         if (!page_ref_freeze(page, expected))
+>                 return -EBUSY;
+>         set_bit(PG_arch_1, &page->flags);
+>         rc = uv_call(0, (u64)uvcb);
+>         page_ref_unfreeze(page, expected);
 
-diff --git a/Documentation/s390/vfio-ccw.rst b/Documentation/s390/vfio-ccw.rst
-index fca9c4f5bd9c..8f71071f4403 100644
---- a/Documentation/s390/vfio-ccw.rst
-+++ b/Documentation/s390/vfio-ccw.rst
-@@ -335,6 +335,10 @@ device.
- The current code allows the guest to start channel programs via
- START SUBCHANNEL, and to issue HALT SUBCHANNEL and CLEAR SUBCHANNEL.
- 
-+Currently all channel programs are prefetched, regardless of the
-+p-bit setting in the ORB.  As a result, self modifying channel
-+programs are not supported (IPL is handled as a special case).
-+
- vfio-ccw supports classic (command mode) channel I/O only. Transport
- mode (HPF) is not supported.
- 
-diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-index 3645d1720c4b..48802e9827b6 100644
---- a/drivers/s390/cio/vfio_ccw_cp.c
-+++ b/drivers/s390/cio/vfio_ccw_cp.c
-@@ -8,6 +8,7 @@
-  *            Xiao Feng Ren <renxiaof@linux.vnet.ibm.com>
-  */
- 
-+#include <linux/ratelimit.h>
- #include <linux/mm.h>
- #include <linux/slab.h>
- #include <linux/iommu.h>
-@@ -625,23 +626,20 @@ static int ccwchain_fetch_one(struct ccwchain *chain,
-  * the target channel program from @orb->cmd.iova to the new ccwchain(s).
-  *
-  * Limitations:
-- * 1. Supports only prefetch enabled mode.
-- * 2. Supports idal(c64) ccw chaining.
-- * 3. Supports 4k idaw.
-+ * 1. Supports idal(c64) ccw chaining.
-+ * 2. Supports 4k idaw.
-  *
-  * Returns:
-  *   %0 on success and a negative error value on failure.
-  */
- int cp_init(struct channel_program *cp, struct device *mdev, union orb *orb)
- {
-+	static DEFINE_RATELIMIT_STATE(ratelimit_state, 5 * HZ, 1);
- 	int ret;
- 
--	/*
--	 * XXX:
--	 * Only support prefetch enable mode now.
--	 */
--	if (!orb->cmd.pfch)
--		return -EOPNOTSUPP;
-+	/* All Linux channel programs are expected to support prefetching */
-+	if (!orb->cmd.pfch && __ratelimit(&ratelimit_state))
-+		printk(KERN_WARNING "vfio_ccw_cp: prefetch will be forced\n");
- 
- 	INIT_LIST_HEAD(&cp->ccwchain_list);
- 	memcpy(&cp->orb, orb, sizeof(*orb));
--- 
-2.17.0
+... up_read(mmap_sem) / unlock_page() / unlock pte
+
+I'm assuming that after the uv_call(), the page is inaccessible and I/O
+devices will go boom if they touch the page.
+
+The page_ref_freeze() ensures that references come between the
+freeze/unfreeze are noticed, but it doesn't actually *stop* new ones for
+users that hold references already.  For the page cache, especially,
+someone could do:
+
+	page = find_get_page();
+	arch_make_page_accessible();
+					lock_page();
+	...				make_secure_pte();
+					unlock_page();
+	get_page();
+	// ^ OK because I have a ref
+	// do DMA on inaccessible page
+
+Because the make_secure_pte() code isn't looking for a *specific*
+'expected' value, it has no way of noticing that the extra ref snuck in
+there.
+
+I _think_ expected actually needs to be checked for having a specific
+(low) value so that if there's a *possibility* of a reference holder
+acquiring additional references, the page is known to be off-limits.
+mm/migrate.c has a few examples of this, but I'm not quite sure how
+bulletproof they are.  Some of it appears to just be optimizations.
+
+
 
