@@ -2,48 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3BF21BF900
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 15:13:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29B691BFCED
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 16:09:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgD3NN5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Apr 2020 09:13:57 -0400
-Received: from verein.lst.de ([213.95.11.211]:40633 "EHLO verein.lst.de"
+        id S1728223AbgD3Nvx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Apr 2020 09:51:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726520AbgD3NN4 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:13:56 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A164968D07; Thu, 30 Apr 2020 15:13:52 +0200 (CEST)
-Date:   Thu, 30 Apr 2020 15:13:52 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     axboe@kernel.dk, hch@lst.de, linux-block@vger.kernel.org,
-        hoeppner@linux.ibm.com, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] s390/dasd: remove ioctl_by_bdev from DASD driver
-Message-ID: <20200430131351.GA24813@lst.de>
-References: <20200430111754.98508-1-sth@linux.ibm.com> <20200430111754.98508-2-sth@linux.ibm.com>
+        id S1728212AbgD3Nvv (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:51:51 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B290624956;
+        Thu, 30 Apr 2020 13:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588254711;
+        bh=BtlbYbV7ZTLuPWVpFdkjQxXtr0m1GdmEM+9Jp5gVnkA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SBiVR1vXuhuBMPdlrx9Fyn7nH6pP0WTdSOq1K8odQh2JIDHRGaXpS7fTaN6GsycZJ
+         I9yTNo+FrKccfH76JryEPxeJHfgJamtYX93lD7w3PJGizbVTDbXdWwdnvUJq2eNPw4
+         /pInd2tXVBxAurTv+MPMlCN/JuhslrFZmqsfhPIs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Philipp Rudo <prudo@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 59/79] s390/ftrace: fix potential crashes when switching tracers
+Date:   Thu, 30 Apr 2020 09:50:23 -0400
+Message-Id: <20200430135043.19851-59-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
+References: <20200430135043.19851-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200430111754.98508-2-sth@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Apr 30, 2020 at 01:17:54PM +0200, Stefan Haberland wrote:
-> Remove the calls to ioctl_by_bdev from the DASD partition detection code
-> to enable the removal of the specific code.
-> 
-> To do so reuse the gendisk private_data pointer and not only provide a
-> pointer to the devmap but provide a new structure containing a pointer
-> to the devmap as well as all required information for the partition
-> detection. This makes it independent from the dasd_information2_t
-> structure.
+From: Philipp Rudo <prudo@linux.ibm.com>
 
-I think sharing the data structure in private data is pretty dangerous.
-In the meantime I thought of another idea - the partition code could
-do a symbol_get of a symbol exported by the dasd driver and use that
-to query the information.
+[ Upstream commit 8ebf6da9db1b2a20bb86cc1bee2552e894d03308 ]
+
+Switching tracers include instruction patching. To prevent that a
+instruction is patched while it's read the instruction patching is done
+in stop_machine 'context'. This also means that any function called
+during stop_machine must not be traced. Thus add 'notrace' to all
+functions called within stop_machine.
+
+Fixes: 1ec2772e0c3c ("s390/diag: add a statistic for diagnose calls")
+Fixes: 38f2c691a4b3 ("s390: improve wait logic of stop_machine")
+Fixes: 4ecf0a43e729 ("processor: get rid of cpu_relax_yield")
+Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/kernel/diag.c  | 2 +-
+ arch/s390/kernel/smp.c   | 4 ++--
+ arch/s390/kernel/trace.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
+index 61f2b0412345a..ccba63aaeb470 100644
+--- a/arch/s390/kernel/diag.c
++++ b/arch/s390/kernel/diag.c
+@@ -133,7 +133,7 @@ void diag_stat_inc(enum diag_stat_enum nr)
+ }
+ EXPORT_SYMBOL(diag_stat_inc);
+ 
+-void diag_stat_inc_norecursion(enum diag_stat_enum nr)
++void notrace diag_stat_inc_norecursion(enum diag_stat_enum nr)
+ {
+ 	this_cpu_inc(diag_stat.counter[nr]);
+ 	trace_s390_diagnose_norecursion(diag_map[nr].code);
+diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
+index f87d4e14269c9..4f8cb8d1c51b9 100644
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@ -403,7 +403,7 @@ int smp_find_processor_id(u16 address)
+ 	return -1;
+ }
+ 
+-bool arch_vcpu_is_preempted(int cpu)
++bool notrace arch_vcpu_is_preempted(int cpu)
+ {
+ 	if (test_cpu_flag_of(CIF_ENABLED_WAIT, cpu))
+ 		return false;
+@@ -413,7 +413,7 @@ bool arch_vcpu_is_preempted(int cpu)
+ }
+ EXPORT_SYMBOL(arch_vcpu_is_preempted);
+ 
+-void smp_yield_cpu(int cpu)
++void notrace smp_yield_cpu(int cpu)
+ {
+ 	if (!MACHINE_HAS_DIAG9C)
+ 		return;
+diff --git a/arch/s390/kernel/trace.c b/arch/s390/kernel/trace.c
+index 490b52e850145..11a669f3cc93c 100644
+--- a/arch/s390/kernel/trace.c
++++ b/arch/s390/kernel/trace.c
+@@ -14,7 +14,7 @@ EXPORT_TRACEPOINT_SYMBOL(s390_diagnose);
+ 
+ static DEFINE_PER_CPU(unsigned int, diagnose_trace_depth);
+ 
+-void trace_s390_diagnose_norecursion(int diag_nr)
++void notrace trace_s390_diagnose_norecursion(int diag_nr)
+ {
+ 	unsigned long flags;
+ 	unsigned int *depth;
+-- 
+2.20.1
+
