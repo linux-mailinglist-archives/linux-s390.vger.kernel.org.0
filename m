@@ -2,116 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A22471BF5C7
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 12:43:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED4151BF65B
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 13:18:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgD3Kn0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Apr 2020 06:43:26 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53496 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726127AbgD3Kn0 (ORCPT
+        id S1726760AbgD3LSE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Apr 2020 07:18:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28634 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726309AbgD3LSE (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:43:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588243405;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RDi2vE7xlXjhzYA/qFLKFknGOZGTd39IiKLpNXW46B0=;
-        b=cvXo84LGaGHaGLeqcOhTPzlFXFQK4Z0MhSIQDYNcXmuKq7znKcWC3DeHX0wgYLF/iOQLmh
-        UVHGpRH8jtAy6BmuUdNc3bGs+V+uvpVjt9BpMmxhU930zHqfv/Krn0lc0YdbbPC1eFHal+
-        CR/eqit1P4HIjsDLcjT80YwM3nEP9Bc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-42hY1zNmNcaAtHdj-7o95A-1; Thu, 30 Apr 2020 06:43:21 -0400
-X-MC-Unique: 42hY1zNmNcaAtHdj-7o95A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 597C5468;
-        Thu, 30 Apr 2020 10:43:20 +0000 (UTC)
-Received: from gondolin (ovpn-112-226.ams2.redhat.com [10.36.112.226])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C09C65C1BE;
-        Thu, 30 Apr 2020 10:43:18 +0000 (UTC)
-Date:   Thu, 30 Apr 2020 12:43:16 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc:     Vineeth Vijayan <vneethv@linux.vnet.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Boris Fiuczynski <fiuczy@linux.ibm.com>
-Subject: Re: [RFD] uevent handling for subchannels
-Message-ID: <20200430124316.023a82b0.cohuck@redhat.com>
-In-Reply-To: <53d7d08d-c1d2-dad3-7f01-a165b24b0359@linux.ibm.com>
-References: <20200403124032.5e70603d.cohuck@redhat.com>
-        <20200417143811.7e6ecb2c.cohuck@redhat.com>
-        <8649ea94-8617-07b6-170e-65c278d9383b@linux.vnet.ibm.com>
-        <c69da1c0-d151-257b-fe43-786e47a3cf9b@linux.vnet.ibm.com>
-        <20200423182001.40345df8.cohuck@redhat.com>
-        <53d7d08d-c1d2-dad3-7f01-a165b24b0359@linux.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Thu, 30 Apr 2020 07:18:04 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UB3CQN140103;
+        Thu, 30 Apr 2020 07:18:00 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30me47b9cp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 07:18:00 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UBG6BG013757;
+        Thu, 30 Apr 2020 11:17:58 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04fra.de.ibm.com with ESMTP id 30mcu5aknm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Apr 2020 11:17:57 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UBHtKL65012140
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Apr 2020 11:17:55 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1EF6FAE058;
+        Thu, 30 Apr 2020 11:17:55 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B0E5AE055;
+        Thu, 30 Apr 2020 11:17:55 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 30 Apr 2020 11:17:55 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id B233BE0260; Thu, 30 Apr 2020 13:17:54 +0200 (CEST)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     axboe@kernel.dk, hch@lst.de
+Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] remove ioclt_by_bdev from DASD
+Date:   Thu, 30 Apr 2020 13:17:53 +0200
+Message-Id: <20200430111754.98508-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-30_07:2020-04-30,2020-04-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=751 clxscore=1015 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004300087
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 27 Apr 2020 12:10:17 +0200
-Peter Oberparleiter <oberpar@linux.ibm.com> wrote:
+Hi Christoph and Jens,
 
-> On 23.04.2020 18:20, Cornelia Huck wrote:
-> > On Thu, 23 Apr 2020 16:52:24 +0200
-> > Vineeth Vijayan <vneethv@linux.vnet.ibm.com> wrote:  
-> >> Then we could also change the way ccw_device_call_sch_unregister() 
-> >> works, where
-> >> the subchannel-unregister is happening from an upper layer.  
-> > 
-> > Hm, what's the problem here? This seems to be mostly a case of "we did
-> > I/O to the device and it appeared not operational; so we go ahead and
-> > unregister the subchannel"? Childless I/O subchannels are a bit useless.  
-> 
-> Hey Conny,
-> 
-> sparked by your proposal, Vineeth and myself looked at the corresponding
-> CIO code and wondered if things couldn't be done in a generally
-> better/cleaner way. So here we'd like to get your opinion.
-> 
-> In particular, as it is currently, a child-driver (IO subchannel driver,
-> vfio-ccw, etc.) unregisters a device owned by a parent-device-driver
-> (CSS), which feels from a high-level-view like a layering violation:
-> only the parent driver should register and unregister the parent device.
-> Also in case no subchannel driver is available (e.g. due to
-> driver_override=none), there would be no subchannel ADD event at all.
+here I have a different proposal how to remove the ioctl_by_bdev calls
+from the DASD device driver. The patch is tested and from my perspective
+OK to be integrated.
+If you find it acceptable please feel free to integrate it into your tree.
+Otherwise I am open for suggestions.
 
-Doesn't the base css code generate the uevent in that case?
+Regards,
+Stefan
 
-> 
-> So, tapping into you historical expertise about CIO, is there any reason
-> for doing it this way beyond being nice to userspace tooling that
-> subchannels with non-working CCW devices are automatically hidden by
-> unregistering them?
+Stefan Haberland (1):
+  s390/dasd: remove ioctl_by_bdev from DASD driver
 
-We always had ccw devices behind I/O subchannels, but that has not been
-the case since we introduced vfio-ccw, so hopefully everybody can deal
-with that. The rationale behind this was that device-less I/O
-subchannels were deemed to be useless; I currently can't remember
-another reason.
+ block/partitions/ibm.c           | 67 ++++++++++++++++++--------------
+ drivers/s390/block/dasd_devmap.c | 17 +++++++-
+ drivers/s390/block/dasd_diag.c   | 10 +++++
+ drivers/s390/block/dasd_eckd.c   | 10 +++++
+ drivers/s390/block/dasd_fba.c    |  8 ++++
+ drivers/s390/block/dasd_genhd.c  |  1 +
+ drivers/s390/block/dasd_int.h    | 10 +++++
+ 7 files changed, 91 insertions(+), 32 deletions(-)
 
-What about EADM, btw? CHSC does not have a device, and message does not
-have a driver.
-
-> 
-> Removing the child-unregisters-parent logic this would also enable
-> manual rebind of subchannels for which only a different driver than the
-> default one can successfully talk to the child device, though I'm
-> unaware of any current application for that.
-
-Yes.
-
-Let me think about that some more (no clear head currently, sorry.)
+-- 
+2.17.1
 
