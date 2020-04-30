@@ -2,50 +2,50 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F8401C069B
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 21:38:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D70E1C06AF
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 21:45:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbgD3Tiu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Apr 2020 15:38:50 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38126 "EHLO
+        id S1726338AbgD3Tpj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Apr 2020 15:45:39 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30678 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726318AbgD3Tiu (ORCPT
+        by vger.kernel.org with ESMTP id S1726375AbgD3Tpj (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Apr 2020 15:38:50 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UJXDx7096318;
-        Thu, 30 Apr 2020 15:38:36 -0400
+        Thu, 30 Apr 2020 15:45:39 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UJc6Y8060255;
+        Thu, 30 Apr 2020 15:45:27 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mguym2xk-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh9r9qhf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 15:38:36 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03UJYFPD098876;
-        Thu, 30 Apr 2020 15:38:35 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mguym2w9-1
+        Thu, 30 Apr 2020 15:45:27 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03UJcCOs061081;
+        Thu, 30 Apr 2020 15:45:26 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30mh9r9qg0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 15:38:35 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UJUoxk014456;
-        Thu, 30 Apr 2020 19:38:32 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 30mcu7xveq-1
+        Thu, 30 Apr 2020 15:45:26 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UJV8qs010872;
+        Thu, 30 Apr 2020 19:45:23 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04fra.de.ibm.com with ESMTP id 30mcu5axg7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 19:38:32 +0000
+        Thu, 30 Apr 2020 19:45:23 +0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UJcTmI61407364
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UJjKtE2556354
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 19:38:29 GMT
+        Thu, 30 Apr 2020 19:45:20 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 59030AE051;
-        Thu, 30 Apr 2020 19:38:29 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id B5B7CAE04D;
+        Thu, 30 Apr 2020 19:45:20 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 66B37AE04D;
-        Thu, 30 Apr 2020 19:38:28 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id CEBB7AE053;
+        Thu, 30 Apr 2020 19:45:19 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.145.16.167])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Apr 2020 19:38:28 +0000 (GMT)
+        Thu, 30 Apr 2020 19:45:19 +0000 (GMT)
 Subject: Re: [PATCH v1 1/1] fs/splice: add missing callback for inaccessible
  pages
 To:     Dave Hansen <dave.hansen@intel.com>,
@@ -103,8 +103,8 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <f32fa7f8-a259-80cc-ec70-d9cd690a8430@de.ibm.com>
-Date:   Thu, 30 Apr 2020 21:38:28 +0200
+Message-ID: <3be8c483-fd08-32ee-851c-c9f0d7752f66@de.ibm.com>
+Date:   Thu, 30 Apr 2020 21:45:19 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
@@ -115,11 +115,11 @@ Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-30_12:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 suspectscore=0
- bulkscore=0 adultscore=0 impostorscore=0 phishscore=0 spamscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ spamscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ impostorscore=0 lowpriorityscore=0 mlxscore=0 phishscore=0
  priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004300147
+ engine=8.12.0-2003020000 definitions=main-2004300145
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -155,4 +155,4 @@ On 30.04.20 21:32, Dave Hansen wrote:
 > I updated the patch and double-checked that it triggers properly with a
 > socket-based sendfile().
 
-Do you have a calltrace? 
+Can you place the updated patch somewhere?
