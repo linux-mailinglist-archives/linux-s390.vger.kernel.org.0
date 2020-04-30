@@ -2,30 +2,31 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BCED1C0A13
-	for <lists+linux-s390@lfdr.de>; Fri,  1 May 2020 00:08:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37A411C0A41
+	for <lists+linux-s390@lfdr.de>; Fri,  1 May 2020 00:20:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgD3WHY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Apr 2020 18:07:24 -0400
-Received: from mga11.intel.com ([192.55.52.93]:23209 "EHLO mga11.intel.com"
+        id S1726697AbgD3WUJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Apr 2020 18:20:09 -0400
+Received: from mga06.intel.com ([134.134.136.31]:64761 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727930AbgD3WGt (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Apr 2020 18:06:49 -0400
-IronPort-SDR: wFddU0H/qqyEsIFD2VY5QDn1+BVhIPD0+cLTNf1QHwEklus7DOtWRCJNnHk2Z/3pgAPPxq9Soa
- ZyiuRkl6DnKA==
+        id S1726447AbgD3WUJ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 30 Apr 2020 18:20:09 -0400
+IronPort-SDR: Nmy2SMonhEF9N5yObYCShGyE0JIviHsvavAck0uweUqq+6nFtjb8JOeBJhhTv2evzjQMA3RNZx
+ 1FePlNckYeAg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 15:06:47 -0700
-IronPort-SDR: EKa0MD1KFBL+6pqaxJP2pWCwCBDSir+lBLyLu+xgV2xbsbFCzrH2Wc2b2lTCwSQqAlfvQPv9WU
- oJNekRcfvZhw==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 15:20:08 -0700
+IronPort-SDR: T7uBwXiNPRoS+3hMz5KdpH/1eTYmxcBu2tj7GmZEFouoQWuhYFf2wiVPVtTggMbBWOoPKAxDeG
+ ZOTJnFvd6Opw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,337,1583222400"; 
-   d="scan'208";a="261926444"
+   d="scan'208";a="261929251"
 Received: from dnlloyd-mobl.amr.corp.intel.com (HELO [10.255.231.251]) ([10.255.231.251])
-  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 15:06:46 -0700
+  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 15:20:07 -0700
 Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
  pages
+From:   Dave Hansen <dave.hansen@intel.com>
 To:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
         viro@zeniv.linux.org.uk
@@ -37,7 +38,7 @@ Cc:     david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
         Ulrich.Weigand@de.ibm.com
 References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
  <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
-From:   Dave Hansen <dave.hansen@intel.com>
+ <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
 Autocrypt: addr=dave.hansen@intel.com; keydata=
  xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
  oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
@@ -81,12 +82,12 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  OPsw5tV/LmQ5GXH0JQ/TZXWygyRFyyI2FqNTx4WHqUn3yFj8rwTAU1tluRUYyeLy0ayUlKBH
  ybj0N71vWO936MqP6haFERzuPAIpxj2ezwu0xb1GjTk4ynna6h5GjnKgdfOWoRtoWndMZxbA
  z5cecg==
-Message-ID: <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
-Date:   Thu, 30 Apr 2020 15:06:46 -0700
+Message-ID: <561b39e0-4501-a6c3-5aa8-13a68d1c9484@intel.com>
+Date:   Thu, 30 Apr 2020 15:20:07 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
+In-Reply-To: <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -95,55 +96,25 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-I was also wondering if Claudio was right about the debug patch having
-races.  I went to go look how the s390 code avoids races when pages go
-from accessible->inaccessible.
+One other thing...  The gup code will not take references on ref-frozen
+pages:
 
-Because, if if all of the traps are in place to transform pages from
-inaccessible->accessible, the code *after* those traps is still
-vulnerable.  What *keeps* pages accessible?
+> static inline __must_check bool try_get_page(struct page *page)
+> {
+>         page = compound_head(page);
+>         if (WARN_ON_ONCE(page_ref_count(page) <= 0))
+>                 return false;
+>         page_ref_inc(page);
+>         return true;
+> }
 
-The race avoidance is this, basically:
+*But*, notice that the path that skips taking a ref is also a
+WARN_ON_ONCE().  Basically, if you get to try_get_page() on a ref-frozen
+page, it's considered buggy.  This makes sense because you fundamentally
+can't freeze refs on a page that might have more refs taken on it.
 
-	down_read(&gmap->mm->mmap_sem);
-	lock_page(page);
-        ptep = get_locked_pte(gmap->mm, uaddr, &ptelock);
-...
->         expected = expected_page_refs(page);
->         if (!page_ref_freeze(page, expected))
->                 return -EBUSY;
->         set_bit(PG_arch_1, &page->flags);
->         rc = uv_call(0, (u64)uvcb);
->         page_ref_unfreeze(page, expected);
-
-... up_read(mmap_sem) / unlock_page() / unlock pte
-
-I'm assuming that after the uv_call(), the page is inaccessible and I/O
-devices will go boom if they touch the page.
-
-The page_ref_freeze() ensures that references come between the
-freeze/unfreeze are noticed, but it doesn't actually *stop* new ones for
-users that hold references already.  For the page cache, especially,
-someone could do:
-
-	page = find_get_page();
-	arch_make_page_accessible();
-					lock_page();
-	...				make_secure_pte();
-					unlock_page();
-	get_page();
-	// ^ OK because I have a ref
-	// do DMA on inaccessible page
-
-Because the make_secure_pte() code isn't looking for a *specific*
-'expected' value, it has no way of noticing that the extra ref snuck in
-there.
-
-I _think_ expected actually needs to be checked for having a specific
-(low) value so that if there's a *possibility* of a reference holder
-acquiring additional references, the page is known to be off-limits.
-mm/migrate.c has a few examples of this, but I'm not quite sure how
-bulletproof they are.  Some of it appears to just be optimizations.
-
-
-
+I think all the other users do this by ensuring that any PTE that could
+be gup'd is set non-present before the refs are frozen and remote TLBs
+are flushed which also ensures no GUPs are running.  I don't know if the
+s390 code has some other way of preventing GUPs, but leaving Present=1
+PTEs while you freeze refs would be quite troublesome on x86.
