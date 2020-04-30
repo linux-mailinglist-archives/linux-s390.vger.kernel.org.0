@@ -2,97 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 212FC1BF542
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 12:22:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B7E11BF568
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 12:29:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgD3KWZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Apr 2020 06:22:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32622 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725280AbgD3KWY (ORCPT
+        id S1726546AbgD3K3r (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Apr 2020 06:29:47 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58718 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726378AbgD3K3r (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:22:24 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UA2qQq049772;
-        Thu, 30 Apr 2020 06:22:22 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhqaph5f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 06:22:22 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03UA4XsU058309;
-        Thu, 30 Apr 2020 06:22:22 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhqaph48-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 06:22:21 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UAKLFG009374;
-        Thu, 30 Apr 2020 10:22:19 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04fra.de.ibm.com with ESMTP id 30mcu5ajgq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 10:22:19 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UAL7Gu60031290
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 10:21:07 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85D7F4204B;
-        Thu, 30 Apr 2020 10:22:16 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D9D2242047;
-        Thu, 30 Apr 2020 10:22:15 +0000 (GMT)
-Received: from localhost (unknown [9.145.144.181])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 30 Apr 2020 10:22:15 +0000 (GMT)
-Date:   Thu, 30 Apr 2020 12:22:14 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Thu, 30 Apr 2020 06:29:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588242585;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=F00GW0IDxO2YtXf8I1Htd7Li0LSvuJyIHlJhh9ba9cc=;
+        b=ET/HEcMaPnnU8Ikjs61jZltkM1jseyY3c45PGlU7miJREHCpkXXQLaY03Qe9vKzx/vNlZE
+        eKvP6zLAHOsdyXX/QZKFc24fU77NAjotl1JoCYIApC469dlGO4tppelP/N8c24f7OyH2V1
+        H3WFLVSoOOPwCGabrnnBfqff3BfwSUU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-F5xrMv_8M0upE38nqrJ6fA-1; Thu, 30 Apr 2020 06:29:37 -0400
+X-MC-Unique: F5xrMv_8M0upE38nqrJ6fA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0BD301899521;
+        Thu, 30 Apr 2020 10:29:32 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-113-172.ams2.redhat.com [10.36.113.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 963F15D780;
+        Thu, 30 Apr 2020 10:29:16 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Baoquan He <bhe@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390: ptrace: hard-code "s390x" instead of UTS_MACHINE
-Message-ID: <your-ad-here.call-01588242134-ext-2784@work.hours>
-References: <20200413013113.8529-1-masahiroy@kernel.org>
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Len Brown <lenb@kernel.org>,
+        Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: [PATCH v2 0/3] mm/memory_hotplug: Allow to not create firmware memmap entries
+Date:   Thu, 30 Apr 2020 12:29:05 +0200
+Message-Id: <20200430102908.10107-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200413013113.8529-1-masahiroy@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_05:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 phishscore=0 clxscore=1011 adultscore=0 suspectscore=1
- spamscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004300077
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 10:31:13AM +0900, Masahiro Yamada wrote:
-> s390 uses the UTS_MACHINE defined arch/s390/Makefile as follows:
-> 
->   UTS_MACHINE     := s390x
-> 
-> We do not need to pass the fixed string from the command line.
-> Hard-code user_regset_view::name, like many other architectures do.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  arch/s390/kernel/Makefile | 5 -----
->  arch/s390/kernel/ptrace.c | 2 +-
->  2 files changed, 1 insertion(+), 6 deletions(-)
+This is the follow up of [1]:
+	[PATCH v1 0/3] mm/memory_hotplug: Make virtio-mem play nicely with
+	kexec-tools
 
-Yes, since we don't have 31-bit kernel build support for s390 anymore
-this makes sense.
-Applied, thanks.
+I realized that this is not only helpful for virtio-mem, but also for
+dax/kmem - it's a fix for that use case (see patch #3) of persistent
+memory.
+
+Also, while testing, I discovered that kexec-tools will *not* add dax/kme=
+m
+memory (anything not directly under the root when parsing /proc/iomem) to
+the elfcorehdr, so this memory will never get included in a dump. This
+probably has to be fixed in kexec-tools - virtio-mem will require this as
+well.
+
+v1 -> v2:
+- Don't change the resource name
+- Rename the flag to MHP_NO_FIRMWARE_MEMMAP to reflect what it is doing
+- Rephrase subjects/descriptions
+- Use the flag for dax/kmem
+
+I'll have to rebase virtio-mem on these changes, there will be a resend.
+
+[1] https://lkml.kernel.org/r/20200429160803.109056-1-david@redhat.com
+
+David Hildenbrand (3):
+  mm/memory_hotplug: Prepare passing flags to add_memory() and friends
+  mm/memory_hotplug: Introduce MHP_NO_FIRMWARE_MEMMAP
+  device-dax: Add system ram (add_memory()) with MHP_NO_FIRMWARE_MEMMAP
+
+ arch/powerpc/platforms/powernv/memtrace.c       |  2 +-
+ arch/powerpc/platforms/pseries/hotplug-memory.c |  2 +-
+ drivers/acpi/acpi_memhotplug.c                  |  2 +-
+ drivers/base/memory.c                           |  2 +-
+ drivers/dax/kmem.c                              |  3 ++-
+ drivers/hv/hv_balloon.c                         |  2 +-
+ drivers/s390/char/sclp_cmd.c                    |  2 +-
+ drivers/xen/balloon.c                           |  2 +-
+ include/linux/memory_hotplug.h                  | 15 ++++++++++++---
+ mm/memory_hotplug.c                             | 14 ++++++++------
+ 10 files changed, 29 insertions(+), 17 deletions(-)
+
+--=20
+2.25.3
+
