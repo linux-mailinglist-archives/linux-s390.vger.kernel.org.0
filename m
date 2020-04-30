@@ -2,195 +2,261 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B480C1BECD8
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 02:08:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 590991BF12E
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 09:19:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgD3AIF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 29 Apr 2020 20:08:05 -0400
-Received: from mga03.intel.com ([134.134.136.65]:17685 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbgD3AIF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 29 Apr 2020 20:08:05 -0400
-IronPort-SDR: KU1Qunb1WCpIcnlTAE1gLOI4I13E1n7z6uHXCpA3QZjcgX2p2rCsK/Aa7odvIWmuHbV3QkjlDt
- BPIyscpbftow==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2020 17:08:04 -0700
-IronPort-SDR: 8lZrsl0wLt7oFUoHi7W//Bntkm29bKrQORzcH1MPPrhb7F9mbLEACH08RrTi8X5hI+ByAQQnM5
- BwXN4hf/V26g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,333,1583222400"; 
-   d="scan'208";a="293378354"
-Received: from chenw5-mobl1.ccr.corp.intel.com (HELO [10.254.209.112]) ([10.254.209.112])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Apr 2020 17:07:58 -0700
-Cc:     baolu.lu@linux.intel.com, Daniel Drake <drake@endlessm.com>,
-        jonathan.derrick@intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
+        id S1726433AbgD3HTp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Apr 2020 03:19:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55649 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726466AbgD3HTp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Apr 2020 03:19:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588231183;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=1ZVQP21/gRpjdQaiA5iEEwLdE4gKxXG18sO+uoyk77w=;
+        b=YyXKqWpmaEqbqG0mQbsp3TYTvS8Kap4mcBdi9+EIrFBzWh84U3znmfH9o6xtGBVz/Wm2qv
+        jc3YLrrjM3DiMqntWdQjbQCKBFBUqk7LjpNpcnOP+6j+FQMe360QpmANXaS7cNUF/PUQ7C
+        Cz+d01l2y2QD2eUgGH8kRwf1hIl7KUU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-331-rM1ylhAbMHiuxvT_teIprA-1; Thu, 30 Apr 2020 03:19:37 -0400
+X-MC-Unique: rM1ylhAbMHiuxvT_teIprA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16BAAEC1A7;
+        Thu, 30 Apr 2020 07:19:35 +0000 (UTC)
+Received: from [10.36.113.172] (ovpn-113-172.ams2.redhat.com [10.36.113.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B9F7360BF4;
+        Thu, 30 Apr 2020 07:19:27 +0000 (UTC)
+Subject: Re: [PATCH v1 2/3] mm/memory_hotplug: Introduce MHP_DRIVER_MANAGED
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
         virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v3 16/34] iommu/vt-d: Convert to probe/release_device()
- call-backs
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-References: <20200429133712.31431-1-joro@8bytes.org>
- <20200429133712.31431-17-joro@8bytes.org>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <7ceca31f-cf24-d4f8-04fd-74691dd3c11a@linux.intel.com>
-Date:   Thu, 30 Apr 2020 08:07:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+References: <20200429160803.109056-1-david@redhat.com>
+ <20200429160803.109056-3-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <a7305cd8-8b2f-1d8f-7654-ecf777c46df6@redhat.com>
+Date:   Thu, 30 Apr 2020 09:19:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200429133712.31431-17-joro@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200429160803.109056-3-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2020/4/29 21:36, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> Convert the Intel IOMMU driver to use the probe_device() and
-> release_device() call-backs of iommu_ops, so that the iommu core code
-> does the group and sysfs setup.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-
-Best regards,
-baolu
-
+On 29.04.20 18:08, David Hildenbrand wrote:
+> Some paravirtualized devices that add memory via add_memory() and
+> friends (esp. virtio-mem) don't want to create entries in
+> /sys/firmware/memmap/ - primarily to hinder kexec from adding this
+> memory to the boot memmap of the kexec kernel.
+>=20
+> In fact, such memory is never exposed via the firmware (e.g., e820), bu=
+t
+> only via the device, so exposing this memory via /sys/firmware/memmap/ =
+is
+> wrong:
+>  "kexec needs the raw firmware-provided memory map to setup the
+>   parameter segment of the kernel that should be booted with
+>   kexec. Also, the raw memory map is useful for debugging. For
+>   that reason, /sys/firmware/memmap is an interface that provides
+>   the raw memory map to userspace." [1]
+>=20
+> We want to let user space know that memory which is always detected,
+> added, and managed via a (device) driver - like memory managed by
+> virtio-mem - is special. It cannot be used for placing kexec segments
+> and the (device) driver is responsible for re-adding memory that
+> (eventually shrunk/grown/defragmented) memory after a reboot/kexec. It
+> should e.g., not be added to a fixed up firmware memmap. However, it sh=
+ould
+> be dumped by kdump.
+>=20
+> Also, such memory could behave differently than an ordinary DIMM - e.g.=
+,
+> memory managed by virtio-mem can have holes inside added memory resourc=
+e,
+> which should not be touched, especially for writing.
+>=20
+> Let's expose that memory as "System RAM (driver managed)" e.g., via
+> /pro/iomem.
+>=20
+> We don't have to worry about firmware_map_remove() on the removal path.
+> If there is no entry, it will simply return with -EINVAL.
+>=20
+> [1] https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware=
+-memmap
+>=20
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
->   drivers/iommu/intel-iommu.c | 67 ++++---------------------------------
->   1 file changed, 6 insertions(+), 61 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index b9f905a55dda..b906727f5b85 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5781,78 +5781,27 @@ static bool intel_iommu_capable(enum iommu_cap cap)
->   	return false;
->   }
->   
-> -static int intel_iommu_add_device(struct device *dev)
-> +static struct iommu_device *intel_iommu_probe_device(struct device *dev)
->   {
-> -	struct dmar_domain *dmar_domain;
-> -	struct iommu_domain *domain;
->   	struct intel_iommu *iommu;
-> -	struct iommu_group *group;
->   	u8 bus, devfn;
-> -	int ret;
->   
->   	iommu = device_to_iommu(dev, &bus, &devfn);
->   	if (!iommu)
-> -		return -ENODEV;
-> -
-> -	iommu_device_link(&iommu->iommu, dev);
-> +		return ERR_PTR(-ENODEV);
->   
->   	if (translation_pre_enabled(iommu))
->   		dev->archdata.iommu = DEFER_DEVICE_DOMAIN_INFO;
->   
-> -	group = iommu_group_get_for_dev(dev);
-> -
-> -	if (IS_ERR(group)) {
-> -		ret = PTR_ERR(group);
-> -		goto unlink;
-> -	}
-> -
-> -	iommu_group_put(group);
-> -
-> -	domain = iommu_get_domain_for_dev(dev);
-> -	dmar_domain = to_dmar_domain(domain);
-> -	if (domain->type == IOMMU_DOMAIN_DMA) {
-> -		if (device_def_domain_type(dev) == IOMMU_DOMAIN_IDENTITY) {
-> -			ret = iommu_request_dm_for_dev(dev);
-> -			if (ret) {
-> -				dmar_remove_one_dev_info(dev);
-> -				dmar_domain->flags |= DOMAIN_FLAG_LOSE_CHILDREN;
-> -				domain_add_dev_info(si_domain, dev);
-> -				dev_info(dev,
-> -					 "Device uses a private identity domain.\n");
-> -			}
-> -		}
-> -	} else {
-> -		if (device_def_domain_type(dev) == IOMMU_DOMAIN_DMA) {
-> -			ret = iommu_request_dma_domain_for_dev(dev);
-> -			if (ret) {
-> -				dmar_remove_one_dev_info(dev);
-> -				dmar_domain->flags |= DOMAIN_FLAG_LOSE_CHILDREN;
-> -				if (!get_private_domain_for_dev(dev)) {
-> -					dev_warn(dev,
-> -						 "Failed to get a private domain.\n");
-> -					ret = -ENOMEM;
-> -					goto unlink;
-> -				}
-> -
-> -				dev_info(dev,
-> -					 "Device uses a private dma domain.\n");
-> -			}
-> -		}
-> -	}
-> -
->   	if (device_needs_bounce(dev)) {
->   		dev_info(dev, "Use Intel IOMMU bounce page dma_ops\n");
->   		set_dma_ops(dev, &bounce_dma_ops);
->   	}
->   
-> -	return 0;
-> -
-> -unlink:
-> -	iommu_device_unlink(&iommu->iommu, dev);
-> -	return ret;
-> +	return &iommu->iommu;
->   }
->   
-> -static void intel_iommu_remove_device(struct device *dev)
-> +static void intel_iommu_release_device(struct device *dev)
->   {
->   	struct intel_iommu *iommu;
->   	u8 bus, devfn;
-> @@ -5863,10 +5812,6 @@ static void intel_iommu_remove_device(struct device *dev)
->   
->   	dmar_remove_one_dev_info(dev);
->   
-> -	iommu_group_remove_device(dev);
-> -
-> -	iommu_device_unlink(&iommu->iommu, dev);
-> -
->   	if (device_needs_bounce(dev))
->   		set_dma_ops(dev, NULL);
->   }
-> @@ -6198,8 +6143,8 @@ const struct iommu_ops intel_iommu_ops = {
->   	.map			= intel_iommu_map,
->   	.unmap			= intel_iommu_unmap,
->   	.iova_to_phys		= intel_iommu_iova_to_phys,
-> -	.add_device		= intel_iommu_add_device,
-> -	.remove_device		= intel_iommu_remove_device,
-> +	.probe_device		= intel_iommu_probe_device,
-> +	.release_device		= intel_iommu_release_device,
->   	.get_resv_regions	= intel_iommu_get_resv_regions,
->   	.put_resv_regions	= generic_iommu_put_resv_regions,
->   	.apply_resv_region	= intel_iommu_apply_resv_region,
-> 
+>  include/linux/memory_hotplug.h |  8 ++++++++
+>  mm/memory_hotplug.c            | 20 ++++++++++++++++----
+>  2 files changed, 24 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotp=
+lug.h
+> index bf0e3edb8688..cc538584b39e 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -68,6 +68,14 @@ struct mhp_params {
+>  	pgprot_t pgprot;
+>  };
+> =20
+> +/* Flags used for add_memory() and friends. */
+> +
+> +/*
+> + * Don't create entries in /sys/firmware/memmap/ and expose memory as
+> + * "System RAM (driver managed)" in e.g., /proc/iomem
+> + */
+> +#define MHP_DRIVER_MANAGED		1
+> +
+>  /*
+>   * Zone resizing functions
+>   *
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index ebdf6541d074..cfa0721280aa 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -98,11 +98,11 @@ void mem_hotplug_done(void)
+>  u64 max_mem_size =3D U64_MAX;
+> =20
+>  /* add this memory to iomem resource */
+> -static struct resource *register_memory_resource(u64 start, u64 size)
+> +static struct resource *register_memory_resource(u64 start, u64 size,
+> +						 const char *resource_name)
+>  {
+>  	struct resource *res;
+>  	unsigned long flags =3D  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> -	char *resource_name =3D "System RAM";
+> =20
+>  	/*
+>  	 * Make sure value parsed from 'mem=3D' only restricts memory adding
+> @@ -1058,7 +1058,8 @@ int __ref add_memory_resource(int nid, struct res=
+ource *res,
+>  	BUG_ON(ret);
+> =20
+>  	/* create new memmap entry */
+> -	firmware_map_add_hotplug(start, start + size, "System RAM");
+> +	if (!(flags & MHP_DRIVER_MANAGED))
+> +		firmware_map_add_hotplug(start, start + size, "System RAM");
+> =20
+>  	/* device_online() will take the lock when calling online_pages() */
+>  	mem_hotplug_done();
+> @@ -1081,10 +1082,21 @@ int __ref add_memory_resource(int nid, struct r=
+esource *res,
+>  /* requires device_hotplug_lock, see add_memory_resource() */
+>  int __ref __add_memory(int nid, u64 start, u64 size, unsigned long fla=
+gs)
+>  {
+> +	const char *resource_name =3D "System RAM";
+>  	struct resource *res;
+>  	int ret;
+> =20
+> -	res =3D register_memory_resource(start, size);
+> +	/*
+> +	 * Indicate that memory managed by a driver is special. It's always
+> +	 * detected and added via a driver, should not be given to the kexec
+> +	 * kernel for booting when manually crafting the firmware memmap, and
+> +	 * no kexec segments should be placed on it. However, kdump should
+> +	 * dump this memory.
+> +	 */
+> +	if (flags & MHP_DRIVER_MANAGED)
+> +		resource_name =3D "System RAM (driver managed)";
+> +
+> +	res =3D register_memory_resource(start, size, resource_name);
+>  	if (IS_ERR(res))
+>  		return PTR_ERR(res);
+> =20
+>=20
+
+BTW, I was wondering if this is actually also something that
+drivers/dax/kmem.c wants to use for adding memory.
+
+Just because we decided to use some DAX memory in the current kernel as
+system ram, doesn't mean we should make that decision for the kexec
+kernel (e.g., using it as initial memory, placing kexec binaries onto
+it, etc.). This is also not what we would observe during a real reboot.
+
+I can see that the "System RAM" resource will show up as child resource
+under the device e.g., in /proc/iomem.
+
+However, entries in /sys/firmware/memmap/ are created as "System RAM".
+
+--=20
+Thanks,
+
+David / dhildenb
+
