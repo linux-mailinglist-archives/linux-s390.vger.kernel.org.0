@@ -2,195 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 342041BF57F
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 12:30:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A22471BF5C7
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 12:43:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgD3KaC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Apr 2020 06:30:02 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58947 "EHLO
+        id S1726413AbgD3Kn0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Apr 2020 06:43:26 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53496 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726891AbgD3KaB (ORCPT
+        by vger.kernel.org with ESMTP id S1726127AbgD3Kn0 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Apr 2020 06:30:01 -0400
+        Thu, 30 Apr 2020 06:43:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588242600;
+        s=mimecast20190719; t=1588243405;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=+3PNEjodfSmVCKHuEI1uD9BcIkwvNKm68jAUXOCtpHs=;
-        b=eJdl+5kSxklF6hY4hhpJgJ5wBqUY+iieKDyUMx+o0m74fIv7Qe4OBqEa/qyIw2TcTwQgmO
-        pdUfpm+ipjSWIQCN+pXan0W3gohsbMPr0+bP6wu02FhT7uqqqVp3SMFAFy3EC4L2JxZjog
-        0ydh85w5oPR2slQ2l8kE5GcHIMP9PqE=
+        bh=RDi2vE7xlXjhzYA/qFLKFknGOZGTd39IiKLpNXW46B0=;
+        b=cvXo84LGaGHaGLeqcOhTPzlFXFQK4Z0MhSIQDYNcXmuKq7znKcWC3DeHX0wgYLF/iOQLmh
+        UVHGpRH8jtAy6BmuUdNc3bGs+V+uvpVjt9BpMmxhU930zHqfv/Krn0lc0YdbbPC1eFHal+
+        CR/eqit1P4HIjsDLcjT80YwM3nEP9Bc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-WVVkTXmBNpi7HsRCgZds0w-1; Thu, 30 Apr 2020 06:29:56 -0400
-X-MC-Unique: WVVkTXmBNpi7HsRCgZds0w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-193-42hY1zNmNcaAtHdj-7o95A-1; Thu, 30 Apr 2020 06:43:21 -0400
+X-MC-Unique: 42hY1zNmNcaAtHdj-7o95A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3AB28015D1;
-        Thu, 30 Apr 2020 10:29:53 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-172.ams2.redhat.com [10.36.113.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E14155EDEE;
-        Thu, 30 Apr 2020 10:29:49 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
-        virtualization@lists.linux-foundation.org,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
-        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v2 3/3] device-dax: Add system ram (add_memory()) with MHP_NO_FIRMWARE_MEMMAP
-Date:   Thu, 30 Apr 2020 12:29:08 +0200
-Message-Id: <20200430102908.10107-4-david@redhat.com>
-In-Reply-To: <20200430102908.10107-1-david@redhat.com>
-References: <20200430102908.10107-1-david@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 597C5468;
+        Thu, 30 Apr 2020 10:43:20 +0000 (UTC)
+Received: from gondolin (ovpn-112-226.ams2.redhat.com [10.36.112.226])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C09C65C1BE;
+        Thu, 30 Apr 2020 10:43:18 +0000 (UTC)
+Date:   Thu, 30 Apr 2020 12:43:16 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc:     Vineeth Vijayan <vneethv@linux.vnet.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Boris Fiuczynski <fiuczy@linux.ibm.com>
+Subject: Re: [RFD] uevent handling for subchannels
+Message-ID: <20200430124316.023a82b0.cohuck@redhat.com>
+In-Reply-To: <53d7d08d-c1d2-dad3-7f01-a165b24b0359@linux.ibm.com>
+References: <20200403124032.5e70603d.cohuck@redhat.com>
+        <20200417143811.7e6ecb2c.cohuck@redhat.com>
+        <8649ea94-8617-07b6-170e-65c278d9383b@linux.vnet.ibm.com>
+        <c69da1c0-d151-257b-fe43-786e47a3cf9b@linux.vnet.ibm.com>
+        <20200423182001.40345df8.cohuck@redhat.com>
+        <53d7d08d-c1d2-dad3-7f01-a165b24b0359@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Currently, when adding memory, we create entries in /sys/firmware/memmap/
-as "System RAM". This does not reflect the reality and will lead to
-kexec-tools to add that memory to the fixed-up initial memmap for a
-kexec kernel (loaded via kexec_load()). The memory will be considered
-initial System RAM by the kexec kernel.
+On Mon, 27 Apr 2020 12:10:17 +0200
+Peter Oberparleiter <oberpar@linux.ibm.com> wrote:
 
-We should let the kexec kernel decide how to use that memory - just as
-we do during an ordinary reboot.
+> On 23.04.2020 18:20, Cornelia Huck wrote:
+> > On Thu, 23 Apr 2020 16:52:24 +0200
+> > Vineeth Vijayan <vneethv@linux.vnet.ibm.com> wrote:  
+> >> Then we could also change the way ccw_device_call_sch_unregister() 
+> >> works, where
+> >> the subchannel-unregister is happening from an upper layer.  
+> > 
+> > Hm, what's the problem here? This seems to be mostly a case of "we did
+> > I/O to the device and it appeared not operational; so we go ahead and
+> > unregister the subchannel"? Childless I/O subchannels are a bit useless.  
+> 
+> Hey Conny,
+> 
+> sparked by your proposal, Vineeth and myself looked at the corresponding
+> CIO code and wondered if things couldn't be done in a generally
+> better/cleaner way. So here we'd like to get your opinion.
+> 
+> In particular, as it is currently, a child-driver (IO subchannel driver,
+> vfio-ccw, etc.) unregisters a device owned by a parent-device-driver
+> (CSS), which feels from a high-level-view like a layering violation:
+> only the parent driver should register and unregister the parent device.
+> Also in case no subchannel driver is available (e.g. due to
+> driver_override=none), there would be no subchannel ADD event at all.
 
-Before configuring the namespace:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-33fffffff : namespace0.0
-	3280000000-32ffffffff : PCI Bus 0000:00
+Doesn't the base css code generate the uevent in that case?
 
-After configuring the namespace:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-1481fffff : namespace0.0
-	  148200000-33fffffff : dax0.0
-	3280000000-32ffffffff : PCI Bus 0000:00
+> 
+> So, tapping into you historical expertise about CIO, is there any reason
+> for doing it this way beyond being nice to userspace tooling that
+> subchannels with non-working CCW devices are automatically hidden by
+> unregistering them?
 
-After loading kmem:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-1481fffff : namespace0.0
-	  150000000-33fffffff : dax0.0
-	    150000000-33fffffff : System RAM
-	3280000000-32ffffffff : PCI Bus 0000:00
+We always had ccw devices behind I/O subchannels, but that has not been
+the case since we introduced vfio-ccw, so hopefully everybody can deal
+with that. The rationale behind this was that device-less I/O
+subchannels were deemed to be useless; I currently can't remember
+another reason.
 
-After a proper reboot:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-1481fffff : namespace0.0
-	  148200000-33fffffff : dax0.0
-	3280000000-32ffffffff : PCI Bus 0000:00
+What about EADM, btw? CHSC does not have a device, and message does not
+have a driver.
 
-Within the kexec kernel before this change:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-1481fffff : namespace0.0
-	  150000000-33fffffff : System RAM
-	3280000000-32ffffffff : PCI Bus 0000:00
+> 
+> Removing the child-unregisters-parent logic this would also enable
+> manual rebind of subchannels for which only a different driver than the
+> default one can successfully talk to the child device, though I'm
+> unaware of any current application for that.
 
-Within the kexec kernel after this change:
-	[root@localhost ~]# cat /proc/iomem
-	...
-	140000000-33fffffff : Persistent Memory
-	  140000000-1481fffff : namespace0.0
-	  148200000-33fffffff : dax0.0
-	3280000000-32ffffffff : PCI Bus 0000:00
+Yes.
 
-/sys/firmware/memmap/ before this change:
-	0000000000000000-000000000009fc00 (System RAM)
-	000000000009fc00-00000000000a0000 (Reserved)
-	00000000000f0000-0000000000100000 (Reserved)
-	0000000000100000-00000000bffdf000 (System RAM)
-	00000000bffdf000-00000000c0000000 (Reserved)
-	00000000feffc000-00000000ff000000 (Reserved)
-	00000000fffc0000-0000000100000000 (Reserved)
-	0000000100000000-0000000140000000 (System RAM)
-	0000000150000000-0000000340000000 (System RAM)
-
-/sys/firmware/memmap/ after a proper reboot:
-	0000000000000000-000000000009fc00 (System RAM)
-	000000000009fc00-00000000000a0000 (Reserved)
-	00000000000f0000-0000000000100000 (Reserved)
-	0000000000100000-00000000bffdf000 (System RAM)
-	00000000bffdf000-00000000c0000000 (Reserved)
-	00000000feffc000-00000000ff000000 (Reserved)
-	00000000fffc0000-0000000100000000 (Reserved)
-	0000000100000000-0000000140000000 (System RAM)
-
-/sys/firmware/memmap/ after this change:
-	0000000000000000-000000000009fc00 (System RAM)
-	000000000009fc00-00000000000a0000 (Reserved)
-	00000000000f0000-0000000000100000 (Reserved)
-	0000000000100000-00000000bffdf000 (System RAM)
-	00000000bffdf000-00000000c0000000 (Reserved)
-	00000000feffc000-00000000ff000000 (Reserved)
-	00000000fffc0000-0000000100000000 (Reserved)
-	0000000100000000-0000000140000000 (System RAM)
-
-kexec-tools already seem to basically ignore any System RAM that's not
-on top level when searching for areas to place kexec images - but also
-for determining crash areas to dump via kdump. This behavior is not
-changed by this patch. kexec-tools probably has to be fixed to also
-include this memory in system dumps.
-
-Note: kexec_file_load() does the right thing already within the kernel.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/dax/kmem.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index e159184e0ba0..929823a79816 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -65,7 +65,8 @@ int dev_dax_kmem_probe(struct device *dev)
- 	new_res->flags =3D IORESOURCE_SYSTEM_RAM;
- 	new_res->name =3D dev_name(dev);
-=20
--	rc =3D add_memory(numa_node, new_res->start, resource_size(new_res), 0)=
-;
-+	rc =3D add_memory(numa_node, new_res->start, resource_size(new_res),
-+			MHP_NO_FIRMWARE_MEMMAP);
- 	if (rc) {
- 		release_resource(new_res);
- 		kfree(new_res);
---=20
-2.25.3
+Let me think about that some more (no clear head currently, sorry.)
 
