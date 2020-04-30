@@ -2,178 +2,119 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8304F1BFF97
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 17:06:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86F671C000E
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 17:24:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgD3PFv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Apr 2020 11:05:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25846 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726377AbgD3PFu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Apr 2020 11:05:50 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UF3BnU050380;
-        Thu, 30 Apr 2020 11:05:48 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhqay548-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 11:05:47 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03UF3EKc050719;
-        Thu, 30 Apr 2020 11:05:47 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhqay52e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 11:05:47 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UEp40h013011;
-        Thu, 30 Apr 2020 15:05:44 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 30mcu72tye-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 15:05:44 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UF5g1c65405082
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 15:05:42 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 09310A405B;
-        Thu, 30 Apr 2020 15:05:42 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E980A4054;
-        Thu, 30 Apr 2020 15:05:41 +0000 (GMT)
-Received: from thinkpad (unknown [9.145.48.229])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Apr 2020 15:05:41 +0000 (GMT)
-Date:   Thu, 30 Apr 2020 17:05:40 +0200
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        id S1726826AbgD3PYn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Apr 2020 11:24:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30053 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726765AbgD3PYn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Apr 2020 11:24:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588260282;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=nhSNFmu2Iz7syjBaUT/MbA657lciB2SBAu/qfBBAEOI=;
+        b=OKirr5QhrZuqYuWGjcAseq1xOYNCPmOkzA32n+oEHYTtxuYshne4RjM3uE+nDlevBf7px/
+        2Xo4NcNv8An87C7MXOfUeh5FLbi7lFvgGyIId1/yD8cx8RMxgVweYAJ/ngXDtjWSqNOnyd
+        N8r4OpeLpJAqaHP+M4g5OTQ5ZSsPktM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-432-gzfeDhBlOmaj1-KrYOon-w-1; Thu, 30 Apr 2020 11:24:37 -0400
+X-MC-Unique: gzfeDhBlOmaj1-KrYOon-w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C442D107ACCA;
+        Thu, 30 Apr 2020 15:24:35 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-113-172.ams2.redhat.com [10.36.113.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 400035D777;
+        Thu, 30 Apr 2020 15:24:31 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH v2] s390: simplify memory notifier for protecting kdump
- crash kernel area
-Message-ID: <20200430170540.49e51d9d@thinkpad>
-In-Reply-To: <1d79310d-8909-73e7-d2dd-90e8b9edf253@redhat.com>
-References: <20200424083904.8587-1-david@redhat.com>
-        <1d79310d-8909-73e7-d2dd-90e8b9edf253@redhat.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@de.ibm.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>
+Subject: [kvm-unit-tests PULL 00/17] s390x updates
+Date:   Thu, 30 Apr 2020 17:24:13 +0200
+Message-Id: <20200430152430.40349-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_09:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 phishscore=0 clxscore=1011 adultscore=0 suspectscore=0
- spamscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004300122
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 29 Apr 2020 16:55:38 +0200
-David Hildenbrand <david@redhat.com> wrote:
+Hi Paolo,
 
-> On 24.04.20 10:39, David Hildenbrand wrote:
-> > Assume we have a crashkernel area of 256MB reserved:
-> > 
-> > root@vm0:~# cat /proc/iomem
-> > 00000000-6fffffff : System RAM
-> >   0f258000-0fcfffff : Kernel code
-> >   0fd00000-101d10e3 : Kernel data
-> >   105b3000-1068dfff : Kernel bss
-> > 70000000-7fffffff : Crash kernel
-> > 
-> > This exactly corresponds to memory block 7 (memory block size is 256MB).
-> > Trying to offline that memory block results in:
-> > 
-> > root@vm0:~# echo "offline" > /sys/devices/system/memory/memory7/state
-> > -bash: echo: write error: Device or resource busy
-> > 
-> > [  128.458762] page:000003d081c00000 refcount:1 mapcount:0 mapping:00000000d01cecd4 index:0x0
-> > [  128.458773] flags: 0x1ffff00000001000(reserved)
-> > [  128.458781] raw: 1ffff00000001000 000003d081c00008 000003d081c00008 0000000000000000
-> > [  128.458781] raw: 0000000000000000 0000000000000000 ffffffff00000001 0000000000000000
-> > [  128.458783] page dumped because: unmovable page
-> > 
-> > The craskernel area is marked reserved in the bootmem allocator. This
-> > results in the memmap getting initialized (refcount=1, PG_reserved), but
-> > the pages are never freed to the page allocator.
-> > 
-> > So these pages look like allocated pages that are unmovable (esp.
-> > PG_reserved), and therefore, memory offlining fails early, when trying to
-> > isolate the page range.
-> > 
-> > We only have to care about the exchange area, make that clear.
-> > 
-> > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> > Cc: Vasily Gorbik <gor@linux.ibm.com>
-> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> > Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> > Cc: Philipp Rudo <prudo@linux.ibm.com>
-> > Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> > Cc: Eric W. Biederman <ebiederm@xmission.com>
-> > Cc: Michal Hocko <mhocko@kernel.org>
-> > Signed-off-by: David Hildenbrand <david@redhat.com>
-> > ---
-> > 
-> > Follow up of:
-> > - "[PATCH v1] s390: drop memory notifier for protecting kdump crash kernel
-> >    area"
-> > 
-> > v1 -> v2:
-> > - Keep the notifier, check for exchange area only
-> > 
-> > ---
-> >  arch/s390/kernel/setup.c | 13 +++++--------
-> >  1 file changed, 5 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-> > index 0f0b140b5558..c0881f0a3175 100644
-> > --- a/arch/s390/kernel/setup.c
-> > +++ b/arch/s390/kernel/setup.c
-> > @@ -594,9 +594,10 @@ static void __init setup_memory_end(void)
-> >  #ifdef CONFIG_CRASH_DUMP
-> >  
-> >  /*
-> > - * When kdump is enabled, we have to ensure that no memory from
-> > - * the area [0 - crashkernel memory size] and
-> > - * [crashk_res.start - crashk_res.end] is set offline.
-> > + * When kdump is enabled, we have to ensure that no memory from the area
-> > + * [0 - crashkernel memory size] is set offline - it will be exchanged with
-> > + * the crashkernel memory region when kdump is triggered. The crashkernel
-> > + * memory region can never get offlined (pages are unmovable).
-> >   */
-> >  static int kdump_mem_notifier(struct notifier_block *nb,
-> >  			      unsigned long action, void *data)
-> > @@ -607,11 +608,7 @@ static int kdump_mem_notifier(struct notifier_block *nb,
-> >  		return NOTIFY_OK;
-> >  	if (arg->start_pfn < PFN_DOWN(resource_size(&crashk_res)))
-> >  		return NOTIFY_BAD;
-> > -	if (arg->start_pfn > PFN_DOWN(crashk_res.end))
-> > -		return NOTIFY_OK;
-> > -	if (arg->start_pfn + arg->nr_pages - 1 < PFN_DOWN(crashk_res.start))
-> > -		return NOTIFY_OK;
-> > -	return NOTIFY_BAD;
-> > +	return NOTIFY_OK;
-> >  }
-> >  
-> >  static struct notifier_block kdump_mem_nb = {
-> > 
-> 
-> Ping.
-> 
+The following changes since commit 5c052c904ded7ecd80d8f7efe2803821b45ce4=
+83:
 
-Looks good, thanks.
+  kvm-unit-tests: nSVM: Test that CR0[63:32] are not set on VMRUN of nest=
+ed guests (2020-04-21 12:16:07 -0400)
 
-Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+are available in the Git repository at:
+
+  https://github.com/davidhildenbrand/kvm-unit-tests.git tags/s390x-2020-=
+04-30
+
+for you to fetch changes up to f7df29115f736b9ffe8e529ba9c2b418d2f5e736:
+
+  s390x: Fix library constant definitions (2020-04-30 16:52:14 +0200)
+
+----------------------------------------------------------------
+New maintainer, reviewer, and cc list. New STSI test. Lots of minor fixes
+and cleanups
+
+----------------------------------------------------------------
+Andrew Jones (1):
+      s390x: unittests: Use smp parameter
+
+Christian Borntraeger (2):
+      s390x/smp: fix detection of "running"
+      s390x/smp: add minimal test for sigp sense running status
+
+Cornelia Huck (2):
+      MAINTAINERS: s390x: add myself as reviewer
+      MAINTAINERS: s390x: add linux-s390 list
+
+David Hildenbrand (1):
+      s390x: STFLE operates on doublewords
+
+Janosch Frank (10):
+      s390x: Add stsi 3.2.2 tests
+      s390x: smp: Test all CRs on initial reset
+      s390x: smp: Dirty fpc before initial reset test
+      s390x: smp: Test stop and store status on a running and stopped cpu
+      s390x: smp: Test local interrupts after cpu reset
+      s390x: smp: Loop if secondary cpu returns into cpu setup again
+      s390x: smp: Remove unneeded cpu loops
+      s390x: smp: Use full PSW to bringup new cpu
+      s390x: smp: Add restart when running test
+      s390x: Fix library constant definitions
+
+Thomas Huth (1):
+      MAINTAINERS: Add Janosch as a s390x maintainer
+
+ MAINTAINERS              |   4 +-
+ lib/s390x/asm/arch_def.h |   8 ++--
+ lib/s390x/asm/facility.h |  14 +++----
+ lib/s390x/io.c           |   2 +-
+ lib/s390x/smp.c          |   6 ++-
+ lib/s390x/smp.h          |   2 +-
+ s390x/cstart64.S         |   5 ++-
+ s390x/smp.c              | 105 +++++++++++++++++++++++++++++++++++++++++=
+++----
+ s390x/stsi.c             |  73 ++++++++++++++++++++++++++++++++
+ s390x/unittests.cfg      |   3 +-
+ 10 files changed, 196 insertions(+), 26 deletions(-)
+
