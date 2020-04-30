@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29B691BFCED
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 16:09:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D88281BFC38
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 16:04:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgD3Nvx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Apr 2020 09:51:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60582 "EHLO mail.kernel.org"
+        id S1728632AbgD3NxI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Apr 2020 09:53:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728212AbgD3Nvv (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:51:51 -0400
+        id S1728627AbgD3NxG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B290624956;
-        Thu, 30 Apr 2020 13:51:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0349B2137B;
+        Thu, 30 Apr 2020 13:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254711;
-        bh=BtlbYbV7ZTLuPWVpFdkjQxXtr0m1GdmEM+9Jp5gVnkA=;
+        s=default; t=1588254786;
+        bh=SfbucmWDjcK2two1sW5SOV6LhivybaHC17DMbrklUMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBiVR1vXuhuBMPdlrx9Fyn7nH6pP0WTdSOq1K8odQh2JIDHRGaXpS7fTaN6GsycZJ
-         I9yTNo+FrKccfH76JryEPxeJHfgJamtYX93lD7w3PJGizbVTDbXdWwdnvUJq2eNPw4
-         /pInd2tXVBxAurTv+MPMlCN/JuhslrFZmqsfhPIs=
+        b=HBjAmT0j0xx5Pr+/WgOZyP4K83hK8eMI14eH+d/hieUI+urVh8/ywd5TjHrRMGH3F
+         eTR7I5/NqfeqSleeTvGFIUQDYeiY5rKAKAgH1wZGrxflS1RZJWgPSSRCULrSFfoeq9
+         qNE8k+XsNZUEreJzv8NklAR8q3MWUp/tW89sjEBw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Philipp Rudo <prudo@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 59/79] s390/ftrace: fix potential crashes when switching tracers
-Date:   Thu, 30 Apr 2020 09:50:23 -0400
-Message-Id: <20200430135043.19851-59-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 42/57] s390/ftrace: fix potential crashes when switching tracers
+Date:   Thu, 30 Apr 2020 09:52:03 -0400
+Message-Id: <20200430135218.20372-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135043.19851-1-sashal@kernel.org>
-References: <20200430135043.19851-1-sashal@kernel.org>
+In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
+References: <20200430135218.20372-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -79,7 +79,7 @@ index 61f2b0412345a..ccba63aaeb470 100644
  	this_cpu_inc(diag_stat.counter[nr]);
  	trace_s390_diagnose_norecursion(diag_map[nr].code);
 diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index f87d4e14269c9..4f8cb8d1c51b9 100644
+index f468a10e52062..66bf050d785cf 100644
 --- a/arch/s390/kernel/smp.c
 +++ b/arch/s390/kernel/smp.c
 @@ -403,7 +403,7 @@ int smp_find_processor_id(u16 address)
@@ -98,8 +98,8 @@ index f87d4e14269c9..4f8cb8d1c51b9 100644
 -void smp_yield_cpu(int cpu)
 +void notrace smp_yield_cpu(int cpu)
  {
- 	if (!MACHINE_HAS_DIAG9C)
- 		return;
+ 	if (MACHINE_HAS_DIAG9C) {
+ 		diag_stat_inc_norecursion(DIAG_STAT_X09C);
 diff --git a/arch/s390/kernel/trace.c b/arch/s390/kernel/trace.c
 index 490b52e850145..11a669f3cc93c 100644
 --- a/arch/s390/kernel/trace.c
