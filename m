@@ -2,420 +2,129 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 672E51BF65C
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 13:18:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 889371BF6C1
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 13:23:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgD3LSG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Apr 2020 07:18:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35636 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726413AbgD3LSF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Apr 2020 07:18:05 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03UB2fhZ069832;
-        Thu, 30 Apr 2020 07:18:01 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30mhc3gvdq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 07:18:00 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03UBGAwe011885;
-        Thu, 30 Apr 2020 11:17:58 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma05fra.de.ibm.com with ESMTP id 30mcu52kpp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Apr 2020 11:17:58 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03UBHt0h62652488
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Apr 2020 11:17:55 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1DC454C044;
-        Thu, 30 Apr 2020 11:17:55 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 027C64C052;
-        Thu, 30 Apr 2020 11:17:55 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 30 Apr 2020 11:17:54 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id B40BFE02BB; Thu, 30 Apr 2020 13:17:54 +0200 (CEST)
-From:   Stefan Haberland <sth@linux.ibm.com>
-To:     axboe@kernel.dk, hch@lst.de
-Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] s390/dasd: remove ioctl_by_bdev from DASD driver
-Date:   Thu, 30 Apr 2020 13:17:54 +0200
-Message-Id: <20200430111754.98508-2-sth@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200430111754.98508-1-sth@linux.ibm.com>
-References: <20200430111754.98508-1-sth@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-30_07:2020-04-30,2020-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2
- impostorscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
- spamscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
- malwarescore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004300087
+        id S1726774AbgD3LXr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Apr 2020 07:23:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:24474 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726413AbgD3LXr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 30 Apr 2020 07:23:47 -0400
+IronPort-SDR: hjHRGopFv8Hv0xQ1I90auL8CBw7fsSrTPsuLe6EFkccpbfpFwgtAslOiGu8GOsPhdN8rhs+Ubo
+ xX2T40bPna/Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2020 04:23:46 -0700
+IronPort-SDR: SHV7wT4BPVHKAo0WmoTz8aq1kRHCx/RdPvBe0nAp3qbMO/SAPWXKmXN7i75QlP4e04SgRh2wTx
+ AK59XRR1ll/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,334,1583222400"; 
+   d="scan'208";a="261745559"
+Received: from isdasana-mobl1.amr.corp.intel.com (HELO [10.254.74.214]) ([10.254.74.214])
+  by orsmga006.jf.intel.com with ESMTP; 30 Apr 2020 04:23:46 -0700
+Subject: Re: [PATCH v2 3/3] device-dax: Add system ram (add_memory()) with
+ MHP_NO_FIRMWARE_MEMMAP
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200430102908.10107-1-david@redhat.com>
+ <20200430102908.10107-4-david@redhat.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <20b86ced-7c47-02ca-0e0e-1bd5d6cc95c1@intel.com>
+Date:   Thu, 30 Apr 2020 04:23:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200430102908.10107-4-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Remove the calls to ioctl_by_bdev from the DASD partition detection code
-to enable the removal of the specific code.
+On 4/30/20 3:29 AM, David Hildenbrand wrote:
+> Currently, when adding memory, we create entries in /sys/firmware/memmap/
+> as "System RAM". This does not reflect the reality and will lead to
+> kexec-tools to add that memory to the fixed-up initial memmap for a
+> kexec kernel (loaded via kexec_load()). The memory will be considered
+> initial System RAM by the kexec kernel.
+> 
+> We should let the kexec kernel decide how to use that memory - just as
+> we do during an ordinary reboot.
+...
+> -	rc = add_memory(numa_node, new_res->start, resource_size(new_res), 0);
+> +	rc = add_memory(numa_node, new_res->start, resource_size(new_res),
+> +			MHP_NO_FIRMWARE_MEMMAP);
 
-To do so reuse the gendisk private_data pointer and not only provide a
-pointer to the devmap but provide a new structure containing a pointer
-to the devmap as well as all required information for the partition
-detection. This makes it independent from the dasd_information2_t
-structure.
+Looks fine.  But, if you send another revision, could you add a comment
+about the actual goal of MHP_NO_FIRMWARE_MEMMAP?  Maybe:
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
----
- block/partitions/ibm.c           | 67 ++++++++++++++++++--------------
- drivers/s390/block/dasd_devmap.c | 17 +++++++-
- drivers/s390/block/dasd_diag.c   | 10 +++++
- drivers/s390/block/dasd_eckd.c   | 10 +++++
- drivers/s390/block/dasd_fba.c    |  8 ++++
- drivers/s390/block/dasd_genhd.c  |  1 +
- drivers/s390/block/dasd_int.h    | 10 +++++
- 7 files changed, 91 insertions(+), 32 deletions(-)
+	/*
+	 * MHP_NO_FIRMWARE_MEMMAP ensures that future
+	 * kexec'd kernels will not treat this as RAM.
+	 */
 
-diff --git a/block/partitions/ibm.c b/block/partitions/ibm.c
-index 073faa6a69b8..da72a990418d 100644
---- a/block/partitions/ibm.c
-+++ b/block/partitions/ibm.c
-@@ -23,6 +23,15 @@ union label_t {
- 	struct vtoc_cms_label cms;
- };
- 
-+struct dasd_gd_private {
-+	void *devmap;
-+	unsigned int cu_type;
-+	unsigned int dev_type;
-+	unsigned int label_block;
-+	unsigned int format;
-+	char type[4];
-+};
-+
- /*
-  * compute the block number from a
-  * cyl-cyl-head-head structure
-@@ -61,7 +70,7 @@ static sector_t cchhb2blk(struct vtoc_cchhb *ptr, struct hd_geometry *geo)
- }
- 
- static int find_label(struct parsed_partitions *state,
--		      dasd_information2_t *info,
-+		      struct dasd_gd_private *gd_priv,
- 		      struct hd_geometry *geo,
- 		      int blocksize,
- 		      sector_t *labelsect,
-@@ -81,15 +90,16 @@ static int find_label(struct parsed_partitions *state,
- 	 * - on an FBA disk it's block 1
- 	 * - on an CMS formatted FBA disk it is sector 1, even if the block size
- 	 *   is larger than 512 bytes (possible if the DIAG discipline is used)
--	 * If we have a valid info structure, then we know exactly which case we
--	 * have, otherwise we just search through all possebilities.
-+	 * If we have a valid dasd_gd_private structure, then we know exactly
-+	 * which case we have, otherwise we just search through all
-+	 * possibilities.
- 	 */
--	if (info) {
--		if ((info->cu_type == 0x6310 && info->dev_type == 0x9336) ||
--		    (info->cu_type == 0x3880 && info->dev_type == 0x3370))
--			testsect[0] = info->label_block;
-+	if (gd_priv) {
-+		if ((gd_priv->cu_type == 0x6310 && gd_priv->dev_type == 0x9336) ||
-+		    (gd_priv->cu_type == 0x3880 && gd_priv->dev_type == 0x3370))
-+			testsect[0] = gd_priv->label_block;
- 		else
--			testsect[0] = info->label_block * (blocksize >> 9);
-+			testsect[0] = gd_priv->label_block * (blocksize >> 9);
- 		testcount = 1;
- 	} else {
- 		testsect[0] = 1;
-@@ -198,7 +208,7 @@ static int find_lnx1_partitions(struct parsed_partitions *state,
- 				union label_t *label,
- 				sector_t labelsect,
- 				loff_t i_size,
--				dasd_information2_t *info)
-+				struct dasd_gd_private *gd_priv)
- {
- 	loff_t offset, geo_size, size;
- 	char tmp[64];
-@@ -221,11 +231,11 @@ static int find_lnx1_partitions(struct parsed_partitions *state,
- 			* geo->sectors * secperblk;
- 		size = i_size >> 9;
- 		if (size != geo_size) {
--			if (!info) {
-+			if (!gd_priv) {
- 				strlcat(state->pp_buf, "\n", PAGE_SIZE);
- 				return 1;
- 			}
--			if (!strcmp(info->type, "ECKD"))
-+			if (!strcmp(gd_priv->type, "ECKD"))
- 				if (geo_size < size)
- 					size = geo_size;
- 			/* else keep size based on i_size */
-@@ -289,9 +299,10 @@ static int find_cms1_partitions(struct parsed_partitions *state,
- int ibm_partition(struct parsed_partitions *state)
- {
- 	struct block_device *bdev = state->bdev;
-+	struct dasd_gd_private *gd_priv = NULL;
-+	struct gendisk *disk = bdev->bd_disk;
- 	int blocksize, res;
- 	loff_t i_size, offset, size;
--	dasd_information2_t *info;
- 	struct hd_geometry *geo;
- 	char type[5] = {0,};
- 	char name[7] = {0,};
-@@ -305,23 +316,21 @@ int ibm_partition(struct parsed_partitions *state)
- 	i_size = i_size_read(bdev->bd_inode);
- 	if (i_size == 0)
- 		goto out_exit;
--	info = kmalloc(sizeof(dasd_information2_t), GFP_KERNEL);
--	if (info == NULL)
--		goto out_exit;
--	geo = kmalloc(sizeof(struct hd_geometry), GFP_KERNEL);
-+	geo = kzalloc(sizeof(struct hd_geometry), GFP_KERNEL);
- 	if (geo == NULL)
--		goto out_nogeo;
-+		goto out_exit;
- 	label = kmalloc(sizeof(union label_t), GFP_KERNEL);
- 	if (label == NULL)
- 		goto out_nolab;
--	if (ioctl_by_bdev(bdev, HDIO_GETGEO, (unsigned long)geo) != 0)
-+	geo->start = get_start_sect(bdev);
-+	if (!disk->fops->getgeo || disk->fops->getgeo(bdev, geo))
- 		goto out_freeall;
--	if (ioctl_by_bdev(bdev, BIODASDINFO2, (unsigned long)info) != 0) {
--		kfree(info);
--		info = NULL;
--	}
- 
--	if (find_label(state, info, geo, blocksize, &labelsect, name, type,
-+	/* gd_priv pointer is only valid for DASD devices */
-+	if (disk && disk->major == DASD_MAJOR)
-+		gd_priv = disk->private_data;
-+
-+	if (find_label(state, gd_priv, geo, blocksize, &labelsect, name, type,
- 		       label)) {
- 		if (!strncmp(type, "VOL1", 4)) {
- 			res = find_vol1_partitions(state, geo, blocksize, name,
-@@ -329,24 +338,24 @@ int ibm_partition(struct parsed_partitions *state)
- 		} else if (!strncmp(type, "LNX1", 4)) {
- 			res = find_lnx1_partitions(state, geo, blocksize, name,
- 						   label, labelsect, i_size,
--						   info);
-+						   gd_priv);
- 		} else if (!strncmp(type, "CMS1", 4)) {
- 			res = find_cms1_partitions(state, geo, blocksize, name,
- 						   label, labelsect);
- 		}
--	} else if (info) {
-+	} else if (gd_priv) {
- 		/*
- 		 * ugly but needed for backward compatibility:
--		 * If the block device is a DASD (i.e. BIODASDINFO2 works),
-+		 * If the block device is a DASD (i.e. valid gd_priv),
- 		 * then we claim it in any case, even though it has no valid
- 		 * label. If it has the LDL format, then we simply define a
- 		 * partition as if it had an LNX1 label.
- 		 */
- 		res = 1;
--		if (info->format == DASD_FORMAT_LDL) {
-+		if (gd_priv->format == DASD_FORMAT_LDL) {
- 			strlcat(state->pp_buf, "(nonl)", PAGE_SIZE);
- 			size = i_size >> 9;
--			offset = (info->label_block + 1) * (blocksize >> 9);
-+			offset = (gd_priv->label_block + 1) * (blocksize >> 9);
- 			put_partition(state, 1, offset, size-offset);
- 			strlcat(state->pp_buf, "\n", PAGE_SIZE);
- 		}
-@@ -357,8 +366,6 @@ int ibm_partition(struct parsed_partitions *state)
- 	kfree(label);
- out_nolab:
- 	kfree(geo);
--out_nogeo:
--	kfree(info);
- out_exit:
- 	return res;
- }
-diff --git a/drivers/s390/block/dasd_devmap.c b/drivers/s390/block/dasd_devmap.c
-index 32fc51341d99..63e48bf9cadc 100644
---- a/drivers/s390/block/dasd_devmap.c
-+++ b/drivers/s390/block/dasd_devmap.c
-@@ -677,18 +677,30 @@ dasd_device_from_cdev(struct ccw_device *cdev)
- 
- void dasd_add_link_to_gendisk(struct gendisk *gdp, struct dasd_device *device)
- {
-+	struct dasd_gd_private *gd_priv;
- 	struct dasd_devmap *devmap;
-+	struct ccw_device *cdev;
- 
-+	gd_priv = kzalloc(sizeof(struct dasd_gd_private), GFP_KERNEL);
-+	if (!gd_priv)
-+		return;
- 	devmap = dasd_find_busid(dev_name(&device->cdev->dev));
- 	if (IS_ERR(devmap))
- 		return;
-+	cdev = device->cdev;
- 	spin_lock(&dasd_devmap_lock);
--	gdp->private_data = devmap;
-+	gd_priv->devmap = devmap;
-+	gd_priv->cu_type = cdev->id.cu_type;
-+	gd_priv->dev_type = cdev->id.dev_type;
-+	memcpy(gd_priv->type, device->discipline->name, sizeof(gd_priv->type));
-+	device->discipline->fill_gd_priv(gd_priv, device);
-+	gdp->private_data = gd_priv;
- 	spin_unlock(&dasd_devmap_lock);
- }
- 
- struct dasd_device *dasd_device_from_gendisk(struct gendisk *gdp)
- {
-+	struct dasd_gd_private *gd_priv;
- 	struct dasd_device *device;
- 	struct dasd_devmap *devmap;
- 
-@@ -696,7 +708,8 @@ struct dasd_device *dasd_device_from_gendisk(struct gendisk *gdp)
- 		return NULL;
- 	device = NULL;
- 	spin_lock(&dasd_devmap_lock);
--	devmap = gdp->private_data;
-+	gd_priv = gdp->private_data;
-+	devmap = gd_priv->devmap;
- 	if (devmap && devmap->device) {
- 		device = devmap->device;
- 		dasd_get_device(device);
-diff --git a/drivers/s390/block/dasd_diag.c b/drivers/s390/block/dasd_diag.c
-index facb588d09e4..38d20744df26 100644
---- a/drivers/s390/block/dasd_diag.c
-+++ b/drivers/s390/block/dasd_diag.c
-@@ -607,6 +607,15 @@ dasd_diag_fill_info(struct dasd_device * device,
- 	return 0;
- }
- 
-+static void dasd_diag_fill_gd_priv(struct dasd_gd_private *gd_priv,
-+				   struct dasd_device *device)
-+{
-+	struct dasd_diag_private *private = device->private;
-+
-+	gd_priv->label_block = (unsigned int) private->pt_block;
-+	gd_priv->format = DASD_FORMAT_LDL;
-+}
-+
- static void
- dasd_diag_dump_sense(struct dasd_device *device, struct dasd_ccw_req * req,
- 		     struct irb *stat)
-@@ -652,6 +661,7 @@ static struct dasd_discipline dasd_diag_discipline = {
- 	.free_cp = dasd_diag_free_cp,
- 	.dump_sense = dasd_diag_dump_sense,
- 	.fill_info = dasd_diag_fill_info,
-+	.fill_gd_priv = dasd_diag_fill_gd_priv,
- };
- 
- static int __init
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index ad44d22e8859..edaa7d1577a9 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -4901,6 +4901,15 @@ dasd_eckd_fill_info(struct dasd_device * device,
- 	return 0;
- }
- 
-+static void dasd_eckd_fill_gd_priv(struct dasd_gd_private *gd_priv,
-+				  struct dasd_device *device)
-+{
-+	struct dasd_eckd_private *private = device->private;
-+
-+	gd_priv->label_block = 2;
-+	gd_priv->format = private->uses_cdl ? DASD_FORMAT_CDL : DASD_FORMAT_LDL;
-+}
-+
- /*
-  * SECTION: ioctl functions for eckd devices.
-  */
-@@ -6727,6 +6736,7 @@ static struct dasd_discipline dasd_eckd_discipline = {
- 	.ext_pool_exhaust = dasd_eckd_ext_pool_exhaust,
- 	.ese_format = dasd_eckd_ese_format,
- 	.ese_read = dasd_eckd_ese_read,
-+	.fill_gd_priv = dasd_eckd_fill_gd_priv,
- };
- 
- static int __init
-diff --git a/drivers/s390/block/dasd_fba.c b/drivers/s390/block/dasd_fba.c
-index cbb770824226..6abbffdffb5f 100644
---- a/drivers/s390/block/dasd_fba.c
-+++ b/drivers/s390/block/dasd_fba.c
-@@ -642,6 +642,13 @@ dasd_fba_fill_info(struct dasd_device * device,
- 	return 0;
- }
- 
-+static void dasd_fba_fill_gd_priv(struct dasd_gd_private *gd_priv,
-+				   struct dasd_device *device)
-+{
-+	gd_priv->label_block = 1;
-+	gd_priv->format = DASD_FORMAT_LDL;
-+}
-+
- static void
- dasd_fba_dump_sense_dbf(struct dasd_device *device, struct irb *irb,
- 			char *reason)
-@@ -822,6 +829,7 @@ static struct dasd_discipline dasd_fba_discipline = {
- 	.dump_sense = dasd_fba_dump_sense,
- 	.dump_sense_dbf = dasd_fba_dump_sense_dbf,
- 	.fill_info = dasd_fba_fill_info,
-+	.fill_gd_priv = dasd_fba_fill_gd_priv,
- };
- 
- static int __init
-diff --git a/drivers/s390/block/dasd_genhd.c b/drivers/s390/block/dasd_genhd.c
-index af5b0ecb8f89..d6ef85936526 100644
---- a/drivers/s390/block/dasd_genhd.c
-+++ b/drivers/s390/block/dasd_genhd.c
-@@ -87,6 +87,7 @@ void dasd_gendisk_free(struct dasd_block *block)
- {
- 	if (block->gdp) {
- 		del_gendisk(block->gdp);
-+		kfree(block->gdp->private_data);
- 		block->gdp->private_data = NULL;
- 		put_disk(block->gdp);
- 		block->gdp = NULL;
-diff --git a/drivers/s390/block/dasd_int.h b/drivers/s390/block/dasd_int.h
-index fa552f9f1666..31d12a62b28b 100644
---- a/drivers/s390/block/dasd_int.h
-+++ b/drivers/s390/block/dasd_int.h
-@@ -259,6 +259,15 @@ struct dasd_uid {
- 	char vduit[33];
- };
- 
-+struct dasd_gd_private {
-+	struct dasd_devmap *devmap;
-+	unsigned int cu_type;
-+	unsigned int dev_type;
-+	unsigned int label_block;
-+	unsigned int format;
-+	char type[4];
-+};
-+
- /*
-  * the struct dasd_discipline is
-  * sth like a table of virtual functions, if you think of dasd_eckd
-@@ -391,6 +400,7 @@ struct dasd_discipline {
- 	struct dasd_ccw_req *(*ese_format)(struct dasd_device *,
- 					   struct dasd_ccw_req *, struct irb *);
- 	int (*ese_read)(struct dasd_ccw_req *, struct irb *);
-+	void (*fill_gd_priv)(struct dasd_gd_private *, struct dasd_device *);
- };
- 
- extern struct dasd_discipline *dasd_diag_discipline_pointer;
--- 
-2.17.1
+Not a biggie, though.
 
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
