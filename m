@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D88281BFC38
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 16:04:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 988F11BFBC3
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Apr 2020 16:02:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgD3NxI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Apr 2020 09:53:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34652 "EHLO mail.kernel.org"
+        id S1729096AbgD3OBl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Apr 2020 10:01:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728627AbgD3NxG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Apr 2020 09:53:06 -0400
+        id S1728831AbgD3Nxx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 30 Apr 2020 09:53:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0349B2137B;
-        Thu, 30 Apr 2020 13:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DE622063A;
+        Thu, 30 Apr 2020 13:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588254786;
-        bh=SfbucmWDjcK2two1sW5SOV6LhivybaHC17DMbrklUMg=;
+        s=default; t=1588254833;
+        bh=jlxp6bHqaL5SLGNE4+p8W1vuvAGZv7qXffR7022qqeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HBjAmT0j0xx5Pr+/WgOZyP4K83hK8eMI14eH+d/hieUI+urVh8/ywd5TjHrRMGH3F
-         eTR7I5/NqfeqSleeTvGFIUQDYeiY5rKAKAgH1wZGrxflS1RZJWgPSSRCULrSFfoeq9
-         qNE8k+XsNZUEreJzv8NklAR8q3MWUp/tW89sjEBw=
+        b=e9wfXrY01SXVQljBfVr5OZ3anAfjHWJ0ZpCVJdyQjmg10b5TX5NrT75C3R103HzCZ
+         zbW+/vWqbZHdC4cTDiIvLarf+62WuajRhKOjoZkAWuA0lkYTHWJ/X4srcKqIX6swhN
+         CO19Oxu6me/dCRKSJAbZCnLWyhrjJXkJQvyjZ3t0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Philipp Rudo <prudo@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 42/57] s390/ftrace: fix potential crashes when switching tracers
-Date:   Thu, 30 Apr 2020 09:52:03 -0400
-Message-Id: <20200430135218.20372-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 24/30] s390/ftrace: fix potential crashes when switching tracers
+Date:   Thu, 30 Apr 2020 09:53:19 -0400
+Message-Id: <20200430135325.20762-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200430135218.20372-1-sashal@kernel.org>
-References: <20200430135218.20372-1-sashal@kernel.org>
+In-Reply-To: <20200430135325.20762-1-sashal@kernel.org>
+References: <20200430135325.20762-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -66,10 +66,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
-index 61f2b0412345a..ccba63aaeb470 100644
+index 35c842aa87058..4c7cf8787a848 100644
 --- a/arch/s390/kernel/diag.c
 +++ b/arch/s390/kernel/diag.c
-@@ -133,7 +133,7 @@ void diag_stat_inc(enum diag_stat_enum nr)
+@@ -128,7 +128,7 @@ void diag_stat_inc(enum diag_stat_enum nr)
  }
  EXPORT_SYMBOL(diag_stat_inc);
  
@@ -79,10 +79,10 @@ index 61f2b0412345a..ccba63aaeb470 100644
  	this_cpu_inc(diag_stat.counter[nr]);
  	trace_s390_diagnose_norecursion(diag_map[nr].code);
 diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index f468a10e52062..66bf050d785cf 100644
+index ecd24711f3aa9..8e31dfd85de32 100644
 --- a/arch/s390/kernel/smp.c
 +++ b/arch/s390/kernel/smp.c
-@@ -403,7 +403,7 @@ int smp_find_processor_id(u16 address)
+@@ -393,7 +393,7 @@ int smp_find_processor_id(u16 address)
  	return -1;
  }
  
@@ -91,7 +91,7 @@ index f468a10e52062..66bf050d785cf 100644
  {
  	if (test_cpu_flag_of(CIF_ENABLED_WAIT, cpu))
  		return false;
-@@ -413,7 +413,7 @@ bool arch_vcpu_is_preempted(int cpu)
+@@ -403,7 +403,7 @@ bool arch_vcpu_is_preempted(int cpu)
  }
  EXPORT_SYMBOL(arch_vcpu_is_preempted);
  
