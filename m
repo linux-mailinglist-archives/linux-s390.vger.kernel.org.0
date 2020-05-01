@@ -2,148 +2,158 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02F401C1121
-	for <lists+linux-s390@lfdr.de>; Fri,  1 May 2020 12:48:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 773AA1C1A9C
+	for <lists+linux-s390@lfdr.de>; Fri,  1 May 2020 18:32:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbgEAKsn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 1 May 2020 06:48:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51366 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728629AbgEAKsc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 1 May 2020 06:48:32 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 041AXTia007994;
-        Fri, 1 May 2020 06:48:31 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30r7mmxft7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 06:48:31 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 041Ak816026765;
-        Fri, 1 May 2020 10:48:29 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 30mcu5vh5u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 10:48:29 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 041AmQMg58851480
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 1 May 2020 10:48:26 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 604AEA4054;
-        Fri,  1 May 2020 10:48:26 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24914A405B;
-        Fri,  1 May 2020 10:48:26 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  1 May 2020 10:48:26 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: [PATCH net-next 13/13] net/smc: llc_add_link_work to handle ADD_LINK LLC requests
-Date:   Fri,  1 May 2020 12:48:13 +0200
-Message-Id: <20200501104813.76601-14-kgraul@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200501104813.76601-1-kgraul@linux.ibm.com>
-References: <20200501104813.76601-1-kgraul@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-01_04:2020-04-30,2020-05-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- clxscore=1015 mlxscore=0 adultscore=0 impostorscore=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 spamscore=0 suspectscore=1
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005010082
+        id S1729620AbgEAQcr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 1 May 2020 12:32:47 -0400
+Received: from mga06.intel.com ([134.134.136.31]:56120 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728443AbgEAQcr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 1 May 2020 12:32:47 -0400
+IronPort-SDR: lqPEMRdDOaO7Ky04patmk2J7kwjR4fzIG0D5CCZ1zXnqDfRMULV2kzKck93rTZ6dZkcU6QK5mm
+ RtDBiq4F3rVQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2020 09:32:46 -0700
+IronPort-SDR: IRlEnw96PyW2wS0xq/MI/Ft7/+0Pp51LZQsrLWOgqrKr4uogpI7iSja65OD1MiLWM19MAn6TgZ
+ Kj4V8cTQry3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,340,1583222400"; 
+   d="scan'208";a="262131924"
+Received: from vjaiswa1-mobl.amr.corp.intel.com (HELO [10.252.137.219]) ([10.252.137.219])
+  by orsmga006.jf.intel.com with ESMTP; 01 May 2020 09:32:45 -0700
+Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
+ pages
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        viro@zeniv.linux.org.uk
+Cc:     david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, jack@suse.cz, kirill@shutemov.name,
+        peterz@infradead.org, sean.j.christopherson@intel.com,
+        Ulrich.Weigand@de.ibm.com
+References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
+ <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
+ <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
+ <3d379d9e-241c-ef3b-dcef-20fdd3b8740d@de.ibm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzShEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gPGRhdmVAc3I3MS5uZXQ+wsF7BBMBAgAlAhsDBgsJCAcDAgYVCAIJ
+ CgsEFgIDAQIeAQIXgAUCTo3k0QIZAQAKCRBoNZUwcMmSsMO2D/421Xg8pimb9mPzM5N7khT0
+ 2MCnaGssU1T59YPE25kYdx2HntwdO0JA27Wn9xx5zYijOe6B21ufrvsyv42auCO85+oFJWfE
+ K2R/IpLle09GDx5tcEmMAHX6KSxpHmGuJmUPibHVbfep2aCh9lKaDqQR07gXXWK5/yU1Dx0r
+ VVFRaHTasp9fZ9AmY4K9/BSA3VkQ8v3OrxNty3OdsrmTTzO91YszpdbjjEFZK53zXy6tUD2d
+ e1i0kBBS6NLAAsqEtneplz88T/v7MpLmpY30N9gQU3QyRC50jJ7LU9RazMjUQY1WohVsR56d
+ ORqFxS8ChhyJs7BI34vQusYHDTp6PnZHUppb9WIzjeWlC7Jc8lSBDlEWodmqQQgp5+6AfhTD
+ kDv1a+W5+ncq+Uo63WHRiCPuyt4di4/0zo28RVcjtzlGBZtmz2EIC3vUfmoZbO/Gn6EKbYAn
+ rzz3iU/JWV8DwQ+sZSGu0HmvYMt6t5SmqWQo/hyHtA7uF5Wxtu1lCgolSQw4t49ZuOyOnQi5
+ f8R3nE7lpVCSF1TT+h8kMvFPv3VG7KunyjHr3sEptYxQs4VRxqeirSuyBv1TyxT+LdTm6j4a
+ mulOWf+YtFRAgIYyyN5YOepDEBv4LUM8Tz98lZiNMlFyRMNrsLV6Pv6SxhrMxbT6TNVS5D+6
+ UorTLotDZKp5+M7BTQRUY85qARAAsgMW71BIXRgxjYNCYQ3Xs8k3TfAvQRbHccky50h99TUY
+ sqdULbsb3KhmY29raw1bgmyM0a4DGS1YKN7qazCDsdQlxIJp9t2YYdBKXVRzPCCsfWe1dK/q
+ 66UVhRPP8EGZ4CmFYuPTxqGY+dGRInxCeap/xzbKdvmPm01Iw3YFjAE4PQ4hTMr/H76KoDbD
+ cq62U50oKC83ca/PRRh2QqEqACvIH4BR7jueAZSPEDnzwxvVgzyeuhwqHY05QRK/wsKuhq7s
+ UuYtmN92Fasbxbw2tbVLZfoidklikvZAmotg0dwcFTjSRGEg0Gr3p/xBzJWNavFZZ95Rj7Et
+ db0lCt0HDSY5q4GMR+SrFbH+jzUY/ZqfGdZCBqo0cdPPp58krVgtIGR+ja2Mkva6ah94/oQN
+ lnCOw3udS+Eb/aRcM6detZr7XOngvxsWolBrhwTQFT9D2NH6ryAuvKd6yyAFt3/e7r+HHtkU
+ kOy27D7IpjngqP+b4EumELI/NxPgIqT69PQmo9IZaI/oRaKorYnDaZrMXViqDrFdD37XELwQ
+ gmLoSm2VfbOYY7fap/AhPOgOYOSqg3/Nxcapv71yoBzRRxOc4FxmZ65mn+q3rEM27yRztBW9
+ AnCKIc66T2i92HqXCw6AgoBJRjBkI3QnEkPgohQkZdAb8o9WGVKpfmZKbYBo4pEAEQEAAcLB
+ XwQYAQIACQUCVGPOagIbDAAKCRBoNZUwcMmSsJeCEACCh7P/aaOLKWQxcnw47p4phIVR6pVL
+ e4IEdR7Jf7ZL00s3vKSNT+nRqdl1ugJx9Ymsp8kXKMk9GSfmZpuMQB9c6io1qZc6nW/3TtvK
+ pNGz7KPPtaDzvKA4S5tfrWPnDr7n15AU5vsIZvgMjU42gkbemkjJwP0B1RkifIK60yQqAAlT
+ YZ14P0dIPdIPIlfEPiAWcg5BtLQU4Wg3cNQdpWrCJ1E3m/RIlXy/2Y3YOVVohfSy+4kvvYU3
+ lXUdPb04UPw4VWwjcVZPg7cgR7Izion61bGHqVqURgSALt2yvHl7cr68NYoFkzbNsGsye9ft
+ M9ozM23JSgMkRylPSXTeh5JIK9pz2+etco3AfLCKtaRVysjvpysukmWMTrx8QnI5Nn5MOlJj
+ 1Ov4/50JY9pXzgIDVSrgy6LYSMc4vKZ3QfCY7ipLRORyalFDF3j5AGCMRENJjHPD6O7bl3Xo
+ 4DzMID+8eucbXxKiNEbs21IqBZbbKdY1GkcEGTE7AnkA3Y6YB7I/j9mQ3hCgm5muJuhM/2Fr
+ OPsw5tV/LmQ5GXH0JQ/TZXWygyRFyyI2FqNTx4WHqUn3yFj8rwTAU1tluRUYyeLy0ayUlKBH
+ ybj0N71vWO936MqP6haFERzuPAIpxj2ezwu0xb1GjTk4ynna6h5GjnKgdfOWoRtoWndMZxbA
+ z5cecg==
+Message-ID: <a10ec7ad-2648-950e-7f30-07c08e400e7b@intel.com>
+Date:   Fri, 1 May 2020 09:32:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <3d379d9e-241c-ef3b-dcef-20fdd3b8740d@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Introduce a work that is scheduled when a new ADD_LINK LLC request is
-received. The work will call either the SMC client or SMC server
-ADD_LINK processing.
+On 5/1/20 12:18 AM, Christian Borntraeger wrote:
+>> 					unlock_page();
+>> 	get_page();
+>> 	// ^ OK because I have a ref
+>> 	// do DMA on inaccessible page
+>>
+>> Because the make_secure_pte() code isn't looking for a *specific*
+>> 'expected' value, it has no way of noticing that the extra ref snuck in
+>> there.
+> I think the expected calcution is actually doing that,giving back the minimum
+> value when no one else has any references that are valid for I/O.
+> 
+> But I might not have understood what you are trying to tell me?
 
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
----
- net/smc/smc_core.h |  1 +
- net/smc/smc_llc.c  | 24 ++++++++++++++++++++++--
- 2 files changed, 23 insertions(+), 2 deletions(-)
+I was wrong.  I was looking at migrate_page_move_mapping():
 
-diff --git a/net/smc/smc_core.h b/net/smc/smc_core.h
-index eb27f2eb7c8c..555ada9d2423 100644
---- a/net/smc/smc_core.h
-+++ b/net/smc/smc_core.h
-@@ -253,6 +253,7 @@ struct smc_link_group {
- 						/* protects llc_event_q */
- 			struct mutex		llc_conf_mutex;
- 						/* protects lgr reconfig. */
-+			struct work_struct	llc_add_link_work;
- 			struct work_struct	llc_event_work;
- 						/* llc event worker */
- 			wait_queue_head_t	llc_waiter;
-diff --git a/net/smc/smc_llc.c b/net/smc/smc_llc.c
-index 3a25b6ebe3a8..50f59746bdf9 100644
---- a/net/smc/smc_llc.c
-+++ b/net/smc/smc_llc.c
-@@ -565,6 +565,24 @@ static int smc_llc_alloc_alt_link(struct smc_link_group *lgr,
- 	return -EMLINK;
- }
- 
-+/* worker to process an add link message */
-+static void smc_llc_add_link_work(struct work_struct *work)
-+{
-+	struct smc_link_group *lgr = container_of(work, struct smc_link_group,
-+						  llc_add_link_work);
-+
-+	if (list_empty(&lgr->list)) {
-+		/* link group is terminating */
-+		smc_llc_flow_qentry_del(&lgr->llc_flow_lcl);
-+		goto out;
-+	}
-+
-+	/* tbd: call smc_llc_process_cli_add_link(lgr); */
-+	/* tbd: call smc_llc_process_srv_add_link(lgr); */
-+out:
-+	smc_llc_flow_stop(lgr, &lgr->llc_flow_lcl);
-+}
-+
- static void smc_llc_rx_delete_link(struct smc_link *link,
- 				   struct smc_llc_msg_del_link *llc)
- {
-@@ -685,11 +703,11 @@ static void smc_llc_event_handler(struct smc_llc_qentry *qentry)
- 				wake_up_interruptible(&lgr->llc_waiter);
- 			} else if (smc_llc_flow_start(&lgr->llc_flow_lcl,
- 						      qentry)) {
--				/* tbd: schedule_work(&lgr->llc_add_link_work); */
-+				schedule_work(&lgr->llc_add_link_work);
- 			}
- 		} else if (smc_llc_flow_start(&lgr->llc_flow_lcl, qentry)) {
- 			/* as smc server, handle client suggestion */
--			/* tbd: schedule_work(&lgr->llc_add_link_work); */
-+			schedule_work(&lgr->llc_add_link_work);
- 		}
- 		return;
- 	case SMC_LLC_CONFIRM_LINK:
-@@ -868,6 +886,7 @@ void smc_llc_lgr_init(struct smc_link_group *lgr, struct smc_sock *smc)
- 	struct net *net = sock_net(smc->clcsock->sk);
- 
- 	INIT_WORK(&lgr->llc_event_work, smc_llc_event_work);
-+	INIT_WORK(&lgr->llc_add_link_work, smc_llc_add_link_work);
- 	INIT_LIST_HEAD(&lgr->llc_event_q);
- 	spin_lock_init(&lgr->llc_event_q_lock);
- 	spin_lock_init(&lgr->llc_flow_lock);
-@@ -882,6 +901,7 @@ void smc_llc_lgr_clear(struct smc_link_group *lgr)
- 	smc_llc_event_flush(lgr);
- 	wake_up_interruptible_all(&lgr->llc_waiter);
- 	cancel_work_sync(&lgr->llc_event_work);
-+	cancel_work_sync(&lgr->llc_add_link_work);
- 	if (lgr->delayed_event) {
- 		kfree(lgr->delayed_event);
- 		lgr->delayed_event = NULL;
--- 
-2.17.1
+>         int expected_count = expected_page_refs(mapping, page) + extra_count;
+...
+>         xas_lock_irq(&xas);
+>         if (page_count(page) != expected_count || xas_load(&xas) != page) {
+>                 xas_unlock_irq(&xas);
+>                 return -EAGAIN;
+>         }
+> 
+>         if (!page_ref_freeze(page, expected_count)) {
+>                 xas_unlock_irq(&xas);
+>                 return -EAGAIN;
+>         }
 
+I saw the check for page_count(page) *and* the page_ref_freeze() call.
+My assumption was that both were needed.  My assumption was wrong.  (I
+think the migrate_page_move_mapping() code may actually be doing a
+superfluous check.)
+
+The larger point, though, is that the s390 code ensures no extra
+references exist upon entering make_secure_pte(), but it still has no
+mechanism to prevent future, new references to page cache pages from
+being created.
+
+The one existing user of expected_page_refs() freezes the refs then
+*removes* the page from the page cache (that's what the xas_lock_irq()
+is for).  That stops *new* refs from being acquired.
+
+The s390 code is missing an equivalent mechanism.
+
+One example:
+
+	page_freeze_refs();
+	// page->_count==0 now
+					find_get_page();
+					// ^ sees a "freed" page
+	page_unfreeze_refs();
+
+find_get_page() will either fail to *find* the page because it will see
+page->_refcount==0 think it is freed (not great), or it will
+VM_BUG_ON_PAGE() in __page_cache_add_speculative().
+
+My bigger point is that this patches doesn't systematically stop finding
+page cache pages that are arch-inaccessible.  This patch hits *one* of
+those sites.
