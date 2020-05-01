@@ -2,195 +2,173 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4412C1C0E89
-	for <lists+linux-s390@lfdr.de>; Fri,  1 May 2020 09:19:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A70C11C1067
+	for <lists+linux-s390@lfdr.de>; Fri,  1 May 2020 11:34:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgEAHTA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 1 May 2020 03:19:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42268 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726452AbgEAHTA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 1 May 2020 03:19:00 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04172os0030587;
-        Fri, 1 May 2020 03:18:42 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30r7mcagsy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 03:18:42 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04172qoI030818;
-        Fri, 1 May 2020 03:18:41 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30r7mcags7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 03:18:41 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0417Gbi8024788;
-        Fri, 1 May 2020 07:18:38 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03fra.de.ibm.com with ESMTP id 30mcu5bba4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 01 May 2020 07:18:38 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0417IZjV63308074
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 1 May 2020 07:18:35 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C8F774C046;
-        Fri,  1 May 2020 07:18:35 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A5AC4C04A;
-        Fri,  1 May 2020 07:18:35 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.25.110])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  1 May 2020 07:18:34 +0000 (GMT)
-Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
- pages
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        viro@zeniv.linux.org.uk
-Cc:     david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, jack@suse.cz, kirill@shutemov.name,
-        peterz@infradead.org, sean.j.christopherson@intel.com,
-        Ulrich.Weigand@de.ibm.com
-References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
- <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
- <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <3d379d9e-241c-ef3b-dcef-20fdd3b8740d@de.ibm.com>
-Date:   Fri, 1 May 2020 09:18:34 +0200
+        id S1728445AbgEAJej (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 1 May 2020 05:34:39 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59316 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728365AbgEAJei (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 1 May 2020 05:34:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588325676;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=HtdiKEBYnl+F4fKOxJyusZbV9rQDJIfKH4dG2/G+1qg=;
+        b=gSAG3Mu50fMiEPGFNm6G5Sexi8OCiZh8Wn+yemLcvBeA0NXyUAaTWII0iarHR6C5mwpb0a
+        k0z3WNG1RZIkOXswsgS6JE0zn9r+HPL1w1HkQ4jZdlFN8lDPjWlGtmPcObhfZxGZywS2lz
+        Iex0E89okpA3UL1S78G373suPv348f0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-YZZnaj37OHisW4YVqlgBvA-1; Fri, 01 May 2020 05:34:32 -0400
+X-MC-Unique: YZZnaj37OHisW4YVqlgBvA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12CF21054F8B;
+        Fri,  1 May 2020 09:34:30 +0000 (UTC)
+Received: from [10.36.112.251] (ovpn-112-251.ams2.redhat.com [10.36.112.251])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 86CCB6A954;
+        Fri,  1 May 2020 09:34:23 +0000 (UTC)
+Subject: Re: [PATCH v2 2/3] mm/memory_hotplug: Introduce
+ MHP_NO_FIRMWARE_MEMMAP
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        virtio-dev@lists.oasis-open.org,
+        virtualization@lists.linux-foundation.org,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-hyperv@vger.kernel.org,
+        linux-s390@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Michal Hocko <mhocko@kernel.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Baoquan He <bhe@redhat.com>
+References: <20200430102908.10107-1-david@redhat.com>
+ <20200430102908.10107-3-david@redhat.com>
+ <87pnbp2dcz.fsf@x220.int.ebiederm.org>
+ <1b49c3be-6e2f-57cb-96f7-f66a8f8a9380@redhat.com>
+ <871ro52ary.fsf@x220.int.ebiederm.org>
+ <373a6898-4020-4af1-5b3d-f827d705dd77@redhat.com>
+ <875zdg26hp.fsf@x220.int.ebiederm.org>
+ <b28c9e02-8cf2-33ae-646b-fe50a185738e@redhat.com>
+ <20200430152403.e0d6da5eb1cad06411ac6d46@linux-foundation.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <5c908ec3-9495-531e-9291-cbab24f292d6@redhat.com>
+Date:   Fri, 1 May 2020 11:34:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200430152403.e0d6da5eb1cad06411ac6d46@linux-foundation.org>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-01_02:2020-04-30,2020-05-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- mlxscore=0 phishscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=992
- impostorscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005010047
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 01.05.20 00:24, Andrew Morton wrote:
+> On Thu, 30 Apr 2020 20:43:39 +0200 David Hildenbrand <david@redhat.com> wrote:
+> 
+>>>
+>>> Why does the firmware map support hotplug entries?
+>>
+>> I assume:
+>>
+>> The firmware memmap was added primarily for x86-64 kexec (and still, is
+>> mostly used on x86-64 only IIRC). There, we had ACPI hotplug. When DIMMs
+>> get hotplugged on real HW, they get added to e820. Same applies to
+>> memory added via HyperV balloon (unless memory is unplugged via
+>> ballooning and you reboot ... the the e820 is changed as well). I assume
+>> we wanted to be able to reflect that, to make kexec look like a real reboot.
+>>
+>> This worked for a while. Then came dax/kmem. Now comes virtio-mem.
+>>
+>>
+>> But I assume only Andrew can enlighten us.
+>>
+>> @Andrew, any guidance here? Should we really add all memory to the
+>> firmware memmap, even if this contradicts with the existing
+>> documentation? (especially, if the actual firmware memmap will *not*
+>> contain that memory after a reboot)
+> 
+> For some reason that patch is misattributed - it was authored by
+> Shaohui Zheng <shaohui.zheng@intel.com>, who hasn't been heard from in
+> a decade.  I looked through the email discussion from that time and I'm
+> not seeing anything useful.  But I wasn't able to locate Dave Hansen's
+> review comments.
 
+Okay, thanks for checking. I think the documentation from 2008 is pretty
+clear what has to be done here. I will add some of these details to the
+patch description.
 
-On 01.05.20 00:06, Dave Hansen wrote:
-> I was also wondering if Claudio was right about the debug patch having
-> races.  I went to go look how the s390 code avoids races when pages go
-> from accessible->inaccessible.
-> 
-> Because, if if all of the traps are in place to transform pages from
-> inaccessible->accessible, the code *after* those traps is still
-> vulnerable.  What *keeps* pages accessible?
-> 
-> The race avoidance is this, basically:
-> 
-> 	down_read(&gmap->mm->mmap_sem);
-> 	lock_page(page);
->         ptep = get_locked_pte(gmap->mm, uaddr, &ptelock);
-> ...
->>         expected = expected_page_refs(page);
->>         if (!page_ref_freeze(page, expected))
->>                 return -EBUSY;
->>         set_bit(PG_arch_1, &page->flags);
->>         rc = uv_call(0, (u64)uvcb);
->>         page_ref_unfreeze(page, expected);
-> 
-> ... up_read(mmap_sem) / unlock_page() / unlock pte
-> 
-> I'm assuming that after the uv_call(), the page is inaccessible and I/O
-> devices will go boom if they touch the page.
-> 
-> The page_ref_freeze() ensures that references come between the
-> freeze/unfreeze are noticed, but it doesn't actually *stop* new ones for
-> users that hold references already.  For the page cache, especially,
-> someone could do:
-> 
-> 	page = find_get_page();
-> 	arch_make_page_accessible();
-> 					lock_page();
-> 	...				make_secure_pte();
+Also, now that I know that esp. kexec-tools already don't consider
+dax/kmem memory properly (memory will not get dumped via kdump) and
+won't really suffer from a name change in /proc/iomem, I will go back to
+the MHP_DRIVER_MANAGED approach and
+1. Don't create firmware memmap entries
+2. Name the resource "System RAM (driver managed)"
+3. Flag the resource via something like IORESOURCE_MEM_DRIVER_MANAGED.
 
-Not sure if I got your point here, but this make_secure_pte should bail
-out because we actually do check for a calculated refcount value and return
--EBUSY. The find_get_page should have raised this refcount to a value that
-would go beyond the expected value, No? 
+This way, kernel users and user space can figure out that this memory
+has different semantics and handle it accordingly - I think that was
+what Eric was asking for.
 
+Of course, open for suggestions.
 
-> 					unlock_page();
-> 	get_page();
-> 	// ^ OK because I have a ref
-> 	// do DMA on inaccessible page
-> 
-> Because the make_secure_pte() code isn't looking for a *specific*
-> 'expected' value, it has no way of noticing that the extra ref snuck in
-> there.
+-- 
+Thanks,
 
-I think the expected calcution is actually doing that,giving back the minimum
-value when no one else has any references that are valid for I/O.
+David / dhildenb
 
-But I might not have understood what you are trying to tell me?
-
-> 
-> I _think_ expected actually needs to be checked for having a specific
-> (low) value so that if there's a *possibility* of a reference holder
-> acquiring additional references, the page is known to be off-limits.
-> mm/migrate.c has a few examples of this, but I'm not quite sure how
-> bulletproof they are.  Some of it appears to just be optimizations.
-> 
-> 
-> 
-b
