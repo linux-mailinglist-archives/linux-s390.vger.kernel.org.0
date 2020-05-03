@@ -2,66 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F9A71C28FB
-	for <lists+linux-s390@lfdr.de>; Sun,  3 May 2020 01:38:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F6721C2C35
+	for <lists+linux-s390@lfdr.de>; Sun,  3 May 2020 14:39:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgEBXij (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 2 May 2020 19:38:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbgEBXij (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 2 May 2020 19:38:39 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC24C061A0C;
-        Sat,  2 May 2020 16:38:39 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id CA81515163F03;
-        Sat,  2 May 2020 16:38:38 -0700 (PDT)
-Date:   Sat, 02 May 2020 16:38:37 -0700 (PDT)
-Message-Id: <20200502.163837.822343488746704553.davem@davemloft.net>
-To:     kgraul@linux.ibm.com
+        id S1728230AbgECMjr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 3 May 2020 08:39:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52274 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728203AbgECMjr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 3 May 2020 08:39:47 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 043CVekt169236;
+        Sun, 3 May 2020 08:39:44 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4v5vwf7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 03 May 2020 08:39:44 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 043CaBrS004592;
+        Sun, 3 May 2020 12:39:42 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma02fra.de.ibm.com with ESMTP id 30s0g592d3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 03 May 2020 12:39:42 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 043Cddwx17039398
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 3 May 2020 12:39:39 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF04B4C04A;
+        Sun,  3 May 2020 12:39:39 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8F12A4C044;
+        Sun,  3 May 2020 12:39:39 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun,  3 May 2020 12:39:39 +0000 (GMT)
+From:   Karsten Graul <kgraul@linux.ibm.com>
+To:     davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
         heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
         ubraun@linux.ibm.com
-Subject: Re: [PATCH net-next 01/13] net/smc: first part of add link
- processing as SMC client
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200502123552.17204-2-kgraul@linux.ibm.com>
-References: <20200502123552.17204-1-kgraul@linux.ibm.com>
-        <20200502123552.17204-2-kgraul@linux.ibm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 02 May 2020 16:38:39 -0700 (PDT)
+Subject: [PATCH net-next v2 00/11] net/smc: add and delete link processing
+Date:   Sun,  3 May 2020 14:38:39 +0200
+Message-Id: <20200503123850.57261-1-kgraul@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-03_09:2020-05-01,2020-05-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ suspectscore=1 adultscore=0 clxscore=1015 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 phishscore=0 mlxscore=0 mlxlogscore=862
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005030110
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-RnJvbTogS2Fyc3RlbiBHcmF1bCA8a2dyYXVsQGxpbnV4LmlibS5jb20+DQpEYXRlOiBTYXQsICAy
-IE1heSAyMDIwIDE0OjM1OjQwICswMjAwDQoNCj4gK3N0YXRpYyB2b2lkIHNtY19sbGNfcHJvY2Vz
-c19jbGlfYWRkX2xpbmsoc3RydWN0IHNtY19saW5rX2dyb3VwICpsZ3IpDQo+ICt7DQo+ICsJc3Ry
-dWN0IHNtY19sbGNfcWVudHJ5ICpxZW50cnk7DQo+ICsNCj4gKwlxZW50cnkgPSBzbWNfbGxjX2Zs
-b3dfcWVudHJ5X2NscigmbGdyLT5sbGNfZmxvd19sY2wpOw0KPiArDQo+ICsJbXV0ZXhfbG9jaygm
-bGdyLT5sbGNfY29uZl9tdXRleCk7DQo+ICsJc21jX2xsY19jbGlfYWRkX2xpbmsocWVudHJ5LT5s
-aW5rLCBxZW50cnkpOw0KPiArCW11dGV4X3VubG9jaygmbGdyLT5sbGNfY29uZl9tdXRleCk7DQo+
-ICt9DQo+ICsNCj4gIC8qIHdvcmtlciB0byBwcm9jZXNzIGFuIGFkZCBsaW5rIG1lc3NhZ2UgKi8N
-Cg0KWW91IG11c3QgbWFrZSBzdXJlIHRoZSBjb21waWxhdGlvbiBzdWNjZWVkcyB3aXRob3V0IHdh
-cm5pbmdzIGFmdGVyIGVhY2gNCmFuZCBldmVyeSBwYXRjaCBpbiB5b3VyIHBhdGNoIHNlcmllcy4N
-Cg0KSGVyZSB5b3UgYXJlIGFkZGluZyBhIHN0YXRpYyBmdW5jdGlvbiB3aGljaCBpcyBjb21wbGV0
-ZWx5IHVudXNlZCBzbyBJIGtub3cNCnRoZSBjb21waWxlciB3aWxsIHdhcm4gd2l0aG91dCBldmVu
-IGJ1aWxkIHRlc3RpbmcgdGhpcyBwYXRjaC4NCg0KQW5kIHRoaXMgd2FzIGRvbmUgaW4gdGhlIHBy
-ZXZpb3VzIHBhdGNoIHNlcmllcyBhcyB3ZWxsLCB3aGljaCBJIHdpbGwNCmZpeCB1cCByaWdodCBu
-b3c6DQoNCm5ldC9zbWMvc21jX2xsYy5jOjU0NDoxMjogd2FybmluZzogoXNtY19sbGNfYWxsb2Nf
-YWx0X2xpbmuiIGRlZmluZWQgYnV0IG5vdCB1c2VkIFstV3VudXNlZC1mdW5jdGlvbl0NCiBzdGF0
-aWMgaW50IHNtY19sbGNfYWxsb2NfYWx0X2xpbmsoc3RydWN0IHNtY19saW5rX2dyb3VwICpsZ3Is
-DQogICAgICAgICAgICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+DQoNCkkgZ2V0IHRoZSBmZWVsaW5n
-LCBzZWVpbmcgYWxsIG9mIHRoaXMsIHRoYXQgeW91IGFyZSBzcGxpdHRpbmcgdXAgdGhlDQpwYXRj
-aCBzZXQgcHJvcGVybHkgb25seSBiZWNhdXNlIEkgZmlybWx5IHJlcXVpcmVkIHlvdSB0byBkbyBz
-by4gIFRoaXMNCmVmZm9ydCBsb29rcyBoYWxmIGhlYXJ0ZWQgYW5kIGJlaW5nIGRvbmUgcmVsdWN0
-YW50bHkuDQoNClBsZWFzZSBjbGVhbiBhbGwgb2YgdGhpcyB1cCBhbmQgc3VibWl0IHRoZXNlIGNo
-YW5nZXMgY2xlYW5seSBhbmQNCnByb3Blcmx5LCB0aGFuayB5b3UuDQo=
+These patches add the 'add link' and 'delete link' processing as 
+SMC server and client. This processing allows to establish and
+remove links of a link group dynamically.
+
+v2: Fix mess up with unused static functions. Merge patch 8 into patch 4.
+    Postpone patch 13 to next series.
+
+Karsten Graul (11):
+  net/smc: first part of add link processing as SMC client
+  net/smc: rkey processing for a new link as SMC client
+  net/smc: final part of add link processing as SMC client
+  net/smc: first part of add link processing as SMC server
+  net/smc: rkey processing for a new link as SMC server
+  net/smc: final part of add link processing as SMC server
+  net/smc: delete an asymmetric link as SMC server
+  net/smc: llc_del_link_work and use the LLC flow for delete link
+  net/smc: delete link processing as SMC client
+  net/smc: delete link processing as SMC server
+  net/smc: enqueue local LLC messages
+
+ net/smc/af_smc.c   |   4 +-
+ net/smc/smc_core.c |  29 +-
+ net/smc/smc_core.h |   4 +-
+ net/smc/smc_llc.c  | 798 +++++++++++++++++++++++++++++++++++++++++++--
+ net/smc/smc_llc.h  |   5 +
+ net/smc/smc_wr.c   |   2 +-
+ net/smc/smc_wr.h   |   1 +
+ 7 files changed, 800 insertions(+), 43 deletions(-)
+
+-- 
+2.17.1
+
