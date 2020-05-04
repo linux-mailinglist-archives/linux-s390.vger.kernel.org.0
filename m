@@ -2,157 +2,179 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7D641C392E
-	for <lists+linux-s390@lfdr.de>; Mon,  4 May 2020 14:19:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 407671C3B76
+	for <lists+linux-s390@lfdr.de>; Mon,  4 May 2020 15:42:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgEDMT2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 4 May 2020 08:19:28 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36514 "EHLO
+        id S1728220AbgEDNmW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 4 May 2020 09:42:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13886 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728754AbgEDMTS (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 4 May 2020 08:19:18 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044CAOBQ065387;
-        Mon, 4 May 2020 08:19:15 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30s2g1m329-1
+        by vger.kernel.org with ESMTP id S1728200AbgEDNmV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 4 May 2020 09:42:21 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044DW7Y7055840;
+        Mon, 4 May 2020 09:42:01 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30s1svqswk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 08:19:15 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 044C9pp4005720;
-        Mon, 4 May 2020 12:19:13 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma05fra.de.ibm.com with ESMTP id 30s0g5hwny-1
+        Mon, 04 May 2020 09:42:01 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 044DWOju057415;
+        Mon, 4 May 2020 09:42:01 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30s1svqsuk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 12:19:13 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 044CJA3D2621768
+        Mon, 04 May 2020 09:42:01 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 044Df6An000445;
+        Mon, 4 May 2020 13:41:58 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma01fra.de.ibm.com with ESMTP id 30s0g5a01p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 May 2020 13:41:58 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 044DfttG33685572
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 May 2020 12:19:10 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B18A3A404D;
-        Mon,  4 May 2020 12:19:10 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7893EA4040;
-        Mon,  4 May 2020 12:19:10 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  4 May 2020 12:19:10 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: [PATCH net-next 12/12] net/smc: save SMC-R peer link_uid
-Date:   Mon,  4 May 2020 14:18:48 +0200
-Message-Id: <20200504121848.46585-13-kgraul@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200504121848.46585-1-kgraul@linux.ibm.com>
-References: <20200504121848.46585-1-kgraul@linux.ibm.com>
+        Mon, 4 May 2020 13:41:55 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C5D664203F;
+        Mon,  4 May 2020 13:41:55 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7C7742045;
+        Mon,  4 May 2020 13:41:55 +0000 (GMT)
+Received: from oc3748833570.ibm.com (unknown [9.145.79.102])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  4 May 2020 13:41:55 +0000 (GMT)
+Received: by oc3748833570.ibm.com (Postfix, from userid 1000)
+        id 21614D80317; Mon,  4 May 2020 15:41:55 +0200 (CEST)
+Date:   Mon, 4 May 2020 15:41:55 +0200
+From:   Ulrich Weigand <uweigand@de.ibm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        viro@zeniv.linux.org.uk, david@redhat.com,
+        akpm@linux-foundation.org, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        jack@suse.cz, kirill@shutemov.name, peterz@infradead.org,
+        sean.j.christopherson@intel.com, Ulrich.Weigand@de.ibm.com
+Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
+ pages
+Message-ID: <20200504134154.GA21001@oc3748833570.ibm.com>
+References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
+ <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
+ <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
+ <3d379d9e-241c-ef3b-dcef-20fdd3b8740d@de.ibm.com>
+ <a10ec7ad-2648-950e-7f30-07c08e400e7b@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a10ec7ad-2648-950e-7f30-07c08e400e7b@intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-04_06:2020-05-04,2020-05-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=1 bulkscore=0 priorityscore=1501 spamscore=0
- lowpriorityscore=0 adultscore=0 phishscore=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040100
+ definitions=2020-05-04_07:2020-05-04,2020-05-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 phishscore=0 adultscore=0
+ impostorscore=0 mlxlogscore=999 bulkscore=0 clxscore=1011 suspectscore=0
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005040111
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-During SMC-R link establishment the peers exchange the link_uid that
-is used for debugging purposes. Save the peer link_uid in smc_link so it
-can be retrieved by the smc_diag netlink interface.
+On Fri, May 01, 2020 at 09:32:45AM -0700, Dave Hansen wrote:
+> The larger point, though, is that the s390 code ensures no extra
+> references exist upon entering make_secure_pte(), but it still has no
+> mechanism to prevent future, new references to page cache pages from
+> being created.
 
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
----
- net/smc/af_smc.c   | 2 ++
- net/smc/smc_core.h | 1 +
- net/smc/smc_llc.c  | 9 +++++++++
- net/smc/smc_llc.h  | 1 +
- 4 files changed, 13 insertions(+)
+Hi Dave, I worked with Claudio and Christian on the initial design
+of our approach, so let me chime in here as well.
 
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index c67272007f41..4e4421c95ca1 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -390,6 +390,7 @@ static int smcr_clnt_conf_first_link(struct smc_sock *smc)
- 				      SMC_CLC_DECLINE, CLC_WAIT_TIME_SHORT);
- 		return rc == -EAGAIN ? SMC_CLC_DECL_TIMEOUT_CL : rc;
- 	}
-+	smc_llc_save_peer_uid(qentry);
- 	rc = smc_llc_eval_conf_link(qentry, SMC_LLC_REQ);
- 	smc_llc_flow_qentry_del(&link->lgr->llc_flow_lcl);
- 	if (rc)
-@@ -1056,6 +1057,7 @@ static int smcr_serv_conf_first_link(struct smc_sock *smc)
- 				      SMC_CLC_DECLINE, CLC_WAIT_TIME_SHORT);
- 		return rc == -EAGAIN ? SMC_CLC_DECL_TIMEOUT_CL : rc;
- 	}
-+	smc_llc_save_peer_uid(qentry);
- 	rc = smc_llc_eval_conf_link(qentry, SMC_LLC_RESP);
- 	smc_llc_flow_qentry_del(&link->lgr->llc_flow_lcl);
- 	if (rc)
-diff --git a/net/smc/smc_core.h b/net/smc/smc_core.h
-index e2ace20db7fd..4ae76802214f 100644
---- a/net/smc/smc_core.h
-+++ b/net/smc/smc_core.h
-@@ -119,6 +119,7 @@ struct smc_link {
- 	u8			peer_gid[SMC_GID_SIZE];	/* gid of peer*/
- 	u8			link_id;	/* unique # within link group */
- 	u8			link_uid[SMC_LGR_ID_SIZE]; /* unique lnk id */
-+	u8			peer_link_uid[SMC_LGR_ID_SIZE]; /* peer uid */
- 	u8			link_idx;	/* index in lgr link array */
- 	u8			link_is_asym;	/* is link asymmetric? */
- 	struct smc_link_group	*lgr;		/* parent link group */
-diff --git a/net/smc/smc_llc.c b/net/smc/smc_llc.c
-index afb889d60881..66ddc9cf5e2f 100644
---- a/net/smc/smc_llc.c
-+++ b/net/smc/smc_llc.c
-@@ -770,6 +770,7 @@ static int smc_llc_cli_conf_link(struct smc_link *link,
- 		smc_llc_flow_qentry_del(&lgr->llc_flow_lcl);
- 		return -ENOLINK;
- 	}
-+	smc_llc_save_peer_uid(qentry);
- 	smc_llc_flow_qentry_del(&lgr->llc_flow_lcl);
- 
- 	rc = smc_ib_modify_qp_rts(link_new);
-@@ -1041,6 +1042,7 @@ static int smc_llc_srv_conf_link(struct smc_link *link,
- 					 false, SMC_LLC_DEL_LOST_PATH);
- 		return -ENOLINK;
- 	}
-+	smc_llc_save_peer_uid(qentry);
- 	smc_llc_link_active(link_new);
- 	if (lgr_new_t == SMC_LGR_ASYMMETRIC_LOCAL ||
- 	    lgr_new_t == SMC_LGR_ASYMMETRIC_PEER)
-@@ -1783,6 +1785,13 @@ void smc_llc_link_set_uid(struct smc_link *link)
- 	memcpy(link->link_uid, &link_uid, SMC_LGR_ID_SIZE);
- }
- 
-+/* save peers link user id, used for debug purposes */
-+void smc_llc_save_peer_uid(struct smc_llc_qentry *qentry)
-+{
-+	memcpy(qentry->link->peer_link_uid, qentry->msg.confirm_link.link_uid,
-+	       SMC_LGR_ID_SIZE);
-+}
-+
- /* evaluate confirm link request or response */
- int smc_llc_eval_conf_link(struct smc_llc_qentry *qentry,
- 			   enum smc_llc_reqresp type)
-diff --git a/net/smc/smc_llc.h b/net/smc/smc_llc.h
-index 1b68f229cb99..55287376112d 100644
---- a/net/smc/smc_llc.h
-+++ b/net/smc/smc_llc.h
-@@ -93,6 +93,7 @@ void smc_llc_flow_stop(struct smc_link_group *lgr, struct smc_llc_flow *flow);
- int smc_llc_eval_conf_link(struct smc_llc_qentry *qentry,
- 			   enum smc_llc_reqresp type);
- void smc_llc_link_set_uid(struct smc_link *link);
-+void smc_llc_save_peer_uid(struct smc_llc_qentry *qentry);
- struct smc_llc_qentry *smc_llc_wait(struct smc_link_group *lgr,
- 				    struct smc_link *lnk,
- 				    int time_out, u8 exp_msg);
+You're right that there is no mechanism to prevent new references,
+but that's really never been the goal either.  We're simply trying
+to ensure that no I/O is ever done on a page that is in the "secure"
+(or inaccessible) state.  To do so, we rely on the assumption that
+all code that starts I/O on a page cache page will *first*:
+- mark the page as pending I/O by either taking an extra page
+  count, or by setting the Writeback flag; then:
+- call arch_make_page_accessible(); then:
+- start I/O; and only after I/O has finished:
+- remove the "pending I/O" marker (Writeback and/or extra ref)
+
+We thought we had identified all places where we needed to place
+arch_make_page_accessible so that the above assumption is satisfied.
+You've found at least two instances where this wasn't true (thanks!);
+but I still think that this can be fixed by just adding those calls.
+
+Now, if the above assumption holds, then I believe we're safe:
+- before we make any page secure, we verify that it is not
+  "pending I/O" as defined above (neither Writeback flag, nor
+  and extra page count)
+- *during* the process of making the page secure, we're protected
+  against any potential races due to changes in that status, since
+  we hold the page lock (and therefore the Writeback flag cannot
+  change), and we've frozen page references (so those cannot change).
+
+This implies that before I/O has started, the page was made
+accessible; and as long as the page is marked "pending I/O"
+it will not be made inaccessible again.
+
+> The one existing user of expected_page_refs() freezes the refs then
+> *removes* the page from the page cache (that's what the xas_lock_irq()
+> is for).  That stops *new* refs from being acquired.
+> 
+> The s390 code is missing an equivalent mechanism.
+> 
+> One example:
+> 
+> 	page_freeze_refs();
+> 	// page->_count==0 now
+> 					find_get_page();
+> 					// ^ sees a "freed" page
+> 	page_unfreeze_refs();
+> 
+> find_get_page() will either fail to *find* the page because it will see
+> page->_refcount==0 think it is freed (not great), or it will
+> VM_BUG_ON_PAGE() in __page_cache_add_speculative().
+
+I don't really see how that could happen; my understanding is that
+page_freeze_refs simply causes potential users to spin and wait
+until it is no longer frozen.  For example, find_get_page will
+in the end call down to find_get_entry, which does:
+
+        if (!page_cache_get_speculative(page))
+                goto repeat;
+
+Am I misunderstanding anything here?
+
+> My bigger point is that this patches doesn't systematically stop finding
+> page cache pages that are arch-inaccessible.  This patch hits *one* of
+> those sites.
+
+As I said above, that wasn't really the goal for our approach.
+
+In particular, note that we *must* have secure pages present in the
+page table of the secure guest (that is a requirement of the architecture;
+note that the "secure" status doesn't just apply to the phyiscal page,
+but a triple of "*this* host physical page is the secure backing store
+of *this* guest physical page in *this* secure guest", which the HW/FW
+tracks based on the specific page table entry).
+
+As a consequence, the page really also has to remain present in the
+page cache (I don't think Linux mm code would be able to handle the
+case where a file-backed page is in the page table but not page cache).
+
+I'm not sure what exactly the requirements for your use case are; if those
+are significantly differently, maybe we can work together to find an
+approach that works for both?
+
+Bye,
+Ulrich
+
 -- 
-2.17.1
-
+  Dr. Ulrich Weigand
+  GNU/Linux compilers and toolchain
+  Ulrich.Weigand@de.ibm.com
