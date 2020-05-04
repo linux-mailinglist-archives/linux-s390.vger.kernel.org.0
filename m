@@ -2,91 +2,84 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C13471C3ED7
-	for <lists+linux-s390@lfdr.de>; Mon,  4 May 2020 17:44:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C9831C4062
+	for <lists+linux-s390@lfdr.de>; Mon,  4 May 2020 18:45:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbgEDPoY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 4 May 2020 11:44:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21568 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728983AbgEDPoX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 4 May 2020 11:44:23 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 044F2XpZ139280;
-        Mon, 4 May 2020 11:44:18 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s50ys4ce-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 11:44:18 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 044Ffo2O012898;
-        Mon, 4 May 2020 15:44:15 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5n435-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 May 2020 15:44:15 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 044Fh3vg61735376
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 May 2020 15:43:03 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D867B4C04A;
-        Mon,  4 May 2020 15:44:12 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E51214C040;
-        Mon,  4 May 2020 15:44:11 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.201.44])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  4 May 2020 15:44:11 +0000 (GMT)
-Date:   Mon, 4 May 2020 18:44:10 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marc Hartmayer <mhartmay@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: Re: linux-next: Tree for May 4 --> mm: free_area_init: allow
- defining max_zone_pfn in descending order does increase memory use
-Message-ID: <20200504154410.GF342687@linux.ibm.com>
-References: <20200504173547.2cdd83bf@canb.auug.org.au>
- <9e9edd1e-6653-a585-0e22-69930a07dce1@de.ibm.com>
+        id S1729736AbgEDQpI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 4 May 2020 12:45:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49921 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729395AbgEDQpH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 4 May 2020 12:45:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588610706;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RgNAr5ePUPXCOlMMjdyI2n+4U4LTYkHptNR+Gklm4AM=;
+        b=PbCQN7Qt1KiMmVqXGpg/ts5Hpy3CDFOiBBTTbh7lGRYPfBwDzlJT2h7xzNiy9QY0vX0SsF
+        RjLwEY1gv7Dg9wXZTTHyromh7iaRqKDVOtjkoackJ9piau7RHCXT3Vp4wml9cQcmfJS4D4
+        h41RFUVyhLHvQ7sDEQh9I0u2Ob4gZoI=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-484-wbwvHBPIOvym7vrLKKKAVQ-1; Mon, 04 May 2020 12:44:59 -0400
+X-MC-Unique: wbwvHBPIOvym7vrLKKKAVQ-1
+Received: by mail-wr1-f71.google.com with SMTP id f15so6201wrj.2
+        for <linux-s390@vger.kernel.org>; Mon, 04 May 2020 09:44:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RgNAr5ePUPXCOlMMjdyI2n+4U4LTYkHptNR+Gklm4AM=;
+        b=jVsWc0T9hb6L+Q5yrnMkqXaIiC9GzgBbxMoWxXdypzFc8aaY4Vg/UMqojWx73dnSi3
+         CIYU5YrqR26Aq56D5ioguMfkLUMMxuXxhdNwA68IpxMAyDxVa5315mhMq7DlApQjn16a
+         IYh+/hllxgkYb5frkFQ5bYDJtRyo81peOlNxZOPAcGJatNA48wx65zhEJveCQUB+UjKj
+         gPVMhw0L+XlhakUPJYe6QZLf7666LKUOT0PxTh6Tz5XGvHMXst9Q8WY+UhmCT9Imc8y5
+         bTGHSOXWBGYBlYfZbGiIJYdLS/nchj8kzMqTLsScqlGAcxaPcwWM+P9ycEF5f/SYI5it
+         S5fg==
+X-Gm-Message-State: AGi0PuZCOiIbcbFbhoTybA7eO2yZ7FXlWGnAvWvXdi9IUFvoELLFEoxn
+        PRxtmdO5+wqh/UjC8cXMEuNkqJkIlgJmOk9pcSsF6UFPvrTPzqiXaM12E9S0Rzk0HJdPvtWoTcR
+        PM1DChkU1e+eMXVx17NnO9w==
+X-Received: by 2002:a05:600c:225a:: with SMTP id a26mr15643701wmm.104.1588610698594;
+        Mon, 04 May 2020 09:44:58 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKAceuiic+rg2tWFVV1HrVcmieBoZp9SufVEvQbCPNh1/dooxyE98gmWg3zzUAgW98Do+zfDg==
+X-Received: by 2002:a05:600c:225a:: with SMTP id a26mr15643675wmm.104.1588610698405;
+        Mon, 04 May 2020 09:44:58 -0700 (PDT)
+Received: from [192.168.178.58] ([151.20.132.175])
+        by smtp.gmail.com with ESMTPSA id y11sm18766137wrh.59.2020.05.04.09.44.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 May 2020 09:44:57 -0700 (PDT)
+Subject: Re: [kvm-unit-tests PULL 00/17] s390x updates
+To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
+Cc:     Thomas Huth <thuth@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@de.ibm.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>
+References: <20200430152430.40349-1-david@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <7ff41e72-06e7-efc1-9e74-3709340c1135@redhat.com>
+Date:   Mon, 4 May 2020 18:44:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9e9edd1e-6653-a585-0e22-69930a07dce1@de.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-04_09:2020-05-04,2020-05-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- clxscore=1011 suspectscore=0 mlxlogscore=798 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005040124
+In-Reply-To: <20200430152430.40349-1-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Ho Christian,
+On 30/04/20 17:24, David Hildenbrand wrote:
+>   https://github.com/davidhildenbrand/kvm-unit-tests.git tags/s390x-2020-04-30
 
-On Mon, May 04, 2020 at 04:50:06PM +0200, Christian Borntraeger wrote:
-> Mike,
-> commit 51a2f644fd020d5f090044825c388444d11029d ("mm: free_area_init: allow defining max_zone_pfn in descending order")
-> does increase the memory use on s390 (e.g. 700 MB vs.1.8 GB).
-> 
-> Something is odd in this patch. Any idea?
+Pulled, thanks.
 
-Yeah, this patch is buggy. In short, it breaks zone size calculation on
-s390 and some other architectures.
+Paolo
 
-I've just replied at [1] with more details and a fix.
-
-[1] https://lore.kernel.org/linux-mm/20200504153901.GM14260@kernel.org/
-
--- 
-Sincerely yours,
-Mike.
