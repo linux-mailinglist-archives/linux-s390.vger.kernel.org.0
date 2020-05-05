@@ -2,54 +2,73 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E4D41C6173
-	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 21:58:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AFD81C61A1
+	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 22:10:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgEET6H (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 May 2020 15:58:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46334 "EHLO
+        id S1728749AbgEEUKE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 May 2020 16:10:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728135AbgEET6H (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 15:58:07 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A99BC061A0F;
-        Tue,  5 May 2020 12:58:07 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A31C01280966A;
-        Tue,  5 May 2020 12:58:06 -0700 (PDT)
-Date:   Tue, 05 May 2020 12:58:05 -0700 (PDT)
-Message-Id: <20200505.125805.2022273480111353321.davem@davemloft.net>
-To:     kgraul@linux.ibm.com
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: Re: [PATCH net-next 0/2] log state changes and cleanup
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200505130121.103272-1-kgraul@linux.ibm.com>
-References: <20200505130121.103272-1-kgraul@linux.ibm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 05 May 2020 12:58:07 -0700 (PDT)
+        by vger.kernel.org with ESMTP id S1728076AbgEEUKE (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 16:10:04 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25989C061A0F
+        for <linux-s390@vger.kernel.org>; Tue,  5 May 2020 13:10:04 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id 72so32989otu.1
+        for <linux-s390@vger.kernel.org>; Tue, 05 May 2020 13:10:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oHTwlgdwogMaMauWudijcuKhbWcUeWAm3wC8aKEGoGs=;
+        b=GHjgCMOe8Ff1xkRGxZmhuI8ghIbPLW4dHl0dpKobopTJc41in+IJyncK1tVxF5/LTr
+         gS0y4bPI+KFvs6u0ZVGO8Xy4BB7RzQbtdWZYKei/co/Yv2QoyDhsXnMTcPvAjApflxuF
+         zHChxFMlDnfpUW3q4zmAjkwdVkZ5/gteZDjP0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oHTwlgdwogMaMauWudijcuKhbWcUeWAm3wC8aKEGoGs=;
+        b=G9A4Dpdlgu9REa5ZRSQme9QiDvZF610S0DaczEbHR2ail2bAz0YFL/ffCvPqM3S/0e
+         QUIHGnwrqfyVDJ33bP/QTRahK4KMV37tGVQu5rYkhNqtr4GOK85f4Pmb+XkhoMrI/BSP
+         5J0Fsg6e2EeY36kViYlw7vWHPSuAupsyQ2HbyP8XNn/qO/ywy3WqGUapBkwex+/bIEdB
+         sFTbYTRpf07AKO4cWQUYDhRWKlNlXUr9L2oBtSvEFK9VxWXQ5I/94dXjPm3pBR6GPwc0
+         k6vffAWCw7N7Qr3ESNyfbdD3ndcVL6g6hk/PgIsUpg4UKZcMwxwyzsJ83mHgIH+guLne
+         W17Q==
+X-Gm-Message-State: AGi0PuaEYBzCeEp+88Wici1CLVSghORR6wVxFot03wpAvAj8i8yYxHMw
+        fb23H71bFeB+By51rR4KTq6PWEiU5YLJXnBBSNxpEUzvFd4=
+X-Google-Smtp-Source: APiQypJStawP9vJJqKbd5Qx2KNsVl70G0sQGOdwSYIg9LgR2Vh53MnSwYthujuHw5vVqN7DzpLyygyD5ljNHsxM2Aq8=
+X-Received: by 2002:a05:6830:1e1c:: with SMTP id s28mr3549585otr.207.1588709403259;
+ Tue, 05 May 2020 13:10:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200505162559.14138-1-jwi@linux.ibm.com> <20200505162559.14138-11-jwi@linux.ibm.com>
+ <20200505102149.1fd5b9ba@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <a19ccf27-2280-036c-057f-8e6d2319bb28@linux.ibm.com> <20200505112940.6fe70918@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <6788c6f1-52cb-c421-7251-500a391bb48b@linux.ibm.com>
+In-Reply-To: <6788c6f1-52cb-c421-7251-500a391bb48b@linux.ibm.com>
+From:   Edwin Peer <edwin.peer@broadcom.com>
+Date:   Tue, 5 May 2020 13:09:27 -0700
+Message-ID: <CAKOOJTzfbo9NJpOWpNn5B-oQ_yTvc7-ZxJP6dWvCV46p0z-T3A@mail.gmail.com>
+Subject: Re: [PATCH net-next 10/11] s390/qeth: allow reset via ethtool
+To:     Julian Wiedmann <jwi@linux.ibm.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
-Date: Tue,  5 May 2020 15:01:19 +0200
+On Tue, May 5, 2020 at 12:57 PM Julian Wiedmann <jwi@linux.ibm.com> wrote:
 
-> Patch 1 adds the logging of important state changes to enable SMC-R 
-> users to detect SMC-R link groups that are not redundant and require
-> user actions. Patch 2 is a contribution to clean up an unused inline 
-> function.
+> It's a virtual device, _none_ of them make much sense?!
 
-Please use an appropriate subsystem prefix in your Subject lines for
-patch series intro emails, just like you would do for the patches
-themselves.
+Why not introduce a new reset bit that captures the semantics of
+whatever qeth_schedule_recovery does?
 
-Series applied, thank.
+Regards,
+Edwin Peer
