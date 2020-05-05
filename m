@@ -2,60 +2,60 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0778E1C59D1
-	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 16:40:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80A1C1C59FB
+	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 16:50:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbgEEOkD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 May 2020 10:40:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40266 "EHLO
+        id S1729408AbgEEOuR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 May 2020 10:50:17 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31698 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727083AbgEEOkC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 10:40:02 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045EYrsd039947;
-        Tue, 5 May 2020 10:39:48 -0400
+        by vger.kernel.org with ESMTP id S1729060AbgEEOuR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 10:50:17 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045E2fmU074421;
+        Tue, 5 May 2020 10:50:04 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8sgu8hr-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8sqbmvc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 10:39:48 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 045Eaf2g046540;
-        Tue, 5 May 2020 10:39:48 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8sgu8gb-1
+        Tue, 05 May 2020 10:50:04 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 045E3Ivb077655;
+        Tue, 5 May 2020 10:50:04 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8sqbmu5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 10:39:47 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045EUj3a028193;
-        Tue, 5 May 2020 14:39:45 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma05fra.de.ibm.com with ESMTP id 30s0g5jw0n-1
+        Tue, 05 May 2020 10:50:04 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045EkStq026060;
+        Tue, 5 May 2020 14:50:01 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04fra.de.ibm.com with ESMTP id 30s0g62w97-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 14:39:45 +0000
+        Tue, 05 May 2020 14:50:01 +0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045EdeJF66191822
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045Ent5N29884470
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 May 2020 14:39:40 GMT
+        Tue, 5 May 2020 14:49:56 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24234A4051;
-        Tue,  5 May 2020 14:39:40 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id E36FAA4051;
+        Tue,  5 May 2020 14:49:55 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9942EA4040;
-        Tue,  5 May 2020 14:39:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 845DDA4040;
+        Tue,  5 May 2020 14:49:54 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.145.49.139])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 May 2020 14:39:38 +0000 (GMT)
+        Tue,  5 May 2020 14:49:54 +0000 (GMT)
 Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
  pages
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Ulrich Weigand <uweigand@de.ibm.com>
-Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>, viro@zeniv.linux.org.uk,
-        david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, jack@suse.cz, kirill@shutemov.name,
-        peterz@infradead.org, sean.j.christopherson@intel.com,
-        Ulrich.Weigand@de.ibm.com
+To:     Ulrich Weigand <uweigand@de.ibm.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        viro@zeniv.linux.org.uk, david@redhat.com,
+        akpm@linux-foundation.org, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        jack@suse.cz, kirill@shutemov.name, peterz@infradead.org,
+        sean.j.christopherson@intel.com, Ulrich.Weigand@de.ibm.com
 References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
  <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
  <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
@@ -63,10 +63,10 @@ References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
  <a10ec7ad-2648-950e-7f30-07c08e400e7b@intel.com>
  <20200504134154.GA21001@oc3748833570.ibm.com>
  <231da2f1-a6ef-0cf9-7f57-95e8b925997b@intel.com>
- <45bc81bb-8765-ffff-6e47-8ee9702c8bcd@de.ibm.com>
- <6e97a4b0-df4f-90c7-a6f7-61ee52e0833e@intel.com>
- <da6bc7cb-ef13-08cd-f162-663b4a66043b@de.ibm.com>
- <fcc9adea-598f-f882-c3e3-09d190cd5d52@intel.com>
+ <20200505135556.GA9920@oc3748833570.ibm.com>
+ <fd300dca-f0b4-ce3b-4a97-244030624fbd@de.ibm.com>
+ <d1de4fb2-dfe6-83fa-9973-2505d4c397ec@de.ibm.com>
+ <20200505143300.GA14113@oc3748833570.ibm.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -111,23 +111,23 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <d0a7970b-b7bf-c362-fc7e-1f5aaa8aef29@de.ibm.com>
-Date:   Tue, 5 May 2020 16:39:38 +0200
+Message-ID: <d31af5af-91fd-a29e-2985-78b61261bc77@de.ibm.com>
+Date:   Tue, 5 May 2020 16:49:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <fcc9adea-598f-f882-c3e3-09d190cd5d52@intel.com>
+In-Reply-To: <20200505143300.GA14113@oc3748833570.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-05-05_08:2020-05-04,2020-05-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- priorityscore=1501 adultscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 mlxscore=0 impostorscore=0 phishscore=0 suspectscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005050119
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=662 impostorscore=0 adultscore=0 suspectscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005050114
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -135,33 +135,31 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 05.05.20 16:34, Dave Hansen wrote:
-> On 5/5/20 7:31 AM, Christian Borntraeger wrote:
->>> So, the requirements are:
+On 05.05.20 16:33, Ulrich Weigand wrote:
+> On Tue, May 05, 2020 at 04:03:00PM +0200, Christian Borntraeger wrote:
+>>> Just looked at 
+>>> commit 88b1a17dfc3ed7728316478fae0f5ad508f50397  mm: add 'try_get_page()' helper function
 >>>
->>> 1. Allow host-side DMA and CPU access to shared pages
->>> 2. Stop host-side DMA and CPU access to encrypted pages
->>> 3. Allow pages to be converted between the states at the request of the
->>>    guest
+>>> which says:
+>>>     Also like 'get_page()', you can't use this function unless you already
+>>>     had a reference to the page.  The intent is that you can use this
+>>>     exactly like get_page(), but in situations where you want to limit the
+>>>     maximum reference count.
+>>>     
+>>>     The code currently does an unconditional WARN_ON_ONCE() if we ever hit
+>>>     the reference count issues (either zero or negative), as a notification
+>>>     that the conditional non-increment actually happened.
 >>>
->>> Stopping the DMA is pretty easy, even across the gazillions of drivers
->>> in the tree because even random ethernet drivers do stuff like:
->>>
->>>                 txdr->buffer_info[i].dma =
->>>                         dma_map_single(&pdev->dev, skb->data, skb->len,
->>>                                        DMA_TO_DEVICE);
->>>
->>> So the DMA can be stopped at the mapping layer.  It's a *LOT* easier to
->>> catch there since the IOMMUs already provide isolation between the I/O
->>> and CPU address spaces.
->> And your problem is that the guest could convert this after the dma_map?
->> So you looked into our code if this would help?
+>>> If try_get_page must not be called with an existing reference, that means
+>> 		s/not//
+>>> that when we call it the page reference is already higher and our freeze
+>>> will never succeed. That would imply that we cannot trigger this. No?
 > 
-> Yep, it seemed like a close-enough problem.
+> Well, my understanding is that the "existing" reference may be one of the
+> references that is expected by our freeze code, in particular in gup the
+> existing reference is simply the one from the pte.  So in this case our
+> freeze *would* succeeed.
 
-Is there a way to prevent the guest from switching the state? We also have 2
-variants of secure pages
-1. those that are secure and when the host accesses them will be encrypted
-2. those that are marked by the guest as shared. When you look at 
-arch_make_page_accessible we first try to "pin" the shared state. So the guest
-trying to "unshare" such a page would trigger an exit that we can handle.
+If thats the case then "<0" looks indeed better than "<=0" for the check.
+I think try_get_page was never meant to exclude a parallel page_ref_freeze/unfreeze.
+
