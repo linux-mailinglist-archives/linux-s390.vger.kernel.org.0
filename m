@@ -2,107 +2,165 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F2C71C630C
-	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 23:28:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7122F1C63F7
+	for <lists+linux-s390@lfdr.de>; Wed,  6 May 2020 00:34:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgEEV26 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 May 2020 17:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727785AbgEEV26 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 5 May 2020 17:28:58 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BF4F206A5;
-        Tue,  5 May 2020 21:28:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588714137;
-        bh=5/BTjp/n0KQrA6IRrVk66kijzLqf9GSaanDpQXL2EO0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MjEIEuhhyNNEVHWW4xHpfU7lqsKN2+Tle857n5AIo9+DH7thr9GIMnSD871SeFeai
-         DQOOWX1Jw5K9JpBS7yReB8HDdMy5UlMzSk0OmVBQXXc0kSKC3hUzH6QBIAt4qLPboo
-         GcRAv801idqEn3fmDBPIySvxMT/p4dAOOLagec6o=
-Date:   Tue, 5 May 2020 14:28:55 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Julian Wiedmann <jwi@linux.ibm.com>
-Cc:     David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
+        id S1729265AbgEEWeb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 May 2020 18:34:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15622 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727089AbgEEWeb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 18:34:31 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045MWIQv187522;
+        Tue, 5 May 2020 18:34:30 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30uf8hany8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 18:34:30 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 045MY91c004214;
+        Tue, 5 May 2020 18:34:30 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30uf8hanxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 18:34:30 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045MUP5g007881;
+        Tue, 5 May 2020 22:34:29 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma05wdc.us.ibm.com with ESMTP id 30s0g6mbqc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 May 2020 22:34:29 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045MYR5b56230372
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 May 2020 22:34:27 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CA59B6A047;
+        Tue,  5 May 2020 22:34:27 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4B226A054;
+        Tue,  5 May 2020 22:34:26 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.169.140])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue,  5 May 2020 22:34:26 +0000 (GMT)
+Subject: Re: [PATCH] KVM: s390: Remove false WARN_ON_ONCE for the PQAP
+ instruction
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
+        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
         linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>
-Subject: Re: [PATCH net-next 10/11] s390/qeth: allow reset via ethtool
-Message-ID: <20200505142855.24b7c1bf@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <6788c6f1-52cb-c421-7251-500a391bb48b@linux.ibm.com>
-References: <20200505162559.14138-1-jwi@linux.ibm.com>
-        <20200505162559.14138-11-jwi@linux.ibm.com>
-        <20200505102149.1fd5b9ba@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <a19ccf27-2280-036c-057f-8e6d2319bb28@linux.ibm.com>
-        <20200505112940.6fe70918@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <6788c6f1-52cb-c421-7251-500a391bb48b@linux.ibm.com>
+        Qian Cai <cailca@icloud.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+References: <20200505073525.2287-1-borntraeger@de.ibm.com>
+ <20200505095332.528254e5.cohuck@redhat.com>
+ <f3512a63-91dc-ab9a-a9ab-3e2a6e24fea3@de.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <889a7e3d-8318-4c85-67c8-a42a665b56f4@linux.ibm.com>
+Date:   Tue, 5 May 2020 18:34:26 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <f3512a63-91dc-ab9a-a9ab-3e2a6e24fea3@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-05_11:2020-05-04,2020-05-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=3 bulkscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 adultscore=0 mlxlogscore=999 phishscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005050169
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 5 May 2020 21:57:43 +0200 Julian Wiedmann wrote:
-> > This is the comment from the uAPI header:
-> > 
-> > /* The reset() operation must clear the flags for the components which
-> >  * were actually reset.  On successful return, the flags indicate the
-> >  * components which were not reset, either because they do not exist
-> >  * in the hardware or because they cannot be reset independently.  The
-> >  * driver must never reset any components that were not requested.
-> >  */
-> > 
-> > Now let's take ETH_RESET_PHY as an example. Surely you're not resetting
-> > any PHY here, so that bit should not be cleared. Please look at the
-> > bits and select the ones which make sense, add whatever is missing.
-> >   
-> 
-> It's a virtual device, _none_ of them make much sense?! We better not be
-> resetting any actual HW components, the other interfaces on the same
-> adapter would be quite unhappy about that.
 
-Well, then, you can't use the API in its current form. You can't say
-none of the sub-options are applicable, but the sum of them does.
 
-> Sorry for being dense, and I appreciate that the API leaves a lot of room
-> for sophisticated partial resets where the driver/HW allows it.
-> But it sounds like what you're suggesting is
-> (1) we select a rather arbitrary set of components that _might_ represent a
->     full "virtual" reset, and then
-> (2) expect the user to guess a super-set of these features. And not worry
->     when they selected too much, and this obscure PHY thing failed to reset.
+On 5/5/20 3:55 AM, Christian Borntraeger wrote:
+>
+> On 05.05.20 09:53, Cornelia Huck wrote:
+>> On Tue,  5 May 2020 09:35:25 +0200
+>> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+>>
+>>> In LPAR we will only get an intercept for FC==3 for the PQAP
+>>> instruction. Running nested under z/VM can result in other intercepts as
+>>> well, for example PQAP(QCI). So the WARN_ON_ONCE is not right. Let
+>>> us simply remove it.
+>> While I agree with removing the WARN_ON_ONCE, I'm wondering why z/VM
+>> gives us intercepts for those fcs... is that just a result of nesting
+>> (or the z/VM implementation), or is there anything we might want to do?
+> Yes nesting.
+> The ECA bit for interpretion is an effective one. So if the ECA bit is off
+> in z/VM (no crypto cards) our ECA bit is basically ignored as these bits
+> are ANDed.
+> I asked Tony to ask the z/VM team if that is the case here.
 
-No, please see the code I provided below, and read how the interface 
-is supposed to work. I posted the code comment in my previous reply. 
-I don't know what else I can do for you.
+I apologize, but I was on vacation yesterday and did not have a
+chance to look at this until today. I left a slack message for
+my z/VM contact, but have not yet gotten a response.
 
-User can still pass "all" but you can't _clear_ all bits, 'cause you
-didn't reset any PHY, MAC, etc.
+The only AP virtualization support we currently provide with
+Linux on Z relies on AP interpretive execution. The ECA.28
+bit in the SIE state description determines whether AP
+instructions executed on a guest are intercepted (0) or
+interpreted (1). The problem here is that ECA.28 is an
+effective control meaning that ECA.28 for the guest is
+logically ANDed with the host's. If linux is running as a
+guest of z/VM and z/VM is sets ECA.28 to zero,
+then ECA.28 for the guest will also be zero, in which case
+every AP instruction executed on the guest will be intercepted.
 
-> So I looked at gve's implementation and thought "yep, looks simple enough".
+The only AP instruction that has an interception handler is
+PQAP with function code 0x03 (AP-queue interruption control), so
+this warning is being issued for all other AP instructions being
+intercepted; so, maybe this is the right thing to do? After all,
+running a linux as a guest of z/VM that is setting ECA.28 to zero is not
+a supported configuration.
 
-Ugh, yeah, gve is not a good example.
+Having said that, the root of the problem is the fact that
+a guest is allowed to start without AP interpretive execution
+turned on because that is the only currently supported configuration.
+If there is a way to determine the effective value of ECA.28 for a
+KVM guest, when KVM could respond appropriately when QEMU
+queries whether the KVM_S390_VM_CRYPTO_ENABLE_APIE attribute
+is available in the CPU model. If it is not, then QEMU does not set the
+S390_FEAT_AP (AP instructions installed) feature and a guest started
+with cpu model feature ap='on' will fail to start.
 
-> But if we start asking users to interpret HW bits that hardly make any
-> sense to them, we're worse off than with the existing custom sysfs trigger...
 
-Actually - operationally, how do you expect people to use this reset?
-Some user space system detects the NIC is in a bad state? Does the
-interface communicate that via some log messages or such?
+>
+>>> Cc: Pierre Morel <pmorel@linux.ibm.com>
+>>> Cc: Tony Krowiak <akrowiak@linux.ibm.com>
+>>> Reported-by: Qian Cai <cailca@icloud.com>
+>>> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>>> ---
+>>>   arch/s390/kvm/priv.c | 4 +++-
+>>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
+>>> index 69a824f9ef0b..bbe46c6aedbf 100644
+>>> --- a/arch/s390/kvm/priv.c
+>>> +++ b/arch/s390/kvm/priv.c
+>>> @@ -626,10 +626,12 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
+>>>   	 * available for the guest are AQIC and TAPQ with the t bit set
+>>>   	 * since we do not set IC.3 (FIII) we currently will only intercept
+>>>   	 * the AQIC function code.
+>>> +	 * Note: running nested under z/VM can result in intercepts, e.g.
+>> s/intercepts/intercepts for other function codes/
+>>
+>>> +	 * for PQAP(QCI). We do not support this and bail out.
+>>>   	 */
+>>>   	reg0 = vcpu->run->s.regs.gprs[0];
+>>>   	fc = (reg0 >> 24) & 0xff;
+>>> -	if (WARN_ON_ONCE(fc != 0x03))
+>>> +	if (fc != 0x03)
+>>>   		return -EOPNOTSUPP;
+>>>   
+>>>   	/* PQAP instruction is allowed for guest kernel only */
 
-The commit message doesn't really explain the "why".
-
-> > Then my suggestion would be something like:
-> > 
-> >   #define QETH_RESET_FLAGS (flag | flag | flag)
-> > 
-> >   if ((*flags & QETH_RESET_FLAGS) != QETH_RESET_FLAGS))
-> > 	return -EINVAL;
-> >   ...
-> >   *flags &= ~QETH_RESET_FLAGS;
