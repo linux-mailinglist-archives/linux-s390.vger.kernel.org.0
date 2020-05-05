@@ -2,111 +2,77 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A79A21C5E5D
-	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 19:07:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F02F1C5EAB
+	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 19:21:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbgEERHc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 May 2020 13:07:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729248AbgEERHc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 13:07:32 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E311C061A10
-        for <linux-s390@vger.kernel.org>; Tue,  5 May 2020 10:07:32 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x15so1175533pfa.1
-        for <linux-s390@vger.kernel.org>; Tue, 05 May 2020 10:07:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=vBqzVx+qxfalnXJK7KTGtarAHizzhkjQWkeOeL25v0I=;
-        b=O5i7do4icdhMgjwpo9TCdui1mhr1arbAoT6CXE/FL4FNU3azDor8xRsQqnf1oekzW/
-         7Qdnbc7WereNZhHIyoLYjd3kSqw20Zgo4WpUa6FDM3lp00UVK8MuXDFlE01cNDiRoL/O
-         EAJ+Ut2sB0upkwibNjvyQBcsbJtaD+jjUHszOCYm3fAaoq1qP93jucL3eyvdClOkn4r9
-         aH+4c51iqcLP9pbxn4M3XH4t32uYqryQbnelLqdVh/XN7PZz087P/5s0HNVg2D8n0IWM
-         Us9QoDxYRHRAsocKaYP+GGGf+vkaem3+rBmS0NeZS6uvBlq/NtEMkGqiIrBNdRSUHVrW
-         Rf/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=vBqzVx+qxfalnXJK7KTGtarAHizzhkjQWkeOeL25v0I=;
-        b=CuywNQ8W71RoputLsM33aw9Eda6NMz2nI3BJXfCddDBAI0LVJUiuKzFPK+8J8LeVXw
-         guA99M2slucE2JP9/AI+p45mOe9YA4ABSa5a8db8b+ABQsbPjFeUrW6r6saeUSl/Mef5
-         PxthmYCb8uIwvbtjEILtqXxIFnPOK37e2YTs5JDmlwYBtmj/nZxmXRxM6qjRZrMv00um
-         N8L6yfiwcNRP79EpAKKcjBlwNikFHQZw8YO+e+0LNqWj6z5qaS/b6dofEXyJzWegFePy
-         SSjFo2W+XlYZuW5l8wkvzUpevVETgc67yfSgaKrdp7XNY4mbWxKl/2PT9HTQ6WngZ5//
-         eWaw==
-X-Gm-Message-State: AGi0PuZv+2KzGUS4aEDdl0QdUhfrrvWg4kQLZM5MmJ7dXpjVUOp/tOpH
-        VJHMAmUuK2xyxd78ncVuZOpLSg==
-X-Google-Smtp-Source: APiQypL1cJk6Ptxu94QvTpoApcHVyzDf/w6RUKic+BQutwZLjzt9TVLdFv2iA8r9azHBa6jgEpe/WQ==
-X-Received: by 2002:a63:778d:: with SMTP id s135mr3848663pgc.238.1588698451129;
-        Tue, 05 May 2020 10:07:31 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id z190sm2471532pfb.1.2020.05.05.10.07.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2020 10:07:30 -0700 (PDT)
-Date:   Tue, 5 May 2020 10:07:29 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Paolo Bonzini <pbonzini@redhat.com>
-cc:     Jim Mattson <jmattson@google.com>,
-        Emanuele Giuseppe Esposito <eesposit@redhat.com>,
-        Jonathan Adams <jwadams@google.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
- kernel statistics
-In-Reply-To: <1d12f846-bf89-7b0a-5c71-e61d83b1a36f@redhat.com>
-Message-ID: <alpine.DEB.2.22.394.2005051003380.216575@chino.kir.corp.google.com>
-References: <20200504110344.17560-1-eesposit@redhat.com> <alpine.DEB.2.22.394.2005041429210.224786@chino.kir.corp.google.com> <f2654143-b8e5-5a1f-8bd0-0cb0df2cd638@redhat.com> <CALMp9eQYcLr_REzDC1kWTHX4SJWt7x+Zd1KwNvS1YGd5TVM1xA@mail.gmail.com>
- <1d12f846-bf89-7b0a-5c71-e61d83b1a36f@redhat.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        id S1729654AbgEERVw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 May 2020 13:21:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbgEERVw (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 5 May 2020 13:21:52 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC48E206E6;
+        Tue,  5 May 2020 17:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588699312;
+        bh=nRlb0jkQOeBCCjsmOpl46ERKZFc2TA8mQn3XHW9D/fA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=W4bSsHP2sV4OXHqeN9yFp/ryJUCLNy0XJCOwTFJUFNDx+7rbI1rH7Pjt2aM5gO1Bl
+         RzLq+A/+D/uSHL2LcPej5YRNw86qpkESUSlVSCZuzWZNIaOJnj3rgqewchcxz4g+f9
+         OEix2v6TLU0+Bce5UOGoU2b/MlNMCtYSl4Wl4//w=
+Date:   Tue, 5 May 2020 10:21:49 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Julian Wiedmann <jwi@linux.ibm.com>
+Cc:     David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>
+Subject: Re: [PATCH net-next 10/11] s390/qeth: allow reset via ethtool
+Message-ID: <20200505102149.1fd5b9ba@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200505162559.14138-11-jwi@linux.ibm.com>
+References: <20200505162559.14138-1-jwi@linux.ibm.com>
+        <20200505162559.14138-11-jwi@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 5 May 2020, Paolo Bonzini wrote:
-
-> >>> Since this is becoming a generic API (good!!), maybe we can discuss
-> >>> possible ways to optimize gathering of stats in mass?
-> >> Sure, the idea of a binary format was considered from the beginning in
-> >> [1], and it can be done either together with the current filesystem, or
-> >> as a replacement via different mount options.
-> > 
-> > ASCII stats are not scalable. A binary format is definitely the way to go.
+On Tue,  5 May 2020 18:25:58 +0200 Julian Wiedmann wrote:
+> Implement the .reset callback. Only a full reset is supported.
 > 
-> I am totally in favor of having a binary format, but it should be
-> introduced as a separate series on top of this one---and preferably by
-> someone who has already put some thought into the problem (which
-> Emanuele and I have not, beyond ensuring that the statsfs concept and
-> API is flexible enough).
+> Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+> Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
+> ---
+>  drivers/s390/net/qeth_ethtool.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
+> diff --git a/drivers/s390/net/qeth_ethtool.c b/drivers/s390/net/qeth_ethtool.c
+> index ebdc03210608..0d12002d0615 100644
+> --- a/drivers/s390/net/qeth_ethtool.c
+> +++ b/drivers/s390/net/qeth_ethtool.c
+> @@ -193,6 +193,21 @@ static void qeth_get_drvinfo(struct net_device *dev,
+>  		 CARD_RDEV_ID(card), CARD_WDEV_ID(card), CARD_DDEV_ID(card));
+>  }
+>  
+> +static int qeth_reset(struct net_device *dev, u32 *flags)
+> +{
+> +	struct qeth_card *card = dev->ml_priv;
+> +	int rc;
+> +
+> +	if (*flags != ETH_RESET_ALL)
+> +		return -EINVAL;
+> +
+> +	rc = qeth_schedule_recovery(card);
+> +	if (!rc)
+> +		*flags = 0;
 
-The concern is that once this series is merged then /sys/kernel/stats 
-could be considered an ABI and there would be a reasonable expectation 
-that it will remain stable, in so far as the stats that userspace is 
-interested in are stable and not obsoleted.
-
-So is this a suggestion that the binary format becomes complementary to 
-statsfs and provide a means for getting all stats from a single subsystem, 
-or that this series gets converted to such a format before it is merged?
-
-> ASCII stats are necessary for quick userspace consumption and for
-> backwards compatibility with KVM debugfs (which is not an ABI, but it's
-> damn useful and should not be dropped without providing something as
-> handy), so this is what this series starts from.
-> 
+I think it's better if you only clear the flags for things you actually
+reset. See the commit message for 7a13240e3718 ("bnxt_en: fix
+ethtool_reset_flags ABI violations").
