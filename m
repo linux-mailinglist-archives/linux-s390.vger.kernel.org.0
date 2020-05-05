@@ -2,60 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A19D1C55D8
-	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 14:44:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D64181C5605
+	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 14:56:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgEEMo0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 May 2020 08:44:26 -0400
-Received: from verein.lst.de ([213.95.11.211]:35169 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbgEEMo0 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 5 May 2020 08:44:26 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A5B2068C4E; Tue,  5 May 2020 14:44:23 +0200 (CEST)
-Date:   Tue, 5 May 2020 14:44:23 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-kernel@vger.kernel.org,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Subject: Re: [PATCH 1/1] s390/dasd: remove ioctl_by_bdev from DASD driver
-Message-ID: <20200505124423.GA26313@lst.de>
-References: <20200430111754.98508-1-sth@linux.ibm.com> <20200430111754.98508-2-sth@linux.ibm.com> <20200430131351.GA24813@lst.de> <4ab11558-9f2b-02ee-d191-c9a5cc38de0f@linux.ibm.com> <70f541fe-a678-8952-0753-32707d21e337@linux.ibm.com>
+        id S1728497AbgEEM4r (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 May 2020 08:56:47 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48882 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728584AbgEEM4q (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 08:56:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588683405;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8yWr9it9UVIjIozeui22t/drP1zIlGmphNP17FFVfPs=;
+        b=avLZ2ExkGnNMyIg9VkBflGOxrhKJWq8GcnzDmKicVdv4tJUW/sq3y/wDqKTGe+T0D1Pmr/
+        UGCNZsSSUBRdow7jlnT/dDL93K4k1x92DrQiwC7rBsdhlON6sA2ezUHshww/j55/CYGX4X
+        j8zjw80RPUcBvoWGFiMi+yhA38i0MDs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-218-WUe0cykJMFWeOHT_sxDAZg-1; Tue, 05 May 2020 08:56:39 -0400
+X-MC-Unique: WUe0cykJMFWeOHT_sxDAZg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7262E108BD15;
+        Tue,  5 May 2020 12:56:38 +0000 (UTC)
+Received: from gondolin (ovpn-112-219.ams2.redhat.com [10.36.112.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 12F5A5C1B2;
+        Tue,  5 May 2020 12:56:36 +0000 (UTC)
+Date:   Tue, 5 May 2020 14:56:34 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>
+Subject: Re: [PATCH v4 0/8] s390x/vfio-ccw: Channel Path Handling [KVM]
+Message-ID: <20200505145435.40113d4c.cohuck@redhat.com>
+In-Reply-To: <20200505122745.53208-1-farman@linux.ibm.com>
+References: <20200505122745.53208-1-farman@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70f541fe-a678-8952-0753-32707d21e337@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, May 04, 2020 at 10:45:33AM +0200, Stefan Haberland wrote:
-> > findthe corresponding device for example. Not sure if this is that easy.
-> 
-> I did some additional research on this.
-> What I could imagine:
-> 
-> The gendisk->private_data pointer currently contains a pointer to
-> the dasd_devmap structure. This one is also reachable by iterating
-> over an exported dasd_hashlist.
-> So I could export the dasd_hashlist symbol, iterate over it and try
-> to find the dasd_devmap pointer I have from the gendisk->private_data
-> pointer.
-> This would ensure that the gendisk belongs to the DASD driver and I
-> could use the additional information that is somehow reachable through
-> the gendisk->private_data pointer.
-> 
-> But again, I am not sure if this additional code and effort is needed.
-> From my point of view checking the gendisk->major for DASD_MAJOR is
-> OK to ensure that the device belongs to the DASD driver.
+On Tue,  5 May 2020 14:27:37 +0200
+Eric Farman <farman@linux.ibm.com> wrote:
 
-With CONFIG_DEBUG_BLOCK_EXT_DEVT you can't rely on major numbers.
+> Here is a new pass at the channel-path handling code for vfio-ccw.
+> Changes from previous versions are recorded in git notes for each patch.
+> Patches 5 through 7 got swizzled a little bit, in order to better
+> compartmentalize the code they define. Basically, the IRQ definitions
+> were moved from patch 7 to 5, and then patch 6 was placed ahead of
+> patch 5.
+> 
+> I have put Conny's r-b's on patches 1, 3, 4, (new) 5, and 8, and believe
+> I have addressed all comments from v3, with two exceptions:
+> 
+> > I'm wondering if we should make this [vfio_ccw_schib_region_{write,release}]
+> > callback optional (not in this patch).  
+> 
+> I have that implemented on top of this series, and will send later as part
+> of a larger cleanup series.
 
-And compared to all the complications I think the biodasdinfo method
-is the least of all those evils.  Jens, any opinion?
+Good, sounds reasonable.
+
+> 
+> > One thing though that keeps coming up: do we need any kind of
+> > serialization? Can there be any confusion from concurrent reads from
+> > userspace, or are we sure that we always provide consistent data?  
+> 
+> I _think_ this is in good shape, though as suggested another set of
+> eyeballs would be nice. There is still a problem on the main
+> interrupt/FSM path, which I'm not attempting to address here.
+
+I'll try to think about it some more.
+
+> 
+> With this code plus the corresponding QEMU series (posted momentarily)
+> applied I am able to configure off/on a CHPID (for example, by issuing
+> "chchp -c 0/1 xx" on the host), and the guest is able to see both the
+> events and reflect the updated path masks in its structures.
+> 
+> v3: https://lore.kernel.org/kvm/20200417023001.65006-1-farman@linux.ibm.com/
+> v2: https://lore.kernel.org/kvm/20200206213825.11444-1-farman@linux.ibm.com/
+> v1: https://lore.kernel.org/kvm/20191115025620.19593-1-farman@linux.ibm.com/
+> 
+> Eric Farman (3):
+>   vfio-ccw: Refactor the unregister of the async regions
+>   vfio-ccw: Refactor IRQ handlers
+>   vfio-ccw: Add trace for CRW event
+> 
+> Farhan Ali (5):
+>   vfio-ccw: Introduce new helper functions to free/destroy regions
+>   vfio-ccw: Register a chp_event callback for vfio-ccw
+>   vfio-ccw: Introduce a new schib region
+>   vfio-ccw: Introduce a new CRW region
+>   vfio-ccw: Wire up the CRW irq and CRW region
+> 
+>  Documentation/s390/vfio-ccw.rst     |  38 ++++++-
+>  drivers/s390/cio/Makefile           |   2 +-
+>  drivers/s390/cio/vfio_ccw_chp.c     | 148 +++++++++++++++++++++++++
+>  drivers/s390/cio/vfio_ccw_drv.c     | 165 ++++++++++++++++++++++++++--
+>  drivers/s390/cio/vfio_ccw_ops.c     |  65 ++++++++---
+>  drivers/s390/cio/vfio_ccw_private.h |  16 +++
+>  drivers/s390/cio/vfio_ccw_trace.c   |   1 +
+>  drivers/s390/cio/vfio_ccw_trace.h   |  30 +++++
+>  include/uapi/linux/vfio.h           |   3 +
+>  include/uapi/linux/vfio_ccw.h       |  18 +++
+>  10 files changed, 458 insertions(+), 28 deletions(-)
+>  create mode 100644 drivers/s390/cio/vfio_ccw_chp.c
+> 
+
