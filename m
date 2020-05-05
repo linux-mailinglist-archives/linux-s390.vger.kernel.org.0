@@ -2,150 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22D531C4C61
-	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 04:52:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 388B51C4D0B
+	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 06:15:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgEECwT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 4 May 2020 22:52:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:57846 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726516AbgEECwS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 4 May 2020 22:52:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D5C41FB;
-        Mon,  4 May 2020 19:52:17 -0700 (PDT)
-Received: from [192.168.0.129] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20A803F71F;
-        Mon,  4 May 2020 19:52:04 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH 3/3] mm/hugetlb: Introduce HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1586864670-21799-1-git-send-email-anshuman.khandual@arm.com>
- <1586864670-21799-4-git-send-email-anshuman.khandual@arm.com>
- <20200425175511.7a68efb5e2f4436fe0328c1d@linux-foundation.org>
- <87d37591-caa2-b82b-392a-3a29b2c7e9a6@arm.com>
- <20200425200124.20d0c75fcaef05d062d3667c@linux-foundation.org>
-Message-ID: <21460cbc-8e9a-b956-5797-57b2e1df9fb1@arm.com>
-Date:   Tue, 5 May 2020 08:21:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725535AbgEEEPj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 May 2020 00:15:39 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:16300 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725272AbgEEEPj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 00:15:39 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R491e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0TxXItq5_1588652118;
+Received: from 30.27.236.135(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TxXItq5_1588652118)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 05 May 2020 12:15:22 +0800
+Subject: Re: [PATCH v4 0/7] clean up redundant 'kvm_run' parameters
+To:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
+        mpe@ellerman.id.au, benh@kernel.crashing.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
+        chenhuacai@gmail.com
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <b660f6cb-a89b-2452-c15b-095add6413ec@linux.alibaba.com>
+Date:   Tue, 5 May 2020 12:15:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200425200124.20d0c75fcaef05d062d3667c@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Paolo Bonzini, any opinion on this?
 
+Thanks and best,
+Tianjia
 
-On 04/26/2020 08:31 AM, Andrew Morton wrote:
-> On Sun, 26 Apr 2020 08:13:17 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+On 2020/4/27 12:35, Tianjia Zhang wrote:
+> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
+> structure. For historical reasons, many kvm-related function parameters
+> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
+> patch does a unified cleanup of these remaining redundant parameters.
 > 
->>
->>
->> On 04/26/2020 06:25 AM, Andrew Morton wrote:
->>> On Tue, 14 Apr 2020 17:14:30 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
->>>
->>>> There are multiple similar definitions for arch_clear_hugepage_flags() on
->>>> various platforms. This introduces HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS for those
->>>> platforms that need to define their own arch_clear_hugepage_flags() while
->>>> also providing a generic fallback definition for others to use. This help
->>>> reduce code duplication.
->>>>
->>>> ...
->>>>
->>>> --- a/include/linux/hugetlb.h
->>>> +++ b/include/linux/hugetlb.h
->>>> @@ -544,6 +544,10 @@ static inline int is_hugepage_only_range(struct mm_struct *mm,
->>>>  }
->>>>  #endif
->>>>  
->>>> +#ifndef HAVE_ARCH_CLEAR_HUGEPAGE_FLAGS
->>>> +static inline void arch_clear_hugepage_flags(struct page *page) { }
->>>> +#endif
->>>> +
->>>>  #ifndef arch_make_huge_pte
->>>>  static inline pte_t arch_make_huge_pte(pte_t entry, struct vm_area_struct *vma,
->>>>  				       struct page *page, int writable)
->>>
->>> This is the rather old-school way of doing it.  The Linus-suggested way is
->>>
->>> #ifndef arch_clear_hugepage_flags
->>> static inline void arch_clear_hugepage_flags(struct page *page)
->>> {
->>> }
->>> #define arch_clear_hugepage_flags arch_clear_hugepage_flags
->>
->> Do we need that above line here ? Is not that implicit.
+> This series of patches has completely cleaned the architecture of
+> arm64, mips, ppc, and s390 (no such redundant code on x86). Due to
+> the large number of modified codes, a separate patch is made for each
+> platform. On the ppc platform, there is also a redundant structure
+> pointer of 'kvm_run' in 'vcpu_arch', which has also been cleaned
+> separately.
 > 
-> It depends if other header files want to test whether
-> arch_clear_hugepage_flags is already defined.  If the header heorarchy
-> is well-defined and working properly, they shouldn't need to, because
-> we're reliably indluding the relevant arch header before (or early
-> within) include/linux/hugetlb.h.
+> ---
+> v4 change:
+>    mips: fixes two errors in entry.c.
 > 
-> It would be nice if
+> v3 change:
+>    Keep the existing `vcpu->run` in the function body unchanged.
 > 
-> #define arch_clear_hugepage_flags arch_clear_hugepage_flags
-> #define arch_clear_hugepage_flags arch_clear_hugepage_flags
+> v2 change:
+>    s390 retains the original variable name and minimizes modification.
 > 
-> were to generate an compiler error but it doesn't.  If it did we could
-> detect these incorrect inclusion orders.
+> Tianjia Zhang (7):
+>    KVM: s390: clean up redundant 'kvm_run' parameters
+>    KVM: arm64: clean up redundant 'kvm_run' parameters
+>    KVM: PPC: Remove redundant kvm_run from vcpu_arch
+>    KVM: PPC: clean up redundant 'kvm_run' parameters
+>    KVM: PPC: clean up redundant kvm_run parameters in assembly
+>    KVM: MIPS: clean up redundant 'kvm_run' parameters
+>    KVM: MIPS: clean up redundant kvm_run parameters in assembly
 > 
->>> #endif
->>>
->>> And the various arch headers do
->>>
->>> static inline void arch_clear_hugepage_flags(struct page *page)
->>> {
->>> 	<some implementation>
->>> }
->>> #define arch_clear_hugepage_flags arch_clear_hugepage_flags
->>>
->>> It's a small difference - mainly to avoid adding two variables to the
->>> overall namespace where one would do.
->>
->> Understood, will change and resend.
+>   arch/arm64/include/asm/kvm_coproc.h      |  12 +--
+>   arch/arm64/include/asm/kvm_host.h        |  11 +--
+>   arch/arm64/include/asm/kvm_mmu.h         |   2 +-
+>   arch/arm64/kvm/handle_exit.c             |  36 +++----
+>   arch/arm64/kvm/sys_regs.c                |  13 ++-
+>   arch/mips/include/asm/kvm_host.h         |  32 +------
+>   arch/mips/kvm/emulate.c                  |  59 ++++--------
+>   arch/mips/kvm/entry.c                    |  21 ++---
+>   arch/mips/kvm/mips.c                     |  14 +--
+>   arch/mips/kvm/trap_emul.c                | 114 ++++++++++-------------
+>   arch/mips/kvm/vz.c                       |  26 ++----
+>   arch/powerpc/include/asm/kvm_book3s.h    |  16 ++--
+>   arch/powerpc/include/asm/kvm_host.h      |   1 -
+>   arch/powerpc/include/asm/kvm_ppc.h       |  27 +++---
+>   arch/powerpc/kvm/book3s.c                |   4 +-
+>   arch/powerpc/kvm/book3s.h                |   2 +-
+>   arch/powerpc/kvm/book3s_64_mmu_hv.c      |  12 +--
+>   arch/powerpc/kvm/book3s_64_mmu_radix.c   |   4 +-
+>   arch/powerpc/kvm/book3s_emulate.c        |  10 +-
+>   arch/powerpc/kvm/book3s_hv.c             |  64 ++++++-------
+>   arch/powerpc/kvm/book3s_hv_nested.c      |  12 +--
+>   arch/powerpc/kvm/book3s_interrupts.S     |  17 ++--
+>   arch/powerpc/kvm/book3s_paired_singles.c |  72 +++++++-------
+>   arch/powerpc/kvm/book3s_pr.c             |  33 ++++---
+>   arch/powerpc/kvm/booke.c                 |  39 ++++----
+>   arch/powerpc/kvm/booke.h                 |   8 +-
+>   arch/powerpc/kvm/booke_emulate.c         |   2 +-
+>   arch/powerpc/kvm/booke_interrupts.S      |   9 +-
+>   arch/powerpc/kvm/bookehv_interrupts.S    |  10 +-
+>   arch/powerpc/kvm/e500_emulate.c          |  15 ++-
+>   arch/powerpc/kvm/emulate.c               |  10 +-
+>   arch/powerpc/kvm/emulate_loadstore.c     |  32 +++----
+>   arch/powerpc/kvm/powerpc.c               |  72 +++++++-------
+>   arch/powerpc/kvm/trace_hv.h              |   6 +-
+>   arch/s390/kvm/kvm-s390.c                 |  23 +++--
+>   virt/kvm/arm/arm.c                       |   6 +-
+>   virt/kvm/arm/mmio.c                      |  11 ++-
+>   virt/kvm/arm/mmu.c                       |   5 +-
+>   38 files changed, 392 insertions(+), 470 deletions(-)
 > 
-> That's OK - I've queued up that fix.
->
-
-Hello Andrew,
-
-I might not have searched all the relevant trees or might have just searched
-earlier than required. But I dont see these patches (or your proposed fixes)
-either in mmotm (2020-04-29-23-04) or in next-20200504. Wondering if you are
-waiting on a V2 for this series accommodating the changes you had proposed.
-
-- Anshuman
