@@ -2,96 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDDBA1C5D74
-	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 18:26:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C8D61C5DFA
+	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 18:54:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbgEEQ0M (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 May 2020 12:26:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61244 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730677AbgEEQ0L (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 12:26:11 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045G2jPS052203;
-        Tue, 5 May 2020 12:26:10 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8sgxu5q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 12:26:10 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045GJncb003376;
-        Tue, 5 May 2020 16:26:08 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5qc3j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 16:26:07 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045GQ5fm62259404
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 May 2020 16:26:05 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4173442045;
-        Tue,  5 May 2020 16:26:05 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED29B42042;
-        Tue,  5 May 2020 16:26:04 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 May 2020 16:26:04 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 11/11] s390/qeth: clean up Kconfig help text
-Date:   Tue,  5 May 2020 18:25:59 +0200
-Message-Id: <20200505162559.14138-12-jwi@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200505162559.14138-1-jwi@linux.ibm.com>
-References: <20200505162559.14138-1-jwi@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-05_09:2020-05-04,2020-05-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- priorityscore=1501 adultscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 mlxscore=0 impostorscore=0 phishscore=0 suspectscore=0
- mlxlogscore=459 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005050126
+        id S1730107AbgEEQyI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 May 2020 12:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729949AbgEEQyH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 12:54:07 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34587C061BD3
+        for <linux-s390@vger.kernel.org>; Tue,  5 May 2020 09:54:05 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id j8so2042487iog.13
+        for <linux-s390@vger.kernel.org>; Tue, 05 May 2020 09:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CQPV38VFHq5jUdj3xuK872aLx1CmmM995oAhTR/zeg4=;
+        b=p0OmBMiNRcbZeEVttRyrUydpDTEXD+loILZwadE01yiYrZMAefBa5lEnkCd8IE/f1C
+         wqtNt3itnutwU9SNyU/Y0fQOnPrSFTEoDV1obS+naK5wdvSAbwcozgcVIGkY/Otjnd9p
+         51XhOstTUsx5ISmBzOTD1jNv/oS5q27DmqmWhYSeqm+5U94xAJaIyLgweW34StzfEErI
+         3dfM/v0XMGcRAFe9bPtoLVFLg5ACcy1j8Rnan0JmxmJvsltfDo9KWXkcjYgZK/TvXSRC
+         Oh/P44Cii0cxHTkyJ4tN2a3504hNbCU0BEhwsSTKenaJXoMTLVbgu3JdVv36Y/5fs6vB
+         BO9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CQPV38VFHq5jUdj3xuK872aLx1CmmM995oAhTR/zeg4=;
+        b=K9UiwlxfzU97pyDCNFJbI/qM9tB7Ld99h1yDLZs7XBTuPOyht3Nk/pp3UtbqRGM0k2
+         yQDxUPt98Q+ctINZhUKDKg8/eiVIhTuDKFRxOJk8nday+wVuVzA4ctUbt5/VEIJw2sye
+         htdLOahHyAU1AHex1VxNm6xPrtWTqT9nQ/TCN356QUyyLlpIQ/qC7YGuLPYlWSEheM8k
+         UZrZECc9qIV95dRk9LpkEXL27lhD9wgaBJQGMewRrRE3FXY4Z6EDd4fx5Bs/7J/IAyy9
+         /2fPNuhUs5D+6XCzX7EJnd0hm7dgQ9F0J2ZPl8XaI0+Es2MjTPGMPfmscapHbvZGQsKd
+         rDsQ==
+X-Gm-Message-State: AGi0PuYHHJhw6cWUq1sd8wjIES2sF4fiUF/eqsnX5Kie/6tray04Eu6N
+        fN2COQ1ABWfLbwteROY6O13UU6nigT/uo5DiIxXorw==
+X-Google-Smtp-Source: APiQypIh87tWtIMtuteWC1af3Q4H+FkjslZ8xyNvCG2aA394n3dc+bOaNgbwVm/hpp4CR/gsTCwAOETr4pzr5lry2Mw=
+X-Received: by 2002:a02:a004:: with SMTP id a4mr3700717jah.18.1588697644142;
+ Tue, 05 May 2020 09:54:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200504110344.17560-1-eesposit@redhat.com> <alpine.DEB.2.22.394.2005041429210.224786@chino.kir.corp.google.com>
+ <f2654143-b8e5-5a1f-8bd0-0cb0df2cd638@redhat.com>
+In-Reply-To: <f2654143-b8e5-5a1f-8bd0-0cb0df2cd638@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 5 May 2020 09:53:53 -0700
+Message-ID: <CALMp9eQYcLr_REzDC1kWTHX4SJWt7x+Zd1KwNvS1YGd5TVM1xA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
+ kernel statistics
+To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Remove a stale doc link. While at it also reword the help text to get
-rid of an outdated marketing term.
+On Tue, May 5, 2020 at 2:18 AM Emanuele Giuseppe Esposito
+<eesposit@redhat.com> wrote:
+>
+>
+>
+> On 5/4/20 11:37 PM, David Rientjes wrote:
+> > Since this is becoming a generic API (good!!), maybe we can discuss
+> > possible ways to optimize gathering of stats in mass?
+>
+> Sure, the idea of a binary format was considered from the beginning in
+> [1], and it can be done either together with the current filesystem, or
+> as a replacement via different mount options.
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- drivers/s390/net/Kconfig | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/s390/net/Kconfig b/drivers/s390/net/Kconfig
-index 3850a0f5f0bc..53120e68796e 100644
---- a/drivers/s390/net/Kconfig
-+++ b/drivers/s390/net/Kconfig
-@@ -63,12 +63,9 @@ config QETH
- 	prompt "Gigabit Ethernet device support"
- 	depends on CCW && NETDEVICES && IP_MULTICAST && QDIO && ETHERNET
- 	help
--	  This driver supports the IBM System z OSA Express adapters
--	  in QDIO mode (all media types), HiperSockets interfaces and z/VM
--	  virtual NICs for Guest LAN and VSWITCH.
--	
--	  For details please refer to the documentation provided by IBM at
--	  <http://www.ibm.com/developerworks/linux/linux390>
-+	  This driver supports IBM's OSA Express network adapters in QDIO mode,
-+	  HiperSockets interfaces and z/VM virtual NICs for Guest LAN and
-+	  VSWITCH.
- 
- 	  To compile this driver as a module, choose M.
- 	  The module name is qeth.
--- 
-2.17.1
-
+ASCII stats are not scalable. A binary format is definitely the way to go.
