@@ -2,53 +2,53 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78AD71C57B2
-	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 16:01:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10FD21C57B8
+	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 16:01:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgEEOBG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 May 2020 10:01:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45818 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728076AbgEEOBG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 10:01:06 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045DZ3k1044652;
-        Tue, 5 May 2020 10:00:48 -0400
+        id S1729247AbgEEOBo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 May 2020 10:01:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48100 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728076AbgEEOBo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 10:01:44 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045DXIsX076454;
+        Tue, 5 May 2020 10:01:29 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30sp8ju67f-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30s2g2xvqu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 10:00:46 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 045DZ6Q1044733;
-        Tue, 5 May 2020 10:00:31 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30sp8ju5wd-1
+        Tue, 05 May 2020 10:01:28 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 045DXVXO077770;
+        Tue, 5 May 2020 10:01:27 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30s2g2xvb9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 10:00:30 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045E0H2X028108;
-        Tue, 5 May 2020 14:00:17 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04fra.de.ibm.com with ESMTP id 30s0g62v62-1
+        Tue, 05 May 2020 10:01:27 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045E0NKp021577;
+        Tue, 5 May 2020 14:01:14 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma01fra.de.ibm.com with ESMTP id 30s0g5aw3t-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 14:00:17 +0000
+        Tue, 05 May 2020 14:01:14 +0000
 Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045E0C281507738
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045E19rj31326312
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 May 2020 14:00:12 GMT
+        Tue, 5 May 2020 14:01:09 GMT
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0FDC611C074;
-        Tue,  5 May 2020 14:00:12 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0100311C054;
+        Tue,  5 May 2020 14:01:09 +0000 (GMT)
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 121BB11C07F;
-        Tue,  5 May 2020 14:00:11 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 12C4611C052;
+        Tue,  5 May 2020 14:01:08 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.145.49.139])
         by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 May 2020 14:00:10 +0000 (GMT)
+        Tue,  5 May 2020 14:01:07 +0000 (GMT)
 Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
  pages
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Ulrich Weigand <uweigand@de.ibm.com>
+To:     Ulrich Weigand <uweigand@de.ibm.com>,
+        Dave Hansen <dave.hansen@intel.com>
 Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>, viro@zeniv.linux.org.uk,
         david@redhat.com, akpm@linux-foundation.org, aarcange@redhat.com,
         linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
@@ -63,6 +63,7 @@ References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
  <a10ec7ad-2648-950e-7f30-07c08e400e7b@intel.com>
  <20200504134154.GA21001@oc3748833570.ibm.com>
  <231da2f1-a6ef-0cf9-7f57-95e8b925997b@intel.com>
+ <20200505135556.GA9920@oc3748833570.ibm.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -107,23 +108,23 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <45bc81bb-8765-ffff-6e47-8ee9702c8bcd@de.ibm.com>
-Date:   Tue, 5 May 2020 16:00:10 +0200
+Message-ID: <fd300dca-f0b4-ce3b-4a97-244030624fbd@de.ibm.com>
+Date:   Tue, 5 May 2020 16:01:07 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <231da2f1-a6ef-0cf9-7f57-95e8b925997b@intel.com>
+In-Reply-To: <20200505135556.GA9920@oc3748833570.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-05-05_08:2020-05-04,2020-05-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0 clxscore=1015
- mlxscore=0 lowpriorityscore=0 mlxlogscore=999 impostorscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005050105
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 priorityscore=1501 spamscore=0
+ lowpriorityscore=0 adultscore=0 phishscore=0 mlxlogscore=959 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005050105
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -131,21 +132,85 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 05.05.20 14:34, Dave Hansen wrote:[...]
->> I'm not sure what exactly the requirements for your use case are; if those
->> are significantly differently, maybe we can work together to find an
->> approach that works for both?
+On 05.05.20 15:55, Ulrich Weigand wrote:
+> On Tue, May 05, 2020 at 05:34:45AM -0700, Dave Hansen wrote:
+>> On 5/4/20 6:41 AM, Ulrich Weigand wrote:
+>>> You're right that there is no mechanism to prevent new references,
+>>> but that's really never been the goal either.  We're simply trying
+>>> to ensure that no I/O is ever done on a page that is in the "secure"
+>>> (or inaccessible) state.  To do so, we rely on the assumption that
+>>> all code that starts I/O on a page cache page will *first*:
+>>> - mark the page as pending I/O by either taking an extra page
+>>>   count, or by setting the Writeback flag; then:
+>>> - call arch_make_page_accessible(); then:
+>>> - start I/O; and only after I/O has finished:
+>>> - remove the "pending I/O" marker (Writeback and/or extra ref)
+>>
+>> Let's ignore writeback for a moment because get_page() is the more
+>> general case.  The locking sequence is:
+>>
+>> 1. get_page() (or equivalent) "locks out" a page from converting to
+>>    inaccessbile,
+>> 2. followed by a make_page_accessible() guarantees that the page
+>>    *stays* accessible until
+>> 3. I/O is safe in this region
+>> 4. put_page(), removes the "lock out", I/O now unsafe
 > 
-> I'm actually trying to figure out what to do with AMD's SEV.  The
-> current state isn't great and, for instance, allows userspace to read
-> guest ciphertext.  But, the pages come and go out of the encrypted state
-> at the behest of the guest, and the kernel needs *some* mapping for the
-> pages to do things like instruction emulation.
+> Yes, exactly.
 > 
-> I started looking at s390 because someone said there was a similar
-> problem there and suggested the hooks might work.  I couldn't figure out
-> how they worked comprehensively on s390, and that's how we got here.
+>> They key is, though, the get_page() must happen before
+>> make_page_accessible() and *every* place that acquires a new reference
+>> needs a make_page_accessible().
+> 
+> Well, sort of: every place that acquires a new reference *and then
+> performs I/O* needs a make_page_accessible().  There seem to be a
+> lot of plain get_page() calls that aren't related to I/O.
+> 
+>> try_get_page() is obviously one of those "new reference sites" and it
+>> only has one call site outisde of the gup code: generic_pipe_buf_get(),
+>> which is effectively patched by the patch that started this thread.  The
+>> fact that this one oddball site _and_ gup are patched now is a good sign.
+>>
+>> *But*, I still don't know how that could work nicely:
+>>
+>>> static inline __must_check bool try_get_page(struct page *page)
+>>> {
+>>>         page = compound_head(page);
+>>>         if (WARN_ON_ONCE(page_ref_count(page) <= 0))
+>>>                 return false;
+>>>         page_ref_inc(page);
+>>>         return true;
+>>> }
+>>
+>> If try_get_page() collides with a freeze_page_refs(), it'll hit the
+>> WARN_ON_ONCE(), which is surely there for a good reason.  I'm not sure
+>> that warning is _actually_ valid since freeze_page_refs() isn't truly a
+>> 0 refcount.  But, the fact that this hasn't been encountered means that
+>> the testing here is potentially lacking.
+> 
+> This is indeed interesting.  In particular if you compare try_get_page
+> with try_get_compound_head in gup.c, which does instead:
+> 
+>         if (WARN_ON_ONCE(page_ref_count(head) < 0))
+>                 return NULL;
+> 
+> which seems more reasonable to me, given the presence of the
+> page_ref_freeze method.  So I'm not sure why try_get_page has <= 0.
 
-We are certainly not married to our approach. I would happily extend/change
-this to anything that works for your case and the s390 case. So can you outline
-your requirements a  bit more?
+
+Just looked at 
+commit 88b1a17dfc3ed7728316478fae0f5ad508f50397  mm: add 'try_get_page()' helper function
+
+which says:
+    Also like 'get_page()', you can't use this function unless you already
+    had a reference to the page.  The intent is that you can use this
+    exactly like get_page(), but in situations where you want to limit the
+    maximum reference count.
+    
+    The code currently does an unconditional WARN_ON_ONCE() if we ever hit
+    the reference count issues (either zero or negative), as a notification
+    that the conditional non-increment actually happened.
+
+If try_get_page must not be called with an existing reference, that means
+that when we call it the page reference is already higher and our freeze
+will never succeed. That would imply that we cannot trigger this. No?
