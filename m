@@ -2,59 +2,60 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB3501C558E
-	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 14:37:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A19D1C55D8
+	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 14:44:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgEEMha (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 May 2020 08:37:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728609AbgEEMha (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 08:37:30 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB24C061A0F;
-        Tue,  5 May 2020 05:37:30 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 4BA1539A; Tue,  5 May 2020 14:37:27 +0200 (CEST)
-Date:   Tue, 5 May 2020 14:37:25 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 00/34] iommu: Move iommu_group setup to IOMMU core code
-Message-ID: <20200505123725.GB18353@8bytes.org>
-References: <20200429133712.31431-1-joro@8bytes.org>
+        id S1728898AbgEEMo0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 May 2020 08:44:26 -0400
+Received: from verein.lst.de ([213.95.11.211]:35169 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728497AbgEEMo0 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 5 May 2020 08:44:26 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id A5B2068C4E; Tue,  5 May 2020 14:44:23 +0200 (CEST)
+Date:   Tue, 5 May 2020 14:44:23 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stefan Haberland <sth@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-kernel@vger.kernel.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: Re: [PATCH 1/1] s390/dasd: remove ioctl_by_bdev from DASD driver
+Message-ID: <20200505124423.GA26313@lst.de>
+References: <20200430111754.98508-1-sth@linux.ibm.com> <20200430111754.98508-2-sth@linux.ibm.com> <20200430131351.GA24813@lst.de> <4ab11558-9f2b-02ee-d191-c9a5cc38de0f@linux.ibm.com> <70f541fe-a678-8952-0753-32707d21e337@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429133712.31431-1-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <70f541fe-a678-8952-0753-32707d21e337@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 03:36:38PM +0200, Joerg Roedel wrote:
-> Please review. If there are no objections I plan to put these patches
-> into the IOMMU tree early next week.
+On Mon, May 04, 2020 at 10:45:33AM +0200, Stefan Haberland wrote:
+> > findthe corresponding device for example. Not sure if this is that easy.
+> 
+> I did some additional research on this.
+> What I could imagine:
+> 
+> The gendisk->private_data pointer currently contains a pointer to
+> the dasd_devmap structure. This one is also reachable by iterating
+> over an exported dasd_hashlist.
+> So I could export the dasd_hashlist symbol, iterate over it and try
+> to find the dasd_devmap pointer I have from the gendisk->private_data
+> pointer.
+> This would ensure that the gendisk belongs to the DASD driver and I
+> could use the additional information that is somehow reachable through
+> the gendisk->private_data pointer.
+> 
+> But again, I am not sure if this additional code and effort is needed.
+> From my point of view checking the gendisk->major for DASD_MAJOR is
+> OK to ensure that the device belongs to the DASD driver.
 
-Series is now applied.
+With CONFIG_DEBUG_BLOCK_EXT_DEVT you can't rely on major numbers.
+
+And compared to all the complications I think the biodasdinfo method
+is the least of all those evils.  Jens, any opinion?
