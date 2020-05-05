@@ -2,60 +2,57 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD86E1C5E41
-	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 19:02:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A79A21C5E5D
+	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 19:07:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730638AbgEERCn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 May 2020 13:02:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22243 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730608AbgEERCn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 13:02:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588698161;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5wA5G//ZMwKX3KXqf3Mv3pq9KAcUMr/otngiqdWE/rQ=;
-        b=f4hBZdIT0fUnLr5YIdT3hLEZeAoQrnGo6S+77a3aO79CES/aHHUeGTvBWQrfFvtQYTVTdy
-        wc9yr6tDjCKhTzWXaR69f4t4T4CgkwQck7aQr2QX9ozqModWk8pSOQDvSBRWhJODBJkh5W
-        e0byfBrLLt4Vh6gywoGnMV4wXiUAmMQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-500-9ZSdmtedO_OYC8QzdQaagg-1; Tue, 05 May 2020 13:02:38 -0400
-X-MC-Unique: 9ZSdmtedO_OYC8QzdQaagg-1
-Received: by mail-wr1-f72.google.com with SMTP id g7so1515123wrw.18
-        for <linux-s390@vger.kernel.org>; Tue, 05 May 2020 10:02:37 -0700 (PDT)
+        id S1729720AbgEERHc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 May 2020 13:07:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729248AbgEERHc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 13:07:32 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E311C061A10
+        for <linux-s390@vger.kernel.org>; Tue,  5 May 2020 10:07:32 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x15so1175533pfa.1
+        for <linux-s390@vger.kernel.org>; Tue, 05 May 2020 10:07:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=vBqzVx+qxfalnXJK7KTGtarAHizzhkjQWkeOeL25v0I=;
+        b=O5i7do4icdhMgjwpo9TCdui1mhr1arbAoT6CXE/FL4FNU3azDor8xRsQqnf1oekzW/
+         7Qdnbc7WereNZhHIyoLYjd3kSqw20Zgo4WpUa6FDM3lp00UVK8MuXDFlE01cNDiRoL/O
+         EAJ+Ut2sB0upkwibNjvyQBcsbJtaD+jjUHszOCYm3fAaoq1qP93jucL3eyvdClOkn4r9
+         aH+4c51iqcLP9pbxn4M3XH4t32uYqryQbnelLqdVh/XN7PZz087P/5s0HNVg2D8n0IWM
+         Us9QoDxYRHRAsocKaYP+GGGf+vkaem3+rBmS0NeZS6uvBlq/NtEMkGqiIrBNdRSUHVrW
+         Rf/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5wA5G//ZMwKX3KXqf3Mv3pq9KAcUMr/otngiqdWE/rQ=;
-        b=W4H9MMMT6suEH7JCj7rcDmLhekvcxh2y7k44Iffwz5U+xD1kEjDZq+/SvzujqPAT5N
-         sqhbFpZ4U3gXBqqWGQxP1XMaPeIWuIDOAsoQro7yNzf1KvHQNx0Ips+NrX94kqxA3zyi
-         Gi5v6XuZkAk96Pf9/tvSypltwgWJcBLfYsTKxpZuIC+bukDuYBJplrZsG0uowFFCtu/q
-         VUGyX5sjwitx/1qg3CQBINAuO2wPx8+45qVRCfkeNGSKKV+3761zvujFJOZXXo/GhPaR
-         YAvAhbc2Dip5NS/MIYX1/m9D6RHMF2JaJGRoLcwmPpdzgVXou5KimaR4wazOHk0KtgcD
-         Svww==
-X-Gm-Message-State: AGi0PubbBLzD2m/0uGMy5Ggi6M/9QqiDfk+t090heqTJDBS80NuAfW7R
-        h8FbQGyCP60isUFblo2QA3z/g/DoaZ1UOqa/BAU81Go//0vezzqLgxFq2bgj6L+Y2BgjwrVKpj0
-        yAst+KxgPwC1yVuqesXJYRw==
-X-Received: by 2002:adf:d0c5:: with SMTP id z5mr5096747wrh.410.1588698156792;
-        Tue, 05 May 2020 10:02:36 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJLNwomNOVHwIvpSDnSwZmv6Omr127dtUlNqUvacYqezIg5AT62IcLqVfdIy2Hep5WWyqsAoA==
-X-Received: by 2002:adf:d0c5:: with SMTP id z5mr5096701wrh.410.1588698156541;
-        Tue, 05 May 2020 10:02:36 -0700 (PDT)
-Received: from [192.168.178.58] ([151.20.132.175])
-        by smtp.gmail.com with ESMTPSA id g24sm1632241wrb.35.2020.05.05.10.02.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 May 2020 10:02:35 -0700 (PDT)
-Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
- kernel statistics
-To:     Jim Mattson <jmattson@google.com>,
-        Emanuele Giuseppe Esposito <eesposit@redhat.com>
-Cc:     David Rientjes <rientjes@google.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=vBqzVx+qxfalnXJK7KTGtarAHizzhkjQWkeOeL25v0I=;
+        b=CuywNQ8W71RoputLsM33aw9Eda6NMz2nI3BJXfCddDBAI0LVJUiuKzFPK+8J8LeVXw
+         guA99M2slucE2JP9/AI+p45mOe9YA4ABSa5a8db8b+ABQsbPjFeUrW6r6saeUSl/Mef5
+         PxthmYCb8uIwvbtjEILtqXxIFnPOK37e2YTs5JDmlwYBtmj/nZxmXRxM6qjRZrMv00um
+         N8L6yfiwcNRP79EpAKKcjBlwNikFHQZw8YO+e+0LNqWj6z5qaS/b6dofEXyJzWegFePy
+         SSjFo2W+XlYZuW5l8wkvzUpevVETgc67yfSgaKrdp7XNY4mbWxKl/2PT9HTQ6WngZ5//
+         eWaw==
+X-Gm-Message-State: AGi0PuZv+2KzGUS4aEDdl0QdUhfrrvWg4kQLZM5MmJ7dXpjVUOp/tOpH
+        VJHMAmUuK2xyxd78ncVuZOpLSg==
+X-Google-Smtp-Source: APiQypL1cJk6Ptxu94QvTpoApcHVyzDf/w6RUKic+BQutwZLjzt9TVLdFv2iA8r9azHBa6jgEpe/WQ==
+X-Received: by 2002:a63:778d:: with SMTP id s135mr3848663pgc.238.1588698451129;
+        Tue, 05 May 2020 10:07:31 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id z190sm2471532pfb.1.2020.05.05.10.07.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2020 10:07:30 -0700 (PDT)
+Date:   Tue, 5 May 2020 10:07:29 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Paolo Bonzini <pbonzini@redhat.com>
+cc:     Jim Mattson <jmattson@google.com>,
+        Emanuele Giuseppe Esposito <eesposit@redhat.com>,
         Jonathan Adams <jwadams@google.com>,
         kvm list <kvm@vger.kernel.org>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
@@ -68,44 +65,48 @@ Cc:     David Rientjes <rientjes@google.com>,
         kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-s390@vger.kernel.org,
         Linux FS Devel <linux-fsdevel@vger.kernel.org>
-References: <20200504110344.17560-1-eesposit@redhat.com>
- <alpine.DEB.2.22.394.2005041429210.224786@chino.kir.corp.google.com>
- <f2654143-b8e5-5a1f-8bd0-0cb0df2cd638@redhat.com>
- <CALMp9eQYcLr_REzDC1kWTHX4SJWt7x+Zd1KwNvS1YGd5TVM1xA@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <1d12f846-bf89-7b0a-5c71-e61d83b1a36f@redhat.com>
-Date:   Tue, 5 May 2020 19:02:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
+ kernel statistics
+In-Reply-To: <1d12f846-bf89-7b0a-5c71-e61d83b1a36f@redhat.com>
+Message-ID: <alpine.DEB.2.22.394.2005051003380.216575@chino.kir.corp.google.com>
+References: <20200504110344.17560-1-eesposit@redhat.com> <alpine.DEB.2.22.394.2005041429210.224786@chino.kir.corp.google.com> <f2654143-b8e5-5a1f-8bd0-0cb0df2cd638@redhat.com> <CALMp9eQYcLr_REzDC1kWTHX4SJWt7x+Zd1KwNvS1YGd5TVM1xA@mail.gmail.com>
+ <1d12f846-bf89-7b0a-5c71-e61d83b1a36f@redhat.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-In-Reply-To: <CALMp9eQYcLr_REzDC1kWTHX4SJWt7x+Zd1KwNvS1YGd5TVM1xA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 05/05/20 18:53, Jim Mattson wrote:
->>> Since this is becoming a generic API (good!!), maybe we can discuss
->>> possible ways to optimize gathering of stats in mass?
->> Sure, the idea of a binary format was considered from the beginning in
->> [1], and it can be done either together with the current filesystem, or
->> as a replacement via different mount options.
+On Tue, 5 May 2020, Paolo Bonzini wrote:
+
+> >>> Since this is becoming a generic API (good!!), maybe we can discuss
+> >>> possible ways to optimize gathering of stats in mass?
+> >> Sure, the idea of a binary format was considered from the beginning in
+> >> [1], and it can be done either together with the current filesystem, or
+> >> as a replacement via different mount options.
+> > 
+> > ASCII stats are not scalable. A binary format is definitely the way to go.
 > 
-> ASCII stats are not scalable. A binary format is definitely the way to go.
+> I am totally in favor of having a binary format, but it should be
+> introduced as a separate series on top of this one---and preferably by
+> someone who has already put some thought into the problem (which
+> Emanuele and I have not, beyond ensuring that the statsfs concept and
+> API is flexible enough).
+> 
 
-I am totally in favor of having a binary format, but it should be
-introduced as a separate series on top of this one---and preferably by
-someone who has already put some thought into the problem (which
-Emanuele and I have not, beyond ensuring that the statsfs concept and
-API is flexible enough).
+The concern is that once this series is merged then /sys/kernel/stats 
+could be considered an ABI and there would be a reasonable expectation 
+that it will remain stable, in so far as the stats that userspace is 
+interested in are stable and not obsoleted.
 
-ASCII stats are necessary for quick userspace consumption and for
-backwards compatibility with KVM debugfs (which is not an ABI, but it's
-damn useful and should not be dropped without providing something as
-handy), so this is what this series starts from.
+So is this a suggestion that the binary format becomes complementary to 
+statsfs and provide a means for getting all stats from a single subsystem, 
+or that this series gets converted to such a format before it is merged?
 
-Paolo
-
+> ASCII stats are necessary for quick userspace consumption and for
+> backwards compatibility with KVM debugfs (which is not an ABI, but it's
+> damn useful and should not be dropped without providing something as
+> handy), so this is what this series starts from.
+> 
