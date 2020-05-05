@@ -2,164 +2,107 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33C221C61D6
-	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 22:16:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F2C71C630C
+	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 23:28:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729227AbgEEUQK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 May 2020 16:16:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50524 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727785AbgEEUQK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 16:16:10 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045K3V4l125345;
-        Tue, 5 May 2020 16:15:32 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30twhxgdka-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 16:15:32 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 045K3vmL127279;
-        Tue, 5 May 2020 16:15:31 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30twhxgdj9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 16:15:31 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045KErIv004025;
-        Tue, 5 May 2020 20:15:29 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 30s0g5qmp5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 20:15:29 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045KFQp953281128
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 May 2020 20:15:26 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D75154C04A;
-        Tue,  5 May 2020 20:15:26 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 74F714C04E;
-        Tue,  5 May 2020 20:15:24 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.204.113])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  5 May 2020 20:15:24 +0000 (GMT)
-Date:   Tue, 5 May 2020 23:15:22 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rich Felker <dalias@libc.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        id S1728076AbgEEV26 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 May 2020 17:28:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727785AbgEEV26 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 5 May 2020 17:28:58 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BF4F206A5;
+        Tue,  5 May 2020 21:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588714137;
+        bh=5/BTjp/n0KQrA6IRrVk66kijzLqf9GSaanDpQXL2EO0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MjEIEuhhyNNEVHWW4xHpfU7lqsKN2+Tle857n5AIo9+DH7thr9GIMnSD871SeFeai
+         DQOOWX1Jw5K9JpBS7yReB8HDdMy5UlMzSk0OmVBQXXc0kSKC3hUzH6QBIAt4qLPboo
+         GcRAv801idqEn3fmDBPIySvxMT/p4dAOOLagec6o=
+Date:   Tue, 5 May 2020 14:28:55 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Julian Wiedmann <jwi@linux.ibm.com>
+Cc:     David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <guoren@kernel.org>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-c6x-dev@linux-c6x.org" <linux-c6x-dev@linux-c6x.org>,
-        Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        "linux-hexagon@vger.kernel.org" <linux-hexagon@vger.kernel.org>,
-        Helge Deller <deller@gmx.de>,
-        "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 17/20] mm: free_area_init: allow defining max_zone_pfn
- in descending order
-Message-ID: <20200505201522.GA683243@linux.ibm.com>
-References: <20200429121126.17989-1-rppt@kernel.org>
- <20200429121126.17989-18-rppt@kernel.org>
- <20200503174138.GA114085@roeck-us.net>
- <20200503184300.GA154219@roeck-us.net>
- <20200504153901.GM14260@kernel.org>
- <a0b20e15-fddb-aa9c-fd67-f1c8e735b4a4@synopsys.com>
- <20200505091946.GG342687@linux.ibm.com>
- <88b9465b-6e6d-86ca-3776-ccb7a5b60b7f@synopsys.com>
+        Ursula Braun <ubraun@linux.ibm.com>
+Subject: Re: [PATCH net-next 10/11] s390/qeth: allow reset via ethtool
+Message-ID: <20200505142855.24b7c1bf@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <6788c6f1-52cb-c421-7251-500a391bb48b@linux.ibm.com>
+References: <20200505162559.14138-1-jwi@linux.ibm.com>
+        <20200505162559.14138-11-jwi@linux.ibm.com>
+        <20200505102149.1fd5b9ba@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <a19ccf27-2280-036c-057f-8e6d2319bb28@linux.ibm.com>
+        <20200505112940.6fe70918@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <6788c6f1-52cb-c421-7251-500a391bb48b@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <88b9465b-6e6d-86ca-3776-ccb7a5b60b7f@synopsys.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-05_10:2020-05-04,2020-05-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0
- malwarescore=0 impostorscore=0 suspectscore=5 mlxscore=0 clxscore=1015
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005050154
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, May 05, 2020 at 06:07:46PM +0000, Vineet Gupta wrote:
-> On 5/5/20 2:19 AM, Mike Rapoport wrote:
-> > From the code I've got the impression that it is either one of them. I.e
-> > the physical memory is either at
-> >
-> > 0x8000_0000 - <end of DDR 0 bank>
-> > 0x0000_0000 - <end of DDR 1 bank>
-> >
-> > or
-> >
-> > 0x0_8000_0000 - <end of DDR 0 bank>
-> > 0x1_0000_0000 - <end of DDR 1 bank>
-> >
-> > Is this possible to have a system with three live ranges? Like
-> >
-> > 0x0_0000_0000 - <end of DDR 1 bank>
-> > 0x0_8000_0000 - <end of DDR 0 bank>
-> > 0x1_0000_0000 - <end of DDR 2 bank>
+On Tue, 5 May 2020 21:57:43 +0200 Julian Wiedmann wrote:
+> > This is the comment from the uAPI header:
+> > 
+> > /* The reset() operation must clear the flags for the components which
+> >  * were actually reset.  On successful return, the flags indicate the
+> >  * components which were not reset, either because they do not exist
+> >  * in the hardware or because they cannot be reset independently.  The
+> >  * driver must never reset any components that were not requested.
+> >  */
+> > 
+> > Now let's take ETH_RESET_PHY as an example. Surely you're not resetting
+> > any PHY here, so that bit should not be cleared. Please look at the
+> > bits and select the ones which make sense, add whatever is missing.
+> >   
 > 
-> We don't have such a system, but it is indeed possible in theory. The question is
->  - Can other arches have such a setup too
+> It's a virtual device, _none_ of them make much sense?! We better not be
+> resetting any actual HW components, the other interfaces on the same
+> adapter would be quite unhappy about that.
 
-At the moment all architectures that support HIGHMEM have it above
-DMA/NORMAL. I'm not sure if such a setup is theoretically possible for
-other architectures, but as of now none of them support it in Linux.
+Well, then, you can't use the API in its current form. You can't say
+none of the sub-options are applicable, but the sum of them does.
 
-The general case is somewhat like
+> Sorry for being dense, and I appreciate that the API leaves a lot of room
+> for sophisticated partial resets where the driver/HW allows it.
+> But it sounds like what you're suggesting is
+> (1) we select a rather arbitrary set of components that _might_ represent a
+>     full "virtual" reset, and then
+> (2) expect the user to guess a super-set of these features. And not worry
+>     when they selected too much, and this obscure PHY thing failed to reset.
 
-	max_dma_pfn <= max_normal_pfn < max_high_pfn
+No, please see the code I provided below, and read how the interface 
+is supposed to work. I posted the code comment in my previous reply. 
+I don't know what else I can do for you.
 
-And of course, either max_dma_pfn or max_high_pfn or both may be not
-needed for an architecture.
+User can still pass "all" but you can't _clear_ all bits, 'cause you
+didn't reset any PHY, MAC, etc.
 
->  - Is it not better to have the core retain the flexibility just in case
+> So I looked at gve's implementation and thought "yep, looks simple enough".
 
-Hmm, there is indeed flexibility in the nodes and zones initialization,
-but if you'd look more closely to free_area_init*() and friends, there
-is a lot of cruft and retrofitting ;-)
+Ugh, yeah, gve is not a good example.
 
-What we have is two mutually exclusive paths, one that relies on the
-architecture to calculate zone sizes and find the holes between the
-zones (!CONFIG_HAVE_MEMBLOCK_NODE_MAP) and the other one that only
-requires the architectures to pass possible limit for each zone and
-detects the actual zone spans based on the knowlegde about the actual
-physical memory layout that comes from memblock.
+> But if we start asking users to interpret HW bits that hardly make any
+> sense to them, we're worse off than with the existing custom sysfs trigger...
 
-These patches attempt to drop the older method and switch all the
-architectures to use newer and simpler one.
+Actually - operationally, how do you expect people to use this reset?
+Some user space system detects the NIC is in a bad state? Does the
+interface communicate that via some log messages or such?
 
-If the requirement to have support for 3-banks is a theoretical
-possibility, I would prefer to adjust ARC's version of
-arch_has_descending_max_zone_pfns() to cope with either of 2-banks
-configuration (PAE40 and non-PAE40) and deal with the third bank when/if
-it actually materializes.
+The commit message doesn't really explain the "why".
 
-> Thx,
-> -Vineet
-
--- 
-Sincerely yours,
-Mike.
+> > Then my suggestion would be something like:
+> > 
+> >   #define QETH_RESET_FLAGS (flag | flag | flag)
+> > 
+> >   if ((*flags & QETH_RESET_FLAGS) != QETH_RESET_FLAGS))
+> > 	return -EINVAL;
+> >   ...
+> >   *flags &= ~QETH_RESET_FLAGS;
