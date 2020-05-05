@@ -2,192 +2,243 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA3E71C5574
-	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 14:31:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A90B1C557D
+	for <lists+linux-s390@lfdr.de>; Tue,  5 May 2020 14:34:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgEEMbs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 May 2020 08:31:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55164 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728609AbgEEMbs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 08:31:48 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 045CTjOF082521;
-        Tue, 5 May 2020 08:31:46 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30s50gjw4c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 08:31:46 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 045CTtwF083388;
-        Tue, 5 May 2020 08:31:45 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30s50gjw3a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 08:31:45 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 045CQ98P025436;
-        Tue, 5 May 2020 12:31:43 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma01fra.de.ibm.com with ESMTP id 30s0g5au0v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 12:31:43 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 045CVesS64159830
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 May 2020 12:31:41 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E2F36AE053;
-        Tue,  5 May 2020 12:31:40 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7C6C5AE04D;
-        Tue,  5 May 2020 12:31:40 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.49.139])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 May 2020 12:31:40 +0000 (GMT)
-Subject: Re: [PATCH] KVM: s390: Remove false WARN_ON_ONCE for the PQAP
- instruction
-To:     Pierre Morel <pmorel@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
-        KVM <kvm@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Qian Cai <cailca@icloud.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>
-References: <20200505073525.2287-1-borntraeger@de.ibm.com>
- <20200505095332.528254e5.cohuck@redhat.com>
- <f3512a63-91dc-ab9a-a9ab-3e2a6e24fea3@de.ibm.com>
- <59f1b90c-47d6-2661-0e99-548a53c9bcd6@redhat.com>
- <480b0bff-8eb5-f75c-a3ce-2555e38917ee@de.ibm.com>
- <1ef464b8-bba7-4ec6-558f-7f76c6690fb2@linux.ibm.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <6c449373-430c-5bff-582a-1f9db57336fc@de.ibm.com>
-Date:   Tue, 5 May 2020 14:31:40 +0200
+        id S1728268AbgEEMev (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 May 2020 08:34:51 -0400
+Received: from mga17.intel.com ([192.55.52.151]:62798 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728233AbgEEMev (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 5 May 2020 08:34:51 -0400
+IronPort-SDR: FATU/mbVA63zbCLlXXkd0e2NQ6mgVyNaAr8MBs2uJuhVumSB32MW9tLuLCXjJ+IVSY7LV3Jt5U
+ kuekYbJF0tcw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2020 05:34:48 -0700
+IronPort-SDR: 5sPwFZ5SegOPdotfSIk2A0YgWqeEhHdmFdVY8CDlelqI6TsiAarzVP5Ycxj38/uhqZwbRiKMK1
+ 7pLUNH1MltEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,354,1583222400"; 
+   d="scan'208";a="263151718"
+Received: from jmserbon-mobl1.amr.corp.intel.com (HELO [10.254.110.254]) ([10.254.110.254])
+  by orsmga006.jf.intel.com with ESMTP; 05 May 2020 05:34:45 -0700
+Subject: Re: [PATCH v2 1/1] fs/splice: add missing callback for inaccessible
+ pages
+To:     Ulrich Weigand <uweigand@de.ibm.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        viro@zeniv.linux.org.uk, david@redhat.com,
+        akpm@linux-foundation.org, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        jack@suse.cz, kirill@shutemov.name, peterz@infradead.org,
+        sean.j.christopherson@intel.com, Ulrich.Weigand@de.ibm.com
+References: <20200430143825.3534128-1-imbrenda@linux.ibm.com>
+ <1a3f5107-9847-73d4-5059-c6ef9d293551@de.ibm.com>
+ <e3e95a35-b0e3-b733-92f4-98bcccbe7ca5@intel.com>
+ <3d379d9e-241c-ef3b-dcef-20fdd3b8740d@de.ibm.com>
+ <a10ec7ad-2648-950e-7f30-07c08e400e7b@intel.com>
+ <20200504134154.GA21001@oc3748833570.ibm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <231da2f1-a6ef-0cf9-7f57-95e8b925997b@intel.com>
+Date:   Tue, 5 May 2020 05:34:45 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1ef464b8-bba7-4ec6-558f-7f76c6690fb2@linux.ibm.com>
+In-Reply-To: <20200504134154.GA21001@oc3748833570.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-05_07:2020-05-04,2020-05-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 impostorscore=0 adultscore=0 priorityscore=1501
- malwarescore=0 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005050098
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 05.05.20 14:18, Pierre Morel wrote:
+On 5/4/20 6:41 AM, Ulrich Weigand wrote:
+> On Fri, May 01, 2020 at 09:32:45AM -0700, Dave Hansen wrote:
+>> The larger point, though, is that the s390 code ensures no extra
+>> references exist upon entering make_secure_pte(), but it still has no
+>> mechanism to prevent future, new references to page cache pages from
+>> being created.
 > 
-> 
-> On 2020-05-05 10:27, Christian Borntraeger wrote:
+> Hi Dave, I worked with Claudio and Christian on the initial design
+> of our approach, so let me chime in here as well.
+
+Hi Ulrich!
+
+> You're right that there is no mechanism to prevent new references,
+> but that's really never been the goal either.  We're simply trying
+> to ensure that no I/O is ever done on a page that is in the "secure"
+> (or inaccessible) state.  To do so, we rely on the assumption that
+> all code that starts I/O on a page cache page will *first*:
+> - mark the page as pending I/O by either taking an extra page
+>   count, or by setting the Writeback flag; then:
+> - call arch_make_page_accessible(); then:
+> - start I/O; and only after I/O has finished:
+> - remove the "pending I/O" marker (Writeback and/or extra ref)
+
+Let's ignore writeback for a moment because get_page() is the more
+general case.  The locking sequence is:
+
+1. get_page() (or equivalent) "locks out" a page from converting to
+   inaccessbile,
+2. followed by a make_page_accessible() guarantees that the page
+   *stays* accessible until
+3. I/O is safe in this region
+4. put_page(), removes the "lock out", I/O now unsafe
+
+They key is, though, the get_page() must happen before
+make_page_accessible() and *every* place that acquires a new reference
+needs a make_page_accessible().
+
+try_get_page() is obviously one of those "new reference sites" and it
+only has one call site outisde of the gup code: generic_pipe_buf_get(),
+which is effectively patched by the patch that started this thread.  The
+fact that this one oddball site _and_ gup are patched now is a good sign.
+
+*But*, I still don't know how that could work nicely:
+
+> static inline __must_check bool try_get_page(struct page *page)
+> {
+>         page = compound_head(page);
+>         if (WARN_ON_ONCE(page_ref_count(page) <= 0))
+>                 return false;
+>         page_ref_inc(page);
+>         return true;
+> }
+
+If try_get_page() collides with a freeze_page_refs(), it'll hit the
+WARN_ON_ONCE(), which is surely there for a good reason.  I'm not sure
+that warning is _actually_ valid since freeze_page_refs() isn't truly a
+0 refcount.  But, the fact that this hasn't been encountered means that
+the testing here is potentially lacking.
+
+> We thought we had identified all places where we needed to place
+> arch_make_page_accessible so that the above assumption is satisfied.
+> You've found at least two instances where this wasn't true (thanks!);
+> but I still think that this can be fixed by just adding those calls.
+
+Why do you think that's the extent of the problem?  Because the crashes
+stopped?
+
+I'd feel a lot more comfortable if you explained the audits that you've
+performed or _why_ you think that.  What I've heard thus far is
+basically that you've been able to boot a guest and you're ready to ship
+this code.
+
+>> The one existing user of expected_page_refs() freezes the refs then
+>> *removes* the page from the page cache (that's what the xas_lock_irq()
+>> is for).  That stops *new* refs from being acquired.
 >>
+>> The s390 code is missing an equivalent mechanism.
 >>
->> On 05.05.20 10:04, David Hildenbrand wrote:
->>> On 05.05.20 09:55, Christian Borntraeger wrote:
->>>>
->>>>
->>>> On 05.05.20 09:53, Cornelia Huck wrote:
->>>>> On Tue,  5 May 2020 09:35:25 +0200
->>>>> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
->>>>>
->>>>>> In LPAR we will only get an intercept for FC==3 for the PQAP
->>>>>> instruction. Running nested under z/VM can result in other intercepts as
->>>>>> well, for example PQAP(QCI). So the WARN_ON_ONCE is not right. Let
->>>>>> us simply remove it.
->>>>>
->>>>> While I agree with removing the WARN_ON_ONCE, I'm wondering why z/VM
->>>>> gives us intercepts for those fcs... is that just a result of nesting
->>>>> (or the z/VM implementation), or is there anything we might want to do?
->>>>
->>>> Yes nesting.
->>>> The ECA bit for interpretion is an effective one. So if the ECA bit is off
->>>> in z/VM (no crypto cards) our ECA bit is basically ignored as these bits
->>>> are ANDed.
->>>> I asked Tony to ask the z/VM team if that is the case here.
->>>>
->>>
->>> So we can't detect if we have support for ECA_APIE, because there is no
->>> explicit feature bit, right? Rings a bell. Still an ugly
->>> hardware/firmware specification.
+>> One example:
+>>
+>> 	page_freeze_refs();
+>> 	// page->_count==0 now
+>> 					find_get_page();
+>> 					// ^ sees a "freed" page
+>> 	page_unfreeze_refs();
+>>
+>> find_get_page() will either fail to *find* the page because it will see
+>> page->_refcount==0 think it is freed (not great), or it will
+>> VM_BUG_ON_PAGE() in __page_cache_add_speculative().
 > 
-> Sorry to be late but you were really too fast for me. :)
+> I don't really see how that could happen; my understanding is that
+> page_freeze_refs simply causes potential users to spin and wait
+> until it is no longer frozen.  For example, find_get_page will
+> in the end call down to find_get_entry, which does:
 > 
-> AFAIK we detect if we have AP instructions enabled by ECA_APIE for the host by probing with a PQAP(TESTQ) during the boot.
-> If the hypervizor accept this instruction it is supposed to work as if it has set APIE present for the Linux host.
-> If the instruction is rejected we do not enable AP instructions for the guest
+>         if (!page_cache_get_speculative(page))
+>                 goto repeat;
+> 
+> Am I misunderstanding anything here?
 
-Yes, we do have the AP instruction in the KVM host (z/VM guest). It seems that this is implemented without ECA_APIE on the z/VM side
-as there is no domain assigned yet (and it is still possible to attach a virtual crypto device/domain).
-It seems to me that z/VM implements all of this with a software implementation. This then is not used for VSIE.
-Instead it relies on the architecture saying that ECA_APIE is an effective control.
+Dang, I think I was looking at the TINY_RCU code, which is unfortunately
+first in page_cache_get_speculative().  It doesn't support PREEMPT or
+SMP, so it can take some shortcuts.
 
+But, with regular RCU, you're right, it _does_ appear that it would hit
+that retry loop, but then it would *succeed* in getting a reference.  In
+the end, this just supports the sequence I wrote above:
+arch_make_page_accessible() is only valid when called with an elevated
+refcount and the refcount must be held to lock out make_secure_pte().
+
+>> My bigger point is that this patches doesn't systematically stop finding
+>> page cache pages that are arch-inaccessible.  This patch hits *one* of
+>> those sites.
 > 
-> We also detect if we can use QCI by testing the facility bit and propagate only the facility bits we have earned or emulate don't we?
+> As I said above, that wasn't really the goal for our approach.
 > 
-> So here I am curious why we got an interception.
+> In particular, note that we *must* have secure pages present in the
+> page table of the secure guest (that is a requirement of the architecture;
+> note that the "secure" status doesn't just apply to the phyiscal page,
+> but a triple of "*this* host physical page is the secure backing store
+> of *this* guest physical page in *this* secure guest", which the HW/FW
+> tracks based on the specific page table entry).
 > 
-> Did we give false information to the guest?
-> Is the guest right to issue the instruction intercepted?
-> Did z/VM provide the host with false facility information?
-> Did z/VM dynamically change the virtualization scheme after the boot?
-> 
-> I did not find evidence of the first assumption which would have been a legitimate warning.
-> The next 3 are, IMHO, misbehavior from the guest or z/VM, and do not justify a warning there so I find right to remove it.
-> 
-> consider it as a "late" reviewed-by.
-> 
-> Regards,
-> 
+> As a consequence, the page really also has to remain present in the
+> page cache (I don't think Linux mm code would be able to handle the
+> case where a file-backed page is in the page table but not page cache).
+
+It actually happens transiently, at least.  I believe inode truncation
+removes from the page cache before it zaps the PTEs.
+
+> I'm not sure what exactly the requirements for your use case are; if those
+> are significantly differently, maybe we can work together to find an
+> approach that works for both?
+
+I'm actually trying to figure out what to do with AMD's SEV.  The
+current state isn't great and, for instance, allows userspace to read
+guest ciphertext.  But, the pages come and go out of the encrypted state
+at the behest of the guest, and the kernel needs *some* mapping for the
+pages to do things like instruction emulation.
+
+I started looking at s390 because someone said there was a similar
+problem there and suggested the hooks might work.  I couldn't figure out
+how they worked comprehensively on s390, and that's how we got here.
