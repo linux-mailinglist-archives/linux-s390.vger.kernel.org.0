@@ -2,142 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EEB31C6D1A
-	for <lists+linux-s390@lfdr.de>; Wed,  6 May 2020 11:39:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A20151C6F44
+	for <lists+linux-s390@lfdr.de>; Wed,  6 May 2020 13:24:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgEFJj0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 6 May 2020 05:39:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31178 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728306AbgEFJj0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 May 2020 05:39:26 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0469WYVX188321;
-        Wed, 6 May 2020 05:39:16 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30s1sxwk3f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 05:39:15 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0469Zux2020607;
-        Wed, 6 May 2020 09:39:13 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5rvx6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 09:39:13 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0469dBwp51052754
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 May 2020 09:39:11 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 09ACB42042;
-        Wed,  6 May 2020 09:39:11 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5F42F4203F;
-        Wed,  6 May 2020 09:39:10 +0000 (GMT)
-Received: from [9.145.87.216] (unknown [9.145.87.216])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  6 May 2020 09:39:10 +0000 (GMT)
-Subject: Re: [PATCH net-next] net/smc: remove set but not used variables
- 'del_llc, del_llc_resp'
-To:     YueHaibing <yuehaibing@huawei.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20200506065540.171504-1-yuehaibing@huawei.com>
-From:   Karsten Graul <kgraul@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-Message-ID: <7e36e689-f5b7-0140-cd04-be62dcf08fbc@linux.ibm.com>
-Date:   Wed, 6 May 2020 11:39:12 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1727857AbgEFLYl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 May 2020 07:24:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26877 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726712AbgEFLYk (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 May 2020 07:24:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588764278;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/Qr0XiLssBUP1KzSEARJHgF0bv5jIGk/42Em4vy6c0w=;
+        b=Bi9YTl8NVxTt/1rcNbhZ9M/KTcGrbREsYhi3O3TM5kRmU3ylsUj893trh42oonzFNSJ5oW
+        A5cLem75IlZ92HThG82gmbCDYCu5Gqt9hkO24yJTYb2YzLoA71DRJyrqcgQgxjSm8czTUz
+        KuP3yHIWHYM7FuA0NhHB6EyWg8w2vDU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-229-7gDtz1ExOEa6CAGZiSQbdw-1; Wed, 06 May 2020 07:24:33 -0400
+X-MC-Unique: 7gDtz1ExOEa6CAGZiSQbdw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DCE1107ACCA;
+        Wed,  6 May 2020 11:24:32 +0000 (UTC)
+Received: from gondolin (ovpn-112-211.ams2.redhat.com [10.36.112.211])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A307399CF;
+        Wed,  6 May 2020 11:24:30 +0000 (UTC)
+Date:   Wed, 6 May 2020 13:24:27 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jared Rossi <jrossi@linux.ibm.com>
+Cc:     Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
+Message-ID: <20200506132427.2f64a07d.cohuck@redhat.com>
+In-Reply-To: <20200506001544.16213-2-jrossi@linux.ibm.com>
+References: <20200506001544.16213-1-jrossi@linux.ibm.com>
+        <20200506001544.16213-2-jrossi@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200506065540.171504-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-06_03:2020-05-04,2020-05-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 phishscore=0 adultscore=0
- impostorscore=0 mlxlogscore=999 bulkscore=0 clxscore=1011 suspectscore=0
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005060072
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 06/05/2020 08:55, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
+On Tue,  5 May 2020 20:15:44 -0400
+Jared Rossi <jrossi@linux.ibm.com> wrote:
 
-Thank you, good catch. Your patch will be part of our next patch submission.
-
-Regards, Karsten
-
+> Remove the explicit prefetch check when using vfio-ccw devices.
+> This check does not trigger in practice as all Linux channel programs
+> are intended to use prefetch.
 > 
-> net/smc/smc_llc.c: In function 'smc_llc_cli_conf_link':
-> net/smc/smc_llc.c:753:31: warning:
->  variable 'del_llc' set but not used [-Wunused-but-set-variable]
->   struct smc_llc_msg_del_link *del_llc;
->                                ^
-> net/smc/smc_llc.c: In function 'smc_llc_process_srv_delete_link':
-> net/smc/smc_llc.c:1311:33: warning:
->  variable 'del_llc_resp' set but not used [-Wunused-but-set-variable]
->     struct smc_llc_msg_del_link *del_llc_resp;
->                                  ^
+> It is expected that all ORBs issued by Linux will request prefetch.
+> Although non-prefetching ORBs are not rejected, they will prefetch
+> nonetheless. A warning is issued up to once per 5 seconds when a
+> forced prefetch occurs.
 > 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> A non-prefetch ORB does not necessarily result in an error, however
+> frequent encounters with non-prefetch ORBs indicate that channel
+> programs are being executed in a way that is inconsistent with what
+> the guest is requesting. While there is currently no known case of an
+> error caused by forced prefetch, it is possible in theory that forced
+> prefetch could result in an error if applied to a channel program that
+> is dependent on non-prefetch.
+> 
+> Signed-off-by: Jared Rossi <jrossi@linux.ibm.com>
 > ---
->  net/smc/smc_llc.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
+>  Documentation/s390/vfio-ccw.rst |  6 ++++++
+>  drivers/s390/cio/vfio_ccw_cp.c  | 19 ++++++++++++-------
+>  2 files changed, 18 insertions(+), 7 deletions(-)
 > 
-> diff --git a/net/smc/smc_llc.c b/net/smc/smc_llc.c
-> index 4cc583678ac7..391237b601fe 100644
-> --- a/net/smc/smc_llc.c
-> +++ b/net/smc/smc_llc.c
-> @@ -750,7 +750,6 @@ static int smc_llc_cli_conf_link(struct smc_link *link,
->  				 enum smc_lgr_type lgr_new_t)
+
+(...)
+
+> @@ -625,23 +626,27 @@ static int ccwchain_fetch_one(struct ccwchain *chain,
+>   * the target channel program from @orb->cmd.iova to the new ccwchain(s).
+>   *
+>   * Limitations:
+> - * 1. Supports only prefetch enabled mode.
+> - * 2. Supports idal(c64) ccw chaining.
+> - * 3. Supports 4k idaw.
+> + * 1. Supports idal(c64) ccw chaining.
+> + * 2. Supports 4k idaw.
+>   *
+>   * Returns:
+>   *   %0 on success and a negative error value on failure.
+>   */
+>  int cp_init(struct channel_program *cp, struct device *mdev, union orb *orb)
 >  {
->  	struct smc_link_group *lgr = link->lgr;
-> -	struct smc_llc_msg_del_link *del_llc;
->  	struct smc_llc_qentry *qentry = NULL;
->  	int rc = 0;
+> +	static DEFINE_RATELIMIT_STATE(ratelimit_state, 5 * HZ, 1);
+>  	int ret;
 >  
-> @@ -764,7 +763,6 @@ static int smc_llc_cli_conf_link(struct smc_link *link,
->  	}
->  	if (qentry->msg.raw.hdr.common.type != SMC_LLC_CONFIRM_LINK) {
->  		/* received DELETE_LINK instead */
-> -		del_llc = &qentry->msg.delete_link;
->  		qentry->msg.raw.hdr.flags |= SMC_LLC_FLAG_RESP;
->  		smc_llc_send_message(link, &qentry->msg);
->  		smc_llc_flow_qentry_del(&lgr->llc_flow_lcl);
-> @@ -1308,16 +1306,12 @@ static void smc_llc_process_srv_delete_link(struct smc_link_group *lgr)
->  		 * enqueued DELETE_LINK request (forward it)
->  		 */
->  		if (!smc_llc_send_message(lnk, &qentry->msg)) {
-> -			struct smc_llc_msg_del_link *del_llc_resp;
->  			struct smc_llc_qentry *qentry2;
+>  	/*
+> -	 * XXX:
+> -	 * Only support prefetch enable mode now.
+> +	 * We only support prefetching the channel program. We assume all channel
+> +	 * programs executed by supported guests (i.e. Linux) likewise support
+> +	 * prefetching. Even if prefetching is not specified the channel program
+> +	 * is still executed using prefetch. Executing a channel program that
+> +	 * does not specify prefetching will typically not cause an error, but a
+> +	 * warning is issued to help identify the problem if something does break.
+>  	 */
+> -	if (!orb->cmd.pfch)
+> -		return -EOPNOTSUPP;
+
+/* custom ratelimiting to avoid flood during boot */
+
+(to avoid people stumbling over this)
+
+> +	if (!orb->cmd.pfch && __ratelimit(&ratelimit_state))
+> +		dev_warn(mdev, "executing channel program with prefetch, but prefetch isn't specified");
+
+hmm... what about
+
+"prefetching channel program even though prefetch not specified in orb"?
+
 >  
->  			qentry2 = smc_llc_wait(lgr, lnk, SMC_LLC_WAIT_TIME,
->  					       SMC_LLC_DELETE_LINK);
-> -			if (!qentry2) {
-> -			} else {
-> -				del_llc_resp = &qentry2->msg.delete_link;
-> +			if (qentry2)
->  				smc_llc_flow_qentry_del(&lgr->llc_flow_lcl);
-> -			}
->  		}
->  	}
->  	smcr_link_clear(lnk_del, true);
-> 
-> 
-> 
+>  	INIT_LIST_HEAD(&cp->ccwchain_list);
+>  	memcpy(&cp->orb, orb, sizeof(*orb));
 
--- 
-Karsten
+(...)
 
-(I'm a dude)
+Apart from the bikeshedding, looks sane to me; but would like more
+opinions.
+
