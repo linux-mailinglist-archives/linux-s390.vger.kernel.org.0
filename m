@@ -2,53 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31B151C7C0C
-	for <lists+linux-s390@lfdr.de>; Wed,  6 May 2020 23:11:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 531911C7C4F
+	for <lists+linux-s390@lfdr.de>; Wed,  6 May 2020 23:22:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbgEFVLu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 6 May 2020 17:11:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729162AbgEFVLu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 May 2020 17:11:50 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A655BC061A0F;
-        Wed,  6 May 2020 14:11:50 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1CC68122A98F1;
-        Wed,  6 May 2020 14:11:50 -0700 (PDT)
-Date:   Wed, 06 May 2020 14:11:49 -0700 (PDT)
-Message-Id: <20200506.141149.81578290716709045.davem@davemloft.net>
-To:     jwi@linux.ibm.com
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, ubraun@linux.ibm.com
-Subject: Re: [PATCH v2 net-next 00/10] s390/qeth: updates 2020-05-06
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200506080949.3915-1-jwi@linux.ibm.com>
-References: <20200506080949.3915-1-jwi@linux.ibm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 06 May 2020 14:11:50 -0700 (PDT)
+        id S1729268AbgEFVWM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 May 2020 17:22:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62404 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729261AbgEFVWM (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 May 2020 17:22:12 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046L2enM143800;
+        Wed, 6 May 2020 17:22:11 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8srveeu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 17:22:11 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 046L3rlX148174;
+        Wed, 6 May 2020 17:22:11 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30u8srveef-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 17:22:11 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 046LKkBO004196;
+        Wed, 6 May 2020 21:22:10 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma04dal.us.ibm.com with ESMTP id 30s0g75hm5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 21:22:10 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 046LM8kP51052986
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 May 2020 21:22:08 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 958A1BE051;
+        Wed,  6 May 2020 21:22:08 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C6A9BE053;
+        Wed,  6 May 2020 21:22:07 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.180.129])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  6 May 2020 21:22:07 +0000 (GMT)
+From:   Jared Rossi <jrossi@linux.ibm.com>
+To:     Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/1] vfio-ccw: Enable transparent CCW IPL from DASD
+Date:   Wed,  6 May 2020 17:24:39 -0400
+Message-Id: <20200506212440.31323-1-jrossi@linux.ibm.com>
+X-Mailer: git-send-email 2.21.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-06_09:2020-05-05,2020-05-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
+ mlxlogscore=857 impostorscore=0 adultscore=0 suspectscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005060170
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
-Date: Wed,  6 May 2020 10:09:39 +0200
+Remove the explicit prefetch check when using vfio-ccw devices.
+This check does not trigger in practice as all Linux channel programs
+are intended to use prefetch.
 
-> please apply the following patch series for qeth to netdev's net-next
-> tree.
-> Same patches as yesterday, except that the ethtool reset has been
-> dropped for now.
-> 
-> This primarily adds infrastructure to deal with HW offloads when the
-> packets get forwarded over the adapter's internal switch.
-> Aside from that, just some minor tweaking for the TX code.
+Version 4 makes only stylistic and word choice changes to comments
+and/or documentation.
 
-Series applied, thanks Julian.
+Jared Rossi (1):
+  vfio-ccw: Enable transparent CCW IPL from DASD
+
+ Documentation/s390/vfio-ccw.rst |  6 ++++++
+ drivers/s390/cio/vfio_ccw_cp.c  | 19 ++++++++++++-------
+ 2 files changed, 18 insertions(+), 7 deletions(-)
+
+-- 
+2.17.0
+
