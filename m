@@ -2,163 +2,65 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D64C01C64E6
-	for <lists+linux-s390@lfdr.de>; Wed,  6 May 2020 02:13:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C04B81C671F
+	for <lists+linux-s390@lfdr.de>; Wed,  6 May 2020 06:53:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgEFANS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 May 2020 20:13:18 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42182 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728642AbgEFANR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 May 2020 20:13:17 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04603NPp178229;
-        Tue, 5 May 2020 20:13:16 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4gvfsgy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 20:13:16 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04603cUa178845;
-        Tue, 5 May 2020 20:13:16 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4gvfsgp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 May 2020 20:13:16 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0460AKUr017832;
-        Wed, 6 May 2020 00:13:15 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma04dal.us.ibm.com with ESMTP id 30s0g6v4es-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 00:13:15 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0460DD6F45154626
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 May 2020 00:13:13 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 68D3078064;
-        Wed,  6 May 2020 00:13:13 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A22CC7805E;
-        Wed,  6 May 2020 00:13:12 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.85.145.129])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed,  6 May 2020 00:13:12 +0000 (GMT)
-From:   Jared Rossi <jrossi@linux.ibm.com>
-To:     Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
-Date:   Tue,  5 May 2020 20:15:44 -0400
-Message-Id: <20200506001544.16213-2-jrossi@linux.ibm.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200506001544.16213-1-jrossi@linux.ibm.com>
-References: <20200506001544.16213-1-jrossi@linux.ibm.com>
+        id S1725869AbgEFExC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 May 2020 00:53:02 -0400
+Received: from verein.lst.de ([213.95.11.211]:38744 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725771AbgEFExC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 6 May 2020 00:53:02 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 46CD968C4E; Wed,  6 May 2020 06:52:59 +0200 (CEST)
+Date:   Wed, 6 May 2020 06:52:58 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stefan Haberland <sth@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-kernel@vger.kernel.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: Re: [PATCH 1/1] s390/dasd: remove ioctl_by_bdev from DASD driver
+Message-ID: <20200506045258.GB9846@lst.de>
+References: <20200430111754.98508-1-sth@linux.ibm.com> <20200430111754.98508-2-sth@linux.ibm.com> <20200430131351.GA24813@lst.de> <4ab11558-9f2b-02ee-d191-c9a5cc38de0f@linux.ibm.com> <70f541fe-a678-8952-0753-32707d21e337@linux.ibm.com> <20200505124423.GA26313@lst.de> <a6c99eba-44f2-2944-a135-50ed75ef2c55@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-05_11:2020-05-04,2020-05-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 phishscore=0 spamscore=0 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005050182
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a6c99eba-44f2-2944-a135-50ed75ef2c55@linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Remove the explicit prefetch check when using vfio-ccw devices.
-This check does not trigger in practice as all Linux channel programs
-are intended to use prefetch.
+On Tue, May 05, 2020 at 05:09:56PM +0200, Stefan Haberland wrote:
+> OK, thanks for the hint.I did not have this in mind. And I still have
+> to look up how this is working at all.
+> But isn't this only a real issue for devices with more than 16 minors
+> or partitions? So it should not be a problem for DASDs with our limit
+> of 3 partitions and the fixed amount of minors, right?
+> 
+> Just tested with CONFIG_DEBUG_BLOCK_EXT_DEVT enabled and about 1000
+> unlabeled devices. Did not see an issue.
+> 
+> While I see the SCSI devices with MAJOR 259 and quite a random MINOR
+> all the DASD devices keep their MAJOR 94 and ascending MINOR.
 
-It is expected that all ORBs issued by Linux will request prefetch.
-Although non-prefetching ORBs are not rejected, they will prefetch
-nonetheless. A warning is issued up to once per 5 seconds when a
-forced prefetch occurs.
+Looks like it only changes the minors, and not the majors.  Still
+checking for major and relying on a shared structure define in different
+places just doesn't look maintainable.
 
-A non-prefetch ORB does not necessarily result in an error, however
-frequent encounters with non-prefetch ORBs indicate that channel
-programs are being executed in a way that is inconsistent with what
-the guest is requesting. While there is currently no known case of an
-error caused by forced prefetch, it is possible in theory that forced
-prefetch could result in an error if applied to a channel program that
-is dependent on non-prefetch.
+> > And compared to all the complications I think the biodasdinfo method
+> > is the least of all those evils.
+> 
+> Are you talking about your first patch suggestion?Then I disagree.
+> I still do not like to force the driver to be built in if there is an
+> alternative.
 
-Signed-off-by: Jared Rossi <jrossi@linux.ibm.com>
----
- Documentation/s390/vfio-ccw.rst |  6 ++++++
- drivers/s390/cio/vfio_ccw_cp.c  | 19 ++++++++++++-------
- 2 files changed, 18 insertions(+), 7 deletions(-)
+No, I mean the series that I actually sent out:
 
-diff --git a/Documentation/s390/vfio-ccw.rst b/Documentation/s390/vfio-ccw.rst
-index fca9c4f5bd9c..23e7d136f8b4 100644
---- a/Documentation/s390/vfio-ccw.rst
-+++ b/Documentation/s390/vfio-ccw.rst
-@@ -335,6 +335,12 @@ device.
- The current code allows the guest to start channel programs via
- START SUBCHANNEL, and to issue HALT SUBCHANNEL and CLEAR SUBCHANNEL.
- 
-+Currently all channel programs are prefetched, regardless of the
-+p-bit setting in the ORB.  As a result, self modifying channel
-+programs are not supported.  For this reason, IPL has to be handled as
-+a special case by a userspace/guest program; this has been implemented
-+in QEMU's s390-ccw bios as of QEMU 4.1.
-+
- vfio-ccw supports classic (command mode) channel I/O only. Transport
- mode (HPF) is not supported.
- 
-diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-index 3645d1720c4b..d423ca934779 100644
---- a/drivers/s390/cio/vfio_ccw_cp.c
-+++ b/drivers/s390/cio/vfio_ccw_cp.c
-@@ -8,6 +8,7 @@
-  *            Xiao Feng Ren <renxiaof@linux.vnet.ibm.com>
-  */
- 
-+#include <linux/ratelimit.h>
- #include <linux/mm.h>
- #include <linux/slab.h>
- #include <linux/iommu.h>
-@@ -625,23 +626,27 @@ static int ccwchain_fetch_one(struct ccwchain *chain,
-  * the target channel program from @orb->cmd.iova to the new ccwchain(s).
-  *
-  * Limitations:
-- * 1. Supports only prefetch enabled mode.
-- * 2. Supports idal(c64) ccw chaining.
-- * 3. Supports 4k idaw.
-+ * 1. Supports idal(c64) ccw chaining.
-+ * 2. Supports 4k idaw.
-  *
-  * Returns:
-  *   %0 on success and a negative error value on failure.
-  */
- int cp_init(struct channel_program *cp, struct device *mdev, union orb *orb)
- {
-+	static DEFINE_RATELIMIT_STATE(ratelimit_state, 5 * HZ, 1);
- 	int ret;
- 
- 	/*
--	 * XXX:
--	 * Only support prefetch enable mode now.
-+	 * We only support prefetching the channel program. We assume all channel
-+	 * programs executed by supported guests (i.e. Linux) likewise support
-+	 * prefetching. Even if prefetching is not specified the channel program
-+	 * is still executed using prefetch. Executing a channel program that
-+	 * does not specify prefetching will typically not cause an error, but a
-+	 * warning is issued to help identify the problem if something does break.
- 	 */
--	if (!orb->cmd.pfch)
--		return -EOPNOTSUPP;
-+	if (!orb->cmd.pfch && __ratelimit(&ratelimit_state))
-+		dev_warn(mdev, "executing channel program with prefetch, but prefetch isn't specified");
- 
- 	INIT_LIST_HEAD(&cp->ccwchain_list);
- 	memcpy(&cp->orb, orb, sizeof(*orb));
--- 
-2.17.0
-
+https://lkml.org/lkml/2020/4/21/66
+https://lkml.org/lkml/2020/4/21/68
+https://lkml.org/lkml/2020/4/21/69
