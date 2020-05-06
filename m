@@ -2,123 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CECF41C6FCA
-	for <lists+linux-s390@lfdr.de>; Wed,  6 May 2020 13:59:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B2CC1C700C
+	for <lists+linux-s390@lfdr.de>; Wed,  6 May 2020 14:12:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgEFL7z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 6 May 2020 07:59:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61932 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727994AbgEFL7y (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 May 2020 07:59:54 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046BhZG0113419;
-        Wed, 6 May 2020 07:59:53 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30uvm90eba-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 07:59:53 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 046BjDxF117461;
-        Wed, 6 May 2020 07:59:52 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30uvm90eah-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 07:59:52 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 046BoK2n021410;
-        Wed, 6 May 2020 11:59:50 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5s4ct-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 May 2020 11:59:50 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 046BxlFY62325060
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 May 2020 11:59:47 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A0052AE051;
-        Wed,  6 May 2020 11:59:47 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D41BAE04D;
-        Wed,  6 May 2020 11:59:47 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  6 May 2020 11:59:47 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
-        id 460F6E0554; Wed,  6 May 2020 13:59:47 +0200 (CEST)
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
+        id S1727975AbgEFMMk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 May 2020 08:12:40 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45743 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727067AbgEFMMj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 May 2020 08:12:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1588767157;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ybp99ie0cZbrJsaPu3fRVqjLiBB0hnNYN5fy/Wmj9SE=;
+        b=FUe2Gp1OdbhQN8IByVbTZ4n+2tTMF8ATm+a4A7CHftOpbf0bom+puDGXQq6w5SNbfDVXFT
+        gwHqc+VKRHdeASY8u9tvZZLQsj3HUlub2Mb/MiRUaPYlLxw3G4ySVLazzczA8QeoThMBgk
+        NZCnTbeg0zJNbXY1IbsyW8AeeIV6RdQ=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-ASP4sSG_MO-6D6AqWg8IIA-1; Wed, 06 May 2020 08:12:35 -0400
+X-MC-Unique: ASP4sSG_MO-6D6AqWg8IIA-1
+Received: by mail-wm1-f71.google.com with SMTP id h184so1119727wmf.5
+        for <linux-s390@vger.kernel.org>; Wed, 06 May 2020 05:12:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ybp99ie0cZbrJsaPu3fRVqjLiBB0hnNYN5fy/Wmj9SE=;
+        b=TGJGI2jhmiU6RaP7tTobf1gBzia3TVF6YJfhve3djOsQr180wpj4AKLyapdrdLDNmj
+         mjdAK0jmpLBBnqfXKIEeyxBlDzaxJ9AbHnr+fRcDhedhLeDzEW6qO/OIi6gsTFWhG7/B
+         TQkPbVrAc7glaVQ+m3M5PbCp9tPJNgegxPlJCtnkYGMmv27M+GM517k/msQMylO9HHZi
+         b/rR/ShZhOkzatxGh5MrzMl1RihtIS17ZHGKhoZZ9ynyICl6fTFql2r4FpONquY6xqxw
+         TEFrRxb8S0m+NCA2a5Qr8OlhMepbc1YL05BXFsR57ElIoRdT+uR4uySlbGpVJ0nW4w0q
+         Zl7A==
+X-Gm-Message-State: AGi0Pub+cHAIEo7ftKkfCbhrZjj/Dx48qAPU8yZw9DahqGU0EwCcImRz
+        NwXCEsdTUO1aolw6DLxx2HIb7ImpMneFn+yEuH+QnSKfU+KWqZhHjXekhiklyPaOZiIct2gp8oB
+        4lJOfec4e1XHQKKinQq+7yw==
+X-Received: by 2002:a1c:6402:: with SMTP id y2mr4149169wmb.116.1588767151386;
+        Wed, 06 May 2020 05:12:31 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKA0dkO+kUYpZP4gWFbcPSl/DNfe0d39YUqIA7R6bHmLSW3U7w+KDm1VQ6rvIbX7CmDagIXNA==
+X-Received: by 2002:a1c:6402:: with SMTP id y2mr4149141wmb.116.1588767150993;
+        Wed, 06 May 2020 05:12:30 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:11d7:2f21:f38b:17e? ([2001:b07:6468:f312:11d7:2f21:f38b:17e])
+        by smtp.gmail.com with ESMTPSA id p190sm2745441wmp.38.2020.05.06.05.12.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 May 2020 05:12:30 -0700 (PDT)
+Subject: Re: [GIT PULL 1/1] KVM: s390: Remove false WARN_ON_ONCE for the PQAP
+ instruction
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
 Cc:     KVM <kvm@vger.kernel.org>,
         Janosch Frank <frankja@linux.vnet.ibm.com>,
         David Hildenbrand <david@redhat.com>,
         Cornelia Huck <cohuck@redhat.com>,
         linux-s390 <linux-s390@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
         Tony Krowiak <akrowiak@linux.ibm.com>,
         Pierre Morel <pmorel@linux.ibm.com>,
         Qian Cai <cailca@icloud.com>
-Subject: [GIT PULL 1/1] KVM: s390: Remove false WARN_ON_ONCE for the PQAP instruction
-Date:   Wed,  6 May 2020 13:59:45 +0200
-Message-Id: <20200506115945.13132-2-borntraeger@de.ibm.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200506115945.13132-1-borntraeger@de.ibm.com>
 References: <20200506115945.13132-1-borntraeger@de.ibm.com>
+ <20200506115945.13132-2-borntraeger@de.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <bcd98cbd-1e28-47a2-6cbd-668da4ddb9f5@redhat.com>
+Date:   Wed, 6 May 2020 14:12:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-05-06_04:2020-05-05,2020-05-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- suspectscore=0 clxscore=1015 adultscore=0 bulkscore=0 malwarescore=0
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005060088
+In-Reply-To: <20200506115945.13132-2-borntraeger@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-In LPAR we will only get an intercept for FC==3 for the PQAP
-instruction. Running nested under z/VM can result in other intercepts as
-well as ECA_APIE is an effective bit: If one hypervisor layer has
-turned this bit off, the end result will be that we will get intercepts for
-all function codes. Usually the first one will be a query like PQAP(QCI).
-So the WARN_ON_ONCE is not right. Let us simply remove it.
+On 06/05/20 13:59, Christian Borntraeger wrote:
+> Running nested under z/VM can result in other intercepts as
+> well as ECA_APIE is an effective bit: If one hypervisor layer has
+> turned this bit off, the end result will be that we will get intercepts for
+> all function codes. Usually the first one will be a query like PQAP(QCI).
+> So the WARN_ON_ONCE is not right. Let us simply remove it.
 
-Cc: Pierre Morel <pmorel@linux.ibm.com>
-Cc: Tony Krowiak <akrowiak@linux.ibm.com>
-Cc: stable@vger.kernel.org # v5.3+
-Fixes: e5282de93105 ("s390: ap: kvm: add PQAP interception for AQIC")
-Link: https://lore.kernel.org/kvm/20200505083515.2720-1-borntraeger@de.ibm.com
-Reported-by: Qian Cai <cailca@icloud.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
----
- arch/s390/kvm/priv.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Possibly stupid question since I can only recognize some words here. :)
+But anyway... shouldn't z/VM trap this intercept when the guest has
+turned off the bit, and only reflect the SIE exit based on the function
+code?
 
-diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
-index 69a824f9ef0b..893893642415 100644
---- a/arch/s390/kvm/priv.c
-+++ b/arch/s390/kvm/priv.c
-@@ -626,10 +626,12 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
- 	 * available for the guest are AQIC and TAPQ with the t bit set
- 	 * since we do not set IC.3 (FIII) we currently will only intercept
- 	 * the AQIC function code.
-+	 * Note: running nested under z/VM can result in intercepts for other
-+	 * function codes, e.g. PQAP(QCI). We do not support this and bail out.
- 	 */
- 	reg0 = vcpu->run->s.regs.gprs[0];
- 	fc = (reg0 >> 24) & 0xff;
--	if (WARN_ON_ONCE(fc != 0x03))
-+	if (fc != 0x03)
- 		return -EOPNOTSUPP;
- 
- 	/* PQAP instruction is allowed for guest kernel only */
--- 
-2.25.4
+Thanks,
+
+Paolo
 
