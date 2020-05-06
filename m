@@ -2,135 +2,107 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A20151C6F44
-	for <lists+linux-s390@lfdr.de>; Wed,  6 May 2020 13:24:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 004801C6FC8
+	for <lists+linux-s390@lfdr.de>; Wed,  6 May 2020 13:59:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgEFLYl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 6 May 2020 07:24:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26877 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726712AbgEFLYk (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 May 2020 07:24:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588764278;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/Qr0XiLssBUP1KzSEARJHgF0bv5jIGk/42Em4vy6c0w=;
-        b=Bi9YTl8NVxTt/1rcNbhZ9M/KTcGrbREsYhi3O3TM5kRmU3ylsUj893trh42oonzFNSJ5oW
-        A5cLem75IlZ92HThG82gmbCDYCu5Gqt9hkO24yJTYb2YzLoA71DRJyrqcgQgxjSm8czTUz
-        KuP3yHIWHYM7FuA0NhHB6EyWg8w2vDU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-229-7gDtz1ExOEa6CAGZiSQbdw-1; Wed, 06 May 2020 07:24:33 -0400
-X-MC-Unique: 7gDtz1ExOEa6CAGZiSQbdw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DCE1107ACCA;
-        Wed,  6 May 2020 11:24:32 +0000 (UTC)
-Received: from gondolin (ovpn-112-211.ams2.redhat.com [10.36.112.211])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A307399CF;
-        Wed,  6 May 2020 11:24:30 +0000 (UTC)
-Date:   Wed, 6 May 2020 13:24:27 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jared Rossi <jrossi@linux.ibm.com>
-Cc:     Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
-Message-ID: <20200506132427.2f64a07d.cohuck@redhat.com>
-In-Reply-To: <20200506001544.16213-2-jrossi@linux.ibm.com>
-References: <20200506001544.16213-1-jrossi@linux.ibm.com>
-        <20200506001544.16213-2-jrossi@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1728000AbgEFL7y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 May 2020 07:59:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38210 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725985AbgEFL7x (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 May 2020 07:59:53 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 046BWqkX056618;
+        Wed, 6 May 2020 07:59:53 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30uf8hwhtn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 07:59:53 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 046BjNZ2116765;
+        Wed, 6 May 2020 07:59:52 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30uf8hwhsu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 07:59:52 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 046BoePO014961;
+        Wed, 6 May 2020 11:59:50 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma05fra.de.ibm.com with ESMTP id 30s0g5kp0u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 May 2020 11:59:49 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 046Bxlt451118108
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 May 2020 11:59:47 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0DB2511C050;
+        Wed,  6 May 2020 11:59:47 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED00511C054;
+        Wed,  6 May 2020 11:59:46 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  6 May 2020 11:59:46 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id A6AB3E0554; Wed,  6 May 2020 13:59:46 +0200 (CEST)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Subject: [GIT PULL 0/1] KVM: s390: Fix for running nested under z/VM
+Date:   Wed,  6 May 2020 13:59:44 +0200
+Message-Id: <20200506115945.13132-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-05-06_04:2020-05-05,2020-05-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 adultscore=0 mlxlogscore=879 phishscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005060088
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue,  5 May 2020 20:15:44 -0400
-Jared Rossi <jrossi@linux.ibm.com> wrote:
+Paolo,
+a fix for kvm/master.
 
-> Remove the explicit prefetch check when using vfio-ccw devices.
-> This check does not trigger in practice as all Linux channel programs
-> are intended to use prefetch.
-> 
-> It is expected that all ORBs issued by Linux will request prefetch.
-> Although non-prefetching ORBs are not rejected, they will prefetch
-> nonetheless. A warning is issued up to once per 5 seconds when a
-> forced prefetch occurs.
-> 
-> A non-prefetch ORB does not necessarily result in an error, however
-> frequent encounters with non-prefetch ORBs indicate that channel
-> programs are being executed in a way that is inconsistent with what
-> the guest is requesting. While there is currently no known case of an
-> error caused by forced prefetch, it is possible in theory that forced
-> prefetch could result in an error if applied to a channel program that
-> is dependent on non-prefetch.
-> 
-> Signed-off-by: Jared Rossi <jrossi@linux.ibm.com>
-> ---
->  Documentation/s390/vfio-ccw.rst |  6 ++++++
->  drivers/s390/cio/vfio_ccw_cp.c  | 19 ++++++++++++-------
->  2 files changed, 18 insertions(+), 7 deletions(-)
-> 
+The following changes since commit 2a173ec993baa6a97e7b0fb89240200a88d90746:
 
-(...)
+  MAINTAINERS: add a reviewer for KVM/s390 (2020-04-20 11:24:00 +0200)
 
-> @@ -625,23 +626,27 @@ static int ccwchain_fetch_one(struct ccwchain *chain,
->   * the target channel program from @orb->cmd.iova to the new ccwchain(s).
->   *
->   * Limitations:
-> - * 1. Supports only prefetch enabled mode.
-> - * 2. Supports idal(c64) ccw chaining.
-> - * 3. Supports 4k idaw.
-> + * 1. Supports idal(c64) ccw chaining.
-> + * 2. Supports 4k idaw.
->   *
->   * Returns:
->   *   %0 on success and a negative error value on failure.
->   */
->  int cp_init(struct channel_program *cp, struct device *mdev, union orb *orb)
->  {
-> +	static DEFINE_RATELIMIT_STATE(ratelimit_state, 5 * HZ, 1);
->  	int ret;
->  
->  	/*
-> -	 * XXX:
-> -	 * Only support prefetch enable mode now.
-> +	 * We only support prefetching the channel program. We assume all channel
-> +	 * programs executed by supported guests (i.e. Linux) likewise support
-> +	 * prefetching. Even if prefetching is not specified the channel program
-> +	 * is still executed using prefetch. Executing a channel program that
-> +	 * does not specify prefetching will typically not cause an error, but a
-> +	 * warning is issued to help identify the problem if something does break.
->  	 */
-> -	if (!orb->cmd.pfch)
-> -		return -EOPNOTSUPP;
+are available in the Git repository at:
 
-/* custom ratelimiting to avoid flood during boot */
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.7-3
 
-(to avoid people stumbling over this)
+for you to fetch changes up to 5615e74f48dcc982655543e979b6c3f3f877e6f6:
 
-> +	if (!orb->cmd.pfch && __ratelimit(&ratelimit_state))
-> +		dev_warn(mdev, "executing channel program with prefetch, but prefetch isn't specified");
+  KVM: s390: Remove false WARN_ON_ONCE for the PQAP instruction (2020-05-05 11:15:05 +0200)
 
-hmm... what about
+----------------------------------------------------------------
+KVM: s390: Fix for running nested uner z/VM
 
-"prefetching channel program even though prefetch not specified in orb"?
+There are circumstances when running nested under z/VM that would trigger a
+WARN_ON_ONCE. Remove the WARN_ON_ONCE. Long term we certainly want to make this
+code more robust and flexible, but just returning instead of WARNING makes
+guest bootable again.
 
->  
->  	INIT_LIST_HEAD(&cp->ccwchain_list);
->  	memcpy(&cp->orb, orb, sizeof(*orb));
+----------------------------------------------------------------
+Christian Borntraeger (1):
+      KVM: s390: Remove false WARN_ON_ONCE for the PQAP instruction
 
-(...)
-
-Apart from the bikeshedding, looks sane to me; but would like more
-opinions.
-
+ arch/s390/kvm/priv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
