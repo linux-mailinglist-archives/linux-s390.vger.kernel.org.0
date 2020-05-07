@@ -2,123 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22FD91C8AB8
-	for <lists+linux-s390@lfdr.de>; Thu,  7 May 2020 14:28:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 739F41C8AC5
+	for <lists+linux-s390@lfdr.de>; Thu,  7 May 2020 14:30:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbgEGM2A (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 7 May 2020 08:28:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7504 "EHLO
+        id S1726074AbgEGMam convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Thu, 7 May 2020 08:30:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49228 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725923AbgEGM17 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 May 2020 08:27:59 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047C422X113559;
-        Thu, 7 May 2020 08:27:51 -0400
+        by vger.kernel.org with ESMTP id S1725903AbgEGMam (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 May 2020 08:30:42 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047C2Yxv117643;
+        Thu, 7 May 2020 08:30:41 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4vabmgu-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30s1t08jcj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 08:27:50 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 047C6Vwx121760;
-        Thu, 7 May 2020 08:27:50 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4vabmfv-1
+        Thu, 07 May 2020 08:30:41 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 047CS7Be018829;
+        Thu, 7 May 2020 08:30:40 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30s1t08jbb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 08:27:50 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 047CKEA1028886;
-        Thu, 7 May 2020 12:27:48 GMT
+        Thu, 07 May 2020 08:30:40 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 047CUclj011733;
+        Thu, 7 May 2020 12:30:38 GMT
 Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma02fra.de.ibm.com with ESMTP id 30s0g5cmh7-1
+        by ppma04fra.de.ibm.com with ESMTP id 30s0g64k56-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 12:27:48 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 047CRk9f56295540
+        Thu, 07 May 2020 12:30:38 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 047CUZhY34209798
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 May 2020 12:27:46 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18626AE056;
-        Thu,  7 May 2020 12:27:46 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A3003AE051;
-        Thu,  7 May 2020 12:27:45 +0000 (GMT)
-Received: from thinkpad (unknown [9.145.63.153])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 May 2020 12:27:45 +0000 (GMT)
-Date:   Thu, 7 May 2020 14:27:44 +0200
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>, linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Thu, 7 May 2020 12:30:35 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6625811C052;
+        Thu,  7 May 2020 12:30:35 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7EC611C050;
+        Thu,  7 May 2020 12:30:34 +0000 (GMT)
+Received: from marcibm (unknown [9.145.33.209])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  7 May 2020 12:30:34 +0000 (GMT)
+From:   Marc Hartmayer <mhartmay@linux.ibm.com>
+To:     Janosch Frank <frankja@linux.ibm.com>,
+        Marc Hartmayer <mhartmay@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     Thomas Huth <thuth@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH v4 06/11] s390/module: Use s390_kernel_write() for late
- relocations
-Message-ID: <20200507142744.05271ac0@thinkpad>
-In-Reply-To: <nycvar.YFH.7.76.2005071159490.25812@cbobk.fhfr.pm>
-References: <cover.1588173720.git.jpoimboe@redhat.com>
-        <4710f82c960ff5f8b0dd7dba6aafde5bea275cfa.1588173720.git.jpoimboe@redhat.com>
-        <nycvar.YFH.7.76.2005071159490.25812@cbobk.fhfr.pm>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        linux-s390@vger.kernel.org
+Subject: Re: [kvm-unit-tests RFC] s390x: Add Protected VM support
+In-Reply-To: <ad0d5c9d-bde2-2143-0440-d47d6e28bb29@linux.ibm.com>
+References: <20200506124636.21876-1-mhartmay@linux.ibm.com> <ad0d5c9d-bde2-2143-0440-d47d6e28bb29@linux.ibm.com>
+Date:   Thu, 07 May 2020 14:30:32 +0200
+Message-ID: <877dxo6i6v.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
  definitions=2020-05-07_06:2020-05-07,2020-05-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- suspectscore=0 adultscore=0 clxscore=1011 impostorscore=0
- lowpriorityscore=0 bulkscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 phishscore=0 adultscore=0
+ impostorscore=0 mlxlogscore=999 bulkscore=0 clxscore=1015 suspectscore=1
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2005070094
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 7 May 2020 12:00:13 +0200 (CEST)
-Jiri Kosina <jikos@kernel.org> wrote:
+On Wed, May 06, 2020 at 04:03 PM +0200, Janosch Frank <frankja@linux.ibm.com> wrote:
+> On 5/6/20 2:46 PM, Marc Hartmayer wrote:
+>> Add support for Protected Virtual Machine (PVM) tests. For starting a
+>> PVM guest we must be able to generate a PVM image by using the
+>> `genprotimg` tool from the s390-tools collection. This requires the
+>> ability to pass a machine-specific host-key document, so the option
+>> `--host-key-document` is added to the configure script.
+>> 
+>> Signed-off-by: Marc Hartmayer <mhartmay@linux.ibm.com>
 
-> On Wed, 29 Apr 2020, Josh Poimboeuf wrote:
-> 
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > 
-> > Because of late module patching, a livepatch module needs to be able to
-> > apply some of its relocations well after it has been loaded.  Instead of
-> > playing games with module_{dis,en}able_ro(), use existing text poking
-> > mechanisms to apply relocations after module loading.
-> > 
-> > So far only x86, s390 and Power have HAVE_LIVEPATCH but only the first
-> > two also have STRICT_MODULE_RWX.
-> > 
-> > This will allow removal of the last module_disable_ro() usage in
-> > livepatch.  The ultimate goal is to completely disallow making
-> > executable mappings writable.
-> > 
-> > [ jpoimboe: Split up patches.  Use mod state to determine whether
-> > 	    memcpy() can be used.  Test and add fixes. ]
-> > 
-> > Cc: linux-s390@vger.kernel.org
-> > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> > Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> > Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-> > Acked-by: Miroslav Benes <mbenes@suse.cz>
-> 
-> Could we please get an Ack / Reviewed-by: for this patch from s390 folks?
-> 
-> Thanks,
-> 
+[…snip…]
 
-Looks pretty straightforward, and using s390_kernel_write() is OK, so
+>>  [intercept]
+>>  file = intercept.elf
+>> +pv_support = 1
+>
+> So, let's do this discussion once more:
+> Why would we need a opt-in for something which works on all our current
+> tests? I'd much rather have a opt-out or just a bail-out when running
+> the test like I already implemented for the storage key related
+> tests...
+>
+> I don't see any benefit for this right now other than forcing me to add
+> another line to this file that was not needed before..
+>
 
-Acked-by: Gerald Schaefer <gerald.schaefer@de.ibm.com> # s390
+Okay. So shall I add an option ’pv_not_supported’? Or simply assume that
+the actual test cases will handle it?
+
+-- 
+Kind regards / Beste Grüße
+   Marc Hartmayer
+
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Gregor Pillen 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen
+Registergericht: Amtsgericht Stuttgart, HRB 243294
