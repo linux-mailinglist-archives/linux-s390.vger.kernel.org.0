@@ -2,70 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF9321C85ED
-	for <lists+linux-s390@lfdr.de>; Thu,  7 May 2020 11:39:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B48C1C8649
+	for <lists+linux-s390@lfdr.de>; Thu,  7 May 2020 12:01:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbgEGJjO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 7 May 2020 05:39:14 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:3885 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725809AbgEGJjO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 7 May 2020 05:39:14 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 337F46E45F027E20161D;
-        Thu,  7 May 2020 17:39:12 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 7 May 2020 17:39:05 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
+        id S1725910AbgEGKAk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 7 May 2020 06:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38930 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726222AbgEGKAS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 7 May 2020 06:00:18 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A814C21473;
+        Thu,  7 May 2020 10:00:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1588845617;
+        bh=bcDuPlK5Eisv/i5AZHvazLLY9XdRx5lz+/uXpfp9JV0=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=JjsIhurgsHOjFr9qWqQvkxxcy4ipTQLatYA569lhQObBh7lN947EJYsDjpAkEAPIa
+         DEd0T3Jgb+mzWPee30GaH8plLJnVLwybi9eLGgyaqYjQlqzle0e8UabNznG975H/3X
+         3xHy2ae0ORM+laxQcVbParXO5zgCRycV6E8D8dpM=
+Date:   Thu, 7 May 2020 12:00:13 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>, linux-s390@vger.kernel.org,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>, <linux-s390@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH -next] s390/ism: fix error return code in ism_probe()
-Date:   Thu, 7 May 2020 09:43:07 +0000
-Message-ID: <20200507094307.14102-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH v4 06/11] s390/module: Use s390_kernel_write() for late
+ relocations
+In-Reply-To: <4710f82c960ff5f8b0dd7dba6aafde5bea275cfa.1588173720.git.jpoimboe@redhat.com>
+Message-ID: <nycvar.YFH.7.76.2005071159490.25812@cbobk.fhfr.pm>
+References: <cover.1588173720.git.jpoimboe@redhat.com> <4710f82c960ff5f8b0dd7dba6aafde5bea275cfa.1588173720.git.jpoimboe@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Fix to return negative error code -ENOMEM from the smcd_alloc_dev()
-error handling case instead of 0, as done elsewhere in this function.
+On Wed, 29 Apr 2020, Josh Poimboeuf wrote:
 
-Fixes: 684b89bc39ce ("s390/ism: add device driver for internal shared memory")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/s390/net/ism_drv.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> From: Peter Zijlstra <peterz@infradead.org>
+> 
+> Because of late module patching, a livepatch module needs to be able to
+> apply some of its relocations well after it has been loaded.  Instead of
+> playing games with module_{dis,en}able_ro(), use existing text poking
+> mechanisms to apply relocations after module loading.
+> 
+> So far only x86, s390 and Power have HAVE_LIVEPATCH but only the first
+> two also have STRICT_MODULE_RWX.
+> 
+> This will allow removal of the last module_disable_ro() usage in
+> livepatch.  The ultimate goal is to completely disallow making
+> executable mappings writable.
+> 
+> [ jpoimboe: Split up patches.  Use mod state to determine whether
+> 	    memcpy() can be used.  Test and add fixes. ]
+> 
+> Cc: linux-s390@vger.kernel.org
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
+> Acked-by: Miroslav Benes <mbenes@suse.cz>
 
-diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
-index c75112ee7b97..c7fade836d83 100644
---- a/drivers/s390/net/ism_drv.c
-+++ b/drivers/s390/net/ism_drv.c
-@@ -521,8 +521,10 @@ static int ism_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 
- 	ism->smcd = smcd_alloc_dev(&pdev->dev, dev_name(&pdev->dev), &ism_ops,
- 				   ISM_NR_DMBS);
--	if (!ism->smcd)
-+	if (!ism->smcd) {
-+		ret = -ENOMEM;
- 		goto err_resource;
-+	}
- 
- 	ism->smcd->priv = ism;
- 	ret = ism_dev_init(ism);
+Could we please get an Ack / Reviewed-by: for this patch from s390 folks?
 
+Thanks,
 
+-- 
+Jiri Kosina
+SUSE Labs
 
