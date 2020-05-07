@@ -2,104 +2,221 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 510391C95DC
-	for <lists+linux-s390@lfdr.de>; Thu,  7 May 2020 18:02:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 209D41C9833
+	for <lists+linux-s390@lfdr.de>; Thu,  7 May 2020 19:46:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgEGQCX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 7 May 2020 12:02:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32942 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726029AbgEGQCX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 May 2020 12:02:23 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047G125h092262;
-        Thu, 7 May 2020 12:02:06 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4gx89nu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 12:02:03 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 047FVgvZ092738;
-        Thu, 7 May 2020 12:01:59 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4gx89ex-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 12:01:59 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 047G0ut7017669;
-        Thu, 7 May 2020 16:01:48 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 30s0g5upmq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 May 2020 16:01:48 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 047G1kEX66781672
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 May 2020 16:01:46 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3144D42041;
-        Thu,  7 May 2020 16:01:46 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D10E84204D;
-        Thu,  7 May 2020 16:01:45 +0000 (GMT)
-Received: from thinkpad (unknown [9.145.19.24])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 May 2020 16:01:45 +0000 (GMT)
-Date:   Thu, 7 May 2020 18:01:44 +0200
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH v4 05/11] s390: Change s390_kernel_write() return type
- to match memcpy()
-Message-ID: <20200507180144.165a6edf@thinkpad>
-In-Reply-To: <nycvar.YFH.7.76.2005071534170.25812@cbobk.fhfr.pm>
-References: <cover.1588173720.git.jpoimboe@redhat.com>
-        <be5119b30920d2da6fca3f6d2b1aca5712a2fd30.1588173720.git.jpoimboe@redhat.com>
-        <nycvar.YFH.7.76.2005071534170.25812@cbobk.fhfr.pm>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1728073AbgEGRqT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 7 May 2020 13:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726531AbgEGRqS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 May 2020 13:46:18 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83D46C05BD0A
+        for <linux-s390@vger.kernel.org>; Thu,  7 May 2020 10:46:18 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id y26so2227732ioj.2
+        for <linux-s390@vger.kernel.org>; Thu, 07 May 2020 10:46:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yU0mJ28GxeMYjUBMEveE72PctswqptxZPEqLuEZt3cA=;
+        b=vnd3Wz+k5EBZmosgqi5KKkGOlJPJfOp4+cC5rwQ5WKpxRuQIpmmoJ3cc9pg33/Ra2g
+         /q3iGdwk0pNt0z7FaQrx4sYZVKT6xvn6L11gFpzroAtPAbaIaFOaFA33AOzmsY2oJVzE
+         jtgyAMHmQRTny/Ymt7q8IJQ7lmehM/dp2fOPtkiEAf4fIS+TJ1gOCEXPyqVc+EempRvT
+         LnIlcIIg3aPKzbfL50LWiVOlU2fXt/KiLSoS1PkVzECJlOLjp7YUx+z81+MOMhjkymjK
+         17ES11qP77zrlhR4/OPv4Jsjafu984eSlgI/TG6K8fqacWkVukhDDXeHg0UV09ujnOXR
+         8eVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yU0mJ28GxeMYjUBMEveE72PctswqptxZPEqLuEZt3cA=;
+        b=qmzC63JbTjHO8XAJnlwavc56KKjgChjsr4vD401iViLsbhlPhqcMzNO9ngLLzEUapk
+         +6EDStkkInbe8xTj2ERm3q9wlfbGTXLWLZR15A8FG/bdw6GzSs/jgnc42NNbnvyLYTOk
+         hIf4nQzcOhk3nDhpTriTjsl4t8WrmLGI232pJwOaQ8DU71/kgQX84ZoQ0NMMqkRBAYax
+         kmF5ZkuNtNVJ9+RKRFoH4B7VJIBnIWTJg6/zI8EYp9xAZ1SahCwsSOECDBcEv0hQuwOF
+         liYm7X63arAfEkFLe3V5iaA/gr3xC83wXbVNbo/jogS7cYDUTnPDUuRzbJiI/af1uJI9
+         d5Mw==
+X-Gm-Message-State: AGi0PuZo9chNRm/0BSaP4SFyAF2PdXvhM655oni6XSEcGy7zEF8UZsq8
+        EzDplw+UW76TPhRFA6gwwj/OwjEo/NgsAF/ijcKM
+X-Google-Smtp-Source: APiQypKtjV9RP7CzUz6PwlgUeogcwCqPXHQgs82XapWkRetj+C9fCnc4inT+4h675n5xp5ipP2PRJql00+jL03kLjws=
+X-Received: by 2002:a6b:c9cc:: with SMTP id z195mr2514506iof.164.1588873577069;
+ Thu, 07 May 2020 10:46:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-07_09:2020-05-07,2020-05-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 mlxscore=0
- priorityscore=1501 malwarescore=0 phishscore=0 spamscore=0 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005070123
+References: <20200504110344.17560-1-eesposit@redhat.com>
+In-Reply-To: <20200504110344.17560-1-eesposit@redhat.com>
+From:   Jonathan Adams <jwadams@google.com>
+Date:   Thu, 7 May 2020 10:45:40 -0700
+Message-ID: <CA+VK+GN=iDhDV2ZDJbBsxrjZ3Qoyotk_L0DvsbwDVvqrpFZ8fQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
+ kernel statistics
+To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 7 May 2020 15:36:48 +0200 (CEST)
-Jiri Kosina <jikos@kernel.org> wrote:
+On Mon, May 4, 2020 at 4:05 AM Emanuele Giuseppe Esposito
+<eesposit@redhat.com> wrote:
+...
+> Statsfs offers a generic and stable API, allowing any kind of
+> directory/file organization and supporting multiple kind of aggregations
+> (not only sum, but also average, max, min and count_zero) and data types
+> (all unsigned and signed types plus boolean). The implementation, which i=
+s
+> a generalization of KVM=E2=80=99s debugfs statistics code, takes care of =
+gathering
+> and displaying information at run time; users only need to specify the
+> values to be included in each source.
+>
+> Statsfs would also be a different mountpoint from debugfs, and would not
+> suffer from limited access due to the security lock down patches. Its mai=
+n
+> function is to display each statistics as a file in the desired folder
+> hierarchy defined through the API. Statsfs files can be read, and possibl=
+y
+> cleared if their file mode allows it.
+>
+> Statsfs has two main components: the public API defined by
+> include/linux/statsfs.h, and the virtual file system which should end up
+> in /sys/kernel/stats.
 
-> On Wed, 29 Apr 2020, Josh Poimboeuf wrote:
-> 
-> > s390_kernel_write()'s function type is almost identical to memcpy().
-> > Change its return type to "void *" so they can be used interchangeably.
-> > 
-> > Cc: linux-s390@vger.kernel.org
-> > Cc: heiko.carstens@de.ibm.com
-> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-> > Acked-by: Miroslav Benes <mbenes@suse.cz>
-> 
-> Also for this one -- s390 folks, could you please provide your Ack for 
-> taking things through livepatching.git as part of this series?
-> 
-> Thanks.
-> 
+This is good work.  As David Rientjes mentioned, I'm currently investigatin=
+g
+a similar project, based on a google-internal debugfs-based FS we call
+"metricfs".  It's
+designed in a slightly different fashion than statsfs here is, and the
+statistics exported are
+mostly fed into our OpenTelemetry-like system.  We're motivated by
+wanting an upstreamed solution, so that we can upstream the metrics we
+create that are of general interest, and lower the overall rebasing
+burden for our tree.
 
-Ah, forgot about that one, sorry. Also looks good.
+Some feedback on your design as proposed:
 
-Acked-by: Gerald Schaefer <gerald.schaefer@de.ibm.com> # s390
+ - the 8/16/32/64 signed/unsigned integers seems like a wart, and the
+built-in support to grab any offset from a structure doesn't seem like
+much of an advantage.  A simpler interface would be to just support an
+"integer" (possibly signed/unsigned) type, which is always 64-bit, and
+allow the caller to provide a function pointer to retrieve the value,
+with one or two void *s cbargs.  Then the framework could provide an
+offset-based callback (or callbacks) similar to the existing
+functionality, and a similar one for per-CPU based statistics.  A
+second "clear" callback could be optionally provided to allow for
+statistics to be cleared, as in your current proposal.
+
+ - A callback-style interface also allows for a lot more flexibility
+in sourcing values, and doesn't lock your callers into one way of
+storing them.  You would, of course, have to be clear about locking
+rules etc. for the callbacks.
+
+ - Beyond the statistic's type, one *very* useful piece of metadata
+for telemetry tools is knowing whether a given statistic is
+"cumulative" (an unsigned counter which is only ever increased), as
+opposed to a floating value (like "amount of memory used").
+
+I agree with the folks asking for a binary interface to read
+statistics, but I also agree that it can be added on later.  I'm more
+concerned with getting the statistics model and capabilities right
+from the beginning, because those are harder to adjust later.
+
+Would you be open to collaborating on the statsfs design?  As
+background for this discussion, here are some details of how our
+metricfs implementation approaches statistics:
+
+1. Each metricfs metric can have one or two string or integer "keys".
+If these exist, they expand the metric from a single value into a
+multi-dimensional table. For example, we use this to report a hash
+table we keep of functions calling "WARN()", in a 'warnings'
+statistic:
+
+% cat .../warnings/values
+x86_pmu_stop 1
+%
+
+Indicates that the x86_pmu_stop() function has had a WARN() fire once
+since the system was booted.  If multiple functions have fired
+WARN()s, they are listed in this table with their own counts. [1]  We
+also use these to report per-CPU counters on a CPU-by-CPU basis:
+
+% cat .../irq_x86/NMI/values
+0 42
+1 18
+... one line per cpu
+%
+
+2.  We also export some metadata about each statistic.  For example,
+the metadata for the NMI counter above looks like:
+
+% cat .../NMI/annotations
+DESCRIPTION Non-maskable\ interrupts
+CUMULATIVE
+% cat .../NMI/fields
+cpu value
+int int
+%
+
+(Describing the statistic, marking it as "cumulative", and saying the
+fields are "cpu" and "value", both ints).  The metadata doesn't change
+much, so having separate files allows the user-space agent to read
+them once and then the values multiple times.
+
+3. We have a (very few) statistics where the value itself is a string,
+usually for device statuses.
+
+For our use cases, we generally don't both output a statistic and it's
+aggregation from the kernel; either we sum up things in the kernel
+(e.g. over a bunch of per-cpu or per-memcg counters) and only have the
+result statistic, or we expect user-space to sum up the data if it's
+interested.  The tabular form makes it pretty easy to do so (i.e. you
+can use awk(1) to sum all of the per-cpu NMI counters).  We don't
+generally reset statistics, except as a side effect of removing a
+device.
+
+Thanks again for the patchset, and for pointing out that KVM also
+needs statistics sent out; it's great that there is interest in this.
+
+Cheers,
+- jonathan
+
+P.S.  I also have a couple (non-critical) high-level notes:
+  * It's not clear what tree your patches are against, or their
+dependencies; I was able to get them to apply to linux-next master
+with a little massaging, but then they failed to compile because
+they're built on top of your "libfs: group and simplify linux fs code"
+patch series you sent out in late april.  Including a git link or at
+least a baseline tree and a list of the patch series you rely upon is
+helpful for anyone wanting to try out your changes.
+
+  * The main reason I was trying to try out your patches was to get a
+sense of the set of directories and things the KVM example generates;
+while it's apparently the same as the existing KVM debugfs tree, it's
+useful to know how this ends up looking on a real system, and I'm not
+familiar with the KVM stats.  Since this patch is intended slightly
+more broadly than just KVM, it might have been useful to include
+sample output for those not familiar with how things are today.
+
+
+[1]    We also use this to export various network/storage statistics
+on a per-device basis.  e.g. network bytes received counts:
+
+% cat .../rx_bytes/values
+lo 501360681
+eth0 1457631256
+...
+%
