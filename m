@@ -2,118 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AF9F1C8C7B
-	for <lists+linux-s390@lfdr.de>; Thu,  7 May 2020 15:36:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46A841C8CB3
+	for <lists+linux-s390@lfdr.de>; Thu,  7 May 2020 15:41:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726069AbgEGNgw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 7 May 2020 09:36:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725879AbgEGNgw (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 7 May 2020 09:36:52 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F100B20643;
-        Thu,  7 May 2020 13:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1588858611;
-        bh=LzQDOyhUPzaN/QEmH/5Zc/cFyUE1+mfVuXz0rvZ8LqA=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=eStuCrUmYvOzkkb/b4gwo9EssNgSWMvVXNQfMmAmE3/4XYZlvs7S40Q9uCK3FyII/
-         ZUug+OReaOaXNuqa34GONmSGK97EHYDBrdlFU/G7dNy+eRUj4oFGLGIdAGWICWyr8+
-         a4mkZ7utRJPgqiGk8/ZqsQ1Uz8FrYTdz2jtWB8y8=
-Date:   Thu, 7 May 2020 15:36:48 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH v4 05/11] s390: Change s390_kernel_write() return type
- to match memcpy()
-In-Reply-To: <be5119b30920d2da6fca3f6d2b1aca5712a2fd30.1588173720.git.jpoimboe@redhat.com>
-Message-ID: <nycvar.YFH.7.76.2005071534170.25812@cbobk.fhfr.pm>
-References: <cover.1588173720.git.jpoimboe@redhat.com> <be5119b30920d2da6fca3f6d2b1aca5712a2fd30.1588173720.git.jpoimboe@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1726320AbgEGNku convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Thu, 7 May 2020 09:40:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54980 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726900AbgEGNku (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 May 2020 09:40:50 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 047DeHWH160271;
+        Thu, 7 May 2020 09:40:48 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4r6g2kx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 09:40:48 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 047DebWY162527;
+        Thu, 7 May 2020 09:40:48 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30s4r6g2k6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 09:40:48 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 047DUJqQ009647;
+        Thu, 7 May 2020 13:40:46 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 30s0g5uebu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 May 2020 13:40:46 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 047DehI460228050
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 7 May 2020 13:40:43 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 73A2811C054;
+        Thu,  7 May 2020 13:40:43 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F357511C04A;
+        Thu,  7 May 2020 13:40:42 +0000 (GMT)
+Received: from marcibm (unknown [9.145.33.209])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  7 May 2020 13:40:42 +0000 (GMT)
+From:   Marc Hartmayer <mhartmay@linux.ibm.com>
+To:     Andrew Jones <drjones@redhat.com>,
+        Marc Hartmayer <mhartmay@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [kvm-unit-tests RFC] s390x: Add Protected VM support
+In-Reply-To: <20200506135016.ml3k73siokhltyl5@kamzik.brq.redhat.com>
+References: <20200506124636.21876-1-mhartmay@linux.ibm.com> <20200506135016.ml3k73siokhltyl5@kamzik.brq.redhat.com>
+Date:   Thu, 07 May 2020 15:40:39 +0200
+Message-ID: <87wo5n6ey0.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-07_08:2020-05-07,2020-05-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 malwarescore=0
+ impostorscore=0 bulkscore=0 suspectscore=1 adultscore=0 phishscore=0
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005070106
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 29 Apr 2020, Josh Poimboeuf wrote:
+On Wed, May 06, 2020 at 03:50 PM +0200, Andrew Jones <drjones@redhat.com> wrote:
+> On Wed, May 06, 2020 at 02:46:36PM +0200, Marc Hartmayer wrote:
+>> Add support for Protected Virtual Machine (PVM) tests. For starting a
+>> PVM guest we must be able to generate a PVM image by using the
+>> `genprotimg` tool from the s390-tools collection. This requires the
+>> ability to pass a machine-specific host-key document, so the option
+>> `--host-key-document` is added to the configure script.
+>> 
+>> Signed-off-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+>> ---
 
-> s390_kernel_write()'s function type is almost identical to memcpy().
-> Change its return type to "void *" so they can be used interchangeably.
-> 
-> Cc: linux-s390@vger.kernel.org
-> Cc: heiko.carstens@de.ibm.com
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-> Acked-by: Miroslav Benes <mbenes@suse.cz>
+[…snip…]
 
-Also for this one -- s390 folks, could you please provide your Ack for 
-taking things through livepatching.git as part of this series?
-
-Thanks.
-
-> ---
->  arch/s390/include/asm/uaccess.h | 2 +-
->  arch/s390/mm/maccess.c          | 9 ++++++---
->  2 files changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-> index a470f1fa9f2a..324438889fe1 100644
-> --- a/arch/s390/include/asm/uaccess.h
-> +++ b/arch/s390/include/asm/uaccess.h
-> @@ -276,6 +276,6 @@ static inline unsigned long __must_check clear_user(void __user *to, unsigned lo
->  }
->  
->  int copy_to_user_real(void __user *dest, void *src, unsigned long count);
-> -void s390_kernel_write(void *dst, const void *src, size_t size);
-> +void *s390_kernel_write(void *dst, const void *src, size_t size);
->  
->  #endif /* __S390_UACCESS_H */
-> diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
-> index de7ca4b6718f..22a0be655f27 100644
-> --- a/arch/s390/mm/maccess.c
-> +++ b/arch/s390/mm/maccess.c
-> @@ -55,19 +55,22 @@ static notrace long s390_kernel_write_odd(void *dst, const void *src, size_t siz
->   */
->  static DEFINE_SPINLOCK(s390_kernel_write_lock);
->  
-> -void notrace s390_kernel_write(void *dst, const void *src, size_t size)
-> +notrace void *s390_kernel_write(void *dst, const void *src, size_t size)
->  {
-> +	void *tmp = dst;
->  	unsigned long flags;
->  	long copied;
->  
->  	spin_lock_irqsave(&s390_kernel_write_lock, flags);
->  	while (size) {
-> -		copied = s390_kernel_write_odd(dst, src, size);
-> -		dst += copied;
-> +		copied = s390_kernel_write_odd(tmp, src, size);
-> +		tmp += copied;
->  		src += copied;
->  		size -= copied;
->  	}
->  	spin_unlock_irqrestore(&s390_kernel_write_lock, flags);
 > +
-> +	return dst;
->  }
->  
->  static int __no_sanitize_address __memcpy_real(void *dest, void *src, size_t count)
-> -- 
-> 2.21.1
-> 
+>>  	"$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+>> +	if [ "${pv_support}" == 1 ]; then
+>> +		pv_cmd "$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+>> +	fi
+>>  	exec {fd}<&-
+>>  }
+>> -- 
+>> 2.17.0
+>>
+>
+> I don't think making the changes to scripts/common.bash will work for
+> standalone tests. Why not do this stuff in s390x/run instead?
 
+Okay, I’ve looked into the code, and the reason for this approach is
+that I want to treat the PVM and the “normal” test case as two separate
+test cases, but using the same test configuration. I don’t see how I can
+achieve this by editing s390x/run and for the standalone case.
+
+Maybe this approach is already broken and I should simply add the PVM
+testcases as extra test cases to the unittest.cfg - but this would
+result in duplicated code in the configuration file.
+
+> Also,
+> do you need the pv_support[ed] parameter? You could just do a
+> [ -f "${kernel%.elf}.pv.img" ] to decide if you should run again
+> with PV, right?
+>
+> Thanks,
+> drew
+>
 -- 
-Jiri Kosina
-SUSE Labs
+Kind regards / Beste Grüße
+   Marc Hartmayer
 
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Gregor Pillen 
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen
+Registergericht: Amtsgericht Stuttgart, HRB 243294
