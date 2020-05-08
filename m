@@ -2,84 +2,168 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F38551CA882
-	for <lists+linux-s390@lfdr.de>; Fri,  8 May 2020 12:47:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C81C51CA8CA
+	for <lists+linux-s390@lfdr.de>; Fri,  8 May 2020 12:55:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgEHKrf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 8 May 2020 06:47:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38874 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726797AbgEHKre (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 8 May 2020 06:47:34 -0400
+        id S1726325AbgEHKzu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 8 May 2020 06:55:50 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52044 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726091AbgEHKzt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 8 May 2020 06:55:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1588934852;
+        s=mimecast20190719; t=1588935348;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=SEDOfW/qGS5s4maaqBjklYq821EFGHUya19S5KaYYO0=;
-        b=MCimMweN4YB4XbNtXceo93h1e4E9PghNB1orckyqBWutqCfO8gIWmeusLxubSK1Ir/ZoTQ
-        0iqJXPmij35nwd65Fn6LWVFYHJdgHowUcWB2bB1wYQxVdRWMarDMUx37F+b1VMgYbJFL+Y
-        sbb5D6TKInKLEOTZ3cZraDQcun5R6Sg=
+        bh=YUpP2FTjMjhc6xKawN9xJBQkrgRCnohCffdCugnXa6w=;
+        b=VYjqv4ag2c3yRYsOZjZrM/WKU/a2+ul2+hgHHjdNqw/R7vJ76tS3I59+8YIy/Co3C3O8te
+        ew0H0DTjxocAMd8KaobkWVg6xHymp4aKTgwTxvvC75aLdAC/1HtytAmG0gX2mlHcXA+cUu
+        bRIrKFIXgeGffZsAbkAwZGN1j+Xbb2g=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-484-dJ3cNptYMiC7WzVScgx75w-1; Fri, 08 May 2020 06:47:30 -0400
-X-MC-Unique: dJ3cNptYMiC7WzVScgx75w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-322-mBxAyCQ1OL6qYQpErLk-3w-1; Fri, 08 May 2020 06:55:46 -0400
+X-MC-Unique: mBxAyCQ1OL6qYQpErLk-3w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A9E680058A;
-        Fri,  8 May 2020 10:47:29 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41EED80183C;
+        Fri,  8 May 2020 10:55:45 +0000 (UTC)
 Received: from gondolin (ovpn-112-144.ams2.redhat.com [10.36.112.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 12DD510013BD;
-        Fri,  8 May 2020 10:47:27 +0000 (UTC)
-Date:   Fri, 8 May 2020 12:47:25 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2EA4F690FC;
+        Fri,  8 May 2020 10:55:44 +0000 (UTC)
+Date:   Fri, 8 May 2020 12:55:41 +0200
 From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jared Rossi <jrossi@linux.ibm.com>
-Cc:     Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] vfio-ccw: Enable transparent CCW IPL from DASD
-Message-ID: <20200508124725.58fb985a.cohuck@redhat.com>
-In-Reply-To: <20200506212440.31323-2-jrossi@linux.ibm.com>
-References: <20200506212440.31323-1-jrossi@linux.ibm.com>
-        <20200506212440.31323-2-jrossi@linux.ibm.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH] vfio-ccw: document possible errors
+Message-ID: <20200508125541.72adc626.cohuck@redhat.com>
+In-Reply-To: <55932365-3d36-1629-5d65-06c71e8231f9@linux.ibm.com>
+References: <20200407111605.1795-1-cohuck@redhat.com>
+        <55932365-3d36-1629-5d65-06c71e8231f9@linux.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed,  6 May 2020 17:24:40 -0400
-Jared Rossi <jrossi@linux.ibm.com> wrote:
+On Fri, 17 Apr 2020 12:33:18 -0400
+Eric Farman <farman@linux.ibm.com> wrote:
 
-> Remove the explicit prefetch check when using vfio-ccw devices.
-> This check does not trigger in practice as all Linux channel programs
-> are intended to use prefetch.
+> On 4/7/20 7:16 AM, Cornelia Huck wrote:
+> > Interacting with the I/O and the async regions can yield a number
+> > of errors, which had been undocumented so far. These are part of
+> > the api, so remedy that.  
 > 
-> It is expected that all ORBs issued by Linux will request prefetch.
-> Although non-prefetching ORBs are not rejected, they will prefetch
-> nonetheless. A warning is issued up to once per 5 seconds when a
-> forced prefetch occurs.
-> 
-> A non-prefetch ORB does not necessarily result in an error, however
-> frequent encounters with non-prefetch ORBs indicate that channel
-> programs are being executed in a way that is inconsistent with what
-> the guest is requesting. While there is currently no known case of an
-> error caused by forced prefetch, it is possible in theory that forced
-> prefetch could result in an error if applied to a channel program that
-> is dependent on non-prefetch.
-> 
-> Signed-off-by: Jared Rossi <jrossi@linux.ibm.com>
-> ---
->  Documentation/s390/vfio-ccw.rst |  6 ++++++
->  drivers/s390/cio/vfio_ccw_cp.c  | 19 ++++++++++++-------
->  2 files changed, 18 insertions(+), 7 deletions(-)
-> 
+> (Makes a note to myself, to do the same for the schib/crw regions we're
+> adding for channel path handling.)
 
-Thanks, applied.
+Yes, please :) I plan to merge this today, so you can add a patch on
+top.
+
+> 
+> > 
+> > Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+> > ---
+> >  Documentation/s390/vfio-ccw.rst | 54 ++++++++++++++++++++++++++++++++-
+> >  1 file changed, 53 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/s390/vfio-ccw.rst b/Documentation/s390/vfio-ccw.rst
+> > index fca9c4f5bd9c..4538215a362c 100644
+> > --- a/Documentation/s390/vfio-ccw.rst
+> > +++ b/Documentation/s390/vfio-ccw.rst
+> > @@ -210,7 +210,36 @@ Subchannel.
+> >  
+> >  irb_area stores the I/O result.
+> >  
+> > -ret_code stores a return code for each access of the region.
+> > +ret_code stores a return code for each access of the region. The following
+> > +values may occur:
+> > +
+> > +``0``
+> > +  The operation was successful.
+> > +
+> > +``-EOPNOTSUPP``
+> > +  The orb specified transport mode or an unidentified IDAW format, did not
+> > +  specify prefetch mode, or the scsw specified a function other than the
+
+'did not specify prefetch mode' needs to be dropped now, will do so
+before queuing.
+
+> > +  start function.
+> > +
+> > +``-EIO``
+> > +  A request was issued while the device was not in a state ready to accept
+> > +  requests, or an internal error occurred.
+> > +
+> > +``-EBUSY``
+> > +  The subchannel was status pending or busy, or a request is already active.
+> > +
+> > +``-EAGAIN``
+> > +  A request was being processed, and the caller should retry.
+> > +
+> > +``-EACCES``
+> > +  The channel path(s) used for the I/O were found to be not operational.
+> > +
+> > +``-ENODEV``
+> > +  The device was found to be not operational.
+> > +
+> > +``-EINVAL``
+> > +  The orb specified a chain longer than 255 ccws, or an internal error
+> > +  occurred.
+> >  
+> >  This region is always available.  
+> 
+> Maybe move this little line up between the struct layout and "While
+> starting an I/O request, orb_area ..." instead of being lost way down here?
+
+Good idea, that also would match the documentation for the async region.
+
+> 
+> But other than that suggestion, everything looks fine.
+> 
+> Reviewed-by: Eric Farman <farman@linux.ibm.com>
+
+Thanks!
+
+> 
+> >  
+> > @@ -231,6 +260,29 @@ This region is exposed via region type VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD.
+> >  
+> >  Currently, CLEAR SUBCHANNEL and HALT SUBCHANNEL use this region.
+> >  
+> > +command specifies the command to be issued; ret_code stores a return code
+> > +for each access of the region. The following values may occur:
+> > +
+> > +``0``
+> > +  The operation was successful.
+> > +
+> > +``-ENODEV``
+> > +  The device was found to be not operational.
+> > +
+> > +``-EINVAL``
+> > +  A command other than halt or clear was specified.
+> > +
+> > +``-EIO``
+> > +  A request was issued while the device was not in a state ready to accept
+> > +  requests.
+> > +
+> > +``-EAGAIN``
+> > +  A request was being processed, and the caller should retry.
+> > +
+> > +``-EBUSY``
+> > +  The subchannel was status pending or busy while processing a halt request.
+> > +
+> > +
+> >  vfio-ccw operation details
+> >  --------------------------
+> >  
+> >   
+> 
 
