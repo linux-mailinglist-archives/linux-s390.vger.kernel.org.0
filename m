@@ -2,152 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F91A1CE55C
-	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 22:24:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0CDD1CE575
+	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 22:28:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731575AbgEKUYt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 May 2020 16:24:49 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51222 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728283AbgEKUYs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 11 May 2020 16:24:48 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04BKN1ae178275;
-        Mon, 11 May 2020 20:23:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Zo5Cza0n1Es3FSckgTZNHDduwVjYv8Se3/rnvi5K1+U=;
- b=zNA36/v3LiAoVOKNe46hByFJzcgmlm6fSXJxh2iNnyOiub80LYucHlnc0/E56KgILM9H
- IFRiKn4q0LUdaR2nYs6dCPMSq80mGCHofR6f2TqItyeoJMBmDZXvQ7v2tUhfVy9k1X36
- tcBZGa4jzU7DQvWfHUpO9TKxtWFGYZZ9nF7VsO1e0ZGnb9D9DoRmFfbUB6r4TRv4NYPv
- o37UJDnsiD3w8Clee8jwQnZrV85aEd6/M09htR49v5WSHMk/NB7F5FD5bkmsoKKY23Ji
- COyA88eG4SJcYvBMQXLI4Ajl98LrSZ6SUDDOJAn/OQQSjR8daR7AoTwaaFTFsvb7nqV0 BA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 30x3mbqayv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 May 2020 20:23:14 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04BKMUL6165379;
-        Mon, 11 May 2020 20:23:13 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 30xbgfkcvb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 May 2020 20:23:13 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04BKMsCT016911;
-        Mon, 11 May 2020 20:22:55 GMT
-Received: from [192.168.2.157] (/73.164.160.178)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 May 2020 13:22:53 -0700
-Subject: Re: [PATCH V3 3/3] mm/hugetlb: Define a generic fallback for
- arch_clear_hugepage_flags()
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588907271-11920-1-git-send-email-anshuman.khandual@arm.com>
- <1588907271-11920-4-git-send-email-anshuman.khandual@arm.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <cbccae27-ff79-5580-80be-0a9493d063ba@oracle.com>
-Date:   Mon, 11 May 2020 13:22:50 -0700
+        id S1731665AbgEKU2Q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 May 2020 16:28:16 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28366 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727873AbgEKU2Q (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 11 May 2020 16:28:16 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BKLH5o120224;
+        Mon, 11 May 2020 16:27:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ws44ww0d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 16:27:43 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04BKKjKm118909;
+        Mon, 11 May 2020 16:27:42 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ws44wvyd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 16:27:42 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04BKKtQu022427;
+        Mon, 11 May 2020 20:27:39 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 30wm55n28j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 20:27:39 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04BKRb0O48955522
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 May 2020 20:27:37 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F265052051;
+        Mon, 11 May 2020 20:27:36 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.10.222])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7AFF55204E;
+        Mon, 11 May 2020 20:27:36 +0000 (GMT)
+Subject: Re: [PATCH -next] s390: Remove two unused inline functions
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Sven Schnelle <svens@linux.ibm.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>, mingo@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200508140724.11324-1-yuehaibing@huawei.com>
+ <20200511060750.GA93884@tuxmaker.boeblingen.de.ibm.com>
+ <20200511161756.7586afe6@gandalf.local.home>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <cf344230-27b1-7302-36bb-55c25c6b5de4@de.ibm.com>
+Date:   Mon, 11 May 2020 22:27:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <1588907271-11920-4-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <20200511161756.7586afe6@gandalf.local.home>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=784
- spamscore=0 suspectscore=0 phishscore=0 bulkscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005110154
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 impostorscore=0
- mlxscore=0 suspectscore=0 bulkscore=0 mlxlogscore=817 phishscore=0
- malwarescore=0 lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005110154
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-11_09:2020-05-11,2020-05-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 spamscore=0 adultscore=0 phishscore=0 mlxscore=0
+ clxscore=1011 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2005110149
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 5/7/20 8:07 PM, Anshuman Khandual wrote:
-> There are multiple similar definitions for arch_clear_hugepage_flags() on
-> various platforms. Lets just add it's generic fallback definition for
-> platforms that do not override. This help reduce code duplication.
+On 11.05.20 22:17, Steven Rostedt wrote:
+> On Mon, 11 May 2020 08:07:51 +0200
+> Sven Schnelle <svens@linux.ibm.com> wrote:
 > 
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Fenghua Yu <fenghua.yu@intel.com>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: x86@kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-parisc@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-arch@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> Thanks for noticing, looks like i missed them.
+>>
+>> Acked-by: Sven Schnelle <svens@linux.ibm.com>
+> 
+> As this is s390 specific, will it be going through the s390 repo?
 
-Thanks!
-Removing duplicate code is good.
-
-Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
-
--- 
-Mike Kravetz
+Yes. 
+I will pick this up. Vasily will then take care of it.
