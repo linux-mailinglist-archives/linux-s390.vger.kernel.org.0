@@ -2,120 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CEC81CD19C
-	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 08:08:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A4BF1CD46E
+	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 11:05:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgEKGIe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 May 2020 02:08:34 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53932 "EHLO
+        id S1726071AbgEKJFy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 May 2020 05:05:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7392 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726661AbgEKGIe (ORCPT
+        by vger.kernel.org with ESMTP id S1725790AbgEKJFy (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 11 May 2020 02:08:34 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B63TDJ040248;
-        Mon, 11 May 2020 02:07:57 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ws5a0wg6-1
+        Mon, 11 May 2020 05:05:54 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B939Ot109199;
+        Mon, 11 May 2020 05:05:33 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30wsc2wc93-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 02:07:56 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04B63lxP041557;
-        Mon, 11 May 2020 02:07:56 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ws5a0wfk-1
+        Mon, 11 May 2020 05:05:33 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04B915f7029312;
+        Mon, 11 May 2020 09:05:31 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma02fra.de.ibm.com with ESMTP id 30wm559mfd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 02:07:56 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04B65JRE031811;
-        Mon, 11 May 2020 06:07:54 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 30wm55br2n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 06:07:54 +0000
+        Mon, 11 May 2020 09:05:31 +0000
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04B67pj464160134
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04B95S2B61079688
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 May 2020 06:07:51 GMT
+        Mon, 11 May 2020 09:05:28 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B32EB4C046;
-        Mon, 11 May 2020 06:07:51 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 5D5D74C052;
+        Mon, 11 May 2020 09:05:28 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 716124C059;
-        Mon, 11 May 2020 06:07:51 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Mon, 11 May 2020 06:07:51 +0000 (GMT)
-Date:   Mon, 11 May 2020 08:07:51 +0200
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     rostedt@goodmis.org, mingo@redhat.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] s390: Remove two unused inline functions
-Message-ID: <20200511060750.GA93884@tuxmaker.boeblingen.de.ibm.com>
-References: <20200508140724.11324-1-yuehaibing@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508140724.11324-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        by IMSVA (Postfix) with ESMTP id D6A0C4C044;
+        Mon, 11 May 2020 09:05:27 +0000 (GMT)
+Received: from sig-9-145-153-65.de.ibm.com (unknown [9.145.153.65])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 11 May 2020 09:05:27 +0000 (GMT)
+Message-ID: <2dbdf71e427a4b1df365412df34c773bc57528a9.camel@linux.vnet.ibm.com>
+Subject: Re: [PATCH -next] s390/cio: Remove unused inline
+ functionidset_sch_get_first
+From:   Vineeth Vijayan <vneethv@linux.vnet.ibm.com>
+To:     YueHaibing <yuehaibing@huawei.com>, vneethv@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, gustavo@embeddedor.com
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 11 May 2020 11:05:27 +0200
+In-Reply-To: <20200508140643.30540-1-yuehaibing@huawei.com>
+References: <20200508140643.30540-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-5.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-11_01:2020-05-08,2020-05-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
- priorityscore=1501 suspectscore=0 adultscore=0 impostorscore=0
- malwarescore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005110049
+ definitions=2020-05-11_03:2020-05-11,2020-05-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=843
+ impostorscore=0 adultscore=0 mlxscore=0 malwarescore=0 priorityscore=1501
+ spamscore=0 bulkscore=0 suspectscore=3 lowpriorityscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005110071
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi,
+Thank you.
+This patch will be part of the s390's next patch submission.
 
-On Fri, May 08, 2020 at 10:07:24PM +0800, YueHaibing wrote:
-> commit 657480d9c015 ("s390: support KPROBES_ON_FTRACE")
-> left behind this, remove it.
+Reviewed-by: Vineeth Vijayan <vneethv@linux.ibm.com>
+
+Regards,
+Vineeth
+
+
+On Fri, 2020-05-08 at 22:06 +0800, YueHaibing wrote:
+> commit 8ebd51a705c5 ("s390/cio: idset.c: remove some unused
+> functions")
+> left behind this, remove it
 > 
 > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  arch/s390/kernel/ftrace.c | 16 ----------------
->  1 file changed, 16 deletions(-)
+>  drivers/s390/cio/idset.c | 12 ------------
+>  1 file changed, 12 deletions(-)
 > 
-> diff --git a/arch/s390/kernel/ftrace.c b/arch/s390/kernel/ftrace.c
-> index 4cd9b1ada834..44e01dd1e624 100644
-> --- a/arch/s390/kernel/ftrace.c
-> +++ b/arch/s390/kernel/ftrace.c
-> @@ -72,22 +72,6 @@ static inline void ftrace_generate_orig_insn(struct ftrace_insn *insn)
->  #endif
+> diff --git a/drivers/s390/cio/idset.c b/drivers/s390/cio/idset.c
+> index 77d0ea7b381b..45f9c0736be4 100644
+> --- a/drivers/s390/cio/idset.c
+> +++ b/drivers/s390/cio/idset.c
+> @@ -59,18 +59,6 @@ static inline int idset_contains(struct idset *set,
+> int ssid, int id)
+>  	return test_bit(ssid * set->num_id + id, set->bitmap);
 >  }
 >  
-> -static inline void ftrace_generate_kprobe_nop_insn(struct ftrace_insn *insn)
+> -static inline int idset_get_first(struct idset *set, int *ssid, int
+> *id)
 > -{
-> -#ifdef CONFIG_KPROBES
-> -	insn->opc = BREAKPOINT_INSTRUCTION;
-> -	insn->disp = KPROBE_ON_FTRACE_NOP;
-> -#endif
+> -	int bitnum;
+> -
+> -	bitnum = find_first_bit(set->bitmap, set->num_ssid * set-
+> >num_id);
+> -	if (bitnum >= set->num_ssid * set->num_id)
+> -		return 0;
+> -	*ssid = bitnum / set->num_id;
+> -	*id = bitnum % set->num_id;
+> -	return 1;
 > -}
 > -
-> -static inline void ftrace_generate_kprobe_call_insn(struct ftrace_insn *insn)
-> -{
-> -#ifdef CONFIG_KPROBES
-> -	insn->opc = BREAKPOINT_INSTRUCTION;
-> -	insn->disp = KPROBE_ON_FTRACE_CALL;
-> -#endif
-> -}
-> -
->  int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
->  		       unsigned long addr)
+>  struct idset *idset_sch_new(void)
 >  {
-> -- 
-> 2.17.1
+>  	return idset_new(max_ssid + 1, __MAX_SUBCHANNEL + 1);
 
-Thanks for noticing, looks like i missed them.
-
-Acked-by: Sven Schnelle <svens@linux.ibm.com>
-
-Sven
