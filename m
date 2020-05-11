@@ -2,120 +2,291 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FD781CE07B
-	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 18:30:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12ADC1CE11E
+	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 19:03:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730048AbgEKQa4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 May 2020 12:30:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41052 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728556AbgEKQaz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 11 May 2020 12:30:55 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04BG35mO030805;
-        Mon, 11 May 2020 12:30:51 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ws5e2y9p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 12:30:51 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04BGUheg018599;
-        Mon, 11 May 2020 16:30:48 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04fra.de.ibm.com with ESMTP id 30wm55hwre-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 16:30:48 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04BGUjBw53215322
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 May 2020 16:30:45 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 752C3AE059;
-        Mon, 11 May 2020 16:30:45 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1D3ABAE051;
-        Mon, 11 May 2020 16:30:45 +0000 (GMT)
-Received: from linux.fritz.box (unknown [9.145.9.35])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 11 May 2020 16:30:45 +0000 (GMT)
-Subject: Re: [PATCH v3 3/3] s390/dasd: remove ioctl_by_bdev calls
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     axboe@kernel.dk, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com
-References: <20200508131455.55407-1-sth@linux.ibm.com>
- <20200508131455.55407-4-sth@linux.ibm.com> <20200508155342.GC4200@lst.de>
-From:   Stefan Haberland <sth@linux.ibm.com>
-Autocrypt: addr=sth@linux.ibm.com; keydata=
- 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
- cH4TNHyhiR0KAbxE8qKx3Jc=
-Message-ID: <6cd6788e-ce3d-7869-307a-9a6723f6eb79@linux.ibm.com>
-Date:   Mon, 11 May 2020 18:30:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1730840AbgEKRCx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 May 2020 13:02:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730066AbgEKRCw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 11 May 2020 13:02:52 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2188C061A0C
+        for <linux-s390@vger.kernel.org>; Mon, 11 May 2020 10:02:52 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id i19so10543082ioh.12
+        for <linux-s390@vger.kernel.org>; Mon, 11 May 2020 10:02:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v9CvyozKz45tnTJQ44+n4GCpZIz1GaPx/h3VjVloSMY=;
+        b=tbeMsNETXaEX3eJAcNRFx55zA4c6oWWywXJTG0m9Laj8pgKvsqI7TxoQJ64X4vE4z1
+         KA3IuRAIIjUJrjr3WjqA24MmwomMG4cu4cWAni3plBKjfwhrJxPfbLuO9m1FjoAf6c2V
+         tNwkuMMNnJOXVORPh8uuO8jvnKUOsmiy8jjjP4G8ZvPYf3udSJVnLdWmuCJoz2u0yxMi
+         +oIituEo72EEqvu9+Pa+GXdkvq/PgDg2nH8Gt73tTw2l/vZacrGPtfkJoLRPxzDERdkD
+         BYVqxGGvUD8JSOma+Kr/PXclcfjnUHDrFgS/59PETBSkayfVQEvNfaTrCfIDG18RKAec
+         dwYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v9CvyozKz45tnTJQ44+n4GCpZIz1GaPx/h3VjVloSMY=;
+        b=COWZf6jlDucThHLIppa8fKr5cTT/H5Vh9/ag7GweGlYIsS4NgjO7Ps05mZvX5T+oq5
+         aO4JgPj469zVE5jB72iT0NzPS4zB+4ILvrxAsZ4Ip66eHhqkBbKtBTybJg/IN5nNNjYO
+         AstcFLGcUgLT9tVuqnbp2KasRmocGvIxZau0zGbtSEEUVA8F6Vt7GezQG6SpGB9/GrAa
+         H/yTfFtQvKKgit17ia5zEhP9eKgXa7Wc4my4yEFZQAba5NyxFh+i0P2GSpluuoohPy/l
+         lceOqwJTerJMmwmEGeweMte05pjvSinXo37vepAtCwZW/GGRVZyBwcmmOD+WqXyXDfZP
+         rJvw==
+X-Gm-Message-State: AGi0PuasXwt0+Npp5GCH4MaUl0uQf90VgBHoNhQO1LNxU1/gmrttDmmW
+        P8ZX/B92vsaJ0F9pdcmEoatS0Jg0a7fvG7uELmfY
+X-Google-Smtp-Source: APiQypIzyhjcdRL5OT7UxMCqUNX1Cf2+MX0zMCcjnimWF5EBRCR6JtPmcD8rSAVKspTwViI94ganHU9wtPVKGKmx8k0=
+X-Received: by 2002:a6b:dd06:: with SMTP id f6mr12960070ioc.90.1589216571449;
+ Mon, 11 May 2020 10:02:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200508155342.GC4200@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-11_07:2020-05-11,2020-05-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- phishscore=0 spamscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005110126
+References: <20200504110344.17560-1-eesposit@redhat.com> <CA+VK+GN=iDhDV2ZDJbBsxrjZ3Qoyotk_L0DvsbwDVvqrpFZ8fQ@mail.gmail.com>
+ <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
+In-Reply-To: <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
+From:   Jonathan Adams <jwadams@google.com>
+Date:   Mon, 11 May 2020 10:02:14 -0700
+Message-ID: <CA+VK+GOccmwVov9Fx1eMZkzivBduWRuoyAuCRtjMfM4LemRkgw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
+ kernel statistics
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Am 08.05.20 um 17:53 schrieb Christoph Hellwig:
-> I think this should use symbol_get instead.
+On Fri, May 8, 2020 at 2:44 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> [Answering for Emanuele because he's not available until Monday]
+>
+> On 07/05/20 19:45, Jonathan Adams wrote:
+> > This is good work.  As David Rientjes mentioned, I'm currently investigating
+> > a similar project, based on a google-internal debugfs-based FS we call
+> > "metricfs".  It's
+> > designed in a slightly different fashion than statsfs here is, and the
+> > statistics exported are
+> > mostly fed into our OpenTelemetry-like system.  We're motivated by
+> > wanting an upstreamed solution, so that we can upstream the metrics we
+> > create that are of general interest, and lower the overall rebasing
+> > burden for our tree.
+>
+> Cool.  We included a public reading API exactly so that there could be
+> other "frontends".  I was mostly thinking of BPF as an in-tree user, but
+> your metricfs could definitely use the reading API.
+>
+> >  - the 8/16/32/64 signed/unsigned integers seems like a wart, and the
+> > built-in support to grab any offset from a structure doesn't seem like
+> > much of an advantage. A simpler interface would be to just support an> "integer" (possibly signed/unsigned) type, which is always 64-bit, and
+> > allow the caller to provide a function pointer to retrieve the value,
+> > with one or two void *s cbargs.  Then the framework could provide an
+> > offset-based callback (or callbacks) similar to the existing
+> > functionality, and a similar one for per-CPU based statistics.  A
+> > second "clear" callback could be optionally provided to allow for
+> > statistics to be cleared, as in your current proposal.
+>
+> Ok, so basically splitting get_simple_value into many separate
+> callbacks.  The callbacks would be in a struct like
+>
+> struct stats_fs_type {
+>         uint64_t (*get)(struct stats_fs_value *, void *);
+>         void (*clear)(struct stats_fs_value *, void *);
+>         bool signed;
+> }
+...
+> struct stats_fs_type stats_fs_type_u8 = {
+>         stats_fs_get_u8,
+>         stats_fs_clear_u8,
+>         false
+> };
+>
+> and custom types can be defined using "&(struct stats_fs_type) {...}".
 
-Thanks for the Feedback, also for the previous patch.
-I will incorporate it, run some test cycles and submit the patches
-again when I am ready.
+That makes sense.
+
+> >  - Beyond the statistic's type, one *very* useful piece of metadata
+> > for telemetry tools is knowing whether a given statistic is
+> > "cumulative" (an unsigned counter which is only ever increased), as
+> > opposed to a floating value (like "amount of memory used").
+>
+> Good idea.  Also, clearing does not make sense for a floating value, so
+> we can use cumulative/floating to get a default for the mode: KVM
+> statistics for example are mostly cumulative and mode 644, except a few
+> that are floating and those are all mode 444.  Therefore it makes sense
+> to add cumulative/floating even before outputting it as metadata.
+>
+> > I'm more
+> > concerned with getting the statistics model and capabilities right
+> > from the beginning, because those are harder to adjust later.
+>
+> Agreed.
+>
+> > 1. Each metricfs metric can have one or two string or integer "keys".
+> > If these exist, they expand the metric from a single value into a
+> > multi-dimensional table. For example, we use this to report a hash
+> > table we keep of functions calling "WARN()", in a 'warnings'
+> > statistic:
+> >
+> > % cat .../warnings/values
+> > x86_pmu_stop 1
+> > %
+> >
+> > Indicates that the x86_pmu_stop() function has had a WARN() fire once
+> > since the system was booted.  If multiple functions have fired
+> > WARN()s, they are listed in this table with their own counts. [1]  We
+> > also use these to report per-CPU counters on a CPU-by-CPU basis:
+> >
+> > % cat .../irq_x86/NMI/values
+> > 0 42
+> > 1 18
+> > ... one line per cpu
+> > % cat .../rx_bytes/values
+> > lo 501360681
+> > eth0 1457631256
+>
+> These seem like two different things.
+
+I see your point; I agree that there are two different things here.
+
+> The percpu and per-interface values are best represented as subordinate
+> sources, one per CPU and one per interface.  For interfaces I would just
+> use a separate directory, but it doesn't really make sense for CPUs.  So
+> if we can cater for it in the model, it's better.  For example:
+>
+> - add a new argument to statsfs_create_source and statsfs_create_values
+> that makes it not create directories and files respectively.
+>
+> - add a new "aggregate function" STATS_FS_LIST that directs the parent
+> to build a table of all the simple values below it
+>
+> We can also add a helper statsfs_add_values_percpu that creates a new
+> source for each CPU, I think.
+
+I think I'd characterize this slightly differently; we have a set of
+statistics which are essentially "in parallel":
+
+  - a variety of statistics, N CPUs they're available for, or
+  - a variety of statistics, N interfaces they're available for.
+  - a variety of statistics, N kvm object they're available for.
+
+Recreating a parallel hierarchy of statistics any time we add/subtract
+a CPU or interface seems like a lot of overhead.  Perhaps a better
+model would
+be some sort of "parameter enumn" (naming is hard; parameter set?), so
+when a CPU/network interface/etc is added you'd add its ID to the
+"CPUs" we know about, and at removal time you'd take it out; it would
+have an associated cbarg for the value getting callback.
+
+Does that make sense as a design?
+
+I'm working on characterizing all of our metricfs usage; I'll see if
+this looks like it mostly covers our usecases.
+
+> The warnings one instead is a real hash table.  It should be possible to
+> implement it as some kind of customized aggregation, that is implemented
+> in the client instead of coming from subordinate sources.  The
+> presentation can then just use STATS_FS_LIST.  I don't see anything in
+> the design that is a blocker.
+
+Yes; though if it's low-enough overhead, you could imagine having a
+dynamically-updated parameter enum based on the hash table.
+
+> > 2.  We also export some metadata about each statistic.  For example,
+> > the metadata for the NMI counter above looks like:
+> >
+> > % cat .../NMI/annotations
+> > DESCRIPTION Non-maskable\ interrupts
+> > CUMULATIVE
+> > % cat .../NMI/fields
+> > cpu value
+> > int int
+> > %
+>
+> Good idea.  I would prefer per-directory dot-named files for this.  For
+> example a hypothetical statsfs version of /proc/interrupts could be like
+> this:
+>
+> $ cat /sys/kernel/stats/interrupts/.schema
+> 0                                          // Name
+> CUMULATIVE                                 // Flags
+> int:int                                    // Type(s)
+> IR-IO-APIC    2-edge      timer            // Description
+> ...
+> LOC
+> CUMULATIVE
+> int:int
+> Local timer interrupts
+> ...
+> $ cat /sys/kernel/stats/interrupts/LOC
+> 0 4286815
+> 1 4151572
+> 2 4199361
+> 3 4229248
+>
+> > 3. We have a (very few) statistics where the value itself is a string,
+> > usually for device statuses.
+>
+> Maybe in addition to CUMULATIVE and FLOATING we can have ENUM
+> properties, and a table to convert those enums to strings.  Aggregation
+> could also be used to make a histogram out of enums in subordinate
+> sources, e.g.
+>
+> $ cat /sys/kernel/stats/kvm/637-1/vcpu_state
+> running 12
+> uninitialized 0
+> halted 4
+
+That's along similar lines to the parameter enums, yeah.
+
+> So in general I'd say the sources/values model holds up.  We certainly
+> want to:
+>
+> - switch immediately to callbacks instead of the type constants (so that
+> core statsfs code only does signed/unsigned)
+>
+> - add a field to distinguish cumulative and floating properties (and use
+> it to determine the default file mode)
+
+Yup, these make sense.
+
+> - add a new argument to statsfs_create_source and statsfs_create_values
+> that makes it not create directories and files respectively
+>
+> - add a new API to look for a statsfs_value recursively in all the
+> subordinate sources, and pass the source/value pair to a callback
+> function; and reimplement recursive aggregation and clear in terms of
+> this function.
+
+This is where I think a little iteration on the "parameter enums"
+should happen before jumping into implementation.
+
+> > For our use cases, we generally don't both output a statistic and it's
+> > aggregation from the kernel; either we sum up things in the kernel
+> > (e.g. over a bunch of per-cpu or per-memcg counters) and only have the
+> > result statistic, or we expect user-space to sum up the data if it's
+> > interested.  The tabular form makes it pretty easy to do so (i.e. you
+> > can use awk(1) to sum all of the per-cpu NMI counters).
+>
+> Yep, the above "not create a dentry" flag would handle the case where
+> you sum things up in the kernel because the more fine grained counters
+> would be overwhelming.
+
+nodnod; or the callback could handle the sum itself.
+
+Thanks,
+- jonathan
