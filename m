@@ -2,114 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A4BF1CD46E
-	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 11:05:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE8AD1CD567
+	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 11:37:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726071AbgEKJFy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 May 2020 05:05:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7392 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725790AbgEKJFy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 11 May 2020 05:05:54 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B939Ot109199;
-        Mon, 11 May 2020 05:05:33 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30wsc2wc93-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 05:05:33 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04B915f7029312;
-        Mon, 11 May 2020 09:05:31 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 30wm559mfd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 May 2020 09:05:31 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04B95S2B61079688
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 May 2020 09:05:28 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5D5D74C052;
-        Mon, 11 May 2020 09:05:28 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D6A0C4C044;
-        Mon, 11 May 2020 09:05:27 +0000 (GMT)
-Received: from sig-9-145-153-65.de.ibm.com (unknown [9.145.153.65])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 11 May 2020 09:05:27 +0000 (GMT)
-Message-ID: <2dbdf71e427a4b1df365412df34c773bc57528a9.camel@linux.vnet.ibm.com>
-Subject: Re: [PATCH -next] s390/cio: Remove unused inline
- functionidset_sch_get_first
-From:   Vineeth Vijayan <vneethv@linux.vnet.ibm.com>
-To:     YueHaibing <yuehaibing@huawei.com>, vneethv@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, gustavo@embeddedor.com
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 11 May 2020 11:05:27 +0200
-In-Reply-To: <20200508140643.30540-1-yuehaibing@huawei.com>
-References: <20200508140643.30540-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-5.el7) 
-Mime-Version: 1.0
+        id S1729463AbgEKJhK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 May 2020 05:37:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52184 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725790AbgEKJhJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 11 May 2020 05:37:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589189828;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9/z8oJy0DrW82NKQzFo0pYOXFvWx+Vn3ieQ420AJ3lc=;
+        b=Or824gshAxJh9WOS+X/WmIVuhaACN/xsBpOMow3E7W7/tNv3v5zydn5wBdNRVYnKgMGqZd
+        hIRYGEyJpBX3pyvj0YrEdtX07AhYX1+AuEUmgX4kjIaQKr6/Viugg2zG5STQwWBQA2NORY
+        y0JlmGkDpG9l4Oc4H8vCPart9d87y9U=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-23-xgPEJZfxPCKQKHCZRUiJ1Q-1; Mon, 11 May 2020 05:37:05 -0400
+X-MC-Unique: xgPEJZfxPCKQKHCZRUiJ1Q-1
+Received: by mail-wm1-f69.google.com with SMTP id h6so8052845wmi.7
+        for <linux-s390@vger.kernel.org>; Mon, 11 May 2020 02:37:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9/z8oJy0DrW82NKQzFo0pYOXFvWx+Vn3ieQ420AJ3lc=;
+        b=KkOo5nBFtVVJ0fHkPfYvkSs9tdn9P8pdxH2L47Dx6unBLi4T/p3SlgfNL+VLEFiony
+         rWbeJb94mdPsV0m4IuwZ9Eo2MlZZNLGNFcFrdZefJasDYvQnDp71pFsPvLPdtlbC9hQu
+         AdIZ9s4OC2bPi+nGN3amB0E3pMlT3ctdrQYmyidiBOlHZiv7vK6ZCcpfGavE2YnFi9my
+         0WQimahJMKvosGwvY80C/VpL0T0nYo0VEsRh87o4RdeBLriQV49BrjdC+fP51LOhxTyu
+         6sRtnF/pp+BjdMOQFd1Bf8t00XdukgKWMsiluglkvlehvQN//HgJDFX7tC/tfyzavP0w
+         YMjg==
+X-Gm-Message-State: AGi0PuaO3Ao0oMDJjL5t0emazr+cr9XOopd+av9kUKnuImkBM+ENeYti
+        zcfNAjm0DdO7ChxATe10vwzBmY7+DqpDB6wNtXqfUvZ8kr14Fwi9Prk2H7Io/qvvXcURKfv2bza
+        X+aX4K8Z5dBi2b/QYwW+Xkg==
+X-Received: by 2002:adf:9447:: with SMTP id 65mr18006250wrq.331.1589189824501;
+        Mon, 11 May 2020 02:37:04 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLgXJL2J4QG833y891iupVzJ12ZpeHXWlbbAPxxD6jgWVlOjQHWoAXK6Z1hUwl6JqLwXHJL/w==
+X-Received: by 2002:adf:9447:: with SMTP id 65mr18006221wrq.331.1589189824311;
+        Mon, 11 May 2020 02:37:04 -0700 (PDT)
+Received: from localhost.localdomain ([194.230.155.159])
+        by smtp.gmail.com with ESMTPSA id r14sm1636537wmb.2.2020.05.11.02.37.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 02:37:03 -0700 (PDT)
+Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
+ kernel statistics
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jonathan Adams <jwadams@google.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        David Rientjes <rientjes@google.com>
+References: <20200504110344.17560-1-eesposit@redhat.com>
+ <CA+VK+GN=iDhDV2ZDJbBsxrjZ3Qoyotk_L0DvsbwDVvqrpFZ8fQ@mail.gmail.com>
+ <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
+From:   Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Message-ID: <20c45f7b-3daa-c300-a8e7-0fd26664080b@redhat.com>
+Date:   Mon, 11 May 2020 11:37:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-11_03:2020-05-11,2020-05-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=843
- impostorscore=0 adultscore=0 mlxscore=0 malwarescore=0 priorityscore=1501
- spamscore=0 bulkscore=0 suspectscore=3 lowpriorityscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2005110071
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Thank you.
-This patch will be part of the s390's next patch submission.
 
-Reviewed-by: Vineeth Vijayan <vneethv@linux.ibm.com>
-
-Regards,
-Vineeth
-
-
-On Fri, 2020-05-08 at 22:06 +0800, YueHaibing wrote:
-> commit 8ebd51a705c5 ("s390/cio: idset.c: remove some unused
-> functions")
-> left behind this, remove it
+On 5/8/20 11:44 AM, Paolo Bonzini wrote:
+> So in general I'd say the sources/values model holds up.  We certainly
+> want to:
 > 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/s390/cio/idset.c | 12 ------------
->  1 file changed, 12 deletions(-)
+> - switch immediately to callbacks instead of the type constants (so that
+> core statsfs code only does signed/unsigned)
 > 
-> diff --git a/drivers/s390/cio/idset.c b/drivers/s390/cio/idset.c
-> index 77d0ea7b381b..45f9c0736be4 100644
-> --- a/drivers/s390/cio/idset.c
-> +++ b/drivers/s390/cio/idset.c
-> @@ -59,18 +59,6 @@ static inline int idset_contains(struct idset *set,
-> int ssid, int id)
->  	return test_bit(ssid * set->num_id + id, set->bitmap);
->  }
->  
-> -static inline int idset_get_first(struct idset *set, int *ssid, int
-> *id)
-> -{
-> -	int bitnum;
-> -
-> -	bitnum = find_first_bit(set->bitmap, set->num_ssid * set-
-> >num_id);
-> -	if (bitnum >= set->num_ssid * set->num_id)
-> -		return 0;
-> -	*ssid = bitnum / set->num_id;
-> -	*id = bitnum % set->num_id;
-> -	return 1;
-> -}
-> -
->  struct idset *idset_sch_new(void)
->  {
->  	return idset_new(max_ssid + 1, __MAX_SUBCHANNEL + 1);
+> - add a field to distinguish cumulative and floating properties (and use
+> it to determine the default file mode)
+> 
+> - add a new argument to statsfs_create_source and statsfs_create_values
+> that makes it not create directories and files respectively
+> 
+> - add a new API to look for a statsfs_value recursively in all the
+> subordinate sources, and pass the source/value pair to a callback
+> function; and reimplement recursive aggregation and clear in terms of
+> this function.
+
+Ok I will apply this, thank you for all the suggestions. 
+I will post the v3 patchset in the next few weeks. 
+
+In the meanwhile, I wrote the documentation you asked (even though it's 
+going to change in v3), you can find it here:
+
+https://github.com/esposem/linux/commit/dfa92f270f1aed73d5f3b7f12640b2a1635c711f
+
+Thank you,
+Emanuele
 
