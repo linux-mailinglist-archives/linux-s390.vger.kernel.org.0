@@ -2,160 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87CC11CD043
-	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 05:15:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CEC81CD19C
+	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 08:08:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgEKDPW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 10 May 2020 23:15:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:50292 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgEKDPV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 10 May 2020 23:15:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B3601FB;
-        Sun, 10 May 2020 20:15:20 -0700 (PDT)
-Received: from [10.163.72.179] (unknown [10.163.72.179])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F18C63F305;
-        Sun, 10 May 2020 20:15:09 -0700 (PDT)
-Subject: Re: [PATCH V3 2/3] mm/hugetlb: Define a generic fallback for
- is_hugepage_only_range()
-To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1588907271-11920-1-git-send-email-anshuman.khandual@arm.com>
- <1588907271-11920-3-git-send-email-anshuman.khandual@arm.com>
- <9fc622e1-45ff-b79f-ebe0-35614837456c@oracle.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <c21ab871-da06-baf6-ba31-80b13402b8c9@arm.com>
-Date:   Mon, 11 May 2020 08:44:39 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1728367AbgEKGIe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 May 2020 02:08:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53932 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726661AbgEKGIe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 11 May 2020 02:08:34 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04B63TDJ040248;
+        Mon, 11 May 2020 02:07:57 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30ws5a0wg6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 02:07:56 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04B63lxP041557;
+        Mon, 11 May 2020 02:07:56 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30ws5a0wfk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 02:07:56 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04B65JRE031811;
+        Mon, 11 May 2020 06:07:54 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 30wm55br2n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 11 May 2020 06:07:54 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04B67pj464160134
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 May 2020 06:07:51 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B32EB4C046;
+        Mon, 11 May 2020 06:07:51 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 716124C059;
+        Mon, 11 May 2020 06:07:51 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon, 11 May 2020 06:07:51 +0000 (GMT)
+Date:   Mon, 11 May 2020 08:07:51 +0200
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     rostedt@goodmis.org, mingo@redhat.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] s390: Remove two unused inline functions
+Message-ID: <20200511060750.GA93884@tuxmaker.boeblingen.de.ibm.com>
+References: <20200508140724.11324-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <9fc622e1-45ff-b79f-ebe0-35614837456c@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508140724.11324-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-11_01:2020-05-08,2020-05-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ priorityscore=1501 suspectscore=0 adultscore=0 impostorscore=0
+ malwarescore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2005110049
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi,
 
-
-On 05/09/2020 03:52 AM, Mike Kravetz wrote:
-> On 5/7/20 8:07 PM, Anshuman Khandual wrote:
->> There are multiple similar definitions for is_hugepage_only_range() on
->> various platforms. Lets just add it's generic fallback definition for
->> platforms that do not override. This help reduce code duplication.
->>
->> Cc: Russell King <linux@armlinux.org.uk>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Tony Luck <tony.luck@intel.com>
->> Cc: Fenghua Yu <fenghua.yu@intel.com>
->> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
->> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
->> Cc: Helge Deller <deller@gmx.de>
->> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> Cc: Paul Mackerras <paulus@samba.org>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Paul Walmsley <paul.walmsley@sifive.com>
->> Cc: Palmer Dabbelt <palmer@dabbelt.com>
->> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
->> Cc: Vasily Gorbik <gor@linux.ibm.com>
->> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
->> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
->> Cc: Rich Felker <dalias@libc.org>
->> Cc: "David S. Miller" <davem@davemloft.net>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
->> Cc: Mike Kravetz <mike.kravetz@oracle.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: x86@kernel.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-ia64@vger.kernel.org
->> Cc: linux-mips@vger.kernel.org
->> Cc: linux-parisc@vger.kernel.org
->> Cc: linuxppc-dev@lists.ozlabs.org
->> Cc: linux-riscv@lists.infradead.org
->> Cc: linux-s390@vger.kernel.org
->> Cc: linux-sh@vger.kernel.org
->> Cc: sparclinux@vger.kernel.org
->> Cc: linux-mm@kvack.org
->> Cc: linux-arch@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  arch/arm/include/asm/hugetlb.h     | 6 ------
->>  arch/arm64/include/asm/hugetlb.h   | 6 ------
->>  arch/ia64/include/asm/hugetlb.h    | 1 +
->>  arch/mips/include/asm/hugetlb.h    | 7 -------
->>  arch/parisc/include/asm/hugetlb.h  | 6 ------
->>  arch/powerpc/include/asm/hugetlb.h | 1 +
->>  arch/riscv/include/asm/hugetlb.h   | 6 ------
->>  arch/s390/include/asm/hugetlb.h    | 7 -------
->>  arch/sh/include/asm/hugetlb.h      | 6 ------
->>  arch/sparc/include/asm/hugetlb.h   | 6 ------
->>  arch/x86/include/asm/hugetlb.h     | 6 ------
->>  include/linux/hugetlb.h            | 9 +++++++++
->>  12 files changed, 11 insertions(+), 56 deletions(-)
->>
-> <snip>
->> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
->> index 43a1cef8f0f1..c01c0c6f7fd4 100644
->> --- a/include/linux/hugetlb.h
->> +++ b/include/linux/hugetlb.h
->> @@ -591,6 +591,15 @@ static inline unsigned int blocks_per_huge_page(struct hstate *h)
->>  
->>  #include <asm/hugetlb.h>
->>  
->> +#ifndef is_hugepage_only_range
->> +static inline int is_hugepage_only_range(struct mm_struct *mm,
->> +					unsigned long addr, unsigned long len)
->> +{
->> +	return 0;
->> +}
->> +#define is_hugepage_only_range is_hugepage_only_range
->> +#endif
->> +
->>  #ifndef arch_make_huge_pte
->>  static inline pte_t arch_make_huge_pte(pte_t entry, struct vm_area_struct *vma,
->>  				       struct page *page, int writable)
->>
+On Fri, May 08, 2020 at 10:07:24PM +0800, YueHaibing wrote:
+> commit 657480d9c015 ("s390: support KPROBES_ON_FTRACE")
+> left behind this, remove it.
 > 
-> Did you try building without CONFIG_HUGETLB_PAGE defined?  I'm guessing
-
-Yes I did for multiple platforms (s390, arm64, ia64, x86, powerpc etc).
-
-> that you need a stub for is_hugepage_only_range().  Or, perhaps add this
-> to asm-generic/hugetlb.h?
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  arch/s390/kernel/ftrace.c | 16 ----------------
+>  1 file changed, 16 deletions(-)
 > 
-There is already a stub (include/linux/hugetlb.h) when !CONFIG_HUGETLB_PAGE.
+> diff --git a/arch/s390/kernel/ftrace.c b/arch/s390/kernel/ftrace.c
+> index 4cd9b1ada834..44e01dd1e624 100644
+> --- a/arch/s390/kernel/ftrace.c
+> +++ b/arch/s390/kernel/ftrace.c
+> @@ -72,22 +72,6 @@ static inline void ftrace_generate_orig_insn(struct ftrace_insn *insn)
+>  #endif
+>  }
+>  
+> -static inline void ftrace_generate_kprobe_nop_insn(struct ftrace_insn *insn)
+> -{
+> -#ifdef CONFIG_KPROBES
+> -	insn->opc = BREAKPOINT_INSTRUCTION;
+> -	insn->disp = KPROBE_ON_FTRACE_NOP;
+> -#endif
+> -}
+> -
+> -static inline void ftrace_generate_kprobe_call_insn(struct ftrace_insn *insn)
+> -{
+> -#ifdef CONFIG_KPROBES
+> -	insn->opc = BREAKPOINT_INSTRUCTION;
+> -	insn->disp = KPROBE_ON_FTRACE_CALL;
+> -#endif
+> -}
+> -
+>  int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr,
+>  		       unsigned long addr)
+>  {
+> -- 
+> 2.17.1
+
+Thanks for noticing, looks like i missed them.
+
+Acked-by: Sven Schnelle <svens@linux.ibm.com>
+
+Sven
