@@ -2,135 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F0F01CE1C8
-	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 19:34:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 531921CE34D
+	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 20:55:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730999AbgEKReg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 May 2020 13:34:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54881 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730887AbgEKRef (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 11 May 2020 13:34:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589218474;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jCAJG5qvZrEQpE9xVUmgEKkY6ZGLKpgEhGop1JiyIl0=;
-        b=hcyCwnUXTdYBNYFLqUg2GihL4D9uas+zLEUKIUGv/xskDRIm/IoyiczJXfYo/BSslHxCuu
-        EfRQlwpWh/vC1qOSUP/IUt6SEic3zgNbVCxYSsAwK2CM53VzR2tf5AsKUcJT+I9umDjRrx
-        ysh4dq1P/gu2OJsZCJiKLoFZ2Ggr+S4=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-Uh3_9m65M_WXB8GDC7CPRw-1; Mon, 11 May 2020 13:34:32 -0400
-X-MC-Unique: Uh3_9m65M_WXB8GDC7CPRw-1
-Received: by mail-wm1-f70.google.com with SMTP id m123so1912757wmm.5
-        for <linux-s390@vger.kernel.org>; Mon, 11 May 2020 10:34:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jCAJG5qvZrEQpE9xVUmgEKkY6ZGLKpgEhGop1JiyIl0=;
-        b=KZU3FSmXIgrShU39frIRZO1FMsnLpy6OrzPD3TagaCJGYd89W+b4d36TNZPDewkIO2
-         jDgpLFLVFDZ5yzQmmFxvACvqctZMWVmYAvuSvbGKP1gUcmkSyefcSdEeFPLgfz0drzLh
-         FgJYknSgFJv3Tn+ohwsZ481TQZbwsteNb9Bvtp69cNNTJFEx7ZffBS4oWHh/U1/rJCkh
-         MBEhUTQClsEKXIsrlgnnVZjXSeHjBPxtIN5GewGSzLzOPHHwM0Ac0NemILwn9ORQHUcL
-         F7beaxaGBWjUsFASk+3J9WofsH30JivgtBdO6XJcpTkfaidR04I7BiQtNNHc7pZu+/Sw
-         TL4Q==
-X-Gm-Message-State: AGi0PuapHcviXOVgLP/zLhzZhVlvu9vKpX79+HTTPcfIpiJc0HiqOLk4
-        eXFY/MCEXIrfasYTODeIvRmC/dtfHcKlTh55wWOz59xDXC7NOfaCu2WeRa7tdyp1UMUS6ygNr7W
-        RBC5g+DC5Zo5+v/49cvIe8w==
-X-Received: by 2002:a5d:49ca:: with SMTP id t10mr12469217wrs.285.1589218471440;
-        Mon, 11 May 2020 10:34:31 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJNe6I7z0SbQYOHpqyl28aME7TxGvpzSGiIlzFVueJrlC+GRcVDtQgQEgjyS86Oa3oOuu0xgw==
-X-Received: by 2002:a5d:49ca:: with SMTP id t10mr12469194wrs.285.1589218471191;
-        Mon, 11 May 2020 10:34:31 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:4c95:a679:8cf7:9fb6? ([2001:b07:6468:f312:4c95:a679:8cf7:9fb6])
-        by smtp.gmail.com with ESMTPSA id 89sm18102311wrj.37.2020.05.11.10.34.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 10:34:30 -0700 (PDT)
-Subject: Re: [PATCH v2 0/5] Statsfs: a new ram-based file sytem for Linux
- kernel statistics
-To:     Jonathan Adams <jwadams@google.com>
-Cc:     Emanuele Giuseppe Esposito <eesposit@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
+        id S1731230AbgEKSyl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 May 2020 14:54:41 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36664 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729319AbgEKSyk (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 11 May 2020 14:54:40 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04BIl1RS193726;
+        Mon, 11 May 2020 18:52:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=lmEoEgyjfI3GJtDHmilX9SzLNvOcuTcOvW+PKUiq8MI=;
+ b=EHSd0gyOZ6mJk8AUfljgZqe/l84M3dxdDwcVRDw3lihli7/i2Ooh9bj5w+NhMbvq+dFl
+ +FaLdDGTwvHat1D1fTX9EysW7L+8m1FqNmjnP1V9Grb4VhLqayw4Rd6B5b5ZCDBnZrfU
+ JWaJTpVkRmmbWYekhkSap850c0mJaWwjl9pi6axUTNK4z+ZIX+AX003KGJoo239cmPWE
+ oqeYy7f7nIQBOOKDabvZBLSDOUgQ6SCUSohzsOuqTGGHU+E0BbpmeZ+V/KBXTwEmpuzQ
+ IyfctIDTRsMjj+/zrpJ901i0t+bUlmAVcrTybfNsnwobMod1pi0U9lWm3kgq5X7GLtfk dg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 30x3mbpvsc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 May 2020 18:52:48 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04BImDbQ039635;
+        Mon, 11 May 2020 18:52:48 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 30x69rjjya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 May 2020 18:52:48 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04BIqcwi024982;
+        Mon, 11 May 2020 18:52:39 GMT
+Received: from [192.168.2.157] (/73.164.160.178)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 11 May 2020 11:52:37 -0700
+Subject: Re: [PATCH V3 2/3] mm/hugetlb: Define a generic fallback for
+ is_hugepage_only_range()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20200504110344.17560-1-eesposit@redhat.com>
- <CA+VK+GN=iDhDV2ZDJbBsxrjZ3Qoyotk_L0DvsbwDVvqrpFZ8fQ@mail.gmail.com>
- <29982969-92f6-b6d0-aeae-22edb401e3ac@redhat.com>
- <CA+VK+GOccmwVov9Fx1eMZkzivBduWRuoyAuCRtjMfM4LemRkgw@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <fe21094c-bdb0-b802-482e-72bc17e5232a@redhat.com>
-Date:   Mon, 11 May 2020 19:34:29 +0200
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1588907271-11920-1-git-send-email-anshuman.khandual@arm.com>
+ <1588907271-11920-3-git-send-email-anshuman.khandual@arm.com>
+ <9fc622e1-45ff-b79f-ebe0-35614837456c@oracle.com>
+ <c21ab871-da06-baf6-ba31-80b13402b8c9@arm.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <ab931b52-1f1b-1ff3-47ee-377de3ed1a98@oracle.com>
+Date:   Mon, 11 May 2020 11:52:34 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <CA+VK+GOccmwVov9Fx1eMZkzivBduWRuoyAuCRtjMfM4LemRkgw@mail.gmail.com>
+In-Reply-To: <c21ab871-da06-baf6-ba31-80b13402b8c9@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 adultscore=0
+ spamscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005110142
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9618 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 impostorscore=0
+ mlxscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 phishscore=0
+ malwarescore=0 lowpriorityscore=0 spamscore=0 adultscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005110142
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Jonathan, I think the remaining sticky point is this one:
-
-On 11/05/20 19:02, Jonathan Adams wrote:
-> I think I'd characterize this slightly differently; we have a set of
-> statistics which are essentially "in parallel":
+On 5/10/20 8:14 PM, Anshuman Khandual wrote:
+> On 05/09/2020 03:52 AM, Mike Kravetz wrote:
+>> On 5/7/20 8:07 PM, Anshuman Khandual wrote:
+>>
+>> Did you try building without CONFIG_HUGETLB_PAGE defined?  I'm guessing
 > 
->   - a variety of statistics, N CPUs they're available for, or
->   - a variety of statistics, N interfaces they're available for.
->   - a variety of statistics, N kvm object they're available for.
+> Yes I did for multiple platforms (s390, arm64, ia64, x86, powerpc etc).
 > 
-> Recreating a parallel hierarchy of statistics any time we add/subtract
-> a CPU or interface seems like a lot of overhead.  Perhaps a better 
-> model would be some sort of "parameter enumn" (naming is hard;
-> parameter set?), so when a CPU/network interface/etc is added you'd
-> add its ID to the "CPUs" we know about, and at removal time you'd
-> take it out; it would have an associated cbarg for the value getting
-> callback.
+>> that you need a stub for is_hugepage_only_range().  Or, perhaps add this
+>> to asm-generic/hugetlb.h?
+>>
+> There is already a stub (include/linux/hugetlb.h) when !CONFIG_HUGETLB_PAGE.
 > 
->> Yep, the above "not create a dentry" flag would handle the case where
->> you sum things up in the kernel because the more fine grained counters
->> would be overwhelming.
->
-> nodnod; or the callback could handle the sum itself.
 
-In general for statsfs we took a more explicit approach where each
-addend in a sum is a separate stats_fs_source.  In this version of the
-patches it's also a directory, but we'll take your feedback and add both
-the ability to hide directories (first) and to list values (second).
+Thanks!  I missed that stub in the existing code.  I like the removal of
+redundant code.
 
-So, in the cases of interfaces and KVM objects I would prefer to keep
-each addend separate.
+Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
 
-For CPUs that however would be pretty bad.  Many subsystems might
-accumulate stats percpu for performance reason, which would then be
-exposed as the sum (usually).  So yeah, native handling of percpu values
-makes sense.  I think it should fit naturally into the same custom
-aggregation framework as hash table keys, we'll see if there's any devil
-in the details.
-
-Core kernel stats such as /proc/interrupts or /proc/stat are the
-exception here, since individual per-CPU values can be vital for
-debugging.  For those, creating a source per stat, possibly on-the-fly
-at hotplug/hot-unplug time because NR_CPUS can be huge, would still be
-my preferred way to do it.
-
-Thanks,
-
-Paolo
-
+-- 
+Mike Kravetz
