@@ -2,107 +2,100 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 275531CECEA
-	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2020 08:17:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 838701CF190
+	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2020 11:28:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbgELGRg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 12 May 2020 02:17:36 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6028 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726161AbgELGRg (ORCPT
+        id S1726193AbgELJ2A (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 12 May 2020 05:28:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34256 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725889AbgELJ2A (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 12 May 2020 02:17:36 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04C68aZL046838;
-        Tue, 12 May 2020 02:16:59 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ws5b2ma9-1
+        Tue, 12 May 2020 05:28:00 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04C92k1u171251;
+        Tue, 12 May 2020 05:27:57 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ws2f5ha2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 02:16:59 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04C6E9XA053090;
-        Tue, 12 May 2020 02:16:59 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30ws5b2m9q-1
+        Tue, 12 May 2020 05:27:57 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04C9G3er009885;
+        Tue, 12 May 2020 09:27:55 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 30wm55e5dm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 02:16:59 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04C6Ffbl029383;
-        Tue, 12 May 2020 06:16:57 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma05fra.de.ibm.com with ESMTP id 30wm55jbtd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 06:16:57 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04C6GsnL56492162
+        Tue, 12 May 2020 09:27:55 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04C9RqTn61014508
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 May 2020 06:16:54 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 76AD24C04E;
-        Tue, 12 May 2020 06:16:54 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 309CF4C04A;
-        Tue, 12 May 2020 06:16:54 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Tue, 12 May 2020 06:16:54 +0000 (GMT)
-Date:   Tue, 12 May 2020 08:16:54 +0200
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        YueHaibing <yuehaibing@huawei.com>, mingo@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] s390: Remove two unused inline functions
-Message-ID: <20200512061653.GA33732@tuxmaker.boeblingen.de.ibm.com>
-References: <20200508140724.11324-1-yuehaibing@huawei.com>
- <20200511060750.GA93884@tuxmaker.boeblingen.de.ibm.com>
- <20200511161756.7586afe6@gandalf.local.home>
- <cf344230-27b1-7302-36bb-55c25c6b5de4@de.ibm.com>
- <02b965de57774f393bb16d669164e0cef2497f2f.camel@perches.com>
+        Tue, 12 May 2020 09:27:52 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 65955AE04D;
+        Tue, 12 May 2020 09:27:52 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5CD3BAE051;
+        Tue, 12 May 2020 09:27:52 +0000 (GMT)
+Received: from t480-pf1aa2c2 (unknown [9.145.178.74])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 12 May 2020 09:27:52 +0000 (GMT)
+Received: from bblock by t480-pf1aa2c2 with local (Exim 4.92.3)
+        (envelope-from <bblock@linux.ibm.com>)
+        id 1jYRCZ-003O1E-AY; Tue, 12 May 2020 11:27:51 +0200
+Date:   Tue, 12 May 2020 11:27:51 +0200
+From:   Benjamin Block <bblock@linux.ibm.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Fedor Loshakov <loshakov@linux.ibm.com>,
+        linux-scsi@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: Re: [PATCH 0/8] zfcp: fix DIF/DIX support with scsi-mq host-wide
+ tag-set
+Message-ID: <20200512092751.GF129511@t480-pf1aa2c2>
+References: <cover.1588956679.git.bblock@linux.ibm.com>
+ <158925392374.17325.3358760553480361613.b4-ty@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <02b965de57774f393bb16d669164e0cef2497f2f.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <158925392374.17325.3358760553480361613.b4-ty@oracle.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-12_01:2020-05-11,2020-05-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
- priorityscore=1501 suspectscore=0 adultscore=0 impostorscore=0
- malwarescore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005120049
+ definitions=2020-05-12_02:2020-05-11,2020-05-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 bulkscore=0 clxscore=1015 impostorscore=0 adultscore=0
+ phishscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005120074
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Joe,
-
-On Mon, May 11, 2020 at 01:38:57PM -0700, Joe Perches wrote:
-
-> Awhile back, I posted a list of apparently unused static inline
-> functions in .h files treewide found by a script:
+On Mon, May 11, 2020 at 11:28:26PM -0400, Martin K. Petersen wrote:
+> On Fri, 8 May 2020 19:23:27 +0200, Benjamin Block wrote:
 > 
-> https://lore.kernel.org/lkml/4603e761a5f39f4d97375e1e08d20d720c526341.camel@perches.com/
+> > some time ago we noticed - Fedor did - that our DIV and DIX support in
+> > zfcp broke at some point. I tracked that down to a commit made for v5.4
+> > (737eb78e82d5), but we didn't notice it back than, because our CI
+> > doesn't currently run with either DIV, nor DIX enabled (time allowing
+> > this is something we want to improve so we catch stuff like this
+> > earlier). It also turned out that the commit in v5.4 was not really the
+> > root-cause, and was only making the problem visible more easy.
+> > 
+> > [...]
 > 
-> Here are the s390 entries:
+> Applied to 5.8/scsi-queue, thanks!
 > 
-> arch/s390/include/asm/atomic_ops.h:138:static inline long __atomic64_cmpxchg_bool(long *ptr, long old, long new)
-> arch/s390/include/asm/bitops.h:278:static inline void __set_bit_inv(unsigned long nr, volatile unsigned long *ptr)
-> arch/s390/include/asm/bitops.h:283:static inline void __clear_bit_inv(unsigned long nr, volatile unsigned long *ptr)
-> arch/s390/include/asm/cpu_mcf.h:106:static inline int kernel_cpumcf_begin(void)
-> arch/s390/include/asm/cpu_mcf.h:114:static inline void kernel_cpumcf_end(void)
-> arch/s390/include/asm/ftrace.h:64:static inline int is_ftrace_nop(struct ftrace_insn *insn)
-> arch/s390/include/asm/kvm_para.h:146:static inline long kvm_hypercall5(unsigned long nr, unsigned long p1,
-> arch/s390/include/asm/kvm_para.h:175:static inline long kvm_hypercall6(unsigned long nr, unsigned long p1,
-> arch/s390/include/asm/pci_dma.h:134:static inline void invalidate_table_entry(unsigned long *entry)
-> arch/s390/include/asm/pci_dma.h:176:static inline int entry_isprotected(unsigned long entry)
-> arch/s390/include/asm/timex.h:52:static inline void store_clock_comparator(__u64 *time)
 
-Thanks, i take a look and prepare a patch.
+Thanks Martin!
 
-Regards
-Sven
+-- 
+Best Regards, Benjamin Block  / Linux on IBM Z Kernel Development / IBM Systems
+IBM Deutschland Research & Development GmbH    /    https://www.ibm.com/privacy
+Vorsitz. AufsR.: Gregor Pillen         /        Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: AmtsG Stuttgart, HRB 243294
