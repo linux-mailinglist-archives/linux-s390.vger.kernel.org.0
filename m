@@ -2,82 +2,106 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2690F1CE5BA
-	for <lists+linux-s390@lfdr.de>; Mon, 11 May 2020 22:39:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0396E1CEA0B
+	for <lists+linux-s390@lfdr.de>; Tue, 12 May 2020 03:15:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbgEKUjB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 May 2020 16:39:01 -0400
-Received: from smtprelay0130.hostedemail.com ([216.40.44.130]:38690 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729801AbgEKUjB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 11 May 2020 16:39:01 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 0A199100E7B43;
-        Mon, 11 May 2020 20:39:00 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 50,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:800:960:967:973:982:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2525:2553:2560:2563:2682:2685:2693:2828:2859:2933:2937:2939:2942:2945:2947:2951:2954:3022:3138:3139:3140:3141:3142:3352:3622:3865:3866:3870:3871:3872:3934:3936:3938:3941:3944:3947:3950:3953:3956:3959:4321:5007:7903:7974:9010:9025:10004:10400:10848:10967:11026:11232:11473:11658:11914:12043:12296:12297:12438:12555:12740:12760:12895:13069:13311:13357:13439:13845:14096:14097:14181:14659:14721:21080:21325:21451:21627:21811:30054:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:3,LUA_SUMMARY:none
-X-HE-Tag: duck20_4e5e081df3660
-X-Filterd-Recvd-Size: 2939
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 11 May 2020 20:38:58 +0000 (UTC)
-Message-ID: <02b965de57774f393bb16d669164e0cef2497f2f.camel@perches.com>
-Subject: Re: [PATCH -next] s390: Remove two unused inline functions
-From:   Joe Perches <joe@perches.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sven Schnelle <svens@linux.ibm.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>, mingo@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 11 May 2020 13:38:57 -0700
-In-Reply-To: <cf344230-27b1-7302-36bb-55c25c6b5de4@de.ibm.com>
-References: <20200508140724.11324-1-yuehaibing@huawei.com>
-         <20200511060750.GA93884@tuxmaker.boeblingen.de.ibm.com>
-         <20200511161756.7586afe6@gandalf.local.home>
-         <cf344230-27b1-7302-36bb-55c25c6b5de4@de.ibm.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        id S1728301AbgELBPX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 May 2020 21:15:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728110AbgELBPX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 11 May 2020 21:15:23 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B033C061A0C
+        for <linux-s390@vger.kernel.org>; Mon, 11 May 2020 18:15:23 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ms17so8602907pjb.0
+        for <linux-s390@vger.kernel.org>; Mon, 11 May 2020 18:15:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=t0TLC5mt6zw20J38nO6UV1Kz+5E95WBtIXeRkoxQ4a0=;
+        b=dao2jUsKEg0MNPr55uxxilqsr6U9IBF9cB0argAoiu+nzQbynnQySyQri1WXpjEqJG
+         rQtQRPE6kf9dn6K8zEzinKtihNCU1nkYNvzWld5uPTEk0mRNxcVlEd7QHVoT3hDK97qL
+         pi/e9VDFvCcvxsyBBxEa0d1VjKvLysP4thOc93Rg/sC9E6+N+xIBpO6zbeElBB7SqnZ/
+         YTlSxPBt57ylnu2S8n8Gq6ZhAaEFbqPB/fadW3E5kfIFHu6upTL0RyENKnjdB9YK2uCU
+         /zMtQNQK80ucr9aQD1DPhHKkX/5sXAJJ2Lamv7kwnHNMvUiNsy2zxg6pVJAT5oN5G1LV
+         4z7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=t0TLC5mt6zw20J38nO6UV1Kz+5E95WBtIXeRkoxQ4a0=;
+        b=bxP2F2QWsvA/2bv8xg/FrSOj0vdhHO8sZU1fFlE87bEjEz0zczgcyp+4SP/P5r9pfh
+         yjOVDQDr8y4l7o8Ai1rKgQNuJvXVZpMWJ9ua/TKHQjUffmyM5VhWcjlAsrbUZge/cpQx
+         ju4eabdU9d3c9+Pw+DQDxHPBS6Hr3pv8xC8SaS4fhs5cBuxGgm0ZPAJ1cRejNRHvTBCW
+         3ZGuW+PkMvFjhfVq4X9fIefd///HpJl2c5LxmEMS/4InoE0eVXfA73sdm26CTqUEJhEf
+         eB2in2oeN35CVf8Zgsr17yFNpkrf4RzutR8WBPvg+t0M/2xKaRz7l4TKok3pdhehKkTw
+         PYdg==
+X-Gm-Message-State: AGi0PuaCLEigsCKWTgeRuuHl260FvvWVSOJF38UhsgYOPDlCjaQLoCTX
+        HANrKPGdjlijgyLr5AEnKsUFMjMqGfhauADwEuI=
+X-Google-Smtp-Source: APiQypL7drP1TXFtbqS0WcI7b2l//8li31Sqm1idopYxv/pczsPHVy5oY3Tu50ZHDTGRWIkTbhvf7HaHzAaILZR4PMk=
+X-Received: by 2002:a17:90b:3443:: with SMTP id lj3mr25124196pjb.38.1589246121078;
+ Mon, 11 May 2020 18:15:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Reply-To: mrsanna.h.bruun119@gmail.com
+Received: by 2002:a17:90a:2901:0:0:0:0 with HTTP; Mon, 11 May 2020 18:15:20
+ -0700 (PDT)
+From:   "Mrs. Anna H. Bruun" <mrsanna.h.bruun119@gmail.com>
+Date:   Mon, 11 May 2020 18:15:20 -0700
+X-Google-Sender-Auth: DP3vQANA4x9hZJUxoEOwwGs8HNQ
+Message-ID: <CAAebY0nohthGzgVxSYUxAi+Xyp7H3amaMG=ZS+G-HS=Abxp5pg@mail.gmail.com>
+Subject: My Greetings
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 2020-05-11 at 22:27 +0200, Christian Borntraeger wrote:
-> On 11.05.20 22:17, Steven Rostedt wrote:
-> > On Mon, 11 May 2020 08:07:51 +0200
-> > Sven Schnelle <svens@linux.ibm.com> wrote:
-> > 
-> > > Thanks for noticing, looks like i missed them.
-> > > 
-> > > Acked-by: Sven Schnelle <svens@linux.ibm.com>
-> > 
-> > As this is s390 specific, will it be going through the s390 repo?
-> 
-> Yes. 
-> I will pick this up. Vasily will then take care of it.
+My Dear
 
-Awhile back, I posted a list of apparently unused static inline
-functions in .h files treewide found by a script:
+My Name is Mrs. Anna H. Bruun, from Norway. I know that this message
+will be a surprise to you. Firstly, I am married to Mr. Patrick Bruun,
+A gold merchant who owns a small gold Mine in Burkina Faso; He died of
+Cardiovascular Disease in mid-March 2011. During his life time he
+deposited the sum of =E2=82=AC 8.5 Million Euro) Eight million, Five hundre=
+d
+thousand Euros in a bank in Ouagadougou the capital city of Burkina
+Faso. The deposited money was from the sale of the shares, death
+benefits payment and entitlements of my deceased husband by his
+company.
 
-https://lore.kernel.org/lkml/4603e761a5f39f4d97375e1e08d20d720c526341.camel@perches.com/
+I am sending this message to you praying that it will reach you in
+good health, since I am not in good health condition in which I sleep
+every night without knowing if I may be alive to see the next day. I
+am suffering from long time cancer and presently i am partially
+suffering from a stroke illness which has become almost impossible for
+me to move around. I am married to my late husband for over 4 years
+before he died and is unfortunately that we don't have a child, my
+doctor confided in me that i have less chance to live. Having known my
+health condition, I decided to contact you to claim the fund since I
+don't have any relation I grew up from the orphanage home,
 
-Here are the s390 entries:
+I have decided to donate what I have to you for the support of helping
+Motherless babies/Less privileged/Widows' because I am dying and
+diagnosed of cancer for about 2 years ago. I have been touched by God
+Almighty to donate from what I have inherited from my late husband to
+you for good work of God Almighty. I have asked Almighty God to
+forgive me and believe he has, because He is a Merciful God I will be
+going in for an operation surgery soon
 
-arch/s390/include/asm/atomic_ops.h:138:static inline long __atomic64_cmpxchg_bool(long *ptr, long old, long new)
-arch/s390/include/asm/bitops.h:278:static inline void __set_bit_inv(unsigned long nr, volatile unsigned long *ptr)
-arch/s390/include/asm/bitops.h:283:static inline void __clear_bit_inv(unsigned long nr, volatile unsigned long *ptr)
-arch/s390/include/asm/cpu_mcf.h:106:static inline int kernel_cpumcf_begin(void)
-arch/s390/include/asm/cpu_mcf.h:114:static inline void kernel_cpumcf_end(void)
-arch/s390/include/asm/ftrace.h:64:static inline int is_ftrace_nop(struct ftrace_insn *insn)
-arch/s390/include/asm/kvm_para.h:146:static inline long kvm_hypercall5(unsigned long nr, unsigned long p1,
-arch/s390/include/asm/kvm_para.h:175:static inline long kvm_hypercall6(unsigned long nr, unsigned long p1,
-arch/s390/include/asm/pci_dma.h:134:static inline void invalidate_table_entry(unsigned long *entry)
-arch/s390/include/asm/pci_dma.h:176:static inline int entry_isprotected(unsigned long entry)
-arch/s390/include/asm/timex.h:52:static inline void store_clock_comparator(__u64 *time)
+This is the reason i need your services to stand as my next of kin or
+an executor to claim the funds for charity purposes. If this money
+remains unclaimed after my death, the bank executives or the
+government will take the money as unclaimed fund and maybe use it for
+selfish and worthless ventures, I need a very honest person who can
+claim this money and use it for Charity works, for orphanages, widows
+and also build schools for less privilege that will be named after my
+late husband and my name; I need your urgent answer to know if you
+will be able to execute this project, and I will give you more
+Information on how the fund will be transferred to your bank account.
 
-
+Thanks
+Mrs. Anna H.
