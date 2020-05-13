@@ -2,118 +2,82 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EDE41D0586
-	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2020 05:28:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BCEF1D0A02
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2020 09:42:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgEMD2v (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 12 May 2020 23:28:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34720 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725898AbgEMD2v (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 May 2020 23:28:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589340530;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NRE4OFt0pi4qgIPXxiCcH4eekt5X7YxGUJZCZ70unDk=;
-        b=F/7vx6X4NbxbD1qDnuwOhKHkLWpaJS1Wm50XBu8nyyIPs3Mlj3kmWtZAY8fyWKhir0un2f
-        dprbl1Z0gUDqvnjWTsz/sGX/QlWd7wZNfOmgnTYQG3PoWqGUgkrBtV4XZ89bo0oDbNBaUi
-        FzwXpSrFbCgarjTOisYLfs0AMuVUJ2U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-208-71V8pT9QO0-rrJCT8ULhcg-1; Tue, 12 May 2020 23:28:48 -0400
-X-MC-Unique: 71V8pT9QO0-rrJCT8ULhcg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 003F71841932;
-        Wed, 13 May 2020 03:28:47 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-65.pek2.redhat.com [10.72.12.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C7685D9DD;
-        Wed, 13 May 2020 03:28:40 +0000 (UTC)
-Subject: Re: s390x: kdump kernel can not boot if I load kernel and initrd
- images via the kexec_file_load syscall.
-To:     Philipp Rudo <prudo@linux.ibm.com>
-Cc:     Dave Young <dyoung@redhat.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <4d7ff4bb-f09e-7aec-964f-f5cc2412e5b7@redhat.com>
- <20200511111558.2d3e3db3@laptop2-ibm.local>
- <20200511170146.28eaafed@laptop2-ibm.local>
- <19903f1e-b3ae-730e-8a02-ed30fb47e9ba@redhat.com>
- <559a3c8f-9da9-a64d-aa78-434365c4b271@redhat.com>
- <79241fab-3299-1ba3-1c2b-a29eb4e0af7c@redhat.com>
- <20200512193956.15ae3f23@laptop2-ibm.local>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <426212ae-7687-87df-2275-f26ffd16fc8e@redhat.com>
-Date:   Wed, 13 May 2020 11:28:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200512193956.15ae3f23@laptop2-ibm.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        id S1728988AbgEMHmo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 May 2020 03:42:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46286 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729681AbgEMHmo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 13 May 2020 03:42:44 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04D7VvL0155586;
+        Wed, 13 May 2020 03:42:38 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3101m499h6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 03:42:37 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04D7ekwO027966;
+        Wed, 13 May 2020 07:42:35 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma01fra.de.ibm.com with ESMTP id 3100ubge6m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 07:42:35 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04D7gWrb63439226
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 May 2020 07:42:33 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6BED11C04A;
+        Wed, 13 May 2020 07:42:32 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7BFF911C052;
+        Wed, 13 May 2020 07:42:32 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 May 2020 07:42:32 +0000 (GMT)
+From:   Ursula Braun <ubraun@linux.ibm.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, kgraul@linux.ibm.com,
+        weiyongjun1@huawei.com, ubraun@linux.ibm.com
+Subject: [PATCH net 0/2] s390/net: updates 2020-05-13
+Date:   Wed, 13 May 2020 09:42:28 +0200
+Message-Id: <20200513074230.967-1-ubraun@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-13_02:2020-05-11,2020-05-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 mlxlogscore=581 priorityscore=1501 phishscore=0 clxscore=1015
+ cotscore=-2147483648 impostorscore=0 spamscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 suspectscore=1 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005130065
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-在 2020年05月13日 01:39, Philipp Rudo 写道:
-> Hi Lianbo,
-> 
-> stupid me obviously never tested the kdump+initrd combination...
-> 
-> The patch below fixed the problem for me. Could please give it a try, too.
-> 
+Dave,
 
-Thank you for the patch, Philipp. Kdump kernel can boot on s390x machine with this patch.
+please apply the fix from Wei Yongjun to netdev's net tree and
+add Karsten Graul as co-maintainer for drivers/s390/net.
 
-> Thanks
-> Philipp
-> 
-> ---
-> 
-> From 3f77088c9139582261d2e3ee6476324fc1ded401 Mon Sep 17 00:00:00 2001
-> From: Philipp Rudo <prudo@linux.ibm.com>
-> Date: Tue, 12 May 2020 19:25:14 +0200
-> Subject: [PATCH] s390/kexec_file: fix initrd location for kdump kernel
-> 
-> initrd_start must not point at the location the initrd is loaded into
-> the crashkernel memory but at the location it will be after the
-> crashkernel memory is swapped with the memory at 0.
-> 
-> Fixes: ee337f5469fd ("s390/kexec_file: Add crash support to image loader")
-> Reported-by: Lianbo Jiang <lijiang@redhat.com>
-> Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
-> ---
->  arch/s390/kernel/machine_kexec_file.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-> index 8415ae7d2a23..f9e4baa64b67 100644
-> --- a/arch/s390/kernel/machine_kexec_file.c
-> +++ b/arch/s390/kernel/machine_kexec_file.c
-> @@ -151,7 +151,7 @@ static int kexec_file_add_initrd(struct kimage *image,
->  		buf.mem += crashk_res.start;
->  	buf.memsz = buf.bufsz;
->  
-> -	data->parm->initrd_start = buf.mem;
-> +	data->parm->initrd_start = data->memsz;
+Thanks, Ursula
 
-Good findings.
+Ursula Braun (1):
+  MAINTAINERS: add Karsten Graul as S390 NETWORK DRIVERS maintainer
 
->  	data->parm->initrd_size = buf.memsz;
->  	data->memsz += buf.memsz;
->  
-> 
+Wei Yongjun (1):
+  s390/ism: fix error return code in ism_probe()
 
-Tested-by: Lianbo Jiang <lijiang@redhat.com>
+ MAINTAINERS                | 1 +
+ drivers/s390/net/ism_drv.c | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-Thanks.
-Lianbo
+-- 
+2.17.1
 
