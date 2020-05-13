@@ -2,169 +2,156 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 079321D0ACD
-	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2020 10:28:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F16821D1799
+	for <lists+linux-s390@lfdr.de>; Wed, 13 May 2020 16:29:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730332AbgEMI2D (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 13 May 2020 04:28:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51692 "EHLO
+        id S2388992AbgEMO3n (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 May 2020 10:29:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53252 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729189AbgEMI2C (ORCPT
+        by vger.kernel.org with ESMTP id S2388790AbgEMO3m (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 13 May 2020 04:28:02 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04D84Ngj000865;
-        Wed, 13 May 2020 04:28:01 -0400
+        Wed, 13 May 2020 10:29:42 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEAo62156622;
+        Wed, 13 May 2020 10:29:41 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3101m8tf8d-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3101knnxk6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 04:28:01 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04D84hMb002619;
-        Wed, 13 May 2020 04:28:01 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3101m8tf7m-1
+        Wed, 13 May 2020 10:29:41 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04DEBLQ4158639;
+        Wed, 13 May 2020 10:29:40 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3101knnxje-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 04:28:01 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04D8Pega024292;
-        Wed, 13 May 2020 08:27:59 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma01fra.de.ibm.com with ESMTP id 3100ubgf3q-1
+        Wed, 13 May 2020 10:29:40 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04DEL5fd015403;
+        Wed, 13 May 2020 14:29:39 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 3100ub9rgv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 08:27:59 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04D8RvNa62849358
+        Wed, 13 May 2020 14:29:38 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04DESPjt25035040
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 May 2020 08:27:57 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF70652054;
-        Wed, 13 May 2020 08:27:56 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.172.249])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id AAD1D52051;
-        Wed, 13 May 2020 08:27:56 +0000 (GMT)
-Subject: Re: s390x: kdump kernel can not boot if I load kernel and initrd
- images via the kexec_file_load syscall.
-To:     Philipp Rudo <prudo@linux.ibm.com>, lijiang <lijiang@redhat.com>
-Cc:     Dave Young <dyoung@redhat.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <4d7ff4bb-f09e-7aec-964f-f5cc2412e5b7@redhat.com>
- <20200511111558.2d3e3db3@laptop2-ibm.local>
- <20200511170146.28eaafed@laptop2-ibm.local>
- <19903f1e-b3ae-730e-8a02-ed30fb47e9ba@redhat.com>
- <559a3c8f-9da9-a64d-aa78-434365c4b271@redhat.com>
- <79241fab-3299-1ba3-1c2b-a29eb4e0af7c@redhat.com>
- <20200512193956.15ae3f23@laptop2-ibm.local>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <ea013211-575e-993d-9437-ba961ef64fe0@de.ibm.com>
-Date:   Wed, 13 May 2020 10:27:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200512193956.15ae3f23@laptop2-ibm.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 13 May 2020 14:28:25 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 14DD2A4066;
+        Wed, 13 May 2020 14:29:36 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC722A405F;
+        Wed, 13 May 2020 14:29:35 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 13 May 2020 14:29:35 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
+        id A4F0BE02B1; Wed, 13 May 2020 16:29:35 +0200 (CEST)
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Jared Rossi <jrossi@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
+Subject: [RFC PATCH v2 0/4] vfio-ccw: Fix interrupt handling for HALT/CLEAR
+Date:   Wed, 13 May 2020 16:29:30 +0200
+Message-Id: <20200513142934.28788-1-farman@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-13_02:2020-05-11,2020-05-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0
- mlxlogscore=999 impostorscore=0 malwarescore=0 bulkscore=0 phishscore=0
- cotscore=-2147483648 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005130070
+ definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ cotscore=-2147483648 mlxlogscore=999 adultscore=0 clxscore=1015
+ suspectscore=0 spamscore=0 phishscore=0 priorityscore=1501 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005130121
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Conny,
 
+Back in January, I suggested a small patch [1] to try to clean up
+the handling of HSCH/CSCH interrupts, especially as it relates to
+concurrent SSCH interrupts. Here is a new attempt to address this.
 
-On 12.05.20 19:39, Philipp Rudo wrote:
-> Hi Lianbo,
-> 
-> stupid me obviously never tested the kdump+initrd combination...
-> 
-> The patch below fixed the problem for me. Could please give it a try, too.
-> 
-> Thanks
-> Philipp
-> 
-> ---
-> 
-> From 3f77088c9139582261d2e3ee6476324fc1ded401 Mon Sep 17 00:00:00 2001
-> From: Philipp Rudo <prudo@linux.ibm.com>
-> Date: Tue, 12 May 2020 19:25:14 +0200
-> Subject: [PATCH] s390/kexec_file: fix initrd location for kdump kernel
-> 
-> initrd_start must not point at the location the initrd is loaded into
-> the crashkernel memory but at the location it will be after the
-> crashkernel memory is swapped with the memory at 0.
-> 
-> Fixes: ee337f5469fd ("s390/kexec_file: Add crash support to image loader")
-> Reported-by: Lianbo Jiang <lijiang@redhat.com>
-> Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
-> ---
->  arch/s390/kernel/machine_kexec_file.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-> index 8415ae7d2a23..f9e4baa64b67 100644
-> --- a/arch/s390/kernel/machine_kexec_file.c
-> +++ b/arch/s390/kernel/machine_kexec_file.c
-> @@ -151,7 +151,7 @@ static int kexec_file_add_initrd(struct kimage *image,
->  		buf.mem += crashk_res.start;
->  	buf.memsz = buf.bufsz;
->  
-> -	data->parm->initrd_start = buf.mem;
-> +	data->parm->initrd_start = data->memsz;
->  	data->parm->initrd_size = buf.memsz;
->  	data->memsz += buf.memsz;
+There was some suggestion earlier about locking the FSM, but I'm not
+seeing any problems with that. Rather, what I'm noticing is that the
+flow between a synchronous START and asynchronous HALT/CLEAR have
+different impacts on the FSM state. Consider:
 
+    CPU 1                           CPU 2
 
-Thanks, applied. 
+    SSCH (set state=CP_PENDING)
+    INTERRUPT (set state=IDLE)
+    CSCH (no change in state)
+                                    SSCH (set state=CP_PENDING)
+    INTERRUPT (set state=IDLE)
+                                    INTERRUPT (set state=IDLE)
+
+The second interrupt on CPU 1 will call cp_free() for the START
+created by CPU 2, and our results will be, um, messy. This
+suggests that three things must be true:
+
+ A) cp_free() must be called for either a final interrupt,
+or a failure issuing a SSCH
+ B) The FSM state must only be set to IDLE once cp_free()
+has been called
+ C) A SSCH cannot be issued while an interrupt is outstanding
+
+It's not great that items B and C are separated in the interrupt
+path by a mutex boundary where the copy into io_region occurs.
+We could (and perhaps should) move them together, which would
+improve things somewhat, but still doesn't address the scenario
+laid out above. Even putting that work within the mutex window
+during interrupt processing doesn't address things totally.
+
+So, the patches here do two things. One to handle unsolicited
+interrupts [2], which I think is pretty straightforward. Though,
+it does make me want to do a more drastic rearranging of the
+affected function. :)
+
+The other warrants some discussion, since it's sort of weird.
+Basically, recognize what commands we've issued, expect interrupts
+for each, and prevent new SSCH's while asynchronous commands are
+pending. It doesn't address interrupts from the HSCH/CSCH that
+could be generated by the Channel Path Handling code [3] for an
+offline CHPID yet, and it needs some TLC to make checkpatch happy.
+But it's the best possibility I've seen thus far.
+
+I used private->scsw for this because it's barely used for anything
+else; at one point I had been considering removing it outright because
+we have entirely too many SCSW's in this code. :) I could implement
+this as three small flags in private, to simplify the code and avoid
+confusion with the different fctl/actl flags in private vs schib.
+
+It does make me wonder whether the CP_PENDING check before cp_free()
+is still necessary, but that's a query for a later date.
+
+Also, perhaps this could be accomplished with two new FSM states,
+one for a HALT and one for a CLEAR. I put it aside because the
+interrupt handler got a little hairy with that, but I'm still looking
+at it in parallel to this discussion.
+
+I look forward to hearing your thoughts...
+
+[1] https://lore.kernel.org/kvm/20200124145455.51181-1-farman@linux.ibm.com/
+[2] https://lore.kernel.org/kvm/9635c45f-4652-c837-d256-46f426737a5e@linux.ibm.com/
+[3] https://lore.kernel.org/kvm/20200505122745.53208-1-farman@linux.ibm.com/
+
+Eric Farman (4):
+  vfio-ccw: Do not reset FSM state for unsolicited interrupts
+  vfio-ccw: Utilize scsw actl to serialize start operations
+  vfio-ccw: Expand SCSW usage to HALT and CLEAR
+  vfio-ccw: Clean up how to react to a failed START
+
+ drivers/s390/cio/vfio_ccw_drv.c | 10 +++++++++-
+ drivers/s390/cio/vfio_ccw_fsm.c | 26 ++++++++++++++++++++++++++
+ drivers/s390/cio/vfio_ccw_ops.c |  3 +--
+ 3 files changed, 36 insertions(+), 3 deletions(-)
+
+-- 
+2.17.1
+
