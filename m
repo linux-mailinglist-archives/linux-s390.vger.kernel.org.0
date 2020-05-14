@@ -2,85 +2,74 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D4841D2E9D
-	for <lists+linux-s390@lfdr.de>; Thu, 14 May 2020 13:45:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDACB1D2EEE
+	for <lists+linux-s390@lfdr.de>; Thu, 14 May 2020 13:58:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgENLpY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 May 2020 07:45:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13514 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726067AbgENLpY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 14 May 2020 07:45:24 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EBWtQ9030739;
-        Thu, 14 May 2020 07:45:23 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 310ub011c5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 07:45:22 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04EBerSI005485;
-        Thu, 14 May 2020 11:45:20 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 3100ub3hrk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 11:45:20 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04EBjFYB13042080
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 May 2020 11:45:15 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D6BA52052;
-        Thu, 14 May 2020 11:45:15 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3E0C05204F;
-        Thu, 14 May 2020 11:45:15 +0000 (GMT)
-From:   Ursula Braun <ubraun@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, kgraul@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: [PATCH net 1/1] MAINTAINERS: another add of Karsten Graul for S390 networking
-Date:   Thu, 14 May 2020 13:45:12 +0200
-Message-Id: <20200514114512.101771-1-ubraun@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-14_02:2020-05-14,2020-05-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 mlxscore=0 phishscore=0 adultscore=0 suspectscore=1
- lowpriorityscore=0 spamscore=0 clxscore=1015 cotscore=-2147483648
- mlxlogscore=678 bulkscore=0 priorityscore=1501 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005140104
+        id S1726216AbgENL6Q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 May 2020 07:58:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59583 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726073AbgENL6Q (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 May 2020 07:58:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589457495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XGl+5VE42uZb7UUcuppvQrMTFvGL+eHMuXlr/U1lpf8=;
+        b=QZD2i6GLyigrYBgHMtRP0fn/eZQRlPyAS8STQjLWyWWrVAECJI+fTTgH5WuzrPBzyjsbMx
+        Kd/AoCep5QyA+dFZiPsgjuYpequWXjEAuk9+fncVkW8rsBRN9kM+0RnhWxtYDtuk+dY0dW
+        FjHlE99rSnKdfpnn27nK4CRDZOJSwcY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-379-ECKt9cEeOKKEVGCZCl1RjA-1; Thu, 14 May 2020 07:58:13 -0400
+X-MC-Unique: ECKt9cEeOKKEVGCZCl1RjA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C432800053;
+        Thu, 14 May 2020 11:58:12 +0000 (UTC)
+Received: from gondolin (unknown [10.40.192.240])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 38CF139E;
+        Thu, 14 May 2020 11:58:08 +0000 (UTC)
+Date:   Thu, 14 May 2020 13:58:05 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
+Subject: Re: [kvm-unit-tests PATCH v6 04/10] s390x: interrupt registration
+Message-ID: <20200514135805.77a7ae82.cohuck@redhat.com>
+In-Reply-To: <1587725152-25569-5-git-send-email-pmorel@linux.ibm.com>
+References: <1587725152-25569-1-git-send-email-pmorel@linux.ibm.com>
+        <1587725152-25569-5-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Complete adding of Karsten as maintainer for all S390 networking
-parts in the kernel.
+On Fri, 24 Apr 2020 12:45:46 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Cc: Julian Wiedmann <jwi@linux.ibm.com>
-Acked-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+> Let's make it possible to add and remove a custom io interrupt handler,
+> that can be used instead of the normal one.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> Reviewed-by: Thomas Huth <thuth@redhat.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  lib/s390x/interrupt.c | 23 ++++++++++++++++++++++-
+>  lib/s390x/interrupt.h |  8 ++++++++
+>  2 files changed, 30 insertions(+), 1 deletion(-)
+>  create mode 100644 lib/s390x/interrupt.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 85894787825e..391e7eea6a3e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14655,6 +14655,7 @@ F:	net/iucv/
- 
- S390 NETWORK DRIVERS
- M:	Julian Wiedmann <jwi@linux.ibm.com>
-+M:	Karsten Graul <kgraul@linux.ibm.com>
- M:	Ursula Braun <ubraun@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- S:	Supported
--- 
-2.17.1
+As the "normal one" means "no handler, just abort", is there any reason
+not simply to always provide one? What is the use case for multiple I/O
+interrupt handlers?
 
