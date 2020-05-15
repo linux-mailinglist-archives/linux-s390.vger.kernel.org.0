@@ -2,53 +2,181 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6E4E1D3EC0
-	for <lists+linux-s390@lfdr.de>; Thu, 14 May 2020 22:12:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 932B11D45B8
+	for <lists+linux-s390@lfdr.de>; Fri, 15 May 2020 08:17:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgENUMb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 May 2020 16:12:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727827AbgENUMa (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 14 May 2020 16:12:30 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D477EC061A0C;
-        Thu, 14 May 2020 13:12:30 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 745A5128D5B94;
-        Thu, 14 May 2020 13:12:30 -0700 (PDT)
-Date:   Thu, 14 May 2020 13:12:29 -0700 (PDT)
-Message-Id: <20200514.131229.1854195473777943633.davem@davemloft.net>
-To:     ubraun@linux.ibm.com
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, kgraul@linux.ibm.com
-Subject: Re: [PATCH net 1/1] MAINTAINERS: another add of Karsten Graul for
- S390 networking
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200514114512.101771-1-ubraun@linux.ibm.com>
-References: <20200514114512.101771-1-ubraun@linux.ibm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        id S1726584AbgEOGRI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 May 2020 02:17:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23987 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726589AbgEOGRI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 May 2020 02:17:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589523426;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oN6MYt7rJRAHouc5JqboQ3NUhAVY4MBugEYSlQiB08g=;
+        b=Nz737vrZXbC2Ohl1nOkmocGnpUecAsY3k+FscqWnPPrU9ny9tV33ZY4kjH/3qCp7tWcB+8
+        jS9dQRP4JyO3f8ikBX/qYEOsTAzCzdCIevnedTEqE3LNHoX2beuG+J4i6fLkiDzu5WmnLZ
+        yCjN0llYdlUB53vt0o85IwrtIB0vPPk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-280-EVw2PcdEMlGjaoMsis_Fqg-1; Fri, 15 May 2020 02:17:01 -0400
+X-MC-Unique: EVw2PcdEMlGjaoMsis_Fqg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BF7AD1085943;
+        Fri, 15 May 2020 06:16:59 +0000 (UTC)
+Received: from gondolin (ovpn-112-229.ams2.redhat.com [10.36.112.229])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E7C762B4DE;
+        Fri, 15 May 2020 06:16:54 +0000 (UTC)
+Date:   Fri, 15 May 2020 08:16:52 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Collin Walling <walling@linux.ibm.com>
+Cc:     Thomas Huth <thuth@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, pbonzini@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v6 2/2] s390/kvm: diagnose 318 handling
+Message-ID: <20200515081652.62c33498.cohuck@redhat.com>
+In-Reply-To: <f3428cd4-d9af-cc99-ff31-4b3f3deee3d2@linux.ibm.com>
+References: <20200513221557.14366-1-walling@linux.ibm.com>
+        <20200513221557.14366-3-walling@linux.ibm.com>
+        <d4320d09-7b3a-ac13-77be-02397f4ccc83@redhat.com>
+        <de4e4416-5158-b60f-e2a8-fb6d3d48d516@linux.ibm.com>
+        <88d27a61-b55b-ee68-f7f9-85ce7fcefd64@redhat.com>
+        <e7691d9a-a446-17db-320e-a2348e0eb057@linux.ibm.com>
+        <516405b3-67c4-aa12-1fa5-772e401e4403@redhat.com>
+        <2aa0d573-b9d4-8022-9ec5-79f7156d1bcb@linux.ibm.com>
+        <af478798-eced-a279-8425-a1bb23d2bd48@redhat.com>
+        <f3428cd4-d9af-cc99-ff31-4b3f3deee3d2@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 14 May 2020 13:12:30 -0700 (PDT)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Ursula Braun <ubraun@linux.ibm.com>
-Date: Thu, 14 May 2020 13:45:12 +0200
+On Thu, 14 May 2020 14:53:24 -0400
+Collin Walling <walling@linux.ibm.com> wrote:
 
-> Complete adding of Karsten as maintainer for all S390 networking
-> parts in the kernel.
+> On 5/14/20 2:37 PM, Thomas Huth wrote:
+> > On 14/05/2020 19.20, Collin Walling wrote:  
+> >> On 5/14/20 5:53 AM, David Hildenbrand wrote:  
+> >>> On 14.05.20 11:49, Janosch Frank wrote:  
+> >>>> On 5/14/20 11:37 AM, David Hildenbrand wrote:  
+> >>>>> On 14.05.20 10:52, Janosch Frank wrote:  
+> >>>>>> On 5/14/20 9:53 AM, Thomas Huth wrote:  
+> >>>>>>> On 14/05/2020 00.15, Collin Walling wrote:  
+> >>>>>>>> DIAGNOSE 0x318 (diag318) is a privileged s390x instruction that must
+> >>>>>>>> be intercepted by SIE and handled via KVM. Let's introduce some
+> >>>>>>>> functions to communicate between userspace and KVM via ioctls. These
+> >>>>>>>> will be used to get/set the diag318 related information, as well as
+> >>>>>>>> check the system if KVM supports handling this instruction.
+> >>>>>>>>
+> >>>>>>>> This information can help with diagnosing the environment the VM is
+> >>>>>>>> running in (Linux, z/VM, etc) if the OS calls this instruction.
+> >>>>>>>>
+> >>>>>>>> By default, this feature is disabled and can only be enabled if a
+> >>>>>>>> user space program (such as QEMU) explicitly requests it.
+> >>>>>>>>
+> >>>>>>>> The Control Program Name Code (CPNC) is stored in the SIE block
+> >>>>>>>> and a copy is retained in each VCPU. The Control Program Version
+> >>>>>>>> Code (CPVC) is not designed to be stored in the SIE block, so we
+> >>>>>>>> retain a copy in each VCPU next to the CPNC.
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Collin Walling <walling@linux.ibm.com>
+> >>>>>>>> ---
+> >>>>>>>>  Documentation/virt/kvm/devices/vm.rst | 29 +++++++++
+> >>>>>>>>  arch/s390/include/asm/kvm_host.h      |  6 +-
+> >>>>>>>>  arch/s390/include/uapi/asm/kvm.h      |  5 ++
+> >>>>>>>>  arch/s390/kvm/diag.c                  | 20 ++++++
+> >>>>>>>>  arch/s390/kvm/kvm-s390.c              | 89 +++++++++++++++++++++++++++
+> >>>>>>>>  arch/s390/kvm/kvm-s390.h              |  1 +
+> >>>>>>>>  arch/s390/kvm/vsie.c                  |  2 +
+> >>>>>>>>  7 files changed, 151 insertions(+), 1 deletion(-)  
+> >>>>>>> [...]  
+> >>>>>>>> diff --git a/arch/s390/kvm/diag.c b/arch/s390/kvm/diag.c
+> >>>>>>>> index 563429dece03..3caed4b880c8 100644
+> >>>>>>>> --- a/arch/s390/kvm/diag.c
+> >>>>>>>> +++ b/arch/s390/kvm/diag.c
+> >>>>>>>> @@ -253,6 +253,24 @@ static int __diag_virtio_hypercall(struct kvm_vcpu *vcpu)
+> >>>>>>>>  	return ret < 0 ? ret : 0;
+> >>>>>>>>  }
+> >>>>>>>>  
+> >>>>>>>> +static int __diag_set_diag318_info(struct kvm_vcpu *vcpu)
+> >>>>>>>> +{
+> >>>>>>>> +	unsigned int reg = (vcpu->arch.sie_block->ipa & 0xf0) >> 4;
+> >>>>>>>> +	u64 info = vcpu->run->s.regs.gprs[reg];
+> >>>>>>>> +
+> >>>>>>>> +	if (!vcpu->kvm->arch.use_diag318)
+> >>>>>>>> +		return -EOPNOTSUPP;
+> >>>>>>>> +
+> >>>>>>>> +	vcpu->stat.diagnose_318++;
+> >>>>>>>> +	kvm_s390_set_diag318_info(vcpu->kvm, info);
+> >>>>>>>> +
+> >>>>>>>> +	VCPU_EVENT(vcpu, 3, "diag 0x318 cpnc: 0x%x cpvc: 0x%llx",
+> >>>>>>>> +		   vcpu->kvm->arch.diag318_info.cpnc,
+> >>>>>>>> +		   (u64)vcpu->kvm->arch.diag318_info.cpvc);  
+> >>
+> >> Errr.. thought I dropped this message. We favored just using the
+> >> VM_EVENT from last time.
+> >>  
+> >>>>>>>> +
+> >>>>>>>> +	return 0;
+> >>>>>>>> +}
+> >>>>>>>> +
+> >>>>>>>>  int kvm_s390_handle_diag(struct kvm_vcpu *vcpu)
+> >>>>>>>>  {
+> >>>>>>>>  	int code = kvm_s390_get_base_disp_rs(vcpu, NULL) & 0xffff;
+> >>>>>>>> @@ -272,6 +290,8 @@ int kvm_s390_handle_diag(struct kvm_vcpu *vcpu)
+> >>>>>>>>  		return __diag_page_ref_service(vcpu);
+> >>>>>>>>  	case 0x308:
+> >>>>>>>>  		return __diag_ipl_functions(vcpu);
+> >>>>>>>> +	case 0x318:
+> >>>>>>>> +		return __diag_set_diag318_info(vcpu);
+> >>>>>>>>  	case 0x500:
+> >>>>>>>>  		return __diag_virtio_hypercall(vcpu);  
+> >>>>>>>
+> >>>>>>> I wonder whether it would make more sense to simply drop to userspace
+> >>>>>>> and handle the diag 318 call there? That way the userspace would always
+> >>>>>>> be up-to-date, and as we've seen in the past (e.g. with the various SIGP
+> >>>>>>> handling), it's better if the userspace is in control... e.g. userspace
+> >>>>>>> could also decide to only use KVM_S390_VM_MISC_ENABLE_DIAG318 if the
+> >>>>>>> guest just executed the diag 318 instruction.
+> >>>>>>>
+> >>>>>>> And you need the kvm_s390_vm_get/set_misc functions anyway, so these
+> >>>>>>> could also be simply used by the diag 318 handler in userspace?  
+> >>
+> >> Pardon my ignorance, but I do not think I fully understand what exactly
+> >> should be dropped in favor of doing things in userspace.
+> >>
+> >> My assumption: if a diag handler is not found in KVM, then we
+> >> fallthrough to userspace handling?  
+> > 
+> > Right, if you simply omit this change to diag.c, the default case
+> > returns -EOPNOTSUPP which then should cause an exit to userspace. You
+> > can then add the code in QEMU to handle_diag() in target/s390x/kvm.c
+> > instead.
+> > 
+> >  Thomas
+> >   
 > 
-> Cc: Julian Wiedmann <jwi@linux.ibm.com>
-> Acked-by: Julian Wiedmann <jwi@linux.ibm.com>
-> Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+> Very cool! Okay, I think this makes sense, then. I'll look into this.
+> Thanks for the tip.
+> 
+> @Conny, I assume this is what you meant as well? If so, ignore my
+> response I sent earlier :)
+> 
 
-Applied, thanks.
+Yes; if done correctly, it should be easy to hack something up for tcg
+as well, if we want it.
+
