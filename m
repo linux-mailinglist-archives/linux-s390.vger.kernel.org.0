@@ -2,109 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB3EF1D77DB
-	for <lists+linux-s390@lfdr.de>; Mon, 18 May 2020 13:52:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C88D71D7BB1
+	for <lists+linux-s390@lfdr.de>; Mon, 18 May 2020 16:46:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgERLw1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 May 2020 07:52:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38270 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726413AbgERLw1 (ORCPT
+        id S1728097AbgEROqd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 May 2020 10:46:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44617 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726958AbgEROqc (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 18 May 2020 07:52:27 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IBWP7F054515;
-        Mon, 18 May 2020 07:51:08 -0400
+        Mon, 18 May 2020 10:46:32 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IEjhUj014889;
+        Mon, 18 May 2020 10:46:31 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 313r0xuesb-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312cqm3eqt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 07:51:08 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04IBWQWj054578;
-        Mon, 18 May 2020 07:51:07 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 313r0xuerc-1
+        Mon, 18 May 2020 10:46:31 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04IEjnxP015522;
+        Mon, 18 May 2020 10:46:31 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312cqm3eq7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 07:51:07 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04IBkXpk030546;
-        Mon, 18 May 2020 11:51:05 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04fra.de.ibm.com with ESMTP id 3127t5sn29-1
+        Mon, 18 May 2020 10:46:31 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04IEG0HI017533;
+        Mon, 18 May 2020 14:46:30 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma02dal.us.ibm.com with ESMTP id 3127t6cd8y-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 11:51:05 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04IBp3C743712642
+        Mon, 18 May 2020 14:46:30 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04IEkQwx49676720
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 11:51:03 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D825952052;
-        Mon, 18 May 2020 11:51:02 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.23.117])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id D378B5204E;
-        Mon, 18 May 2020 11:51:01 +0000 (GMT)
-Date:   Mon, 18 May 2020 13:51:00 +0200
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390@vger.kernel.org, Stable <stable@vger.kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Willem de Bruijn <willemb@google.com>
-Subject: Re: [PATCH RESEND] lib: fix bitmap_parse() on 64-bit big endian archs
-Message-ID: <20200518115059.GA19150@oc3871087118.ibm.com>
-References: <1589798090-11136-1-git-send-email-agordeev@linux.ibm.com>
- <CAHp75VdM2yrpd2d3pK2RkmbhF3yiM4=fiTXL4i3yu3AxV3wY-A@mail.gmail.com>
+        Mon, 18 May 2020 14:46:26 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72BED6E04E;
+        Mon, 18 May 2020 14:46:26 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9A2376E04C;
+        Mon, 18 May 2020 14:46:25 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.206.55])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Mon, 18 May 2020 14:46:25 +0000 (GMT)
+Subject: Re: [PATCH v7 2/3] s390: keep diag 318 variables consistent with the
+ rest
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Cc:     pbonzini@redhat.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com
+References: <20200515221935.18775-1-walling@linux.ibm.com>
+ <20200515221935.18775-3-walling@linux.ibm.com>
+ <6f910102-c729-6605-39f7-d22ee8b40b4c@redhat.com>
+From:   Collin Walling <walling@linux.ibm.com>
+Message-ID: <36ceecf8-a1cd-3592-362b-53d6c57722be@linux.ibm.com>
+Date:   Mon, 18 May 2020 10:46:24 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdM2yrpd2d3pK2RkmbhF3yiM4=fiTXL4i3yu3AxV3wY-A@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <6f910102-c729-6605-39f7-d22ee8b40b4c@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-18_04:2020-05-15,2020-05-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- phishscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015 suspectscore=0
- impostorscore=0 bulkscore=0 adultscore=0 spamscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005180100
+ definitions=2020-05-18_06:2020-05-15,2020-05-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ adultscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 lowpriorityscore=0 clxscore=1015 cotscore=-2147483648
+ spamscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005180129
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, May 18, 2020 at 02:33:43PM +0300, Andy Shevchenko wrote:
-> On Mon, May 18, 2020 at 1:40 PM Alexander Gordeev
-> <agordeev@linux.ibm.com> wrote:
-> >
-> > Commit 2d6261583be0 ("lib: rework bitmap_parse()") does
-> > not take into account order of halfwords on 64-bit big
-> > endian architectures.
+On 5/18/20 2:30 AM, Thomas Huth wrote:
+> On 16/05/2020 00.19, Collin Walling wrote:
+>> Rename diag318 to diag_318 and byte_134 to fac134 in order to keep
+>> naming schemes consistent with other diags and the read info struct
+>> and make grepping easier.
+>>
+>> Signed-off-by: Collin Walling <walling@linux.ibm.com>
+>> ---
+>>  arch/s390/include/asm/diag.h   | 2 +-
+>>  arch/s390/include/asm/sclp.h   | 2 +-
+>>  arch/s390/kernel/setup.c       | 6 +++---
+>>  drivers/s390/char/sclp.h       | 2 +-
+>>  drivers/s390/char/sclp_early.c | 2 +-
+>>  5 files changed, 7 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/s390/include/asm/diag.h b/arch/s390/include/asm/diag.h
+>> index ca8f85b53a90..19da822e494c 100644
+>> --- a/arch/s390/include/asm/diag.h
+>> +++ b/arch/s390/include/asm/diag.h
+>> @@ -295,7 +295,7 @@ struct diag26c_mac_resp {
+>>  } __aligned(8);
+>>  
+>>  #define CPNC_LINUX		0x4
+>> -union diag318_info {
+>> +union diag_318_info {
 > 
-> Thanks for report and the patch!
+> $ grep -r diag.*info arch/s390/include/asm/diag.h
+> struct diag204_info_blk_hdr {
+> struct diag204_x_info_blk_hdr {
+> struct diag204_cpu_info {
+> struct diag204_x_cpu_info {
+> 	struct diag204_x_cpu_info cpus[];
+> union diag318_info {
 > 
-> Did it work before? Can we have a test case for that that we will see
-> the failure?
+> ... none of these seem to use an underscore between the "diag" and the
+> number ... so this seems unnecessary to me ... or what do I miss?
+> 
+>  Thomas
+> 
 
-The test exists and enabled with CONFIG_TEST_BITMAP.
-It does not appear ever passed before on 64 BE.
-It does not fail on 64 LE for me either.
+I could have sworn I saw more cases with the underscore. I think I was
+honing-in on a few cases in QEMU for whatever reason.
 
-Thanks!
+Let's just forget this patch was posted :)
 
-[...]
+-- 
+--
+Regards,
+Collin
 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+Stay safe and stay healthy
