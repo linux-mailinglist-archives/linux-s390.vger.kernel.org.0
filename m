@@ -2,180 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7F931D73A2
-	for <lists+linux-s390@lfdr.de>; Mon, 18 May 2020 11:15:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA31A1D74B8
+	for <lists+linux-s390@lfdr.de>; Mon, 18 May 2020 12:06:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgERJPJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 May 2020 05:15:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12784 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726130AbgERJPI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 18 May 2020 05:15:08 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04I94f6R053861;
-        Mon, 18 May 2020 05:15:06 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 312cagk89y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 05:15:06 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04I95P4c059242;
-        Mon, 18 May 2020 05:15:05 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 312cagk88n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 05:15:05 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04I99rsI029126;
-        Mon, 18 May 2020 09:15:03 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 3127t5ktkw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 09:15:03 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04I9F0Wv42729696
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 09:15:00 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D5AB64C05E;
-        Mon, 18 May 2020 09:15:00 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 613B74C044;
-        Mon, 18 May 2020 09:15:00 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.6.241])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 18 May 2020 09:15:00 +0000 (GMT)
-Subject: Re: [PATCH v7 3/3] s390/kvm: diagnose 0x318 get/set handling
-To:     Collin Walling <walling@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Cc:     pbonzini@redhat.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, imbrenda@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com, thuth@redhat.com
-References: <20200515221935.18775-1-walling@linux.ibm.com>
- <20200515221935.18775-4-walling@linux.ibm.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
- J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
- CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
- 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
- 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
- +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
- T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
- OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
- /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
- IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABzUNDaHJpc3RpYW4g
- Qm9ybnRyYWVnZXIgKDJuZCBJQk0gYWRkcmVzcykgPGJvcm50cmFlZ2VyQGxpbnV4LmlibS5j
- b20+wsF5BBMBAgAjBQJdP/hMAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQEXu8
- gLWmHHy/pA/+JHjpEnd01A0CCyfVnb5fmcOlQ0LdmoKWLWPvU840q65HycCBFTt6V62cDljB
- kXFFxMNA4y/2wqU0H5/CiL963y3gWIiJsZa4ent+KrHl5GK1nIgbbesfJyA7JqlB0w/E/SuY
- NRQwIWOo/uEvOgXnk/7+rtvBzNaPGoGiiV1LZzeaxBVWrqLtmdi1iulW/0X/AlQPuF9dD1Px
- hx+0mPjZ8ClLpdSp5d0yfpwgHtM1B7KMuQPQZGFKMXXTUd3ceBUGGczsgIMipZWJukqMJiJj
- QIMH0IN7XYErEnhf0GCxJ3xAn/J7iFpPFv8sFZTvukntJXSUssONnwiKuld6ttUaFhSuSoQg
- OFYR5v7pOfinM0FcScPKTkrRsB5iUvpdthLq5qgwdQjmyINt3cb+5aSvBX2nNN135oGOtlb5
- tf4dh00kUR8XFHRrFxXx4Dbaw4PKgV3QLIHKEENlqnthH5t0tahDygQPnSucuXbVQEcDZaL9
- WgJqlRAAj0pG8M6JNU5+2ftTFXoTcoIUbb0KTOibaO9zHVeGegwAvPLLNlKHiHXcgLX1tkjC
- DrvE2Z0e2/4q7wgZgn1kbvz7ZHQZB76OM2mjkFu7QNHlRJ2VXJA8tMXyTgBX6kq1cYMmd/Hl
- OhFrAU3QO1SjCsXA2CDk9MM1471mYB3CTXQuKzXckJnxHkHOwU0ETpw8+AEQAJjyNXvMQdJN
- t07BIPDtbAQk15FfB0hKuyZVs+0lsjPKBZCamAAexNRk11eVGXK/YrqwjChkk60rt3q5i42u
- PpNMO9aS8cLPOfVft89Y654Qd3Rs1WRFIQq9xLjdLfHh0i0jMq5Ty+aiddSXpZ7oU6E+ud+X
- Czs3k5RAnOdW6eV3+v10sUjEGiFNZwzN9Udd6PfKET0J70qjnpY3NuWn5Sp1ZEn6lkq2Zm+G
- 9G3FlBRVClT30OWeiRHCYB6e6j1x1u/rSU4JiNYjPwSJA8EPKnt1s/Eeq37qXXvk+9DYiHdT
- PcOa3aNCSbIygD3jyjkg6EV9ZLHibE2R/PMMid9FrqhKh/cwcYn9FrT0FE48/2IBW5mfDpAd
- YvpawQlRz3XJr2rYZJwMUm1y+49+1ZmDclaF3s9dcz2JvuywNq78z/VsUfGz4Sbxy4ShpNpG
- REojRcz/xOK+FqNuBk+HoWKw6OxgRzfNleDvScVmbY6cQQZfGx/T7xlgZjl5Mu/2z+ofeoxb
- vWWM1YCJAT91GFvj29Wvm8OAPN/+SJj8LQazd9uGzVMTz6lFjVtH7YkeW/NZrP6znAwv5P1a
- DdQfiB5F63AX++NlTiyA+GD/ggfRl68LheSskOcxDwgI5TqmaKtX1/8RkrLpnzO3evzkfJb1
- D5qh3wM1t7PZ+JWTluSX8W25ABEBAAHCwV8EGAECAAkFAk6cPPgCGwwACgkQEXu8gLWmHHz8
- 2w//VjRlX+tKF3szc0lQi4X0t+pf88uIsvR/a1GRZpppQbn1jgE44hgF559K6/yYemcvTR7r
- 6Xt7cjWGS4wfaR0+pkWV+2dbw8Xi4DI07/fN00NoVEpYUUnOnupBgychtVpxkGqsplJZQpng
- v6fauZtyEcUK3dLJH3TdVQDLbUcL4qZpzHbsuUnTWsmNmG4Vi0NsEt1xyd/Wuw+0kM/oFEH1
- 4BN6X9xZcG8GYUbVUd8+bmio8ao8m0tzo4pseDZFo4ncDmlFWU6hHnAVfkAs4tqA6/fl7RLN
- JuWBiOL/mP5B6HDQT9JsnaRdzqF73FnU2+WrZPjinHPLeE74istVgjbowvsgUqtzjPIG5pOj
- cAsKoR0M1womzJVRfYauWhYiW/KeECklci4TPBDNx7YhahSUlexfoftltJA8swRshNA/M90/
- i9zDo9ySSZHwsGxG06ZOH5/MzG6HpLja7g8NTgA0TD5YaFm/oOnsQVsf2DeAGPS2xNirmknD
- jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
- ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <b08dbb8a-76fd-3693-d470-6171074ffce4@de.ibm.com>
-Date:   Mon, 18 May 2020 11:15:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1726040AbgERKGF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 May 2020 06:06:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25048 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726270AbgERKGE (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 May 2020 06:06:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589796363;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fz4ynS03WvX/2AkHFduj5e1SKrcKdNWHwhW4rgU70Y8=;
+        b=HqTBlMrIpf7koKkLUj1CxDIzXAE9AJ8qxU75tkn6i6EDPLbyl6hBkHwHeGPB+GKRrVfsFJ
+        Sf/iBShZM4JjYXEx5hDQmqDAvoLWTXmSAbtUzR6mLs2URBIDt4UpU6A+ubVrG4q924wmCP
+        rxmfTJB5/vKKGgh90H1x/LmoElajlFk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-137-I5e74_0KOEemx_ybx5rwHA-1; Mon, 18 May 2020 06:05:59 -0400
+X-MC-Unique: I5e74_0KOEemx_ybx5rwHA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B9ED835B8E;
+        Mon, 18 May 2020 10:05:58 +0000 (UTC)
+Received: from gondolin (ovpn-113-28.ams2.redhat.com [10.36.113.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E7F45C1B2;
+        Mon, 18 May 2020 10:05:57 +0000 (UTC)
+Date:   Mon, 18 May 2020 12:05:54 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>
+Subject: Re: [PATCH v4 0/8] s390x/vfio-ccw: Channel Path Handling [KVM]
+Message-ID: <20200518120554.6b7b04cd.cohuck@redhat.com>
+In-Reply-To: <20200505122745.53208-1-farman@linux.ibm.com>
+References: <20200505122745.53208-1-farman@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200515221935.18775-4-walling@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-18_03:2020-05-15,2020-05-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- bulkscore=0 mlxlogscore=999 adultscore=0 clxscore=1015 impostorscore=0
- lowpriorityscore=0 cotscore=-2147483648 phishscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005180081
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Tue,  5 May 2020 14:27:37 +0200
+Eric Farman <farman@linux.ibm.com> wrote:
 
-
-On 16.05.20 00:19, Collin Walling wrote:
-> DIAGNOSE 0x318 (diag 318) sets information regarding the environment
-> the VM is running in (Linux, z/VM, etc) and is observed via
-> firmware/service events.
+> Here is a new pass at the channel-path handling code for vfio-ccw.
+> Changes from previous versions are recorded in git notes for each patch.
+> Patches 5 through 7 got swizzled a little bit, in order to better
+> compartmentalize the code they define. Basically, the IRQ definitions
+> were moved from patch 7 to 5, and then patch 6 was placed ahead of
+> patch 5.
 > 
-> This is a privileged s390x instruction that must be intercepted by
-> SIE. Userspace handling is required, so let's introduce some functions
-> to communicate between userspace and KVM via ioctls. These will be used
-> to get/set the diag 318 related information.
+> I have put Conny's r-b's on patches 1, 3, 4, (new) 5, and 8, and believe
+> I have addressed all comments from v3, with two exceptions:
 > 
-> The Control Program Name Code (CPNC) is stored in the SIE block. The
-> CPNC along with the Control Program Version Code (CPVC) are stored in
-> the kvm_arch struct.
+> > I'm wondering if we should make this [vfio_ccw_schib_region_{write,release}]
+> > callback optional (not in this patch).  
 > 
-> Signed-off-by: Collin Walling <walling@linux.ibm.com>
-> ---
->  Documentation/virt/kvm/devices/vm.rst | 21 +++++++
->  arch/s390/include/asm/kvm_host.h      |  5 +-
->  arch/s390/include/uapi/asm/kvm.h      |  4 ++
->  arch/s390/kvm/kvm-s390.c              | 82 +++++++++++++++++++++++++++
->  arch/s390/kvm/vsie.c                  |  2 +
->  5 files changed, 113 insertions(+), 1 deletion(-)
+> I have that implemented on top of this series, and will send later as part
+> of a larger cleanup series.
 > 
-> diff --git a/Documentation/virt/kvm/devices/vm.rst b/Documentation/virt/kvm/devices/vm.rst
-> index 0aa5b1cfd700..52cc906dd7bd 100644
-> --- a/Documentation/virt/kvm/devices/vm.rst
-> +++ b/Documentation/virt/kvm/devices/vm.rst
-> @@ -314,3 +314,24 @@ Allows userspace to query the status of migration mode.
->  	     if it is enabled
->  :Returns:   -EFAULT if the given address is not accessible from kernel space;
->  	    0 in case of success.
-> +
-> +6. GROUP: KVM_S390_VM_MISC
-> +==========================
-> +
-> +:Architectures: s390
-> +
-> +6.1. KVM_S390_VM_MISC_DIAG_318 (r/w)
-> +-----------------------------------
-> +
-> +Allows userspace to retrieve and set the DIAGNOSE 0x318 information,
-> +which consists of a 1-byte "Control Program Name Code" and a 7-byte
-> +"Control Program Version Code" (a 64 bit value all in all). This
-> +information is set by the guest (usually during IPL). This interface is
-> +intended to allow retrieving and setting it during migration; while no
-> +real harm is done if the information is changed outside of migration,
-> +it is strongly discouraged.
-> +
-> +:Parameters: address of a buffer in user space (u64), where the
-> +	     information is read from or stored into
-> +:Returns:    -EFAULT if the given address is not accessible from kernel space;
-> +	     0 in case of success
+> > One thing though that keeps coming up: do we need any kind of
+> > serialization? Can there be any confusion from concurrent reads from
+> > userspace, or are we sure that we always provide consistent data?  
+> 
+> I _think_ this is in good shape, though as suggested another set of
+> eyeballs would be nice. There is still a problem on the main
+> interrupt/FSM path, which I'm not attempting to address here.
+> 
+> With this code plus the corresponding QEMU series (posted momentarily)
+> applied I am able to configure off/on a CHPID (for example, by issuing
+> "chchp -c 0/1 xx" on the host), and the guest is able to see both the
+> events and reflect the updated path masks in its structures.
+> 
+> v3: https://lore.kernel.org/kvm/20200417023001.65006-1-farman@linux.ibm.com/
+> v2: https://lore.kernel.org/kvm/20200206213825.11444-1-farman@linux.ibm.com/
+> v1: https://lore.kernel.org/kvm/20191115025620.19593-1-farman@linux.ibm.com/
+> 
+> Eric Farman (3):
+>   vfio-ccw: Refactor the unregister of the async regions
+>   vfio-ccw: Refactor IRQ handlers
+>   vfio-ccw: Add trace for CRW event
+> 
+> Farhan Ali (5):
+>   vfio-ccw: Introduce new helper functions to free/destroy regions
+>   vfio-ccw: Register a chp_event callback for vfio-ccw
+>   vfio-ccw: Introduce a new schib region
+>   vfio-ccw: Introduce a new CRW region
+>   vfio-ccw: Wire up the CRW irq and CRW region
+> 
+>  Documentation/s390/vfio-ccw.rst     |  38 ++++++-
+>  drivers/s390/cio/Makefile           |   2 +-
+>  drivers/s390/cio/vfio_ccw_chp.c     | 148 +++++++++++++++++++++++++
+>  drivers/s390/cio/vfio_ccw_drv.c     | 165 ++++++++++++++++++++++++++--
+>  drivers/s390/cio/vfio_ccw_ops.c     |  65 ++++++++---
+>  drivers/s390/cio/vfio_ccw_private.h |  16 +++
+>  drivers/s390/cio/vfio_ccw_trace.c   |   1 +
+>  drivers/s390/cio/vfio_ccw_trace.h   |  30 +++++
+>  include/uapi/linux/vfio.h           |   3 +
+>  include/uapi/linux/vfio_ccw.h       |  18 +++
+>  10 files changed, 458 insertions(+), 28 deletions(-)
+>  create mode 100644 drivers/s390/cio/vfio_ccw_chp.c
+> 
 
+Thanks, applied.
 
-An alternative would be a new sync_reg value + KVM capability.
-
+The documentation needed a bit of fiddling (please double-check), and I
+think we want to document error codes for the schib/crw regions as
+well. I can do that if I find time, but I'd also happily merge a patch.
 
