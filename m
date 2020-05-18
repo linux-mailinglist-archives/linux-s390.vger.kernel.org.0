@@ -2,43 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EB7B1D6260
-	for <lists+linux-s390@lfdr.de>; Sat, 16 May 2020 17:43:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23AC81D710F
+	for <lists+linux-s390@lfdr.de>; Mon, 18 May 2020 08:31:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726226AbgEPPnr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 16 May 2020 11:43:47 -0400
-Received: from verein.lst.de ([213.95.11.211]:60888 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726206AbgEPPnr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 16 May 2020 11:43:47 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id CD87368B05; Sat, 16 May 2020 17:43:44 +0200 (CEST)
-Date:   Sat, 16 May 2020 17:43:44 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk,
-        hoeppner@linux.ibm.com, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        linux-kernel@vger.kernel.org, borntraeger@de.ibm.com
-Subject: Re: [PATCH v3 3/3] s390/dasd: remove ioctl_by_bdev calls
-Message-ID: <20200516154344.GA16828@lst.de>
-References: <20200508131455.55407-1-sth@linux.ibm.com> <20200508131455.55407-4-sth@linux.ibm.com> <20200508155342.GC4200@lst.de> <6cd6788e-ce3d-7869-307a-9a6723f6eb79@linux.ibm.com>
+        id S1726813AbgERGbK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 May 2020 02:31:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45367 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726454AbgERGbK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 May 2020 02:31:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589783469;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=6dlVEUYFcNlE9cDLgKeiDl8r+5tXmvOo+L0M06F/hsM=;
+        b=gX1rxtJH71j/WNGQ/Xrf4pvV/wRgNUIzlFoagI8AH+hKwXBrpRcUzux/QncPXEflD1+MP8
+        Vuu3lik5V1JlnCt+f+DXE13o4PFl2sUkpZLol49zStBh46sermCoTlSfQ21YYFH/L1N8iT
+        R7nS1j9BLmQafIwfzw1BQF7kZAnayjw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-29-9uWgtAhMMym563F0t_IA6A-1; Mon, 18 May 2020 02:31:05 -0400
+X-MC-Unique: 9uWgtAhMMym563F0t_IA6A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D6FC9835B40;
+        Mon, 18 May 2020 06:31:02 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-112-182.ams2.redhat.com [10.36.112.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D09C060BE1;
+        Mon, 18 May 2020 06:30:57 +0000 (UTC)
+Subject: Re: [PATCH v7 2/3] s390: keep diag 318 variables consistent with the
+ rest
+To:     Collin Walling <walling@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Cc:     pbonzini@redhat.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com
+References: <20200515221935.18775-1-walling@linux.ibm.com>
+ <20200515221935.18775-3-walling@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <6f910102-c729-6605-39f7-d22ee8b40b4c@redhat.com>
+Date:   Mon, 18 May 2020 08:30:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6cd6788e-ce3d-7869-307a-9a6723f6eb79@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200515221935.18775-3-walling@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, May 11, 2020 at 06:30:44PM +0200, Stefan Haberland wrote:
-> Am 08.05.20 um 17:53 schrieb Christoph Hellwig:
-> > I think this should use symbol_get instead.
+On 16/05/2020 00.19, Collin Walling wrote:
+> Rename diag318 to diag_318 and byte_134 to fac134 in order to keep
+> naming schemes consistent with other diags and the read info struct
+> and make grepping easier.
 > 
-> Thanks for the Feedback, also for the previous patch.
-> I will incorporate it, run some test cycles and submit the patches
-> again when I am ready.
+> Signed-off-by: Collin Walling <walling@linux.ibm.com>
+> ---
+>  arch/s390/include/asm/diag.h   | 2 +-
+>  arch/s390/include/asm/sclp.h   | 2 +-
+>  arch/s390/kernel/setup.c       | 6 +++---
+>  drivers/s390/char/sclp.h       | 2 +-
+>  drivers/s390/char/sclp_early.c | 2 +-
+>  5 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/s390/include/asm/diag.h b/arch/s390/include/asm/diag.h
+> index ca8f85b53a90..19da822e494c 100644
+> --- a/arch/s390/include/asm/diag.h
+> +++ b/arch/s390/include/asm/diag.h
+> @@ -295,7 +295,7 @@ struct diag26c_mac_resp {
+>  } __aligned(8);
+>  
+>  #define CPNC_LINUX		0x4
+> -union diag318_info {
+> +union diag_318_info {
 
-Did you manage to get back to this?
+$ grep -r diag.*info arch/s390/include/asm/diag.h
+struct diag204_info_blk_hdr {
+struct diag204_x_info_blk_hdr {
+struct diag204_cpu_info {
+struct diag204_x_cpu_info {
+	struct diag204_x_cpu_info cpus[];
+union diag318_info {
+
+... none of these seem to use an underscore between the "diag" and the
+number ... so this seems unnecessary to me ... or what do I miss?
+
+ Thomas
+
