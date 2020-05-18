@@ -2,163 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DEBD1D7DD9
-	for <lists+linux-s390@lfdr.de>; Mon, 18 May 2020 18:07:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 557931D7DEF
+	for <lists+linux-s390@lfdr.de>; Mon, 18 May 2020 18:09:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbgERQHo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 May 2020 12:07:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51754 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728347AbgERQHo (ORCPT
+        id S1728355AbgERQJL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 May 2020 12:09:11 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36433 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728209AbgERQJL (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 18 May 2020 12:07:44 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04IG1CXk067092;
-        Mon, 18 May 2020 12:07:43 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31293u2xmu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 12:07:42 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04IG1TXe068489;
-        Mon, 18 May 2020 12:07:42 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31293u2xkv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 12:07:42 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04IG5dBg016148;
-        Mon, 18 May 2020 16:07:40 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 3127t5mf96-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 May 2020 16:07:40 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04IG7cSe65274094
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 May 2020 16:07:38 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5684F11C050;
-        Mon, 18 May 2020 16:07:38 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF1FD11C052;
-        Mon, 18 May 2020 16:07:37 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.158.244])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 18 May 2020 16:07:37 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        david@redhat.com, thuth@redhat.com, cohuck@redhat.com
-Subject: [kvm-unit-tests PATCH v7 12/12] s390x: css: ping pong
-Date:   Mon, 18 May 2020 18:07:31 +0200
-Message-Id: <1589818051-20549-13-git-send-email-pmorel@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1589818051-20549-1-git-send-email-pmorel@linux.ibm.com>
-References: <1589818051-20549-1-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-18_06:2020-05-15,2020-05-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 impostorscore=0
- priorityscore=1501 suspectscore=1 adultscore=0 lowpriorityscore=0
- cotscore=-2147483648 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005180134
+        Mon, 18 May 2020 12:09:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589818150;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4cLRGfEJrT34Zs0HHrKeCdIpNu/IJcAp2lPPWYOLxio=;
+        b=aOrFP/8++CsGlQDwd6HyVbvKiD7x7fNzQcL8Szf31uwhokcrcpEKez640qU0eUjBB1oICJ
+        ttLbf1v5BCvdFmdZMVwUOEfymrUmbdtA2ITR6BOnuyrg7yh3AY7Aebt/8GzH5lKsTE5HM5
+        XLbOVJ5ZnxpOfTy4Jj1DUPdpXLqTLjA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-512-8bXDv3rVPoGiBmfz8wzQug-1; Mon, 18 May 2020 12:09:08 -0400
+X-MC-Unique: 8bXDv3rVPoGiBmfz8wzQug-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D73BB100CCD9;
+        Mon, 18 May 2020 16:09:06 +0000 (UTC)
+Received: from gondolin (ovpn-113-28.ams2.redhat.com [10.36.113.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A30D182A0D;
+        Mon, 18 May 2020 16:09:05 +0000 (UTC)
+Date:   Mon, 18 May 2020 18:09:03 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Jared Rossi <jrossi@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [RFC PATCH v2 0/4] vfio-ccw: Fix interrupt handling for
+ HALT/CLEAR
+Message-ID: <20200518180903.7cb21dd8.cohuck@redhat.com>
+In-Reply-To: <20200513142934.28788-1-farman@linux.ibm.com>
+References: <20200513142934.28788-1-farman@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-To test a write command with the SSCH instruction we need a QEMU device,
-with control unit type 0xC0CA. The PONG device is such a device.
+On Wed, 13 May 2020 16:29:30 +0200
+Eric Farman <farman@linux.ibm.com> wrote:
 
-This type of device responds to PONG_WRITE requests by incrementing an
-integer, stored as a string at offset 0 of the CCW data.
+> Hi Conny,
+> 
+> Back in January, I suggested a small patch [1] to try to clean up
+> the handling of HSCH/CSCH interrupts, especially as it relates to
+> concurrent SSCH interrupts. Here is a new attempt to address this.
+> 
+> There was some suggestion earlier about locking the FSM, but I'm not
+> seeing any problems with that. Rather, what I'm noticing is that the
+> flow between a synchronous START and asynchronous HALT/CLEAR have
+> different impacts on the FSM state. Consider:
+> 
+>     CPU 1                           CPU 2
+> 
+>     SSCH (set state=CP_PENDING)
+>     INTERRUPT (set state=IDLE)
+>     CSCH (no change in state)
+>                                     SSCH (set state=CP_PENDING)
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
----
- s390x/css.c | 54 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+This is the transition I do not understand. When we get a request via
+the I/O area, we go to CP_PROCESSING and start doing translations.
+However, we only transition to CP_PENDING if we actually do a SSCH with
+cc 0 -- which shouldn't be possible in the flow you outline... unless
+it really is something that can be taken care of with locking (state
+machine transitioning due to an interrupt without locking, so we go to
+IDLE without other parts noticing.)
 
-diff --git a/s390x/css.c b/s390x/css.c
-index c94a916..da80574 100644
---- a/s390x/css.c
-+++ b/s390x/css.c
-@@ -21,6 +21,12 @@
- #include <css.h>
- 
- #define PONG_CU_TYPE		0xc0ca
-+/* Channel Commands for PONG device */
-+#define PONG_WRITE	0x21 /* Write */
-+#define PONG_READ	0x22 /* Read buffer */
-+
-+#define BUFSZ	9
-+static char buffer[BUFSZ];
- 
- struct lowcore *lowcore = (void *)0x0;
- 
-@@ -274,6 +280,53 @@ unreg_cb:
- 	unregister_io_int_func(irq_io);
- }
- 
-+static void test_ping(void)
-+{
-+	int success, result;
-+	int cnt = 0, max = 4;
-+
-+	if (senseid.cu_type != PONG_CU) {
-+		report_skip("Device is not a pong device.");
-+		return;
-+	}
-+
-+	result = register_io_int_func(irq_io);
-+	if (result) {
-+		report(0, "Could not register IRQ handler");
-+		return;
-+	}
-+
-+	while (cnt++ < max) {
-+		snprintf(buffer, BUFSZ, "%08x\n", cnt);
-+		success = start_subchannel(PONG_WRITE, buffer, BUFSZ, 0);
-+		if (!success) {
-+			report(0, "start_subchannel failed");
-+			goto unreg_cb;
-+		}
-+
-+		wait_for_interrupt(PSW_MASK_IO);
-+
-+		success = start_subchannel(PONG_READ, buffer, BUFSZ, 0);
-+		if (!success) {
-+			report(0, "start_subchannel failed");
-+			goto unreg_cb;
-+		}
-+
-+		wait_for_interrupt(PSW_MASK_IO);
-+
-+		result = atol(buffer);
-+		if (result != (cnt + 1)) {
-+			report(0, "Bad answer from pong: %08x - %08x",
-+			       cnt, result);
-+			goto unreg_cb;
-+		}
-+	}
-+	report(1, "ping-pong count 0x%08x", cnt);
-+
-+unreg_cb:
-+	unregister_io_int_func(irq_io);
-+}
-+
- static struct {
- 	const char *name;
- 	void (*func)(void);
-@@ -281,6 +334,7 @@ static struct {
- 	{ "enumerate (stsch)", test_enumerate },
- 	{ "enable (msch)", test_enable },
- 	{ "sense (ssch/tsch)", test_sense },
-+	{ "ping-pong (ssch/tsch)", test_ping },
- 	{ NULL, NULL }
- };
- 
--- 
-2.25.1
+>     INTERRUPT (set state=IDLE)
+>                                     INTERRUPT (set state=IDLE)
+
+But taking a step back (and ignoring your series and the discussion,
+sorry about that):
+
+We need to do something (creating a local translation of the guest's
+channel program) that does not have any relation to the process in the
+architecture at all, but is only something that needs to be done
+because of what vfio-ccw is trying to do (issuing a channel program on
+behalf of another entity.) Trying to sort that out by poking at actl
+and fctl bits does not seem like the best way; especially as keeping
+the bits up-to-date via STSCH is an exercise in futility.
+
+What about the following (and yes, I had suggested something vaguely in
+that direction before):
+
+- Detach the cp from the subchannel (or better, remove the 1:1
+  relationship). By that I mean building the cp as a separately
+  allocated structure (maybe embedding a kref, but that might not be
+  needed), and appending it to a list after SSCH with cc=0. Discard it
+  if cc!=0.
+- Remove the CP_PENDING state. The state is either IDLE after any
+  successful SSCH/HSCH/CSCH, or a new state in that case. But no
+  special state for SSCH.
+- A successful CSCH removes the first queued request, if any.
+- A final interrupt removes the first queued request, if any.
+
+Thoughts?
 
