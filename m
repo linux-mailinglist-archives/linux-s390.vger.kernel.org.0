@@ -2,46 +2,50 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D6A71DA100
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2020 21:29:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B95C1DA14A
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2020 21:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgEST3b (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 May 2020 15:29:31 -0400
-Received: from verein.lst.de ([213.95.11.211]:45629 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbgEST3b (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 19 May 2020 15:29:31 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3464E68B02; Tue, 19 May 2020 21:29:29 +0200 (CEST)
-Date:   Tue, 19 May 2020 21:29:29 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Stefan Haberland <sth@linux.ibm.com>, axboe@kernel.dk,
-        hoeppner@linux.ibm.com, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        linux-kernel@vger.kernel.org, borntraeger@de.ibm.com
-Subject: Re: [PATCH 3/2] block: remove ioctl_by_bdev
-Message-ID: <20200519192929.GA7920@lst.de>
-References: <20200519142259.102279-1-sth@linux.ibm.com> <20200519143321.GB16127@lst.de> <20200519190333.GR23230@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519190333.GR23230@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1726290AbgESTtC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 May 2020 15:49:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbgESTtC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 May 2020 15:49:02 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D658C08C5C0;
+        Tue, 19 May 2020 12:49:02 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8EF14128BFAE0;
+        Tue, 19 May 2020 12:49:01 -0700 (PDT)
+Date:   Tue, 19 May 2020 12:49:00 -0700 (PDT)
+Message-Id: <20200519.124900.1271332249104138126.davem@davemloft.net>
+To:     jwi@linux.ibm.com
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        ubraun@linux.ibm.com, kgraul@linux.ibm.com
+Subject: Re: [PATCH net-next 0/2] s390/net: updates 2020-05-19
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200519190904.64217-1-jwi@linux.ibm.com>
+References: <20200519190904.64217-1-jwi@linux.ibm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 May 2020 12:49:01 -0700 (PDT)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, May 19, 2020 at 08:03:33PM +0100, Al Viro wrote:
-> On Tue, May 19, 2020 at 04:33:21PM +0200, Christoph Hellwig wrote:
-> > No callers left.
+From: Julian Wiedmann <jwi@linux.ibm.com>
+Date: Tue, 19 May 2020 21:09:02 +0200
+
+> please apply the following patch series to netdev's net-next tree.
 > 
-> No callers left after...?  IOW, where are the patches?  There'd been
-> several patchsets posted, each with more than one revision...
+> s390 dropped its support for power management, this removes the relevant
+> code from the s390 network drivers.
 
-In Jens' for-5.8/block tree, which has all the patches to remove them
-merged.
-
-Link: https://git.kernel.dk/cgit/linux-block/log/?h=for-5.8/block
+Series applied.
