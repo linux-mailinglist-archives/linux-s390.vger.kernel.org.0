@@ -2,46 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 848E41DA069
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2020 21:03:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3119D1DA08A
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2020 21:09:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726348AbgESTDo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 May 2020 15:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726059AbgESTDo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 May 2020 15:03:44 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E32C08C5C0;
-        Tue, 19 May 2020 12:03:44 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1jb7WX-00BxzX-83; Tue, 19 May 2020 19:03:33 +0000
-Date:   Tue, 19 May 2020 20:03:33 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Stefan Haberland <sth@linux.ibm.com>, axboe@kernel.dk,
-        hoeppner@linux.ibm.com, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        linux-kernel@vger.kernel.org, borntraeger@de.ibm.com
-Subject: Re: [PATCH 3/2] block: remove ioctl_by_bdev
-Message-ID: <20200519190333.GR23230@ZenIV.linux.org.uk>
-References: <20200519142259.102279-1-sth@linux.ibm.com>
- <20200519143321.GB16127@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519143321.GB16127@lst.de>
+        id S1726567AbgESTJP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 May 2020 15:09:15 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22648 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726348AbgESTJO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 19 May 2020 15:09:14 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04JJ2ufJ156836;
+        Tue, 19 May 2020 15:09:12 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 312age0f0y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 May 2020 15:09:12 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04JJ5EfU016227;
+        Tue, 19 May 2020 19:09:09 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04fra.de.ibm.com with ESMTP id 313wne0xrb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 May 2020 19:09:09 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04JJ96iw54395068
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 May 2020 19:09:06 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96EE45204E;
+        Tue, 19 May 2020 19:09:06 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4172952050;
+        Tue, 19 May 2020 19:09:06 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev <netdev@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH net-next 0/2] s390/net: updates 2020-05-19
+Date:   Tue, 19 May 2020 21:09:02 +0200
+Message-Id: <20200519190904.64217-1-jwi@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-19_08:2020-05-19,2020-05-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 mlxlogscore=607 clxscore=1015 bulkscore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 cotscore=-2147483648
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005190157
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, May 19, 2020 at 04:33:21PM +0200, Christoph Hellwig wrote:
-> No callers left.
+Hi Dave & Jakub,
 
-No callers left after...?  IOW, where are the patches?  There'd been
-several patchsets posted, each with more than one revision...
+please apply the following patch series to netdev's net-next tree.
 
-I realize that some of that went into -mm, but could you repost
-the final variant of the entire pile and/or tell which set of
-git branches to look at?
+s390 dropped its support for power management, this removes the relevant
+code from the s390 network drivers.
+
+Thanks,
+Julian
+
+Julian Wiedmann (2):
+  s390/net: remove pm ops from ccwgroup drivers
+  s390/net: remove pm support from iucv drivers
+
+ arch/s390/include/asm/ccwgroup.h  |  10 ---
+ drivers/s390/net/ctcm_main.c      |  40 ------------
+ drivers/s390/net/lcs.c            |  59 -----------------
+ drivers/s390/net/netiucv.c        | 104 +-----------------------------
+ drivers/s390/net/qeth_core_main.c |  31 ---------
+ drivers/s390/net/smsgiucv.c       |  65 -------------------
+ 6 files changed, 1 insertion(+), 308 deletions(-)
+
+-- 
+2.17.1
+
