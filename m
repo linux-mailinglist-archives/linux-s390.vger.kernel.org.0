@@ -2,80 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04C721D99D9
-	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2020 16:33:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BF621D9F34
+	for <lists+linux-s390@lfdr.de>; Tue, 19 May 2020 20:22:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgESOdZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 May 2020 10:33:25 -0400
-Received: from verein.lst.de ([213.95.11.211]:44330 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbgESOdZ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 19 May 2020 10:33:25 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1ECA568C4E; Tue, 19 May 2020 16:33:22 +0200 (CEST)
-Date:   Tue, 19 May 2020 16:33:21 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     hch@lst.de, axboe@kernel.dk, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com
-Subject: [PATCH 3/2] block: remove ioctl_by_bdev
-Message-ID: <20200519143321.GB16127@lst.de>
-References: <20200519142259.102279-1-sth@linux.ibm.com>
+        id S1729528AbgESSWh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 May 2020 14:22:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgESSWh (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 May 2020 14:22:37 -0400
+X-Greylist: delayed 318 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 19 May 2020 11:22:36 PDT
+Received: from valentin-vidic.from.hr (valentin-vidic.from.hr [IPv6:2001:470:1f0b:3b7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE5EDC08C5C0;
+        Tue, 19 May 2020 11:22:36 -0700 (PDT)
+X-Virus-Scanned: Debian amavisd-new at valentin-vidic.from.hr
+Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
+        id 8DE56543; Tue, 19 May 2020 20:17:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=valentin-vidic.from.hr; s=2020; t=1589912232;
+        bh=agIZSkznk24x5nRuX+3INPmxl6trTGmhxoT+BEZ/4+w=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WqVM+uuRUgP1oDGP2/fRdKOzfeQmkdqItQhcBecTsN9KS2cJ4MLGHyqHmuFWWOJGd
+         EaHbHtp/gY5HAEAfJf5DIcSWCdgd2TwZ5vzc0vbX0S3oMcCrf7xEeu5Od3k1G/7YuT
+         Q6tgt3+H+BWkviCXAwZfriVt9yeJ9XNAuARUMZL4FOSL9jGiM+17P8CwwE0JhdcPgf
+         jL6L4/ir+35XVDbrTsq9SWUuFS6wWYAc3MG2uKM6nfcKa0LGm75Ohwn3GkiXm4Tb8W
+         MQD0BvC+JLyyHOzFpskrIHev9+T7BPIlhCs4kSm7XPGDeCMdxlWlOeXYx63Bsp+xHh
+         aDmMFxWSEpTj6WcJVTQ4DIXHoYCWlqBYfiyK7RBhaSHZMED56bKVRn81BgmbvclSdW
+         J7cEjgaVGmt4iFxyNBMt7kvWnZIs5KMQ4xs51ad1ZuqoOl6wVf33wBXiWslwftRwnQ
+         meQZZfPHOVeHBe/mYt7UQqWdrYIu43CjQHulvp8ZCzFBp8HdnFBHg1U1hNRT+tloUY
+         YBi8u9SkXnc9h60uisWqLmj28RZetBPaMMeAj/qyF6zgXJOdP+8d/dn8GiIt733iQN
+         0iYCBxK+/bJ8zAX5t2+Jqo5iRxV2zcrHkvWuYhwfFVvFzMhb4hn+ZB3Dh04eBKwgR6
+         4cb7wMcsCXGYJ38rKOwgodJ4=
+From:   Valentin Vidic <vvidic@valentin-vidic.from.hr>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Valentin Vidic <vvidic@valentin-vidic.from.hr>,
+        stable@vger.kernel.org
+Subject: [PATCH] s390/sclp_vt220: Fix console name to match device
+Date:   Tue, 19 May 2020 20:16:54 +0200
+Message-Id: <20200519181654.16765-1-vvidic@valentin-vidic.from.hr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519142259.102279-1-sth@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-No callers left.
+Console name reported in /proc/consoles:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+  ttyS1                -W- (EC p  )    4:65
+
+does not match device name:
+
+  crw--w----    1 root     root        4,  65 May 17 12:18 /dev/ttysclp0
+
+so debian-installer gets confused and fails to start.
+
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Cc: stable@vger.kernel.org
 ---
- fs/block_dev.c     | 12 ------------
- include/linux/fs.h |  1 -
- 2 files changed, 13 deletions(-)
+ drivers/s390/char/sclp_vt220.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index ebd1507789d29..2eb92456a22e7 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -2166,18 +2166,6 @@ const struct file_operations def_blk_fops = {
- 	.fallocate	= blkdev_fallocate,
- };
+diff --git a/drivers/s390/char/sclp_vt220.c b/drivers/s390/char/sclp_vt220.c
+index 3f9a6ef650fa..3c2ed6d01387 100644
+--- a/drivers/s390/char/sclp_vt220.c
++++ b/drivers/s390/char/sclp_vt220.c
+@@ -35,8 +35,8 @@
+ #define SCLP_VT220_MINOR		65
+ #define SCLP_VT220_DRIVER_NAME		"sclp_vt220"
+ #define SCLP_VT220_DEVICE_NAME		"ttysclp"
+-#define SCLP_VT220_CONSOLE_NAME		"ttyS"
+-#define SCLP_VT220_CONSOLE_INDEX	1	/* console=ttyS1 */
++#define SCLP_VT220_CONSOLE_NAME		"ttysclp"
++#define SCLP_VT220_CONSOLE_INDEX	0	/* console=ttysclp0 */
  
--int ioctl_by_bdev(struct block_device *bdev, unsigned cmd, unsigned long arg)
--{
--	int res;
--	mm_segment_t old_fs = get_fs();
--	set_fs(KERNEL_DS);
--	res = blkdev_ioctl(bdev, 0, cmd, arg);
--	set_fs(old_fs);
--	return res;
--}
--
--EXPORT_SYMBOL(ioctl_by_bdev);
--
- /**
-  * lookup_bdev  - lookup a struct block_device by name
-  * @pathname:	special file representing the block device
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 1a95e51588113..861ca61d728bc 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2636,7 +2636,6 @@ extern int sync_filesystem(struct super_block *);
- extern const struct file_operations def_blk_fops;
- extern const struct file_operations def_chr_fops;
- #ifdef CONFIG_BLOCK
--extern int ioctl_by_bdev(struct block_device *, unsigned, unsigned long);
- extern int blkdev_ioctl(struct block_device *, fmode_t, unsigned, unsigned long);
- extern long compat_blkdev_ioctl(struct file *, unsigned, unsigned long);
- extern int blkdev_get(struct block_device *bdev, fmode_t mode, void *holder);
+ /* Representation of a single write request */
+ struct sclp_vt220_request {
 -- 
-2.26.2
+2.20.1
 
