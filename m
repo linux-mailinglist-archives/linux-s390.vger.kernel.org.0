@@ -2,64 +2,68 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1C031DDB3C
-	for <lists+linux-s390@lfdr.de>; Fri, 22 May 2020 01:43:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D3291DEF60
+	for <lists+linux-s390@lfdr.de>; Fri, 22 May 2020 20:39:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgEUXn2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 21 May 2020 19:43:28 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:29499 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728754AbgEUXn1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 May 2020 19:43:27 -0400
-X-Originating-IP: 50.39.163.217
-Received: from localhost (50-39-163-217.bvtn.or.frontiernet.net [50.39.163.217])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 60C5A240003;
-        Thu, 21 May 2020 23:43:11 +0000 (UTC)
-Date:   Thu, 21 May 2020 16:43:09 -0700
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Robert Elliott <elliott@hpe.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
-        linux-crypto@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 0/7] padata: parallelize deferred page init
-Message-ID: <20200521234309.GA244176@localhost>
-References: <20200520182645.1658949-1-daniel.m.jordan@oracle.com>
+        id S1730882AbgEVSjx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 22 May 2020 14:39:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37716 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730810AbgEVSjw (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 22 May 2020 14:39:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9EFFBAE09;
+        Fri, 22 May 2020 18:39:52 +0000 (UTC)
+From:   Petr Tesarik <ptesarik@suse.com>
+To:     linux-s390@vger.kernel.org
+Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, Petr Tesarik <ptesarik@suse.com>
+Subject: [PATCH 1/1] s390/pci: Log new handle in clp_disable_fh()
+Date:   Fri, 22 May 2020 20:39:22 +0200
+Message-Id: <20200522183922.5253-1-ptesarik@suse.com>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200520182645.1658949-1-daniel.m.jordan@oracle.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, May 20, 2020 at 02:26:38PM -0400, Daniel Jordan wrote:
-> Please review and test, and thanks to Alex, Andrew, Josh, and Pavel for
-> their feedback in the last version.
+After disabling a function, the original handle is logged instead of
+the disabled handle.
 
-I re-tested v2:
+Fixes: 17cdec960cf77 (s390/pci: Recover handle in clp_set_pci_fn())
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ arch/s390/pci/pci_clp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Tested-by: Josh Triplett <josh@joshtriplett.org>
+diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+index ea794ae755ae..179bcecefdee 100644
+--- a/arch/s390/pci/pci_clp.c
++++ b/arch/s390/pci/pci_clp.c
+@@ -309,14 +309,13 @@ int clp_enable_fh(struct zpci_dev *zdev, u8 nr_dma_as)
+ 
+ int clp_disable_fh(struct zpci_dev *zdev)
+ {
+-	u32 fh = zdev->fh;
+ 	int rc;
+ 
+ 	if (!zdev_enabled(zdev))
+ 		return 0;
+ 
+ 	rc = clp_set_pci_fn(zdev, 0, CLP_SET_DISABLE_PCI_FN);
+-	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, fh, rc);
++	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, zdev->fh, rc);
+ 	return rc;
+ }
+ 
+-- 
+2.26.1
 
-[    0.231435] node 1 initialised, 24189223 pages in 32ms
-[    0.236718] node 0 initialised, 23398907 pages in 36ms
