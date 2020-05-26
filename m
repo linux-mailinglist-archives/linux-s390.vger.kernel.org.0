@@ -2,128 +2,76 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4822E1E1EF8
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 11:45:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 772451E1F2C
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 11:55:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731810AbgEZJpW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 26 May 2020 05:45:22 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55976 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728686AbgEZJpW (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 26 May 2020 05:45:22 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 791CE1C02C0; Tue, 26 May 2020 11:45:19 +0200 (CEST)
-Date:   Tue, 26 May 2020 11:45:18 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        greybus-dev@lists.linaro.org, netdev <netdev@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-s390@vger.kernel.org,
-        "open list:TARGET SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
-        <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 2/8] ACPI: PM: Use the new device_to_pm() helper to
- access struct dev_pm_ops
-Message-ID: <20200526094518.GA4600@amd>
-References: <20200525182608.1823735-1-kw@linux.com>
- <20200525182608.1823735-3-kw@linux.com>
- <CAJZ5v0jQUmdDYmJsP43Ja3urpVLUxe-yD_Hm_Jd2LtCoPiXsrQ@mail.gmail.com>
+        id S1728765AbgEZJzt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 26 May 2020 05:55:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26617 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728746AbgEZJzs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 26 May 2020 05:55:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590486948;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+cQApP9aKEI0EAEIJXWQWFCwQQofjUokxLamDjDh03I=;
+        b=OCRlOM8UzXYBvbldOqAruxuKRleP6CclZdyqQk9FMDP2Te/jSMLxhUMvqOwebJDdeJAJxr
+        un9sLDbSWEuTHtfKKPMB5LM3y2u856HpubyARlay6dsTB5E6UKIj/2aQGqckKO8AZDk9gl
+        9ZUIkWaF506F4YDtDgGTuIsg3Kr9/wU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-9HbLNGWxPI6ox2gEn9O8Vg-1; Tue, 26 May 2020 05:55:46 -0400
+X-MC-Unique: 9HbLNGWxPI6ox2gEn9O8Vg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1AB651800D42;
+        Tue, 26 May 2020 09:55:45 +0000 (UTC)
+Received: from gondolin (ovpn-113-77.ams2.redhat.com [10.36.113.77])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D4D3110013D5;
+        Tue, 26 May 2020 09:55:43 +0000 (UTC)
+Date:   Tue, 26 May 2020 11:55:41 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Jared Rossi <jrossi@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [RFC PATCH v2 0/4] vfio-ccw: Fix interrupt handling for
+ HALT/CLEAR
+Message-ID: <20200526115541.4a11accc.cohuck@redhat.com>
+In-Reply-To: <20200513142934.28788-1-farman@linux.ibm.com>
+References: <20200513142934.28788-1-farman@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jQUmdDYmJsP43Ja3urpVLUxe-yD_Hm_Jd2LtCoPiXsrQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Wed, 13 May 2020 16:29:30 +0200
+Eric Farman <farman@linux.ibm.com> wrote:
 
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> There was some suggestion earlier about locking the FSM, but I'm not
+> seeing any problems with that. Rather, what I'm noticing is that the
+> flow between a synchronous START and asynchronous HALT/CLEAR have
+> different impacts on the FSM state. Consider:
+> 
+>     CPU 1                           CPU 2
+> 
+>     SSCH (set state=CP_PENDING)
+>     INTERRUPT (set state=IDLE)
+>     CSCH (no change in state)
+>                                     SSCH (set state=CP_PENDING)
+>     INTERRUPT (set state=IDLE)
+>                                     INTERRUPT (set state=IDLE)
 
-On Tue 2020-05-26 10:37:36, Rafael J. Wysocki wrote:
-> On Mon, May 25, 2020 at 8:26 PM Krzysztof Wilczy=C5=84ski <kw@linux.com> =
-wrote:
-> >
-> > Use the new device_to_pm() helper to access Power Management callbacs
-> > (struct dev_pm_ops) for a particular device (struct device_driver).
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Krzysztof Wilczy=C5=84ski <kw@linux.com>
-> > ---
-> >  drivers/acpi/device_pm.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-> > index 5832bc10aca8..b98a32c48fbe 100644
-> > --- a/drivers/acpi/device_pm.c
-> > +++ b/drivers/acpi/device_pm.c
-> > @@ -1022,9 +1022,10 @@ static bool acpi_dev_needs_resume(struct device =
-*dev, struct acpi_device *adev)
-> >  int acpi_subsys_prepare(struct device *dev)
-> >  {
-> >         struct acpi_device *adev =3D ACPI_COMPANION(dev);
-> > +       const struct dev_pm_ops *pm =3D driver_to_pm(dev->driver);
->=20
-> I don't really see a reason for this change.
->=20
-> What's wrong with the check below?
+A different question (not related to how we want to fix this): How
+easily can you trigger this bug? Is this during normal testing with a
+bit of I/O stress, or do you have a special test case?
 
-Duplicated code. Yes, compiler can sort it out, but... new version
-looks better to me.
-
-Best regards,
-								pavel
-
-> >
-> > -       if (dev->driver && dev->driver->pm && dev->driver->pm->prepare)=
- {
-> > -               int ret =3D dev->driver->pm->prepare(dev);
-> > +       if (pm && pm->prepare) {
-> > +               int ret =3D pm->prepare(dev);
-
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---bg08WKrSYDhXBjb5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7M5S0ACgkQMOfwapXb+vJLqgCcCbDmh7NooqBM+qslb58avjsp
-78cAn1mUUlj/BAfzgJELHWPID2a0mmvg
-=+Cmh
------END PGP SIGNATURE-----
-
---bg08WKrSYDhXBjb5--
