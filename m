@@ -2,106 +2,128 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABC501E1EB0
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 11:36:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4822E1E1EF8
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 11:45:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728785AbgEZJgh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 26 May 2020 05:36:37 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30565 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728750AbgEZJgh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 26 May 2020 05:36:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590485796;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=N9CrJGv37BpytimFY2SmZJooBun68CG0VTdXjYuGNU0=;
-        b=PWR7Cth9u07JrBgfSp56LV8VnaHP7N0mMke59WoSm7H16g3T8NJJlZgJcVELktaM9iIpmQ
-        gInkGf/Pi55RaK6Oxy3TK4cdcwc2rf7QzfXtUM30Y3ee6jAMjG2Z2VpGnuOFiO4aMs3dmG
-        SYWoMWDt5iOks2ltqcL55g8xKO6g5lo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-135-LiCUBOrPOJ2m6HPSepfNzQ-1; Tue, 26 May 2020 05:36:34 -0400
-X-MC-Unique: LiCUBOrPOJ2m6HPSepfNzQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46F80100A8F2;
-        Tue, 26 May 2020 09:36:33 +0000 (UTC)
-Received: from localhost (ovpn-113-77.ams2.redhat.com [10.36.113.77])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D96596EF8C;
-        Tue, 26 May 2020 09:36:32 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: [PATCH] s390/virtio: remove unused pm callbacks
-Date:   Tue, 26 May 2020 11:36:29 +0200
-Message-Id: <20200526093629.257649-1-cohuck@redhat.com>
+        id S1731810AbgEZJpW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 26 May 2020 05:45:22 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:55976 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728686AbgEZJpW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 26 May 2020 05:45:22 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 791CE1C02C0; Tue, 26 May 2020 11:45:19 +0200 (CEST)
+Date:   Tue, 26 May 2020 11:45:18 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        greybus-dev@lists.linaro.org, netdev <netdev@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-s390@vger.kernel.org,
+        "open list:TARGET SUBSYSTEM" <linux-scsi@vger.kernel.org>,
+        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
+        <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH 2/8] ACPI: PM: Use the new device_to_pm() helper to
+ access struct dev_pm_ops
+Message-ID: <20200526094518.GA4600@amd>
+References: <20200525182608.1823735-1-kw@linux.com>
+ <20200525182608.1823735-3-kw@linux.com>
+ <CAJZ5v0jQUmdDYmJsP43Ja3urpVLUxe-yD_Hm_Jd2LtCoPiXsrQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jQUmdDYmJsP43Ja3urpVLUxe-yD_Hm_Jd2LtCoPiXsrQ@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Support for hibernation on s390 has been recently been removed with
-commit 394216275c7d ("s390: remove broken hibernate / power management
-support"), no need to keep unused code around.
 
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
----
- drivers/s390/virtio/virtio_ccw.c | 26 --------------------------
- 1 file changed, 26 deletions(-)
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-index 957889a42d2e..5730572b52cd 100644
---- a/drivers/s390/virtio/virtio_ccw.c
-+++ b/drivers/s390/virtio/virtio_ccw.c
-@@ -1372,27 +1372,6 @@ static struct ccw_device_id virtio_ids[] = {
- 	{},
- };
- 
--#ifdef CONFIG_PM_SLEEP
--static int virtio_ccw_freeze(struct ccw_device *cdev)
--{
--	struct virtio_ccw_device *vcdev = dev_get_drvdata(&cdev->dev);
--
--	return virtio_device_freeze(&vcdev->vdev);
--}
--
--static int virtio_ccw_restore(struct ccw_device *cdev)
--{
--	struct virtio_ccw_device *vcdev = dev_get_drvdata(&cdev->dev);
--	int ret;
--
--	ret = virtio_ccw_set_transport_rev(vcdev);
--	if (ret)
--		return ret;
--
--	return virtio_device_restore(&vcdev->vdev);
--}
--#endif
--
- static struct ccw_driver virtio_ccw_driver = {
- 	.driver = {
- 		.owner = THIS_MODULE,
-@@ -1405,11 +1384,6 @@ static struct ccw_driver virtio_ccw_driver = {
- 	.set_online = virtio_ccw_online,
- 	.notify = virtio_ccw_cio_notify,
- 	.int_class = IRQIO_VIR,
--#ifdef CONFIG_PM_SLEEP
--	.freeze = virtio_ccw_freeze,
--	.thaw = virtio_ccw_restore,
--	.restore = virtio_ccw_restore,
--#endif
- };
- 
- static int __init pure_hex(char **cp, unsigned int *val, int min_digit,
--- 
-2.25.4
+On Tue 2020-05-26 10:37:36, Rafael J. Wysocki wrote:
+> On Mon, May 25, 2020 at 8:26 PM Krzysztof Wilczy=C5=84ski <kw@linux.com> =
+wrote:
+> >
+> > Use the new device_to_pm() helper to access Power Management callbacs
+> > (struct dev_pm_ops) for a particular device (struct device_driver).
+> >
+> > No functional change intended.
+> >
+> > Signed-off-by: Krzysztof Wilczy=C5=84ski <kw@linux.com>
+> > ---
+> >  drivers/acpi/device_pm.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+> > index 5832bc10aca8..b98a32c48fbe 100644
+> > --- a/drivers/acpi/device_pm.c
+> > +++ b/drivers/acpi/device_pm.c
+> > @@ -1022,9 +1022,10 @@ static bool acpi_dev_needs_resume(struct device =
+*dev, struct acpi_device *adev)
+> >  int acpi_subsys_prepare(struct device *dev)
+> >  {
+> >         struct acpi_device *adev =3D ACPI_COMPANION(dev);
+> > +       const struct dev_pm_ops *pm =3D driver_to_pm(dev->driver);
+>=20
+> I don't really see a reason for this change.
+>=20
+> What's wrong with the check below?
 
+Duplicated code. Yes, compiler can sort it out, but... new version
+looks better to me.
+
+Best regards,
+								pavel
+
+> >
+> > -       if (dev->driver && dev->driver->pm && dev->driver->pm->prepare)=
+ {
+> > -               int ret =3D dev->driver->pm->prepare(dev);
+> > +       if (pm && pm->prepare) {
+> > +               int ret =3D pm->prepare(dev);
+
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--bg08WKrSYDhXBjb5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7M5S0ACgkQMOfwapXb+vJLqgCcCbDmh7NooqBM+qslb58avjsp
+78cAn1mUUlj/BAfzgJELHWPID2a0mmvg
+=+Cmh
+-----END PGP SIGNATURE-----
+
+--bg08WKrSYDhXBjb5--
