@@ -2,139 +2,154 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 19E5B1E267A
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 18:06:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 571591E2705
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 18:30:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgEZQGh convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Tue, 26 May 2020 12:06:37 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33144 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727941AbgEZQGh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 26 May 2020 12:06:37 -0400
-Received: by mail-oi1-f196.google.com with SMTP id o24so19145577oic.0;
-        Tue, 26 May 2020 09:06:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=c26RmLFN4y9M7Vs7EfSWgMEviKc2MmyIW9oT1wuhozo=;
-        b=ahTd5HarRRGvm0TxkwSK2SVrnG0OUcco+8fAMnDVdXyVzDpMhfdPffs86FREdmZZ2F
-         i278C5j0uC0dIIXuF0ISSBXhrX3Pkb4r0L2POLcr2CXuQEWmVvDesdeSAz6P7OTpfl6I
-         Jnz01ev/ZGFzfGUTUXudCkuonc5b33t/35gex2TDuS/VkilJAJ7lUUSkmEY6Xsly4jue
-         38IkCaYAYQFMHu6NJPZOEBLrVt66O9lsvCvf8Eo1D8ZAy7UC606LPKldz7YGVTcQ38hn
-         ht276Q2qNdGINWinfkxri9KVBSriSaVhA1DLuxzm+zzyehRBR1uEsDy4lNJRX9a0Rs8D
-         IwFg==
-X-Gm-Message-State: AOAM531cpSQdEihvTSHocCtgEmZFMZu0LXmevvjUB0A4Szv1at++iYyR
-        TAUqVgg/pzmljk/qtm6FaLGBILgDreWOpyfLkj4=
-X-Google-Smtp-Source: ABdhPJyiiCLhbG6JtUDbl1Up10+V4yfossUJYh4yAKCjzUPhWyxowp2NgBVmj4+4Sa3zxFepbl+ycVP4MzeV68GD/Vo=
-X-Received: by 2002:aca:eb56:: with SMTP id j83mr15203344oih.110.1590509195948;
- Tue, 26 May 2020 09:06:35 -0700 (PDT)
+        id S2388612AbgEZQaW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 26 May 2020 12:30:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56189 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388592AbgEZQaV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 26 May 2020 12:30:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590510620;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PFH+lO6ohBLSBU7ZKmdmDibYJAoqrjA+Qt35whMPcWw=;
+        b=L468XSfgRVAi2Rt8YfcdjpE6Yyq683eDb/zj5nWPjQxK9M2Q4PyyEIsWpTX4VYybKUH70x
+        9jdMi8Nr9d9ugmxWuaqMTQhnkhap6bTD/fI9iN7+k6XuhQsX6BgBM3Wxwcvez5NOwVowUX
+        QVcu6Vb1JBVRLuFJY3zYDpPNkob0nA4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-404-gsgQ_yY5Oge-dN8-dIAyXQ-1; Tue, 26 May 2020 12:30:15 -0400
+X-MC-Unique: gsgQ_yY5Oge-dN8-dIAyXQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CAEC8018A7;
+        Tue, 26 May 2020 16:30:14 +0000 (UTC)
+Received: from gondolin (ovpn-113-77.ams2.redhat.com [10.36.113.77])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 225B95C1BB;
+        Tue, 26 May 2020 16:30:09 +0000 (UTC)
+Date:   Tue, 26 May 2020 18:30:05 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
+Subject: Re: [kvm-unit-tests PATCH v7 07/12] s390x: Library resources for
+ CSS tests
+Message-ID: <20200526183005.76fc9124.cohuck@redhat.com>
+In-Reply-To: <1589818051-20549-8-git-send-email-pmorel@linux.ibm.com>
+References: <1589818051-20549-1-git-send-email-pmorel@linux.ibm.com>
+        <1589818051-20549-8-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20200525182608.1823735-1-kw@linux.com> <20200525182608.1823735-9-kw@linux.com>
- <20200526063521.GC2578492@kroah.com> <20200526150744.GC75990@rocinante>
- <CAJZ5v0grVQhmk=q9_=CbBa8y_8XbTOeqv-Hb6Hivi6ffKsVHmQ@mail.gmail.com> <20200526152844.GA5809@rowland.harvard.edu>
-In-Reply-To: <20200526152844.GA5809@rowland.harvard.edu>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 26 May 2020 18:06:24 +0200
-Message-ID: <CAJZ5v0gTWaE_ehFg+JDpPEANiD-jr5P5D4LL2XpSiVzHZoZ-_g@mail.gmail.com>
-Subject: Re: [PATCH 8/8] net/iucv: Use the new device_to_pm() helper to access
- struct dev_pm_ops
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Johan Hovold <johan@kernel.org>,
-        Alex Elder <elder@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        greybus-dev@lists.linaro.org, netdev <netdev@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-s390@vger.kernel.org,
-        "open list:TARGET SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
-        <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, May 26, 2020 at 5:28 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Tue, May 26, 2020 at 05:19:07PM +0200, Rafael J. Wysocki wrote:
-> > On Tue, May 26, 2020 at 5:07 PM Krzysztof Wilczyński <kw@linux.com> wrote:
-> > >
-> > > Hello Greg,
-> > >
-> > > [...]
-> > > > It's "interesting" how using your new helper doesn't actually make the
-> > > > code smaller.  Perhaps it isn't a good helper function?
-> > >
-> > > The idea for the helper was inspired by the comment Dan made to Bjorn
-> > > about Bjorn's change, as per:
-> > >
-> > >   https://lore.kernel.org/driverdev-devel/20191016135002.GA24678@kadam/
-> > >
-> > > It looked like a good idea to try to reduce the following:
-> > >
-> > >   dev->driver && dev->driver->pm && dev->driver->pm->prepare
-> > >
-> > > Into something more succinct.  Albeit, given the feedback from yourself
-> > > and Rafael, I gather that this helper is not really a good addition.
-> >
-> > IMO it could be used for reducing code duplication like you did in the
-> > PCI code, but not necessarily in the other places where the code in
-> > question is not exactly duplicated.
->
-> The code could be a little more succinct, although it wouldn't fit every
-> usage.  For example,
->
-> #define pm_do_callback(dev, method) \
->         (dev->driver && dev->driver->pm && dev->driver->pm->callback ? \
->         dev->driver->pm->callback(dev) : 0)
->
-> Then the usage is something like:
->
->         ret = pm_do_callback(dev, prepare);
->
-> Would this be an overall improvement?
+On Mon, 18 May 2020 18:07:26 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-It wouldn't cover all of the use cases.
+> Provide some definitions and library routines that can be used by
+> tests targeting the channel subsystem.
+> 
+> Debug function can be activated by defining DEBUG_CSS before the
+> inclusion of the css.h header file.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  lib/s390x/css.h      | 259 +++++++++++++++++++++++++++++++++++++++++++
+>  lib/s390x/css_dump.c | 157 ++++++++++++++++++++++++++
+>  s390x/Makefile       |   1 +
+>  3 files changed, 417 insertions(+)
+>  create mode 100644 lib/s390x/css.h
+>  create mode 100644 lib/s390x/css_dump.c
+> 
 
-For example, PCI does other things in addition to running a callback
-when it is present.
+(...)
 
-Something like this might be enough though:
+> +struct ccw1 {
+> +	unsigned char code;
+> +	unsigned char flags;
+> +	unsigned short count;
 
-#define pm_driver_callback_is_present(dev, method) \
-        (dev->driver && dev->driver->pm && dev->driver->pm->method)
+I'm wondering why you're using unsigned {char,short} here, instead of
+the uint*_t types everywhere else? It's not wrong, but probably better
+to be consistent?
 
-#define pm_run_driver_callback(dev, method) \
-        (pm_driver_callback_is_present(dev, method) ?
-dev->driver->pm->method(dev) : 0)
+> +	uint32_t data_address;
+> +} __attribute__ ((aligned(4)));
+> +
+> +#define SID_ONE		0x00010000
+> +
 
-#define pm_get_driver_callback(dev, method) \
-        (pm_driver_callback_is_present(dev, method) ?
-dev->driver->pm->method : NULL)
+I think it would be beneficial for the names to somewhat match the
+naming in Linux and/or QEMU -- or more speaking names (as you do for
+some), which is also good.
 
-so whoever needs the callback pointer can use pm_get_driver_callback()
-and whoever only needs to run the callback can use
-pm_run_driver_callback().
+> +#define ORB_M_KEY	0xf0000000
+> +#define ORB_F_SUSPEND	0x08000000
+> +#define ORB_F_STREAMING	0x04000000
+> +#define ORB_F_MODIFCTRL	0x02000000
+> +#define ORB_F_SYNC	0x01000000
+> +#define ORB_F_FORMAT	0x00800000
+> +#define ORB_F_PREFETCH	0x00400000
+> +#define ORB_F_INIT_IRQ	0x00200000
 
-Cheers!
+ORB_F_ISIC? (As it does not refer to 'initialization', but 'initial'.)
+
+> +#define ORB_F_ADDRLIMIT	0x00100000
+> +#define ORB_F_SUSP_IRQ	0x00080000
+
+ORB_F_SSIC? (As it deals with suppression.)
+
+> +#define ORB_F_TRANSPORT	0x00040000
+> +#define ORB_F_IDAW2	0x00020000
+
+ORB_F_IDAW_FMT2?
+
+Or following Linux/QEMU, use ORB_F_C64 for a certain retro appeal :)
+
+> +#define ORB_F_IDAW_2K	0x00010000
+> +#define ORB_M_LPM	0x0000ff00
+> +#define ORB_F_LPM_DFLT	0x00008000
+
+That's a default lpm of 0x80, right? It's a bit buried between the orb
+definitions, and it also seems to be more of a implementation choice --
+move it out from the flags here?
+
+> +#define ORB_F_ILSM	0x00000080
+
+ORB_F_ILS?
+
+> +#define ORB_F_CCW_IND	0x00000040
+
+ORB_F_MIDAW? I had a hard time figuring out that one :)
+
+> +#define ORB_F_ORB_EXT	0x00000001
+
+(...)
+
+> +/*
+> + * Try o have a more human representation of the PMCW flags
+
+s/o/to/
+
+> + * each letter in the string represent the first
+
+s/represent/represents/
+
+> + * letter of the associated bit in the flag fields.
+> + */
+
+(...)
+
+Generally, looks good to me.
+
