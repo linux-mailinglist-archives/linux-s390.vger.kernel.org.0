@@ -2,100 +2,70 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D2CA1E14AB
-	for <lists+linux-s390@lfdr.de>; Mon, 25 May 2020 21:12:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB44E1E1AC2
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 07:44:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390013AbgEYTM4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 25 May 2020 15:12:56 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51252 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388838AbgEYTM4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 25 May 2020 15:12:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590433975;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=bgyXUgoK8gNwEuSroz/lcdX7YHS0Vw6icnIWqrocyRo=;
-        b=YKL4q416Q4ejziqGuR1RaYpu8SiB4GhXJ7r1ToGskvhncY7oGdKb9HdwLO+2nImrJy2c09
-        Hpnh94/noulAlJi3v1r53J927HiyDN+AVQEXmVaUG30hYwUTh7nKWVS8aQJEdXzik5pOed
-        koqymIUVLLyHLLOWckvzshCCATkikLA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-127-DiMUblVCNBC7meUhG7mTaQ-1; Mon, 25 May 2020 15:12:53 -0400
-X-MC-Unique: DiMUblVCNBC7meUhG7mTaQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70C98460;
-        Mon, 25 May 2020 19:12:52 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-112-92.ams2.redhat.com [10.36.112.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B290C60BE1;
-        Mon, 25 May 2020 19:12:45 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v7 08/12] s390x: css: stsch, enumeration
- test
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        david@redhat.com, cohuck@redhat.com
-References: <1589818051-20549-1-git-send-email-pmorel@linux.ibm.com>
- <1589818051-20549-9-git-send-email-pmorel@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <da731645-c408-2e79-4c78-a55b5f0d477b@redhat.com>
-Date:   Mon, 25 May 2020 21:12:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726277AbgEZFoj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 26 May 2020 01:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbgEZFoj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 26 May 2020 01:44:39 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27A9CC061A0E;
+        Mon, 25 May 2020 22:44:39 -0700 (PDT)
+Received: by ozlabs.org (Postfix, from userid 1003)
+        id 49WNFb23Kfz9sRY; Tue, 26 May 2020 15:44:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
+        t=1590471875; bh=j0PNgC0xr6mRDHCZ2htDfbQsT0XH5gFzuCdilAoQCBw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H05nUKbvRSIH+7O5N9VUsnkHeRklB48VujBczf2Xtd7k/msK8glVNwOfwKFhBxaM2
+         RMEhFP3061zuW6+4Tyn4tcDNAEbnpgE5y/GbpnLgkqD9inO7dRTJ8JdJazRZlG5By1
+         dDTw25f7q0+rjMvV86X6zTMCLnL9GISRBtWJGAOBofFztGdhMaHaSDnzVJeKDOeTRr
+         P/gT1fm1rSHSwWvDzu+Yy/x7JV3Y4U7YJfxqHFYoVKLC8zIAnftSk9Bv7oB4+ke1/z
+         t+6gHdzDMsO3E/gW5yqaeDf4mGpMKKUTqOEkTCh4o4CEB+cdOrXQUL3itzvvSsvIix
+         ogkCA1YC4CmqQ==
+Date:   Tue, 26 May 2020 14:36:56 +1000
+From:   Paul Mackerras <paulus@ozlabs.org>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
+        chenhuacai@gmail.com, kvm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/7] KVM: PPC: Remove redundant kvm_run from vcpu_arch
+Message-ID: <20200526043656.GA282305@thinks.paulus.ozlabs.org>
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+ <20200427043514.16144-4-tianjia.zhang@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <1589818051-20549-9-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200427043514.16144-4-tianjia.zhang@linux.alibaba.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 18/05/2020 18.07, Pierre Morel wrote:
-> First step for testing the channel subsystem is to enumerate the css and
-> retrieve the css devices.
+On Mon, Apr 27, 2020 at 12:35:10PM +0800, Tianjia Zhang wrote:
+> The 'kvm_run' field already exists in the 'vcpu' structure, which
+> is the same structure as the 'kvm_run' in the 'vcpu_arch' and
+> should be deleted.
 > 
-> This tests the success of STSCH I/O instruction, we do not test the
-> reaction of the VM for an instruction with wrong parameters.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->  s390x/Makefile      |  1 +
->  s390x/css.c         | 89 +++++++++++++++++++++++++++++++++++++++++++++
->  s390x/unittests.cfg |  4 ++
->  3 files changed, 94 insertions(+)
->  create mode 100644 s390x/css.c
-[...]
-> diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
-> index 07013b2..a436ec0 100644
-> --- a/s390x/unittests.cfg
-> +++ b/s390x/unittests.cfg
-> @@ -83,3 +83,7 @@ extra_params = -m 1G
->  [sclp-3g]
->  file = sclp.elf
->  extra_params = -m 3G
-> +
-> +[css]
-> +file = css.elf
-> +extra_params =-device ccw-pong
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 
-I gave your patch series a try on a normal upstream QEMU (that does not
-have the ccw-pong device yet), and the css test of course fails there,
-since QEMU bails out with:
+This looks fine.
 
- -device ccw-pong: 'ccw-pong' is not a valid device model name
+I assume each architecture sub-maintainer is taking the relevant
+patches from this series via their tree - is that right?
 
-This is unfortunate - I think we likely have to deal with QEMUs for
-quite a while that do not have this device enabled. Could you maybe add
-some kind of check to the kvm-unit-tests scripts that only run a test if
-a given device is available, and skip the test otherwise?
-
- Thomas
-
+Reviewed-by: Paul Mackerras <paulus@ozlabs.org>
