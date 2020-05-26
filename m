@@ -2,89 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E5401E23D4
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 16:16:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4644C1E24AA
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 16:58:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgEZOQ0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 26 May 2020 10:16:26 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:49646 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgEZOQ0 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 26 May 2020 10:16:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ZEZ1+yG3T0vEd58X58pERPcfzN4dbTvcTqCMRc8b9RQ=; b=mwjDL+wWgCxatP4XIvGOhsucBR
-        sYYetvGOeYtDiCDaYnPMf19gGi5la/8GEIhcC3Me4+QEzKqUEPzQ8E2INyTB3j6c8qBAew7S/s4g3
-        Yr6FjMBwCT5Re5vMGbX/NZ4MqVfNEmWtY8VJFGpTnXQwMYyiIMn+3pRNonmA+TDQxhQI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jdaNB-003HxR-V6; Tue, 26 May 2020 16:16:05 +0200
-Date:   Tue, 26 May 2020 16:16:05 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>
-Cc:     kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] [not for merge] netstats: example use of stats_fs
- API
-Message-ID: <20200526141605.GJ768009@lunn.ch>
-References: <20200526110318.69006-1-eesposit@redhat.com>
- <20200526110318.69006-8-eesposit@redhat.com>
+        id S1729249AbgEZO5r (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 26 May 2020 10:57:47 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:37776 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727978AbgEZO5r (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 26 May 2020 10:57:47 -0400
+Received: by mail-ej1-f65.google.com with SMTP id l21so24159170eji.4;
+        Tue, 26 May 2020 07:57:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=h/vc/U48e43hYebkBpRwszhtS9SjYZ2xSvS7nTqAhXk=;
+        b=JPgpJnLNkWjACul1dvYApARVGs2Cs5gfG38iSSaBGT9/l5HFAlskGf9v34VHttoTvd
+         cN9mDEwJ9T2RpslOcBxIh3Ok6hEdzIQwFiiibxZG5vsq7L6QpmZwS2RWsfcLS4DzBhpL
+         2UsyWHHXavFq7+qswrou69yuetvQU/XCZlHtrhiyueM6ERqDLX8Xd3B0xuRVF4u0T/JB
+         3FbgiyyU/xsDy3HAghkLsm0BWrnDttYQlIdKeg33LsCiCJA9GTkm9MSzIjVerh8ATz3W
+         fvX6oKgTZC+77hTsTqts/rPQf8cB7ZzNHFrzvM3tRsKxivdTMljMV9kdwqgl9PT3z9r8
+         ql7g==
+X-Gm-Message-State: AOAM5322H1G4oVJlE4HYNCDokfd3D5xFWS8N3RXUnHQpcWHMowcngU31
+        1wgyg9nuoHj3xOkFpKT+l+Y=
+X-Google-Smtp-Source: ABdhPJzdElVIHtsR0qMTrQLNXyURt2kuG/VwKifaQBwdr8EPvJOXOlo0YVxmLG6Ml176FD4Quk6tgg==
+X-Received: by 2002:a17:906:4406:: with SMTP id x6mr1463667ejo.160.1590505065110;
+        Tue, 26 May 2020 07:57:45 -0700 (PDT)
+Received: from rocinante ([95.155.85.46])
+        by smtp.gmail.com with ESMTPSA id v3sm149610ejj.14.2020.05.26.07.57.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 07:57:44 -0700 (PDT)
+Date:   Tue, 26 May 2020 16:57:42 +0200
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Ursula Braun <ubraun@linux.ibm.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        greybus-dev@lists.linaro.org, netdev@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 8/8] net/iucv: Use the new device_to_pm() helper to
+ access struct dev_pm_ops
+Message-ID: <20200526145742.GA75990@rocinante>
+References: <20200525182608.1823735-1-kw@linux.com>
+ <20200525182608.1823735-9-kw@linux.com>
+ <55c3d2eb-feff-bf33-235d-b89c0abef7b1@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200526110318.69006-8-eesposit@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <55c3d2eb-feff-bf33-235d-b89c0abef7b1@linux.ibm.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, May 26, 2020 at 01:03:17PM +0200, Emanuele Giuseppe Esposito wrote:
-> Apply stats_fs on the networking statistics subsystem.
+Hi Ursula,
+
+On 20-05-26 09:07:27, Ursula Braun wrote:
 > 
-> Currently it only works with disabled network namespace
-> (CONFIG_NET_NS=n), because multiple namespaces will have the same
-> device name under the same root source that will cause a conflict in
-> stats_fs.
+> 
+> On 5/25/20 8:26 PM, Krzysztof Wilczyński wrote:
+> > Use the new device_to_pm() helper to access Power Management callbacs
+> > (struct dev_pm_ops) for a particular device (struct device_driver).
+> > 
+> > No functional change intended.
+> > 
+> > Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> 
+> pm support is going to be removed (for s390 in general and) for
+> net/iucv/iucv.c with this net-next patch:
+[...]
 
-Hi Emanuele
+Good to know!  Thank you for letting me know.  I appreciate that.
 
-How do you atomically get and display a group of statistics?
-
-If you look at how the netlink socket works, you will see code like:
-
-                do {
-                        start = u64_stats_fetch_begin_irq(&cpu_stats->syncp);
-                        rx_packets = cpu_stats->rx_packets;
-                        rx_bytes = cpu_stats->rx_bytes;
-			....
-                } while (u64_stats_fetch_retry_irq(&cpu_stats->syncp, start));
-
-It will ensure that rx_packets and rx_bytes are consistent with each
-other. If the value of the sequence counter changes while inside the
-loop, the loop so repeated until it does not change.
-
-In general, hardware counters in NICs are the same.  You tell it to
-take a snapshot of the statistics counters, and then read them all
-back, to give a consistent view across all the statistics.
-
-I've not looked at this new code in detail, but it looks like you have
-one file per statistic, and assume each statistic is independent of
-every other statistic. This independence can limit how you use the
-values, particularly when debugging. The netlink interface we use does
-not have this limitation.
-
-	     Andrew
+Krzysztof
