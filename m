@@ -2,126 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 133EB1E1D7C
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 10:39:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 180341E1EA3
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 11:33:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731491AbgEZIjK convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Tue, 26 May 2020 04:39:10 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42355 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728516AbgEZIjJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 26 May 2020 04:39:09 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z3so15626949otp.9;
-        Tue, 26 May 2020 01:39:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MpwY3EHc5z85EihmevYmSupSr3w2Pyaz4sc6UHi08wA=;
-        b=THJavD6TYGCMTkFEN445a4SyCaYydzMAEnjQ4yo3GHCeH7RP+WZy8uJJuPgZ2/pLfC
-         x9igDO4yJmCJtVoypSWlVb96jb1cmxDovIgbOODut3UXEq52tlpgZYtV630arLaultMe
-         WgoN96/7MOnzQHLvmF80oa7Fl3U1zD4AXAtzFTDRxdWJVVX+UM/iUAkvfn9GBOMxDQbn
-         CoCJJwN/9lR9M+BzeAJ2Fvu6Ew1quXmt5BHM1a9TDEPinK12Y9FFEdr2H2hdSkaMR5nj
-         uPH9e7X1x8lsd237CMFsegWizytsLwIJJnvLQCDh0t6eNbYoUcYlwu518FRW9q9IVe2y
-         Y0uA==
-X-Gm-Message-State: AOAM532+cJb3MDqSS6QdXTcf5LwAF685IGszKu0Kjp4V1aHyfptx0AQU
-        4b1hWTGbPm/j75JxsTBvKpPCPHQbU5TAVGAhUBA=
-X-Google-Smtp-Source: ABdhPJyg99dhbbsUdUpzqyLlD2Zp0WEwPi+B3o8RxPqwRzQCCrVCeDF3laDVas19O0CvHdxuwQP2MEhi6k5TafK25JQ=
-X-Received: by 2002:a9d:6c0f:: with SMTP id f15mr94657otq.118.1590482348592;
- Tue, 26 May 2020 01:39:08 -0700 (PDT)
+        id S1731715AbgEZJdi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 26 May 2020 05:33:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2096 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728746AbgEZJdi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 26 May 2020 05:33:38 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04Q9WpjF145357;
+        Tue, 26 May 2020 05:33:38 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 316ygb329v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 05:33:36 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04Q9WxGG145618;
+        Tue, 26 May 2020 05:33:27 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 316ygb3249-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 05:33:26 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04Q9TvGI015349;
+        Tue, 26 May 2020 09:33:17 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma05fra.de.ibm.com with ESMTP id 316uf8j8ya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 09:33:17 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04Q9XFNE262578
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 May 2020 09:33:15 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 128DE4C040;
+        Tue, 26 May 2020 09:33:15 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F1CD54C046;
+        Tue, 26 May 2020 09:33:14 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 26 May 2020 09:33:14 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 5AFB3E024B; Tue, 26 May 2020 11:33:14 +0200 (CEST)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: [GIT PULL 0/3] KVM: s390: Cleanups for 5.8
+Date:   Tue, 26 May 2020 11:33:10 +0200
+Message-Id: <20200526093313.77976-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <20200525182608.1823735-1-kw@linux.com> <20200525182608.1823735-6-kw@linux.com>
-In-Reply-To: <20200525182608.1823735-6-kw@linux.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 26 May 2020 10:38:56 +0200
-Message-ID: <CAJZ5v0i-RnP7RycZ3GqOZuEYqrX_+r5-VS7DqtNCyHDwp1sPKg@mail.gmail.com>
-Subject: Re: [PATCH 5/8] usb: phy: fsl: Use the new device_to_pm() helper to
- access struct dev_pm_ops
-To:     =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        greybus-dev@lists.linaro.org, netdev <netdev@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-s390@vger.kernel.org,
-        "open list:TARGET SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
-        <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-25_12:2020-05-25,2020-05-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ cotscore=-2147483648 spamscore=0 lowpriorityscore=0 suspectscore=0
+ bulkscore=0 mlxlogscore=603 mlxscore=0 clxscore=1015 malwarescore=0
+ adultscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005260073
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, May 25, 2020 at 8:26 PM Krzysztof Wilczyński <kw@linux.com> wrote:
->
-> Use the new device_to_pm() helper to access Power Management callbacs
-> (struct dev_pm_ops) for a particular device (struct device_driver).
->
-> No functional change intended.
->
-> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
-> ---
->  drivers/usb/phy/phy-fsl-usb.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/usb/phy/phy-fsl-usb.c b/drivers/usb/phy/phy-fsl-usb.c
-> index b451f4695f3f..3b9ad5db8380 100644
-> --- a/drivers/usb/phy/phy-fsl-usb.c
-> +++ b/drivers/usb/phy/phy-fsl-usb.c
-> @@ -460,6 +460,7 @@ int fsl_otg_start_host(struct otg_fsm *fsm, int on)
->         struct device *dev;
->         struct fsl_otg *otg_dev =
->                 container_of(otg->usb_phy, struct fsl_otg, phy);
-> +       const struct dev_pm_ops *pm;
->         u32 retval = 0;
->
->         if (!otg->host)
-> @@ -479,8 +480,9 @@ int fsl_otg_start_host(struct otg_fsm *fsm, int on)
->                 else {
->                         otg_reset_controller();
->                         VDBG("host on......\n");
-> -                       if (dev->driver->pm && dev->driver->pm->resume) {
-> -                               retval = dev->driver->pm->resume(dev);
-> +                       pm = driver_to_pm(dev->driver);
-> +                       if (pm && pm->resume) {
-> +                               retval = pm->resume(dev);
+Paolo,
 
-And why is the new version better this time?
+The following changes since commit 2a173ec993baa6a97e7b0fb89240200a88d90746:
 
->                                 if (fsm->id) {
->                                         /* default-b */
->                                         fsl_otg_drv_vbus(fsm, 1);
-> @@ -504,8 +506,9 @@ int fsl_otg_start_host(struct otg_fsm *fsm, int on)
->                 else {
->                         VDBG("host off......\n");
->                         if (dev && dev->driver) {
-> -                               if (dev->driver->pm && dev->driver->pm->suspend)
-> -                                       retval = dev->driver->pm->suspend(dev);
-> +                               pm = driver_to_pm(dev->driver);
-> +                               if (pm && pm->suspend)
-> +                                       retval = pm->suspend(dev);
->                                 if (fsm->id)
->                                         /* default-b */
->                                         fsl_otg_drv_vbus(fsm, 0);
-> --
-> 2.26.2
->
+  MAINTAINERS: add a reviewer for KVM/s390 (2020-04-20 11:24:00 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-next-5.8-1
+
+for you to fetch changes up to 0b545fd17f84184f9536bde68c3521e36c488448:
+
+  KVM: s390: remove unneeded semicolon in gisa_vcpu_kicker() (2020-04-20 11:33:32 +0200)
+
+----------------------------------------------------------------
+KVM: s390: Cleanups for 5.8
+
+- vsie (nesting) cleanups
+- remove unneeded semicolon
+
+----------------------------------------------------------------
+David Hildenbrand (2):
+      KVM: s390: vsie: Move conditional reschedule
+      KVM: s390: vsie: gmap_table_walk() simplifications
+
+Jason Yan (1):
+      KVM: s390: remove unneeded semicolon in gisa_vcpu_kicker()
+
+ arch/s390/kvm/interrupt.c |  2 +-
+ arch/s390/kvm/vsie.c      |  3 +--
+ arch/s390/mm/gmap.c       | 10 +++++-----
+ 3 files changed, 7 insertions(+), 8 deletions(-)
