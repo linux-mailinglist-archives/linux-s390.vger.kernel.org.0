@@ -2,129 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F0351E1AE2
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 07:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CB701E1B57
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 08:33:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgEZF7d (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 26 May 2020 01:59:33 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60013 "EHLO ozlabs.org"
+        id S1728078AbgEZGdj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 26 May 2020 02:33:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725771AbgEZF7c (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 26 May 2020 01:59:32 -0400
-Received: by ozlabs.org (Postfix, from userid 1003)
-        id 49WNZn04xgz9sSs; Tue, 26 May 2020 15:59:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
-        t=1590472769; bh=4zTMjLxiP7At/YtrE7MFZ9lR12F6gL3vS4op93NKqcw=;
+        id S1726842AbgEZGdi (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 26 May 2020 02:33:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 493922073B;
+        Tue, 26 May 2020 06:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590474816;
+        bh=ekoHJmuDYgfF1SuG9z404kGqxsTf0Kd2lPtuC2TdX78=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=khGxIciPhO0Sfk2SnU/0Ae673wU3qJd++HDVCdDXw0crK8Ypm2/n9l62eVF831yOi
-         qSlxMK1kVwrGk5Ie4AuHOGiyMVvCJOwjYXSbzPDmsHvR8Rc6dTcCW4fUqTmnv2FFC3
-         IC6DoGsAZ7Lz1lXXrlNfXZL/2bFCAo2dtE/thks2LK2v0to3aW5buJZfJX1GsIWfGN
-         AgMpuG9PWO3XTyuFrjqeVqtJHgB3BOMn3n4bxBUe7RXQfa23LEupF1Ywt0g5DVnF/1
-         IVVxPvpB947tg6+DMLQ0rMbIi1mYImwuRTcOzmoU9yY9DUZ2d3cWMG3nlOTWEdkC0S
-         nbtLhygWbPVew==
-Date:   Tue, 26 May 2020 15:59:24 +1000
-From:   Paul Mackerras <paulus@ozlabs.org>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
-        chenhuacai@gmail.com, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 5/7] KVM: PPC: clean up redundant kvm_run parameters
- in assembly
-Message-ID: <20200526055924.GD282305@thinks.paulus.ozlabs.org>
-References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
- <20200427043514.16144-6-tianjia.zhang@linux.alibaba.com>
+        b=upgmfSg6+hyi2RnYD15UKVCUWWpzVmk35guz+ryNT4da9EZJ7evbDVNO0PKMLrqsQ
+         +fGZzarS6/XMZfmdW21nbzBX5BfMvv+D0W3fk0eD7I2f2aKeRnpBAyI0v+M2ILIryk
+         7qnBc+AjLpsROB+BxZwolVoeKKpBh4GZdOQAKZLI=
+Date:   Tue, 26 May 2020 08:33:34 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Johan Hovold <johan@kernel.org>,
+        Alex Elder <elder@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        greybus-dev@lists.linaro.org, netdev@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 1/8] driver core: Add helper for accessing Power
+ Management callbacs
+Message-ID: <20200526063334.GB2578492@kroah.com>
+References: <20200525182608.1823735-1-kw@linux.com>
+ <20200525182608.1823735-2-kw@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200427043514.16144-6-tianjia.zhang@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200525182608.1823735-2-kw@linux.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 12:35:12PM +0800, Tianjia Zhang wrote:
-> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
-> structure. For historical reasons, many kvm-related function parameters
-> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
-> patch does a unified cleanup of these remaining redundant parameters.
-
-Some of these changes don't look completely correct to me, see below.
-If you're expecting these patches to go through my tree, I can fix up
-the patch and commit it (with you as author), noting the changes I
-made in the commit message.  Do you want me to do that?
-
-> diff --git a/arch/powerpc/kvm/book3s_interrupts.S b/arch/powerpc/kvm/book3s_interrupts.S
-> index f7ad99d972ce..0eff749d8027 100644
-> --- a/arch/powerpc/kvm/book3s_interrupts.S
-> +++ b/arch/powerpc/kvm/book3s_interrupts.S
-> @@ -55,8 +55,7 @@
->   ****************************************************************************/
+On Mon, May 25, 2020 at 06:26:01PM +0000, Krzysztof Wilczyński wrote:
+> Add driver_to_pm() helper allowing for accessing the Power Management
+> callbacs for a particular device.  Access to the callbacs (struct
+> dev_pm_ops) is normally done through using the pm pointer that is
+> embedded within the device_driver struct.
+> 
+> Helper allows for the code required to reference the pm pointer and
+> access Power Management callbas to be simplified.  Changing the
+> following:
+> 
+>   struct device_driver *drv = dev->driver;
+>   if (dev->driver && dev->driver->pm && dev->driver->pm->prepare) {
+>       int ret = dev->driver->pm->prepare(dev);
+> 
+> To:
+> 
+>   const struct dev_pm_ops *pm = driver_to_pm(dev->driver);
+>   if (pm && pm->prepare) {
+>       int ret = pm->prepare(dev);
+> 
+> Or, changing the following:
+> 
+>      const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+> 
+> To:
+>      const struct dev_pm_ops *pm = driver_to_pm(dev->driver);
+> 
+> Signed-off-by: Krzysztof Wilczyński <kw@linux.com>
+> ---
+>  include/linux/device/driver.h | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
+> index ee7ba5b5417e..ccd0b315fd93 100644
+> --- a/include/linux/device/driver.h
+> +++ b/include/linux/device/driver.h
+> @@ -236,6 +236,21 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
+>  }
+>  #endif
 >  
->  /* Registers:
-> - *  r3: kvm_run pointer
-> - *  r4: vcpu pointer
-> + *  r3: vcpu pointer
->   */
->  _GLOBAL(__kvmppc_vcpu_run)
->  
-> @@ -68,8 +67,8 @@ kvm_start_entry:
->  	/* Save host state to the stack */
->  	PPC_STLU r1, -SWITCH_FRAME_SIZE(r1)
->  
-> -	/* Save r3 (kvm_run) and r4 (vcpu) */
-> -	SAVE_2GPRS(3, r1)
-> +	/* Save r3 (vcpu) */
-> +	SAVE_GPR(3, r1)
->  
->  	/* Save non-volatile registers (r14 - r31) */
->  	SAVE_NVGPRS(r1)
-> @@ -82,11 +81,11 @@ kvm_start_entry:
->  	PPC_STL	r0, _LINK(r1)
->  
->  	/* Load non-volatile guest state from the vcpu */
-> -	VCPU_LOAD_NVGPRS(r4)
-> +	VCPU_LOAD_NVGPRS(r3)
->  
->  kvm_start_lightweight:
->  	/* Copy registers into shadow vcpu so we can access them in real mode */
-> -	mr	r3, r4
-> +	mr	r4, r3
+> +/**
+> + * driver_to_pm - Return Power Management callbacs (struct dev_pm_ops) for
+> + *                a particular device.
+> + * @drv: Pointer to a device (struct device_driver) for which you want to access
+> + *       the Power Management callbacks.
+> + *
+> + * Returns a pointer to the struct dev_pm_ops embedded within the device (struct
+> + * device_driver), or returns NULL if Power Management is not present and the
+> + * pointer is not valid.
+> + */
+> +static inline const struct dev_pm_ops *driver_to_pm(struct device_driver *drv)
+> +{
+> +	return drv && drv->pm ? drv->pm : NULL;
 
-This mr doesn't seem necessary.
+I hate ? : lines with a passion, as they break normal pattern mattching
+in my brain.  Please just spell this all out:
+	if (drv && drv->pm)
+		return drv->pm;
+	return NULL;
 
->  	bl	FUNC(kvmppc_copy_to_svcpu)
->  	nop
->  	REST_GPR(4, r1)
+Much easier to read, and the compiler will do the exact same thing.
 
-This should be loading r4 from GPR3(r1), not GPR4(r1) - which is what
-REST_GPR(4, r1) will do.
+Only place ? : are ok to use in my opinion, are as function arguments.
 
-Then, in the file but not in the patch context, there is this line:
+thanks,
 
-	PPC_LL	r3, GPR4(r1)		/* vcpu pointer */
-
-where once again GPR4 needs to be GPR3.
-
-> @@ -191,10 +190,10 @@ after_sprg3_load:
->  	PPC_STL	r31, VCPU_GPR(R31)(r7)
->  
->  	/* Pass the exit number as 3rd argument to kvmppc_handle_exit */
-
-The comment should be modified to say "2nd" instead of "3rd",
-otherwise it is confusing.
-
-The rest of the patch looks OK.
-
-Paul.
+greg k-h
