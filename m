@@ -2,97 +2,201 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B54D91E29E3
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 20:17:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 313C51E2F36
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 21:41:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgEZSQi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 26 May 2020 14:16:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41701 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727112AbgEZSQi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 26 May 2020 14:16:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590516996;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=nLjXjlHBIkm/XDuvR0aMSKGbwOCZj+vUGdURjBkZE4k=;
-        b=EglCR0zkbPI5kTFbKMnL/PGp7zNr0IHjGiVOcRYctLCBzMINikgRmd6LrLe/PAdAX5lBQZ
-        G3LeRpK0ofvTbfD4LZe0AwrBZaPLpXofw9fvfFqvWPXcGPIETk1jzrNmbduIj+NPUxHij9
-        rETiBbloweuEk80D8eah1O6T24LJIYI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-477-ChwY5mq6NSSJ8OgO7G1sCg-1; Tue, 26 May 2020 14:16:32 -0400
-X-MC-Unique: ChwY5mq6NSSJ8OgO7G1sCg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AFEA380183C;
-        Tue, 26 May 2020 18:16:31 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-112-8.ams2.redhat.com [10.36.112.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0B3C979C40;
-        Tue, 26 May 2020 18:16:26 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v7 06/12] s390x: use get_clock_ms() to
- calculate a delay in ms
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        david@redhat.com, cohuck@redhat.com
-References: <1589818051-20549-1-git-send-email-pmorel@linux.ibm.com>
- <1589818051-20549-7-git-send-email-pmorel@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <a490dc16-b323-5a52-2d29-f4707d89a1d6@redhat.com>
-Date:   Tue, 26 May 2020 20:16:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S2389641AbgEZTj2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 26 May 2020 15:39:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39746 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389582AbgEZTj1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 26 May 2020 15:39:27 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QJWGWK147184;
+        Tue, 26 May 2020 15:39:26 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 316yqjgqfu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 15:39:26 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04QJWOEF147748;
+        Tue, 26 May 2020 15:39:26 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 316yqjgqfk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 15:39:25 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04QJYst7000740;
+        Tue, 26 May 2020 19:39:25 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01dal.us.ibm.com with ESMTP id 316ufa0vtp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 19:39:25 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04QJdNNx26345916
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 May 2020 19:39:23 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6D106A054;
+        Tue, 26 May 2020 19:39:23 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 19DFF6A047;
+        Tue, 26 May 2020 19:39:23 +0000 (GMT)
+Received: from [9.65.228.55] (unknown [9.65.228.55])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 26 May 2020 19:39:22 +0000 (GMT)
+Subject: Re: [PATCH] vfio-ccw: document possible errors
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20200407111605.1795-1-cohuck@redhat.com>
+ <55932365-3d36-1629-5d65-06c71e8231f9@linux.ibm.com>
+ <20200508125541.72adc626.cohuck@redhat.com>
+From:   Eric Farman <farman@linux.ibm.com>
+Message-ID: <ed9b7c9b-3dc7-e573-55a8-d52f28877da9@linux.ibm.com>
+Date:   Tue, 26 May 2020 15:39:22 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <1589818051-20549-7-git-send-email-pmorel@linux.ibm.com>
+In-Reply-To: <20200508125541.72adc626.cohuck@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-26_02:2020-05-26,2020-05-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 suspectscore=0 clxscore=1015 priorityscore=1501 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=999 phishscore=0 adultscore=0 mlxscore=0
+ spamscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005260147
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 18/05/2020 18.07, Pierre Morel wrote:
-> use get_clock_ms() to calculate a delay in ms
+
+
+On 5/8/20 6:55 AM, Cornelia Huck wrote:
+> On Fri, 17 Apr 2020 12:33:18 -0400
+> Eric Farman <farman@linux.ibm.com> wrote:
 > 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->  lib/s390x/asm/time.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>> On 4/7/20 7:16 AM, Cornelia Huck wrote:
+>>> Interacting with the I/O and the async regions can yield a number
+>>> of errors, which had been undocumented so far. These are part of
+>>> the api, so remedy that.  
+>>
+>> (Makes a note to myself, to do the same for the schib/crw regions we're
+>> adding for channel path handling.)
 > 
-> diff --git a/lib/s390x/asm/time.h b/lib/s390x/asm/time.h
-> index 25c7a3c..931a119 100644
-> --- a/lib/s390x/asm/time.h
-> +++ b/lib/s390x/asm/time.h
-> @@ -23,4 +23,14 @@ static inline uint64_t get_clock_ms(void)
->  	return (clk >> (63 - 51)) / 1000;
->  }
->  
-> +static inline void mdelay(unsigned long ms)
-> +{
-> +	unsigned long startclk;
-> +
-> +	startclk = get_clock_ms();
-> +	for (;;)
-> +		if (get_clock_ms() - startclk > ms)
-> +			break;
+> Yes, please :) I plan to merge this today, so you can add a patch on
+> top.
 
-Maybe rather:
+I finally picked this up and realized that the io and async regions both
+document the return codes that would be stored in a field within their
+respective regions. The schib/crw regions don't have any such field, so
+the only values to be documented are the ones that the .read callback
+itself returns. What obvious thing am I missing?
 
-    for (;get_clock_ms() - startclk <= ms;)
-	;
-
-?
-Or:
-
-    while (get_clock_ms() - startclk <= ms)
-        ;
-?
-
- Thomas
-
+> 
+>>
+>>>
+>>> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+>>> ---
+>>>  Documentation/s390/vfio-ccw.rst | 54 ++++++++++++++++++++++++++++++++-
+>>>  1 file changed, 53 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/s390/vfio-ccw.rst b/Documentation/s390/vfio-ccw.rst
+>>> index fca9c4f5bd9c..4538215a362c 100644
+>>> --- a/Documentation/s390/vfio-ccw.rst
+>>> +++ b/Documentation/s390/vfio-ccw.rst
+>>> @@ -210,7 +210,36 @@ Subchannel.
+>>>  
+>>>  irb_area stores the I/O result.
+>>>  
+>>> -ret_code stores a return code for each access of the region.
+>>> +ret_code stores a return code for each access of the region. The following
+>>> +values may occur:
+>>> +
+>>> +``0``
+>>> +  The operation was successful.
+>>> +
+>>> +``-EOPNOTSUPP``
+>>> +  The orb specified transport mode or an unidentified IDAW format, did not
+>>> +  specify prefetch mode, or the scsw specified a function other than the
+> 
+> 'did not specify prefetch mode' needs to be dropped now, will do so
+> before queuing.
+> 
+>>> +  start function.
+>>> +
+>>> +``-EIO``
+>>> +  A request was issued while the device was not in a state ready to accept
+>>> +  requests, or an internal error occurred.
+>>> +
+>>> +``-EBUSY``
+>>> +  The subchannel was status pending or busy, or a request is already active.
+>>> +
+>>> +``-EAGAIN``
+>>> +  A request was being processed, and the caller should retry.
+>>> +
+>>> +``-EACCES``
+>>> +  The channel path(s) used for the I/O were found to be not operational.
+>>> +
+>>> +``-ENODEV``
+>>> +  The device was found to be not operational.
+>>> +
+>>> +``-EINVAL``
+>>> +  The orb specified a chain longer than 255 ccws, or an internal error
+>>> +  occurred.
+>>>  
+>>>  This region is always available.  
+>>
+>> Maybe move this little line up between the struct layout and "While
+>> starting an I/O request, orb_area ..." instead of being lost way down here?
+> 
+> Good idea, that also would match the documentation for the async region.
+> 
+>>
+>> But other than that suggestion, everything looks fine.
+>>
+>> Reviewed-by: Eric Farman <farman@linux.ibm.com>
+> 
+> Thanks!
+> 
+>>
+>>>  
+>>> @@ -231,6 +260,29 @@ This region is exposed via region type VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD.
+>>>  
+>>>  Currently, CLEAR SUBCHANNEL and HALT SUBCHANNEL use this region.
+>>>  
+>>> +command specifies the command to be issued; ret_code stores a return code
+>>> +for each access of the region. The following values may occur:
+>>> +
+>>> +``0``
+>>> +  The operation was successful.
+>>> +
+>>> +``-ENODEV``
+>>> +  The device was found to be not operational.
+>>> +
+>>> +``-EINVAL``
+>>> +  A command other than halt or clear was specified.
+>>> +
+>>> +``-EIO``
+>>> +  A request was issued while the device was not in a state ready to accept
+>>> +  requests.
+>>> +
+>>> +``-EAGAIN``
+>>> +  A request was being processed, and the caller should retry.
+>>> +
+>>> +``-EBUSY``
+>>> +  The subchannel was status pending or busy while processing a halt request.
+>>> +
+>>> +
+>>>  vfio-ccw operation details
+>>>  --------------------------
+>>>  
+>>>   
+>>
+> 
