@@ -2,154 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 571591E2705
-	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 18:30:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EDE91E27A3
+	for <lists+linux-s390@lfdr.de>; Tue, 26 May 2020 18:49:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388612AbgEZQaW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 26 May 2020 12:30:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56189 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388592AbgEZQaV (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 26 May 2020 12:30:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590510620;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PFH+lO6ohBLSBU7ZKmdmDibYJAoqrjA+Qt35whMPcWw=;
-        b=L468XSfgRVAi2Rt8YfcdjpE6Yyq683eDb/zj5nWPjQxK9M2Q4PyyEIsWpTX4VYybKUH70x
-        9jdMi8Nr9d9ugmxWuaqMTQhnkhap6bTD/fI9iN7+k6XuhQsX6BgBM3Wxwcvez5NOwVowUX
-        QVcu6Vb1JBVRLuFJY3zYDpPNkob0nA4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-404-gsgQ_yY5Oge-dN8-dIAyXQ-1; Tue, 26 May 2020 12:30:15 -0400
-X-MC-Unique: gsgQ_yY5Oge-dN8-dIAyXQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CAEC8018A7;
-        Tue, 26 May 2020 16:30:14 +0000 (UTC)
-Received: from gondolin (ovpn-113-77.ams2.redhat.com [10.36.113.77])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 225B95C1BB;
-        Tue, 26 May 2020 16:30:09 +0000 (UTC)
-Date:   Tue, 26 May 2020 18:30:05 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v7 07/12] s390x: Library resources for
- CSS tests
-Message-ID: <20200526183005.76fc9124.cohuck@redhat.com>
-In-Reply-To: <1589818051-20549-8-git-send-email-pmorel@linux.ibm.com>
-References: <1589818051-20549-1-git-send-email-pmorel@linux.ibm.com>
-        <1589818051-20549-8-git-send-email-pmorel@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1731505AbgEZQsQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 26 May 2020 12:48:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731494AbgEZQsP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 26 May 2020 12:48:15 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53626C03E96F
+        for <linux-s390@vger.kernel.org>; Tue, 26 May 2020 09:48:15 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id f3so22792858ioj.1
+        for <linux-s390@vger.kernel.org>; Tue, 26 May 2020 09:48:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CDy85Gj7MYd1kNtILJcUzn7KVIhIM0XshsVeAc/i0tA=;
+        b=dCxwuhqpPbwbXsS8D4GR15Oi/vkWvJ2t6JE5jqhDuEYRBCxiAwo9cWnqARqt/pZ9N3
+         vSDlZ8wDeZydMMsvQgllY5SFL21AkwmUO/yVMpJRwkWuLZ+okFm2plV7st5ZUHxgg7+n
+         nw9y2DMW7Y1odFWc8D0ovkNrkmBQTlf+wVi0icllMuisiL6LQjhD1eU0HTahi0uvVson
+         7H1igoRa7sC3VzH0k6kw37/8QsEYXM6RYbG1TkZAtikaoCp3wlyHVEwAfTjAFYYV3q4L
+         NgflHMgnD8hmupC7gXChsbUVMFzyhgq3aBSV9WdpBp5mfIm6+JpoU8GgF7qXRXSqT3gV
+         qZIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CDy85Gj7MYd1kNtILJcUzn7KVIhIM0XshsVeAc/i0tA=;
+        b=RWO2HHM/WwkC6UXZDsW5okfBuEp0Mg1gMB2QPl1+nGY8yog3AuTmATYhcX/5Mpzdjx
+         vgMnKPVyaWvPHhJVsHWHRrlRq0TfHr6tqwaySmkGKQZnhorkxujypjiB+7y8I4WBEOsT
+         ncC5mnl1pCiTzBfgt+r8jekN9/fDRsmTccJtwCrM8voa+YZHbzuuWmSDdjzjpLmW9emc
+         0+VUkMtWW6z6+hiaKnvI9IlKOHuJRGUHOD3I9v/46yau5RMwr0mKbEscw3gG1fIhrHPR
+         gZIawFmSTivi+E7DnE0WUupEBq3sw12mc8DYp5VfWhTPoApiJ5oBfHyvDMn4uP3Z3Iym
+         ozpA==
+X-Gm-Message-State: AOAM5302J04iSP2ROE39GnGxWVwGPJZoSAsa5sBalgPBT2q9I8gW57oB
+        p2d7gf2p1OhMYcIirkS2ILQcIA==
+X-Google-Smtp-Source: ABdhPJwt8EDbE+Md3qNwECgPyEhh34GzLnn6Kwx5Q+Egs2R3PU4UAkkaFOOCDwhKuojJpS4rMr4mTQ==
+X-Received: by 2002:a02:2708:: with SMTP id g8mr1921759jaa.52.1590511694529;
+        Tue, 26 May 2020 09:48:14 -0700 (PDT)
+Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id d29sm250489ild.42.2020.05.26.09.48.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 09:48:13 -0700 (PDT)
+Subject: Re: [greybus-dev] [PATCH 8/8] net/iucv: Use the new device_to_pm()
+ helper to access struct dev_pm_ops
+To:     =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>, linux-pci@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Kevin Hilman <khilman@kernel.org>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        linux-acpi@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Johan Hovold <johan@kernel.org>, greybus-dev@lists.linaro.org,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Felipe Balbi <balbi@kernel.org>, Alex Elder <elder@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20200525182608.1823735-1-kw@linux.com>
+ <20200525182608.1823735-9-kw@linux.com> <20200526063521.GC2578492@kroah.com>
+ <20200526150744.GC75990@rocinante>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <acb9415a-d0d0-3ebc-b5ae-c26a7dc2114a@linaro.org>
+Date:   Tue, 26 May 2020 11:48:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200526150744.GC75990@rocinante>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 18 May 2020 18:07:26 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
-
-> Provide some definitions and library routines that can be used by
-> tests targeting the channel subsystem.
+On 5/26/20 10:07 AM, Krzysztof Wilczyński wrote:
+> Hello Greg,
 > 
-> Debug function can be activated by defining DEBUG_CSS before the
-> inclusion of the css.h header file.
+> [...]
+>> It's "interesting" how using your new helper doesn't actually make the
+>> code smaller.  Perhaps it isn't a good helper function?
+
+Helper functions often improve code readability, which is
+beneficial even if it doesn't reduce code size or efficiency.
+
+But I won't argue for or against this particular change.
+It's OK with me either way.
+
+					-Alex
+
+> The idea for the helper was inspired by the comment Dan made to Bjorn
+> about Bjorn's change, as per:
 > 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->  lib/s390x/css.h      | 259 +++++++++++++++++++++++++++++++++++++++++++
->  lib/s390x/css_dump.c | 157 ++++++++++++++++++++++++++
->  s390x/Makefile       |   1 +
->  3 files changed, 417 insertions(+)
->  create mode 100644 lib/s390x/css.h
->  create mode 100644 lib/s390x/css_dump.c
+>    https://lore.kernel.org/driverdev-devel/20191016135002.GA24678@kadam/
 > 
-
-(...)
-
-> +struct ccw1 {
-> +	unsigned char code;
-> +	unsigned char flags;
-> +	unsigned short count;
-
-I'm wondering why you're using unsigned {char,short} here, instead of
-the uint*_t types everywhere else? It's not wrong, but probably better
-to be consistent?
-
-> +	uint32_t data_address;
-> +} __attribute__ ((aligned(4)));
-> +
-> +#define SID_ONE		0x00010000
-> +
-
-I think it would be beneficial for the names to somewhat match the
-naming in Linux and/or QEMU -- or more speaking names (as you do for
-some), which is also good.
-
-> +#define ORB_M_KEY	0xf0000000
-> +#define ORB_F_SUSPEND	0x08000000
-> +#define ORB_F_STREAMING	0x04000000
-> +#define ORB_F_MODIFCTRL	0x02000000
-> +#define ORB_F_SYNC	0x01000000
-> +#define ORB_F_FORMAT	0x00800000
-> +#define ORB_F_PREFETCH	0x00400000
-> +#define ORB_F_INIT_IRQ	0x00200000
-
-ORB_F_ISIC? (As it does not refer to 'initialization', but 'initial'.)
-
-> +#define ORB_F_ADDRLIMIT	0x00100000
-> +#define ORB_F_SUSP_IRQ	0x00080000
-
-ORB_F_SSIC? (As it deals with suppression.)
-
-> +#define ORB_F_TRANSPORT	0x00040000
-> +#define ORB_F_IDAW2	0x00020000
-
-ORB_F_IDAW_FMT2?
-
-Or following Linux/QEMU, use ORB_F_C64 for a certain retro appeal :)
-
-> +#define ORB_F_IDAW_2K	0x00010000
-> +#define ORB_M_LPM	0x0000ff00
-> +#define ORB_F_LPM_DFLT	0x00008000
-
-That's a default lpm of 0x80, right? It's a bit buried between the orb
-definitions, and it also seems to be more of a implementation choice --
-move it out from the flags here?
-
-> +#define ORB_F_ILSM	0x00000080
-
-ORB_F_ILS?
-
-> +#define ORB_F_CCW_IND	0x00000040
-
-ORB_F_MIDAW? I had a hard time figuring out that one :)
-
-> +#define ORB_F_ORB_EXT	0x00000001
-
-(...)
-
-> +/*
-> + * Try o have a more human representation of the PMCW flags
-
-s/o/to/
-
-> + * each letter in the string represent the first
-
-s/represent/represents/
-
-> + * letter of the associated bit in the flag fields.
-> + */
-
-(...)
-
-Generally, looks good to me.
+> It looked like a good idea to try to reduce the following:
+> 
+>    dev->driver && dev->driver->pm && dev->driver->pm->prepare
+> 
+> Into something more succinct.  Albeit, given the feedback from yourself
+> and Rafael, I gather that this helper is not really a good addition.
+> 
+> Thank you everyone and sorry for the commotion!
+> 
+> Krzysztof
+> _______________________________________________
+> greybus-dev mailing list
+> greybus-dev@lists.linaro.org
+> https://lists.linaro.org/mailman/listinfo/greybus-dev
+> 
 
