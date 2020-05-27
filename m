@@ -2,89 +2,162 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 065721E3910
-	for <lists+linux-s390@lfdr.de>; Wed, 27 May 2020 08:24:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 649DA1E3CBD
+	for <lists+linux-s390@lfdr.de>; Wed, 27 May 2020 10:55:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgE0GYT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 27 May 2020 02:24:19 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:52965 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726337AbgE0GYT (ORCPT
+        id S2388230AbgE0IzQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 27 May 2020 04:55:16 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24951 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388070AbgE0IzP (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 27 May 2020 02:24:19 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0TzmW8ts_1590560648;
-Received: from 30.27.118.64(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TzmW8ts_1590560648)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 27 May 2020 14:24:10 +0800
-Subject: Re: [PATCH v4 6/7] KVM: MIPS: clean up redundant 'kvm_run' parameters
-To:     Huacai Chen <chenhuacai@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        paulus@ozlabs.org, mpe@ellerman.id.au,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org, hpa@zytor.com,
-        Marc Zyngier <maz@kernel.org>, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, Peter Xu <peterx@redhat.com>,
-        thuth@redhat.com, kvm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        kvmarm@lists.cs.columbia.edu,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
- <20200427043514.16144-7-tianjia.zhang@linux.alibaba.com>
- <CAAhV-H7kpKUfQoWid6GSNL5+4hTTroGyL83EaW6yZwS2+Ti9kA@mail.gmail.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <37246a25-c4dc-7757-3f5c-d46870a4f186@linux.alibaba.com>
-Date:   Wed, 27 May 2020 14:24:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 27 May 2020 04:55:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590569714;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4PYXw+YoKr1bluRLooF3WfBA+4ZF+vPqkW7Kq0yhOR8=;
+        b=D4gaRg9GeJSnKEbBT71V9KEnbLOYkx2UdWIX4L0OIPnoCtXOZC9rF6Lm+B9E65e0J8flw/
+        yoTR4UqaWEWqbDzBkidXbEAo33AjyXNw27I8Y5UekXhL+XXWhKPHKJNPeCd9A1qoLyYPqp
+        pYco5Owc/79HEbDtvewj+wQkFf+MxJg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-470-Qmbjyls0Ob-aPeRP18Sy8w-1; Wed, 27 May 2020 04:55:12 -0400
+X-MC-Unique: Qmbjyls0Ob-aPeRP18Sy8w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B0A8D107ACF5;
+        Wed, 27 May 2020 08:55:11 +0000 (UTC)
+Received: from gondolin (ovpn-112-223.ams2.redhat.com [10.36.112.223])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D51E5C1B0;
+        Wed, 27 May 2020 08:55:04 +0000 (UTC)
+Date:   Wed, 27 May 2020 10:55:01 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
+Subject: Re: [kvm-unit-tests PATCH v7 08/12] s390x: css: stsch, enumeration
+ test
+Message-ID: <20200527105501.53681762.cohuck@redhat.com>
+In-Reply-To: <1589818051-20549-9-git-send-email-pmorel@linux.ibm.com>
+References: <1589818051-20549-1-git-send-email-pmorel@linux.ibm.com>
+        <1589818051-20549-9-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H7kpKUfQoWid6GSNL5+4hTTroGyL83EaW6yZwS2+Ti9kA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Mon, 18 May 2020 18:07:27 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-
-On 2020/4/27 13:40, Huacai Chen wrote:
-> Reviewed-by: Huacai Chen <chenhc@lemote.com>
+> First step for testing the channel subsystem is to enumerate the css and
+> retrieve the css devices.
 > 
-> On Mon, Apr 27, 2020 at 12:35 PM Tianjia Zhang
-> <tianjia.zhang@linux.alibaba.com> wrote:
->>
->> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
->> structure. For historical reasons, many kvm-related function parameters
->> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
->> patch does a unified cleanup of these remaining redundant parameters.
->>
->> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->> ---
->>   arch/mips/include/asm/kvm_host.h |  28 +-------
->>   arch/mips/kvm/emulate.c          |  59 ++++++----------
->>   arch/mips/kvm/mips.c             |  11 ++-
->>   arch/mips/kvm/trap_emul.c        | 114 ++++++++++++++-----------------
->>   arch/mips/kvm/vz.c               |  26 +++----
->>   5 files changed, 87 insertions(+), 151 deletions(-)
->>
+> This tests the success of STSCH I/O instruction, we do not test the
+> reaction of the VM for an instruction with wrong parameters.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  s390x/Makefile      |  1 +
+>  s390x/css.c         | 89 +++++++++++++++++++++++++++++++++++++++++++++
+>  s390x/unittests.cfg |  4 ++
+>  3 files changed, 94 insertions(+)
+>  create mode 100644 s390x/css.c
 
-Hi Huacai,
+(...)
 
-These two patches(6/7 and 7/7) should be merged into the tree of the 
-mips architecture separately. At present, there seems to be no good way 
-to merge the whole architecture patchs.
+> +static void test_enumerate(void)
+> +{
+> +	struct pmcw *pmcw = &schib.pmcw;
+> +	int cc;
+> +	int scn;
+> +	int scn_found = 0;
+> +	int dev_found = 0;
+> +
+> +	for (scn = 0; scn < 0xffff; scn++) {
+> +		cc = stsch(scn|SID_ONE, &schib);
+> +		switch (cc) {
+> +		case 0:		/* 0 means SCHIB stored */
+> +			break;
+> +		case 3:		/* 3 means no more channels */
+> +			goto out;
+> +		default:	/* 1 or 2 should never happened for STSCH */
+> +			report(0, "Unexpected cc=%d on subchannel number 0x%x",
+> +			       cc, scn);
+> +			return;
+> +		}
+> +
+> +		/* We currently only support type 0, a.k.a. I/O channels */
+> +		if (PMCW_CHANNEL_TYPE(pmcw) != 0)
+> +			continue;
+> +
+> +		/* We ignore I/O channels without valid devices */
+> +		scn_found++;
+> +		if (!(pmcw->flags & PMCW_DNV))
+> +			continue;
+> +
+> +		/* We keep track of the first device as our test device */
+> +		if (!test_device_sid)
+> +			test_device_sid = scn | SID_ONE;
+> +
+> +		dev_found++;
+> +	}
+> +
+> +out:
+> +	report(dev_found,
+> +	       "Tested subchannels: %d, I/O subchannels: %d, I/O devices: %d",
+> +	       scn, scn_found, dev_found);
 
-For this series of patches, some architectures have been merged, some 
-need to update the patch.
+Just wondering: with the current invocation, you expect to find exactly
+one subchannel with a valid device, right?
 
-Thanks and best,
-Tianjia
+> +}
+> +
+> +static struct {
+> +	const char *name;
+> +	void (*func)(void);
+> +} tests[] = {
+> +	{ "enumerate (stsch)", test_enumerate },
+> +	{ NULL, NULL }
+> +};
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	int i;
+> +
+> +	report_prefix_push("Channel Subsystem");
+> +	for (i = 0; tests[i].name; i++) {
+> +		report_prefix_push(tests[i].name);
+> +		tests[i].func();
+> +		report_prefix_pop();
+> +	}
+> +	report_prefix_pop();
+> +
+> +	return report_summary();
+> +}
+> diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
+> index 07013b2..a436ec0 100644
+> --- a/s390x/unittests.cfg
+> +++ b/s390x/unittests.cfg
+> @@ -83,3 +83,7 @@ extra_params = -m 1G
+>  [sclp-3g]
+>  file = sclp.elf
+>  extra_params = -m 3G
+> +
+> +[css]
+> +file = css.elf
+> +extra_params =-device ccw-pong
+
+Hm... you could test enumeration even with a QEMU that does not include
+support for the pong device, right? Would it be worthwhile to split out
+a set of css tests that use e.g. a virtio-net-ccw device, and have a
+css-pong set of tests that require the pong device?
+
