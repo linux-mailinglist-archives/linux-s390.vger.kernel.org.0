@@ -2,107 +2,237 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 221151E3EA0
-	for <lists+linux-s390@lfdr.de>; Wed, 27 May 2020 12:08:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97A581E3EAD
+	for <lists+linux-s390@lfdr.de>; Wed, 27 May 2020 12:09:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387491AbgE0KIC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 27 May 2020 06:08:02 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55268 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727888AbgE0KIB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 27 May 2020 06:08:01 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04RA7bN9029643;
-        Wed, 27 May 2020 10:07:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=Jgk+aa3gaSbaEJGRzqmUB4J/D3RcAW2mzmSgXwtDYpI=;
- b=I++iBdw/d6EbbsVc0QonMYtP9GdH7G9gqk7JTiB94+7WbFWe/ILrE7Z3/1Xou2AA/fj0
- XfiW1ia3B13QNes64K8EvFxGTdek2n1b1W/CZkKh0BNspXqu5WHk3CdXeMTM9mLZJxGW
- HOtff/B6xDcXoVujMkSWvLLR+R8xcPpBHqJLZ0kEdQhnfyRw8J6J6VCNosFSIaEu0thm
- Xz1cn4ch5LgZ1tUZIBA3t8NTvbbgSWEt29tV/Ak2G+yNA1HvzCz/bBs7k698p7fC90vO
- 0n/SEPzLJEx2JmH8cX0h5LZ95k2fkDoJBgdt9g4Ud68tggcn37DEw46UAI4yWToBi71J Lg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 316u8qxjjc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 10:07:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04R9vY3D160684;
-        Wed, 27 May 2020 10:05:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 317j5rcya4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 May 2020 10:05:35 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04RA5XM3005085;
-        Wed, 27 May 2020 10:05:33 GMT
-Received: from dhcp-10-175-217-36.vpn.oracle.com (/10.175.217.36)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 27 May 2020 03:05:33 -0700
-Date:   Wed, 27 May 2020 11:05:23 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>
-cc:     kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-        brendanhiggins@google.com, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com
-Subject: Re: [PATCH v3 3/7] kunit: tests for stats_fs API
-In-Reply-To: <20200526110318.69006-4-eesposit@redhat.com>
-Message-ID: <alpine.LRH.2.21.2005271054360.24819@localhost>
-References: <20200526110318.69006-1-eesposit@redhat.com> <20200526110318.69006-4-eesposit@redhat.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        id S2387766AbgE0KJT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 27 May 2020 06:09:19 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37103 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729769AbgE0KJS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 27 May 2020 06:09:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590574157;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9HaviUrTiAbs1UoheBfRsIoYcyxJMuV7YIs0k4bLVxk=;
+        b=FGuUx/iRudGWCpCudABY/c1FgT9HyUXgna3ZPVoK3KfBHyVNTuWlcFMxacvKgxZkC7M6l2
+        A97xNOK8yHGN/E8MUf4EU8+9mmZztuMO0i7yrscv9s3RGMOWn4i+sluElbYctT946Zycb7
+        m7zAVkktG8N/TI+cxB03V89LlF/2Q24=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-66-6PY6oArxMIyrvaxnJJym5Q-1; Wed, 27 May 2020 06:09:13 -0400
+X-MC-Unique: 6PY6oArxMIyrvaxnJJym5Q-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC52A8014D4;
+        Wed, 27 May 2020 10:09:12 +0000 (UTC)
+Received: from gondolin (ovpn-112-223.ams2.redhat.com [10.36.112.223])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A9F7160C05;
+        Wed, 27 May 2020 10:09:08 +0000 (UTC)
+Date:   Wed, 27 May 2020 12:09:05 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
+Subject: Re: [kvm-unit-tests PATCH v7 11/12] s390x: css: ssch/tsch with
+ sense and interrupt
+Message-ID: <20200527120905.5fb20a4e.cohuck@redhat.com>
+In-Reply-To: <1589818051-20549-12-git-send-email-pmorel@linux.ibm.com>
+References: <1589818051-20549-1-git-send-email-pmorel@linux.ibm.com>
+        <1589818051-20549-12-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=4
- mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005270072
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=4
- phishscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005270073
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 26 May 2020, Emanuele Giuseppe Esposito wrote:
+On Mon, 18 May 2020 18:07:30 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> Add kunit tests to extensively test the stats_fs API functionality.
->
+> We add a new css_lib file to contain the I/O functions we may
+> share with different tests.
+> First function is the subchannel_enable() function.
+> 
+> When a channel is enabled we can start a SENSE_ID command using
+> the SSCH instruction to recognize the control unit and device.
+> 
+> This tests the success of SSCH, the I/O interruption and the TSCH
+> instructions.
+> 
+> The test expects a device with a control unit type of 0xC0CA as the
+> first subchannel of the CSS.
 
-I've added in the kunit-related folks.
- 
-> In order to run them, the kernel .config must set CONFIG_KUNIT=y
-> and a new .kunitconfig file must be created with CONFIG_STATS_FS=y
-> and CONFIG_STATS_FS_TEST=y
->
+It might make sense to extend this to be able to check for any expected
+type (e.g. 0x3832, should my suggestion to split css tests and css-pong
+tests make sense.)
 
-It looks like CONFIG_STATS_FS is built-in, but it exports
-much of the functionality you are testing.  However could the
-tests also be built as a module (i.e. make CONFIG_STATS_FS_TEST
-a tristate variable)? To test this you'd need to specify
-CONFIG_KUNIT=m and CONFIG_STATS_FS_TEST=m, and testing would
-simply be a case of "modprobe"ing the stats fs module and collecting
-results in /sys/kernel/debug/kunit/<module_name> (rather 
-than running kunit.py). Are you relying on unexported internals in
-the the tests that would prevent building them as a module?
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  lib/s390x/css.h     |  20 ++++++
+>  lib/s390x/css_lib.c |  55 +++++++++++++++++
+>  s390x/Makefile      |   1 +
+>  s390x/css.c         | 145 ++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 221 insertions(+)
+>  create mode 100644 lib/s390x/css_lib.c
 
-Thanks!
+(...)
 
-Alan
+> +int enable_subchannel(unsigned int sid)
+> +{
+> +	struct schib schib;
+> +	struct pmcw *pmcw = &schib.pmcw;
+> +	int try_count = 5;
+> +	int cc;
+> +
+> +	if (!(sid & SID_ONE))
+> +		return -1;
+
+Hm... this error is indistinguishable for the caller from a cc 1 for
+the msch. Use something else (as this is a coding error)?
+
+> +
+> +	cc = stsch(sid, &schib);
+> +	if (cc)
+> +		return -cc;
+> +
+> +	do {
+> +		pmcw->flags |= PMCW_ENABLE;
+> +
+> +		cc = msch(sid, &schib);
+> +		if (cc)
+> +			return -cc;
+> +
+> +		cc = stsch(sid, &schib);
+> +		if (cc)
+> +			return -cc;
+> +
+> +	} while (!(pmcw->flags & PMCW_ENABLE) && --try_count);
+> +
+> +	return try_count;
+
+How useful is that information for the caller? I don't see the code
+below making use of it.
+
+> +}
+> +
+> +int start_ccw1_chain(unsigned int sid, struct ccw1 *ccw)
+> +{
+> +	struct orb orb;
+> +
+> +	orb.intparm = sid;
+
+Just an idea: If you use something else here (maybe the cpa), and set
+the intparm to the sid in msch, you can test something else: Does msch
+properly set the intparm, and is that intparm overwritten by a
+successful ssch, until the next ssch or msch comes around?
+
+> +	orb.ctrl = ORB_F_INIT_IRQ|ORB_F_FORMAT|ORB_F_LPM_DFLT;
+> +	orb.cpa = (unsigned int) (unsigned long)ccw;
+
+Use a struct initializer, so that unset fields are 0?
+
+> +
+> +	return ssch(sid, &orb);
+> +}
+
+(...)
+
+> +/*
+> + * test_sense
+> + * Pre-requisits:
+> + * - We need the QEMU PONG device as the first recognized
+> + *   device by the enumeration.
+> + * - ./s390x-run s390x/css.elf -device ccw-pong,cu_type=0xc0ca
+> + */
+> +static void test_sense(void)
+> +{
+> +	int ret;
+> +
+> +	if (!test_device_sid) {
+> +		report_skip("No device");
+> +		return;
+> +	}
+> +
+> +	ret = enable_subchannel(test_device_sid);
+> +	if (ret < 0) {
+> +		report(0,
+> +		       "Could not enable the subchannel: %08x",
+> +		       test_device_sid);
+> +		return;
+> +	}
+> +
+> +	ret = register_io_int_func(irq_io);
+> +	if (ret) {
+> +		report(0, "Could not register IRQ handler");
+> +		goto unreg_cb;
+> +	}
+> +
+> +	lowcore->io_int_param = 0;
+> +
+> +	ret = start_subchannel(CCW_CMD_SENSE_ID, &senseid, sizeof(senseid),
+> +			       CCW_F_SLI);
+
+Clear senseid, before actually sending the program?
+
+> +	if (!ret) {
+> +		report(0, "ssch failed for SENSE ID on sch %08x",
+> +		       test_device_sid);
+> +		goto unreg_cb;
+> +	}
+> +
+> +	wait_for_interrupt(PSW_MASK_IO);
+> +
+> +	if (lowcore->io_int_param != test_device_sid)
+> +		goto unreg_cb;
+> +
+> +	report_info("reserved %02x cu_type %04x cu_model %02x dev_type %04x dev_model %02x",
+> +		    senseid.reserved, senseid.cu_type, senseid.cu_model,
+> +		    senseid.dev_type, senseid.dev_model);
+> +
+
+I'd also recommend checking that senseid.reserved is indeed 0xff -- in
+combination with senseid clearing before the ssch, that ensures that
+the senseid structure has actually been written to and is not pure
+garbage. (It's also a cu type agnostic test :)
+
+It also might make sense to check how much data you actually got, as
+you set SLI.
+
+
+> +	report((senseid.cu_type == PONG_CU),
+> +	       "cu_type: expect 0x%04x got 0x%04x",
+> +	       PONG_CU_TYPE, senseid.cu_type);
+> +
+> +unreg_cb:
+> +	unregister_io_int_func(irq_io);
+> +}
+> +
+>  static struct {
+>  	const char *name;
+>  	void (*func)(void);
+>  } tests[] = {
+>  	{ "enumerate (stsch)", test_enumerate },
+>  	{ "enable (msch)", test_enable },
+> +	{ "sense (ssch/tsch)", test_sense },
+>  	{ NULL, NULL }
+>  };
+>  
+> @@ -145,6 +289,7 @@ int main(int argc, char *argv[])
+>  	int i;
+>  
+>  	report_prefix_push("Channel Subsystem");
+> +	enable_io_isc();
+>  	for (i = 0; tests[i].name; i++) {
+>  		report_prefix_push(tests[i].name);
+>  		tests[i].func();
+
