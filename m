@@ -2,162 +2,184 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 649DA1E3CBD
-	for <lists+linux-s390@lfdr.de>; Wed, 27 May 2020 10:55:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2794B1E3DC3
+	for <lists+linux-s390@lfdr.de>; Wed, 27 May 2020 11:42:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388230AbgE0IzQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 27 May 2020 04:55:16 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24951 "EHLO
+        id S1728248AbgE0Jmu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 27 May 2020 05:42:50 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59776 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388070AbgE0IzP (ORCPT
+        by vger.kernel.org with ESMTP id S1728033AbgE0Jmu (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 27 May 2020 04:55:15 -0400
+        Wed, 27 May 2020 05:42:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590569714;
+        s=mimecast20190719; t=1590572568;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4PYXw+YoKr1bluRLooF3WfBA+4ZF+vPqkW7Kq0yhOR8=;
-        b=D4gaRg9GeJSnKEbBT71V9KEnbLOYkx2UdWIX4L0OIPnoCtXOZC9rF6Lm+B9E65e0J8flw/
-        yoTR4UqaWEWqbDzBkidXbEAo33AjyXNw27I8Y5UekXhL+XXWhKPHKJNPeCd9A1qoLyYPqp
-        pYco5Owc/79HEbDtvewj+wQkFf+MxJg=
+        bh=f0puwwXNhKN7RSE2QI0t2f9CXt8LITwCnQss5WUrmJk=;
+        b=MYwWq0fTiyVQbvctRkUo6pwYw1JD8SUbaW41RPkEfbNlJN0k3z3o26AJ99lMIwosGJLkDm
+        JCSrNGzbMwLwmuXBtBRtGmC4nuXqdxTRkQt30liYLSiure+glpl5XkBwahIRJiPI4u5ky0
+        LoEJYjGVwp7/Py7B5qLxQwA4w5uFE9g=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-470-Qmbjyls0Ob-aPeRP18Sy8w-1; Wed, 27 May 2020 04:55:12 -0400
-X-MC-Unique: Qmbjyls0Ob-aPeRP18Sy8w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-52-c5Fq9dKQNkOJWehSURcLyQ-1; Wed, 27 May 2020 05:42:47 -0400
+X-MC-Unique: c5Fq9dKQNkOJWehSURcLyQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B0A8D107ACF5;
-        Wed, 27 May 2020 08:55:11 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05F8C872FE0;
+        Wed, 27 May 2020 09:42:46 +0000 (UTC)
 Received: from gondolin (ovpn-112-223.ams2.redhat.com [10.36.112.223])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D51E5C1B0;
-        Wed, 27 May 2020 08:55:04 +0000 (UTC)
-Date:   Wed, 27 May 2020 10:55:01 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EE72F7D982;
+        Wed, 27 May 2020 09:42:41 +0000 (UTC)
+Date:   Wed, 27 May 2020 11:42:39 +0200
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Pierre Morel <pmorel@linux.ibm.com>
 Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
         frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v7 08/12] s390x: css: stsch, enumeration
- test
-Message-ID: <20200527105501.53681762.cohuck@redhat.com>
-In-Reply-To: <1589818051-20549-9-git-send-email-pmorel@linux.ibm.com>
+Subject: Re: [kvm-unit-tests PATCH v7 09/12] s390x: css: msch, enable test
+Message-ID: <20200527114239.65fa9473.cohuck@redhat.com>
+In-Reply-To: <1589818051-20549-10-git-send-email-pmorel@linux.ibm.com>
 References: <1589818051-20549-1-git-send-email-pmorel@linux.ibm.com>
-        <1589818051-20549-9-git-send-email-pmorel@linux.ibm.com>
+        <1589818051-20549-10-git-send-email-pmorel@linux.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 18 May 2020 18:07:27 +0200
+On Mon, 18 May 2020 18:07:28 +0200
 Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> First step for testing the channel subsystem is to enumerate the css and
-> retrieve the css devices.
+> A second step when testing the channel subsystem is to prepare a channel
+> for use.
+> This includes:
+> - Get the current subchannel Information Block (SCHIB) using STSCH
+> - Update it in memory to set the ENABLE bit
+> - Tell the CSS that the SCHIB has been modified using MSCH
+> - Get the SCHIB from the CSS again to verify that the subchannel is
+>   enabled.
+> - If the subchannel is not enabled retry a predefined retries count.
 > 
-> This tests the success of STSCH I/O instruction, we do not test the
-> reaction of the VM for an instruction with wrong parameters.
+> This tests the MSCH instruction to enable a channel succesfuly.
+> This is NOT a routine to really enable the channel, no retry is done,
+> in case of error, a report is made.
+
+Hm... so you retry if the subchannel is not enabled after cc 0, but you
+don't retry if the cc indicates busy/status pending? Makes sense, as we
+don't expect the subchannel to be busy, but a more precise note in the
+patch description would be good :)
+
 > 
 > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 > ---
->  s390x/Makefile      |  1 +
->  s390x/css.c         | 89 +++++++++++++++++++++++++++++++++++++++++++++
->  s390x/unittests.cfg |  4 ++
->  3 files changed, 94 insertions(+)
->  create mode 100644 s390x/css.c
-
-(...)
-
-> +static void test_enumerate(void)
+>  s390x/css.c | 67 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+> 
+> diff --git a/s390x/css.c b/s390x/css.c
+> index d7989d8..1b60a47 100644
+> --- a/s390x/css.c
+> +++ b/s390x/css.c
+> @@ -16,6 +16,7 @@
+>  #include <string.h>
+>  #include <interrupt.h>
+>  #include <asm/arch_def.h>
+> +#include <asm/time.h>
+>  
+>  #include <css.h>
+>  
+> @@ -65,11 +66,77 @@ out:
+>  	       scn, scn_found, dev_found);
+>  }
+>  
+> +#define MAX_ENABLE_RETRIES	5
+> +static void test_enable(void)
 > +{
 > +	struct pmcw *pmcw = &schib.pmcw;
+> +	int retry_count = 0;
 > +	int cc;
-> +	int scn;
-> +	int scn_found = 0;
-> +	int dev_found = 0;
 > +
-> +	for (scn = 0; scn < 0xffff; scn++) {
-> +		cc = stsch(scn|SID_ONE, &schib);
-> +		switch (cc) {
-> +		case 0:		/* 0 means SCHIB stored */
-> +			break;
-> +		case 3:		/* 3 means no more channels */
-> +			goto out;
-> +		default:	/* 1 or 2 should never happened for STSCH */
-> +			report(0, "Unexpected cc=%d on subchannel number 0x%x",
-> +			       cc, scn);
-> +			return;
-> +		}
-> +
-> +		/* We currently only support type 0, a.k.a. I/O channels */
-> +		if (PMCW_CHANNEL_TYPE(pmcw) != 0)
-> +			continue;
-> +
-> +		/* We ignore I/O channels without valid devices */
-> +		scn_found++;
-> +		if (!(pmcw->flags & PMCW_DNV))
-> +			continue;
-> +
-> +		/* We keep track of the first device as our test device */
-> +		if (!test_device_sid)
-> +			test_device_sid = scn | SID_ONE;
-> +
-> +		dev_found++;
+> +	if (!test_device_sid) {
+> +		report_skip("No device");
+> +		return;
 > +	}
 > +
-> +out:
-> +	report(dev_found,
-> +	       "Tested subchannels: %d, I/O subchannels: %d, I/O devices: %d",
-> +	       scn, scn_found, dev_found);
-
-Just wondering: with the current invocation, you expect to find exactly
-one subchannel with a valid device, right?
-
-> +}
-> +
-> +static struct {
-> +	const char *name;
-> +	void (*func)(void);
-> +} tests[] = {
-> +	{ "enumerate (stsch)", test_enumerate },
-> +	{ NULL, NULL }
-> +};
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	int i;
-> +
-> +	report_prefix_push("Channel Subsystem");
-> +	for (i = 0; tests[i].name; i++) {
-> +		report_prefix_push(tests[i].name);
-> +		tests[i].func();
-> +		report_prefix_pop();
+> +	/* Read the SCHIB for this subchannel */
+> +	cc = stsch(test_device_sid, &schib);
+> +	if (cc) {
+> +		report(0, "stsch cc=%d", cc);
+> +		return;
 > +	}
-> +	report_prefix_pop();
 > +
-> +	return report_summary();
-> +}
-> diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
-> index 07013b2..a436ec0 100644
-> --- a/s390x/unittests.cfg
-> +++ b/s390x/unittests.cfg
-> @@ -83,3 +83,7 @@ extra_params = -m 1G
->  [sclp-3g]
->  file = sclp.elf
->  extra_params = -m 3G
+> +	if (pmcw->flags & PMCW_ENABLE) {
+> +		report(1, "stsch: sch %08x already enabled", test_device_sid);
+> +		return;
+> +	}
 > +
-> +[css]
-> +file = css.elf
-> +extra_params =-device ccw-pong
+> +retry:
+> +	/* Update the SCHIB to enable the channel */
+> +	pmcw->flags |= PMCW_ENABLE;
+> +
+> +	/* Tell the CSS we want to modify the subchannel */
+> +	cc = msch(test_device_sid, &schib);
+> +	if (cc) {
+> +		/*
+> +		 * If the subchannel is status pending or
+> +		 * if a function is in progress,
+> +		 * we consider both cases as errors.
 
-Hm... you could test enumeration even with a QEMU that does not include
-support for the pong device, right? Would it be worthwhile to split out
-a set of css tests that use e.g. a virtio-net-ccw device, and have a
-css-pong set of tests that require the pong device?
+Could also be cc 3, but that would be even more weird. Just logging the
+cc seems fine, though.
+
+> +		 */
+> +		report(0, "msch cc=%d", cc);
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * Read the SCHIB again to verify the enablement
+> +	 */
+> +	cc = stsch(test_device_sid, &schib);
+> +	if (cc) {
+> +		report(0, "stsch cc=%d", cc);
+> +		return;
+> +	}
+> +
+> +	if (pmcw->flags & PMCW_ENABLE) {
+> +		report(1, "msch: sch %08x enabled after %d retries",
+> +		       test_device_sid, retry_count);
+> +		return;
+> +	}
+> +
+> +	if (retry_count++ < MAX_ENABLE_RETRIES) {
+> +		mdelay(10); /* the hardware was not ready, let it some time */
+
+s/let/give/
+
+> +		goto retry;
+> +	}
+> +
+> +	report(0,
+> +	       "msch: enabling sch %08x failed after %d retries. pmcw: %x",
+> +	       test_device_sid, retry_count, pmcw->flags);
+> +}
+> +
+>  static struct {
+>  	const char *name;
+>  	void (*func)(void);
+>  } tests[] = {
+>  	{ "enumerate (stsch)", test_enumerate },
+> +	{ "enable (msch)", test_enable },
+>  	{ NULL, NULL }
+>  };
+>  
+
+Otherwise,
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
