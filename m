@@ -2,83 +2,44 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFBD61E63C5
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2020 16:24:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14DEA1E6EEB
+	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2020 00:28:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391114AbgE1OW7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 28 May 2020 10:22:59 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48526 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391022AbgE1OWw (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 28 May 2020 10:22:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590675771;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lJAE3W4i6ShVxeRfUH/bQwuRjs3nBOGoAWqm9myFCPw=;
-        b=dz6NPnhJPKteYo/RPAU4/5RHF+imHDWXnb+fIqvVw0ARkw9kW9bkuk7DaUpPAX5eeX9B+T
-        N2dRIOJnGQzL7H4+5Uob0hpsY8wlT55RqmmIQnz9FoBnqxqr4Ovvh3npRWuUKlRrtK37MM
-        r2ELxk1Z46YoDpnLKfsK6RStTiUDDQk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-Akt7k8GuMKaJnQE7t8yySw-1; Thu, 28 May 2020 10:22:49 -0400
-X-MC-Unique: Akt7k8GuMKaJnQE7t8yySw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A0A2F1005512;
-        Thu, 28 May 2020 14:22:47 +0000 (UTC)
-Received: from gondolin (ovpn-113-28.ams2.redhat.com [10.36.113.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2132860C05;
-        Thu, 28 May 2020 14:22:45 +0000 (UTC)
-Date:   Thu, 28 May 2020 16:22:43 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PULL 00/10] vfio-ccw patches for 5.8
-Message-ID: <20200528162243.7ee3a352.cohuck@redhat.com>
-In-Reply-To: <your-ad-here.call-01590669751-ext-3257@work.hours>
-References: <20200525094115.222299-1-cohuck@redhat.com>
-        <your-ad-here.call-01590669751-ext-3257@work.hours>
-Organization: Red Hat GmbH
+        id S2437200AbgE1W20 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Thu, 28 May 2020 18:28:26 -0400
+Received: from mail.bnv.gob.ve ([201.249.200.115]:48574 "EHLO
+        correo.bnv.gob.ve" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2437098AbgE1W2U (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 28 May 2020 18:28:20 -0400
+Received: from localhost (localhost.bnv.gob.ve [127.0.0.1])
+        by correo.bnv.gob.ve (Postfix) with ESMTP id D465C38E4516;
+        Thu, 28 May 2020 14:03:47 -0400 (-04)
+Received: from correo.bnv.gob.ve ([127.0.0.1])
+        by localhost (correo.bnv.gob.ve [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id biaUjgFqsRFF; Thu, 28 May 2020 14:03:47 -0400 (-04)
+Received: from localhost (localhost.bnv.gob.ve [127.0.0.1])
+        by correo.bnv.gob.ve (Postfix) with ESMTP id 744AA38E3626;
+        Thu, 28 May 2020 13:04:31 -0400 (-04)
+X-Virus-Scanned: amavisd-new at bnv.gob.ve
+Received: from correo.bnv.gob.ve ([127.0.0.1])
+        by localhost (correo.bnv.gob.ve [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id vgNYBv3H6nTf; Thu, 28 May 2020 13:04:31 -0400 (-04)
+Received: from [10.19.23.127] (unknown [105.0.4.230])
+        by correo.bnv.gob.ve (Postfix) with ESMTPSA id 0621138E0A1B;
+        Thu, 28 May 2020 12:30:06 -0400 (-04)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Spende von 2.000.000,00 Euro
+To:     Recipients <manuel@info.com>
+From:   "manuel franco" <manuel@info.com>
+Date:   Thu, 28 May 2020 18:29:53 +0200
+Reply-To: manuelfrancospende11@gmail.com
+Message-Id: <20200528163007.0621138E0A1B@correo.bnv.gob.ve>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 28 May 2020 14:42:31 +0200
-Vasily Gorbik <gor@linux.ibm.com> wrote:
-
-> On Mon, May 25, 2020 at 11:41:05AM +0200, Cornelia Huck wrote:
-> > The following changes since commit 6a8b55ed4056ea5559ebe4f6a4b247f627870d4c:
-> > 
-> >   Linux 5.7-rc3 (2020-04-26 13:51:02 -0700)
-> > 
-> > are available in the Git repository at:
-> > 
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/vfio-ccw tags/vfio-ccw-20200525  
-> 
-> Hello Conny,
-> 
-> s390/features is based on v5.7-rc2 rather than on v5.7-rc3 as your
-> tags/vfio-ccw-20200525. Are there any pre-requisites in between for
-> vfio-ccw changes? It does cleanly rebase onto v5.7-rc2.
-
-There shouldn't be anything.
-
-> 
-> Could you please rebase onto v5.7-rc2 or s390/features if that's possible?
-
-Ugh. Isn't there any way to avoid doing that?
-
+Ich bin Manuel Franco, ich spende Ihnen 2.000.000,00 Euro. Nehmen Sie jetzt Kontakt mit mir auf, damit wir fortfahren können.
