@@ -2,122 +2,147 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CD1A1E566F
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2020 07:22:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82BEC1E5740
+	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2020 08:06:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgE1FWg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 28 May 2020 01:22:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51756 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727016AbgE1FWe (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 28 May 2020 01:22:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590643352;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=J+iKV2WQ6lOBXo37IQKk0z/KDQxyIDc+E74qSJBHsLY=;
-        b=HHMOS4DrPrizHpKaCsMF9ZJp2gMJ+/yVUKXtkEyqPna5UKescYVdsyxxo+iBKgM2S6QWcu
-        cnjWtQ9ltSpQoczRgq1AmlCQS8dsfT8q3Q6xXEApHu70UjX/DNaa1Kh9a9eiF85kyVYO/b
-        pfjtA1s6QduaeYaktCtaidQeL1WYcRc=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-57-CppvYzNZP76YQDtoeFigbw-1; Thu, 28 May 2020 01:22:30 -0400
-X-MC-Unique: CppvYzNZP76YQDtoeFigbw-1
-Received: by mail-ed1-f69.google.com with SMTP id f10so10995687edn.10
-        for <linux-s390@vger.kernel.org>; Wed, 27 May 2020 22:22:29 -0700 (PDT)
+        id S1726865AbgE1GGX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 28 May 2020 02:06:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbgE1GGW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 28 May 2020 02:06:22 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851E8C05BD1E;
+        Wed, 27 May 2020 23:06:21 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id nu7so2597808pjb.0;
+        Wed, 27 May 2020 23:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QRjmGZLeTYEO4i6MoF3PtMzQtXAOSemrWcRExVPUhU0=;
+        b=qzQNmOjJMfx76fCYwTzEmTuVwMGge0fL0GWMupqX0HLjuKhR49C7IW0linuKLYMFff
+         pT9IgB7pfjGuI9MGGOsNafL/gpkZxX0sO+68ICAkIeIYY9Cj+Cg/4FLq1i1cLiHVBNba
+         ME5L2kT617ELN+gNFH1URELQdmrhHJnIXJNaC4bU9a3mycImgez61p/gBrVzqmmu1WuL
+         pTLgmOjqEwGZoFvWR9UxP8CLtNKobiWraqdwe9AAlR+8aIRcWtGrQmt+MFYTtq4GAk+S
+         3ehH+LX/hC9ip2ZPrTomrcn2ecq4NR1RBJ7e3TQi3gkuyMnU1m4z/10Wem9GCg2+AznL
+         +HZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=J+iKV2WQ6lOBXo37IQKk0z/KDQxyIDc+E74qSJBHsLY=;
-        b=ecAWyBcdhLYnsDC9xQzrcrhRhWD6M3p0Cdj2LXFWpg9bLIWTEKYhKbh2eZQ8DiEPuM
-         G4E1yW4u46Mo8rvTR+Px61ScvxoGsmAw+gWKHXOvJMsklj4MTQuS9w+RgEu6XY48F42I
-         UeXZNNz9ViNalRC2YiRhgdFx3dYZ5xT7ZFeXSVllI59ElevDE92LWmrnj4LMaGyEyhiG
-         8LcfkXQM3ga9G39rNEONTSoMkyuRCJlkYQI3pxKfG4TwqcipuYqp5lT2A7kemVrJeNP1
-         zYWncP0ksWa/fSKulnWgb59/zNxQPJu54NSDu0jSRrNqsxevf/XvpRzsrw+Rlvb+qjor
-         cvSA==
-X-Gm-Message-State: AOAM532nWXLJNHolzygPyGlvnwNqpstbexBidHGiEht8RFpYWCJUjrXw
-        2id5ddbyoHysrqLJGT1jHQ/6ow05GMyNJX2HCmTYuIJtlkqkoOvSvphojG06tFXEcnSKEKXwJRV
-        lw82HbADKuu2M52IdfGz91A==
-X-Received: by 2002:a50:d6d0:: with SMTP id l16mr1387314edj.317.1590643349023;
-        Wed, 27 May 2020 22:22:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzJyu6Bj2R7xQtg6fbTx+WdDfElhcWjvy2DluItTe1wU0Un+QkFMtlI7BVZ+bXqt+0zrNq85A==
-X-Received: by 2002:a50:d6d0:: with SMTP id l16mr1387289edj.317.1590643348729;
-        Wed, 27 May 2020 22:22:28 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
-        by smtp.gmail.com with ESMTPSA id g23sm4521316ejo.28.2020.05.27.22.22.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 22:22:28 -0700 (PDT)
-Subject: Re: [PATCH v3 0/7] Statsfs: a new ram-based file system for Linux
- kernel statistics
-To:     David Ahern <dsahern@gmail.com>, Jakub Kicinski <kuba@kernel.org>,
-        Emanuele Giuseppe Esposito <eesposit@redhat.com>
-Cc:     kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>
-References: <20200526110318.69006-1-eesposit@redhat.com>
- <20200526153128.448bfb43@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
- <6a754b40-b148-867d-071d-8f31c5c0d172@redhat.com>
- <20200527132321.54bcdf04@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
- <af2ba926-73bc-26c3-7ce7-bd45f657fd85@redhat.com>
- <b6fa4439-c6b8-63a4-84fd-fbac3d4f10fd@gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <c33f59e4-36ca-8fa9-af8f-b4cec4896b00@redhat.com>
-Date:   Thu, 28 May 2020 07:22:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        bh=QRjmGZLeTYEO4i6MoF3PtMzQtXAOSemrWcRExVPUhU0=;
+        b=UMXYpFQafUQa0r9dSR789IEUX5n+XV3ysFqlUE7mGzYQHiMt4NsEX5C+fErjmjx3FT
+         qFLvMYXruxGiXwEBTSxfOAvuXpFCY7TUZfqglNTQXoJzZ+lLFMTRqDEsnsu7kq79Yyqk
+         wvlo0423+dq/SCzHGncWVGplC0+Cc0dvCvQZ5af7uobMQulCcnWvWAzE1pO7W/o94hg8
+         nmPe4wO4wZNVmbjiyIVqd61XVjCxLJNSdZt8Rn7GzJrXg3oN1auPm5Fu4twTo6av5zYt
+         9DCrx4A4uS79ciULOAkKJKu5PRs/FuOCVXBFjbUWL0eaYiIzQS9hxKARps7x54vOohpp
+         DI+w==
+X-Gm-Message-State: AOAM531Cr0IVihVCgJ/6XAyDyIKPumd3Arws3kUe54WiA/szjzrdBYLa
+        9nllDgfyWHBdK5HOxAexNFQ=
+X-Google-Smtp-Source: ABdhPJwgQh/1+ElEZy/GFWA/I0TiUP5DNcoygK4OlSyCCkgMjGUipBHyCB8x1THDdNmuLIZxE5pa7g==
+X-Received: by 2002:a17:902:7d89:: with SMTP id a9mr1924897plm.309.1590645980888;
+        Wed, 27 May 2020 23:06:20 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id w73sm3698863pfd.113.2020.05.27.23.06.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 23:06:20 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Fangrui Song <maskray@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] s390: vdso: Use $(LD) instead of $(CC) to link vDSO
+Date:   Wed, 27 May 2020 23:06:01 -0700
+Message-Id: <20200528060600.2732012-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.27.0.rc0
 MIME-Version: 1.0
-In-Reply-To: <b6fa4439-c6b8-63a4-84fd-fbac3d4f10fd@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 28/05/20 00:21, David Ahern wrote:
-> On 5/27/20 3:07 PM, Paolo Bonzini wrote:
->> I see what you meant now.  statsfs can also be used to enumerate objects
->> if one is so inclined (with the prototype in patch 7, for example, each
->> network interface becomes a directory).
-> 
-> there are many use cases that have 100's to 1000's have network devices.
-> Having a sysfs entry per device already bloats memory usage for these
-> use cases; another filesystem with an entry per device makes that worse.
-> Really the wrong direction for large scale systems.
+Currently, the VDSO is being linked through $(CC). This does not match
+how the rest of the kernel links objects, which is through the $(LD)
+variable.
 
-Hi David,
+When clang is built in a default configuration, it first attempts to use
+the target triple's default linker, which is just ld. However, the user
+can override this through the CLANG_DEFAULT_LINKER cmake define so that
+clang uses another linker by default, such as LLVM's own linker, ld.lld.
+This can be useful to get more optimized links across various different
+projects.
 
-IMO the important part for now is having a flexible kernel API for
-exposing statistics across multiple subsystems, so that they can be
-harvested in an efficient way.  The userspace API is secondary, and
-multiple APIs can be added to cater for different usecases.
+However, this is problematic for the s390 vDSO because ld.lld does not
+have any s390 emulatiom support:
 
-For example, as of the first five patches the memory usage is the same
-as what is now in the mainline kernel, since all the patchset does is
-take existing debugfs inodes and move them to statsfs.  I agree that, if
-the concept is extended to the whole kernel, scalability and memory
-usage becomes an issue; and indeed, the long-term plan is to support a
-binary format that is actually _more_ efficient than the status quo for
-large scale systems.
+https://github.com/llvm/llvm-project/blob/llvmorg-10.0.1-rc1/lld/ELF/Driver.cpp#L132-L150
 
-In the meanwhile, the new filesystem can be disabled (see the difference
-between "STATS_FS" and "STATS_FS_API") if it imposes undesirable overhead.
+Thus, if a user is using a toolchain with ld.lld as the default, they
+will see an error, even if they have specified ld.bfd through the LD
+make variable:
 
-Thanks,
+$ make -j"$(nproc)" -s ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- LLVM=1 \
+                       LD=s390x-linux-gnu-ld \
+                       defconfig arch/s390/kernel/vdso64/
+ld.lld: error: unknown emulation: elf64_s390
+clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
 
-Paolo
+Normally, '-fuse-ld=bfd' could be used to get around this; however, this
+can be fragile, depending on paths and variable naming. The cleaner
+solution for the kernel is to take advantage of the fact that $(LD) can
+be invoked directly, which bypasses the heuristics of $(CC) and respects
+the user's choice. Similar changes have been done for ARM, ARM64, and
+MIPS.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/1041
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ arch/s390/kernel/vdso64/Makefile | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+index bec19e7e6e1c..b8db1ffbc2b9 100644
+--- a/arch/s390/kernel/vdso64/Makefile
++++ b/arch/s390/kernel/vdso64/Makefile
+@@ -18,8 +18,8 @@ KBUILD_AFLAGS_64 += -m64 -s
+ 
+ KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
+ KBUILD_CFLAGS_64 += -m64 -fPIC -shared -fno-common -fno-builtin
+-KBUILD_CFLAGS_64 += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
+-		    -Wl,--hash-style=both
++ldflags-y := -shared -nostdlib -soname=linux-vdso64.so.1 \
++	     --hash-style=both -T
+ 
+ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
+ $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_64)
+@@ -37,8 +37,8 @@ KASAN_SANITIZE := n
+ $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
+ 
+ # link rule for the .so file, .lds has to be first
+-$(obj)/vdso64.so.dbg: $(src)/vdso64.lds $(obj-vdso64) FORCE
+-	$(call if_changed,vdso64ld)
++$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) FORCE
++	$(call if_changed,ld)
+ 
+ # strip rule for the .so file
+ $(obj)/%.so: OBJCOPYFLAGS := -S
+@@ -50,8 +50,6 @@ $(obj-vdso64): %.o: %.S FORCE
+ 	$(call if_changed_dep,vdso64as)
+ 
+ # actual build commands
+-quiet_cmd_vdso64ld = VDSO64L $@
+-      cmd_vdso64ld = $(CC) $(c_flags) -Wl,-T $(filter %.lds %.o,$^) -o $@
+ quiet_cmd_vdso64as = VDSO64A $@
+       cmd_vdso64as = $(CC) $(a_flags) -c -o $@ $<
+ 
+
+base-commit: 9cb1fd0efd195590b828b9b865421ad345a4a145
+-- 
+2.27.0.rc0
 
