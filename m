@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 396B71E5EE3
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2020 13:57:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C60CA1E606B
+	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2020 14:12:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388940AbgE1L5J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 28 May 2020 07:57:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
+        id S2388556AbgE1MKJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 28 May 2020 08:10:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388930AbgE1L5J (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:09 -0400
+        id S2388707AbgE1L4X (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B288721582;
-        Thu, 28 May 2020 11:57:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A1E9212CC;
+        Thu, 28 May 2020 11:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667028;
+        s=default; t=1590666982;
         bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HGUTr9gwesjDGRcRNC7QwJNtrbtbgO5G555RfuV94cpQhKoo1iMYCaDqbBwHWb2QD
-         eyRRwJMrjTUM5I+/lXwbSW5zDT5ona83sJa7six1OoqojLz/+1j9GYOYbSD6IvI0JP
-         WqCFKexHFSrXCsUDmPLUeubRqMEdx95Qj9KAgtlE=
+        b=u/ouTlHhib2/+3jEHUxq4MqvXq5cFvfBwv1zw6OEcO0DzAW6Gm3qm9OacI/2HuYEZ
+         S8UKtAI9utZgoPw9bRqY4lRC1tEl9/O28bzkm+T4aHCXNKkBC2LQEoCPVtQiv2iUHm
+         KT62Q7Jurxi8esTDQ9hf6cFuzsDaA0cmgtv0/roQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 12/26] s390/mm: fix set_huge_pte_at() for empty ptes
-Date:   Thu, 28 May 2020 07:56:40 -0400
-Message-Id: <20200528115654.1406165-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 19/47] s390/mm: fix set_huge_pte_at() for empty ptes
+Date:   Thu, 28 May 2020 07:55:32 -0400
+Message-Id: <20200528115600.1405808-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528115654.1406165-1-sashal@kernel.org>
-References: <20200528115654.1406165-1-sashal@kernel.org>
+In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
+References: <20200528115600.1405808-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
