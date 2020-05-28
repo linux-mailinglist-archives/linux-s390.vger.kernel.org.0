@@ -2,111 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E82D41E5CA8
-	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2020 12:05:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 396B71E5EE3
+	for <lists+linux-s390@lfdr.de>; Thu, 28 May 2020 13:57:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387648AbgE1KFv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 28 May 2020 06:05:51 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15978 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387597AbgE1KFu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 28 May 2020 06:05:50 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04SA1O6v135021;
-        Thu, 28 May 2020 06:05:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=de8C/Le/tmh5vqYbCaE1NMQrFIKhJEo1ATNxsabAwnk=;
- b=gjfu7OY9YL6HQh9E7ARGj2df5ZYlIlyRjFIdRXk8dGMVBWT08WXOcwG1kcCQb9KEzlbM
- uXwC+RQQ0A839Isb0wlGG88y2ZN98AxqbFcs7Id/FailSujFGlkqMwBiRy/u7EGRRj1J
- wiBtrueDAYUS/KmPNKxuTLceeeFtxF0SO91lpRuMh5NzHNOxRwLbHiFVKpILeLsnOCSC
- WDv9z5eV2G03812DeHxIe8DDjo2g4GJ8bAM9hyVAlOo4acK2YLDB2TtPuhy0pnpHK8Z1
- HpUmU4uyjrqddYdhBzfLI1WoT3kJs8nW/kyGIJyS/YLVEHhcLg6bk1oyQ9Hg7iDesDKp YA== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31a9nb37uu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 May 2020 06:05:47 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04S9jL5U021886;
-        Thu, 28 May 2020 10:05:45 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 316uf89nv0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 May 2020 10:05:45 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04SA5gZ823789708
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 May 2020 10:05:42 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5E05111C058;
-        Thu, 28 May 2020 10:05:42 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF1F511C050;
-        Thu, 28 May 2020 10:05:41 +0000 (GMT)
-Received: from localhost (unknown [9.145.63.210])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 28 May 2020 10:05:41 +0000 (GMT)
-Date:   Thu, 28 May 2020 12:05:40 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Petr Tesarik <ptesarik@suse.com>, linux-s390@vger.kernel.org,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] s390/pci: Log new handle in clp_disable_fh()
-Message-ID: <your-ad-here.call-01590660340-ext-2669@work.hours>
-References: <20200522183922.5253-1-ptesarik@suse.com>
- <20200528110813.7eb1fc1f@ezekiel.suse.cz>
- <595c993e-0be4-3164-2498-b915c3fc9726@linux.ibm.com>
+        id S2388940AbgE1L5J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 28 May 2020 07:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388930AbgE1L5J (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:09 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B288721582;
+        Thu, 28 May 2020 11:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590667028;
+        bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HGUTr9gwesjDGRcRNC7QwJNtrbtbgO5G555RfuV94cpQhKoo1iMYCaDqbBwHWb2QD
+         eyRRwJMrjTUM5I+/lXwbSW5zDT5ona83sJa7six1OoqojLz/+1j9GYOYbSD6IvI0JP
+         WqCFKexHFSrXCsUDmPLUeubRqMEdx95Qj9KAgtlE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 12/26] s390/mm: fix set_huge_pte_at() for empty ptes
+Date:   Thu, 28 May 2020 07:56:40 -0400
+Message-Id: <20200528115654.1406165-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200528115654.1406165-1-sashal@kernel.org>
+References: <20200528115654.1406165-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <595c993e-0be4-3164-2498-b915c3fc9726@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-28_02:2020-05-28,2020-05-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxlogscore=517 spamscore=0 clxscore=1011 impostorscore=0 mlxscore=0
- lowpriorityscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- cotscore=-2147483648 suspectscore=1 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005280064
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:01:45PM +0200, Pierre Morel wrote:
-> 
-> On 2020-05-28 11:08, Petr Tesarik wrote:
-> > Hi all,
-> > 
-> > just a gentle ping.
-> > 
-> > If the current behaviour (logging the original handle) was intended,
-> > then it was worth mentioning in the commit message for 17cdec960cf77,
-> > which made the change, but since that's no longer an option, I'd be
-> > happy with an explanation in email.
-> > 
-> > Petr T
-> > 
-> > On Fri, 22 May 2020 20:39:22 +0200
-> > Petr Tesarik <ptesarik@suse.com> wrote:
-> > 
-> > > After disabling a function, the original handle is logged instead of
-> > > the disabled handle.
-> 
-> Hi Petr,
-> 
-> Sorry for the delay, no doubt, you are right, the fh in zpci_dbg is the old
-> one and we should use the one in the zdev struct.
-> 
-> Thanks,
-> Pierre
-> 
-> Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-Applied, thanks
+[ Upstream commit ac8372f3b4e41015549b331a4f350224661e7fc6 ]
+
+On s390, the layout of normal and large ptes (i.e. pmds/puds) differs.
+Therefore, set_huge_pte_at() does a conversion from a normal pte to
+the corresponding large pmd/pud. So, when converting an empty pte, this
+should result in an empty pmd/pud, which would return true for
+pmd/pud_none().
+
+However, after conversion we also mark the pmd/pud as large, and
+therefore present. For empty ptes, this will result in an empty pmd/pud
+that is also marked as large, and pmd/pud_none() would not return true.
+
+There is currently no issue with this behaviour, as set_huge_pte_at()
+does not seem to be called for empty ptes. It would be valid though, so
+let's fix this by not marking empty ptes as large in set_huge_pte_at().
+
+This was found by testing a patch from from Anshuman Khandual, which is
+currently discussed on LKML ("mm/debug: Add more arch page table helper
+tests").
+
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/mm/hugetlbpage.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
+index 5674710a4841..7dfae86afa47 100644
+--- a/arch/s390/mm/hugetlbpage.c
++++ b/arch/s390/mm/hugetlbpage.c
+@@ -159,10 +159,13 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 		rste &= ~_SEGMENT_ENTRY_NOEXEC;
+ 
+ 	/* Set correct table type for 2G hugepages */
+-	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3)
+-		rste |= _REGION_ENTRY_TYPE_R3 | _REGION3_ENTRY_LARGE;
+-	else
++	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3) {
++		if (likely(pte_present(pte)))
++			rste |= _REGION3_ENTRY_LARGE;
++		rste |= _REGION_ENTRY_TYPE_R3;
++	} else if (likely(pte_present(pte)))
+ 		rste |= _SEGMENT_ENTRY_LARGE;
++
+ 	clear_huge_pte_skeys(mm, rste);
+ 	pte_val(*ptep) = rste;
+ }
+-- 
+2.25.1
+
