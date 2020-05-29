@@ -2,263 +2,219 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D90E41E8A3B
-	for <lists+linux-s390@lfdr.de>; Fri, 29 May 2020 23:43:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B85611E8B13
+	for <lists+linux-s390@lfdr.de>; Sat, 30 May 2020 00:16:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgE2VnS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 29 May 2020 17:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbgE2VnQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 29 May 2020 17:43:16 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 190E9C08C5C9;
-        Fri, 29 May 2020 14:43:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=nhbwxUUlPI+chouh1KJuBjV9Ingp0nmsf6VxXQj6Kuo=; b=Z6Txg7GjoZPTJf8duH+GLUyEDJ
-        u4kaMLC7N+Dx6VXDwY04jOczBS4kJ6IDPzpTUGOgXwRyJbIhDSNPJxKMS9bC8ZuWTKW11vc71FhKN
-        7PR+foScH0l6IiN/rLJpr+9kmF3gCZ+ATpO1Sm6lCp6tJvojESRzp24uGFoNufptCQ8kExNXvNH+E
-        MhymazHJTQQmRMszDxAQp0Gl1/V9O+uK/ziughQ5jIGK9y8XGD9YHgCS72Ov6eFm7uLDOaGr3H3O9
-        FQ2c/mF7Sx01tKihq56S+agZr9vEj/s1+OhD/swdE0xnQc0kvM/ii/yFH6aXtLIf2uQEtuHd/0mCA
-        aarhzo0Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jemmK-0006Ht-3e; Fri, 29 May 2020 21:43:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8EDBF306A9D;
-        Fri, 29 May 2020 23:42:58 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id DC7442B9B1BC7; Fri, 29 May 2020 23:42:57 +0200 (CEST)
-Message-ID: <20200529214203.900682204@infradead.org>
-User-Agent: quilt/0.66
-Date:   Fri, 29 May 2020 23:35:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        a.darwish@linutronix.de, rostedt@goodmis.org,
-        bigeasy@linutronix.de, peterz@infradead.org, davem@davemloft.net,
-        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v3 5/5] lockdep: Remove lockdep_hardirq{s_enabled,_context}() argument
-References: <20200529213550.683440625@infradead.org>
+        id S1728356AbgE2WQf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 29 May 2020 18:16:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22350 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725808AbgE2WQe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 29 May 2020 18:16:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590790592;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=RyWRgA39MpCS4B1s1Q6dcjnQ39Nmyes8pkIQMz0S9CE=;
+        b=HyEydRMZTLGrdMZrhync1yjF80RTDrg5tllQ8JcDCwKF5HM1gHuL3kxdX10bl+DQhabkyB
+        EDrpC3oDmktZI9oHoT+zfWbnRFMzHocyzPSUi8rG5h98NqPmqzMk5OClHcNQUB2gyoJsoz
+        lvtDt5pyQRDGMJtCC3WFSCxzW0AhSkg=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-450-g-0s99Q7OfmzxxXQYdWBeA-1; Fri, 29 May 2020 18:16:26 -0400
+X-MC-Unique: g-0s99Q7OfmzxxXQYdWBeA-1
+Received: by mail-qt1-f200.google.com with SMTP id t24so4179096qtj.15
+        for <linux-s390@vger.kernel.org>; Fri, 29 May 2020 15:16:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=RyWRgA39MpCS4B1s1Q6dcjnQ39Nmyes8pkIQMz0S9CE=;
+        b=IQrGR+yghNzdyyVBs7ZhEfs7En8QpKpFhLe7mntTU9wFolm1aZ+LB9qNOaqZFun18m
+         tHrxocZldwfITbYerBZFSw1GD+4tI/rlvaS4rvrAx0zLa2orAbyWUGEkhIOkVEW10VXS
+         vwZHngfaFLyqFMnJ9aj6ki4dsERpGJRidsUflz2/0uSHeYr53nLYRjtxV/ReduVk34KP
+         C1Z3Rt2+lZ9YFGRvFICOw0IXzltU2Bh9qT6OwbLX7BBra6sxy+RuYvWTXBa9xUCWl1um
+         Ofn0OdJuO1VKLJbh72kR+5/ZBaJg1w6okFrMp2tiVOc9AtwOcQmLJtVQwvdV9PAjZbJ2
+         7uww==
+X-Gm-Message-State: AOAM5318VSlxQ+IGYw0cqRRUObvp4Bgl/bLgKDEF3lZXPph94ihyy7pl
+        L14X2S37NOVdh3GL+RN2QEC6t25F8BcBnxPeCupw4km4MOPUX9dO0NHgC/wBfkpqk6RhyDX1kj5
+        Ob+TVXXaxyPtIj4RJvH8Qxw==
+X-Received: by 2002:a37:6188:: with SMTP id v130mr4562279qkb.138.1590790585938;
+        Fri, 29 May 2020 15:16:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw51w0cnvYWh4WhXmhdM31BK730VJAQnizGJEPYNr8qH289FZOtd/33h3DF8AwAKbkwmoOGzg==
+X-Received: by 2002:a37:6188:: with SMTP id v130mr4562246qkb.138.1590790585671;
+        Fri, 29 May 2020 15:16:25 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id w13sm8244813qkb.91.2020.05.29.15.16.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2020 15:16:24 -0700 (PDT)
+Date:   Fri, 29 May 2020 15:16:23 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core code
+Message-ID: <20200529221623.qc6twmpzryh7nkvb@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
+References: <20200414131542.25608-1-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200414131542.25608-1-joro@8bytes.org>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Now that the macros use per-cpu data, we no longer need the argument.
+On Tue Apr 14 20, Joerg Roedel wrote:
+>Hi,
+>
+>here is the second version of this patch-set. The first version with
+>some more introductory text can be found here:
+>
+>	https://lore.kernel.org/lkml/20200407183742.4344-1-joro@8bytes.org/
+>
+>Changes v1->v2:
+>
+>	* Rebased to v5.7-rc1
+>
+>	* Re-wrote the arm-smmu changes as suggested by Robin Murphy
+>
+>	* Re-worked the Exynos patches to hopefully not break the
+>	  driver anymore
+>
+>	* Fixed a missing mutex_unlock() reported by Marek Szyprowski,
+>	  thanks for that.
+>
+>There is also a git-branch available with these patches applied:
+>
+>	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=iommu-probe-device-v2
+>
+>Please review.
+>
+>Thanks,
+>
+>	Joerg
+>
+>Joerg Roedel (32):
+>  iommu: Move default domain allocation to separate function
+>  iommu/amd: Implement iommu_ops->def_domain_type call-back
+>  iommu/vt-d: Wire up iommu_ops->def_domain_type
+>  iommu/amd: Remove dma_mask check from check_device()
+>  iommu/amd: Return -ENODEV in add_device when device is not handled by
+>    IOMMU
+>  iommu: Add probe_device() and remove_device() call-backs
+>  iommu: Move default domain allocation to iommu_probe_device()
+>  iommu: Keep a list of allocated groups in __iommu_probe_device()
+>  iommu: Move new probe_device path to separate function
+>  iommu: Split off default domain allocation from group assignment
+>  iommu: Move iommu_group_create_direct_mappings() out of
+>    iommu_group_add_device()
+>  iommu: Export bus_iommu_probe() and make is safe for re-probing
+>  iommu/amd: Remove dev_data->passthrough
+>  iommu/amd: Convert to probe/release_device() call-backs
+>  iommu/vt-d: Convert to probe/release_device() call-backs
+>  iommu/arm-smmu: Convert to probe/release_device() call-backs
+>  iommu/pamu: Convert to probe/release_device() call-backs
+>  iommu/s390: Convert to probe/release_device() call-backs
+>  iommu/virtio: Convert to probe/release_device() call-backs
+>  iommu/msm: Convert to probe/release_device() call-backs
+>  iommu/mediatek: Convert to probe/release_device() call-backs
+>  iommu/mediatek-v1 Convert to probe/release_device() call-backs
+>  iommu/qcom: Convert to probe/release_device() call-backs
+>  iommu/rockchip: Convert to probe/release_device() call-backs
+>  iommu/tegra: Convert to probe/release_device() call-backs
+>  iommu/renesas: Convert to probe/release_device() call-backs
+>  iommu/omap: Remove orphan_dev tracking
+>  iommu/omap: Convert to probe/release_device() call-backs
+>  iommu/exynos: Use first SYSMMU in controllers list for IOMMU core
+>  iommu/exynos: Convert to probe/release_device() call-backs
+>  iommu: Remove add_device()/remove_device() code-paths
+>  iommu: Unexport iommu_group_get_for_dev()
+>
+>Sai Praneeth Prakhya (1):
+>  iommu: Add def_domain_type() callback in iommu_ops
+>
+> drivers/iommu/amd_iommu.c       |  97 ++++----
+> drivers/iommu/amd_iommu_types.h |   1 -
+> drivers/iommu/arm-smmu-v3.c     |  38 +--
+> drivers/iommu/arm-smmu.c        |  39 ++--
+> drivers/iommu/exynos-iommu.c    |  24 +-
+> drivers/iommu/fsl_pamu_domain.c |  22 +-
+> drivers/iommu/intel-iommu.c     |  68 +-----
+> drivers/iommu/iommu.c           | 393 +++++++++++++++++++++++++-------
+> drivers/iommu/ipmmu-vmsa.c      |  60 ++---
+> drivers/iommu/msm_iommu.c       |  34 +--
+> drivers/iommu/mtk_iommu.c       |  24 +-
+> drivers/iommu/mtk_iommu_v1.c    |  50 ++--
+> drivers/iommu/omap-iommu.c      |  99 ++------
+> drivers/iommu/qcom_iommu.c      |  24 +-
+> drivers/iommu/rockchip-iommu.c  |  26 +--
+> drivers/iommu/s390-iommu.c      |  22 +-
+> drivers/iommu/tegra-gart.c      |  24 +-
+> drivers/iommu/tegra-smmu.c      |  31 +--
+> drivers/iommu/virtio-iommu.c    |  41 +---
+> include/linux/iommu.h           |  21 +-
+> 20 files changed, 533 insertions(+), 605 deletions(-)
+>
+>-- 
+>2.17.1
+>
+>_______________________________________________
+>iommu mailing list
+>iommu@lists.linux-foundation.org
+>https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/entry/common.c        |    2 +-
- include/linux/irqflags.h       |    8 ++++----
- include/linux/lockdep.h        |    2 +-
- kernel/locking/lockdep.c       |   30 +++++++++++++++---------------
- kernel/softirq.c               |    2 +-
- tools/include/linux/irqflags.h |    4 ++--
- 6 files changed, 24 insertions(+), 24 deletions(-)
+Hi Joerg,
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -689,7 +689,7 @@ noinstr void idtentry_exit_user(struct p
- 
- noinstr bool idtentry_enter_nmi(struct pt_regs *regs)
- {
--	bool irq_state = lockdep_hardirqs_enabled(current);
-+	bool irq_state = lockdep_hardirqs_enabled();
- 
- 	__nmi_enter();
- 	lockdep_hardirqs_off(CALLER_ADDR0);
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -40,9 +40,9 @@ DECLARE_PER_CPU(int, hardirq_context);
-   extern void trace_hardirqs_off_finish(void);
-   extern void trace_hardirqs_on(void);
-   extern void trace_hardirqs_off(void);
--# define lockdep_hardirq_context(p)	(this_cpu_read(hardirq_context))
-+# define lockdep_hardirq_context()	(this_cpu_read(hardirq_context))
- # define lockdep_softirq_context(p)	((p)->softirq_context)
--# define lockdep_hardirqs_enabled(p)	(this_cpu_read(hardirqs_enabled))
-+# define lockdep_hardirqs_enabled()	(this_cpu_read(hardirqs_enabled))
- # define lockdep_softirqs_enabled(p)	((p)->softirqs_enabled)
- # define lockdep_hardirq_enter()			\
- do {							\
-@@ -109,9 +109,9 @@ do {						\
- # define trace_hardirqs_off_finish()		do { } while (0)
- # define trace_hardirqs_on()		do { } while (0)
- # define trace_hardirqs_off()		do { } while (0)
--# define lockdep_hardirq_context(p)	0
-+# define lockdep_hardirq_context()	0
- # define lockdep_softirq_context(p)	0
--# define lockdep_hardirqs_enabled(p)	0
-+# define lockdep_hardirqs_enabled()	0
- # define lockdep_softirqs_enabled(p)	0
- # define lockdep_hardirq_enter()	do { } while (0)
- # define lockdep_hardirq_threaded()	do { } while (0)
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -736,7 +736,7 @@ do {									\
- 
- # define lockdep_assert_RT_in_threaded_ctx() do {			\
- 		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
--			  lockdep_hardirq_context(current) &&		\
-+			  lockdep_hardirq_context() &&			\
- 			  !(current->hardirq_threaded || current->irq_config),	\
- 			  "Not in threaded context on PREEMPT_RT as expected\n");	\
- } while (0)
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -2062,9 +2062,9 @@ print_bad_irq_dependency(struct task_str
- 	pr_warn("-----------------------------------------------------\n");
- 	pr_warn("%s/%d [HC%u[%lu]:SC%u[%lu]:HE%u:SE%u] is trying to acquire:\n",
- 		curr->comm, task_pid_nr(curr),
--		lockdep_hardirq_context(curr), hardirq_count() >> HARDIRQ_SHIFT,
-+		lockdep_hardirq_context(), hardirq_count() >> HARDIRQ_SHIFT,
- 		curr->softirq_context, softirq_count() >> SOFTIRQ_SHIFT,
--		lockdep_hardirqs_enabled(curr),
-+		lockdep_hardirqs_enabled(),
- 		curr->softirqs_enabled);
- 	print_lock(next);
- 
-@@ -3331,9 +3331,9 @@ print_usage_bug(struct task_struct *curr
- 
- 	pr_warn("%s/%d [HC%u[%lu]:SC%u[%lu]:HE%u:SE%u] takes:\n",
- 		curr->comm, task_pid_nr(curr),
--		lockdep_hardirq_context(curr), hardirq_count() >> HARDIRQ_SHIFT,
-+		lockdep_hardirq_context(), hardirq_count() >> HARDIRQ_SHIFT,
- 		lockdep_softirq_context(curr), softirq_count() >> SOFTIRQ_SHIFT,
--		lockdep_hardirqs_enabled(curr),
-+		lockdep_hardirqs_enabled(),
- 		lockdep_softirqs_enabled(curr));
- 	print_lock(this);
- 
-@@ -3655,7 +3655,7 @@ void lockdep_hardirqs_on_prepare(unsigne
- 	if (DEBUG_LOCKS_WARN_ON(current->lockdep_recursion & LOCKDEP_RECURSION_MASK))
- 		return;
- 
--	if (unlikely(lockdep_hardirqs_enabled(current))) {
-+	if (unlikely(lockdep_hardirqs_enabled())) {
- 		/*
- 		 * Neither irq nor preemption are disabled here
- 		 * so this is racy by nature but losing one hit
-@@ -3683,7 +3683,7 @@ void lockdep_hardirqs_on_prepare(unsigne
- 	 * Can't allow enabling interrupts while in an interrupt handler,
- 	 * that's general bad form and such. Recursion, limited stack etc..
- 	 */
--	if (DEBUG_LOCKS_WARN_ON(lockdep_hardirq_context(current)))
-+	if (DEBUG_LOCKS_WARN_ON(lockdep_hardirq_context()))
- 		return;
- 
- 	current->hardirq_chain_key = current->curr_chain_key;
-@@ -3718,7 +3718,7 @@ void noinstr lockdep_hardirqs_on(unsigne
- 	if (DEBUG_LOCKS_WARN_ON(curr->lockdep_recursion & LOCKDEP_RECURSION_MASK))
- 		return;
- 
--	if (lockdep_hardirqs_enabled(curr)) {
-+	if (lockdep_hardirqs_enabled()) {
- 		/*
- 		 * Neither irq nor preemption are disabled here
- 		 * so this is racy by nature but losing one hit
-@@ -3772,7 +3772,7 @@ void noinstr lockdep_hardirqs_off(unsign
- 	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
- 		return;
- 
--	if (lockdep_hardirqs_enabled(curr)) {
-+	if (lockdep_hardirqs_enabled()) {
- 		/*
- 		 * We have done an ON -> OFF transition:
- 		 */
-@@ -3821,7 +3821,7 @@ void lockdep_softirqs_on(unsigned long i
- 	 * usage bit for all held locks, if hardirqs are
- 	 * enabled too:
- 	 */
--	if (lockdep_hardirqs_enabled(curr))
-+	if (lockdep_hardirqs_enabled())
- 		mark_held_locks(curr, LOCK_ENABLED_SOFTIRQ);
- 	lockdep_recursion_finish();
- }
-@@ -3870,7 +3870,7 @@ mark_usage(struct task_struct *curr, str
- 	 */
- 	if (!hlock->trylock) {
- 		if (hlock->read) {
--			if (lockdep_hardirq_context(curr))
-+			if (lockdep_hardirq_context())
- 				if (!mark_lock(curr, hlock,
- 						LOCK_USED_IN_HARDIRQ_READ))
- 					return 0;
-@@ -3879,7 +3879,7 @@ mark_usage(struct task_struct *curr, str
- 						LOCK_USED_IN_SOFTIRQ_READ))
- 					return 0;
- 		} else {
--			if (lockdep_hardirq_context(curr))
-+			if (lockdep_hardirq_context())
- 				if (!mark_lock(curr, hlock, LOCK_USED_IN_HARDIRQ))
- 					return 0;
- 			if (curr->softirq_context)
-@@ -3917,7 +3917,7 @@ mark_usage(struct task_struct *curr, str
- 
- static inline unsigned int task_irq_context(struct task_struct *task)
- {
--	return LOCK_CHAIN_HARDIRQ_CONTEXT * !!lockdep_hardirq_context(task) +
-+	return LOCK_CHAIN_HARDIRQ_CONTEXT * !!lockdep_hardirq_context() +
- 	       LOCK_CHAIN_SOFTIRQ_CONTEXT * !!task->softirq_context;
- }
- 
-@@ -4010,7 +4010,7 @@ static inline short task_wait_context(st
- 	 * Set appropriate wait type for the context; for IRQs we have to take
- 	 * into account force_irqthread as that is implied by PREEMPT_RT.
- 	 */
--	if (lockdep_hardirq_context(curr)) {
-+	if (lockdep_hardirq_context()) {
- 		/*
- 		 * Check if force_irqthreads will run us threaded.
- 		 */
-@@ -4853,11 +4853,11 @@ static void check_flags(unsigned long fl
- 		return;
- 
- 	if (irqs_disabled_flags(flags)) {
--		if (DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled(current))) {
-+		if (DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())) {
- 			printk("possible reason: unannotated irqs-off.\n");
- 		}
- 	} else {
--		if (DEBUG_LOCKS_WARN_ON(!lockdep_hardirqs_enabled(current))) {
-+		if (DEBUG_LOCKS_WARN_ON(!lockdep_hardirqs_enabled())) {
- 			printk("possible reason: unannotated irqs-on.\n");
- 		}
- 	}
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -230,7 +230,7 @@ static inline bool lockdep_softirq_start
- {
- 	bool in_hardirq = false;
- 
--	if (lockdep_hardirq_context(current)) {
-+	if (lockdep_hardirq_context()) {
- 		in_hardirq = true;
- 		lockdep_hardirq_exit();
- 	}
---- a/tools/include/linux/irqflags.h
-+++ b/tools/include/linux/irqflags.h
-@@ -2,9 +2,9 @@
- #ifndef _LIBLOCKDEP_LINUX_TRACE_IRQFLAGS_H_
- #define _LIBLOCKDEP_LINUX_TRACE_IRQFLAGS_H_
- 
--# define lockdep_hardirq_context(p)	0
-+# define lockdep_hardirq_context()	0
- # define lockdep_softirq_context(p)	0
--# define lockdep_hardirqs_enabled(p)	0
-+# define lockdep_hardirqs_enabled()	0
- # define lockdep_softirqs_enabled(p)	0
- # define lockdep_hardirq_enter()	do { } while (0)
- # define lockdep_hardirq_exit()		do { } while (0)
+With this patchset, I have an epyc system where if I boot with
+iommu=nopt and force a dump I will see some io page faults for a nic
+on the system. The vmcore is harvested and the system reboots. I
+haven't reproduced it on other systems yet, but without the patchset I
+don't see the io page faults during the kdump.
 
+Regards,
+Jerry
 
