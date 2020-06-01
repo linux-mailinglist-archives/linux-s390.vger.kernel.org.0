@@ -2,117 +2,248 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3ABD1EA03F
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Jun 2020 10:44:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 482691EA20A
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Jun 2020 12:42:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgFAIoa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 1 Jun 2020 04:44:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbgFAIo3 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 1 Jun 2020 04:44:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0D94206E2;
-        Mon,  1 Jun 2020 08:44:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591001068;
-        bh=++2cB/ePJhne1YRp0fru1zBYoji5d1nprT5N9O4udpk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wVfow37nJUctQuczEjtuvdKVbO338MPrWmtxn6qzZZHMLNELwOQlIvzJoFUuF/1kq
-         q5DWi1Wf0naUXbCdA1uSgSP2CWJRK7dS8k1Y+Djaw8xRkHX+tVonEUHstDVdezlly+
-         CKUb/UU3oTLuSzgUFnUcgt1pHUYemwJpSNjNMHJk=
-Date:   Mon, 1 Jun 2020 10:44:26 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tao pilgrim <pilgrimtao@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, hch@lst.de, sth@linux.ibm.com,
-        viro@zeniv.linux.org.uk, clm@fb.com, jaegeuk@kernel.org,
-        hch@infradead.org, Mark Fasheh <mark@fasheh.com>,
-        dhowells@redhat.com, balbi@kernel.org, damien.lemoal@wdc.com,
-        bvanassche@acm.org, ming.lei@redhat.com,
-        martin.petersen@oracle.com, satyat@google.com,
-        chaitanya.kulkarni@wdc.com, houtao1@huawei.com,
-        asml.silence@gmail.com, ajay.joshi@wdc.com,
-        linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>, hoeppner@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        sagi@grimberg.me, linux-nvme@lists.infradead.org,
-        linux-usb@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        dsterba@suse.com, linux-btrfs@vger.kernel.org, chao@kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, darrick.wong@oracle.com,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
-        ocfs2-devel@oss.oracle.com, deepa.kernel@gmail.com
-Subject: Re: [PATCH v2] blkdev: Replace blksize_bits() with ilog2()
-Message-ID: <20200601084426.GB1667318@kroah.com>
-References: <20200529141100.37519-1-pilgrimtao@gmail.com>
- <c8412d98-0328-0976-e5f9-5beddc148a35@kernel.dk>
- <CAAWJmAZOQQQeNiTr48OSRRdO2pG+q4c=6gjT55CkWC5FN=HXmA@mail.gmail.com>
+        id S1725935AbgFAKmw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 1 Jun 2020 06:42:52 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50191 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725838AbgFAKmv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Jun 2020 06:42:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591008169;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=AeMGc882OThjd+9FTKhf2SV28sW70mLexiTD0o0MA38=;
+        b=fyjIFkiaQZi22bYh+APBLPrzTyF/eBFtWLmLjLeU7ZxqxlQ/bUQ0UXSmmgQ9IriD6rlRmJ
+        vd6weS1WBegN9p5WAnVgJqCYKHvaSp+MtsWsYCWvht6lzVuRZVxguKMlpIetbM/1snfhKG
+        XNfsQJGfyvYd9hnotGiOaO2ioPUdZJI=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-362-adIdNjdqNLCBycABeiYmqg-1; Mon, 01 Jun 2020 06:42:44 -0400
+X-MC-Unique: adIdNjdqNLCBycABeiYmqg-1
+Received: by mail-qt1-f199.google.com with SMTP id p9so5503660qtn.5
+        for <linux-s390@vger.kernel.org>; Mon, 01 Jun 2020 03:42:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=AeMGc882OThjd+9FTKhf2SV28sW70mLexiTD0o0MA38=;
+        b=fYBpaf0wZrc6M7UG4oGGPl3lS5rFWwn9N7si7fgtE+cFFJ7CUtwim8O19lT/G2spkK
+         eHbK4rK7pfUdodBtOKBxlKZKb4NefVpG1W8ZKa4MyDLZml19FlOa3OsJobXtNbN+r+pu
+         psn+M5wdMkm9zGjLIBujLtYUN9y91I2c/AHLTX0OgKCg4Ay1drL8UbW4hBDhJXLGPTYh
+         gWQ6rip9h7SnTF2MCQgbgs02tlq8PfMTOSHYKn12y+KnEej1ua5nxLkIEQx4oAcRIfs9
+         utM689Gyip5neORS1HqQD3tLmiygfNi6z2CzSzQx5jr8gl5V751al6bfZyN5QXegflrd
+         oTjA==
+X-Gm-Message-State: AOAM531pJTgVaKKMsX7lEZCCvG9dUfsEPtZ2Ux4DnIr6qwxTRDbKqxq+
+        QCMes8qV33cAlbHXEI3ndiO20Ic6YISHunuX7pSrXvOoLSxfZB56lB4qP4IaWphpVnr/YOQQz5F
+        Mj26rq1oFsA2Q6XVZw0qvzg==
+X-Received: by 2002:a0c:e4d3:: with SMTP id g19mr19829672qvm.42.1591008163378;
+        Mon, 01 Jun 2020 03:42:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx+BINnTJE9j45H+TvYk5eeeeQO8aLXNnH2+mU7xE+aZ2rhNvGdUvylAKc6cV/RkkqIBE9yOw==
+X-Received: by 2002:a0c:e4d3:: with SMTP id g19mr19829653qvm.42.1591008163033;
+        Mon, 01 Jun 2020 03:42:43 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id m10sm15395899qtg.94.2020.06.01.03.42.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2020 03:42:42 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 03:42:40 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core code
+Message-ID: <20200601104240.7f5xhz7gooqhaq4n@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
+References: <20200414131542.25608-1-joro@8bytes.org>
+ <20200529221623.qc6twmpzryh7nkvb@cantor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAAWJmAZOQQQeNiTr48OSRRdO2pG+q4c=6gjT55CkWC5FN=HXmA@mail.gmail.com>
+In-Reply-To: <20200529221623.qc6twmpzryh7nkvb@cantor>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jun 01, 2020 at 03:22:01PM +0800, Tao pilgrim wrote:
-> On Fri, May 29, 2020 at 10:13 PM Jens Axboe <axboe@kernel.dk> wrote:
-> >
-> > On 5/29/20 8:11 AM, Kaitao Cheng wrote:
-> > > There is a function named ilog2() exist which can replace blksize.
-> > > The generated code will be shorter and more efficient on some
-> > > architecture, such as arm64. And ilog2() can be optimized according
-> > > to different architecture.
-> >
-> > When you posted this last time, I said:
-> >
-> > "I like the simplification, but do you have any results to back up
-> >  that claim? Is the generated code shorter? Runs faster?"
-> >
-> 
-> Hi  Jens Axboe:
-> 
-> I did a test on ARM64.
-> unsigned int ckt_blksize(int size)
-> {
->    return blksize_bits(size);
-> }
-> unsigned int ckt_ilog2(int size)
-> {
->     return ilog2(size);
-> }
-> 
-> When I compiled it into assembly code, I got the following result,
-> 
-> 0000000000000088 <ckt_blksize>:
->       88: 2a0003e8 mov w8, w0
->       8c: 321d03e0 orr w0, wzr, #0x8
->       90: 11000400 add w0, w0, #0x1
->       94: 7108051f cmp w8, #0x201
->       98: 53017d08 lsr w8, w8, #1
->       9c: 54ffffa8 b.hi 90 <ckt_blksize+0x8>
->       a0: d65f03c0 ret
->       a4: d503201f nop
-> 
-> 00000000000000a8 <ckt_ilog2>:
->       a8: 320013e8 orr w8, wzr, #0x1f
->       ac: 5ac01009 clz w9, w0
->       b0: 4b090108 sub w8, w8, w9
->       b4: 7100001f cmp w0, #0x0
->       b8: 5a9f1100 csinv w0, w8, wzr, ne
->       bc: d65f03c0 ret
-> 
-> The generated code of ilog2  is shorter , and  runs faster
+On Fri May 29 20, Jerry Snitselaar wrote:
+>On Tue Apr 14 20, Joerg Roedel wrote:
+>>Hi,
+>>
+>>here is the second version of this patch-set. The first version with
+>>some more introductory text can be found here:
+>>
+>>	https://lore.kernel.org/lkml/20200407183742.4344-1-joro@8bytes.org/
+>>
+>>Changes v1->v2:
+>>
+>>	* Rebased to v5.7-rc1
+>>
+>>	* Re-wrote the arm-smmu changes as suggested by Robin Murphy
+>>
+>>	* Re-worked the Exynos patches to hopefully not break the
+>>	  driver anymore
+>>
+>>	* Fixed a missing mutex_unlock() reported by Marek Szyprowski,
+>>	  thanks for that.
+>>
+>>There is also a git-branch available with these patches applied:
+>>
+>>	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=iommu-probe-device-v2
+>>
+>>Please review.
+>>
+>>Thanks,
+>>
+>>	Joerg
+>>
+>>Joerg Roedel (32):
+>> iommu: Move default domain allocation to separate function
+>> iommu/amd: Implement iommu_ops->def_domain_type call-back
+>> iommu/vt-d: Wire up iommu_ops->def_domain_type
+>> iommu/amd: Remove dma_mask check from check_device()
+>> iommu/amd: Return -ENODEV in add_device when device is not handled by
+>>   IOMMU
+>> iommu: Add probe_device() and remove_device() call-backs
+>> iommu: Move default domain allocation to iommu_probe_device()
+>> iommu: Keep a list of allocated groups in __iommu_probe_device()
+>> iommu: Move new probe_device path to separate function
+>> iommu: Split off default domain allocation from group assignment
+>> iommu: Move iommu_group_create_direct_mappings() out of
+>>   iommu_group_add_device()
+>> iommu: Export bus_iommu_probe() and make is safe for re-probing
+>> iommu/amd: Remove dev_data->passthrough
+>> iommu/amd: Convert to probe/release_device() call-backs
+>> iommu/vt-d: Convert to probe/release_device() call-backs
+>> iommu/arm-smmu: Convert to probe/release_device() call-backs
+>> iommu/pamu: Convert to probe/release_device() call-backs
+>> iommu/s390: Convert to probe/release_device() call-backs
+>> iommu/virtio: Convert to probe/release_device() call-backs
+>> iommu/msm: Convert to probe/release_device() call-backs
+>> iommu/mediatek: Convert to probe/release_device() call-backs
+>> iommu/mediatek-v1 Convert to probe/release_device() call-backs
+>> iommu/qcom: Convert to probe/release_device() call-backs
+>> iommu/rockchip: Convert to probe/release_device() call-backs
+>> iommu/tegra: Convert to probe/release_device() call-backs
+>> iommu/renesas: Convert to probe/release_device() call-backs
+>> iommu/omap: Remove orphan_dev tracking
+>> iommu/omap: Convert to probe/release_device() call-backs
+>> iommu/exynos: Use first SYSMMU in controllers list for IOMMU core
+>> iommu/exynos: Convert to probe/release_device() call-backs
+>> iommu: Remove add_device()/remove_device() code-paths
+>> iommu: Unexport iommu_group_get_for_dev()
+>>
+>>Sai Praneeth Prakhya (1):
+>> iommu: Add def_domain_type() callback in iommu_ops
+>>
+>>drivers/iommu/amd_iommu.c       |  97 ++++----
+>>drivers/iommu/amd_iommu_types.h |   1 -
+>>drivers/iommu/arm-smmu-v3.c     |  38 +--
+>>drivers/iommu/arm-smmu.c        |  39 ++--
+>>drivers/iommu/exynos-iommu.c    |  24 +-
+>>drivers/iommu/fsl_pamu_domain.c |  22 +-
+>>drivers/iommu/intel-iommu.c     |  68 +-----
+>>drivers/iommu/iommu.c           | 393 +++++++++++++++++++++++++-------
+>>drivers/iommu/ipmmu-vmsa.c      |  60 ++---
+>>drivers/iommu/msm_iommu.c       |  34 +--
+>>drivers/iommu/mtk_iommu.c       |  24 +-
+>>drivers/iommu/mtk_iommu_v1.c    |  50 ++--
+>>drivers/iommu/omap-iommu.c      |  99 ++------
+>>drivers/iommu/qcom_iommu.c      |  24 +-
+>>drivers/iommu/rockchip-iommu.c  |  26 +--
+>>drivers/iommu/s390-iommu.c      |  22 +-
+>>drivers/iommu/tegra-gart.c      |  24 +-
+>>drivers/iommu/tegra-smmu.c      |  31 +--
+>>drivers/iommu/virtio-iommu.c    |  41 +---
+>>include/linux/iommu.h           |  21 +-
+>>20 files changed, 533 insertions(+), 605 deletions(-)
+>>
+>>-- 
+>>2.17.1
+>>
+>>_______________________________________________
+>>iommu mailing list
+>>iommu@lists.linux-foundation.org
+>>https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>>
+>
+>Hi Joerg,
+>
+>With this patchset, I have an epyc system where if I boot with
+>iommu=nopt and force a dump I will see some io page faults for a nic
+>on the system. The vmcore is harvested and the system reboots. I
+>haven't reproduced it on other systems yet, but without the patchset I
+>don't see the io page faults during the kdump.
+>
+>Regards,
+>Jerry
 
-But does this code path actually show up anywhere that is actually
-measurable as mattering?
+I just hit an issue on a separate intel based system (kdump iommu=nopt),
+where it panics in during intel_iommu_attach_device, in is_aux_domain,
+due to device_domain_info being DEFER_DEVICE_DOMAIN_INFO. That doesn't
+get set to a valid address until the domain_add_dev_info call.
 
-If so, please show that benchmark results.
+Is it as simple as the following?
 
-thanks,
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 29d3940847d3..f1bbeed46a4c 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5053,8 +5053,8 @@ is_aux_domain(struct device *dev, struct iommu_domain *domain)
+  {
+         struct device_domain_info *info = dev->archdata.iommu;
+  
+-       return info && info->auxd_enabled &&
+-                       domain->type == IOMMU_DOMAIN_UNMANAGED;
++       return info && info != DEFER_DEVICE_DOMAIN_INFO &&
++               info->auxd_enabled && domain->type == IOMMU_DOMAIN_UNMANAGED;
+  }
+  
+  static void auxiliary_link_device(struct dmar_domain *domain,
 
-greg k-h
+
+Regards,
+Jerry
+
