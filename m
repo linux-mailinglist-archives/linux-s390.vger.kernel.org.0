@@ -2,55 +2,55 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 482691EA20A
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Jun 2020 12:42:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 219761EA4C2
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Jun 2020 15:17:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725935AbgFAKmw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 1 Jun 2020 06:42:52 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50191 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725838AbgFAKmv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Jun 2020 06:42:51 -0400
+        id S1726751AbgFANRQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 1 Jun 2020 09:17:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27745 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726075AbgFANRP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Jun 2020 09:17:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591008169;
+        s=mimecast20190719; t=1591017432;
         h=from:from:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:mime-version:mime-version:
          content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=AeMGc882OThjd+9FTKhf2SV28sW70mLexiTD0o0MA38=;
-        b=fyjIFkiaQZi22bYh+APBLPrzTyF/eBFtWLmLjLeU7ZxqxlQ/bUQ0UXSmmgQ9IriD6rlRmJ
-        vd6weS1WBegN9p5WAnVgJqCYKHvaSp+MtsWsYCWvht6lzVuRZVxguKMlpIetbM/1snfhKG
-        XNfsQJGfyvYd9hnotGiOaO2ioPUdZJI=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-362-adIdNjdqNLCBycABeiYmqg-1; Mon, 01 Jun 2020 06:42:44 -0400
-X-MC-Unique: adIdNjdqNLCBycABeiYmqg-1
-Received: by mail-qt1-f199.google.com with SMTP id p9so5503660qtn.5
-        for <linux-s390@vger.kernel.org>; Mon, 01 Jun 2020 03:42:43 -0700 (PDT)
+        bh=bTjB8qfrHTSFjfUbutxvl/qwCsz3nerFRx3HPBX7A6Q=;
+        b=S/JfOFbasRfNkNF9W59HtZI0O6axEa+LknXGz6r8HXoFLliGjE49Hh2h6eqA+X2J8PfOKG
+        jgBzq+ZXHmBfvrN9nJFU2s9QExokmWR60k4p3IHPmlm97W5Bzb2ltqxZpra5aVKL8BXvkP
+        rHnOyMuCHLRkjqInqgJ4efV23x+uYsw=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-500-zNUCp1nAO1ql5pwnh1RR-Q-1; Mon, 01 Jun 2020 09:17:06 -0400
+X-MC-Unique: zNUCp1nAO1ql5pwnh1RR-Q-1
+Received: by mail-qv1-f70.google.com with SMTP id f18so686295qvr.22
+        for <linux-s390@vger.kernel.org>; Mon, 01 Jun 2020 06:17:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:reply-to
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to;
-        bh=AeMGc882OThjd+9FTKhf2SV28sW70mLexiTD0o0MA38=;
-        b=fYBpaf0wZrc6M7UG4oGGPl3lS5rFWwn9N7si7fgtE+cFFJ7CUtwim8O19lT/G2spkK
-         eHbK4rK7pfUdodBtOKBxlKZKb4NefVpG1W8ZKa4MyDLZml19FlOa3OsJobXtNbN+r+pu
-         psn+M5wdMkm9zGjLIBujLtYUN9y91I2c/AHLTX0OgKCg4Ay1drL8UbW4hBDhJXLGPTYh
-         gWQ6rip9h7SnTF2MCQgbgs02tlq8PfMTOSHYKn12y+KnEej1ua5nxLkIEQx4oAcRIfs9
-         utM689Gyip5neORS1HqQD3tLmiygfNi6z2CzSzQx5jr8gl5V751al6bfZyN5QXegflrd
-         oTjA==
-X-Gm-Message-State: AOAM531pJTgVaKKMsX7lEZCCvG9dUfsEPtZ2Ux4DnIr6qwxTRDbKqxq+
-        QCMes8qV33cAlbHXEI3ndiO20Ic6YISHunuX7pSrXvOoLSxfZB56lB4qP4IaWphpVnr/YOQQz5F
-        Mj26rq1oFsA2Q6XVZw0qvzg==
-X-Received: by 2002:a0c:e4d3:: with SMTP id g19mr19829672qvm.42.1591008163378;
-        Mon, 01 Jun 2020 03:42:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx+BINnTJE9j45H+TvYk5eeeeQO8aLXNnH2+mU7xE+aZ2rhNvGdUvylAKc6cV/RkkqIBE9yOw==
-X-Received: by 2002:a0c:e4d3:: with SMTP id g19mr19829653qvm.42.1591008163033;
-        Mon, 01 Jun 2020 03:42:43 -0700 (PDT)
+        bh=bTjB8qfrHTSFjfUbutxvl/qwCsz3nerFRx3HPBX7A6Q=;
+        b=uClv6CxGr2Ac7Es1g5PlC8M2ibxUYizPpvGyVgNKlZZBf1IDBS75OrrtstlPfD6mo2
+         Tk+9NT7Mg6MSaZnJ5o7cSHR/Ah2JilyOXDu+3nBLb6GV0hSFnWyTRCZWrOF1S4KEcfQu
+         Wg3HuzAr9XiSG66wHLg/DC2RY/nQGn4vT9xcV94PmasevmQofA9FMa8ezR4GmYuj4VL+
+         loKk2s4vBI2/aScSnhBDSBtpU+KlFCbu9pCE/daEM7Q+plxB1NFXvpCSp9roYWVMnFVU
+         LcmUAkaG/mtcDHLx//DEr8CGkHnmZ/96Mh/pOVukV7ZgK2as2yzZUE6SXt8PY/ZP1n6Y
+         HZgw==
+X-Gm-Message-State: AOAM531vlFvPa5/+55ki5U5FPDVfBWpbBOGoeEFiSPeYZ46ylWfVxRdW
+        HEexU47sXNUN1FeO/AiKrsmRDv9hxVp3cAhUwrCyvTS8kKMurMEDSh2XW8jLfw3NOo24ebsLapL
+        W8+0nOU815sl5OGaRAR6y3A==
+X-Received: by 2002:a0c:ee25:: with SMTP id l5mr20058569qvs.5.1591017425793;
+        Mon, 01 Jun 2020 06:17:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxfI03wn2xa5VbguB4ZgxB0Liv4dY32KsoEfpHfoc+ZEMln7Vo+khXJZaEY6bPHZ9c8b/Aysw==
+X-Received: by 2002:a0c:ee25:: with SMTP id l5mr20058438qvs.5.1591017424552;
+        Mon, 01 Jun 2020 06:17:04 -0700 (PDT)
 Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id m10sm15395899qtg.94.2020.06.01.03.42.41
+        by smtp.gmail.com with ESMTPSA id r77sm12075150qke.6.2020.06.01.06.17.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Jun 2020 03:42:42 -0700 (PDT)
-Date:   Mon, 1 Jun 2020 03:42:40 -0700
+        Mon, 01 Jun 2020 06:17:03 -0700 (PDT)
+Date:   Mon, 1 Jun 2020 06:17:02 -0700
 From:   Jerry Snitselaar <jsnitsel@redhat.com>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -75,7 +75,7 @@ To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         iommu@lists.linux-foundation.org,
         linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
 Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core code
-Message-ID: <20200601104240.7f5xhz7gooqhaq4n@cantor>
+Message-ID: <20200601131702.4ksimsjvnsmo3mvn@cantor>
 Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
 Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
         Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
@@ -99,150 +99,161 @@ Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
         linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
 References: <20200414131542.25608-1-joro@8bytes.org>
  <20200529221623.qc6twmpzryh7nkvb@cantor>
+ <20200601104240.7f5xhz7gooqhaq4n@cantor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200529221623.qc6twmpzryh7nkvb@cantor>
+In-Reply-To: <20200601104240.7f5xhz7gooqhaq4n@cantor>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri May 29 20, Jerry Snitselaar wrote:
->On Tue Apr 14 20, Joerg Roedel wrote:
->>Hi,
+On Mon Jun 01 20, Jerry Snitselaar wrote:
+>On Fri May 29 20, Jerry Snitselaar wrote:
+>>On Tue Apr 14 20, Joerg Roedel wrote:
+>>>Hi,
+>>>
+>>>here is the second version of this patch-set. The first version with
+>>>some more introductory text can be found here:
+>>>
+>>>	https://lore.kernel.org/lkml/20200407183742.4344-1-joro@8bytes.org/
+>>>
+>>>Changes v1->v2:
+>>>
+>>>	* Rebased to v5.7-rc1
+>>>
+>>>	* Re-wrote the arm-smmu changes as suggested by Robin Murphy
+>>>
+>>>	* Re-worked the Exynos patches to hopefully not break the
+>>>	  driver anymore
+>>>
+>>>	* Fixed a missing mutex_unlock() reported by Marek Szyprowski,
+>>>	  thanks for that.
+>>>
+>>>There is also a git-branch available with these patches applied:
+>>>
+>>>	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=iommu-probe-device-v2
+>>>
+>>>Please review.
+>>>
+>>>Thanks,
+>>>
+>>>	Joerg
+>>>
+>>>Joerg Roedel (32):
+>>>iommu: Move default domain allocation to separate function
+>>>iommu/amd: Implement iommu_ops->def_domain_type call-back
+>>>iommu/vt-d: Wire up iommu_ops->def_domain_type
+>>>iommu/amd: Remove dma_mask check from check_device()
+>>>iommu/amd: Return -ENODEV in add_device when device is not handled by
+>>>  IOMMU
+>>>iommu: Add probe_device() and remove_device() call-backs
+>>>iommu: Move default domain allocation to iommu_probe_device()
+>>>iommu: Keep a list of allocated groups in __iommu_probe_device()
+>>>iommu: Move new probe_device path to separate function
+>>>iommu: Split off default domain allocation from group assignment
+>>>iommu: Move iommu_group_create_direct_mappings() out of
+>>>  iommu_group_add_device()
+>>>iommu: Export bus_iommu_probe() and make is safe for re-probing
+>>>iommu/amd: Remove dev_data->passthrough
+>>>iommu/amd: Convert to probe/release_device() call-backs
+>>>iommu/vt-d: Convert to probe/release_device() call-backs
+>>>iommu/arm-smmu: Convert to probe/release_device() call-backs
+>>>iommu/pamu: Convert to probe/release_device() call-backs
+>>>iommu/s390: Convert to probe/release_device() call-backs
+>>>iommu/virtio: Convert to probe/release_device() call-backs
+>>>iommu/msm: Convert to probe/release_device() call-backs
+>>>iommu/mediatek: Convert to probe/release_device() call-backs
+>>>iommu/mediatek-v1 Convert to probe/release_device() call-backs
+>>>iommu/qcom: Convert to probe/release_device() call-backs
+>>>iommu/rockchip: Convert to probe/release_device() call-backs
+>>>iommu/tegra: Convert to probe/release_device() call-backs
+>>>iommu/renesas: Convert to probe/release_device() call-backs
+>>>iommu/omap: Remove orphan_dev tracking
+>>>iommu/omap: Convert to probe/release_device() call-backs
+>>>iommu/exynos: Use first SYSMMU in controllers list for IOMMU core
+>>>iommu/exynos: Convert to probe/release_device() call-backs
+>>>iommu: Remove add_device()/remove_device() code-paths
+>>>iommu: Unexport iommu_group_get_for_dev()
+>>>
+>>>Sai Praneeth Prakhya (1):
+>>>iommu: Add def_domain_type() callback in iommu_ops
+>>>
+>>>drivers/iommu/amd_iommu.c       |  97 ++++----
+>>>drivers/iommu/amd_iommu_types.h |   1 -
+>>>drivers/iommu/arm-smmu-v3.c     |  38 +--
+>>>drivers/iommu/arm-smmu.c        |  39 ++--
+>>>drivers/iommu/exynos-iommu.c    |  24 +-
+>>>drivers/iommu/fsl_pamu_domain.c |  22 +-
+>>>drivers/iommu/intel-iommu.c     |  68 +-----
+>>>drivers/iommu/iommu.c           | 393 +++++++++++++++++++++++++-------
+>>>drivers/iommu/ipmmu-vmsa.c      |  60 ++---
+>>>drivers/iommu/msm_iommu.c       |  34 +--
+>>>drivers/iommu/mtk_iommu.c       |  24 +-
+>>>drivers/iommu/mtk_iommu_v1.c    |  50 ++--
+>>>drivers/iommu/omap-iommu.c      |  99 ++------
+>>>drivers/iommu/qcom_iommu.c      |  24 +-
+>>>drivers/iommu/rockchip-iommu.c  |  26 +--
+>>>drivers/iommu/s390-iommu.c      |  22 +-
+>>>drivers/iommu/tegra-gart.c      |  24 +-
+>>>drivers/iommu/tegra-smmu.c      |  31 +--
+>>>drivers/iommu/virtio-iommu.c    |  41 +---
+>>>include/linux/iommu.h           |  21 +-
+>>>20 files changed, 533 insertions(+), 605 deletions(-)
+>>>
+>>>-- 
+>>>2.17.1
+>>>
+>>>_______________________________________________
+>>>iommu mailing list
+>>>iommu@lists.linux-foundation.org
+>>>https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>>>
 >>
->>here is the second version of this patch-set. The first version with
->>some more introductory text can be found here:
+>>Hi Joerg,
 >>
->>	https://lore.kernel.org/lkml/20200407183742.4344-1-joro@8bytes.org/
+>>With this patchset, I have an epyc system where if I boot with
+>>iommu=nopt and force a dump I will see some io page faults for a nic
+>>on the system. The vmcore is harvested and the system reboots. I
+>>haven't reproduced it on other systems yet, but without the patchset I
+>>don't see the io page faults during the kdump.
 >>
->>Changes v1->v2:
->>
->>	* Rebased to v5.7-rc1
->>
->>	* Re-wrote the arm-smmu changes as suggested by Robin Murphy
->>
->>	* Re-worked the Exynos patches to hopefully not break the
->>	  driver anymore
->>
->>	* Fixed a missing mutex_unlock() reported by Marek Szyprowski,
->>	  thanks for that.
->>
->>There is also a git-branch available with these patches applied:
->>
->>	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=iommu-probe-device-v2
->>
->>Please review.
->>
->>Thanks,
->>
->>	Joerg
->>
->>Joerg Roedel (32):
->> iommu: Move default domain allocation to separate function
->> iommu/amd: Implement iommu_ops->def_domain_type call-back
->> iommu/vt-d: Wire up iommu_ops->def_domain_type
->> iommu/amd: Remove dma_mask check from check_device()
->> iommu/amd: Return -ENODEV in add_device when device is not handled by
->>   IOMMU
->> iommu: Add probe_device() and remove_device() call-backs
->> iommu: Move default domain allocation to iommu_probe_device()
->> iommu: Keep a list of allocated groups in __iommu_probe_device()
->> iommu: Move new probe_device path to separate function
->> iommu: Split off default domain allocation from group assignment
->> iommu: Move iommu_group_create_direct_mappings() out of
->>   iommu_group_add_device()
->> iommu: Export bus_iommu_probe() and make is safe for re-probing
->> iommu/amd: Remove dev_data->passthrough
->> iommu/amd: Convert to probe/release_device() call-backs
->> iommu/vt-d: Convert to probe/release_device() call-backs
->> iommu/arm-smmu: Convert to probe/release_device() call-backs
->> iommu/pamu: Convert to probe/release_device() call-backs
->> iommu/s390: Convert to probe/release_device() call-backs
->> iommu/virtio: Convert to probe/release_device() call-backs
->> iommu/msm: Convert to probe/release_device() call-backs
->> iommu/mediatek: Convert to probe/release_device() call-backs
->> iommu/mediatek-v1 Convert to probe/release_device() call-backs
->> iommu/qcom: Convert to probe/release_device() call-backs
->> iommu/rockchip: Convert to probe/release_device() call-backs
->> iommu/tegra: Convert to probe/release_device() call-backs
->> iommu/renesas: Convert to probe/release_device() call-backs
->> iommu/omap: Remove orphan_dev tracking
->> iommu/omap: Convert to probe/release_device() call-backs
->> iommu/exynos: Use first SYSMMU in controllers list for IOMMU core
->> iommu/exynos: Convert to probe/release_device() call-backs
->> iommu: Remove add_device()/remove_device() code-paths
->> iommu: Unexport iommu_group_get_for_dev()
->>
->>Sai Praneeth Prakhya (1):
->> iommu: Add def_domain_type() callback in iommu_ops
->>
->>drivers/iommu/amd_iommu.c       |  97 ++++----
->>drivers/iommu/amd_iommu_types.h |   1 -
->>drivers/iommu/arm-smmu-v3.c     |  38 +--
->>drivers/iommu/arm-smmu.c        |  39 ++--
->>drivers/iommu/exynos-iommu.c    |  24 +-
->>drivers/iommu/fsl_pamu_domain.c |  22 +-
->>drivers/iommu/intel-iommu.c     |  68 +-----
->>drivers/iommu/iommu.c           | 393 +++++++++++++++++++++++++-------
->>drivers/iommu/ipmmu-vmsa.c      |  60 ++---
->>drivers/iommu/msm_iommu.c       |  34 +--
->>drivers/iommu/mtk_iommu.c       |  24 +-
->>drivers/iommu/mtk_iommu_v1.c    |  50 ++--
->>drivers/iommu/omap-iommu.c      |  99 ++------
->>drivers/iommu/qcom_iommu.c      |  24 +-
->>drivers/iommu/rockchip-iommu.c  |  26 +--
->>drivers/iommu/s390-iommu.c      |  22 +-
->>drivers/iommu/tegra-gart.c      |  24 +-
->>drivers/iommu/tegra-smmu.c      |  31 +--
->>drivers/iommu/virtio-iommu.c    |  41 +---
->>include/linux/iommu.h           |  21 +-
->>20 files changed, 533 insertions(+), 605 deletions(-)
->>
->>-- 
->>2.17.1
->>
->>_______________________________________________
->>iommu mailing list
->>iommu@lists.linux-foundation.org
->>https://lists.linuxfoundation.org/mailman/listinfo/iommu
->>
+>>Regards,
+>>Jerry
 >
->Hi Joerg,
+>I just hit an issue on a separate intel based system (kdump iommu=nopt),
+>where it panics in during intel_iommu_attach_device, in is_aux_domain,
+>due to device_domain_info being DEFER_DEVICE_DOMAIN_INFO. That doesn't
+>get set to a valid address until the domain_add_dev_info call.
 >
->With this patchset, I have an epyc system where if I boot with
->iommu=nopt and force a dump I will see some io page faults for a nic
->on the system. The vmcore is harvested and the system reboots. I
->haven't reproduced it on other systems yet, but without the patchset I
->don't see the io page faults during the kdump.
+>Is it as simple as the following?
+>
+>diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>index 29d3940847d3..f1bbeed46a4c 100644
+>--- a/drivers/iommu/intel-iommu.c
+>+++ b/drivers/iommu/intel-iommu.c
+>@@ -5053,8 +5053,8 @@ is_aux_domain(struct device *dev, struct iommu_domain *domain)
+> {
+>        struct device_domain_info *info = dev->archdata.iommu;
+>-       return info && info->auxd_enabled &&
+>-                       domain->type == IOMMU_DOMAIN_UNMANAGED;
+>+       return info && info != DEFER_DEVICE_DOMAIN_INFO &&
+>+               info->auxd_enabled && domain->type == IOMMU_DOMAIN_UNMANAGED;
+> }
+> static void auxiliary_link_device(struct dmar_domain *domain,
+>
 >
 >Regards,
 >Jerry
+>
 
-I just hit an issue on a separate intel based system (kdump iommu=nopt),
-where it panics in during intel_iommu_attach_device, in is_aux_domain,
-due to device_domain_info being DEFER_DEVICE_DOMAIN_INFO. That doesn't
-get set to a valid address until the domain_add_dev_info call.
-
-Is it as simple as the following?
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 29d3940847d3..f1bbeed46a4c 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5053,8 +5053,8 @@ is_aux_domain(struct device *dev, struct iommu_domain *domain)
-  {
-         struct device_domain_info *info = dev->archdata.iommu;
-  
--       return info && info->auxd_enabled &&
--                       domain->type == IOMMU_DOMAIN_UNMANAGED;
-+       return info && info != DEFER_DEVICE_DOMAIN_INFO &&
-+               info->auxd_enabled && domain->type == IOMMU_DOMAIN_UNMANAGED;
-  }
-  
-  static void auxiliary_link_device(struct dmar_domain *domain,
-
+With the patch, I avoid the panic, but I'm seeing an issue similar to the epyc system.
+I'm getting dmar faults from a couple of nics and the hp ilo. The addresses in question
+were in e820 reserved sections, but there aren't rmrr covering those addresses. The system
+manages to harvest the vmcore and reboot like the epyc. Without the patches I don't see
+the dmar faults. I needed to give this system back, but I'll try to poke at it some more
+in the next couple of days.
 
 Regards,
 Jerry
