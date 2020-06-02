@@ -2,159 +2,82 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 160D81EC02E
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2020 18:38:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C97E1EC19B
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2020 20:06:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgFBQiS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Jun 2020 12:38:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45812 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725969AbgFBQiR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jun 2020 12:38:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591115896;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=hHqD35umcQO2huEjb9WL/Ckh3jB+GYgIq0lk1r/iSMI=;
-        b=ReaM5w19lpFOo9+RfsXq7dFeZ9bWvhu14kG2nAWplJp0ePFumtaL4uls9p1uPD6u/j3VBa
-        vh6+j4NPJujFXrqqkiiaCLBFCnCcGmZ5Ltgprb00h8L31BJ8WLg15qHR8OU5zwECz5WUm9
-        /pLgzynC4eaUES6YKgX5jfe3cMBhDYg=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-493-aCMN6HbTP7aXJeBXxwHNpw-1; Tue, 02 Jun 2020 12:38:10 -0400
-X-MC-Unique: aCMN6HbTP7aXJeBXxwHNpw-1
-Received: by mail-qv1-f72.google.com with SMTP id w3so4089031qvl.9
-        for <linux-s390@vger.kernel.org>; Tue, 02 Jun 2020 09:38:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=hHqD35umcQO2huEjb9WL/Ckh3jB+GYgIq0lk1r/iSMI=;
-        b=nuq/cBfFxCyPjY85QhCVgyluaTcd87ygYk853ygH5G+c6cOvHsdMISdAN5KAM/KKNh
-         JKGFDBhmPZixAREyiKCKFmdOr3inPAlq+qzSy+QJEOYZ+UgMsrKCom7DOfv4EH0siXNX
-         vkvbJ44pM1C34aHA3EO04oDDQ1fbwrh7yXZPx0Mf7mHpG2yd+dVH1FdROSSSYQmjep2r
-         9HJ1RrkRNc3luAuKUPxFbhDvKu1/TDZZnbjOSo0oISQ2lTMzJO0KaCXuBwQPSdD19fKk
-         rKS2MyTDijV3yVxUEZxECrE6/ruQTVDQIBfFj3vhXTALA4xlkS6krHlx8GQNNqoo2I/w
-         gpQA==
-X-Gm-Message-State: AOAM530kkhQOlYXI38Rvp82d+OIcnMnB3Kgyf2y55tAMHnMV8gKVvAWo
-        pbvw0d+TFzf5F1WgCt1rGKIoxFspqMfnPh4X14yQpbeaj/wRpC8r0qWopiBLxJshb7kQSq6k3G8
-        oudWCTKsNh9uEZBaLh06lIQ==
-X-Received: by 2002:a37:e205:: with SMTP id g5mr26245739qki.451.1591115889882;
-        Tue, 02 Jun 2020 09:38:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxEHwB8sZ6GJqYFOX4Dc4L1exr5Cive5nf+jzBOew3IuxjQdOjd9lAvq/gnZam2w9pqVYc4MQ==
-X-Received: by 2002:a37:e205:: with SMTP id g5mr26245713qki.451.1591115889616;
-        Tue, 02 Jun 2020 09:38:09 -0700 (PDT)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id 70sm2863201qkk.10.2020.06.02.09.38.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 09:38:08 -0700 (PDT)
-Date:   Tue, 2 Jun 2020 09:38:06 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core code
-Message-ID: <20200602163806.o5dpj2tpemwdzyiw@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
-References: <20200414131542.25608-1-joro@8bytes.org>
- <20200529221623.qc6twmpzryh7nkvb@cantor>
- <20200601104240.7f5xhz7gooqhaq4n@cantor>
- <47711845-98ee-95b8-aa95-423a36ed9741@linux.intel.com>
- <20200602000236.j4m3jvluzdhjngdc@cantor>
- <20200602142312.GJ14598@8bytes.org>
+        id S1726139AbgFBSG6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Jun 2020 14:06:58 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:51620 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbgFBSG6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jun 2020 14:06:58 -0400
+X-Greylist: delayed 364 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Jun 2020 14:06:56 EDT
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 9435E72CCF1;
+        Tue,  2 Jun 2020 21:00:51 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 77BEF7CFE82; Tue,  2 Jun 2020 21:00:51 +0300 (MSK)
+Date:   Tue, 2 Jun 2020 21:00:51 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromyatnikov <evgsyr@gmail.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] s390: fix syscall_get_error for compat processes
+Message-ID: <20200602180051.GA2427@altlinux.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200602142312.GJ14598@8bytes.org>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue Jun 02 20, Joerg Roedel wrote:
->Hi Jerry,
->
->On Mon, Jun 01, 2020 at 05:02:36PM -0700, Jerry Snitselaar wrote:
->>
->> Yeah, that will solve the panic.
->>
->
->If you still see the kdump faults, can you please try with the attached
->diff? I was not able to reproduce them in my setup.
->
->Regards,
->
->	Joerg
->
+If both the tracer and the tracee are compat processes, and gprs[2]
+is assigned a value by __poke_user_compat, then the higher 32 bits
+of gprs[2] are cleared, IS_ERR_VALUE() always returns false, and
+syscall_get_error() always returns 0.
 
-I have another hp proliant server now, and reproduced. I will have the
-patch below tested shortly. Minor change, I switched group->domain to
-domain since group isn't an argument, and *data being passed in comes
-from group->domain anyways.
+Fix the implementation by sign-extending the value for compat processes
+the same way as x86 implementation does.
 
->diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->index b5ea203f6c68..5a6d509f72b6 100644
->--- a/drivers/iommu/iommu.c
->+++ b/drivers/iommu/iommu.c
->@@ -1680,8 +1680,12 @@ static void probe_alloc_default_domain(struct bus_type *bus,
-> static int iommu_group_do_dma_attach(struct device *dev, void *data)
-> {
-> 	struct iommu_domain *domain = data;
->+	int ret = 0;
->
->-	return __iommu_attach_device(domain, dev);
->+	if (!iommu_is_attach_deferred(group->domain, dev))
->+		ret = __iommu_attach_device(group->domain, dev);
->+
->+	return ret;
-> }
->
-> static int __iommu_group_dma_attach(struct iommu_group *group)
->_______________________________________________
->iommu mailing list
->iommu@lists.linux-foundation.org
->https://lists.linuxfoundation.org/mailman/listinfo/iommu
->
+The bug was exposed to user space by commit 201766a20e30f ("ptrace: add
+PTRACE_GET_SYSCALL_INFO request") and detected by strace test suite.
 
+This change fixes strace syscall tampering on s390.
+
+Fixes: 753c4dd6a2fa2 ("[S390] ptrace changes")
+Cc: Elvira Khabirova <lineprinter@altlinux.org>
+Cc: stable@vger.kernel.org # v2.6.28+
+Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+---
+ arch/s390/include/asm/syscall.h | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/arch/s390/include/asm/syscall.h b/arch/s390/include/asm/syscall.h
+index f073292e9fdb..c07633824715 100644
+--- a/arch/s390/include/asm/syscall.h
++++ b/arch/s390/include/asm/syscall.h
+@@ -33,7 +33,17 @@ static inline void syscall_rollback(struct task_struct *task,
+ static inline long syscall_get_error(struct task_struct *task,
+ 				     struct pt_regs *regs)
+ {
+-	return IS_ERR_VALUE(regs->gprs[2]) ? regs->gprs[2] : 0;
++	unsigned long error = regs->gprs[2];
++#ifdef CONFIG_COMPAT
++	if (test_tsk_thread_flag(task, TIF_31BIT)) {
++		/*
++		 * Sign-extend the value so (int)-EFOO becomes (long)-EFOO
++		 * and will match correctly in comparisons.
++		 */
++		error = (long) (int) error;
++	}
++#endif
++	return IS_ERR_VALUE(error) ? error : 0;
+ }
+ 
+ static inline long syscall_get_return_value(struct task_struct *task,
+-- 
+ldv
