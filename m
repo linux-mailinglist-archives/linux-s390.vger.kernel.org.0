@@ -2,138 +2,159 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 064051EBF14
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2020 17:34:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 160D81EC02E
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2020 18:38:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgFBPeo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Jun 2020 11:34:44 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43289 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726112AbgFBPeo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jun 2020 11:34:44 -0400
+        id S1726267AbgFBQiS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Jun 2020 12:38:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45812 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725969AbgFBQiR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jun 2020 12:38:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591112082;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AHoowLWyuNkFNNNFhKM9v3rdJYam+R1Lag23sEG1vxM=;
-        b=Pki/ihu4amFYWptCE6PC2Gw5TVLieIP4wY90rcKDLbMpovnMTXoUQp5MWqTnRjKa07X4ut
-        M7E7szKsVToGs4ctpVUE7cvYnZuDXWmjQ/Mcl1TjpDdRbQfH6qSsbZvAhL+bWLrBKnjiqL
-        AFJ/vi1vLhDaYpmQDevQdrj6mxOOE98=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-I_SbP9yuNDW9k474Grww1w-1; Tue, 02 Jun 2020 11:34:40 -0400
-X-MC-Unique: I_SbP9yuNDW9k474Grww1w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D7171902EA0;
-        Tue,  2 Jun 2020 15:34:39 +0000 (UTC)
-Received: from gondolin (ovpn-112-184.ams2.redhat.com [10.36.112.184])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7BE347E7E6;
-        Tue,  2 Jun 2020 15:34:37 +0000 (UTC)
-Date:   Tue, 2 Jun 2020 17:34:34 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, Farhan Ali <alifm@linux.ibm.com>
-Subject: Re: [PULL 08/10] vfio-ccw: Introduce a new CRW region
-Message-ID: <20200602173434.6a81181b.cohuck@redhat.com>
-In-Reply-To: <71bf02e5-dbb4-0b3f-0956-b1b13dadf42a@linux.ibm.com>
-References: <20200525094115.222299-1-cohuck@redhat.com>
-        <20200525094115.222299-9-cohuck@redhat.com>
-        <20200602151313.0e639b57.cohuck@redhat.com>
-        <71bf02e5-dbb4-0b3f-0956-b1b13dadf42a@linux.ibm.com>
-Organization: Red Hat GmbH
+        s=mimecast20190719; t=1591115896;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=hHqD35umcQO2huEjb9WL/Ckh3jB+GYgIq0lk1r/iSMI=;
+        b=ReaM5w19lpFOo9+RfsXq7dFeZ9bWvhu14kG2nAWplJp0ePFumtaL4uls9p1uPD6u/j3VBa
+        vh6+j4NPJujFXrqqkiiaCLBFCnCcGmZ5Ltgprb00h8L31BJ8WLg15qHR8OU5zwECz5WUm9
+        /pLgzynC4eaUES6YKgX5jfe3cMBhDYg=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-493-aCMN6HbTP7aXJeBXxwHNpw-1; Tue, 02 Jun 2020 12:38:10 -0400
+X-MC-Unique: aCMN6HbTP7aXJeBXxwHNpw-1
+Received: by mail-qv1-f72.google.com with SMTP id w3so4089031qvl.9
+        for <linux-s390@vger.kernel.org>; Tue, 02 Jun 2020 09:38:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=hHqD35umcQO2huEjb9WL/Ckh3jB+GYgIq0lk1r/iSMI=;
+        b=nuq/cBfFxCyPjY85QhCVgyluaTcd87ygYk853ygH5G+c6cOvHsdMISdAN5KAM/KKNh
+         JKGFDBhmPZixAREyiKCKFmdOr3inPAlq+qzSy+QJEOYZ+UgMsrKCom7DOfv4EH0siXNX
+         vkvbJ44pM1C34aHA3EO04oDDQ1fbwrh7yXZPx0Mf7mHpG2yd+dVH1FdROSSSYQmjep2r
+         9HJ1RrkRNc3luAuKUPxFbhDvKu1/TDZZnbjOSo0oISQ2lTMzJO0KaCXuBwQPSdD19fKk
+         rKS2MyTDijV3yVxUEZxECrE6/ruQTVDQIBfFj3vhXTALA4xlkS6krHlx8GQNNqoo2I/w
+         gpQA==
+X-Gm-Message-State: AOAM530kkhQOlYXI38Rvp82d+OIcnMnB3Kgyf2y55tAMHnMV8gKVvAWo
+        pbvw0d+TFzf5F1WgCt1rGKIoxFspqMfnPh4X14yQpbeaj/wRpC8r0qWopiBLxJshb7kQSq6k3G8
+        oudWCTKsNh9uEZBaLh06lIQ==
+X-Received: by 2002:a37:e205:: with SMTP id g5mr26245739qki.451.1591115889882;
+        Tue, 02 Jun 2020 09:38:09 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxEHwB8sZ6GJqYFOX4Dc4L1exr5Cive5nf+jzBOew3IuxjQdOjd9lAvq/gnZam2w9pqVYc4MQ==
+X-Received: by 2002:a37:e205:: with SMTP id g5mr26245713qki.451.1591115889616;
+        Tue, 02 Jun 2020 09:38:09 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id 70sm2863201qkk.10.2020.06.02.09.38.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 09:38:08 -0700 (PDT)
+Date:   Tue, 2 Jun 2020 09:38:06 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core code
+Message-ID: <20200602163806.o5dpj2tpemwdzyiw@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org
+References: <20200414131542.25608-1-joro@8bytes.org>
+ <20200529221623.qc6twmpzryh7nkvb@cantor>
+ <20200601104240.7f5xhz7gooqhaq4n@cantor>
+ <47711845-98ee-95b8-aa95-423a36ed9741@linux.intel.com>
+ <20200602000236.j4m3jvluzdhjngdc@cantor>
+ <20200602142312.GJ14598@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200602142312.GJ14598@8bytes.org>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 2 Jun 2020 10:46:25 -0400
-Eric Farman <farman@linux.ibm.com> wrote:
+On Tue Jun 02 20, Joerg Roedel wrote:
+>Hi Jerry,
+>
+>On Mon, Jun 01, 2020 at 05:02:36PM -0700, Jerry Snitselaar wrote:
+>>
+>> Yeah, that will solve the panic.
+>>
+>
+>If you still see the kdump faults, can you please try with the attached
+>diff? I was not able to reproduce them in my setup.
+>
+>Regards,
+>
+>	Joerg
+>
 
-> On 6/2/20 9:13 AM, Cornelia Huck wrote:
-> > On Mon, 25 May 2020 11:41:13 +0200
-> > Cornelia Huck <cohuck@redhat.com> wrote:
-> >   
-> >> From: Farhan Ali <alifm@linux.ibm.com>
-> >>
-> >> This region provides a mechanism to pass a Channel Report Word
-> >> that affect vfio-ccw devices, and needs to be passed to the guest
-> >> for its awareness and/or processing.
-> >>
-> >> The base driver (see crw_collect_info()) provides space for two
-> >> CRWs, as a subchannel event may have two CRWs chained together
-> >> (one for the ssid, one for the subchannel).  As vfio-ccw will
-> >> deal with everything at the subchannel level, provide space
-> >> for a single CRW to be transferred in one shot.
-> >>
-> >> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> >> Signed-off-by: Eric Farman <farman@linux.ibm.com>
-> >> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> >> Message-Id: <20200505122745.53208-7-farman@linux.ibm.com>
-> >> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-> >> ---
-> >>  Documentation/s390/vfio-ccw.rst     | 19 ++++++++++
-> >>  drivers/s390/cio/vfio_ccw_chp.c     | 55 +++++++++++++++++++++++++++++
-> >>  drivers/s390/cio/vfio_ccw_drv.c     | 20 +++++++++++
-> >>  drivers/s390/cio/vfio_ccw_ops.c     |  8 +++++
-> >>  drivers/s390/cio/vfio_ccw_private.h |  4 +++
-> >>  include/uapi/linux/vfio.h           |  2 ++
-> >>  include/uapi/linux/vfio_ccw.h       |  8 +++++
-> >>  7 files changed, 116 insertions(+)
-> >>  
-> > 
-> > (...)
-> >   
-> >> @@ -413,6 +423,16 @@ static int __init vfio_ccw_sch_init(void)
-> >>  		goto out_err;
-> >>  	}
-> >>  
-> >> +	vfio_ccw_crw_region = kmem_cache_create_usercopy("vfio_ccw_crw_region",
-> >> +					sizeof(struct ccw_crw_region), 0,
-> >> +					SLAB_ACCOUNT, 0,
-> >> +					sizeof(struct ccw_crw_region), NULL);  
-> > 
-> > Ugh, I just tested this rebased to the s390 features branch, and I must
-> > have used some different options, because I now get
-> > 
-> >    kmem_cache_create(vfio_ccw_crw_region) integrity check failed
-> > 
-> > presumably due to the size of the ccw_crw_region.
-> > 
-> > We maybe need to pad it up (leave it unpacked)? Eric, what do you think?  
-> 
-> Certainly packing a single one-word struct is weird, and the message is
-> coming out of the tiny struct itself:
-> 
-> mm/slab-common.c:88:
->         if (!name || in_interrupt() || size < sizeof(void *) ||
->                 size > KMALLOC_MAX_SIZE) {
->                 pr_err("kmem_cache_create(%s) integrity check failed\n",
-> name);
-> 
-> That's protected by CONFIG_DEBUG_VM which wasn't enabled in my config.
-> So playing around with things, we'd have to explicitly add a pad (or the
-> second CRW, ha!) to get the struct back up to a doubleword. That'd be
-> fine with me.
+I have another hp proliant server now, and reproduced. I will have the
+patch below tested shortly. Minor change, I switched group->domain to
+domain since group isn't an argument, and *data being passed in comes
+from group->domain anyways.
 
-I think I'll just go with
-
-struct ccw_crw_region {                                                         
-        __u32 crw;                                                              
-        __u32 pad;                                                              
-} __packed;
-
-here and in the doc. I'll do some tests and do another pull request
-tomorrow.
+>diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>index b5ea203f6c68..5a6d509f72b6 100644
+>--- a/drivers/iommu/iommu.c
+>+++ b/drivers/iommu/iommu.c
+>@@ -1680,8 +1680,12 @@ static void probe_alloc_default_domain(struct bus_type *bus,
+> static int iommu_group_do_dma_attach(struct device *dev, void *data)
+> {
+> 	struct iommu_domain *domain = data;
+>+	int ret = 0;
+>
+>-	return __iommu_attach_device(domain, dev);
+>+	if (!iommu_is_attach_deferred(group->domain, dev))
+>+		ret = __iommu_attach_device(group->domain, dev);
+>+
+>+	return ret;
+> }
+>
+> static int __iommu_group_dma_attach(struct iommu_group *group)
+>_______________________________________________
+>iommu mailing list
+>iommu@lists.linux-foundation.org
+>https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>
 
