@@ -2,122 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E6531EB688
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2020 09:26:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 966041EB989
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2020 12:26:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725897AbgFBH0c (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Jun 2020 03:26:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33860 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725616AbgFBH0b (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jun 2020 03:26:31 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05271m0J109860;
-        Tue, 2 Jun 2020 03:26:28 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31dfsfcbuk-1
+        id S1727798AbgFBKZf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Jun 2020 06:25:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45844 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726217AbgFBKZD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jun 2020 06:25:03 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0529W2sD115764;
+        Tue, 2 Jun 2020 06:24:39 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31dfmksvxg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 03:26:28 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0527Q6Tk004162;
-        Tue, 2 Jun 2020 07:26:26 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 31bf47wj47-1
+        Tue, 02 Jun 2020 06:24:39 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0529aMS7132792;
+        Tue, 2 Jun 2020 06:24:38 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31dfmksvw6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jun 2020 07:26:26 +0000
+        Tue, 02 Jun 2020 06:24:38 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 052AK7EJ031346;
+        Tue, 2 Jun 2020 10:24:36 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma02fra.de.ibm.com with ESMTP id 31bf47tcdp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Jun 2020 10:24:35 +0000
 Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0527QN1g64422064
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 052ANIxI53412138
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Jun 2020 07:26:23 GMT
+        Tue, 2 Jun 2020 10:23:18 GMT
 Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CD7C752050;
-        Tue,  2 Jun 2020 07:26:23 +0000 (GMT)
-Received: from oc5500677777.ibm.com (unknown [9.145.186.47])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 733F85204E;
-        Tue,  2 Jun 2020 07:26:23 +0000 (GMT)
-Subject: Re: [PATCH 1/1] s390/pci: Log new handle in clp_disable_fh()
-To:     Petr Tesarik <ptesarik@suse.com>, linux-s390@vger.kernel.org,
-        Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-References: <20200522183922.5253-1-ptesarik@suse.com>
- <20200528110813.7eb1fc1f@ezekiel.suse.cz>
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-Message-ID: <9e4a0dec-d249-9443-6b93-83e3f9f33674@linux.ibm.com>
-Date:   Tue, 2 Jun 2020 09:26:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        by IMSVA (Postfix) with ESMTP id 889CF5205F;
+        Tue,  2 Jun 2020 10:24:33 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.29.146])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id B65545204E;
+        Tue,  2 Jun 2020 10:24:32 +0000 (GMT)
+Date:   Tue, 2 Jun 2020 12:24:31 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Willem de Bruijn <willemb@google.com>
+Subject: Re: [PATCH RESEND] lib: fix bitmap_parse() on 64-bit big endian archs
+Message-ID: <20200602102430.GA17703@oc3871087118.ibm.com>
+References: <1589798090-11136-1-git-send-email-agordeev@linux.ibm.com>
+ <CAHp75VdM2yrpd2d3pK2RkmbhF3yiM4=fiTXL4i3yu3AxV3wY-A@mail.gmail.com>
+ <20200518115059.GA19150@oc3871087118.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200528110813.7eb1fc1f@ezekiel.suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200518115059.GA19150@oc3871087118.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-02_05:2020-06-01,2020-06-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- cotscore=-2147483648 mlxscore=0 bulkscore=0 priorityscore=1501
- clxscore=1011 impostorscore=0 mlxlogscore=801 lowpriorityscore=0
- suspectscore=0 spamscore=0 adultscore=0 classifier=spam adjust=0
+ definitions=2020-06-02_11:2020-06-01,2020-06-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 adultscore=0
+ cotscore=-2147483648 bulkscore=0 phishscore=0 clxscore=1015
+ impostorscore=0 spamscore=0 priorityscore=1501 classifier=spam adjust=0
  reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006020039
+ definitions=main-2006020061
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Petr,
+On Mon, May 18, 2020 at 01:50:59PM +0200, Alexander Gordeev wrote:
+> On Mon, May 18, 2020 at 02:33:43PM +0300, Andy Shevchenko wrote:
+> > On Mon, May 18, 2020 at 1:40 PM Alexander Gordeev
+> > <agordeev@linux.ibm.com> wrote:
+> > >
+> > > Commit 2d6261583be0 ("lib: rework bitmap_parse()") does
+> > > not take into account order of halfwords on 64-bit big
+> > > endian architectures.
+> > 
+> > Thanks for report and the patch!
+> > 
+> > Did it work before? Can we have a test case for that that we will see
+> > the failure?
+> 
+> The test exists and enabled with CONFIG_TEST_BITMAP.
+> It does not appear ever passed before on 64 BE.
+> It does not fail on 64 LE for me either.
 
-sorry for not reacting sooner, I was on holiday, saw your message but figured it wasn't super critical.
-Thanks for finding this issue and thank you Pierre and Vasily for stepping in.
+Hi Andy et al,
 
-Best,
-Niklas Schnelle
+Any feedback on the fix? Does it work on 64 LE for you?
 
-On 5/28/20 11:08 AM, Petr Tesarik wrote:
-> Hi all,
+Thanks!
+
+> Thanks!
 > 
-> just a gentle ping.
+> [...]
 > 
-> If the current behaviour (logging the original handle) was intended,
-> then it was worth mentioning in the commit message for 17cdec960cf77,
-> which made the change, but since that's no longer an option, I'd be
-> happy with an explanation in email.
-> 
-> Petr T
-> 
-> On Fri, 22 May 2020 20:39:22 +0200
-> Petr Tesarik <ptesarik@suse.com> wrote:
-> 
->> After disabling a function, the original handle is logged instead of
->> the disabled handle.
->>
->> Fixes: 17cdec960cf77 (s390/pci: Recover handle in clp_set_pci_fn())
->> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
->> ---
->>  arch/s390/pci/pci_clp.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
->> index ea794ae755ae..179bcecefdee 100644
->> --- a/arch/s390/pci/pci_clp.c
->> +++ b/arch/s390/pci/pci_clp.c
->> @@ -309,14 +309,13 @@ int clp_enable_fh(struct zpci_dev *zdev, u8 nr_dma_as)
->>  
->>  int clp_disable_fh(struct zpci_dev *zdev)
->>  {
->> -	u32 fh = zdev->fh;
->>  	int rc;
->>  
->>  	if (!zdev_enabled(zdev))
->>  		return 0;
->>  
->>  	rc = clp_set_pci_fn(zdev, 0, CLP_SET_DISABLE_PCI_FN);
->> -	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, fh, rc);
->> +	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, zdev->fh, rc);
->>  	return rc;
->>  }
->>  
-> 
+> > -- 
+> > With Best Regards,
+> > Andy Shevchenko
