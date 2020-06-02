@@ -2,85 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 634A31EB5AC
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2020 08:13:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E6531EB688
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Jun 2020 09:26:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbgFBGNJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Jun 2020 02:13:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbgFBGNJ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 2 Jun 2020 02:13:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A38F5206A2;
-        Tue,  2 Jun 2020 06:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591078388;
-        bh=rRykBBWnGs96WxsrQLDxmACWOa/UFVBVpsVgwWsmVXk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1Hjjl6n79wTkMOGwUGwEfwwZ3SrDwiog0vc+onIjwGGuMKSzKjJvPZlMTPoeBSV3T
-         s00gQNv4yH6M7lX9kvpeFeAHUFFI/guixhK0D6JH5aXOm+zA8naHv9mb1MQJ2Wi8AE
-         gcQr/P3/ruI6VfcDbwA53bx45o8NZmrvKj7Cj1H8=
-Date:   Tue, 2 Jun 2020 08:13:05 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Tao pilgrim <pilgrimtao@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        sth@linux.ibm.com, viro@zeniv.linux.org.uk, clm@fb.com,
-        jaegeuk@kernel.org, hch@infradead.org,
-        Mark Fasheh <mark@fasheh.com>, dhowells@redhat.com,
-        balbi@kernel.org, damien.lemoal@wdc.com, bvanassche@acm.org,
-        ming.lei@redhat.com, martin.petersen@oracle.com, satyat@google.com,
-        chaitanya.kulkarni@wdc.com, houtao1@huawei.com,
-        asml.silence@gmail.com, ajay.joshi@wdc.com,
-        linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>, hoeppner@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        sagi@grimberg.me, linux-nvme@lists.infradead.org,
-        linux-usb@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        dsterba@suse.com, linux-btrfs@vger.kernel.org, chao@kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, darrick.wong@oracle.com,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        jlbec@evilplan.org, joseph.qi@linux.alibaba.com,
-        ocfs2-devel@oss.oracle.com, deepa.kernel@gmail.com
-Subject: Re: [PATCH v2] blkdev: Replace blksize_bits() with ilog2()
-Message-ID: <20200602061305.GA2258861@kroah.com>
-References: <20200529141100.37519-1-pilgrimtao@gmail.com>
- <c8412d98-0328-0976-e5f9-5beddc148a35@kernel.dk>
- <CAAWJmAZOQQQeNiTr48OSRRdO2pG+q4c=6gjT55CkWC5FN=HXmA@mail.gmail.com>
- <20200601084426.GB1667318@kroah.com>
- <20200602055152.GA11620@lst.de>
+        id S1725897AbgFBH0c (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Jun 2020 03:26:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33860 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725616AbgFBH0b (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jun 2020 03:26:31 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05271m0J109860;
+        Tue, 2 Jun 2020 03:26:28 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31dfsfcbuk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Jun 2020 03:26:28 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0527Q6Tk004162;
+        Tue, 2 Jun 2020 07:26:26 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 31bf47wj47-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Jun 2020 07:26:26 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0527QN1g64422064
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Jun 2020 07:26:23 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD7C752050;
+        Tue,  2 Jun 2020 07:26:23 +0000 (GMT)
+Received: from oc5500677777.ibm.com (unknown [9.145.186.47])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 733F85204E;
+        Tue,  2 Jun 2020 07:26:23 +0000 (GMT)
+Subject: Re: [PATCH 1/1] s390/pci: Log new handle in clp_disable_fh()
+To:     Petr Tesarik <ptesarik@suse.com>, linux-s390@vger.kernel.org,
+        Pierre Morel <pmorel@linux.ibm.com>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+References: <20200522183922.5253-1-ptesarik@suse.com>
+ <20200528110813.7eb1fc1f@ezekiel.suse.cz>
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+Message-ID: <9e4a0dec-d249-9443-6b93-83e3f9f33674@linux.ibm.com>
+Date:   Tue, 2 Jun 2020 09:26:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602055152.GA11620@lst.de>
+In-Reply-To: <20200528110813.7eb1fc1f@ezekiel.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-02_05:2020-06-01,2020-06-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ cotscore=-2147483648 mlxscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1011 impostorscore=0 mlxlogscore=801 lowpriorityscore=0
+ suspectscore=0 spamscore=0 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006020039
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 07:51:52AM +0200, Christoph Hellwig wrote:
-> On Mon, Jun 01, 2020 at 10:44:26AM +0200, Greg KH wrote:
-> > But does this code path actually show up anywhere that is actually
-> > measurable as mattering?
-> > 
-> > If so, please show that benchmark results.
+Hi Petr,
+
+sorry for not reacting sooner, I was on holiday, saw your message but figured it wasn't super critical.
+Thanks for finding this issue and thank you Pierre and Vasily for stepping in.
+
+Best,
+Niklas Schnelle
+
+On 5/28/20 11:08 AM, Petr Tesarik wrote:
+> Hi all,
 > 
-> I think the requests are starting to be a bit unreasonable.  Tao is
-> replacing a reimplementation of a standard function with that standard
-> function / compiler builtin.  We don't put such a high burden on that.
-
-That's fine, but to say it is "faster" usually means we want to see it
-actually going faster somehow :)
-
-> And once the proper existing fields are used where possible as shown
-> in my reply just replacing the rest seems totally obvious - quite
-> contrary I think keeping a reimplementation would need a high bar.
-
-Your patch makes sense, I was not objecting to that.
-
-thanks,
-
-greg k-h
+> just a gentle ping.
+> 
+> If the current behaviour (logging the original handle) was intended,
+> then it was worth mentioning in the commit message for 17cdec960cf77,
+> which made the change, but since that's no longer an option, I'd be
+> happy with an explanation in email.
+> 
+> Petr T
+> 
+> On Fri, 22 May 2020 20:39:22 +0200
+> Petr Tesarik <ptesarik@suse.com> wrote:
+> 
+>> After disabling a function, the original handle is logged instead of
+>> the disabled handle.
+>>
+>> Fixes: 17cdec960cf77 (s390/pci: Recover handle in clp_set_pci_fn())
+>> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+>> ---
+>>  arch/s390/pci/pci_clp.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+>> index ea794ae755ae..179bcecefdee 100644
+>> --- a/arch/s390/pci/pci_clp.c
+>> +++ b/arch/s390/pci/pci_clp.c
+>> @@ -309,14 +309,13 @@ int clp_enable_fh(struct zpci_dev *zdev, u8 nr_dma_as)
+>>  
+>>  int clp_disable_fh(struct zpci_dev *zdev)
+>>  {
+>> -	u32 fh = zdev->fh;
+>>  	int rc;
+>>  
+>>  	if (!zdev_enabled(zdev))
+>>  		return 0;
+>>  
+>>  	rc = clp_set_pci_fn(zdev, 0, CLP_SET_DISABLE_PCI_FN);
+>> -	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, fh, rc);
+>> +	zpci_dbg(3, "dis fid:%x, fh:%x, rc:%d\n", zdev->fid, zdev->fh, rc);
+>>  	return rc;
+>>  }
+>>  
+> 
