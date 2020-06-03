@@ -2,115 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 273CF1EC9A9
-	for <lists+linux-s390@lfdr.de>; Wed,  3 Jun 2020 08:44:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 377A41ECE45
+	for <lists+linux-s390@lfdr.de>; Wed,  3 Jun 2020 13:27:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgFCGoE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 3 Jun 2020 02:44:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41432 "EHLO
+        id S1725882AbgFCL12 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 3 Jun 2020 07:27:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58530 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725275AbgFCGoE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 3 Jun 2020 02:44:04 -0400
+        with ESMTP id S1726083AbgFCL10 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 3 Jun 2020 07:27:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591166643;
+        s=mimecast20190719; t=1591183645;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LNHVI7P34BM+W8F8+/kyhRzc/JWzM8TCEpl7EdHB1Es=;
-        b=FgC9SSqDMcVaA9ko3qUNR8aMkTVgrWkwx2xgNbkb7yIgyKkdmj52R9JdM25a+QYvuoMkkT
-        6D/cemQ7hWgH9Q1UPMp2x3vEOlKE+XkPH7Ynh8rBPibCT8+zhFtW6lAJRFy0VtUa8dvKVI
-        g7ClxuMam+4C2EfvNRzcx8ftwSkkXUI=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=0fTj5fQOdgWNycfPO0iTGPBBBLkg3emkFGsb1i6/ZK4=;
+        b=DzY5sERCPjjGEuf7g2qS73syknLN0eMBbdrA0Pkl1lZmoyIt3SJO/Iwpv4OJETd25/8a/B
+        0qZU1ZMPi6yrlPdo1f6sabKE+j2VrWTH4xsfMeqzp3uoZZB7nJzrs1Ct6lXEw9sG7oz3U2
+        xuQ+tz9K6f+InNxSqcDJlaOav3DPixU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-248-MOpPq_q3OEO3q3R3KxRd1Q-1; Wed, 03 Jun 2020 02:44:01 -0400
-X-MC-Unique: MOpPq_q3OEO3q3R3KxRd1Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-424-H6ERAEeCNl2Vnse0jAZ4Sw-1; Wed, 03 Jun 2020 07:27:21 -0400
+X-MC-Unique: H6ERAEeCNl2Vnse0jAZ4Sw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82E8718FE86D;
-        Wed,  3 Jun 2020 06:44:00 +0000 (UTC)
-Received: from gondolin (ovpn-112-182.ams2.redhat.com [10.36.112.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7900978B56;
-        Wed,  3 Jun 2020 06:43:59 +0000 (UTC)
-Date:   Wed, 3 Jun 2020 08:43:56 +0200
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F5991883604;
+        Wed,  3 Jun 2020 11:27:20 +0000 (UTC)
+Received: from localhost (ovpn-112-182.ams2.redhat.com [10.36.112.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 329D210016DA;
+        Wed,  3 Jun 2020 11:27:20 +0000 (UTC)
 From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-Subject: Re: [PATCH] s390/virtio: remove unused pm callbacks
-Message-ID: <20200603084356.326d66aa.cohuck@redhat.com>
-In-Reply-To: <20200526093629.257649-1-cohuck@redhat.com>
-References: <20200526093629.257649-1-cohuck@redhat.com>
-Organization: Red Hat GmbH
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>
+Subject: [PULL v2 00/10] vfio-ccw patches for 5.8
+Date:   Wed,  3 Jun 2020 13:27:06 +0200
+Message-Id: <20200603112716.332801-1-cohuck@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Friendly ping.
+The following changes since commit e1750a3d9abbea2ece29cac8dc5a6f5bc19c1492:
 
-On Tue, 26 May 2020 11:36:29 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
+  s390/pci: Log new handle in clp_disable_fh() (2020-05-28 12:26:03 +0200)
 
-> Support for hibernation on s390 has been recently been removed with
+are available in the Git repository at:
 
-(one 'been' too much here, I just noticed :)
+  https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/vfio-ccw tags/vfio-ccw-20200603-v2
 
-> commit 394216275c7d ("s390: remove broken hibernate / power management
-> support"), no need to keep unused code around.
-> 
-> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-> ---
->  drivers/s390/virtio/virtio_ccw.c | 26 --------------------------
->  1 file changed, 26 deletions(-)
-> 
-> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-> index 957889a42d2e..5730572b52cd 100644
-> --- a/drivers/s390/virtio/virtio_ccw.c
-> +++ b/drivers/s390/virtio/virtio_ccw.c
-> @@ -1372,27 +1372,6 @@ static struct ccw_device_id virtio_ids[] = {
->  	{},
->  };
->  
-> -#ifdef CONFIG_PM_SLEEP
-> -static int virtio_ccw_freeze(struct ccw_device *cdev)
-> -{
-> -	struct virtio_ccw_device *vcdev = dev_get_drvdata(&cdev->dev);
-> -
-> -	return virtio_device_freeze(&vcdev->vdev);
-> -}
-> -
-> -static int virtio_ccw_restore(struct ccw_device *cdev)
-> -{
-> -	struct virtio_ccw_device *vcdev = dev_get_drvdata(&cdev->dev);
-> -	int ret;
-> -
-> -	ret = virtio_ccw_set_transport_rev(vcdev);
-> -	if (ret)
-> -		return ret;
-> -
-> -	return virtio_device_restore(&vcdev->vdev);
-> -}
-> -#endif
-> -
->  static struct ccw_driver virtio_ccw_driver = {
->  	.driver = {
->  		.owner = THIS_MODULE,
-> @@ -1405,11 +1384,6 @@ static struct ccw_driver virtio_ccw_driver = {
->  	.set_online = virtio_ccw_online,
->  	.notify = virtio_ccw_cio_notify,
->  	.int_class = IRQIO_VIR,
-> -#ifdef CONFIG_PM_SLEEP
-> -	.freeze = virtio_ccw_freeze,
-> -	.thaw = virtio_ccw_restore,
-> -	.restore = virtio_ccw_restore,
-> -#endif
->  };
->  
->  static int __init pure_hex(char **cp, unsigned int *val, int min_digit,
+for you to fetch changes up to b2dd9a44a1098c96935c495570b663bd223a087e:
+
+  vfio-ccw: Add trace for CRW event (2020-06-03 11:28:19 +0200)
+
+----------------------------------------------------------------
+vfio-ccw updates:
+- accept requests without the prefetch bit set
+- enable path handling via two new regions
+
+----------------------------------------------------------------
+
+Changes v1->v2:
+- add padding to struct ccw_crw_region
+- rebase to s390 features branch
+
+Cornelia Huck (1):
+  vfio-ccw: document possible errors
+
+Eric Farman (3):
+  vfio-ccw: Refactor the unregister of the async regions
+  vfio-ccw: Refactor IRQ handlers
+  vfio-ccw: Add trace for CRW event
+
+Farhan Ali (5):
+  vfio-ccw: Introduce new helper functions to free/destroy regions
+  vfio-ccw: Register a chp_event callback for vfio-ccw
+  vfio-ccw: Introduce a new schib region
+  vfio-ccw: Introduce a new CRW region
+  vfio-ccw: Wire up the CRW irq and CRW region
+
+Jared Rossi (1):
+  vfio-ccw: Enable transparent CCW IPL from DASD
+
+ Documentation/s390/vfio-ccw.rst     | 100 ++++++++++++++++-
+ drivers/s390/cio/Makefile           |   2 +-
+ drivers/s390/cio/vfio_ccw_chp.c     | 148 +++++++++++++++++++++++++
+ drivers/s390/cio/vfio_ccw_cp.c      |  19 ++--
+ drivers/s390/cio/vfio_ccw_drv.c     | 165 ++++++++++++++++++++++++++--
+ drivers/s390/cio/vfio_ccw_ops.c     |  65 ++++++++---
+ drivers/s390/cio/vfio_ccw_private.h |  16 +++
+ drivers/s390/cio/vfio_ccw_trace.c   |   1 +
+ drivers/s390/cio/vfio_ccw_trace.h   |  30 +++++
+ include/uapi/linux/vfio.h           |   3 +
+ include/uapi/linux/vfio_ccw.h       |  19 ++++
+ 11 files changed, 531 insertions(+), 37 deletions(-)
+ create mode 100644 drivers/s390/cio/vfio_ccw_chp.c
+
+-- 
+2.25.4
 
