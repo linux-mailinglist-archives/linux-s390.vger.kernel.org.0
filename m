@@ -2,103 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 045681EEC3B
-	for <lists+linux-s390@lfdr.de>; Thu,  4 Jun 2020 22:42:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1C1E1EED78
+	for <lists+linux-s390@lfdr.de>; Thu,  4 Jun 2020 23:47:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbgFDUmB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 4 Jun 2020 16:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729073AbgFDUmA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 4 Jun 2020 16:42:00 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9356AC08C5C0;
-        Thu,  4 Jun 2020 13:42:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RRQblA+6bnMhS+1SeeEZEKS/yygoKGFKeYypCO41S+w=; b=C0D4Ai1alqr8n5EZ4NTgLMZNjz
-        FhgjMiyvs2pElhVDljwJfczLn/lUbRXtxNiNgZlQ26DdYPKuvFDQcj+WPlebJAlKW13CQib6OpZLB
-        O1sZhbeGkYwrCro0S/96SpLGo/EuJX6bmfFEoZa5VHq8RJezHp0KiwdqcnzPWh0OsALyAC696r4WF
-        KFFKqcdLiszkPv3L5bz9uK35dmbij3evt7cNScCz5vIyUO4HFM2UrJHrzBx9PWKR8di8Vplku1MgN
-        SxxLVmSByLs94EzRvfh+cnSMfBhSuBFGd7BD4rgxW7dW+yiGBZd/CEjmVOt3k2WfWqjeEn0c6vLKh
-        8tRyt0dw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jgwfv-0002aT-Rn; Thu, 04 Jun 2020 20:41:20 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 578649838B9; Thu,  4 Jun 2020 22:41:16 +0200 (CEST)
-Date:   Thu, 4 Jun 2020 22:41:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        a.darwish@linutronix.de, rostedt@goodmis.org,
-        bigeasy@linutronix.de, sparclinux@vger.kernel.org,
-        mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        heiko.carstens@de.ibm.com, linux-s390@vger.kernel.org
-Subject: Re: [RFC][PATCH v3 1/5] sparc64: Fix asm/percpu.h build error
-Message-ID: <20200604204116.GD4496@worktop.programming.kicks-ass.net>
-References: <20200529213550.683440625@infradead.org>
- <20200529214203.673108357@infradead.org>
- <20200529.162917.1970892823680223252.davem@davemloft.net>
- <20200604165703.GG3976@hirez.programming.kicks-ass.net>
+        id S1728024AbgFDVrQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 4 Jun 2020 17:47:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23162 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725943AbgFDVrQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 4 Jun 2020 17:47:16 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 054L2h04055403;
+        Thu, 4 Jun 2020 17:47:14 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ek4swnpt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 17:46:48 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 054LkirM164843;
+        Thu, 4 Jun 2020 17:46:44 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ek4swncr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 17:46:44 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 054LUcLu030223;
+        Thu, 4 Jun 2020 21:44:31 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 31bf482suq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Jun 2020 21:44:31 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 054LiTen51511446
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Jun 2020 21:44:29 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6A23242042;
+        Thu,  4 Jun 2020 21:44:29 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 21BE74203F;
+        Thu,  4 Jun 2020 21:44:29 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.48.217])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  4 Jun 2020 21:44:29 +0000 (GMT)
+Date:   Thu, 4 Jun 2020 23:44:21 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] s390/virtio: remove unused pm callbacks
+Message-ID: <20200604234421.4ada966b.pasic@linux.ibm.com>
+In-Reply-To: <20200526093629.257649-1-cohuck@redhat.com>
+References: <20200526093629.257649-1-cohuck@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200604165703.GG3976@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-04_13:2020-06-04,2020-06-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ phishscore=0 suspectscore=0 spamscore=0 cotscore=-2147483648 clxscore=1011
+ bulkscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006040150
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Jun 04, 2020 at 06:57:03PM +0200, Peter Zijlstra wrote:
+On Tue, 26 May 2020 11:36:29 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-> I think I see, what happens is that these headers end up in the VDSO
-> build, and that doesn't have these CFLAGS, because userspace.
+> Support for hibernation on s390 has been recently been removed with
+> commit 394216275c7d ("s390: remove broken hibernate / power management
+> support"), no need to keep unused code around.
 > 
-> Let me see what to do about that.
+> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 
-I feel like the below is cheating, but it's the best I could find :/
-VDSO including kernel headers and the utter maze that our kernel headers
-are makes it really hard to untangle :/
+Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
 
-This builds sparc64-defconfig and sparc64-all{no,mod}config.
-
-Dave, does this work for you, or should I try hardder?
-
----
- arch/sparc/include/asm/percpu_64.h  | 2 ++
- arch/sparc/include/asm/trap_block.h | 2 ++
- 2 files changed, 4 insertions(+)
-
-diff --git a/arch/sparc/include/asm/percpu_64.h b/arch/sparc/include/asm/percpu_64.h
-index 32ef6f05cc565..a8786a4b90b6b 100644
---- a/arch/sparc/include/asm/percpu_64.h
-+++ b/arch/sparc/include/asm/percpu_64.h
-@@ -4,7 +4,9 @@
-
- #include <linux/compiler.h>
-
-+#ifndef BUILD_VDSO
- register unsigned long __local_per_cpu_offset asm("g5");
-+#endif
-
- #ifdef CONFIG_SMP
-
-diff --git a/arch/sparc/include/asm/trap_block.h b/arch/sparc/include/asm/trap_block.h
-index 0f6d0c4f66838..ace0d48e837e5 100644
---- a/arch/sparc/include/asm/trap_block.h
-+++ b/arch/sparc/include/asm/trap_block.h
-@@ -2,6 +2,8 @@
- #ifndef _SPARC_TRAP_BLOCK_H
- #define _SPARC_TRAP_BLOCK_H
-
-+#include <linux/threads.h>
-+
- #include <asm/hypervisor.h>
- #include <asm/asi.h>
-
+> ---
+>  drivers/s390/virtio/virtio_ccw.c | 26 --------------------------
+>  1 file changed, 26 deletions(-)
+> 
+> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+> index 957889a42d2e..5730572b52cd 100644
+> --- a/drivers/s390/virtio/virtio_ccw.c
+> +++ b/drivers/s390/virtio/virtio_ccw.c
+> @@ -1372,27 +1372,6 @@ static struct ccw_device_id virtio_ids[] = {
+>  	{},
+>  };
+>  
+> -#ifdef CONFIG_PM_SLEEP
+> -static int virtio_ccw_freeze(struct ccw_device *cdev)
+> -{
+> -	struct virtio_ccw_device *vcdev = dev_get_drvdata(&cdev->dev);
+> -
+> -	return virtio_device_freeze(&vcdev->vdev);
+> -}
+> -
+> -static int virtio_ccw_restore(struct ccw_device *cdev)
+> -{
+> -	struct virtio_ccw_device *vcdev = dev_get_drvdata(&cdev->dev);
+> -	int ret;
+> -
+> -	ret = virtio_ccw_set_transport_rev(vcdev);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return virtio_device_restore(&vcdev->vdev);
+> -}
+> -#endif
+> -
+>  static struct ccw_driver virtio_ccw_driver = {
+>  	.driver = {
+>  		.owner = THIS_MODULE,
+> @@ -1405,11 +1384,6 @@ static struct ccw_driver virtio_ccw_driver = {
+>  	.set_online = virtio_ccw_online,
+>  	.notify = virtio_ccw_cio_notify,
+>  	.int_class = IRQIO_VIR,
+> -#ifdef CONFIG_PM_SLEEP
+> -	.freeze = virtio_ccw_freeze,
+> -	.thaw = virtio_ccw_restore,
+> -	.restore = virtio_ccw_restore,
+> -#endif
+>  };
+>  
+>  static int __init pure_hex(char **cp, unsigned int *val, int min_digit,
 
