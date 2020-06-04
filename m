@@ -2,187 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A70ED1EDEB3
-	for <lists+linux-s390@lfdr.de>; Thu,  4 Jun 2020 09:42:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E60311EE30E
+	for <lists+linux-s390@lfdr.de>; Thu,  4 Jun 2020 13:14:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgFDHmm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 4 Jun 2020 03:42:42 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49534 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727881AbgFDHmm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 4 Jun 2020 03:42:42 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0547bodk115467;
-        Thu, 4 Jun 2020 03:42:41 -0400
+        id S1726061AbgFDLOK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 4 Jun 2020 07:14:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3784 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725995AbgFDLOJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 4 Jun 2020 07:14:09 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 054B2X4L066652;
+        Thu, 4 Jun 2020 07:14:09 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31d2u3gt8e-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31efd5kwfc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 03:42:41 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0547e413119657;
-        Thu, 4 Jun 2020 03:42:40 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31d2u3gt83-1
+        Thu, 04 Jun 2020 07:14:09 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 054B2XUk066675;
+        Thu, 4 Jun 2020 07:14:08 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31efd5kwem-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 03:42:40 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0547ZE2t024916;
-        Thu, 4 Jun 2020 07:42:39 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04fra.de.ibm.com with ESMTP id 31bf483vb1-1
+        Thu, 04 Jun 2020 07:14:08 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 054BAVB9025849;
+        Thu, 4 Jun 2020 11:14:06 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 31bf481vfn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jun 2020 07:42:39 +0000
+        Thu, 04 Jun 2020 11:14:06 +0000
 Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0547gaqt51511396
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 054BE3en8389010
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jun 2020 07:42:36 GMT
+        Thu, 4 Jun 2020 11:14:03 GMT
 Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8769E5204E;
-        Thu,  4 Jun 2020 07:42:36 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.167.22])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 392A55204F;
-        Thu,  4 Jun 2020 07:42:36 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v7 07/12] s390x: Library resources for CSS
- tests
+        by IMSVA (Postfix) with ESMTP id 9F85E52050;
+        Thu,  4 Jun 2020 11:14:03 +0000 (GMT)
+Received: from localhost (unknown [9.145.37.112])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 2F0A352052;
+        Thu,  4 Jun 2020 11:14:03 +0000 (GMT)
+Date:   Thu, 4 Jun 2020 13:14:01 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
 To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-References: <1589818051-20549-1-git-send-email-pmorel@linux.ibm.com>
- <1589818051-20549-8-git-send-email-pmorel@linux.ibm.com>
- <20200526183005.76fc9124.cohuck@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <1920d8a8-76fb-dc0c-3d40-0db69dc7e207@linux.ibm.com>
-Date:   Thu, 4 Jun 2020 09:42:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PULL v2 00/10] vfio-ccw patches for 5.8
+Message-ID: <your-ad-here.call-01591269241-ext-6441@work.hours>
+References: <20200603112716.332801-1-cohuck@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200526183005.76fc9124.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200603112716.332801-1-cohuck@redhat.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-04_04:2020-06-02,2020-06-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- cotscore=-2147483648 malwarescore=0 phishscore=0 clxscore=1015 bulkscore=0
- adultscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0 mlxscore=0
- mlxlogscore=999 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006040047
+ definitions=2020-06-04_07:2020-06-02,2020-06-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 cotscore=-2147483648 malwarescore=0
+ adultscore=0 spamscore=0 clxscore=1015 impostorscore=0 priorityscore=1501
+ bulkscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006040073
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Wed, Jun 03, 2020 at 01:27:06PM +0200, Cornelia Huck wrote:
+> The following changes since commit e1750a3d9abbea2ece29cac8dc5a6f5bc19c1492:
+> 
+>   s390/pci: Log new handle in clp_disable_fh() (2020-05-28 12:26:03 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/vfio-ccw tags/vfio-ccw-20200603-v2
+> 
+> for you to fetch changes up to b2dd9a44a1098c96935c495570b663bd223a087e:
+> 
+>   vfio-ccw: Add trace for CRW event (2020-06-03 11:28:19 +0200)
+> 
+> ----------------------------------------------------------------
+> vfio-ccw updates:
+> - accept requests without the prefetch bit set
+> - enable path handling via two new regions
 
-
-On 2020-05-26 18:30, Cornelia Huck wrote:
-> On Mon, 18 May 2020 18:07:26 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> Provide some definitions and library routines that can be used by
->> tests targeting the channel subsystem.
->>
->> Debug function can be activated by defining DEBUG_CSS before the
->> inclusion of the css.h header file.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
->>   lib/s390x/css.h      | 259 +++++++++++++++++++++++++++++++++++++++++++
->>   lib/s390x/css_dump.c | 157 ++++++++++++++++++++++++++
->>   s390x/Makefile       |   1 +
->>   3 files changed, 417 insertions(+)
->>   create mode 100644 lib/s390x/css.h
->>   create mode 100644 lib/s390x/css_dump.c
->>
-> 
-> (...)
-> 
->> +struct ccw1 {
->> +	unsigned char code;
->> +	unsigned char flags;
->> +	unsigned short count;
-> 
-> I'm wondering why you're using unsigned {char,short} here, instead of
-> the uint*_t types everywhere else? It's not wrong, but probably better
-> to be consistent?
-> 
->> +	uint32_t data_address;
->> +} __attribute__ ((aligned(4)));
->> +
->> +#define SID_ONE		0x00010000
->> +
-> 
-> I think it would be beneficial for the names to somewhat match the
-> naming in Linux and/or QEMU -- or more speaking names (as you do for
-> some), which is also good.
-> 
->> +#define ORB_M_KEY	0xf0000000
->> +#define ORB_F_SUSPEND	0x08000000
->> +#define ORB_F_STREAMING	0x04000000
->> +#define ORB_F_MODIFCTRL	0x02000000
->> +#define ORB_F_SYNC	0x01000000
->> +#define ORB_F_FORMAT	0x00800000
->> +#define ORB_F_PREFETCH	0x00400000
->> +#define ORB_F_INIT_IRQ	0x00200000
-> 
-> ORB_F_ISIC? (As it does not refer to 'initialization', but 'initial'.)
-> 
->> +#define ORB_F_ADDRLIMIT	0x00100000
->> +#define ORB_F_SUSP_IRQ	0x00080000
-> 
-> ORB_F_SSIC? (As it deals with suppression.)
-> 
->> +#define ORB_F_TRANSPORT	0x00040000
->> +#define ORB_F_IDAW2	0x00020000
-> 
-> ORB_F_IDAW_FMT2?
-> 
-> Or following Linux/QEMU, use ORB_F_C64 for a certain retro appeal :)
-> 
->> +#define ORB_F_IDAW_2K	0x00010000
->> +#define ORB_M_LPM	0x0000ff00
->> +#define ORB_F_LPM_DFLT	0x00008000
-> 
-> That's a default lpm of 0x80, right? It's a bit buried between the orb
-> definitions, and it also seems to be more of a implementation choice --
-> move it out from the flags here?
-> 
->> +#define ORB_F_ILSM	0x00000080
-> 
-> ORB_F_ILS?
-> 
->> +#define ORB_F_CCW_IND	0x00000040
-> 
-> ORB_F_MIDAW? I had a hard time figuring out that one :)
-> 
->> +#define ORB_F_ORB_EXT	0x00000001
-> 
-> (...)
-> 
->> +/*
->> + * Try o have a more human representation of the PMCW flags
-> 
-> s/o/to/
-> 
->> + * each letter in the string represent the first
-> 
-> s/represent/represents/
-> 
->> + * letter of the associated bit in the flag fields.
->> + */
-> 
-> (...)
-> 
-> Generally, looks good to me.
-> 
-
-Thanks a lot,
-I take all your remarks and will update the names for better ones as you 
-suggest.
-
-Regards,
-Pierre
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
+Merged into features, thank you.
+https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/log/?h=features
