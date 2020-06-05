@@ -2,113 +2,104 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 956031EF3A1
-	for <lists+linux-s390@lfdr.de>; Fri,  5 Jun 2020 11:03:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9298B1EF5C9
+	for <lists+linux-s390@lfdr.de>; Fri,  5 Jun 2020 12:52:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgFEJDA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 5 Jun 2020 05:03:00 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28517 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726084AbgFEJDA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 5 Jun 2020 05:03:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591347779;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=E9W+ssSzRMZht+8FbnsLQ8QYoERTC5Emg1mIe1OGFO4=;
-        b=cMy1hk6Tv13I8MpT/xLzxna0XBR6BQj3PGMuNoA+9xwUEk4jbuT8tApRUN41UaR2Dj1SxZ
-        oIlHikR43IJY6WljgUoJmLjUkI+j/8n9ja/tFipCj4EgC8Ma+ZXYBJJEaX+QVbqcXa/jf1
-        52OhqmMPu7uQer9qziPLGUwmljqJd0w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-I_Dy0O-yP2SeJX2gOScNTQ-1; Fri, 05 Jun 2020 05:02:57 -0400
-X-MC-Unique: I_Dy0O-yP2SeJX2gOScNTQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF6C619200C8;
-        Fri,  5 Jun 2020 09:02:55 +0000 (UTC)
-Received: from gondolin (ovpn-113-2.ams2.redhat.com [10.36.113.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0A2DB5C1B0;
-        Fri,  5 Jun 2020 09:02:51 +0000 (UTC)
-Date:   Fri, 5 Jun 2020 11:02:50 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v7 11/12] s390x: css: ssch/tsch with
- sense and interrupt
-Message-ID: <20200605110250.461ea3b7.cohuck@redhat.com>
-In-Reply-To: <a53f84e9-8e32-2ac2-2af1-0edd911841c4@linux.ibm.com>
-References: <1589818051-20549-1-git-send-email-pmorel@linux.ibm.com>
-        <1589818051-20549-12-git-send-email-pmorel@linux.ibm.com>
-        <20200527120905.5fb20a4e.cohuck@redhat.com>
-        <a53f84e9-8e32-2ac2-2af1-0edd911841c4@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1726719AbgFEKwm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 5 Jun 2020 06:52:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17940 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726507AbgFEKwm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 5 Jun 2020 06:52:42 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 055AWbWs140100;
+        Fri, 5 Jun 2020 06:52:36 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31fhr9nk8p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 06:52:36 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 055AZ10n148493;
+        Fri, 5 Jun 2020 06:52:36 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31fhr9nk86-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 06:52:36 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 055Ap4Dg031721;
+        Fri, 5 Jun 2020 10:52:34 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma02fra.de.ibm.com with ESMTP id 31end6h9ks-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 05 Jun 2020 10:52:34 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 055AqVia64159896
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 5 Jun 2020 10:52:31 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD9934203F;
+        Fri,  5 Jun 2020 10:52:31 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6D3014204B;
+        Fri,  5 Jun 2020 10:52:31 +0000 (GMT)
+Received: from osiris (unknown [9.171.91.28])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  5 Jun 2020 10:52:31 +0000 (GMT)
+Date:   Fri, 5 Jun 2020 12:52:30 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] s390/virtio: remove unused pm callbacks
+Message-ID: <20200605105230.GA4189@osiris>
+References: <20200526093629.257649-1-cohuck@redhat.com>
+ <20200604234421.4ada966b.pasic@linux.ibm.com>
+ <20200605093907.4d4b3c2a.cohuck@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605093907.4d4b3c2a.cohuck@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-05_02:2020-06-04,2020-06-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ priorityscore=1501 mlxlogscore=999 mlxscore=0 suspectscore=1
+ lowpriorityscore=0 cotscore=-2147483648 impostorscore=0 spamscore=0
+ clxscore=1011 phishscore=0 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006050077
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 5 Jun 2020 09:37:39 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
-
-> On 2020-05-27 12:09, Cornelia Huck wrote:
-> > On Mon, 18 May 2020 18:07:30 +0200
-> > Pierre Morel <pmorel@linux.ibm.com> wrote:
-> >   
-> >> We add a new css_lib file to contain the I/O functions we may
-> >> share with different tests.
-> >> First function is the subchannel_enable() function.
-> >>
-> >> When a channel is enabled we can start a SENSE_ID command using
-> >> the SSCH instruction to recognize the control unit and device.
-> >>
-> >> This tests the success of SSCH, the I/O interruption and the TSCH
-> >> instructions.
-> >>
-> >> The test expects a device with a control unit type of 0xC0CA as the
-> >> first subchannel of the CSS.  
-> > 
-> > It might make sense to extend this to be able to check for any expected
-> > type (e.g. 0x3832, should my suggestion to split css tests and css-pong
-> > tests make sense.)  
+On Fri, Jun 05, 2020 at 09:39:07AM +0200, Cornelia Huck wrote:
+> On Thu, 4 Jun 2020 23:44:21 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
 > 
-> right.
-> 
-> >   
-> >>
-> >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> >> ---
-> >>   lib/s390x/css.h     |  20 ++++++
-> >>   lib/s390x/css_lib.c |  55 +++++++++++++++++
-> >>   s390x/Makefile      |   1 +
-> >>   s390x/css.c         | 145 ++++++++++++++++++++++++++++++++++++++++++++
-> >>   4 files changed, 221 insertions(+)
-> >>   create mode 100644 lib/s390x/css_lib.c  
+> > On Tue, 26 May 2020 11:36:29 +0200
+> > Cornelia Huck <cohuck@redhat.com> wrote:
 > > 
-> > (...)
-> >   
-> >> +int enable_subchannel(unsigned int sid)
-> >> +{
-> >> +	struct schib schib;
-> >> +	struct pmcw *pmcw = &schib.pmcw;
-> >> +	int try_count = 5;
-> >> +	int cc;
-> >> +
-> >> +	if (!(sid & SID_ONE))
-> >> +		return -1;  
-> > 
-> > Hm... this error is indistinguishable for the caller from a cc 1 for
-> > the msch. Use something else (as this is a coding error)?  
+> > > Support for hibernation on s390 has been recently been removed with
 > 
-> right it is a coding error -> assert ?
+> s/been recently been removed/recently been removed/
+> 
+> > > commit 394216275c7d ("s390: remove broken hibernate / power management
+> > > support"), no need to keep unused code around.
+> > > 
+> > > Signed-off-by: Cornelia Huck <cohuck@redhat.com>  
+> > 
+> > Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+> 
+> Thanks!
+> 
+> As this is only a single patch, I think a pull request is a bit
+> overkill, so it would probably be best for someone to pick this
+> directly.
+> 
+> s390 arch maintainers? Michael?
 
-Sounds good to me.
-
+Applied, thanks!
