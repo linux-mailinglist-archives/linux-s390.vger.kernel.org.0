@@ -2,33 +2,33 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 200AA1F0446
-	for <lists+linux-s390@lfdr.de>; Sat,  6 Jun 2020 04:51:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87C871F04EF
+	for <lists+linux-s390@lfdr.de>; Sat,  6 Jun 2020 06:32:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgFFCvk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 5 Jun 2020 22:51:40 -0400
-Received: from mga18.intel.com ([134.134.136.126]:55214 "EHLO mga18.intel.com"
+        id S1726157AbgFFEci (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 6 Jun 2020 00:32:38 -0400
+Received: from mga02.intel.com ([134.134.136.20]:53266 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728555AbgFFCvk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 5 Jun 2020 22:51:40 -0400
-IronPort-SDR: I+q/baBpY3lCopwTvohIFJZbI++Yyqx597+LvcyKZ1l3p+Xpevkk3aB73k5vpcVVZtoSDmx+zE
- qTprmBKTdT1w==
+        id S1726153AbgFFEci (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 6 Jun 2020 00:32:38 -0400
+IronPort-SDR: ER3ECbdfnUv4RFTEg23FnUgndZ9Ww2hA20HqafIcihZjbe8DmbXCci8NV7SvdvMmCGc4R/FdY9
+ RFFNFYKM3WMQ==
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 19:51:29 -0700
-IronPort-SDR: v1XOwHCbEKWworwbN/YKp/6lNFgNkpReG03XKfsdokN0eOgn664uNQkilXTcAkceyoMyULdhZ9
- JUMMPfhDANUw==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 21:31:59 -0700
+IronPort-SDR: KvBOEM6VTacyBV0Kz02hGOGjh7n2++q+kyEvwMqAfcLwtoBXGyOO0SDVQ0GW6YYLi1TBWCn6B/
+ v953zzZkd2Tg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,478,1583222400"; 
-   d="gz'50?scan'50,208,50";a="417471793"
+X-IronPort-AV: E=Sophos;i="5.73,479,1583222400"; 
+   d="gz'50?scan'50,208,50";a="378929338"
 Received: from lkp-server02.sh.intel.com (HELO 85fa322b0eb2) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 05 Jun 2020 19:51:24 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 05 Jun 2020 21:31:56 -0700
 Received: from kbuild by 85fa322b0eb2 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jhOvc-0000Tm-9c; Sat, 06 Jun 2020 02:51:24 +0000
-Date:   Sat, 6 Jun 2020 10:51:15 +0800
+        id 1jhQUt-0000Uk-Bb; Sat, 06 Jun 2020 04:31:55 +0000
+Date:   Sat, 6 Jun 2020 12:31:29 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org
@@ -36,14 +36,14 @@ Cc:     kbuild-all@lists.01.org, freude@linux.ibm.com,
         borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
         pasic@linux.ibm.com, alex.williamson@redhat.com,
         kwankhede@nvidia.com
-Subject: Re: [PATCH v8 09/16] s390/vfio_ap: add qlink from ap_matrix_mdev
- struct to vfio_ap_queue struct
-Message-ID: <202006061029.y89xYyx5%lkp@intel.com>
-References: <20200605214004.14270-10-akrowiak@linux.ibm.com>
+Subject: Re: [PATCH v8 14/16] s390/vfio-ap: handle host AP config change
+ notification
+Message-ID: <202006061250.WG33vFHq%lkp@intel.com>
+References: <20200605214004.14270-15-akrowiak@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="huq684BweRXVnRxX"
+Content-Type: multipart/mixed; boundary="0F1p//8PRICkK4MW"
 Content-Disposition: inline
-In-Reply-To: <20200605214004.14270-10-akrowiak@linux.ibm.com>
+In-Reply-To: <20200605214004.14270-15-akrowiak@linux.ibm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
@@ -51,7 +51,7 @@ List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
---huq684BweRXVnRxX
+--0F1p//8PRICkK4MW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -81,43 +81,102 @@ Reported-by: kernel test robot <lkp@intel.com>
 
 All warnings (new ones prefixed by >>, old ones prefixed by <<):
 
->> drivers/s390/crypto/vfio_ap_ops.c:53:23: warning: no previous prototype for 'vfio_ap_get_mdev_queue' [-Wmissing-prototypes]
-53 | struct vfio_ap_queue *vfio_ap_get_mdev_queue(struct ap_matrix_mdev *matrix_mdev,
+drivers/s390/crypto/vfio_ap_ops.c:52:23: warning: no previous prototype for 'vfio_ap_get_mdev_queue' [-Wmissing-prototypes]
+52 | struct vfio_ap_queue *vfio_ap_get_mdev_queue(struct ap_matrix_mdev *matrix_mdev,
 |                       ^~~~~~~~~~~~~~~~~~~~~~
-drivers/s390/crypto/vfio_ap_ops.c:143:24: warning: no previous prototype for 'vfio_ap_irq_disable' [-Wmissing-prototypes]
-143 | struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+drivers/s390/crypto/vfio_ap_ops.c:142:24: warning: no previous prototype for 'vfio_ap_irq_disable' [-Wmissing-prototypes]
+142 | struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
 |                        ^~~~~~~~~~~~~~~~~~~
-drivers/s390/crypto/vfio_ap_ops.c:1453:5: warning: no previous prototype for 'vfio_ap_mdev_reset_queue' [-Wmissing-prototypes]
-1453 | int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+drivers/s390/crypto/vfio_ap_ops.c:1484:5: warning: no previous prototype for 'vfio_ap_mdev_reset_queue' [-Wmissing-prototypes]
+1484 | int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
 |     ^~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/s390/crypto/vfio_ap_ops.c:1746:6: warning: no previous prototype for 'vfio_ap_mdev_unassign_apids' [-Wmissing-prototypes]
+1746 | bool vfio_ap_mdev_unassign_apids(struct ap_matrix_mdev *matrix_mdev,
+|      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/s390/crypto/vfio_ap_ops.c:1779:6: warning: no previous prototype for 'vfio_ap_mdev_unassign_apqis' [-Wmissing-prototypes]
+1779 | bool vfio_ap_mdev_unassign_apqis(struct ap_matrix_mdev *matrix_mdev,
+|      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-vim +/vfio_ap_get_mdev_queue +53 drivers/s390/crypto/vfio_ap_ops.c
+vim +/vfio_ap_mdev_unassign_apids +1746 drivers/s390/crypto/vfio_ap_ops.c
 
-    52	
-  > 53	struct vfio_ap_queue *vfio_ap_get_mdev_queue(struct ap_matrix_mdev *matrix_mdev,
-    54						     unsigned long apqn)
-    55	{
-    56		struct vfio_ap_queue *q;
-    57	
-    58		hash_for_each_possible(matrix_mdev->qtable, q, mdev_qnode, apqn) {
-    59			if (q && (q->apqn == apqn))
-    60				return q;
-    61		}
-    62	
-    63		return NULL;
-    64	}
-    65	
+  1733	
+  1734	/**
+  1735	 * vfio_ap_mdev_unassign_apids
+  1736	 *
+  1737	 * @matrix_mdev: The matrix mediated device
+  1738	 *
+  1739	 * @aqm: A bitmap with 256 bits. Each bit in the map represents an APID from 0
+  1740	 *	 to 255 (with the leftmost bit corresponding to APID 0).
+  1741	 *
+  1742	 * Unassigns each APID specified in @aqm that is assigned to the shadow CRYCB
+  1743	 * of @matrix_mdev. Returns true if at least one APID is unassigned; otherwise,
+  1744	 * returns false.
+  1745	 */
+> 1746	bool vfio_ap_mdev_unassign_apids(struct ap_matrix_mdev *matrix_mdev,
+  1747					 unsigned long *apm_unassign)
+  1748	{
+  1749		unsigned long apid;
+  1750		bool unassigned = false;
+  1751	
+  1752		/*
+  1753		 * If the matrix mdev is not in use by a KVM guest, return indicating
+  1754		 * that no APIDs have been unassigned.
+  1755		 */
+  1756		if (!vfio_ap_mdev_has_crycb(matrix_mdev))
+  1757			return false;
+  1758	
+  1759		for_each_set_bit_inv(apid, apm_unassign, AP_DEVICES) {
+  1760			unassigned |= vfio_ap_mdev_unassign_guest_apid(matrix_mdev,
+  1761								       apid);
+  1762		}
+  1763	
+  1764		return unassigned;
+  1765	}
+  1766	
+  1767	/**
+  1768	 * vfio_ap_mdev_unassign_apqis
+  1769	 *
+  1770	 * @matrix_mdev: The matrix mediated device
+  1771	 *
+  1772	 * @aqm: A bitmap with 256 bits. Each bit in the map represents an APQI from 0
+  1773	 *	 to 255 (with the leftmost bit corresponding to APQI 0).
+  1774	 *
+  1775	 * Unassigns each APQI specified in @aqm that is assigned to the shadow CRYCB
+  1776	 * of @matrix_mdev. Returns true if at least one APQI is unassigned; otherwise,
+  1777	 * returns false.
+  1778	 */
+> 1779	bool vfio_ap_mdev_unassign_apqis(struct ap_matrix_mdev *matrix_mdev,
+  1780					 unsigned long *aqm_unassign)
+  1781	{
+  1782		unsigned long apqi;
+  1783		bool unassigned = false;
+  1784	
+  1785		/*
+  1786		 * If the matrix mdev is not in use by a KVM guest, return indicating
+  1787		 * that no APQIs have been unassigned.
+  1788		 */
+  1789		if (!vfio_ap_mdev_has_crycb(matrix_mdev))
+  1790			return false;
+  1791	
+  1792		for_each_set_bit_inv(apqi, aqm_unassign, AP_DOMAINS) {
+  1793			unassigned |= vfio_ap_mdev_unassign_guest_apqi(matrix_mdev,
+  1794								       apqi);
+  1795		}
+  1796	
+  1797		return unassigned;
+  1798	}
+  1799	
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
 https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
---huq684BweRXVnRxX
+--0F1p//8PRICkK4MW
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICOL32l4AAy5jb25maWcAlDzLcty2svt8xZSzOWeRRC8r9j2lBUiCM8iQBE2AMxptWLI8
+H4sICNkN214AAy5jb25maWcAlDzLcty2svt8xZSzOWeRRC8r9j2lBUiCM8iQBE2AMxptWLI8
 dlSRJZc0ujfO199u8NV4kOPjSsVmdwNsNBr9BOfnn35esNfD09fbw/3d7cPD98WX/eP++faw
 /7T4fP+w/88ikYtC6gVPhP4ViLP7x9e/f3s5f3+yePvr77+e/PJ8d7ZY758f9w+L+Onx8/2X
 Vxh9//T4088/wX8/A/DrN5jo+X8WOOiXBxz/y5e7u8W/lnH878X7X89/PQHCWBapWDZx3AjV
@@ -1216,4 +1275,4 @@ PL4x/tgeeAPnS4mg9eI6Mwffl/QzxsoPWn6veAx9rHOsIjpTRs+xv9XlxNpXUoLoXqMHDI9A
 4+rNmIvyyp0nWeA0HXo6AP1ZO+Bp5dJlmJuLQ56ZvHzuvo0nPpFbZvgM4spXgCIPeA4u144v
 CG4zag5vTHw2dAmQ+UZSowz/P35kkLBqyAMA
 
---huq684BweRXVnRxX--
+--0F1p//8PRICkK4MW--
