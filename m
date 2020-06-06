@@ -2,33 +2,33 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0DCE1F0428
-	for <lists+linux-s390@lfdr.de>; Sat,  6 Jun 2020 03:35:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 200AA1F0446
+	for <lists+linux-s390@lfdr.de>; Sat,  6 Jun 2020 04:51:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgFFBfb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 5 Jun 2020 21:35:31 -0400
-Received: from mga02.intel.com ([134.134.136.20]:2564 "EHLO mga02.intel.com"
+        id S1728559AbgFFCvk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 5 Jun 2020 22:51:40 -0400
+Received: from mga18.intel.com ([134.134.136.126]:55214 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgFFBfa (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 5 Jun 2020 21:35:30 -0400
-IronPort-SDR: DztzSGYVyFzNPGC95zDjXMySz++lLPeT4qGLg33VfkrWQHhEYr5p1FkP6attNsMa8g+uIiq6D7
- Mxu/TNSi4qgw==
+        id S1728555AbgFFCvk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 5 Jun 2020 22:51:40 -0400
+IronPort-SDR: I+q/baBpY3lCopwTvohIFJZbI++Yyqx597+LvcyKZ1l3p+Xpevkk3aB73k5vpcVVZtoSDmx+zE
+ qTprmBKTdT1w==
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 18:30:12 -0700
-IronPort-SDR: /C7oTsXb5+EdiQGgO7zT6IVacb5jMLjGKdtdcGKuMLj78fAusrkL4LE1PlUmvVSrmqP9iinAek
- 6Ll8jGXMLhjQ==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2020 19:51:29 -0700
+IronPort-SDR: v1XOwHCbEKWworwbN/YKp/6lNFgNkpReG03XKfsdokN0eOgn664uNQkilXTcAkceyoMyULdhZ9
+ JUMMPfhDANUw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,478,1583222400"; 
-   d="gz'50?scan'50,208,50";a="258182459"
+   d="gz'50?scan'50,208,50";a="417471793"
 Received: from lkp-server02.sh.intel.com (HELO 85fa322b0eb2) ([10.239.97.151])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Jun 2020 18:30:07 -0700
+  by orsmga004.jf.intel.com with ESMTP; 05 Jun 2020 19:51:24 -0700
 Received: from kbuild by 85fa322b0eb2 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1jhNex-0000Su-51; Sat, 06 Jun 2020 01:30:07 +0000
-Date:   Sat, 6 Jun 2020 09:29:36 +0800
+        id 1jhOvc-0000Tm-9c; Sat, 06 Jun 2020 02:51:24 +0000
+Date:   Sat, 6 Jun 2020 10:51:15 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org
@@ -36,14 +36,14 @@ Cc:     kbuild-all@lists.01.org, freude@linux.ibm.com,
         borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
         pasic@linux.ibm.com, alex.williamson@redhat.com,
         kwankhede@nvidia.com
-Subject: Re: [PATCH v8 04/16] s390/zcrypt: driver callback to indicate
- resource in use
-Message-ID: <202006060958.6lBQa8wE%lkp@intel.com>
-References: <20200605214004.14270-5-akrowiak@linux.ibm.com>
+Subject: Re: [PATCH v8 09/16] s390/vfio_ap: add qlink from ap_matrix_mdev
+ struct to vfio_ap_queue struct
+Message-ID: <202006061029.y89xYyx5%lkp@intel.com>
+References: <20200605214004.14270-10-akrowiak@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="uAKRQypu60I7Lcqm"
+Content-Type: multipart/mixed; boundary="huq684BweRXVnRxX"
 Content-Disposition: inline
-In-Reply-To: <20200605214004.14270-5-akrowiak@linux.ibm.com>
+In-Reply-To: <20200605214004.14270-10-akrowiak@linux.ibm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
@@ -51,7 +51,7 @@ List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
---uAKRQypu60I7Lcqm
+--huq684BweRXVnRxX
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -81,148 +81,43 @@ Reported-by: kernel test robot <lkp@intel.com>
 
 All warnings (new ones prefixed by >>, old ones prefixed by <<):
 
-drivers/s390/crypto/ap_bus.c: In function '__ap_revise_reserved':
-drivers/s390/crypto/ap_bus.c:594:6: warning: variable 'rc' set but not used [-Wunused-but-set-variable]
-594 |  int rc, card, queue, devres, drvres;
-|      ^~
-drivers/s390/crypto/ap_bus.c: At top level:
->> drivers/s390/crypto/ap_bus.c:1106:5: warning: no previous prototype for '__verify_card_reservations' [-Wmissing-prototypes]
-1106 | int __verify_card_reservations(struct device_driver *drv, void *data)
-|     ^~~~~~~~~~~~~~~~~~~~~~~~~~
->> drivers/s390/crypto/ap_bus.c:1195:5: warning: no previous prototype for '__verify_queue_reservations' [-Wmissing-prototypes]
-1195 | int __verify_queue_reservations(struct device_driver *drv, void *data)
-|     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/s390/crypto/vfio_ap_ops.c:53:23: warning: no previous prototype for 'vfio_ap_get_mdev_queue' [-Wmissing-prototypes]
+53 | struct vfio_ap_queue *vfio_ap_get_mdev_queue(struct ap_matrix_mdev *matrix_mdev,
+|                       ^~~~~~~~~~~~~~~~~~~~~~
+drivers/s390/crypto/vfio_ap_ops.c:143:24: warning: no previous prototype for 'vfio_ap_irq_disable' [-Wmissing-prototypes]
+143 | struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+|                        ^~~~~~~~~~~~~~~~~~~
+drivers/s390/crypto/vfio_ap_ops.c:1453:5: warning: no previous prototype for 'vfio_ap_mdev_reset_queue' [-Wmissing-prototypes]
+1453 | int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+|     ^~~~~~~~~~~~~~~~~~~~~~~~
 
-vim +/__verify_card_reservations +1106 drivers/s390/crypto/ap_bus.c
+vim +/vfio_ap_get_mdev_queue +53 drivers/s390/crypto/vfio_ap_ops.c
 
-  1105	
-> 1106	int __verify_card_reservations(struct device_driver *drv, void *data)
-  1107	{
-  1108		int rc = 0;
-  1109		struct ap_driver *ap_drv = to_ap_drv(drv);
-  1110		unsigned long *newapm = (unsigned long *)data;
-  1111	
-  1112		/*
-  1113		 * No need to verify whether the driver is using the queues if it is the
-  1114		 * default driver.
-  1115		 */
-  1116		if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
-  1117			return 0;
-  1118	
-  1119		/* The non-default driver's module must be loaded */
-  1120		if (!try_module_get(drv->owner))
-  1121			return 0;
-  1122	
-  1123		if (ap_drv->in_use)
-  1124			if (ap_drv->in_use(newapm, ap_perms.aqm))
-  1125				rc = -EADDRINUSE;
-  1126	
-  1127		module_put(drv->owner);
-  1128	
-  1129		return rc;
-  1130	}
-  1131	
-  1132	static int apmask_commit(unsigned long *newapm)
-  1133	{
-  1134		int rc;
-  1135		unsigned long reserved[BITS_TO_LONGS(AP_DEVICES)];
-  1136	
-  1137		/*
-  1138		 * Check if any bits in the apmask have been set which will
-  1139		 * result in queues being removed from non-default drivers
-  1140		 */
-  1141		if (bitmap_andnot(reserved, newapm, ap_perms.apm, AP_DEVICES)) {
-  1142			rc = bus_for_each_drv(&ap_bus_type, NULL, reserved,
-  1143					      __verify_card_reservations);
-  1144			if (rc)
-  1145				return rc;
-  1146		}
-  1147	
-  1148		memcpy(ap_perms.apm, newapm, APMASKSIZE);
-  1149	
-  1150		return 0;
-  1151	}
-  1152	
-  1153	static ssize_t apmask_store(struct bus_type *bus, const char *buf,
-  1154				    size_t count)
-  1155	{
-  1156		int rc;
-  1157		DECLARE_BITMAP(newapm, AP_DEVICES);
-  1158	
-  1159		if (mutex_lock_interruptible(&ap_perms_mutex))
-  1160			return -ERESTARTSYS;
-  1161	
-  1162		rc = ap_parse_bitmap_str(buf, ap_perms.apm, AP_DEVICES, newapm);
-  1163		if (rc)
-  1164			goto done;
-  1165	
-  1166		rc = apmask_commit(newapm);
-  1167	
-  1168	done:
-  1169		mutex_unlock(&ap_perms_mutex);
-  1170		if (rc)
-  1171			return rc;
-  1172	
-  1173		ap_bus_revise_bindings();
-  1174	
-  1175		return count;
-  1176	}
-  1177	
-  1178	static BUS_ATTR_RW(apmask);
-  1179	
-  1180	static ssize_t aqmask_show(struct bus_type *bus, char *buf)
-  1181	{
-  1182		int rc;
-  1183	
-  1184		if (mutex_lock_interruptible(&ap_perms_mutex))
-  1185			return -ERESTARTSYS;
-  1186		rc = scnprintf(buf, PAGE_SIZE,
-  1187			       "0x%016lx%016lx%016lx%016lx\n",
-  1188			       ap_perms.aqm[0], ap_perms.aqm[1],
-  1189			       ap_perms.aqm[2], ap_perms.aqm[3]);
-  1190		mutex_unlock(&ap_perms_mutex);
-  1191	
-  1192		return rc;
-  1193	}
-  1194	
-> 1195	int __verify_queue_reservations(struct device_driver *drv, void *data)
-  1196	{
-  1197		int rc = 0;
-  1198		struct ap_driver *ap_drv = to_ap_drv(drv);
-  1199		unsigned long *newaqm = (unsigned long *)data;
-  1200	
-  1201		/*
-  1202		 * If the reserved bits do not identify queues reserved for use by the
-  1203		 * non-default driver, there is no need to verify the driver is using
-  1204		 * the queues.
-  1205		 */
-  1206		if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
-  1207			return 0;
-  1208	
-  1209		/* The non-default driver's module must be loaded */
-  1210		if (!try_module_get(drv->owner))
-  1211			return 0;
-  1212	
-  1213		if (ap_drv->in_use)
-  1214			if (ap_drv->in_use(ap_perms.apm, newaqm))
-  1215				rc = -EADDRINUSE;
-  1216	
-  1217		module_put(drv->owner);
-  1218	
-  1219		return rc;
-  1220	}
-  1221	
+    52	
+  > 53	struct vfio_ap_queue *vfio_ap_get_mdev_queue(struct ap_matrix_mdev *matrix_mdev,
+    54						     unsigned long apqn)
+    55	{
+    56		struct vfio_ap_queue *q;
+    57	
+    58		hash_for_each_possible(matrix_mdev->qtable, q, mdev_qnode, apqn) {
+    59			if (q && (q->apqn == apqn))
+    60				return q;
+    61		}
+    62	
+    63		return NULL;
+    64	}
+    65	
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
 https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
---uAKRQypu60I7Lcqm
+--huq684BweRXVnRxX
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICB3j2l4AAy5jb25maWcAlDzLcty2svt8xZSzOWeRRC8r9j2lBUiCM8iQBE2AMxptWLI8
+H4sICOL32l4AAy5jb25maWcAlDzLcty2svt8xZSzOWeRRC8r9j2lBUiCM8iQBE2AMxptWLI8
 dlSRJZc0ujfO199u8NV4kOPjSsVmdwNsNBr9BOfnn35esNfD09fbw/3d7cPD98WX/eP++faw
 /7T4fP+w/88ikYtC6gVPhP4ViLP7x9e/f3s5f3+yePvr77+e/PJ8d7ZY758f9w+L+Onx8/2X
 Vxh9//T4088/wX8/A/DrN5jo+X8WOOiXBxz/y5e7u8W/lnH878X7X89/PQHCWBapWDZx3AjV
@@ -1321,4 +1216,4 @@ PL4x/tgeeAPnS4mg9eI6Mwffl/QzxsoPWn6veAx9rHOsIjpTRs+xv9XlxNpXUoLoXqMHDI9A
 4+rNmIvyyp0nWeA0HXo6AP1ZO+Bp5dJlmJuLQ56ZvHzuvo0nPpFbZvgM4spXgCIPeA4u144v
 CG4zag5vTHw2dAmQ+UZSowz/P35kkLBqyAMA
 
---uAKRQypu60I7Lcqm--
+--huq684BweRXVnRxX--
