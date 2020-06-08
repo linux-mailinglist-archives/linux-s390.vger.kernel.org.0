@@ -2,137 +2,156 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1874F1F1989
-	for <lists+linux-s390@lfdr.de>; Mon,  8 Jun 2020 15:00:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E73F61F1AF1
+	for <lists+linux-s390@lfdr.de>; Mon,  8 Jun 2020 16:25:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgFHNAK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 8 Jun 2020 09:00:10 -0400
-Received: from mga07.intel.com ([134.134.136.100]:24601 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbgFHNAK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 8 Jun 2020 09:00:10 -0400
-IronPort-SDR: L9yHiPSY6L9003JD8yJ4tCbt4+dStbQHDGniGEIJvvuNSXqRBjVBXc6PZHD4NyM5f+9y93iRNg
- HQYVDNftdOCA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2020 06:00:08 -0700
-IronPort-SDR: PE7HufXDg7f9+jqjyOSDQxo3+G5SfFBHCYIwahilTfZJSDu5i1xv5XRhvFNk0pOmcejo6UVxmT
- YgYUB1xC1Ltw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,487,1583222400"; 
-   d="scan'208";a="274212404"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006.jf.intel.com with ESMTP; 08 Jun 2020 06:00:04 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jiHNm-00BgOT-Bj; Mon, 08 Jun 2020 16:00:06 +0300
-Date:   Mon, 8 Jun 2020 16:00:06 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390@vger.kernel.org, Stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Amritha Nambiar <amritha.nambiar@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Vineet Gupta <vineet.gupta1@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Willem de Bruijn <willemb@google.com>
-Subject: Re: [PATCH RESEND2] lib: fix bitmap_parse() on 64-bit big endian
- archs
-Message-ID: <20200608130006.GN2428291@smile.fi.intel.com>
-References: <1591611829-23071-1-git-send-email-agordeev@linux.ibm.com>
- <CAHp75VcFdrvNMj0TL8ZHxShqqGDM31Hy8vitmn9HOPjZ6f9uYw@mail.gmail.com>
- <20200608124433.GA28369@oc3871087118.ibm.com>
+        id S1729553AbgFHOZD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 8 Jun 2020 10:25:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46108 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728472AbgFHOZD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 8 Jun 2020 10:25:03 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058EM386190809;
+        Mon, 8 Jun 2020 10:25:02 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7a18arv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 10:25:02 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058EMRYg192687;
+        Mon, 8 Jun 2020 10:25:02 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31g7a18ant-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 10:25:00 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058EH49F024375;
+        Mon, 8 Jun 2020 14:24:58 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma05fra.de.ibm.com with ESMTP id 31g2s7sp38-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Jun 2020 14:24:57 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058EOtwb53215314
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jun 2020 14:24:55 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9CC4142054;
+        Mon,  8 Jun 2020 14:24:55 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4B7054205F;
+        Mon,  8 Jun 2020 14:24:55 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.43.245])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  8 Jun 2020 14:24:55 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v8 03/12] s390x: saving regs for interrupts
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com
+References: <1591603981-16879-1-git-send-email-pmorel@linux.ibm.com>
+ <1591603981-16879-4-git-send-email-pmorel@linux.ibm.com>
+ <d4f1167c-5e44-f69c-8aac-f792a2a50ca7@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <cde77b21-7fbb-bd09-bd3d-f77c5bd2a088@linux.ibm.com>
+Date:   Mon, 8 Jun 2020 16:24:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200608124433.GA28369@oc3871087118.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <d4f1167c-5e44-f69c-8aac-f792a2a50ca7@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-08_13:2020-06-08,2020-06-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ adultscore=0 phishscore=0 mlxlogscore=999 spamscore=0 cotscore=-2147483648
+ clxscore=1015 priorityscore=1501 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006080104
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jun 08, 2020 at 02:44:34PM +0200, Alexander Gordeev wrote:
-> On Mon, Jun 08, 2020 at 03:03:05PM +0300, Andy Shevchenko wrote:
-> > On Mon, Jun 8, 2020 at 1:26 PM Alexander Gordeev <agordeev@linux.ibm.com> wrote:
-> > >
-> > > Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not
-> > > take into account order of halfwords on 64-bit big endian
-> > > architectures. As result (at least) Receive Packet Steering,
-> > > IRQ affinity masks and runtime kernel test "test_bitmap" get
-> > > broken on s390.
-> > 
-> > ...
-> > 
-> > > +#if defined(__BIG_ENDIAN) && defined(CONFIG_64BIT)
-> > 
-> > I think it's better to re-use existing patterns.
-> > 
-> > ipc/sem.c:1682:#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
-> > 
-> > > +static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
-> > > +{
-> > > +       maskp += (chunk_idx / 2);
-> > > +       ((u32 *)maskp)[(chunk_idx & 1) ^ 1] = chunk;
-> > > +}
-> > > +#else
-> > > +static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
-> > > +{
-> > > +       ((u32 *)maskp)[chunk_idx] = chunk;
-> > > +}
-> > > +#endif
-> > 
-> > See below.
-> > 
-> > ...
-> > 
-> > > -               end = bitmap_get_x32_reverse(start, end, bitmap++);
-> > > +               end = bitmap_get_x32_reverse(start, end, &chunk);
-> > >                 if (IS_ERR(end))
-> > >                         return PTR_ERR(end);
-> > > +
-> > > +               save_x32_chunk(maskp, chunk, chunk_idx++);
-> > 
-> > Can't we simple do
-> > 
-> >         int chunk_index = 0;
-> >         ...
-> >         do {
-> > #if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
-> >                end = bitmap_get_x32_reverse(start, end,
-> > bitmap[chunk_index ^ 1]);
-> > #else
-> >                end = bitmap_get_x32_reverse(start, end, bitmap[chunk_index]);
-> > #endif
-> >         ...
-> >         } while (++chunk_index);
-> > 
-> > ?
-> 
-> Well, unless we ignore coding style 21) Conditional Compilation
-> we could. Do you still insist it would be better?
 
-I think it's okay to do here
- - it's not a big function
- - it has no stub versions (you always do something)
- - the result pretty much readable (5 lines any editor can keep on screen)
- - and it's not ignoring, see "Wherever possible...", compare readability of
-   two versions, for yours reader needs to go somewhere to read, calculate and
-   return, when everything already being forgotten
- - last but not least, I bet it makes code shorter (at least in C)
+
+On 2020-06-08 11:05, Thomas Huth wrote:
+> On 08/06/2020 10.12, Pierre Morel wrote:
+>> If we use multiple source of interrupts, for example, using SCLP
+>> console to print information while using I/O interrupts, we need
+>> to have a re-entrant register saving interruption handling.
+>>
+>> Instead of saving at a static memory address, let's save the base
+>> registers, the floating point registers and the floating point
+>> control register on the stack in case of I/O interrupts
+>>
+>> Note that we keep the static register saving to recover from the
+>> RESET tests.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> Acked-by: Janosch Frank <frankja@linux.ibm.com>
+>> ---
+>>   s390x/cstart64.S | 41 +++++++++++++++++++++++++++++++++++++++--
+>>   1 file changed, 39 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
+>> index b50c42c..a9d8223 100644
+>> --- a/s390x/cstart64.S
+>> +++ b/s390x/cstart64.S
+>> @@ -119,6 +119,43 @@ memsetxc:
+>>   	lmg	%r0, %r15, GEN_LC_SW_INT_GRS
+>>   	.endm
+>>   
+>> +/* Save registers on the stack (r15), so we can have stacked interrupts. */
+>> +	.macro SAVE_REGS_STACK
+>> +	/* Allocate a stack frame for 15 general registers */
+>> +	slgfi   %r15, 15 * 8
+>> +	/* Store registers r0 to r14 on the stack */
+>> +	stmg    %r0, %r14, 0(%r15)
+>> +	/* Allocate a stack frame for 16 floating point registers */
+>> +	/* The size of a FP register is the size of an double word */
+>> +	slgfi   %r15, 16 * 8
+>> +	/* Save fp register on stack: offset to SP is multiple of reg number */
+>> +	.irp i, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+>> +	std	\i, \i * 8(%r15)
+>> +	.endr
+>> +	/* Save fpc, but keep stack aligned on 64bits */
+>> +	slgfi   %r15, 8
+>> +	efpc	%r0
+>> +	stg	%r0, 0(%r15)
+>> +	.endm
+> 
+> I wonder whether it would be sufficient to only save the registers here
+> that are "volatile" according to the ELF ABI? ... that would save quite
+> some space on the stack, I think... OTOH, the old code was also saving
+> all registers, so maybe that's something for a separate patch later...
+
+I don't think so for the general registers
+The "volatile" registers are lost during a C call, so it is the duty of 
+the caller to save them before the call, if he wants, and this is 
+possible for the programmer or the compiler to arrange that.
+
+For interruptions, we steal the CPU with all the registers from the 
+program without warning, the program has no possibility to save them.
+So we must save all registers for him.
+
+For the FP registers, we surely can do something if we establish a usage 
+convention on the floating point.
+A few tests need hardware floating point.
+
+If IRQ speed or stack size becomes an issue we can think about 
+optimizing the floating point usage.
+
+> 
+> Acked-by: Thomas Huth <thuth@redhat.com>
+> 
+
+Thanks,
+
+Pierre
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Pierre Morel
+IBM Lab Boeblingen
