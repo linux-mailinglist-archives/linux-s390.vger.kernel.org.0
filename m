@@ -2,38 +2,37 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4859E1F23C1
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2020 01:17:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E495D1F2CC7
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2020 02:30:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbgFHXQN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 8 Jun 2020 19:16:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37450 "EHLO mail.kernel.org"
+        id S1730122AbgFHXPz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 8 Jun 2020 19:15:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730187AbgFHXQK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:16:10 -0400
+        id S1729259AbgFHXPx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:15:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE0FC2078C;
-        Mon,  8 Jun 2020 23:16:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 844A120760;
+        Mon,  8 Jun 2020 23:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658170;
-        bh=Sp34QcXNnxLdREDvyYQ8VkxY0hFWQfze28x7WgtpEng=;
+        s=default; t=1591658153;
+        bh=LfOx7hZICOMMpNKBAODLweZ8DDtcz6noxEHhmIyjwqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zQb/Vxt9S8uG+OXBaQhP1uMQEfso667h4nxPrawSUI2s+yEOgyvbEzelmVdQEUPJZ
-         0vZ6JrnS+3/31zVO4YFwuoVZZiqd2agkIlESUzjaEPeGODji9wsjXG5F7n2WiI7Afb
-         TWxmGMt4y9SRwApvo5N5VqB6nVyfPaE6K3ightUQ=
+        b=LsZc8GiZ2mi2B9afjLLJEM4MNiHjNP5qTEsj+uDvsQj7ZDafy7dbrtPPgKTN3XCDL
+         m2vHTlid0/tIju00z87CW4D4eHKXZ71XMWLSfIqfXmZoUiQXlGgXNYX1pr3c0GOpq/
+         ivw1f+cZ3m3gtz0NUM7sMSYZ1udYYqrtUF4v1OIs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Rudo <prudo@linux.ibm.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 197/606] s390/kexec_file: fix initrd location for kdump kernel
-Date:   Mon,  8 Jun 2020 19:05:22 -0400
-Message-Id: <20200608231211.3363633-197-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 185/606] s390/kaslr: add support for R_390_JMP_SLOT relocation type
+Date:   Mon,  8 Jun 2020 19:05:10 -0400
+Message-Id: <20200608231211.3363633-185-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -46,39 +45,43 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Philipp Rudo <prudo@linux.ibm.com>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-commit 70b690547d5ea1a3d135a4cc39cd1e08246d0c3a upstream.
+commit 4c1cbcbd6c56c79de2c07159be4f55386bb0bef2 upstream.
 
-initrd_start must not point at the location the initrd is loaded into
-the crashkernel memory but at the location it will be after the
-crashkernel memory is swapped with the memory at 0.
+With certain kernel configurations, the R_390_JMP_SLOT relocation type
+might be generated, which is not expected by the KASLR relocation code,
+and the kernel stops with the message "Unknown relocation type".
 
-Fixes: ee337f5469fd ("s390/kexec_file: Add crash support to image loader")
-Reported-by: Lianbo Jiang <lijiang@redhat.com>
-Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
-Tested-by: Lianbo Jiang <lijiang@redhat.com>
-Link: https://lore.kernel.org/r/20200512193956.15ae3f23@laptop2-ibm.local
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+This was found with a zfcpdump kernel config, where CONFIG_MODULES=n
+and CONFIG_VFIO=n. In that case, symbol_get() is used on undefined
+__weak symbols in virt/kvm/vfio.c, which results in the generation
+of R_390_JMP_SLOT relocation types.
+
+Fix this by handling R_390_JMP_SLOT similar to R_390_GLOB_DAT.
+
+Fixes: 805bc0bc238f ("s390/kernel: build a relocatable kernel")
+Cc: <stable@vger.kernel.org> # v5.2+
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/s390/kernel/machine_kexec_file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/kernel/machine_kexec_reloc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-index 8415ae7d2a23..f9e4baa64b67 100644
---- a/arch/s390/kernel/machine_kexec_file.c
-+++ b/arch/s390/kernel/machine_kexec_file.c
-@@ -151,7 +151,7 @@ static int kexec_file_add_initrd(struct kimage *image,
- 		buf.mem += crashk_res.start;
- 	buf.memsz = buf.bufsz;
- 
--	data->parm->initrd_start = buf.mem;
-+	data->parm->initrd_start = data->memsz;
- 	data->parm->initrd_size = buf.memsz;
- 	data->memsz += buf.memsz;
- 
+diff --git a/arch/s390/kernel/machine_kexec_reloc.c b/arch/s390/kernel/machine_kexec_reloc.c
+index d5035de9020e..b7182cec48dc 100644
+--- a/arch/s390/kernel/machine_kexec_reloc.c
++++ b/arch/s390/kernel/machine_kexec_reloc.c
+@@ -28,6 +28,7 @@ int arch_kexec_do_relocs(int r_type, void *loc, unsigned long val,
+ 		break;
+ 	case R_390_64:		/* Direct 64 bit.  */
+ 	case R_390_GLOB_DAT:
++	case R_390_JMP_SLOT:
+ 		*(u64 *)loc = val;
+ 		break;
+ 	case R_390_PC16:	/* PC relative 16 bit.	*/
 -- 
 2.25.1
 
