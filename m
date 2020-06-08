@@ -2,37 +2,37 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E495D1F2CC7
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2020 02:30:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21E4B1F2E9E
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2020 02:44:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730122AbgFHXPz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 8 Jun 2020 19:15:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
+        id S1728347AbgFIAnl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 8 Jun 2020 20:43:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729259AbgFHXPx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:15:53 -0400
+        id S1728543AbgFHXMO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 8 Jun 2020 19:12:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 844A120760;
-        Mon,  8 Jun 2020 23:15:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A92120C09;
+        Mon,  8 Jun 2020 23:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591658153;
-        bh=LfOx7hZICOMMpNKBAODLweZ8DDtcz6noxEHhmIyjwqI=;
+        s=default; t=1591657934;
+        bh=ETOa5S7IVS5g7JXF0N5kT4zBWbPEceRY2Mwz3JiwPEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LsZc8GiZ2mi2B9afjLLJEM4MNiHjNP5qTEsj+uDvsQj7ZDafy7dbrtPPgKTN3XCDL
-         m2vHTlid0/tIju00z87CW4D4eHKXZ71XMWLSfIqfXmZoUiQXlGgXNYX1pr3c0GOpq/
-         ivw1f+cZ3m3gtz0NUM7sMSYZ1udYYqrtUF4v1OIs=
+        b=JGsUpFbPNJNHpKTtOWz4y701r97m687ovRqRSoCpy6pklBQWWB+LHItAFTGrZFSDP
+         mU2wT4Jn9sDzfAmoMl00OOE6dm3gf8+Wpzt+HT3USD4W1SdKUa0A8ZJ/96c71gsYBp
+         fhdCoqvDh9GFC5VHtkvqdZ/5Alq3legT1dO1wYto=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 185/606] s390/kaslr: add support for R_390_JMP_SLOT relocation type
-Date:   Mon,  8 Jun 2020 19:05:10 -0400
-Message-Id: <20200608231211.3363633-185-sashal@kernel.org>
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 002/606] s390/ism: fix error return code in ism_probe()
+Date:   Mon,  8 Jun 2020 19:02:07 -0400
+Message-Id: <20200608231211.3363633-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200608231211.3363633-1-sashal@kernel.org>
 References: <20200608231211.3363633-1-sashal@kernel.org>
@@ -45,43 +45,39 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit 4c1cbcbd6c56c79de2c07159be4f55386bb0bef2 upstream.
+[ Upstream commit 29b74cb75e3572d83708745e81e24d37837415f9 ]
 
-With certain kernel configurations, the R_390_JMP_SLOT relocation type
-might be generated, which is not expected by the KASLR relocation code,
-and the kernel stops with the message "Unknown relocation type".
+Fix to return negative error code -ENOMEM from the smcd_alloc_dev()
+error handling case instead of 0, as done elsewhere in this function.
 
-This was found with a zfcpdump kernel config, where CONFIG_MODULES=n
-and CONFIG_VFIO=n. In that case, symbol_get() is used on undefined
-__weak symbols in virt/kvm/vfio.c, which results in the generation
-of R_390_JMP_SLOT relocation types.
-
-Fix this by handling R_390_JMP_SLOT similar to R_390_GLOB_DAT.
-
-Fixes: 805bc0bc238f ("s390/kernel: build a relocatable kernel")
-Cc: <stable@vger.kernel.org> # v5.2+
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 684b89bc39ce ("s390/ism: add device driver for internal shared memory")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/machine_kexec_reloc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/s390/net/ism_drv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/machine_kexec_reloc.c b/arch/s390/kernel/machine_kexec_reloc.c
-index d5035de9020e..b7182cec48dc 100644
---- a/arch/s390/kernel/machine_kexec_reloc.c
-+++ b/arch/s390/kernel/machine_kexec_reloc.c
-@@ -28,6 +28,7 @@ int arch_kexec_do_relocs(int r_type, void *loc, unsigned long val,
- 		break;
- 	case R_390_64:		/* Direct 64 bit.  */
- 	case R_390_GLOB_DAT:
-+	case R_390_JMP_SLOT:
- 		*(u64 *)loc = val;
- 		break;
- 	case R_390_PC16:	/* PC relative 16 bit.	*/
+diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
+index 4fc2056bd227..e615dc240150 100644
+--- a/drivers/s390/net/ism_drv.c
++++ b/drivers/s390/net/ism_drv.c
+@@ -521,8 +521,10 @@ static int ism_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
+ 	ism->smcd = smcd_alloc_dev(&pdev->dev, dev_name(&pdev->dev), &ism_ops,
+ 				   ISM_NR_DMBS);
+-	if (!ism->smcd)
++	if (!ism->smcd) {
++		ret = -ENOMEM;
+ 		goto err_resource;
++	}
+ 
+ 	ism->smcd->priv = ism;
+ 	ret = ism_dev_init(ism);
 -- 
 2.25.1
 
