@@ -2,55 +2,60 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87FBC1F16AE
-	for <lists+linux-s390@lfdr.de>; Mon,  8 Jun 2020 12:28:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E21F1F1862
+	for <lists+linux-s390@lfdr.de>; Mon,  8 Jun 2020 14:03:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgFHK20 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 8 Jun 2020 06:28:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57882 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729393AbgFHK2Z (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 8 Jun 2020 06:28:25 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 058ABstu178122;
-        Mon, 8 Jun 2020 06:28:10 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31g59r9m0u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 06:28:10 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 058AMoMC010283;
-        Mon, 8 Jun 2020 06:28:09 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31g59r9kyv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 06:28:09 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 058AQ566011235;
-        Mon, 8 Jun 2020 10:28:07 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma05fra.de.ibm.com with ESMTP id 31g2s7sgxw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Jun 2020 10:28:07 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 058AS5bq6685010
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 8 Jun 2020 10:28:05 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F0AF7AE056;
-        Mon,  8 Jun 2020 10:28:04 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 242A6AE053;
-        Mon,  8 Jun 2020 10:28:04 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.56.93])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  8 Jun 2020 10:28:04 +0000 (GMT)
-Date:   Mon, 8 Jun 2020 12:28:02 +0200
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+        id S1729615AbgFHMDT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 8 Jun 2020 08:03:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbgFHMDS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 8 Jun 2020 08:03:18 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36BBC08C5C2;
+        Mon,  8 Jun 2020 05:03:18 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so6573384plo.7;
+        Mon, 08 Jun 2020 05:03:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pM5X2YtapFWuSkDwXFYHOUc12hO3c2lItIisPiXHQGY=;
+        b=hlaI/X2BEdu5DgSxAm6kB07OPe7M25Gvh52cfold8MS6AFOumejiu9RPBd5jcVPDTg
+         2pt5Ihb8e+UJUm042qK+Wch8QmNHdF1RJQpe9lh6SVMe97OWd0QiduR/hXS+wWgyDOvP
+         AKOvCNve69T9GXxz2aMRXRIozw8kkWrtRSipFStp5SYG5lO4K0oT9qFXsl/2jkBVKaU7
+         OmOnFW/Pbaxgl/KZP1HzbQ4ArzR1YJLVihKRvjHD/SMJZNirBsrzJYMKCq13Eft5gsU/
+         HTZ0E2/sgsj1TJbmiE68ZnMteRg0odb/O0fYprG6bWydeoH5IM+LEJjIFnvjK/3SfP+3
+         y/AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pM5X2YtapFWuSkDwXFYHOUc12hO3c2lItIisPiXHQGY=;
+        b=e/zjVNw3g86UhG+Jcxg5DfpDWLT2+FKTh6a35H+vaQslaIHZ1bg3cvOcbNbMbE3/kK
+         cPx3mpHETVj6utjl8GTaI/XP4Svwig64bU87+CBeBu94/WWdLHgz8tyV7v2Mu+GLRKhK
+         0dMCsgfaM+F+fYTGw7y3a3mA5gSGX6HS+WUYs/W5KF58xbP92pw3tgVbmCZYFBCNmmAo
+         h5MRIiej2GTZgGvakby505guTnbwyqI18zCYEeB15ct25mA769dEa0jGyCVyUDSuvj2T
+         iFHY4Q2/cHR0vNeXYA5XBFjFxWVndDWUEZ4miqgAWnnNnGVaCo6C7zqdh8827Kk4hwHn
+         RBTw==
+X-Gm-Message-State: AOAM530bhfy9t+tjBMKBsMsX1Y5Fc7NUSI4w1ENI9ImbNRQg7j3UVD8F
+        Ec03pLHym7X7qxvoFGWf144SLl7+3rmC49ogYJQ=
+X-Google-Smtp-Source: ABdhPJzy6nnYdAQTRPWCex6+8jSc+Wso/vIgnHDy7gsVnQJzj+ADZ8ojZnrCRPnZO2B9QhUqv5R1pbDzd9PTeN79vlc=
+X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr17147126pjq.228.1591617797903;
+ Mon, 08 Jun 2020 05:03:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <1591611829-23071-1-git-send-email-agordeev@linux.ibm.com>
+In-Reply-To: <1591611829-23071-1-git-send-email-agordeev@linux.ibm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Jun 2020 15:03:05 +0300
+Message-ID: <CAHp75VcFdrvNMj0TL8ZHxShqqGDM31Hy8vitmn9HOPjZ6f9uYw@mail.gmail.com>
+Subject: Re: [PATCH RESEND2] lib: fix bitmap_parse() on 64-bit big endian archs
+To:     Alexander Gordeev <agordeev@linux.ibm.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-s390@vger.kernel.org, Stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Amritha Nambiar <amritha.nambiar@intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Chris Wilson <chris@chris-wilson.co.uk>,
@@ -63,72 +68,67 @@ Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Vineet Gupta <vineet.gupta1@synopsys.com>,
         Will Deacon <will.deacon@arm.com>,
         Willem de Bruijn <willemb@google.com>
-Subject: Re: [PATCH RESEND] lib: fix bitmap_parse() on 64-bit big endian archs
-Message-ID: <20200608102801.GA22989@oc3871087118.ibm.com>
-References: <1589798090-11136-1-git-send-email-agordeev@linux.ibm.com>
- <CAHp75VdM2yrpd2d3pK2RkmbhF3yiM4=fiTXL4i3yu3AxV3wY-A@mail.gmail.com>
- <20200518115059.GA19150@oc3871087118.ibm.com>
- <20200602102430.GA17703@oc3871087118.ibm.com>
- <20200605132558.GM2428291@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605132558.GM2428291@smile.fi.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-08_07:2020-06-08,2020-06-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- impostorscore=0 clxscore=1015 adultscore=0 spamscore=0 phishscore=0
- malwarescore=0 mlxlogscore=999 cotscore=-2147483648 bulkscore=0
- suspectscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006080073
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Jun 05, 2020 at 04:25:58PM +0300, Andy Shevchenko wrote:
-> Test case, please.
+On Mon, Jun 8, 2020 at 1:26 PM Alexander Gordeev <agordeev@linux.ibm.com> wrote:
+>
+> Commit 2d6261583be0 ("lib: rework bitmap_parse()") does not
+> take into account order of halfwords on 64-bit big endian
+> architectures. As result (at least) Receive Packet Steering,
+> IRQ affinity masks and runtime kernel test "test_bitmap" get
+> broken on s390.
 
-Hi Andy,
+...
 
-Below is the output of the runtime kernel test "test_bitmap".
-I resent the patch with Andrew Morton on CC, but did not include
-the excessive test output:
+> +#if defined(__BIG_ENDIAN) && defined(CONFIG_64BIT)
 
-test_bitmap: parse: 4: input is 1, result is 0x100000000, expected 0x1
-test_bitmap: parse: 5: input is deadbeef, result is 0xdeadbeef00000000, expected 0xdeadbeef
-test_bitmap: parse: 6: input is 1,0, result is 0x1, expected 0x100000000
-test_bitmap: parse: 7: input is deadbeef,,0,1, result is 0x1, expected 0xdeadbeef
-test_bitmap: parse: 8: input is deadbeef,1,0, result is 0x1, expected 0x100000000
-test_bitmap: parse: 9: input is baadf00d,deadbeef,1,0, result is 0x1, expected 0x100000000
-test_bitmap: parse: 10: input is badf00d,deadbeef,1,0, errno is -75, expected 0
-test_bitmap: parse: 11: input is badf00d,deadbeef,1,0, errno is -75, expected 0
-test_bitmap: parse: 12: input is   badf00d,deadbeef,1,0  , errno is -75, expected 0
-test_bitmap: parse: 13: input is  , badf00d,deadbeef,1,0 , , errno is -75, expected 0
-test_bitmap: parse: 14: input is  , badf00d, ,, ,,deadbeef,1,0 , , errno is -75, expected 0
-test_bitmap: parse: 16: input is 3,0, errno is 0, expected -75
-test_bitmap: parse_user: 4: input is 1, result is 0x100000000, expected 0x1
-test_bitmap: parse_user: 5: input is deadbeef, result is 0xdeadbeef00000000, expected 0xdeadbeef
-test_bitmap: parse_user: 6: input is 1,0, result is 0x1, expected 0x100000000
-test_bitmap: parse_user: 7: input is deadbeef,,0,1, result is 0x1, expected 0xdeadbeef
-test_bitmap: parse_user: 8: input is deadbeef,1,0, result is 0x1, expected 0x100000000
-test_bitmap: parse_user: 9: input is baadf00d,deadbeef,1,0, result is 0x1, expected 0x100000000
-test_bitmap: parse_user: 10: input is badf00d,deadbeef,1,0, errno is -75, expected 0
-test_bitmap: parse_user: 11: input is badf00d,deadbeef,1,0, errno is -75, expected 0
-test_bitmap: parse_user: 12: input is   badf00d,deadbeef,1,0  , errno is -75, expected 0
-test_bitmap: parse_user: 13: input is  , badf00d,deadbeef,1,0 , , errno is -75, expected 0
-test_bitmap: parse_user: 14: input is  , badf00d, ,, ,,deadbeef,1,0 , , errno is -75, expected 0
-test_bitmap: parse_user: 16: input is 3,0, errno is 0, expected -75
+I think it's better to re-use existing patterns.
 
-Thanks!
+ipc/sem.c:1682:#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
 
+> +static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
+> +{
+> +       maskp += (chunk_idx / 2);
+> +       ((u32 *)maskp)[(chunk_idx & 1) ^ 1] = chunk;
+> +}
+> +#else
+> +static void save_x32_chunk(unsigned long *maskp, u32 chunk, int chunk_idx)
+> +{
+> +       ((u32 *)maskp)[chunk_idx] = chunk;
+> +}
+> +#endif
 
-> Yes, you can simulate BE test case on LE platform and vise versa.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+See below.
+
+...
+
+> -               end = bitmap_get_x32_reverse(start, end, bitmap++);
+> +               end = bitmap_get_x32_reverse(start, end, &chunk);
+>                 if (IS_ERR(end))
+>                         return PTR_ERR(end);
+> +
+> +               save_x32_chunk(maskp, chunk, chunk_idx++);
+
+Can't we simple do
+
+        int chunk_index = 0;
+        ...
+        do {
+#if defined(CONFIG_64BIT) && defined(__BIG_ENDIAN)
+               end = bitmap_get_x32_reverse(start, end,
+bitmap[chunk_index ^ 1]);
+#else
+               end = bitmap_get_x32_reverse(start, end, bitmap[chunk_index]);
+#endif
+        ...
+        } while (++chunk_index);
+
+?
+
+-- 
+With Best Regards,
+Andy Shevchenko
