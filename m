@@ -2,153 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E5321F3A89
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2020 14:20:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B9331F3D53
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2020 15:52:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgFIMUm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Jun 2020 08:20:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33874 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726903AbgFIMUm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Jun 2020 08:20:42 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 059C374S042115;
-        Tue, 9 Jun 2020 08:20:41 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31j59uapfb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 08:20:41 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 059C3QCl044221;
-        Tue, 9 Jun 2020 08:20:41 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31j59uapea-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 08:20:41 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 059CBJlR023453;
-        Tue, 9 Jun 2020 12:20:38 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03ams.nl.ibm.com with ESMTP id 31g2s7wwsh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jun 2020 12:20:38 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 059CJKe746662086
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Jun 2020 12:19:20 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B08F4C046;
-        Tue,  9 Jun 2020 12:20:36 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DFBF74C040;
-        Tue,  9 Jun 2020 12:20:35 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.16.61])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  9 Jun 2020 12:20:35 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v8 10/12] s390x: css: stsch, enumeration
- test
-To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        david@redhat.com, cohuck@redhat.com
-References: <1591603981-16879-1-git-send-email-pmorel@linux.ibm.com>
- <1591603981-16879-11-git-send-email-pmorel@linux.ibm.com>
- <af39687e-4512-d147-5011-11d03b68e1bf@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <a9a44f1d-2179-5d95-f45f-172000f7a3c1@linux.ibm.com>
-Date:   Tue, 9 Jun 2020 14:20:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1730327AbgFINwn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Jun 2020 09:52:43 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54359 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730331AbgFINwk (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Jun 2020 09:52:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591710759;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1QZxzGJLd7MwraWpl9HYsPVgjFSkkdnN13rxpeDTWvE=;
+        b=bNcxCSaVY4LbDXddGZPULryKNQOp9rhnZwPnUAkw4Wmu5KJtFh+k4aM8EFRnXVb5rsFxbc
+        7/K66D3UkgQEr5zQ7WoK6vmMPJ8Wco7pkZWyV2w62EjnwLsDRTC0J8sMoAoxlOPzJ7CkVt
+        4Z7fOflo5Bl+Ts91bC/g+WHCP8+friM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-374-SKVCis5-OQWdNQGNLlklxw-1; Tue, 09 Jun 2020 09:52:35 -0400
+X-MC-Unique: SKVCis5-OQWdNQGNLlklxw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ABB2A18A8235;
+        Tue,  9 Jun 2020 13:52:33 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-113-78.ams2.redhat.com [10.36.113.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 708335C1BD;
+        Tue,  9 Jun 2020 13:52:19 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
+        tony.luck@intel.com, fenghua.yu@intel.com, geert@linux-m68k.org,
+        monstr@monstr.eu, ralf@linux-mips.org, paul.burton@mips.com,
+        jhogan@kernel.org, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, benh@kernel.crashing.org, paulus@samba.org,
+        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, luto@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, peterz@infradead.org, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, dhowells@redhat.com, firoz.khan@linaro.org,
+        stefan@agner.ch, schwidefsky@de.ibm.com, axboe@kernel.dk,
+        christian@brauner.io, hare@suse.com, deepa.kernel@gmail.com,
+        tycho@tycho.ws, kim.phillips@arm.com, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: Add a new fchmodat4() syscall, v2
+References: <20190717012719.5524-1-palmer@sifive.com>
+Date:   Tue, 09 Jun 2020 15:52:17 +0200
+In-Reply-To: <20190717012719.5524-1-palmer@sifive.com> (Palmer Dabbelt's
+        message of "Tue, 16 Jul 2019 18:27:15 -0700")
+Message-ID: <87o8pscpny.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <af39687e-4512-d147-5011-11d03b68e1bf@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-09_03:2020-06-09,2020-06-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 spamscore=0 impostorscore=0 priorityscore=1501
- malwarescore=0 adultscore=0 mlxscore=0 cotscore=-2147483648 phishscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006090093
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+* Palmer Dabbelt:
 
+> This patch set adds fchmodat4(), a new syscall. The actual
+> implementation is super simple: essentially it's just the same as
+> fchmodat(), but LOOKUP_FOLLOW is conditionally set based on the flags.
+> I've attempted to make this match "man 2 fchmodat" as closely as
+> possible, which says EINVAL is returned for invalid flags (as opposed to
+> ENOTSUPP, which is currently returned by glibc for AT_SYMLINK_NOFOLLOW).
+> I have a sketch of a glibc patch that I haven't even compiled yet, but
+> seems fairly straight-forward:
 
-On 2020-06-09 09:39, Thomas Huth wrote:
-> On 08/06/2020 10.12, Pierre Morel wrote:
-
-...snip...
-
->> +int css_enumerate(void)
->> +{
->> +	struct pmcw *pmcw = &schib.pmcw;
->> +	int scn_found = 0;
->> +	int dev_found = 0;
->> +	int schid = 0;
->> +	int cc;
->> +	int scn;
->> +
->> +	for (scn = 0; scn < 0xffff; scn++) {
->> +		cc = stsch(scn | SCHID_ONE, &schib);
->> +		switch (cc) {
->> +		case 0:		/* 0 means SCHIB stored */
->> +			break;
->> +		case 3:		/* 3 means no more channels */
->> +			goto out;
->> +		default:	/* 1 or 2 should never happened for STSCH */
->> +			report_info("Unexpected error %d on subchannel %08x",
->> +				    cc, scn | SCHID_ONE);
-> 
-> Should this maybe even be a report_abort() instead? Or leave the error
-> reporting to the caller...
-
-report_abort() should be fine as if this happens something is really broken.
-
-> 
->> +			return cc;
->> +		}
-
-...snip...
-
->> +static void test_enumerate(void)
->> +{
->> +	test_device_sid = css_enumerate();
->> +	if (test_device_sid & SCHID_ONE) {
->> +		report(1, "First device schid: 0x%08x", test_device_sid);
->> +		return;
->> +	}
->> +
->> +	switch (test_device_sid) {
->> +	case 0:
->> +		report (0, "No I/O device found");
->> +		break;
->> +	default:	/* 1 or 2 should never happened for STSCH */
->> +		report(0, "Unexpected cc=%d during enumeration",
->> +		       test_device_sid);
->> +			return;
->> +	}
-> 
-> Ok, so here is now the test failure for the cc=1 or 2 that should never
-> happen. That means currently you print out the CC for this error twice.
-> One time should be enough, either here, or use an report_abort() in the
-> css_enumerate(), I'd say.
-> 
-> Anyway, can you please replace this switch statement with a "if
-> (!test_device_sid)" instead? Or do you plan to add more "case"
-> statements later?
-
-I will use the repor_abort() in the css_enumerate() so there
-is only two case, I find a channel or not, so I don't even need the 
-second if :) .
+What's the status here?  We'd really like to see this system call in the
+kernel because our emulation in glibc has its problems (especially if
+/proc is not mounted).
 
 Thanks,
-Pierre
+Florian
 
--- 
-Pierre Morel
-IBM Lab Boeblingen
