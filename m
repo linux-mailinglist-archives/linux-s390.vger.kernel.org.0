@@ -2,92 +2,128 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D76F1F3354
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2020 07:22:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CD111F3459
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2020 08:49:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgFIFWM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Jun 2020 01:22:12 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55359 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725770AbgFIFWM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Jun 2020 01:22:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1591680131;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=WHQ8UFZ46VmZPIRBXNrYRjN+az6Pby2qoab4JPg/jJg=;
-        b=KrCMZlzYjQWdPP1lb7Yf5H67H6RYGMf3gXw2TJBHwv348N1a6Tk2wxlUcu3z9m9TkmFRiA
-        4Wlhf30nhKtJI29mYRW9Zk7ScQpTaMVVLSlYPtn+DmgvAvHq19Az+NcUR40CnvBNu7caJ1
-        G/Gk5eRw5l2/uf4D9i+a8eg6mQwqlpw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-223-Zr_1y2IeMC6_TyrBPWae1A-1; Tue, 09 Jun 2020 01:22:06 -0400
-X-MC-Unique: Zr_1y2IeMC6_TyrBPWae1A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 955A48014D4;
-        Tue,  9 Jun 2020 05:22:05 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-112-109.ams2.redhat.com [10.36.112.109])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5C83A60BF3;
-        Tue,  9 Jun 2020 05:22:01 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v8 08/12] s390x: retrieve decimal and
- hexadecimal kernel parameters
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        david@redhat.com, cohuck@redhat.com
-References: <1591603981-16879-1-git-send-email-pmorel@linux.ibm.com>
- <1591603981-16879-9-git-send-email-pmorel@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <b013343d-d08d-43c6-1fac-f29d3070b535@redhat.com>
-Date:   Tue, 9 Jun 2020 07:21:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726935AbgFIGtW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Jun 2020 02:49:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10726 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726917AbgFIGtW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Jun 2020 02:49:22 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0596Vjqi191885;
+        Tue, 9 Jun 2020 02:49:21 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31gg81hspu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 02:49:21 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0596Vtac192581;
+        Tue, 9 Jun 2020 02:49:21 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31gg81hsp7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 02:49:20 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0596k9oR002782;
+        Tue, 9 Jun 2020 06:49:18 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04fra.de.ibm.com with ESMTP id 31g2s7t687-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Jun 2020 06:49:18 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0596nFrb57671682
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Jun 2020 06:49:15 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B3AC42054;
+        Tue,  9 Jun 2020 06:49:15 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD04B42041;
+        Tue,  9 Jun 2020 06:49:14 +0000 (GMT)
+Received: from osiris (unknown [9.171.82.114])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  9 Jun 2020 06:49:14 +0000 (GMT)
+Date:   Tue, 9 Jun 2020 08:49:13 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH v2] s390: vdso: Use $(LD) instead of $(CC) to link vDSO
+Message-ID: <20200609064913.GA6796@osiris>
+References: <CAKwvOdmCrM0eUZHR12OBgyRhNPFDzZKjrpZ0DW8Cg=wqTfzDFw@mail.gmail.com>
+ <20200602192523.32758-1-natechancellor@gmail.com>
+ <CAKwvOdnH8rxT7y1U0d=pyD19K38KwarrwA2s+Ji7ctgg+ks_kg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1591603981-16879-9-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdnH8rxT7y1U0d=pyD19K38KwarrwA2s+Ji7ctgg+ks_kg@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-09_01:2020-06-08,2020-06-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 impostorscore=0 clxscore=1011 bulkscore=0
+ mlxlogscore=999 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006090046
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 08/06/2020 10.12, Pierre Morel wrote:
-> We often need to retrieve hexadecimal kernel parameters.
-> Let's implement a shared utility to do it.
+On Tue, Jun 02, 2020 at 12:52:26PM -0700, Nick Desaulniers wrote:
+> On Tue, Jun 2, 2020 at 12:25 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> >
+> > Currently, the VDSO is being linked through $(CC). This does not match
+> > how the rest of the kernel links objects, which is through the $(LD)
+> > variable.
+> >
+> > When clang is built in a default configuration, it first attempts to use
+> > the target triple's default linker, which is just ld. However, the user
+> > can override this through the CLANG_DEFAULT_LINKER cmake define so that
+> > clang uses another linker by default, such as LLVM's own linker, ld.lld.
+> > This can be useful to get more optimized links across various different
+> > projects.
+> >
+> > However, this is problematic for the s390 vDSO because ld.lld does not
+> > have any s390 emulatiom support:
+> >
+> > https://github.com/llvm/llvm-project/blob/llvmorg-10.0.1-rc1/lld/ELF/Driver.cpp#L132-L150
+> >
+> > Thus, if a user is using a toolchain with ld.lld as the default, they
+> > will see an error, even if they have specified ld.bfd through the LD
+> > make variable:
+> >
+> > $ make -j"$(nproc)" -s ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- LLVM=1 \
+> >                        LD=s390x-linux-gnu-ld \
+> >                        defconfig arch/s390/kernel/vdso64/
+> > ld.lld: error: unknown emulation: elf64_s390
+> > clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
+> >
+> > Normally, '-fuse-ld=bfd' could be used to get around this; however, this
+> > can be fragile, depending on paths and variable naming. The cleaner
+> > solution for the kernel is to take advantage of the fact that $(LD) can
+> > be invoked directly, which bypasses the heuristics of $(CC) and respects
+> > the user's choice. Similar changes have been done for ARM, ARM64, and
+> > MIPS.
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/1041
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->  lib/s390x/kernel-args.c | 60 +++++++++++++++++++++++++++++++++++++++++
->  lib/s390x/kernel-args.h | 18 +++++++++++++
->  s390x/Makefile          |  1 +
->  3 files changed, 79 insertions(+)
->  create mode 100644 lib/s390x/kernel-args.c
->  create mode 100644 lib/s390x/kernel-args.h
-[...]
-> +int kernel_arg(int argc, char *argv[], const char *str, unsigned long *val)
-> +{
-> +	int i, ret;
-> +	char *p;
-> +
-> +	for (i = 0; i < argc; i++) {
-> +		ret = strncmp(argv[i], str, strlen(str));
-> +		if (ret)
-> +			continue;
-> +		p = strchr(argv[i], '=');
-> +		if (!p)
-> +			return -1;
-> +		p = strchr(p, 'x');
-> +		if (!p)
-> +			*val = atol(p + 1);
+> Thanks, with this, I'm more confident that the linker flags don't change.
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+...
+> > -KBUILD_CFLAGS_64 += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
+> > -                   -Wl,--hash-style=both
+> > +ldflags-y := -fPIC -shared -nostdlib -soname=linux-vdso64.so.1 \
+> > +            --hash-style=both -T
 
-If p is NULL, then you call atol(NULL + 1) ... I think you need another
-temporary variable here instead to hold the new pointer / NULL value?
-
- Thomas
-
+I added the --build-id flag according to commit 7a0a93c51799 ("arm64:
+vdso: Explicitly add build-id option") and applied the patch.
+Thanks!
