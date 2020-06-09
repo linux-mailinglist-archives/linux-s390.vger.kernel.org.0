@@ -2,153 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5484C1F2EA5
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2020 02:44:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7AD51F3345
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jun 2020 07:07:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731958AbgFIAnq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 8 Jun 2020 20:43:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729036AbgFHXMD (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 8 Jun 2020 19:12:03 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726449AbgFIFHo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Jun 2020 01:07:44 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46947 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726286AbgFIFHn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Jun 2020 01:07:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1591679261;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=4HEKBfWtkZz3zDE5s7NlYMIZiplqjV3odsm7ZYpAiek=;
+        b=PTGnQB+UEzHgVXYGGISfKoBc2k6ELCNgg8Pn8kzYCJY3d7Wnu8WWAcinPIQUwUA6azGJ2I
+        14kaTM7DGOZUPgV+MYsG8t8PQNcdFX8ph0k28vN+K+amJVgYo/7vX7ewi/UMKl5bDPMp8l
+        WFKjRk70XVWI5zmyOsiDlWe5TDxbyQg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-124-FOUW4EbzMZafgQDog2DTEg-1; Tue, 09 Jun 2020 01:07:39 -0400
+X-MC-Unique: FOUW4EbzMZafgQDog2DTEg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81405214D8;
-        Mon,  8 Jun 2020 23:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1591657922;
-        bh=FVGe8qaMruNT+7gpi3rEtG8gVXNp1V100Vai5EX7ITI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SvEmzW5f5kwcespfbLpVWQiP9BnN0d+t2Hj4sDcwBH8OopnPsdH+gvs8kQ6KwxEqC
-         SNlY0YPgTjaSeF3vVCHdksgZWdLx3mCWdmi097rNOmxLsGrmMgyxJAFPOuewnUfRqe
-         6iafYs+cJurz/xJcrBJ/PNOBNAYabZCsEu5SGGDg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 271/274] s390/bpf: Maintain 8-byte stack alignment
-Date:   Mon,  8 Jun 2020 19:06:04 -0400
-Message-Id: <20200608230607.3361041-271-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB002107ACF4;
+        Tue,  9 Jun 2020 05:07:38 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-112-109.ams2.redhat.com [10.36.112.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E6A1385;
+        Tue,  9 Jun 2020 05:07:34 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v8 07/12] s390x: define function to wait
+ for interrupt
+To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com
+References: <1591603981-16879-1-git-send-email-pmorel@linux.ibm.com>
+ <1591603981-16879-8-git-send-email-pmorel@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <0005ec91-d4ac-2892-a800-76c96e7b34a0@redhat.com>
+Date:   Tue, 9 Jun 2020 07:07:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1591603981-16879-8-git-send-email-pmorel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+On 08/06/2020 10.12, Pierre Morel wrote:
+> Allow the program to wait for an interrupt.
+> 
+> The interrupt handler is in charge to remove the WAIT bit
+> when it finished handling the interrupt.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> ---
+>  lib/s390x/asm/arch_def.h | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+> index 12045ff..e0ced12 100644
+> --- a/lib/s390x/asm/arch_def.h
+> +++ b/lib/s390x/asm/arch_def.h
+> @@ -10,9 +10,11 @@
+>  #ifndef _ASM_S390X_ARCH_DEF_H_
+>  #define _ASM_S390X_ARCH_DEF_H_
+>  
+> +#define PSW_MASK_IO			0x0200000000000000UL
+>  #define PSW_MASK_EXT			0x0100000000000000UL
+>  #define PSW_MASK_DAT			0x0400000000000000UL
+>  #define PSW_MASK_SHORT_PSW		0x0008000000000000UL
+> +#define PSW_MASK_WAIT			0x0002000000000000UL
+>  #define PSW_MASK_PSTATE			0x0001000000000000UL
+>  #define PSW_MASK_BA			0x0000000080000000UL
+>  #define PSW_MASK_EA			0x0000000100000000UL
+> @@ -253,6 +255,18 @@ static inline void load_psw_mask(uint64_t mask)
+>  		: "+r" (tmp) :  "a" (&psw) : "memory", "cc" );
+>  }
+>  
+> +static inline void wait_for_interrupt(uint64_t irq_mask)
+> +{
+> +	uint64_t psw_mask = extract_psw_mask();
+> +
+> +	load_psw_mask(psw_mask | irq_mask | PSW_MASK_WAIT);
+> +	/*
+> +	 * After being woken and having processed the interrupt, let's restore
+> +	 * the PSW mask.
+> +	 */
+> +	load_psw_mask(psw_mask);
+> +}
+> +
+>  static inline void enter_pstate(void)
+>  {
+>  	uint64_t mask;
+> 
 
-[ Upstream commit effe5be17706167ee968fa28afe40dec9c6f71db ]
-
-Certain kernel functions (e.g. get_vtimer/set_vtimer) cause kernel
-panic when the stack is not 8-byte aligned. Currently JITed BPF programs
-may trigger this by allocating stack frames with non-rounded sizes and
-then being interrupted. Fix by using rounded fp->aux->stack_depth.
-
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20200602174339.2501066-1-iii@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/s390/net/bpf_jit_comp.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
-
-diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
-index 8d2134136290..0f37a1b635f8 100644
---- a/arch/s390/net/bpf_jit_comp.c
-+++ b/arch/s390/net/bpf_jit_comp.c
-@@ -594,7 +594,7 @@ static void bpf_jit_epilogue(struct bpf_jit *jit, u32 stack_depth)
-  * stack space for the large switch statement.
-  */
- static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp,
--				 int i, bool extra_pass)
-+				 int i, bool extra_pass, u32 stack_depth)
- {
- 	struct bpf_insn *insn = &fp->insnsi[i];
- 	u32 dst_reg = insn->dst_reg;
-@@ -1207,7 +1207,7 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp,
- 		 */
- 
- 		if (jit->seen & SEEN_STACK)
--			off = STK_OFF_TCCNT + STK_OFF + fp->aux->stack_depth;
-+			off = STK_OFF_TCCNT + STK_OFF + stack_depth;
- 		else
- 			off = STK_OFF_TCCNT;
- 		/* lhi %w0,1 */
-@@ -1249,7 +1249,7 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp,
- 		/*
- 		 * Restore registers before calling function
- 		 */
--		save_restore_regs(jit, REGS_RESTORE, fp->aux->stack_depth);
-+		save_restore_regs(jit, REGS_RESTORE, stack_depth);
- 
- 		/*
- 		 * goto *(prog->bpf_func + tail_call_start);
-@@ -1519,7 +1519,7 @@ static int bpf_set_addr(struct bpf_jit *jit, int i)
-  * Compile eBPF program into s390x code
-  */
- static int bpf_jit_prog(struct bpf_jit *jit, struct bpf_prog *fp,
--			bool extra_pass)
-+			bool extra_pass, u32 stack_depth)
- {
- 	int i, insn_count, lit32_size, lit64_size;
- 
-@@ -1527,18 +1527,18 @@ static int bpf_jit_prog(struct bpf_jit *jit, struct bpf_prog *fp,
- 	jit->lit64 = jit->lit64_start;
- 	jit->prg = 0;
- 
--	bpf_jit_prologue(jit, fp->aux->stack_depth);
-+	bpf_jit_prologue(jit, stack_depth);
- 	if (bpf_set_addr(jit, 0) < 0)
- 		return -1;
- 	for (i = 0; i < fp->len; i += insn_count) {
--		insn_count = bpf_jit_insn(jit, fp, i, extra_pass);
-+		insn_count = bpf_jit_insn(jit, fp, i, extra_pass, stack_depth);
- 		if (insn_count < 0)
- 			return -1;
- 		/* Next instruction address */
- 		if (bpf_set_addr(jit, i + insn_count) < 0)
- 			return -1;
- 	}
--	bpf_jit_epilogue(jit, fp->aux->stack_depth);
-+	bpf_jit_epilogue(jit, stack_depth);
- 
- 	lit32_size = jit->lit32 - jit->lit32_start;
- 	lit64_size = jit->lit64 - jit->lit64_start;
-@@ -1569,6 +1569,7 @@ struct s390_jit_data {
-  */
- struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
- {
-+	u32 stack_depth = round_up(fp->aux->stack_depth, 8);
- 	struct bpf_prog *tmp, *orig_fp = fp;
- 	struct bpf_binary_header *header;
- 	struct s390_jit_data *jit_data;
-@@ -1621,7 +1622,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
- 	 *   - 3:   Calculate program size and addrs arrray
- 	 */
- 	for (pass = 1; pass <= 3; pass++) {
--		if (bpf_jit_prog(&jit, fp, extra_pass)) {
-+		if (bpf_jit_prog(&jit, fp, extra_pass, stack_depth)) {
- 			fp = orig_fp;
- 			goto free_addrs;
- 		}
-@@ -1635,7 +1636,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
- 		goto free_addrs;
- 	}
- skip_init_ctx:
--	if (bpf_jit_prog(&jit, fp, extra_pass)) {
-+	if (bpf_jit_prog(&jit, fp, extra_pass, stack_depth)) {
- 		bpf_jit_binary_free(header);
- 		fp = orig_fp;
- 		goto free_addrs;
--- 
-2.25.1
+Reviewed-by: Thomas Huth <thuth@redhat.com>
 
