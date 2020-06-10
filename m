@@ -2,135 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BDDF1F4D57
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2020 07:55:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 546D51F507E
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2020 10:46:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726035AbgFJFzE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 10 Jun 2020 01:55:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726273AbgFJFzE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 10 Jun 2020 01:55:04 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7BFC03E96B
-        for <linux-s390@vger.kernel.org>; Tue,  9 Jun 2020 22:55:03 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id w90so860004qtd.8
-        for <linux-s390@vger.kernel.org>; Tue, 09 Jun 2020 22:55:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gXeXhMtb00GflCcome0aHfH/SxNK2VTYdZLVXM019as=;
-        b=iAqAoTvA46Z2sblYgfZOL7pzb3QK0mqL/ZnAwC0797L01rt261OwAPmuXMNgXLg05w
-         V29um2KxKaOmr+04jdeOpytlIkVk7HpK5mjAj4DOZCLtQr2Ii+jWPr6VMXKxSGNJKFFQ
-         w23WDEFR+SSzKXnujerpUeyBkCKiSkPjVxYSOJ4UX7/VlcgGT7qd6srNpuYABMS70h1O
-         ndXS0zQeBWxThlRJXk6plgxXE9I+uZ4UXeOFhSUPmpJanush8yygVryxPxsQccIAC5kt
-         uiwGMqYSmtN1uwc7bUWGS1Vs9qSTh/Fc23PUZCFs1cmqrERiPw4oEd+na+B+sbKU/g33
-         T5KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gXeXhMtb00GflCcome0aHfH/SxNK2VTYdZLVXM019as=;
-        b=TOpGtsI8CrNz4Z8s2aqfJe/vOtMmux+IVenEg1KR0/VM5MfKhsz0Ygklq66zlmXLfx
-         03NzkMx1YJqlvWPdQKaAi1JOH78ab0U+gxm/OhfRG/t24JvGeIO1/GRKr/Evn2NQJCUH
-         SfN7uCYh1kH/oCRLkTGLaIuBgvTGKmff8cFkDR6U6ju0G19zgT7qIDwimcgyGkqJpkJk
-         S1B3PciTEQA4EncP5TEQurpG9Hy12AKghNYAvFKHBf2JtX/S2xE8WviiR8WPLN5f2r8d
-         uiQTSd4ik/uVcdrls8h2XP7B9lVSKCUou+I5gop4dQMIqa8vVHO36q0jRJGnmwle3tHw
-         pL3A==
-X-Gm-Message-State: AOAM5327PGxhP/IAsCzFL6GOXhncbY1ICiAkwNDLcG6+nT1mbTIjlwTE
-        oi7LSETnzAE9PgkWzqR5dfJTVtrxnWRTfmtQUZ3KHA==
-X-Google-Smtp-Source: ABdhPJw3koTqDtRzMIIGbRP7i54AjEis4nXKiEC8e6TgERflXOQglSBjO+mkIcvGtrWrte9076PRZ3XzqXKFqCZK5Iw=
-X-Received: by 2002:ac8:260b:: with SMTP id u11mr1541245qtu.380.1591768501932;
- Tue, 09 Jun 2020 22:55:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200610052154.5180-1-cai@lca.pw>
-In-Reply-To: <20200610052154.5180-1-cai@lca.pw>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 10 Jun 2020 07:54:50 +0200
-Message-ID: <CACT4Y+Ze=cddKcU_bYf4L=GaHuJRUjY=AdFFpM7aKy2+aZrmyQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/page_alloc: silence a KASAN false positive
+        id S1726835AbgFJIqB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 10 Jun 2020 04:46:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38920 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726081AbgFJIqB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 10 Jun 2020 04:46:01 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05A8WtvQ124369;
+        Wed, 10 Jun 2020 04:46:00 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31jgsj2d3v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 04:45:59 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05A8fRGt026110;
+        Wed, 10 Jun 2020 08:45:57 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 31g2s7ybpx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 10 Jun 2020 08:45:57 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05A8jtni5505232
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jun 2020 08:45:55 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0250011C052;
+        Wed, 10 Jun 2020 08:45:55 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C13FB11C05C;
+        Wed, 10 Jun 2020 08:45:54 +0000 (GMT)
+Received: from osiris (unknown [9.171.21.235])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 10 Jun 2020 08:45:54 +0000 (GMT)
+Date:   Wed, 10 Jun 2020 10:45:53 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
 To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Alexander Potapenko <glider@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390: set NODES_SHIFT=0 when NUMA=n
+Message-ID: <20200610084553.GB4894@osiris>
+References: <20200610014501.4268-1-cai@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610014501.4268-1-cai@lca.pw>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-10_04:2020-06-10,2020-06-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
+ phishscore=0 adultscore=0 malwarescore=0 spamscore=0 suspectscore=56
+ clxscore=1011 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006100061
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 7:22 AM Qian Cai <cai@lca.pw> wrote:
->
-> kernel_init_free_pages() will use memset() on s390 to clear all pages
-> from kmalloc_order() which will override KASAN redzones because a
-> redzone was setup from the end of the allocation size to the end of the
-> last page. Silence it by not reporting it there. An example of the
-> report is,
-
-Interesting. The reason why we did not hit it on x86_64 is because
-clear_page is implemented in asm (arch/x86/lib/clear_page_64.S) and
-thus is not instrumented. Arm64 probably does the same. However, on
-s390 clear_page is defined to memset.
-clear_[high]page are pretty extensively used in the kernel.
-We can either do this, or make clear_page non instrumented on s390 as
-well to match the existing implicit assumption. The benefit of the
-current approach is that we can find some real use-after-free's and
-maybe out-of-bounds on clear_page. The downside is that we may need
-more of these annotations. Thoughts?
-
->  BUG: KASAN: slab-out-of-bounds in __free_pages_ok
->  Write of size 4096 at addr 000000014beaa000
->  Call Trace:
->  show_stack+0x152/0x210
->  dump_stack+0x1f8/0x248
->  print_address_description.isra.13+0x5e/0x4d0
->  kasan_report+0x130/0x178
->  check_memory_region+0x190/0x218
->  memset+0x34/0x60
->  __free_pages_ok+0x894/0x12f0
->  kfree+0x4f2/0x5e0
->  unpack_to_rootfs+0x60e/0x650
->  populate_rootfs+0x56/0x358
->  do_one_initcall+0x1f4/0xa20
->  kernel_init_freeable+0x758/0x7e8
->  kernel_init+0x1c/0x170
->  ret_from_fork+0x24/0x28
->  Memory state around the buggy address:
->  000000014bea9f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->  000000014bea9f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >000000014beaa000: 03 fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
->                     ^
->  000000014beaa080: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
->  000000014beaa100: fe fe fe fe fe fe fe fe fe fe fe fe fe fe
->
-> Fixes: 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options")
+On Tue, Jun 09, 2020 at 09:45:01PM -0400, Qian Cai wrote:
+> When NUMA=n and nr_node_ids=2, in apply_wqattrs_prepare(), it has,
+> 
+> for_each_node(node) {
+> 	if (wq_calc_node_cpumask(...
+> 
+> where it will trigger a booting warning,
+> 
+> WARNING: workqueue cpumask: online intersect > possible intersect
+> 
+> because it found 2 nodes and wq_numa_possible_cpumask[1] is an empty
+> cpumask. NUMA=y has no such problem because node_possible_map will be
+> initialized properly containing only node 0. Fix it by setting
+> NODES_SHIFT=0 when NUMA=n.
+> 
+> Fixes: 701dc81e7412 ("s390/mm: remove fake numa support")
 > Signed-off-by: Qian Cai <cai@lca.pw>
 > ---
->  mm/page_alloc.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 727751219003..9954973f89a3 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1164,8 +1164,11 @@ static void kernel_init_free_pages(struct page *page, int numpages)
->  {
->         int i;
->
-> +       /* s390's use of memset() could override KASAN redzones. */
-> +       kasan_disable_current();
->         for (i = 0; i < numpages; i++)
->                 clear_highpage(page + i);
-> +       kasan_enable_current();
->  }
->
->  static __always_inline bool free_pages_prepare(struct page *page,
-> --
-> 2.21.0 (Apple Git-122.2)
->
+>  arch/s390/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+
+Thanks! However I committed a different solution. Hope you don't mind:
+
+From dd3f1f08f2317768b35b2df3ff8285185df7e195 Mon Sep 17 00:00:00 2001
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
+Date: Wed, 10 Jun 2020 10:36:05 +0200
+Subject: [PATCH] s390/numa: let NODES_SHIFT depend on NEED_MULTIPLE_NODES
+
+Qian Cai reported:
+---
+When NUMA=n and nr_node_ids=2, in apply_wqattrs_prepare(), it has,
+
+for_each_node(node) {
+        if (wq_calc_node_cpumask(...
+
+where it will trigger a booting warning,
+
+WARNING: workqueue cpumask: online intersect > possible intersect
+
+because it found 2 nodes and wq_numa_possible_cpumask[1] is an empty
+cpumask.
+---
+
+Let NODES_SHIFT depend on NEED_MULTIPLE_NODES like it is done
+on other architectures in order to fix this.
+
+Fixes: 701dc81e7412 ("s390/mm: remove fake numa support")
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+---
+ arch/s390/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 2167bce993ff..ae01be202204 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -462,6 +462,7 @@ config NUMA
+ 
+ config NODES_SHIFT
+ 	int
++	depends on NEED_MULTIPLE_NODES
+ 	default "1"
+ 
+ config SCHED_SMT
+-- 
+2.17.1
+
