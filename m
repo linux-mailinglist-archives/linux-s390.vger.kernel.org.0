@@ -2,59 +2,60 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3C9D1F4B05
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2020 03:45:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C55F01F4CD4
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2020 07:22:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726085AbgFJBpS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Jun 2020 21:45:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58500 "EHLO
+        id S1726051AbgFJFWZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 10 Jun 2020 01:22:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgFJBpR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Jun 2020 21:45:17 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6524DC03E96B
-        for <linux-s390@vger.kernel.org>; Tue,  9 Jun 2020 18:45:16 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id n141so640557qke.2
-        for <linux-s390@vger.kernel.org>; Tue, 09 Jun 2020 18:45:16 -0700 (PDT)
+        with ESMTP id S1725908AbgFJFWX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 10 Jun 2020 01:22:23 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA5DC03E96B
+        for <linux-s390@vger.kernel.org>; Tue,  9 Jun 2020 22:22:22 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id w9so849081qtv.3
+        for <linux-s390@vger.kernel.org>; Tue, 09 Jun 2020 22:22:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lca.pw; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=SyG3PDT/1k7qwtsgQqq5FDrFZ5PwQThhefYVb1X2LUg=;
-        b=O0cT0OuPOQIon8tdE+8vsepQXDEPeFw84UM/G5iXWznws6X1+5ppCbJhjI7m/Ib4l+
-         neph/zHqc75eNZUcpcxLi+6jJeWzWlduBs6KWVN6WEC7zHHMNYK+sWiag2SqDa70lub1
-         8lRncKp7maiGoo4VoSr6W6HaTz4eOapitwKtP+F1xwL/OQIRUwNHAsfYzn0h6YICSKz2
-         SskErKyPjkKrz3RJV8yJeIFWXdqT88GKSLr2BIx3P/JqvYD0r8ezI4ZkDiXcpdlrMpAp
-         G606p/0Nyvc8Y6z1hlQH7aKJeV3flxzOzu/gS5xs7gpuiCsvMW2yYDEkoeHHnzVJErS9
-         5rhw==
+        bh=8QdWS47TQ1Szf9UCQ4isLDh5BjiBexfLw+qwLr2MzEw=;
+        b=OCU+XXFzrS4ai50Np9aZhbn19RNc2bnShkVkV8MLxQN2uJDPsqKuyNIhYPoQ/I05Bf
+         LjboC7mC14jw+qhwG/PPPOPqYFy6HRRaWoVYVlQ2NlVwSrzUAChOoG3tIZYdLp5HKxyy
+         fUGwtp2o++EXckki0Z9sOJmealnfizMwTbSOxuc2R7yVi5ImeS5/e8rVkwyJLyN5QfnG
+         86xNL+QfjOlAwiR8X9DUiDipaWoC+txwyqfLAg6ViaRZ38jH87M7LHzvswhNwprkM1U3
+         Z/ru0cpVetqQ6RC+AnQqfNuLt3gW8i77xxokKTz2DZ63qtHuBEiQMkJuyhkhXdoXlqp8
+         3L+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=SyG3PDT/1k7qwtsgQqq5FDrFZ5PwQThhefYVb1X2LUg=;
-        b=Vtj/Cy8NvUtARMUrrbz6BC3FOij7hG2JwE9azi0HRM33Rg8T4hJ8BXDJtUjyQAqkXl
-         4mMXpTF8Z95+qFnivHgXfmjryuA6/il4A/Gr7kNRo2k3Sc2YoElfHWzwp01I1kKZHGHF
-         wG2YpUljUEuJFYKrwPgs4IdrBp3MEUmviV8a5rR3VVyJyDX1CoAg16HDXkjKwzS9CVGv
-         KlAdD82j310cpFWbDNSaV5ujTssxOxNSBW0I57+b/hANHhxGhbU/708k7u16NEX0QN6n
-         BfX0C6B9/EQhUDjTOuWbCeEDOXLr+LYEsXOoOr80jjCl1d07rWQvpBmAI9hcTKxxnrJN
-         KMLA==
-X-Gm-Message-State: AOAM532TJ/CG/DksGv1zY8w/I2h4PFb6g849ntbyy9gLBeZ+KLeWA96g
-        43tw7jJ3yZ7uGGqkX9a5DfoOF0+k9ydX9w==
-X-Google-Smtp-Source: ABdhPJwmZ8+aSeZTUD4JHv3p3mVlsPu+AZd2ArmXbgxF2cry2dw1lWhW/nN0xlaPURjvFEdS8HQS3g==
-X-Received: by 2002:a37:9bd7:: with SMTP id d206mr882395qke.113.1591753515098;
-        Tue, 09 Jun 2020 18:45:15 -0700 (PDT)
+        bh=8QdWS47TQ1Szf9UCQ4isLDh5BjiBexfLw+qwLr2MzEw=;
+        b=B2SsmAHg5ez13ChFn1fX7rN6qePRLIE1Ll+LZwKG4DAiEdrHcDDqwi6kFEqE2/Fmqt
+         Ym2fQzcKDCIWPJbhFogd0m1WWNaNUB5fC6DIU/8FqHaR7onI5OcuPO9BHx9Hlz6BjdXY
+         GQ5XgEnrPtqB1rPCNnVxXLht0LmlbbDCySLyP7MlQcxrDHDadACMqveCq/PpfOHn9X4I
+         kZQHOy462mO50bVEi8/W30xB6uCaQV4/DzR6UhnkyUScjdtZG7McRimbAJtRGMVH1FbC
+         fPq25ul+zO4qtlC3SFPaRF4+AsqQMt5kG6QeO/fZNcatfYEttvpTaP4p7K27a+vDXBsA
+         90OQ==
+X-Gm-Message-State: AOAM532DnUeRueojXu2iLmng98nne3lJlSZ630TlwIGE7Ei4u6YVMOkf
+        FMA1J98xRr+61xvTXnFziuZg1w==
+X-Google-Smtp-Source: ABdhPJxu0jgXyK9IXjFAr7eI3aNQFUTA7yhVo6Cz+97MafAvWUnd3xNTF/6D8+pFUXvnePGcNvWKrQ==
+X-Received: by 2002:ac8:1892:: with SMTP id s18mr1471482qtj.306.1591766541396;
+        Tue, 09 Jun 2020 22:22:21 -0700 (PDT)
 Received: from ovpn-113-201.phx2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id d14sm11601210qtr.17.2020.06.09.18.45.14
+        by smtp.gmail.com with ESMTPSA id d23sm11831827qtn.38.2020.06.09.22.22.19
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 09 Jun 2020 18:45:14 -0700 (PDT)
+        Tue, 09 Jun 2020 22:22:20 -0700 (PDT)
 From:   Qian Cai <cai@lca.pw>
-To:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     akpm@linux-foundation.org
+Cc:     borntraeger@de.ibm.com, glider@google.com, keescook@chromium.org,
+        dvyukov@google.com, kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         Qian Cai <cai@lca.pw>
-Subject: [PATCH] s390: set NODES_SHIFT=0 when NUMA=n
-Date:   Tue,  9 Jun 2020 21:45:01 -0400
-Message-Id: <20200610014501.4268-1-cai@lca.pw>
+Subject: [PATCH] mm/page_alloc: silence a KASAN false positive
+Date:   Wed, 10 Jun 2020 01:21:54 -0400
+Message-Id: <20200610052154.5180-1-cai@lca.pw>
 X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -63,40 +64,59 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-When NUMA=n and nr_node_ids=2, in apply_wqattrs_prepare(), it has,
+kernel_init_free_pages() will use memset() on s390 to clear all pages
+from kmalloc_order() which will override KASAN redzones because a
+redzone was setup from the end of the allocation size to the end of the
+last page. Silence it by not reporting it there. An example of the
+report is,
 
-for_each_node(node) {
-	if (wq_calc_node_cpumask(...
+ BUG: KASAN: slab-out-of-bounds in __free_pages_ok
+ Write of size 4096 at addr 000000014beaa000
+ Call Trace:
+ show_stack+0x152/0x210
+ dump_stack+0x1f8/0x248
+ print_address_description.isra.13+0x5e/0x4d0
+ kasan_report+0x130/0x178
+ check_memory_region+0x190/0x218
+ memset+0x34/0x60
+ __free_pages_ok+0x894/0x12f0
+ kfree+0x4f2/0x5e0
+ unpack_to_rootfs+0x60e/0x650
+ populate_rootfs+0x56/0x358
+ do_one_initcall+0x1f4/0xa20
+ kernel_init_freeable+0x758/0x7e8
+ kernel_init+0x1c/0x170
+ ret_from_fork+0x24/0x28
+ Memory state around the buggy address:
+ 000000014bea9f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ 000000014bea9f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>000000014beaa000: 03 fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
+                    ^
+ 000000014beaa080: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
+ 000000014beaa100: fe fe fe fe fe fe fe fe fe fe fe fe fe fe
 
-where it will trigger a booting warning,
-
-WARNING: workqueue cpumask: online intersect > possible intersect
-
-because it found 2 nodes and wq_numa_possible_cpumask[1] is an empty
-cpumask. NUMA=y has no such problem because node_possible_map will be
-initialized properly containing only node 0. Fix it by setting
-NODES_SHIFT=0 when NUMA=n.
-
-Fixes: 701dc81e7412 ("s390/mm: remove fake numa support")
+Fixes: 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options")
 Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- arch/s390/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/page_alloc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index f854faff38c3..59625356d18a 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -462,7 +462,8 @@ config NUMA
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 727751219003..9954973f89a3 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1164,8 +1164,11 @@ static void kernel_init_free_pages(struct page *page, int numpages)
+ {
+ 	int i;
  
- config NODES_SHIFT
- 	int
--	default "1"
-+	default "1" if NUMA
-+	default "0"
++	/* s390's use of memset() could override KASAN redzones. */
++	kasan_disable_current();
+ 	for (i = 0; i < numpages; i++)
+ 		clear_highpage(page + i);
++	kasan_enable_current();
+ }
  
- config SCHED_SMT
- 	def_bool n
+ static __always_inline bool free_pages_prepare(struct page *page,
 -- 
 2.21.0 (Apple Git-122.2)
 
