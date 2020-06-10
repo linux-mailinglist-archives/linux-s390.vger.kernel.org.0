@@ -2,138 +2,153 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E12261F5439
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2020 14:07:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9158B1F54B4
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Jun 2020 14:26:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbgFJMH5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 10 Jun 2020 08:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41708 "EHLO
+        id S1728965AbgFJM0K (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 10 Jun 2020 08:26:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728480AbgFJMH4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 10 Jun 2020 08:07:56 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 715CDC03E96B
-        for <linux-s390@vger.kernel.org>; Wed, 10 Jun 2020 05:07:56 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id p15so861908qvr.9
-        for <linux-s390@vger.kernel.org>; Wed, 10 Jun 2020 05:07:56 -0700 (PDT)
+        with ESMTP id S1729034AbgFJM0G (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 10 Jun 2020 08:26:06 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70BFEC03E96F
+        for <linux-s390@vger.kernel.org>; Wed, 10 Jun 2020 05:26:05 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 205so1773622qkg.3
+        for <linux-s390@vger.kernel.org>; Wed, 10 Jun 2020 05:26:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lca.pw; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=lro6qhLL0P88qN7ekMirUkTClLvqbIrZ+9sE8Oe/PY4=;
-        b=cg6ZckV/Z2EIx+t+s118UZQfhcDtNQtRVo5hRWK0390A7cOKKmZ9afuS/hLhNpkzEA
-         J/u3IzApEiFX3FulGKsCxqJGtjSMDUFKXn7nbMtI2kg2s2DrnfEfBniXGCnxclIdvad/
-         oXyXigpG4sSHfnEy5EM1w/TidSnhfxDxA+gUtMZhxfFjzNloH7tj0FixiT3XxhL7wXqI
-         EE6ZWSEFqSdEmMEPQ7KNvWdTqmlX/uiT0QfCNn3DjpqH+k96HTJ1UAGKAZK+gnHms6xU
-         j+WFwrDSNlXzokpSV4c/bcmJBeHFSM8El1vRd0NI824WjqOInMQhH02riUvo4+Aj+wXo
-         YGfg==
+        bh=xNoh9u1q9fbWqVtSlCDwrQ/3B0eRAU+tf8g5idD9RH8=;
+        b=UwTLaOrWR7hV8EsCbkCBzm+aoRnVXQvT3SaWLGbTiHJZLxaHGs/C6EN8wujmxE0ylL
+         0vyEjXlLHwgwt3QdRSmhy+bwyqBa0q8UeWEcM+com0sDMfX+0OVk/D5ZsQ5aOHPUs2Ko
+         OEAjMVTDagknQn+r75YbZSHmgd12Tch0f7xyc1hUfY1P3Bv/rYmXeLIZ2cthH5ckwRib
+         bFEVJzGdhTGoGpc+oN4P9dqpw6flV8M8DKy9vklpOspXXjPTPRFgTc3Suffya+z8fun1
+         q5DfKR0awUCBLUOlkC8lyr29hjcgkhM0FpYfHGE+S5k6J35vuCTL1CblOxltWLeJjjAP
+         by1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=lro6qhLL0P88qN7ekMirUkTClLvqbIrZ+9sE8Oe/PY4=;
-        b=ZW7q3ZCSOiLOeRSEwPidMon+XOyXdbIXVUxP7ztj9w/fgrODtEiLJGC24yqiI15+ZJ
-         y7jJsyJJnjoEHMDcPMhOCRdN+2Qa1+YnJuXWt2tIS2EJGb1VD9YYcEODAr6KGAmpAXAF
-         ibrOQZ1mGAHmmiVDaE1z438kKNiZ1pZ2wSIzYB5w3/KTJxaXsuqgxOnGp60YcALW5T2o
-         qiIO8BCqeZ/1Gn3QfF7gI0nU0BMs2GKBMk8KCibtoPw8Jbm2VrwrGS8dLN2YVdjPilFf
-         /Vq8Q7TGNh60uMJZnJR5fTT42vXwhwTTCZv58l5LfeNGk4uN06ujYSnZutVw+6tSeJXk
-         bshQ==
-X-Gm-Message-State: AOAM531aWph01VvdF9GKrqc8MWdAVJfpkcVNc9QW5BQoR43bV71mRVFT
-        VAt9hKnXbMPMaMcROpPXABvZpx2gR3+FlA==
-X-Google-Smtp-Source: ABdhPJxb8/gCRbVz6ieNFA5DjYzSCSNnlTH0asHu842as71W+WpWLNO2QpDK1mRMvSt/9yx4ythZRg==
-X-Received: by 2002:ad4:552b:: with SMTP id ba11mr1727278qvb.145.1591790875533;
-        Wed, 10 Jun 2020 05:07:55 -0700 (PDT)
+        bh=xNoh9u1q9fbWqVtSlCDwrQ/3B0eRAU+tf8g5idD9RH8=;
+        b=p6fn8cCdp8myo4UjGw4SdNjUGK2+0fBrMRyEzJuXZowU/iC2RmHbjY0LG0bBx9gfQP
+         mRg0Wcsip6XrfiCpnnUjC+1Z4fUsnSz/j08AfcaoSX0cgoQg0s7vKS/O1Z7fBfsAhzA4
+         OLWZfONVXpcdx1ngi7MFQfgndM6YNKQcIKSi7eedKL6uF/fZngA4+k9aktFARqY/XK7o
+         3VSrGH9AJUC9045l+TZC1YQfiSMLxM4g+soQxrx47as2Hw8yNtGI+mX+WBuug2Uo8yS+
+         4AdEdgJQpUWPW694PMWo7/LXcL9GP01X2wNvOLBzQoM/M3ubop454K/ci7OECNayeJGa
+         Jtsg==
+X-Gm-Message-State: AOAM531qNuvnbMNiapbiBS8Yb8UIaXBo6lQ3y+IJP4fUrkQHmbZE6IHU
+        COpsN2omNRQZozE+l8pjHsBIMQ==
+X-Google-Smtp-Source: ABdhPJxfCiqGtPTB/F8/CkJXwvO/TBi4Kep/Q9MykJYaeASwyoqY8SlgDYmVpqi7gBmnB+zfpWIusQ==
+X-Received: by 2002:a37:7d45:: with SMTP id y66mr2582137qkc.484.1591791963659;
+        Wed, 10 Jun 2020 05:26:03 -0700 (PDT)
 Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id l19sm12236941qtq.13.2020.06.10.05.07.54
+        by smtp.gmail.com with ESMTPSA id y54sm13368128qtj.28.2020.06.10.05.26.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 05:07:54 -0700 (PDT)
-Date:   Wed, 10 Jun 2020 08:07:48 -0400
+        Wed, 10 Jun 2020 05:26:02 -0700 (PDT)
+Date:   Wed, 10 Jun 2020 08:26:00 -0400
 From:   Qian Cai <cai@lca.pw>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390: set NODES_SHIFT=0 when NUMA=n
-Message-ID: <20200610120748.GA954@lca.pw>
-References: <20200610014501.4268-1-cai@lca.pw>
- <20200610084553.GB4894@osiris>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH] mm/page_alloc: silence a KASAN false positive
+Message-ID: <20200610122600.GB954@lca.pw>
+References: <20200610052154.5180-1-cai@lca.pw>
+ <CACT4Y+Ze=cddKcU_bYf4L=GaHuJRUjY=AdFFpM7aKy2+aZrmyQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200610084553.GB4894@osiris>
+In-Reply-To: <CACT4Y+Ze=cddKcU_bYf4L=GaHuJRUjY=AdFFpM7aKy2+aZrmyQ@mail.gmail.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jun 10, 2020 at 10:45:53AM +0200, Heiko Carstens wrote:
-> On Tue, Jun 09, 2020 at 09:45:01PM -0400, Qian Cai wrote:
-> > When NUMA=n and nr_node_ids=2, in apply_wqattrs_prepare(), it has,
-> > 
-> > for_each_node(node) {
-> > 	if (wq_calc_node_cpumask(...
-> > 
-> > where it will trigger a booting warning,
-> > 
-> > WARNING: workqueue cpumask: online intersect > possible intersect
-> > 
-> > because it found 2 nodes and wq_numa_possible_cpumask[1] is an empty
-> > cpumask. NUMA=y has no such problem because node_possible_map will be
-> > initialized properly containing only node 0. Fix it by setting
-> > NODES_SHIFT=0 when NUMA=n.
-> > 
-> > Fixes: 701dc81e7412 ("s390/mm: remove fake numa support")
+On Wed, Jun 10, 2020 at 07:54:50AM +0200, Dmitry Vyukov wrote:
+> On Wed, Jun 10, 2020 at 7:22 AM Qian Cai <cai@lca.pw> wrote:
+> >
+> > kernel_init_free_pages() will use memset() on s390 to clear all pages
+> > from kmalloc_order() which will override KASAN redzones because a
+> > redzone was setup from the end of the allocation size to the end of the
+> > last page. Silence it by not reporting it there. An example of the
+> > report is,
+> 
+> Interesting. The reason why we did not hit it on x86_64 is because
+> clear_page is implemented in asm (arch/x86/lib/clear_page_64.S) and
+> thus is not instrumented. Arm64 probably does the same. However, on
+> s390 clear_page is defined to memset.
+> clear_[high]page are pretty extensively used in the kernel.
+> We can either do this, or make clear_page non instrumented on s390 as
+> well to match the existing implicit assumption. The benefit of the
+> current approach is that we can find some real use-after-free's and
+> maybe out-of-bounds on clear_page. The downside is that we may need
+> more of these annotations. Thoughts?
+
+Since we had already done the same thing in poison_page(), I suppose we
+could do the same here. Also, clear_page() has been used in many places
+on s390, and it is not clear to me if those are all safe like this.
+
+There might be more annotations required, so it probably up to s390
+maintainers (CC'ed) if they prefer not instrumenting clear_page() like
+other arches.
+
+> 
+> >  BUG: KASAN: slab-out-of-bounds in __free_pages_ok
+> >  Write of size 4096 at addr 000000014beaa000
+> >  Call Trace:
+> >  show_stack+0x152/0x210
+> >  dump_stack+0x1f8/0x248
+> >  print_address_description.isra.13+0x5e/0x4d0
+> >  kasan_report+0x130/0x178
+> >  check_memory_region+0x190/0x218
+> >  memset+0x34/0x60
+> >  __free_pages_ok+0x894/0x12f0
+> >  kfree+0x4f2/0x5e0
+> >  unpack_to_rootfs+0x60e/0x650
+> >  populate_rootfs+0x56/0x358
+> >  do_one_initcall+0x1f4/0xa20
+> >  kernel_init_freeable+0x758/0x7e8
+> >  kernel_init+0x1c/0x170
+> >  ret_from_fork+0x24/0x28
+> >  Memory state around the buggy address:
+> >  000000014bea9f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >  000000014bea9f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > >000000014beaa000: 03 fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
+> >                     ^
+> >  000000014beaa080: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
+> >  000000014beaa100: fe fe fe fe fe fe fe fe fe fe fe fe fe fe
+> >
+> > Fixes: 6471384af2a6 ("mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options")
 > > Signed-off-by: Qian Cai <cai@lca.pw>
 > > ---
-> >  arch/s390/Kconfig | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> Thanks! However I committed a different solution. Hope you don't mind:
-
-No problem with that at all.
-
-> 
-> From dd3f1f08f2317768b35b2df3ff8285185df7e195 Mon Sep 17 00:00:00 2001
-> From: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Date: Wed, 10 Jun 2020 10:36:05 +0200
-> Subject: [PATCH] s390/numa: let NODES_SHIFT depend on NEED_MULTIPLE_NODES
-> 
-> Qian Cai reported:
-> ---
-> When NUMA=n and nr_node_ids=2, in apply_wqattrs_prepare(), it has,
-> 
-> for_each_node(node) {
->         if (wq_calc_node_cpumask(...
-> 
-> where it will trigger a booting warning,
-> 
-> WARNING: workqueue cpumask: online intersect > possible intersect
-> 
-> because it found 2 nodes and wq_numa_possible_cpumask[1] is an empty
-> cpumask.
-> ---
-> 
-> Let NODES_SHIFT depend on NEED_MULTIPLE_NODES like it is done
-> on other architectures in order to fix this.
-> 
-> Fixes: 701dc81e7412 ("s390/mm: remove fake numa support")
-> Reported-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-> ---
->  arch/s390/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index 2167bce993ff..ae01be202204 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -462,6 +462,7 @@ config NUMA
->  
->  config NODES_SHIFT
->  	int
-> +	depends on NEED_MULTIPLE_NODES
->  	default "1"
->  
->  config SCHED_SMT
-> -- 
-> 2.17.1
-> 
+> >  mm/page_alloc.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > index 727751219003..9954973f89a3 100644
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -1164,8 +1164,11 @@ static void kernel_init_free_pages(struct page *page, int numpages)
+> >  {
+> >         int i;
+> >
+> > +       /* s390's use of memset() could override KASAN redzones. */
+> > +       kasan_disable_current();
+> >         for (i = 0; i < numpages; i++)
+> >                 clear_highpage(page + i);
+> > +       kasan_enable_current();
+> >  }
+> >
+> >  static __always_inline bool free_pages_prepare(struct page *page,
+> > --
+> > 2.21.0 (Apple Git-122.2)
+> >
