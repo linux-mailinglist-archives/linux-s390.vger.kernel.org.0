@@ -2,135 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D7BE1F7A84
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2020 17:15:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5B6D1F7BD5
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2020 18:53:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbgFLPP0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 12 Jun 2020 11:15:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37194 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726085AbgFLPPZ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 12 Jun 2020 11:15:25 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05CEWLWc135855;
-        Fri, 12 Jun 2020 11:15:23 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31m8u1xgt2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 11:15:22 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05CF0uMW088858;
-        Fri, 12 Jun 2020 11:15:21 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31m8u1xgn2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 11:15:20 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05CF5pb0008300;
-        Fri, 12 Jun 2020 15:15:10 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 31g2s83h9f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 12 Jun 2020 15:15:10 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05CFF7g142926352
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jun 2020 15:15:07 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 84E0C42045;
-        Fri, 12 Jun 2020 15:15:07 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A0B042049;
-        Fri, 12 Jun 2020 15:15:07 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.76.70])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 12 Jun 2020 15:15:07 +0000 (GMT)
-Subject: Re: [PATCH] s390: protvirt: virtio: Refuse device without IOMMU
-To:     Mauricio Tavares <raubvogel@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
- <CAHEKYV6edAHyrW-VQtW5ufZkqpXbfd1sU9N4BqOktezdffHTsg@mail.gmail.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <56545c29-c906-0020-6727-0e35c21741f5@linux.ibm.com>
-Date:   Fri, 12 Jun 2020 17:15:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726258AbgFLQxH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jun 2020 12:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726108AbgFLQxH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 12 Jun 2020 12:53:07 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 985DAC03E96F;
+        Fri, 12 Jun 2020 09:53:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=P/jNQXjNSM/A6oN+60RJrl9Lv/d/a/2jIE6Q5ifN8/s=; b=LKj+wOy3l57klhVmnW+yujCrgG
+        K7vkYi8Xm/4X3STZKa3XkUVc5AWgi7GO+GsOh+Bf1JE7dJHBKvlapqkZV0d9gYyCrh2J2Z4/kPTY9
+        eelN7KE71KCqEPJLY22K0lXk1Ybhak4ch2hFNUsnJOnAq0JnQ/5vGXDnAmn/SHUfGAH/r3rjIEoH+
+        GaaphLBJxhYFqpz+IeuImATeDu4sovDgngfnxkVC8r35iNWt+5x3sr+LWGuKxIjjCP9Qog63+PLHF
+        jIphBiN6QCX8C98YlF0kJECi8dCAaccSYeNUekLCIHGQG7AgjrszTRsgowpiiHyc8cPivjxu43f3L
+        XtfHf8Cw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jjmvG-0006Qb-09; Fri, 12 Jun 2020 16:52:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BB7CB3003E4;
+        Fri, 12 Jun 2020 18:52:51 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9937E213DCC6A; Fri, 12 Jun 2020 18:52:51 +0200 (CEST)
+Date:   Fri, 12 Jun 2020 18:52:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [v2 PATCH] printk: Make linux/printk.h self-contained
+Message-ID: <20200612165251.GG2497@hirez.programming.kicks-ass.net>
+References: <20200611125144.GA2506@gondor.apana.org.au>
+ <20200612043634.GA30181@gondor.apana.org.au>
+ <20200612131405.GI4311@linux-b0ei>
 MIME-Version: 1.0
-In-Reply-To: <CAHEKYV6edAHyrW-VQtW5ufZkqpXbfd1sU9N4BqOktezdffHTsg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-11_23:2020-06-11,2020-06-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 clxscore=1015 bulkscore=0
- mlxlogscore=999 spamscore=0 cotscore=-2147483648 phishscore=0
- suspectscore=0 adultscore=0 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006110174
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200612131405.GI4311@linux-b0ei>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 2020-06-12 15:45, Mauricio Tavares wrote:
-> On Wed, Jun 10, 2020 at 12:32 PM Pierre Morel <pmorel@linux.ibm.com> wrote:
->>
->> Protected Virtualisation protects the memory of the guest and
->> do not allow a the host to access all of its memory.
->>
->> Let's refuse a VIRTIO device which does not use IOMMU
->> protected access.
->>
->        Stupid questions:
-
-not stupid at all. :)
-
+On Fri, Jun 12, 2020 at 03:14:05PM +0200, Petr Mladek wrote:
+> On Fri 2020-06-12 14:36:35, Herbert Xu wrote:
+> > As it stands if you include printk.h by itself it will fail to
+> > compile because it requires definitions from ratelimit.h.  However,
+> > simply including ratelimit.h from printk.h does not work due to
+> > inclusion loops involving sched.h and kernel.h.
+> > 
+> > This patch solves this by moving bits from ratelimit.h into a new
+> > header file which can then be included by printk.h without any
+> > worries about header loops.
+> > 
+> > The build bot then revealed some intriguing failures arising out
+> > of this patch.  On s390 there is an inclusion loop with asm/bug.h
+> > and linux/kernel.h that triggers a compile failure, because kernel.h
+> > will cause asm-generic/bug.h to be included before s390's own
+> > asm/bug.h has finished processing.  This has been fixed by not
+> > including kernel.h in arch/s390/include/asm/bug.h.
+> > 
+> > A related failure was seen on powerpc where asm/bug.h leads to
+> > the inclusion of linux/kernel.h via asm-generic/bug.h which then
+> > prematurely tries to use the very macros defined in asm/bug.h.
+> > The particular inclusion path which led to this involves lockdep.h.
+> > I have fixed this moving the type definitions lockdep.h into the
+> > new lockdep_types.h.
+> > 
+> > Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 > 
-> 1. Do all CPU families we care about (which are?) support IOMMU? Ex:
-> would it recognize an ARM thingie with SMMU? [1]
-
-In Message-ID: <6356ba7f-afab-75e1-05ff-4a22b88c610e@linux.ibm.com>
-(as answer to Jason) I modified the patch and propose to take care of 
-this problem by using force_dma_unencrypted() inside virtio core instead 
-of a S390 specific test.
-
-If we use force_dma_unencrypted(dev) to check if we must refuse a device 
-without the VIRTIO_F_IOMMU_PLATFORM feature, we are safe:
-only architectures defining CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED will 
-have to define force_dma_unencrypted(dev), and they can choose what to 
-do by checking the architecture functionalities and/or the device.
-
-> 2. Would it make sense to have some kind of
-> yes-I-know-the-consequences-but-I-need-to-have-a-virtio-device-without-iommu-in-this-guest
-> flag?
-
-Yes, two ways:
-
-Never refuse a device without VIRTIO_F_IOMMU_PLATFORM, by not defining 
-CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED or by always return 0 in 
-force_dma_unencrypted()
-
-have force_dma_unencrypted() selectively answer by checking the device 
-and/or architecture state.
-
+> I am fine with the changes as long as the kernel test robot
+> does not complain ;-)
 > 
-...snip...
->>
+> Acked-by: Petr Mladek <pmladek@suse.com>
 > 
-> [1] https://developer.arm.com/architectures/system-architectures/system-components/system-mmu-support
-> 
+> Well, I wonder if PeterZ is fine with the lockdep part. It might make
+> sense to split it into separate patch as a prerequisite.
 
-Regards,
-Pierre
-
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
+They look fine, but yes, I think it makes sense to split that out.
