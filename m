@@ -2,113 +2,632 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0E681F70B4
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2020 01:05:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ED8F1F730F
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jun 2020 06:37:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgFKXFa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 11 Jun 2020 19:05:30 -0400
-Received: from sonic315-55.consmr.mail.gq1.yahoo.com ([98.137.65.31]:35971
-        "EHLO sonic315-55.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726287AbgFKXF3 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 11 Jun 2020 19:05:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1591916728; bh=4YUy2dnKX+aLfXhIKF01g98COCeJaRGO0uIb0VS79Kk=; h=Date:From:Subject:To:Cc:References:From:Subject; b=ksY/536Vx4+k7UgUuK7sU+hVBThfiszI09Iuz1pRDsEDzIekIw49uYjp7ORgIcNYz0f6DNDzfy6/4yfZrOHqInTp/7Z/HcyjmMMLgeZWuD8TRAwOaMMkENqEBRHmRUuLAghQQjihayEfj8L20m6zZMfg23tNVn0w4aye3VB6XxwcQwPiMIHahzYpkJItzHEI+CmtRNoS45OeF8pkyYlQXTj5rda13IOwNMLzMGJ8ZXmNJM+2AQJKKYg2covwyMtdvSqzYCtGIcWITwCXA8hKPZtr12KvBVm1CK0E2O6h8qR/7PTGpw4okY+ctPIvnNIDw3ffcEEgwvbMVoGH5mEvNw==
-X-YMail-OSG: VeI5KAIVM1l8FZBKKOcgI77XPMQpX1yRxgEuJkG2HwGiwftSWlMzUhg.wI9RpCO
- 0m9mb_xDfGj9T2zqhX.uH.ouvYYHvpDFZhv1pWFL5y1aS4v9hb1LGwKsLcCxtdjVmrndIAxlrgTz
- 8LO3W4t7Y60g_t0QstSujZEh68oL_wRlHCSB5Td_M.HVxGsUQjqWM2qr_3.AkhSA0yutg5qcke8K
- Tv4I9pYJd9awi6FeCBU8.AW0hdjLa6mwHM8hm8SCtmWxN5P9kgX8HCxAaSA2wWYE5BgfOiUDY0eN
- 8SdF4xfPgafkYHgez7VCD9nxGHLJtR8PsxeXciMIqqC1F9E63fd4UIcXYfSp5mCCnXf1pW2oA0VZ
- eHnF2Lf5MUvy0KsxA7VkbSJfJnhx72DN4PMW15_Pqypq2CTc5FOh7t_XE2x5gmqPfv8aAgem9Z6S
- G754j7JvVIvxR16NyP1NJHKbTMsWHNX0qPQnbyQSB5vpRmVwkBOq_AHkSPmPavoJRKp4qbzy6bBO
- Bgl5ef0LdH1w0IGoNwlRH.UR8MrIAnwak32wCqG5lf.SwS9m.j1yNpS4_5D0o_3_e09XXbmbVT87
- JydTvntH.WypWlGKDwbEeflUZOlJnJ07XyPmONgYYP36533AICJBEt96Va3.mhtjhlFw3.29ZciX
- DUnx7ZrUMS58v2ROWoMShz.kIsuifGl.62rbZy_X8r4vO.Uxo5XJwzW4msMSwsvTqaOqT_X2DSbr
- LLj_UnAnYi2D4y9bOLYthO6rgknJsjH5NNK_yfRdTmQy.0mTEM7K9s8uzcE9CTS8fKfsDaVPyVxh
- xVmmJFX.A8jqmra2IrNsfF8nyaPIwxTRtGkfxuk34ZNH.5c0amNlvLcBd8.CT2wpn_WASLVEIrIT
- lDlihOCfti987bgw5CyoUnMPwNm0_HyhWtZkakVcpPqyn4HsvO_sGZRdcb0.0tEu_C025pvdxswN
- rmgxGP8nc8FxFl_ewO1mGzIfh.LwtPgP6qxJHGwfAB.8sgV6oyaOcpklbPCK0mtb2TNuawY.gM1Y
- 4EIewDISpLaEHGybdY02ejlYI9grt4UFGP66cBLM98U9eaSs476RtjcbgJDnZF0_b5o12Ivh3yDE
- .RRrOjKXttZUE3n3qAJp9VaVUkrJ1tU13bF05OPpKcgEydjxVzV7vX1CE71IihUl_3XGlg_spYT1
- ddNGRuEIqFA0z2RSjAXwv25g7eOX4gy.2PVQRZ6tqkn.PDou7IfhlVk8_1frFp5r3OUVYDW2Om7X
- b38HOjsBTSMFQLSdrTiz56K7c1Ygr8lUnUMCqgmgaJUxAZUUchMUduSb9Ii8mcXGP569B9NwAMAc
- y3hNB5BRs5SQzb2xm6fsFam.vFlKXVBiNz6MHR.jitsw1wi_Lt0BaPaD8ibirje_yAw4-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.gq1.yahoo.com with HTTP; Thu, 11 Jun 2020 23:05:28 +0000
-Received: by smtp422.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 385a77de6a3948fc2d5a9f83b3566fac;
-          Thu, 11 Jun 2020 23:05:25 +0000 (UTC)
-Date:   Thu, 11 Jun 2020 19:05:21 -0400
-From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Subject: AMD IOMMU + SME + amdgpu regression
-To:     Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        David Rientjes <rientjes@google.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Daniel Drake <drake@endlessm.com>, jonathan.derrick@intel.com,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
+        id S1725947AbgFLEhi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jun 2020 00:37:38 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:38554 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbgFLEhi (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 12 Jun 2020 00:37:38 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jjbQh-0007rY-3q; Fri, 12 Jun 2020 14:36:36 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 12 Jun 2020 14:36:35 +1000
+Date:   Fri, 12 Jun 2020 14:36:35 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [v2 PATCH] printk: Make linux/printk.h self-contained
+Message-ID: <20200612043634.GA30181@gondor.apana.org.au>
+References: <20200611125144.GA2506@gondor.apana.org.au>
 MIME-Version: 1.0
-Message-Id: <1591915710.rakbpzst8h.none@localhost>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-References: <1591915710.rakbpzst8h.none.ref@localhost>
-X-Mailer: WebService/1.1.16072 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611125144.GA2506@gondor.apana.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi,
+As it stands if you include printk.h by itself it will fail to
+compile because it requires definitions from ratelimit.h.  However,
+simply including ratelimit.h from printk.h does not work due to
+inclusion loops involving sched.h and kernel.h.
 
-amdgpu + IOMMU + SME is now working for me on 5.7, yay! But, it is=20
-broken on torvalds master, boo. On boot, depending on which exact commit=20
-I test, it either hangs immediately (with built-in driver, before=20
-starting initramfs), displays some errors then hangs, or spams the=20
-screen with many amdgpu errors.
+This patch solves this by moving bits from ratelimit.h into a new
+header file which can then be included by printk.h without any
+worries about header loops.
 
-I bisected the black screen hang to:
+The build bot then revealed some intriguing failures arising out
+of this patch.  On s390 there is an inclusion loop with asm/bug.h
+and linux/kernel.h that triggers a compile failure, because kernel.h
+will cause asm-generic/bug.h to be included before s390's own
+asm/bug.h has finished processing.  This has been fixed by not
+including kernel.h in arch/s390/include/asm/bug.h.
 
-commit dce8d6964ebdb333383bacf5e7ab8c27df151218
-Author: Joerg Roedel <jroedel@suse.de>
-Date:   Wed Apr 29 15:36:53 2020 +0200
+A related failure was seen on powerpc where asm/bug.h leads to
+the inclusion of linux/kernel.h via asm-generic/bug.h which then
+prematurely tries to use the very macros defined in asm/bug.h.
+The particular inclusion path which led to this involves lockdep.h.
+I have fixed this moving the type definitions lockdep.h into the
+new lockdep_types.h.
 
-    iommu/amd: Convert to probe/release_device() call-backs
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-    Convert the AMD IOMMU Driver to use the probe_device() and
-    release_device() call-backs of iommu_ops, so that the iommu core code
-    does the group and sysfs setup.
-
-    Signed-off-by: Joerg Roedel <jroedel@suse.de>
-    Link: https://lore.kernel.org/r/20200429133712.31431-16-joro@8bytes.org
-    Signed-off-by: Joerg Roedel <jroedel@suse.de>
-
-Testing torvalds master (623f6dc593) with the containing merge=20
-(98bdc74b36) plus the DMA mapping merge (4e94d08734) reverted allows=20
-amdgpu + IOMMU + SME to once again work.
-
-I think that nobody is really working on amdgpu + SME, but it would be a=20
-shame if it was supported and then incidentally broken by a small=20
-change.
-
-I am using an ASRock B450 Pro4 with Ryzen 1600 and ASUS RX 480. I don't=20
-understand this code at all, but let me know what I can do to=20
-troubleshoot.
-
-Thanks,
-Alex.
+diff --git a/include/linux/ratelimit_types.h b/include/linux/ratelimit_types.h
+new file mode 100644
+index 000000000000..b676aa419eef
+--- /dev/null
++++ b/include/linux/ratelimit_types.h
+@@ -0,0 +1,43 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_RATELIMIT_TYPES_H
++#define _LINUX_RATELIMIT_TYPES_H
++
++#include <linux/bits.h>
++#include <linux/param.h>
++#include <linux/spinlock_types.h>
++
++#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
++#define DEFAULT_RATELIMIT_BURST		10
++
++/* issue num suppressed message on exit */
++#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
++
++struct ratelimit_state {
++	raw_spinlock_t	lock;		/* protect the state */
++
++	int		interval;
++	int		burst;
++	int		printed;
++	int		missed;
++	unsigned long	begin;
++	unsigned long	flags;
++};
++
++#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
++		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
++		.interval	= interval_init,			\
++		.burst		= burst_init,				\
++	}
++
++#define RATELIMIT_STATE_INIT_DISABLED					\
++	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
++
++#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
++									\
++	struct ratelimit_state name =					\
++		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
++
++extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
++#define __ratelimit(state) ___ratelimit(state, __func__)
++
++#endif /* _LINUX_RATELIMIT_TYPES_H */
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index e061635e0409..1cd862cfd2f4 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -7,6 +7,7 @@
+ #include <linux/kern_levels.h>
+ #include <linux/linkage.h>
+ #include <linux/cache.h>
++#include <linux/ratelimit_types.h>
+ 
+ extern const char linux_banner[];
+ extern const char linux_proc_banner[];
+diff --git a/include/linux/ratelimit.h b/include/linux/ratelimit.h
+index 8ddf79e9207a..b17e0cd0a30c 100644
+--- a/include/linux/ratelimit.h
++++ b/include/linux/ratelimit.h
+@@ -2,41 +2,10 @@
+ #ifndef _LINUX_RATELIMIT_H
+ #define _LINUX_RATELIMIT_H
+ 
+-#include <linux/param.h>
++#include <linux/ratelimit_types.h>
+ #include <linux/sched.h>
+ #include <linux/spinlock.h>
+ 
+-#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
+-#define DEFAULT_RATELIMIT_BURST		10
+-
+-/* issue num suppressed message on exit */
+-#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
+-
+-struct ratelimit_state {
+-	raw_spinlock_t	lock;		/* protect the state */
+-
+-	int		interval;
+-	int		burst;
+-	int		printed;
+-	int		missed;
+-	unsigned long	begin;
+-	unsigned long	flags;
+-};
+-
+-#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
+-		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
+-		.interval	= interval_init,			\
+-		.burst		= burst_init,				\
+-	}
+-
+-#define RATELIMIT_STATE_INIT_DISABLED					\
+-	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
+-
+-#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
+-									\
+-	struct ratelimit_state name =					\
+-		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
+-
+ static inline void ratelimit_state_init(struct ratelimit_state *rs,
+ 					int interval, int burst)
+ {
+@@ -73,9 +42,6 @@ ratelimit_set_flags(struct ratelimit_state *rs, unsigned long flags)
+ 
+ extern struct ratelimit_state printk_ratelimit_state;
+ 
+-extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
+-#define __ratelimit(state) ___ratelimit(state, __func__)
+-
+ #ifdef CONFIG_PRINTK
+ 
+ #define WARN_ON_RATELIMIT(condition, state)	({		\
+diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
+index 7725f8006fdf..0b25f28351ed 100644
+--- a/arch/s390/include/asm/bug.h
++++ b/arch/s390/include/asm/bug.h
+@@ -2,7 +2,7 @@
+ #ifndef _ASM_S390_BUG_H
+ #define _ASM_S390_BUG_H
+ 
+-#include <linux/kernel.h>
++#include <linux/compiler.h>
+ 
+ #ifdef CONFIG_BUG
+ 
+diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
+new file mode 100644
+index 000000000000..7b9350624577
+--- /dev/null
++++ b/include/linux/lockdep_types.h
+@@ -0,0 +1,196 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Runtime locking correctness validator
++ *
++ *  Copyright (C) 2006,2007 Red Hat, Inc., Ingo Molnar <mingo@redhat.com>
++ *  Copyright (C) 2007 Red Hat, Inc., Peter Zijlstra
++ *
++ * see Documentation/locking/lockdep-design.rst for more details.
++ */
++#ifndef __LINUX_LOCKDEP_TYPES_H
++#define __LINUX_LOCKDEP_TYPES_H
++
++#include <linux/types.h>
++
++#define MAX_LOCKDEP_SUBCLASSES		8UL
++
++enum lockdep_wait_type {
++	LD_WAIT_INV = 0,	/* not checked, catch all */
++
++	LD_WAIT_FREE,		/* wait free, rcu etc.. */
++	LD_WAIT_SPIN,		/* spin loops, raw_spinlock_t etc.. */
++
++#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
++	LD_WAIT_CONFIG,		/* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
++#else
++	LD_WAIT_CONFIG = LD_WAIT_SPIN,
++#endif
++	LD_WAIT_SLEEP,		/* sleeping locks, mutex_t etc.. */
++
++	LD_WAIT_MAX,		/* must be last */
++};
++
++#ifdef CONFIG_LOCKDEP
++
++#include <linux/list.h>
++
++/*
++ * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
++ * the total number of states... :-(
++ */
++#define XXX_LOCK_USAGE_STATES		(1+2*4)
++
++/*
++ * NR_LOCKDEP_CACHING_CLASSES ... Number of classes
++ * cached in the instance of lockdep_map
++ *
++ * Currently main class (subclass == 0) and signle depth subclass
++ * are cached in lockdep_map. This optimization is mainly targeting
++ * on rq->lock. double_rq_lock() acquires this highly competitive with
++ * single depth.
++ */
++#define NR_LOCKDEP_CACHING_CLASSES	2
++
++/*
++ * A lockdep key is associated with each lock object. For static locks we use
++ * the lock address itself as the key. Dynamically allocated lock objects can
++ * have a statically or dynamically allocated key. Dynamically allocated lock
++ * keys must be registered before being used and must be unregistered before
++ * the key memory is freed.
++ */
++struct lockdep_subclass_key {
++	char __one_byte;
++} __attribute__ ((__packed__));
++
++/* hash_entry is used to keep track of dynamically allocated keys. */
++struct lock_class_key {
++	union {
++		struct hlist_node		hash_entry;
++		struct lockdep_subclass_key	subkeys[MAX_LOCKDEP_SUBCLASSES];
++	};
++};
++
++extern struct lock_class_key __lockdep_no_validate__;
++
++struct lock_trace;
++
++#define LOCKSTAT_POINTS		4
++
++/*
++ * The lock-class itself. The order of the structure members matters.
++ * reinit_class() zeroes the key member and all subsequent members.
++ */
++struct lock_class {
++	/*
++	 * class-hash:
++	 */
++	struct hlist_node		hash_entry;
++
++	/*
++	 * Entry in all_lock_classes when in use. Entry in free_lock_classes
++	 * when not in use. Instances that are being freed are on one of the
++	 * zapped_classes lists.
++	 */
++	struct list_head		lock_entry;
++
++	/*
++	 * These fields represent a directed graph of lock dependencies,
++	 * to every node we attach a list of "forward" and a list of
++	 * "backward" graph nodes.
++	 */
++	struct list_head		locks_after, locks_before;
++
++	const struct lockdep_subclass_key *key;
++	unsigned int			subclass;
++	unsigned int			dep_gen_id;
++
++	/*
++	 * IRQ/softirq usage tracking bits:
++	 */
++	unsigned long			usage_mask;
++	const struct lock_trace		*usage_traces[XXX_LOCK_USAGE_STATES];
++
++	/*
++	 * Generation counter, when doing certain classes of graph walking,
++	 * to ensure that we check one node only once:
++	 */
++	int				name_version;
++	const char			*name;
++
++	short				wait_type_inner;
++	short				wait_type_outer;
++
++#ifdef CONFIG_LOCK_STAT
++	unsigned long			contention_point[LOCKSTAT_POINTS];
++	unsigned long			contending_point[LOCKSTAT_POINTS];
++#endif
++} __no_randomize_layout;
++
++#ifdef CONFIG_LOCK_STAT
++struct lock_time {
++	s64				min;
++	s64				max;
++	s64				total;
++	unsigned long			nr;
++};
++
++enum bounce_type {
++	bounce_acquired_write,
++	bounce_acquired_read,
++	bounce_contended_write,
++	bounce_contended_read,
++	nr_bounce_types,
++
++	bounce_acquired = bounce_acquired_write,
++	bounce_contended = bounce_contended_write,
++};
++
++struct lock_class_stats {
++	unsigned long			contention_point[LOCKSTAT_POINTS];
++	unsigned long			contending_point[LOCKSTAT_POINTS];
++	struct lock_time		read_waittime;
++	struct lock_time		write_waittime;
++	struct lock_time		read_holdtime;
++	struct lock_time		write_holdtime;
++	unsigned long			bounces[nr_bounce_types];
++};
++
++struct lock_class_stats lock_stats(struct lock_class *class);
++void clear_lock_stats(struct lock_class *class);
++#endif
++
++/*
++ * Map the lock object (the lock instance) to the lock-class object.
++ * This is embedded into specific lock instances:
++ */
++struct lockdep_map {
++	struct lock_class_key		*key;
++	struct lock_class		*class_cache[NR_LOCKDEP_CACHING_CLASSES];
++	const char			*name;
++	short				wait_type_outer; /* can be taken in this context */
++	short				wait_type_inner; /* presents this context */
++#ifdef CONFIG_LOCK_STAT
++	int				cpu;
++	unsigned long			ip;
++#endif
++};
++
++struct pin_cookie { unsigned int val; };
++
++#else /* !CONFIG_LOCKDEP */
++
++/*
++ * The class key takes no space if lockdep is disabled:
++ */
++struct lock_class_key { };
++
++/*
++ * The lockdep_map takes no space if lockdep is disabled:
++ */
++struct lockdep_map { };
++
++struct pin_cookie { };
++
++#endif /* !LOCKDEP */
++
++#endif /* __LINUX_LOCKDEP_TYPES_H */
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 206774ac6946..1655d767c2c7 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -10,181 +10,20 @@
+ #ifndef __LINUX_LOCKDEP_H
+ #define __LINUX_LOCKDEP_H
+ 
++#include <linux/lockdep_types.h>
++
+ struct task_struct;
+-struct lockdep_map;
+ 
+ /* for sysctl */
+ extern int prove_locking;
+ extern int lock_stat;
+ 
+-#define MAX_LOCKDEP_SUBCLASSES		8UL
+-
+-#include <linux/types.h>
+-
+-enum lockdep_wait_type {
+-	LD_WAIT_INV = 0,	/* not checked, catch all */
+-
+-	LD_WAIT_FREE,		/* wait free, rcu etc.. */
+-	LD_WAIT_SPIN,		/* spin loops, raw_spinlock_t etc.. */
+-
+-#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
+-	LD_WAIT_CONFIG,		/* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
+-#else
+-	LD_WAIT_CONFIG = LD_WAIT_SPIN,
+-#endif
+-	LD_WAIT_SLEEP,		/* sleeping locks, mutex_t etc.. */
+-
+-	LD_WAIT_MAX,		/* must be last */
+-};
+-
+ #ifdef CONFIG_LOCKDEP
+ 
+ #include <linux/linkage.h>
+-#include <linux/list.h>
+ #include <linux/debug_locks.h>
+ #include <linux/stacktrace.h>
+ 
+-/*
+- * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
+- * the total number of states... :-(
+- */
+-#define XXX_LOCK_USAGE_STATES		(1+2*4)
+-
+-/*
+- * NR_LOCKDEP_CACHING_CLASSES ... Number of classes
+- * cached in the instance of lockdep_map
+- *
+- * Currently main class (subclass == 0) and signle depth subclass
+- * are cached in lockdep_map. This optimization is mainly targeting
+- * on rq->lock. double_rq_lock() acquires this highly competitive with
+- * single depth.
+- */
+-#define NR_LOCKDEP_CACHING_CLASSES	2
+-
+-/*
+- * A lockdep key is associated with each lock object. For static locks we use
+- * the lock address itself as the key. Dynamically allocated lock objects can
+- * have a statically or dynamically allocated key. Dynamically allocated lock
+- * keys must be registered before being used and must be unregistered before
+- * the key memory is freed.
+- */
+-struct lockdep_subclass_key {
+-	char __one_byte;
+-} __attribute__ ((__packed__));
+-
+-/* hash_entry is used to keep track of dynamically allocated keys. */
+-struct lock_class_key {
+-	union {
+-		struct hlist_node		hash_entry;
+-		struct lockdep_subclass_key	subkeys[MAX_LOCKDEP_SUBCLASSES];
+-	};
+-};
+-
+-extern struct lock_class_key __lockdep_no_validate__;
+-
+-struct lock_trace;
+-
+-#define LOCKSTAT_POINTS		4
+-
+-/*
+- * The lock-class itself. The order of the structure members matters.
+- * reinit_class() zeroes the key member and all subsequent members.
+- */
+-struct lock_class {
+-	/*
+-	 * class-hash:
+-	 */
+-	struct hlist_node		hash_entry;
+-
+-	/*
+-	 * Entry in all_lock_classes when in use. Entry in free_lock_classes
+-	 * when not in use. Instances that are being freed are on one of the
+-	 * zapped_classes lists.
+-	 */
+-	struct list_head		lock_entry;
+-
+-	/*
+-	 * These fields represent a directed graph of lock dependencies,
+-	 * to every node we attach a list of "forward" and a list of
+-	 * "backward" graph nodes.
+-	 */
+-	struct list_head		locks_after, locks_before;
+-
+-	const struct lockdep_subclass_key *key;
+-	unsigned int			subclass;
+-	unsigned int			dep_gen_id;
+-
+-	/*
+-	 * IRQ/softirq usage tracking bits:
+-	 */
+-	unsigned long			usage_mask;
+-	const struct lock_trace		*usage_traces[XXX_LOCK_USAGE_STATES];
+-
+-	/*
+-	 * Generation counter, when doing certain classes of graph walking,
+-	 * to ensure that we check one node only once:
+-	 */
+-	int				name_version;
+-	const char			*name;
+-
+-	short				wait_type_inner;
+-	short				wait_type_outer;
+-
+-#ifdef CONFIG_LOCK_STAT
+-	unsigned long			contention_point[LOCKSTAT_POINTS];
+-	unsigned long			contending_point[LOCKSTAT_POINTS];
+-#endif
+-} __no_randomize_layout;
+-
+-#ifdef CONFIG_LOCK_STAT
+-struct lock_time {
+-	s64				min;
+-	s64				max;
+-	s64				total;
+-	unsigned long			nr;
+-};
+-
+-enum bounce_type {
+-	bounce_acquired_write,
+-	bounce_acquired_read,
+-	bounce_contended_write,
+-	bounce_contended_read,
+-	nr_bounce_types,
+-
+-	bounce_acquired = bounce_acquired_write,
+-	bounce_contended = bounce_contended_write,
+-};
+-
+-struct lock_class_stats {
+-	unsigned long			contention_point[LOCKSTAT_POINTS];
+-	unsigned long			contending_point[LOCKSTAT_POINTS];
+-	struct lock_time		read_waittime;
+-	struct lock_time		write_waittime;
+-	struct lock_time		read_holdtime;
+-	struct lock_time		write_holdtime;
+-	unsigned long			bounces[nr_bounce_types];
+-};
+-
+-struct lock_class_stats lock_stats(struct lock_class *class);
+-void clear_lock_stats(struct lock_class *class);
+-#endif
+-
+-/*
+- * Map the lock object (the lock instance) to the lock-class object.
+- * This is embedded into specific lock instances:
+- */
+-struct lockdep_map {
+-	struct lock_class_key		*key;
+-	struct lock_class		*class_cache[NR_LOCKDEP_CACHING_CLASSES];
+-	const char			*name;
+-	short				wait_type_outer; /* can be taken in this context */
+-	short				wait_type_inner; /* presents this context */
+-#ifdef CONFIG_LOCK_STAT
+-	int				cpu;
+-	unsigned long			ip;
+-#endif
+-};
+-
+ static inline void lockdep_copy_map(struct lockdep_map *to,
+ 				    struct lockdep_map *from)
+ {
+@@ -421,8 +260,6 @@ static inline void lock_set_subclass(struct lockdep_map *lock,
+ 
+ extern void lock_downgrade(struct lockdep_map *lock, unsigned long ip);
+ 
+-struct pin_cookie { unsigned int val; };
+-
+ #define NIL_COOKIE (struct pin_cookie){ .val = 0U, }
+ 
+ extern struct pin_cookie lock_pin_lock(struct lockdep_map *lock);
+@@ -501,10 +338,6 @@ static inline void lockdep_set_selftest_task(struct task_struct *task)
+ # define lockdep_reset()		do { debug_locks = 1; } while (0)
+ # define lockdep_free_key_range(start, size)	do { } while (0)
+ # define lockdep_sys_exit() 			do { } while (0)
+-/*
+- * The class key takes no space if lockdep is disabled:
+- */
+-struct lock_class_key { };
+ 
+ static inline void lockdep_register_key(struct lock_class_key *key)
+ {
+@@ -514,11 +347,6 @@ static inline void lockdep_unregister_key(struct lock_class_key *key)
+ {
+ }
+ 
+-/*
+- * The lockdep_map takes no space if lockdep is disabled:
+- */
+-struct lockdep_map { };
+-
+ #define lockdep_depth(tsk)	(0)
+ 
+ #define lockdep_is_held_type(l, r)		(1)
+@@ -530,8 +358,6 @@ struct lockdep_map { };
+ 
+ #define lockdep_recursing(tsk)			(0)
+ 
+-struct pin_cookie { };
+-
+ #define NIL_COOKIE (struct pin_cookie){ }
+ 
+ #define lockdep_pin_lock(l)			({ struct pin_cookie cookie = { }; cookie; })
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
