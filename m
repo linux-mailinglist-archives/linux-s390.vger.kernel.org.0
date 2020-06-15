@@ -2,108 +2,153 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1F121FA0B8
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2020 21:45:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 884E31FA36C
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 00:23:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730742AbgFOTph (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 15 Jun 2020 15:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728773AbgFOTph (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 15 Jun 2020 15:45:37 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E851C061A0E;
-        Mon, 15 Jun 2020 12:45:36 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id s18so19321344ioe.2;
-        Mon, 15 Jun 2020 12:45:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GcEsP5XHkAYWjVB1MFDssViF4cxMQLWXk2Kgbxji0hs=;
-        b=d1N76KYXqQ1fpaIX30dgZBqRd8wI/sojfUihP9H9n7SrJl5fw8AIM1QjJHFUie0ynn
-         Ba7u2YUNcGPgUH5k5/xR7j1g1AD4ubDfekbuaJsUIn8tpQbEqATe7gJrtx3bqoUJmH4s
-         5+bquUS4RYotC8sNbFVFKTlUv9aULk2bwxwqhhxgC1NWXrZ2b3J+MnEA2epJN5YcPwJd
-         seJUjothmBUqRpHkR2X5MhScZehYA2HegUeEnFWW4JD2VuEs9SDBgZ0eGzbMT5M7oi0/
-         XAULqncIPF3a7VQsBQHJiygHfxiVk4UqM7Xb3uuuIVXJb73uzIjZdrMQlG7Z9vwbj0Z+
-         CyHA==
+        id S1725843AbgFOWXL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 15 Jun 2020 18:23:11 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36348 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726408AbgFOWXK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 15 Jun 2020 18:23:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592259788;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6iJ7T2WCuS9j4a5Opdda9lcC0DUIC1agfdOIfVBRkmk=;
+        b=JM0R61XmrpMRvMTem8IOt/bmPdu7/ZgVmRoJD7FJ1IoX3QkA/ZkJJMH2M+yy007S7bHRrD
+        TQ5ukLs6GeVU49/Fx5n0nbCGZRFrMxJoVgYb5BxAW9NqemTxSf1+A1bkiY9uDNDyoQ++BB
+        GCDpGYZWgCW46r2hIfrUdBjjjiOA10Y=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-448-4l8Tz7ouO-uapL037e-1Xw-1; Mon, 15 Jun 2020 18:23:05 -0400
+X-MC-Unique: 4l8Tz7ouO-uapL037e-1Xw-1
+Received: by mail-qt1-f200.google.com with SMTP id t24so15185763qtj.15
+        for <linux-s390@vger.kernel.org>; Mon, 15 Jun 2020 15:23:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GcEsP5XHkAYWjVB1MFDssViF4cxMQLWXk2Kgbxji0hs=;
-        b=oD8rqe1WbSqXPeGF+kDGc8ny/y8ZwR4nKi3K9xLvoeN5cmrNEsfuIvRKjrB9b7cCiJ
-         aDCzAMYetaJJYLn4POxwKcLWyDI6do9l4LZ0aeCbK2KLF3ogWlhDpI8t563TOxzlbiZi
-         XsZTmklNrV1zI+xAv3WWoQcNa3ktsCTo2/rDEpvnpDmW6nmx08TKX5jQtJTPE6WEr6wT
-         +KIDoOpMRYvPoSjcw46UA9Xq02vIsOmDgE92qyte4GfseqBE8SDPaTjV9IN2h423Pu1U
-         Yk/lBu3IiMSLLtpuLiRGJeYlp8q905CasW9zE37EJjIJPmzDMe+v1HFJb6r1JIQDTV09
-         8loQ==
-X-Gm-Message-State: AOAM5319MNyHR3uHQK7Fo+4VDz/IfJHwZzc5RA/G6XG2nu1ijlVfVvDg
-        SRSa0DwKOOS+q/xtbhN83gIl0E1UlgXQQZlNUA==
-X-Google-Smtp-Source: ABdhPJxruXU+i+P2JjGW09+nvoxmHKpEF1SP+mxNnwxG3exn2/HqUJry5Lh3ZGwSfno6ZlJbUa99xQueu/DZAVZXhg0=
-X-Received: by 2002:a05:6602:80b:: with SMTP id z11mr29222473iow.109.1592250335524;
- Mon, 15 Jun 2020 12:45:35 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6iJ7T2WCuS9j4a5Opdda9lcC0DUIC1agfdOIfVBRkmk=;
+        b=fwThPpiTR96Vt4O1inVkf5reZIhh9MckyaX3D6HkSTDdj3hk0UH1oIOyQ0yht2HZYU
+         fmQeJaPtXRGkcyypS3yPp9t2a6A/SpT9cGcLJ0hYOaDmQL9aPnPOQ3n3FcNx4SbCBXQw
+         gPpRgGm803FiM8qA/l+FT/ltbtsJO+FUvjEkjBCRZDMag74p/Y5AwHrYV3Z3NRSwmBZt
+         ECnB2RT7mIvp16+/b3TTcdD27Mqyq6jWLwxUGqtpgayg/wHZTH6cwqfZWVz1EltdE7Yy
+         c9+wp9wTxexsoIlARJtus/cp4228oR/JEuqJeXr0C20wsd+UlXkF+A0owLrSdTCnLeRP
+         3zZA==
+X-Gm-Message-State: AOAM532GOzhxUGC87uIIW1HlSS7CNWoIjrg9sC4iqIAwsOHsCrZQHkbs
+        Z6enpv/BzkkeWxq0pgr8JyFgeELHol2TeUMD8JAfFxjiqOyroyCK1TgGjxiEhrmgAcsGp0CvLlo
+        +f6vozgqD0F671H65d9tW+w==
+X-Received: by 2002:ac8:4f46:: with SMTP id i6mr17839222qtw.317.1592259784901;
+        Mon, 15 Jun 2020 15:23:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwsVEBhvqnlL41B27HM9K7iSgiXjn7WNVAulmZ9FZltbdlG0mU9CjIqjx17dmiutbX9UExfzg==
+X-Received: by 2002:ac8:4f46:: with SMTP id i6mr17839209qtw.317.1592259784704;
+        Mon, 15 Jun 2020 15:23:04 -0700 (PDT)
+Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id d17sm12237625qke.101.2020.06.15.15.23.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2020 15:23:04 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Xu <peterx@redhat.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 19/25] mm/s390: Use mm_fault_accounting()
+Date:   Mon, 15 Jun 2020 18:23:02 -0400
+Message-Id: <20200615222302.8452-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200615221607.7764-1-peterx@redhat.com>
+References: <20200615221607.7764-1-peterx@redhat.com>
 MIME-Version: 1.0
-References: <20200615130032.931285-1-hch@lst.de> <20200615130032.931285-3-hch@lst.de>
- <CAK8P3a0bRD3RzE_X6Tjzu9Tj+OhHhP+S=k6+VYODBGko8oQhew@mail.gmail.com>
- <20200615141239.GA12951@lst.de> <CAMzpN2heSzZzg16ws3yQkd7YZwmPPx_4RFCpb9JYfFWJ9gfPhA@mail.gmail.com>
- <CAK8P3a3q-hC7kZwLPbc+E5VYcqthQS4J4Rqo+rKkBRU2n071XA@mail.gmail.com>
-In-Reply-To: <CAK8P3a3q-hC7kZwLPbc+E5VYcqthQS4J4Rqo+rKkBRU2n071XA@mail.gmail.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Mon, 15 Jun 2020 15:45:24 -0400
-Message-ID: <CAMzpN2iDPKatOqs+Uuw70ACbnB-D__dgSRZU0wBjOUBwTGOJ-A@mail.gmail.com>
-Subject: Re: [PATCH 2/6] exec: simplify the compat syscall handling
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 2:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Mon, Jun 15, 2020 at 4:48 PM Brian Gerst <brgerst@gmail.com> wrote:
-> > On Mon, Jun 15, 2020 at 10:13 AM Christoph Hellwig <hch@lst.de> wrote:
-> > > On Mon, Jun 15, 2020 at 03:31:35PM +0200, Arnd Bergmann wrote:
->
-> > >
-> > > I'd rather keep it in common code as that allows all the low-level
-> > > exec stuff to be marked static, and avoid us growing new pointless
-> > > compat variants through copy and paste.
-> > > smart compiler to d
-> > >
-> > > > I don't really understand
-> > > > the comment, why can't this just use this?
-> > >
-> > > That errors out with:
-> > >
-> > > ld: arch/x86/entry/syscall_x32.o:(.rodata+0x1040): undefined reference to
-> > > `__x32_sys_execve'
-> > > ld: arch/x86/entry/syscall_x32.o:(.rodata+0x1108): undefined reference to
-> > > `__x32_sys_execveat'
-> > > make: *** [Makefile:1139: vmlinux] Error 1
-> >
-> > I think I have a fix for this, by modifying the syscall wrappers to
-> > add an alias for the __x32 variant to the native __x64_sys_foo().
-> > I'll get back to you with a patch.
->
-> Do we actually need the __x32 prefix any more, or could we just
-> change all x32 specific calls to use __x64_compat_sys_foo()?
+Use the new mm_fault_accounting() helper for page fault accounting.
 
-I suppose that would work too.  The prefix really describes the
-register mapping.
+Avoid doing page fault accounting multiple times if the page fault is retried.
 
---
-Brian Gerst
+CC: Heiko Carstens <heiko.carstens@de.ibm.com>
+CC: Vasily Gorbik <gor@linux.ibm.com>
+CC: Christian Borntraeger <borntraeger@de.ibm.com>
+CC: linux-s390@vger.kernel.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/s390/mm/fault.c | 21 +++++----------------
+ 1 file changed, 5 insertions(+), 16 deletions(-)
+
+diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+index dedc28be27ab..8ca207635b59 100644
+--- a/arch/s390/mm/fault.c
++++ b/arch/s390/mm/fault.c
+@@ -392,7 +392,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+ 	unsigned long trans_exc_code;
+ 	unsigned long address;
+ 	unsigned int flags;
+-	vm_fault_t fault;
++	vm_fault_t fault, major = 0;
+ 
+ 	tsk = current;
+ 	/*
+@@ -428,7 +428,6 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+ 	}
+ 
+ 	address = trans_exc_code & __FAIL_ADDR_MASK;
+-	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
+ 	flags = FAULT_FLAG_DEFAULT;
+ 	if (user_mode(regs))
+ 		flags |= FAULT_FLAG_USER;
+@@ -480,6 +479,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+ 	 * the fault.
+ 	 */
+ 	fault = handle_mm_fault(vma, address, flags);
++	major |= fault & VM_FAULT_MAJOR;
+ 	if (fault_signal_pending(fault, regs)) {
+ 		fault = VM_FAULT_SIGNAL;
+ 		if (flags & FAULT_FLAG_RETRY_NOWAIT)
+@@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+ 	if (unlikely(fault & VM_FAULT_ERROR))
+ 		goto out_up;
+ 
+-	/*
+-	 * Major/minor page fault accounting is only done on the
+-	 * initial attempt. If we go through a retry, it is extremely
+-	 * likely that the page will be found in page cache at that point.
+-	 */
+ 	if (flags & FAULT_FLAG_ALLOW_RETRY) {
+-		if (fault & VM_FAULT_MAJOR) {
+-			tsk->maj_flt++;
+-			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
+-				      regs, address);
+-		} else {
+-			tsk->min_flt++;
+-			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
+-				      regs, address);
+-		}
+ 		if (fault & VM_FAULT_RETRY) {
+ 			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
+ 			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
+@@ -519,6 +505,9 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+ 			goto retry;
+ 		}
+ 	}
++
++	mm_fault_accounting(tsk, regs, address, major);
++
+ 	if (IS_ENABLED(CONFIG_PGSTE) && gmap) {
+ 		address =  __gmap_link(gmap, current->thread.gmap_addr,
+ 				       address);
+-- 
+2.26.2
+
