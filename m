@@ -2,189 +2,151 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E179A1F8C65
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2020 05:02:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FE511F8C7F
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2020 05:38:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbgFODCJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 14 Jun 2020 23:02:09 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53930 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728143AbgFODCI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 14 Jun 2020 23:02:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592190127;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=K4U+ztHAwvhjjKgIyDd+AhXpFv+PexCkPkFdjCrijfk=;
-        b=LXuaepPITMrfuM3nhsxbq76WpAdomvz2ZmKSbt1VFac6P8wHjkrLWai/cquzEz4KFShu99
-        14C6ZStitlkNJKnJUnik4w77s30rVOwZAtn37p5MQ+48CNy39MCmJP2ooU/WBCjYr9GYg8
-        1kbsg/lRb2kWH8Sal3g0CevwWgNxCXQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-149-c7Q0tsasP_2KGTb5GXXjng-1; Sun, 14 Jun 2020 23:02:05 -0400
-X-MC-Unique: c7Q0tsasP_2KGTb5GXXjng-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D2B78064D8;
-        Mon, 15 Jun 2020 03:02:03 +0000 (UTC)
-Received: from [10.72.13.232] (ovpn-13-232.pek2.redhat.com [10.72.13.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E19610013D6;
-        Mon, 15 Jun 2020 03:01:56 +0000 (UTC)
-Subject: Re: [PATCH] s390: protvirt: virtio: Refuse device without IOMMU
-To:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <1591794711-5915-1-git-send-email-pmorel@linux.ibm.com>
- <467d5b58-b70c-1c45-4130-76b6e18c05af@redhat.com>
- <f7eb1154-0f52-0f12-129f-2b511f5a4685@linux.ibm.com>
- <6356ba7f-afab-75e1-05ff-4a22b88c610e@linux.ibm.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <a02b9f94-eb48-4ae2-0ade-a4ce26b61ad8@redhat.com>
-Date:   Mon, 15 Jun 2020 11:01:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <6356ba7f-afab-75e1-05ff-4a22b88c610e@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        id S1728048AbgFODiW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 14 Jun 2020 23:38:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:37640 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727946AbgFODiW (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 14 Jun 2020 23:38:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E9E631B;
+        Sun, 14 Jun 2020 20:38:20 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.79.186])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 687243F71F;
+        Sun, 14 Jun 2020 20:38:10 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     christophe.leroy@c-s.fr, ziy@nvidia.com,
+        gerald.schaefer@de.ibm.com,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V3 0/4] mm/debug_vm_pgtable: Add some more tests
+Date:   Mon, 15 Jun 2020 09:07:53 +0530
+Message-Id: <1592192277-8421-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+This series adds some more arch page table helper validation tests which
+are related to core and advanced memory functions. This also creates a
+documentation, enlisting expected semantics for all page table helpers as
+suggested by Mike Rapoport previously (https://lkml.org/lkml/2020/1/30/40).
 
-On 2020/6/12 下午7:38, Pierre Morel wrote:
->
->
-> On 2020-06-12 11:21, Pierre Morel wrote:
->>
->>
->> On 2020-06-11 05:10, Jason Wang wrote:
->>>
->>> On 2020/6/10 下午9:11, Pierre Morel wrote:
->>>> Protected Virtualisation protects the memory of the guest and
->>>> do not allow a the host to access all of its memory.
->>>>
->>>> Let's refuse a VIRTIO device which does not use IOMMU
->>>> protected access.
->>>>
->>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->>>> ---
->>>>   drivers/s390/virtio/virtio_ccw.c | 5 +++++
->>>>   1 file changed, 5 insertions(+)
->>>>
->>>> diff --git a/drivers/s390/virtio/virtio_ccw.c 
->>>> b/drivers/s390/virtio/virtio_ccw.c
->>>> index 5730572b52cd..06ffbc96587a 100644
->>>> --- a/drivers/s390/virtio/virtio_ccw.c
->>>> +++ b/drivers/s390/virtio/virtio_ccw.c
->>>> @@ -986,6 +986,11 @@ static void virtio_ccw_set_status(struct 
->>>> virtio_device *vdev, u8 status)
->>>>       if (!ccw)
->>>>           return;
->>>> +    /* Protected Virtualisation guest needs IOMMU */
->>>> +    if (is_prot_virt_guest() &&
->>>> +        !__virtio_test_bit(vdev, VIRTIO_F_IOMMU_PLATFORM))
->>>> +            status &= ~VIRTIO_CONFIG_S_FEATURES_OK;
->>>> +
->>>>       /* Write the status to the host. */
->>>>       vcdev->dma_area->status = status;
->>>>       ccw->cmd_code = CCW_CMD_WRITE_STATUS;
->>>
->>>
->>> I wonder whether we need move it to virtio core instead of ccw.
->>>
->>> I think the other memory protection technologies may suffer from 
->>> this as well.
->>>
->>> Thanks
->>>
->>
->>
->> What would you think of the following, also taking into account 
->> Connie's comment on where the test should be done:
->>
->> - declare a weak function in virtio.c code, returning that memory 
->> protection is not in use.
->>
->> - overwrite the function in the arch code
->>
->> - call this function inside core virtio_finalize_features() and if 
->> required fail if the device don't have VIRTIO_F_IOMMU_PLATFORM.
+There are many TRANSPARENT_HUGEPAGE and ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD
+ifdefs scattered across the test. But consolidating all the fallback stubs
+is not very straight forward because ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD is
+not explicitly dependent on ARCH_HAS_TRANSPARENT_HUGEPAGE.
 
+Tested on arm64, x86 platforms but only build tested on all other enabled
+platforms through ARCH_HAS_DEBUG_VM_PGTABLE i.e powerpc, arc, s390. The
+following failure on arm64 still exists which was mentioned previously. It
+will be fixed with the upcoming THP migration on arm64 enablement series.
 
-I think this is fine.
+WARNING .... mm/debug_vm_pgtable.c:860 debug_vm_pgtable+0x940/0xa54
+WARN_ON(!pmd_present(pmd_mkinvalid(pmd_mkhuge(pmd))))
 
+This series is based on v5.8-rc1.
 
->>
->> Alternative could be to test a global variable that the architecture 
->> would overwrite if needed but I find the weak function solution more 
->> flexible.
->>
->> With a function, we also have the possibility to provide the device 
->> as argument and take actions depending it, this may answer Halil's 
->> concern.
->>
->> Regards,
->> Pierre
->>
->
-> hum, in between I found another way which seems to me much better:
->
-> We already have the force_dma_unencrypted() function available which 
-> AFAIU is what we want for encrypted memory protection and is already 
-> used by power and x86 SEV/SME in a way that seems AFAIU compatible 
-> with our problem.
->
-> Even DMA and IOMMU are different things, I think they should be used 
-> together in our case.
->
-> What do you think?
->
-> The patch would then be something like:
->
-> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> index a977e32a88f2..53476d5bbe35 100644
-> --- a/drivers/virtio/virtio.c
-> +++ b/drivers/virtio/virtio.c
-> @@ -4,6 +4,7 @@
->  #include <linux/virtio_config.h>
->  #include <linux/module.h>
->  #include <linux/idr.h>
-> +#include <linux/dma-direct.h>
->  #include <uapi/linux/virtio_ids.h>
->
->  /* Unique numbering for virtio devices. */
-> @@ -179,6 +180,10 @@ int virtio_finalize_features(struct virtio_device 
-> *dev)
->         if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
->                 return 0;
->
-> +       if (force_dma_unencrypted(&dev->dev) &&
-> +           !virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
-> +               return -EIO;
-> +
->         virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
->         status = dev->config->get_status(dev);
->         if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {
+Changes in V3:
 
+- Replaced HAVE_ARCH_SOFT_DIRTY with MEM_SOFT_DIRTY
+- Added HAVE_ARCH_HUGE_VMAP checks in pxx_huge_tests() per Gerald
+- Updated documentation for pmd_thp_tests() per Zi Yan
+- Replaced READ_ONCE() with huge_ptep_get() per Gerald
+- Added pte_mkhuge() and masking with PMD_MASK per Gerald
+- Replaced pte_same() with holding pfn check in pxx_swap_tests()
+- Added documentation for all (#ifdef #else #endif) per Gerald
+- Updated pmd_protnone_tests() per Gerald
+- Updated HugeTLB PTE creation in hugetlb_advanced_tests() per Gerald
+- Replaced [pmd|pud]_mknotpresent() with [pmd|pud]_mkinvalid()
+- Added has_transparent_hugepage() check for PMD and PUD tests
+- Added a patch which debug prints all individual tests being executed
+- Updated documentation for renamed [pmd|pud]_mkinvalid() helpers
 
-I think this can work but need to listen from Michael.
+Changes in V2: (https://patchwork.kernel.org/project/linux-mm/list/?series=260573)
 
-Thanks
+- Dropped CONFIG_ARCH_HAS_PTE_SPECIAL per Christophe
+- Dropped CONFIG_NUMA_BALANCING per Christophe
+- Dropped CONFIG_HAVE_ARCH_SOFT_DIRTY per Christophe
+- Dropped CONFIG_MIGRATION per Christophe
+- Replaced CONFIG_S390 with __HAVE_ARCH_PMDP_INVALIDATE
+- Moved page allocation & free inside swap_migration_tests() per Christophe
+- Added CONFIG_TRANSPARENT_HUGEPAGE to protect pfn_pmd()
+- Added CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD to protect pfn_pud()
+- Added a patch for other arch advanced page table helper tests
+- Added a patch creating a documentation for page table helper semantics
 
+Changes in V1: (https://patchwork.kernel.org/patch/11408253/)
 
->
->
-> Regards,
-> Pierre
->
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Cc: x86@kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (4):
+  mm/debug_vm_pgtable: Add tests validating arch helpers for core MM features
+  mm/debug_vm_pgtable: Add tests validating advanced arch page table helpers
+  mm/debug_vm_pgtable: Add debug prints for individual tests
+  Documentation/mm: Add descriptions for arch page table helpers
+
+ Documentation/vm/arch_pgtable_helpers.rst | 258 +++++++++
+ mm/debug_vm_pgtable.c                     | 660 +++++++++++++++++++++-
+ 2 files changed, 916 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/vm/arch_pgtable_helpers.rst
+
+-- 
+2.20.1
 
