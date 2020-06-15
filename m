@@ -2,136 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F11141F9F86
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2020 20:40:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DFBD61F9F9F
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jun 2020 20:47:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731387AbgFOSkj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 15 Jun 2020 14:40:39 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21774 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731327AbgFOSki (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 15 Jun 2020 14:40:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592246437;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3LdVapGy9WTsAkwpfNEzCTfQe3Pij8/lM5ySXZsHExs=;
-        b=JZUrw80wsDeK0bo3tEKQK8XiW9ngmDKg5MFnAeOyBAYl0bASVB+QJjQFV1GJsM7juSSDEX
-        zWSaFZX2UdG6N7HwH1NEKT0XcQDnP7iZ8aY1Tv5Ylz+cF8epg7Ev8QJSHYanngZUDD+NKp
-        g2VWPw/vUn4XzPWpEZ+uPXRfRhU1J0Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-513-n3G_ZfGUONug8wkjJytxqA-1; Mon, 15 Jun 2020 14:40:12 -0400
-X-MC-Unique: n3G_ZfGUONug8wkjJytxqA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5F43184D144;
-        Mon, 15 Jun 2020 18:40:06 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-41.rdu2.redhat.com [10.10.117.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3972B5D9CC;
-        Mon, 15 Jun 2020 18:40:00 +0000 (UTC)
-Subject: Re: [PATCH 1/2] mm, treewide: Rename kzfree() to kfree_sensitive()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>,
-        samba-technical@lists.samba.org,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-sctp@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org, x86@kernel.org,
-        kasan-dev@googlegroups.com, cocci@systeme.lip6.fr,
-        linux-wpan@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        linux-crypto@vger.kernel.org, linux-pm@vger.kernel.org,
-        ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net, wireguard@lists.zx2c4.com,
-        linux-ppp@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
-References: <20200413211550.8307-1-longman@redhat.com>
- <20200413211550.8307-2-longman@redhat.com> <20200615180753.GJ4151@kadam>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <9d084be2-29a3-7757-9386-20dbaeb5fc24@redhat.com>
-Date:   Mon, 15 Jun 2020 14:39:59 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1731367AbgFOSrY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 15 Jun 2020 14:47:24 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:56425 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729124AbgFOSrW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 15 Jun 2020 14:47:22 -0400
+Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M7sM0-1jolkg0Aj4-0050Na; Mon, 15 Jun 2020 20:47:20 +0200
+Received: by mail-qk1-f181.google.com with SMTP id q8so16734336qkm.12;
+        Mon, 15 Jun 2020 11:47:19 -0700 (PDT)
+X-Gm-Message-State: AOAM532Zh62jZF7IScwZrGQWmsKpDNcfc9mr6ToDm3Xp/YevH8LsXbpk
+        TVopIoc7hWFDjm75Zu5ryClsRarU2rvwEYpEgvo=
+X-Google-Smtp-Source: ABdhPJzcQbK0Gh43Vbjt9NhNlEHEP8lArPvLwYPZGPIYALBqTjBUF1iUc73zpucajmn7+xgOQVN3+L0nF4AR+SfsCY0=
+X-Received: by 2002:ae9:c10d:: with SMTP id z13mr15874842qki.3.1592246838316;
+ Mon, 15 Jun 2020 11:47:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200615180753.GJ4151@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200615130032.931285-1-hch@lst.de> <20200615130032.931285-3-hch@lst.de>
+ <CAK8P3a0bRD3RzE_X6Tjzu9Tj+OhHhP+S=k6+VYODBGko8oQhew@mail.gmail.com>
+ <20200615141239.GA12951@lst.de> <CAMzpN2heSzZzg16ws3yQkd7YZwmPPx_4RFCpb9JYfFWJ9gfPhA@mail.gmail.com>
+In-Reply-To: <CAMzpN2heSzZzg16ws3yQkd7YZwmPPx_4RFCpb9JYfFWJ9gfPhA@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 15 Jun 2020 20:47:02 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3q-hC7kZwLPbc+E5VYcqthQS4J4Rqo+rKkBRU2n071XA@mail.gmail.com>
+Message-ID: <CAK8P3a3q-hC7kZwLPbc+E5VYcqthQS4J4Rqo+rKkBRU2n071XA@mail.gmail.com>
+Subject: Re: [PATCH 2/6] exec: simplify the compat syscall handling
+To:     Brian Gerst <brgerst@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:5GjnYx0J87C77bLS6hMICrpv7SsJrmsJfyFkoZ/+LoKPVJfqpC4
+ /AfZewhVis2YEpTJGiS6awXwvUfSN/3ej6d0BBm+Ts0UEPmvLjn5NbLiCLaAmpa1xxZc0vk
+ gkrEPFCdlc6zQ2yi98hk0uCeSs8N88VAjJOfwnv1w8buTd3DApJh7sd3kb8kLOZb6d+0xGR
+ y95oybICxuNU1Eu+9tA1w==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:O00rYkEmzd4=:n94Ow7JDI1CgjsWhSySVId
+ MFeIzFQ0ReIOQKC+1DIax5tWGzqGJPz1R27aM0+nQzOMAWlOh+BJkrLWFh+X4QAJ+rm77DwVy
+ JCfBdMOZSV9mgrZq8ZvilMbNU9Ocyk9T0McCpKp7HRW1Dy7UGlIputexAoM9/EL4BAEB4kkuP
+ pgrswxarTjgYKFeZXxGOH0HL9KJ158tVHglV4I5zFB/zllXofs5iMexfLb+EAgopQkCYY0kpS
+ QXuYZmv0Qt1+kSbk+WK+5qfvvaJBa91JgxAPRUZ+adF8JFSQDlNm12cF+x1s8nKJYVPdk/+Uz
+ e/8dDZ76C8ZTbbnyPC6KYaS2AEqJwyOZSFpt65Yj36I4tkitdbzQL3zuDZIh9UC8IswDNXlgn
+ zwN11R6M7r6yMTJ++E0Y2Q85IN45qly+xWSeZ+Fgq2RUk0Wj4wF5UsHNgj7KtvV6KEy8gNDdA
+ DuEaCrtiKM5BKY0GvHH5V65kuBqZ9VjxayvpibwVcQH2BRM6v+sH529ezlxRCvIcfRl9d30GN
+ lus0EjHqd9f/adxr6q7fC7HNz7m+8EgDQH6OvXyZKoqv8tl1l1ic2UK0slQgEVeLxwZIjGHWq
+ k6Y8kgNMaPbpQNgDzAr9k89BvfqQjHmqYuWSYIrU5QKTCMunaQ0hYPSLSL7gWV0xRpgw4FIs3
+ MqwTHBmEdOuqVhjT7LZ2ksIwa0oFpIC8hcwWfTNeHSymsfs/ReN4fjU/L4TWGTj+ZcYCGgMuI
+ zN3ivEq9V0UggtSP9EmDhxrpt4/6chz1kSPmour+ky9RwMTXPfFhXKNFAlHTN0bO5I7/ERIVp
+ fBvbtu09WOLhNcG9dF+7v9uEtIqN1I8iMyQnVaFEhddMShJTNo=
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 6/15/20 2:07 PM, Dan Carpenter wrote:
-> On Mon, Apr 13, 2020 at 05:15:49PM -0400, Waiman Long wrote:
->> diff --git a/mm/slab_common.c b/mm/slab_common.c
->> index 23c7500eea7d..c08bc7eb20bd 100644
->> --- a/mm/slab_common.c
->> +++ b/mm/slab_common.c
->> @@ -1707,17 +1707,17 @@ void *krealloc(const void *p, size_t new_size, gfp_t flags)
->>   EXPORT_SYMBOL(krealloc);
->>   
->>   /**
->> - * kzfree - like kfree but zero memory
->> + * kfree_sensitive - Clear sensitive information in memory before freeing
->>    * @p: object to free memory of
->>    *
->>    * The memory of the object @p points to is zeroed before freed.
->> - * If @p is %NULL, kzfree() does nothing.
->> + * If @p is %NULL, kfree_sensitive() does nothing.
->>    *
->>    * Note: this function zeroes the whole allocated buffer which can be a good
->>    * deal bigger than the requested buffer size passed to kmalloc(). So be
->>    * careful when using this function in performance sensitive code.
->>    */
->> -void kzfree(const void *p)
->> +void kfree_sensitive(const void *p)
->>   {
->>   	size_t ks;
->>   	void *mem = (void *)p;
->> @@ -1725,10 +1725,10 @@ void kzfree(const void *p)
->>   	if (unlikely(ZERO_OR_NULL_PTR(mem)))
->>   		return;
->>   	ks = ksize(mem);
->> -	memset(mem, 0, ks);
->> +	memzero_explicit(mem, ks);
->          ^^^^^^^^^^^^^^^^^^^^^^^^^
-> This is an unrelated bug fix.  It really needs to be pulled into a
-> separate patch by itself and back ported to stable kernels.
->
->>   	kfree(mem);
->>   }
->> -EXPORT_SYMBOL(kzfree);
->> +EXPORT_SYMBOL(kfree_sensitive);
->>   
->>   /**
->>    * ksize - get the actual amount of memory allocated for a given object
-> regards,
-> dan carpenter
->
-Thanks for the suggestion. I will break it out and post a version soon.
+On Mon, Jun 15, 2020 at 4:48 PM Brian Gerst <brgerst@gmail.com> wrote:
+> On Mon, Jun 15, 2020 at 10:13 AM Christoph Hellwig <hch@lst.de> wrote:
+> > On Mon, Jun 15, 2020 at 03:31:35PM +0200, Arnd Bergmann wrote:
 
-Cheers,
-Longman
+> >
+> > I'd rather keep it in common code as that allows all the low-level
+> > exec stuff to be marked static, and avoid us growing new pointless
+> > compat variants through copy and paste.
+> > smart compiler to d
+> >
+> > > I don't really understand
+> > > the comment, why can't this just use this?
+> >
+> > That errors out with:
+> >
+> > ld: arch/x86/entry/syscall_x32.o:(.rodata+0x1040): undefined reference to
+> > `__x32_sys_execve'
+> > ld: arch/x86/entry/syscall_x32.o:(.rodata+0x1108): undefined reference to
+> > `__x32_sys_execveat'
+> > make: *** [Makefile:1139: vmlinux] Error 1
+>
+> I think I have a fix for this, by modifying the syscall wrappers to
+> add an alias for the __x32 variant to the native __x64_sys_foo().
+> I'll get back to you with a patch.
 
+Do we actually need the __x32 prefix any more, or could we just
+change all x32 specific calls to use __x64_compat_sys_foo()?
+
+      Arnd
