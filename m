@@ -2,99 +2,119 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 287371FB1F9
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 15:25:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4CA71FB243
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 15:36:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgFPNZL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 Jun 2020 09:25:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24580 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726467AbgFPNZK (ORCPT
+        id S1728803AbgFPNgu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 Jun 2020 09:36:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37652 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727966AbgFPNgu (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 16 Jun 2020 09:25:10 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GD3P9i070097;
-        Tue, 16 Jun 2020 09:25:05 -0400
+        Tue, 16 Jun 2020 09:36:50 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GDVVjT101545;
+        Tue, 16 Jun 2020 09:36:42 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31pc7npex1-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31pg44s0dm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 09:25:05 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GD3ST1070372;
-        Tue, 16 Jun 2020 09:25:04 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31pc7npevt-1
+        Tue, 16 Jun 2020 09:36:42 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GDWxXi108139;
+        Tue, 16 Jun 2020 09:36:41 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31pg44s0cg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 09:25:04 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GDJkA3032303;
-        Tue, 16 Jun 2020 13:25:02 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7wd5b-1
+        Tue, 16 Jun 2020 09:36:41 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GDLgiQ009521;
+        Tue, 16 Jun 2020 13:36:39 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma05fra.de.ibm.com with ESMTP id 31mpe826fu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Jun 2020 13:25:02 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GDOx0L34275416
+        Tue, 16 Jun 2020 13:36:39 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GDaaQU9830446
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Jun 2020 13:24:59 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4EBDBAE051;
-        Tue, 16 Jun 2020 13:24:59 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0398DAE053;
-        Tue, 16 Jun 2020 13:24:59 +0000 (GMT)
-Received: from osiris (unknown [9.171.4.37])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 16 Jun 2020 13:24:58 +0000 (GMT)
-Date:   Tue, 16 Jun 2020 15:24:57 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Elvira Khabirova <lineprinter@altlinux.org>,
-        Eugene Syromyatnikov <evgsyr@gmail.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390: fix syscall_get_error for compat processes
-Message-ID: <20200616132457.GA4166@osiris>
-References: <20200602180051.GA2427@altlinux.org>
+        Tue, 16 Jun 2020 13:36:36 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 873684C04E;
+        Tue, 16 Jun 2020 13:36:36 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D0C594C04A;
+        Tue, 16 Jun 2020 13:36:35 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.26.88])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 16 Jun 2020 13:36:35 +0000 (GMT)
+Subject: Re: [PATCH v2 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <1592224764-1258-1-git-send-email-pmorel@linux.ibm.com>
+ <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+ <20200616115202.0285aa08.pasic@linux.ibm.com>
+ <ef235cc9-9d4b-1247-c01a-9dd1c63f437c@linux.ibm.com>
+ <20200616142010.04b7ba19.cohuck@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <8ba494d2-ad91-bc5c-2df8-b9d81c435211@linux.ibm.com>
+Date:   Tue, 16 Jun 2020 15:36:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200602180051.GA2427@altlinux.org>
+In-Reply-To: <20200616142010.04b7ba19.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-16_04:2020-06-16,2020-06-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1
- mlxlogscore=794 clxscore=1011 impostorscore=0 malwarescore=0
- cotscore=-2147483648 priorityscore=1501 lowpriorityscore=0 phishscore=0
- spamscore=0 mlxscore=0 adultscore=0 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ cotscore=-2147483648 bulkscore=0 malwarescore=0 impostorscore=0
+ clxscore=1015 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 adultscore=0 mlxlogscore=834
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2006160097
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jun 02, 2020 at 09:00:51PM +0300, Dmitry V. Levin wrote:
-> If both the tracer and the tracee are compat processes, and gprs[2]
-> is assigned a value by __poke_user_compat, then the higher 32 bits
-> of gprs[2] are cleared, IS_ERR_VALUE() always returns false, and
-> syscall_get_error() always returns 0.
-> 
-> Fix the implementation by sign-extending the value for compat processes
-> the same way as x86 implementation does.
-> 
-> The bug was exposed to user space by commit 201766a20e30f ("ptrace: add
-> PTRACE_GET_SYSCALL_INFO request") and detected by strace test suite.
-> 
-> This change fixes strace syscall tampering on s390.
-> 
-> Fixes: 753c4dd6a2fa2 ("[S390] ptrace changes")
-> Cc: Elvira Khabirova <lineprinter@altlinux.org>
-> Cc: stable@vger.kernel.org # v2.6.28+
-> Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
-> ---
->  arch/s390/include/asm/syscall.h | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
 
-Applied, thank you!
+
+On 2020-06-16 14:20, Cornelia Huck wrote:
+> On Tue, 16 Jun 2020 12:52:50 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> 
+>> On 2020-06-16 11:52, Halil Pasic wrote:
+>>> On Mon, 15 Jun 2020 14:39:24 +0200
+>>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> 
+>>>> @@ -162,6 +163,11 @@ bool force_dma_unencrypted(struct device *dev)
+>>>>    	return is_prot_virt_guest();
+>>>>    }
+>>>>    
+>>>> +int arch_needs_iommu_platform(struct virtio_device *dev)
+>>>
+>>> Maybe prefixing the name with virtio_ would help provide the
+>>> proper context.
+>>
+>> The virtio_dev makes it obvious and from the virtio side it should be
+>> obvious that the arch is responsible for this.
+>>
+>> However if nobody has something against I change it.
+> 
+> arch_needs_virtio_iommu_platform()?
+
+fine with me
+
+-- 
+Pierre Morel
+IBM Lab Boeblingen
