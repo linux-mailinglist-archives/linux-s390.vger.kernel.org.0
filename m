@@ -2,168 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B0621FB5CA
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 17:16:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 823571FB62E
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 17:31:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbgFPPOW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 Jun 2020 11:14:22 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:47431 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728183AbgFPPOV (ORCPT
+        id S1729390AbgFPPbP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 Jun 2020 11:31:15 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34098 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728809AbgFPPbO (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 16 Jun 2020 11:14:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592320459;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=N4DqM6R4Z12SHiksYK4U2MNmd4IxYiT0/TCjo80uvTY=;
-        b=Kk/LIwMk3fnzwxrV8NI2rVFMLK69O9Xjji1u31ncXb5HQZRtVRIGANCbrHDv1PyLJlUmBZ
-        gDoKrYWXUewVKiWZCpWkXQwgs2JE3KTdOG05liv3vblvuer2FSYS27s+MGxUjLmjeoYu2/
-        vT9VaBQxjASwFjVjZXnl7gpPc/nwWTs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-403-pUOAG87EMLieA5C2qSS2DA-1; Tue, 16 Jun 2020 11:14:18 -0400
-X-MC-Unique: pUOAG87EMLieA5C2qSS2DA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12763EC1A2;
-        Tue, 16 Jun 2020 15:14:17 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-114-128.ams2.redhat.com [10.36.114.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 117587CCE7;
-        Tue, 16 Jun 2020 15:14:03 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v9 01/12] s390x: Use PSW bits definitions
- in cstart
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        david@redhat.com, cohuck@redhat.com
-References: <1592213521-19390-1-git-send-email-pmorel@linux.ibm.com>
- <1592213521-19390-2-git-send-email-pmorel@linux.ibm.com>
- <f160d328-694a-4476-4863-c49a1d0e5349@redhat.com>
- <13898aa9-800b-4de8-71b8-f64ee07fc793@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <b2bffa74-ea11-c6f9-82fa-bb1ddfa4abfb@redhat.com>
-Date:   Tue, 16 Jun 2020 17:14:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 16 Jun 2020 11:31:14 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GF1vU3085449;
+        Tue, 16 Jun 2020 11:31:13 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31pux0b0vu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 11:31:13 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GF1xtG085731;
+        Tue, 16 Jun 2020 11:31:13 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31pux0b0um-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 11:31:12 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GFLBAT021774;
+        Tue, 16 Jun 2020 15:31:10 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03fra.de.ibm.com with ESMTP id 31mpe7t8u7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 15:31:10 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GFV7tb21692480
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 15:31:07 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4F55A5204F;
+        Tue, 16 Jun 2020 15:31:07 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.20.221])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id DB6C552050;
+        Tue, 16 Jun 2020 15:31:06 +0000 (GMT)
+Subject: Re: [PATCH v8 00/16] s390/vfio-ap: dynamic configuration support
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
+        pasic@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, fiuczy@linux.ibm.com
+References: <20200605214004.14270-1-akrowiak@linux.ibm.com>
+ <cf889ee5-ae5c-4752-507b-a31a4c42e1c8@linux.ibm.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <9981d271-1936-c93e-1609-8e306c343b50@de.ibm.com>
+Date:   Tue, 16 Jun 2020 17:31:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <13898aa9-800b-4de8-71b8-f64ee07fc793@linux.ibm.com>
+In-Reply-To: <cf889ee5-ae5c-4752-507b-a31a4c42e1c8@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_04:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ cotscore=-2147483648 lowpriorityscore=0 spamscore=0 suspectscore=0
+ malwarescore=0 clxscore=1011 adultscore=0 phishscore=0 mlxlogscore=899
+ mlxscore=0 priorityscore=1501 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160107
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 16/06/2020 15.58, Pierre Morel wrote:
-> 
-> 
-> On 2020-06-16 15:13, Thomas Huth wrote:
->> On 15/06/2020 11.31, Pierre Morel wrote:
->>> This patch defines the PSW bits EA/BA used to initialize the PSW masks
->>> for exceptions.
->>>
->>> Since some PSW mask definitions exist already in arch_def.h we add these
->>> definitions there.
->>> We move all PSW definitions together and protect assembler code against
->>> C syntax.
->>>
->>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->>> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
->>> ---
->>>   lib/s390x/asm/arch_def.h | 15 +++++++++++----
->>>   s390x/cstart64.S         | 15 ++++++++-------
->>>   2 files changed, 19 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
->>> index 1b3bb0c..b5d7aca 100644
->>> --- a/lib/s390x/asm/arch_def.h
->>> +++ b/lib/s390x/asm/arch_def.h
->>> @@ -10,15 +10,21 @@
->>>   #ifndef _ASM_S390X_ARCH_DEF_H_
->>>   #define _ASM_S390X_ARCH_DEF_H_
->>>   +#define PSW_MASK_EXT            0x0100000000000000UL
->>> +#define PSW_MASK_DAT            0x0400000000000000UL
->>> +#define PSW_MASK_SHORT_PSW        0x0008000000000000UL
->>> +#define PSW_MASK_PSTATE            0x0001000000000000UL
->>> +#define PSW_MASK_BA            0x0000000080000000UL
->>> +#define PSW_MASK_EA            0x0000000100000000UL
->>> +
->>> +#define PSW_MASK_ON_EXCEPTION    (PSW_MASK_EA | PSW_MASK_BA)
->>> +
->>> +#ifndef __ASSEMBLER__
->>>   struct psw {
->>>       uint64_t    mask;
->>>       uint64_t    addr;
->>>   };
->>>   -#define PSW_MASK_EXT            0x0100000000000000UL
->>> -#define PSW_MASK_DAT            0x0400000000000000UL
->>> -#define PSW_MASK_PSTATE            0x0001000000000000UL
->>> -
->>>   #define CR0_EXTM_SCLP            0x0000000000000200UL
->>>   #define CR0_EXTM_EXTC            0x0000000000002000UL
->>>   #define CR0_EXTM_EMGC            0x0000000000004000UL
->>> @@ -297,4 +303,5 @@ static inline uint32_t get_prefix(void)
->>>       return current_prefix;
->>>   }
->>>   +#endif /* __ASSEMBLER */
->>>   #endif
->>> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
->>> index e084f13..d386f35 100644
->>> --- a/s390x/cstart64.S
->>> +++ b/s390x/cstart64.S
->>> @@ -12,6 +12,7 @@
->>>    */
->>>   #include <asm/asm-offsets.h>
->>>   #include <asm/sigp.h>
->>> +#include <asm/arch_def.h>
->>>     .section .init
->>>   @@ -198,19 +199,19 @@ svc_int:
->>>         .align    8
->>>   reset_psw:
->>> -    .quad    0x0008000180000000
->>> +    .quad    PSW_MASK_ON_EXCEPTION | PSW_MASK_SHORT_PSW
->>>   initial_psw:
->>> -    .quad    0x0000000180000000, clear_bss_start
->>> +    .quad    PSW_MASK_ON_EXCEPTION, clear_bss_start
->>>   pgm_int_psw:
->>> -    .quad    0x0000000180000000, pgm_int
->>> +    .quad    PSW_MASK_ON_EXCEPTION, pgm_int
->>>   ext_int_psw:
->>> -    .quad    0x0000000180000000, ext_int
->>> +    .quad    PSW_MASK_ON_EXCEPTION, ext_int
->>>   mcck_int_psw:
->>> -    .quad    0x0000000180000000, mcck_int
->>> +    .quad    PSW_MASK_ON_EXCEPTION, mcck_int
->>>   io_int_psw:
->>> -    .quad    0x0000000180000000, io_int
->>> +    .quad    PSW_MASK_ON_EXCEPTION, io_int
->>>   svc_int_psw:
->>> -    .quad    0x0000000180000000, svc_int
->>> +    .quad    PSW_MASK_ON_EXCEPTION, svc_int
->>>   initial_cr0:
->>>       /* enable AFP-register control, so FP regs (+BFP instr) can be
->>> used */
->>>       .quad    0x0000000000040000
->>>
->>
->> I'm afraid, by when I compile this on RHEL7, the toolchain complains:
-> 
-> I will try to figure out why.
-> which version are you using? and which compiler?
+On 16.06.20 16:26, Tony Krowiak wrote:
+> I would greatly appreciate some attention to this patch series ... Please?
 
-$ as --version
-GNU assembler version 2.27-43.base.el7
-$ gcc --version
-gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-39)
+Any idea about the kernel test build mails? Are these patches maybe against
+a wrong tree?
 
-I think the problem are the "UL" suffixes ... IIRC they are only
-supported by newer versions of the binutils.
-
- Thomas
 
