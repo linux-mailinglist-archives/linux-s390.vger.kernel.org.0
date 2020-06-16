@@ -2,213 +2,173 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88CBC1FBE8E
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 20:56:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E10CF1FBF6A
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 21:51:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbgFPSzl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 Jun 2020 14:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbgFPSzj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 Jun 2020 14:55:39 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA78FC061573
-        for <linux-s390@vger.kernel.org>; Tue, 16 Jun 2020 11:55:38 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id c21so12409766lfb.3
-        for <linux-s390@vger.kernel.org>; Tue, 16 Jun 2020 11:55:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q0q8gubf8krgZV8oGCJJ77Manwa2gcrwHgDVVcoIMF4=;
-        b=Za9iu2csZgttP35aE+aT08tNb3V6uxoyuIhn76uFapZGtiQBoNJQlm46x1X88modKX
-         56L73dqUCWnkD91z+9cqMwv5Y5xo/wgnVPwKoQqgiOz23E0vmPXaA37iu5082TSSxz11
-         OBgSNYHUnDL9NHnY2O/1eCVT5xkEIS6vHlrTo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q0q8gubf8krgZV8oGCJJ77Manwa2gcrwHgDVVcoIMF4=;
-        b=MCHVRCWyBCm44uYxwsGzOr1NvOKqKqZCPzudLoBOWvhYercpB+tXNSu4oWzT7tk86X
-         RVnysz3DizuIKfaPUvCa7paHiYogw2WHlLv0LJTtZuSIGI7cnCPsfq/biPdRD7qNqYxm
-         4jSM5OjaYAUrHo4ZDlM1KpY+V7m1unHTwK4HfPcI0SQlJtqmR0tDXFgPSLiS337nH6q7
-         cg9KmgJGDTZU7z+mgqPnmqEBDM+ux+PyTP8vx9WBfteqgWtYLSU3B4BVUpxCWTGnqE1D
-         ZthzIGIq3UuvDMgpXAUvA8ez0o48JdCK28cVWcejTz5ECtw6kCK9i6Gu3KdILAy3c/aW
-         I7lQ==
-X-Gm-Message-State: AOAM531/bfpTu1kqou0DFLPbYhiSnS2bvNeKANQPvQ0zK+9zTmYbJYKc
-        D0H2bBLsp+BPJ09TiiIAzEl9HSihnys=
-X-Google-Smtp-Source: ABdhPJyQaz4wdAXgpr7F/cqCXWVe0nUygKBxV4iVsGkUQ1VaedagrpXWyprlvF9dGC+Y5a2D4zxVZA==
-X-Received: by 2002:a05:6512:110d:: with SMTP id l13mr2498687lfg.93.1592333736284;
-        Tue, 16 Jun 2020 11:55:36 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id w17sm5381285ljj.108.2020.06.16.11.55.34
-        for <linux-s390@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jun 2020 11:55:34 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id s1so24890592ljo.0
-        for <linux-s390@vger.kernel.org>; Tue, 16 Jun 2020 11:55:34 -0700 (PDT)
-X-Received: by 2002:a2e:97c3:: with SMTP id m3mr2263094ljj.312.1592333733916;
- Tue, 16 Jun 2020 11:55:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200615221607.7764-1-peterx@redhat.com>
-In-Reply-To: <20200615221607.7764-1-peterx@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 16 Jun 2020 11:55:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiTjaXHu+uxMi0xCZQOm4KVr0MucECAK=Zm4p4YZZ1XEg@mail.gmail.com>
-Message-ID: <CAHk-=wiTjaXHu+uxMi0xCZQOm4KVr0MucECAK=Zm4p4YZZ1XEg@mail.gmail.com>
-Subject: Re: [PATCH 00/25] mm: Page fault accounting cleanups
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        openrisc@lists.librecores.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: multipart/mixed; boundary="00000000000093703c05a8381612"
+        id S1728144AbgFPTvC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 Jun 2020 15:51:02 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41400 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728518AbgFPTvB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 16 Jun 2020 15:51:01 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GJWNEJ002581;
+        Tue, 16 Jun 2020 15:51:01 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31n45dvujq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 15:51:01 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GJWbHm003478;
+        Tue, 16 Jun 2020 15:51:00 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31n45dvuj7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 15:51:00 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GJnhjG013450;
+        Tue, 16 Jun 2020 19:50:58 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7wv99-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 19:50:58 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GJot3S58916932
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 19:50:55 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6C844A405C;
+        Tue, 16 Jun 2020 19:50:55 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 53030A405B;
+        Tue, 16 Jun 2020 19:50:55 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 16 Jun 2020 19:50:55 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
+        id E791DE01F3; Tue, 16 Jun 2020 21:50:54 +0200 (CEST)
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Jared Rossi <jrossi@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
+Subject: [RFC PATCH v3 0/3] vfio-ccw: Fix interrupt handling for HALT/CLEAR
+Date:   Tue, 16 Jun 2020 21:50:50 +0200
+Message-Id: <20200616195053.99253-1-farman@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_12:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 phishscore=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 bulkscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ clxscore=1011 cotscore=-2147483648 mlxscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160134
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---00000000000093703c05a8381612
-Content-Type: text/plain; charset="UTF-8"
+Let's continue our discussion of the handling of vfio-ccw interrupts.
 
-On Mon, Jun 15, 2020 at 3:16 PM Peter Xu <peterx@redhat.com> wrote:
->
-> This series tries to address all of them by introducing mm_fault_accounting()
-> first, so that we move all the page fault accounting into the common code base,
-> then call it properly from arch pf handlers just like handle_mm_fault().
+The initial fix [1] relied upon the interrupt path's examination of the
+FSM state, and freeing all resources if it were CP_PENDING. But the
+interface used by HALT/CLEAR SUBCHANNEL doesn't affect the FSM state.
+Consider this sequence:
 
-Hmm.
+    CPU 1                           CPU 2
+    CLEAR (state=IDLE/no change)
+                                    START [2]
+    INTERRUPT (set state=IDLE)
+                                    INTERRUPT (set state=IDLE)
 
-So having looked at this a bit more, I'd actually like to go even
-further, and just get rid of the per-architecture code _entirely_.
+This translates to a couple of possible scenarios:
 
-Here's a straw-man patch to the generic code - the idea is mostly laid
-out in the comment that I'm just quoting here directly too:
+ A) The START gets a cc2 because of the outstanding CLEAR, -EBUSY is
+    returned, resources are freed, and state remains IDLE
+ B) The START gets a cc0 because the CLEAR has already presented an
+    interrupt, and state is set to CP_PENDING
 
-        /*
-         * Do accounting in the common code, to avoid unnecessary
-         * architecture differences or duplicated code.
-         *
-         * We arbitrarily make the rules be:
-         *
-         *  - faults that never even got here (because the address
-         *    wasn't valid). That includes arch_vma_access_permitted()
-         *    failing above.
-         *
-         *    So this is expressly not a "this many hardware page
-         *    faults" counter. Use the hw profiling for that.
-         *
-         *  - incomplete faults (ie RETRY) do not count (see above).
-         *    They will only count once completed.
-         *
-         *  - the fault counts as a "major" fault when the final
-         *    successful fault is VM_FAULT_MAJOR, or if it was a
-         *    retry (which implies that we couldn't handle it
-         *    immediately previously).
-         *
-         *  - if the fault is done for GUP, regs wil be NULL and
-         *    no accounting will be done (but you _could_ pass in
-         *    your own regs and it would be accounted to the thread
-         *    doing the fault, not to the target!)
-         */
+If the START gets a cc0 before the CLEAR INTERRUPT (stacked onto a
+workqueue by the IRQ context) gets a chance to run, then the INTERRUPT
+will release the channel program memory prematurely. If the two
+operations run concurrently, then the FSM state set to CP_PROCESSING
+will prevent the cp_free() from being invoked. But the io_mutex
+boundary on that path will pause itself until the START completes,
+and then allow the FSM to be reset to IDLE without considering the
+outstanding START. Neither scenario would be considered good.
 
-the code itself in the patch is
+Having said all of that, in v2 Conny suggested [3] the following:
 
- (a) pretty trivial and self-evident
+> - Detach the cp from the subchannel (or better, remove the 1:1
+>   relationship). By that I mean building the cp as a separately
+>   allocated structure (maybe embedding a kref, but that might not be
+>   needed), and appending it to a list after SSCH with cc=0. Discard it
+>   if cc!=0.
+> - Remove the CP_PENDING state. The state is either IDLE after any
+>   successful SSCH/HSCH/CSCH, or a new state in that case. But no
+>   special state for SSCH.
+> - A successful CSCH removes the first queued request, if any.
+> - A final interrupt removes the first queued request, if any.
 
- (b) INCOMPLETE
+What I have implemented here is basically this, with a few changes:
 
-that (b) is worth noting: this patch won't compile on its own. It
-intentionally leaves all the users without the new 'regs' argument,
-because you obviously simply need to remove all the code that
-currently tries to do any accounting.
+ - I don't queue cp's. Since there should only be one START in process
+   at a time, and HALT/CLEAR doesn't build a cp, I didn't see a pressing
+   need to introduce that complexity.
+ - Furthermore, while I initially made a separately allocated cp, adding
+   an alloc for a cp on each I/O AND moving the guest_cp alloc from the
+   probe path to the I/O path seems excessive. So I implemented a
+   "started" flag to the cp, set after a cc0 from the START, and examine
+   that on the interrupt path to determine whether cp_free() is needed.
+ - I opted against a "SOMETHING_PENDING" state if START/HALT/CLEAR
+   got a cc0, and just put the FSM back to IDLE. It becomes too unwieldy
+   to discern which operation an interrupt is completing, and whether
+   more interrupts are expected, to be worth the additional state.
+ - A successful CSCH doesn't do anything special, and cp_free()
+   is only performed on the interrupt path. Part of me wrestled with
+   how a HALT fits into that, but mostly it was that a cc0 on any
+   of the instructions indicated the "channel subsystem is signaled
+   to asynchronously perform the [START/HALT/CLEAR] function."
+   This means that an in-flight START could still receive data from the
+   device/subchannel, so not a good idea to release memory at that point.
 
-Comments?
+Separate from all that, I added a small check of the io_work queue to
+the FSM START path. Part of the problems I've seen was that an interrupt
+is presented by a CPU, but not yet processed by vfio-ccw. Some of the
+problems seen thus far is because of this gap, and the above changes
+don't address that either. Whether this is appropriate or ridiculous
+would be a welcome discussion.
 
-This is a bigger change, but I think it might be worth it to _really_
-consolidate the major/minor logic.
+Previous versions:
+v2: https://lore.kernel.org/kvm/20200513142934.28788-1-farman@linux.ibm.com/
+v1: https://lore.kernel.org/kvm/20200124145455.51181-1-farman@linux.ibm.com/
 
-One detail worth noting: I do wonder if we should put the
+Footnotes:
+[1] https://lore.kernel.org/kvm/62e87bf67b38dc8d5760586e7c96d400db854ebe.1562854091.git.alifm@linux.ibm.com/
+[2] Halil has pointed out that QEMU should prohibit this, based on the
+    rules set forth by the POPs. This is true, but we should not rely on
+    it behaving properly without addressing this scenario that is visible
+    today. Once I get this behaving correctly, I'll spend some time
+    seeing if QEMU is misbehaving somehow.
+[3] https://lore.kernel.org/kvm/20200518180903.7cb21dd8.cohuck@redhat.com/
+[4] https://lore.kernel.org/kvm/a52368d3-8cec-7b99-1587-25e055228b62@linux.ibm.com/
 
-    perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
+Eric Farman (3):
+  vfio-ccw: Indicate if a channel_program is started
+  vfio-ccw: Remove the CP_PENDING FSM state
+  vfio-ccw: Check workqueue before doing START
 
-just in the arch code at the top of the fault handling, and consider
-it entirely unrelated to the major/minor fault handling. The
-major/minor faults fundamnetally are about successes. But the plain
-PERF_COUNT_SW_PAGE_FAULTS could be about things that fail, including
-things that never even get to this point at all.
+ drivers/s390/cio/vfio_ccw_cp.c      |  2 ++
+ drivers/s390/cio/vfio_ccw_cp.h      |  1 +
+ drivers/s390/cio/vfio_ccw_drv.c     |  5 +----
+ drivers/s390/cio/vfio_ccw_fsm.c     | 32 +++++++++++++++++------------
+ drivers/s390/cio/vfio_ccw_ops.c     |  3 +--
+ drivers/s390/cio/vfio_ccw_private.h |  1 -
+ 6 files changed, 24 insertions(+), 20 deletions(-)
 
-I'm not convinced it's useful to have three SW events that are defined
-to be A=B+C.
+-- 
+2.17.1
 
-But this does *not* do that part. It' sreally just an RFC patch.
-
-                    Linus
-
---00000000000093703c05a8381612
-Content-Type: application/octet-stream; name=patch
-Content-Disposition: attachment; filename=patch
-Content-Transfer-Encoding: base64
-Content-ID: <f_kbiacfcm0>
-X-Attachment-Id: f_kbiacfcm0
-
-IGluY2x1ZGUvbGludXgvbW0uaCB8ICAzICsrLQogbW0vbWVtb3J5LmMgICAgICAgIHwgNDYgKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQogMiBmaWxlcyBjaGFu
-Z2VkLCA0NyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2luY2x1
-ZGUvbGludXgvbW0uaCBiL2luY2x1ZGUvbGludXgvbW0uaAppbmRleCBkYzdiODczMTBjMTAuLmU4
-MmE2MDQzMzljMCAxMDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9tbS5oCisrKyBiL2luY2x1ZGUv
-bGludXgvbW0uaApAQCAtMTY0OCw3ICsxNjQ4LDggQEAgaW50IGludmFsaWRhdGVfaW5vZGVfcGFn
-ZShzdHJ1Y3QgcGFnZSAqcGFnZSk7CiAKICNpZmRlZiBDT05GSUdfTU1VCiBleHRlcm4gdm1fZmF1
-bHRfdCBoYW5kbGVfbW1fZmF1bHQoc3RydWN0IHZtX2FyZWFfc3RydWN0ICp2bWEsCi0JCQl1bnNp
-Z25lZCBsb25nIGFkZHJlc3MsIHVuc2lnbmVkIGludCBmbGFncyk7CisJCQl1bnNpZ25lZCBsb25n
-IGFkZHJlc3MsIHVuc2lnbmVkIGludCBmbGFncywKKwkJCXN0cnVjdCBwdF9yZWdzICopOwogZXh0
-ZXJuIGludCBmaXh1cF91c2VyX2ZhdWx0KHN0cnVjdCB0YXNrX3N0cnVjdCAqdHNrLCBzdHJ1Y3Qg
-bW1fc3RydWN0ICptbSwKIAkJCSAgICB1bnNpZ25lZCBsb25nIGFkZHJlc3MsIHVuc2lnbmVkIGlu
-dCBmYXVsdF9mbGFncywKIAkJCSAgICBib29sICp1bmxvY2tlZCk7CmRpZmYgLS1naXQgYS9tbS9t
-ZW1vcnkuYyBiL21tL21lbW9yeS5jCmluZGV4IGRjN2YzNTQzYjFmZC4uZjE1MDU2MTUxZmIxIDEw
-MDY0NAotLS0gYS9tbS9tZW1vcnkuYworKysgYi9tbS9tZW1vcnkuYwpAQCAtNzIsNiArNzIsNyBA
-QAogI2luY2x1ZGUgPGxpbnV4L29vbS5oPgogI2luY2x1ZGUgPGxpbnV4L251bWEuaD4KIAorI2lu
-Y2x1ZGUgPGxpbnV4L3BlcmZfZXZlbnQuaD4KICNpbmNsdWRlIDx0cmFjZS9ldmVudHMva21lbS5o
-PgogCiAjaW5jbHVkZSA8YXNtL2lvLmg+CkBAIC00MzUzLDcgKzQzNTQsNyBAQCBzdGF0aWMgdm1f
-ZmF1bHRfdCBfX2hhbmRsZV9tbV9mYXVsdChzdHJ1Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZtYSwKICAq
-IHJldHVybiB2YWx1ZS4gIFNlZSBmaWxlbWFwX2ZhdWx0KCkgYW5kIF9fbG9ja19wYWdlX29yX3Jl
-dHJ5KCkuCiAgKi8KIHZtX2ZhdWx0X3QgaGFuZGxlX21tX2ZhdWx0KHN0cnVjdCB2bV9hcmVhX3N0
-cnVjdCAqdm1hLCB1bnNpZ25lZCBsb25nIGFkZHJlc3MsCi0JCXVuc2lnbmVkIGludCBmbGFncykK
-KwkJdW5zaWduZWQgaW50IGZsYWdzLCBzdHJ1Y3QgcHRfcmVncyAqcmVncykKIHsKIAl2bV9mYXVs
-dF90IHJldDsKIApAQCAtNDM5NCw2ICs0Mzk1LDQ5IEBAIHZtX2ZhdWx0X3QgaGFuZGxlX21tX2Zh
-dWx0KHN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqdm1hLCB1bnNpZ25lZCBsb25nIGFkZHJlc3MsCiAJ
-CQltZW1fY2dyb3VwX29vbV9zeW5jaHJvbml6ZShmYWxzZSk7CiAJfQogCisJaWYgKHJldCAmIFZN
-X0ZBVUxUX1JFVFJZKQorCQlyZXR1cm4gcmV0OworCisJLyoKKwkgKiBEbyBhY2NvdW50aW5nIGlu
-IHRoZSBjb21tb24gY29kZSwgdG8gYXZvaWQgdW5uZWNlc3NhcnkKKwkgKiBhcmNoaXRlY3R1cmUg
-ZGlmZmVyZW5jZXMgb3IgZHVwbGljYXRlZCBjb2RlLgorCSAqCisJICogV2UgYXJiaXRyYXJpbHkg
-bWFrZSB0aGUgcnVsZXMgYmU6CisJICoKKwkgKiAgLSBmYXVsdHMgdGhhdCBuZXZlciBldmVuIGdv
-dCBoZXJlIChiZWNhdXNlIHRoZSBhZGRyZXNzCisJICogICAgd2Fzbid0IHZhbGlkKS4gVGhhdCBp
-bmNsdWRlcyBhcmNoX3ZtYV9hY2Nlc3NfcGVybWl0dGVkKCkKKwkgKiAgICBmYWlsaW5nIGFib3Zl
-LgorCSAqCisJICogICAgU28gdGhpcyBpcyBleHByZXNzbHkgbm90IGEgInRoaXMgbWFueSBoYXJk
-d2FyZSBwYWdlCisJICogICAgZmF1bHRzIiBjb3VudGVyLiBVc2UgdGhlIGh3IHByb2ZpbGluZyBm
-b3IgdGhhdC4KKwkgKgorCSAqICAtIGluY29tcGxldGUgZmF1bHRzIChpZSBSRVRSWSkgZG8gbm90
-IGNvdW50IChzZWUgYWJvdmUpLgorCSAqICAgIFRoZXkgd2lsbCBvbmx5IGNvdW50IG9uY2UgY29t
-cGxldGVkLgorCSAqCisJICogIC0gdGhlIGZhdWx0IGNvdW50cyBhcyBhICJtYWpvciIgZmF1bHQg
-d2hlbiB0aGUgZmluYWwKKwkgKiAgICBzdWNjZXNzZnVsIGZhdWx0IGlzIFZNX0ZBVUxUX01BSk9S
-LCBvciBpZiBpdCB3YXMgYQorCSAqICAgIHJldHJ5ICh3aGljaCBpbXBsaWVzIHRoYXQgd2UgY291
-bGRuJ3QgaGFuZGxlIGl0CisJICogICAgaW1tZWRpYXRlbHkgcHJldmlvdXNseSkuCisJICoKKwkg
-KiAgLSBpZiB0aGUgZmF1bHQgaXMgZG9uZSBmb3IgR1VQLCByZWdzIHdpbCBiZSBOVUxMIGFuZAor
-CSAqICAgIG5vIGFjY291bnRpbmcgd2lsbCBiZSBkb25lIChidXQgeW91IF9jb3VsZF8gcGFzcyBp
-bgorCSAqICAgIHlvdXIgb3duIHJlZ3MgYW5kIGl0IHdvdWxkIGJlIGFjY291bnRlZCB0byB0aGUg
-dGhyZWFkCisJICogICAgZG9pbmcgdGhlIGZhdWx0LCBub3QgdG8gdGhlIHRhcmdldCEpCisJICov
-CisKKwlpZiAoIXJlZ3MpCisJCXJldHVybiByZXQ7CisKKwlwZXJmX3N3X2V2ZW50KFBFUkZfQ09V
-TlRfU1dfUEFHRV9GQVVMVFMsIDEsIHJlZ3MsIGFkZHJlc3MpOworCisJaWYgKChyZXQgJiBWTV9G
-QVVMVF9NQUpPUikgfHwgKGZsYWdzICYgRkFVTFRfRkxBR19UUklFRCkpIHsKKwkJY3VycmVudC0+
-bWFqX2ZsdCsrOworCQlwZXJmX3N3X2V2ZW50KFBFUkZfQ09VTlRfU1dfUEFHRV9GQVVMVFNfTUFK
-LCAxLCByZWdzLCBhZGRyZXNzKTsKKwl9IGVsc2UgeworCQljdXJyZW50LT5taW5fZmx0Kys7CisJ
-CXBlcmZfc3dfZXZlbnQoUEVSRl9DT1VOVF9TV19QQUdFX0ZBVUxUU19NSU4sIDEsIHJlZ3MsIGFk
-ZHJlc3MpOworCX0KKwogCXJldHVybiByZXQ7CiB9CiBFWFBPUlRfU1lNQk9MX0dQTChoYW5kbGVf
-bW1fZmF1bHQpOwo=
---00000000000093703c05a8381612--
