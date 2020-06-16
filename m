@@ -2,80 +2,107 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D130C1FAC83
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 11:35:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B82441FACD9
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 11:39:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbgFPJfQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 Jun 2020 05:35:16 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60931 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725911AbgFPJfP (ORCPT
+        id S1727876AbgFPJj3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 Jun 2020 05:39:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7890 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725911AbgFPJj3 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 16 Jun 2020 05:35:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592300114;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=4OcfCuG1vNGsZvLvoiRnSaiZvP8xLfhihUIJTYWNKxs=;
-        b=JSlSV3/vAubSndpcdsdAskgIGKrbNLhdgIluQPY3wlMCeNK+sKrwuvi1/nrcZFednE2aft
-        ytXzPwPBnc3Plx9esoRYuwfZbjgd48V4/g83+xt++LCE6WulAJsW39IQCatFDaYCKG6PgN
-        fpTC1zLpIJKqGYUPbPKBD+8t2Z6u5M8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-311-PmwOFWtJPtK_lRromgykUA-1; Tue, 16 Jun 2020 05:35:13 -0400
-X-MC-Unique: PmwOFWtJPtK_lRromgykUA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14734107B7C9;
-        Tue, 16 Jun 2020 09:35:12 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-114-128.ams2.redhat.com [10.36.114.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ED3C25C1C3;
-        Tue, 16 Jun 2020 09:35:07 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v9 06/12] s390x: clock and delays
- caluculations
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
+        Tue, 16 Jun 2020 05:39:29 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05G92iQv110447;
+        Tue, 16 Jun 2020 05:39:28 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5esfye6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 05:39:28 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05G933aH112435;
+        Tue, 16 Jun 2020 05:39:28 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31p5esfydb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 05:39:28 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05G9U77c012432;
+        Tue, 16 Jun 2020 09:39:26 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma01fra.de.ibm.com with ESMTP id 31mpe7j2jf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 09:39:25 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05G9dNsp61079930
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 09:39:23 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A07384C059;
+        Tue, 16 Jun 2020 09:39:23 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 52B644C046;
+        Tue, 16 Jun 2020 09:39:23 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.26.88])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 16 Jun 2020 09:39:23 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v9 01/12] s390x: Use PSW bits definitions
+ in cstart
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
         david@redhat.com, cohuck@redhat.com
 References: <1592213521-19390-1-git-send-email-pmorel@linux.ibm.com>
- <1592213521-19390-7-git-send-email-pmorel@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <81557eed-ff8e-2076-44f7-2174befce7b5@redhat.com>
-Date:   Tue, 16 Jun 2020 11:35:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ <1592213521-19390-2-git-send-email-pmorel@linux.ibm.com>
+ <accfc1b6-6ddb-2b04-7f8a-ea6fd83b8b2f@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <04f889dc-7706-5f4a-f568-760ea9337f65@linux.ibm.com>
+Date:   Tue, 16 Jun 2020 11:39:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <1592213521-19390-7-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <accfc1b6-6ddb-2b04-7f8a-ea6fd83b8b2f@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_03:2020-06-15,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 adultscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0
+ spamscore=0 impostorscore=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 cotscore=-2147483648 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160066
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 15/06/2020 11.31, Pierre Morel wrote:
-> The hardware gives us a good definition of the microsecond,
-> let's keep this information and let the routine accessing
-> the hardware keep all the information and return microseconds.
-> 
-> Calculate delays in microseconds and take care about wrapping
-> around zero.
-> 
-> Define values with macros and use inlines to keep the
-> milliseconds interface.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->  lib/s390x/asm/time.h | 29 +++++++++++++++++++++++++++--
->  1 file changed, 27 insertions(+), 2 deletions(-)
 
-In case you respin, there is a typo in the title ("caluculations") ...
-otherwise this can be fixed when the patch gets picked up.
 
-Reviewed-by: Thomas Huth <thuth@redhat.com>
+On 2020-06-16 11:31, Thomas Huth wrote:
+> On 15/06/2020 11.31, Pierre Morel wrote:
+>> This patch defines the PSW bits EA/BA used to initialize the PSW masks
+>> for exceptions.
+>>
+>> Since some PSW mask definitions exist already in arch_def.h we add these
+>> definitions there.
+>> We move all PSW definitions together and protect assembler code against
+>> C syntax.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+>> ---
+>>   lib/s390x/asm/arch_def.h | 15 +++++++++++----
+>>   s390x/cstart64.S         | 15 ++++++++-------
+>>   2 files changed, 19 insertions(+), 11 deletions(-)
+> 
+> Reviewed-by: Thomas Huth <thuth@redhat.com>
+> 
 
+Thanks,
+Pierre
+
+-- 
+Pierre Morel
+IBM Lab Boeblingen
