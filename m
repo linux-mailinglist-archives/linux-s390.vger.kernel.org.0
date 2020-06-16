@@ -2,182 +2,99 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ACA91FB1C4
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 15:13:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 287371FB1F9
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 15:25:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbgFPNNl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 Jun 2020 09:13:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38024 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726052AbgFPNNk (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 Jun 2020 09:13:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592313218;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=JBPAifMJNlcrBEUwh/D0BYGOXb4AfCXj5frjE3u0wNw=;
-        b=WhDd7C7Z2nPDY7rd7BVQth3WlI6i1wcZwEn5o49ia+KqI2OpgeOG+U/+5Xk/hv6qrLrgr4
-        uw9fZ//zGgB9jiSuz5VJJHlJIAg3uA16BzsTDKRbbZajxdbDKXLLeOpqkGO7a1bGvOwUQo
-        SyB0o/5SCSxx02SqTjbH9QPQTwKLTN8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295-LD307xFVOXSktcChKX9A9Q-1; Tue, 16 Jun 2020 09:13:37 -0400
-X-MC-Unique: LD307xFVOXSktcChKX9A9Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DCDE980330E;
-        Tue, 16 Jun 2020 13:13:35 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-114-128.ams2.redhat.com [10.36.114.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6EBB45D9D7;
-        Tue, 16 Jun 2020 13:13:34 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v9 01/12] s390x: Use PSW bits definitions
- in cstart
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        david@redhat.com, cohuck@redhat.com
-References: <1592213521-19390-1-git-send-email-pmorel@linux.ibm.com>
- <1592213521-19390-2-git-send-email-pmorel@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <f160d328-694a-4476-4863-c49a1d0e5349@redhat.com>
-Date:   Tue, 16 Jun 2020 15:13:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726606AbgFPNZL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 Jun 2020 09:25:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24580 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726467AbgFPNZK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 16 Jun 2020 09:25:10 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05GD3P9i070097;
+        Tue, 16 Jun 2020 09:25:05 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31pc7npex1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 09:25:05 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05GD3ST1070372;
+        Tue, 16 Jun 2020 09:25:04 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31pc7npevt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 09:25:04 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05GDJkA3032303;
+        Tue, 16 Jun 2020 13:25:02 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 31mpe7wd5b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Jun 2020 13:25:02 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05GDOx0L34275416
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jun 2020 13:24:59 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4EBDBAE051;
+        Tue, 16 Jun 2020 13:24:59 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0398DAE053;
+        Tue, 16 Jun 2020 13:24:59 +0000 (GMT)
+Received: from osiris (unknown [9.171.4.37])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 16 Jun 2020 13:24:58 +0000 (GMT)
+Date:   Tue, 16 Jun 2020 15:24:57 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     "Dmitry V. Levin" <ldv@altlinux.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromyatnikov <evgsyr@gmail.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390: fix syscall_get_error for compat processes
+Message-ID: <20200616132457.GA4166@osiris>
+References: <20200602180051.GA2427@altlinux.org>
 MIME-Version: 1.0
-In-Reply-To: <1592213521-19390-2-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200602180051.GA2427@altlinux.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_04:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1
+ mlxlogscore=794 clxscore=1011 impostorscore=0 malwarescore=0
+ cotscore=-2147483648 priorityscore=1501 lowpriorityscore=0 phishscore=0
+ spamscore=0 mlxscore=0 adultscore=0 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006160097
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 15/06/2020 11.31, Pierre Morel wrote:
-> This patch defines the PSW bits EA/BA used to initialize the PSW masks
-> for exceptions.
+On Tue, Jun 02, 2020 at 09:00:51PM +0300, Dmitry V. Levin wrote:
+> If both the tracer and the tracee are compat processes, and gprs[2]
+> is assigned a value by __poke_user_compat, then the higher 32 bits
+> of gprs[2] are cleared, IS_ERR_VALUE() always returns false, and
+> syscall_get_error() always returns 0.
 > 
-> Since some PSW mask definitions exist already in arch_def.h we add these
-> definitions there.
-> We move all PSW definitions together and protect assembler code against
-> C syntax.
+> Fix the implementation by sign-extending the value for compat processes
+> the same way as x86 implementation does.
 > 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+> The bug was exposed to user space by commit 201766a20e30f ("ptrace: add
+> PTRACE_GET_SYSCALL_INFO request") and detected by strace test suite.
+> 
+> This change fixes strace syscall tampering on s390.
+> 
+> Fixes: 753c4dd6a2fa2 ("[S390] ptrace changes")
+> Cc: Elvira Khabirova <lineprinter@altlinux.org>
+> Cc: stable@vger.kernel.org # v2.6.28+
+> Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
 > ---
->  lib/s390x/asm/arch_def.h | 15 +++++++++++----
->  s390x/cstart64.S         | 15 ++++++++-------
->  2 files changed, 19 insertions(+), 11 deletions(-)
-> 
-> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-> index 1b3bb0c..b5d7aca 100644
-> --- a/lib/s390x/asm/arch_def.h
-> +++ b/lib/s390x/asm/arch_def.h
-> @@ -10,15 +10,21 @@
->  #ifndef _ASM_S390X_ARCH_DEF_H_
->  #define _ASM_S390X_ARCH_DEF_H_
->  
-> +#define PSW_MASK_EXT			0x0100000000000000UL
-> +#define PSW_MASK_DAT			0x0400000000000000UL
-> +#define PSW_MASK_SHORT_PSW		0x0008000000000000UL
-> +#define PSW_MASK_PSTATE			0x0001000000000000UL
-> +#define PSW_MASK_BA			0x0000000080000000UL
-> +#define PSW_MASK_EA			0x0000000100000000UL
-> +
-> +#define PSW_MASK_ON_EXCEPTION	(PSW_MASK_EA | PSW_MASK_BA)
-> +
-> +#ifndef __ASSEMBLER__
->  struct psw {
->  	uint64_t	mask;
->  	uint64_t	addr;
->  };
->  
-> -#define PSW_MASK_EXT			0x0100000000000000UL
-> -#define PSW_MASK_DAT			0x0400000000000000UL
-> -#define PSW_MASK_PSTATE			0x0001000000000000UL
-> -
->  #define CR0_EXTM_SCLP			0x0000000000000200UL
->  #define CR0_EXTM_EXTC			0x0000000000002000UL
->  #define CR0_EXTM_EMGC			0x0000000000004000UL
-> @@ -297,4 +303,5 @@ static inline uint32_t get_prefix(void)
->  	return current_prefix;
->  }
->  
-> +#endif /* __ASSEMBLER */
->  #endif
-> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-> index e084f13..d386f35 100644
-> --- a/s390x/cstart64.S
-> +++ b/s390x/cstart64.S
-> @@ -12,6 +12,7 @@
->   */
->  #include <asm/asm-offsets.h>
->  #include <asm/sigp.h>
-> +#include <asm/arch_def.h>
->  
->  .section .init
->  
-> @@ -198,19 +199,19 @@ svc_int:
->  
->  	.align	8
->  reset_psw:
-> -	.quad	0x0008000180000000
-> +	.quad	PSW_MASK_ON_EXCEPTION | PSW_MASK_SHORT_PSW
->  initial_psw:
-> -	.quad	0x0000000180000000, clear_bss_start
-> +	.quad	PSW_MASK_ON_EXCEPTION, clear_bss_start
->  pgm_int_psw:
-> -	.quad	0x0000000180000000, pgm_int
-> +	.quad	PSW_MASK_ON_EXCEPTION, pgm_int
->  ext_int_psw:
-> -	.quad	0x0000000180000000, ext_int
-> +	.quad	PSW_MASK_ON_EXCEPTION, ext_int
->  mcck_int_psw:
-> -	.quad	0x0000000180000000, mcck_int
-> +	.quad	PSW_MASK_ON_EXCEPTION, mcck_int
->  io_int_psw:
-> -	.quad	0x0000000180000000, io_int
-> +	.quad	PSW_MASK_ON_EXCEPTION, io_int
->  svc_int_psw:
-> -	.quad	0x0000000180000000, svc_int
-> +	.quad	PSW_MASK_ON_EXCEPTION, svc_int
->  initial_cr0:
->  	/* enable AFP-register control, so FP regs (+BFP instr) can be used */
->  	.quad	0x0000000000040000
-> 
+>  arch/s390/include/asm/syscall.h | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
 
-I'm afraid, by when I compile this on RHEL7, the toolchain complains:
-
-s390x/cstart64.S: Assembler messages:
-s390x/cstart64.S:239: Error: found 'L', expected: ')'
-s390x/cstart64.S:239: Error: junk at end of line, first unrecognized
-character is `L'
-s390x/cstart64.S:241: Error: found 'L', expected: ')'
-s390x/cstart64.S:241: Error: junk at end of line, first unrecognized
-character is `L'
-s390x/cstart64.S:243: Error: found 'L', expected: ')'
-s390x/cstart64.S:243: Error: junk at end of line, first unrecognized
-character is `L'
-s390x/cstart64.S:245: Error: found 'L', expected: ')'
-s390x/cstart64.S:245: Error: junk at end of line, first unrecognized
-character is `L'
-s390x/cstart64.S:247: Error: found 'L', expected: ')'
-s390x/cstart64.S:247: Error: junk at end of line, first unrecognized
-character is `L'
-s390x/cstart64.S:249: Error: found 'L', expected: ')'
-s390x/cstart64.S:249: Error: junk at end of line, first unrecognized
-character is `L'
-s390x/cstart64.S:251: Error: found 'L', expected: ')'
-s390x/cstart64.S:251: Error: junk at end of line, first unrecognized
-character is `L'
-s390x/cstart64.S:254: Error: junk at end of line, first unrecognized
-character is `L'
-
-Shall we skip the update to the assembler file for now?
-
- Thomas
-
+Applied, thank you!
