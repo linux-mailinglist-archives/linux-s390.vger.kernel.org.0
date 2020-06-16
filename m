@@ -2,140 +2,143 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B48F1FA5BB
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 03:49:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BE551FA8BC
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Jun 2020 08:23:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726286AbgFPBtK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 15 Jun 2020 21:49:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgFPBtI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 15 Jun 2020 21:49:08 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF9CC061A0E;
-        Mon, 15 Jun 2020 18:49:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tHM7R3nRHzfZ+TprahCEXh9W4RAv/qCWqkAdZ0a0ZlA=; b=g0c6olxKdxfntLr2qTOBGzGnfY
-        pXiiMRe5+0EYhvH6QHxseD5nFq82dTKEcuCovKc+5ah2i1Fv1YS8M0MSkGXiIDgzSBOEh0LxJlWEw
-        rNqMJlqYMzhOORpM+Nj5Rmq1uC/+UPWzyUcTnjnF2ETH1dSpsi7EB+xcqY0YIL14pkm+hE+FEyNQI
-        OGvbgD9Vs72J4BUjVehagGp41jAZ02bS54nzGakPj/zIBL2WtRlLsCUIf72DMNSvsu8yfs/rSYaws
-        tlbTQoxl6Bn4RCaBCV/Nz0DP5i+eUAtmkbLACyoRp+qDlooVljRLCKuFsIuoI4MD49fCCjPVCGnJ4
-        6tHc0ojg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jl0ih-00063T-KW; Tue, 16 Jun 2020 01:49:02 +0000
-Date:   Mon, 15 Jun 2020 18:48:59 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-xfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        borntraeger@de.ibm.com, darrick.wong@oracle.com,
-        kirill@shutemov.name, peterx@redhat.com,
-        yang.shi@linux.alibaba.com, hch@lst.de,
-        linux-kernel@vger.kernel.org, songliubraving@fb.com
-Subject: Re: VM_BUG_ON_PAGE(page_to_pgoff(page) != offset) on s390
-Message-ID: <20200616014859.GY8681@bombadil.infradead.org>
-References: <20200616013309.GB815@lca.pw>
+        id S1726394AbgFPGXE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 Jun 2020 02:23:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32276 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726052AbgFPGXE (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 Jun 2020 02:23:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592288582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8VH7R/DoU62ut+esRu7Hjq7cJgKyK7i23Q0GKINZbgM=;
+        b=L074jNjqCzjBqcI21Lh8nf+zRILP45p/Lg2LNjOQLEoZ22hJ4qgUmHRqyJgmUuFTMXG0wD
+        dSJggUtqfl38Ysfb3ZlA+u5MKSUUhf41tgUM1hlPBXnO5vRStDjzU48GO2xjmPMZXgxV7V
+        MdKrIF8XVqTtmPSj/4al0oWcEY4jvVk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-224-dV-6KyFgPMiZJmzQP3PJeQ-1; Tue, 16 Jun 2020 02:22:58 -0400
+X-MC-Unique: dV-6KyFgPMiZJmzQP3PJeQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 057271085945;
+        Tue, 16 Jun 2020 06:22:57 +0000 (UTC)
+Received: from [10.72.13.124] (ovpn-13-124.pek2.redhat.com [10.72.13.124])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 72FE71001901;
+        Tue, 16 Jun 2020 06:22:46 +0000 (UTC)
+Subject: Re: [PATCH v2 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+To:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <1592224764-1258-1-git-send-email-pmorel@linux.ibm.com>
+ <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <b45e321a-5acb-9be2-4cd6-ae75d7f78f05@redhat.com>
+Date:   Tue, 16 Jun 2020 14:22:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616013309.GB815@lca.pw>
+In-Reply-To: <1592224764-1258-2-git-send-email-pmorel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 09:33:09PM -0400, Qian Cai wrote:
-> Ever since a few days ago, linux-next on s390 has started to crash
-> with compiling workloads or during boot below.
-> 
-> This .config if ever matters,
-> 
-> https://raw.githubusercontent.com/cailca/linux-mm/master/s390.config
 
-CONFIG_READ_ONLY_THP_FOR_FS=y
+On 2020/6/15 下午8:39, Pierre Morel wrote:
+> An architecture protecting the guest memory against unauthorized host
+> access may want to enforce VIRTIO I/O device protection through the
+> use of VIRTIO_F_IOMMU_PLATFORM.
+>
+> Let's give a chance to the architecture to accept or not devices
+> without VIRTIO_F_IOMMU_PLATFORM.
+>
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 
-This looks like a duplicate of
-https://bugzilla.kernel.org/show_bug.cgi?id=206569
 
-which Song has had no luck reproducing.
+Acked-by: Jason Wang <jasowang@redhat.com>
 
-I would suggest simply disabling the Kconfig option for now.
 
-> Since our s390 guest has only 2 CPUs, it is probably going to take a
-> long time to bisect.
-> 
-> 01: [   60.589979] page:000003d0830bd540 refcount:257 mapcount:0 mapping:0000000
-> 01: 0ac9dec15 index:0x155 head:000003d0830bc000 order:8 compound_mapcount:0 comp
-> 01: ound_pincount:0
-> 01: [   60.590361] mapping->aops:xfs_address_space_operations [xfs] dentry name:
-> 01: "lvm"
-> 01: [   60.590369] flags: 0x2000000000000000()
-> 01: [   60.590380] raw: 2000000000000000 000003d0830bc001 000003d0830bd548 00000
-> 01: 00000000400
-> 01: [   60.590387] raw: 0000000000000000 0000000000000000 ffffffff00000000 00000
-> 01: 00000000000
-> 01: [   60.590394] head: 2000000000010015 000003d0830dd588 000000008fb34c20 0000
-> 01: 0000cc4f0568
-> 01: [   60.590401] head: 0000000000000100 0000000000000000 ffffffff00000101 0000
-> 01: 00008f78a000
-> 01: [   60.590407] page dumped because: VM_BUG_ON_PAGE(page_to_pgoff(page) != o
-> 01: fset)
-> 01: [   60.590428] ------------[ cut here ]------------
-> 01: [   60.590435] kernel BUG at mm/filemap.c:2516!
-> 01: [   60.590512] monitor event: 0040 ilc:2 [#1] SMP
-> 01: [   60.590518] Modules linked in: ip_tables x_tables xfs dm_mirror dm_region
-> 01: _hash dm_log dm_mod
-> 01: [   60.590531] CPU: 1 PID: 665 Comm: lvmconfig Not tainted 5.8.0-rc1-next-20
-> 01: 200615 #1
-> 01: [   60.590535] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
-> 01: [   60.590539] Krnl PSW : 0704c00180000000 00000000bdf0bb46 (filemap_fault+0
-> 01: x191e/0x27c0)
-> 01: [   60.590550]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0
-> 01:  RI:0 EA:3
-> 01: [   60.590555] Krnl GPRS: 0000000000000001 0000037c002adef5 000003d0830bd578
-> 01:  0000030000000000
-> 01: [   60.591850]            0000030000000001 0000030000000000 000003e00156fdc8
-> 01:  000003e00156fdc0
-> 01: [   60.591854]            00000000c8f0b800 0000000000000155 000003d0830bd548
-> 01:  000003d0830bd540
-> 01: [   60.591859]            00000000bed41008 00000000bea6f900 00000000bdf0bb42
-> 01:  000003e00156f9d0
-> 01: [   60.591872] Krnl Code: 00000000bdf0bb36: c030005b1e45        larl    %r3,
-> 01: 00000000bea6f7c0
-> 01: [   60.591872]            00000000bdf0bb3c: c0e5000597ca        brasl   %r14
-> 01: ,00000000bdfbead0
-> 01: [   60.591872]           #00000000bdf0bb42: af000000            mc      0,0
-> 01: [   60.591872]           >00000000bdf0bb46: c020007d238d        larl    %r2,
-> 01: 00000000beeb0260
-> 01: [   60.591872]            00000000bdf0bb4c: c0e50028aebe        brasl   %r14
-> 01: ,00000000be4218c8
-> 01: [   60.591872]            00000000bdf0bb52: eb1a0003000c        srlg    %r1,
-> 01: %r10,3
-> 01: [   60.591872]            00000000bdf0bb58: a52d0300            llihl   %r2,
-> 01: 768
-> 01: [   60.591872]            00000000bdf0bb5c: b9080012            agr     %r1,
-> 01: %r2
-> 01: [   60.591901] Call Trace:
-> 01: [   60.591905]  [<00000000bdf0bb46>] filemap_fault+0x191e/0x27c0
-> 01: [   60.591910] ([<00000000bdf0bb42>] filemap_fault+0x191a/0x27c0)
-> 01: [   60.591967]  [<000003ff80240cfc>] xfs_filemap_fault+0x1ac/0x528 [xfs]
-> __xfs_filemap_fault at /home/linux-mm/linux/fs/xfs/xfs_file.c:1214
-> (inlined by) xfs_filemap_fault at /home/linux-mm/linux/fs/xfs/xfs_file.c:1228
-> 01: [   60.591973]  [<00000000bdfc8428>] __do_fault+0xc0/0x470
-> 01: [   60.591977]  [<00000000bdfd75f2>] handle_mm_fault+0x1782/0x29b8
-> 01: [   60.591983]  [<00000000bdb50c60>] do_dat_exception+0x200/0x9c8
-> do_exception at arch/s390/mm/fault.c:481
-> (inlined by) do_dat_exception at arch/s390/mm/fault.c:583
-> 01: [   60.591993]  [<00000000be9f4b76>] pgm_check_handler+0x1d6/0x234
-> 01: [   60.591997] INFO: lockdep is turned off.
-> 01: [   60.592000] Last Breaking-Event-Address:
-> 01: [   60.592004]  [<00000000bdfbeafc>] dump_page+0x2c/0x40
-> 01: [   60.606521] Kernel panic - not syncing: Fatal exception: panic_on_oops
-> 00: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from
->  CPU 00.
-> 00: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from
->  CPU 01.
-> 01: HCPGIR450W CP entered; disabled wait PSW 00020001 80000000 00000000 BDB32B58
+> ---
+>   arch/s390/mm/init.c     | 6 ++++++
+>   drivers/virtio/virtio.c | 9 +++++++++
+>   include/linux/virtio.h  | 2 ++
+>   3 files changed, 17 insertions(+)
+>
+> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> index 87b2d024e75a..3f04ad09650f 100644
+> --- a/arch/s390/mm/init.c
+> +++ b/arch/s390/mm/init.c
+> @@ -46,6 +46,7 @@
+>   #include <asm/kasan.h>
+>   #include <asm/dma-mapping.h>
+>   #include <asm/uv.h>
+> +#include <linux/virtio.h>
+>   
+>   pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+>   
+> @@ -162,6 +163,11 @@ bool force_dma_unencrypted(struct device *dev)
+>   	return is_prot_virt_guest();
+>   }
+>   
+> +int arch_needs_iommu_platform(struct virtio_device *dev)
+> +{
+> +	return is_prot_virt_guest();
+> +}
+> +
+>   /* protected virtualization */
+>   static void pv_init(void)
+>   {
+> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> index a977e32a88f2..30091089bee8 100644
+> --- a/drivers/virtio/virtio.c
+> +++ b/drivers/virtio/virtio.c
+> @@ -167,6 +167,11 @@ void virtio_add_status(struct virtio_device *dev, unsigned int status)
+>   }
+>   EXPORT_SYMBOL_GPL(virtio_add_status);
+>   
+> +int __weak arch_needs_iommu_platform(struct virtio_device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+>   int virtio_finalize_features(struct virtio_device *dev)
+>   {
+>   	int ret = dev->config->finalize_features(dev);
+> @@ -179,6 +184,10 @@ int virtio_finalize_features(struct virtio_device *dev)
+>   	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+>   		return 0;
+>   
+> +	if (arch_needs_iommu_platform(dev) &&
+> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
+> +		return -EIO;
+> +
+>   	virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
+>   	status = dev->config->get_status(dev);
+>   	if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {
+> diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+> index a493eac08393..2c46b310c38c 100644
+> --- a/include/linux/virtio.h
+> +++ b/include/linux/virtio.h
+> @@ -195,4 +195,6 @@ void unregister_virtio_driver(struct virtio_driver *drv);
+>   #define module_virtio_driver(__virtio_driver) \
+>   	module_driver(__virtio_driver, register_virtio_driver, \
+>   			unregister_virtio_driver)
+> +
+> +int arch_needs_iommu_platform(struct virtio_device *dev);
+>   #endif /* _LINUX_VIRTIO_H */
+
