@@ -2,106 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36CAC1FC83F
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 10:04:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 969D11FC85C
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 10:13:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725901AbgFQIEM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 17 Jun 2020 04:04:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgFQIEM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:04:12 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725941AbgFQINp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Jun 2020 04:13:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52224 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725773AbgFQINo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 17 Jun 2020 04:13:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592381623;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+1alsiIWHZc0JfJZ98mEf3xji1GMsCQin/jc8f2S8mU=;
+        b=SQlfHFdP1Zngekc+pGZ3rKQeJaKEexPK6I+Ny6UNYsa6AkidvGXbWM0+ntajvbPhACLF4S
+        /5IOzPu90Jj2wR87kTF1LXh867OsA6TUlE8kYY1Yi0iQhQ87AhVhp2iYOvC+v+zybwc/s8
+        3WcuzFr2iT8bNMvE4N7XV4qryMe5f1M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-237-XirK8OphPsmh1sD5vDe57w-1; Wed, 17 Jun 2020 04:13:39 -0400
+X-MC-Unique: XirK8OphPsmh1sD5vDe57w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91CE021475;
-        Wed, 17 Jun 2020 08:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592381051;
-        bh=MjCLvKpmywtlENNu3L8WcjVAZUYXfsV93TDu3ReXKuQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JTiufBj0BMszSpkVUzi+gNk/qprMzw2wYVoJRieWtNmkrCUlTJiL+eUPkxjEPJZ7D
-         Pl+CdboZUILER+bWki4NgM0L7KE262coRqRGnhsGEroSN9Uf1CdlIdoIHJwTchzbUV
-         5UjKXESI9ZrCTGdCfmJKt9pER0l8tsQDgS//NF2k=
-Date:   Wed, 17 Jun 2020 09:04:06 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        openrisc@lists.librecores.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 00/25] mm: Page fault accounting cleanups
-Message-ID: <20200617080405.GA3208@willie-the-truck>
-References: <20200615221607.7764-1-peterx@redhat.com>
- <CAHk-=wiTjaXHu+uxMi0xCZQOm4KVr0MucECAK=Zm4p4YZZ1XEg@mail.gmail.com>
- <87imfqecjx.fsf@mpe.ellerman.id.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86AA01009618;
+        Wed, 17 Jun 2020 08:13:38 +0000 (UTC)
+Received: from gondolin (ovpn-112-222.ams2.redhat.com [10.36.112.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 83BA519724;
+        Wed, 17 Jun 2020 08:13:34 +0000 (UTC)
+Date:   Wed, 17 Jun 2020 10:13:32 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
+Subject: Re: [kvm-unit-tests PATCH v9 03/12] s390x: saving regs for
+ interrupts
+Message-ID: <20200617101332.7baf9bc4.cohuck@redhat.com>
+In-Reply-To: <1592213521-19390-4-git-send-email-pmorel@linux.ibm.com>
+References: <1592213521-19390-1-git-send-email-pmorel@linux.ibm.com>
+        <1592213521-19390-4-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87imfqecjx.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 10:55:14AM +1000, Michael Ellerman wrote:
-> Linus Torvalds <torvalds@linux-foundation.org> writes:
-> > On Mon, Jun 15, 2020 at 3:16 PM Peter Xu <peterx@redhat.com> wrote:
-> >> This series tries to address all of them by introducing mm_fault_accounting()
-> >> first, so that we move all the page fault accounting into the common code base,
-> >> then call it properly from arch pf handlers just like handle_mm_fault().
-> >
-> > Hmm.
-> >
-> > So having looked at this a bit more, I'd actually like to go even
-> > further, and just get rid of the per-architecture code _entirely_.
+On Mon, 15 Jun 2020 11:31:52 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
+
+> If we use multiple source of interrupts, for example, using SCLP
+> console to print information while using I/O interrupts, we need
+> to have a re-entrant register saving interruption handling.
 > 
-> <snip>
+> Instead of saving at a static memory address, let's save the base
+> registers, the floating point registers and the floating point
+> control register on the stack in case of I/O interrupts
 > 
-> > One detail worth noting: I do wonder if we should put the
-> >
-> >     perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
-> >
-> > just in the arch code at the top of the fault handling, and consider
-> > it entirely unrelated to the major/minor fault handling. The
-> > major/minor faults fundamnetally are about successes. But the plain
-> > PERF_COUNT_SW_PAGE_FAULTS could be about things that fail, including
-> > things that never even get to this point at all.
+> Note that we keep the static register saving to recover from the
+> RESET tests.
 > 
-> Yeah I think we should keep it in the arch code at roughly the top.
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> Acked-by: Janosch Frank <frankja@linux.ibm.com>
+> Acked-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  s390x/cstart64.S | 41 +++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 39 insertions(+), 2 deletions(-)
 
-I agree. It's a nice idea to consolidate the code, but I don't see that
-it's really possible for PERF_COUNT_SW_PAGE_FAULTS without significantly
-changing the semantics (and a potentially less useful way. Of course,
-moving more of do_page_fault() out of the arch code would be great, but
-that's a much bigger effort.
+Acked-by: Cornelia Huck <cohuck@redhat.com>
 
-> If it's moved to the end you could have a process spinning taking bad
-> page faults (and fixing them up), and see no sign of it from the perf
-> page fault counters.
-
-The current arm64 behaviour is that we record PERF_COUNT_SW_PAGE_FAULTS
-if _all_ of the following are true:
-
-  1. The fault isn't handled by kprobes
-  2. The pagefault handler is enabled
-  3. We have an mm (current->mm)
-  4. The fault isn't an unexpected kernel fault on a user address (we oops
-     and kill the task in this case)
-
-Which loosely corresponds to "we took a fault on a user address that it
-looks like we can handle".
-
-That said, I'm happy to tweak this if it brings us into line with other
-architectures.
-
-Will
