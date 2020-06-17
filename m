@@ -2,347 +2,141 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D82DF1FCA3A
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 11:55:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C934B1FCA67
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 12:03:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725536AbgFQJy5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 17 Jun 2020 05:54:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33133 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725901AbgFQJy5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 17 Jun 2020 05:54:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592387694;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TWRj4R3mtyJYcrPbSyH2aI8Q3wWLCi8uedkdMukjCws=;
-        b=gBTqy60Nom5Oh2DHdP3GSb7bT16t+eSXjr0rQcp7V9hEHnO0MAkLJZoOnSQCbVjIkUr8Oq
-        N+2xRbJqKSqKkqiDxrStGPIvz7zvtrYVw13ixAav1iDzt6nAqWnMyM1oVhbam5O/5xUscE
-        48F8zntxzB0Qe8UoMCLNIoUHGHIxSAg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-411-2zpNrnMtOK6D6iJlRjD9ZQ-1; Wed, 17 Jun 2020 05:54:50 -0400
-X-MC-Unique: 2zpNrnMtOK6D6iJlRjD9ZQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 894CC101C2DF;
-        Wed, 17 Jun 2020 09:54:49 +0000 (UTC)
-Received: from gondolin (ovpn-112-222.ams2.redhat.com [10.36.112.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 78FC619D7B;
-        Wed, 17 Jun 2020 09:54:45 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 11:54:42 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v9 12/12] s390x: css: ssch/tsch with
- sense and interrupt
-Message-ID: <20200617115442.036735c5.cohuck@redhat.com>
-In-Reply-To: <1592213521-19390-13-git-send-email-pmorel@linux.ibm.com>
-References: <1592213521-19390-1-git-send-email-pmorel@linux.ibm.com>
-        <1592213521-19390-13-git-send-email-pmorel@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1726270AbgFQKDi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Jun 2020 06:03:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22990 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725964AbgFQKDi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 17 Jun 2020 06:03:38 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05HA2KAQ121051;
+        Wed, 17 Jun 2020 06:02:56 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6hvq6ew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 06:02:55 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05HA2QE4121283;
+        Wed, 17 Jun 2020 06:02:38 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6hvq5rr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 06:02:38 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05HA1nGG006382;
+        Wed, 17 Jun 2020 10:01:50 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 31q6ch8t8m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 10:01:49 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05HA1lRV64815568
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jun 2020 10:01:47 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 079CCA4053;
+        Wed, 17 Jun 2020 10:01:47 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA8EBA4059;
+        Wed, 17 Jun 2020 10:01:43 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.204.35])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 17 Jun 2020 10:01:43 +0000 (GMT)
+Date:   Wed, 17 Jun 2020 13:01:41 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr, ziy@nvidia.com,
+        gerald.schaefer@de.ibm.com, Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 4/4] Documentation/mm: Add descriptions for arch page
+ table helpers
+Message-ID: <20200617100141.GC6493@linux.ibm.com>
+References: <1592192277-8421-1-git-send-email-anshuman.khandual@arm.com>
+ <1592192277-8421-5-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592192277-8421-5-git-send-email-anshuman.khandual@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-17_03:2020-06-16,2020-06-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=1
+ spamscore=0 clxscore=1011 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ mlxlogscore=999 cotscore=-2147483648 adultscore=0 phishscore=0
+ priorityscore=1501 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006170075
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 15 Jun 2020 11:32:01 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
-
-> After a channel is enabled we start a SENSE_ID command using
-> the SSCH instruction to recognize the control unit and device.
+On Mon, Jun 15, 2020 at 09:07:57AM +0530, Anshuman Khandual wrote:
+> This adds a specific description file for all arch page table helpers which
+> is in sync with the semantics being tested via CONFIG_DEBUG_VM_PGTABLE. All
+> future changes either to these descriptions here or the debug test should
+> always remain in sync.
 > 
-> This tests the success of SSCH, the I/O interruption and the TSCH
-> instructions.
-> 
-> The SENSE_ID command response is tested to report 0xff inside
-> its reserved field and to report the same control unit type
-> as the cu_type kernel argument.
-> 
-> Without the cu_type kernel argument, the test expects a device
-> with a default control unit type of 0x3832, a.k.a virtio-net-ccw.
-
-0x3832 is any virtio-ccw device; you could also test for the cu model
-to make sure that it is a net device, but that probably doesn't add
-much additional coverage.
-
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Vineet Gupta <vgupta@synopsys.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: linux-snps-arc@lists.infradead.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-s390@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: x86@kernel.org
+> Cc: linux-arch@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Suggested-by: Mike Rapoport <rppt@kernel.org>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > ---
->  lib/s390x/css.h     |  20 +++++++
->  lib/s390x/css_lib.c |  46 +++++++++++++++
->  s390x/css.c         | 140 +++++++++++++++++++++++++++++++++++++++++++-
->  3 files changed, 205 insertions(+), 1 deletion(-)
+>  Documentation/vm/arch_pgtable_helpers.rst | 258 ++++++++++++++++++++++
+>  mm/debug_vm_pgtable.c                     |   6 +
+>  2 files changed, 264 insertions(+)
+>  create mode 100644 Documentation/vm/arch_pgtable_helpers.rst
 
-(...)
-
-> diff --git a/lib/s390x/css_lib.c b/lib/s390x/css_lib.c
-> index 06a76db..c3d93d3 100644
-> --- a/lib/s390x/css_lib.c
-> +++ b/lib/s390x/css_lib.c
-> @@ -128,3 +128,49 @@ retry:
->  		    schid, retry_count, pmcw->flags);
->  	return -1;
->  }
-> +
-> +int start_ccw1_chain(unsigned int sid, struct ccw1 *ccw)
-> +{
-> +	struct orb orb = {
-> +		.intparm = sid,
-> +		.ctrl = ORB_CTRL_ISIC|ORB_CTRL_FMT|ORB_LPM_DFLT,
-> +		.cpa = (unsigned int) (unsigned long)ccw,
-> +	};
-> +
-> +	return ssch(sid, &orb);
-> +}
-> +
-> +/*
-> + * In the next revisions we will implement the possibility to handle
-> + * CCW chains doing this we will need to work with ccw1 pointers.
-
-"In the future, we want to implement support for CCW chains; for that,
-we will need to work with ccw1 pointers."
-
-?
-
-> + * For now we only need a unique CCW.
-> + */
-> +static struct ccw1 unique_ccw;
-> +
-> +int start_subchannel(unsigned int sid, int code, void *data, int count,
-> +		     unsigned char flags)
-> +{
-> +	int cc;
-> +	struct ccw1 *ccw = &unique_ccw;
-
-Hm... it might better to call this function "start_single_ccw" or
-something like that.
-
-> +
-> +	report_prefix_push("start_subchannel");
-> +	/* Build the CCW chain with a single CCW */
-> +	ccw->code = code;
-> +	ccw->flags = flags; /* No flags need to be set */
-> +	ccw->count = count;
-> +	ccw->data_address = (int)(unsigned long)data;
-> +
-> +	cc = start_ccw1_chain(sid, ccw);
-> +	if (cc) {
-> +		report(0, "start_ccw_chain failed ret=%d", cc);
-> +		report_prefix_pop();
-> +		return cc;
-> +	}
-> +	report_prefix_pop();
-> +	return 0;
-> +}
-> +
-> +int sch_read_len(int sid)
-> +{
-> +	return unique_ccw.count;
-> +}
-
-This function is very odd... it takes a subchannel id as a parameter,
-which it ignores, and instead returns the count field of the static ccw
-used when starting I/O. What is the purpose of this function? Grab the
-data length for the last I/O operation that was started on the
-subchannel? If yes, it might be better to store that information along
-with the sid? If it is the length for the last I/O operation that the
-code _thinks_ it started, it might be better to reuse that information
-from further up in the function instead.
-
-> diff --git a/s390x/css.c b/s390x/css.c
-> index 6948d73..6b618a1 100644
-> --- a/s390x/css.c
-> +++ b/s390x/css.c
-> @@ -16,10 +16,18 @@
->  #include <string.h>
->  #include <interrupt.h>
->  #include <asm/arch_def.h>
-> +#include <kernel-args.h>
->  
->  #include <css.h>
->  
-> +#define DEFAULT_CU_TYPE		0x3832
-
-Maybe append /* virtio-ccw */
-
-> +static unsigned long cu_type = DEFAULT_CU_TYPE;
-> +
-> +struct lowcore *lowcore = (void *)0x0;
-> +
->  static int test_device_sid;
-> +static struct irb irb;
-> +static struct senseid senseid;
->  
->  static void test_enumerate(void)
->  {
-> @@ -45,20 +53,150 @@ static void test_enable(void)
->  	report(cc == 0, "Enable subchannel %08x", test_device_sid);
->  }
->  
-> +static void enable_io_isc(void)
-> +{
-> +	/* Let's enable all ISCs for I/O interrupt */
-> +	lctlg(6, 0x00000000ff000000);
-> +}
-> +
-> +static void irq_io(void)
-> +{
-> +	int ret = 0;
-> +	char *flags;
-> +	int sid;
-> +
-> +	report_prefix_push("Interrupt");
-> +	/* Lowlevel set the SID as interrupt parameter. */
-> +	if (lowcore->io_int_param != test_device_sid) {
-> +		report(0,
-> +		       "Bad io_int_param: %x expected %x",
-> +		       lowcore->io_int_param, test_device_sid);
-> +		goto pop;
-> +	}
-> +	report_prefix_pop();
-> +
-> +	report_prefix_push("tsch");
-> +	sid = lowcore->subsys_id_word;
-> +	ret = tsch(sid, &irb);
-> +	switch (ret) {
-> +	case 1:
-> +		dump_irb(&irb);
-> +		flags = dump_scsw_flags(irb.scsw.ctrl);
-> +		report(0,
-> +		       "I/O interrupt, CC 1 but tsch reporting sch %08x as not status pending: %s",
-> +		       sid, flags);
-> +		break;
-> +	case 2:
-> +		report(0, "tsch returns unexpected CC 2");
-> +		break;
-> +	case 3:
-> +		report(0, "tsch reporting sch %08x as not operational", sid);
-> +		break;
-> +	case 0:
-> +		/* Stay humble on success */
-> +		break;
-> +	}
-> +pop:
-> +	report_prefix_pop();
-> +	lowcore->io_old_psw.mask &= ~PSW_MASK_WAIT;
-> +}
-> +
-> +/*
-> + * test_sense
-> + * Pre-requisits:
-> + * - We need the test device as the first recognized
-> + *   device by the enumeration.
-> + */
-> +static void test_sense(void)
-> +{
-> +	int ret;
-> +
-> +	if (!test_device_sid) {
-> +		report_skip("No device");
-> +		return;
-> +	}
-> +
-> +	ret = css_enable(test_device_sid);
-> +	if (ret) {
-> +		report(0,
-> +		       "Could not enable the subchannel: %08x",
-> +		       test_device_sid);
-> +		return;
-> +	}
-> +
-> +	ret = register_io_int_func(irq_io);
-> +	if (ret) {
-> +		report(0, "Could not register IRQ handler");
-> +		goto unreg_cb;
-> +	}
-> +
-> +	lowcore->io_int_param = 0;
-> +
-> +	memset(&senseid, 0, sizeof(senseid));
-> +	ret = start_subchannel(test_device_sid, CCW_CMD_SENSE_ID,
-> +			       &senseid, sizeof(senseid), CCW_F_SLI);
-> +	if (ret) {
-> +		report(0, "ssch failed for SENSE ID on sch %08x with cc %d",
-> +		       test_device_sid, ret);
-> +		goto unreg_cb;
-> +	}
-> +
-> +	wait_for_interrupt(PSW_MASK_IO);
-> +
-> +	ret = sch_read_len(test_device_sid);
-> +	if (ret < CSS_SENSEID_COMMON_LEN) {
-> +		report(0,
-> +		       "ssch succeeded for SENSE ID but report a too short length: %d",
-> +		       ret);
-> +		goto unreg_cb;
-> +	}
-
-Oh, so you want to check something even different: You know what you
-put in the request, and you expect a certain minimal length back. But
-that length is contained in the scsw, not in the started ccw, isn't it?
-
-> +
-> +	if (senseid.reserved != 0xff) {
-> +		report(0,
-> +		       "ssch succeeded for SENSE ID but reports garbage: %x",
-> +		       senseid.reserved);
-> +		goto unreg_cb;
-> +	}
-> +
-> +	if (lowcore->io_int_param != test_device_sid)
-> +		goto unreg_cb;
-
-You probably want to check this further up? But doesn't irq_io()
-already check this?
-
-> +
-> +	report_info("senseid length read: %d", ret);
-> +	report_info("reserved %02x cu_type %04x cu_model %02x dev_type %04x dev_model %02x",
-> +		    senseid.reserved, senseid.cu_type, senseid.cu_model,
-> +		    senseid.dev_type, senseid.dev_model);
-> +
-> +	report(senseid.cu_type == cu_type, "cu_type: expect 0x%04x got 0x%04x",
-> +	       (uint16_t) cu_type, senseid.cu_type);
-> +
-> +unreg_cb:
-> +	unregister_io_int_func(irq_io);
-> +}
-> +
->  static struct {
->  	const char *name;
->  	void (*func)(void);
->  } tests[] = {
->  	{ "enumerate (stsch)", test_enumerate },
->  	{ "enable (msch)", test_enable },
-> +	{ "sense (ssch/tsch)", test_sense },
->  	{ NULL, NULL }
->  };
->  
-> +static unsigned long value;
-> +
->  int main(int argc, char *argv[])
->  {
-> -	int i;
-> +	int i, ret;
-> +
-> +	ret = kernel_arg(argc, argv, "cu_type=", &value);
-> +	if (!ret)
-> +		cu_type = (uint16_t)value;
-> +	else
-> +		report_info("Using cu_type default value: 0x%04lx", cu_type);
->  
->  	report_prefix_push("Channel Subsystem");
-> +	enable_io_isc();
->  	for (i = 0; tests[i].name; i++) {
->  		report_prefix_push(tests[i].name);
->  		tests[i].func();
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
 
