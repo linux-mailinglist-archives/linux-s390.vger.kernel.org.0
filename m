@@ -2,196 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AB9A1FC7DF
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 09:49:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54B811FC815
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 09:59:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725773AbgFQHtK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 17 Jun 2020 03:49:10 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:56898 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgFQHtJ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 17 Jun 2020 03:49:09 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jlSK1-0003hL-J3; Wed, 17 Jun 2020 17:17:22 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 17 Jun 2020 17:17:21 +1000
-From:   "Herbert Xu" <herbert@gondor.apana.org.au>
-Date:   Wed, 17 Jun 2020 17:17:21 +1000
-Subject: [v3 PATCH 2/2] printk: Make linux/printk.h self-contained
-References: <20200617071524.GA3055@gondor.apana.org.au>
-To:     Petr Mladek <pmladek@suse.com>,
+        id S1725979AbgFQH7T (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Jun 2020 03:59:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49066 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725554AbgFQH7T (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 17 Jun 2020 03:59:19 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05H7VgM3070389;
+        Wed, 17 Jun 2020 03:58:38 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6j9cvrv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 03:58:38 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05H7VnFr071046;
+        Wed, 17 Jun 2020 03:58:38 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6j9cvrb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 03:58:38 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05H7ppgj005618;
+        Wed, 17 Jun 2020 07:58:36 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 31q6ch8mq5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 07:58:36 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05H7wXJP58785952
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jun 2020 07:58:33 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72B2E5204E;
+        Wed, 17 Jun 2020 07:58:33 +0000 (GMT)
+Received: from osiris (unknown [9.171.12.194])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 01F7852050;
+        Wed, 17 Jun 2020 07:58:32 +0000 (GMT)
+Date:   Wed, 17 Jun 2020 09:58:31 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         linux-s390@vger.kernel.org
-Message-Id: <E1jlSK1-0003hL-J3@fornost.hmeau.com>
+Subject: Re: [v3 PATCH 2/2] printk: Make linux/printk.h self-contained
+Message-ID: <20200617075831.GA4479@osiris>
+References: <20200617071524.GA3055@gondor.apana.org.au>
+ <E1jlSK1-0003hL-J3@fornost.hmeau.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E1jlSK1-0003hL-J3@fornost.hmeau.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_13:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 adultscore=0 spamscore=0 clxscore=1011 suspectscore=1
+ mlxlogscore=489 lowpriorityscore=0 bulkscore=0 malwarescore=0 mlxscore=0
+ phishscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006170056
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-As it stands if you include printk.h by itself it will fail to
-compile because it requires definitions from ratelimit.h.  However,
-simply including ratelimit.h from printk.h does not work due to
-inclusion loops involving sched.h and kernel.h.
+On Wed, Jun 17, 2020 at 05:17:21PM +1000, Herbert Xu wrote:
+> As it stands if you include printk.h by itself it will fail to
+> compile because it requires definitions from ratelimit.h.  However,
+> simply including ratelimit.h from printk.h does not work due to
+> inclusion loops involving sched.h and kernel.h.
+> 
+> This patch solves this by moving bits from ratelimit.h into a new
+> header file which can then be included by printk.h without any
+> worries about header loops.
+> 
+> The build bot then revealed some intriguing failures arising out
+> of this patch.  On s390 there is an inclusion loop with asm/bug.h
+> and linux/kernel.h that triggers a compile failure, because kernel.h
+> will cause asm-generic/bug.h to be included before s390's own
+> asm/bug.h has finished processing.  This has been fixed by not
+> including kernel.h in arch/s390/include/asm/bug.h.
+> 
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> Acked-by: Petr Mladek <pmladek@suse.com>
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+> 
+>  arch/s390/include/asm/bug.h     |    2 -
 
-This patch solves this by moving bits from ratelimit.h into a new
-header file which can then be included by printk.h without any
-worries about header loops.
+FWIW, feel free to add
 
-The build bot then revealed some intriguing failures arising out
-of this patch.  On s390 there is an inclusion loop with asm/bug.h
-and linux/kernel.h that triggers a compile failure, because kernel.h
-will cause asm-generic/bug.h to be included before s390's own
-asm/bug.h has finished processing.  This has been fixed by not
-including kernel.h in arch/s390/include/asm/bug.h.
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Acked-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-
- arch/s390/include/asm/bug.h     |    2 -
- include/linux/printk.h          |    1 
- include/linux/ratelimit.h       |   36 ---------------------------------
- include/linux/ratelimit_types.h |   43 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 46 insertions(+), 36 deletions(-)
-
-diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
-index 7725f8006fdfb..0b25f28351edc 100644
---- a/arch/s390/include/asm/bug.h
-+++ b/arch/s390/include/asm/bug.h
-@@ -2,7 +2,7 @@
- #ifndef _ASM_S390_BUG_H
- #define _ASM_S390_BUG_H
- 
--#include <linux/kernel.h>
-+#include <linux/compiler.h>
- 
- #ifdef CONFIG_BUG
- 
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index fc8f03c545430..34c1a7be3e014 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -7,6 +7,7 @@
- #include <linux/kern_levels.h>
- #include <linux/linkage.h>
- #include <linux/cache.h>
-+#include <linux/ratelimit_types.h>
- 
- extern const char linux_banner[];
- extern const char linux_proc_banner[];
-diff --git a/include/linux/ratelimit.h b/include/linux/ratelimit.h
-index 8ddf79e9207a9..b17e0cd0a30cf 100644
---- a/include/linux/ratelimit.h
-+++ b/include/linux/ratelimit.h
-@@ -2,41 +2,10 @@
- #ifndef _LINUX_RATELIMIT_H
- #define _LINUX_RATELIMIT_H
- 
--#include <linux/param.h>
-+#include <linux/ratelimit_types.h>
- #include <linux/sched.h>
- #include <linux/spinlock.h>
- 
--#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
--#define DEFAULT_RATELIMIT_BURST		10
--
--/* issue num suppressed message on exit */
--#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
--
--struct ratelimit_state {
--	raw_spinlock_t	lock;		/* protect the state */
--
--	int		interval;
--	int		burst;
--	int		printed;
--	int		missed;
--	unsigned long	begin;
--	unsigned long	flags;
--};
--
--#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
--		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
--		.interval	= interval_init,			\
--		.burst		= burst_init,				\
--	}
--
--#define RATELIMIT_STATE_INIT_DISABLED					\
--	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
--
--#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
--									\
--	struct ratelimit_state name =					\
--		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
--
- static inline void ratelimit_state_init(struct ratelimit_state *rs,
- 					int interval, int burst)
- {
-@@ -73,9 +42,6 @@ ratelimit_set_flags(struct ratelimit_state *rs, unsigned long flags)
- 
- extern struct ratelimit_state printk_ratelimit_state;
- 
--extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
--#define __ratelimit(state) ___ratelimit(state, __func__)
--
- #ifdef CONFIG_PRINTK
- 
- #define WARN_ON_RATELIMIT(condition, state)	({		\
-diff --git a/include/linux/ratelimit_types.h b/include/linux/ratelimit_types.h
-new file mode 100644
-index 0000000000000..b676aa419eef8
---- /dev/null
-+++ b/include/linux/ratelimit_types.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_RATELIMIT_TYPES_H
-+#define _LINUX_RATELIMIT_TYPES_H
-+
-+#include <linux/bits.h>
-+#include <linux/param.h>
-+#include <linux/spinlock_types.h>
-+
-+#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
-+#define DEFAULT_RATELIMIT_BURST		10
-+
-+/* issue num suppressed message on exit */
-+#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
-+
-+struct ratelimit_state {
-+	raw_spinlock_t	lock;		/* protect the state */
-+
-+	int		interval;
-+	int		burst;
-+	int		printed;
-+	int		missed;
-+	unsigned long	begin;
-+	unsigned long	flags;
-+};
-+
-+#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
-+		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
-+		.interval	= interval_init,			\
-+		.burst		= burst_init,				\
-+	}
-+
-+#define RATELIMIT_STATE_INIT_DISABLED					\
-+	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
-+
-+#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
-+									\
-+	struct ratelimit_state name =					\
-+		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
-+
-+extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
-+#define __ratelimit(state) ___ratelimit(state, __func__)
-+
-+#endif /* _LINUX_RATELIMIT_TYPES_H */
+for the s390 part.
