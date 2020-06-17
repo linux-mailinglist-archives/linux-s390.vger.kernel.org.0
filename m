@@ -2,77 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 104881FC880
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 10:25:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E589E1FC894
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 10:28:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725901AbgFQIZd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 17 Jun 2020 04:25:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgFQIZd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 17 Jun 2020 04:25:33 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE3B4C061573;
-        Wed, 17 Jun 2020 01:25:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=NAXZqH3MursAn0+wgZd0xhoxT3Om8ZNhr3AOj88BNwA=; b=Pcm2agFeAxquPL5LAngzPzjqIq
-        E1O1mPL7BGCp5Eq/PFuKmucc/Uf5gXHhFL64YoiDF5UUJEnoleTZY7DW++UfrzE3aAMdAPrpugq5i
-        8Xrj0NtyY+QCer/HMMKYK48+GSVWNVNIRAZgvR2jG0efnVUh9mMfryhyZpI9WPJPVLLPhDl7VGpF5
-        ZayVIN0VtRSOJQc6xYWrTD06Czu3DoL8zXxSIFXpo3dALqCcYApPxnc0L0L4dHzT1gYTYX5z9ACpY
-        VlD6xfD3HocQKBCqUU/zXLWpMVsdHiq2EV2/I3Lz0eBeK35Ruozq7lysC5Nk72FIsIBe4VewUgA5N
-        uTstIriQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlTNW-0006ko-9Y; Wed, 17 Jun 2020 08:25:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 43972301DFC;
-        Wed, 17 Jun 2020 10:24:59 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0F22829E5A2E3; Wed, 17 Jun 2020 10:24:59 +0200 (CEST)
-Date:   Wed, 17 Jun 2020 10:24:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [v3 PATCH 1/2] lockdep: Split header file into lockdep and
- lockdep_types
-Message-ID: <20200617082459.GC2531@hirez.programming.kicks-ass.net>
-References: <20200617071524.GA3055@gondor.apana.org.au>
- <E1jlSJz-0003hE-8g@fornost.hmeau.com>
+        id S1726275AbgFQI2f (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Jun 2020 04:28:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45548 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726025AbgFQI2f (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 17 Jun 2020 04:28:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592382513;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u3GjgZLiUiOxM4KW4wCX/5fbom+hzlu3qzH3FU/CI2Q=;
+        b=BWlNlnkN+K1AeY3i1Sk3xHBf2XoUPq83qAanim1FziLQti1NEm6E0dhS0dNF2belTxpX+S
+        UmagXbxWnFkIoDYHrSs8sEoWV5sqR+3laX97EMnUMlLJcmTSBv09OFd4+xnDYRsR/ZKSPj
+        b5uua+yt8NQsn1lYnlx7y2FVWdIwu1A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-475-EvvX-GE5NZO2aV2eIq5a0w-1; Wed, 17 Jun 2020 04:28:31 -0400
+X-MC-Unique: EvvX-GE5NZO2aV2eIq5a0w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B44E18C31F2;
+        Wed, 17 Jun 2020 08:28:30 +0000 (UTC)
+Received: from gondolin (ovpn-112-222.ams2.redhat.com [10.36.112.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B2791512FE;
+        Wed, 17 Jun 2020 08:28:26 +0000 (UTC)
+Date:   Wed, 17 Jun 2020 10:27:03 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
+Subject: Re: [kvm-unit-tests PATCH v9 06/12] s390x: clock and delays
+ caluculations
+Message-ID: <20200617102704.7755e11a.cohuck@redhat.com>
+In-Reply-To: <1592213521-19390-7-git-send-email-pmorel@linux.ibm.com>
+References: <1592213521-19390-1-git-send-email-pmorel@linux.ibm.com>
+        <1592213521-19390-7-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E1jlSJz-0003hE-8g@fornost.hmeau.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 05:17:19PM +1000, Herbert Xu wrote:
-> There is a header file inclusion loop between asm-generic/bug.h
-> and linux/kernel.h.  This causes potential compile failurs depending
-> on the which file is included first.  One way of breaking this loop
-> is to stop spinlock_types.h from including lockdep.h.  This patch
-> splits lockdep.h into two files for this purpose.
+On Mon, 15 Jun 2020 11:31:55 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
+
+> The hardware gives us a good definition of the microsecond,
+> let's keep this information and let the routine accessing
+> the hardware keep all the information and return microseconds.
 > 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> Acked-by: Petr Mladek <pmladek@suse.com>
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Calculate delays in microseconds and take care about wrapping
+> around zero.
+> 
+> Define values with macros and use inlines to keep the
+> milliseconds interface.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  lib/s390x/asm/time.h | 29 +++++++++++++++++++++++++++--
+>  1 file changed, 27 insertions(+), 2 deletions(-)
+> 
+> diff --git a/lib/s390x/asm/time.h b/lib/s390x/asm/time.h
+> index 1791380..7f1d891 100644
+> --- a/lib/s390x/asm/time.h
+> +++ b/lib/s390x/asm/time.h
+> @@ -13,14 +13,39 @@
+>  #ifndef ASM_S390X_TIME_H
+>  #define ASM_S390X_TIME_H
+>  
+> -static inline uint64_t get_clock_ms(void)
+> +#define STCK_SHIFT_US	(63 - 51)
+> +#define STCK_MAX	((1UL << 52) - 1)
+> +
+> +static inline uint64_t get_clock_us(void)
+>  {
+>  	uint64_t clk;
+>  
+>  	asm volatile(" stck %0 " : : "Q"(clk) : "memory");
+>  
+>  	/* Bit 51 is incrememented each microsecond */
 
-Looks good.
+That comment may now be a tad non-obvious, because the details are
+hidden behind the #define? Anyway, no strong opinion.
 
-Petr, how about I stick this in tip/locking/header for us both to share?
+> -	return (clk >> (63 - 51)) / 1000;
+> +	return clk >> STCK_SHIFT_US;
+> +}
+> +
+> +static inline void udelay(unsigned long us)
+> +{
+> +	unsigned long startclk = get_clock_us();
+> +	unsigned long c;
+> +
+> +	do {
+> +		c = get_clock_us();
+> +		if (c < startclk)
+> +			c += STCK_MAX;
+> +	} while (c < startclk + us);
+> +}
+> +
+> +static inline void mdelay(unsigned long ms)
+> +{
+> +	udelay(ms * 1000);
+> +}
+> +
+> +static inline uint64_t get_clock_ms(void)
+> +{
+> +	return get_clock_us() / 1000;
+>  }
+>  
+>  #endif
+
+Acked-by: Cornelia Huck <cohuck@redhat.com>
+
