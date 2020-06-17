@@ -2,168 +2,347 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3322C1FC948
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 10:54:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D82DF1FCA3A
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 11:55:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725967AbgFQIyr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 17 Jun 2020 04:54:47 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42896 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725846AbgFQIyr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 17 Jun 2020 04:54:47 -0400
+        id S1725536AbgFQJy5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Jun 2020 05:54:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33133 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725901AbgFQJy5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 17 Jun 2020 05:54:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592384085;
+        s=mimecast20190719; t=1592387694;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OyBmfaQpnotnRsL5tWB9CmbAwI11duXRS+HA1U897D0=;
-        b=U1E32HYw1L3ZWYckby0O8vtfAbk9Lm7Xgn6h0mTWeV7qcwmVbgdrfO5L1JFY+9ernlR63T
-        8TzNG9cNzeu2Ev0qxj0pQfvecpYNkVvPRBcVLugm2Nt2mayVXYIIP3zvh4VFyfQZZzFQ7B
-        LCcsY8fmoxETa2ArArPapifET0f9vIE=
+        bh=TWRj4R3mtyJYcrPbSyH2aI8Q3wWLCi8uedkdMukjCws=;
+        b=gBTqy60Nom5Oh2DHdP3GSb7bT16t+eSXjr0rQcp7V9hEHnO0MAkLJZoOnSQCbVjIkUr8Oq
+        N+2xRbJqKSqKkqiDxrStGPIvz7zvtrYVw13ixAav1iDzt6nAqWnMyM1oVhbam5O/5xUscE
+        48F8zntxzB0Qe8UoMCLNIoUHGHIxSAg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-310-IALioR1mPViDYoJIBrw-UQ-1; Wed, 17 Jun 2020 04:54:41 -0400
-X-MC-Unique: IALioR1mPViDYoJIBrw-UQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-411-2zpNrnMtOK6D6iJlRjD9ZQ-1; Wed, 17 Jun 2020 05:54:50 -0400
+X-MC-Unique: 2zpNrnMtOK6D6iJlRjD9ZQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F1EB18A8227;
-        Wed, 17 Jun 2020 08:54:40 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 894CC101C2DF;
+        Wed, 17 Jun 2020 09:54:49 +0000 (UTC)
 Received: from gondolin (ovpn-112-222.ams2.redhat.com [10.36.112.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 96E097CAA5;
-        Wed, 17 Jun 2020 08:54:36 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 10:54:33 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 78FC619D7B;
+        Wed, 17 Jun 2020 09:54:45 +0000 (UTC)
+Date:   Wed, 17 Jun 2020 11:54:42 +0200
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Pierre Morel <pmorel@linux.ibm.com>
 Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
         frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v9 11/12] s390x: css: msch, enable test
-Message-ID: <20200617105433.6a79e92c.cohuck@redhat.com>
-In-Reply-To: <1592213521-19390-12-git-send-email-pmorel@linux.ibm.com>
+Subject: Re: [kvm-unit-tests PATCH v9 12/12] s390x: css: ssch/tsch with
+ sense and interrupt
+Message-ID: <20200617115442.036735c5.cohuck@redhat.com>
+In-Reply-To: <1592213521-19390-13-git-send-email-pmorel@linux.ibm.com>
 References: <1592213521-19390-1-git-send-email-pmorel@linux.ibm.com>
-        <1592213521-19390-12-git-send-email-pmorel@linux.ibm.com>
+        <1592213521-19390-13-git-send-email-pmorel@linux.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 15 Jun 2020 11:32:00 +0200
+On Mon, 15 Jun 2020 11:32:01 +0200
 Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> A second step when testing the channel subsystem is to prepare a channel
-> for use.
-> This includes:
-> - Get the current subchannel Information Block (SCHIB) using STSCH
-> - Update it in memory to set the ENABLE bit
-> - Tell the CSS that the SCHIB has been modified using MSCH
-> - Get the SCHIB from the CSS again to verify that the subchannel is
->   enabled.
-> - If the command succeeds but subchannel is not enabled retry a
->   predefined retries count.
-> - If the command fails, report the failure and do not retry, even
->   if cc indicates a busy/status pending as we do not expect this.
+> After a channel is enabled we start a SENSE_ID command using
+> the SSCH instruction to recognize the control unit and device.
 > 
-> This tests the MSCH instruction to enable a channel succesfuly.
-> This some retries are done and in case of error, and if the retries
-> count is exceeded, a report is made.
+> This tests the success of SSCH, the I/O interruption and the TSCH
+> instructions.
+> 
+> The SENSE_ID command response is tested to report 0xff inside
+> its reserved field and to report the same control unit type
+> as the cu_type kernel argument.
+> 
+> Without the cu_type kernel argument, the test expects a device
+> with a default control unit type of 0x3832, a.k.a virtio-net-ccw.
+
+0x3832 is any virtio-ccw device; you could also test for the cu model
+to make sure that it is a net device, but that probably doesn't add
+much additional coverage.
+
 > 
 > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 > ---
->  lib/s390x/css_lib.c | 60 +++++++++++++++++++++++++++++++++++++++++++++
->  s390x/css.c         | 15 ++++++++++++
->  2 files changed, 75 insertions(+)
-> 
+>  lib/s390x/css.h     |  20 +++++++
+>  lib/s390x/css_lib.c |  46 +++++++++++++++
+>  s390x/css.c         | 140 +++++++++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 205 insertions(+), 1 deletion(-)
+
+(...)
+
 > diff --git a/lib/s390x/css_lib.c b/lib/s390x/css_lib.c
-> index b0a0294..06a76db 100644
+> index 06a76db..c3d93d3 100644
 > --- a/lib/s390x/css_lib.c
 > +++ b/lib/s390x/css_lib.c
-> @@ -15,6 +15,7 @@
+> @@ -128,3 +128,49 @@ retry:
+>  		    schid, retry_count, pmcw->flags);
+>  	return -1;
+>  }
+> +
+> +int start_ccw1_chain(unsigned int sid, struct ccw1 *ccw)
+> +{
+> +	struct orb orb = {
+> +		.intparm = sid,
+> +		.ctrl = ORB_CTRL_ISIC|ORB_CTRL_FMT|ORB_LPM_DFLT,
+> +		.cpa = (unsigned int) (unsigned long)ccw,
+> +	};
+> +
+> +	return ssch(sid, &orb);
+> +}
+> +
+> +/*
+> + * In the next revisions we will implement the possibility to handle
+> + * CCW chains doing this we will need to work with ccw1 pointers.
+
+"In the future, we want to implement support for CCW chains; for that,
+we will need to work with ccw1 pointers."
+
+?
+
+> + * For now we only need a unique CCW.
+> + */
+> +static struct ccw1 unique_ccw;
+> +
+> +int start_subchannel(unsigned int sid, int code, void *data, int count,
+> +		     unsigned char flags)
+> +{
+> +	int cc;
+> +	struct ccw1 *ccw = &unique_ccw;
+
+Hm... it might better to call this function "start_single_ccw" or
+something like that.
+
+> +
+> +	report_prefix_push("start_subchannel");
+> +	/* Build the CCW chain with a single CCW */
+> +	ccw->code = code;
+> +	ccw->flags = flags; /* No flags need to be set */
+> +	ccw->count = count;
+> +	ccw->data_address = (int)(unsigned long)data;
+> +
+> +	cc = start_ccw1_chain(sid, ccw);
+> +	if (cc) {
+> +		report(0, "start_ccw_chain failed ret=%d", cc);
+> +		report_prefix_pop();
+> +		return cc;
+> +	}
+> +	report_prefix_pop();
+> +	return 0;
+> +}
+> +
+> +int sch_read_len(int sid)
+> +{
+> +	return unique_ccw.count;
+> +}
+
+This function is very odd... it takes a subchannel id as a parameter,
+which it ignores, and instead returns the count field of the static ccw
+used when starting I/O. What is the purpose of this function? Grab the
+data length for the last I/O operation that was started on the
+subchannel? If yes, it might be better to store that information along
+with the sid? If it is the length for the last I/O operation that the
+code _thinks_ it started, it might be better to reuse that information
+from further up in the function instead.
+
+> diff --git a/s390x/css.c b/s390x/css.c
+> index 6948d73..6b618a1 100644
+> --- a/s390x/css.c
+> +++ b/s390x/css.c
+> @@ -16,10 +16,18 @@
 >  #include <string.h>
 >  #include <interrupt.h>
 >  #include <asm/arch_def.h>
-> +#include <asm/time.h>
+> +#include <kernel-args.h>
 >  
 >  #include <css.h>
 >  
-> @@ -68,3 +69,62 @@ out:
->  		    scn, scn_found, dev_found);
->  	return schid;
+> +#define DEFAULT_CU_TYPE		0x3832
+
+Maybe append /* virtio-ccw */
+
+> +static unsigned long cu_type = DEFAULT_CU_TYPE;
+> +
+> +struct lowcore *lowcore = (void *)0x0;
+> +
+>  static int test_device_sid;
+> +static struct irb irb;
+> +static struct senseid senseid;
+>  
+>  static void test_enumerate(void)
+>  {
+> @@ -45,20 +53,150 @@ static void test_enable(void)
+>  	report(cc == 0, "Enable subchannel %08x", test_device_sid);
 >  }
-> +
-> +int css_enable(int schid)
+>  
+> +static void enable_io_isc(void)
 > +{
-> +	struct pmcw *pmcw = &schib.pmcw;
-> +	int retry_count = 0;
-> +	int cc;
-> +
-> +	/* Read the SCHIB for this subchannel */
-> +	cc = stsch(schid, &schib);
-> +	if (cc) {
-> +		report_info("stsch failed with cc=%d", cc);
-
-Mention the schid in the message?
-
-> +		return cc;
-> +	}
-> +
-> +	if (pmcw->flags & PMCW_ENABLE) {
-> +		report_info("stsch: sch %08x already enabled", schid);
-> +		return 0;
-> +	}
-> +
-> +retry:
-> +	/* Update the SCHIB to enable the channel */
-> +	pmcw->flags |= PMCW_ENABLE;
-> +
-> +	/* Tell the CSS we want to modify the subchannel */
-> +	cc = msch(schid, &schib);
-> +	if (cc) {
-> +		/*
-> +		 * If the subchannel is status pending or
-> +		 * if a function is in progress,
-> +		 * we consider both cases as errors.
-> +		 */
-> +		report_info("msch failed with cc=%d", cc);
-> +		return cc;
-> +	}
-> +
-> +	/*
-> +	 * Read the SCHIB again to verify the enablement
-> +	 */
-> +	cc = stsch(schid, &schib);
-> +	if (cc) {
-> +		report_info("stsch failed with cc=%d", cc);
-
-Also add the schid here? Maybe also add a marker to distinguish the two
-cases?
-
-> +		return cc;
-> +	}
-> +
-> +	if (pmcw->flags & PMCW_ENABLE) {
-> +		report_info("Subchannel %08x enabled after %d retries",
-> +			    schid, retry_count);
-> +		return 0;
-> +	}
-> +
-> +	if (retry_count++ < MAX_ENABLE_RETRIES) {
-> +		mdelay(10); /* the hardware was not ready, give it some time */
-> +		goto retry;
-> +	}
-> +
-> +	report_info("msch: enabling sch %08x failed after %d retries. pmcw flags: %x",
-> +		    schid, retry_count, pmcw->flags);
-> +	return -1;
+> +	/* Let's enable all ISCs for I/O interrupt */
+> +	lctlg(6, 0x00000000ff000000);
 > +}
+> +
+> +static void irq_io(void)
+> +{
+> +	int ret = 0;
+> +	char *flags;
+> +	int sid;
+> +
+> +	report_prefix_push("Interrupt");
+> +	/* Lowlevel set the SID as interrupt parameter. */
+> +	if (lowcore->io_int_param != test_device_sid) {
+> +		report(0,
+> +		       "Bad io_int_param: %x expected %x",
+> +		       lowcore->io_int_param, test_device_sid);
+> +		goto pop;
+> +	}
+> +	report_prefix_pop();
+> +
+> +	report_prefix_push("tsch");
+> +	sid = lowcore->subsys_id_word;
+> +	ret = tsch(sid, &irb);
+> +	switch (ret) {
+> +	case 1:
+> +		dump_irb(&irb);
+> +		flags = dump_scsw_flags(irb.scsw.ctrl);
+> +		report(0,
+> +		       "I/O interrupt, CC 1 but tsch reporting sch %08x as not status pending: %s",
+> +		       sid, flags);
+> +		break;
+> +	case 2:
+> +		report(0, "tsch returns unexpected CC 2");
+> +		break;
+> +	case 3:
+> +		report(0, "tsch reporting sch %08x as not operational", sid);
+> +		break;
+> +	case 0:
+> +		/* Stay humble on success */
+> +		break;
+> +	}
+> +pop:
+> +	report_prefix_pop();
+> +	lowcore->io_old_psw.mask &= ~PSW_MASK_WAIT;
+> +}
+> +
+> +/*
+> + * test_sense
+> + * Pre-requisits:
+> + * - We need the test device as the first recognized
+> + *   device by the enumeration.
+> + */
+> +static void test_sense(void)
+> +{
+> +	int ret;
+> +
+> +	if (!test_device_sid) {
+> +		report_skip("No device");
+> +		return;
+> +	}
+> +
+> +	ret = css_enable(test_device_sid);
+> +	if (ret) {
+> +		report(0,
+> +		       "Could not enable the subchannel: %08x",
+> +		       test_device_sid);
+> +		return;
+> +	}
+> +
+> +	ret = register_io_int_func(irq_io);
+> +	if (ret) {
+> +		report(0, "Could not register IRQ handler");
+> +		goto unreg_cb;
+> +	}
+> +
+> +	lowcore->io_int_param = 0;
+> +
+> +	memset(&senseid, 0, sizeof(senseid));
+> +	ret = start_subchannel(test_device_sid, CCW_CMD_SENSE_ID,
+> +			       &senseid, sizeof(senseid), CCW_F_SLI);
+> +	if (ret) {
+> +		report(0, "ssch failed for SENSE ID on sch %08x with cc %d",
+> +		       test_device_sid, ret);
+> +		goto unreg_cb;
+> +	}
+> +
+> +	wait_for_interrupt(PSW_MASK_IO);
+> +
+> +	ret = sch_read_len(test_device_sid);
+> +	if (ret < CSS_SENSEID_COMMON_LEN) {
+> +		report(0,
+> +		       "ssch succeeded for SENSE ID but report a too short length: %d",
+> +		       ret);
+> +		goto unreg_cb;
+> +	}
 
-With the messages updated,
+Oh, so you want to check something even different: You know what you
+put in the request, and you expect a certain minimal length back. But
+that length is contained in the scsw, not in the started ccw, isn't it?
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> +
+> +	if (senseid.reserved != 0xff) {
+> +		report(0,
+> +		       "ssch succeeded for SENSE ID but reports garbage: %x",
+> +		       senseid.reserved);
+> +		goto unreg_cb;
+> +	}
+> +
+> +	if (lowcore->io_int_param != test_device_sid)
+> +		goto unreg_cb;
+
+You probably want to check this further up? But doesn't irq_io()
+already check this?
+
+> +
+> +	report_info("senseid length read: %d", ret);
+> +	report_info("reserved %02x cu_type %04x cu_model %02x dev_type %04x dev_model %02x",
+> +		    senseid.reserved, senseid.cu_type, senseid.cu_model,
+> +		    senseid.dev_type, senseid.dev_model);
+> +
+> +	report(senseid.cu_type == cu_type, "cu_type: expect 0x%04x got 0x%04x",
+> +	       (uint16_t) cu_type, senseid.cu_type);
+> +
+> +unreg_cb:
+> +	unregister_io_int_func(irq_io);
+> +}
+> +
+>  static struct {
+>  	const char *name;
+>  	void (*func)(void);
+>  } tests[] = {
+>  	{ "enumerate (stsch)", test_enumerate },
+>  	{ "enable (msch)", test_enable },
+> +	{ "sense (ssch/tsch)", test_sense },
+>  	{ NULL, NULL }
+>  };
+>  
+> +static unsigned long value;
+> +
+>  int main(int argc, char *argv[])
+>  {
+> -	int i;
+> +	int i, ret;
+> +
+> +	ret = kernel_arg(argc, argv, "cu_type=", &value);
+> +	if (!ret)
+> +		cu_type = (uint16_t)value;
+> +	else
+> +		report_info("Using cu_type default value: 0x%04lx", cu_type);
+>  
+>  	report_prefix_push("Channel Subsystem");
+> +	enable_io_isc();
+>  	for (i = 0; tests[i].name; i++) {
+>  		report_prefix_push(tests[i].name);
+>  		tests[i].func();
 
