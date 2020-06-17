@@ -2,167 +2,188 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86F081FC491
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 05:19:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F32CE1FC616
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 08:19:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgFQDTU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 Jun 2020 23:19:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726253AbgFQDTU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 Jun 2020 23:19:20 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A8DCC061573
-        for <linux-s390@vger.kernel.org>; Tue, 16 Jun 2020 20:19:20 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id 205so791965qkg.3
-        for <linux-s390@vger.kernel.org>; Tue, 16 Jun 2020 20:19:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=U3j0ki4o7P6HMvq+37iahVQx/lVdGux5XXDvZtfYmCI=;
-        b=J8LnPpe9Q3b+vOj4UZWb8AwcHu8M/CmMeFOarX/eZ2C0BpnfHljSTUMJI8Tj7bGJkF
-         qNW+1XsiaZKIA3G09L+DLuIeqZKBQET5xr5Q7O8AAkflCha2tlytA1jhMMDYQx4pw3nd
-         Twd2aI6g2PQQMMlph+EVGB5jnkWjqwiQefpn73vn0E8e7FC7HO9Uqs+mdLmPKhP99WWi
-         h13r4z83CPA6MFCUOjvEVLMi3Q2qGBRQ1VkmSWSQLOmuCbWsuoOMBKwPbVhC7wK6ztQ0
-         KWAgY3O2x/HEBLHripaFD1yGp/TF7Uv3Dz22g4oijy9B2fwbTw1YYqd2RYZ6l1+WKrra
-         DrcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=U3j0ki4o7P6HMvq+37iahVQx/lVdGux5XXDvZtfYmCI=;
-        b=rjdiMspEaIY+CzQAG3B3NIVqA5lln+eZLlz06eWvVm6jVw+yXHT42jTPFyzURy0lbw
-         i79ze+56gyKvXKOMMsdY04dEZ/TykYMXhRIGZ7WLIoXeIE+BCBqWlWl9uVtYpYjIzccA
-         kJAwH6JkDgtMBfy1wPaZjcpyydJ5c1i+B2ehJqxltX49T9mNpQZIzDpjMDJUUPFB2Th9
-         FhuBaMnw4ZSrtHwWEV2v1Z3YqpLLBGFkForlDid/ElMpXsZqm06FvGZ8F4sGCiojgkT9
-         4xJ3ECXcq8QBT/Tpn6zggPMWhmsJGc9wHo+2xQn8R2IiyhqpVdWF23lHY8M96EZwnFtk
-         lwgw==
-X-Gm-Message-State: AOAM533JNpFZnpA3lpJkc7k3yOTjuwLVZVKvGR9Ev+QfItK7OB7PVKRt
-        QSyCLKOwm2WO2E/xkw/tD4eXrg==
-X-Google-Smtp-Source: ABdhPJxJCa4fG57r4UtTtXAVbOYVXGOLOlAEYb3e9XbtMIyZ125D2pdBg/DrT19LCrNxTzyE5rl1Cg==
-X-Received: by 2002:a37:c17:: with SMTP id 23mr23868690qkm.235.1592363959069;
-        Tue, 16 Jun 2020 20:19:19 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id p13sm17452262qtk.24.2020.06.16.20.19.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2020 20:19:18 -0700 (PDT)
-Date:   Tue, 16 Jun 2020 23:19:06 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-xfs@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, borntraeger@de.ibm.com,
-        darrick.wong@oracle.com, kirill@shutemov.name, peterx@redhat.com,
-        yang.shi@linux.alibaba.com, hch@lst.de,
-        linux-kernel@vger.kernel.org, songliubraving@fb.com
-Subject: Re: VM_BUG_ON_PAGE(page_to_pgoff(page) != offset) on s390
-Message-ID: <20200617031906.GA5065@lca.pw>
-References: <20200616013309.GB815@lca.pw>
- <20200616014859.GY8681@bombadil.infradead.org>
+        id S1726681AbgFQGTi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Jun 2020 02:19:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33708 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726497AbgFQGTh (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 17 Jun 2020 02:19:37 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05H62ZIm076934;
+        Wed, 17 Jun 2020 02:19:35 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31q6hpjb14-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 02:19:35 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05H6JZwm127070;
+        Wed, 17 Jun 2020 02:19:35 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31q6hpjb0j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 02:19:35 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05H6G345020586;
+        Wed, 17 Jun 2020 06:19:33 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 31q6ch8gbq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 17 Jun 2020 06:19:33 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05H6JUD33277096
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Jun 2020 06:19:30 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A10B8AE045;
+        Wed, 17 Jun 2020 06:19:30 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3590DAE04D;
+        Wed, 17 Jun 2020 06:19:30 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.5.222])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 17 Jun 2020 06:19:30 +0000 (GMT)
+Subject: Re: [PATCH 19/25] mm/s390: Use mm_fault_accounting()
+To:     Peter Xu <peterx@redhat.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
+References: <20200615221607.7764-1-peterx@redhat.com>
+ <20200615222302.8452-1-peterx@redhat.com>
+ <20200616155933.GA12897@oc3871087118.ibm.com> <20200616163510.GD11838@xz-x1>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <edb88596-6f2c-2648-748d-591a0b1e0131@de.ibm.com>
+Date:   Wed, 17 Jun 2020 08:19:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616014859.GY8681@bombadil.infradead.org>
+In-Reply-To: <20200616163510.GD11838@xz-x1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-16_13:2020-06-16,2020-06-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 spamscore=0 impostorscore=0
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006170044
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 06:48:59PM -0700, Matthew Wilcox wrote:
-> On Mon, Jun 15, 2020 at 09:33:09PM -0400, Qian Cai wrote:
-> > Ever since a few days ago, linux-next on s390 has started to crash
-> > with compiling workloads or during boot below.
-> > 
-> > This .config if ever matters,
-> > 
-> > https://raw.githubusercontent.com/cailca/linux-mm/master/s390.config
-> 
-> CONFIG_READ_ONLY_THP_FOR_FS=y
-> 
-> This looks like a duplicate of
-> https://bugzilla.kernel.org/show_bug.cgi?id=206569
-> 
-> which Song has had no luck reproducing.
-> 
-> I would suggest simply disabling the Kconfig option for now.
 
-Thanks for the information. Indeed, I can't reproduce it anymore after
-setting READ_ONLY_THP_FOR_FS=n.
 
+On 16.06.20 18:35, Peter Xu wrote:
+> Hi, Alexander,
 > 
-> > Since our s390 guest has only 2 CPUs, it is probably going to take a
-> > long time to bisect.
-> > 
-> > 01: [   60.589979] page:000003d0830bd540 refcount:257 mapcount:0 mapping:0000000
-> > 01: 0ac9dec15 index:0x155 head:000003d0830bc000 order:8 compound_mapcount:0 comp
-> > 01: ound_pincount:0
-> > 01: [   60.590361] mapping->aops:xfs_address_space_operations [xfs] dentry name:
-> > 01: "lvm"
-> > 01: [   60.590369] flags: 0x2000000000000000()
-> > 01: [   60.590380] raw: 2000000000000000 000003d0830bc001 000003d0830bd548 00000
-> > 01: 00000000400
-> > 01: [   60.590387] raw: 0000000000000000 0000000000000000 ffffffff00000000 00000
-> > 01: 00000000000
-> > 01: [   60.590394] head: 2000000000010015 000003d0830dd588 000000008fb34c20 0000
-> > 01: 0000cc4f0568
-> > 01: [   60.590401] head: 0000000000000100 0000000000000000 ffffffff00000101 0000
-> > 01: 00008f78a000
-> > 01: [   60.590407] page dumped because: VM_BUG_ON_PAGE(page_to_pgoff(page) != o
-> > 01: fset)
-> > 01: [   60.590428] ------------[ cut here ]------------
-> > 01: [   60.590435] kernel BUG at mm/filemap.c:2516!
-> > 01: [   60.590512] monitor event: 0040 ilc:2 [#1] SMP
-> > 01: [   60.590518] Modules linked in: ip_tables x_tables xfs dm_mirror dm_region
-> > 01: _hash dm_log dm_mod
-> > 01: [   60.590531] CPU: 1 PID: 665 Comm: lvmconfig Not tainted 5.8.0-rc1-next-20
-> > 01: 200615 #1
-> > 01: [   60.590535] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
-> > 01: [   60.590539] Krnl PSW : 0704c00180000000 00000000bdf0bb46 (filemap_fault+0
-> > 01: x191e/0x27c0)
-> > 01: [   60.590550]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0
-> > 01:  RI:0 EA:3
-> > 01: [   60.590555] Krnl GPRS: 0000000000000001 0000037c002adef5 000003d0830bd578
-> > 01:  0000030000000000
-> > 01: [   60.591850]            0000030000000001 0000030000000000 000003e00156fdc8
-> > 01:  000003e00156fdc0
-> > 01: [   60.591854]            00000000c8f0b800 0000000000000155 000003d0830bd548
-> > 01:  000003d0830bd540
-> > 01: [   60.591859]            00000000bed41008 00000000bea6f900 00000000bdf0bb42
-> > 01:  000003e00156f9d0
-> > 01: [   60.591872] Krnl Code: 00000000bdf0bb36: c030005b1e45        larl    %r3,
-> > 01: 00000000bea6f7c0
-> > 01: [   60.591872]            00000000bdf0bb3c: c0e5000597ca        brasl   %r14
-> > 01: ,00000000bdfbead0
-> > 01: [   60.591872]           #00000000bdf0bb42: af000000            mc      0,0
-> > 01: [   60.591872]           >00000000bdf0bb46: c020007d238d        larl    %r2,
-> > 01: 00000000beeb0260
-> > 01: [   60.591872]            00000000bdf0bb4c: c0e50028aebe        brasl   %r14
-> > 01: ,00000000be4218c8
-> > 01: [   60.591872]            00000000bdf0bb52: eb1a0003000c        srlg    %r1,
-> > 01: %r10,3
-> > 01: [   60.591872]            00000000bdf0bb58: a52d0300            llihl   %r2,
-> > 01: 768
-> > 01: [   60.591872]            00000000bdf0bb5c: b9080012            agr     %r1,
-> > 01: %r2
-> > 01: [   60.591901] Call Trace:
-> > 01: [   60.591905]  [<00000000bdf0bb46>] filemap_fault+0x191e/0x27c0
-> > 01: [   60.591910] ([<00000000bdf0bb42>] filemap_fault+0x191a/0x27c0)
-> > 01: [   60.591967]  [<000003ff80240cfc>] xfs_filemap_fault+0x1ac/0x528 [xfs]
-> > __xfs_filemap_fault at /home/linux-mm/linux/fs/xfs/xfs_file.c:1214
-> > (inlined by) xfs_filemap_fault at /home/linux-mm/linux/fs/xfs/xfs_file.c:1228
-> > 01: [   60.591973]  [<00000000bdfc8428>] __do_fault+0xc0/0x470
-> > 01: [   60.591977]  [<00000000bdfd75f2>] handle_mm_fault+0x1782/0x29b8
-> > 01: [   60.591983]  [<00000000bdb50c60>] do_dat_exception+0x200/0x9c8
-> > do_exception at arch/s390/mm/fault.c:481
-> > (inlined by) do_dat_exception at arch/s390/mm/fault.c:583
-> > 01: [   60.591993]  [<00000000be9f4b76>] pgm_check_handler+0x1d6/0x234
-> > 01: [   60.591997] INFO: lockdep is turned off.
-> > 01: [   60.592000] Last Breaking-Event-Address:
-> > 01: [   60.592004]  [<00000000bdfbeafc>] dump_page+0x2c/0x40
-> > 01: [   60.606521] Kernel panic - not syncing: Fatal exception: panic_on_oops
-> > 00: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from
-> >  CPU 00.
-> > 00: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from
-> >  CPU 01.
-> > 01: HCPGIR450W CP entered; disabled wait PSW 00020001 80000000 00000000 BDB32B58
+> On Tue, Jun 16, 2020 at 05:59:33PM +0200, Alexander Gordeev wrote:
+>>> @@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+>>>  	if (unlikely(fault & VM_FAULT_ERROR))
+>>>  		goto out_up;
+>>>
+>>> -	/*
+>>> -	 * Major/minor page fault accounting is only done on the
+>>> -	 * initial attempt. If we go through a retry, it is extremely
+>>> -	 * likely that the page will be found in page cache at that point.
+>>> -	 */
+>>>  	if (flags & FAULT_FLAG_ALLOW_RETRY) {
+>>> -		if (fault & VM_FAULT_MAJOR) {
+>>> -			tsk->maj_flt++;
+>>> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
+>>> -				      regs, address);
+>>> -		} else {
+>>> -			tsk->min_flt++;
+>>> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
+>>> -				      regs, address);
+>>> -		}
+>>>  		if (fault & VM_FAULT_RETRY) {
+>>>  			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
+>>>  			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
+>>
+>> Seems like the call to mm_fault_accounting() will be missed if
+>> we entered here with FAULT_FLAG_RETRY_NOWAIT flag set, since it
+>> jumps to "out_up"...
+> 
+> This is true as a functional change.  However that also means that we've got a
+> VM_FAULT_RETRY, which hints that this fault has been requested to retry rather
+> than handled correctly (for instance, due to some try_lock failed during the
+> fault process).
+> 
+> To me, that case should not be counted as a page fault at all?  Or we might get
+> the same duplicated accounting when the page fault retried from a higher stack.
+> 
+> Thanks
+
+This case below (the one with the gmap) is the KVM case for doing a so called
+pseudo page fault to our guests. (we notify our guests about major host page
+faults and let it reschedule to something else instead of halting the vcpu).
+This is being resolved with either gup or fixup_user_fault asynchronously by
+KVM code (this can also be sync when the guest does not match some conditions)
+We do not change the counters in that code as far as I can tell so we should
+continue to do it here.
+
+(see arch/s390/kvm/kvm-s390.c
+static int vcpu_post_run(struct kvm_vcpu *vcpu, int exit_reason)
+{
+[...]
+        } else if (current->thread.gmap_pfault) {
+                trace_kvm_s390_major_guest_pfault(vcpu);
+                current->thread.gmap_pfault = 0;
+                if (kvm_arch_setup_async_pf(vcpu))
+                        return 0;
+                return kvm_arch_fault_in_page(vcpu, current->thread.gmap_addr, 1);
+        }
