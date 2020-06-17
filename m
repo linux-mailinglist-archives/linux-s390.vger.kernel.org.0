@@ -2,108 +2,106 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54B811FC815
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 09:59:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36CAC1FC83F
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 10:04:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725979AbgFQH7T (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 17 Jun 2020 03:59:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49066 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725554AbgFQH7T (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 17 Jun 2020 03:59:19 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05H7VgM3070389;
-        Wed, 17 Jun 2020 03:58:38 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6j9cvrv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 03:58:38 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05H7VnFr071046;
-        Wed, 17 Jun 2020 03:58:38 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31q6j9cvrb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 03:58:38 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05H7ppgj005618;
-        Wed, 17 Jun 2020 07:58:36 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 31q6ch8mq5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 07:58:36 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05H7wXJP58785952
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jun 2020 07:58:33 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 72B2E5204E;
-        Wed, 17 Jun 2020 07:58:33 +0000 (GMT)
-Received: from osiris (unknown [9.171.12.194])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 01F7852050;
-        Wed, 17 Jun 2020 07:58:32 +0000 (GMT)
-Date:   Wed, 17 Jun 2020 09:58:31 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        id S1725901AbgFQIEM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Jun 2020 04:04:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbgFQIEM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 17 Jun 2020 04:04:12 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91CE021475;
+        Wed, 17 Jun 2020 08:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592381051;
+        bh=MjCLvKpmywtlENNu3L8WcjVAZUYXfsV93TDu3ReXKuQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JTiufBj0BMszSpkVUzi+gNk/qprMzw2wYVoJRieWtNmkrCUlTJiL+eUPkxjEPJZ7D
+         Pl+CdboZUILER+bWki4NgM0L7KE262coRqRGnhsGEroSN9Uf1CdlIdoIHJwTchzbUV
+         5UjKXESI9ZrCTGdCfmJKt9pER0l8tsQDgS//NF2k=
+Date:   Wed, 17 Jun 2020 09:04:06 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Xu <peterx@redhat.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [v3 PATCH 2/2] printk: Make linux/printk.h self-contained
-Message-ID: <20200617075831.GA4479@osiris>
-References: <20200617071524.GA3055@gondor.apana.org.au>
- <E1jlSK1-0003hL-J3@fornost.hmeau.com>
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        openrisc@lists.librecores.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 00/25] mm: Page fault accounting cleanups
+Message-ID: <20200617080405.GA3208@willie-the-truck>
+References: <20200615221607.7764-1-peterx@redhat.com>
+ <CAHk-=wiTjaXHu+uxMi0xCZQOm4KVr0MucECAK=Zm4p4YZZ1XEg@mail.gmail.com>
+ <87imfqecjx.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <E1jlSK1-0003hL-J3@fornost.hmeau.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-16_13:2020-06-16,2020-06-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 adultscore=0 spamscore=0 clxscore=1011 suspectscore=1
- mlxlogscore=489 lowpriorityscore=0 bulkscore=0 malwarescore=0 mlxscore=0
- phishscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006170056
+In-Reply-To: <87imfqecjx.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 05:17:21PM +1000, Herbert Xu wrote:
-> As it stands if you include printk.h by itself it will fail to
-> compile because it requires definitions from ratelimit.h.  However,
-> simply including ratelimit.h from printk.h does not work due to
-> inclusion loops involving sched.h and kernel.h.
+On Wed, Jun 17, 2020 at 10:55:14AM +1000, Michael Ellerman wrote:
+> Linus Torvalds <torvalds@linux-foundation.org> writes:
+> > On Mon, Jun 15, 2020 at 3:16 PM Peter Xu <peterx@redhat.com> wrote:
+> >> This series tries to address all of them by introducing mm_fault_accounting()
+> >> first, so that we move all the page fault accounting into the common code base,
+> >> then call it properly from arch pf handlers just like handle_mm_fault().
+> >
+> > Hmm.
+> >
+> > So having looked at this a bit more, I'd actually like to go even
+> > further, and just get rid of the per-architecture code _entirely_.
 > 
-> This patch solves this by moving bits from ratelimit.h into a new
-> header file which can then be included by printk.h without any
-> worries about header loops.
+> <snip>
 > 
-> The build bot then revealed some intriguing failures arising out
-> of this patch.  On s390 there is an inclusion loop with asm/bug.h
-> and linux/kernel.h that triggers a compile failure, because kernel.h
-> will cause asm-generic/bug.h to be included before s390's own
-> asm/bug.h has finished processing.  This has been fixed by not
-> including kernel.h in arch/s390/include/asm/bug.h.
+> > One detail worth noting: I do wonder if we should put the
+> >
+> >     perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
+> >
+> > just in the arch code at the top of the fault handling, and consider
+> > it entirely unrelated to the major/minor fault handling. The
+> > major/minor faults fundamnetally are about successes. But the plain
+> > PERF_COUNT_SW_PAGE_FAULTS could be about things that fail, including
+> > things that never even get to this point at all.
 > 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> Acked-by: Petr Mladek <pmladek@suse.com>
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
-> 
->  arch/s390/include/asm/bug.h     |    2 -
+> Yeah I think we should keep it in the arch code at roughly the top.
 
-FWIW, feel free to add
+I agree. It's a nice idea to consolidate the code, but I don't see that
+it's really possible for PERF_COUNT_SW_PAGE_FAULTS without significantly
+changing the semantics (and a potentially less useful way. Of course,
+moving more of do_page_fault() out of the arch code would be great, but
+that's a much bigger effort.
 
-Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+> If it's moved to the end you could have a process spinning taking bad
+> page faults (and fixing them up), and see no sign of it from the perf
+> page fault counters.
 
-for the s390 part.
+The current arm64 behaviour is that we record PERF_COUNT_SW_PAGE_FAULTS
+if _all_ of the following are true:
+
+  1. The fault isn't handled by kprobes
+  2. The pagefault handler is enabled
+  3. We have an mm (current->mm)
+  4. The fault isn't an unexpected kernel fault on a user address (we oops
+     and kill the task in this case)
+
+Which loosely corresponds to "we took a fault on a user address that it
+looks like we can handle".
+
+That said, I'm happy to tweak this if it brings us into line with other
+architectures.
+
+Will
