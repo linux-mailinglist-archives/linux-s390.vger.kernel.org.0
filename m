@@ -2,127 +2,77 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DCCE31FC86D
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 10:21:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 104881FC880
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 10:25:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725901AbgFQIVI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 17 Jun 2020 04:21:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36793 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725846AbgFQIVH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 17 Jun 2020 04:21:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592382066;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ug9Lv8PhDyLrDVQL3rPhvFz8zEQJBaxtjpZPOqjHtUQ=;
-        b=NLSoffrXsqinN5LyymC7Uwn8SZP8XexzudFWopZHXVr2Nh8YG6blCWU/GCgatBkWsABul8
-        IZx/PsW+9cbzzjmLKZeGTx5gfR0bXq4YD2aJQKrRqCjOSJ0aR/2UuQEv7sQotfquwV163+
-        EFZn7unlgmEEfwyXFCazetTY0gQMqRk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-206-5J0K3unLMXqFRrAFe4bwoQ-1; Wed, 17 Jun 2020 04:21:01 -0400
-X-MC-Unique: 5J0K3unLMXqFRrAFe4bwoQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C488E879513;
-        Wed, 17 Jun 2020 08:21:00 +0000 (UTC)
-Received: from gondolin (ovpn-112-222.ams2.redhat.com [10.36.112.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A203F5C1BD;
-        Wed, 17 Jun 2020 08:20:56 +0000 (UTC)
-Date:   Wed, 17 Jun 2020 10:20:53 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v9 04/12] s390x: interrupt registration
-Message-ID: <20200617102053.47c4a52c.cohuck@redhat.com>
-In-Reply-To: <1592213521-19390-5-git-send-email-pmorel@linux.ibm.com>
-References: <1592213521-19390-1-git-send-email-pmorel@linux.ibm.com>
-        <1592213521-19390-5-git-send-email-pmorel@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1725901AbgFQIZd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Jun 2020 04:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgFQIZd (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 17 Jun 2020 04:25:33 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE3B4C061573;
+        Wed, 17 Jun 2020 01:25:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=NAXZqH3MursAn0+wgZd0xhoxT3Om8ZNhr3AOj88BNwA=; b=Pcm2agFeAxquPL5LAngzPzjqIq
+        E1O1mPL7BGCp5Eq/PFuKmucc/Uf5gXHhFL64YoiDF5UUJEnoleTZY7DW++UfrzE3aAMdAPrpugq5i
+        8Xrj0NtyY+QCer/HMMKYK48+GSVWNVNIRAZgvR2jG0efnVUh9mMfryhyZpI9WPJPVLLPhDl7VGpF5
+        ZayVIN0VtRSOJQc6xYWrTD06Czu3DoL8zXxSIFXpo3dALqCcYApPxnc0L0L4dHzT1gYTYX5z9ACpY
+        VlD6xfD3HocQKBCqUU/zXLWpMVsdHiq2EV2/I3Lz0eBeK35Ruozq7lysC5Nk72FIsIBe4VewUgA5N
+        uTstIriQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlTNW-0006ko-9Y; Wed, 17 Jun 2020 08:25:02 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 43972301DFC;
+        Wed, 17 Jun 2020 10:24:59 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0F22829E5A2E3; Wed, 17 Jun 2020 10:24:59 +0200 (CEST)
+Date:   Wed, 17 Jun 2020 10:24:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [v3 PATCH 1/2] lockdep: Split header file into lockdep and
+ lockdep_types
+Message-ID: <20200617082459.GC2531@hirez.programming.kicks-ass.net>
+References: <20200617071524.GA3055@gondor.apana.org.au>
+ <E1jlSJz-0003hE-8g@fornost.hmeau.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E1jlSJz-0003hE-8g@fornost.hmeau.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 15 Jun 2020 11:31:53 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
-
-Subject: "s390: I/O interrupt registration" ?
-
-> Let's make it possible to add and remove a custom io interrupt handler,
-> that can be used instead of the normal one.
+On Wed, Jun 17, 2020 at 05:17:19PM +1000, Herbert Xu wrote:
+> There is a header file inclusion loop between asm-generic/bug.h
+> and linux/kernel.h.  This causes potential compile failurs depending
+> on the which file is included first.  One way of breaking this loop
+> is to stop spinlock_types.h from including lockdep.h.  This patch
+> splits lockdep.h into two files for this purpose.
 > 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  lib/s390x/interrupt.c | 23 ++++++++++++++++++++++-
->  lib/s390x/interrupt.h |  8 ++++++++
->  2 files changed, 30 insertions(+), 1 deletion(-)
->  create mode 100644 lib/s390x/interrupt.h
-> 
-> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
-> index 3a40cac..243b9c2 100644
-> --- a/lib/s390x/interrupt.c
-> +++ b/lib/s390x/interrupt.c
-> @@ -10,9 +10,9 @@
->   * under the terms of the GNU Library General Public License version 2.
->   */
->  #include <libcflat.h>
-> -#include <asm/interrupt.h>
->  #include <asm/barrier.h>
->  #include <sclp.h>
-> +#include <interrupt.h>
->  
->  static bool pgm_int_expected;
->  static bool ext_int_expected;
-> @@ -144,12 +144,33 @@ void handle_mcck_int(void)
->  		     stap(), lc->mcck_old_psw.addr);
->  }
->  
-> +static void (*io_int_func)(void);
-> +
->  void handle_io_int(void)
->  {
-> +	if (io_int_func)
-> +		return io_int_func();
-> +
->  	report_abort("Unexpected io interrupt: on cpu %d at %#lx",
->  		     stap(), lc->io_old_psw.addr);
->  }
->  
-> +int register_io_int_func(void (*f)(void))
-> +{
-> +	if (io_int_func)
-> +		return -1;
-> +	io_int_func = f;
-> +	return 0;
-> +}
-> +
-> +int unregister_io_int_func(void (*f)(void))
-> +{
-> +	if (io_int_func != f)
-> +		return -1;
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> Acked-by: Petr Mladek <pmladek@suse.com>
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Not sure if we really need these checks, but they don't hurt, either.
+Looks good.
 
-> +	io_int_func = NULL;
-> +	return 0;
-> +}
-> +
->  void handle_svc_int(void)
->  {
->  	report_abort("Unexpected supervisor call interrupt: on cpu %d at %#lx",
-
-Acked-by: Cornelia Huck <cohuck@redhat.com>
-
+Petr, how about I stick this in tip/locking/header for us both to share?
