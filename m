@@ -2,87 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4CD51FC30B
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 02:54:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86F081FC491
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Jun 2020 05:19:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725964AbgFQAyw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 Jun 2020 20:54:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46574 "EHLO
+        id S1726594AbgFQDTU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 Jun 2020 23:19:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgFQAyw (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 Jun 2020 20:54:52 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BEE9C061573;
-        Tue, 16 Jun 2020 17:54:52 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49mmn31DRrz9sRR;
-        Wed, 17 Jun 2020 10:54:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1592355289;
-        bh=Tt4ck1L8nY61ACyfCaQSk9IvU7WHJrdCNXj+0siSSyg=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=X9ymJOnvys9Xta0MkoWBUczKpvqc1UyN/Q9aQyWmLXe1VKUTEmNDQSj0rsR9Q534F
-         p6Cep2OQrqfnlebt9PQxQzVrQBhhGf8vxbnkZ2KkloITdv6wE3e3fWf2KzjAQ/3rHv
-         4Rf2KtyRVAUQ0TfXasgP2KtS5MyWwwXfSxOEHZFxwBGwJ77QG/uKkxjIM9la7HY3Yo
-         s6mWsZ+5Aa9gVpDy6HW9lFlvnILbbuGiSBVRHnfji5SIv8PgYQDi4XcBz//pG5rD8Z
-         yHLXPGR8ugwb3hM4yDbup0N8aruEnPrwavrRY0cCsW8tvoiEuDekDUjg2hB93vQcq9
-         r0IQCg06h+QGQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        openrisc@lists.librecores.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 00/25] mm: Page fault accounting cleanups
-In-Reply-To: <CAHk-=wiTjaXHu+uxMi0xCZQOm4KVr0MucECAK=Zm4p4YZZ1XEg@mail.gmail.com>
-References: <20200615221607.7764-1-peterx@redhat.com> <CAHk-=wiTjaXHu+uxMi0xCZQOm4KVr0MucECAK=Zm4p4YZZ1XEg@mail.gmail.com>
-Date:   Wed, 17 Jun 2020 10:55:14 +1000
-Message-ID: <87imfqecjx.fsf@mpe.ellerman.id.au>
+        with ESMTP id S1726253AbgFQDTU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 Jun 2020 23:19:20 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A8DCC061573
+        for <linux-s390@vger.kernel.org>; Tue, 16 Jun 2020 20:19:20 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id 205so791965qkg.3
+        for <linux-s390@vger.kernel.org>; Tue, 16 Jun 2020 20:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=U3j0ki4o7P6HMvq+37iahVQx/lVdGux5XXDvZtfYmCI=;
+        b=J8LnPpe9Q3b+vOj4UZWb8AwcHu8M/CmMeFOarX/eZ2C0BpnfHljSTUMJI8Tj7bGJkF
+         qNW+1XsiaZKIA3G09L+DLuIeqZKBQET5xr5Q7O8AAkflCha2tlytA1jhMMDYQx4pw3nd
+         Twd2aI6g2PQQMMlph+EVGB5jnkWjqwiQefpn73vn0E8e7FC7HO9Uqs+mdLmPKhP99WWi
+         h13r4z83CPA6MFCUOjvEVLMi3Q2qGBRQ1VkmSWSQLOmuCbWsuoOMBKwPbVhC7wK6ztQ0
+         KWAgY3O2x/HEBLHripaFD1yGp/TF7Uv3Dz22g4oijy9B2fwbTw1YYqd2RYZ6l1+WKrra
+         DrcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=U3j0ki4o7P6HMvq+37iahVQx/lVdGux5XXDvZtfYmCI=;
+        b=rjdiMspEaIY+CzQAG3B3NIVqA5lln+eZLlz06eWvVm6jVw+yXHT42jTPFyzURy0lbw
+         i79ze+56gyKvXKOMMsdY04dEZ/TykYMXhRIGZ7WLIoXeIE+BCBqWlWl9uVtYpYjIzccA
+         kJAwH6JkDgtMBfy1wPaZjcpyydJ5c1i+B2ehJqxltX49T9mNpQZIzDpjMDJUUPFB2Th9
+         FhuBaMnw4ZSrtHwWEV2v1Z3YqpLLBGFkForlDid/ElMpXsZqm06FvGZ8F4sGCiojgkT9
+         4xJ3ECXcq8QBT/Tpn6zggPMWhmsJGc9wHo+2xQn8R2IiyhqpVdWF23lHY8M96EZwnFtk
+         lwgw==
+X-Gm-Message-State: AOAM533JNpFZnpA3lpJkc7k3yOTjuwLVZVKvGR9Ev+QfItK7OB7PVKRt
+        QSyCLKOwm2WO2E/xkw/tD4eXrg==
+X-Google-Smtp-Source: ABdhPJxJCa4fG57r4UtTtXAVbOYVXGOLOlAEYb3e9XbtMIyZ125D2pdBg/DrT19LCrNxTzyE5rl1Cg==
+X-Received: by 2002:a37:c17:: with SMTP id 23mr23868690qkm.235.1592363959069;
+        Tue, 16 Jun 2020 20:19:19 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id p13sm17452262qtk.24.2020.06.16.20.19.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 20:19:18 -0700 (PDT)
+Date:   Tue, 16 Jun 2020 23:19:06 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-xfs@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, borntraeger@de.ibm.com,
+        darrick.wong@oracle.com, kirill@shutemov.name, peterx@redhat.com,
+        yang.shi@linux.alibaba.com, hch@lst.de,
+        linux-kernel@vger.kernel.org, songliubraving@fb.com
+Subject: Re: VM_BUG_ON_PAGE(page_to_pgoff(page) != offset) on s390
+Message-ID: <20200617031906.GA5065@lca.pw>
+References: <20200616013309.GB815@lca.pw>
+ <20200616014859.GY8681@bombadil.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200616014859.GY8681@bombadil.infradead.org>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-> On Mon, Jun 15, 2020 at 3:16 PM Peter Xu <peterx@redhat.com> wrote:
->> This series tries to address all of them by introducing mm_fault_accounting()
->> first, so that we move all the page fault accounting into the common code base,
->> then call it properly from arch pf handlers just like handle_mm_fault().
->
-> Hmm.
->
-> So having looked at this a bit more, I'd actually like to go even
-> further, and just get rid of the per-architecture code _entirely_.
+On Mon, Jun 15, 2020 at 06:48:59PM -0700, Matthew Wilcox wrote:
+> On Mon, Jun 15, 2020 at 09:33:09PM -0400, Qian Cai wrote:
+> > Ever since a few days ago, linux-next on s390 has started to crash
+> > with compiling workloads or during boot below.
+> > 
+> > This .config if ever matters,
+> > 
+> > https://raw.githubusercontent.com/cailca/linux-mm/master/s390.config
+> 
+> CONFIG_READ_ONLY_THP_FOR_FS=y
+> 
+> This looks like a duplicate of
+> https://bugzilla.kernel.org/show_bug.cgi?id=206569
+> 
+> which Song has had no luck reproducing.
+> 
+> I would suggest simply disabling the Kconfig option for now.
 
-<snip>
+Thanks for the information. Indeed, I can't reproduce it anymore after
+setting READ_ONLY_THP_FOR_FS=n.
 
-> One detail worth noting: I do wonder if we should put the
->
->     perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
->
-> just in the arch code at the top of the fault handling, and consider
-> it entirely unrelated to the major/minor fault handling. The
-> major/minor faults fundamnetally are about successes. But the plain
-> PERF_COUNT_SW_PAGE_FAULTS could be about things that fail, including
-> things that never even get to this point at all.
-
-Yeah I think we should keep it in the arch code at roughly the top.
-
-If it's moved to the end you could have a process spinning taking bad
-page faults (and fixing them up), and see no sign of it from the perf
-page fault counters.
-
-cheers
+> 
+> > Since our s390 guest has only 2 CPUs, it is probably going to take a
+> > long time to bisect.
+> > 
+> > 01: [   60.589979] page:000003d0830bd540 refcount:257 mapcount:0 mapping:0000000
+> > 01: 0ac9dec15 index:0x155 head:000003d0830bc000 order:8 compound_mapcount:0 comp
+> > 01: ound_pincount:0
+> > 01: [   60.590361] mapping->aops:xfs_address_space_operations [xfs] dentry name:
+> > 01: "lvm"
+> > 01: [   60.590369] flags: 0x2000000000000000()
+> > 01: [   60.590380] raw: 2000000000000000 000003d0830bc001 000003d0830bd548 00000
+> > 01: 00000000400
+> > 01: [   60.590387] raw: 0000000000000000 0000000000000000 ffffffff00000000 00000
+> > 01: 00000000000
+> > 01: [   60.590394] head: 2000000000010015 000003d0830dd588 000000008fb34c20 0000
+> > 01: 0000cc4f0568
+> > 01: [   60.590401] head: 0000000000000100 0000000000000000 ffffffff00000101 0000
+> > 01: 00008f78a000
+> > 01: [   60.590407] page dumped because: VM_BUG_ON_PAGE(page_to_pgoff(page) != o
+> > 01: fset)
+> > 01: [   60.590428] ------------[ cut here ]------------
+> > 01: [   60.590435] kernel BUG at mm/filemap.c:2516!
+> > 01: [   60.590512] monitor event: 0040 ilc:2 [#1] SMP
+> > 01: [   60.590518] Modules linked in: ip_tables x_tables xfs dm_mirror dm_region
+> > 01: _hash dm_log dm_mod
+> > 01: [   60.590531] CPU: 1 PID: 665 Comm: lvmconfig Not tainted 5.8.0-rc1-next-20
+> > 01: 200615 #1
+> > 01: [   60.590535] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)
+> > 01: [   60.590539] Krnl PSW : 0704c00180000000 00000000bdf0bb46 (filemap_fault+0
+> > 01: x191e/0x27c0)
+> > 01: [   60.590550]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0
+> > 01:  RI:0 EA:3
+> > 01: [   60.590555] Krnl GPRS: 0000000000000001 0000037c002adef5 000003d0830bd578
+> > 01:  0000030000000000
+> > 01: [   60.591850]            0000030000000001 0000030000000000 000003e00156fdc8
+> > 01:  000003e00156fdc0
+> > 01: [   60.591854]            00000000c8f0b800 0000000000000155 000003d0830bd548
+> > 01:  000003d0830bd540
+> > 01: [   60.591859]            00000000bed41008 00000000bea6f900 00000000bdf0bb42
+> > 01:  000003e00156f9d0
+> > 01: [   60.591872] Krnl Code: 00000000bdf0bb36: c030005b1e45        larl    %r3,
+> > 01: 00000000bea6f7c0
+> > 01: [   60.591872]            00000000bdf0bb3c: c0e5000597ca        brasl   %r14
+> > 01: ,00000000bdfbead0
+> > 01: [   60.591872]           #00000000bdf0bb42: af000000            mc      0,0
+> > 01: [   60.591872]           >00000000bdf0bb46: c020007d238d        larl    %r2,
+> > 01: 00000000beeb0260
+> > 01: [   60.591872]            00000000bdf0bb4c: c0e50028aebe        brasl   %r14
+> > 01: ,00000000be4218c8
+> > 01: [   60.591872]            00000000bdf0bb52: eb1a0003000c        srlg    %r1,
+> > 01: %r10,3
+> > 01: [   60.591872]            00000000bdf0bb58: a52d0300            llihl   %r2,
+> > 01: 768
+> > 01: [   60.591872]            00000000bdf0bb5c: b9080012            agr     %r1,
+> > 01: %r2
+> > 01: [   60.591901] Call Trace:
+> > 01: [   60.591905]  [<00000000bdf0bb46>] filemap_fault+0x191e/0x27c0
+> > 01: [   60.591910] ([<00000000bdf0bb42>] filemap_fault+0x191a/0x27c0)
+> > 01: [   60.591967]  [<000003ff80240cfc>] xfs_filemap_fault+0x1ac/0x528 [xfs]
+> > __xfs_filemap_fault at /home/linux-mm/linux/fs/xfs/xfs_file.c:1214
+> > (inlined by) xfs_filemap_fault at /home/linux-mm/linux/fs/xfs/xfs_file.c:1228
+> > 01: [   60.591973]  [<00000000bdfc8428>] __do_fault+0xc0/0x470
+> > 01: [   60.591977]  [<00000000bdfd75f2>] handle_mm_fault+0x1782/0x29b8
+> > 01: [   60.591983]  [<00000000bdb50c60>] do_dat_exception+0x200/0x9c8
+> > do_exception at arch/s390/mm/fault.c:481
+> > (inlined by) do_dat_exception at arch/s390/mm/fault.c:583
+> > 01: [   60.591993]  [<00000000be9f4b76>] pgm_check_handler+0x1d6/0x234
+> > 01: [   60.591997] INFO: lockdep is turned off.
+> > 01: [   60.592000] Last Breaking-Event-Address:
+> > 01: [   60.592004]  [<00000000bdfbeafc>] dump_page+0x2c/0x40
+> > 01: [   60.606521] Kernel panic - not syncing: Fatal exception: panic_on_oops
+> > 00: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from
+> >  CPU 00.
+> > 00: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from
+> >  CPU 01.
+> > 01: HCPGIR450W CP entered; disabled wait PSW 00020001 80000000 00000000 BDB32B58
