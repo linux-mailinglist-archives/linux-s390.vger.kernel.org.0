@@ -2,151 +2,169 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1594E1FF56F
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2020 16:48:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B53C1FFDE6
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2020 00:22:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731282AbgFROq7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 18 Jun 2020 10:46:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730924AbgFROq5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 18 Jun 2020 10:46:57 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0086C0613ED;
-        Thu, 18 Jun 2020 07:46:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=T94kCvjMg3POOYY9QZ5B+bKnsinmf9rCUNlS0Naq4B0=; b=sZIUAkI2NjZ+MMiCdvtfYxmhhZ
-        QSfUBaQNaFTFjYXrnoa0k4CfMSMBYgWQJcIeJT2KPiGTzastkugYaRi0P2OkdM+B9tZ1giWQFDEAu
-        2xX9amWSGWOU8oF7zGU04ktP0FLYqU657CZfucoyNEhEny+VDLOxDC0qMFWvalfdkhsvTTYC8QmgH
-        WrqZ4LAO5GNL64WUFddp82LA21mBJE9Kg0c2s2xM1T+A7AOKiD/B+MZISNiupYctsyLexsbpGTaYl
-        RPdqczujbtE412KJXCBAeVRyHRT5BW4lEA9qrdRJUA3JtyyPAKSfu0XHEGWFrcTiq+7RnTdV7r0ks
-        TF1gnuUg==;
-Received: from 195-192-102-148.dyn.cablelink.at ([195.192.102.148] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jlvoX-0006W3-Dz; Thu, 18 Jun 2020 14:46:50 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] kernel: add a kernel_wait helper
-Date:   Thu, 18 Jun 2020 16:46:27 +0200
-Message-Id: <20200618144627.114057-7-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200618144627.114057-1-hch@lst.de>
-References: <20200618144627.114057-1-hch@lst.de>
+        id S1731993AbgFRWWq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 18 Jun 2020 18:22:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15548 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731994AbgFRWWp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 18 Jun 2020 18:22:45 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05IM4LwU155638;
+        Thu, 18 Jun 2020 18:22:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31repa3qxq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 18:22:43 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05IM4T15156398;
+        Thu, 18 Jun 2020 18:22:43 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31repa3qxm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 18:22:43 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05IMLDC4009207;
+        Thu, 18 Jun 2020 22:22:42 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma01dal.us.ibm.com with ESMTP id 31rdtr1dsr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 Jun 2020 22:22:42 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05IMMdk062062976
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 18 Jun 2020 22:22:39 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 301586E04E;
+        Thu, 18 Jun 2020 22:22:39 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 446926E04C;
+        Thu, 18 Jun 2020 22:22:38 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.159.16])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 18 Jun 2020 22:22:38 +0000 (GMT)
+From:   Collin Walling <walling@linux.ibm.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     pbonzini@redhat.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com, thuth@redhat.com
+Subject: [PATCH v8 0/2] Use DIAG318 to set Control Program Name & Version Codes
+Date:   Thu, 18 Jun 2020 18:22:20 -0400
+Message-Id: <20200618222222.23175-1-walling@linux.ibm.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-18_21:2020-06-18,2020-06-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 spamscore=0 phishscore=0 adultscore=0 clxscore=1011
+ mlxscore=0 cotscore=-2147483648 mlxlogscore=999 malwarescore=0
+ lowpriorityscore=0 impostorscore=0 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006180168
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Add a helper that waits for a pid and stores the status in the passed
-in kernel pointer.  Use it to fix the usage of kernel_wait4 in
-call_usermodehelper_exec_sync that only happens to work due to the
-implicit set_fs(KERNEL_DS) for kernel threads.
+Changelog:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/sched/task.h |  1 +
- kernel/exit.c              | 16 ++++++++++++++++
- kernel/umh.c               | 29 ++++-------------------------
- 3 files changed, 21 insertions(+), 25 deletions(-)
+    v8
 
-diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-index 38359071236ad7..a80007df396e95 100644
---- a/include/linux/sched/task.h
-+++ b/include/linux/sched/task.h
-@@ -102,6 +102,7 @@ struct task_struct *fork_idle(int);
- struct mm_struct *copy_init_mm(void);
- extern pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags);
- extern long kernel_wait4(pid_t, int __user *, int, struct rusage *);
-+int kernel_wait(pid_t pid, int *stat);
- 
- extern void free_task(struct task_struct *tsk);
- 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 727150f2810338..fd598846df0b17 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -1626,6 +1626,22 @@ long kernel_wait4(pid_t upid, int __user *stat_addr, int options,
- 	return ret;
- }
- 
-+int kernel_wait(pid_t pid, int *stat)
-+{
-+	struct wait_opts wo = {
-+		.wo_type	= PIDTYPE_PID,
-+		.wo_pid		= find_get_pid(pid),
-+		.wo_flags	= WEXITED,
-+	};
-+	int ret;
-+
-+	ret = do_wait(&wo);
-+	if (ret > 0 && wo.wo_stat)
-+		*stat = wo.wo_stat;
-+	put_pid(wo.wo_pid);
-+	return ret;
-+}
-+
- SYSCALL_DEFINE4(wait4, pid_t, upid, int __user *, stat_addr,
- 		int, options, struct rusage __user *, ru)
- {
-diff --git a/kernel/umh.c b/kernel/umh.c
-index 1284823dbad338..6fd948e478bec4 100644
---- a/kernel/umh.c
-+++ b/kernel/umh.c
-@@ -126,37 +126,16 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
- {
- 	pid_t pid;
- 
--	/* If SIGCLD is ignored kernel_wait4 won't populate the status. */
-+	/* If SIGCLD is ignored do_wait won't populate the status. */
- 	kernel_sigaction(SIGCHLD, SIG_DFL);
- 	pid = kernel_thread(call_usermodehelper_exec_async, sub_info, SIGCHLD);
--	if (pid < 0) {
-+	if (pid < 0)
- 		sub_info->retval = pid;
--	} else {
--		int ret = -ECHILD;
--		/*
--		 * Normally it is bogus to call wait4() from in-kernel because
--		 * wait4() wants to write the exit code to a userspace address.
--		 * But call_usermodehelper_exec_sync() always runs as kernel
--		 * thread (workqueue) and put_user() to a kernel address works
--		 * OK for kernel threads, due to their having an mm_segment_t
--		 * which spans the entire address space.
--		 *
--		 * Thus the __user pointer cast is valid here.
--		 */
--		kernel_wait4(pid, (int __user *)&ret, 0, NULL);
--
--		/*
--		 * If ret is 0, either call_usermodehelper_exec_async failed and
--		 * the real error code is already in sub_info->retval or
--		 * sub_info->retval is 0 anyway, so don't mess with it then.
--		 */
--		if (ret)
--			sub_info->retval = ret;
--	}
-+	else
-+		kernel_wait(pid, &sub_info->retval);
- 
- 	/* Restore default kernel sig handler */
- 	kernel_sigaction(SIGCHLD, SIG_IGN);
--
- 	umh_complete(sub_info);
- }
- 
+    • Reset is handled in KVM during initial and clear resets
+    • Sync/Store register handling
+    • Removed device IOCTL code
+    • Added KVM Capability for DIAG318
+        - this is for determining if the CPU model can enable this feature
+    • Reverted changes introduced by bullet 3 in v7
+    • Unshadowing CPNC again, as it makes sense if the guest executing in
+        VSIE sets a unique name/version code; this data should be preserved
+        - reverts bullet 4 in v3
+    • Diag318 is no longer reported via VM or CPU events
+        - no place to put this such that the messages aren't flooding the logs
+        - not necessary, as this data is primarily for IBM hardware/firmware
+            service events, and is observable via such events (e.g. CPU ring
+            dump)
+        - was nice for testing purposes
+    • A copy of the diag318 info (name & version code) is now stored in
+        the kvm_vcpu_arch struct, as opposed to the kvm_arch struct
+
+    v7
+
+    • Removed diag handler, as it will now take place within userspace
+    • Removed KVM_S390_VM_MISC_ENABLE_DIAG318 (undoes first bullet in v6)
+    • Misc clean ups and fixes [removed in v8]
+        - introduced a new patch to s/diag318/diag_318 and s/byte_134/fac134
+          to keep things consistent with the rest of the code
+
+    v6
+
+    • KVM disables diag318 get/set by default [removed in v7]
+    • added new IOCTL to tell KVM to enable diag318 [removed in v7]
+    • removed VCPU event message in favor of VM_EVENT only [removed in v8]
+
+    v5
+    
+    • s/cpc/diag318_info in order to make the relevant data more clear
+    • removed mutex locks for diag318_info get/set
+
+    v4
+    
+    • removed setup.c changes introduced in bullet 1 of v3
+    • kept diag318_info struct cleanup
+    • analogous QEMU patches:
+        https://lists.gnu.org/archive/html/qemu-devel/2019-05/msg00164.html
+
+    v3
+    
+    • kernel patch for diag 0x318 instruction call fixup [removed in v4]
+    • removed CPU model code
+    • cleaned up diag318_info struct
+    • cpnc is no longer unshadowed as it was not needed [removed in v8]
+    • rebased on 5.1.0-rc3
+
+-------------------------------------------------------------------------------
+
+This instruction call is executed once-and-only-once during Kernel setup.
+The availability of this instruction depends on Read Info byte 134 (aka fac134),
+bit 0.
+
+DIAG 0x318's is handled by userspace and may be enabled for a guest even if the
+host kernel cannot support it.
+
+The diag318_info is composed of a Control Program Name Code (CPNC) and a
+Control Program Version Code (CPVC). The CPNC is stored in the SIE block, and
+the CPNC & CPVC pair is stored in the kvm_vcpu_arch struct. 
+
+These values are used for problem diagnosis and allows IBM to identify control
+program information by answering the following question:
+
+    "What environment is this guest running in?" (CPNC)
+    "What are more details regarding the OS?" (CPVC)
+
+In the future, we will implement the CPVC to convey more information about the 
+OS (such as Linux version and potentially some value denoting a specific 
+distro + release). For now, we set this field to 0 until we come up with a solid 
+plan.
+
+Collin Walling (2):
+  s390/setup: diag 318: refactor struct
+  s390/kvm: diagnose 0x318 sync and reset
+
+ arch/s390/include/asm/diag.h     |  6 ++----
+ arch/s390/include/asm/kvm_host.h |  4 +++-
+ arch/s390/include/uapi/asm/kvm.h |  5 ++++-
+ arch/s390/kernel/setup.c         |  3 +--
+ arch/s390/kvm/kvm-s390.c         | 11 ++++++++++-
+ arch/s390/kvm/vsie.c             |  3 +++
+ include/uapi/linux/kvm.h         |  1 +
+ 7 files changed, 24 insertions(+), 9 deletions(-)
+
 -- 
-2.26.2
+2.21.3
 
