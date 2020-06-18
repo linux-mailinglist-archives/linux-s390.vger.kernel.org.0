@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D79041FE0D5
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2020 03:51:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A68EB1FDFCD
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2020 03:44:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbgFRB04 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 17 Jun 2020 21:26:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34680 "EHLO mail.kernel.org"
+        id S1730586AbgFRBna (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Jun 2020 21:43:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731766AbgFRB04 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 17 Jun 2020 21:26:56 -0400
+        id S1732223AbgFRB3D (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:29:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEC6F20776;
-        Thu, 18 Jun 2020 01:26:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE97522245;
+        Thu, 18 Jun 2020 01:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592443615;
-        bh=sgML1kiYHFWj9/9/5wfhrnb0KZZ60yVf8cLgS7JaLx8=;
+        s=default; t=1592443742;
+        bh=6GbONZrIGeBS048AjB4buui1OGTHoi5x/iorTFe4KnY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0GlYfxi4zoElD8nMZecYJguBC7h4Jh3ZBlnjRfUs8Zdx8vFKUAvgSDurJOda/vYE6
-         tobRARQ1b3ciBFNIr4hrEhaMBaEspeDNWc7i+dN1aDccq+C2jRBxogq0foniS7+jKk
-         MCWLpf8WSXjzusTQbDVsh+34GOgElODeauK3EX+I=
+        b=thpFKhGpxB1jiGlGMTcy4V7hdXcxmR64leqJk3yd1Db3RkGvFGGvZNdSNBFcvFNjF
+         NBOyPwL+pu2CJQyZYNS9kU9WOefn9/PpTdYbQyj2gG2YtLu4ihrmMwGElvlxDD7W78
+         M+G3+Fd1sVc6srsCBbIxrx7j1wRBjW5nDY48o+SE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         Benjamin Block <bblock@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 042/108] s390/qdio: put thinint indicator after early error
-Date:   Wed, 17 Jun 2020 21:24:54 -0400
-Message-Id: <20200618012600.608744-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 32/80] s390/qdio: put thinint indicator after early error
+Date:   Wed, 17 Jun 2020 21:27:31 -0400
+Message-Id: <20200618012819.609778-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
-References: <20200618012600.608744-1-sashal@kernel.org>
+In-Reply-To: <20200618012819.609778-1-sashal@kernel.org>
+References: <20200618012819.609778-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -68,10 +68,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  3 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/s390/cio/qdio.h b/drivers/s390/cio/qdio.h
-index 29d6b5222f1c..0f8d13288611 100644
+index 7e70f9298cc1..11f6ebd04545 100644
 --- a/drivers/s390/cio/qdio.h
 +++ b/drivers/s390/cio/qdio.h
-@@ -377,7 +377,6 @@ static inline int multicast_outbound(struct qdio_q *q)
+@@ -376,7 +376,6 @@ static inline int multicast_outbound(struct qdio_q *q)
  extern u64 last_ai_time;
  
  /* prototypes for thin interrupt */
@@ -92,10 +92,10 @@ index d0090c5c88e7..a64615a10352 100644
  			init_data->qib_param_field,
  			init_data->input_slib_elements,
 diff --git a/drivers/s390/cio/qdio_thinint.c b/drivers/s390/cio/qdio_thinint.c
-index 831a3a0a2837..4dc1108069d4 100644
+index debe69adfc70..aecb6445a567 100644
 --- a/drivers/s390/cio/qdio_thinint.c
 +++ b/drivers/s390/cio/qdio_thinint.c
-@@ -270,17 +270,19 @@ int __init tiqdio_register_thinints(void)
+@@ -268,17 +268,19 @@ int __init tiqdio_register_thinints(void)
  
  int qdio_establish_thinint(struct qdio_irq *irq_ptr)
  {
