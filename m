@@ -2,184 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEA6E1FEE51
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2020 11:07:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 549FC1FF02F
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2020 13:03:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbgFRJHU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 18 Jun 2020 05:07:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33753 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728920AbgFRJHQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 18 Jun 2020 05:07:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592471235;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=zph7qfgsNm0uG10f1WSBDBIX+C5pgP3v2hrfa3bjGas=;
-        b=M28+/csFYwcRbngndf9Q1OkchQXGWWN4+EdnkGy727yqWnKQbR9sKggOyHmULpSkMXqF9t
-        Ducw+Zzzbrbc8ClObQZF9WCXAt0nk5H96XBhTxWg5EM7zS17oEanMTP6aleS7pPc92BQfz
-        TKqMzHPx1L4vRWAs4rMAsTwh26jhtv4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-81-9_5xjY4nO3C6vlQFRovjOA-1; Thu, 18 Jun 2020 05:07:10 -0400
-X-MC-Unique: 9_5xjY4nO3C6vlQFRovjOA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50453100CCC0;
-        Thu, 18 Jun 2020 09:07:09 +0000 (UTC)
-Received: from [10.36.114.105] (ovpn-114-105.ams2.redhat.com [10.36.114.105])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ECC597A01A;
-        Thu, 18 Jun 2020 09:07:06 +0000 (UTC)
-Subject: Re: [PATCH] KVM: s390: reduce number of IO pins to 1
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20200617083620.5409-1-borntraeger@de.ibm.com>
- <d17de7d7-6cca-672a-5519-c67fc147f6a5@redhat.com>
- <6953c580-9b99-1c76-b6eb-510dcb70894c@de.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <66419659-e678-2daf-2e02-4f2158076ddb@redhat.com>
-Date:   Thu, 18 Jun 2020 11:07:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1727825AbgFRLDf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 18 Jun 2020 07:03:35 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6283 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729389AbgFRLDd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 18 Jun 2020 07:03:33 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D835E7694E38895BBA77;
+        Thu, 18 Jun 2020 19:03:29 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.189.174) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 18 Jun 2020 19:03:23 +0800
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+To:     <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <arnd@arndb.de>, <borntraeger@de.ibm.com>,
+        <catalin.marinas@arm.com>, <christian@brauner.io>,
+        <cyphar@cyphar.com>, <dhowells@redhat.com>,
+        <ebiederm@xmission.com>, <fenghua.yu@intel.com>,
+        <geert@linux-m68k.org>, <gor@linux.ibm.com>,
+        <heiko.carstens@de.ibm.com>, <ink@jurassic.park.msu.ru>,
+        <jolsa@redhat.com>, <linux@armlinux.org.uk>, <lkp@intel.com>,
+        <mark.rutland@arm.com>, <mattst88@gmail.com>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <monstr@monstr.eu>, <namhyung@kernel.org>,
+        <nixiaoming@huawei.com>, <peterz@infradead.org>, <rth@twiddle.net>,
+        <sargun@sargun.me>, <sfr@canb.auug.org.au>, <tony.luck@intel.com>,
+        <will@kernel.org>, <akpm@linux-foundation.org>
+CC:     <alex.huangjianhui@huawei.com>, <zhongjubin@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        <clang-built-linux@googlegroups.com>, <kbuild-all@lists.01.org>,
+        <linux-mm@kvack.org>
+Subject: [PATCH] s390: fix build error for sys_call_table_emu
+Date:   Thu, 18 Jun 2020 19:03:20 +0800
+Message-ID: <20200618110320.104013-1-nixiaoming@huawei.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <6953c580-9b99-1c76-b6eb-510dcb70894c@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.189.174]
+X-CFilter-Loop: Reflected
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 17.06.20 13:04, Christian Borntraeger wrote:
-> 
-> 
-> On 17.06.20 12:19, David Hildenbrand wrote:
->> On 17.06.20 10:36, Christian Borntraeger wrote:
->>> The current number of KVM_IRQCHIP_NUM_PINS results in an order 3
->>> allocation (32kb) for each guest start/restart. This can result in OOM
->>> killer activity even with free swap when the memory is fragmented
->>> enough:
->>>
->>> kernel: qemu-system-s39 invoked oom-killer: gfp_mask=0x440dc0(GFP_KERNEL_ACCOUNT|__GFP_COMP|__GFP_ZERO), order=3, oom_score_adj=0
->>> kernel: CPU: 1 PID: 357274 Comm: qemu-system-s39 Kdump: loaded Not tainted 5.4.0-29-generic #33-Ubuntu
->>> kernel: Hardware name: IBM 8562 T02 Z06 (LPAR)
->>> kernel: Call Trace:
->>> kernel: ([<00000001f848fe2a>] show_stack+0x7a/0xc0)
->>> kernel:  [<00000001f8d3437a>] dump_stack+0x8a/0xc0
->>> kernel:  [<00000001f8687032>] dump_header+0x62/0x258
->>> kernel:  [<00000001f8686122>] oom_kill_process+0x172/0x180
->>> kernel:  [<00000001f8686abe>] out_of_memory+0xee/0x580
->>> kernel:  [<00000001f86e66b8>] __alloc_pages_slowpath+0xd18/0xe90
->>> kernel:  [<00000001f86e6ad4>] __alloc_pages_nodemask+0x2a4/0x320
->>> kernel:  [<00000001f86b1ab4>] kmalloc_order+0x34/0xb0
->>> kernel:  [<00000001f86b1b62>] kmalloc_order_trace+0x32/0xe0
->>> kernel:  [<00000001f84bb806>] kvm_set_irq_routing+0xa6/0x2e0
->>> kernel:  [<00000001f84c99a4>] kvm_arch_vm_ioctl+0x544/0x9e0
->>> kernel:  [<00000001f84b8936>] kvm_vm_ioctl+0x396/0x760
->>> kernel:  [<00000001f875df66>] do_vfs_ioctl+0x376/0x690
->>> kernel:  [<00000001f875e304>] ksys_ioctl+0x84/0xb0
->>> kernel:  [<00000001f875e39a>] __s390x_sys_ioctl+0x2a/0x40
->>> kernel:  [<00000001f8d55424>] system_call+0xd8/0x2c8
->>>
->>> As far as I can tell s390x does not use the iopins as we bail our for
->>> anything other than KVM_IRQ_ROUTING_S390_ADAPTER and the chip/pin is
->>> only used for KVM_IRQ_ROUTING_IRQCHIP. So let us use a small number to
->>> reduce the memory footprint.
->>>
->>> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
->>> ---
->>>  arch/s390/include/asm/kvm_host.h | 8 ++++----
->>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
->>> index cee3cb6455a2..6ea0820e7c7f 100644
->>> --- a/arch/s390/include/asm/kvm_host.h
->>> +++ b/arch/s390/include/asm/kvm_host.h
->>> @@ -31,12 +31,12 @@
->>>  #define KVM_USER_MEM_SLOTS 32
->>>  
->>>  /*
->>> - * These seem to be used for allocating ->chip in the routing table,
->>> - * which we don't use. 4096 is an out-of-thin-air value. If we need
->>> - * to look at ->chip later on, we'll need to revisit this.
->>> + * These seem to be used for allocating ->chip in the routing table, which we
->>> + * don't use. 1 is as small as we can get to reduce the needed memory. If we
->>> + * need to look at ->chip later on, we'll need to revisit this.
->>>   */
->>>  #define KVM_NR_IRQCHIPS 1
->>> -#define KVM_IRQCHIP_NUM_PINS 4096
->>> +#define KVM_IRQCHIP_NUM_PINS 1
->>>  #define KVM_HALT_POLL_NS_DEFAULT 50000
->>>  
->>>  /* s390-specific vcpu->requests bit members */
->>>
->>
->> Guess it doesn't make sense to wrap all the "->chip" handling in a
->> separate set of defines.
->>
->> Reviewed-by: David Hildenbrand <david@redhat.com>
-> 
-> I guess this is just the most simple solution. I am asking myself if I should add
-> cc stable of Fixes as I was able to trigger this by having several guests with a
-> reboot loop and several guests that trigger memory overcommitment.
-> 
+Build error on s390:
+	arch/s390/kernel/entry.o: in function `sys_call_table_emu':
+	>> (.rodata+0x1288): undefined reference to `__s390_'
 
-I don't think this classifies as stable material.
+In commit ("All arch: remove system call sys_sysctl")
+ 148  common	fdatasync		sys_fdatasync			sys_fdatasync
+-149  common	_sysctl			sys_sysctl			compat_sys_sysctl
++149  common	_sysctl			sys_ni_syscall
+ 150  common	mlock			sys_mlock			sys_mlock
 
+After the patch is integrated, there is a format error in the generated
+arch/s390/include/generated/asm/syscall_table.h:
+	SYSCALL(sys_fdatasync, sys_fdatasync)
+	SYSCALL(sys_ni_syscall,) /* cause build error */
+	SYSCALL(sys_mlock,sys_mlock)
+
+There are holes in the system call number in
+ arch/s390/kernel/syscalls/syscall.tbl. When generating syscall_table.h,
+these hole numbers will be automatically filled with "NI_SYSCALL".
+Therefore, delete the number 149 to fix the current compilation failure.
+ Similarly, modify tools/perf/arch/s390/entry/syscalls/syscall.tbl.
+
+Fixes: ("All arch: remove system call sys_sysctl")
+Fixes: https://lore.kernel.org/linuxppc-dev/20200616030734.87257-1-nixiaoming@huawei.com/
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+---
+ arch/s390/kernel/syscalls/syscall.tbl           | 1 -
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+index f17aaf6fe5de..bcaf93994e3c 100644
+--- a/arch/s390/kernel/syscalls/syscall.tbl
++++ b/arch/s390/kernel/syscalls/syscall.tbl
+@@ -138,7 +138,6 @@
+ 146  common	writev			sys_writev			compat_sys_writev
+ 147  common	getsid			sys_getsid			sys_getsid
+ 148  common	fdatasync		sys_fdatasync			sys_fdatasync
+-149  common	_sysctl			sys_ni_syscall
+ 150  common	mlock			sys_mlock			sys_mlock
+ 151  common	munlock			sys_munlock			sys_munlock
+ 152  common	mlockall		sys_mlockall			sys_mlockall
+diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+index 0193f9b98753..eb77d0d01d8f 100644
+--- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
+@@ -138,7 +138,6 @@
+ 146  common	writev			sys_writev			compat_sys_writev
+ 147  common	getsid			sys_getsid			sys_getsid
+ 148  common	fdatasync		sys_fdatasync			sys_fdatasync
+-149  common	_sysctl			sys_ni_syscall
+ 150  common	mlock			sys_mlock			compat_sys_mlock
+ 151  common	munlock			sys_munlock			compat_sys_munlock
+ 152  common	mlockall		sys_mlockall			sys_mlockall
 -- 
-Thanks,
-
-David / dhildenb
+2.27.0
 
