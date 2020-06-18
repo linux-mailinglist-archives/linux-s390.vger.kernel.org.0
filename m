@@ -2,196 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B286A1FD95C
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2020 01:12:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D79041FE0D5
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2020 03:51:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgFQXMA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 17 Jun 2020 19:12:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30692 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726761AbgFQXMA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 17 Jun 2020 19:12:00 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05HN1wbh084333;
-        Wed, 17 Jun 2020 19:12:00 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31qg6pg5uf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 19:11:59 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05HN29gH085267;
-        Wed, 17 Jun 2020 19:11:59 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31qg6pg5tq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 19:11:59 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05HNAD0M007291;
-        Wed, 17 Jun 2020 23:11:57 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31qur601uu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Jun 2020 23:11:57 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05HNBsWN63111604
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Jun 2020 23:11:54 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4252EAE053;
-        Wed, 17 Jun 2020 23:11:54 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E689AAE04D;
-        Wed, 17 Jun 2020 23:11:53 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.74.214])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 17 Jun 2020 23:11:53 +0000 (GMT)
-Date:   Thu, 18 Jun 2020 01:11:09 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [RFC PATCH v3 1/3] vfio-ccw: Indicate if a channel_program is
- started
-Message-ID: <20200618011109.294a972d.pasic@linux.ibm.com>
-In-Reply-To: <20200616195053.99253-2-farman@linux.ibm.com>
-References: <20200616195053.99253-1-farman@linux.ibm.com>
-        <20200616195053.99253-2-farman@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1726955AbgFRB04 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Jun 2020 21:26:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731766AbgFRB04 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 17 Jun 2020 21:26:56 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEC6F20776;
+        Thu, 18 Jun 2020 01:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592443615;
+        bh=sgML1kiYHFWj9/9/5wfhrnb0KZZ60yVf8cLgS7JaLx8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0GlYfxi4zoElD8nMZecYJguBC7h4Jh3ZBlnjRfUs8Zdx8vFKUAvgSDurJOda/vYE6
+         tobRARQ1b3ciBFNIr4hrEhaMBaEspeDNWc7i+dN1aDccq+C2jRBxogq0foniS7+jKk
+         MCWLpf8WSXjzusTQbDVsh+34GOgElODeauK3EX+I=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 042/108] s390/qdio: put thinint indicator after early error
+Date:   Wed, 17 Jun 2020 21:24:54 -0400
+Message-Id: <20200618012600.608744-42-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200618012600.608744-1-sashal@kernel.org>
+References: <20200618012600.608744-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-17_12:2020-06-17,2020-06-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 clxscore=1015
- mlxscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- cotscore=-2147483648 bulkscore=0 phishscore=0 impostorscore=0 adultscore=0
- malwarescore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006170168
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 16 Jun 2020 21:50:51 +0200
-Eric Farman <farman@linux.ibm.com> wrote:
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-> The interrupt path checks the FSM state when processing a final interrupt
-> (an interrupt that is neither subchannel active, nor device active),
-> to determine whether to call cp_free() and release the associated memory.
-> But, this does not fully close the window where a START comes in after a
-> HALT/CLEAR. If the START runs while the CLEAR interrupt is being processed,
-> the channel program struct will be allocated while the interrupt would be
-> considering whether or not to free it. If the FSM state is CP_PROCESSING,
-> then everything is fine. But if the START is able to issue its SSCH and get
-> a cc0, then the in-flight interrupt would have been for an unrelated
-> operation (perhaps none, if the subchannel was previously idle).
-> 
-> The channel_program struct has an "initialized" flag that is set early
-> in the fsm_io_request() flow, to simplify the various cp_*() accessors.
-> Let's extend this idea to include a "started" flag that announces that the
-> channel program has successfully been issued to hardware. With this, the
-> interrupt path can determine whether the final interrupt should also
-> release the cp resources instead of relying on a transient FSM state.
+[ Upstream commit 75e82bec6b2622c6f455b7a543fb5476a5d0eed7 ]
 
-AFAICT cp->started is potentially accessed by multiple threads, form
-which at least one writes. Am I right?
+qdio_establish() calls qdio_setup_thinint() via qdio_setup_irq().
+If the subsequent qdio_establish_thinint() fails, we miss to put the
+DSCI again. Thus the DSCI isn't available for re-use. Given enough of
+such errors, we could end up with having only the shared DSCI available.
 
-Actually AFAICT you want to use cp->sarted for synchronization between
-multiple treads (I/O requester(s), IRQ handler(s)). How does the
-synchronization work for bool started itself, i.e. don't we have a data
-race on 'started'?
+Merge qdio_setup_thinint() into qdio_establish_thinint(), and deal with
+such an error internally.
 
-A side note: I know, I asked a similar question about 'initialized' back
-then.
+Fixes: 779e6e1c724d ("[S390] qdio: new qdio driver.")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/cio/qdio.h         |  1 -
+ drivers/s390/cio/qdio_setup.c   |  1 -
+ drivers/s390/cio/qdio_thinint.c | 14 ++++++++------
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-Regards,
-Halil
-
-> 
-> Signed-off-by: Eric Farman <farman@linux.ibm.com>
-> ---
->  drivers/s390/cio/vfio_ccw_cp.c  |  2 ++
->  drivers/s390/cio/vfio_ccw_cp.h  |  1 +
->  drivers/s390/cio/vfio_ccw_drv.c |  2 +-
->  drivers/s390/cio/vfio_ccw_fsm.c | 11 +++++++++++
->  4 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-> index b9febc581b1f..7748eeef434e 100644
-> --- a/drivers/s390/cio/vfio_ccw_cp.c
-> +++ b/drivers/s390/cio/vfio_ccw_cp.c
-> @@ -657,6 +657,7 @@ int cp_init(struct channel_program *cp, struct device *mdev, union orb *orb)
->  
->  	if (!ret) {
->  		cp->initialized = true;
-> +		cp->started = false;
->  
->  		/* It is safe to force: if it was not set but idals used
->  		 * ccwchain_calc_length would have returned an error.
-> @@ -685,6 +686,7 @@ void cp_free(struct channel_program *cp)
->  		return;
->  
->  	cp->initialized = false;
-> +	cp->started = false;
->  	list_for_each_entry_safe(chain, temp, &cp->ccwchain_list, next) {
->  		for (i = 0; i < chain->ch_len; i++) {
->  			pfn_array_unpin_free(chain->ch_pa + i, cp->mdev);
-> diff --git a/drivers/s390/cio/vfio_ccw_cp.h b/drivers/s390/cio/vfio_ccw_cp.h
-> index ba31240ce965..7ea14910aaaa 100644
-> --- a/drivers/s390/cio/vfio_ccw_cp.h
-> +++ b/drivers/s390/cio/vfio_ccw_cp.h
-> @@ -39,6 +39,7 @@ struct channel_program {
->  	union orb orb;
->  	struct device *mdev;
->  	bool initialized;
-> +	bool started;
->  	struct ccw1 *guest_cp;
->  };
->  
-> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-> index 8c625b530035..7e2a790dc9a1 100644
-> --- a/drivers/s390/cio/vfio_ccw_drv.c
-> +++ b/drivers/s390/cio/vfio_ccw_drv.c
-> @@ -94,7 +94,7 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
->  		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
->  	if (scsw_is_solicited(&irb->scsw)) {
->  		cp_update_scsw(&private->cp, &irb->scsw);
-> -		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING)
-> +		if (is_final && private->cp.started)
->  			cp_free(&private->cp);
->  	}
->  	mutex_lock(&private->io_mutex);
-> diff --git a/drivers/s390/cio/vfio_ccw_fsm.c b/drivers/s390/cio/vfio_ccw_fsm.c
-> index 23e61aa638e4..d806f88eba72 100644
-> --- a/drivers/s390/cio/vfio_ccw_fsm.c
-> +++ b/drivers/s390/cio/vfio_ccw_fsm.c
-> @@ -50,6 +50,7 @@ static int fsm_io_helper(struct vfio_ccw_private *private)
->  		sch->schib.scsw.cmd.actl |= SCSW_ACTL_START_PEND;
->  		ret = 0;
->  		private->state = VFIO_CCW_STATE_CP_PENDING;
-> +		private->cp.started = true;
->  		break;
->  	case 1:		/* Status pending */
->  	case 2:		/* Busy */
-> @@ -246,6 +247,16 @@ static void fsm_io_request(struct vfio_ccw_private *private,
->  	char *errstr = "request";
->  	struct subchannel_id schid = get_schid(private);
->  
-> +	if (private->cp.started) {
-> +		io_region->ret_code = -EBUSY;
-> +		VFIO_CCW_MSG_EVENT(2,
-> +				   "%pUl (%x.%x.%04x): busy\n",
-> +				   mdev_uuid(mdev), schid.cssid,
-> +				   schid.ssid, schid.sch_no);
-> +		errstr = "busy";
-> +		goto err_out;
-> +	}
-> +
->  	private->state = VFIO_CCW_STATE_CP_PROCESSING;
->  	memcpy(scsw, io_region->scsw_area, sizeof(*scsw));
->  
+diff --git a/drivers/s390/cio/qdio.h b/drivers/s390/cio/qdio.h
+index 29d6b5222f1c..0f8d13288611 100644
+--- a/drivers/s390/cio/qdio.h
++++ b/drivers/s390/cio/qdio.h
+@@ -377,7 +377,6 @@ static inline int multicast_outbound(struct qdio_q *q)
+ extern u64 last_ai_time;
+ 
+ /* prototypes for thin interrupt */
+-void qdio_setup_thinint(struct qdio_irq *irq_ptr);
+ int qdio_establish_thinint(struct qdio_irq *irq_ptr);
+ void qdio_shutdown_thinint(struct qdio_irq *irq_ptr);
+ void tiqdio_add_input_queues(struct qdio_irq *irq_ptr);
+diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
+index d0090c5c88e7..a64615a10352 100644
+--- a/drivers/s390/cio/qdio_setup.c
++++ b/drivers/s390/cio/qdio_setup.c
+@@ -479,7 +479,6 @@ int qdio_setup_irq(struct qdio_initialize *init_data)
+ 	setup_queues(irq_ptr, init_data);
+ 
+ 	setup_qib(irq_ptr, init_data);
+-	qdio_setup_thinint(irq_ptr);
+ 	set_impl_params(irq_ptr, init_data->qib_param_field_format,
+ 			init_data->qib_param_field,
+ 			init_data->input_slib_elements,
+diff --git a/drivers/s390/cio/qdio_thinint.c b/drivers/s390/cio/qdio_thinint.c
+index 831a3a0a2837..4dc1108069d4 100644
+--- a/drivers/s390/cio/qdio_thinint.c
++++ b/drivers/s390/cio/qdio_thinint.c
+@@ -270,17 +270,19 @@ int __init tiqdio_register_thinints(void)
+ 
+ int qdio_establish_thinint(struct qdio_irq *irq_ptr)
+ {
++	int rc;
++
+ 	if (!is_thinint_irq(irq_ptr))
+ 		return 0;
+-	return set_subchannel_ind(irq_ptr, 0);
+-}
+ 
+-void qdio_setup_thinint(struct qdio_irq *irq_ptr)
+-{
+-	if (!is_thinint_irq(irq_ptr))
+-		return;
+ 	irq_ptr->dsci = get_indicator();
+ 	DBF_HEX(&irq_ptr->dsci, sizeof(void *));
++
++	rc = set_subchannel_ind(irq_ptr, 0);
++	if (rc)
++		put_indicator(irq_ptr->dsci);
++
++	return rc;
+ }
+ 
+ void qdio_shutdown_thinint(struct qdio_irq *irq_ptr)
+-- 
+2.25.1
 
