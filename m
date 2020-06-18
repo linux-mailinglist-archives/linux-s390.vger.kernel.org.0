@@ -2,112 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80EA31FF476
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2020 16:14:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0870C1FF4E3
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jun 2020 16:38:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbgFROOp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 18 Jun 2020 10:14:45 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6284 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730596AbgFROOo (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 18 Jun 2020 10:14:44 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 00BEE1C7614B9EE3D7A1;
-        Thu, 18 Jun 2020 22:14:38 +0800 (CST)
-Received: from use12-sp2.huawei.com (10.67.189.174) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 18 Jun 2020 22:14:29 +0800
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-To:     <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <arnd@arndb.de>, <borntraeger@de.ibm.com>,
-        <catalin.marinas@arm.com>, <christian@brauner.io>,
-        <cyphar@cyphar.com>, <dhowells@redhat.com>,
-        <ebiederm@xmission.com>, <fenghua.yu@intel.com>,
-        <geert@linux-m68k.org>, <gor@linux.ibm.com>,
-        <heiko.carstens@de.ibm.com>, <ink@jurassic.park.msu.ru>,
-        <jolsa@redhat.com>, <linux@armlinux.org.uk>, <lkp@intel.com>,
-        <mark.rutland@arm.com>, <mattst88@gmail.com>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <monstr@monstr.eu>, <namhyung@kernel.org>,
-        <nixiaoming@huawei.com>, <peterz@infradead.org>, <rth@twiddle.net>,
-        <sargun@sargun.me>, <sfr@canb.auug.org.au>, <tony.luck@intel.com>,
-        <will@kernel.org>, <akpm@linux-foundation.org>
-CC:     <alex.huangjianhui@huawei.com>, <zhongjubin@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>, <kbuild-all@lists.01.org>,
-        <linux-mm@kvack.org>
-Subject: [PATCH v2] s390: fix build error for sys_call_table_emu
-Date:   Thu, 18 Jun 2020 22:14:26 +0800
-Message-ID: <20200618141426.16884-1-nixiaoming@huawei.com>
-X-Mailer: git-send-email 2.27.0
+        id S1730816AbgFROiX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 18 Jun 2020 10:38:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730846AbgFROiR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 18 Jun 2020 10:38:17 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F33C0C06174E;
+        Thu, 18 Jun 2020 07:38:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=QkS9Mtt0QDYYe9qdb3TQ9/JElZki5rRNgo5h249RJlY=; b=L32Q6EwUocb1McN+U2WqgDbYx1
+        4GkclM9Db9mAuFZXMPwXX23Mt2Q4oVOzO84QHQ6BBXfeCVr6gf4ZAOwBZaqc2yhhEgjG540/H/sIH
+        ePMWCIwSXxNmlgILMXr/q1zXMeXnniSlpR3cMaKca8GTWtBM23md02Wt1LXdJXPJaC6PibEhwst6c
+        ModKdOyeLTrE6BM0xiuQj/UCB/QKTszsTxl/1b25tfCB0lqf+2+uHY3slTWqn8huQQNgXqgfZi5P8
+        fvwzGm+j9zVGpgax3VqNyq2RL21lJXMhXGv2rNnWk7df6kVlVABP5JWOha8rStyxvYrFcIvWQcGNo
+        0qaAvbeg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jlvfe-0000C3-Ki; Thu, 18 Jun 2020 14:37:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BF9CF30604B;
+        Thu, 18 Jun 2020 16:37:35 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B4A0E21AB372C; Thu, 18 Jun 2020 16:37:35 +0200 (CEST)
+Date:   Thu, 18 Jun 2020 16:37:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [v3 PATCH 1/2] lockdep: Split header file into lockdep and
+ lockdep_types
+Message-ID: <20200618143735.GJ576905@hirez.programming.kicks-ass.net>
+References: <20200617071524.GA3055@gondor.apana.org.au>
+ <E1jlSJz-0003hE-8g@fornost.hmeau.com>
+ <20200617082459.GC2531@hirez.programming.kicks-ass.net>
+ <20200617122449.GX31238@alley>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.189.174]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617122449.GX31238@alley>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Build error on s390:
-	arch/s390/kernel/entry.o: in function `sys_call_table_emu':
-	>> (.rodata+0x1288): undefined reference to `__s390_'
+On Wed, Jun 17, 2020 at 02:24:50PM +0200, Petr Mladek wrote:
+> On Wed 2020-06-17 10:24:59, Peter Zijlstra wrote:
+> > On Wed, Jun 17, 2020 at 05:17:19PM +1000, Herbert Xu wrote:
+> > > There is a header file inclusion loop between asm-generic/bug.h
+> > > and linux/kernel.h.  This causes potential compile failurs depending
+> > > on the which file is included first.  One way of breaking this loop
+> > > is to stop spinlock_types.h from including lockdep.h.  This patch
+> > > splits lockdep.h into two files for this purpose.
+> > > 
+> > > Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> > > Acked-by: Petr Mladek <pmladek@suse.com>
+> > > Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > 
+> > Looks good.
+> > 
+> > Petr, how about I stick this in tip/locking/header for us both to share?
+> 
+> Sure. Sounds good to me.
 
-In commit ("All arch: remove system call sys_sysctl")
- 148  common	fdatasync		sys_fdatasync			sys_fdatasync
--149  common	_sysctl			sys_sysctl			compat_sys_sysctl
-+149  common	_sysctl			sys_ni_syscall
- 150  common	mlock			sys_mlock			sys_mlock
-
-After the patch is integrated, there is a format error in the generated
-arch/s390/include/generated/asm/syscall_table.h:
-	SYSCALL(sys_fdatasync, sys_fdatasync)
-	SYSCALL(sys_ni_syscall,) /* cause build error */
-	SYSCALL(sys_mlock,sys_mlock)
-
-According to the guidance of Heiko Carstens, use "-" to fill the empty system call
- Similarly, modify tools/perf/arch/s390/entry/syscalls/syscall.tbl.
-
-Fixes: ("All arch: remove system call sys_sysctl")
-Fixes: https://lore.kernel.org/linuxppc-dev/20200616030734.87257-1-nixiaoming@huawei.com/
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-
-changes in v2:
-	use "-" to fill the empty system call
-
-v1: https://lore.kernel.org/lkml/20200618110320.104013-1-nixiaoming@huawei.com/
----
- arch/s390/kernel/syscalls/syscall.tbl           | 2 +-
- tools/perf/arch/s390/entry/syscalls/syscall.tbl | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index f17aaf6fe5de..04c34c2ed916 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -138,7 +138,7 @@
- 146  common	writev			sys_writev			compat_sys_writev
- 147  common	getsid			sys_getsid			sys_getsid
- 148  common	fdatasync		sys_fdatasync			sys_fdatasync
--149  common	_sysctl			sys_ni_syscall
-+149  common	_sysctl			-				-
- 150  common	mlock			sys_mlock			sys_mlock
- 151  common	munlock			sys_munlock			sys_munlock
- 152  common	mlockall		sys_mlockall			sys_mlockall
-diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-index 0193f9b98753..29144b79a49d 100644
---- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-@@ -138,7 +138,7 @@
- 146  common	writev			sys_writev			compat_sys_writev
- 147  common	getsid			sys_getsid			sys_getsid
- 148  common	fdatasync		sys_fdatasync			sys_fdatasync
--149  common	_sysctl			sys_ni_syscall
-+149  common	_sysctl			-				-
- 150  common	mlock			sys_mlock			compat_sys_mlock
- 151  common	munlock			sys_munlock			compat_sys_munlock
- 152  common	mlockall		sys_mlockall			sys_mlockall
--- 
-2.27.0
-
+OK, done. tip/locking/header should contain just this patch, and that
+branch also got merged into tip/locking/core.
