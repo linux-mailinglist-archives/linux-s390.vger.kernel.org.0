@@ -2,100 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86039201B35
-	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2020 21:27:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD517201CFA
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2020 23:17:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388365AbgFST1c (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 19 Jun 2020 15:27:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388345AbgFST1c (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 19 Jun 2020 15:27:32 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C02FD21531;
-        Fri, 19 Jun 2020 19:27:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1592594852;
-        bh=rXkm2yZFs8wKNU/+Cn6r1srxIA98fiRUp/CywARoGo4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iPITOYSnR+qcpPVoMeBIx4vf1JMjRJjq+3vD6az1YTTlV5W5zzvHfjkTqndezCOOF
-         2dcwSPCk5E128kkAgjGKshlX3geLNdS9/fvHI3g8gkpF1rvPDlhY+9FNGKDaLQMsh0
-         DeGXEznxg9tVzygsMT9OBAYG41pinu0jBVSpnluQ=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D7352405FF; Fri, 19 Jun 2020 16:27:29 -0300 (-03)
-Date:   Fri, 19 Jun 2020 16:27:29 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
-        alexander.shishkin@linux.intel.com, arnd@arndb.de,
-        borntraeger@de.ibm.com, catalin.marinas@arm.com,
-        christian@brauner.io, cyphar@cyphar.com, dhowells@redhat.com,
-        ebiederm@xmission.com, fenghua.yu@intel.com, geert@linux-m68k.org,
-        gor@linux.ibm.com, ink@jurassic.park.msu.ru, jolsa@redhat.com,
-        linux@armlinux.org.uk, lkp@intel.com, mark.rutland@arm.com,
-        mattst88@gmail.com, minchan@kernel.org, mingo@redhat.com,
-        monstr@monstr.eu, namhyung@kernel.org, peterz@infradead.org,
-        rth@twiddle.net, sargun@sargun.me, sfr@canb.auug.org.au,
-        tony.luck@intel.com, will@kernel.org, akpm@linux-foundation.org,
-        alex.huangjianhui@huawei.com, zhongjubin@huawei.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        clang-built-linux@googlegroups.com, kbuild-all@lists.01.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v2] s390: fix build error for sys_call_table_emu
-Message-ID: <20200619192729.GA29309@kernel.org>
-References: <20200618141426.16884-1-nixiaoming@huawei.com>
- <20200619141717.GB9971@osiris>
+        id S1727115AbgFSVRG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 19 Jun 2020 17:17:06 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38222 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbgFSVRF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 19 Jun 2020 17:17:05 -0400
+Received: by mail-pj1-f68.google.com with SMTP id d6so4814960pjs.3;
+        Fri, 19 Jun 2020 14:17:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7hNihcV3mvm2VbgzMCb3VuZiHFSALZHgtjxranVJTmE=;
+        b=dFoRRUIOPhGwq71xQ3P5RaSFVt3bmwjhvl5AdFG+meSI/NEIzNPMMe/xEPhAxzdJ2r
+         d50+IrkTF9f1gGmcHySTy01RmU8QPumj3DOkYArg6zbHLPBcw8QAg2cFZul0l3Sfs5Ob
+         NVZGBZgPzPK/dF4mW9jtu+ycQkiChDdC242EIgLwTR5vM4A45huK/cVwNkPc7kfAs1FK
+         m7UJxPpQrCKNg5x8vWei+3cZ5f2S2K93IBHb8+03qBUtQ3soUjocdfODW8pK0tITf5Vj
+         D4165oNfL+4ZtFffGDbWOQc0n+3yUNv/uGpxRsf6guBFMPf8m7zetLKit9qzowIDS4L/
+         BPFw==
+X-Gm-Message-State: AOAM53268EVEXHpnR3d9xMFMIGRV9mClDCGDRBXanluYcF3KQrPbMdqW
+        AL+PA3LJMsLIrsDQrzB1QNQ=
+X-Google-Smtp-Source: ABdhPJzVFn2+ANNt35xVqck48K2jzOLKssbmFAqliq16/KCjcWBHQm/+K7WAIhdQVl6WxrZdgzhwhg==
+X-Received: by 2002:a17:90a:7a8f:: with SMTP id q15mr4751132pjf.116.1592601423167;
+        Fri, 19 Jun 2020 14:17:03 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id s188sm6551320pfb.118.2020.06.19.14.17.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jun 2020 14:17:01 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 0E5884063E; Fri, 19 Jun 2020 21:17:00 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 21:17:00 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] kernel: add a kernel_wait helper
+Message-ID: <20200619211700.GS11244@42.do-not-panic.com>
+References: <20200618144627.114057-1-hch@lst.de>
+ <20200618144627.114057-7-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200619141717.GB9971@osiris>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200618144627.114057-7-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Em Fri, Jun 19, 2020 at 04:17:17PM +0200, Heiko Carstens escreveu:
-> On Thu, Jun 18, 2020 at 10:14:26PM +0800, Xiaoming Ni wrote:
-> > Build error on s390:
-> > 	arch/s390/kernel/entry.o: in function `sys_call_table_emu':
-> > 	>> (.rodata+0x1288): undefined reference to `__s390_'
-> > 
-> > In commit ("All arch: remove system call sys_sysctl")
-> >  148  common	fdatasync		sys_fdatasync			sys_fdatasync
-> > -149  common	_sysctl			sys_sysctl			compat_sys_sysctl
-> > +149  common	_sysctl			sys_ni_syscall
-> >  150  common	mlock			sys_mlock			sys_mlock
-> > 
-> > After the patch is integrated, there is a format error in the generated
-> > arch/s390/include/generated/asm/syscall_table.h:
-> > 	SYSCALL(sys_fdatasync, sys_fdatasync)
-> > 	SYSCALL(sys_ni_syscall,) /* cause build error */
-> > 	SYSCALL(sys_mlock,sys_mlock)
-> > 
-> > According to the guidance of Heiko Carstens, use "-" to fill the empty system call
-> >  Similarly, modify tools/perf/arch/s390/entry/syscalls/syscall.tbl.
-> > 
-> > Fixes: ("All arch: remove system call sys_sysctl")
-> > Fixes: https://lore.kernel.org/linuxppc-dev/20200616030734.87257-1-nixiaoming@huawei.com/
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
-> > 
-> > changes in v2:
-> > 	use "-" to fill the empty system call
-> > 
-> > v1: https://lore.kernel.org/lkml/20200618110320.104013-1-nixiaoming@huawei.com/
-> > ---
-> >  arch/s390/kernel/syscalls/syscall.tbl           | 2 +-
-> >  tools/perf/arch/s390/entry/syscalls/syscall.tbl | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+On Thu, Jun 18, 2020 at 04:46:27PM +0200, Christoph Hellwig wrote:
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -1626,6 +1626,22 @@ long kernel_wait4(pid_t upid, int __user *stat_addr, int options,
+>  	return ret;
+>  }
+>  
+> +int kernel_wait(pid_t pid, int *stat)
+> +{
+> +	struct wait_opts wo = {
+> +		.wo_type	= PIDTYPE_PID,
+> +		.wo_pid		= find_get_pid(pid),
+> +		.wo_flags	= WEXITED,
+> +	};
+> +	int ret;
+> +
+> +	ret = do_wait(&wo);
+> +	if (ret > 0 && wo.wo_stat)
+> +		*stat = wo.wo_stat;
 
-I get just copies of that file when it gets out of sync, so I suppose
-the patch should be just for arch/s390/kernel/syscalls/syscall.tbl and
-processed by the s/390 maintainer?
+Since all we care about is WEXITED, that could be simplified
+to something like this:
 
-- Arnaldo
+if (ret > 0 && KWIFEXITED(wo.wo_stat)
+ 	*stat = KWEXITSTATUS(wo.wo_stat)
+
+Otherwise callers have to use W*() wrappers.
+
+> +	put_pid(wo.wo_pid);
+> +	return ret;
+> +}
+
+Then we don't get *any* in-kernel code dealing with the W*() crap.
+I just unwrapped this for the umh [0], given that otherwise we'd
+have to use KW*() callers elsewhere. Doing it upshot one level
+further would be even better.
+
+[0] https://lkml.kernel.org/r/20200610154923.27510-1-mcgrof@kernel.org              
+
+  Luis
