@@ -2,119 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13FF12008F7
-	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2020 14:49:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49421200B2E
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2020 16:18:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731398AbgFSMtK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 19 Jun 2020 08:49:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33453 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727926AbgFSMtK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 19 Jun 2020 08:49:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592570948;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=ttqcnZS6LIpSDY05g3rWgu299bv3ZouNWsthZvAW8xQ=;
-        b=PTifYSRR70+X1Wlfk9ajS9a9pX+FIm6jCRd1mSvCyD0MK0AoUGvwCNjdyO8+ZgWIBAnOUn
-        07uVyfkbTMhqMkDK0bg/wmIQ8salR+ioPR75YQnis2NV4/0eMJCov4rGUnlBKlcMNWsNBQ
-        2qR3hzO69LkjQULKA6YMVIJwlbQiB9o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-470-IzzxL71NOB6xAdz4_gnB_Q-1; Fri, 19 Jun 2020 08:49:05 -0400
-X-MC-Unique: IzzxL71NOB6xAdz4_gnB_Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8A5B184D141;
-        Fri, 19 Jun 2020 12:49:03 +0000 (UTC)
-Received: from [10.36.113.137] (ovpn-113-137.ams2.redhat.com [10.36.113.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A260260BF4;
-        Fri, 19 Jun 2020 12:49:01 +0000 (UTC)
-Subject: Re: [PATCH RFC 1/2] s390/zcore: traverse resources instead of
- memblocks
-To:     Philipp Rudo <prudo@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Kirill Smelkov <kirr@nexedi.com>,
-        Alexander Egorenkov <egorenar@linux.vnet.ibm.com>
-References: <20200417150151.17239-1-david@redhat.com>
- <20200417150151.17239-2-david@redhat.com> <20200610114523.GA5943@osiris>
- <20200619144723.01fc99e8@laptop2-ibm.local>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <8f37e793-dd55-0614-92b8-f33379a7fe63@redhat.com>
-Date:   Fri, 19 Jun 2020 14:49:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1732679AbgFSOSe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 19 Jun 2020 10:18:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27960 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726275AbgFSOSe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 19 Jun 2020 10:18:34 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05JE2FrA079813;
+        Fri, 19 Jun 2020 10:17:26 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31rthf0j9q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Jun 2020 10:17:26 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05JE3tnP094985;
+        Fri, 19 Jun 2020 10:17:26 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31rthf0j8e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Jun 2020 10:17:25 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05JEFwJr010398;
+        Fri, 19 Jun 2020 14:17:23 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04fra.de.ibm.com with ESMTP id 31r18v1342-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 Jun 2020 14:17:23 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05JEG2fY63635908
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jun 2020 14:16:02 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1CA3DA4054;
+        Fri, 19 Jun 2020 14:17:20 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE8B2A4062;
+        Fri, 19 Jun 2020 14:17:18 +0000 (GMT)
+Received: from osiris (unknown [9.171.84.209])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 19 Jun 2020 14:17:18 +0000 (GMT)
+Date:   Fri, 19 Jun 2020 16:17:17 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com, arnd@arndb.de,
+        borntraeger@de.ibm.com, catalin.marinas@arm.com,
+        christian@brauner.io, cyphar@cyphar.com, dhowells@redhat.com,
+        ebiederm@xmission.com, fenghua.yu@intel.com, geert@linux-m68k.org,
+        gor@linux.ibm.com, ink@jurassic.park.msu.ru, jolsa@redhat.com,
+        linux@armlinux.org.uk, lkp@intel.com, mark.rutland@arm.com,
+        mattst88@gmail.com, minchan@kernel.org, mingo@redhat.com,
+        monstr@monstr.eu, namhyung@kernel.org, peterz@infradead.org,
+        rth@twiddle.net, sargun@sargun.me, sfr@canb.auug.org.au,
+        tony.luck@intel.com, will@kernel.org, akpm@linux-foundation.org,
+        alex.huangjianhui@huawei.com, zhongjubin@huawei.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        clang-built-linux@googlegroups.com, kbuild-all@lists.01.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH v2] s390: fix build error for sys_call_table_emu
+Message-ID: <20200619141717.GB9971@osiris>
+References: <20200618141426.16884-1-nixiaoming@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200619144723.01fc99e8@laptop2-ibm.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200618141426.16884-1-nixiaoming@huawei.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-19_11:2020-06-19,2020-06-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ impostorscore=0 cotscore=-2147483648 bulkscore=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=771 suspectscore=0
+ malwarescore=0 mlxscore=0 priorityscore=1501 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006190101
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 19.06.20 14:47, Philipp Rudo wrote:
-> Hi David,
+On Thu, Jun 18, 2020 at 10:14:26PM +0800, Xiaoming Ni wrote:
+> Build error on s390:
+> 	arch/s390/kernel/entry.o: in function `sys_call_table_emu':
+> 	>> (.rodata+0x1288): undefined reference to `__s390_'
 > 
-> zcore/memmap is no longer needed and Alexander is preparing a patch to remove
-> it. You can drop this patch.
+> In commit ("All arch: remove system call sys_sysctl")
+>  148  common	fdatasync		sys_fdatasync			sys_fdatasync
+> -149  common	_sysctl			sys_sysctl			compat_sys_sysctl
+> +149  common	_sysctl			sys_ni_syscall
+>  150  common	mlock			sys_mlock			sys_mlock
+> 
+> After the patch is integrated, there is a format error in the generated
+> arch/s390/include/generated/asm/syscall_table.h:
+> 	SYSCALL(sys_fdatasync, sys_fdatasync)
+> 	SYSCALL(sys_ni_syscall,) /* cause build error */
+> 	SYSCALL(sys_mlock,sys_mlock)
+> 
+> According to the guidance of Heiko Carstens, use "-" to fill the empty system call
+>  Similarly, modify tools/perf/arch/s390/entry/syscalls/syscall.tbl.
+> 
+> Fixes: ("All arch: remove system call sys_sysctl")
+> Fixes: https://lore.kernel.org/linuxppc-dev/20200616030734.87257-1-nixiaoming@huawei.com/
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+> 
+> changes in v2:
+> 	use "-" to fill the empty system call
+> 
+> v1: https://lore.kernel.org/lkml/20200618110320.104013-1-nixiaoming@huawei.com/
+> ---
+>  arch/s390/kernel/syscalls/syscall.tbl           | 2 +-
+>  tools/perf/arch/s390/entry/syscalls/syscall.tbl | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 
-Awesome, once that's done, can you consider patch #2? Thanks!
-
--- 
-Thanks,
-
-David / dhildenb
-
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
