@@ -2,90 +2,160 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 755A62003E1
-	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2020 10:29:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B36FB2004DC
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2020 11:21:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731259AbgFSI3L (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 19 Jun 2020 04:29:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731367AbgFSI3D (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 19 Jun 2020 04:29:03 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AC9CC0613F0
-        for <linux-s390@vger.kernel.org>; Fri, 19 Jun 2020 01:29:01 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id d21so2984207lfb.6
-        for <linux-s390@vger.kernel.org>; Fri, 19 Jun 2020 01:29:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=irVvm75B8uOjhet4ds9NewlHhGnanjSr3qTRTZzIUE4=;
-        b=qkbi8YvZIpYdgXOhuLz+oLhk6FU5nre6FOh8jwCxVM9654uCe38mG3xi4sHqGzzDyG
-         SEH1hJrw2TFIChHUxX1ZXnbwARwg6RC5j0BV0+jMRPStvzbKMhHOWFkkmEsrWjqdX5F+
-         D1IOfQlW2zLQg/nVx9gJMOxi4uOERKvqBd1S1RhEt6EhjY5th0/tAvBfP2KAJAM96y7o
-         h72udRwv1GPKxwptl875dVONvJoltvXpQNW88Rr7UCqkXi2dwlS43kJ7lnlN+shZedPc
-         UEpFi+EUsizwMgSG5KrzWkYQzjXdopu2qfdbxfjTUi6dvlVTSJe8cWAu3gdUIqCShHxT
-         T2Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=irVvm75B8uOjhet4ds9NewlHhGnanjSr3qTRTZzIUE4=;
-        b=p56Q+OY+Q/Aw+BOPp8klgC7/3cCHq+SQis282SQS42ga5aJdQv5EYwviNTxo2IdSws
-         3NV8NDSzJuFznqJijFejWSKzZsLxwXA4NhIriE/08fnFdiEs+h4ElzlhP5pfv6hukWPm
-         /+aRpAwG4u9u5Mcy66wzsKkXtI8rhYv/NRTduIQzvhK9LTGYjl+P9ce1FKpSo1LaPWcS
-         sPhsMJhWL34V/Bz/zkgiQVvBi0Kv1V+L0Gv815yi4ltLuRztOPKlkY1T+9tn/p0ZvCjo
-         ga6xAjCZPYbeB6/UTSH9H1ApV+dpXz+fLMH2WaduCDwl7kkyYgDqtHDnH1adZHsx6CIP
-         zQRQ==
-X-Gm-Message-State: AOAM532goHWzhnKC44kCnve3f9G+e+jKtiorHuvbJurwnU3qiOtz27K+
-        JXlb4yCP1Otx67ZnWnJuxIRqEg==
-X-Google-Smtp-Source: ABdhPJxnSAk4hCfsyIu7N052ONa1UuRXTstPiF0JmLx3L/kM6WdrlnqV1xaj4A+uNl5wLop8yEYwoQ==
-X-Received: by 2002:ac2:5c49:: with SMTP id s9mr1327184lfp.90.1592555339610;
-        Fri, 19 Jun 2020 01:28:59 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:8c9:4beb:2ce8:f19d:33e5:571e? ([2a00:1fa0:8c9:4beb:2ce8:f19d:33e5:571e])
-        by smtp.gmail.com with ESMTPSA id a16sm1058721ljb.107.2020.06.19.01.28.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2020 01:28:58 -0700 (PDT)
-Subject: Re: [PATCH 3/6] exec: cleanup the count() function
-To:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200618144627.114057-1-hch@lst.de>
- <20200618144627.114057-4-hch@lst.de>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <04e7876b-a8f3-3f6e-939c-bb0764ece1ac@cogentembedded.com>
-Date:   Fri, 19 Jun 2020 11:28:44 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1728430AbgFSJVJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 19 Jun 2020 05:21:09 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38225 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728109AbgFSJVJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 19 Jun 2020 05:21:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592558467;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CSYuwtmT8b+8sMwO2HmTx/vO/pKshfycGSOo4nB9oQo=;
+        b=KiGa8w7JAfh5Ekn7maJSuwc6WUeeOE+A2FEZVjQTWzknOAsaLyxkJFbXKwlJGWDlSo+tzG
+        6HRlUpkNgcKhZFSG9W4Qh68goTSW9qNPmmfMjms6+vLIBIUDdBRq8afou9KAd5VhWCjMle
+        Zrhh2VS278g0aXkusuCwgby8O0w5Hjo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-292-UBAxIcEyPSmqjbxnv0juBg-1; Fri, 19 Jun 2020 05:21:03 -0400
+X-MC-Unique: UBAxIcEyPSmqjbxnv0juBg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 643A6107ACCD;
+        Fri, 19 Jun 2020 09:21:01 +0000 (UTC)
+Received: from gondolin (ovpn-112-224.ams2.redhat.com [10.36.112.224])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 45F8F1002382;
+        Fri, 19 Jun 2020 09:20:54 +0000 (UTC)
+Date:   Fri, 19 Jun 2020 11:20:51 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+Message-ID: <20200619112051.74babdb1.cohuck@redhat.com>
+In-Reply-To: <20200618002956.5f179de4.pasic@linux.ibm.com>
+References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
+        <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
+        <20200618002956.5f179de4.pasic@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200618144627.114057-4-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello!
+On Thu, 18 Jun 2020 00:29:56 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-On 18.06.2020 17:46, Christoph Hellwig wrote:
-
-> Remove the max argument as it is hard wired to MAX_ARG_STRINGS, and
-
-    Technically, argument is what's actually passed to a function, you're 
-removing a function parameter.
-
-> give the function a slightly less generic name.
+> On Wed, 17 Jun 2020 12:43:57 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-[...]
+> > An architecture protecting the guest memory against unauthorized host
+> > access may want to enforce VIRTIO I/O device protection through the
+> > use of VIRTIO_F_IOMMU_PLATFORM.
+> > 
+> > Let's give a chance to the architecture to accept or not devices
+> > without VIRTIO_F_IOMMU_PLATFORM.
+> >   
+> [..]
+> 
+> 
+> I'm still not really satisfied with your commit message, furthermore
+> I did some thinking about the abstraction you introduce here. I will
+> give a short analysis of that, but first things first. Your patch does
+> the job of preventing calamity, and the details can be changed any time,
+> thus: 
+> 
+> Acked-by: Halil Pasic <pasic@linux.ibm.com>
+> 
+> Regarding the interaction of architecture specific code with virtio core,
+> I believe we could have made the interface more generic.
+> 
+> One option is to introduce virtio_arch_finalize_features(), a hook that
+> could reject any feature that is inappropriate.
 
-MBR, Sergei
+s/any feature/any combination of features/
+
+This sounds like a good idea (for a later update).
+
+> 
+> Another option would be to find a common name for is_prot_virt_guest()
+> (arch/s390) sev_active() (arch/x86) and is_secure_guest() (arch/powerpc)
+> and use that instead of arch_needs_virtio_iommu_platform() and where-ever
+> appropriate. Currently we seem to want this info in driver code only for
+> virtio, but if the virtio driver has a legitimate need to know, other
+> drivers may as well have a legitimate need to know. For example if we
+> wanted to protect ourselves in ccw device drivers from somebody
+> setting up a vfio-ccw device and attach it to the prot-virt guest (AFAICT
+> we only lack guest enablement for this) such a function could be useful.
+
+I'm not really sure if we can find enough commonality between
+architectures, unless you propose to have a function for checking
+things like device memory only.
+
+> 
+> But since this can be rewritten any time, let's go with the option
+> people already agree with, instead of more discussion.
+
+Yes, there's nothing wrong with the patch as-is.
+
+Acked-by: Cornelia Huck <cohuck@redhat.com>
+
+Which tree should this go through? Virtio? s390?
+
+> 
+> Just another question. Do we want this backported? Do we need cc stable?
+
+It does change behaviour of virtio-ccw devices; but then, it only
+fences off configurations that would not have worked anyway.
+Distributions should probably pick this; but I do not consider it
+strictly a "fix" (more a mitigation for broken configurations), so I'm
+not sure whether stable applies.
+
+> [..]
+> 
+> 
+> >  int virtio_finalize_features(struct virtio_device *dev)
+> >  {
+> >  	int ret = dev->config->finalize_features(dev);
+> > @@ -179,6 +194,13 @@ int virtio_finalize_features(struct virtio_device *dev)
+> >  	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
+> >  		return 0;
+> >  
+> > +	if (arch_needs_virtio_iommu_platform(dev) &&
+> > +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
+> > +		dev_warn(&dev->dev,
+> > +			 "virtio: device must provide VIRTIO_F_IOMMU_PLATFORM\n");  
+> 
+> I'm not sure, divulging the current Linux name of this feature bit is a
+> good idea, but if everybody else is fine with this, I don't care that
+
+Not sure if that feature name will ever change, as it is exported in
+headers. At most, we might want to add the new ACCESS_PLATFORM define
+and keep the old one, but that would still mean some churn.
+
+> much. An alternative would be:
+> "virtio: device falsely claims to have full access to the memory,
+> aborting the device"
+
+"virtio: device does not work with limited memory access" ?
+
+But no issue with keeping the current message.
+
