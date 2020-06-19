@@ -2,108 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC727200240
-	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2020 08:57:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 755A62003E1
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2020 10:29:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729548AbgFSG5a (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 19 Jun 2020 02:57:30 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31686 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725778AbgFSG53 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 19 Jun 2020 02:57:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592549848;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Nqv5expqgPehOeHcou7l5fShS+bg6Ed7hQQmrDRcMPQ=;
-        b=eLMbdE6LgAs0WKOIvomYXLJyonjTOfPt8zGtVsrhUyQEkwUEhnpMfHQ0h1VxpSW2oQt3Hq
-        A02hZWi3yX/cQsuttM+ng4l0suBHJmAtjk9DdWS/14L1/p6oBHOYhokgojZZGw3AYGx2NP
-        eaJpGhCCo9BdsyBwJVTD4TM6oh3w/EU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-325-AU6ijzt0Om6Vt-PTSwQYhw-1; Fri, 19 Jun 2020 02:57:26 -0400
-X-MC-Unique: AU6ijzt0Om6Vt-PTSwQYhw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C34B1800D42;
-        Fri, 19 Jun 2020 06:57:25 +0000 (UTC)
-Received: from gondolin (ovpn-112-224.ams2.redhat.com [10.36.112.224])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6ED9960BF4;
-        Fri, 19 Jun 2020 06:57:21 +0000 (UTC)
-Date:   Fri, 19 Jun 2020 08:57:18 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v9 12/12] s390x: css: ssch/tsch with
- sense and interrupt
-Message-ID: <20200619085718.25964a0a.cohuck@redhat.com>
-In-Reply-To: <2383bdc0-caaf-9cb0-f4c4-ed57c1d3dfb1@linux.ibm.com>
-References: <1592213521-19390-1-git-send-email-pmorel@linux.ibm.com>
-        <1592213521-19390-13-git-send-email-pmorel@linux.ibm.com>
-        <20200617115442.036735c5.cohuck@redhat.com>
-        <2383bdc0-caaf-9cb0-f4c4-ed57c1d3dfb1@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1731259AbgFSI3L (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 19 Jun 2020 04:29:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731367AbgFSI3D (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 19 Jun 2020 04:29:03 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AC9CC0613F0
+        for <linux-s390@vger.kernel.org>; Fri, 19 Jun 2020 01:29:01 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id d21so2984207lfb.6
+        for <linux-s390@vger.kernel.org>; Fri, 19 Jun 2020 01:29:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=irVvm75B8uOjhet4ds9NewlHhGnanjSr3qTRTZzIUE4=;
+        b=qkbi8YvZIpYdgXOhuLz+oLhk6FU5nre6FOh8jwCxVM9654uCe38mG3xi4sHqGzzDyG
+         SEH1hJrw2TFIChHUxX1ZXnbwARwg6RC5j0BV0+jMRPStvzbKMhHOWFkkmEsrWjqdX5F+
+         D1IOfQlW2zLQg/nVx9gJMOxi4uOERKvqBd1S1RhEt6EhjY5th0/tAvBfP2KAJAM96y7o
+         h72udRwv1GPKxwptl875dVONvJoltvXpQNW88Rr7UCqkXi2dwlS43kJ7lnlN+shZedPc
+         UEpFi+EUsizwMgSG5KrzWkYQzjXdopu2qfdbxfjTUi6dvlVTSJe8cWAu3gdUIqCShHxT
+         T2Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=irVvm75B8uOjhet4ds9NewlHhGnanjSr3qTRTZzIUE4=;
+        b=p56Q+OY+Q/Aw+BOPp8klgC7/3cCHq+SQis282SQS42ga5aJdQv5EYwviNTxo2IdSws
+         3NV8NDSzJuFznqJijFejWSKzZsLxwXA4NhIriE/08fnFdiEs+h4ElzlhP5pfv6hukWPm
+         /+aRpAwG4u9u5Mcy66wzsKkXtI8rhYv/NRTduIQzvhK9LTGYjl+P9ce1FKpSo1LaPWcS
+         sPhsMJhWL34V/Bz/zkgiQVvBi0Kv1V+L0Gv815yi4ltLuRztOPKlkY1T+9tn/p0ZvCjo
+         ga6xAjCZPYbeB6/UTSH9H1ApV+dpXz+fLMH2WaduCDwl7kkyYgDqtHDnH1adZHsx6CIP
+         zQRQ==
+X-Gm-Message-State: AOAM532goHWzhnKC44kCnve3f9G+e+jKtiorHuvbJurwnU3qiOtz27K+
+        JXlb4yCP1Otx67ZnWnJuxIRqEg==
+X-Google-Smtp-Source: ABdhPJxnSAk4hCfsyIu7N052ONa1UuRXTstPiF0JmLx3L/kM6WdrlnqV1xaj4A+uNl5wLop8yEYwoQ==
+X-Received: by 2002:ac2:5c49:: with SMTP id s9mr1327184lfp.90.1592555339610;
+        Fri, 19 Jun 2020 01:28:59 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:8c9:4beb:2ce8:f19d:33e5:571e? ([2a00:1fa0:8c9:4beb:2ce8:f19d:33e5:571e])
+        by smtp.gmail.com with ESMTPSA id a16sm1058721ljb.107.2020.06.19.01.28.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jun 2020 01:28:58 -0700 (PDT)
+Subject: Re: [PATCH 3/6] exec: cleanup the count() function
+To:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200618144627.114057-1-hch@lst.de>
+ <20200618144627.114057-4-hch@lst.de>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <04e7876b-a8f3-3f6e-939c-bb0764ece1ac@cogentembedded.com>
+Date:   Fri, 19 Jun 2020 11:28:44 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200618144627.114057-4-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 17 Jun 2020 13:55:52 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+Hello!
 
-> On 2020-06-17 11:54, Cornelia Huck wrote:
-> > On Mon, 15 Jun 2020 11:32:01 +0200
-> > Pierre Morel <pmorel@linux.ibm.com> wrote:
+On 18.06.2020 17:46, Christoph Hellwig wrote:
 
-(...)
+> Remove the max argument as it is hard wired to MAX_ARG_STRINGS, and
 
-> >> +int start_subchannel(unsigned int sid, int code, void *data, int count,
-> >> +		     unsigned char flags)
-> >> +{
-> >> +	int cc;
-> >> +	struct ccw1 *ccw = &unique_ccw;  
-> > 
-> > Hm... it might better to call this function "start_single_ccw" or
-> > something like that.  
+    Technically, argument is what's actually passed to a function, you're 
+removing a function parameter.
+
+> give the function a slightly less generic name.
 > 
-> You are right.
-> I will rework this.
-> What about differentiating this badly named "start_subchannel()" into:
-> 
-> ccw_setup_ccw(ccw, data, cnt, flgs);
-> ccw_setup_orb(orb, ccw, flgs)
-> ccw_start_request(schid, orb);
-> 
-> would be much clearer I think.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+[...]
 
-Not sure about ccw_setup_ccw; might get a bit non-obvious if you're
-trying to build a chain.
-
-Let's see how this turns out.
-
-(...)
-
-> I will rework this.
-> 
-> - rework the start_subchannel()
-> - rework the read_len() if we ever need this
-
-I think checking the count after the request concluded is actually a
-good idea. In the future, we could also add a check that it matches the
-requested length for a request where SLI was not specified.
-
-> 
-> Also thinking to put the irq_io routine inside the library, it will be 
-> reused by other tests.
-
-Yes, that probably makes sense as well.
-
+MBR, Sergei
