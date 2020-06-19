@@ -2,128 +2,85 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46BE02014A4
-	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2020 18:14:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3A5B2018A2
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Jun 2020 19:01:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394395AbgFSQNm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 19 Jun 2020 12:13:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23186 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2394390AbgFSQNl (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 19 Jun 2020 12:13:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1592583219;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cHCFBr0H2Wj98J64LoxM3OjPsGeWNQz7WDWbAHsmGis=;
-        b=g31txkb7064DGT16E5DNXqbhZ4Y2JfKNHoTv8e5LP6DGROyASe4p36hcbBr61Z/ebRAtxd
-        b9JzAoXeSPHc6yz/HPoeKp1iVs6/iauucMIgl3T4vrlMg0OdHNmHI4PjWfkHQoiOPXqT2g
-        eLe2u030MckT4351jIiYiP2C8NSpepM=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-bUlaS6yUPtukcyozO98dBQ-1; Fri, 19 Jun 2020 12:13:38 -0400
-X-MC-Unique: bUlaS6yUPtukcyozO98dBQ-1
-Received: by mail-qv1-f70.google.com with SMTP id 59so7120963qvb.4
-        for <linux-s390@vger.kernel.org>; Fri, 19 Jun 2020 09:13:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cHCFBr0H2Wj98J64LoxM3OjPsGeWNQz7WDWbAHsmGis=;
-        b=oan5cpQO+Drcl3QgIJddDzcPelbNcvcPgS5hHpXFq+Wvu7fhIG/sj6WxmceaZx/Cn5
-         r2GPZVajB68EW8tnHe2OZ8vzZfJbYkEBT4fjJRN7DI/t2KUrIiozCXcHh/DlUkzVnryS
-         qXWcvhqjDNw1p7vAh4/qqBxM7rzyoQ6tiuiBLTl21c90fMMLQl9aqoKMREa1xU+Uv0q8
-         PqwJTaBPXEhVrc6+//Oc8zA+Fl48eMSkvtSp+ll8ULaRxtli/tSQ53ujG9LhKxxAN5vk
-         f5CC0JUnf93ApLG8Uf5vD+9G5tCpMYblqDVYQGLoybK9wPeul3vfPAvmzTdSgt1B8pMA
-         LGTg==
-X-Gm-Message-State: AOAM5320ED96CtQisGIyz12dhnjE23k2v2NUle79sUWiXxKvNOsUS95S
-        wUHhA7JQuGQtSmHhs5FZeINf5RDnR6B1DZCn84JsbKPiQ2NEz1sda+GE75R22Y1K0698k34jwu9
-        agoXx32SWqdt0XPYEcsk2kQ==
-X-Received: by 2002:ac8:4746:: with SMTP id k6mr4197646qtp.234.1592583217569;
-        Fri, 19 Jun 2020 09:13:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw8FxSE1nBWsTRVRNtg8kxaR64T2HjUjPlWnGOgZGa7/UjveZ5zpprBuiIcJe4cj3bpOnvD0g==
-X-Received: by 2002:ac8:4746:: with SMTP id k6mr4197618qtp.234.1592583217335;
-        Fri, 19 Jun 2020 09:13:37 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id r76sm6090318qka.30.2020.06.19.09.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jun 2020 09:13:36 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Peter Xu <peterx@redhat.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        id S2405725AbgFSQui (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 19 Jun 2020 12:50:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405838AbgFSQuh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 19 Jun 2020 12:50:37 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF4A4206B7;
+        Fri, 19 Jun 2020 16:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1592585436;
+        bh=8fLK+Pjpfcxokj4e/RXkF66iJ9dZAUaLX/pDyeawXhY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dWv0u1B2cwrZIR6QXdF5eKMnncRQydszuekOIZHLQYR2hOkxkIpgCLEgZfX8XmE9F
+         WaDNZiSrro7iqsDKv3ysZsAfltZdriad2K9OErAKFzA0wr3L6wO5Ao43NipY/r+K6b
+         3tofXaI5FmD7bbvEJ0RadaTTryL23qWpFml02x2s=
+Date:   Fri, 19 Jun 2020 11:56:00 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 18/26] mm/s390: Use general page fault accounting
-Date:   Fri, 19 Jun 2020 12:13:35 -0400
-Message-Id: <20200619161335.9664-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200619160538.8641-1-peterx@redhat.com>
-References: <20200619160538.8641-1-peterx@redhat.com>
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] s390/dasd: Use struct_size() helper
+Message-ID: <20200619165600.GA8668@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Use the general page fault accounting by passing regs into handle_mm_fault().
-It naturally solve the issue of multiple page fault accounting when page fault
-retry happened.
+Make use of the struct_size() helper instead of an open-coded version
+in order to avoid any potential type mistakes. Also, remove unnecessary
+variable _datasize_.
 
-CC: Heiko Carstens <heiko.carstens@de.ibm.com>
-CC: Vasily Gorbik <gor@linux.ibm.com>
-CC: Christian Borntraeger <borntraeger@de.ibm.com>
-CC: linux-s390@vger.kernel.org
-Signed-off-by: Peter Xu <peterx@redhat.com>
+This code was detected with the help of Coccinelle and, audited and
+fixed manually.
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- arch/s390/mm/fault.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+ drivers/s390/block/dasd_diag.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index ab6d7eedcfab..4d62ca7d3e09 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -479,7 +479,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
- 	 * make sure we exit gracefully rather than endlessly redo
- 	 * the fault.
- 	 */
--	fault = handle_mm_fault(vma, address, flags, NULL);
-+	fault = handle_mm_fault(vma, address, flags, regs);
- 	if (fault_signal_pending(fault, regs)) {
- 		fault = VM_FAULT_SIGNAL;
- 		if (flags & FAULT_FLAG_RETRY_NOWAIT)
-@@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
- 	if (unlikely(fault & VM_FAULT_ERROR))
- 		goto out_up;
+diff --git a/drivers/s390/block/dasd_diag.c b/drivers/s390/block/dasd_diag.c
+index facb588d09e4..7f53ba015300 100644
+--- a/drivers/s390/block/dasd_diag.c
++++ b/drivers/s390/block/dasd_diag.c
+@@ -506,7 +506,7 @@ static struct dasd_ccw_req *dasd_diag_build_cp(struct dasd_device *memdev,
+ 	struct req_iterator iter;
+ 	struct bio_vec bv;
+ 	char *dst;
+-	unsigned int count, datasize;
++	unsigned int count;
+ 	sector_t recid, first_rec, last_rec;
+ 	unsigned int blksize, off;
+ 	unsigned char rw_cmd;
+@@ -534,10 +534,8 @@ static struct dasd_ccw_req *dasd_diag_build_cp(struct dasd_device *memdev,
+ 	if (count != last_rec - first_rec + 1)
+ 		return ERR_PTR(-EINVAL);
+ 	/* Build the request */
+-	datasize = sizeof(struct dasd_diag_req) +
+-		count*sizeof(struct dasd_diag_bio);
+-	cqr = dasd_smalloc_request(DASD_DIAG_MAGIC, 0, datasize, memdev,
+-				   blk_mq_rq_to_pdu(req));
++	cqr = dasd_smalloc_request(DASD_DIAG_MAGIC, 0, struct_size(dreq, bio, count),
++				   memdev, blk_mq_rq_to_pdu(req));
+ 	if (IS_ERR(cqr))
+ 		return cqr;
  
--	/*
--	 * Major/minor page fault accounting is only done on the
--	 * initial attempt. If we go through a retry, it is extremely
--	 * likely that the page will be found in page cache at that point.
--	 */
- 	if (flags & FAULT_FLAG_ALLOW_RETRY) {
--		if (fault & VM_FAULT_MAJOR) {
--			tsk->maj_flt++;
--			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
--				      regs, address);
--		} else {
--			tsk->min_flt++;
--			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
--				      regs, address);
--		}
- 		if (fault & VM_FAULT_RETRY) {
- 			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
- 			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
 -- 
-2.26.2
+2.27.0
 
