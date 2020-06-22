@@ -2,65 +2,177 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77FE72038DC
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2020 16:14:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8156C2039FC
+	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2020 16:51:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbgFVON7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 22 Jun 2020 10:13:59 -0400
-Received: from sonic304-9.consmr.mail.bf2.yahoo.com ([74.6.128.32]:42049 "EHLO
-        sonic304-9.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728947AbgFVON7 (ORCPT
+        id S1729180AbgFVOvB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 22 Jun 2020 10:51:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16080 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729128AbgFVOvA (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 22 Jun 2020 10:13:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1592835237; bh=hhJkLx/4j+3AMrcFI1tsepIVGPMdgD+81F+rMmg13zA=; h=Date:From:Reply-To:Subject:References:From:Subject; b=Q+wraoyGhg7Ybp+J2jEWThp/aT64GSYqyCdktTtwry/gbQWySFEmrm47uMhsXUKXi+v6ov8dvzMThJUXEAc7UJoJRLK4HvXn99zcsBpRq5smxRh/t1V0adFOkcE0GSF2JMy9e+Iq5OQlFfe7EkYa4FIAoc5+hhXUF0xYxMnddfloTAuixzGXMS/V/zF/iBrA8Iw/d3P8er33u0f0TmPZTri30jbyWE4UK4p8iL2Px1Us4Fh+/1yfvPUMkQAin95A8CwkbOQqTSBoVL8o6/XqJ6ulkmaxbW6vFejcJycHEoFN4AzDwwKCBmq+tMVOaMxGDHa12Bz/y+VsUJUjoBHE1g==
-X-YMail-OSG: S22VNukVM1kIrI3JX64Il7YZTqOc4VcrCMe.TUFG9uydVMIk5V.RFL_lgCpAkbt
- lqmbaABVj3WSgHfjTaJ0LrnQWUr6urEAieL4YKumzW0CRuCfSNxiBbryRTo1QebtOZWd_CIifNLL
- XWp9x1X1FUV6TXgl0a.tzD9JyJaWtDjSYrsPC9vqHmtOyqtSDehDzITzR0c.d7rrfJN2.gssEJv3
- RQiICY9kR.P6GdVwqVSHTQdDB5Li_ji7KBQrEaM7QN.0nQ58VY40gTHO2He3cMzP0F66uI.qcEX0
- n35Xx2uqwFz.HKSh5QnebESc.i67nrPL3r5Fq73hJBiuXwwPGiVeFjr.UHkEMj7foTESBH0SXYFz
- GkSgI979ChuvAh9XveMR.QENqUxZH594.J2Ofwvs9g7YttuhHdhKV0JzwmJFpQ0G5yW7ioF5kVR6
- yF0.spENgpbmNz8I5fjXLcSCGQk8IP.ilL_z13mCby6g2lXtnMj1H29ErXduN0VBJmjO4zO5M_3p
- ZogN3hpHucxwK7LaDADl3Ynco9sdAwxvDMAcz2uzlADI8kR.nhI9XCg7usfTAfUYNU.oiaEvTPp7
- X.07S9fc1OVKBUYBZmYIlxZXTFKaoLH9CJEBvSJbsz.44hyBUw0JI3Lr61RYNb3G57sJbOOlRWuv
- ImTpqsjkOhwzdIIaq35RiQ9UPV.OP.RRaDRmAIaf4QQ_EePKgGplUrFNgCsW3UTR50N5X0QMRvC.
- InZvQ5Yi80FqNmMTR2RjzZVdHNH8cLcz_qD56jpWCKkVYUjy81M7ZJo0_ka.Q7XzsEduJKP9IcHl
- qlQ7OWwEJx_yo34M4LGa.fzmCW.SAXQgbu4HhSMmVaDjpiRaSvzZ36l3m4vulkuByfBv8jftYUDi
- bthBA59QpXLcTvje3.xqYrTQ7j6ppUAp3xpSR8umfGhOG81fDMJukhEYcVkLQ6jsoY2KQ72MvvIC
- FJM5wHZFCaMKi9zRex7Xcnou30s8shG3eSvGMvdR7uIRAvblldQuvwuK1PZSIfvUj.1EBxgZ7FH6
- mLFlcFKfkcHbs_reEkuQXVineySri3YShASlpFKIQVq.xBODU8r6CnRt6_T5rScG77bR_oP7o0bX
- nVhRWonD9AF6gpSRU6Xj6GrEv218c8rLCBXlqvEOQdjdXw9IU4fT4HSlYBPdz9Y6Plx08qHLJVDy
- 29aEpgzkagkfWGD7h6EKtfJO.rRSF9Wva.EBPQP6yCdO1lDGwXeLfO5QBB8X0kbabdE_bZC6kj5.
- SFUuHvXr0svdR0Br8gRXA53WVqqWR4P69s562fRs95NuoMhbMWABbaWOobkD3xwmwy.aJIYgx_uc
- OQreh1UrVYuL.fFAHfjarc8Ex.5CCnjwyiby4gf6A73W7pA--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.bf2.yahoo.com with HTTP; Mon, 22 Jun 2020 14:13:57 +0000
-Date:   Mon, 22 Jun 2020 14:13:56 +0000 (UTC)
-From:   MRS VERONIC WILLIAMS <veronicwilliams70@outlook.fr>
-Reply-To: mrsverowlliams@outlook.com
-Message-ID: <1077682016.1269417.1592835236319@mail.yahoo.com>
-Subject: THIS FUND DONATION IS FOR CHARITY NEEDS
+        Mon, 22 Jun 2020 10:51:00 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MEWaWr188097;
+        Mon, 22 Jun 2020 10:51:00 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31sk2rbjc0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jun 2020 10:50:59 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05MEWbXS188142;
+        Mon, 22 Jun 2020 10:50:51 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31sk2rbj9c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jun 2020 10:50:50 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05MEeKc2003140;
+        Mon, 22 Jun 2020 14:50:45 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 31sa37ugwq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jun 2020 14:50:45 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05MEogxO37093470
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jun 2020 14:50:42 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9380711C05C;
+        Mon, 22 Jun 2020 14:50:42 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1F5A011C04A;
+        Mon, 22 Jun 2020 14:50:42 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.75.158])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 22 Jun 2020 14:50:42 +0000 (GMT)
+Subject: Re: [PATCH v8 2/2] s390/kvm: diagnose 0x318 sync and reset
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Collin Walling <walling@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        pbonzini@redhat.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, thuth@redhat.com
+References: <20200618222222.23175-1-walling@linux.ibm.com>
+ <20200618222222.23175-3-walling@linux.ibm.com>
+ <20200622122456.781492a8.cohuck@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <43967a50-a69c-face-805d-7cc935d3f230@de.ibm.com>
+Date:   Mon, 22 Jun 2020 16:50:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <1077682016.1269417.1592835236319.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16138 YMailNodin Mozilla/5.0 (Windows NT 6.1; rv:77.0) Gecko/20100101 Firefox/77.0
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200622122456.781492a8.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-22_08:2020-06-22,2020-06-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0
+ cotscore=-2147483648 mlxscore=0 priorityscore=1501 malwarescore=0
+ adultscore=0 spamscore=0 phishscore=0 impostorscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006220111
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-MY WARM GREETINGS,
 
-I AM MRS. VERONICA  WILLIAMS , I DECIDED TO DONATE WHAT I HAVE TO YOU FOR INVESTMENT TOWARDS THE GOOD WORK OF CHARITY ORGANIZATION, AND ALSO TO HELP THE MOTHERLESS AND THE LESS PRIVILEGED ONES AND TO CARRY OUT A CHARITABLE WORKS IN YOUR COUNTRY AND AROUND THE WORLD ON MY BEHALF.
 
-I AM DIAGNOSING OF THROAT CANCER, HOSPITALIZE FOR GOOD 2 YEARS AND SOME MONTHS NOW AND QUITE OBVIOUS THAT I HAVE FEW DAYS TO LIVE, AND I AM A WIDOW NO CHILD; I DECIDED TO WILL/DONATE THE SUM OF $5.8 MILLION PRIVILEGE AND ALSO FORTH ASSISTANCE OF THE WIDOWS. AT THE MOMENT I CANNOT TAKE ANY TELEPHONE CALLS RIGHT NOW DUE TO THE FACT THAT MY RELATIVES (THAT HAVE SQUANDERED THE FUNDS FOR THIS PURPOSE BEFORE) ARE AROUND ME AND MY HEALTH STATUS ALSO. I HAVE ADJUSTED MY WILL AND MY LAWYER IS AWARE.
+On 22.06.20 12:24, Cornelia Huck wrote:
+> On Thu, 18 Jun 2020 18:22:22 -0400
+> Collin Walling <walling@linux.ibm.com> wrote:
+> 
+>> DIAGNOSE 0x318 (diag318) sets information regarding the environment
+>> the VM is running in (Linux, z/VM, etc) and is observed via
+>> firmware/service events.
+>>
+>> This is a privileged s390x instruction that must be intercepted by
+>> SIE. Userspace handles the instruction as well as migration. Data
+>> is communicated via VCPU register synchronization.
+>>
+>> The Control Program Name Code (CPNC) is stored in the SIE block. The
+>> CPNC along with the Control Program Version Code (CPVC) are stored
+>> in the kvm_vcpu_arch struct.
+>>
+>> The CPNC is shadowed/unshadowed in VSIE.
+>>
+>> This data is reset on load normal and clear resets.
+>>
+>> Signed-off-by: Collin Walling <walling@linux.ibm.com>
+>> ---
+>>  arch/s390/include/asm/kvm_host.h |  4 +++-
+>>  arch/s390/include/uapi/asm/kvm.h |  5 ++++-
+>>  arch/s390/kvm/kvm-s390.c         | 11 ++++++++++-
+>>  arch/s390/kvm/vsie.c             |  3 +++
+>>  include/uapi/linux/kvm.h         |  1 +
+>>  5 files changed, 21 insertions(+), 3 deletions(-)
+>>
+> 
+> (...)
+> 
+>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+>> index 4fdf30316582..35cdb4307904 100644
+>> --- a/include/uapi/linux/kvm.h
+>> +++ b/include/uapi/linux/kvm.h
+>> @@ -1031,6 +1031,7 @@ struct kvm_ppc_resize_hpt {
+>>  #define KVM_CAP_PPC_SECURE_GUEST 181
+>>  #define KVM_CAP_HALT_POLL 182
+>>  #define KVM_CAP_ASYNC_PF_INT 183
+>> +#define KVM_CAP_S390_DIAG318 184
+> 
+> Do we strictly need this new cap, or would checking against the sync
+> regs capabilities be enough?
 
-I HAVE WILLED THOSE PROPERTIES TO YOU BY QUOTING MY PERSONAL FILE ROUTING AND ACCOUNT INFORMATION. AND I HAVE ALSO NOTIFIED THE BANK THAT I AM WILLING THAT PROPERTIES TO YOU FOR A GOOD, EFFECTIVE AND PRUDENT WORK. IT IS RIGHT TO SAY THAT I HAVE BEEN DIRECTED TO DO THIS BY GOD. I WILL BE GOING IN FOR A SURGERY SOON AND I WANT TO MAKE SURE THAT I MAKE THIS DONATION BEFORE UNDERGOING THIS SURGERY.
+We could check the sync_regs valid field to decide about the sync. We do
+that for ETOKEN as well and QEMU also uses it in handle_diag_318.
 
-I WILL NEED YOUR SUPPORT TO MAKE THIS DREAM COME THROUGH, COULD YOU LET ME KNOW YOUR INTEREST TO ENABLE ME GIVE YOU FURTHER INFORMATION.
-
-AND I HEREBY ADVICE TO CONTACT ME BY THIS EMAIL ADDRESS.
-
-WAITING YOUR REPLY
-MRS. VERONICA  WILLIAMS 
-
+I think what this is used for is actually to tell the QEMU CPU model
+if this is there. And for that the sync_reg validity seems wrong. So better
+keep the CAP?
