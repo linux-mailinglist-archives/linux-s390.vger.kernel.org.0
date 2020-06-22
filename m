@@ -2,57 +2,57 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A9DF2032F5
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2020 11:09:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE497203376
+	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2020 11:33:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgFVJJk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 22 Jun 2020 05:09:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28152 "EHLO
+        id S1727048AbgFVJdh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 22 Jun 2020 05:33:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61754 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725928AbgFVJJh (ORCPT
+        by vger.kernel.org with ESMTP id S1726982AbgFVJdh (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 22 Jun 2020 05:09:37 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05M92LrL091467;
-        Mon, 22 Jun 2020 05:09:36 -0400
+        Mon, 22 Jun 2020 05:33:37 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05M9Wbjm048063;
+        Mon, 22 Jun 2020 05:33:35 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31sqynebk6-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31sk2r2um1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 05:09:36 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05M92P6W091918;
-        Mon, 22 Jun 2020 05:09:36 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31sqynebj3-1
+        Mon, 22 Jun 2020 05:33:34 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05M9X0RI048847;
+        Mon, 22 Jun 2020 05:33:33 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31sk2r2uhb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 05:09:36 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05M95Gtq000486;
-        Mon, 22 Jun 2020 09:09:33 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma02fra.de.ibm.com with ESMTP id 31sa38173a-1
+        Mon, 22 Jun 2020 05:33:33 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05M9Jvje032098;
+        Mon, 22 Jun 2020 09:33:27 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma01fra.de.ibm.com with ESMTP id 31sa3819vk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 09:09:33 +0000
+        Mon, 22 Jun 2020 09:33:27 +0000
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05M99VNe8257890
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05M9W63B62062956
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 09:09:31 GMT
+        Mon, 22 Jun 2020 09:32:06 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 492A64C05A;
-        Mon, 22 Jun 2020 09:09:31 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 1BE7F4C040;
+        Mon, 22 Jun 2020 09:33:25 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D79664C04A;
-        Mon, 22 Jun 2020 09:09:30 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id A2A134C058;
+        Mon, 22 Jun 2020 09:33:24 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.145.8.171])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 22 Jun 2020 09:09:30 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v9 06/12] s390x: clock and delays
- caluculations
+        Mon, 22 Jun 2020 09:33:24 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v9 08/12] s390x: retrieve decimal and
+ hexadecimal kernel parameters
 To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
-        cohuck@redhat.com
+        cohuck@redhat.com, Andrew Jones <drjones@redhat.com>
 References: <1592213521-19390-1-git-send-email-pmorel@linux.ibm.com>
- <1592213521-19390-7-git-send-email-pmorel@linux.ibm.com>
+ <1592213521-19390-9-git-send-email-pmorel@linux.ibm.com>
 From:   Janosch Frank <frankja@linux.ibm.com>
 Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  mQINBFubpD4BEADX0uhkRhkj2AVn7kI4IuPY3A8xKat0ihuPDXbynUC77mNox7yvK3X5QBO6
@@ -96,136 +96,196 @@ Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
  Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
  phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
-Message-ID: <7659047a-a0f9-b959-c286-b150477d15ab@linux.ibm.com>
-Date:   Mon, 22 Jun 2020 11:09:29 +0200
+Message-ID: <a86a71c7-8c5e-7216-0a74-7bdc36355c02@linux.ibm.com>
+Date:   Mon, 22 Jun 2020 11:33:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <1592213521-19390-7-git-send-email-pmorel@linux.ibm.com>
+In-Reply-To: <1592213521-19390-9-git-send-email-pmorel@linux.ibm.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="rWj6qfHjn1QKv1PMOF07HRRk9NA3lH7eX"
+ boundary="x4c5rWxOoMlca6A7C8cqBNKUamy9aC3dC"
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-22_02:2020-06-22,2020-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- mlxscore=0 suspectscore=0 spamscore=0 cotscore=-2147483648
- lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 bulkscore=0
- clxscore=1015 phishscore=0 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006220065
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0
+ cotscore=-2147483648 mlxscore=0 priorityscore=1501 malwarescore=0
+ adultscore=0 spamscore=0 phishscore=0 impostorscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006220069
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---rWj6qfHjn1QKv1PMOF07HRRk9NA3lH7eX
-Content-Type: multipart/mixed; boundary="eMFW8VtGtyjG1OW2PJx919qRaN2UMEjNH"
+--x4c5rWxOoMlca6A7C8cqBNKUamy9aC3dC
+Content-Type: multipart/mixed; boundary="txW6Zx0vTgWkScy27Jc5dohT3vRniO6r5"
 
---eMFW8VtGtyjG1OW2PJx919qRaN2UMEjNH
+--txW6Zx0vTgWkScy27Jc5dohT3vRniO6r5
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
 On 6/15/20 11:31 AM, Pierre Morel wrote:
-> The hardware gives us a good definition of the microsecond,
-> let's keep this information and let the routine accessing
-> the hardware keep all the information and return microseconds.
->=20
-> Calculate delays in microseconds and take care about wrapping
-> around zero.
->=20
-> Define values with macros and use inlines to keep the
-> milliseconds interface.
+> We often need to retrieve hexadecimal kernel parameters.
+> Let's implement a shared utility to do it.
+
+Often?
+
+My main problem with this patch is that it doesn't belong into the s390
+library. atol() is already in string.c so htol() can be next to it.
+
+util.c already has parse_keyval() so you should be able to extend it a
+bit for hex values and add a function below that goes through argv[].
+
+CCing Andrew as he wrote most of the common library
+
 >=20
 > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-
-Small nit below.
-
-
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-
 > ---
->  lib/s390x/asm/time.h | 29 +++++++++++++++++++++++++++--
->  1 file changed, 27 insertions(+), 2 deletions(-)
+>  lib/s390x/kernel-args.c | 60 +++++++++++++++++++++++++++++++++++++++++=
+
+>  lib/s390x/kernel-args.h | 18 +++++++++++++
+>  s390x/Makefile          |  1 +
+>  3 files changed, 79 insertions(+)
+>  create mode 100644 lib/s390x/kernel-args.c
+>  create mode 100644 lib/s390x/kernel-args.h
 >=20
-> diff --git a/lib/s390x/asm/time.h b/lib/s390x/asm/time.h
-> index 1791380..7f1d891 100644
-> --- a/lib/s390x/asm/time.h
-> +++ b/lib/s390x/asm/time.h
-> @@ -13,14 +13,39 @@
->  #ifndef ASM_S390X_TIME_H
->  #define ASM_S390X_TIME_H
-> =20
-> -static inline uint64_t get_clock_ms(void)
-> +#define STCK_SHIFT_US	(63 - 51)
-> +#define STCK_MAX	((1UL << 52) - 1)
+> diff --git a/lib/s390x/kernel-args.c b/lib/s390x/kernel-args.c
+> new file mode 100644
+> index 0000000..2d3b2c2
+> --- /dev/null
+> +++ b/lib/s390x/kernel-args.c
+> @@ -0,0 +1,60 @@
+> +/*
+> + * Retrieving kernel arguments
+> + *
+> + * Copyright (c) 2020 IBM Corp
+> + *
+> + * Authors:
+> + *  Pierre Morel <pmorel@linux.ibm.com>
+> + *
+> + * This code is free software; you can redistribute it and/or modify i=
+t
+> + * under the terms of the GNU General Public License version 2.
+> + */
 > +
-> +static inline uint64_t get_clock_us(void)
->  {
->  	uint64_t clk;
-> =20
->  	asm volatile(" stck %0 " : : "Q"(clk) : "memory");
-> =20
->  	/* Bit 51 is incrememented each microsecond */
-> -	return (clk >> (63 - 51)) / 1000;
-> +	return clk >> STCK_SHIFT_US;
+> +#include <libcflat.h>
+> +#include <string.h>
+> +#include <asm/arch_def.h>
+> +#include <kernel-args.h>
+> +
+> +static const char *hex_digit =3D "0123456789abcdef";
+> +
+> +static unsigned long htol(char *s)
+> +{
+> +	unsigned long v =3D 0, shift =3D 0, value =3D 0;
+> +	int i, digit, len =3D strlen(s);
+> +
+> +	for (shift =3D 0, i =3D len - 1; i >=3D 0; i--, shift +=3D 4) {
+> +		digit =3D s[i] | 0x20;	/* Set lowercase */
+> +		if (!strchr(hex_digit, digit))
+> +			return 0;	/* this is not a digit ! */
+> +
+> +		if (digit <=3D '9')
+> +			v =3D digit - '0';
+> +		else
+> +			v =3D digit - 'a' + 10;
+> +		value +=3D (v << shift);
+> +	}
+> +
+> +	return value;
 > +}
 > +
-> +static inline void udelay(unsigned long us)
+> +int kernel_arg(int argc, char *argv[], const char *str, unsigned long =
+*val)
 > +{
-> +	unsigned long startclk =3D get_clock_us();
-> +	unsigned long c;
+> +	int i, ret;
+> +	char *p, *q;
 > +
-> +	do {
-> +		c =3D get_clock_us();
-> +		if (c < startclk)
-> +			c +=3D STCK_MAX;
-> +	} while (c < startclk + us);
+> +	for (i =3D 0; i < argc; i++) {
+> +		ret =3D strncmp(argv[i], str, strlen(str));
+> +		if (ret)
+> +			continue;
+> +		p =3D strchr(argv[i], '=3D');
+> +		if (!p)
+> +			return -1;
+> +		q =3D strchr(p, 'x');
+> +		if (!q)
+> +			*val =3D atol(p + 1);
+> +		else
+> +			*val =3D htol(q + 1);
+> +		return 0;
+> +	}
+> +	return -2;
 > +}
+> diff --git a/lib/s390x/kernel-args.h b/lib/s390x/kernel-args.h
+> new file mode 100644
+> index 0000000..a88e34e
+> --- /dev/null
+> +++ b/lib/s390x/kernel-args.h
+> @@ -0,0 +1,18 @@
+> +/*
+> + * Kernel argument
+> + *
+> + * Copyright (c) 2020 IBM Corp
+> + *
+> + * Authors:
+> + *  Pierre Morel <pmorel@linux.ibm.com>
+> + *
+> + * This code is free software; you can redistribute it and/or modify i=
+t
+> + * under the terms of the GNU General Public License version 2.
+> + */
 > +
-> +static inline void mdelay(unsigned long ms)
-> +{
-> +	udelay(ms * 1000);
-> +}
+> +#ifndef KERNEL_ARGS_H
+> +#define KERNEL_ARGS_H
 > +
-> +static inline uint64_t get_clock_ms(void)
-> +{
-> +	return get_clock_us() / 1000;
->  }
-
-Why don't you put that below to the get_clock_us()?
-
+> +int kernel_arg(int argc, char *argv[], const char *str, unsigned long =
+*val);
+> +
+> +#endif
+> diff --git a/s390x/Makefile b/s390x/Makefile
+> index ddb4b48..47a94cc 100644
+> --- a/s390x/Makefile
+> +++ b/s390x/Makefile
+> @@ -51,6 +51,7 @@ cflatobjs +=3D lib/s390x/sclp-console.o
+>  cflatobjs +=3D lib/s390x/interrupt.o
+>  cflatobjs +=3D lib/s390x/mmu.o
+>  cflatobjs +=3D lib/s390x/smp.o
+> +cflatobjs +=3D lib/s390x/kernel-args.o
 > =20
->  #endif
+>  OBJDIRS +=3D lib/s390x
+> =20
 >=20
 
 
 
---eMFW8VtGtyjG1OW2PJx919qRaN2UMEjNH--
+--txW6Zx0vTgWkScy27Jc5dohT3vRniO6r5--
 
---rWj6qfHjn1QKv1PMOF07HRRk9NA3lH7eX
+--x4c5rWxOoMlca6A7C8cqBNKUamy9aC3dC
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl7wdUoACgkQ41TmuOI4
-ufgcwhAA14vAWKiDcnMIFzAyT1EaL41KAoWwEWpUvwg4+3quGjUDKDw69WHFjiie
-PKjD+Zir+NT+/7KAVri7uvVWCz20lR4hRhh/9F5/rTXeDuLuaxNlI3Sb4jujhmTC
-k9mvAg88/tAajSBChjacHHllEl95sXczi0Woa8lykUKiQFhJLnvbngwMcHLhpzuH
-07oEDPX/DIw2pKvzFgTyZKDGJtYHvL8QpIKoiGVLE7a7H+aXYU0u0Gol+vmqipkl
-GgaPzfPQBhcsYsO7fiAap8WCUGX075ZtIBtN9Spg+qvuvI5lSUFNvcjowHPGAUJS
-f0AL41Rtm1pn4GLyckgxMNt5Rv3MO/NZ/+tNv2vhTVha3tD9tPCWBk7LkUlOymuI
-y5gxr6qjylLy+lQgkcAGENofmj78b3kAP4a4qo4gQT2MfPf/HXTqnG7TmLguUJzD
-jPVqIiC0HjXNqwprJFKHevwBsNR5Q7w0WY+qQxRz9INJaI1xblZq7GRyPiHx7WnD
-IB97Pg4PAgbze54KZ6ky8zbdpmKW2+8Xl/HY5ZjIfTtna7nILQ3XVrHmYjGKJaqV
-OKkEE8rBuvnimKT3BBH5qYjtGYgnvskTHO6CDNrsR1Dau7PTEjxoFvmm3hQqeWs/
-03dAtECIe5AsQlGwjHmq8RBE+dRQSdkSjRT+R0DcsnIUnnG64ZI=
-=6t/0
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl7weuQACgkQ41TmuOI4
+ufjZWA/+Ikh7yYITvg5lGGijgc1Q062oYsmOshLASfOdbVOR1P80GpU7aZolt/GL
+ZvORUl2QpC67DKzA3l6k7Dn7a/tbF7bORchvhOQ9d448eYfXsr4tvFSdq+RTFMcb
+oAQobUKNIDjcAtkAaYN87TCSfeEx1WDIgNbkChA83m9VOAJljfyi4WWJv24xS60K
+2VHbSc9FpqKsAFqhfP1Ygw+mBgSr2GhJ3lZ6RzsJAQVAo5um5k0enYcEOglKZXrW
++CulEAE8QShEboaXEY2S2sPZL3+UKbRbXRt56VCLUM8IQNliqTvQjsK6bFqulhNy
+fBB8BvGaWDdQu+uM3t/mCHKrqfKdbbjKgQHa9FmOOjlWD8qe8+EwP8/BlZCzoWaO
+D7juVbdVKMMp7PSQWHTROV+tAjy7hts1PARF/v5P0pyQIaOoumADZBYLlfwNr9ug
+ZjI9FwF4/FOKJYkvD3hFrZyz1HDzxt0K+idRdsF98isUMZerGWbjy9huOyeCEEXg
+jUTbr0OFQL3khsNYYPKJgv8L+mdwRZQhbN720rgyPNjPayjHYu6HqaU6zCIxjh3S
+iiPbS75KoTIO+G/SdW/NJB5HjgAOEwfnSvxbgSNJrceKjkLLhPDzRpQDbq165U4Q
+J6pGdldRbjQaNZ1RzrJI6hpjh0GklfahFDhQZmkMqOMRm1fkINY=
+=iohs
 -----END PGP SIGNATURE-----
 
---rWj6qfHjn1QKv1PMOF07HRRk9NA3lH7eX--
+--x4c5rWxOoMlca6A7C8cqBNKUamy9aC3dC--
 
