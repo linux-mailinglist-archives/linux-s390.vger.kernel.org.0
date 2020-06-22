@@ -2,230 +2,59 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AE3C203B63
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2020 17:46:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2BE4203BCD
+	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2020 18:02:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbgFVPq6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 22 Jun 2020 11:46:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36938 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729484AbgFVPq5 (ORCPT
+        id S1729807AbgFVQC1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 22 Jun 2020 12:02:27 -0400
+Received: from sonic302-21.consmr.mail.ne1.yahoo.com ([66.163.186.147]:34990
+        "EHLO sonic302-21.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729789AbgFVQCX (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:46:57 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MFWOTd001771;
-        Mon, 22 Jun 2020 11:46:55 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31sj0c15jt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 11:46:55 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05MFWveF004790;
-        Mon, 22 Jun 2020 11:46:54 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31sj0c15hk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 11:46:54 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05MFa6aY002812;
-        Mon, 22 Jun 2020 15:46:51 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma05wdc.us.ibm.com with ESMTP id 31sa38gnjf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Jun 2020 15:46:51 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05MFkk9027132214
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jun 2020 15:46:46 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4815913604F;
-        Mon, 22 Jun 2020 15:46:48 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C947136051;
-        Mon, 22 Jun 2020 15:46:47 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.85.169.243])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 22 Jun 2020 15:46:47 +0000 (GMT)
-From:   Collin Walling <walling@linux.ibm.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
-Cc:     pbonzini@redhat.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com, thuth@redhat.com
-Subject: [PATCH v9 2/2] s390/kvm: diagnose 0x318 sync and reset
-Date:   Mon, 22 Jun 2020 11:46:36 -0400
-Message-Id: <20200622154636.5499-3-walling@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200622154636.5499-1-walling@linux.ibm.com>
-References: <20200622154636.5499-1-walling@linux.ibm.com>
+        Mon, 22 Jun 2020 12:02:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1592841741; bh=cK2qy9Lv5SAgMg9nAvfVmkJPj46H3ss3vOVyjpHm6Nk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=imnMzKvnrwdEkzevY9v55JCHWrS7mFcRp2xLflBpdsWBX5v32iTt1Jwj292Sqyxc6zTWfVf6UW3RltjDxv8H8ZAxxFg96tpPBoXA2f/GRkfTuiNcUr3yDzOGiHeT9IqR//B+9C8c9YoGDJPnAeuuKcQvLl1HS8J+STK4/r0WZ3jbtWFF0MKDjydg+AbeXShoRDHqwsqAaAi7D9jDq8wNDWBIR81puaAh7APGDPK32RqjpFS85hxXrbmotW59Gm/gC9SoLB52q4udtwMI++FS4HYmIHt+kUh9tNcMAsNUvFYo0HWMN59EiLf7lYGm/4AR40adfmghUfkmt4dYpTZmZQ==
+X-YMail-OSG: AhKkJLAVM1lDQ3XPPTTJWpEw.A_YPk4v7tBrtMEv9XTYrBN0vKxPyUyPokZyCLH
+ 0NPJEnbM.Ixt5u0eXkMwZesEBqS.rCtCLJgnod2Yg.I9TXOm0suNzcmJ92mBaA3mHgRFUusjI.6E
+ 3Gu4LEq019.le8uhDgpgUZ.YgtmiKAQJK6Bd4WPLqozbdEc8urSPipLpvwJTvKec65xmptWyRiVv
+ 5wejfhjut7ltVV2EWvbGnxpPsKrHXW63gZY0z7W.qC8yTTTM6xXIAPM6OYdYDYNn.6t5yJFWlC1P
+ OIdbZEYbWLsjaYGAZ3nhw68imywZs7JgVqTzxfR4ZQQxpuo3K8t9CM9O0hpOCt10FP__XXwyrmrD
+ TCoCE7B_Edu3G.zjOUn_rksR4jYB.m1Rp.1vZ_bLxnQwCiAul5Wqfj8PNdUGzT.zvxnBCUVqWq9J
+ 8hXM6oMyn8gklCF.R8KCTVo6NRJRq4thjGWIexrpJEGu0QolvkJTIALFEd6_slAReLmAOEup3xKy
+ .77XY9y0L2WZlQcf1QY4ryEv90HkLK9R59Zd1MxuC8qefRgY6y6xUFmVBWO8SDJCCjnQpB48PRDP
+ pRTSfD8hEjxrcMoyLQRR8ik6SRBEuL1N.zoJ2juJT7TtdJItukcqyaFlw7VOC6cm49vWb13NtnZ0
+ gQ2bWEWTG5v0uAlc54_ulltpKs.Fgm6hkagBtyzunEJ52PGAuturV.LPWyLoBYPiB1KC1HlV8gI8
+ yJqtTplsyPL2eALndgi_xv5WXRslUdVun50zfx9iDK5v_kT1lyZrnl7BpPa5N7roHYs5FCR3fGlt
+ 00HJ7sf.lnan3Im8PEbT96k38NwI6o6wqQk3XTx1x0TOib38VwKLgaWNY916uiRI1upzFCMVqmW6
+ hKW.i_z2qDWeeQaZVyBhDmfLTpSCKpEZXqJt.HWEa0uB7F6lyRoT1rQEzhMY_zbISz6YbRmtNDlq
+ VLlEzjYA6uILpMVD7EkmwXGP0XOJgDIix93HShigByDXDbmOlbnVPelpKvxPRFg3gnhpf.0Rc47i
+ 08Ic.liUMCD9zHGFCga9cXgoGaM8kFbRyDB3CB8uLHuuV8rIwOstkm24RLt0t3H1wtfuP85AC7r8
+ v042NbRsPX1Mj80LTxFt.KStV8ND4Dc1.IiPBslhVUpEA9f2YrGnkjCHG4.U4j0M0U489djAouYX
+ y9F8lECiGIH30pwUi5p9NUzViYBtaTM7ID67rbGjIKdkEdFs14rCm3KSzct0U2izLUB1NerwsRiF
+ IQWasnNhp61WOxqpf4zyo6bEJMCV1B8QkTG.8HvHCcJtAwYQhWHkE5SwAzxSGopkwGBC4.Xf9
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.ne1.yahoo.com with HTTP; Mon, 22 Jun 2020 16:02:21 +0000
+Date:   Mon, 22 Jun 2020 16:02:19 +0000 (UTC)
+From:   Karim Zakari <kariim1960z@gmail.com>
+Reply-To: kzakari04@gmail.com
+Message-ID: <1507214802.1850985.1592841739314@mail.yahoo.com>
+Subject: URGENT REPLY.
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-22_08:2020-06-22,2020-06-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=8 mlxscore=0
- bulkscore=0 phishscore=0 clxscore=1015 adultscore=0 cotscore=-2147483648
- spamscore=0 priorityscore=1501 malwarescore=0 lowpriorityscore=0
- mlxlogscore=999 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006220114
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <1507214802.1850985.1592841739314.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16138 YMailNodin Mozilla/5.0 (Windows NT 6.1; ) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-DIAGNOSE 0x318 (diag318) sets information regarding the environment
-the VM is running in (Linux, z/VM, etc) and is observed via
-firmware/service events.
 
-This is a privileged s390x instruction that must be intercepted by
-SIE. Userspace handles the instruction as well as migration. Data
-is communicated via VCPU register synchronization.
 
-The Control Program Name Code (CPNC) is stored in the SIE block. The
-CPNC along with the Control Program Version Code (CPVC) are stored
-in the kvm_vcpu_arch struct.
+Good-Day Friend,
 
-This data is reset on load normal and clear resets.
+ Hope you are doing great Today. I have a proposed business deal worthy (US$16.5 Million Dollars) that will benefit both parties. This is legitimate' legal and your personality will not be compromised.
 
-Signed-off-by: Collin Walling <walling@linux.ibm.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
----
- arch/s390/include/asm/kvm_host.h |  4 +++-
- arch/s390/include/uapi/asm/kvm.h |  5 ++++-
- arch/s390/kvm/kvm-s390.c         | 11 ++++++++++-
- arch/s390/kvm/vsie.c             |  1 +
- include/uapi/linux/kvm.h         |  1 +
- 5 files changed, 19 insertions(+), 3 deletions(-)
+Waiting for your response for more details, As you are willing to execute this business opportunity with me.
 
-diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-index 3d554887794e..8bdf6f1607ca 100644
---- a/arch/s390/include/asm/kvm_host.h
-+++ b/arch/s390/include/asm/kvm_host.h
-@@ -260,7 +260,8 @@ struct kvm_s390_sie_block {
- 	__u32	scaol;			/* 0x0064 */
- 	__u8	sdf;			/* 0x0068 */
- 	__u8    epdx;			/* 0x0069 */
--	__u8    reserved6a[2];		/* 0x006a */
-+	__u8	cpnc;			/* 0x006a */
-+	__u8	reserved6b;		/* 0x006b */
- 	__u32	todpr;			/* 0x006c */
- #define GISA_FORMAT1 0x00000001
- 	__u32	gd;			/* 0x0070 */
-@@ -745,6 +746,7 @@ struct kvm_vcpu_arch {
- 	bool gs_enabled;
- 	bool skey_enabled;
- 	struct kvm_s390_pv_vcpu pv;
-+	union diag318_info diag318_info;
- };
- 
- struct kvm_vm_stat {
-diff --git a/arch/s390/include/uapi/asm/kvm.h b/arch/s390/include/uapi/asm/kvm.h
-index 436ec7636927..2ae1b660086c 100644
---- a/arch/s390/include/uapi/asm/kvm.h
-+++ b/arch/s390/include/uapi/asm/kvm.h
-@@ -231,11 +231,13 @@ struct kvm_guest_debug_arch {
- #define KVM_SYNC_GSCB   (1UL << 9)
- #define KVM_SYNC_BPBC   (1UL << 10)
- #define KVM_SYNC_ETOKEN (1UL << 11)
-+#define KVM_SYNC_DIAG318 (1UL << 12)
- 
- #define KVM_SYNC_S390_VALID_FIELDS \
- 	(KVM_SYNC_PREFIX | KVM_SYNC_GPRS | KVM_SYNC_ACRS | KVM_SYNC_CRS | \
- 	 KVM_SYNC_ARCH0 | KVM_SYNC_PFAULT | KVM_SYNC_VRS | KVM_SYNC_RICCB | \
--	 KVM_SYNC_FPRS | KVM_SYNC_GSCB | KVM_SYNC_BPBC | KVM_SYNC_ETOKEN)
-+	 KVM_SYNC_FPRS | KVM_SYNC_GSCB | KVM_SYNC_BPBC | KVM_SYNC_ETOKEN | \
-+	 KVM_SYNC_DIAG318)
- 
- /* length and alignment of the sdnx as a power of two */
- #define SDNXC 8
-@@ -254,6 +256,7 @@ struct kvm_sync_regs {
- 	__u64 pft;	/* pfault token [PFAULT] */
- 	__u64 pfs;	/* pfault select [PFAULT] */
- 	__u64 pfc;	/* pfault compare [PFAULT] */
-+	__u64 diag318;	/* diagnose 0x318 info */
- 	union {
- 		__u64 vrs[32][2];	/* vector registers (KVM_SYNC_VRS) */
- 		__u64 fprs[16];		/* fp registers (KVM_SYNC_FPRS) */
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index d0ff26d157bc..b05ad718b64b 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -545,6 +545,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_S390_AIS_MIGRATION:
- 	case KVM_CAP_S390_VCPU_RESETS:
- 	case KVM_CAP_SET_GUEST_DEBUG:
-+	case KVM_CAP_S390_DIAG318:
- 		r = 1;
- 		break;
- 	case KVM_CAP_S390_HPAGE_1M:
-@@ -3267,7 +3268,8 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- 				    KVM_SYNC_ACRS |
- 				    KVM_SYNC_CRS |
- 				    KVM_SYNC_ARCH0 |
--				    KVM_SYNC_PFAULT;
-+				    KVM_SYNC_PFAULT |
-+				    KVM_SYNC_DIAG318;
- 	kvm_s390_set_prefix(vcpu, 0);
- 	if (test_kvm_facility(vcpu->kvm, 64))
- 		vcpu->run->kvm_valid_regs |= KVM_SYNC_RICCB;
-@@ -3562,6 +3564,7 @@ static void kvm_arch_vcpu_ioctl_initial_reset(struct kvm_vcpu *vcpu)
- 		vcpu->arch.sie_block->pp = 0;
- 		vcpu->arch.sie_block->fpf &= ~FPF_BPBC;
- 		vcpu->arch.sie_block->todpr = 0;
-+		vcpu->arch.sie_block->cpnc = 0;
- 	}
- }
- 
-@@ -3579,6 +3582,7 @@ static void kvm_arch_vcpu_ioctl_clear_reset(struct kvm_vcpu *vcpu)
- 
- 	regs->etoken = 0;
- 	regs->etoken_extension = 0;
-+	regs->diag318 = 0;
- }
- 
- int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
-@@ -4194,6 +4198,10 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
- 		if (vcpu->arch.pfault_token == KVM_S390_PFAULT_TOKEN_INVALID)
- 			kvm_clear_async_pf_completion_queue(vcpu);
- 	}
-+	if (kvm_run->kvm_dirty_regs & KVM_SYNC_DIAG318) {
-+		vcpu->arch.diag318_info.val = kvm_run->s.regs.diag318;
-+		vcpu->arch.sie_block->cpnc = vcpu->arch.diag318_info.cpnc;
-+	}
- 	/*
- 	 * If userspace sets the riccb (e.g. after migration) to a valid state,
- 	 * we should enable RI here instead of doing the lazy enablement.
-@@ -4295,6 +4303,7 @@ static void store_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
- 	kvm_run->s.regs.pp = vcpu->arch.sie_block->pp;
- 	kvm_run->s.regs.gbea = vcpu->arch.sie_block->gbea;
- 	kvm_run->s.regs.bpbc = (vcpu->arch.sie_block->fpf & FPF_BPBC) == FPF_BPBC;
-+	kvm_run->s.regs.diag318 = vcpu->arch.diag318_info.val;
- 	if (MACHINE_HAS_GS) {
- 		__ctl_set_bit(2, 4);
- 		if (vcpu->arch.gs_enabled)
-diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index 9e9056cebfcf..4f3cbf6003a9 100644
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -548,6 +548,7 @@ static int shadow_scb(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
- 		scb_s->ecd |= scb_o->ecd & ECD_ETOKENF;
- 
- 	scb_s->hpid = HPID_VSIE;
-+	scb_s->cpnc = scb_o->cpnc;
- 
- 	prepare_ibc(vcpu, vsie_page);
- 	rc = shadow_crycb(vcpu, vsie_page);
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 4fdf30316582..35cdb4307904 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1031,6 +1031,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_PPC_SECURE_GUEST 181
- #define KVM_CAP_HALT_POLL 182
- #define KVM_CAP_ASYNC_PF_INT 183
-+#define KVM_CAP_S390_DIAG318 184
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
--- 
-2.26.2
-
+Sincerely Yours,
+Mr. Karim Zakari.
