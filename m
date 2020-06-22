@@ -2,95 +2,144 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8415203AE9
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2020 17:30:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A092C203B0A
+	for <lists+linux-s390@lfdr.de>; Mon, 22 Jun 2020 17:37:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbgFVPaM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 22 Jun 2020 11:30:12 -0400
-Received: from sonic310-21.consmr.mail.gq1.yahoo.com ([98.137.69.147]:33157
-        "EHLO sonic310-21.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729247AbgFVPaL (ORCPT
+        id S1729531AbgFVPha (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 22 Jun 2020 11:37:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21314 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729494AbgFVPh3 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 22 Jun 2020 11:30:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1592839811; bh=ZrqH4CkkktGM5U4f9eYdkRlGgwNo9TU/U6UyKhhS7Nk=; h=Date:From:Subject:To:Cc:References:In-Reply-To:From:Subject; b=FMooE4Fd+vL4bOCsF19oFQ+8koe0SIaIvvnGdNGfg2bY9knR5NmK7OICT9TR/C4FomIL9cKp+4yWwn+F6H2vlvCQsslSqNrU3R5XJIZ+X3cjerWqjIpY8zb9ydg7gue/6Xc4vqKJOS1EsEMOrpmE2Nv5tvLGQneg7LWwmDotsRzxkX1Wih8HHzws+RGqUypcRFtQLFLn1F+oLy+uSiVoNGeOSvWvy4dlO53/Cs55fitsnVg2Cl8z3JSvTv8QAJz7Fv2TewSJX57O433tT8/QBqo7Xuvbg6idLtQHo9zE9a2gE+v5/0hP+Z6L/rHNzJlToMcYh2Jh4sas0IgFWTyXnQ==
-X-YMail-OSG: Cr3SZHIVM1nhNBz0ZZsYMs_M_FiwKACLBt6kQJYR4K4mF8rlKRnT_f7fT.t2sCC
- DipgYeUhA4EqFw.SkQWXpFDSR9OEwLAwPhxJrNDrZntjEiUyBxrucSuQHm_QF14U8f.b2eKVT72N
- qLFP7qiHUNKXQ4SYEPcuZ_q_hvbnxXiCXViFhbZeefE03ucrFdRs4EM21.p1dmjv5xm1mLoCeWIN
- jkgvvhLmjrY8f5pm5D.I7cSGPM0XP4TaGG6w.i1Rm9gkDs8YL.9moWBhj1cX2qg6nJLn_YP9zuaP
- 0j4YBbovs_HxALABkTP.KUcbU5likQB6ekjU..0CB5QQqi81Q0Hy7bFSr7FHxVMM12ot7uWaEinI
- JzMYBL7BgegWMHyrDLq0BukuCBzZhQ7HtVDiFAb6SLzynuhFE2s0oduA4_8TuEHwugSN8ABWWMon
- VPs76OFaHB4AiH8rlzDNUDvCs7hdVL4wp9PFB6nn9gIroi814lkRYshQ4SiMu8.x1LxzVQKuj_1K
- AuI6G4xS5qHgGm9tql95oMLMkoCQ_OChr1GN3vdf3AkF.9X9Wc6QF3ClqlTETxkAJr74XyNRNefG
- KKhCUU2Mb6kqNBNzFDJhl1nBfl4J3BT0UE0D3HzQ.zUoHGifRb9ATfXlzwDHyItKsky9dMsmfqtp
- i6TMZweDPyfDW5BjQ.MZTGyShESLRfuuUEljOv8zB54h_Fy7RVp.TsJfycEpERk0eoEc8YtNTOHf
- CcMXxFXSBJJWfuCSoiKgkmgJ.tWI9GYciX5ptLM5SO5ucVKruIh5YWFPlCwnk7h.bBmMVMK6JbYY
- FIzEK18BG84ne8qJn5HcUc4YGExVQ_0VdZ68jSrZOOgnALE7w0Yh7P.5FEyFgcDv5CQRtTlDa9XV
- 332GOILLb4zJJheQ0JFSPElT9FH3CBrDs5LCQxJomwN4y7xwltOYhRMK83otrU_Fj_y_eHeotXp5
- XEoZNPauow06YAJ6iF5IF8YixALM0Q7iN05wMbk0d_uc0b55OOLVDb3x3VUYpis0YS82.POsP32I
- ulBQXux3NQlclxawhgWzTJz.jykMGFqABOqUbZETOIhVNH9HkQalW_F5SQXc82W2mLThpOJ_x082
- G.nYAFFP6Iozy3gvrmlA27ubLrteMzz7DLQIULn80k0_6JJr84FSeEkkQDHO2PSnfc8bmvPlGVvp
- 18BXWE0ViDKr5zEztaQIMuEjnaJYCCDIS0FBU4hrX67yVYFDBT0y6ZYXCS4tbw1UClE62qzLiBIP
- UN3eLZ.VIszJNb86Rf9A8WrGMP2tM7.UAiknCB.VtjckyXwujOVTk01wBBbAFbL0YYDxIOdYmGmw
- oInI7KsCeCE6pCvJGjT60utyj2RwD2L_Yt9unDDKpSoj3x.XhDmB.
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.gq1.yahoo.com with HTTP; Mon, 22 Jun 2020 15:30:11 +0000
-Received: by smtp418.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 402ae077068331dedde2e55d9ced12f3;
-          Mon, 22 Jun 2020 15:30:08 +0000 (UTC)
-Date:   Mon, 22 Jun 2020 11:30:04 -0400
-From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Subject: Re: AMD IOMMU + SME + amdgpu regression
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Andy Gross <agross@kernel.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Drake <drake@endlessm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        jonathan.derrick@intel.com, Jonathan Hunter <jonathanh@nvidia.com>,
-        Joerg Roedel <joro@8bytes.org>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        David Rientjes <rientjes@google.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        virtualization@lists.linux-foundation.org,
-        Will Deacon <will@kernel.org>
-References: <1591915710.rakbpzst8h.none.ref@localhost>
-        <1591915710.rakbpzst8h.none@localhost> <20200622100257.GD31822@suse.de>
-In-Reply-To: <20200622100257.GD31822@suse.de>
+        Mon, 22 Jun 2020 11:37:29 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05MFWPRY001791;
+        Mon, 22 Jun 2020 11:37:28 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31sj0c0w15-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jun 2020 11:37:27 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05MFWgrH003183;
+        Mon, 22 Jun 2020 11:37:27 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31sj0c0w0m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jun 2020 11:37:27 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05MFZElX025905;
+        Mon, 22 Jun 2020 15:37:26 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma04dal.us.ibm.com with ESMTP id 31sa38mr9d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Jun 2020 15:37:26 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05MFbMCh47513938
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Jun 2020 15:37:22 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A8790BE058;
+        Mon, 22 Jun 2020 15:37:22 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CEFE0BE04F;
+        Mon, 22 Jun 2020 15:37:21 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.169.243])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Mon, 22 Jun 2020 15:37:21 +0000 (GMT)
+Subject: Re: [PATCH v8 1/2] s390/setup: diag 318: refactor struct
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     pbonzini@redhat.com, frankja@linux.ibm.com, david@redhat.com,
+        cohuck@redhat.com, imbrenda@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com, thuth@redhat.com
+References: <20200618222222.23175-1-walling@linux.ibm.com>
+ <20200618222222.23175-2-walling@linux.ibm.com>
+ <e3edb120-33cb-9f3a-bf05-79b3a48613fe@de.ibm.com>
+From:   Collin Walling <walling@linux.ibm.com>
+Message-ID: <de3ace0b-4f84-aa33-5f95-0f8ec308c865@linux.ibm.com>
+Date:   Mon, 22 Jun 2020 11:37:21 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Message-Id: <1592839701.mxvvths2x9.none@localhost>
+In-Reply-To: <e3edb120-33cb-9f3a-bf05-79b3a48613fe@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: WebService/1.1.16138 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-22_08:2020-06-22,2020-06-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 clxscore=1015 adultscore=0 cotscore=-2147483648
+ spamscore=0 priorityscore=1501 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006220114
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Excerpts from Joerg Roedel's message of June 22, 2020 6:02 am:
-> Hi Alex,
->=20
-> On Thu, Jun 11, 2020 at 07:05:21PM -0400, Alex Xu (Hello71) wrote:
->> I am using an ASRock B450 Pro4 with Ryzen 1600 and ASUS RX 480. I don't=20
->> understand this code at all, but let me know what I can do to=20
->> troubleshoot.
->=20
-> Does it boot without SME enabled?
->=20
->=20
-> Regards,
->=20
-> 	Joerg
->=20
+On 6/22/20 10:56 AM, Christian Borntraeger wrote:
+> 
+> On 19.06.20 00:22, Collin Walling wrote:
+>> The diag 318 struct introduced in include/asm/diag.h can be
+>> reused in KVM, so let's condense the version code fields in the
+>> diag318_info struct for easier usage and simplify it until we
+>> can determine how the data should be formatted.
+>>
+>> Signed-off-by: Collin Walling <walling@linux.ibm.com>
+>> Reviewed-by: David Hildenbrand <david@redhat.com>
+>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+>> Reviewed-by: Thomas Huth <thuth@redhat.com>
+>> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+> 
+> Series looks good to me. Can you respin the 2nd patch regarding the VSIE things
+> and I can then apply it.
+> 
+> 
 
-Yes, it works with SME off with dbed452a078 ("dma-pool: decouple=20
-DMA_REMAP from DMA_COHERENT_POOL") applied.
+Will do. Thanks.
+
+>> ---
+>>  arch/s390/include/asm/diag.h | 6 ++----
+>>  arch/s390/kernel/setup.c     | 3 +--
+>>  2 files changed, 3 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/s390/include/asm/diag.h b/arch/s390/include/asm/diag.h
+>> index 0036eab14391..ca8f85b53a90 100644
+>> --- a/arch/s390/include/asm/diag.h
+>> +++ b/arch/s390/include/asm/diag.h
+>> @@ -298,10 +298,8 @@ struct diag26c_mac_resp {
+>>  union diag318_info {
+>>  	unsigned long val;
+>>  	struct {
+>> -		unsigned int cpnc : 8;
+>> -		unsigned int cpvc_linux : 24;
+>> -		unsigned char cpvc_distro[3];
+>> -		unsigned char zero;
+>> +		unsigned long cpnc : 8;
+>> +		unsigned long cpvc : 56;
+>>  	};
+>>  };
+>>  
+>> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+>> index 5853c9872dfe..878cacfc9c3e 100644
+>> --- a/arch/s390/kernel/setup.c
+>> +++ b/arch/s390/kernel/setup.c
+>> @@ -1021,8 +1021,7 @@ static void __init setup_control_program_code(void)
+>>  {
+>>  	union diag318_info diag318_info = {
+>>  		.cpnc = CPNC_LINUX,
+>> -		.cpvc_linux = 0,
+>> -		.cpvc_distro = {0},
+>> +		.cpvc = 0,
+>>  	};
+>>  
+>>  	if (!sclp.has_diag318)
+>>
+
+
+-- 
+Regards,
+Collin
+
+Stay safe and stay healthy
