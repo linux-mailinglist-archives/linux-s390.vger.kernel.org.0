@@ -2,105 +2,165 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F25A8204DFA
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2020 11:31:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7B18204E35
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2020 11:42:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732194AbgFWJbA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 23 Jun 2020 05:31:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1942 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731945AbgFWJbA (ORCPT
+        id S1732026AbgFWJmr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 23 Jun 2020 05:42:47 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36407 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731968AbgFWJmq (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 23 Jun 2020 05:31:00 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05N922Vq034764;
-        Tue, 23 Jun 2020 05:31:00 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31tysr85dh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 05:30:59 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05N9Uxhm158687;
-        Tue, 23 Jun 2020 05:30:59 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31tysr82ar-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 05:30:59 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05N9OP7x008836;
-        Tue, 23 Jun 2020 09:24:25 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 31sa37vuup-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 09:24:25 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05N9OMTY50921618
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 09:24:22 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8B3125205A;
-        Tue, 23 Jun 2020 09:24:22 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.145.62.182])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 19AE75204F;
-        Tue, 23 Jun 2020 09:24:22 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     pbonzini@redhat.com
-Cc:     kvm@vger.kernel.org, frankja@linux.vnet.ibm.com, david@redhat.com,
-        borntraeger@de.ibm.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com
-Subject: [GIT PULL 0/1] KVM: s390: Fix for 5.8
-Date:   Tue, 23 Jun 2020 11:23:40 +0200
-Message-Id: <20200623092341.10348-1-frankja@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
+        Tue, 23 Jun 2020 05:42:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592905364;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QoBwKmjOvInG9MfmBsLrqKkfpaZqKCYNSmoYTUfOHHE=;
+        b=W4imJMlVrdXnxVmceX+aEA5Vc0QjNCsiOIZ/YP4/e15mTqZa3dvrTqJ/Vi9YdJVop+Ad/F
+        X77hWs09TzvvUVpIOtWeIFvLPBA6x9X8PKtpgyta+JyChwSyGbYYYSCUFZzAvBi1yGreuh
+        xPFYNC5qVZGN9GyBGJnQ5L+aRMU6J4A=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-285-XhWYfBBXMi2riSdUoNufLg-1; Tue, 23 Jun 2020 05:42:42 -0400
+X-MC-Unique: XhWYfBBXMi2riSdUoNufLg-1
+Received: by mail-wr1-f71.google.com with SMTP id b14so14402611wrp.0
+        for <linux-s390@vger.kernel.org>; Tue, 23 Jun 2020 02:42:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QoBwKmjOvInG9MfmBsLrqKkfpaZqKCYNSmoYTUfOHHE=;
+        b=c3jRDYaGMAI+8UhnoE+BvP2fJp/q434+KD0Z2urY7w7XZs2FIKxX8GdfSRKZ7+cKDZ
+         h3X6l/qvcGLMZ4RnmOYdTgyh//s3s5PH8YzNCH6rKYCGhZq2lqO74Gn7EL4HYyNW78ny
+         Vl/NMdbdvW0ksLRZfIsV4vDg3jtndKxNucE7g9cAQ7JxyaLVf/cFyCOmgb+uxk8IayX6
+         FQkUGpTFqjslKayQa1jg4qasCLL/phyn0Rh7xBclEIJnRs92CQ3hoKwiphEthy8tLwpt
+         x2t1oO+SF5VCkYnxcEwiX5+Vx4v4gCvkQdAIsIyoGG4QZPSI+d2DCH3Ki+hImVdgcqls
+         UFlw==
+X-Gm-Message-State: AOAM531LqU3cfWjuw77rdqRVWKG/JXaZwvzWKEMPcv8vL3wKrNxPE7XL
+        kGe1WxzdmnAMJlsLqGWnw2tgD3xbV1KjcioX2Rdbl0KjXgXGx4OE1eOSvmEwb5rBimFAFYP+CG6
+        Q77RQLuoUNQt3CNbLPpHC/w==
+X-Received: by 2002:adf:e908:: with SMTP id f8mr1064516wrm.3.1592905361578;
+        Tue, 23 Jun 2020 02:42:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwYpabjIXBcOB9eaiLhNkEzAaSPqokuBtil8iucj5gBxqX45bVu6WVMKG+2KSXPDnKUswgA9A==
+X-Received: by 2002:adf:e908:: with SMTP id f8mr1064490wrm.3.1592905361326;
+        Tue, 23 Jun 2020 02:42:41 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:fd64:dd90:5ad5:d2e1? ([2001:b07:6468:f312:fd64:dd90:5ad5:d2e1])
+        by smtp.gmail.com with ESMTPSA id 26sm1149131wmj.25.2020.06.23.02.42.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 02:42:40 -0700 (PDT)
+Subject: Re: [PATCH v4 0/7] clean up redundant 'kvm_run' parameters
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
+        chenhuacai@gmail.com
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <fe463233-d094-fca5-b4e9-c1d97124fd69@redhat.com>
+Date:   Tue, 23 Jun 2020 11:42:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_04:2020-06-22,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- mlxscore=0 bulkscore=0 spamscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 phishscore=0 mlxlogscore=999
- cotscore=-2147483648 suspectscore=1 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006230068
+In-Reply-To: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Paolo,
+On 27/04/20 06:35, Tianjia Zhang wrote:
+> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
+> structure. For historical reasons, many kvm-related function parameters
+> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
+> patch does a unified cleanup of these remaining redundant parameters.
+> 
+> This series of patches has completely cleaned the architecture of
+> arm64, mips, ppc, and s390 (no such redundant code on x86). Due to
+> the large number of modified codes, a separate patch is made for each
+> platform. On the ppc platform, there is also a redundant structure
+> pointer of 'kvm_run' in 'vcpu_arch', which has also been cleaned
+> separately.
 
-please pull this fix reducing the number of (currently unused) iopins
-for kvm/master.
+Tianjia, can you please refresh the patches so that each architecture
+maintainer can pick them up?  Thanks very much for this work!
 
+Paolo
 
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
-
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git tags/kvm-s390-master-5.8-3
-
-for you to fetch changes up to 774911290c589e98e3638e73b24b0a4d4530e97c:
-
-  KVM: s390: reduce number of IO pins to 1 (2020-06-18 09:48:19 +0200)
-
-----------------------------------------------------------------
-The current number of KVM_IRQCHIP_NUM_PINS results in an order 3
-allocation (32kb) for each guest start/restart which can result in OOM
-killer activity when kernel memory is fragmented enough.
-
-This fix reduces the number of iopins as s390 doesn't use them, hence
-reducing the memory footprint.
-
-----------------------------------------------------------------
-
-Christian Borntraeger (1):
-  KVM: s390: reduce number of IO pins to 1
-
- arch/s390/include/asm/kvm_host.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
--- 
-2.25.4
+> 
+> ---
+> v4 change:
+>   mips: fixes two errors in entry.c.
+> 
+> v3 change:
+>   Keep the existing `vcpu->run` in the function body unchanged.
+> 
+> v2 change:
+>   s390 retains the original variable name and minimizes modification.
+> 
+> Tianjia Zhang (7):
+>   KVM: s390: clean up redundant 'kvm_run' parameters
+>   KVM: arm64: clean up redundant 'kvm_run' parameters
+>   KVM: PPC: Remove redundant kvm_run from vcpu_arch
+>   KVM: PPC: clean up redundant 'kvm_run' parameters
+>   KVM: PPC: clean up redundant kvm_run parameters in assembly
+>   KVM: MIPS: clean up redundant 'kvm_run' parameters
+>   KVM: MIPS: clean up redundant kvm_run parameters in assembly
+> 
+>  arch/arm64/include/asm/kvm_coproc.h      |  12 +--
+>  arch/arm64/include/asm/kvm_host.h        |  11 +--
+>  arch/arm64/include/asm/kvm_mmu.h         |   2 +-
+>  arch/arm64/kvm/handle_exit.c             |  36 +++----
+>  arch/arm64/kvm/sys_regs.c                |  13 ++-
+>  arch/mips/include/asm/kvm_host.h         |  32 +------
+>  arch/mips/kvm/emulate.c                  |  59 ++++--------
+>  arch/mips/kvm/entry.c                    |  21 ++---
+>  arch/mips/kvm/mips.c                     |  14 +--
+>  arch/mips/kvm/trap_emul.c                | 114 ++++++++++-------------
+>  arch/mips/kvm/vz.c                       |  26 ++----
+>  arch/powerpc/include/asm/kvm_book3s.h    |  16 ++--
+>  arch/powerpc/include/asm/kvm_host.h      |   1 -
+>  arch/powerpc/include/asm/kvm_ppc.h       |  27 +++---
+>  arch/powerpc/kvm/book3s.c                |   4 +-
+>  arch/powerpc/kvm/book3s.h                |   2 +-
+>  arch/powerpc/kvm/book3s_64_mmu_hv.c      |  12 +--
+>  arch/powerpc/kvm/book3s_64_mmu_radix.c   |   4 +-
+>  arch/powerpc/kvm/book3s_emulate.c        |  10 +-
+>  arch/powerpc/kvm/book3s_hv.c             |  64 ++++++-------
+>  arch/powerpc/kvm/book3s_hv_nested.c      |  12 +--
+>  arch/powerpc/kvm/book3s_interrupts.S     |  17 ++--
+>  arch/powerpc/kvm/book3s_paired_singles.c |  72 +++++++-------
+>  arch/powerpc/kvm/book3s_pr.c             |  33 ++++---
+>  arch/powerpc/kvm/booke.c                 |  39 ++++----
+>  arch/powerpc/kvm/booke.h                 |   8 +-
+>  arch/powerpc/kvm/booke_emulate.c         |   2 +-
+>  arch/powerpc/kvm/booke_interrupts.S      |   9 +-
+>  arch/powerpc/kvm/bookehv_interrupts.S    |  10 +-
+>  arch/powerpc/kvm/e500_emulate.c          |  15 ++-
+>  arch/powerpc/kvm/emulate.c               |  10 +-
+>  arch/powerpc/kvm/emulate_loadstore.c     |  32 +++----
+>  arch/powerpc/kvm/powerpc.c               |  72 +++++++-------
+>  arch/powerpc/kvm/trace_hv.h              |   6 +-
+>  arch/s390/kvm/kvm-s390.c                 |  23 +++--
+>  virt/kvm/arm/arm.c                       |   6 +-
+>  virt/kvm/arm/mmio.c                      |  11 ++-
+>  virt/kvm/arm/mmu.c                       |   5 +-
+>  38 files changed, 392 insertions(+), 470 deletions(-)
+> 
 
