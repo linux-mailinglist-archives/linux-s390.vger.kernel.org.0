@@ -2,99 +2,68 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 830AA2054F4
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2020 16:38:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DE21205559
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2020 17:01:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732740AbgFWOiW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 23 Jun 2020 10:38:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18738 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732738AbgFWOiW (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 23 Jun 2020 10:38:22 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05NEX67i033482;
-        Tue, 23 Jun 2020 10:38:21 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ukkng7r0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 10:38:20 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05NEX9h0033877;
-        Tue, 23 Jun 2020 10:38:19 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ukkng7qd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 10:38:19 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05NEaJvv027641;
-        Tue, 23 Jun 2020 14:38:19 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma02wdc.us.ibm.com with ESMTP id 31uk2mr8pa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 14:38:19 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05NEcFhO26280290
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 14:38:15 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A50566E050;
-        Tue, 23 Jun 2020 14:38:15 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B38DD6E054;
-        Tue, 23 Jun 2020 14:38:14 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.182.30])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Tue, 23 Jun 2020 14:38:14 +0000 (GMT)
-Subject: Re: [PATCH v9 0/2] Use DIAG318 to set Control Program Name & Version
- Codes
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org
-Cc:     pbonzini@redhat.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, imbrenda@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com, thuth@redhat.com
-References: <20200622154636.5499-1-walling@linux.ibm.com>
- <cfe77de0-e1d8-5779-541f-286cf3002459@de.ibm.com>
-From:   Collin Walling <walling@linux.ibm.com>
-Message-ID: <704fd712-1883-9aad-bb60-4412cb8a9573@linux.ibm.com>
-Date:   Tue, 23 Jun 2020 10:38:13 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1732874AbgFWPBI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 23 Jun 2020 11:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732845AbgFWPBI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 23 Jun 2020 11:01:08 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 281BAC061573;
+        Tue, 23 Jun 2020 08:01:08 -0700 (PDT)
+Received: from [5.158.153.53] (helo=debian-buster-darwi.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <a.darwish@linutronix.de>)
+        id 1jnkPY-0004DR-Uo; Tue, 23 Jun 2020 17:00:33 +0200
+Date:   Tue, 23 Jun 2020 17:00:31 +0200
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de,
+        x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        bigeasy@linutronix.de, davem@davemloft.net,
+        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
+        linux-s390@vger.kernel.org, linux@armlinux.org.uk
+Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
+ per-cpu variables
+Message-ID: <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
+References: <20200623083645.277342609@infradead.org>
+ <20200623083721.512673481@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <cfe77de0-e1d8-5779-541f-286cf3002459@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-23_07:2020-06-23,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 spamscore=0 malwarescore=0 priorityscore=1501
- mlxlogscore=999 adultscore=0 phishscore=0 bulkscore=0 clxscore=1015
- impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006120000 definitions=main-2006230110
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623083721.512673481@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 6/23/20 3:13 AM, Christian Borntraeger wrote:
-> 
-> 
-> On 22.06.20 17:46, Collin Walling wrote:
->> Changelog:
->>
->>     v9
->>
->>     • No longer unshadowing CPNC in VSIE
->>
-> applied. 
-> 
+On Tue, Jun 23, 2020 at 10:36:52AM +0200, Peter Zijlstra wrote:
+...
+> -#define lockdep_assert_irqs_disabled()	do {				\
+> -		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
+> -			  current->hardirqs_enabled,			\
+> -			  "IRQs not disabled as expected\n");		\
+> -	} while (0)
+> +#define lockdep_assert_irqs_enabled()					\
+> +do {									\
+> +	WARN_ON_ONCE(debug_locks && !this_cpu_read(hardirqs_enabled));	\
+> +} while (0)
+>
 
-Thanks!
+Can we add a small comment on top of lockdep_off(), stating that lockdep
+IRQ tracking will still be kept after a lockdep_off call?
 
--- 
-Regards,
-Collin
+thanks,
 
-Stay safe and stay healthy
+--
+Ahmed S. Darwish
+Linutronix GmbH
