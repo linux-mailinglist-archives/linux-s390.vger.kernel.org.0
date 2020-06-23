@@ -2,121 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A60DD204CD8
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2020 10:47:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C30A204CEA
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2020 10:49:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731786AbgFWIrk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 23 Jun 2020 04:47:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28920 "EHLO
+        id S1731973AbgFWIsn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 23 Jun 2020 04:48:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7046 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731158AbgFWIrk (ORCPT
+        by vger.kernel.org with ESMTP id S1731735AbgFWIsg (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 23 Jun 2020 04:47:40 -0400
+        Tue, 23 Jun 2020 04:48:36 -0400
 Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05N8YkdN059305;
-        Tue, 23 Jun 2020 04:47:38 -0400
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05N8XEsU052824;
+        Tue, 23 Jun 2020 04:48:32 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ud982mp7-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ud982nqh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 04:47:38 -0400
+        Tue, 23 Jun 2020 04:48:31 -0400
 Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05N8XXJh054804;
-        Tue, 23 Jun 2020 04:47:37 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ud982mnf-1
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05N8XeG7055496;
+        Tue, 23 Jun 2020 04:48:31 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ud982npp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 04:47:37 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05N8eTRv030877;
-        Tue, 23 Jun 2020 08:47:36 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 31sa37vst1-1
+        Tue, 23 Jun 2020 04:48:31 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05N8fdtL029890;
+        Tue, 23 Jun 2020 08:48:29 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 31sa381w8u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 08:47:35 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05N8lXTR2490792
+        Tue, 23 Jun 2020 08:48:29 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05N8mQG562390426
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 08:47:33 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C0C211C054;
-        Tue, 23 Jun 2020 08:47:33 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 908B711C058;
-        Tue, 23 Jun 2020 08:47:32 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.187.217])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Jun 2020 08:47:32 +0000 (GMT)
-Subject: Re: [PATCH v9 2/2] s390/kvm: diagnose 0x318 sync and reset
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-To:     Thomas Huth <thuth@redhat.com>,
-        Collin Walling <walling@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Cc:     pbonzini@redhat.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, imbrenda@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-References: <20200622154636.5499-1-walling@linux.ibm.com>
- <20200622154636.5499-3-walling@linux.ibm.com>
- <06bd4fde-ecdb-0795-bcab-e8f5fbabcd14@redhat.com>
- <4387834c-7cd4-df50-294c-4f56aa14a089@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <a1bcfa5a-368a-cdef-9681-aff2deee2a42@de.ibm.com>
-Date:   Tue, 23 Jun 2020 10:47:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 23 Jun 2020 08:48:26 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 96D684204B;
+        Tue, 23 Jun 2020 08:48:26 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 25E7642041;
+        Tue, 23 Jun 2020 08:48:26 +0000 (GMT)
+Received: from osiris (unknown [9.171.83.193])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 23 Jun 2020 08:48:26 +0000 (GMT)
+Date:   Tue, 23 Jun 2020 10:48:24 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH] mm/page_alloc: silence a KASAN false positive
+Message-ID: <20200623084824.GB5665@osiris>
+References: <20200610052154.5180-1-cai@lca.pw>
+ <CACT4Y+Ze=cddKcU_bYf4L=GaHuJRUjY=AdFFpM7aKy2+aZrmyQ@mail.gmail.com>
+ <20200610122600.GB954@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <4387834c-7cd4-df50-294c-4f56aa14a089@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200610122600.GB954@lca.pw>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-23_04:2020-06-22,2020-06-23 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- malwarescore=0 spamscore=0 cotscore=-2147483648 mlxlogscore=999
- lowpriorityscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- bulkscore=0 adultscore=0 suspectscore=0 classifier=spam adjust=0
+ malwarescore=0 spamscore=0 cotscore=-2147483648 mlxlogscore=851
+ lowpriorityscore=0 impostorscore=0 clxscore=1011 priorityscore=1501
+ bulkscore=0 adultscore=0 suspectscore=84 classifier=spam adjust=0
  reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2006230064
 Sender: linux-s390-owner@vger.kernel.org
@@ -124,119 +82,33 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 23.06.20 10:45, Christian Borntraeger wrote:
+On Wed, Jun 10, 2020 at 08:26:00AM -0400, Qian Cai wrote:
+> On Wed, Jun 10, 2020 at 07:54:50AM +0200, Dmitry Vyukov wrote:
+> > On Wed, Jun 10, 2020 at 7:22 AM Qian Cai <cai@lca.pw> wrote:
+> > >
+> > > kernel_init_free_pages() will use memset() on s390 to clear all pages
+> > > from kmalloc_order() which will override KASAN redzones because a
+> > > redzone was setup from the end of the allocation size to the end of the
+> > > last page. Silence it by not reporting it there. An example of the
+> > > report is,
+> > 
+> > Interesting. The reason why we did not hit it on x86_64 is because
+> > clear_page is implemented in asm (arch/x86/lib/clear_page_64.S) and
+> > thus is not instrumented. Arm64 probably does the same. However, on
+> > s390 clear_page is defined to memset.
+> > clear_[high]page are pretty extensively used in the kernel.
+> > We can either do this, or make clear_page non instrumented on s390 as
+> > well to match the existing implicit assumption. The benefit of the
+> > current approach is that we can find some real use-after-free's and
+> > maybe out-of-bounds on clear_page. The downside is that we may need
+> > more of these annotations. Thoughts?
 > 
+> Since we had already done the same thing in poison_page(), I suppose we
+> could do the same here. Also, clear_page() has been used in many places
+> on s390, and it is not clear to me if those are all safe like this.
 > 
-> On 23.06.20 10:42, Thomas Huth wrote:
->> On 22/06/2020 17.46, Collin Walling wrote:
->>> DIAGNOSE 0x318 (diag318) sets information regarding the environment
->>> the VM is running in (Linux, z/VM, etc) and is observed via
->>> firmware/service events.
->>>
->>> This is a privileged s390x instruction that must be intercepted by
->>> SIE. Userspace handles the instruction as well as migration. Data
->>> is communicated via VCPU register synchronization.
->>>
->>> The Control Program Name Code (CPNC) is stored in the SIE block. The
->>> CPNC along with the Control Program Version Code (CPVC) are stored
->>> in the kvm_vcpu_arch struct.
->>>
->>> This data is reset on load normal and clear resets.
->>>
->>> Signed-off-by: Collin Walling <walling@linux.ibm.com>
->>> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
->>> ---
->>>  arch/s390/include/asm/kvm_host.h |  4 +++-
->>>  arch/s390/include/uapi/asm/kvm.h |  5 ++++-
->>>  arch/s390/kvm/kvm-s390.c         | 11 ++++++++++-
->>>  arch/s390/kvm/vsie.c             |  1 +
->>>  include/uapi/linux/kvm.h         |  1 +
->>>  5 files changed, 19 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
->>> index 3d554887794e..8bdf6f1607ca 100644
->>> --- a/arch/s390/include/asm/kvm_host.h
->>> +++ b/arch/s390/include/asm/kvm_host.h
->>> @@ -260,7 +260,8 @@ struct kvm_s390_sie_block {
->>>  	__u32	scaol;			/* 0x0064 */
->>>  	__u8	sdf;			/* 0x0068 */
->>>  	__u8    epdx;			/* 0x0069 */
->>> -	__u8    reserved6a[2];		/* 0x006a */
->>> +	__u8	cpnc;			/* 0x006a */
->>> +	__u8	reserved6b;		/* 0x006b */
->>>  	__u32	todpr;			/* 0x006c */
->>>  #define GISA_FORMAT1 0x00000001
->>>  	__u32	gd;			/* 0x0070 */
->>> @@ -745,6 +746,7 @@ struct kvm_vcpu_arch {
->>>  	bool gs_enabled;
->>>  	bool skey_enabled;
->>>  	struct kvm_s390_pv_vcpu pv;
->>> +	union diag318_info diag318_info;
->>>  };
->>>  
->>>  struct kvm_vm_stat {
->>> diff --git a/arch/s390/include/uapi/asm/kvm.h b/arch/s390/include/uapi/asm/kvm.h
->>> index 436ec7636927..2ae1b660086c 100644
->>> --- a/arch/s390/include/uapi/asm/kvm.h
->>> +++ b/arch/s390/include/uapi/asm/kvm.h
->>> @@ -231,11 +231,13 @@ struct kvm_guest_debug_arch {
->>>  #define KVM_SYNC_GSCB   (1UL << 9)
->>>  #define KVM_SYNC_BPBC   (1UL << 10)
->>>  #define KVM_SYNC_ETOKEN (1UL << 11)
->>> +#define KVM_SYNC_DIAG318 (1UL << 12)
->>>  
->>>  #define KVM_SYNC_S390_VALID_FIELDS \
->>>  	(KVM_SYNC_PREFIX | KVM_SYNC_GPRS | KVM_SYNC_ACRS | KVM_SYNC_CRS | \
->>>  	 KVM_SYNC_ARCH0 | KVM_SYNC_PFAULT | KVM_SYNC_VRS | KVM_SYNC_RICCB | \
->>> -	 KVM_SYNC_FPRS | KVM_SYNC_GSCB | KVM_SYNC_BPBC | KVM_SYNC_ETOKEN)
->>> +	 KVM_SYNC_FPRS | KVM_SYNC_GSCB | KVM_SYNC_BPBC | KVM_SYNC_ETOKEN | \
->>> +	 KVM_SYNC_DIAG318)
->>>  
->>>  /* length and alignment of the sdnx as a power of two */
->>>  #define SDNXC 8
->>> @@ -254,6 +256,7 @@ struct kvm_sync_regs {
->>>  	__u64 pft;	/* pfault token [PFAULT] */
->>>  	__u64 pfs;	/* pfault select [PFAULT] */
->>>  	__u64 pfc;	/* pfault compare [PFAULT] */
->>> +	__u64 diag318;	/* diagnose 0x318 info */
->>>  	union {
->>>  		__u64 vrs[32][2];	/* vector registers (KVM_SYNC_VRS) */
->>>  		__u64 fprs[16];		/* fp registers (KVM_SYNC_FPRS) */
->>
->> It's been a while since I touched kvm_sync_regs the last time ... but
->> can your really extend this structure right in the middle without
->> breaking older user spaces (ie. QEMUs) ? This is a uapi header ... so I
->> think you rather have to add this add the end or e.g. put it into the
->> padding2 region or something like that...? Or do I miss something?
-> 
-> Argh. You are right. It should go to the end and not in the middle. Will fixup.
-> 
+> There might be more annotations required, so it probably up to s390
+> maintainers (CC'ed) if they prefer not instrumenting clear_page() like
+> other arches.
 
-Something like this on top. 
-
-diff --git a/arch/s390/include/uapi/asm/kvm.h b/arch/s390/include/uapi/asm/kvm.h
-index 2ae1b660086c..7a6b14874d65 100644
---- a/arch/s390/include/uapi/asm/kvm.h
-+++ b/arch/s390/include/uapi/asm/kvm.h
-@@ -256,7 +256,6 @@ struct kvm_sync_regs {
-        __u64 pft;      /* pfault token [PFAULT] */
-        __u64 pfs;      /* pfault select [PFAULT] */
-        __u64 pfc;      /* pfault compare [PFAULT] */
--       __u64 diag318;  /* diagnose 0x318 info */
-        union {
-                __u64 vrs[32][2];       /* vector registers (KVM_SYNC_VRS) */
-                __u64 fprs[16];         /* fp registers (KVM_SYNC_FPRS) */
-@@ -267,7 +266,8 @@ struct kvm_sync_regs {
-        __u8 reserved2 : 7;
-        __u8 padding1[51];      /* riccb needs to be 64byte aligned */
-        __u8 riccb[64];         /* runtime instrumentation controls block */
--       __u8 padding2[192];     /* sdnx needs to be 256byte aligned */
-+       __u64 diag318;          /* diagnose 0x318 info */
-+       __u8 padding2[184];     /* sdnx needs to be 256byte aligned */
-        union {
-                __u8 sdnx[SDNXL];  /* state description annex */
-                struct {
-
-
+Vasily will look into this and come up with a proper solution for s390.
