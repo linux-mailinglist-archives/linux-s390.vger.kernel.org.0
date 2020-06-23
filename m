@@ -2,132 +2,253 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F245204AC3
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2020 09:13:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0A34204BE7
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2020 10:06:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731335AbgFWHNX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 23 Jun 2020 03:13:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22606 "EHLO
+        id S1731539AbgFWIGX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 23 Jun 2020 04:06:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54502 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730977AbgFWHNW (ORCPT
+        by vger.kernel.org with ESMTP id S1731516AbgFWIGW (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 23 Jun 2020 03:13:22 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05N73UYt085813;
-        Tue, 23 Jun 2020 03:13:21 -0400
+        Tue, 23 Jun 2020 04:06:22 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05N84VcZ160977;
+        Tue, 23 Jun 2020 04:06:21 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31u67f23cs-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31tysr5yx5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 03:13:21 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05N741Wj088589;
-        Tue, 23 Jun 2020 03:13:21 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31u67f23bu-1
+        Tue, 23 Jun 2020 04:06:21 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05N85dfs167189;
+        Tue, 23 Jun 2020 04:06:20 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31tysr5yvs-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 03:13:21 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05N7AQdo006113;
-        Tue, 23 Jun 2020 07:13:18 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31sa37vn9b-1
+        Tue, 23 Jun 2020 04:06:20 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05N85qU6014299;
+        Tue, 23 Jun 2020 08:06:17 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma02fra.de.ibm.com with ESMTP id 31sa381v6u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Jun 2020 07:13:18 +0000
+        Tue, 23 Jun 2020 08:06:17 +0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05N7DFIo3146018
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05N86Ff758064968
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jun 2020 07:13:15 GMT
+        Tue, 23 Jun 2020 08:06:15 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C7799A405E;
-        Tue, 23 Jun 2020 07:13:15 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 3E909A4051;
+        Tue, 23 Jun 2020 08:06:15 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 515FFA4040;
-        Tue, 23 Jun 2020 07:13:15 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.187.217])
+        by IMSVA (Postfix) with ESMTP id D3788A4040;
+        Tue, 23 Jun 2020 08:06:14 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.62.182])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Jun 2020 07:13:15 +0000 (GMT)
-Subject: Re: [PATCH v9 0/2] Use DIAG318 to set Control Program Name & Version
- Codes
-To:     Collin Walling <walling@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Cc:     pbonzini@redhat.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, imbrenda@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com, thuth@redhat.com
-References: <20200622154636.5499-1-walling@linux.ibm.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <cfe77de0-e1d8-5779-541f-286cf3002459@de.ibm.com>
-Date:   Tue, 23 Jun 2020 09:13:15 +0200
+        Tue, 23 Jun 2020 08:06:14 +0000 (GMT)
+Subject: Re: [PATCH] KVM: s390: reduce number of IO pins to 1
+To:     David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20200617083620.5409-1-borntraeger@de.ibm.com>
+ <d17de7d7-6cca-672a-5519-c67fc147f6a5@redhat.com>
+ <6953c580-9b99-1c76-b6eb-510dcb70894c@de.ibm.com>
+ <66419659-e678-2daf-2e02-4f2158076ddb@redhat.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <7573ef21-9ed8-cbd0-5456-f8389e4fd25c@linux.ibm.com>
+Date:   Tue, 23 Jun 2020 10:06:14 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200622154636.5499-1-walling@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <66419659-e678-2daf-2e02-4f2158076ddb@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="DkelNSMMLPGsqribB5qmbbqC5kh0zekX1"
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-06-23_04:2020-06-22,2020-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- impostorscore=0 clxscore=1015 malwarescore=0 mlxlogscore=912
- priorityscore=1501 spamscore=0 cotscore=-2147483648 lowpriorityscore=0
- phishscore=0 adultscore=0 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006230054
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ mlxscore=0 bulkscore=0 spamscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 phishscore=0 mlxlogscore=999
+ cotscore=-2147483648 suspectscore=2 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006230059
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--DkelNSMMLPGsqribB5qmbbqC5kh0zekX1
+Content-Type: multipart/mixed; boundary="CSIFHQ09u4KiIGL2plJVKzRwynvG1JVJY"
+
+--CSIFHQ09u4KiIGL2plJVKzRwynvG1JVJY
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 6/18/20 11:07 AM, David Hildenbrand wrote:
+> On 17.06.20 13:04, Christian Borntraeger wrote:
+>>
+>>
+>> On 17.06.20 12:19, David Hildenbrand wrote:
+>>> On 17.06.20 10:36, Christian Borntraeger wrote:
+>>>> The current number of KVM_IRQCHIP_NUM_PINS results in an order 3
+>>>> allocation (32kb) for each guest start/restart. This can result in O=
+OM
+>>>> killer activity even with free swap when the memory is fragmented
+>>>> enough:
+>>>>
+>>>> kernel: qemu-system-s39 invoked oom-killer: gfp_mask=3D0x440dc0(GFP_=
+KERNEL_ACCOUNT|__GFP_COMP|__GFP_ZERO), order=3D3, oom_score_adj=3D0
+>>>> kernel: CPU: 1 PID: 357274 Comm: qemu-system-s39 Kdump: loaded Not t=
+ainted 5.4.0-29-generic #33-Ubuntu
+>>>> kernel: Hardware name: IBM 8562 T02 Z06 (LPAR)
+>>>> kernel: Call Trace:
+>>>> kernel: ([<00000001f848fe2a>] show_stack+0x7a/0xc0)
+>>>> kernel:  [<00000001f8d3437a>] dump_stack+0x8a/0xc0
+>>>> kernel:  [<00000001f8687032>] dump_header+0x62/0x258
+>>>> kernel:  [<00000001f8686122>] oom_kill_process+0x172/0x180
+>>>> kernel:  [<00000001f8686abe>] out_of_memory+0xee/0x580
+>>>> kernel:  [<00000001f86e66b8>] __alloc_pages_slowpath+0xd18/0xe90
+>>>> kernel:  [<00000001f86e6ad4>] __alloc_pages_nodemask+0x2a4/0x320
+>>>> kernel:  [<00000001f86b1ab4>] kmalloc_order+0x34/0xb0
+>>>> kernel:  [<00000001f86b1b62>] kmalloc_order_trace+0x32/0xe0
+>>>> kernel:  [<00000001f84bb806>] kvm_set_irq_routing+0xa6/0x2e0
+>>>> kernel:  [<00000001f84c99a4>] kvm_arch_vm_ioctl+0x544/0x9e0
+>>>> kernel:  [<00000001f84b8936>] kvm_vm_ioctl+0x396/0x760
+>>>> kernel:  [<00000001f875df66>] do_vfs_ioctl+0x376/0x690
+>>>> kernel:  [<00000001f875e304>] ksys_ioctl+0x84/0xb0
+>>>> kernel:  [<00000001f875e39a>] __s390x_sys_ioctl+0x2a/0x40
+>>>> kernel:  [<00000001f8d55424>] system_call+0xd8/0x2c8
+>>>>
+>>>> As far as I can tell s390x does not use the iopins as we bail our fo=
+r
+>>>> anything other than KVM_IRQ_ROUTING_S390_ADAPTER and the chip/pin is=
+
+>>>> only used for KVM_IRQ_ROUTING_IRQCHIP. So let us use a small number =
+to
+>>>> reduce the memory footprint.
+>>>>
+>>>> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>>>> ---
+>>>>  arch/s390/include/asm/kvm_host.h | 8 ++++----
+>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/as=
+m/kvm_host.h
+>>>> index cee3cb6455a2..6ea0820e7c7f 100644
+>>>> --- a/arch/s390/include/asm/kvm_host.h
+>>>> +++ b/arch/s390/include/asm/kvm_host.h
+>>>> @@ -31,12 +31,12 @@
+>>>>  #define KVM_USER_MEM_SLOTS 32
+>>>> =20
+>>>>  /*
+>>>> - * These seem to be used for allocating ->chip in the routing table=
+,
+>>>> - * which we don't use. 4096 is an out-of-thin-air value. If we need=
+
+>>>> - * to look at ->chip later on, we'll need to revisit this.
+>>>> + * These seem to be used for allocating ->chip in the routing table=
+, which we
+>>>> + * don't use. 1 is as small as we can get to reduce the needed memo=
+ry. If we
+>>>> + * need to look at ->chip later on, we'll need to revisit this.
+>>>>   */
+>>>>  #define KVM_NR_IRQCHIPS 1
+>>>> -#define KVM_IRQCHIP_NUM_PINS 4096
+>>>> +#define KVM_IRQCHIP_NUM_PINS 1
+>>>>  #define KVM_HALT_POLL_NS_DEFAULT 50000
+>>>> =20
+>>>>  /* s390-specific vcpu->requests bit members */
+>>>>
+>>>
+>>> Guess it doesn't make sense to wrap all the "->chip" handling in a
+>>> separate set of defines.
+>>>
+>>> Reviewed-by: David Hildenbrand <david@redhat.com>
+>>
+>> I guess this is just the most simple solution. I am asking myself if I=
+ should add
+>> cc stable of Fixes as I was able to trigger this by having several gue=
+sts with a
+>> reboot loop and several guests that trigger memory overcommitment.
+>>
+>=20
+> I don't think this classifies as stable material.
+>=20
+I'd like to have it in stable.
+I'm not looking forward to getting bugzillas after distro tests and then
+telling them that we already have a patch for that.
 
 
-On 22.06.20 17:46, Collin Walling wrote:
-> Changelog:
-> 
->     v9
-> 
->     • No longer unshadowing CPNC in VSIE
-> 
-applied. 
+--CSIFHQ09u4KiIGL2plJVKzRwynvG1JVJY--
+
+--DkelNSMMLPGsqribB5qmbbqC5kh0zekX1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl7xt/YACgkQ41TmuOI4
+ufjzlg//W7axBUXmEBe6ndtBv5zgD9Kuklr/Grf8ZJ4yIuN/S582MQSfGN2dQs23
+5CSSQ24zHI0eXvDmSIbV8m3OuqJU8mBHRXY2ElaDtqwY2CtXP4qIz9izdynmua0x
+ixJBC58UoXHRt07vwoM9m365smsIUxfQuLfHsrQmRv/AgTGM0T9GYo+3wtArp1vv
+xQxgBLR9PKUFTJrs+yOXRMk5Q9tqNEQtebNKbqLyuNk88drOK9cb8S/5bH8g9TEs
+XfdCGZdOMaiylfImVZZVHHy+MfIqLbB1ayCtLXaNRZbxNKlnFr+1i7Gt1PZXFqkl
+t75sgEA9vCbkTbbiXuI+x34Fx+KP9jjslWMOU/qP7pLbTVzpcSTx54S4jV9Cw2Mu
+1ZPjNWhLLkcfluxfjGRMWb9c3kgqpLZR+y/erQ3NQ62q6MDTGsqeEYd2NW5iYdUC
+blIVV/Z4bnOc9TxGbcDMK/WgdR8l0+AwIWef/4CL2kEMu0cA89CWm22XziO2gNiv
+k8W1IDyRWBjIMXDST1mFuWeqccXQH76+B7/mlQh9yvNzNjnMDp4Kp5AFmraFM2io
+bcDDO1LBEzWrxjVR0Z5vIOoRuSM+2EVVWuB3s8qcjx8UI0lbpd8CYLyuh2dqrXVf
+ifMwXnUl6vuWnD9IDLNB2remy+OgM5Iwxxidt2nP/StY45rG0Po=
+=+gDt
+-----END PGP SIGNATURE-----
+
+--DkelNSMMLPGsqribB5qmbbqC5kh0zekX1--
+
