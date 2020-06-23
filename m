@@ -2,54 +2,41 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B05E9205A0E
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2020 20:00:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 483FF205A56
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jun 2020 20:13:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733138AbgFWSAG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 23 Jun 2020 14:00:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58848 "EHLO
+        id S1733012AbgFWSNv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 23 Jun 2020 14:13:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733050AbgFWSAF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 23 Jun 2020 14:00:05 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B869C061755
-        for <linux-s390@vger.kernel.org>; Tue, 23 Jun 2020 11:00:05 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id q15so2152792wmj.2
-        for <linux-s390@vger.kernel.org>; Tue, 23 Jun 2020 11:00:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Wcyp7xJ9VH6Ce5YmoH+01qglUFlPRs0bPBHrFHPBGrU=;
-        b=b0gWdjg9shIjXDAXSuaxcUf0kvXH4yOK4YqHK+9dT9MEpAkVd6umkpXAERDfyobiWl
-         iXYdhTzGdCZyETgQEnsKBMRw2uD1/6EG+a2gNOJxd+k6D/sDEhaX6N+anOTYiE5UTlEW
-         9guLzwsJbj9ourTGn7rQyP3RVBIwQBwAZ/LZZzmAPQobTh1G7a54oM7BKIaUVWVU7sYR
-         92sTnOH08HPqyhu7XVR11xnX2duZHFm8vCQNLqhX6EcurG9VD3S0w6GR/Cq7XgDKoDq9
-         1VJ29HZZZHA+0Um8K2+yTGYbKt5FDsWkltk1RndhkdGr1x6j4EAOX4DINZmI1bfl6Cvx
-         oAyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wcyp7xJ9VH6Ce5YmoH+01qglUFlPRs0bPBHrFHPBGrU=;
-        b=p8vl31o/DuKR/m/9n47nJ2gd6jCXyxbklnXPZjsptT5telTPeYFWb1eu47f68N4ltB
-         2QYsn9ni6qNUcTN0+0I59Sl2cKjWmwfs6BLfDounsJs9xh0xOLadAhLSUcYXSrjndrQY
-         AITd0qYnYjWfX9ACY8+ozIuteSNmUuBEax+duLEQOOTFHn82mRaFdTbfgpEin3EISmud
-         npDB1mV9l8hdMIzMZMS2hAwGFlBJke8Is4LwyCeswOogP+xf9fCJWBoCAZw8Wk/6sEFX
-         gCpcc0u3iMeRT3xj50myGhZdI1pvxBDfKLxGdTI5wPod2uSGojpJKwB8jQ3+hBmYLQcG
-         DTpg==
-X-Gm-Message-State: AOAM531P8EwMqqxaikqZHD0UQdwSmZDtlPY0JfUSdApo/kANN3QC5GXP
-        /aWHDbR2oennfjHmvfQM/RdPfA==
-X-Google-Smtp-Source: ABdhPJyBS+rhzsc1deZ1Ay1FOdoRDXOTCxrPOjQRzUCugXkZeGKEC8Ks241Yw7kTMxlqgYm+GZsCyQ==
-X-Received: by 2002:a7b:cb11:: with SMTP id u17mr25343911wmj.84.1592935203860;
-        Tue, 23 Jun 2020 11:00:03 -0700 (PDT)
-Received: from elver.google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id r1sm22986260wrn.29.2020.06.23.11.00.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2020 11:00:03 -0700 (PDT)
-Date:   Tue, 23 Jun 2020 19:59:57 +0200
-From:   Marco Elver <elver@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
+        with ESMTP id S1728916AbgFWSNv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 23 Jun 2020 14:13:51 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3498FC061573;
+        Tue, 23 Jun 2020 11:13:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Esyq+AEdoh1XonloiuoRagpt95xyDAj6PU4H+a2A370=; b=XtqJqEuJ6fk19CHHDiS/uWu7m0
+        RAcYnkqt4nYjb3KNc+oUduIZ4BmQP6z7+ubMqv/JvBbC0/xybPxcpQOpQ/lg78gd2x3ZCJn9O6mkt
+        Jd5I2z7aiGrouE6zK9gfUYo9bIvJl5dPbeWIYGWpiwKHEq2yefSrMbieDo8PwFR4ey3HjXZsEOZo+
+        kpeu2fan50uIPlXjGdc5H6SPIPfo5+/vVs7+Y3TBJ/eY4XYLK7YLqWy42vBSITC110wTLB/gjxvnQ
+        cqjN7VtvtR9/alVFGB6linsRbGqpzYe0uAFkxKU8EndRnmKY04OLN74stY8WRWXUSKeBa9tcMtxn0
+        Pl+jThxQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jnnPO-0006JO-In; Tue, 23 Jun 2020 18:12:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9BF5E303DA0;
+        Tue, 23 Jun 2020 20:12:32 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8DE8F20267E51; Tue, 23 Jun 2020 20:12:32 +0200 (CEST)
+Date:   Tue, 23 Jun 2020 20:12:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
 Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>, mingo@kernel.org,
         will@kernel.org, tglx@linutronix.de, x86@kernel.org,
         linux-kernel@vger.kernel.org, rostedt@goodmis.org,
@@ -59,72 +46,78 @@ Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>, mingo@kernel.org,
         linux-s390@vger.kernel.org, linux@armlinux.org.uk
 Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
  per-cpu variables
-Message-ID: <20200623175957.GA106514@elver.google.com>
+Message-ID: <20200623181232.GB4800@hirez.programming.kicks-ass.net>
 References: <20200623083645.277342609@infradead.org>
  <20200623083721.512673481@infradead.org>
  <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
  <20200623152450.GM4817@hirez.programming.kicks-ass.net>
  <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
  <20200623163730.GA4800@hirez.programming.kicks-ass.net>
+ <20200623175957.GA106514@elver.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200623163730.GA4800@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.13.2 (2019-12-18)
+In-Reply-To: <20200623175957.GA106514@elver.google.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 06:37PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 23, 2020 at 06:13:21PM +0200, Ahmed S. Darwish wrote:
-> > Well, freshly merged code is using it. For example, KCSAN:
+On Tue, Jun 23, 2020 at 07:59:57PM +0200, Marco Elver wrote:
+> On Tue, Jun 23, 2020 at 06:37PM +0200, Peter Zijlstra wrote:
+> > On Tue, Jun 23, 2020 at 06:13:21PM +0200, Ahmed S. Darwish wrote:
+> > > Well, freshly merged code is using it. For example, KCSAN:
+> > > 
+> > >     => f1bc96210c6a ("kcsan: Make KCSAN compatible with lockdep")
+> > >     => kernel/kcsan/report.c:
+> > > 
+> > >     void kcsan_report(...)
+> > >     {
+> > > 	...
+> > >         /*
+> > >          * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
+> > >          * we do not turn off lockdep here; this could happen due to recursion
+> > >          * into lockdep via KCSAN if we detect a race in utilities used by
+> > >          * lockdep.
+> > >          */
+> > >         lockdep_off();
+> > > 	...
+> > >     }
 > > 
-> >     => f1bc96210c6a ("kcsan: Make KCSAN compatible with lockdep")
-> >     => kernel/kcsan/report.c:
-> > 
-> >     void kcsan_report(...)
-> >     {
-> > 	...
-> >         /*
-> >          * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
-> >          * we do not turn off lockdep here; this could happen due to recursion
-> >          * into lockdep via KCSAN if we detect a race in utilities used by
-> >          * lockdep.
-> >          */
-> >         lockdep_off();
-> > 	...
-> >     }
+> > Marco, do you remember what exactly happened there? Because I'm about to
+> > wreck that. That is, I'm going to make TRACE_IRQFLAGS ignore
+> > lockdep_off().
 > 
-> Marco, do you remember what exactly happened there? Because I'm about to
-> wreck that. That is, I'm going to make TRACE_IRQFLAGS ignore
-> lockdep_off().
+> Yeah, I was trying to squash any kind of recursion:
+> 
+> 	lockdep -> other libs ->
+> 		-> KCSAN
+> 		-> print report
+> 		-> dump stack, printk and friends
+> 		-> lockdep -> other libs
+> 			-> KCSAN ...
+> 
+> Some history:
+> 
+> * Initial patch to fix:
+> 	https://lore.kernel.org/lkml/20200115162512.70807-1-elver@google.com/
 
-Yeah, I was trying to squash any kind of recursion:
+That patch is weird; just :=n on lockdep.c should've cured that, the
+rest is massive overkill.
 
-	lockdep -> other libs ->
-		-> KCSAN
-		-> print report
-		-> dump stack, printk and friends
-		-> lockdep -> other libs
-			-> KCSAN ...
+> * KCSAN+lockdep+ftrace:
+> 	https://lore.kernel.org/lkml/20200214211035.209972-1-elver@google.com/
 
-Some history:
+That doesn't really have anything useful..
 
-* Initial patch to fix:
-	https://lore.kernel.org/lkml/20200115162512.70807-1-elver@google.com/
+> lockdep now has KCSAN_SANITIZE := n, but we still need to ensure that
+> there are no paths out of lockdep, or the IRQ flags tracing code, that
+> might lead through other libs, through KCSAN, libs used to generate a
+> report, and back to lockdep.
+> 
+> I never quite figured out the exact trace that led to corruption, but
+> avoiding any kind of potential for recursion was the only thing that
+> would avoid the check_flags() warnings.
 
-* KCSAN+lockdep+ftrace:
-	https://lore.kernel.org/lkml/20200214211035.209972-1-elver@google.com/
-
-lockdep now has KCSAN_SANITIZE := n, but we still need to ensure that
-there are no paths out of lockdep, or the IRQ flags tracing code, that
-might lead through other libs, through KCSAN, libs used to generate a
-report, and back to lockdep.
-
-I never quite figured out the exact trace that led to corruption, but
-avoiding any kind of potential for recursion was the only thing that
-would avoid the check_flags() warnings.
-
-Thanks,
--- Marco
+Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
+anything happens.
