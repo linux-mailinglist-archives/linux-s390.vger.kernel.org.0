@@ -2,124 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B05E0207283
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 13:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AFF92072C9
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 14:05:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403790AbgFXLtK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 24 Jun 2020 07:49:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38180 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2403784AbgFXLtK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 24 Jun 2020 07:49:10 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OBXQxR137219;
-        Wed, 24 Jun 2020 07:48:18 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux02d77g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 07:48:18 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OBXWRp137775;
-        Wed, 24 Jun 2020 07:48:16 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux02d75v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 07:48:16 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OBkbc2026374;
-        Wed, 24 Jun 2020 11:48:13 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma01fra.de.ibm.com with ESMTP id 31uururavg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 11:48:13 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OBmAwx61079580
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jun 2020 11:48:10 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6AFA3A405C;
-        Wed, 24 Jun 2020 11:48:10 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 45497A4054;
-        Wed, 24 Jun 2020 11:48:09 +0000 (GMT)
-Received: from thinkpad (unknown [9.171.4.225])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Wed, 24 Jun 2020 11:48:09 +0000 (GMT)
-Date:   Wed, 24 Jun 2020 13:48:08 +0200
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr, ziy@nvidia.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH V3 0/4] mm/debug_vm_pgtable: Add some more tests
-Message-ID: <20200624134808.0c460862@thinkpad>
-In-Reply-To: <20200624110539.GC24934@oc3871087118.ibm.com>
-References: <1592192277-8421-1-git-send-email-anshuman.khandual@arm.com>
-        <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
-        <20200624110539.GC24934@oc3871087118.ibm.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S2389974AbgFXMFu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 24 Jun 2020 08:05:50 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39921 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388522AbgFXMFt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 24 Jun 2020 08:05:49 -0400
+Received: by mail-pl1-f193.google.com with SMTP id s14so982132plq.6;
+        Wed, 24 Jun 2020 05:05:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4rW66tKgMxqam/uZ0Bz8Bt7qxGkjsWEZUtUfdcWMRhc=;
+        b=XMlLF2B+pioEMrPQZj3RDmyozPWMTSp2Y5bUwU8DkblV2+DkldHhM/ppyp+n6jb396
+         7D5v7nJ5LaAunRH33dwATmcG8zWn1i0HLZb+fGQZwma8/1i6zvq0obF1XuGnMLlQe2OX
+         Hwr3KJyWXWQHnSFjR/vzXwgC5cqb776738drwoOUJtuNVsGcuzSInbk+I553bPA/Bi4T
+         zQoZF27Ozxnw/LvU+Itrjb1AuwBZiIZQGRrepaINNMj7ekTsYcw+PcvICKaCafLfciCa
+         /lmz/x6dKy8+Ru2OZ7YPV9SmeLIFmmQdPicPfFg0jhiV8pqPG6OyO7X3PdPynSBi/6pM
+         hAHw==
+X-Gm-Message-State: AOAM5301N0bJedtkn+VakeApif5q6cYp4Ix5Aot4P4qHyqEi7eb/YlUp
+        Fn65emJE2mgPTo+hxRONy7U=
+X-Google-Smtp-Source: ABdhPJx9eNUtUf3wuLMsAQaZO33hgDdcCinYPWgXgNxzY43C5jkpxbcvMxqvxkaY5VupgSIqvNCnfQ==
+X-Received: by 2002:a17:90a:30c2:: with SMTP id h60mr3388528pjb.23.1593000348658;
+        Wed, 24 Jun 2020 05:05:48 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id y3sm20167541pff.37.2020.06.24.05.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 05:05:47 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 3F48940430; Wed, 24 Jun 2020 12:05:46 +0000 (UTC)
+Date:   Wed, 24 Jun 2020 12:05:46 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     ast@kernel.org, axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+Message-ID: <20200624120546.GC4332@42.do-not-panic.com>
+References: <20200610154923.27510-5-mcgrof@kernel.org>
+ <20200623141157.5409-1-borntraeger@de.ibm.com>
+ <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
+ <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-24_06:2020-06-24,2020-06-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
- lowpriorityscore=0 phishscore=0 impostorscore=0 cotscore=-2147483648
- bulkscore=0 adultscore=0 mlxlogscore=663 mlxscore=0 priorityscore=1501
- spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006240085
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 24 Jun 2020 13:05:39 +0200
-Alexander Gordeev <agordeev@linux.ibm.com> wrote:
-
-> On Wed, Jun 24, 2020 at 08:43:10AM +0530, Anshuman Khandual wrote:
+On Wed, Jun 24, 2020 at 01:11:54PM +0200, Christian Borntraeger wrote:
 > 
-> [...]
 > 
-> > Hello Gerald/Christophe/Vineet,
+> On 23.06.20 16:23, Christian Borntraeger wrote:
 > > 
-> > It would be really great if you could give this series a quick test
-> > on s390/ppc/arc platforms respectively. Thank you.
+> > 
+> > On 23.06.20 16:11, Christian Borntraeger wrote:
+> >> Jens Markwardt reported a regression in the linux-next runs.  with "umh: fix
+> >> processed error when UMH_WAIT_PROC is used" (from linux-next) a linux bridge
+> >> with an KVM guests no longer activates :
+> >>
+> >> without patch
+> >> # ip addr show dev virbr1
+> >> 6: virbr1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+> >>     link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
+> >>     inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
+> >>        valid_lft forever preferred_lft forever
+> >>
+> >> with this patch the bridge stays DOWN with NO-CARRIER
+> >>
+> >> # ip addr show dev virbr1
+> >> 6: virbr1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+> >>     link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
+> >>     inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
+> >>        valid_lft forever preferred_lft forever
+> >>
+> >> This was bisected in linux-next. Reverting from linux-next also fixes the issue.
+> >>
+> >> Any idea?
+> > 
+> > FWIW, s390 is big endian. Maybe some of the shifts inn the __KW* macros are wrong.
 > 
-> That worked for me with the default and debug s390 configurations.
-> Would you like to try with some particular options or combinations
-> of the options?
+> Does anyone have an idea why "umh: fix processed error when UMH_WAIT_PROC is used" breaks the
+> linux-bridge on s390?
 
-It will be enabled automatically on all archs that set
-ARCH_HAS_DEBUG_VM_PGTABLE, which we do for s390 unconditionally.
-Also, DEBUG_VM has to be set, which we have only in the debug config.
-So only the s390 debug config will have it enabled, you can check
-dmesg for "debug_vm_pgtable" to see when / where it was run, and if it
-triggered any warnings.
+glibc for instance defines __WEXITSTATUS in only one location: bits/waitstatus.h
+and it does not special case it per architecture, so at this point I'd
+have to say we have to look somewhere else for why this is happening.
 
-I also checked with the v3 series, and it works fine for s390.
+The commmit which caused this is issuing a correct error code down the
+pipeline, nothing more. I'll make taking a look at this a priority right
+now. Let us see what I come up with today.
+
+  Luis
