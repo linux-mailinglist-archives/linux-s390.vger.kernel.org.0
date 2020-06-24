@@ -2,170 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABB9F2070F6
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 12:18:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3920D2071CA
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 13:06:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388633AbgFXKSK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 24 Jun 2020 06:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387962AbgFXKSJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 24 Jun 2020 06:18:09 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42673C061573
-        for <linux-s390@vger.kernel.org>; Wed, 24 Jun 2020 03:18:09 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id u23so1385859otq.10
-        for <linux-s390@vger.kernel.org>; Wed, 24 Jun 2020 03:18:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4EH3Ayzk56MpDLOyZMi6Qg/VpTeqgjGr2SzN8cMmYoc=;
-        b=PTp4jBmr409uWPW5Vt6YrFOGDI30bKkNf7AC3vJo8Zwx4VR1rbjpgadDaEIZaiNFVL
-         VBJTF4XPT50EzLlvQiw8k4f2W0kd7aQGIMmlpeve9yrSDO078p6j5Vr2Ri837Rhm4jfv
-         u1+mRP5qAmpO/O+bu41SiNy9tUQ79STVe38DFeFeNP9499lp6tYg2B/9LdPxLqSViv/A
-         aEpznoyQ9vt5hdRMbFbNXOt8J3TRaPZVbdEX7KyF7CUmhSh1dbmdFYj9dqvPQj4ajKRS
-         cF2lIRn2VYT9yr1bRN5NevIgJSIw+t8chreAMLUflL4yfhZAHloKAxOl7LxOqTVI1NyJ
-         3/4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4EH3Ayzk56MpDLOyZMi6Qg/VpTeqgjGr2SzN8cMmYoc=;
-        b=RxaMlBAmQceitKt3IqwoXgNIeIA0AE8E5s/0xfx491WKpADxzmA2NapFHyl9Jh5jBD
-         ko+Sj5NYiAlJJuXdXBT4T8ZH7roUw5+heVynDm5RKTKZzF/Xg89PjbTvXeDluC/zngyu
-         YzL1SWAK+PIntTyoRE2Ere5KZxC5uQV2pDc3yXoLUjJn1MSZqAf6EZgbI/0ZC2b85Wc5
-         j5ayohGJ2ArhU5Ic2zJDMcZd1jUMSQDmo9n8YINIRAetFfMi+QQ8xqSOmyYeG4UMYUUY
-         OfCyTe1x4gw83lGvrp/imkV8/qNsCBakdrfjRSVneqSzDubHIbFkvvwrwfdhNSBCo/yz
-         PTag==
-X-Gm-Message-State: AOAM532ogWjpbF+db7uoJPEobjxUmPSPrMV8GccT82DsJ9cJFaRzbrSC
-        JbZLdPopAYkJU0g62bB9QCq+8Zy6V1kvcmdHlyoMag==
-X-Google-Smtp-Source: ABdhPJw+WsW4dQOdXlVaB0Camas9/CrD9Jx9TYR5aNuPASM2glwnAa/P+LokVbvtPCFjZhr2vBM7U5l7wiUgv2imktE=
-X-Received: by 2002:a9d:638c:: with SMTP id w12mr18833226otk.251.1592993888296;
- Wed, 24 Jun 2020 03:18:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200623083645.277342609@infradead.org> <20200623083721.512673481@infradead.org>
- <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
- <20200623152450.GM4817@hirez.programming.kicks-ass.net> <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
- <20200623163730.GA4800@hirez.programming.kicks-ass.net> <20200623175957.GA106514@elver.google.com>
- <20200623181232.GB4800@hirez.programming.kicks-ass.net> <20200623202404.GE2483@worktop.programming.kicks-ass.net>
- <20200624090033.GD4800@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200624090033.GD4800@hirez.programming.kicks-ass.net>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 24 Jun 2020 12:17:56 +0200
-Message-ID: <CANpmjNMj8FZuBrZsH62V3bZEhFvT2zXwLusVOLwNuH_-kLhp2g@mail.gmail.com>
-Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
- per-cpu variables
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        id S2390564AbgFXLGr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 24 Jun 2020 07:06:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64280 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728734AbgFXLGq (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:06:46 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OB2xsi037997;
+        Wed, 24 Jun 2020 07:05:50 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwysn1kn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 07:05:50 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OB3ocl041599;
+        Wed, 24 Jun 2020 07:05:49 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwysn1gp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 07:05:49 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OB1RS2005458;
+        Wed, 24 Jun 2020 11:05:46 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06ams.nl.ibm.com with ESMTP id 31uusjgh6c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 11:05:45 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OB5hJk55050438
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 11:05:43 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED895AE04D;
+        Wed, 24 Jun 2020 11:05:42 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 380B0AE063;
+        Wed, 24 Jun 2020 11:05:41 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.59.63])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 24 Jun 2020 11:05:41 +0000 (GMT)
+Date:   Wed, 24 Jun 2020 13:05:39 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr, ziy@nvidia.com,
+        gerald.schaefer@de.ibm.com, Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, bigeasy@linutronix.de,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
-        linux-s390@vger.kernel.org, linux@armlinux.org.uk,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH V3 0/4] mm/debug_vm_pgtable: Add some more tests
+Message-ID: <20200624110539.GC24934@oc3871087118.ibm.com>
+References: <1592192277-8421-1-git-send-email-anshuman.khandual@arm.com>
+ <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-24_06:2020-06-24,2020-06-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 priorityscore=1501 impostorscore=0 phishscore=0
+ cotscore=-2147483648 mlxlogscore=812 spamscore=0 adultscore=0
+ clxscore=1011 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006240081
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 24 Jun 2020 at 11:01, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Jun 23, 2020 at 10:24:04PM +0200, Peter Zijlstra wrote:
-> > On Tue, Jun 23, 2020 at 08:12:32PM +0200, Peter Zijlstra wrote:
-> > > Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
-> > > anything happens.
-> >
-> > OK, so the below patch doesn't seem to have any nasty recursion issues
-> > here. The only 'problem' is that lockdep now sees report_lock can cause
-> > deadlocks.
-> >
-> > It is completely right about it too, but I don't suspect there's much we
-> > can do about it, it's pretty much the standard printk() with scheduler
-> > locks held report.
->
-> So I've been getting tons and tons of this:
->
-> [   60.471348] ==================================================================
-> [   60.479427] BUG: KCSAN: data-race in __rcu_read_lock / __rcu_read_unlock
-> [   60.486909]
-> [   60.488572] write (marked) to 0xffff88840fff1cf0 of 4 bytes by interrupt on cpu 1:
-> [   60.497026]  __rcu_read_lock+0x37/0x60
-> [   60.501214]  cpuacct_account_field+0x1b/0x170
-> [   60.506081]  task_group_account_field+0x32/0x160
-> [   60.511238]  account_system_time+0xe6/0x110
-> [   60.515912]  update_process_times+0x1d/0xd0
-> [   60.520585]  tick_sched_timer+0xfc/0x180
-> [   60.524967]  __hrtimer_run_queues+0x271/0x440
-> [   60.529832]  hrtimer_interrupt+0x222/0x670
-> [   60.534409]  __sysvec_apic_timer_interrupt+0xb3/0x1a0
-> [   60.540052]  asm_call_on_stack+0x12/0x20
-> [   60.544434]  sysvec_apic_timer_interrupt+0xba/0x130
-> [   60.549882]  asm_sysvec_apic_timer_interrupt+0x12/0x20
-> [   60.555621]  delay_tsc+0x7d/0xe0
-> [   60.559226]  kcsan_setup_watchpoint+0x292/0x4e0
-> [   60.564284]  __rcu_read_unlock+0x73/0x2c0
-> [   60.568763]  __unlock_page_memcg+0xda/0xf0
-> [   60.573338]  unlock_page_memcg+0x32/0x40
-> [   60.577721]  page_remove_rmap+0x5c/0x200
-> [   60.582104]  unmap_page_range+0x83c/0xc10
-> [   60.586582]  unmap_single_vma+0xb0/0x150
-> [   60.590963]  unmap_vmas+0x81/0xe0
-> [   60.594663]  exit_mmap+0x135/0x2b0
-> [   60.598464]  __mmput+0x21/0x150
-> [   60.601970]  mmput+0x2a/0x30
-> [   60.605176]  exit_mm+0x2fc/0x350
-> [   60.608780]  do_exit+0x372/0xff0
-> [   60.612385]  do_group_exit+0x139/0x140
-> [   60.616571]  __do_sys_exit_group+0xb/0x10
-> [   60.621048]  __se_sys_exit_group+0xa/0x10
-> [   60.625524]  __x64_sys_exit_group+0x1b/0x20
-> [   60.630189]  do_syscall_64+0x6c/0xe0
-> [   60.634182]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [   60.639820]
-> [   60.641485] read to 0xffff88840fff1cf0 of 4 bytes by task 2430 on cpu 1:
-> [   60.648969]  __rcu_read_unlock+0x73/0x2c0
-> [   60.653446]  __unlock_page_memcg+0xda/0xf0
-> [   60.658019]  unlock_page_memcg+0x32/0x40
-> [   60.662400]  page_remove_rmap+0x5c/0x200
-> [   60.666782]  unmap_page_range+0x83c/0xc10
-> [   60.671259]  unmap_single_vma+0xb0/0x150
-> [   60.675641]  unmap_vmas+0x81/0xe0
-> [   60.679341]  exit_mmap+0x135/0x2b0
-> [   60.683141]  __mmput+0x21/0x150
-> [   60.686647]  mmput+0x2a/0x30
-> [   60.689853]  exit_mm+0x2fc/0x350
-> [   60.693458]  do_exit+0x372/0xff0
-> [   60.697062]  do_group_exit+0x139/0x140
-> [   60.701248]  __do_sys_exit_group+0xb/0x10
-> [   60.705724]  __se_sys_exit_group+0xa/0x10
-> [   60.710201]  __x64_sys_exit_group+0x1b/0x20
-> [   60.714872]  do_syscall_64+0x6c/0xe0
-> [   60.718864]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [   60.724503]
-> [   60.726156] Reported by Kernel Concurrency Sanitizer on:
-> [   60.732089] CPU: 1 PID: 2430 Comm: sshd Not tainted 5.8.0-rc2-00186-gb4ee11fe08b3-dirty #303
-> [   60.741510] Hardware name: Intel Corporation S2600GZ/S2600GZ, BIOS SE5C600.86B.02.02.0002.122320131210 12/23/2013
-> [   60.752957] ==================================================================
->
-> And I figured a quick way to get rid of that would be something like the
-> below, seeing how volatile gets auto annotated... but that doesn't seem
-> to actually work.
->
-> What am I missing?
+On Wed, Jun 24, 2020 at 08:43:10AM +0530, Anshuman Khandual wrote:
 
-There's one more in include/linux/rcupdate.h. I suggested this at some point:
+[...]
 
-    https://lore.kernel.org/lkml/20200220213317.GA35033@google.com/
+> Hello Gerald/Christophe/Vineet,
+> 
+> It would be really great if you could give this series a quick test
+> on s390/ppc/arc platforms respectively. Thank you.
 
-To avoid volatiles as I don't think they are needed here.
+That worked for me with the default and debug s390 configurations.
+Would you like to try with some particular options or combinations
+of the options?
 
-[ Still testing your other patches for KCSAN, will send another reply there. ]
-
-Thanks,
--- Marco
+> - Anshuman
