@@ -2,181 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B407207223
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 13:33:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B05E0207283
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 13:49:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390644AbgFXLc6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 24 Jun 2020 07:32:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388470AbgFXLcz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 24 Jun 2020 07:32:55 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53185C061573
-        for <linux-s390@vger.kernel.org>; Wed, 24 Jun 2020 04:32:55 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r12so1886010wrj.13
-        for <linux-s390@vger.kernel.org>; Wed, 24 Jun 2020 04:32:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=qt1v5KPwVtg9+e9cwfIoG4ufrY0z/DdC6WEwpkwGwRY=;
-        b=PO3rDTooWldPb7m9fXQ004Kj2l49mgaYAD82B/2PTCqvIPWKGgDAUSUc3TjPSkrSk6
-         2HKmM9LxLqSy6eW6xalqb2WlfcofRUI7SkopBqxyeqPN5KFaP/b3GMnyB6Mvl968Yzo9
-         M6nRd5g3iEaEMoCYpIUpcKUf54np6GeEwbpcRcPqp1p4xYHMISr0PCEsTZ5KqnufDx/9
-         jqFAUMlfFQpiUe6kCE/qTNKZH0uM2JYP8ND3bwXWXqt0cU/n310GFc9WoYrnCWJymjua
-         Ks86Qk2/C7smXDLuM9imntU/DrzpJjIf3MInM4A9HjB6SUX8GipQuezL36J4Y/YzfM79
-         0LeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=qt1v5KPwVtg9+e9cwfIoG4ufrY0z/DdC6WEwpkwGwRY=;
-        b=GfYqbO/t2KFnM0HemJsFDdHGmsNn+iDwT7EF8etOMfRFyBQ2cXhc3yBwA5wkRHPMjB
-         FZYh9WZr02SHsrhOakeXv80VI/ZRs09dC8Zphq85OqFib3i1h44a3DlahC/76qDOGuAd
-         88cFo3X7G4eStqVDnDYEhmpN+qV+Ou0cz2FY/7iHFQa9GwV6HHZGDoQCoYC4GEkFn+aH
-         OWhauqZTl35xVqEksWEM1MKuDTG8oHbkCnxWX6QegOw7RJJOJS9QIE2yzGOUqSWY5YEe
-         CCn0DEmkaDAaAiHT02Kb8MWftqLtem5gcWpEh/ZC8H8HI0Mr+pF8jM948ruKWlLjyNL9
-         R0wg==
-X-Gm-Message-State: AOAM532gb4XBbEaTUBDAza+ElFLGjuBbO2linQcqlk1M5RCbc4IqLydv
-        5bIRE4V8K+LwZWAvSpuBUEE62g==
-X-Google-Smtp-Source: ABdhPJy/9BBSYnNE09ZOA9yfYLU2h8l9wONKCCYCzYanyMgrjnHC3enrn/8qL92u09xqSIsKnx4IKA==
-X-Received: by 2002:adf:c44d:: with SMTP id a13mr9380625wrg.205.1592998373687;
-        Wed, 24 Jun 2020 04:32:53 -0700 (PDT)
-Received: from elver.google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id u84sm4305920wme.42.2020.06.24.04.32.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 04:32:52 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 13:32:46 +0200
-From:   Marco Elver <elver@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>, mingo@kernel.org,
-        will@kernel.org, tglx@linutronix.de, x86@kernel.org,
-        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        bigeasy@linutronix.de, davem@davemloft.net,
-        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
-        linux-s390@vger.kernel.org, linux@armlinux.org.uk,
-        paulmck@kernel.org
-Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
- per-cpu variables
-Message-ID: <20200624113246.GA170324@elver.google.com>
-References: <20200623083645.277342609@infradead.org>
- <20200623083721.512673481@infradead.org>
- <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
- <20200623152450.GM4817@hirez.programming.kicks-ass.net>
- <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
- <20200623163730.GA4800@hirez.programming.kicks-ass.net>
- <20200623175957.GA106514@elver.google.com>
- <20200623181232.GB4800@hirez.programming.kicks-ass.net>
- <20200623202404.GE2483@worktop.programming.kicks-ass.net>
+        id S2403790AbgFXLtK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 24 Jun 2020 07:49:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38180 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2403784AbgFXLtK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 24 Jun 2020 07:49:10 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OBXQxR137219;
+        Wed, 24 Jun 2020 07:48:18 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux02d77g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 07:48:18 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OBXWRp137775;
+        Wed, 24 Jun 2020 07:48:16 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ux02d75v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 07:48:16 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OBkbc2026374;
+        Wed, 24 Jun 2020 11:48:13 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma01fra.de.ibm.com with ESMTP id 31uururavg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 11:48:13 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OBmAwx61079580
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 11:48:10 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6AFA3A405C;
+        Wed, 24 Jun 2020 11:48:10 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 45497A4054;
+        Wed, 24 Jun 2020 11:48:09 +0000 (GMT)
+Received: from thinkpad (unknown [9.171.4.225])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Wed, 24 Jun 2020 11:48:09 +0000 (GMT)
+Date:   Wed, 24 Jun 2020 13:48:08 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Alexander Gordeev <agordeev@linux.ibm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr, ziy@nvidia.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH V3 0/4] mm/debug_vm_pgtable: Add some more tests
+Message-ID: <20200624134808.0c460862@thinkpad>
+In-Reply-To: <20200624110539.GC24934@oc3871087118.ibm.com>
+References: <1592192277-8421-1-git-send-email-anshuman.khandual@arm.com>
+        <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
+        <20200624110539.GC24934@oc3871087118.ibm.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200623202404.GE2483@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.13.2 (2019-12-18)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-24_06:2020-06-24,2020-06-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
+ lowpriorityscore=0 phishscore=0 impostorscore=0 cotscore=-2147483648
+ bulkscore=0 adultscore=0 mlxlogscore=663 mlxscore=0 priorityscore=1501
+ spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006240085
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 10:24PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 23, 2020 at 08:12:32PM +0200, Peter Zijlstra wrote:
-> > Fair enough; I'll rip it all up and boot a KCSAN kernel, see what if
-> > anything happens.
->=20
-> OK, so the below patch doesn't seem to have any nasty recursion issues
-> here. The only 'problem' is that lockdep now sees report_lock can cause
-> deadlocks.
+On Wed, 24 Jun 2020 13:05:39 +0200
+Alexander Gordeev <agordeev@linux.ibm.com> wrote:
 
-Thanks, using non-raw now makes sense.
+> On Wed, Jun 24, 2020 at 08:43:10AM +0530, Anshuman Khandual wrote:
+> 
+> [...]
+> 
+> > Hello Gerald/Christophe/Vineet,
+> > 
+> > It would be really great if you could give this series a quick test
+> > on s390/ppc/arc platforms respectively. Thank you.
+> 
+> That worked for me with the default and debug s390 configurations.
+> Would you like to try with some particular options or combinations
+> of the options?
 
-> It is completely right about it too, but I don't suspect there's much we
-> can do about it, it's pretty much the standard printk() with scheduler
-> locks held report.
+It will be enabled automatically on all archs that set
+ARCH_HAS_DEBUG_VM_PGTABLE, which we do for s390 unconditionally.
+Also, DEBUG_VM has to be set, which we have only in the debug config.
+So only the s390 debug config will have it enabled, you can check
+dmesg for "debug_vm_pgtable" to see when / where it was run, and if it
+triggered any warnings.
 
-Right, I think we just have to tolerate the potential risk of deadlock
-until there is a way to make all the code that prints in print_report()
-scheduler-safe (that includes stack_trace_print()).
-
-Based on your suggested change to core.c, how about the below patch?
-Anything we've missed? If you think it's reasonable, please carry it
-with the IRQ state tracking changes.
-
-As far as I can tell there are no more warnings together with the other
-patch you sent to add '& LOCKDEP_RECURSION_MASK'.
-
-Thanks,
--- Marco
-
------- >8 ------
-
-=46rom: Marco Elver <elver@google.com>
-Date: Wed, 24 Jun 2020 11:23:22 +0200
-Subject: [PATCH] kcsan: Make KCSAN compatible with new IRQ state tracking
-
-The new IRQ state tracking code does not honor lockdep_off(), and as
-such we should again permit tracing by using non-raw functions in
-core.c. Update the lockdep_off() comment in report.c, to reflect the
-fact there is still a potential risk of deadlock due to using printk()
-=66rom scheduler code.
-
-Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Marco Elver <elver@google.com>
----
- kernel/kcsan/core.c   | 5 ++---
- kernel/kcsan/report.c | 9 +++++----
- 2 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 15f67949d11e..732623c30359 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -397,8 +397,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t=
- size, int type)
- 	}
-=20
- 	if (!kcsan_interrupt_watcher)
--		/* Use raw to avoid lockdep recursion via IRQ flags tracing. */
--		raw_local_irq_save(irq_flags);
-+		local_irq_save(irq_flags);
-=20
- 	watchpoint =3D insert_watchpoint((unsigned long)ptr, size, is_write);
- 	if (watchpoint =3D=3D NULL) {
-@@ -539,7 +538,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t=
- size, int type)
- 	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
- out_unlock:
- 	if (!kcsan_interrupt_watcher)
--		raw_local_irq_restore(irq_flags);
-+		local_irq_restore(irq_flags);
- out:
- 	user_access_restore(ua_flags);
- }
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index ac5f8345bae9..6b2fb1a6d8cd 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -606,10 +606,11 @@ void kcsan_report(const volatile void *ptr, size_t si=
-ze, int access_type,
- 		goto out;
-=20
- 	/*
--	 * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
--	 * we do not turn off lockdep here; this could happen due to recursion
--	 * into lockdep via KCSAN if we detect a race in utilities used by
--	 * lockdep.
-+	 * Because we may generate reports when we're in scheduler code, the use
-+	 * of printk() could deadlock. Until such time that all printing code
-+	 * called in print_report() is scheduler-safe, accept the risk, and just
-+	 * get our message out. As such, also disable lockdep to hide the
-+	 * warning, and avoid disabling lockdep for the rest of the kernel.
- 	 */
- 	lockdep_off();
-=20
---=20
-2.27.0.111.gc72c7da667-goog
-=20
+I also checked with the v3 series, and it works fine for s390.
