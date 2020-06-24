@@ -2,101 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40C82206B19
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 06:29:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB890206CCA
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 08:45:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgFXE3z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 24 Jun 2020 00:29:55 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56644 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727862AbgFXE3x (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 24 Jun 2020 00:29:53 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05O4LvSc030582;
-        Wed, 24 Jun 2020 04:29:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=jt9ppXIndIGWmGXxqK3cCyssTE94sxkPsZAau7yXdVk=;
- b=sdj2F3YKsX86XmRgJddHfdtO4l9GAnHza4TRJihFrbUSgKMa6Ys041jbVj40Vib3v2sV
- rHrf1gjCA4N2nrFN7DqfLy3EUQ063jHE5stlhYEV5wpM1bhkur4bS9Sq7Byv9DaBHhRt
- 4o4LM4s0sToaHCYWBa/MHV8/dp0y+S843sPmiWL82Mhr15xO1br1Ye5gn0MYf+k3K7Kw
- sLfp7XunhoJ0RM3x8ta008eU/q1idZgDyk6XIf/wAajCNF/m0CDrU+84d+F24LnPiKe3
- +n9l8S7GyaVo/+C0U6lwTd2702PW36oTJFxWpr/V41R2aWRZai5UjNDMV+eoZGWnvtHG vQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 31uustrksy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 24 Jun 2020 04:29:50 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05O4Nmxc086112;
-        Wed, 24 Jun 2020 04:29:50 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 31uuqy7dg0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jun 2020 04:29:50 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05O4Tmem030156;
-        Wed, 24 Jun 2020 04:29:48 GMT
-Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 24 Jun 2020 04:29:47 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Steffen Maier <maier@linux.ibm.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Kees Cook <keescook@chromium.org>, linux-scsi@vger.kernel.org,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>
-Subject: Re: [PATCH] zfcp: fix panic on ERP timeout for previously dismissed ERP action
-Date:   Wed, 24 Jun 2020 00:29:40 -0400
-Message-Id: <159297296072.9797.12946914828075340057.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200623140242.98864-1-maier@linux.ibm.com>
-References: <20200623140242.98864-1-maier@linux.ibm.com>
+        id S2389230AbgFXGpO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 24 Jun 2020 02:45:14 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31192 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389227AbgFXGpO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 24 Jun 2020 02:45:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1592981113;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pZ59dMrcCMEt2xju0yrJ58giI7+PBEke5uneE3q+nqM=;
+        b=UUNu3W6BIoHEXroCRmRES9OY4NB7bocb0vhuqYi4hwzkVG4snUlINFFfGwFQHG542c5OFk
+        84tGPk5FUuGGfg52OzvCxh2wQu3HBrlrjduP2KcjH5v3KWprcLJ6BnaWa+oyXphK4V+nJk
+        sHesQBGIa5q4D8r3CnxECOxzVY9VeWQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-118-7I9BkGZKMEG8noI3qbHkjQ-1; Wed, 24 Jun 2020 02:45:10 -0400
+X-MC-Unique: 7I9BkGZKMEG8noI3qbHkjQ-1
+Received: by mail-wr1-f69.google.com with SMTP id o25so2032942wro.16
+        for <linux-s390@vger.kernel.org>; Tue, 23 Jun 2020 23:45:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pZ59dMrcCMEt2xju0yrJ58giI7+PBEke5uneE3q+nqM=;
+        b=QrrdHihcuXRdlwhaLBKoanyK4JRW40r3TBdRm0IXrKdKp2v8GbQyRdHz2Zz764sT6t
+         Q6euIsZJu0VJnq485R5mvU5hSd96jw8qf9q6LyaCPCkdAoGhA9fx3dzrIeyNZcFLRm9T
+         AFycLzGsZzWjct6aCwRiWcDiNT25iYW/6DQHPfuN5sfw9VC8CVgXbimE2gZAeSffRaJI
+         pvroxlUaO4Olbr6VNyK/E7Plj1xr1iUmnUzcZ4hRKLKfvDRmsQrkUTeGFZsmo4ATV2S3
+         mCAXQ1OZLxM5K4NgGYeof4F07Igbhhr7ztAsQAZZz17Knv4wCvp/DKzBPek7SkIFHmMl
+         nngQ==
+X-Gm-Message-State: AOAM533JYNRsw+BXKlcMWBdbLWSDT0LnZj2WvFwiWTNWt85cF/y77v5a
+        sJtyKeeAayrd/CCl6pIexnxniVcU6dYBkkY3jNAoYLuFK99LhpapiO+swTzUt4e2zQNTcd3JC0S
+        4jZgpqLQzAxT/pxvwQiFdtA==
+X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr25962239wma.66.1592981108867;
+        Tue, 23 Jun 2020 23:45:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzMXhCCx7l+MF5swaHD+KvMstBu8/FWEBhX9IfD+hyk+lEneLcjsCv+2Y48HR+WDxmoO+gR9A==
+X-Received: by 2002:a1c:3dc3:: with SMTP id k186mr25962215wma.66.1592981108602;
+        Tue, 23 Jun 2020 23:45:08 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.170.5])
+        by smtp.gmail.com with ESMTPSA id c70sm6535302wme.32.2020.06.23.23.45.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2020 23:45:08 -0700 (PDT)
+Subject: Re: [GIT PULL 0/1] KVM: s390: Fix for 5.8
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, frankja@linux.vnet.ibm.com, david@redhat.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com,
+        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com
+References: <20200623092341.10348-1-frankja@linux.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <4c3afcb4-5671-f8d6-2a89-8ed69cff5e1f@redhat.com>
+Date:   Wed, 24 Jun 2020 08:45:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=851
- adultscore=0 mlxscore=0 suspectscore=0 malwarescore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006240031
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9661 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- cotscore=-2147483648 malwarescore=0 mlxscore=0 clxscore=1011
- lowpriorityscore=0 mlxlogscore=866 phishscore=0 priorityscore=1501
- spamscore=0 impostorscore=0 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006240031
+In-Reply-To: <20200623092341.10348-1-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 23 Jun 2020 16:02:42 +0200, Steffen Maier wrote:
-
-> Suppose that, for unrelated reasons, FSF requests on behalf of recovery
-> are very slow and can run into the ERP timeout.
+On 23/06/20 11:23, Janosch Frank wrote:
+> Hi Paolo,
 > 
-> In the case at hand, we did adapter recovery to a large degree.
-> However due to the slowness a LUN open is pending
-> so the corresponding fc_rport remains blocked.
-> After fast_io_fail_tmo we trigger close physical port recovery
-> for the port under which the LUN should have been opened.
-> The new higher order port recovery
-> dismisses the pending LUN open ERP action and
-> dismisses the pending LUN open FSF request.
-> Such dismissal decouples the ERP action from the pending corresponding
-> FSF request by setting zfcp_fsf_req->erp_action to NULL
-> (among other things) [zfcp_erp_strategy_check_fsfreq()].
+> please pull this fix reducing the number of (currently unused) iopins
+> for kvm/master.
 > 
-> [...]
+> 
+> The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+> 
+>   Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git tags/kvm-s390-master-5.8-3
+> 
+> for you to fetch changes up to 774911290c589e98e3638e73b24b0a4d4530e97c:
+> 
+>   KVM: s390: reduce number of IO pins to 1 (2020-06-18 09:48:19 +0200)
+> 
+> ----------------------------------------------------------------
+> The current number of KVM_IRQCHIP_NUM_PINS results in an order 3
+> allocation (32kb) for each guest start/restart which can result in OOM
+> killer activity when kernel memory is fragmented enough.
+> 
+> This fix reduces the number of iopins as s390 doesn't use them, hence
+> reducing the memory footprint.
+> 
+> ----------------------------------------------------------------
+> 
+> Christian Borntraeger (1):
+>   KVM: s390: reduce number of IO pins to 1
+> 
+>  arch/s390/include/asm/kvm_host.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
 
-Applied to 5.8/scsi-fixes, thanks!
+Pulled, thanks.  Unfortunately this missed my 5.8-rc3 pull request by a
+day, but at least it's safe and sound in kvm/master.
 
-[1/1] scsi: zfcp: Fix panic on ERP timeout for previously dismissed ERP action
-      https://git.kernel.org/mkp/scsi/c/936e6b85da04
+Paolo
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
