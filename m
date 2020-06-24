@@ -2,114 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AFF92072C9
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 14:05:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E65F207346
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 14:26:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389974AbgFXMFu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 24 Jun 2020 08:05:50 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39921 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388522AbgFXMFt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 24 Jun 2020 08:05:49 -0400
-Received: by mail-pl1-f193.google.com with SMTP id s14so982132plq.6;
-        Wed, 24 Jun 2020 05:05:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4rW66tKgMxqam/uZ0Bz8Bt7qxGkjsWEZUtUfdcWMRhc=;
-        b=XMlLF2B+pioEMrPQZj3RDmyozPWMTSp2Y5bUwU8DkblV2+DkldHhM/ppyp+n6jb396
-         7D5v7nJ5LaAunRH33dwATmcG8zWn1i0HLZb+fGQZwma8/1i6zvq0obF1XuGnMLlQe2OX
-         Hwr3KJyWXWQHnSFjR/vzXwgC5cqb776738drwoOUJtuNVsGcuzSInbk+I553bPA/Bi4T
-         zQoZF27Ozxnw/LvU+Itrjb1AuwBZiIZQGRrepaINNMj7ekTsYcw+PcvICKaCafLfciCa
-         /lmz/x6dKy8+Ru2OZ7YPV9SmeLIFmmQdPicPfFg0jhiV8pqPG6OyO7X3PdPynSBi/6pM
-         hAHw==
-X-Gm-Message-State: AOAM5301N0bJedtkn+VakeApif5q6cYp4Ix5Aot4P4qHyqEi7eb/YlUp
-        Fn65emJE2mgPTo+hxRONy7U=
-X-Google-Smtp-Source: ABdhPJx9eNUtUf3wuLMsAQaZO33hgDdcCinYPWgXgNxzY43C5jkpxbcvMxqvxkaY5VupgSIqvNCnfQ==
-X-Received: by 2002:a17:90a:30c2:: with SMTP id h60mr3388528pjb.23.1593000348658;
-        Wed, 24 Jun 2020 05:05:48 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id y3sm20167541pff.37.2020.06.24.05.05.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 05:05:47 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 3F48940430; Wed, 24 Jun 2020 12:05:46 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 12:05:46 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     ast@kernel.org, axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-Message-ID: <20200624120546.GC4332@42.do-not-panic.com>
-References: <20200610154923.27510-5-mcgrof@kernel.org>
- <20200623141157.5409-1-borntraeger@de.ibm.com>
- <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
- <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
+        id S2390305AbgFXM0f (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 24 Jun 2020 08:26:35 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34630 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389907AbgFXM0d (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 24 Jun 2020 08:26:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593001592;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=//a7AwgdL3EMlmKzdzygrkm/h2UlJCHixiMJsRC6eY0=;
+        b=CQUFKQWq8NTw8kPpt/qLWBnnHM5kjFuER3qK9iYEhbc7k407qR2Zca6EyFAkSYAL2gA/1b
+        FQiI6jlax+BvDad8xHZs3RlB/u2eNhtyXm09ukkLjs/DND4sjYnPSf7tej1MxG3Gi/Zvvo
+        AodPJrk+ePFosc19jwBvkUCl0nvZIQM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-425-ti_anV-MOPSmAJ-nLh_sMg-1; Wed, 24 Jun 2020 08:26:28 -0400
+X-MC-Unique: ti_anV-MOPSmAJ-nLh_sMg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F3EAE107ACF5;
+        Wed, 24 Jun 2020 12:26:26 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-114-35.ams2.redhat.com [10.36.114.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F15521008034;
+        Wed, 24 Jun 2020 12:26:22 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v9 09/12] s390x: Library resources for CSS
+ tests
+To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com
+References: <1592213521-19390-1-git-send-email-pmorel@linux.ibm.com>
+ <1592213521-19390-10-git-send-email-pmorel@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <9de11879-4429-bfe8-7f1e-1f5880764a6a@redhat.com>
+Date:   Wed, 24 Jun 2020 14:26:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
+In-Reply-To: <1592213521-19390-10-git-send-email-pmorel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:11:54PM +0200, Christian Borntraeger wrote:
+On 15/06/2020 11.31, Pierre Morel wrote:
+> Provide some definitions and library routines that can be used by
+> tests targeting the channel subsystem.
 > 
-> 
-> On 23.06.20 16:23, Christian Borntraeger wrote:
-> > 
-> > 
-> > On 23.06.20 16:11, Christian Borntraeger wrote:
-> >> Jens Markwardt reported a regression in the linux-next runs.  with "umh: fix
-> >> processed error when UMH_WAIT_PROC is used" (from linux-next) a linux bridge
-> >> with an KVM guests no longer activates :
-> >>
-> >> without patch
-> >> # ip addr show dev virbr1
-> >> 6: virbr1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
-> >>     link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
-> >>     inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
-> >>        valid_lft forever preferred_lft forever
-> >>
-> >> with this patch the bridge stays DOWN with NO-CARRIER
-> >>
-> >> # ip addr show dev virbr1
-> >> 6: virbr1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
-> >>     link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
-> >>     inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
-> >>        valid_lft forever preferred_lft forever
-> >>
-> >> This was bisected in linux-next. Reverting from linux-next also fixes the issue.
-> >>
-> >> Any idea?
-> > 
-> > FWIW, s390 is big endian. Maybe some of the shifts inn the __KW* macros are wrong.
-> 
-> Does anyone have an idea why "umh: fix processed error when UMH_WAIT_PROC is used" breaks the
-> linux-bridge on s390?
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>   lib/s390x/css.h      | 256 +++++++++++++++++++++++++++++++++++++++++++
+>   lib/s390x/css_dump.c | 153 ++++++++++++++++++++++++++
+>   s390x/Makefile       |   1 +
+>   3 files changed, 410 insertions(+)
+>   create mode 100644 lib/s390x/css.h
+>   create mode 100644 lib/s390x/css_dump.c
+[...]
+> diff --git a/lib/s390x/css_dump.c b/lib/s390x/css_dump.c
+> new file mode 100644
+> index 0000000..0c2b64e
+> --- /dev/null
+> +++ b/lib/s390x/css_dump.c
+> @@ -0,0 +1,153 @@
+> +/*
+> + * Channel subsystem structures dumping
+> + *
+> + * Copyright (c) 2020 IBM Corp.
+> + *
+> + * Authors:
+> + *  Pierre Morel <pmorel@linux.ibm.com>
+> + *
+> + * This code is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2.
+> + *
+> + * Description:
+> + * Provides the dumping functions for various structures used by subchannels:
+> + * - ORB  : Operation request block, describes the I/O operation and points to
+> + *          a CCW chain
+> + * - CCW  : Channel Command Word, describes the command, data and flow control
+> + * - IRB  : Interuption response Block, describes the result of an operation;
+> + *          holds a SCSW and model-dependent data.
+> + * - SCHIB: SubCHannel Information Block composed of:
+> + *   - SCSW: SubChannel Status Word, status of the channel.
+> + *   - PMCW: Path Management Control Word
+> + * You need the QEMU ccw-pong device in QEMU to answer the I/O transfers.
+> + */
+> +
+> +#include <libcflat.h>
+> +#include <unistd.h>
 
-glibc for instance defines __WEXITSTATUS in only one location: bits/waitstatus.h
-and it does not special case it per architecture, so at this point I'd
-have to say we have to look somewhere else for why this is happening.
+Please don't use unistd.h in kvm-unit-tests - this header is not usable 
+in cross-compilation environments:
 
-The commmit which caused this is issuing a correct error code down the
-pipeline, nothing more. I'll make taking a look at this a priority right
-now. Let us see what I come up with today.
+  https://travis-ci.com/github/huth/kvm-unit-tests/jobs/353089278#L536
 
-  Luis
+Thanks,
+  Thomas
+
