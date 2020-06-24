@@ -2,68 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5FBC2075EE
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 16:44:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21264207734
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 17:19:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391012AbgFXOoN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 24 Jun 2020 10:44:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52698 "EHLO
+        id S2404034AbgFXPTL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 24 Jun 2020 11:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389836AbgFXOoM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 24 Jun 2020 10:44:12 -0400
+        with ESMTP id S2404017AbgFXPTL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 24 Jun 2020 11:19:11 -0400
 Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2292C061573;
-        Wed, 24 Jun 2020 07:44:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCBC6C061573;
+        Wed, 24 Jun 2020 08:19:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=MmxB8m2YTQX4GpqX+DS37OeRO131e4ndrA9Pl7MwAgc=; b=IOKw7hTcqP1QeelKxku2fGErUp
-        y+gPHThYulPLcw9ZipHA3WEiY0WwtrldwMIjz3I7xFlS4UrXh0IrgE+Nr+g3IVn/C5NubV4TtA66n
-        mLCdiZe84XJ5gE3144uUmasV1evosCnueCmLRk8e5igFHS/jiN+zd4BOILHYYRSu5tnwTTHYczGNM
-        1jNp5/TmBH3r+Cd233b/d63zVr4Nez7dPM6LjZYPehQuohr79GeKnvEyrBvDcVSHQMeCupwKnSb4b
-        k2SF0UgTWsWjSf1WxnC6wYcLs8KKkTGGpdaa+3jajs+y6awdDlv2/jH3uD+C53erVvC46axMeuEel
-        iaiP6SWQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jo6cJ-0001Xw-5j; Wed, 24 Jun 2020 14:43:11 +0000
-Date:   Wed, 24 Jun 2020 15:43:11 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     mcgrof@kernel.org, ast@kernel.org, axboe@kernel.dk,
-        bfields@fieldses.org, bridge@lists.linux-foundation.org,
-        chainsaw@gentoo.org, christian.brauner@ubuntu.com,
-        chuck.lever@oracle.com, davem@davemloft.net, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-Message-ID: <20200624144311.GA5839@infradead.org>
-References: <20200610154923.27510-5-mcgrof@kernel.org>
- <20200623141157.5409-1-borntraeger@de.ibm.com>
- <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
- <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
+        bh=OzpoSzSO3ZwwkTaaz+DbzEmnMWM/twLb1Ew9uO9Omg4=; b=IiAut47R5a9gS07Hg7ZrLDUswa
+        MPDOrqrb35FNW7KA4s0pUdZ+xW7oaaLhOoeJiu9J+UTLn/Qj+ir5baR9VA7kEydjQwVr4EB3fZcl1
+        UDWmBsrI+TkqD4KDiZAQKns4WXZ8EvOchOT2GpbdTro1j6tZQa9K4MwEydqHn12TfL+dOAUZbtzk6
+        knDrzkV/e9M9xycx+wIfsS57Dwf6vaVxcQkDVYa96lmKIONLDVeVIGvZLcKENzqqTC7rZJHYnTbf3
+        aKNMRDwBPvihLQrDIWqXFNrvsBzZsruACWqWCs1VrhRRLtKG9pkW8T7/p0yi5CvGJhUvk1loFIU9p
+        +Q/nmH+w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jo7AG-0003Sa-Sx; Wed, 24 Jun 2020 15:18:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 97715301A7A;
+        Wed, 24 Jun 2020 17:18:14 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8CDC9203CDC50; Wed, 24 Jun 2020 17:18:14 +0200 (CEST)
+Date:   Wed, 24 Jun 2020 17:18:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>, mingo@kernel.org,
+        will@kernel.org, tglx@linutronix.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        bigeasy@linutronix.de, davem@davemloft.net,
+        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
+        linux-s390@vger.kernel.org, linux@armlinux.org.uk,
+        paulmck@kernel.org
+Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
+ per-cpu variables
+Message-ID: <20200624151814.GI4781@hirez.programming.kicks-ass.net>
+References: <20200623083645.277342609@infradead.org>
+ <20200623083721.512673481@infradead.org>
+ <20200623150031.GA2986783@debian-buster-darwi.lab.linutronix.de>
+ <20200623152450.GM4817@hirez.programming.kicks-ass.net>
+ <20200623161320.GA2996373@debian-buster-darwi.lab.linutronix.de>
+ <20200623163730.GA4800@hirez.programming.kicks-ass.net>
+ <20200623175957.GA106514@elver.google.com>
+ <20200623181232.GB4800@hirez.programming.kicks-ass.net>
+ <20200623202404.GE2483@worktop.programming.kicks-ass.net>
+ <20200624113246.GA170324@elver.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200624113246.GA170324@elver.google.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 01:11:54PM +0200, Christian Borntraeger wrote:
-> Does anyone have an idea why "umh: fix processed error when UMH_WAIT_PROC is used" breaks the
-> linux-bridge on s390?
+On Wed, Jun 24, 2020 at 01:32:46PM +0200, Marco Elver wrote:
+> From: Marco Elver <elver@google.com>
+> Date: Wed, 24 Jun 2020 11:23:22 +0200
+> Subject: [PATCH] kcsan: Make KCSAN compatible with new IRQ state tracking
+> 
+> The new IRQ state tracking code does not honor lockdep_off(), and as
+> such we should again permit tracing by using non-raw functions in
+> core.c. Update the lockdep_off() comment in report.c, to reflect the
+> fact there is still a potential risk of deadlock due to using printk()
+> from scheduler code.
+> 
+> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Marco Elver <elver@google.com>
 
-Are we even sure this is s390 specific and doesn't happen on other
-architectures with the same bridge setup?
+Thanks!
+
+I've put this in front of the series at hand. I'll wait a little while
+longer for arch people to give feedback on their header patches before I
+stuff the lot into tip/locking/core.
