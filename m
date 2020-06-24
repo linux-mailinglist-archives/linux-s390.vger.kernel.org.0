@@ -2,125 +2,129 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3661520743F
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 15:17:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5425B2075E2
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 16:41:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388092AbgFXNR3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 24 Jun 2020 09:17:29 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:39242 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728685AbgFXNR2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 24 Jun 2020 09:17:28 -0400
-Received: by mail-pj1-f65.google.com with SMTP id b92so1146276pjc.4;
-        Wed, 24 Jun 2020 06:17:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AmTxCuZjvcdiVEVhuLvvhfsJ8oNVmZ/lVyIOEYHWB0Y=;
-        b=Xc7/HPDfLjwO3vfOloH87tfQI4+HU7eSv2eJgbWB2VPf9JWtdmpEd2QXBmiJCy05dd
-         SUFETLgRt/OctOt5l3jgTWrwYVWkWAU8Q+QsiKAPRb9F+7ugQOxyeILRtceXsv0VmKP4
-         VtYCRJdJqRojiwFMXqFVJ/tpocUN8g7Cr8MFuOwUM10AFQE5i3sUtlTGmGPmOFBBzN+i
-         kB/jdQyJ0/WGTJuU62xF2LdZua+UNsDRQ7ku0j9EVHleHCUDO9GPVyjGTeCRbebME5Ie
-         9FeEDrpG+AADn8a8F+j4z4deipzeJi01RNzahjOH3jN2QhXTV+pnzrMRK6k8L7o6NVgw
-         D//w==
-X-Gm-Message-State: AOAM532vVbPp5eIKC7CxT0QEgrf89GpuBF1Bt8bpM9ELPFqnKUFeiaEr
-        wgVIjEamAzQeW5xiUzyrNUA=
-X-Google-Smtp-Source: ABdhPJz52oTL2B/3PLmnDoI2vugPQaT+ieV89E/RBDP6y5SvM7SHzDqNhk7CAkBkvaU94q6GXPDJhQ==
-X-Received: by 2002:a17:90a:2622:: with SMTP id l31mr29954851pje.18.1593004647767;
-        Wed, 24 Jun 2020 06:17:27 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id b71sm10617893pfb.125.2020.06.24.06.17.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 06:17:26 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 46E1340430; Wed, 24 Jun 2020 13:17:25 +0000 (UTC)
-Date:   Wed, 24 Jun 2020 13:17:25 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        id S2391121AbgFXOl0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 24 Jun 2020 10:41:26 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2384 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389836AbgFXOlZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 24 Jun 2020 10:41:25 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OEXFqX135508;
+        Wed, 24 Jun 2020 10:40:26 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyym7wv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 10:40:26 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OEXTZ2137306;
+        Wed, 24 Jun 2020 10:40:26 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwyym7ut-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 10:40:25 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OEbebC005715;
+        Wed, 24 Jun 2020 14:40:22 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 31uusjgqb6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 24 Jun 2020 14:40:22 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OEeJGu19136648
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jun 2020 14:40:20 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6EA85205A;
+        Wed, 24 Jun 2020 14:40:19 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.59.63])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 16FBF52051;
+        Wed, 24 Jun 2020 14:40:18 +0000 (GMT)
+Date:   Wed, 24 Jun 2020 16:40:16 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        christophe.leroy@c-s.fr, ziy@nvidia.com,
+        Jonathan Corbet <corbet@lwn.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Martin Doucha <mdoucha@suse.cz>
-Cc:     ast@kernel.org, axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-Message-ID: <20200624131725.GL13911@42.do-not-panic.com>
-References: <20200610154923.27510-5-mcgrof@kernel.org>
- <20200623141157.5409-1-borntraeger@de.ibm.com>
- <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
- <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
- <20200624120546.GC4332@42.do-not-panic.com>
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH V3 0/4] mm/debug_vm_pgtable: Add some more tests
+Message-ID: <20200624144015.GD24934@oc3871087118.ibm.com>
+References: <1592192277-8421-1-git-send-email-anshuman.khandual@arm.com>
+ <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
+ <20200624110539.GC24934@oc3871087118.ibm.com>
+ <20200624134808.0c460862@thinkpad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200624120546.GC4332@42.do-not-panic.com>
+In-Reply-To: <20200624134808.0c460862@thinkpad>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-24_08:2020-06-24,2020-06-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ clxscore=1015 bulkscore=0 priorityscore=1501 cotscore=-2147483648
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 mlxlogscore=870
+ phishscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006240106
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Martin, your eyeballs would be appreciated for a bit on this.
-
-On Wed, Jun 24, 2020 at 12:05:46PM +0000, Luis Chamberlain wrote:
-> On Wed, Jun 24, 2020 at 01:11:54PM +0200, Christian Borntraeger wrote:
-> > 
-> > 
-> > On 23.06.20 16:23, Christian Borntraeger wrote:
-> > > 
-> > > 
-> > > On 23.06.20 16:11, Christian Borntraeger wrote:
-> > >> Jens Markwardt reported a regression in the linux-next runs.  with "umh: fix
-> > >> processed error when UMH_WAIT_PROC is used" (from linux-next) a linux bridge
-> > >> with an KVM guests no longer activates :
-> > >>
-> > >> without patch
-> > >> # ip addr show dev virbr1
-> > >> 6: virbr1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
-> > >>     link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
-> > >>     inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
-> > >>        valid_lft forever preferred_lft forever
-> > >>
-> > >> with this patch the bridge stays DOWN with NO-CARRIER
-> > >>
-> > >> # ip addr show dev virbr1
-> > >> 6: virbr1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
-> > >>     link/ether 52:54:00:1e:3f:c0 brd ff:ff:ff:ff:ff:ff
-> > >>     inet 192.168.254.254/24 brd 192.168.254.255 scope global virbr1
-> > >>        valid_lft forever preferred_lft forever
-> > >>
-> > >> This was bisected in linux-next. Reverting from linux-next also fixes the issue.
-> > >>
-> > >> Any idea?
-> > > 
-> > > FWIW, s390 is big endian. Maybe some of the shifts inn the __KW* macros are wrong.
-> > 
-> > Does anyone have an idea why "umh: fix processed error when UMH_WAIT_PROC is used" breaks the
-> > linux-bridge on s390?
+On Wed, Jun 24, 2020 at 01:48:08PM +0200, Gerald Schaefer wrote:
+> On Wed, 24 Jun 2020 13:05:39 +0200
+> Alexander Gordeev <agordeev@linux.ibm.com> wrote:
 > 
-> glibc for instance defines __WEXITSTATUS in only one location: bits/waitstatus.h
-> and it does not special case it per architecture, so at this point I'd
-> have to say we have to look somewhere else for why this is happening.
+> > On Wed, Jun 24, 2020 at 08:43:10AM +0530, Anshuman Khandual wrote:
+> > 
+> > [...]
+> > 
+> > > Hello Gerald/Christophe/Vineet,
+> > > 
+> > > It would be really great if you could give this series a quick test
+> > > on s390/ppc/arc platforms respectively. Thank you.
+> > 
+> > That worked for me with the default and debug s390 configurations.
+> > Would you like to try with some particular options or combinations
+> > of the options?
+> 
+> It will be enabled automatically on all archs that set
+> ARCH_HAS_DEBUG_VM_PGTABLE, which we do for s390 unconditionally.
+> Also, DEBUG_VM has to be set, which we have only in the debug config.
+> So only the s390 debug config will have it enabled, you can check
+> dmesg for "debug_vm_pgtable" to see when / where it was run, and if it
+> triggered any warnings.
 
-I found however an LTP bug indicating the need to test for
-s390 wait macros [0] in light of a recent bug in glibc for s390.
-I am asking for references to that issue given I cannot find
-any mention of this on glibc yet.
+Yes, that is what I did ;)
 
-I'm in hopes Martin might be aware of that mentioned s390 glic bug.
+I should have been more clear. I wonder whether Anshuman has in
+mind other options which possibly makes sense to set or unset
+and check how it goes with non-standard configurations.
 
-[0] https://github.com/linux-test-project/ltp/issues/605
-
-  Luis
+> I also checked with the v3 series, and it works fine for s390.
