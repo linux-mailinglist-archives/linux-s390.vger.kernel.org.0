@@ -2,110 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B438207CD8
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 22:22:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF0A5207D9A
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 22:40:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406285AbgFXUWk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 24 Jun 2020 16:22:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10190 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391426AbgFXUWj (ORCPT
+        id S2391383AbgFXUky (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 24 Jun 2020 16:40:54 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48869 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727981AbgFXUkx (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:22:39 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05OK2XCN052277;
-        Wed, 24 Jun 2020 16:22:39 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwysee87-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 16:22:39 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05OKHi1r093695;
-        Wed, 24 Jun 2020 16:22:38 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31uwysee7q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 16:22:38 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05OKK64M022049;
-        Wed, 24 Jun 2020 20:22:37 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma04wdc.us.ibm.com with ESMTP id 31uury6j97-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Jun 2020 20:22:37 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05OKMZdp41091540
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Jun 2020 20:22:35 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A62E5B2065;
-        Wed, 24 Jun 2020 20:22:35 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 706D4B2064;
-        Wed, 24 Jun 2020 20:22:35 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.85.198.108])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 24 Jun 2020 20:22:35 +0000 (GMT)
-From:   Collin Walling <walling@linux.ibm.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
-Cc:     pbonzini@redhat.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com, thuth@redhat.com
-Subject: [PATCH 2/2] docs: kvm: fix rst formatting
-Date:   Wed, 24 Jun 2020 16:22:00 -0400
-Message-Id: <20200624202200.28209-3-walling@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200624202200.28209-1-walling@linux.ibm.com>
-References: <20200624202200.28209-1-walling@linux.ibm.com>
+        Wed, 24 Jun 2020 16:40:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593031252;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=s/Q+RsZBYMOAhrMPCGGxWYAFNZoQJnDuY4/Qu5DbXBw=;
+        b=cGo19hyg1lEv1BEwzv+MYIVL9q89DC5V2rj4iRHHuoyrUnA9Lre9IdCgAgAYKuFY/Gl86f
+        GUhGi/x4TV4+QepuoQ7/xZebYXTZnrBdG0Bvui0TsDm9hc1o4N5GbeSINsKHnham5NkHil
+        1qTzGrbOxj1dTB8r/IbV/+/7Ka5R2qc=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-423-L_8KEJnyOFu73cjLNVk_dw-1; Wed, 24 Jun 2020 16:40:50 -0400
+X-MC-Unique: L_8KEJnyOFu73cjLNVk_dw-1
+Received: by mail-qk1-f199.google.com with SMTP id h18so2500967qkj.13
+        for <linux-s390@vger.kernel.org>; Wed, 24 Jun 2020 13:40:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=s/Q+RsZBYMOAhrMPCGGxWYAFNZoQJnDuY4/Qu5DbXBw=;
+        b=UesVyGw2un9DVSnOVf1+jS6dMSlsVt15tDcvo84WTQeUEbttP426yTa9/gwVPZQF7Q
+         9umQCctqv25Uy4KqrQPmmMc27IgPs8/rdfL0zwb1hDJWH5tq2WPVzvo1xbzdSu5kkSw0
+         PUSUj/BoM/j8+ZNbkVen8bHgu3Gn3dWOy/hHjb7IP0gNg3uNBCfbCTWXwz9lGrvrmrBj
+         ZoIeeL0uWFhm9frWdchgxWxyPhu9C+Y0pubIaCdFyPSsf2rTUJGkVQ2knEQTfTVvgaOC
+         6lbZznpCV54Fza4Sx2DyBfNt/tpKN4INcQ5CvPJ3kiIh6LoytE9O1pi/rJeeFWCEtgLm
+         wJrA==
+X-Gm-Message-State: AOAM532KM/iLbvgLMfP3ebEOjROE7lYBt5oJRe9avSxmf/bOaCp5ed3w
+        /Oyc9WDT1y2mRz6vShXF9pZ1Dc9+Z/AD3CpTo+KNIi1SMGiGcOCbzYaCvmhYImHUdnGLUDjYc5f
+        68VEK3DxRHS3Jzp1tTpkO3g==
+X-Received: by 2002:ac8:4d4d:: with SMTP id x13mr27918965qtv.289.1593031250300;
+        Wed, 24 Jun 2020 13:40:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxDdof3kQnRWMH/ZuwYgHnSQWiMQJJVG8ff1Lps2dKtAX8O4FtVpVCamC1ozXzBQ9kDQ5TqUw==
+X-Received: by 2002:ac8:4d4d:: with SMTP id x13mr27918944qtv.289.1593031250075;
+        Wed, 24 Jun 2020 13:40:50 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id p3sm4444095qtl.21.2020.06.24.13.40.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2020 13:40:49 -0700 (PDT)
+Date:   Wed, 24 Jun 2020 16:40:47 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 18/26] mm/s390: Use general page fault accounting
+Message-ID: <20200624204047.GC64004@xz-x1>
+References: <20200619160538.8641-1-peterx@redhat.com>
+ <20200619161335.9664-1-peterx@redhat.com>
+ <20200624204930.2445bcd6@thinkpad>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-24_15:2020-06-24,2020-06-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=8 spamscore=0
- cotscore=-2147483648 mlxscore=0 phishscore=0 clxscore=1015
- lowpriorityscore=0 adultscore=0 impostorscore=0 bulkscore=0
- mlxlogscore=999 priorityscore=1501 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006240129
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200624204930.2445bcd6@thinkpad>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-KVM_CAP_S390_VCPU_RESETS and KVM_CAP_S390_PROTECTED needed
-just a little bit of rst touch-up
+On Wed, Jun 24, 2020 at 08:49:30PM +0200, Gerald Schaefer wrote:
+> On Fri, 19 Jun 2020 12:13:35 -0400
+> Peter Xu <peterx@redhat.com> wrote:
+> 
+> > Use the general page fault accounting by passing regs into handle_mm_fault().
+> > It naturally solve the issue of multiple page fault accounting when page fault
+> > retry happened.
+> > 
+> > CC: Heiko Carstens <heiko.carstens@de.ibm.com>
+> > CC: Vasily Gorbik <gor@linux.ibm.com>
+> > CC: Christian Borntraeger <borntraeger@de.ibm.com>
+> > CC: linux-s390@vger.kernel.org
+> > Signed-off-by: Peter Xu <peterx@redhat.com>
+> > ---
+> >  arch/s390/mm/fault.c | 16 +---------------
+> >  1 file changed, 1 insertion(+), 15 deletions(-)
+> > 
+> > diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+> > index ab6d7eedcfab..4d62ca7d3e09 100644
+> > --- a/arch/s390/mm/fault.c
+> > +++ b/arch/s390/mm/fault.c
+> > @@ -479,7 +479,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+> >  	 * make sure we exit gracefully rather than endlessly redo
+> >  	 * the fault.
+> >  	 */
+> > -	fault = handle_mm_fault(vma, address, flags, NULL);
+> > +	fault = handle_mm_fault(vma, address, flags, regs);
+> >  	if (fault_signal_pending(fault, regs)) {
+> >  		fault = VM_FAULT_SIGNAL;
+> >  		if (flags & FAULT_FLAG_RETRY_NOWAIT)
+> > @@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+> >  	if (unlikely(fault & VM_FAULT_ERROR))
+> >  		goto out_up;
+> 
+> There are two cases here where we skipped the accounting,
+> fault_signal_pending() and VM_FAULT_ERROR, similar to other archs.
+> 
+> fault_signal_pending() should be ok, because that only seems to be true
+> for fault & VM_FAULT_RETRY, in which case the new approach also skips
+> the accounting.
 
-Signed-off-by: Collin Walling <walling@linux.ibm.com>
----
- Documentation/virt/kvm/api.rst | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+IMHO it's still possible to have fault_signal_pending() return true even if the
+fault is not with VM_FAULT_RETRY, e.g., when the signal is delivered right
+after the fault is correctly handled for the thread.  However I hope we can
+avoid considering that too even if so...
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 056608e8f243..2d1572d92616 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -6134,16 +6134,17 @@ in CPUID and only exposes Hyper-V identification. In this case, guest
- thinks it's running on Hyper-V and only use Hyper-V hypercalls.
- 
- 8.22 KVM_CAP_S390_VCPU_RESETS
-+-----------------------------
- 
--Architectures: s390
-+:Architectures: s390
- 
- This capability indicates that the KVM_S390_NORMAL_RESET and
- KVM_S390_CLEAR_RESET ioctls are available.
- 
- 8.23 KVM_CAP_S390_PROTECTED
-+---------------------------
- 
--Architecture: s390
--
-+:Architecture: s390
- 
- This capability indicates that the Ultravisor has been initialized and
- KVM can therefore start protected VMs.
+> 
+> But for VM_FAULT_ERROR, the new approach would do accounting, IIUC. Is
+> that changed on purpose? See also my reply on [PATCH 01/26].
+
+(replied in the other thread)
+
+Thanks,
+
 -- 
-2.26.2
+Peter Xu
 
