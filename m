@@ -2,135 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF0A5207D9A
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jun 2020 22:40:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 987D92099E0
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2020 08:31:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391383AbgFXUky (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 24 Jun 2020 16:40:54 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48869 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727981AbgFXUkx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 24 Jun 2020 16:40:53 -0400
+        id S2390095AbgFYGbn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 25 Jun 2020 02:31:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30785 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390090AbgFYGbn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 25 Jun 2020 02:31:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593031252;
+        s=mimecast20190719; t=1593066701;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=s/Q+RsZBYMOAhrMPCGGxWYAFNZoQJnDuY4/Qu5DbXBw=;
-        b=cGo19hyg1lEv1BEwzv+MYIVL9q89DC5V2rj4iRHHuoyrUnA9Lre9IdCgAgAYKuFY/Gl86f
-        GUhGi/x4TV4+QepuoQ7/xZebYXTZnrBdG0Bvui0TsDm9hc1o4N5GbeSINsKHnham5NkHil
-        1qTzGrbOxj1dTB8r/IbV/+/7Ka5R2qc=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-423-L_8KEJnyOFu73cjLNVk_dw-1; Wed, 24 Jun 2020 16:40:50 -0400
-X-MC-Unique: L_8KEJnyOFu73cjLNVk_dw-1
-Received: by mail-qk1-f199.google.com with SMTP id h18so2500967qkj.13
-        for <linux-s390@vger.kernel.org>; Wed, 24 Jun 2020 13:40:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=s/Q+RsZBYMOAhrMPCGGxWYAFNZoQJnDuY4/Qu5DbXBw=;
-        b=UesVyGw2un9DVSnOVf1+jS6dMSlsVt15tDcvo84WTQeUEbttP426yTa9/gwVPZQF7Q
-         9umQCctqv25Uy4KqrQPmmMc27IgPs8/rdfL0zwb1hDJWH5tq2WPVzvo1xbzdSu5kkSw0
-         PUSUj/BoM/j8+ZNbkVen8bHgu3Gn3dWOy/hHjb7IP0gNg3uNBCfbCTWXwz9lGrvrmrBj
-         ZoIeeL0uWFhm9frWdchgxWxyPhu9C+Y0pubIaCdFyPSsf2rTUJGkVQ2knEQTfTVvgaOC
-         6lbZznpCV54Fza4Sx2DyBfNt/tpKN4INcQ5CvPJ3kiIh6LoytE9O1pi/rJeeFWCEtgLm
-         wJrA==
-X-Gm-Message-State: AOAM532KM/iLbvgLMfP3ebEOjROE7lYBt5oJRe9avSxmf/bOaCp5ed3w
-        /Oyc9WDT1y2mRz6vShXF9pZ1Dc9+Z/AD3CpTo+KNIi1SMGiGcOCbzYaCvmhYImHUdnGLUDjYc5f
-        68VEK3DxRHS3Jzp1tTpkO3g==
-X-Received: by 2002:ac8:4d4d:: with SMTP id x13mr27918965qtv.289.1593031250300;
-        Wed, 24 Jun 2020 13:40:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxDdof3kQnRWMH/ZuwYgHnSQWiMQJJVG8ff1Lps2dKtAX8O4FtVpVCamC1ozXzBQ9kDQ5TqUw==
-X-Received: by 2002:ac8:4d4d:: with SMTP id x13mr27918944qtv.289.1593031250075;
-        Wed, 24 Jun 2020 13:40:50 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id p3sm4444095qtl.21.2020.06.24.13.40.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 13:40:49 -0700 (PDT)
-Date:   Wed, 24 Jun 2020 16:40:47 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH 18/26] mm/s390: Use general page fault accounting
-Message-ID: <20200624204047.GC64004@xz-x1>
-References: <20200619160538.8641-1-peterx@redhat.com>
- <20200619161335.9664-1-peterx@redhat.com>
- <20200624204930.2445bcd6@thinkpad>
+        bh=LyDrngkDg+6iBhDtD6oC/1TO4hEBSTxlWLbuzJNG8Mg=;
+        b=Gb7KJHDWsunGCgwKEc47N71Oc3jcDGmnjED561ieT+FihGds45iUPhnfeFafMteMyvLD3s
+        qiTHqagf6NO/bkuREaLqvOuceSTc/ADVktAVs0bZpjikaiqtQVu7g91ebZtIVCVv8QM/f9
+        X+nSmvR4hN82p48m+pItXjhGfnU9wfE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-416-BVxxHgDPPRqFWq1gJsHDEA-1; Thu, 25 Jun 2020 02:31:40 -0400
+X-MC-Unique: BVxxHgDPPRqFWq1gJsHDEA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A639C8015F7;
+        Thu, 25 Jun 2020 06:31:38 +0000 (UTC)
+Received: from gondolin (ovpn-112-36.ams2.redhat.com [10.36.112.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9787D5D9D3;
+        Thu, 25 Jun 2020 06:31:33 +0000 (UTC)
+Date:   Thu, 25 Jun 2020 08:31:30 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Collin Walling <walling@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        pbonzini@redhat.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        david@redhat.com, imbrenda@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com, thuth@redhat.com
+Subject: Re: [PATCH 1/2] docs: kvm: add documentation for
+ KVM_CAP_S390_DIAG318
+Message-ID: <20200625083130.420819c9.cohuck@redhat.com>
+In-Reply-To: <20200624202200.28209-2-walling@linux.ibm.com>
+References: <20200624202200.28209-1-walling@linux.ibm.com>
+        <20200624202200.28209-2-walling@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200624204930.2445bcd6@thinkpad>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 08:49:30PM +0200, Gerald Schaefer wrote:
-> On Fri, 19 Jun 2020 12:13:35 -0400
-> Peter Xu <peterx@redhat.com> wrote:
+On Wed, 24 Jun 2020 16:21:59 -0400
+Collin Walling <walling@linux.ibm.com> wrote:
+
+> Documentation for the s390 DIAGNOSE 0x318 instruction handling.
 > 
-> > Use the general page fault accounting by passing regs into handle_mm_fault().
-> > It naturally solve the issue of multiple page fault accounting when page fault
-> > retry happened.
-> > 
-> > CC: Heiko Carstens <heiko.carstens@de.ibm.com>
-> > CC: Vasily Gorbik <gor@linux.ibm.com>
-> > CC: Christian Borntraeger <borntraeger@de.ibm.com>
-> > CC: linux-s390@vger.kernel.org
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > ---
-> >  arch/s390/mm/fault.c | 16 +---------------
-> >  1 file changed, 1 insertion(+), 15 deletions(-)
-> > 
-> > diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-> > index ab6d7eedcfab..4d62ca7d3e09 100644
-> > --- a/arch/s390/mm/fault.c
-> > +++ b/arch/s390/mm/fault.c
-> > @@ -479,7 +479,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
-> >  	 * make sure we exit gracefully rather than endlessly redo
-> >  	 * the fault.
-> >  	 */
-> > -	fault = handle_mm_fault(vma, address, flags, NULL);
-> > +	fault = handle_mm_fault(vma, address, flags, regs);
-> >  	if (fault_signal_pending(fault, regs)) {
-> >  		fault = VM_FAULT_SIGNAL;
-> >  		if (flags & FAULT_FLAG_RETRY_NOWAIT)
-> > @@ -489,21 +489,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
-> >  	if (unlikely(fault & VM_FAULT_ERROR))
-> >  		goto out_up;
+> Signed-off-by: Collin Walling <walling@linux.ibm.com>
+> ---
+>  Documentation/virt/kvm/api.rst | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
-> There are two cases here where we skipped the accounting,
-> fault_signal_pending() and VM_FAULT_ERROR, similar to other archs.
-> 
-> fault_signal_pending() should be ok, because that only seems to be true
-> for fault & VM_FAULT_RETRY, in which case the new approach also skips
-> the accounting.
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 426f94582b7a..056608e8f243 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -6150,3 +6150,22 @@ KVM can therefore start protected VMs.
+>  This capability governs the KVM_S390_PV_COMMAND ioctl and the
+>  KVM_MP_STATE_LOAD MP_STATE. KVM_SET_MP_STATE can fail for protected
+>  guests when the state change is invalid.
+> +
+> +8.24 KVM_CAP_S390_DIAG318
+> +-------------------------
+> +
+> +:Architecture: s390
+> +
+> +This capability allows for information regarding the control program that may
 
-IMHO it's still possible to have fault_signal_pending() return true even if the
-fault is not with VM_FAULT_RETRY, e.g., when the signal is delivered right
-after the fault is correctly handled for the thread.  However I hope we can
-avoid considering that too even if so...
+Maybe s/allows for/covers/ ?
 
-> 
-> But for VM_FAULT_ERROR, the new approach would do accounting, IIUC. Is
-> that changed on purpose? See also my reply on [PATCH 01/26].
+> +be observed via system/firmware service events. The availability of this
+> +capability indicates that KVM handling of the register synchronization, reset,
+> +and VSIE shadowing of the DIAGNOSE 0x318 related information is present.
+> +
+> +The information associated with the instruction is an 8-byte value consisting
+> +of a one-byte Control Program Name Code (CPNC), and a 7-byte Control Program
+> +Version Code (CPVC). The CPNC determines what environment the control program
+> +is running in (e.g. Linux, z/VM...), and the CPVC is used for extraneous
+> +information specific to OS (e.g. Linux version, Linux distribution...)
+> +
+> +If this capability is available, then the CPNC and CPVC can be synchronized
+> +between KVM and userspace via the sync regs mechanism (KVM_SYNC_DIAG318).
 
-(replied in the other thread)
+Anyway,
 
-Thanks,
-
--- 
-Peter Xu
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
