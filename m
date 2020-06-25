@@ -2,72 +2,54 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AD2520A2AD
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2020 18:11:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 177F420A2ED
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jun 2020 18:30:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406029AbgFYQLh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 25 Jun 2020 12:11:37 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39429 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2403801AbgFYQLh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 25 Jun 2020 12:11:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593101496;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LhIGYjeh1ZLiQBB1Zj+yCORUmvKtDAx28fAGiKeMIyU=;
-        b=K581IProzQtZA2jWiiXsfGlrGY7KrKh4SvhlERY+Am15zuzJbxj/BsfMzt5lGzdvIz1DLN
-        CRrx4n2ec2iS7LiRv+/hp9FQzahlbRUIK9a7zpRmRDVnYlMHoGJGM7d7xJW5LeHwkquaQD
-        wH2KFFOWa8QH9Z1ctiFpef049tVVhj0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-67-0MK2I85SNWunYIiMRdd3LQ-1; Thu, 25 Jun 2020 12:11:33 -0400
-X-MC-Unique: 0MK2I85SNWunYIiMRdd3LQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6066D18585A0;
-        Thu, 25 Jun 2020 16:11:31 +0000 (UTC)
-Received: from gondolin (ovpn-112-36.ams2.redhat.com [10.36.112.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 75A9860C1D;
-        Thu, 25 Jun 2020 16:11:26 +0000 (UTC)
-Date:   Thu, 25 Jun 2020 18:11:24 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Collin Walling <walling@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        pbonzini@redhat.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        david@redhat.com, imbrenda@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com, thuth@redhat.com
-Subject: Re: [PATCH v2 1/2] docs: kvm: add documentation for
- KVM_CAP_S390_DIAG318
-Message-ID: <20200625181124.478ddd9f.cohuck@redhat.com>
-In-Reply-To: <20200625150724.10021-2-walling@linux.ibm.com>
-References: <20200625150724.10021-1-walling@linux.ibm.com>
-        <20200625150724.10021-2-walling@linux.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        id S2406121AbgFYQaU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 25 Jun 2020 12:30:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403859AbgFYQaT (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 25 Jun 2020 12:30:19 -0400
+Subject: Re: [GIT PULL] s390 updates for 5.8-rc3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593102619;
+        bh=9A9rVMBkFqjj5fohiV8K130QBeXQtO0I949mWPf36RY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=DXJge5MJ2vTfdxT+frjnRKm57WU/TDicKmTF+jF47Uza0IMywMp5U5OW7GEgDxaov
+         vQJHaDlpOGTrErwKm2dZFs+NaJS/7ebXvU6D1I4FfKshHS1qGNO+xbzazNi+JDTAmE
+         X3Fe95TcZW10NDA5wpLFDMGzheCFlVRvy7zJeLZk=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200625120327.GA7638@osiris>
+References: <20200625120327.GA7638@osiris>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200625120327.GA7638@osiris>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-3
+X-PR-Tracked-Commit-Id: 827c4913923e0b441ba07ba4cc41e01181102303
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 908f7d12d3ba51dfe0449b9723199b423f97ca9a
+Message-Id: <159310261924.15384.1981897420466320692.pr-tracker-bot@kernel.org>
+Date:   Thu, 25 Jun 2020 16:30:19 +0000
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 25 Jun 2020 11:07:23 -0400
-Collin Walling <walling@linux.ibm.com> wrote:
+The pull request you sent on Thu, 25 Jun 2020 14:03:27 +0200:
 
-> Documentation for the s390 DIAGNOSE 0x318 instruction handling.
-> 
-> Signed-off-by: Collin Walling <walling@linux.ibm.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> ---
->  Documentation/virt/kvm/api.rst | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-3
 
-Still looks good to me.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/908f7d12d3ba51dfe0449b9723199b423f97ca9a
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
