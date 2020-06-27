@@ -2,103 +2,76 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE9E120C2F6
-	for <lists+linux-s390@lfdr.de>; Sat, 27 Jun 2020 18:11:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D92320C384
+	for <lists+linux-s390@lfdr.de>; Sat, 27 Jun 2020 20:31:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbgF0QLA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 27 Jun 2020 12:11:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53500 "EHLO
+        id S1726715AbgF0Sbn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 27 Jun 2020 14:31:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgF0QK7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 27 Jun 2020 12:10:59 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 975E6C03E979
-        for <linux-s390@vger.kernel.org>; Sat, 27 Jun 2020 09:10:59 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id f6so2180902pjq.5
-        for <linux-s390@vger.kernel.org>; Sat, 27 Jun 2020 09:10:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GmqzFZ1buIwT4xrRi2FIHyllUAjbkOAd/H/8HxkAW6U=;
-        b=dh4JYSM4NRBR8w2L+qg0N6eb1ocUwJuefZCDJ8ZAsegTTsNUdCHDIcY2KsJTT14RgX
-         lmeulxGNpq4ng/Fmwb1zgiNrDYW0uFB4egI29Rc7jTu1T59KcyRuyhT/Zn9yPJpRPuSQ
-         E5NYbzcoNWjOrKIiJt1IMVILm4RHgsJF72yjM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GmqzFZ1buIwT4xrRi2FIHyllUAjbkOAd/H/8HxkAW6U=;
-        b=adoftiYaX44QWC77uYaaZ1XdjXILJXOcd7zOGHouCuJXMcCFWOHa9XJcAx5N97CQi0
-         LLAgjaLzBlI0Z9BIxxmcWUsNbXtHwQEc/TusOHGmTtfNhUrmJJFL1we3nPAupBh0CHKP
-         r6ApY8f/u/C9zMGfghVTTFGny/WkvqK6GQPNk6fbImomRdOfDenHpMEpRLsxPzxkff0Y
-         1zc/oqYHV4c8SPeNpB3R1X8bVpVSKIDTkvCSDMWP0k1/OXELQw3mmcsQywtUwm5UI1OA
-         kGHhYU5o03Lt3a+enlJK/o9sQLM6po4Hx/+CMBrHDhfzyw0InhUXkUeRw4FBEdmD/kfs
-         74DQ==
-X-Gm-Message-State: AOAM532FHYTdFiBADoxv0+vav15cnrjbP17zjCPT8vVQEBpIidRcRTsa
-        1ByP5U83Bu2gkdc3lFaAPHpx0Q==
-X-Google-Smtp-Source: ABdhPJxvFEkA27nw2gBUVjy1fli8GztX/RD0yA8MQhKOnpjbbyyo6aVteBGz+IF4Z8iHZdIMOvTrXg==
-X-Received: by 2002:a17:90a:35c:: with SMTP id 28mr1653573pjf.63.1593274258994;
-        Sat, 27 Jun 2020 09:10:58 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u13sm7074448pjy.40.2020.06.27.09.10.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2020 09:10:58 -0700 (PDT)
-Date:   Sat, 27 Jun 2020 09:10:56 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        kernel-hardening@lists.openwall.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/s390/char/tty3270: Remove function callback casts
-Message-ID: <202006270853.C40CA89806@keescook>
-References: <20200627125417.18887-1-oscar.carter@gmx.com>
+        with ESMTP id S1725867AbgF0Sbm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 27 Jun 2020 14:31:42 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1097C061794;
+        Sat, 27 Jun 2020 11:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=iUonY5tAtTgjqNbCWE5Vwbj85TqSh1tjYug5m+z4Qck=; b=MsYzlS2SipjcxBXS/jfM5VXHva
+        0MfNKJEN4Ox+ZUvZVKPtEzNZ/zLlCXy8jbjH80IN8Oo773ZG+LOVNciLsZ72OHXVwzxk8wniA3U0V
+        tIoFs0GZReQhvgYWkbnVwL19Dtx67F+f2/O0c4xdQPIiDKuRbrQdIabEJGQ0UH7dl9YfrpBoHiVgY
+        LJn5cith0pkJo77B4FDd/wIbqvCKQwOqO7uUuO1u9O+wrbWAQz/Co4K78ZNVlmHwzVD0Tbj5ZR3ox
+        rEf/WEDcRKl4UkREWSDVjoOd6pfKJAywWo3Lu/yQzI4vCUWY3bSD+SM2sePDqJoJZXsfpfI+PBruY
+        O/fqA5KQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpFba-0004Zp-Dw; Sat, 27 Jun 2020 18:31:10 +0000
+Date:   Sat, 27 Jun 2020 19:31:10 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Joerg Roedel <joro@8bytes.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Stafford Horne <shorne@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-parisc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        linuxppc-dev@lists.ozlabs.org, openrisc@lists.librecores.org,
+        sparclinux@vger.kernel.org
+Subject: Re: [PATCH 0/8] mm: cleanup usage of <asm/pgalloc.h>
+Message-ID: <20200627183110.GE25039@casper.infradead.org>
+References: <20200627143453.31835-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200627125417.18887-1-oscar.carter@gmx.com>
+In-Reply-To: <20200627143453.31835-1-rppt@kernel.org>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 02:54:17PM +0200, Oscar Carter wrote:
-> In an effort to enable -Wcast-function-type in the top-level Makefile to
-> support Control Flow Integrity builds, remove all the function callback
-> casts.
-> 
-> To do this modify the function prototypes accordingly.
-> 
-> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+On Sat, Jun 27, 2020 at 05:34:45PM +0300, Mike Rapoport wrote:
+> Most architectures have very similar versions of pXd_alloc_one() and
+> pXd_free_one() for intermediate levels of page table. 
+> These patches add generic versions of these functions in
+> <asm-generic/pgalloc.h> and enable use of the generic functions where
+> appropriate.
 
-Oh yes, the tasklets! I'd love to see this fixed correctly. (Which is to
-say, modernize the API.) Romain hasn't had time to continue the work:
-https://lore.kernel.org/kernel-hardening/20190929163028.9665-1-romain.perier@gmail.com/
+For the series:
 
-Is this something you'd want to tackle?
-
-> ---
->  drivers/s390/char/tty3270.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
-> index 98d7fc152e32..aec996de44d9 100644
-> --- a/drivers/s390/char/tty3270.c
-> +++ b/drivers/s390/char/tty3270.c
-> @@ -556,8 +556,9 @@ tty3270_scroll_backward(struct kbd_data *kbd)
->   * Pass input line to tty.
->   */
->  static void
-> -tty3270_read_tasklet(struct raw3270_request *rrq)
-> +tty3270_read_tasklet(unsigned long data)
->  {
-> +	struct raw3270_request *rrq = (struct raw3270_request *)data;
-
-Regardless, this is correct as far as fixing the prototype.
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
