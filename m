@@ -2,127 +2,119 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FFE020C012
-	for <lists+linux-s390@lfdr.de>; Sat, 27 Jun 2020 10:17:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6547620C14F
+	for <lists+linux-s390@lfdr.de>; Sat, 27 Jun 2020 14:55:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgF0IRx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 27 Jun 2020 04:17:53 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:46046 "EHLO pegase1.c-s.fr"
+        id S1726646AbgF0MzJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 27 Jun 2020 08:55:09 -0400
+Received: from mout.gmx.net ([212.227.17.22]:52029 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbgF0IRx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 27 Jun 2020 04:17:53 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49v67c3vRsz9tyVp;
-        Sat, 27 Jun 2020 10:17:48 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id LVJHe2PffxRU; Sat, 27 Jun 2020 10:17:48 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49v67c2nSlz9tyVn;
-        Sat, 27 Jun 2020 10:17:48 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id ACB498B772;
-        Sat, 27 Jun 2020 10:17:49 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id i_8AMg20BFyg; Sat, 27 Jun 2020 10:17:49 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C3F508B75B;
-        Sat, 27 Jun 2020 10:17:47 +0200 (CEST)
-Subject: Re: [PATCH V3 0/4] mm/debug_vm_pgtable: Add some more tests
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     christophe.leroy@c-s.fr, ziy@nvidia.com,
-        gerald.schaefer@de.ibm.com, Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        id S1726589AbgF0MzI (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 27 Jun 2020 08:55:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1593262492;
+        bh=OZFz73ODcG4HFVet5IxLP7LoD5Tul3KsEAIISgKqlEA=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=cMqLOo14qDy43kwqRC5RunQ9/8+1rZmrsf0EuKYO6Mm+jhcMb74jiRjlsSJu0NbWJ
+         j9xto0rcAQ/usNU4tZMeNS5pJUoGyssE19JrqoLbJuYX4UwasjtPv+05JXMffVlMJX
+         XEFSGlXuHddcgz7xuYOC5hL1aLL4vGG5x+zoci4E=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.73.70]) by mail.gmx.com
+ (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1N3siG-1ipfml3n96-00zoC5; Sat, 27 Jun 2020 14:54:52 +0200
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Kees Cook <keescook@chromium.org>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1592192277-8421-1-git-send-email-anshuman.khandual@arm.com>
- <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <0ed75013-6ac4-3902-391a-1f7152510c6d@csgroup.eu>
-Date:   Sat, 27 Jun 2020 10:17:27 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     kernel-hardening@lists.openwall.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
+Subject: [PATCH] drivers/s390/char/tty3270: Remove function callback casts
+Date:   Sat, 27 Jun 2020 14:54:17 +0200
+Message-Id: <20200627125417.18887-1-oscar.carter@gmx.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:WuLVlRTrugTdMXef4+/XXVnc8C9knOmuEp8gUSwkWy9Toq23Y5B
+ MyN5hAU4IiecdUDVIvl+O1g8No+219xwL53VlaOGWjTVLPgWWpIzZ7kaoJvi/BdIrDmhNq2
+ zjh0RnLOgL1kUHJy1cXOEJtsSGnIwBtBIgnoQ0jmyeeyWRTav0zTNhYDOLih8KfHTDf858h
+ bn0dcKhtppCqNkjsUwTZw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HUfvtbJHxCU=:wVnHHWAAYZzyqtb6vmVCxL
+ woNLDkTI0KAiNyG/mbSv1JTsnjv09BojAkwDuw/ytyOYrjDteKWh6gmRnOQWTv+SqCFveXZTG
+ vZcsBYf6lR5pvngUEiamQYCHj+f6t2HgyUKFV8RlGIuRkh2EVhLflig21KSC8GYX+HBTORehW
+ Twxwm8ppmQ7Shjv7tAniEhhy9ZC2dzA4tiEFaRwfZ8PgqFWzHMcxDDSG7KB5Mbco8NB8/1/ei
+ 0laH8IvM2AtcFCLMtlU0ZCc+zmbq9gDdybmjwfIroi4lhi0RV5LLi0b1dG6SF6U9NxtryRw5O
+ hYE+luzPT58uie5fdVd0RBfDV0wqQDmGxmycCRD1BQJMrqjrXfhGikWD7FGrxMsR90WolEoXL
+ PkzuFNxh9xFVrGKJPWvqs5U0PGT1UlChCmlZ3qWnhYJQubNe9T1hIk57hvk9cdDxxSsW7NCxQ
+ fSXr2O/GR0TLX1uSSoPmZkiTl5O6KzgQh1ib4i6omTOrXI3u2f8qBZ/UQ85usA1qat2abnmez
+ vYkCZYobxnRJNgPeDFq5mLn7TEtAU5h4fX3ttu+N8EDDblCg/7fFEKgKcAs3EzFNnlAdMg3tm
+ g0Tg7RQpxP8k/JTGv7h/2ijofU7NEBRNr4QaQAuKKl7yjKcE7InawrIjghaRRhMB0KR7Svyt/
+ /+HJcs6gnbkPEsykDU+7FnDcjXu5J1zs3Uij6QOcZ1Ms07rLHX7ZXI1dhN9iWer/jhoNfiTKG
+ yp5QqTdCt8EgzbBn59h66Hxr0EWYepfURo/pv3yIT3G28yF5tghjsFsJgMdfxD6+XPnsSflwH
+ jpb26ZOx6bPcQsIFk7fYin8dlRJtf11J72vDFa/NjES2p6FFwptPRf1oNTjJNHZPAww9f1XST
+ 8ssOWMRWLGdq5whMhYt7XJqTqmAeQFV4DyCiN4J/uHXrtZ0nlVK3y+0p2Ayz6kBZ4HYClSMrP
+ UpvkMzdFb4KmkSDuySzuKD9F3uAec/fBYk1j6Bdbxf5zRFEji4mmolm0QDDFYMuGEmTrLexmc
+ 9pWJZWkYbdnI+c9McaavZYduNGXOpLVi8RTgxlP4oON8fMkkD17cwYLpup56Yg/2REgXPC1TH
+ 5NvZF6vkVIsx/Jpwrhf0VL2PO1+6fbJpTIa/B1+0YqHxlnRO/IQdL/rX/NcBQojl3MNHnnsBK
+ zGopnAW8+Br3XkJ+90uUI1jDU+j9oLlDYp1AlcI1/vb0bzI7B1PUCazzogYgEXJWqBSU19xff
+ EwfePvX23zwtVPKOO
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+In an effort to enable -Wcast-function-type in the top-level Makefile to
+support Control Flow Integrity builds, remove all the function callback
+casts.
 
+To do this modify the function prototypes accordingly.
 
-Le 24/06/2020 à 05:13, Anshuman Khandual a écrit :
-> 
-> 
-> On 06/15/2020 09:07 AM, Anshuman Khandual wrote:
->> This series adds some more arch page table helper validation tests which
->> are related to core and advanced memory functions. This also creates a
->> documentation, enlisting expected semantics for all page table helpers as
->> suggested by Mike Rapoport previously (https://lkml.org/lkml/2020/1/30/40).
->>
->> There are many TRANSPARENT_HUGEPAGE and ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD
->> ifdefs scattered across the test. But consolidating all the fallback stubs
->> is not very straight forward because ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD is
->> not explicitly dependent on ARCH_HAS_TRANSPARENT_HUGEPAGE.
->>
->> Tested on arm64, x86 platforms but only build tested on all other enabled
->> platforms through ARCH_HAS_DEBUG_VM_PGTABLE i.e powerpc, arc, s390. The
->> following failure on arm64 still exists which was mentioned previously. It
->> will be fixed with the upcoming THP migration on arm64 enablement series.
->>
->> WARNING .... mm/debug_vm_pgtable.c:860 debug_vm_pgtable+0x940/0xa54
->> WARN_ON(!pmd_present(pmd_mkinvalid(pmd_mkhuge(pmd))))
->>
->> This series is based on v5.8-rc1.
->>
->> Changes in V3:
->>
->> - Replaced HAVE_ARCH_SOFT_DIRTY with MEM_SOFT_DIRTY
->> - Added HAVE_ARCH_HUGE_VMAP checks in pxx_huge_tests() per Gerald
->> - Updated documentation for pmd_thp_tests() per Zi Yan
->> - Replaced READ_ONCE() with huge_ptep_get() per Gerald
->> - Added pte_mkhuge() and masking with PMD_MASK per Gerald
->> - Replaced pte_same() with holding pfn check in pxx_swap_tests()
->> - Added documentation for all (#ifdef #else #endif) per Gerald
->> - Updated pmd_protnone_tests() per Gerald
->> - Updated HugeTLB PTE creation in hugetlb_advanced_tests() per Gerald
->> - Replaced [pmd|pud]_mknotpresent() with [pmd|pud]_mkinvalid()
->> - Added has_transparent_hugepage() check for PMD and PUD tests
->> - Added a patch which debug prints all individual tests being executed
->> - Updated documentation for renamed [pmd|pud]_mkinvalid() helpers
-> 
-> Hello Gerald/Christophe/Vineet,
-> 
-> It would be really great if you could give this series a quick test
-> on s390/ppc/arc platforms respectively. Thank you.
-> 
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+=2D--
+ drivers/s390/char/tty3270.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Running ok on powerpc 8xx after fixing build failures.
+diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
+index 98d7fc152e32..aec996de44d9 100644
+=2D-- a/drivers/s390/char/tty3270.c
++++ b/drivers/s390/char/tty3270.c
+@@ -556,8 +556,9 @@ tty3270_scroll_backward(struct kbd_data *kbd)
+  * Pass input line to tty.
+  */
+ static void
+-tty3270_read_tasklet(struct raw3270_request *rrq)
++tty3270_read_tasklet(unsigned long data)
+ {
++	struct raw3270_request *rrq =3D (struct raw3270_request *)data;
+ 	static char kreset_data =3D TW_KR;
+ 	struct tty3270 *tp =3D container_of(rrq->view, struct tty3270, view);
+ 	char *input;
+@@ -652,8 +653,9 @@ tty3270_issue_read(struct tty3270 *tp, int lock)
+  * Hang up the tty
+  */
+ static void
+-tty3270_hangup_tasklet(struct tty3270 *tp)
++tty3270_hangup_tasklet(unsigned long data)
+ {
++	struct tty3270 *tp =3D (struct tty3270 *)data;
+ 	tty_port_tty_hangup(&tp->port, true);
+ 	raw3270_put_view(&tp->view);
+ }
+@@ -752,11 +754,9 @@ tty3270_alloc_view(void)
 
-Christophe
+ 	tty_port_init(&tp->port);
+ 	timer_setup(&tp->timer, tty3270_update, 0);
+-	tasklet_init(&tp->readlet,
+-		     (void (*)(unsigned long)) tty3270_read_tasklet,
++	tasklet_init(&tp->readlet, tty3270_read_tasklet,
+ 		     (unsigned long) tp->read);
+-	tasklet_init(&tp->hanglet,
+-		     (void (*)(unsigned long)) tty3270_hangup_tasklet,
++	tasklet_init(&tp->hanglet, tty3270_hangup_tasklet,
+ 		     (unsigned long) tp);
+ 	INIT_WORK(&tp->resize_work, tty3270_resize_work);
+
+=2D-
+2.20.1
+
