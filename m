@@ -2,178 +2,151 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99EA720D0F7
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2020 20:41:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1A9620D378
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2020 21:12:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbgF2ShL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 29 Jun 2020 14:37:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48392 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726831AbgF2Sf4 (ORCPT
+        id S1729166AbgF2S7N (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 29 Jun 2020 14:59:13 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33759 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728059AbgF2S7M (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:56 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TG488h169400;
-        Mon, 29 Jun 2020 12:10:49 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ycgcynfv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 12:10:49 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TG5V45177075;
-        Mon, 29 Jun 2020 12:10:48 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ycgcynes-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 12:10:48 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TG5oE8026201;
-        Mon, 29 Jun 2020 16:10:46 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma05fra.de.ibm.com with ESMTP id 31wwr896r7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 16:10:46 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TGAhBU65470542
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jun 2020 16:10:43 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 356ED4C066;
-        Mon, 29 Jun 2020 16:10:43 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C086B4C04A;
-        Mon, 29 Jun 2020 16:10:40 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.79.64])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 29 Jun 2020 16:10:40 +0000 (GMT)
-Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
- IOMMU feature
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, jasowang@redhat.com,
-        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
- <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
- <20200629115651-mutt-send-email-mst@kernel.org>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <a94443a3-1aff-8cf5-bc1c-9271f260e930@linux.ibm.com>
-Date:   Mon, 29 Jun 2020 18:09:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 29 Jun 2020 14:59:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593457151;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DvR5lot4hzCFT5eKKaI2zdb2cQ/Ts1ntFHFt81EYMcQ=;
+        b=AS6Hetx93aYp9sX5b/A2qG4E/aGCY4T3cVukc733LCH8S+6fjJGt939Mucm7a4cmR2kvKy
+        8MZGdLFojdDFbGUbUc0bj3QnCs2ZcVkfShcghz81SltVdWf6MiyOiBuWlH/07vY0iKItqp
+        FfIqP1GZazyzlGcpKSu/mQHiMicxuu4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-326-tk6KlmltOlK2xGJforFtxQ-1; Mon, 29 Jun 2020 07:56:37 -0400
+X-MC-Unique: tk6KlmltOlK2xGJforFtxQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 221EA464;
+        Mon, 29 Jun 2020 11:56:36 +0000 (UTC)
+Received: from gondolin (ovpn-113-61.ams2.redhat.com [10.36.113.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 933D97166E;
+        Mon, 29 Jun 2020 11:56:34 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 13:56:31 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc:     Vineeth Vijayan <vneethv@linux.vnet.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Boris Fiuczynski <fiuczy@linux.ibm.com>
+Subject: Re: [RFD] uevent handling for subchannels
+Message-ID: <20200629135631.10db3c32.cohuck@redhat.com>
+In-Reply-To: <20200430124316.023a82b0.cohuck@redhat.com>
+References: <20200403124032.5e70603d.cohuck@redhat.com>
+        <20200417143811.7e6ecb2c.cohuck@redhat.com>
+        <8649ea94-8617-07b6-170e-65c278d9383b@linux.vnet.ibm.com>
+        <c69da1c0-d151-257b-fe43-786e47a3cf9b@linux.vnet.ibm.com>
+        <20200423182001.40345df8.cohuck@redhat.com>
+        <53d7d08d-c1d2-dad3-7f01-a165b24b0359@linux.ibm.com>
+        <20200430124316.023a82b0.cohuck@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200629115651-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-29_15:2020-06-29,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 cotscore=-2147483648 mlxscore=0 bulkscore=0 mlxlogscore=999
- adultscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
- phishscore=0 spamscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006290105
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Thu, 30 Apr 2020 12:43:16 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
+<It's been some time, but this topic has recently popped up again.>
 
-On 2020-06-29 17:57, Michael S. Tsirkin wrote:
-> On Wed, Jun 17, 2020 at 12:43:57PM +0200, Pierre Morel wrote:
->> An architecture protecting the guest memory against unauthorized host
->> access may want to enforce VIRTIO I/O device protection through the
->> use of VIRTIO_F_IOMMU_PLATFORM.
->>
->> Let's give a chance to the architecture to accept or not devices
->> without VIRTIO_F_IOMMU_PLATFORM.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> Acked-by: Jason Wang <jasowang@redhat.com>
->> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
->> ---
->>   arch/s390/mm/init.c     |  6 ++++++
->>   drivers/virtio/virtio.c | 22 ++++++++++++++++++++++
->>   include/linux/virtio.h  |  2 ++
->>   3 files changed, 30 insertions(+)
->>
->> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
->> index 6dc7c3b60ef6..215070c03226 100644
->> --- a/arch/s390/mm/init.c
->> +++ b/arch/s390/mm/init.c
->> @@ -45,6 +45,7 @@
->>   #include <asm/kasan.h>
->>   #include <asm/dma-mapping.h>
->>   #include <asm/uv.h>
->> +#include <linux/virtio.h>
->>   
->>   pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
->>   
->> @@ -161,6 +162,11 @@ bool force_dma_unencrypted(struct device *dev)
->>   	return is_prot_virt_guest();
->>   }
->>   
->> +int arch_needs_virtio_iommu_platform(struct virtio_device *dev)
->> +{
->> +	return is_prot_virt_guest();
->> +}
->> +
->>   /* protected virtualization */
->>   static void pv_init(void)
->>   {
->> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
->> index a977e32a88f2..aa8e01104f86 100644
->> --- a/drivers/virtio/virtio.c
->> +++ b/drivers/virtio/virtio.c
->> @@ -167,6 +167,21 @@ void virtio_add_status(struct virtio_device *dev, unsigned int status)
->>   }
->>   EXPORT_SYMBOL_GPL(virtio_add_status);
->>   
->> +/*
->> + * arch_needs_virtio_iommu_platform - provide arch specific hook when finalizing
->> + *				      features for VIRTIO device dev
->> + * @dev: the VIRTIO device being added
->> + *
->> + * Permits the platform to provide architecture specific functionality when
->> + * devices features are finalized. This is the default implementation.
->> + * Architecture implementations can override this.
->> + */
->> +
->> +int __weak arch_needs_virtio_iommu_platform(struct virtio_device *dev)
->> +{
->> +	return 0;
->> +}
->> +
->>   int virtio_finalize_features(struct virtio_device *dev)
->>   {
->>   	int ret = dev->config->finalize_features(dev);
->> @@ -179,6 +194,13 @@ int virtio_finalize_features(struct virtio_device *dev)
->>   	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
->>   		return 0;
->>   
->> +	if (arch_needs_virtio_iommu_platform(dev) &&
->> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
->> +		dev_warn(&dev->dev,
->> +			 "virtio: device must provide VIRTIO_F_IOMMU_PLATFORM\n");
->> +		return -ENODEV;
->> +	}
->> +
->>   	virtio_add_status(dev, VIRTIO_CONFIG_S_FEATURES_OK);
->>   	status = dev->config->get_status(dev);
->>   	if (!(status & VIRTIO_CONFIG_S_FEATURES_OK)) {
+> On Mon, 27 Apr 2020 12:10:17 +0200
+> Peter Oberparleiter <oberpar@linux.ibm.com> wrote:
 > 
-> Well don't you need to check it *before* VIRTIO_F_VERSION_1, not after?
+> > On 23.04.2020 18:20, Cornelia Huck wrote:  
+> > > On Thu, 23 Apr 2020 16:52:24 +0200
+> > > Vineeth Vijayan <vneethv@linux.vnet.ibm.com> wrote:    
+> > >> Then we could also change the way ccw_device_call_sch_unregister() 
+> > >> works, where
+> > >> the subchannel-unregister is happening from an upper layer.    
+> > > 
+> > > Hm, what's the problem here? This seems to be mostly a case of "we did
+> > > I/O to the device and it appeared not operational; so we go ahead and
+> > > unregister the subchannel"? Childless I/O subchannels are a bit useless.    
+> > 
+> > Hey Conny,
+> > 
+> > sparked by your proposal, Vineeth and myself looked at the corresponding
+> > CIO code and wondered if things couldn't be done in a generally
+> > better/cleaner way. So here we'd like to get your opinion.
+> > 
+> > In particular, as it is currently, a child-driver (IO subchannel driver,
+> > vfio-ccw, etc.) unregisters a device owned by a parent-device-driver
+> > (CSS), which feels from a high-level-view like a layering violation:
+> > only the parent driver should register and unregister the parent device.
+> > Also in case no subchannel driver is available (e.g. due to
+> > driver_override=none), there would be no subchannel ADD event at all.  
+> 
+> Doesn't the base css code generate the uevent in that case?
 
-Yes, you are right,
+Just checked again, the code in css_register_subchannel() should indeed
+take care of the !driver case. But still, even better if we can get rid
+of it :)
 
-Thanks,
+> 
+> > 
+> > So, tapping into you historical expertise about CIO, is there any reason
+> > for doing it this way beyond being nice to userspace tooling that
+> > subchannels with non-working CCW devices are automatically hidden by
+> > unregistering them?  
+> 
+> We always had ccw devices behind I/O subchannels, but that has not been
+> the case since we introduced vfio-ccw, so hopefully everybody can deal
+> with that. The rationale behind this was that device-less I/O
+> subchannels were deemed to be useless; I currently can't remember
+> another reason.
+> 
+> What about EADM, btw? CHSC does not have a device, and message does not
+> have a driver.
 
-Pierre
+Just checked EADM; it does not have a child device.
 
--- 
-Pierre Morel
-IBM Lab Boeblingen
+> 
+> > 
+> > Removing the child-unregisters-parent logic this would also enable
+> > manual rebind of subchannels for which only a different driver than the
+> > default one can successfully talk to the child device, though I'm
+> > unaware of any current application for that.  
+> 
+> Yes.
+> 
+> Let me think about that some more (no clear head currently, sorry.)
+
+Ok, so I've resumed the thinking process, and I think getting rid of
+the "no I/O subchannel without functional device" approach is a good
+idea, and allows us to make handling driver matches more similar to
+everyone else.
+
+What changes would be needed?
+* The whole logic to suppress uevents for subchannels and generate one
+  later will go. (Touches the various subchannel driver, including
+  vfio-ccw.)
+* ccw_device_todo() can just unregister the ccw device, and there's no
+  longer a need for ccw_device_call_sch_unregister(). (IIUC, this also
+  covers setting disconnected devices offline.)
+* As the I/O subchannel driver now needs to deal with cases where no
+  ccw device is available, the code for that needs to be checked.
+  (That's probably the most time-consuming task.)
+
+Userspace should be fine with I/O subchannels without ccw device,
+that's nothing new.
+
+Does that sound reasonable?
+
