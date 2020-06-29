@@ -2,113 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E5E720D21F
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2020 20:50:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35F1620D265
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2020 20:51:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgF2Sqo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 29 Jun 2020 14:46:44 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37172 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729200AbgF2Sqn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:46:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593456401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lmeklZemL80Q7lsiy/DTnr9n71S9umll3AkykzC+jhc=;
-        b=jELQEPaTByRF52JD1NkVF/HAlxaFMnoUqkxDJHCmhrUgyJv37/aFjMB0ZrMBV/C8A5FGbg
-        77ERASuOjnxp0ZtdN362hVpw7foWi1msxVMBPwgbh+YnlcTnQV8MwSaGWLBRODWZ7lW2Ks
-        B4kgBLLhV/M9bniIF/RPvkHLTgqofYA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-39-qTZ19pRuPo682yuNxSFHLQ-1; Mon, 29 Jun 2020 09:44:50 -0400
-X-MC-Unique: qTZ19pRuPo682yuNxSFHLQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99FC6107ACF9;
-        Mon, 29 Jun 2020 13:44:48 +0000 (UTC)
-Received: from gondolin (ovpn-113-61.ams2.redhat.com [10.36.113.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6FDB35C1D4;
-        Mon, 29 Jun 2020 13:44:42 +0000 (UTC)
-Date:   Mon, 29 Jun 2020 15:44:39 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
- IOMMU feature
-Message-ID: <20200629154439.14cc5ae7.cohuck@redhat.com>
-In-Reply-To: <7fe6e9ab-fd5a-3f92-1f3a-f9e6805d3730@linux.ibm.com>
-References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
-        <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
-        <20200618002956.5f179de4.pasic@linux.ibm.com>
-        <20200619112051.74babdb1.cohuck@redhat.com>
-        <7fe6e9ab-fd5a-3f92-1f3a-f9e6805d3730@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1729389AbgF2Ss7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 29 Jun 2020 14:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729136AbgF2Srm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 29 Jun 2020 14:47:42 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C001C02E2C4;
+        Mon, 29 Jun 2020 07:01:28 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id e3so1342915qvo.10;
+        Mon, 29 Jun 2020 07:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8FrjxWdY/Gjwce8t0JyeJsnYTMhQlskObJO/oLUWzfo=;
+        b=KsYeoNtN/hmKD60koJPvKXhY1HT5rh0BdsIymjK2OY+Ah5csm67fWOMInZoSB5MyiF
+         z81tpEOU7gbEs2Eu9dK1IU73/ldLFTcOuXQ4NQt1zxjMaUlUH9xpuPmQkDZyG2XpHE5A
+         z0rDQ6F3p6odfLFvjQ20/v+vqn3osPhCyUtrTurdqBrAHPO36wwugYL1OqGKXGdazN2M
+         p5mNNLqMsIqkd1lea0NNKZvGNZ4NvI4uksXON6N73LrjpsMxdX6M9+heVdl/zTyGvkYj
+         tkHXxI8XU7hiVfWyn9RhwdGCF2zdf8eMUPHFh6FNadOyOkvVyTEcnpjW7aa7VVLEWYLN
+         vdxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8FrjxWdY/Gjwce8t0JyeJsnYTMhQlskObJO/oLUWzfo=;
+        b=DSuuW0+07wcgDzTyrYqX0uyN8GZtYZA9b0ZFzEyTViLNb4h6pZE597I9G0VIgucvJD
+         aiZeyxbU/LSSBjt/pL+KcMGE7PdanaXo0F2JQdC4l7Q+lwLAbtqljTLF5jCwAHMlBPUx
+         g9V1dJ5kIS/ynUdt8Uj9EbrQvD1UKTOBhjBgT3ZyiKXpXLYea3P9JO587LRoRz2KeeNv
+         eZqifAnr1Wkk1Tbua5iQLkIIx1PjQ4rLVNJNpBwRZBFoa/yWLwkUM8sbJjjbKMZOzgjN
+         W751EaDIWYcQSSdewozHh8vpCX0MUn8gZqR6oLzx/ggkpNe6LzEx+ImM9X0Jc6Xo6gRe
+         H7ow==
+X-Gm-Message-State: AOAM531JKlq/ZGAplHoVs4tch6+PMhfQcqxtbGk2MjY0gdNj9heTXIcP
+        cO3qNZhciqnutr86w2breH3RRck7yxyKPa0VQlQ=
+X-Google-Smtp-Source: ABdhPJwRvnHK4e9FuZZ286EO2eHunvWxUS+jw1hxD70l+wfbFL9aDwHZRKLC21a2KPKCyOwmNUkOhP18WuRSaAVXDjg=
+X-Received: by 2002:ad4:4cc3:: with SMTP id i3mr8130354qvz.114.1593439286277;
+ Mon, 29 Jun 2020 07:01:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200627143453.31835-1-rppt@kernel.org>
+In-Reply-To: <20200627143453.31835-1-rppt@kernel.org>
+From:   Pekka Enberg <penberg@gmail.com>
+Date:   Mon, 29 Jun 2020 17:01:14 +0300
+Message-ID: <CAOJsxLE47WP9aMY3nh=E7C1a_esHt=sBFWCnsVA2umZ7TZ6TTA@mail.gmail.com>
+Subject: Re: [PATCH 0/8] mm: cleanup usage of <asm/pgalloc.h>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Joerg Roedel <joro@8bytes.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Stafford Horne <shorne@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-alpha@vger.kernel.org,
+        "list@ebiederm.org:DOCUMENTATION <linux-doc@vger.kernel.org>,
+        list@ebiederm.org:MEMORY MANAGEMENT <linux-mm@kvack.org>," 
+        <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        ia64 <linux-ia64@vger.kernel.org>,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-um@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 29 Jun 2020 15:14:04 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+On Sat, Jun 27, 2020 at 5:35 PM Mike Rapoport <rppt@kernel.org> wrote:
+> Most architectures have very similar versions of pXd_alloc_one() and
+> pXd_free_one() for intermediate levels of page table.
+> These patches add generic versions of these functions in
+> <asm-generic/pgalloc.h> and enable use of the generic functions where
+> appropriate.
 
-> On 2020-06-19 11:20, Cornelia Huck wrote:
-> > On Thu, 18 Jun 2020 00:29:56 +0200
-> > Halil Pasic <pasic@linux.ibm.com> wrote:
-> >   
-> >> On Wed, 17 Jun 2020 12:43:57 +0200
-> >> Pierre Morel <pmorel@linux.ibm.com> wrote:  
+Very nice cleanup series to the page table code!
 
-> >>> @@ -179,6 +194,13 @@ int virtio_finalize_features(struct virtio_device *dev)
-> >>>   	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
-> >>>   		return 0;
-> >>>   
-> >>> +	if (arch_needs_virtio_iommu_platform(dev) &&
-> >>> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-> >>> +		dev_warn(&dev->dev,
-> >>> +			 "virtio: device must provide VIRTIO_F_IOMMU_PLATFORM\n");  
+FWIW:
 
-[Side note: wasn't there a patch renaming this bit on the list? I think
-this name is only kept for userspace compat.]
-
-> >>
-> >> I'm not sure, divulging the current Linux name of this feature bit is a
-> >> good idea, but if everybody else is fine with this, I don't care that  
-> > 
-> > Not sure if that feature name will ever change, as it is exported in
-> > headers. At most, we might want to add the new ACCESS_PLATFORM define
-> > and keep the old one, but that would still mean some churn.
-> >   
-> >> much. An alternative would be:
-> >> "virtio: device falsely claims to have full access to the memory,
-> >> aborting the device"  
-> > 
-> > "virtio: device does not work with limited memory access" ?
-> > 
-> > But no issue with keeping the current message.
-> >   
-> 
-> If it is OK, I would like to specify that the arch is responsible to 
-> accept or not the device.
-> The reason why the device is not accepted without IOMMU_PLATFORM is arch 
-> specific.
-
-Hm, I'd think the reason is always the same (the device cannot access
-the memory directly), just the way to figure out whether that is the
-case or not is arch-specific, as with so many other things. No real
-need to go into detail here, I think.
-
+Reviewed-by: Pekka Enberg <penberg@kernel.org>
