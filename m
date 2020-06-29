@@ -2,47 +2,47 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03A7620D3E9
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2020 21:13:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EB1A20D3FE
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jun 2020 21:13:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbgF2TDH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 29 Jun 2020 15:03:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30740 "EHLO
+        id S1728525AbgF2TD5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 29 Jun 2020 15:03:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56401 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729188AbgF2TDG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 29 Jun 2020 15:03:06 -0400
+        with ESMTP id S1729042AbgF2TDz (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 29 Jun 2020 15:03:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593457384;
+        s=mimecast20190719; t=1593457433;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=2QOGVGFzRVKWNQySHe49H5TbBnoiSG0GTPoOr1bPhO0=;
-        b=gGbbhxS6maFU03sMbd4J/Rfa/qX+/ycp6KV6DCionn9R/fdexYjFaGmWPDoOOJAKTMAZuQ
-        selMylympI397Jre7Uk4YSCo01a1hNW5joWadft3WlpA1EosE8i6ti7u3C1Yir5svDkTCf
-        0GUciZ0BTx4mq0YDCW5HlsHy1+mMUok=
+        bh=tafezFPVKisxFrViNoe9kf9bq7boE8cZG7BjLLxVJOo=;
+        b=A0IQmMlJPzSy6qDFK405nzj82PqX0Qw11AON9g14wLbv0KoVXTPZA1bLpeeQDzIoENSBPi
+        PjxqZNQGIf3bzVX81WvSzv7UTQCbUoV5XWZJ19Rq9pC4hHIhDPFtA/DsUNn9V0i5qA5Azw
+        /c1mT1BssOoueaK1mHaqUoSnM4xx5uE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-440-eFQI0pS-P8eHP3vdJFGVxg-1; Mon, 29 Jun 2020 08:01:31 -0400
-X-MC-Unique: eFQI0pS-P8eHP3vdJFGVxg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-139-gUkfve_3M3qoeuyEa2k3FA-1; Mon, 29 Jun 2020 09:02:38 -0400
+X-MC-Unique: gUkfve_3M3qoeuyEa2k3FA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DD53805EF7;
-        Mon, 29 Jun 2020 12:01:29 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C13B1017E01;
+        Mon, 29 Jun 2020 13:02:36 +0000 (UTC)
 Received: from [10.36.114.157] (ovpn-114-157.ams2.redhat.com [10.36.114.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F2925C557;
-        Mon, 29 Jun 2020 12:01:23 +0000 (UTC)
-Subject: Re: [PATCH RFC] s390x/vmem: get rid of memory segment list
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, Vasily Gorbik <gor@linux.ibm.com>,
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CCB009CFF2;
+        Mon, 29 Jun 2020 13:02:32 +0000 (UTC)
+Subject: Re: [PATCH RFC 2/2] s390/mm: don't set ARCH_KEEP_MEMBLOCK
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200625150029.45019-1-david@redhat.com>
- <20200626192253.2281d95d@thinkpad> <20200626204621.55248f99@thinkpad>
- <20200629115537.GC4468@osiris>
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Michael Holzheu <holzheu@linux.vnet.ibm.com>
+References: <20200417150151.17239-1-david@redhat.com>
+ <20200417150151.17239-3-david@redhat.com> <20200626163215.GA4268@osiris>
+ <20200629124432.GE4468@osiris>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -88,43 +88,56 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <0c783dbb-630c-6440-74b8-8b40af146d6a@redhat.com>
-Date:   Mon, 29 Jun 2020 14:01:22 +0200
+Message-ID: <1d9b431a-58cb-8b5f-cb3f-5656a3032e34@redhat.com>
+Date:   Mon, 29 Jun 2020 15:02:30 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200629115537.GC4468@osiris>
+In-Reply-To: <20200629124432.GE4468@osiris>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 29.06.20 13:55, Heiko Carstens wrote:
-> On Fri, Jun 26, 2020 at 08:46:21PM +0200, Gerald Schaefer wrote:
->> Verified with DCSS overlapping boot and standby memory, works fine.
->> As expected, the error message changes, but I don't think that is a
->> problem, as long as you also remove the old -ENOSPC case / comment
->> in arch/s390/mm/extmem.c. It is actually more correct now I guess,
->> -ENOSPC doesn't look like the correct return value anyway.
+On 29.06.20 14:44, Heiko Carstens wrote:
+> On Fri, Jun 26, 2020 at 06:32:15PM +0200, Heiko Carstens wrote:
+>> On Fri, Apr 17, 2020 at 05:01:51PM +0200, David Hildenbrand wrote:
+>>> Commit 50be63450728 ("s390/mm: Convert bootmem to memblock") mentions
+>>> 	"The original bootmem allocator is getting replaced by memblock. To
+>>> 	cover the needs of the s390 kdump implementation the physical
+>>> 	memory list is used."
+>>>
+>>> zcore was converted to use resources instead of memblocks.
+>>> memblock_discard() will *not* mess with "physmem", only with "memory" and
+>>> "reserved" memblocks. So, that data will stay after early boot, to be
+>>> used in arch/s390/kernel/crash_dump.c to create the ELF header from
+>>> inside the 2nd (a.k.a. dumping) kernel.
+>>>
+>>> We no longer need ARCH_KEEP_MEMBLOCK.
+>>>
+>>> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+>>> Cc: Vasily Gorbik <gor@linux.ibm.com>
+>>> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+>>> Cc: Philipp Rudo <prudo@linux.ibm.com>
+>>> Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>> ---
+>>>  arch/s390/Kconfig | 1 -
+>>>  1 file changed, 1 deletion(-)
 >>
->> Thanks for cleaning up! Looks good to me, and removes > 100 LOC,
->> unless Heiko remembers some other issues from ancient times.
->>
->> Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
->> Tested-by: Gerald Schaefer <gerald.schaefer@de.ibm.com> [DCSS]
+>> Applied, thanks!
 > 
-> Looks good to me too. Gerald, thanks for looking and verifying this,
-> and David, thanks for providing the patch.
-> 
-> Applied.
-> 
+> Hmm, this triggers:
 
-Thanks Gerald and Heiko! Should I send an addon patch to tweak the
-documentation or resend this patch?
+Ah, I see, will have a look. Weird I didn't notice that ...
+
+Thanks!
+
+
 
 -- 
 Thanks,
