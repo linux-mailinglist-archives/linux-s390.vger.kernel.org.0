@@ -2,94 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6DFA20F1D8
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2020 11:41:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9D2320F4AE
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2020 14:33:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732075AbgF3Jl3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 30 Jun 2020 05:41:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731939AbgF3Jl2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 30 Jun 2020 05:41:28 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B889CC03E979;
-        Tue, 30 Jun 2020 02:41:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ObiET+eN9wPISA69yMBAjLsRR+NFaZ4l0xk8JBk7804=; b=YxYVnapPrNLDtKA1tIbiaacSX5
-        ZAYioY8ULLtGnawpbkokHrxzK+nUrSkEF0L09yUL8NLcQdrEpxv7PMoMmS6qf8unE1c5M2AhC0TU/
-        1cY7d/vUPxWxB+SRzRxgdSjYXnTbXUlhczgIMZvS/cInvnmDeoIcS1G7ikHH+rj+PlXkDbwFuoUHz
-        tb8903egHL1o5Nbw6dvVBCBkcCfRA/qz/W3unSbaTs7QP3ecC/6V1h9WMCbcQl+hJUBbYW39j0KHw
-        JD+4egP8OPWq0pUvcxFGGKFFx2ano6jdwqVG+BFTkOahPzwI+V6dH/FmiFRYeplwMXqNG4jjxVX8p
-        UC+CT2mg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqCka-0004MK-9L; Tue, 30 Jun 2020 09:40:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 835593013E5;
-        Tue, 30 Jun 2020 11:40:19 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 703772147FFB9; Tue, 30 Jun 2020 11:40:19 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 11:40:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Cc:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de,
-        x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        bigeasy@linutronix.de, davem@davemloft.net,
-        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
-        linux-s390@vger.kernel.org, linux@armlinux.org.uk
-Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
- per-cpu variables
-Message-ID: <20200630094019.GL4800@hirez.programming.kicks-ass.net>
-References: <20200623083645.277342609@infradead.org>
- <20200623083721.512673481@infradead.org>
- <20200630055939.GA3676007@debian-buster-darwi.lab.linutronix.de>
+        id S1733311AbgF3Mdi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 30 Jun 2020 08:33:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18824 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732042AbgF3Mdh (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 30 Jun 2020 08:33:37 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05UCWcBc034487;
+        Tue, 30 Jun 2020 08:33:30 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3204yvh57b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 08:33:30 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05UCX8r6039165;
+        Tue, 30 Jun 2020 08:33:29 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3204yvh553-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 08:33:29 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05UCGQOu007689;
+        Tue, 30 Jun 2020 12:33:27 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06fra.de.ibm.com with ESMTP id 31wwcgsq0s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 12:33:27 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05UCXOV365077476
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jun 2020 12:33:24 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4FA0311C04C;
+        Tue, 30 Jun 2020 12:33:24 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8310A11C05B;
+        Tue, 30 Jun 2020 12:33:23 +0000 (GMT)
+Received: from localhost (unknown [9.145.78.150])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 30 Jun 2020 12:33:23 +0000 (GMT)
+Date:   Tue, 30 Jun 2020 14:33:20 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: Re: [PATCH] mm/page_alloc: silence a KASAN false positive
+Message-ID: <your-ad-here.call-01593520400-ext-3384@work.hours>
+References: <20200610052154.5180-1-cai@lca.pw>
+ <CACT4Y+Ze=cddKcU_bYf4L=GaHuJRUjY=AdFFpM7aKy2+aZrmyQ@mail.gmail.com>
+ <20200610122600.GB954@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200630055939.GA3676007@debian-buster-darwi.lab.linutronix.de>
+In-Reply-To: <20200610122600.GB954@lca.pw>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-30_06:2020-06-30,2020-06-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 suspectscore=21
+ clxscore=1011 malwarescore=0 phishscore=0 adultscore=0 bulkscore=0
+ impostorscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006300090
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 07:59:39AM +0200, Ahmed S. Darwish wrote:
-> Peter Zijlstra wrote:
+On Wed, Jun 10, 2020 at 08:26:00AM -0400, Qian Cai wrote:
+> On Wed, Jun 10, 2020 at 07:54:50AM +0200, Dmitry Vyukov wrote:
+> > On Wed, Jun 10, 2020 at 7:22 AM Qian Cai <cai@lca.pw> wrote:
+> > >
+> > > kernel_init_free_pages() will use memset() on s390 to clear all pages
+> > > from kmalloc_order() which will override KASAN redzones because a
+> > > redzone was setup from the end of the allocation size to the end of the
+> > > last page. Silence it by not reporting it there. An example of the
+> > > report is,
+> > 
+> > Interesting. The reason why we did not hit it on x86_64 is because
+> > clear_page is implemented in asm (arch/x86/lib/clear_page_64.S) and
+> > thus is not instrumented. Arm64 probably does the same. However, on
+> > s390 clear_page is defined to memset.
+> > clear_[high]page are pretty extensively used in the kernel.
+> > We can either do this, or make clear_page non instrumented on s390 as
+> > well to match the existing implicit assumption. The benefit of the
+> > current approach is that we can find some real use-after-free's and
+> > maybe out-of-bounds on clear_page. The downside is that we may need
+> > more of these annotations. Thoughts?
 > 
-> ...
+> Since we had already done the same thing in poison_page(), I suppose we
+> could do the same here. Also, clear_page() has been used in many places
+> on s390, and it is not clear to me if those are all safe like this.
 > 
-> > -#define lockdep_assert_irqs_disabled()	do {			\
-> > -		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
-> > -			  current->hardirqs_enabled,			\
-> > -			  "IRQs not disabled as expected\n");		\
-> > -	} while (0)
+> There might be more annotations required, so it probably up to s390
+> maintainers (CC'ed) if they prefer not instrumenting clear_page() like
+> other arches.
 > 
-> ...
-> 
-> > +#define lockdep_assert_irqs_disabled()				\
-> > +do {									\
-> > +	WARN_ON_ONCE(debug_locks && this_cpu_read(hardirqs_enabled));	\
-> > +} while (0)
-> 
-> I think it would be nice to keep the "IRQs not disabled as expected"
-> message. It makes the lockdep splat much more readable.
-> 
-> This is similarly the case for the v3 lockdep preemption macros:
-> 
->   https://lkml.kernel.org/r/20200630054452.3675847-5-a.darwish@linutronix.de
-> 
-> I did not add a message though to get in-sync with the IRQ macros above.
 
-Hurmph.. the file:line output of a splat is usually all I look at, also
-__WARN_printf() generates such atrocious crap code that try and not use
-it.
+Sorry for delay. I assume you tested it without CONFIG_JUMP_LABEL.
+I had to fix couple of things before I was able to use init_on_alloc=1
+and init_on_free=1 boot options on s390 to reproduce KASAN problem:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v5.8-rc3&id=998f5bbe3dbdab81c1cfb1aef7c3892f5d24f6c7
+https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=fixes&id=95e61b1b5d6394b53d147c0fcbe2ae70fbe09446
+https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=fixes&id=d6df52e9996dcc2062c3d9c9123288468bb95b52
 
-I suppose I should do a __WARN_str() or something, but then people are
-unlikely to want to use that, too much variation etc. :/
+Back to clear_page - we could certainly make it non-instrumented. But
+it didn't cause any problems so far. And as Dmitry pointed out we
+could potentially find additional bugs with it. So, I'm leaning
+towards original solution proposed. For that you have my
 
-Cursed if you do, cursed if you don't.
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+Tested-by: Vasily Gorbik <gor@linux.ibm.com>
+
+Thank you for looking into this!
+
+Andrew, would you pick this change up?
+Thank you
+
+Vasily
