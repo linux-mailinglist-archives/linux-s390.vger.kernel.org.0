@@ -2,116 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D48B320EC38
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2020 05:54:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 325CB20EDEC
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2020 07:59:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbgF3Dx7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 29 Jun 2020 23:53:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:60194 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726710AbgF3Dx6 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 29 Jun 2020 23:53:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2739030E;
-        Mon, 29 Jun 2020 20:53:58 -0700 (PDT)
-Received: from [10.163.84.101] (unknown [10.163.84.101])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5EE3D3F73C;
-        Mon, 29 Jun 2020 20:53:47 -0700 (PDT)
-Subject: Re: [PATCH V3 0/4] mm/debug_vm_pgtable: Add some more tests
-To:     linux-mm@kvack.org
-Cc:     christophe.leroy@c-s.fr, ziy@nvidia.com,
-        gerald.schaefer@de.ibm.com, Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Qian Cai <cai@lca.pw>
-References: <1592192277-8421-1-git-send-email-anshuman.khandual@arm.com>
- <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <1ed72a76-9f20-0169-4c16-c1d8808690eb@arm.com>
-Date:   Tue, 30 Jun 2020 09:23:35 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726892AbgF3F7s (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 30 Jun 2020 01:59:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbgF3F7p (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 30 Jun 2020 01:59:45 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CC5EC061755;
+        Mon, 29 Jun 2020 22:59:45 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 07:59:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593496780;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ISSeNlZb4Rl1m7bgMA2uyOzUeDrOW1JpndE6Mh/W8oo=;
+        b=tqyB+b0h7XAflMZ6GCQA117o6LO/DRXQ49iOQJaRt6GU+AMe/g96NWoHeJ3OKOxYIqAf56
+        R9jHf5NsgEwHhU8JfVG/7KopkPQObAv6gXHNLk3oVB02Cw6D9HfcjnLKG4kMEsSQbmRLKQ
+        ql+OWsaB7Ew3IyMmDmdfTl0r4tj3w/0UmA59u6U3hXTKCSEoRma9BkbJFQWc4h6HHXV/UA
+        0/DpJwbBzBymAknZtj5HJUHqavwWqGdtOWPff6P1edyHQuF/qvQiB+mrzLGOrOK7cV2SmH
+        y9azpiFEn/6HMpOnxKo09o4IoZdBMmaq5qLwGKVa268DfUBmzcP9oCGC6uRtCg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593496780;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ISSeNlZb4Rl1m7bgMA2uyOzUeDrOW1JpndE6Mh/W8oo=;
+        b=IS/fTrrEBdr0B5uSkPSVJuizfzPVBDIc0SfUXgPsIr2XNfbeNGHrvtMNmsoh6sP3ovWtTB
+        9Z/W5HYn3zWJUVDw==
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de,
+        x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        bigeasy@linutronix.de, davem@davemloft.net,
+        sparclinux@vger.kernel.org, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
+        linux-s390@vger.kernel.org, linux@armlinux.org.uk
+Subject: Re: [PATCH v4 7/8] lockdep: Change hardirq{s_enabled,_context} to
+ per-cpu variables
+Message-ID: <20200630055939.GA3676007@debian-buster-darwi.lab.linutronix.de>
+References: <20200623083645.277342609@infradead.org>
+ <20200623083721.512673481@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <70ddc7dd-b688-b73e-642a-6363178c8cdd@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623083721.512673481@infradead.org>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Peter Zijlstra wrote:
 
+...
 
-On 06/24/2020 08:43 AM, Anshuman Khandual wrote:
-> 
-> 
-> On 06/15/2020 09:07 AM, Anshuman Khandual wrote:
->> This series adds some more arch page table helper validation tests which
->> are related to core and advanced memory functions. This also creates a
->> documentation, enlisting expected semantics for all page table helpers as
->> suggested by Mike Rapoport previously (https://lkml.org/lkml/2020/1/30/40).
->>
->> There are many TRANSPARENT_HUGEPAGE and ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD
->> ifdefs scattered across the test. But consolidating all the fallback stubs
->> is not very straight forward because ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD is
->> not explicitly dependent on ARCH_HAS_TRANSPARENT_HUGEPAGE.
->>
->> Tested on arm64, x86 platforms but only build tested on all other enabled
->> platforms through ARCH_HAS_DEBUG_VM_PGTABLE i.e powerpc, arc, s390. The
->> following failure on arm64 still exists which was mentioned previously. It
->> will be fixed with the upcoming THP migration on arm64 enablement series.
->>
->> WARNING .... mm/debug_vm_pgtable.c:860 debug_vm_pgtable+0x940/0xa54
->> WARN_ON(!pmd_present(pmd_mkinvalid(pmd_mkhuge(pmd))))
->>
->> This series is based on v5.8-rc1.
->>
->> Changes in V3:
->>
->> - Replaced HAVE_ARCH_SOFT_DIRTY with MEM_SOFT_DIRTY
->> - Added HAVE_ARCH_HUGE_VMAP checks in pxx_huge_tests() per Gerald
->> - Updated documentation for pmd_thp_tests() per Zi Yan
->> - Replaced READ_ONCE() with huge_ptep_get() per Gerald
->> - Added pte_mkhuge() and masking with PMD_MASK per Gerald
->> - Replaced pte_same() with holding pfn check in pxx_swap_tests()
->> - Added documentation for all (#ifdef #else #endif) per Gerald
->> - Updated pmd_protnone_tests() per Gerald
->> - Updated HugeTLB PTE creation in hugetlb_advanced_tests() per Gerald
->> - Replaced [pmd|pud]_mknotpresent() with [pmd|pud]_mkinvalid()
->> - Added has_transparent_hugepage() check for PMD and PUD tests
->> - Added a patch which debug prints all individual tests being executed
->> - Updated documentation for renamed [pmd|pud]_mkinvalid() helpers
-> 
-> Hello Gerald/Christophe/Vineet,
-> 
-> It would be really great if you could give this series a quick test
-> on s390/ppc/arc platforms respectively. Thank you.
+> -#define lockdep_assert_irqs_disabled()	do {			\
+> -		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
+> -			  current->hardirqs_enabled,			\
+> -			  "IRQs not disabled as expected\n");		\
+> -	} while (0)
 
-Thanks Alexander, Gerald and Christophe for testing this out on s390
-and ppc32 platforms. Probably Vineet and Qian (any other volunteers)
-could help us with arc and ppc64 platforms, which I would appreciate.
+...
+
+> +#define lockdep_assert_irqs_disabled()				\
+> +do {									\
+> +	WARN_ON_ONCE(debug_locks && this_cpu_read(hardirqs_enabled));	\
+> +} while (0)
+
+I think it would be nice to keep the "IRQs not disabled as expected"
+message. It makes the lockdep splat much more readable.
+
+This is similarly the case for the v3 lockdep preemption macros:
+
+  https://lkml.kernel.org/r/20200630054452.3675847-5-a.darwish@linutronix.de
+
+I did not add a message though to get in-sync with the IRQ macros above.
+
+Thanks,
+
+--
+Ahmed S. Darwish
+Linutronix GmbH
