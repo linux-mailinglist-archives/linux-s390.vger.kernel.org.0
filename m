@@ -2,140 +2,165 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FC1420F8B1
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2020 17:43:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40A2920F931
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jun 2020 18:13:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389653AbgF3Pnj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 30 Jun 2020 11:43:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389655AbgF3Pne (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 30 Jun 2020 11:43:34 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CF1FC03E97E
-        for <linux-s390@vger.kernel.org>; Tue, 30 Jun 2020 08:43:34 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id q17so9582585pfu.8
-        for <linux-s390@vger.kernel.org>; Tue, 30 Jun 2020 08:43:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Czyj7qztvQ/ET90pA6Cgm802J9mg/c4CrHX1EyYszQQ=;
-        b=GFGPy40KuPsHkZUJdbeyZcQSvGfgs5FvnkigPPk9SV7CG59Zt39VKpM1zlVSVXoRDt
-         yCeVdinmT/3C3Jtmhrs/ytEmj7Wsnn2qAcbIAA0lgRJAkDSMH3qtVX2x5ups9P63e9d7
-         P9x2xILnsZVnyM3LolHHJ5MFrhP7fYB+ZvvgJsDeODXoJ2PGrPKhFRUVpy4BweeZ7T88
-         7TInXYSLaUF36rQyQh/ug2yeZtWjhx06VQWrVd2dOvf947KJmX/LErgbh6FwQ3ULFM07
-         +NsZiEDxchja6NsLMdoWiv7fTvOttuxXSfOyaHVhHUidelj6tLF2XevCAgd1imXsny29
-         D7Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Czyj7qztvQ/ET90pA6Cgm802J9mg/c4CrHX1EyYszQQ=;
-        b=mobc4JLLrIwSQAO82RDg+2XlJWSW2wLaRCAN7MblMU8CoARnv2RcC8LYCWmpxDmGTA
-         8xlWGDS2RJFdKGaAtT2xBug9xlEZxKqwi9QdyQmLTWatXZwboFS33zNa/NzxJfwOnyZV
-         RPmOaUfcgHz3Kje1WUTebB08ZSmOUXKu47F1hquSQfRSbzlTH78pCkPDi3TCXt5LhH/N
-         6D+cVLAP/p0+DU7SGqQxJ9jEa3PmRBZWI/a0o2K0aqGGjPMmBphy8faHsvGPr9rIh7bi
-         2cbvqu/p8K2HrHsCLrnyNueriRiXHSOvWZTWnfqKB3gzMidwalaiIFKvSWvY/qefrcVF
-         4JMA==
-X-Gm-Message-State: AOAM531fX3kdyrer2KLpttWCHPnHMPSEuReebwcuxlR92yHxEvyB7ubN
-        Otk1DIJYnK3fBSg0U05UmZMKFtKLlu6AVA==
-X-Google-Smtp-Source: ABdhPJx6lEIGGyQAAazhh6sEGODM0EvGn2wcc8uAkFeSAVS9hqQhG93iUqi0nvo2CJcI+RwKQRfdOw==
-X-Received: by 2002:a65:5a0f:: with SMTP id y15mr15197406pgs.6.1593531813542;
-        Tue, 30 Jun 2020 08:43:33 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:4113:50ea:3eb3:a39b? ([2605:e000:100e:8c61:4113:50ea:3eb3:a39b])
-        by smtp.gmail.com with ESMTPSA id w68sm3185027pff.191.2020.06.30.08.43.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 08:43:32 -0700 (PDT)
-Subject: Re: rename ->make_request_fn and move it to the
- block_device_operations
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
-        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-s390@vger.kernel.org
-References: <20200629193947.2705954-1-hch@lst.de>
- <bd1443c0-be37-115b-1110-df6f0e661a50@kernel.dk>
-Message-ID: <6ddbe343-0fc2-58c8-3726-c4ba9952994f@kernel.dk>
-Date:   Tue, 30 Jun 2020 09:43:31 -0600
+        id S1732007AbgF3QNY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 30 Jun 2020 12:13:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41156 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729341AbgF3QNX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 30 Jun 2020 12:13:23 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05UFWilh095887;
+        Tue, 30 Jun 2020 12:13:22 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3204s112yv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 12:13:21 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05UGAOFg042870;
+        Tue, 30 Jun 2020 12:13:21 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3204s112xw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 12:13:20 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05UG1lUg015952;
+        Tue, 30 Jun 2020 16:13:18 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma02fra.de.ibm.com with ESMTP id 31wwr7stfv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 16:13:18 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05UGDGQV63177176
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jun 2020 16:13:16 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B59242045;
+        Tue, 30 Jun 2020 16:13:16 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C02F14203F;
+        Tue, 30 Jun 2020 16:13:15 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.24.54])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Jun 2020 16:13:15 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v9 06/12] s390x: clock and delays
+ caluculations
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
+        cohuck@redhat.com
+References: <1592213521-19390-1-git-send-email-pmorel@linux.ibm.com>
+ <1592213521-19390-7-git-send-email-pmorel@linux.ibm.com>
+ <7659047a-a0f9-b959-c286-b150477d15ab@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <ef49bb41-6089-8590-3697-25b1cb0d6e47@linux.ibm.com>
+Date:   Tue, 30 Jun 2020 18:13:15 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <bd1443c0-be37-115b-1110-df6f0e661a50@kernel.dk>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <7659047a-a0f9-b959-c286-b150477d15ab@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-30_06:2020-06-30,2020-06-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 cotscore=-2147483648 suspectscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1015 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006300112
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 6/30/20 7:57 AM, Jens Axboe wrote:
-> On 6/29/20 1:39 PM, Christoph Hellwig wrote:
->> Hi Jens,
+
+
+On 2020-06-22 11:09, Janosch Frank wrote:
+> On 6/15/20 11:31 AM, Pierre Morel wrote:
+>> The hardware gives us a good definition of the microsecond,
+>> let's keep this information and let the routine accessing
+>> the hardware keep all the information and return microseconds.
 >>
->> this series moves the make_request_fn method into block_device_operations
->> with the much more descriptive ->submit_bio name.  It then also gives
->> generic_make_request a more descriptive name, and further optimize the
->> path to issue to blk-mq, removing the need for the direct_make_request
->> bypass.
+>> Calculate delays in microseconds and take care about wrapping
+>> around zero.
+>>
+>> Define values with macros and use inlines to keep the
+>> milliseconds interface.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 > 
-> Looks good to me, and it's a nice cleanup as well. Applied.
+> Small nit below.
 
-Dropped, insta-crashes with dm:
+seen, I move it up.
 
-[   10.240134] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[   10.241000] #PF: supervisor instruction fetch in kernel mode
-[   10.241666] #PF: error_code(0x0010) - not-present page
-[   10.242280] PGD 0 P4D 0 
-[   10.242600] Oops: 0010 [#1] PREEMPT SMP
-[   10.243073] CPU: 1 PID: 2110 Comm: systemd-udevd Not tainted 5.8.0-rc3+ #6655
-[   10.243939] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1 04/01/2014
-[   10.245012] RIP: 0010:0x0
-[   10.245322] Code: Bad RIP value.
-[   10.245695] RSP: 0018:ffffc900002f7af8 EFLAGS: 00010246
-[   10.246333] RAX: ffffffff81c83520 RBX: ffff8881b805dea8 RCX: ffff88819e844070
-[   10.247227] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88819e844070
-[   10.248112] RBP: ffffc900002f7b48 R08: ffff8881b6f38800 R09: ffff88818ff0ea58
-[   10.248994] R10: 0000000000000000 R11: ffff88818ff0ea58 R12: ffff88819e844070
-[   10.250077] R13: 00000000ffffffff R14: 0000000000000000 R15: ffff888107812948
-[   10.251168] FS:  00007f5c3ed66a80(0000) GS:ffff8881b9c80000(0000) knlGS:0000000000000000
-[   10.252161] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   10.253189] CR2: ffffffffffffffd6 CR3: 00000001b2953003 CR4: 00000000001606e0
-[   10.254157] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   10.255279] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   10.256365] Call Trace:
-[   10.256781]  submit_bio_noacct+0x1f6/0x3d0
-[   10.257297]  submit_bio+0x37/0x130
-[   10.257780]  ? guard_bio_eod+0x2e/0x70
-[   10.258418]  mpage_readahead+0x13c/0x180
-[   10.259096]  ? blkdev_direct_IO+0x490/0x490
-[   10.259654]  read_pages+0x68/0x2d0
-[   10.260051]  page_cache_readahead_unbounded+0x1b7/0x220
-[   10.260818]  generic_file_buffered_read+0x865/0xc80
-[   10.261587]  ? _copy_to_user+0x6d/0x80
-[   10.262171]  ? cp_new_stat+0x119/0x130
-[   10.262680]  new_sync_read+0xfe/0x170
-[   10.263155]  vfs_read+0xc8/0x180
-[   10.263647]  ksys_read+0x53/0xc0
-[   10.264209]  do_syscall_64+0x3c/0x70
-[   10.264759]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   10.265200] RIP: 0033:0x7f5c3fcc9ab2
-[   10.265510] Code: Bad RIP value.
-[   10.265775] RSP: 002b:00007ffc8e0cf9c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-[   10.266426] RAX: ffffffffffffffda RBX: 000055d5eca76c68 RCX: 00007f5c3fcc9ab2
-[   10.267012] RDX: 0000000000000040 RSI: 000055d5eca76c78 RDI: 0000000000000006
-[   10.267591] RBP: 000055d5eca44890 R08: 000055d5eca76c50 R09: 00007f5c3fd99a40
-[   10.268168] R10: 0000000000000008 R11: 0000000000000246 R12: 000000003bd90000
-[   10.268744] R13: 0000000000000040 R14: 000055d5eca76c50 R15: 000055d5eca448e0
-[   10.269319] Modules linked in:
-[   10.269562] CR2: 0000000000000000
-[   10.269845] ---[ end trace f09b8963e5a3593b ]---
+> 
+> 
+> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+
+Thanks,
+Pierre
+
+
+> 
+>> ---
+>>   lib/s390x/asm/time.h | 29 +++++++++++++++++++++++++++--
+>>   1 file changed, 27 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/lib/s390x/asm/time.h b/lib/s390x/asm/time.h
+>> index 1791380..7f1d891 100644
+>> --- a/lib/s390x/asm/time.h
+>> +++ b/lib/s390x/asm/time.h
+>> @@ -13,14 +13,39 @@
+>>   #ifndef ASM_S390X_TIME_H
+>>   #define ASM_S390X_TIME_H
+>>   
+>> -static inline uint64_t get_clock_ms(void)
+>> +#define STCK_SHIFT_US	(63 - 51)
+>> +#define STCK_MAX	((1UL << 52) - 1)
+>> +
+>> +static inline uint64_t get_clock_us(void)
+>>   {
+>>   	uint64_t clk;
+>>   
+>>   	asm volatile(" stck %0 " : : "Q"(clk) : "memory");
+>>   
+>>   	/* Bit 51 is incrememented each microsecond */
+>> -	return (clk >> (63 - 51)) / 1000;
+>> +	return clk >> STCK_SHIFT_US;
+>> +}
+>> +
+>> +static inline void udelay(unsigned long us)
+>> +{
+>> +	unsigned long startclk = get_clock_us();
+>> +	unsigned long c;
+>> +
+>> +	do {
+>> +		c = get_clock_us();
+>> +		if (c < startclk)
+>> +			c += STCK_MAX;
+>> +	} while (c < startclk + us);
+>> +}
+>> +
+>> +static inline void mdelay(unsigned long ms)
+>> +{
+>> +	udelay(ms * 1000);
+>> +}
+>> +
+>> +static inline uint64_t get_clock_ms(void)
+>> +{
+>> +	return get_clock_us() / 1000;
+>>   }
+> 
+> Why don't you put that below to the get_clock_us()?
+
+right, better.
+
 
 -- 
-Jens Axboe
-
+Pierre Morel
+IBM Lab Boeblingen
