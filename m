@@ -2,134 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2089C211094
-	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 18:28:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DEB421129D
+	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 20:26:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731951AbgGAQ2n (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 1 Jul 2020 12:28:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5418 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731672AbgGAQ2n (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jul 2020 12:28:43 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061G3RvQ001549;
-        Wed, 1 Jul 2020 12:28:40 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32083fpsfs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 12:28:40 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 061GEjEl048292;
-        Wed, 1 Jul 2020 12:28:39 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32083fpsep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 12:28:39 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 061GPcIU016721;
-        Wed, 1 Jul 2020 16:28:37 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31wwr8d4ua-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 16:28:37 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 061GSY2m7668066
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Jul 2020 16:28:34 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 870DAA405F;
-        Wed,  1 Jul 2020 16:28:34 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A5A59A4065;
-        Wed,  1 Jul 2020 16:28:33 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.203.198])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  1 Jul 2020 16:28:33 +0000 (GMT)
-Date:   Wed, 1 Jul 2020 19:28:31 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 1/2] mm/memblock: expose only miminal interface to
- add/walk physmem
-Message-ID: <20200701162831.GB2999146@linux.ibm.com>
-References: <20200701141830.18749-1-david@redhat.com>
- <20200701141830.18749-2-david@redhat.com>
- <20200701150643.GA2999146@linux.ibm.com>
- <20200701153157.GC5008@osiris>
+        id S1733014AbgGAS0T (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 1 Jul 2020 14:26:19 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29639 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732835AbgGAS0T (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jul 2020 14:26:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593627977;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gM4o34lY2Q2Fu9DNpo9nmnqeENsycpsv4CwD0QpSKRo=;
+        b=ZwrGxUsJXRw2TeInzKH2KaJeb9JWfx1KCCpvaat4ntHZPxEMPcJvHYoCuuE/LqHFxJiATm
+        CMR5wsva05+WpEwBxa2VZABOZwF7xw5v+hOJiZDfIOao/Plpqymv/XDTfhwNJQpla9oVwX
+        oJV7CI8PfLVPGrg3qAbF5in+Zc6AIVg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-467-ve54S7gINvapvHMQrfW7sQ-1; Wed, 01 Jul 2020 14:26:14 -0400
+X-MC-Unique: ve54S7gINvapvHMQrfW7sQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7EE0A80183C;
+        Wed,  1 Jul 2020 18:26:11 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 244BF5C1D3;
+        Wed,  1 Jul 2020 18:26:08 +0000 (UTC)
+Date:   Wed, 1 Jul 2020 13:24:48 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-bcache@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-nvdimm@lists.01.org,
+        linux-s390@vger.kernel.org, dm-devel@redhat.com,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linuxppc-dev@lists.ozlabs.org, drbd-dev@lists.linbit.com
+Subject: Re: [PATCH 10/20] dm: stop using ->queuedata
+Message-ID: <20200701172448.GA27528@redhat.com>
+References: <20200701085947.3354405-1-hch@lst.de>
+ <20200701085947.3354405-11-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200701153157.GC5008@osiris>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
- impostorscore=0 priorityscore=1501 spamscore=0 adultscore=0
- lowpriorityscore=0 clxscore=1015 mlxscore=0 malwarescore=0 phishscore=0
- mlxlogscore=999 suspectscore=1 bulkscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007010114
+In-Reply-To: <20200701085947.3354405-11-hch@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 05:31:57PM +0200, Heiko Carstens wrote:
-> On Wed, Jul 01, 2020 at 06:06:43PM +0300, Mike Rapoport wrote:
-> > Hi David,
-> > 
-> > On Wed, Jul 01, 2020 at 04:18:29PM +0200, David Hildenbrand wrote:
-> > > "physmem" in the memblock allocator is somewhat weird: it's not actually
-> > > used for allocation, it's simply information collected during boot, which
-> > > describes the unmodified physical memory map at boot time, without any
-> > > standby/hotplugged memory. It's only used on s390x and is currently the
-> > > only reason s390x keeps using CONFIG_ARCH_KEEP_MEMBLOCK.
-> > > 
-> > > Physmem isn't numa aware and current users don't specify any flags. Let's
-> > > hide it from the user, exposing only for_each_physmem(), and simplify. The
-> > > interface for physmem is now really minimalistic:
-> > > - memblock_physmem_add() to add ranges
-> > > - for_each_physmem() / __next_physmem_range() to walk physmem ranges
-> > > 
-> > > Don't place it into an __init section and don't discard it without
-> > > CONFIG_ARCH_KEEP_MEMBLOCK. As we're reusing __next_mem_range(), remove
-> > > the __meminit notifier to avoid section mismatch warnings once
-> > > CONFIG_ARCH_KEEP_MEMBLOCK is no longer used with
-> > > CONFIG_HAVE_MEMBLOCK_PHYS_MAP.
-> > > 
-> > > While fixing up the documentation, sneak in some related cleanups. We can
-> > > stop setting CONFIG_HAVE_MEMBLOCK_PHYS_MAP for s390x next.
-> > 
-> > As you noted in the previous version it should have been
-> > CONFIG_ARCH_KEEP_MEMBLOCK ;-)
-> > 
-> > > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> > > Cc: Vasily Gorbik <gor@linux.ibm.com>
-> > > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> > > Cc: Mike Rapoport <rppt@linux.ibm.com>
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > Signed-off-by: David Hildenbrand <david@redhat.com>
-> > 
-> > Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > > ---
-> > >  arch/s390/kernel/crash_dump.c |  6 ++--
-> > >  include/linux/memblock.h      | 28 ++++++++++++++---
-> > >  mm/memblock.c                 | 57 ++++++++++++++++++-----------------
-> > >  3 files changed, 55 insertions(+), 36 deletions(-)
-> 
-> So I guess this should go via the s390 tree, since the second patch of
-> this series can go only upstream if both this patch and a patch which
-> is currently only on our features are merged before.
-> 
-> Any objections?
+On Wed, Jul 01 2020 at  4:59am -0400,
+Christoph Hellwig <hch@lst.de> wrote:
 
-Not from my side.
+> Instead of setting up the queuedata as well just use one private data
+> field.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
--- 
-Sincerely yours,
-Mike.
+Acked-by: Mike Snitzer <snitzer@redhat.com>
+
