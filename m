@@ -2,144 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FEA9210702
-	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 11:01:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A027B2107F2
+	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 11:23:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgGAJAZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 1 Jul 2020 05:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbgGAJAX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jul 2020 05:00:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 259CCC03E97E;
-        Wed,  1 Jul 2020 02:00:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=jQY+NtFCO+7CU3/nFb1b4IXvqab2qyR+s502t/FTrN0=; b=uk7IalP7MNGMM6uU4dAQlW8WyT
-        wAAF3+qlfzX6YNhcR3wK+W1kCSwSAAIh+p6a51QmR/WkvI5iNXX6RT/rUdJ1Xa1ZGQGj78s7Yqvqv
-        apKuRzsOW0hTYSSpzgapI7XjWd8J5KsEfQ3xUFfoxf0IJVlsoz/OdGiccYlHINoaSVCTGbcgukSEb
-        eDReKFk2IXHSvZ0m2RrUUS0NHvjl0G8Haam0Ucf3tnKRRxbqUGybDQOBJMKimJ9oSqmYsG3MeDOsT
-        +mgRZL3+n+xb4vpMz97ijSIURtS2Bit7lRbBO0vSx/zQv2yJuSSYpUXX7qRfYpSCkzrXWbLSNMus7
-        gE2BAOEw==;
-Received: from [2001:4bb8:184:76e3:ea38:596b:3e9e:422a] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqYbL-0008II-NY; Wed, 01 Jul 2020 09:00:20 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
-        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 20/20] block: remove direct_make_request
-Date:   Wed,  1 Jul 2020 10:59:47 +0200
-Message-Id: <20200701085947.3354405-21-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200701085947.3354405-1-hch@lst.de>
-References: <20200701085947.3354405-1-hch@lst.de>
+        id S1729236AbgGAJXn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 1 Jul 2020 05:23:43 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32931 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728776AbgGAJXm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jul 2020 05:23:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593595420;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XLaMq5gNtePfIRrL0DrsIJr+qn4Jk1tc2oraVPfZ9O0=;
+        b=I+f+Xm1WlHtXiwmNvu2LKxoPGNEkW0CIraDiFRzRu0jbI3FjS1rbxhG7MJlzSQRh3gaKDT
+        6TAMFrNLlQfe0puKaRzTpnoT82pDuc15S7rJLpmZTAb+P7/wGXy1LzLmnAiMG5Mim90X4p
+        6hmp34ve74dFwGOc14jqrCo7peJeJFY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-10-iMdHcMA1OZe8_fXT15gJJw-1; Wed, 01 Jul 2020 05:23:37 -0400
+X-MC-Unique: iMdHcMA1OZe8_fXT15gJJw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE0DCEC1C6;
+        Wed,  1 Jul 2020 09:23:35 +0000 (UTC)
+Received: from gondolin (ovpn-113-61.ams2.redhat.com [10.36.113.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 342C87C1F6;
+        Wed,  1 Jul 2020 09:23:34 +0000 (UTC)
+Date:   Wed, 1 Jul 2020 11:23:13 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc:     Vineeth Vijayan <vneethv@linux.vnet.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Boris Fiuczynski <fiuczy@linux.ibm.com>
+Subject: Re: [RFD] uevent handling for subchannels
+Message-ID: <20200701112313.62a22156.cohuck@redhat.com>
+In-Reply-To: <20200629135631.10db3c32.cohuck@redhat.com>
+References: <20200403124032.5e70603d.cohuck@redhat.com>
+        <20200417143811.7e6ecb2c.cohuck@redhat.com>
+        <8649ea94-8617-07b6-170e-65c278d9383b@linux.vnet.ibm.com>
+        <c69da1c0-d151-257b-fe43-786e47a3cf9b@linux.vnet.ibm.com>
+        <20200423182001.40345df8.cohuck@redhat.com>
+        <53d7d08d-c1d2-dad3-7f01-a165b24b0359@linux.ibm.com>
+        <20200430124316.023a82b0.cohuck@redhat.com>
+        <20200629135631.10db3c32.cohuck@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Now that submit_bio_noacct has a decent blk-mq fast path there is no
-more need for this bypass.
+On Mon, 29 Jun 2020 13:56:31 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk-core.c              | 28 ----------------------------
- drivers/md/dm.c               |  5 +----
- drivers/nvme/host/multipath.c |  2 +-
- include/linux/blkdev.h        |  1 -
- 4 files changed, 2 insertions(+), 34 deletions(-)
+> Ok, so I've resumed the thinking process, and I think getting rid of
+> the "no I/O subchannel without functional device" approach is a good
+> idea, and allows us to make handling driver matches more similar to
+> everyone else.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 2ff166f0d24ee3..bf882b8d84450c 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1211,34 +1211,6 @@ blk_qc_t submit_bio_noacct(struct bio *bio)
- }
- EXPORT_SYMBOL(submit_bio_noacct);
- 
--/**
-- * direct_make_request - hand a buffer directly to its device driver for I/O
-- * @bio:  The bio describing the location in memory and on the device.
-- *
-- * This function behaves like submit_bio_noacct(), but does not protect
-- * against recursion.  Must only be used if the called driver is known
-- * to be blk-mq based.
-- */
--blk_qc_t direct_make_request(struct bio *bio)
--{
--	struct gendisk *disk = bio->bi_disk;
--
--	if (WARN_ON_ONCE(!disk->queue->mq_ops)) {
--		bio_io_error(bio);
--		return BLK_QC_T_NONE;
--	}
--	if (!submit_bio_checks(bio))
--		return BLK_QC_T_NONE;
--	if (unlikely(bio_queue_enter(bio)))
--		return BLK_QC_T_NONE;
--	if (!blk_crypto_bio_prep(&bio)) {
--		blk_queue_exit(disk->queue);
--		return BLK_QC_T_NONE;
--	}
--	return blk_mq_submit_bio(bio);
--}
--EXPORT_SYMBOL_GPL(direct_make_request);
--
- /**
-  * submit_bio - submit a bio to the block device layer for I/O
-  * @bio: The &struct bio which describes the I/O
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index b32b539dbace56..2cb33896198c4c 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1302,10 +1302,7 @@ static blk_qc_t __map_bio(struct dm_target_io *tio)
- 		/* the bio has been remapped so dispatch it */
- 		trace_block_bio_remap(clone->bi_disk->queue, clone,
- 				      bio_dev(io->orig_bio), sector);
--		if (md->type == DM_TYPE_NVME_BIO_BASED)
--			ret = direct_make_request(clone);
--		else
--			ret = submit_bio_noacct(clone);
-+		ret = submit_bio_noacct(clone);
- 		break;
- 	case DM_MAPIO_KILL:
- 		free_tio(tio);
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index f07fa47c251d9d..a986ac52c4cc7f 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -314,7 +314,7 @@ blk_qc_t nvme_ns_head_submit_bio(struct bio *bio)
- 		trace_block_bio_remap(bio->bi_disk->queue, bio,
- 				      disk_devt(ns->head->disk),
- 				      bio->bi_iter.bi_sector);
--		ret = direct_make_request(bio);
-+		ret = submit_bio_noacct(bio);
- 	} else if (nvme_available_path(head)) {
- 		dev_warn_ratelimited(dev, "no usable path - requeuing I/O\n");
- 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index b73cfa6a5141df..1cc913ffdbe21e 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -853,7 +853,6 @@ static inline void rq_flush_dcache_pages(struct request *rq)
- extern int blk_register_queue(struct gendisk *disk);
- extern void blk_unregister_queue(struct gendisk *disk);
- blk_qc_t submit_bio_noacct(struct bio *bio);
--extern blk_qc_t direct_make_request(struct bio *bio);
- extern void blk_rq_init(struct request_queue *q, struct request *rq);
- extern void blk_put_request(struct request *);
- extern struct request *blk_get_request(struct request_queue *, unsigned int op,
--- 
-2.26.2
+As an aside, there's another odd construct: the I/O subchannel driver
+*always* binds to the subchannel device, even if there is a problem,
+and schedules an unregistration of the subchannel device on error. This
+was introduced because events from machine check handling are not
+processed if there isn't a driver (at least I thought back then that it
+was a good idea.) I think a more correct way to handle this would be to
+do the following:
+
+* If something doesn't work, clean up and return an error in the probe
+  function. The subchannel device stays around, it's just not bound.
+* Have the css bus do some basic processing for subchannels not bound
+  to any driver (e.g., check dnv/w). This would also make it possible
+  to unregister dead message subchannels if a machine check is received
+  for them (don't know if that's an actual problem in pratice.)
+
+> 
+> What changes would be needed?
+> * The whole logic to suppress uevents for subchannels and generate one
+>   later will go. (Touches the various subchannel driver, including
+>   vfio-ccw.)
+> * ccw_device_todo() can just unregister the ccw device, and there's no
+>   longer a need for ccw_device_call_sch_unregister(). (IIUC, this also
+>   covers setting disconnected devices offline.)
+
+I'm actually not sure if unregistration-by-driver is the right thing
+for most cases (except for something like disconnected device removal),
+that should be done by the bus. Maybe something for later (don't fear,
+I don't plan to work on the common I/O layer again :)
+
+> * As the I/O subchannel driver now needs to deal with cases where no
+>   ccw device is available, the code for that needs to be checked.
+>   (That's probably the most time-consuming task.)
+
+Had a quick look, doesn't actually look too bad (most places already
+check for !cdev.)
+
+> 
+> Userspace should be fine with I/O subchannels without ccw device,
+> that's nothing new.
+> 
+> Does that sound reasonable?
 
