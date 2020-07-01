@@ -2,84 +2,183 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B87D2210F6F
-	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 17:36:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72CD3210F7D
+	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 17:39:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731815AbgGAPgl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 1 Jul 2020 11:36:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45320 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731721AbgGAPgl (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jul 2020 11:36:41 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 061FXB7k096624;
-        Wed, 1 Jul 2020 11:36:38 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 320s239h7k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 11:36:38 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 061FXiHv103625;
-        Wed, 1 Jul 2020 11:36:38 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 320s239h6y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 11:36:37 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 061FJedh001187;
-        Wed, 1 Jul 2020 15:36:36 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 31wwr8d38a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 01 Jul 2020 15:36:35 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 061FaXTq53018754
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 1 Jul 2020 15:36:33 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 35DA5A4072;
-        Wed,  1 Jul 2020 15:36:33 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C7C75A4055;
-        Wed,  1 Jul 2020 15:36:32 +0000 (GMT)
-Received: from osiris (unknown [9.171.45.129])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  1 Jul 2020 15:36:32 +0000 (GMT)
-Date:   Wed, 1 Jul 2020 17:36:31 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 1/2] mm/memblock: expose only miminal interface to
- add/walk physmem
-Message-ID: <20200701153631.GD5008@osiris>
-References: <20200701150643.GA2999146@linux.ibm.com>
- <62588A3E-81FA-4C79-B215-D1D33887597C@redhat.com>
+        id S1731978AbgGAPjD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 1 Jul 2020 11:39:03 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46205 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731815AbgGAPjD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jul 2020 11:39:03 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b16so11141325pfi.13;
+        Wed, 01 Jul 2020 08:39:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AZesbQnE9xZtAvlp8hgGkQiaXBzVdBqKAV0FPQQ6oZs=;
+        b=lgnO2u1MArWinys5+t5FLanYeZvQaGvwmrH7PjH3hehbJoNyDwgCJsA0dVXc/Dgzt7
+         sTZ5G80nXFJVak54UI4jSEV8Mn7f7YRFL/HY3lyNba4tMXTqFperQcF0BMb1PJAZjRId
+         KCcUG69SffNThv8FDjooggmKiooQjgIikCnDWzfGAfV/d3vrHT6ScyHLsM4wrhM+fgs/
+         0+Tzb/M/a0cAqz6t/QCp9d2m4moXI9XAWgHO7vCXXkqOh2PAmOiyDar0um6w/CyM00o8
+         eejj6Vxb/UU8bSYSwlhSnswCXFuf7ircU+qbN5oaamWlKXt00aXyIZRsN3rpMCj+5/KO
+         SZng==
+X-Gm-Message-State: AOAM531rgLOw6E99NqCUB1IpbwbjLCXFLO91gFS5srjNlnuxD3nCS2fR
+        qtWHoyIM+Vn/TS9yFQehcSM=
+X-Google-Smtp-Source: ABdhPJwcc1ftRiobDwYJoEvcTEgwjxcf5bDCUJdlkJWOMFVXK83NcGgXQfCysyiX5lkFdVIUl46mrA==
+X-Received: by 2002:aa7:9906:: with SMTP id z6mr25183903pff.60.1593617941931;
+        Wed, 01 Jul 2020 08:39:01 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id i196sm6357971pgc.55.2020.07.01.08.39.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2020 08:39:00 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 76FA2403DC; Wed,  1 Jul 2020 15:38:59 +0000 (UTC)
+Date:   Wed, 1 Jul 2020 15:38:59 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
+        axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com, mcgrof@kernel.org,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+Message-ID: <20200701153859.GT4332@42.do-not-panic.com>
+References: <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
+ <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
+ <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
+ <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
+ <20200626025410.GJ4332@42.do-not-panic.com>
+ <20200630175704.GO13911@42.do-not-panic.com>
+ <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+ <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
+ <20200701135324.GS4332@42.do-not-panic.com>
+ <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <62588A3E-81FA-4C79-B215-D1D33887597C@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-01_08:2020-07-01,2020-07-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 impostorscore=0 phishscore=0 suspectscore=1 mlxlogscore=999
- cotscore=-2147483648 mlxscore=0 spamscore=0 priorityscore=1501 bulkscore=0
- adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2007010110
+In-Reply-To: <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-> >> While fixing up the documentation, sneak in some related cleanups. We can
-> >> stop setting CONFIG_HAVE_MEMBLOCK_PHYS_MAP for s390x next.
-> > As you noted in the previous version it should have been
-> > CONFIG_ARCH_KEEP_MEMBLOCK ;-)
-> Grml :) maybe maintainers can fix that up when applying in case
-> there are no other comments.
+On Wed, Jul 01, 2020 at 11:08:57PM +0900, Tetsuo Handa wrote:
+> On 2020/07/01 22:53, Luis Chamberlain wrote:
+> >> Well, it is not br_stp_call_user() but br_stp_start() which is expecting
+> >> to set sub_info->retval for both KWIFEXITED() case and KWIFSIGNALED() case.
+> >> That is, sub_info->retval needs to carry raw value (i.e. without "umh: fix
+> >> processed error when UMH_WAIT_PROC is used" will be the correct behavior).
+> > 
+> > br_stp_start() doesn't check for the raw value, it just checks for err
+> > or !err. So the patch, "umh: fix processed error when UMH_WAIT_PROC is
+> > used" propagates the correct error now.
+> 
+> No. If "/sbin/bridge-stp virbr0 start" terminated due to e.g. SIGSEGV
+> (for example, by inserting "kill -SEGV $$" into right after "#!/bin/sh" line),
+> br_stp_start() needs to select BR_KERNEL_STP path. We can't assume that
+> /sbin/bridge-stp is always terminated by exit() syscall (and hence we can't
+> ignore KWIFSIGNALED() case in call_usermodehelper_exec_sync()).
 
-Sure, just need to know how to handle this. :)
+Ah, well that would be a different fix required, becuase again,
+br_stp_start() does not untangle the correct error today really.
+I also I think it would be odd odd that SIGSEGV or another signal 
+is what was terminating Christian's bridge stp call, but let's
+find out!
+
+Note we pass 0 to the options to wait so the mistake here could indeed
+be that we did not need KWIFSIGNALED(). I was afraid of this prospect...
+as it other implications.
+
+It means we either *open code* all callers, or we handle this in a
+unified way on the umh. And if we do handle this in a unified way, it
+then begs the question as to *what* do we pass for the signals case and
+continued case. Below we just pass the signal, and treat continued as
+OK, but treating continued as OK would also be a *new* change as well.
+
+For instance (this goes just boot tested, but Christian if you can
+try this as well that would be appreciated):
+
+diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+index bba06befbff5..d1898f5dd1fc 100644
+--- a/include/linux/sched/task.h
++++ b/include/linux/sched/task.h
+@@ -105,10 +105,12 @@ extern long kernel_wait4(pid_t, int __user *, int, struct rusage *);
+ 
+ /* Only add helpers for actual use cases in the kernel */
+ #define KWEXITSTATUS(status)		(__KWEXITSTATUS(status))
++#define KWTERMSIG(status)		(__KWTERMSIG(status))
++#define KWSTOPSIG(status)		(__KWSTOPSIG(status))
+ #define KWIFEXITED(status)		(__KWIFEXITED(status))
+-
+-/* Nonzero if STATUS indicates normal termination.  */
+-#define __KWIFEXITED(status)     (__KWTERMSIG(status) == 0)
++#define KWIFSIGNALED(status)		(__KWIFSIGNALED(status))
++#define KWIFSTOPPED(status)		(__KWIFSTOPPED(status))
++#define KWIFCONTINUED(status)		(__KWIFCONTINUED(status))
+ 
+ /* If KWIFEXITED(STATUS), the low-order 8 bits of the status.  */
+ #define __KWEXITSTATUS(status)   (((status) & 0xff00) >> 8)
+@@ -116,6 +118,24 @@ extern long kernel_wait4(pid_t, int __user *, int, struct rusage *);
+ /* If KWIFSIGNALED(STATUS), the terminating signal.  */
+ #define __KWTERMSIG(status)      ((status) & 0x7f)
+ 
++/* If KWIFSTOPPED(STATUS), the signal that stopped the child.  */
++#define __KWSTOPSIG(status)      __KWEXITSTATUS(status)
++
++/* Nonzero if STATUS indicates normal termination.  */
++#define __KWIFEXITED(status)     (__KWTERMSIG(status) == 0)
++
++/* Nonzero if STATUS indicates termination by a signal.  */
++#define __KWIFSIGNALED(status) \
++	(((signed char) (((status) & 0x7f) + 1) >> 1) > 0)
++
++/* Nonzero if STATUS indicates the child is stopped.  */
++#define __KWIFSTOPPED(status)    (((status) & 0xff) == 0x7f)
++
++/* Nonzero if STATUS indicates the child continued after a stop. */
++#define __KWIFCONTINUED(status) ((status) == __KW_CONTINUED)
++
++#define __KW_CONTINUED		0xffff
++
+ extern void free_task(struct task_struct *tsk);
+ 
+ /* sched_exec is called by processes performing an exec */
+diff --git a/kernel/umh.c b/kernel/umh.c
+index f81e8698e36e..c98fb1ed90c9 100644
+--- a/kernel/umh.c
++++ b/kernel/umh.c
+@@ -156,6 +156,18 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
+ 		 */
+ 		if (KWIFEXITED(ret))
+ 			sub_info->retval = KWEXITSTATUS(ret);
++		/*
++		 * Do we really want to be passing the signal, or do we pass
++		 * a single error code for all cases?
++		 */
++		else if (KWIFSIGNALED(ret))
++			sub_info->retval = KWTERMSIG(ret);
++		/* Same here */
++		else if (KWIFSTOPPED((ret)))
++			sub_info->retval = KWSTOPSIG(ret);
++		/* And are we really sure we want this? */
++		else if (KWIFCONTINUED((ret)))
++			sub_info->retval = 0;
+ 	}
+ 
+ 	/* Restore default kernel sig handler */
