@@ -2,113 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A027B2107F2
-	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 11:23:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DEA52107F5
+	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 11:24:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgGAJXn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 1 Jul 2020 05:23:43 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32931 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbgGAJXm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jul 2020 05:23:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593595420;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XLaMq5gNtePfIRrL0DrsIJr+qn4Jk1tc2oraVPfZ9O0=;
-        b=I+f+Xm1WlHtXiwmNvu2LKxoPGNEkW0CIraDiFRzRu0jbI3FjS1rbxhG7MJlzSQRh3gaKDT
-        6TAMFrNLlQfe0puKaRzTpnoT82pDuc15S7rJLpmZTAb+P7/wGXy1LzLmnAiMG5Mim90X4p
-        6hmp34ve74dFwGOc14jqrCo7peJeJFY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-10-iMdHcMA1OZe8_fXT15gJJw-1; Wed, 01 Jul 2020 05:23:37 -0400
-X-MC-Unique: iMdHcMA1OZe8_fXT15gJJw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE0DCEC1C6;
-        Wed,  1 Jul 2020 09:23:35 +0000 (UTC)
-Received: from gondolin (ovpn-113-61.ams2.redhat.com [10.36.113.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 342C87C1F6;
-        Wed,  1 Jul 2020 09:23:34 +0000 (UTC)
-Date:   Wed, 1 Jul 2020 11:23:13 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc:     Vineeth Vijayan <vneethv@linux.vnet.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Boris Fiuczynski <fiuczy@linux.ibm.com>
-Subject: Re: [RFD] uevent handling for subchannels
-Message-ID: <20200701112313.62a22156.cohuck@redhat.com>
-In-Reply-To: <20200629135631.10db3c32.cohuck@redhat.com>
-References: <20200403124032.5e70603d.cohuck@redhat.com>
-        <20200417143811.7e6ecb2c.cohuck@redhat.com>
-        <8649ea94-8617-07b6-170e-65c278d9383b@linux.vnet.ibm.com>
-        <c69da1c0-d151-257b-fe43-786e47a3cf9b@linux.vnet.ibm.com>
-        <20200423182001.40345df8.cohuck@redhat.com>
-        <53d7d08d-c1d2-dad3-7f01-a165b24b0359@linux.ibm.com>
-        <20200430124316.023a82b0.cohuck@redhat.com>
-        <20200629135631.10db3c32.cohuck@redhat.com>
-Organization: Red Hat GmbH
+        id S1728776AbgGAJYj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 1 Jul 2020 05:24:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18562 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727090AbgGAJYj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jul 2020 05:24:39 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06190vqC005781;
+        Wed, 1 Jul 2020 05:24:36 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 320k1pgxpp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 05:24:35 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 061914ib006408;
+        Wed, 1 Jul 2020 05:24:35 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 320k1pgxny-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 05:24:35 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0619Erf5026176;
+        Wed, 1 Jul 2020 09:24:33 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04fra.de.ibm.com with ESMTP id 31wwr826yv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 01 Jul 2020 09:24:33 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0619OUfR45678642
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 1 Jul 2020 09:24:30 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7020A405B;
+        Wed,  1 Jul 2020 09:24:30 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 48D87A4054;
+        Wed,  1 Jul 2020 09:24:30 +0000 (GMT)
+Received: from osiris (unknown [9.171.45.129])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  1 Jul 2020 09:24:30 +0000 (GMT)
+Date:   Wed, 1 Jul 2020 11:24:28 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: Re: [PATCH v1] s390/extmem: remove stale -ENOSPC comment and handling
+Message-ID: <20200701092428.GA5008@osiris>
+References: <20200625150029.45019-1-david@redhat.com>
+ <20200630084240.8283-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630084240.8283-1-david@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-01_04:2020-07-01,2020-07-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 impostorscore=0 clxscore=1015 suspectscore=1
+ cotscore=-2147483648 priorityscore=1501 spamscore=0 malwarescore=0
+ bulkscore=0 mlxlogscore=928 mlxscore=0 phishscore=0 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007010063
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 29 Jun 2020 13:56:31 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
-
-> Ok, so I've resumed the thinking process, and I think getting rid of
-> the "no I/O subchannel without functional device" approach is a good
-> idea, and allows us to make handling driver matches more similar to
-> everyone else.
-
-As an aside, there's another odd construct: the I/O subchannel driver
-*always* binds to the subchannel device, even if there is a problem,
-and schedules an unregistration of the subchannel device on error. This
-was introduced because events from machine check handling are not
-processed if there isn't a driver (at least I thought back then that it
-was a good idea.) I think a more correct way to handle this would be to
-do the following:
-
-* If something doesn't work, clean up and return an error in the probe
-  function. The subchannel device stays around, it's just not bound.
-* Have the css bus do some basic processing for subchannels not bound
-  to any driver (e.g., check dnv/w). This would also make it possible
-  to unregister dead message subchannels if a machine check is received
-  for them (don't know if that's an actual problem in pratice.)
-
+On Tue, Jun 30, 2020 at 10:42:40AM +0200, David Hildenbrand wrote:
+> segment_load() will no longer return -ENOSPC. If a segment overlaps with
+> storage, we now also return -EBUSY. Remove the stale comment from
+> __segment_load() and the stale handling from segment_warning().
 > 
-> What changes would be needed?
-> * The whole logic to suppress uevents for subchannels and generate one
->   later will go. (Touches the various subchannel driver, including
->   vfio-ccw.)
-> * ccw_device_todo() can just unregister the ccw device, and there's no
->   longer a need for ccw_device_call_sch_unregister(). (IIUC, this also
->   covers setting disconnected devices offline.)
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  arch/s390/mm/extmem.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 
-I'm actually not sure if unregistration-by-driver is the right thing
-for most cases (except for something like disconnected device removal),
-that should be done by the bus. Maybe something for later (don't fear,
-I don't plan to work on the common I/O layer again :)
-
-> * As the I/O subchannel driver now needs to deal with cases where no
->   ccw device is available, the code for that needs to be checked.
->   (That's probably the most time-consuming task.)
-
-Had a quick look, doesn't actually look too bad (most places already
-check for !cdev.)
-
-> 
-> Userspace should be fine with I/O subchannels without ccw device,
-> that's nothing new.
-> 
-> Does that sound reasonable?
-
+Applied, thanks!
