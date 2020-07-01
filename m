@@ -2,88 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 942F7210D3A
-	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 16:11:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1F6A210D6A
+	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 16:19:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731202AbgGAOLu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 1 Jul 2020 10:11:50 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:60283 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731153AbgGAOLu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jul 2020 10:11:50 -0400
-Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 061E90OX093153;
-        Wed, 1 Jul 2020 23:09:00 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp);
- Wed, 01 Jul 2020 23:09:00 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 061E8xWB093138
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 1 Jul 2020 23:08:59 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>, ast@kernel.org,
-        axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-References: <9e767819-9bbe-2181-521e-4d8ca28ca4f7@de.ibm.com>
- <20200624160953.GH4332@42.do-not-panic.com>
- <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
- <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
- <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
- <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
- <20200626025410.GJ4332@42.do-not-panic.com>
- <20200630175704.GO13911@42.do-not-panic.com>
- <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
- <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
- <20200701135324.GS4332@42.do-not-panic.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
-Date:   Wed, 1 Jul 2020 23:08:57 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1731515AbgGAOSo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 1 Jul 2020 10:18:44 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:36723 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731504AbgGAOSn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jul 2020 10:18:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593613121;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=WXANX7e/4PKUrgXNjDH8epRg0aU4bUifT+MRphx7SbI=;
+        b=NN1VtqhH+DRrERqGv7j39we1nD0Lhax9C9uYMyp38yTDrR6Urr1AGKOzdKmbbwOIydCCVr
+        mQ8KEny8lH3/vpiapg4PKxHSBMpt8TbT8WzDOpbapqq3EdTb7zdQnIFKmLSmw5dv+yM9as
+        BzX0Qb1OaNjWdlsfp2W/8M2S9G52QMs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-8ISAIio-PKymnyTfUtGACQ-1; Wed, 01 Jul 2020 10:18:37 -0400
+X-MC-Unique: 8ISAIio-PKymnyTfUtGACQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 013D3805EEE;
+        Wed,  1 Jul 2020 14:18:36 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-112-52.ams2.redhat.com [10.36.112.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1DDC65C1C5;
+        Wed,  1 Jul 2020 14:18:30 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Michael Holzheu <holzheu@linux.vnet.ibm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH v2 0/2] s390/mm: don't set ARCH_KEEP_MEMBLOCK
+Date:   Wed,  1 Jul 2020 16:18:28 +0200
+Message-Id: <20200701141830.18749-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200701135324.GS4332@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2020/07/01 22:53, Luis Chamberlain wrote:
->> Well, it is not br_stp_call_user() but br_stp_start() which is expecting
->> to set sub_info->retval for both KWIFEXITED() case and KWIFSIGNALED() case.
->> That is, sub_info->retval needs to carry raw value (i.e. without "umh: fix
->> processed error when UMH_WAIT_PROC is used" will be the correct behavior).
-> 
-> br_stp_start() doesn't check for the raw value, it just checks for err
-> or !err. So the patch, "umh: fix processed error when UMH_WAIT_PROC is
-> used" propagates the correct error now.
+This series is based on the latest s390/features branch, which contains
+"s390/zcore: remove memmap device". [1]
 
-No. If "/sbin/bridge-stp virbr0 start" terminated due to e.g. SIGSEGV
-(for example, by inserting "kill -SEGV $$" into right after "#!/bin/sh" line),
-br_stp_start() needs to select BR_KERNEL_STP path. We can't assume that
-/sbin/bridge-stp is always terminated by exit() syscall (and hence we can't
-ignore KWIFSIGNALED() case in call_usermodehelper_exec_sync()).
+Looking into why we still create memblocks for stdnaby/hotplugged memory
+(via add_memory()), I discovered that we might not need ARCH_KEEP_MEMBLOCK
+on s390x after all.
+
+This is relevant in the context of virtio-mem, where we hotplug a lot of
+small memory blocks (and want to avoid managing unused metadata). But also
+for existing setups, it might help to free up some memory after boot.
+
+Compile-tested on s390x, pseries, arm64, i386, mips64, powernv, sh, and
+x86_64.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features
+
+v1 -> v2:
+- "mm/memblock: expose only miminal interface to add/walk physmem"
+-- Use inline function for __next_physmem_range
+-- Rewrite some comments
+
+RFC -> v1:
+- "s390/zcore: traverse resources instead of memblocks" has been replaced
+  on s390/features by "s390/zcore: remove memmap devic"
+- Add "mm/memblock: expose only miminal interface to add/walk physmem"
+-- Sort out section mismatch errors when using physmem after boot without
+   ARCH_KEEP_MEMBLOCK
+- "s390/mm: don't set ARCH_KEEP_MEMBLOCK"
+-- Rephrase description
+
+David Hildenbrand (2):
+  mm/memblock: expose only miminal interface to add/walk physmem
+  s390/mm: don't set ARCH_KEEP_MEMBLOCK
+
+ arch/s390/Kconfig             |  1 -
+ arch/s390/kernel/crash_dump.c |  6 ++--
+ include/linux/memblock.h      | 28 ++++++++++++++---
+ mm/memblock.c                 | 57 ++++++++++++++++++-----------------
+ 4 files changed, 55 insertions(+), 37 deletions(-)
+
+-- 
+2.26.2
 
