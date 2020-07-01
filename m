@@ -2,84 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78F432109B8
-	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 12:53:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EB5B210C2A
+	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 15:26:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730015AbgGAKxN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 1 Jul 2020 06:53:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:57020 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729892AbgGAKxN (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 1 Jul 2020 06:53:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B597030E;
-        Wed,  1 Jul 2020 03:53:12 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB9483F73C;
-        Wed,  1 Jul 2020 03:53:08 -0700 (PDT)
-Subject: Re: [PATCH v3 00/34] iommu: Move iommu_group setup to IOMMU core code
-To:     Qian Cai <cai@lca.pw>, Joerg Roedel <joro@8bytes.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-tegra@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        jonathan.derrick@intel.com, linux-s390@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        virtualization@lists.linux-foundation.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
-References: <20200429133712.31431-1-joro@8bytes.org>
- <20200701004020.GA6221@lca.pw>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <9b0ef27a-f249-a90b-9899-e53b946f83cc@arm.com>
-Date:   Wed, 1 Jul 2020 11:53:07 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+        id S1731058AbgGAN0F (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 1 Jul 2020 09:26:05 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:53713 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729429AbgGAN0E (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jul 2020 09:26:04 -0400
+Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 061DOXC9036582;
+        Wed, 1 Jul 2020 22:24:33 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp);
+ Wed, 01 Jul 2020 22:24:33 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 061DOW2e036570
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 1 Jul 2020 22:24:32 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, ast@kernel.org,
+        axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, dhowells@redhat.com,
+        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <b7d658b9-606a-feb1-61f9-b58e3420d711@de.ibm.com>
+ <3118dc0d-a3af-9337-c897-2380062a8644@de.ibm.com>
+ <20200624144311.GA5839@infradead.org>
+ <9e767819-9bbe-2181-521e-4d8ca28ca4f7@de.ibm.com>
+ <20200624160953.GH4332@42.do-not-panic.com>
+ <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
+ <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
+ <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
+ <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
+ <20200626025410.GJ4332@42.do-not-panic.com>
+ <20200630175704.GO13911@42.do-not-panic.com>
+ <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
+Date:   Wed, 1 Jul 2020 22:24:29 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200701004020.GA6221@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2020-07-01 01:40, Qian Cai wrote:
-> Looks like this patchset introduced an use-after-free on arm-smmu-v3.
+On 2020/07/01 19:08, Christian Borntraeger wrote:
 > 
-> Reproduced using mlx5,
 > 
-> # echo 1 > /sys/class/net/enp11s0f1np1/device/sriov_numvfs
-> # echo 0 > /sys/class/net/enp11s0f1np1/device/sriov_numvfs
-> 
-> The .config,
-> https://github.com/cailca/linux-mm/blob/master/arm64.config
-> 
-> Looking at the free stack,
-> 
-> iommu_release_device->iommu_group_remove_device
-> 
-> was introduced in 07/34 ("iommu: Add probe_device() and release_device()
-> call-backs").
+> On 30.06.20 19:57, Luis Chamberlain wrote:
+>> On Fri, Jun 26, 2020 at 02:54:10AM +0000, Luis Chamberlain wrote:
+>>> On Wed, Jun 24, 2020 at 08:37:55PM +0200, Christian Borntraeger wrote:
+>>>>
+>>>>
+>>>> On 24.06.20 20:32, Christian Borntraeger wrote:
+>>>> [...]> 
+>>>>> So the translations look correct. But your change is actually a sematic change
+>>>>> if(ret) will only trigger if there is an error
+>>>>> if (KWIFEXITED(ret)) will always trigger when the process ends. So we will always overwrite -ECHILD
+>>>>> and we did not do it before. 
+>>>>>
+>>>>
+>>>> So the right fix is
+>>>>
+>>>> diff --git a/kernel/umh.c b/kernel/umh.c
+>>>> index f81e8698e36e..a3a3196e84d1 100644
+>>>> --- a/kernel/umh.c
+>>>> +++ b/kernel/umh.c
+>>>> @@ -154,7 +154,7 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
+>>>>                  * the real error code is already in sub_info->retval or
+>>>>                  * sub_info->retval is 0 anyway, so don't mess with it then.
+>>>>                  */
+>>>> -               if (KWIFEXITED(ret))
+>>>> +               if (KWEXITSTATUS(ret))
+>>>>                         sub_info->retval = KWEXITSTATUS(ret);
 
-Right, iommu_group_remove_device can tear down the group and call 
-->domain_free before the driver has any knowledge of the last device 
-going away via the ->release_device call.
+Well, it is not br_stp_call_user() but br_stp_start() which is expecting
+to set sub_info->retval for both KWIFEXITED() case and KWIFSIGNALED() case.
+That is, sub_info->retval needs to carry raw value (i.e. without "umh: fix
+processed error when UMH_WAIT_PROC is used" will be the correct behavior).
 
-I guess the question is do we simply flip the call order in 
-iommu_release_device() so drivers can easily clean up their internal 
-per-device state first, or do we now want them to be robust against 
-freeing domains with devices still nominally attached?
-
-Robin.
