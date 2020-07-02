@@ -2,136 +2,351 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AB8B2128AD
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Jul 2020 17:53:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25888212982
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Jul 2020 18:31:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgGBPxA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 2 Jul 2020 11:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgGBPw7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 Jul 2020 11:52:59 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05396C08C5DD
-        for <linux-s390@vger.kernel.org>; Thu,  2 Jul 2020 08:52:58 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h19so32848919ljg.13
-        for <linux-s390@vger.kernel.org>; Thu, 02 Jul 2020 08:52:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X1hZZYHT2jx0soQwDY2Nw4ZNux9TK2TS4ou5sFWlySY=;
-        b=KwW+/U9fkM+srFlFPvkKz4V3jEnKIKH8ygaroNt4YXgCxeue/VrdTKoJwmcn9oXIVs
-         4DY0ZVk34mPlw7u4KLu6rGjhvnrQL6/lofTS76CSIpt1KUwe2M3VISdDz83TvG8iTXSI
-         W47Pw8OTk/hC0zb2MZaQ1r596h7N8T5A23JSQkaU9RWiYgGd5Xav7JwLesO4IqMIFUZL
-         2VuieIxaw/GaR9iMUF6CkG5lHBbOPJgWIfkSCxXHB48wkXOO7uuaIH8G93d6r33rKKeJ
-         p2LG1w2EFwjJvNEP/726kUUAmMNBPXMl5+BvhQTxMO/S6XCBw/1QqIdNdExANIirUL/4
-         +A/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X1hZZYHT2jx0soQwDY2Nw4ZNux9TK2TS4ou5sFWlySY=;
-        b=kW+W91Neel4GxTswKg4mnkS1+8Z7tuoU0Cl/vklXjOPh/L17tyVC5kHhoMfuctz6Dj
-         mgvaSKlznJfPzvCRBwc/Ru09IY/MXRJDC+JXu2Cyj6h8njT6AuDSq3KD1RNCi4/DbRO8
-         68AOlIf23UM1QWwibcpKWz9g6Jcm7DzXLFsFZspVr0qZiqxkiKXdgH+E1ZGO0qlZvary
-         yVUOZNPryVpKnGYX+T7jNBA/sMsjD7oVwe5mq6rR4VzUgbWgDN8g/MRV6WFckfPIZnEs
-         b4v6y2nOl75dnn77pwbGGW4aMn3uwb/Z7jCU/H46u0XM5Ttk8rAUdocKl3Vst0tS/CK0
-         HIyQ==
-X-Gm-Message-State: AOAM531kPA6kJjq6S9I2XcuPLX663AyMYnaWt2lonSQuITztrIGJkmEw
-        nRadkBMTNlZqGU/r7Y57KsS2j1q1Ucd/7cYglvViyw==
-X-Google-Smtp-Source: ABdhPJz3ABkPWjkv8L0FIiK+Kjjg6BO4eaaimJnKQo1xzAYZPxzmmzDpXVUF4bLDPypwEcFJ8kmLmaUrHoL1B8Z52PM=
-X-Received: by 2002:a2e:b88c:: with SMTP id r12mr16463205ljp.266.1593705177353;
- Thu, 02 Jul 2020 08:52:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200629193947.2705954-1-hch@lst.de> <20200629193947.2705954-19-hch@lst.de>
- <20200702141001.GA3834@lca.pw> <20200702151453.GA1799@lst.de>
-In-Reply-To: <20200702151453.GA1799@lst.de>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 2 Jul 2020 21:22:46 +0530
-Message-ID: <CA+G9fYv6DfJB=DeQFVptAuaVv1Ng-BK0fRHgFZ=DNzymu8LVvw@mail.gmail.com>
-Subject: Re: [PATCH 18/20] block: refator submit_bio_noacct
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Qian Cai <cai@lca.pw>, Jens Axboe <axboe@kernel.dk>,
-        dm-devel@redhat.com, open list <linux-kernel@vger.kernel.org>,
-        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
-        drbd-dev@lists.linbit.com,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-s390@vger.kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        id S1726779AbgGBQba (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 2 Jul 2020 12:31:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24238 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726199AbgGBQb3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 Jul 2020 12:31:29 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 062GUZno170194;
+        Thu, 2 Jul 2020 12:31:27 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 320t3gn1pn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 12:31:27 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 062GUbUk170491;
+        Thu, 2 Jul 2020 12:31:26 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 320t3gn1ny-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 12:31:26 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 062GQQOv032129;
+        Thu, 2 Jul 2020 16:31:24 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma02fra.de.ibm.com with ESMTP id 31wwr7tynx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jul 2020 16:31:24 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 062GU2r653412218
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 Jul 2020 16:30:02 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7657911C050;
+        Thu,  2 Jul 2020 16:31:22 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA0E111C058;
+        Thu,  2 Jul 2020 16:31:21 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.146.43])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  2 Jul 2020 16:31:21 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, thuth@redhat.com, cohuck@redhat.com,
+        drjones@redhat.com
+Subject: [kvm-unit-tests PATCH v10 0/9] s390x: Testing the Channel Subsystem I/O
+Date:   Thu,  2 Jul 2020 18:31:11 +0200
+Message-Id: <1593707480-23921-1-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-02_09:2020-07-02,2020-07-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
+ cotscore=-2147483648 adultscore=0 phishscore=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 spamscore=0 suspectscore=1 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2007020111
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 2 Jul 2020 at 20:45, Christoph Hellwig <hch@lst.de> wrote:
->
-> On Thu, Jul 02, 2020 at 10:10:10AM -0400, Qian Cai wrote:
-> > On Mon, Jun 29, 2020 at 09:39:45PM +0200, Christoph Hellwig wrote:
-> > > Split out a __submit_bio_noacct helper for the actual de-recursion
-> > > algorithm, and simplify the loop by using a continue when we can't
-> > > enter the queue for a bio.
-> > >
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> >
-> > Reverting this commit and its dependencies,
-> >
-> > 5a6c35f9af41 block: remove direct_make_request
-> > ff93ea0ce763 block: shortcut __submit_bio_noacct for blk-mq drivers
-> >
-> > fixed the stack-out-of-bounds during boot,
-> >
-> > https://lore.kernel.org/linux-block/000000000000bcdeaa05a97280e4@google.com/
->
-> Yikes.  bio_alloc_bioset pokes into bio_list[1] in a totally
-> undocumented way.  But even with that the problem should only show
-> up with "block: shortcut __submit_bio_noacct for blk-mq drivers".
->
-> Can you try this patch?
+Hi All,
 
-Applied your patch on top of linux-next 20200702 and tested on
-arm64 and x86_64 devices and the reported BUG fixed.
+Goal of the series is to have a framework to test Channel-Subsystem I/O with
+QEMU/KVM.
+  
+To be able to support interrupt for CSS I/O and for SCLP we need to modify
+the interrupt framework to allow re-entrant interruptions.
+  
+We add a registration for IRQ callbacks to the test program to define its own
+interrupt handler. We need to do special work under interrupt like acknowledging
+the interrupt.
+  
+This series presents three tests:
+- Enumeration:
+        The CSS is enumerated using the STSCH instruction recursively on all
+        potentially existing channels.
+        Keeping the first channel found as a reference for future use.
+        Checks STSCH
+ 
+- Enable:
+        If the enumeration succeeded the tests enables the reference
+        channel with MSCH and verifies with STSCH that the channel is
+        effectively enabled, retrying a predefined count on failure
+	to enable the channel
+        Checks MSCH       
+ 
+- Sense:
+        If the channel is enabled this test sends a SENSE_ID command
+        to the reference channel, analyzing the answer and expecting
+        the Control unit type being 0x3832, a.k.a. virtio-ccw.
+        Checks SSCH(READ) and IO-IRQ
 
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Note:
+- The following 5 patches are general usage and may be pulled first:
+  s390x: saving regs for interrupts
+  s390x: I/O interrupt registration
+  s390x: export the clock get_clock_ms() utility
+  s390x: clock and delays calculations
+  s390x: define function to wait for interrupt
 
->
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index bf882b8d84450c..9f1bf8658b611a 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1155,11 +1155,10 @@ static blk_qc_t __submit_bio_noacct(struct bio *bio)
->  static blk_qc_t __submit_bio_noacct_mq(struct bio *bio)
->  {
->         struct gendisk *disk = bio->bi_disk;
-> -       struct bio_list bio_list;
-> +       struct bio_list bio_list[2] = { };
->         blk_qc_t ret = BLK_QC_T_NONE;
->
-> -       bio_list_init(&bio_list);
-> -       current->bio_list = &bio_list;
-> +       current->bio_list = bio_list;
->
->         do {
->                 WARN_ON_ONCE(bio->bi_disk != disk);
-> @@ -1174,7 +1173,7 @@ static blk_qc_t __submit_bio_noacct_mq(struct bio *bio)
->                 }
->
->                 ret = blk_mq_submit_bio(bio);
-> -       } while ((bio = bio_list_pop(&bio_list)));
-> +       } while ((bio = bio_list_pop(&bio_list[0])));
->
->         current->bio_list = NULL;
->         return ret;
+- These 4 patches are really I/O oriented:
+  s390x: Library resources for CSS tests
+  s390x: css: stsch, enumeration test
+  s390x: css: msch, enable test
+  s390x: css: ssch/tsch with sense and interrupt
 
-ref:
-https://lkft.validation.linaro.org/scheduler/job/1538359#L288
-https://lkft.validation.linaro.org/scheduler/job/1538360#L572
+Regards,
+Pierre
+
+Pierre Morel (9):
+  s390x: saving regs for interrupts
+  s390x: I/O interrupt registration
+  s390x: export the clock get_clock_ms() utility
+  s390x: clock and delays calculations
+  s390x: define function to wait for interrupt
+  s390x: Library resources for CSS tests
+  s390x: css: stsch, enumeration test
+  s390x: css: msch, enable test
+  s390x: css: ssch/tsch with sense and interrupt
+
+ lib/s390x/asm/arch_def.h |  14 ++
+ lib/s390x/asm/time.h     |  50 +++++++
+ lib/s390x/css.h          | 286 +++++++++++++++++++++++++++++++++++++++
+ lib/s390x/css_dump.c     | 152 +++++++++++++++++++++
+ lib/s390x/css_lib.c      | 277 +++++++++++++++++++++++++++++++++++++
+ lib/s390x/interrupt.c    |  23 +++-
+ lib/s390x/interrupt.h    |   8 ++
+ s390x/Makefile           |   3 +
+ s390x/css.c              | 162 ++++++++++++++++++++++
+ s390x/cstart64.S         |  41 +++++-
+ s390x/intercept.c        |  11 +-
+ s390x/unittests.cfg      |   4 +
+ 12 files changed, 1018 insertions(+), 13 deletions(-)
+ create mode 100644 lib/s390x/asm/time.h
+ create mode 100644 lib/s390x/css.h
+ create mode 100644 lib/s390x/css_dump.c
+ create mode 100644 lib/s390x/css_lib.c
+ create mode 100644 lib/s390x/interrupt.h
+ create mode 100644 s390x/css.c
+
+-- 
+2.25.1
+
+from v9 to v10:
+
+- postpone and removed from series 
+  - s390x: Use PSW bits definitions in cstart
+  - s390x: Move control register bit definitions and add AFP to them
+  reason: gcc compiler for RedHat-7 does not allow UL suffix for
+          macro declarations.
+  (Thomas)
+
+- postpone and removed from series 
+  -s390x-retrieve-decimal-and-hexadecimal-kernel-par.patch
+  reason: must be reworked and since we can do without an argument
+          I prefer to separate it from this series.
+  (Janosch, Andrew)
+
+- several word spelling, better comments
+  (Connie, Thomas)
+
+- Extensively reworked ssch/tsch with sense and interrupt
+  - added a dedicated ISC to the channel subsystem test
+    when enabling a channel
+  - reworked the ISC enabling in CR6
+  - reworked the test on residual count
+  - moved the IRQ handler and the start function inside the
+    library to share with following CSS tests.
+  - added more report_info to the IRQ handler
+  - rename some functions, start_single_ccw, css_irq_io,
+    css_residual_count
+  (Connie, Pierre)
+
+from v8 to v9:
+
+- rename PSW_EXCEPTION_MASK to PSW_MASK_ON_EXCEPTION
+  (Thomas)
+
+- changed false max microseconds in delay calculation
+  (Thomas)
+
+- fix bug in decimal parameter calculation
+  (Thomas)
+
+- fix bug in msch inline assembly
+  (Thomas)
+
+- add report_abort() for unprobable result of tsch
+  in I/O IRQ
+  (Thomas)
+
+- use of existing lctlg() wrapper instead of new function
+  (Thomas)
+
+from v7 to v8
+
+* Suppress ccw-pong specific remote device
+  (Thomas, Janosch)
+
+* use virtio-net-ccw as device instead of a specific
+  device: no more need for QEMU patch
+  (Connie)
+
+* Add kernel parameter to access a different device.
+  (Connie)
+
+* Add tests on subschannel reading, length, garbage.
+  (Connie)
+
+* Several naming changes and reorganizations of definitions.
+  (Connie)
+
+* Take wrapping into account for delay calculation
+
+* Align CCW1 on 8 bytes boundary
+
+* Reorganize the first three patches
+  (Janosch)
+
+from v6 to v7
+
+* s390x: saving regs for interrupts
+- macro name modificatio for SAVE_REGS_STACK
+  (David)
+- saving the FPC
+  (David)
+
+* s390x: Use PSW bits definitions in cstart
+- suppress definition for PSW_RESET_MASK
+  use PSW_EXCEPTION_MASK | PSW_MASK_SHORT_PSW
+  (David)
+
+* s390x: Library resources for CSS tests
+* s390x: css: stsch, enumeration test
+  move library definitions from stsch patche
+  to the Library patch
+  add the library to the s390 Makefile here
+  (Janosch)
+  
+* s390x: css: msch, enable test
+  Add retries when enable fails
+  (Connie)
+  Re-introduce the patches for delay implementation
+  to add a delay between retries
+
+* s390x: define function to wait for interrupt
+  Changed name from wfi to wait_for_interrupt
+  (Janosch)
+
+* s390x: css: ssch/tsch with sense and interrupt
+  add a flag parameter to ssch and use it to add
+  SLI (Suppress Length Indication) flag for SENSE_ID
+  (Connie)
 
 
-- Naresh
+from v5 to v6
+- Added comments for IRQ handling in
+  s390x: saving regs for interrupts
+  (Janosch) 
+
+- fixed BUG on reset_psw, added PSW_MASK_PSW_SHORT
+  and PSW_RESET_MASK
+
+- fixed several lines over 80 chars
+
+- fixed licenses, use GPL V2 (no more LGPL)
+
+- replacing delay() with wfi() (Wait For Interrupt)
+  during the css tests
+  (suggested by Connie's comments)
+
+- suppressing delay() induces suppressing the patch
+  "s390x: export the clock get_clock_ms() utility"
+  which is already reviewed but can be picked from
+  the v5 series.
+
+- changed the logic of the tests, the 4 css tests
+  are always run one after the other so no need to 
+  re-run enumeration and enabling at the begining
+  of each tests, it has alredy been done.
+  This makes code simpler.
+
+from v4 to v5
+- add a patch to explicitely define the initial_cr0
+  value
+  (Janosch)
+- add RB from Janosh on interrupt registration
+- several formating, typo correction and removing
+  unnecessary initialization in "linrary resources..."
+  (Janosch)
+- several formating and typo corrections on
+  "stsch enumeration test"
+  (Connie)
+- reworking the msch test
+  (Connie)
+- reworking of ssch test, pack the sense-id structure
+  (Connie)
+
+from v3 to v4
+- add RB from David and Thomas for patchs 
+  (3) irq registration and (4) clock export
+- rework the PSW bit definitions
+  (Thomas)
+- Suppress undef DEBUG from css_dump
+  (Thomas)
+- rework report() functions using new scheme
+  (Thomas)
+- suppress un-necessary report_info()
+- more spelling corrections
+- add a loop around enable bit testing
+  (Connie)
+- rework IRQ testing
+  (Connie)
+- Test data addresses to be under 2G
+  (Connie)
+
+from v2 to v3:
+- Rework spelling
+  (Connie)
+- More descriptions
+  (Connie)
+- use __ASSEMBLER__ preprocessing to keep
+  bits definitions and C structures in the same file
+  (David)
+- rename the new file clock.h as time.h
+  (Janosch, David?)
+- use registration for the IO interruption
+  (David, Thomas)
+- test the SCHIB to verify it has really be modified
+  (Connie)
+- Lot of simplifications in the tests
+  (Connie)
+
+from v1 to v2:
+- saving floating point registers (David, Janosh)
+- suppress unused PSW bits defintions (Janosh)
+- added Thomas reviewed-by
+- style and comments modifications (Connie, Janosh)
+- moved get_clock_ms() into headers and use it (Thomas)
+- separate header and library utility from tests
+- Suppress traces, separate tests, make better usage of reports
+
