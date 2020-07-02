@@ -2,107 +2,66 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F298C211B12
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Jul 2020 06:28:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A7BB211BD9
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Jul 2020 08:15:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgGBE2Y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 2 Jul 2020 00:28:24 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58243 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgGBE2Y (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 Jul 2020 00:28:24 -0400
-Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 0624QsOL032532;
-        Thu, 2 Jul 2020 13:26:54 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp);
- Thu, 02 Jul 2020 13:26:54 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 0624Qsh8032529
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Thu, 2 Jul 2020 13:26:54 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
- seems to break linux bridge on s390x (bisected)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
-        axboe@kernel.dk, bfields@fieldses.org,
-        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
-        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
-        davem@davemloft.net, dhowells@redhat.com,
-        gregkh@linuxfoundation.org, jarkko.sakkinen@linux.intel.com,
-        jmorris@namei.org, josh@joshtriplett.org, keescook@chromium.org,
-        keyrings@vger.kernel.org, kuba@kernel.org,
-        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
-        philipp.reisner@linbit.com, ravenexp@gmail.com,
-        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
-        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
-        netdev@vger.kernel.org, markward@linux.ibm.com,
-        linux-s390 <linux-s390@vger.kernel.org>
-References: <ea41e2a9-61f7-aec1-79e5-7b08b6dd5119@de.ibm.com>
- <4e27098e-ac8d-98f0-3a9a-ea25242e24ec@de.ibm.com>
- <4d8fbcea-a892-3453-091f-d57c03f9aa90@de.ibm.com>
- <1263e370-7cee-24d8-b98c-117bf7c90a83@de.ibm.com>
- <20200626025410.GJ4332@42.do-not-panic.com>
- <20200630175704.GO13911@42.do-not-panic.com>
- <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
- <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
- <20200701135324.GS4332@42.do-not-panic.com>
- <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
- <20200701153859.GT4332@42.do-not-panic.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <e3f3e501-2cb7-b683-4b85-2002b7603244@i-love.sakura.ne.jp>
-Date:   Thu, 2 Jul 2020 13:26:53 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726241AbgGBGOq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 2 Jul 2020 02:14:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726169AbgGBGOo (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 2 Jul 2020 02:14:44 -0400
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34D4D208FE;
+        Thu,  2 Jul 2020 06:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593670483;
+        bh=TRjOq0ioBsI/lLgnqh3WHyq3NuAIqhAPdkGT9KrgKH8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yItMbcctXfs5o3K3a0Uwam0VmikvvsUcR4rDa/JwGQwZB8Uz/Yhp2jGzCMiYmIUEm
+         4zPuCUnKKcbVFIxEfBWBqPKPHn5qsYIgU9hyGcq8vCgJNY75/6RU7God1Ttp8qeL9G
+         H4psw2naqAuo1p/prO5iO6oUyZzGm17MB9ZSYIN4=
+Received: by mail-lj1-f172.google.com with SMTP id z24so5336428ljn.8;
+        Wed, 01 Jul 2020 23:14:43 -0700 (PDT)
+X-Gm-Message-State: AOAM533BEREcPKSfi48xecrvT/Dya6EQ7p4zEefhyRSfUPpQv1T7ksCH
+        EJpOShR3ahD0H1YRmuKv+I9vZycBr0zsCrJg+/M=
+X-Google-Smtp-Source: ABdhPJyW7ZQG/gxodV+UBsSp8muv8lWxec/bTY9tvW0qqCeZQo8oSQL9G2bg+h67AMeeX8NyXrYP1bqMgId6X08X7/E=
+X-Received: by 2002:a2e:88c6:: with SMTP id a6mr11256607ljk.27.1593670481513;
+ Wed, 01 Jul 2020 23:14:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200701153859.GT4332@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200701085947.3354405-1-hch@lst.de> <20200701085947.3354405-13-hch@lst.de>
+In-Reply-To: <20200701085947.3354405-13-hch@lst.de>
+From:   Song Liu <song@kernel.org>
+Date:   Wed, 1 Jul 2020 23:14:30 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5=055Eo-b3fjC_b-nJz-fg1FGwy_aqrNNtHm-U8vut-A@mail.gmail.com>
+Message-ID: <CAPhsuW5=055Eo-b3fjC_b-nJz-fg1FGwy_aqrNNtHm-U8vut-A@mail.gmail.com>
+Subject: Re: [PATCH 12/20] block: remove the request_queue argument from blk_queue_split
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, dm-devel@redhat.com,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
+        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
+        linux-bcache@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
+        linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2020/07/02 0:38, Luis Chamberlain wrote:
-> @@ -156,6 +156,18 @@ static void call_usermodehelper_exec_sync(struct subprocess_info *sub_info)
->  		 */
->  		if (KWIFEXITED(ret))
->  			sub_info->retval = KWEXITSTATUS(ret);
-> +		/*
-> +		 * Do we really want to be passing the signal, or do we pass
-> +		 * a single error code for all cases?
-> +		 */
-> +		else if (KWIFSIGNALED(ret))
-> +			sub_info->retval = KWTERMSIG(ret);
+On Wed, Jul 1, 2020 at 2:02 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> The queue can be trivially derived from the bio, so pass one less
+> argument.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+[...]
+>  drivers/md/md.c               |  2 +-
 
-No, this is bad. Caller of usermode helper is unable to distinguish exit(9)
-and e.g. SIGKILL'ed by the OOM-killer. Please pass raw exit status value.
-
-I feel that caller of usermode helper should not use exit status value.
-For example, call_sbin_request_key() is checking
-
-  test_bit(KEY_FLAG_USER_CONSTRUCT, &key->flags) || key_validate(key) < 0
-
-condition (if usermode helper was invoked) in order to "ignore any errors from
-userspace if the key was instantiated".
-
-> +		/* Same here */
-> +		else if (KWIFSTOPPED((ret)))
-> +			sub_info->retval = KWSTOPSIG(ret);
-> +		/* And are we really sure we want this? */
-> +		else if (KWIFCONTINUED((ret)))
-> +			sub_info->retval = 0;
->  	}
->  
->  	/* Restore default kernel sig handler */
-> 
-
+For md.c:
+Acked-by: Song Liu <song@kernel.org>
