@@ -2,67 +2,82 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DEB421129D
-	for <lists+linux-s390@lfdr.de>; Wed,  1 Jul 2020 20:26:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70F642117E9
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Jul 2020 03:28:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733014AbgGAS0T (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 1 Jul 2020 14:26:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29639 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732835AbgGAS0T (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jul 2020 14:26:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593627977;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gM4o34lY2Q2Fu9DNpo9nmnqeENsycpsv4CwD0QpSKRo=;
-        b=ZwrGxUsJXRw2TeInzKH2KaJeb9JWfx1KCCpvaat4ntHZPxEMPcJvHYoCuuE/LqHFxJiATm
-        CMR5wsva05+WpEwBxa2VZABOZwF7xw5v+hOJiZDfIOao/Plpqymv/XDTfhwNJQpla9oVwX
-        oJV7CI8PfLVPGrg3qAbF5in+Zc6AIVg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-467-ve54S7gINvapvHMQrfW7sQ-1; Wed, 01 Jul 2020 14:26:14 -0400
-X-MC-Unique: ve54S7gINvapvHMQrfW7sQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728418AbgGBBXj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 1 Jul 2020 21:23:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728411AbgGBBXj (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 1 Jul 2020 21:23:39 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7EE0A80183C;
-        Wed,  1 Jul 2020 18:26:11 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 244BF5C1D3;
-        Wed,  1 Jul 2020 18:26:08 +0000 (UTC)
-Date:   Wed, 1 Jul 2020 13:24:48 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-bcache@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-nvdimm@lists.01.org,
-        linux-s390@vger.kernel.org, dm-devel@redhat.com,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linuxppc-dev@lists.ozlabs.org, drbd-dev@lists.linbit.com
-Subject: Re: [PATCH 10/20] dm: stop using ->queuedata
-Message-ID: <20200701172448.GA27528@redhat.com>
-References: <20200701085947.3354405-1-hch@lst.de>
- <20200701085947.3354405-11-hch@lst.de>
+        by mail.kernel.org (Postfix) with ESMTPSA id 04B422083E;
+        Thu,  2 Jul 2020 01:23:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593653018;
+        bh=ONj7aKbHlOlgWW2rGPQ0J/OhBHcYbrSt/+Ss/muTSBQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2uwEfIuxQEe4d1vHrxOJ7TvJO8s4QfgyLUvmknhf9xO39+/33f7kmmXxJWjRgemUt
+         koLb4gpJE1u/Yf2WoGT1oFuyt5d1G3Nri3hO/XMuuaIV0fUJEydem0gjhOvbVVe59V
+         MqCFeog9hWAj8kIins1AwporA2vikWe0FB6mf1wM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Egorenkov <egorenar@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 35/53] s390/kasan: fix early pgm check handler execution
+Date:   Wed,  1 Jul 2020 21:21:44 -0400
+Message-Id: <20200702012202.2700645-35-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200702012202.2700645-1-sashal@kernel.org>
+References: <20200702012202.2700645-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200701085947.3354405-11-hch@lst.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 01 2020 at  4:59am -0400,
-Christoph Hellwig <hch@lst.de> wrote:
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-> Instead of setting up the queuedata as well just use one private data
-> field.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+[ Upstream commit 998f5bbe3dbdab81c1cfb1aef7c3892f5d24f6c7 ]
 
-Acked-by: Mike Snitzer <snitzer@redhat.com>
+Currently if early_pgm_check_handler is called it ends up in pgm check
+loop. The problem is that early_pgm_check_handler is instrumented by
+KASAN but executed without DAT flag enabled which leads to addressing
+exception when KASAN checks try to access shadow memory.
+
+Fix that by executing early handlers with DAT flag on under KASAN as
+expected.
+
+Reported-and-tested-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/kernel/early.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/s390/kernel/early.c b/arch/s390/kernel/early.c
+index cd241ee66eff4..0782772318580 100644
+--- a/arch/s390/kernel/early.c
++++ b/arch/s390/kernel/early.c
+@@ -170,6 +170,8 @@ static noinline __init void setup_lowcore_early(void)
+ 	psw_t psw;
+ 
+ 	psw.mask = PSW_MASK_BASE | PSW_DEFAULT_KEY | PSW_MASK_EA | PSW_MASK_BA;
++	if (IS_ENABLED(CONFIG_KASAN))
++		psw.mask |= PSW_MASK_DAT;
+ 	psw.addr = (unsigned long) s390_base_ext_handler;
+ 	S390_lowcore.external_new_psw = psw;
+ 	psw.addr = (unsigned long) s390_base_pgm_handler;
+-- 
+2.25.1
 
