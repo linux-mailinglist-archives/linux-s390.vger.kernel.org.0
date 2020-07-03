@@ -2,74 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DEBA213154
-	for <lists+linux-s390@lfdr.de>; Fri,  3 Jul 2020 04:26:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E917221331C
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Jul 2020 06:48:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726035AbgGCC0b (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 2 Jul 2020 22:26:31 -0400
-Received: from mga11.intel.com ([192.55.52.93]:51259 "EHLO mga11.intel.com"
+        id S1726304AbgGCEsy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 Jul 2020 00:48:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgGCC0a (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 2 Jul 2020 22:26:30 -0400
-IronPort-SDR: O7lf2elbCikiZsf1mE15oQGKyA8B7OQ6nLVtCnPPdFHe3HdR/6PJdJ9a7JRxWwAtGU7I8cljYM
- zOYZu63i5z6w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9670"; a="145212917"
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="145212917"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2020 19:26:29 -0700
-IronPort-SDR: 0Ve5FLC4SNoprdrxVntJ9NtWXdCSqMWN4SXOc6Mn+7Lvs65qxvNtZmIUGXSB1lmJ3/+3AL02E4
- 8UAJk0IGGPuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,306,1589266800"; 
-   d="scan'208";a="455734093"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by orsmga005.jf.intel.com with ESMTP; 02 Jul 2020 19:26:29 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH] vfio-ccw: Fix a build error due to missing include of linux/slab.h
-Date:   Thu,  2 Jul 2020 19:26:28 -0700
-Message-Id: <20200703022628.6036-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.26.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726203AbgGCEsy (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 3 Jul 2020 00:48:54 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6540420760;
+        Fri,  3 Jul 2020 04:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593751733;
+        bh=qCwA4YWH7p37GAZMeu+hKOmjvj572O6tQitBU9AkFA8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tu1u0P0WWAPSlKRhONp69ryOgimZiASL7tdbV191VzQwJFsTuQHdnuMY0QNyJzODN
+         GITk7H/2ElwWxOt5dvfAI2AMjUzs2rks/bAvD1NlqTS51CVe/LEDKB46tq5x6aEcOP
+         nT4Ccl9OGEgmV5nZJEe3M9y8p1vx5OZ8u5tebPho=
+Date:   Thu, 2 Jul 2020 21:48:52 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH v2 1/2] mm/memblock: expose only miminal interface to
+ add/walk physmem
+Message-Id: <20200702214852.f6ab03dc8d072abf35359d3b@linux-foundation.org>
+In-Reply-To: <9a6728b2-05d3-0e98-dc45-a3e4821e0539@redhat.com>
+References: <20200701141830.18749-1-david@redhat.com>
+        <20200701141830.18749-2-david@redhat.com>
+        <20200701150643.GA2999146@linux.ibm.com>
+        <20200701153157.GC5008@osiris>
+        <9a6728b2-05d3-0e98-dc45-a3e4821e0539@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Include linux/slab.h to fix a build error due to kfree() being undefined.
+On Thu, 2 Jul 2020 09:23:10 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-Fixes: 3f02cb2fd9d2d ("vfio-ccw: Wire up the CRW irq and CRW region")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
+> >>> ---
+> >>>  arch/s390/kernel/crash_dump.c |  6 ++--
+> >>>  include/linux/memblock.h      | 28 ++++++++++++++---
+> >>>  mm/memblock.c                 | 57 ++++++++++++++++++-----------------
+> >>>  3 files changed, 55 insertions(+), 36 deletions(-)
+> > 
+> > So I guess this should go via the s390 tree, since the second patch of
+> > this series can go only upstream if both this patch and a patch which
+> > is currently only on our features are merged before.
+> > 
+> > Any objections?
+> 
+> @Andrew, fine with you if this goes via the s390 tree?
 
-Encountered this when cross-compiling with a pretty minimal config, didn't
-bother digging into why the error only showed up in my environment.
-
- drivers/s390/cio/vfio_ccw_chp.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/s390/cio/vfio_ccw_chp.c b/drivers/s390/cio/vfio_ccw_chp.c
-index a646fc81c872..13b26a1c7988 100644
---- a/drivers/s390/cio/vfio_ccw_chp.c
-+++ b/drivers/s390/cio/vfio_ccw_chp.c
-@@ -8,6 +8,7 @@
-  *            Eric Farman <farman@linux.ibm.com>
-  */
- 
-+#include <linux/slab.h>
- #include <linux/vfio.h>
- #include "vfio_ccw_private.h"
- 
--- 
-2.26.0
-
+Sure, please go ahead.
