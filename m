@@ -2,128 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F9E5213AD7
-	for <lists+linux-s390@lfdr.de>; Fri,  3 Jul 2020 15:21:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 039D5213AFB
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Jul 2020 15:29:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgGCNVR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 Jul 2020 09:21:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35294 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726347AbgGCNVQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Jul 2020 09:21:16 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 063CduMZ162542;
-        Fri, 3 Jul 2020 09:21:02 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 321ng20hnr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 09:21:02 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 063DGdCb030922;
-        Fri, 3 Jul 2020 13:21:00 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 31wwch6ugs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jul 2020 13:21:00 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 063DKvg865536206
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Jul 2020 13:20:57 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AEAAD11C050;
-        Fri,  3 Jul 2020 13:20:57 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9942C11C04A;
-        Fri,  3 Jul 2020 13:20:57 +0000 (GMT)
-Received: from t480-pf1aa2c2 (unknown [9.145.150.95])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  3 Jul 2020 13:20:57 +0000 (GMT)
-Received: from bblock by t480-pf1aa2c2 with local (Exim 4.94)
-        (envelope-from <bblock@linux.ibm.com>)
-        id 1jrLce-005ouR-J9; Fri, 03 Jul 2020 15:20:56 +0200
-From:   Benjamin Block <bblock@linux.ibm.com>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        id S1726251AbgGCN2y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 Jul 2020 09:28:54 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33519 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726022AbgGCN2x (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Jul 2020 09:28:53 -0400
+Received: by mail-pl1-f195.google.com with SMTP id 72so2088344ple.0;
+        Fri, 03 Jul 2020 06:28:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nZixvdmK63kTxJGVp6SPuFsnYljJqU7VXv2wxF9MXFA=;
+        b=XlNdsEJKuh017yoaqze1QzzzKwb783SXTEXBcadTk0ed7oA0Sm9nPzkmkG/qKzrvEU
+         x65NJnpnvbpqJk3IIddNLcEFc7l4Q+/G3w8PRmJJKa6cnmgSZyNEpbNLnO003LUDNoWG
+         UcMNQqXDIw8J1ptTFItLwr8SKneXNiFzj1h/tEagCN1MbHMoVQPrkt+DyOCl+bJGan/v
+         ICsT56q9x2sRIMeVNfo1yDRB0cXK80hl+0mZJqzXYST5IwX7IUV7AYSp4gbZWsLBWolx
+         WFEpexWDUQ9c6YCO01nzQ46uHQn9/yp4qNK4vOr4JuUdvWMwqWutVPLflMZ87p8Y/qM2
+         3UPA==
+X-Gm-Message-State: AOAM5302es4kl5puR7Xy9zWGA/rez4EwCHDqFyMFAI9j3/0ffCfy5mgr
+        5qBgU2pGPtZDXLhiVgt8QlU=
+X-Google-Smtp-Source: ABdhPJx7Zgvv1Ln8YT3HW6KzNg/0D212spMjLCprFe2ez6VGItOK7VCNoHYcRalmweCVJasHt2okLw==
+X-Received: by 2002:a17:90a:3223:: with SMTP id k32mr38367135pjb.121.1593782932606;
+        Fri, 03 Jul 2020 06:28:52 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 125sm11298479pff.130.2020.07.03.06.28.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2020 06:28:51 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 5569C40945; Fri,  3 Jul 2020 13:28:50 +0000 (UTC)
+Date:   Fri, 3 Jul 2020 13:28:50 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     David Howells <dhowells@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Fedor Loshakov <loshakov@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH 7/7] zfcp: avoid benign overflow of the Request Queue's free-level
-Date:   Fri,  3 Jul 2020 15:20:03 +0200
-Message-Id: <7f61f59a1f8db270312e64644f9173b8f1ac895f.1593780621.git.bblock@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1593780621.git.bblock@linux.ibm.com>
-References: <cover.1593780621.git.bblock@linux.ibm.com>
+        Christoph Hellwig <hch@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>, ast@kernel.org,
+        axboe@kernel.dk, bfields@fieldses.org,
+        bridge@lists.linux-foundation.org, chainsaw@gentoo.org,
+        christian.brauner@ubuntu.com, chuck.lever@oracle.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        jarkko.sakkinen@linux.intel.com, jmorris@namei.org,
+        josh@joshtriplett.org, keescook@chromium.org,
+        keyrings@vger.kernel.org, kuba@kernel.org,
+        lars.ellenberg@linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, nikolay@cumulusnetworks.com,
+        philipp.reisner@linbit.com, ravenexp@gmail.com,
+        roopa@cumulusnetworks.com, serge@hallyn.com, slyfox@gentoo.org,
+        viro@zeniv.linux.org.uk, yangtiezhu@loongson.cn,
+        netdev@vger.kernel.org, markward@linux.ibm.com,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: linux-next: umh: fix processed error when UMH_WAIT_PROC is used
+ seems to break linux bridge on s390x (bisected)
+Message-ID: <20200703132850.GW4332@42.do-not-panic.com>
+References: <20200626025410.GJ4332@42.do-not-panic.com>
+ <20200630175704.GO13911@42.do-not-panic.com>
+ <b24d8dae-1872-ba2c-acd4-ed46c0781317@de.ibm.com>
+ <a6792135-3285-0861-014e-3db85ea251dc@i-love.sakura.ne.jp>
+ <20200701135324.GS4332@42.do-not-panic.com>
+ <8d714a23-bac4-7631-e5fc-f97c20a46083@i-love.sakura.ne.jp>
+ <20200701153859.GT4332@42.do-not-panic.com>
+ <e3f3e501-2cb7-b683-4b85-2002b7603244@i-love.sakura.ne.jp>
+ <20200702194656.GV4332@42.do-not-panic.com>
+ <d8a74a06-de97-54ae-de03-0d955e82f62b@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-Organization: IBM Deutschland Research & Development GmbH, Vorsitz. AufsR. Gregor Pillen, Geschaeftsfuehrung Dirk Wittkopp, Sitz der Gesellschaft Boeblingen, Registergericht AmtsG Stuttgart, HRB 243294
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-03_06:2020-07-02,2020-07-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- cotscore=-2147483648 phishscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- adultscore=0 spamscore=0 suspectscore=2 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2007030087
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d8a74a06-de97-54ae-de03-0d955e82f62b@i-love.sakura.ne.jp>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+On Fri, Jul 03, 2020 at 09:52:01AM +0900, Tetsuo Handa wrote:
+> On 2020/07/03 4:46, Luis Chamberlain wrote:
+> > The alternative to making a compromise is using generic wrappers for
+> > things which make sense and letting the callers use those.
+> 
+> I suggest just introducing KWIFEXITED()/KWEXITSTATUS()/KWIFSIGNALED()/KWTERMSIG()
+> macros and fixing the callers, for some callers are not aware of possibility of
+> KWIFSIGNALED() case.
 
-zfcp_qdio_send() and zfcp_qdio_int_req() run concurrently, adding and
-completing SBALs on the Request Queue. There's a theoretical race where
-zfcp_qdio_int_req() completes a number of SBALs & increments the queue's
-free-level _before_ zfcp_qdio_send() was able to decrement it.
+OK so we open code all uses. Do that in a next iteration.
 
-This can cause ->req_q_free to momentarily hold a value larger than
-QDIO_MAX_BUFFERS_PER_Q. Luckily zfcp_qdio_send() is always called under
-->req_q_lock, and all readers of the free-level also take this lock. So
-we can trust that zfcp_qdio_send() will clean up such a temporary
-overflow before anyone can actually observe it.
-
-But it's still confusing and annoying to worry about. So adjust the code
-to avoid this race.
-
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com>
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
----
- drivers/s390/scsi/zfcp_qdio.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/s390/scsi/zfcp_qdio.c b/drivers/s390/scsi/zfcp_qdio.c
-index d3d110a04884..e78d65bd46b1 100644
---- a/drivers/s390/scsi/zfcp_qdio.c
-+++ b/drivers/s390/scsi/zfcp_qdio.c
-@@ -260,17 +260,20 @@ int zfcp_qdio_send(struct zfcp_qdio *qdio, struct zfcp_qdio_req *q_req)
- 	zfcp_qdio_account(qdio);
- 	spin_unlock(&qdio->stat_lock);
- 
-+	atomic_sub(sbal_number, &qdio->req_q_free);
-+
- 	retval = do_QDIO(qdio->adapter->ccw_device, QDIO_FLAG_SYNC_OUTPUT, 0,
- 			 q_req->sbal_first, sbal_number);
- 
- 	if (unlikely(retval)) {
-+		/* Failed to submit the IO, roll back our modifications. */
-+		atomic_add(sbal_number, &qdio->req_q_free);
- 		zfcp_qdio_zero_sbals(qdio->req_q, q_req->sbal_first,
- 				     sbal_number);
- 		return retval;
- 	}
- 
- 	/* account for transferred buffers */
--	atomic_sub(sbal_number, &qdio->req_q_free);
- 	qdio->req_q_idx += sbal_number;
- 	qdio->req_q_idx %= QDIO_MAX_BUFFERS_PER_Q;
- 
--- 
-2.26.2
+  Luis
 
