@@ -2,79 +2,155 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3D16214EF3
-	for <lists+linux-s390@lfdr.de>; Sun,  5 Jul 2020 21:42:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09032215096
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2020 02:49:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgGETmg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 5 Jul 2020 15:42:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32488 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727931AbgGETmg (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 5 Jul 2020 15:42:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593978155;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=Nre+vcTZuioR9qndvPPDHYxrgwQ/M91HckbWLUZ5+GI=;
-        b=GEhJ6DMgET96C3B5LDrSaFxlRGouJP2lWaD+lNXEm6k4UADU+/7IKA/86f232D+6ejcNvW
-        1Z1DiVE6boUnQrBM1zJURodjhzFU1Skx0WtB0rGTEH5R1pi7N5DLC4Rjj70kLgjOwVKtRD
-        IZQNbMq1Q6Clya4BsbepTO6Fov0uHQA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-C0tMnLRYPvyuwOP0ZQNRZA-1; Sun, 05 Jul 2020 15:42:33 -0400
-X-MC-Unique: C0tMnLRYPvyuwOP0ZQNRZA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6BC321005510;
-        Sun,  5 Jul 2020 19:42:31 +0000 (UTC)
-Received: from krava (unknown [10.40.192.42])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D40AB7BD7F;
-        Sun,  5 Jul 2020 19:42:25 +0000 (UTC)
-Date:   Sun, 5 Jul 2020 21:42:25 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     linux-s390@vger.kernel.org,
-        Sumanth Korikkar <Sumanth.Korikkar@ibm.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Brendan Gregg <brendan.d.gregg@gmail.com>, bas@baslab.org,
-        Matheus Marchini <mat@mmarchini.me>, Daniel Xu <dxu@dxuuu.xyz>
-Subject: bpf: bpf_probe_read helper restriction on s390x
-Message-ID: <20200705194225.GB3356590@krava>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        id S1728053AbgGFAtS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 5 Jul 2020 20:49:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:43272 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727996AbgGFAtS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 5 Jul 2020 20:49:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4089630E;
+        Sun,  5 Jul 2020 17:49:17 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.84.195])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DBA993F718;
+        Sun,  5 Jul 2020 17:49:06 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V4 0/4] mm/debug_vm_pgtable: Add some more tests
+Date:   Mon,  6 Jul 2020 06:18:32 +0530
+Message-Id: <1593996516-7186-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-hi,
-with following commit:
-  0ebeea8ca8a4 bpf: Restrict bpf_probe_read{, str}() only to archs where they work
+This series adds some more arch page table helper validation tests which
+are related to core and advanced memory functions. This also creates a
+documentation, enlisting expected semantics for all page table helpers as
+suggested by Mike Rapoport previously (https://lkml.org/lkml/2020/1/30/40).
 
-the bpf_probe_read BPF helper is restricted on architectures that
-have 'non overlapping address space' and select following config:
+There are many TRANSPARENT_HUGEPAGE and ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD
+ifdefs scattered across the test. But consolidating all the fallback stubs
+is not very straight forward because ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD is
+not explicitly dependent on ARCH_HAS_TRANSPARENT_HUGEPAGE.
 
-   select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+Tested on arm64, x86 platforms but only build tested on all other enabled
+platforms through ARCH_HAS_DEBUG_VM_PGTABLE i.e powerpc, arc, s390. The
+following failure on arm64 still exists which was mentioned previously. It
+will be fixed with the upcoming THP migration on arm64 enablement series.
 
-there's also nice explanation in this commit's changelog:
-  6ae08ae3dea2 bpf: Add probe_read_{user, kernel} and probe_read_{user, kernel}_str helpers
+WARNING .... mm/debug_vm_pgtable.c:860 debug_vm_pgtable+0x940/0xa54
+WARN_ON(!pmd_present(pmd_mkinvalid(pmd_mkhuge(pmd))))
+
+This series is based on v5.8-rc4.
+
+Changes in V4:
+
+- Replaced READ_ONCE() with ptep_get() while accessing PTE pointers per Christophe
+- Fixed function argument alignments per Christophe
+
+Changes in V3: (https://patchwork.kernel.org/project/linux-mm/list/?series=302483)
+
+- Replaced HAVE_ARCH_SOFT_DIRTY with MEM_SOFT_DIRTY
+- Added HAVE_ARCH_HUGE_VMAP checks in pxx_huge_tests() per Gerald
+- Updated documentation for pmd_thp_tests() per Zi Yan
+- Replaced READ_ONCE() with huge_ptep_get() per Gerald
+- Added pte_mkhuge() and masking with PMD_MASK per Gerald
+- Replaced pte_same() with holding pfn check in pxx_swap_tests()
+- Added documentation for all (#ifdef #else #endif) per Gerald
+- Updated pmd_protnone_tests() per Gerald
+- Updated HugeTLB PTE creation in hugetlb_advanced_tests() per Gerald
+- Replaced [pmd|pud]_mknotpresent() with [pmd|pud]_mkinvalid()
+- Added has_transparent_hugepage() check for PMD and PUD tests
+- Added a patch which debug prints all individual tests being executed
+- Updated documentation for renamed [pmd|pud]_mkinvalid() helpers
+
+Changes in V2: (https://patchwork.kernel.org/project/linux-mm/list/?series=260573)
+
+- Dropped CONFIG_ARCH_HAS_PTE_SPECIAL per Christophe
+- Dropped CONFIG_NUMA_BALANCING per Christophe
+- Dropped CONFIG_HAVE_ARCH_SOFT_DIRTY per Christophe
+- Dropped CONFIG_MIGRATION per Christophe
+- Replaced CONFIG_S390 with __HAVE_ARCH_PMDP_INVALIDATE
+- Moved page allocation & free inside swap_migration_tests() per Christophe
+- Added CONFIG_TRANSPARENT_HUGEPAGE to protect pfn_pmd()
+- Added CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD to protect pfn_pud()
+- Added a patch for other arch advanced page table helper tests
+- Added a patch creating a documentation for page table helper semantics
+
+Changes in V1: (https://patchwork.kernel.org/patch/11408253/)
+
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Cc: x86@kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
 
-We have a problem with bpftrace not working properly on s390x because
-bpf_probe_read is no longer available, and bpftrace does not use
-bpf_probe_read_(user/kernel) variants yet.
+Anshuman Khandual (4):
+  mm/debug_vm_pgtable: Add tests validating arch helpers for core MM features
+  mm/debug_vm_pgtable: Add tests validating advanced arch page table helpers
+  mm/debug_vm_pgtable: Add debug prints for individual tests
+  Documentation/mm: Add descriptions for arch page table helpers
 
-My question is if s390x is 'arch with overlapping address space' and we
-could fix this by adding ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE for s390x
-or we need to fix bpftrace to detect this, which we probably need to do
-in any case ;-)
+ Documentation/vm/arch_pgtable_helpers.rst | 258 +++++++++
+ mm/debug_vm_pgtable.c                     | 666 +++++++++++++++++++++-
+ 2 files changed, 922 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/vm/arch_pgtable_helpers.rst
 
-thanks,
-jirka
+-- 
+2.20.1
 
