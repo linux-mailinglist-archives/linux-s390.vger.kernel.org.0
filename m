@@ -2,122 +2,105 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 945C9215551
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2020 12:15:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B66DC215705
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Jul 2020 14:07:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgGFKPs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 Jul 2020 06:15:48 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35750 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728264AbgGFKPs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Jul 2020 06:15:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594030546;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Y68mMxEzC0O/oSar6VvuB9qVZfYoFFGVqLRrOjB+/5U=;
-        b=O52eowooqviJ+/11gd/FDcG0sIreOTsimsplxP6GDPfsPynYQaTbgxxkZ34Xu7hiJkPvn/
-        ME0JW+RQvDXGKgbgQA3L8v0ggd46xaBfvuTT60QEKuUVIU5YFpj97SK+Hq8hZ+bDtZW1JB
-        YzrUrSz0YKwK25fpvKXFS/GpH94oxZQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-N3QhGbUdMMqeQFS9DGYDag-1; Mon, 06 Jul 2020 06:15:43 -0400
-X-MC-Unique: N3QhGbUdMMqeQFS9DGYDag-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47DF2106B248;
-        Mon,  6 Jul 2020 10:15:41 +0000 (UTC)
-Received: from krava (unknown [10.40.193.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5224F7B416;
-        Mon,  6 Jul 2020 10:15:35 +0000 (UTC)
-Date:   Mon, 6 Jul 2020 12:15:34 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc:     agordeev@linux.ibm.com, ast@kernel.org, bas@baslab.org,
-        bpf@vger.kernel.org, brendan.d.gregg@gmail.com,
-        daniel@iogearbox.net, dxu@dxuuu.xyz, linux-s390@vger.kernel.org,
-        mat@mmarchini.me, netdev@vger.kernel.org,
-        yauheni.kaliuta@redhat.com, Sumanth.Korikkar@ibm.com
-Subject: Re: bpf: bpf_probe_read helper restriction on s390x
-Message-ID: <20200706101534.GA3401866@krava>
-References: <OFDA9C9258.BBAFD274-ON0025859D.001E3F9D-C125859D.001E497A@notes.na.collabserv.com>
- <f95739ee-59a9-4dfc-8da0-dfef2c73bd6a@linux.ibm.com>
+        id S1728917AbgGFMHm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 Jul 2020 08:07:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28962 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728414AbgGFMHl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Jul 2020 08:07:41 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 066C1pg7073550;
+        Mon, 6 Jul 2020 08:06:44 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 322pam0w1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 08:06:44 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 066C2E8T075760;
+        Mon, 6 Jul 2020 08:06:44 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 322pam0vyt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 08:06:43 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 066C5hZZ016297;
+        Mon, 6 Jul 2020 12:06:41 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 322hd7t93r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Jul 2020 12:06:40 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 066C6cD056754260
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Jul 2020 12:06:38 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 07A6E4C044;
+        Mon,  6 Jul 2020 12:06:38 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0AEA84C040;
+        Mon,  6 Jul 2020 12:06:36 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.151.4])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  6 Jul 2020 12:06:35 +0000 (GMT)
+Date:   Mon, 6 Jul 2020 14:06:34 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 0/4] mm/debug_vm_pgtable: Add some more tests
+Message-ID: <20200706120633.GA32473@oc3871087118.ibm.com>
+References: <1593996516-7186-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f95739ee-59a9-4dfc-8da0-dfef2c73bd6a@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <1593996516-7186-1-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-06_09:2020-07-06,2020-07-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ cotscore=-2147483648 lowpriorityscore=0 phishscore=0 priorityscore=1501
+ suspectscore=0 mlxlogscore=929 adultscore=0 clxscore=1015 malwarescore=0
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007060090
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jul 06, 2020 at 08:33:15AM +0200, Sumanth Korikkar wrote:
-> Hi Jiri,
-> 
-> s390 has overlapping address space. As suggested by the commit,
-> ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE should not be enabled for s390
-> kernel.
-> 
-> This should be changed in bpftrace application.
-> 
-> Even if we enable ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE, bpf_probe_read
-> will only work in certain cases like kernel pointer deferences (kprobes). 
-> User pointer deferences in uprobes/kprobes/etc will fail or have some
-> invalid data
-> 
-> I am looking forward to this fix:
-> https://github.com/iovisor/bpftrace/pull/1141 OR probe split in bpftrace.
+On Mon, Jul 06, 2020 at 06:18:32AM +0530, Anshuman Khandual wrote:
 
-did not see this, will review ;-) thanks a lot!
+[...]
 
-jirka
+> Tested on arm64, x86 platforms but only build tested on all other enabled
+> platforms through ARCH_HAS_DEBUG_VM_PGTABLE i.e powerpc, arc, s390. The
 
-> 
-> (Resending as some cc from my email client failed.)
-> 
-> Thank you
-> 
-> Best Regards
-> Sumanth Korikkar
-> > Jiri Olsa <jolsa@redhat.com> wrote on 07/05/2020 09:42:25 PM:
-> > 
-> > > Subject: [EXTERNAL] bpf: bpf_probe_read helper restriction on s390x
-> > >
-> > > hi,
-> > > with following commit:
-> > >   0ebeea8ca8a4 bpf: Restrict bpf_probe_read{, str}() only to archs
-> > > where they work
-> > >
-> > > the bpf_probe_read BPF helper is restricted on architectures that
-> > > have 'non overlapping address space' and select following config:
-> > >
-> > >    select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-> > >
-> > > there's also nice explanation in this commit's changelog:
-> > >   6ae08ae3dea2 bpf: Add probe_read_{user, kernel} and probe_read_
-> > > {user, kernel}_str helpers
-> > >
-> > >
-> > > We have a problem with bpftrace not working properly on s390x because
-> > > bpf_probe_read is no longer available, and bpftrace does not use
-> > > bpf_probe_read_(user/kernel) variants yet.
-> > >
-> > > My question is if s390x is 'arch with overlapping address space' and we
-> > > could fix this by adding ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE for
-> > s390x
-> > > or we need to fix bpftrace to detect this, which we probably need to do
-> > > in any case ;-)
-> > >
-> > > thanks,
-> > > jirka
-> > >
-> > 
-> -- 
-> Sumanth Korikkar
-> 
+Sorry for missing to test earlier. Works for me on s390. Also, tried with
+few relevant config options to set/unset.
 
+Thanks!
