@@ -2,104 +2,152 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 710EA2164C9
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2020 05:43:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C11E9216889
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2020 10:45:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgGGDnG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 Jul 2020 23:43:06 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:55898 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727077AbgGGDnG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 6 Jul 2020 23:43:06 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jseUe-0002DJ-Bz; Tue, 07 Jul 2020 13:42:05 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 07 Jul 2020 13:42:04 +1000
-Date:   Tue, 7 Jul 2020 13:42:04 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH RESEND] lockdep: Move list.h inclusion into lockdep.h
-Message-ID: <20200707034204.GA13225@gondor.apana.org.au>
-References: <20200617071524.GA3055@gondor.apana.org.au>
- <E1jlSJz-0003hE-8g@fornost.hmeau.com>
- <20200617082459.GC2531@hirez.programming.kicks-ass.net>
- <20200617122449.GX31238@alley>
- <20200618143735.GJ576905@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618143735.GJ576905@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727875AbgGGIpF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Jul 2020 04:45:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64132 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726467AbgGGIpF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Jul 2020 04:45:05 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0678Ve6c104150;
+        Tue, 7 Jul 2020 04:45:00 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 324bpmpx67-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 04:44:57 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0678XoAT110196;
+        Tue, 7 Jul 2020 04:44:50 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 324bpmpx25-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 04:44:49 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0678iVx4002463;
+        Tue, 7 Jul 2020 08:44:42 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma05fra.de.ibm.com with ESMTP id 322hd81mdk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jul 2020 08:44:42 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0678idwq49741930
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Jul 2020 08:44:39 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6511BA404D;
+        Tue,  7 Jul 2020 08:44:39 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87860A4057;
+        Tue,  7 Jul 2020 08:44:38 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.29.12])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Jul 2020 08:44:38 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com
+Subject: [PATCH v4 0/2] s390: virtio: let arch validate VIRTIO features
+Date:   Tue,  7 Jul 2020 10:44:35 +0200
+Message-Id: <1594111477-15401-1-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-07_05:2020-07-07,2020-07-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ suspectscore=1 bulkscore=0 clxscore=1015 cotscore=-2147483648 spamscore=0
+ priorityscore=1501 malwarescore=0 mlxscore=0 impostorscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007070062
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Jun 18, 2020 at 04:37:35PM +0200, Peter Zijlstra wrote:
->
-> OK, done. tip/locking/header should contain just this patch, and that
-> branch also got merged into tip/locking/core.
+Hi all,
 
-Hi Peter:
+I changed the patch subject to reflect the content, becoming more
+general.
 
-Could you please apply this patch on top as there is still a header
-loop otherwise? Thanks!
+1) I removed the ack from Christian and Jason even far as
+   I understand they gave it for the functionality more than for the
+   implementation.
+   @Jason, @Christian, please can I get back your acked-by with these changes?
 
----8<---
-Currently lockdep_types.h includes list.h without actually using any
-of its macros or functions.  All it needs are the type definitions
-which were moved into types.h long ago.  This potentially causes
-inclusion loops because both are included by many core header
-files.
+2) previous patch had another name:
+   [PATCH v3 0/1] s390: virtio: let arch choose to accept devices without IOMMU feature
+   id: Message-Id: <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
 
-This patch moves the list.h inclusion into lockdep.h.  Note that
-we could probably remove it completely but that could potentially
-result in compile failures should any end users not include list.h
-directly and also be unlucky enough to not get list.h via some other
-header file.
+3) The new version generalize the validation of the features by the
+   architecture, making it not IOMMU_PLATFORM specific anymore inside
+   virtio.c
 
-Reported-by: Petr Mladek <pmladek@suse.com>
-Tested-by: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+   The architecture specific code for s390 is now testing the virtio
+   features.
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 3b73cf84f77d..b1ad5c045353 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -21,6 +21,7 @@ extern int lock_stat;
- #ifdef CONFIG_LOCKDEP
- 
- #include <linux/linkage.h>
-+#include <linux/list.h>
- #include <linux/debug_locks.h>
- #include <linux/stacktrace.h>
- 
-diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
-index 7b9350624577..bb35b449f533 100644
---- a/include/linux/lockdep_types.h
-+++ b/include/linux/lockdep_types.h
-@@ -32,8 +32,6 @@ enum lockdep_wait_type {
- 
- #ifdef CONFIG_LOCKDEP
- 
--#include <linux/list.h>
--
- /*
-  * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
-  * the total number of states... :-(
+4) Since I reworked the patch I also moved the arch specific code
+   from arch/s390/mm/init.c to arch/s390/kernel/to uv.c
+
+5) Finaly, I splitted the patch into generic virtio and arch
+   specific code.
+
+Regards,
+Pierre
+
+Pierre Morel (2):
+  virtio: let arch validate VIRTIO features
+  s390: virtio: PV needs VIRTIO I/O device protection
+
+ arch/s390/kernel/uv.c         | 25 +++++++++++++++++++++++++
+ drivers/virtio/virtio.c       | 19 +++++++++++++++++++
+ include/linux/virtio_config.h |  1 +
+ 3 files changed, 45 insertions(+)
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.25.1
+
+Changelog
+
+to v4:
+
+- separate virtio and arch code
+  (Pierre)
+
+- moved code from arch/s390/mm/init.c to arch/s390/kernel/uv.c
+  (Heiko)
+
+- moved validation inside the arch code
+  (Connie)
+
+- moved the call to arch validation before VIRTIO_F_1 test
+  (Michael)
+
+to v3:
+
+- add warning
+  (Connie, Christian)
+
+- add comment
+  (Connie)
+
+- change hook name
+  (Halil, Connie)
+
+to v2:
+
+- put the test in virtio_finalize_features()
+  (Connie)
+
+- put the test inside VIRTIO core
+  (Jason)
+
+- pass a virtio device as parameter
+  (Halil)
+
+
