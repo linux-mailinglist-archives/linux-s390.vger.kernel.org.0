@@ -2,153 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17B41216C98
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Jul 2020 14:14:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EFFE217B50
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2020 00:53:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgGGMN6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Jul 2020 08:13:58 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54476 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728061AbgGGMN5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Jul 2020 08:13:57 -0400
+        id S1729733AbgGGWvA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Jul 2020 18:51:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55599 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729710AbgGGWu5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Jul 2020 18:50:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594124035;
+        s=mimecast20190719; t=1594162256;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=G/Wc6jVLL+7Snxn8L6LNWC5WyExAeJpqj1cp/XEQWpU=;
-        b=eWVV1nkkq7iGXBmWcdVeMzbS0u+7Ud40VXW/b/DRJ15gRWjTSm5hRi/ZIafoCjH9plLUrz
-        sRo6/4yZL6vhhy0Ah4gU/e4IQRC9dQxT00zIVv2DF/jUNhiNh6FW6H8h7cWHflGlLUhknH
-        bjLSI1Pa3GoKJ0RKSxrpW8w4Rb49XTM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-188-2TPcKBtoMmS8k2NQeYVo2A-1; Tue, 07 Jul 2020 08:13:51 -0400
-X-MC-Unique: 2TPcKBtoMmS8k2NQeYVo2A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C1FA18FF687;
-        Tue,  7 Jul 2020 12:13:39 +0000 (UTC)
-Received: from [10.36.114.87] (ovpn-114-87.ams2.redhat.com [10.36.114.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1CF4860E3E;
-        Tue,  7 Jul 2020 12:13:37 +0000 (UTC)
-Subject: Re: [PATCH v1 0/9] s390: implement and optimize vmemmap_free()
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, Christian Borntraeger <borntraeger@de.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-References: <20200703133917.39045-1-david@redhat.com>
- <20200707120849.GB12303@osiris>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <f4a87c47-4987-e3f8-8c06-ff6dd60f6a39@redhat.com>
-Date:   Tue, 7 Jul 2020 14:13:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+         in-reply-to:in-reply-to:references:references;
+        bh=L3XIq9qb2B089LN9k3kMf47vSw7aFkV5Znk8amd1bbo=;
+        b=iYt+qxj0EepIfd94l1adZFwCkHRtj6Ff6QQZ2A2IK8Rgege3z3hGy2ElD9EtZoQr0av7EP
+        frCE+RTH+YJOUGIPV2dJvN7Tdj8CUP/WiOq2aMvdMbRD3gkRc1CvawVuOttd6/t9HNBkxQ
+        uDgrIh0vmZ8aHQjcw6toLRtke+SLqLc=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-278-QbOzWK5yNzqZZQ_dztpo9g-1; Tue, 07 Jul 2020 18:50:54 -0400
+X-MC-Unique: QbOzWK5yNzqZZQ_dztpo9g-1
+Received: by mail-qv1-f69.google.com with SMTP id t12so17827308qvw.5
+        for <linux-s390@vger.kernel.org>; Tue, 07 Jul 2020 15:50:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=L3XIq9qb2B089LN9k3kMf47vSw7aFkV5Znk8amd1bbo=;
+        b=n0a5D53P3fVYzVdpXwXEzHNKWw8bRxgskkwtfbvgpoh/pyBga7XZvs4dJB1TwKqSby
+         2RLAIGsHgXhmbiljCLUyn4GNlHTmiakoSfdHz9boUlcjmd6IC7AcGIfvev6EqYfVRXUa
+         Ox6yc9H3kiK6gH1kjbAg9cQfRFgn+FcYu/Ghdm15DyhEzgMsBmM3YLCQhwfztBUMyv8l
+         r3gCQ91E7Rf1ITeegZeXcSnVB+s/eho/8RtrtCt7fBPYAHgmNQXqgKl08HvXNK8SuaaK
+         8lIeoVKnX8EQ5rLZp21+3ZifFjyefGNdr/LXNKRV7VBnqrvlSjPLqZK6FDELdwNhpIOs
+         Befg==
+X-Gm-Message-State: AOAM5314frAMtRflEiEn3GQH4zBL1A3CTru/u6DfEVeVyhog9bPyTnb4
+        HHSCs4LdR21jolkV8ydd0Y8h8SVMJyTeV3hgxuo0MnVR47T9oYu+2fF5Is9X5Txwv96UuNRh7Et
+        cPXEiO2nlpOrFzgCRC8RgLA==
+X-Received: by 2002:a37:aa05:: with SMTP id t5mr54060137qke.451.1594162254233;
+        Tue, 07 Jul 2020 15:50:54 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyeE2qM5GM19ugpdoKdIt+ai6du4xQwHKQ/Rb9KnI/4dISGj30ouoU1oW9Iw8yZXJini/8w8g==
+X-Received: by 2002:a37:aa05:: with SMTP id t5mr54060118qke.451.1594162254014;
+        Tue, 07 Jul 2020 15:50:54 -0700 (PDT)
+Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id j16sm26267642qtp.92.2020.07.07.15.50.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jul 2020 15:50:53 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        peterx@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v5 18/25] mm/s390: Use general page fault accounting
+Date:   Tue,  7 Jul 2020 18:50:14 -0400
+Message-Id: <20200707225021.200906-19-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200707225021.200906-1-peterx@redhat.com>
+References: <20200707225021.200906-1-peterx@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200707120849.GB12303@osiris>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 07.07.20 14:08, Heiko Carstens wrote:
-> On Fri, Jul 03, 2020 at 03:39:08PM +0200, David Hildenbrand wrote:
->> This series is based on the latest s390/features branch [1]. It implements
->> vmemmap_free(), consolidating it with vmem_add_range(), and optimizes it by
->> - Freeing empty page tables (now also done for idendity mapping).
->> - Handling cases where the vmemmap of a section does not fill huge pages
->>   completely.
->>
->> vmemmap_free() is currently never used, unless adiing standby memory fails
->> (unlikely). This is relevant for virtio-mem, which adds/removes memory
->> in memory block/section granularity (always removes memory in the same
->> granularity it added it).
->>
->> I gave this a proper test with my virtio-mem prototype (which I will share
->> once the basic QEMU implementation is upstream), both with 56 byte memmap
->> per page and 64 byte memmap per page, with and without huge page support.
->> In both cases, removing memory (routed through arch_remove_memory()) will
->> result in
->> - all populated vmemmap pages to get removed/freed
->> - all applicable page tables for the vmemmap getting removed/freed
->> - all applicable page tables for the idendity mapping getting removed/freed
->> Unfortunately, I don't have access to bigger and z/VM (esp. dcss)
->> environments.
->>
->> This is the basis for real memory hotunplug support for s390x and should
->> complete my journey to s390x vmem/vmemmap code for now :)
->>
->> What needs double-checking is tlb flushing. AFAIKS, as there are no valid
->> accesses, doing a single range flush at the end is sufficient, both when
->> removing vmemmap pages and the idendity mapping.
->>
->> Along, some minor cleanups.
-> 
-> Hmm.. I really would like to see if there would be only a single page
-> table walker left in vmem.c, which handles both adding and removing
-> things.
-> Now we end up with two different page table walk implementations
-> within the same file. However not sure if it is worth the effort to
-> unify them though.
+Use the general page fault accounting by passing regs into handle_mm_fault().
+It naturally solve the issue of multiple page fault accounting when page fault
+retry happened.
 
-I tried to unify vmemmap_populate() and vmem_add_range() already and
-didn't like the end result ... so, unifying these along with the removal
-part won't be any better - most probably. Open for suggestions :)
+CC: Heiko Carstens <heiko.carstens@de.ibm.com>
+CC: Vasily Gorbik <gor@linux.ibm.com>
+CC: Christian Borntraeger <borntraeger@de.ibm.com>
+CC: linux-s390@vger.kernel.org
+Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Acked-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/s390/mm/fault.c | 16 +---------------
+ 1 file changed, 1 insertion(+), 15 deletions(-)
 
-(at least arm64 and x86-64 handle it similarly)
-
+diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+index fc14df0b4d6e..9aa201df2e94 100644
+--- a/arch/s390/mm/fault.c
++++ b/arch/s390/mm/fault.c
+@@ -478,7 +478,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+ 	 * make sure we exit gracefully rather than endlessly redo
+ 	 * the fault.
+ 	 */
+-	fault = handle_mm_fault(vma, address, flags, NULL);
++	fault = handle_mm_fault(vma, address, flags, regs);
+ 	if (fault_signal_pending(fault, regs)) {
+ 		fault = VM_FAULT_SIGNAL;
+ 		if (flags & FAULT_FLAG_RETRY_NOWAIT)
+@@ -488,21 +488,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+ 	if (unlikely(fault & VM_FAULT_ERROR))
+ 		goto out_up;
+ 
+-	/*
+-	 * Major/minor page fault accounting is only done on the
+-	 * initial attempt. If we go through a retry, it is extremely
+-	 * likely that the page will be found in page cache at that point.
+-	 */
+ 	if (flags & FAULT_FLAG_ALLOW_RETRY) {
+-		if (fault & VM_FAULT_MAJOR) {
+-			tsk->maj_flt++;
+-			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
+-				      regs, address);
+-		} else {
+-			tsk->min_flt++;
+-			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
+-				      regs, address);
+-		}
+ 		if (fault & VM_FAULT_RETRY) {
+ 			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
+ 			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
 -- 
-Thanks,
-
-David / dhildenb
+2.26.2
 
