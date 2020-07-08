@@ -2,111 +2,163 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E338D217F6D
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2020 08:09:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34324217FCF
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2020 08:50:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbgGHGJN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Jul 2020 02:09:13 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36870 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbgGHGJN (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jul 2020 02:09:13 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06866XVq097296;
-        Wed, 8 Jul 2020 06:09:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=z1G2f0b66VHoL5BRHaMkeOPuTvsvV9boGDlv2nknlAs=;
- b=YRsYTmZa1U+rwBM5oBiSlVTOlTfPwHWzhAb955ksDqP32mJhz5MOu98dLmP8q7YsW09Z
- pYvHs1bHJXuJcVTt4EgbMJS0+VBI8AZlaG1kAxcaYJvufgeVQEYpTcfTyyNrzp/gs1Ai
- Q3aSbZLghSErNQuRTZCU4QZafojSJ3h2Hq6SMc1MUi21czNq3sZ16LP4onY3Hx/Rvw6U
- vIyFYOcA3VIq2nLdF/vDIxNell02PgeUrKyQgHoYLet3l4N+5iZlXDcqM5Uiva5riWOZ
- KDsp3vrbvc3tzX6Xh5nlcLDV3IYVALFGJZ0JF6Li5alP/Kg70Z6b8yZDz2Ae+os1qT1l 9g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 323sxxvr0c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 08 Jul 2020 06:09:04 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0685xBCG063834;
-        Wed, 8 Jul 2020 06:07:03 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 3233p4k2h2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Jul 2020 06:07:03 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06866wZk030638;
-        Wed, 8 Jul 2020 06:06:58 GMT
-Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Jul 2020 23:06:58 -0700
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Fedor Loshakov <loshakov@linux.ibm.com>,
-        linux-doc@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        George Spelvin <lkml@sdf.org>
-Subject: Re: [PATCH 0/7] zfcp: cleanups and small changes for 5.9
-Date:   Wed,  8 Jul 2020 02:06:45 -0400
-Message-Id: <159418828149.5152.2055440250302680177.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1593780621.git.bblock@linux.ibm.com>
-References: <cover.1593780621.git.bblock@linux.ibm.com>
+        id S1729535AbgGHGus (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Jul 2020 02:50:48 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34139 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729209AbgGHGus (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jul 2020 02:50:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594191047;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=hwOIoPZhNJC6ecRIpeMTkpwXX1sXWf9wq362A66w32w=;
+        b=PePIaNJQq8Yn9Y56bhFIva9q4FaG94PDFEfYV987W1AF791JhNVyawSrGmYpq9u07Oa2GU
+        Mn/bg+fKktxqv3BKVEptbfQ98okuf5Jtb/yCaQb+n9qtRdP6AfL1tdl88S0xFvTHnxcyU9
+        KV1q/7H+JxMYQXCBThtcdqaCVycXUI0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-173-A7Oen5JfOwKnvGjyU9c9ig-1; Wed, 08 Jul 2020 02:50:43 -0400
+X-MC-Unique: A7Oen5JfOwKnvGjyU9c9ig-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46CC6800D5C;
+        Wed,  8 Jul 2020 06:50:42 +0000 (UTC)
+Received: from [10.36.113.117] (ovpn-113-117.ams2.redhat.com [10.36.113.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A527D60C80;
+        Wed,  8 Jul 2020 06:50:40 +0000 (UTC)
+Subject: Re: [PATCH v1 0/9] s390: implement and optimize vmemmap_free()
+From:   David Hildenbrand <david@redhat.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <20200703133917.39045-1-david@redhat.com>
+ <20200707120849.GB12303@osiris>
+ <f4a87c47-4987-e3f8-8c06-ff6dd60f6a39@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <51813747-a2d6-03a4-fe61-b8d62dbca05b@redhat.com>
+Date:   Wed, 8 Jul 2020 08:50:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9675 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- mlxscore=0 spamscore=0 bulkscore=0 malwarescore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007080041
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9675 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxlogscore=999
- bulkscore=0 impostorscore=0 adultscore=0 cotscore=-2147483648 phishscore=0
- priorityscore=1501 clxscore=1011 malwarescore=0 suspectscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2007080042
+In-Reply-To: <f4a87c47-4987-e3f8-8c06-ff6dd60f6a39@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 3 Jul 2020 15:19:56 +0200, Benjamin Block wrote:
-
-> here are some cleanups and small changes for zfcp I'd like to include in
-> 5.9 if possible.
+On 07.07.20 14:13, David Hildenbrand wrote:
+> On 07.07.20 14:08, Heiko Carstens wrote:
+>> On Fri, Jul 03, 2020 at 03:39:08PM +0200, David Hildenbrand wrote:
+>>> This series is based on the latest s390/features branch [1]. It implements
+>>> vmemmap_free(), consolidating it with vmem_add_range(), and optimizes it by
+>>> - Freeing empty page tables (now also done for idendity mapping).
+>>> - Handling cases where the vmemmap of a section does not fill huge pages
+>>>   completely.
+>>>
+>>> vmemmap_free() is currently never used, unless adiing standby memory fails
+>>> (unlikely). This is relevant for virtio-mem, which adds/removes memory
+>>> in memory block/section granularity (always removes memory in the same
+>>> granularity it added it).
+>>>
+>>> I gave this a proper test with my virtio-mem prototype (which I will share
+>>> once the basic QEMU implementation is upstream), both with 56 byte memmap
+>>> per page and 64 byte memmap per page, with and without huge page support.
+>>> In both cases, removing memory (routed through arch_remove_memory()) will
+>>> result in
+>>> - all populated vmemmap pages to get removed/freed
+>>> - all applicable page tables for the vmemmap getting removed/freed
+>>> - all applicable page tables for the idendity mapping getting removed/freed
+>>> Unfortunately, I don't have access to bigger and z/VM (esp. dcss)
+>>> environments.
+>>>
+>>> This is the basis for real memory hotunplug support for s390x and should
+>>> complete my journey to s390x vmem/vmemmap code for now :)
+>>>
+>>> What needs double-checking is tlb flushing. AFAIKS, as there are no valid
+>>> accesses, doing a single range flush at the end is sufficient, both when
+>>> removing vmemmap pages and the idendity mapping.
+>>>
+>>> Along, some minor cleanups.
+>>
+>> Hmm.. I really would like to see if there would be only a single page
+>> table walker left in vmem.c, which handles both adding and removing
+>> things.
+>> Now we end up with two different page table walk implementations
+>> within the same file. However not sure if it is worth the effort to
+>> unify them though.
 > 
-> One of the changes touches documentation in `Documentation/scsi/`, so I
-> put Jonathan on To, hope that was correct. I hope you can still pull
-> this all in one go to minimize work. IBM did retire some old URLs and
-> content from our public website, so we have to clean that up in the
-> documentation so there are not dead links. I changed these in the hopes
-> we can minimize documentation churn going forward, just to replace URLs.
+> I tried to unify vmemmap_populate() and vmem_add_range() already and
+> didn't like the end result ... so, unifying these along with the removal
+> part won't be any better - most probably. Open for suggestions :)
 > 
-> [...]
+> (at least arm64 and x86-64 handle it similarly)
+> 
 
-Applied to 5.9/scsi-queue, thanks!
+I'll play with something like
 
-[1/7] scsi: zfcp: Use prandom_u32_max() for backoff
-      https://git.kernel.org/mkp/scsi/c/0cd0e57ec858
-[2/7] scsi: zfcp: Fix an outdated comment for zfcp_qdio_send()
-      https://git.kernel.org/mkp/scsi/c/459ad085d87b
-[3/7] scsi: docs: Update outdated link to IBM developerworks
-      https://git.kernel.org/mkp/scsi/c/b9789bfbfe9d
-[4/7] scsi: docs: Remove invalid link and update text for zfcp kernel config
-      https://git.kernel.org/mkp/scsi/c/c06de6e28c9e
-[5/7] scsi: zfcp: Clean up zfcp_erp_action_ready()
-      https://git.kernel.org/mkp/scsi/c/b43cdb5ac856
-[6/7] scsi: zfcp: Replace open-coded list move
-      https://git.kernel.org/mkp/scsi/c/6bcb7c171a0c
-[7/7] scsi: zfcp: Avoid benign overflow of the Request Queue's free-level
-      https://git.kernel.org/mkp/scsi/c/c3bfffa5ec69
+static void modify_pagetable(unsigned long start, unsigned long end,
+			     bool direct, bool add)
+
+and see how it turns out.
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Thanks,
+
+David / dhildenb
+
