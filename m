@@ -2,52 +2,65 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87B7A2190D1
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2020 21:35:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1F5A2190B4
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2020 21:34:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbgGHTff (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Jul 2020 15:35:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgGHTff (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jul 2020 15:35:35 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1597C061A0B;
-        Wed,  8 Jul 2020 12:35:34 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 440141276B32F;
-        Wed,  8 Jul 2020 12:35:34 -0700 (PDT)
-Date:   Wed, 08 Jul 2020 12:35:33 -0700 (PDT)
-Message-Id: <20200708.123533.193185690205076854.davem@davemloft.net>
-To:     kgraul@linux.ibm.com
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: Re: [PATCH net 0/5] net/smc: fixes 2020-07-08
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200708150515.44938-1-kgraul@linux.ibm.com>
-References: <20200708150515.44938-1-kgraul@linux.ibm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 08 Jul 2020 12:35:34 -0700 (PDT)
+        id S1726122AbgGHTeP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Jul 2020 15:34:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgGHTeO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 8 Jul 2020 15:34:14 -0400
+Received: from embeddedor (unknown [201.162.240.161])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FB4220720;
+        Wed,  8 Jul 2020 19:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594236854;
+        bh=trbpVxueRJhho0ntp4U+HjeFPyUeIcRU0OSyGcAoJPg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qMWroq5v6pTfxB6LhBOnQArAQxz/wuA55yPp68otSILYyP/aP6gxFM7+oK/h939JA
+         4xzxrg2WLfAQ45stASiEVHiqDJ201/scLQQQFtsoGwzF2U+b/E7rLpundKwLHqynuO
+         e5rkZsUTtQgitkxUNzn0Hbt3VPAXN/wl9UMAQZg4=
+Date:   Wed, 8 Jul 2020 14:39:42 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Stefan Haberland <sth@linux.ibm.com>
+Cc:     Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] s390/dasd: Use struct_size() helper
+Message-ID: <20200708193942.GJ11533@embeddedor>
+References: <20200619165600.GA8668@embeddedor>
+ <47a86753-fd4d-9a7a-c808-5f387c872ab3@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <47a86753-fd4d-9a7a-c808-5f387c872ab3@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
-Date: Wed,  8 Jul 2020 17:05:10 +0200
-
-> Please apply the following patch series for smc to netdev's net tree.
+On Wed, Jul 08, 2020 at 11:13:08AM +0200, Stefan Haberland wrote:
+> Am 19.06.20 um 18:56 schrieb Gustavo A. R. Silva:
+> > Make use of the struct_size() helper instead of an open-coded version
+> > in order to avoid any potential type mistakes. Also, remove unnecessary
+> > variable _datasize_.
+> >
+> > This code was detected with the help of Coccinelle and, audited and
+> > fixed manually.
+> >
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> The patches fix problems found during more testing of SMC
-> functionality, resulting in hang conditions and unneeded link
-> deactivations. The clc module was hardened to be prepared for
-> possible future SMCD versions.
+> Thanks for the patch.
+> Tested and applied.
 
-Series applied, thank you.
+Thanks, Stefan.
+
+--
+Gustavo
