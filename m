@@ -2,59 +2,56 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EFFE217B50
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2020 00:53:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6DA6217F42
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jul 2020 07:50:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbgGGWvA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Jul 2020 18:51:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55599 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729710AbgGGWu5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Jul 2020 18:50:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594162256;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=L3XIq9qb2B089LN9k3kMf47vSw7aFkV5Znk8amd1bbo=;
-        b=iYt+qxj0EepIfd94l1adZFwCkHRtj6Ff6QQZ2A2IK8Rgege3z3hGy2ElD9EtZoQr0av7EP
-        frCE+RTH+YJOUGIPV2dJvN7Tdj8CUP/WiOq2aMvdMbRD3gkRc1CvawVuOttd6/t9HNBkxQ
-        uDgrIh0vmZ8aHQjcw6toLRtke+SLqLc=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-278-QbOzWK5yNzqZZQ_dztpo9g-1; Tue, 07 Jul 2020 18:50:54 -0400
-X-MC-Unique: QbOzWK5yNzqZZQ_dztpo9g-1
-Received: by mail-qv1-f69.google.com with SMTP id t12so17827308qvw.5
-        for <linux-s390@vger.kernel.org>; Tue, 07 Jul 2020 15:50:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=L3XIq9qb2B089LN9k3kMf47vSw7aFkV5Znk8amd1bbo=;
-        b=n0a5D53P3fVYzVdpXwXEzHNKWw8bRxgskkwtfbvgpoh/pyBga7XZvs4dJB1TwKqSby
-         2RLAIGsHgXhmbiljCLUyn4GNlHTmiakoSfdHz9boUlcjmd6IC7AcGIfvev6EqYfVRXUa
-         Ox6yc9H3kiK6gH1kjbAg9cQfRFgn+FcYu/Ghdm15DyhEzgMsBmM3YLCQhwfztBUMyv8l
-         r3gCQ91E7Rf1ITeegZeXcSnVB+s/eho/8RtrtCt7fBPYAHgmNQXqgKl08HvXNK8SuaaK
-         8lIeoVKnX8EQ5rLZp21+3ZifFjyefGNdr/LXNKRV7VBnqrvlSjPLqZK6FDELdwNhpIOs
-         Befg==
-X-Gm-Message-State: AOAM5314frAMtRflEiEn3GQH4zBL1A3CTru/u6DfEVeVyhog9bPyTnb4
-        HHSCs4LdR21jolkV8ydd0Y8h8SVMJyTeV3hgxuo0MnVR47T9oYu+2fF5Is9X5Txwv96UuNRh7Et
-        cPXEiO2nlpOrFzgCRC8RgLA==
-X-Received: by 2002:a37:aa05:: with SMTP id t5mr54060137qke.451.1594162254233;
-        Tue, 07 Jul 2020 15:50:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyeE2qM5GM19ugpdoKdIt+ai6du4xQwHKQ/Rb9KnI/4dISGj30ouoU1oW9Iw8yZXJini/8w8g==
-X-Received: by 2002:a37:aa05:: with SMTP id t5mr54060118qke.451.1594162254014;
-        Tue, 07 Jul 2020 15:50:54 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id j16sm26267642qtp.92.2020.07.07.15.50.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 15:50:53 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        id S1726471AbgGHFuF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Jul 2020 01:50:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30084 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725794AbgGHFuE (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jul 2020 01:50:04 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0685aQW6082438;
+        Wed, 8 Jul 2020 01:49:55 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3257x1geev-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 01:49:55 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0685ntZn114548;
+        Wed, 8 Jul 2020 01:49:55 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3257x1geec-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 01:49:55 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0685kxZi001206;
+        Wed, 8 Jul 2020 05:49:53 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 322hd7v64d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jul 2020 05:49:53 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0685npIJ9372054
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Jul 2020 05:49:51 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E5C10A4060;
+        Wed,  8 Jul 2020 05:49:50 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 53456A405B;
+        Wed,  8 Jul 2020 05:49:49 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.67.194])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  8 Jul 2020 05:49:49 +0000 (GMT)
+Date:   Wed, 8 Jul 2020 07:49:47 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        peterx@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Will Deacon <will@kernel.org>,
         Andrea Arcangeli <aarcange@redhat.com>,
         David Rientjes <rientjes@google.com>,
@@ -64,69 +61,85 @@ Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         linux-s390@vger.kernel.org
-Subject: [PATCH v5 18/25] mm/s390: Use general page fault accounting
-Date:   Tue,  7 Jul 2020 18:50:14 -0400
-Message-Id: <20200707225021.200906-19-peterx@redhat.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200707225021.200906-1-peterx@redhat.com>
+Subject: Re: [PATCH v5 18/25] mm/s390: Use general page fault accounting
+Message-ID: <20200708054947.GA4026@oc3871087118.ibm.com>
 References: <20200707225021.200906-1-peterx@redhat.com>
+ <20200707225021.200906-19-peterx@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200707225021.200906-19-peterx@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-08_01:2020-07-08,2020-07-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0 lowpriorityscore=0
+ phishscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
+ cotscore=-2147483648 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2007080033
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Use the general page fault accounting by passing regs into handle_mm_fault().
-It naturally solve the issue of multiple page fault accounting when page fault
-retry happened.
+On Tue, Jul 07, 2020 at 06:50:14PM -0400, Peter Xu wrote:
+> Use the general page fault accounting by passing regs into handle_mm_fault().
+> It naturally solve the issue of multiple page fault accounting when page fault
+> retry happened.
+> 
+> CC: Heiko Carstens <heiko.carstens@de.ibm.com>
+> CC: Vasily Gorbik <gor@linux.ibm.com>
+> CC: Christian Borntraeger <borntraeger@de.ibm.com>
+> CC: linux-s390@vger.kernel.org
+> Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+> Acked-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+> Signed-off-by: Peter Xu <peterx@redhat.com>
+> ---
+>  arch/s390/mm/fault.c | 16 +---------------
+>  1 file changed, 1 insertion(+), 15 deletions(-)
+> 
+> diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+> index fc14df0b4d6e..9aa201df2e94 100644
+> --- a/arch/s390/mm/fault.c
+> +++ b/arch/s390/mm/fault.c
+> @@ -478,7 +478,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+>  	 * make sure we exit gracefully rather than endlessly redo
+>  	 * the fault.
+>  	 */
+> -	fault = handle_mm_fault(vma, address, flags, NULL);
+> +	fault = handle_mm_fault(vma, address, flags, regs);
+>  	if (fault_signal_pending(fault, regs)) {
+>  		fault = VM_FAULT_SIGNAL;
+>  		if (flags & FAULT_FLAG_RETRY_NOWAIT)
+> @@ -488,21 +488,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
+>  	if (unlikely(fault & VM_FAULT_ERROR))
+>  		goto out_up;
+>  
+> -	/*
+> -	 * Major/minor page fault accounting is only done on the
+> -	 * initial attempt. If we go through a retry, it is extremely
+> -	 * likely that the page will be found in page cache at that point.
+> -	 */
+>  	if (flags & FAULT_FLAG_ALLOW_RETRY) {
 
-CC: Heiko Carstens <heiko.carstens@de.ibm.com>
-CC: Vasily Gorbik <gor@linux.ibm.com>
-CC: Christian Borntraeger <borntraeger@de.ibm.com>
-CC: linux-s390@vger.kernel.org
-Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Acked-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/s390/mm/fault.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+Shouldn't this check ^^^ be dropped as well?
 
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index fc14df0b4d6e..9aa201df2e94 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -478,7 +478,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
- 	 * make sure we exit gracefully rather than endlessly redo
- 	 * the fault.
- 	 */
--	fault = handle_mm_fault(vma, address, flags, NULL);
-+	fault = handle_mm_fault(vma, address, flags, regs);
- 	if (fault_signal_pending(fault, regs)) {
- 		fault = VM_FAULT_SIGNAL;
- 		if (flags & FAULT_FLAG_RETRY_NOWAIT)
-@@ -488,21 +488,7 @@ static inline vm_fault_t do_exception(struct pt_regs *regs, int access)
- 	if (unlikely(fault & VM_FAULT_ERROR))
- 		goto out_up;
- 
--	/*
--	 * Major/minor page fault accounting is only done on the
--	 * initial attempt. If we go through a retry, it is extremely
--	 * likely that the page will be found in page cache at that point.
--	 */
- 	if (flags & FAULT_FLAG_ALLOW_RETRY) {
--		if (fault & VM_FAULT_MAJOR) {
--			tsk->maj_flt++;
--			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
--				      regs, address);
--		} else {
--			tsk->min_flt++;
--			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
--				      regs, address);
--		}
- 		if (fault & VM_FAULT_RETRY) {
- 			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
- 			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
--- 
-2.26.2
+Since commit 4064b9827063 ("mm: allow VM_FAULT_RETRY for multiple times")
+FAULT_FLAG_ALLOW_RETRY never gets unset, so no need to check..
 
+> -		if (fault & VM_FAULT_MAJOR) {
+> -			tsk->maj_flt++;
+> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
+> -				      regs, address);
+> -		} else {
+> -			tsk->min_flt++;
+> -			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
+> -				      regs, address);
+> -		}
+>  		if (fault & VM_FAULT_RETRY) {
+>  			if (IS_ENABLED(CONFIG_PGSTE) && gmap &&
+>  			    (flags & FAULT_FLAG_RETRY_NOWAIT)) {
+> -- 
+> 2.26.2
+> 
