@@ -2,150 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A872E21A0EA
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2020 15:31:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99D0F21A0F6
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jul 2020 15:33:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgGINbF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Jul 2020 09:31:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39210 "EHLO
+        id S1726864AbgGINdc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Jul 2020 09:33:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52033 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726410AbgGINbE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Jul 2020 09:31:04 -0400
+        with ESMTP id S1726410AbgGINdc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Jul 2020 09:33:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594301463;
+        s=mimecast20190719; t=1594301612;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5ZV046C9FlHRH3RTZDZ6h6ABB8tB0CGYUWgmvEylPwk=;
-        b=UwgRj4nEvtfg8ja+vNU2zSHp4A5mRwYHviDY2pF7JkPZVerKg+D6seePZk4XdE0YqMg5+H
-        y4J58tCsQWwZcawX/cqCSQ2P6z+hFcaZpTsiplFtAsNGR8XbjPekogBEUQG+54wqwDDmuk
-        ILkfzmlqc9OAMaDczd8jNRJ0xmcNPOs=
+        bh=p43UIFy8qtmd83okViGUI3Ft//gtWVQ0TxEHPBKHNmQ=;
+        b=EWEE1mEnBMp93gVbpgYwWXNB8hAsh9ddF8RVMjirOrRR7fv7/mYpSh53SW16Sbnz3QTndb
+        bJjI5J8hKEZe4pkdIYdweMtzrig6b9IMeGaZrx4Db08KfNm0F9V3bpH//Y1Fv+3Pi/+pZv
+        oSEgROnXG3HujEONjL3mYUuiXi75+mU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-121-O1bBZozZOOi4rh1E1kj1NQ-1; Thu, 09 Jul 2020 09:31:01 -0400
-X-MC-Unique: O1bBZozZOOi4rh1E1kj1NQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-162-h4mfr5ZfMcSBzZfGyFZi4w-1; Thu, 09 Jul 2020 09:33:27 -0400
+X-MC-Unique: h4mfr5ZfMcSBzZfGyFZi4w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56112E91C;
-        Thu,  9 Jul 2020 13:31:00 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1FB46100AA22;
+        Thu,  9 Jul 2020 13:33:26 +0000 (UTC)
 Received: from gondolin (ovpn-113-62.ams2.redhat.com [10.36.113.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B9E321A888;
-        Thu,  9 Jul 2020 13:30:58 +0000 (UTC)
-Date:   Thu, 9 Jul 2020 15:30:55 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C8BEA10016DA;
+        Thu,  9 Jul 2020 13:33:21 +0000 (UTC)
+Date:   Thu, 9 Jul 2020 15:33:18 +0200
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Pierre Morel <pmorel@linux.ibm.com>
 Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
         frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com,
         drjones@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v11 8/9] s390x: css: msch, enable test
-Message-ID: <20200709153055.6f2b5e59.cohuck@redhat.com>
-In-Reply-To: <d55c3e5b-8adf-8f7f-2b97-c270fb6598b4@linux.ibm.com>
+Subject: Re: [kvm-unit-tests PATCH v11 9/9] s390x: css: ssch/tsch with sense
+ and interrupt
+Message-ID: <20200709153318.2931430d.cohuck@redhat.com>
+In-Reply-To: <9aba6196-edd4-4eb0-1e1c-e6410291863b@linux.ibm.com>
 References: <1594282068-11054-1-git-send-email-pmorel@linux.ibm.com>
-        <1594282068-11054-9-git-send-email-pmorel@linux.ibm.com>
-        <20200709134056.0d267b6c.cohuck@redhat.com>
-        <d55c3e5b-8adf-8f7f-2b97-c270fb6598b4@linux.ibm.com>
+        <1594282068-11054-10-git-send-email-pmorel@linux.ibm.com>
+        <20200709141348.6ae5ff18.cohuck@redhat.com>
+        <9aba6196-edd4-4eb0-1e1c-e6410291863b@linux.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 9 Jul 2020 15:12:05 +0200
+On Thu, 9 Jul 2020 15:18:25 +0200
 Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> On 2020-07-09 13:40, Cornelia Huck wrote:
-> > On Thu,  9 Jul 2020 10:07:47 +0200
+> On 2020-07-09 14:13, Cornelia Huck wrote:
+> > On Thu,  9 Jul 2020 10:07:48 +0200
 > > Pierre Morel <pmorel@linux.ibm.com> wrote:
-> >   
-> >> A second step when testing the channel subsystem is to prepare a channel
-> >> for use.
-> >> This includes:
-> >> - Get the current subchannel Information Block (SCHIB) using STSCH
-> >> - Update it in memory to set the ENABLE bit and the specified ISC
-> >> - Tell the CSS that the SCHIB has been modified using MSCH
-> >> - Get the SCHIB from the CSS again to verify that the subchannel is
-> >>    enabled and uses the specified ISC.
-> >> - If the command succeeds but subchannel is not enabled or the ISC
-> >>    field is not as expected, retry a predefined retries count.
-> >> - If the command fails, report the failure and do not retry, even
-> >>    if cc indicates a busy/status pending as we do not expect this.
-> >>
-> >> This tests the MSCH instruction to enable a channel successfully.
-> >> Retries are done and in case of error, and if the retries count
-> >> is exceeded, a report is made.
-> >>
-> >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> >> Acked-by: Thomas Huth <thuth@redhat.com>
-> >> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> >> ---
-> >>   lib/s390x/css.h     |  8 +++--
-> >>   lib/s390x/css_lib.c | 72 +++++++++++++++++++++++++++++++++++++++++++++
-> >>   s390x/css.c         | 15 ++++++++++
-> >>   3 files changed, 92 insertions(+), 3 deletions(-)  
-> > 
-> > (...)
-> >   
-> >> +/*
-> >> + * css_msch: enable subchannel and set with specified ISC  
-> > 
-> > "css_enable: enable the subchannel with the specified ISC"
-> > 
-> > ?
-> >   
-> >> + * @schid: Subchannel Identifier
-> >> + * @isc  : number of the interruption subclass to use
-> >> + * Return value:
-> >> + *   On success: 0
-> >> + *   On error the CC of the faulty instruction
-> >> + *      or -1 if the retry count is exceeded.
-> >> + */
-> >> +int css_enable(int schid, int isc)
-> >> +{
-> >> +	struct pmcw *pmcw = &schib.pmcw;
-> >> +	int retry_count = 0;
-> >> +	uint16_t flags;
-> >> +	int cc;
-> >> +
-> >> +	/* Read the SCHIB for this subchannel */
-> >> +	cc = stsch(schid, &schib);
-> >> +	if (cc) {
-> >> +		report_info("stsch: sch %08x failed with cc=%d", schid, cc);
-> >> +		return cc;
-> >> +	}
-> >> +
-> >> +	flags = PMCW_ENABLE | (isc << PMCW_ISC_SHIFT);
-> >> +	if ((pmcw->flags & flags) == flags) {  
-> > 
-> > I think you want (pmcw->flags & PMCW_ENABLE) == PMCW_ENABLE -- this
-> > catches the case of "subchannel has been enabled before, but with a
-> > different isc".  
-> 
-> If with a different ISC, we need to modify the ISC.
-> Don't we ?
 
-I think that's a policy decision (I would probably fail and require a
-disable before setting another isc, but that's a matter of taste).
-
-Regardless, I think the current check doesn't even catch the 'different
-isc' case?
-
+> >> +	if (irb.scsw.sch_stat & !(SCSW_SCHS_PCI | SCSW_SCHS_IL)) {  
+> > 
+> > Did you mean ~(SCSW_SCHS_PCI | SCSW_SCHS_IL)?  
 > 
-> >   
-> >> +		report_info("stsch: sch %08x already enabled", schid);
-> >> +		return 0;
-> >> +	}  
-> 
-> 
+> grrr... yes, thanks.
 > 
 > > 
-> > (...)
-> >   
+> > If yes, why do think a PCI may show up?  
 > 
-> 
+> Should not in the current implementation.
+> I thought I can add it as a general test.
+
+Yeah, maybe in the future. But for now, I think it is a bit confusing.
 
