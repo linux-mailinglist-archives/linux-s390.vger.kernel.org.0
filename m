@@ -2,184 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95E9221B700
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2020 15:47:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58EA821B762
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2020 15:58:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgGJNrt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 Jul 2020 09:47:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18276 "EHLO
+        id S1728215AbgGJN6g (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 10 Jul 2020 09:58:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26866 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726840AbgGJNrs (ORCPT
+        by vger.kernel.org with ESMTP id S1728212AbgGJN6f (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 10 Jul 2020 09:47:48 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ADW2SU122001;
-        Fri, 10 Jul 2020 09:47:47 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpkmua6-1
+        Fri, 10 Jul 2020 09:58:35 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ADW5d1006613;
+        Fri, 10 Jul 2020 09:58:33 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpr3yq7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 09:47:47 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06ADZRr4022647;
-        Fri, 10 Jul 2020 13:47:45 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 326bch8nb9-1
+        Fri, 10 Jul 2020 09:58:33 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06ADW6Mr006663;
+        Fri, 10 Jul 2020 09:58:32 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 326bpr3ynx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jul 2020 13:47:45 +0000
+        Fri, 10 Jul 2020 09:58:32 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06ADt0H8004646;
+        Fri, 10 Jul 2020 13:58:29 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma02fra.de.ibm.com with ESMTP id 326bcf0p7h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jul 2020 13:58:29 +0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06ADlgcP65732700
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06ADvBjQ59638268
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jul 2020 13:47:42 GMT
+        Fri, 10 Jul 2020 13:57:11 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 82015AE04D;
-        Fri, 10 Jul 2020 13:47:42 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8F7DFAE053;
+        Fri, 10 Jul 2020 13:57:11 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B2B6AE056;
-        Fri, 10 Jul 2020 13:47:42 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 38F08AE055;
+        Fri, 10 Jul 2020 13:57:11 +0000 (GMT)
 Received: from osiris (unknown [9.171.65.223])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 10 Jul 2020 13:47:42 +0000 (GMT)
-Date:   Fri, 10 Jul 2020 15:47:40 +0200
+        Fri, 10 Jul 2020 13:57:11 +0000 (GMT)
+Date:   Fri, 10 Jul 2020 15:57:09 +0200
 From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, Christian Borntraeger <borntraeger@de.ibm.com>,
         Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [GIT PULL] more s390 updates for 5.8-rc5
-Message-ID: <20200710134740.GA14845@osiris>
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v1 0/9] s390: implement and optimize vmemmap_free()
+Message-ID: <20200710135709.GB14845@osiris>
+References: <20200703133917.39045-1-david@redhat.com>
+ <20200707120849.GB12303@osiris>
+ <f4a87c47-4987-e3f8-8c06-ff6dd60f6a39@redhat.com>
+ <51813747-a2d6-03a4-fe61-b8d62dbca05b@redhat.com>
+ <13549874-c33b-c47a-adbd-d625c83cc87d@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <13549874-c33b-c47a-adbd-d625c83cc87d@redhat.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-10_06:2020-07-10,2020-07-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1011 priorityscore=1501 bulkscore=0
- impostorscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
- suspectscore=7 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007100093
+ definitions=2020-07-10_07:2020-07-10,2020-07-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 clxscore=1011 priorityscore=1501 mlxlogscore=759
+ malwarescore=0 adultscore=0 bulkscore=0 suspectscore=1 mlxscore=0
+ impostorscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007100093
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Linus,
+On Wed, Jul 08, 2020 at 02:16:39PM +0200, David Hildenbrand wrote:
+> >>> Hmm.. I really would like to see if there would be only a single page
+> >>> table walker left in vmem.c, which handles both adding and removing
+> >>> things.
+> >>> Now we end up with two different page table walk implementations
+> >>> within the same file. However not sure if it is worth the effort to
+> >>> unify them though.
+> >>
+> >> I tried to unify vmemmap_populate() and vmem_add_range() already and
+> >> didn't like the end result ... so, unifying these along with the removal
+> >> part won't be any better - most probably. Open for suggestions :)
+> >>
+> >> (at least arm64 and x86-64 handle it similarly)
+> >>
+> > 
+> > I'll play with something like
+> > 
+> > static void modify_pagetable(unsigned long start, unsigned long end,
+> > 			     bool direct, bool add)
+> > 
+> > and see how it turns out.
+> > 
+> 
+> Did a quick hack. With a single walker (modify_pagetable) I get
+> 
+>  arch/s390/mm/vmem.c | 628 ++++++++++++++++++++++++++++++--------------
+>  1 file changed, 434 insertions(+), 194 deletions(-)
+> 
+> Overall looks cleaner, only modify_pte_table() and modify_pmd_table()
+> are a little more involved ...
 
-please pull more small s390 updates for 5.8-rc5.
-
-This request is mainly due to the fact that Gerald Schaefer's and also
-my old email addresses currently do not work any longer. Therefore we
-decided to switch to new email addresses and reflect that in the
-MAINTAINERS file.
-
-Thanks,
-Heiko
-
-The following changes since commit dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258:
-
-  Linux 5.8-rc4 (2020-07-05 16:20:22 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-5
-
-for you to fetch changes up to dd9ce2d6eeaebbdd342cbe095b7a195d569f18d3:
-
-  MAINTAINERS: update email address for Gerald Schaefer (2020-07-10 15:06:49 +0200)
-
-----------------------------------------------------------------
-- Update email addresses in MAINTAINERS file and add .mailmap entries
-  for Gerald Schaefer and Heiko Carstens.
-
-- Fix huge pte soft dirty copying.
-
-----------------------------------------------------------------
-Gerald Schaefer (1):
-      MAINTAINERS: update email address for Gerald Schaefer
-
-Heiko Carstens (1):
-      MAINTAINERS: update email address for Heiko Carstens
-
-Janosch Frank (1):
-      s390/mm: fix huge pte soft dirty copying
-
- .mailmap                   | 5 +++++
- MAINTAINERS                | 8 ++++----
- arch/s390/mm/hugetlbpage.c | 2 +-
- 3 files changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/.mailmap b/.mailmap
-index c69d9c734fb5..6da12dfd10dc 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -90,11 +90,16 @@ Frank Rowand <frowand.list@gmail.com> <frank.rowand@sonymobile.com>
- Frank Zago <fzago@systemfabricworks.com>
- Gao Xiang <xiang@kernel.org> <gaoxiang25@huawei.com>
- Gao Xiang <xiang@kernel.org> <hsiangkao@aol.com>
-+Gerald Schaefer <gerald.schaefer@linux.ibm.com> <gerald.schaefer@de.ibm.com>
-+Gerald Schaefer <gerald.schaefer@linux.ibm.com> <geraldsc@de.ibm.com>
-+Gerald Schaefer <gerald.schaefer@linux.ibm.com> <geraldsc@linux.vnet.ibm.com>
- Greg Kroah-Hartman <greg@echidna.(none)>
- Greg Kroah-Hartman <gregkh@suse.de>
- Greg Kroah-Hartman <greg@kroah.com>
- Gregory CLEMENT <gregory.clement@bootlin.com> <gregory.clement@free-electrons.com>
- Hanjun Guo <guohanjun@huawei.com> <hanjun.guo@linaro.org>
-+Heiko Carstens <hca@linux.ibm.com> <h.carstens@de.ibm.com>
-+Heiko Carstens <hca@linux.ibm.com> <heiko.carstens@de.ibm.com>
- Henk Vergonet <Henk.Vergonet@gmail.com>
- Henrik Kretzschmar <henne@nachtwindheim.de>
- Henrik Rydberg <rydberg@bitmath.org>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1d4aa7f942de..06f61751353c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3306,7 +3306,7 @@ X:	arch/riscv/net/bpf_jit_comp32.c
- 
- BPF JIT for S390
- M:	Ilya Leoshkevich <iii@linux.ibm.com>
--M:	Heiko Carstens <heiko.carstens@de.ibm.com>
-+M:	Heiko Carstens <hca@linux.ibm.com>
- M:	Vasily Gorbik <gor@linux.ibm.com>
- L:	netdev@vger.kernel.org
- L:	bpf@vger.kernel.org
-@@ -14831,7 +14831,7 @@ S:	Maintained
- F:	drivers/video/fbdev/savage/
- 
- S390
--M:	Heiko Carstens <heiko.carstens@de.ibm.com>
-+M:	Heiko Carstens <hca@linux.ibm.com>
- M:	Vasily Gorbik <gor@linux.ibm.com>
- M:	Christian Borntraeger <borntraeger@de.ibm.com>
- L:	linux-s390@vger.kernel.org
-@@ -14862,7 +14862,7 @@ F:	drivers/s390/block/dasd*
- F:	include/linux/dasd_mod.h
- 
- S390 IOMMU (PCI)
--M:	Gerald Schaefer <gerald.schaefer@de.ibm.com>
-+M:	Gerald Schaefer <gerald.schaefer@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- S:	Supported
- W:	http://www.ibm.com/developerworks/linux/linux390/
-@@ -14890,7 +14890,7 @@ F:	drivers/s390/net/
- 
- S390 PCI SUBSYSTEM
- M:	Niklas Schnelle <schnelle@linux.ibm.com>
--M:	Gerald Schaefer <gerald.schaefer@de.ibm.com>
-+M:	Gerald Schaefer <gerald.schaefer@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- S:	Supported
- W:	http://www.ibm.com/developerworks/linux/linux390/
-diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
-index 82df06d720e8..3b5a4d25ca9b 100644
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -117,7 +117,7 @@ static inline pte_t __rste_to_pte(unsigned long rste)
- 					     _PAGE_YOUNG);
- #ifdef CONFIG_MEM_SOFT_DIRTY
- 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_SOFT_DIRTY,
--					     _PAGE_DIRTY);
-+					     _PAGE_SOFT_DIRTY);
- #endif
- 		pte_val(pte) |= move_set_bit(rste, _SEGMENT_ENTRY_NOEXEC,
- 					     _PAGE_NOEXEC);
+Would you mind to resend the series with this integrated?
