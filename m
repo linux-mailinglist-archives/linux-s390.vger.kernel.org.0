@@ -2,54 +2,55 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 177DC21BA1B
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2020 17:59:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CA7421BBA2
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2020 18:56:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgGJP7j (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 Jul 2020 11:59:39 -0400
-Received: from verein.lst.de ([213.95.11.211]:43840 "EHLO verein.lst.de"
+        id S1728398AbgGJQzG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 10 Jul 2020 12:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbgGJP7j (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 10 Jul 2020 11:59:39 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8BDA968B05; Fri, 10 Jul 2020 17:59:33 +0200 (CEST)
-Date:   Fri, 10 Jul 2020 17:59:33 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Tom Murphy <murphyt7@tcd.ie>
-Cc:     iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH V6 4/5] iommu/dma-iommu: Use the dev->coherent_dma_mask
-Message-ID: <20200710155933.GA20886@lst.de>
-References: <20190908165642.22253-1-murphyt7@tcd.ie> <20190908165642.22253-5-murphyt7@tcd.ie>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190908165642.22253-5-murphyt7@tcd.ie>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1728304AbgGJQzF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 10 Jul 2020 12:55:05 -0400
+Subject: Re: [GIT PULL] more s390 updates for 5.8-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594400105;
+        bh=das7VozmdKMpxCnnu9V9d1M8qijYd1MvL60anUbk9KQ=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=hPpIt0LBwoqPsDFTdu1fF2BnAZKbM2QMH+sOvY5pNw1vJhh7fJksxUIvZeR5twUP3
+         U5F4cvkYrBc0KJby8o+BrmV+R3T974BW0u7dCUxHSBLVDjLsGa4aaymtxMa6sVYSkW
+         wJNKI7Zdv0IpXQrVOwoXYwy6qYB6wb2LiLG13YT4=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200710134740.GA14845@osiris>
+References: <20200710134740.GA14845@osiris>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200710134740.GA14845@osiris>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-5
+X-PR-Tracked-Commit-Id: dd9ce2d6eeaebbdd342cbe095b7a195d569f18d3
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e8749d068855c2b075b3de1985e6af836a02b257
+Message-Id: <159440010524.18761.7709098818759791442.pr-tracker-bot@kernel.org>
+Date:   Fri, 10 Jul 2020 16:55:05 +0000
+To:     Heiko Carstens <hca@linux.ibm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Btw, what is the current state of converting intel-iommu to the dma-iommu
-code?
+The pull request you sent on Fri, 10 Jul 2020 15:47:40 +0200:
+
+> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.8-5
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e8749d068855c2b075b3de1985e6af836a02b257
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
