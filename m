@@ -2,143 +2,56 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 985FF21DDD8
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2020 18:48:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35AD021DECA
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2020 19:33:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbgGMQss (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 13 Jul 2020 12:48:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20575 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729764AbgGMQss (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 13 Jul 2020 12:48:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594658927;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=84HXSEfmbt0+vn1F/xRQMsKwpXDD6K/wrYokP/216f8=;
-        b=cXV7tsHjNOBWlKwvRD07BpixmAm1xZl/XWBLWo19CebdnsZEoZNXJiZitOOelxTJBIsdhu
-        2wVWDH34gpTXNNYl6bh5x6rcE0wEYefC0ochGaiQZTHkT7smmV6NVrREJZ6+gqLTGwdG5j
-        tRS7rNgN73tjEa+R6FJzGKoLkQTyeLo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-422-taVAPnOMMCiMeU52nuZSZQ-1; Mon, 13 Jul 2020 12:48:45 -0400
-X-MC-Unique: taVAPnOMMCiMeU52nuZSZQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729806AbgGMRdf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 13 Jul 2020 13:33:35 -0400
+Received: from ms.lwn.net ([45.79.88.28]:36124 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729644AbgGMRdd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 13 Jul 2020 13:33:33 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F831800597;
-        Mon, 13 Jul 2020 16:48:42 +0000 (UTC)
-Received: from localhost (ovpn-116-10.gru2.redhat.com [10.97.116.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F9791053B31;
-        Mon, 13 Jul 2020 16:48:32 +0000 (UTC)
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Cc:     zohar@linux.ibm.com, erichte@linux.ibm.com, nayna@linux.ibm.com,
-        stable@vger.kernel.org, Bruno Meneguele <bmeneg@redhat.com>
-Subject: [PATCH v6] ima: move APPRAISE_BOOTPARAM dependency on ARCH_POLICY to runtime
-Date:   Mon, 13 Jul 2020 13:48:30 -0300
-Message-Id: <20200713164830.101165-1-bmeneg@redhat.com>
+        by ms.lwn.net (Postfix) with ESMTPSA id EB2072E2;
+        Mon, 13 Jul 2020 17:33:32 +0000 (UTC)
+Date:   Mon, 13 Jul 2020 11:33:31 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] S390: Replace HTTP links with HTTPS ones
+Message-ID: <20200713113331.0f71440d@lwn.net>
+In-Reply-To: <20200709182742.24724-1-grandmaster@al2klimov.de>
+References: <20200709182742.24724-1-grandmaster@al2klimov.de>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The IMA_APPRAISE_BOOTPARAM config allows enabling different "ima_appraise="
-modes - log, fix, enforce - at run time, but not when IMA architecture
-specific policies are enabled.  This prevents properly labeling the
-filesystem on systems where secure boot is supported, but not enabled on the
-platform.  Only when secure boot is actually enabled should these IMA
-appraise modes be disabled.
+On Thu,  9 Jul 2020 20:27:42 +0200
+"Alexander A. Klimov" <grandmaster@al2klimov.de> wrote:
 
-This patch removes the compile time dependency and makes it a runtime
-decision, based on the secure boot state of that platform.
+>  Documentation/s390/monreader.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/s390/monreader.rst b/Documentation/s390/monreader.rst
+> index 1e857575c113..21cdfb699b49 100644
+> --- a/Documentation/s390/monreader.rst
+> +++ b/Documentation/s390/monreader.rst
+> @@ -146,7 +146,7 @@ start offset relative to a 4K page (frame) boundary.
+>  
+>  See "Appendix A: `*MONITOR`" in the "z/VM Performance" document for a description
+>  of the monitor control element layout. The layout of the monitor records can
+> -be found here (z/VM 5.1): http://www.vm.ibm.com/pubs/mon510/index.html
+> +be found here (z/VM 5.1): https://www.vm.ibm.com/pubs/mon510/index.html
 
-Test results as follows:
+Applied, thanks.
 
--> x86-64 with secure boot enabled
-
-[    0.015637] Kernel command line: <...> ima_policy=appraise_tcb ima_appraise=fix
-[    0.015668] ima: Secure boot enabled: ignoring ima_appraise=fix boot parameter option
-
--> powerpc with secure boot disabled
-
-[    0.000000] Kernel command line: <...> ima_policy=appraise_tcb ima_appraise=fix
-[    0.000000] Secure boot mode disabled
-
--> Running the system without secure boot and with both options set:
-
-CONFIG_IMA_APPRAISE_BOOTPARAM=y
-CONFIG_IMA_ARCH_POLICY=y
-
-Audit prompts "missing-hash" but still allow execution and, consequently,
-filesystem labeling:
-
-type=INTEGRITY_DATA msg=audit(07/09/2020 12:30:27.778:1691) : pid=4976
-uid=root auid=root ses=2
-subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=appraise_data
-cause=missing-hash comm=bash name=/usr/bin/evmctl dev="dm-0" ino=493150
-res=no
-
-Cc: stable@vger.kernel.org
-Fixes: d958083a8f64 ("x86/ima: define arch_get_ima_policy() for x86")
-Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
----
-v6:
-  - explictly print the bootparam being ignored to the user (Mimi)
-v5:
-  - add pr_info() to inform user the ima_appraise= boot param is being
-	ignored due to secure boot enabled (Nayna)
-  - add some testing results to commit log
-v4:
-  - instead of change arch_policy loading code, check secure boot state at
-	"ima_appraise=" parameter handler (Mimi)
-v3:
-  - extend secure boot arch checker to also consider trusted boot
-  - enforce IMA appraisal when secure boot is effectively enabled (Nayna)
-  - fix ima_appraise flag assignment by or'ing it (Mimi)
-v2:
-  - pr_info() message prefix correction
- security/integrity/ima/Kconfig        | 2 +-
- security/integrity/ima/ima_appraise.c | 6 ++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-index edde88dbe576..62dc11a5af01 100644
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@ -232,7 +232,7 @@ config IMA_APPRAISE_REQUIRE_POLICY_SIGS
- 
- config IMA_APPRAISE_BOOTPARAM
- 	bool "ima_appraise boot parameter"
--	depends on IMA_APPRAISE && !IMA_ARCH_POLICY
-+	depends on IMA_APPRAISE
- 	default y
- 	help
- 	  This option enables the different "ima_appraise=" modes
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index a9649b04b9f1..28a59508c6bd 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -19,6 +19,12 @@
- static int __init default_appraise_setup(char *str)
- {
- #ifdef CONFIG_IMA_APPRAISE_BOOTPARAM
-+	if (arch_ima_get_secureboot()) {
-+		pr_info("Secure boot enabled: ignoring ima_appraise=%s boot parameter option",
-+			str);
-+		return 1;
-+	}
-+
- 	if (strncmp(str, "off", 3) == 0)
- 		ima_appraise = 0;
- 	else if (strncmp(str, "log", 3) == 0)
--- 
-2.26.2
-
+jon
