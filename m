@@ -2,234 +2,137 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7B0021BD9B
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jul 2020 21:25:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 519D821CD80
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jul 2020 05:07:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgGJTZg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 Jul 2020 15:25:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54868 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728264AbgGJTZf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 10 Jul 2020 15:25:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594409133;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dB+4p3mFcNbkumvGSSHU5rWnmgenBPiiFxkhyGA7nh8=;
-        b=Obv3yu1SiTZT/VRBCG7bbPKPnpH4WkYI72x/Ic1B6FueUQyJvsvmCNz2Ngo4cvTDOEPIU3
-        dnwFJx+RpLQioFGij2/MOBuFHAYVCW7XhjENtsIv7no/ns4BzTBzpTwVihCCAllTU58e/L
-        9UJujHWNaPq7u68p0u31cEoJbet4LeA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-509-D3aiIOxYOIuMLB_d2DOSHw-1; Fri, 10 Jul 2020 15:25:20 -0400
-X-MC-Unique: D3aiIOxYOIuMLB_d2DOSHw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81758106B242;
-        Fri, 10 Jul 2020 19:25:18 +0000 (UTC)
-Received: from localhost (ovpn-116-13.gru2.redhat.com [10.97.116.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0DCD91010404;
-        Fri, 10 Jul 2020 19:25:17 +0000 (UTC)
-Date:   Fri, 10 Jul 2020 16:25:16 -0300
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        id S1728368AbgGMDH3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 12 Jul 2020 23:07:29 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:35605 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725892AbgGMDH3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 12 Jul 2020 23:07:29 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0U2UhFSb_1594609639;
+Received: from 30.25.206.74(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U2UhFSb_1594609639)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 13 Jul 2020 11:07:21 +0800
+Subject: Re: [PATCH v4 5/7] KVM: PPC: clean up redundant kvm_run parameters in
+ assembly
+To:     Paul Mackerras <paulus@ozlabs.org>
+Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
+        chenhuacai@gmail.com, kvm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-integrity@vger.kernel.org, erichte@linux.ibm.com,
-        nayna@linux.ibm.com, stable@vger.kernel.org
-Subject: Re: [PATCH v5] ima: move APPRAISE_BOOTPARAM dependency on
- ARCH_POLICY to runtime
-Message-ID: <20200710192516.GC10547@glitch>
-References: <20200709164647.45153-1-bmeneg@redhat.com>
- <1594401804.14405.8.camel@linux.ibm.com>
- <20200710180338.GA10547@glitch>
- <20200710183420.GB10547@glitch>
- <1594407288.14405.36.camel@linux.ibm.com>
+        linux-kernel@vger.kernel.org
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+ <20200427043514.16144-6-tianjia.zhang@linux.alibaba.com>
+ <20200526055924.GD282305@thinks.paulus.ozlabs.org>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <c3540a4b-a568-3428-0427-ae2a1f30dbe2@linux.alibaba.com>
+Date:   Mon, 13 Jul 2020 11:07:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1594407288.14405.36.camel@linux.ibm.com>
-X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="VywGB/WGlW4DM4P8"
-Content-Disposition: inline
+In-Reply-To: <20200526055924.GD282305@thinks.paulus.ozlabs.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---VywGB/WGlW4DM4P8
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 10, 2020 at 02:54:48PM -0400, Mimi Zohar wrote:
-> On Fri, 2020-07-10 at 15:34 -0300, Bruno Meneguele wrote:
-> > On Fri, Jul 10, 2020 at 03:03:38PM -0300, Bruno Meneguele wrote:
-> > > On Fri, Jul 10, 2020 at 01:23:24PM -0400, Mimi Zohar wrote:
-> > > > On Thu, 2020-07-09 at 13:46 -0300, Bruno Meneguele wrote:
-> > > > > APPRAISE_BOOTPARAM has been marked as dependent on !ARCH_POLICY i=
-n compile
-> > > > > time, enforcing the appraisal whenever the kernel had the arch po=
-licy option
-> > > > > enabled.
-> > > >=20
-> > > > > However it breaks systems where the option is set but the system =
-didn't
-> > > > > boot in a "secure boot" platform. In this scenario, anytime an ap=
-praisal
-> > > > > policy (i.e. ima_policy=3Dappraisal_tcb) is used it will be force=
-d, without
-> > > > > giving the user the opportunity to label the filesystem, before e=
-nforcing
-> > > > > integrity.
-> > > > >=20
-> > > > > Considering the ARCH_POLICY is only effective when secure boot is=
- actually
-> > > > > enabled this patch remove the compile time dependency and move it=
- to a
-> > > > > runtime decision, based on the secure boot state of that platform=
-.
-> > > >=20
-> > > > Perhaps we could simplify this patch description a bit?
-> > > >=20
-> > > > The IMA_APPRAISE_BOOTPARAM config allows enabling different
-> > > > "ima_appraise=3D" modes - log, fix, enforce - at run time, but not =
-when
-> > > > IMA architecture specific policies are enabled. =A0This prevents
-> > > > properly labeling the filesystem on systems where secure boot is
-> > > > supported, but not enabled on the platform. =A0Only when secure boo=
-t is
-> > > > enabled, should these IMA appraise modes be disabled.
-> > > >=20
-> > > > This patch removes the compile time dependency and makes it a runti=
-me
-> > > > decision, based on the secure boot state of that platform.
-> > > >=20
-> > >=20
-> > > Sounds good to me.
-> > >=20
-> > > > <snip>
-> > > >=20
-> > > > > diff --git a/security/integrity/ima/ima_appraise.c b/security/int=
-egrity/ima/ima_appraise.c
-> > > > > index a9649b04b9f1..884de471b38a 100644
-> > > > > --- a/security/integrity/ima/ima_appraise.c
-> > > > > +++ b/security/integrity/ima/ima_appraise.c
-> > > > > @@ -19,6 +19,11 @@
-> > > > >  static int __init default_appraise_setup(c
-> > > >=20
-> > > > > har *str)
-> > > > >  {
-> > > > >  #ifdef CONFIG_IMA_APPRAISE_BOOTPARAM
-> > > > > +=09if (arch_ima_get_secureboot()) {
-> > > > > +=09=09pr_info("appraise boot param ignored: secure boot enabled"=
-);
-> > > >=20
-> > > > Instead of a generic statement, is it possible to include the actua=
-l
-> > > > option being denied? =A0Perhaps something like: "Secure boot enable=
-d,
-> > > > ignoring %s boot command line option"
-> > > >=20
-> > > > Mimi
-> > > >=20
-> > >=20
-> > > Yes, sure.
-> > >=20
-> >=20
-> > Btw, would it make sense to first make sure we have a valid "str"
-> > option and not something random to print?
-> > =20
-> > diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity=
-/ima/ima_appraise.c
-> > index a9649b04b9f1..1f1175531d3e 100644
-> > --- a/security/integrity/ima/ima_appraise.c
-> > +++ b/security/integrity/ima/ima_appraise.c
-> > @@ -25,6 +25,16 @@ static int __init default_appraise_setup(char *str)
-> >                 ima_appraise =3D IMA_APPRAISE_LOG;
-> >         else if (strncmp(str, "fix", 3) =3D=3D 0)
-> >                 ima_appraise =3D IMA_APPRAISE_FIX;
-> > +       else
-> > +               pr_info("invalid \"%s\" appraise option");
-> > +
-> > +       if (arch_ima_get_secureboot()) {
-> > +               if (!is_ima_appraise_enabled()) {
-> > +                       pr_info("Secure boot enabled: ignoring ima_appr=
-aise=3D%s boot parameter option",
-> > +                               str);
-> > +                       ima_appraise =3D IMA_APPRAISE_ENFORCE;
-> > +               }
-> > +       }
->=20
-> Providing feedback is probably a good idea. =A0However, the
-> "arch_ima_get_secureboot" test can't come after setting
-> "ima_appraise."
->=20
 
-Sorry, but I'm not sure if I got the reason to why it can't be done
-after: would it be basically to prevent any further processing about
-ima_appraise as a matter of security principle? Or maybe to keep the
-dependency between secureboot and bootparam truly strict?=20
+On 2020/5/26 13:59, Paul Mackerras wrote:
+> On Mon, Apr 27, 2020 at 12:35:12PM +0800, Tianjia Zhang wrote:
+>> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
+>> structure. For historical reasons, many kvm-related function parameters
+>> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
+>> patch does a unified cleanup of these remaining redundant parameters.
+> 
+> Some of these changes don't look completely correct to me, see below.
+> If you're expecting these patches to go through my tree, I can fix up
+> the patch and commit it (with you as author), noting the changes I
+> made in the commit message.  Do you want me to do that?
+> 
 
-Or are there something else I'm missing?
+I am very glad for you to do so, although I have submitted a new version 
+of patch, I still prefer you to fix up and commit it.
 
-> Mimi
->=20
-> >  #endif
-> >         return 1;
-> >  }
-> >=20
-> >=20
-> > The "else" there I think would make sense as well, at least to give the
-> > user some feedback about a possible mispelling of him (as a separate
-> > patch).
-> >=20
-> > And "if(!is_ima_appraise_enabled())" would avoid to print anything abou=
-t
-> > "ignoring the option" to the user in case he explicitly set "enforce",
-> > which we know there isn't any real effect but is allowed and shown in
-> > kernel-parameters.txt.
-> >=20
-> > > Thanks!
-> > >=20
-> > > > > +=09=09return 1;
-> > > > > +=09}
-> > > > > +
-> > > > >  =09if (strncmp(str, "off", 3) =3D=3D 0)
-> > > > >  =09=09ima_appraise =3D 0;
-> > > > >  =09else if (strncmp(str, "log", 3) =3D=3D 0)
-> > > >=20
-> > >=20
-> > > --=20
-> > > bmeneg=20
-> > > PGP Key: http://bmeneg.com/pubkey.txt
-> >=20
-> >=20
-> >=20
->=20
+Thanks and best,
+Tianjia
 
---=20
-bmeneg=20
-PGP Key: http://bmeneg.com/pubkey.txt
-
---VywGB/WGlW4DM4P8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl8IwJwACgkQYdRkFR+R
-okPoHwgAy7MLZ15gY7OtTlh4cernWNb6w8odML7tp8dhQG8ToXwkPwBdBjC5WU6z
-nbhxCHTxLej0ej8nHoo0IEsAv+4iNnlM+VtS/mWT5p1/dD2HkiM2cTK3Zwj1kqZk
-1L9tPFbvBIllDRAFzzn44vSDG/jixbGFMGU9y3rFAQQHqFNi1ZDz3hg0yzgwJNar
-pW4FPhxzXVi5ASCGhm7/Z5/qbx6ARtwH5U/eFIx45dG3oAafXqcZiJ1fj871nEjR
-1ddrO2U4Yy53z4JqimlRxhu/VlB+U1wlRG8GnEuM1ngkiKwJ48Zrdo+Ren8dOdTK
-0gu15PhNDXuOPPzVHi2ot69JM1kq1Q==
-=nip5
------END PGP SIGNATURE-----
-
---VywGB/WGlW4DM4P8--
-
+>> diff --git a/arch/powerpc/kvm/book3s_interrupts.S b/arch/powerpc/kvm/book3s_interrupts.S
+>> index f7ad99d972ce..0eff749d8027 100644
+>> --- a/arch/powerpc/kvm/book3s_interrupts.S
+>> +++ b/arch/powerpc/kvm/book3s_interrupts.S
+>> @@ -55,8 +55,7 @@
+>>    ****************************************************************************/
+>>   
+>>   /* Registers:
+>> - *  r3: kvm_run pointer
+>> - *  r4: vcpu pointer
+>> + *  r3: vcpu pointer
+>>    */
+>>   _GLOBAL(__kvmppc_vcpu_run)
+>>   
+>> @@ -68,8 +67,8 @@ kvm_start_entry:
+>>   	/* Save host state to the stack */
+>>   	PPC_STLU r1, -SWITCH_FRAME_SIZE(r1)
+>>   
+>> -	/* Save r3 (kvm_run) and r4 (vcpu) */
+>> -	SAVE_2GPRS(3, r1)
+>> +	/* Save r3 (vcpu) */
+>> +	SAVE_GPR(3, r1)
+>>   
+>>   	/* Save non-volatile registers (r14 - r31) */
+>>   	SAVE_NVGPRS(r1)
+>> @@ -82,11 +81,11 @@ kvm_start_entry:
+>>   	PPC_STL	r0, _LINK(r1)
+>>   
+>>   	/* Load non-volatile guest state from the vcpu */
+>> -	VCPU_LOAD_NVGPRS(r4)
+>> +	VCPU_LOAD_NVGPRS(r3)
+>>   
+>>   kvm_start_lightweight:
+>>   	/* Copy registers into shadow vcpu so we can access them in real mode */
+>> -	mr	r3, r4
+>> +	mr	r4, r3
+> 
+> This mr doesn't seem necessary.
+> 
+>>   	bl	FUNC(kvmppc_copy_to_svcpu)
+>>   	nop
+>>   	REST_GPR(4, r1)
+> 
+> This should be loading r4 from GPR3(r1), not GPR4(r1) - which is what
+> REST_GPR(4, r1) will do.
+> 
+> Then, in the file but not in the patch context, there is this line:
+> 
+> 	PPC_LL	r3, GPR4(r1)		/* vcpu pointer */
+> 
+> where once again GPR4 needs to be GPR3.
+> 
+>> @@ -191,10 +190,10 @@ after_sprg3_load:
+>>   	PPC_STL	r31, VCPU_GPR(R31)(r7)
+>>   
+>>   	/* Pass the exit number as 3rd argument to kvmppc_handle_exit */
+> 
+> The comment should be modified to say "2nd" instead of "3rd",
+> otherwise it is confusing.
+> 
+> The rest of the patch looks OK.
+> 
+> Paul.
+> 
