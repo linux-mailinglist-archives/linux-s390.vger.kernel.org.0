@@ -2,106 +2,99 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B909921EFDC
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2020 13:56:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF61221F3D8
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2020 16:23:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgGNL4K (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Jul 2020 07:56:10 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28102 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727858AbgGNL4J (ORCPT
+        id S1728623AbgGNOXU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Jul 2020 10:23:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52312 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725876AbgGNOXU (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 14 Jul 2020 07:56:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594727768;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ykcZBNksAR9Za8nLz+KVj+UU2/4kb9H0fHJr+dQVzzs=;
-        b=c9yk2vPj410HFFCStjwJ7jZmPsBcK2ffU1Yg6FDFeG/TWbCdZumnRgIbsUy7gGwofTfe2l
-        tJNikpfVhTXDCQEzM0afSFkDKMSmmlBY6cREY8OOStbHLqGDQHaTKm/k4tXHbtfPrMTMlW
-        zLfdPbMFwWR4f5zd/5vBwuMs2FjSFqc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-Odd-OnzdOimKF9ZZRcmQPA-1; Tue, 14 Jul 2020 07:56:06 -0400
-X-MC-Unique: Odd-OnzdOimKF9ZZRcmQPA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A5E08014D7;
-        Tue, 14 Jul 2020 11:56:04 +0000 (UTC)
-Received: from gondolin (ovpn-112-240.ams2.redhat.com [10.36.112.240])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 717F260CD0;
-        Tue, 14 Jul 2020 11:55:58 +0000 (UTC)
-Date:   Tue, 14 Jul 2020 13:55:55 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v6 2/2] s390: virtio: PV needs VIRTIO I/O device
- protection
-Message-ID: <20200714135555.2148fb83.cohuck@redhat.com>
-In-Reply-To: <1594726682-12076-3-git-send-email-pmorel@linux.ibm.com>
-References: <1594726682-12076-1-git-send-email-pmorel@linux.ibm.com>
-        <1594726682-12076-3-git-send-email-pmorel@linux.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Tue, 14 Jul 2020 10:23:20 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06EE2ksb183554;
+        Tue, 14 Jul 2020 10:23:17 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3292umv8fs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jul 2020 10:23:17 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06EEGoSd012817;
+        Tue, 14 Jul 2020 14:23:15 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 327527ue73-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jul 2020 14:23:15 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06EENCNH59965574
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Jul 2020 14:23:12 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7CD374C059;
+        Tue, 14 Jul 2020 14:23:12 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2EC144C044;
+        Tue, 14 Jul 2020 14:23:12 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 14 Jul 2020 14:23:12 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev <netdev@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH net-next 00/10] s390/qeth: updates 2020-07-14
+Date:   Tue, 14 Jul 2020 16:22:55 +0200
+Message-Id: <20200714142305.29297-1-jwi@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-14_04:2020-07-14,2020-07-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1011 priorityscore=1501 phishscore=0 adultscore=0 malwarescore=0
+ mlxlogscore=924 bulkscore=0 suspectscore=0 impostorscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007140104
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 14 Jul 2020 13:38:02 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+Hi Dave & Jakub,
 
-> If protected virtualization is active on s390, the virtio queues are
-> not accessible to the host, unless VIRTIO_F_IOMMU_PLATFORM has been
-> negotiated. Use the new arch_validate_virtio_features() interface to
-> fail probe if that's not the case, preventing a host error on access
-> attempt.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> Acked-by: Halil Pasic <pasic@linux.ibm.com>
-> ---
->  arch/s390/mm/init.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
+please apply the following patch series for qeth to netdev's net-next tree.
 
-(...)
+This brings a mix of cleanups for various parts of the control code.
 
-> +int arch_validate_virtio_features(struct virtio_device *dev)
-> +{
-> +	if (!is_prot_virt_guest())
-> +		return 0;
-> +
-> +	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
-> +		dev_warn(&dev->dev,
-> +			 "legacy virtio not supported with protected virtualizatio\n");
+Thanks,
+Julian
 
-typo: s/virtualizatio/virtualization/
+Julian Wiedmann (10):
+  s390/qeth: reject unsupported link type earlier
+  s390/qeth: fine-tune errno when cmds are cancelled
+  s390/qeth: only init the isolation mode when necessary
+  s390/qeth: don't clear the configured isolation mode
+  s390/qeth: clean up error handling for isolation mode cmds
+  s390/qeth: use u64_to_user_ptr() in the OAT code
+  s390/qeth: clean up a magic number in the OAT callback
+  s390/qeth: cleanup OAT code
+  s390/qeth: unify RX-mode hashtables
+  s390/qeth: constify the MPC initialization data
 
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-> +		dev_warn(&dev->dev,
-> +			 "support for limited memory access required for protected virtualization\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /* protected virtualization */
->  static void pv_init(void)
->  {
+ drivers/s390/net/qeth_core.h      |   8 +-
+ drivers/s390/net/qeth_core_main.c | 193 +++++++++++++-----------------
+ drivers/s390/net/qeth_core_mpc.c  |  16 +--
+ drivers/s390/net/qeth_core_mpc.h  |  17 ++-
+ drivers/s390/net/qeth_core_sys.c  |  20 ++--
+ drivers/s390/net/qeth_l2_main.c   |   9 +-
+ drivers/s390/net/qeth_l3_main.c   |  19 +--
+ 7 files changed, 120 insertions(+), 162 deletions(-)
+
+-- 
+2.17.1
 
