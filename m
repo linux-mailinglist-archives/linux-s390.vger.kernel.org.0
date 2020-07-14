@@ -2,245 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 923A821F3ED
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2020 16:24:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CDC121F456
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2020 16:40:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgGNOXq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Jul 2020 10:23:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26868 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728706AbgGNOXX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 14 Jul 2020 10:23:23 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06EDZFoF095150;
-        Tue, 14 Jul 2020 10:23:22 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 328s0dbn3u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 10:23:21 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06EEHTvE021600;
-        Tue, 14 Jul 2020 14:23:18 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 3274pgub5h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jul 2020 14:23:18 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06EENFst63242558
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jul 2020 14:23:16 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D7E324C05A;
-        Tue, 14 Jul 2020 14:23:15 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 92D6F4C050;
-        Tue, 14 Jul 2020 14:23:15 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Jul 2020 14:23:15 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 10/10] s390/qeth: constify the MPC initialization data
-Date:   Tue, 14 Jul 2020 16:23:05 +0200
-Message-Id: <20200714142305.29297-11-jwi@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200714142305.29297-1-jwi@linux.ibm.com>
-References: <20200714142305.29297-1-jwi@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-14_04:2020-07-14,2020-07-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- suspectscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 phishscore=0 clxscore=1015 impostorscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007140104
+        id S1728493AbgGNOi4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Jul 2020 10:38:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726964AbgGNOiz (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 14 Jul 2020 10:38:55 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4560F22519;
+        Tue, 14 Jul 2020 14:38:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594737534;
+        bh=YQI3JFO0/IRGd0ndbGFLjzwEN80zHIU6ULPZ524xL9A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LQLAynTjldbvw/BddaWMNMxoExHdd4te8/t9qxpSuNhImyyAXyj3UzNiM4Ns7v1cP
+         MaMynGSQrFRVdaAga6yElO3pd7W9wb6DnmyeXKD5clNo2Zb4f1KgMwKHhAj8X07owE
+         cZAqFvKCX659wtGKyhlr609MOx8zO1TZw9q4Eqa8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 03/19] KVM: s390: reduce number of IO pins to 1
+Date:   Tue, 14 Jul 2020 10:38:33 -0400
+Message-Id: <20200714143849.4035283-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200714143849.4035283-1-sashal@kernel.org>
+References: <20200714143849.4035283-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-We're not modifying these data blobs, so mark them as constant.
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+[ Upstream commit 774911290c589e98e3638e73b24b0a4d4530e97c ]
+
+The current number of KVM_IRQCHIP_NUM_PINS results in an order 3
+allocation (32kb) for each guest start/restart. This can result in OOM
+killer activity even with free swap when the memory is fragmented
+enough:
+
+kernel: qemu-system-s39 invoked oom-killer: gfp_mask=0x440dc0(GFP_KERNEL_ACCOUNT|__GFP_COMP|__GFP_ZERO), order=3, oom_score_adj=0
+kernel: CPU: 1 PID: 357274 Comm: qemu-system-s39 Kdump: loaded Not tainted 5.4.0-29-generic #33-Ubuntu
+kernel: Hardware name: IBM 8562 T02 Z06 (LPAR)
+kernel: Call Trace:
+kernel: ([<00000001f848fe2a>] show_stack+0x7a/0xc0)
+kernel:  [<00000001f8d3437a>] dump_stack+0x8a/0xc0
+kernel:  [<00000001f8687032>] dump_header+0x62/0x258
+kernel:  [<00000001f8686122>] oom_kill_process+0x172/0x180
+kernel:  [<00000001f8686abe>] out_of_memory+0xee/0x580
+kernel:  [<00000001f86e66b8>] __alloc_pages_slowpath+0xd18/0xe90
+kernel:  [<00000001f86e6ad4>] __alloc_pages_nodemask+0x2a4/0x320
+kernel:  [<00000001f86b1ab4>] kmalloc_order+0x34/0xb0
+kernel:  [<00000001f86b1b62>] kmalloc_order_trace+0x32/0xe0
+kernel:  [<00000001f84bb806>] kvm_set_irq_routing+0xa6/0x2e0
+kernel:  [<00000001f84c99a4>] kvm_arch_vm_ioctl+0x544/0x9e0
+kernel:  [<00000001f84b8936>] kvm_vm_ioctl+0x396/0x760
+kernel:  [<00000001f875df66>] do_vfs_ioctl+0x376/0x690
+kernel:  [<00000001f875e304>] ksys_ioctl+0x84/0xb0
+kernel:  [<00000001f875e39a>] __s390x_sys_ioctl+0x2a/0x40
+kernel:  [<00000001f8d55424>] system_call+0xd8/0x2c8
+
+As far as I can tell s390x does not use the iopins as we bail our for
+anything other than KVM_IRQ_ROUTING_S390_ADAPTER and the chip/pin is
+only used for KVM_IRQ_ROUTING_IRQCHIP. So let us use a small number to
+reduce the memory footprint.
+
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Link: https://lore.kernel.org/r/20200617083620.5409-1-borntraeger@de.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c |  2 +-
- drivers/s390/net/qeth_core_mpc.c  | 16 ++++++++--------
- drivers/s390/net/qeth_core_mpc.h  | 17 ++++++++---------
- 3 files changed, 17 insertions(+), 18 deletions(-)
+ arch/s390/include/asm/kvm_host.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 01a280b5e8d2..8a76022fceda 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -2026,7 +2026,7 @@ static bool qeth_mpc_match_reply(struct qeth_cmd_buffer *iob,
- }
+diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+index d6bcd34f3ec32..ec65bc2bd084e 100644
+--- a/arch/s390/include/asm/kvm_host.h
++++ b/arch/s390/include/asm/kvm_host.h
+@@ -31,12 +31,12 @@
+ #define KVM_USER_MEM_SLOTS 32
  
- static struct qeth_cmd_buffer *qeth_mpc_alloc_cmd(struct qeth_card *card,
--						  void *data,
-+						  const void *data,
- 						  unsigned int data_length)
- {
- 	struct qeth_cmd_buffer *iob;
-diff --git a/drivers/s390/net/qeth_core_mpc.c b/drivers/s390/net/qeth_core_mpc.c
-index e3f4866c158e..68c2588b9dcc 100644
---- a/drivers/s390/net/qeth_core_mpc.c
-+++ b/drivers/s390/net/qeth_core_mpc.c
-@@ -10,7 +10,7 @@
- #include <asm/cio.h>
- #include "qeth_core_mpc.h"
+ /*
+- * These seem to be used for allocating ->chip in the routing table,
+- * which we don't use. 4096 is an out-of-thin-air value. If we need
+- * to look at ->chip later on, we'll need to revisit this.
++ * These seem to be used for allocating ->chip in the routing table, which we
++ * don't use. 1 is as small as we can get to reduce the needed memory. If we
++ * need to look at ->chip later on, we'll need to revisit this.
+  */
+ #define KVM_NR_IRQCHIPS 1
+-#define KVM_IRQCHIP_NUM_PINS 4096
++#define KVM_IRQCHIP_NUM_PINS 1
+ #define KVM_HALT_POLL_NS_DEFAULT 50000
  
--unsigned char IDX_ACTIVATE_READ[] = {
-+const unsigned char IDX_ACTIVATE_READ[] = {
- 	0x00, 0x00, 0x80, 0x00,  0x00, 0x00, 0x00, 0x00,
- 	0x19, 0x01, 0x01, 0x80,  0x00, 0x00, 0x00, 0x00,
- 	0x00, 0x00, 0x00, 0x00,  0x00, 0x00, 0xc8, 0xc1,
-@@ -18,7 +18,7 @@ unsigned char IDX_ACTIVATE_READ[] = {
- 	0x00, 0x00
- };
- 
--unsigned char IDX_ACTIVATE_WRITE[] = {
-+const unsigned char IDX_ACTIVATE_WRITE[] = {
- 	0x00, 0x00, 0x80, 0x00,  0x00, 0x00, 0x00, 0x00,
- 	0x15, 0x01, 0x01, 0x80,  0x00, 0x00, 0x00, 0x00,
- 	0xff, 0xff, 0x00, 0x00,  0x00, 0x00, 0xc8, 0xc1,
-@@ -26,7 +26,7 @@ unsigned char IDX_ACTIVATE_WRITE[] = {
- 	0x00, 0x00
- };
- 
--unsigned char CM_ENABLE[] = {
-+const unsigned char CM_ENABLE[] = {
- 	0x00, 0xe0, 0x00, 0x00,  0x00, 0x00, 0x00, 0x01,
- 	0x00, 0x00, 0x00, 0x14,  0x00, 0x00, 0x00, 0x63,
- 	0x10, 0x00, 0x00, 0x01,
-@@ -45,7 +45,7 @@ unsigned char CM_ENABLE[] = {
- 	0xff, 0xff, 0xff
- };
- 
--unsigned char CM_SETUP[] = {
-+const unsigned char CM_SETUP[] = {
- 	0x00, 0xe0, 0x00, 0x00,  0x00, 0x00, 0x00, 0x02,
- 	0x00, 0x00, 0x00, 0x14,  0x00, 0x00, 0x00, 0x64,
- 	0x10, 0x00, 0x00, 0x01,
-@@ -65,7 +65,7 @@ unsigned char CM_SETUP[] = {
- 	0x04, 0x06, 0xc8, 0x00
- };
- 
--unsigned char ULP_ENABLE[] = {
-+const unsigned char ULP_ENABLE[] = {
- 	0x00, 0xe0, 0x00, 0x00,  0x00, 0x00, 0x00, 0x03,
- 	0x00, 0x00, 0x00, 0x14,  0x00, 0x00, 0x00, 0x6b,
- 	0x10, 0x00, 0x00, 0x01,
-@@ -85,7 +85,7 @@ unsigned char ULP_ENABLE[] = {
- 	0xf1, 0x00, 0x00
- };
- 
--unsigned char ULP_SETUP[] = {
-+const unsigned char ULP_SETUP[] = {
- 	0x00, 0xe0, 0x00, 0x00,  0x00, 0x00, 0x00, 0x04,
- 	0x00, 0x00, 0x00, 0x14,  0x00, 0x00, 0x00, 0x6c,
- 	0x10, 0x00, 0x00, 0x01,
-@@ -107,7 +107,7 @@ unsigned char ULP_SETUP[] = {
- 	0x00, 0x00, 0x00, 0x00
- };
- 
--unsigned char DM_ACT[] = {
-+const unsigned char DM_ACT[] = {
- 	0x00, 0xe0, 0x00, 0x00,  0x00, 0x00, 0x00, 0x05,
- 	0x00, 0x00, 0x00, 0x14,  0x00, 0x00, 0x00, 0x55,
- 	0x10, 0x00, 0x00, 0x01,
-@@ -123,7 +123,7 @@ unsigned char DM_ACT[] = {
- 	0x05, 0x40, 0x01, 0x01,  0x00
- };
- 
--unsigned char IPA_PDU_HEADER[] = {
-+const unsigned char IPA_PDU_HEADER[] = {
- 	0x00, 0xe0, 0x00, 0x00,  0x77, 0x77, 0x77, 0x77,
- 	0x00, 0x00, 0x00, 0x14,  0x00, 0x00, 0x00, 0x00,
- 	0x10, 0x00, 0x00, 0x01,  0x00, 0x00, 0x00, 0x00,
-diff --git a/drivers/s390/net/qeth_core_mpc.h b/drivers/s390/net/qeth_core_mpc.h
-index 9d6f39d8f9ab..b459def0fb26 100644
---- a/drivers/s390/net/qeth_core_mpc.h
-+++ b/drivers/s390/net/qeth_core_mpc.h
-@@ -13,13 +13,13 @@
- #include <uapi/linux/if_ether.h>
- #include <uapi/linux/in6.h>
- 
-+extern const unsigned char IPA_PDU_HEADER[];
- #define IPA_PDU_HEADER_SIZE	0x40
- #define QETH_IPA_PDU_LEN_TOTAL(buffer) (buffer + 0x0e)
- #define QETH_IPA_PDU_LEN_PDU1(buffer) (buffer + 0x26)
- #define QETH_IPA_PDU_LEN_PDU2(buffer) (buffer + 0x29)
- #define QETH_IPA_PDU_LEN_PDU3(buffer) (buffer + 0x3a)
- 
--extern unsigned char IPA_PDU_HEADER[];
- #define QETH_IPA_CMD_DEST_ADDR(buffer) (buffer + 0x2c)
- 
- #define QETH_SEQ_NO_LENGTH	4
-@@ -858,7 +858,7 @@ extern const char *qeth_get_ipa_cmd_name(enum qeth_ipa_cmds cmd);
- /* END OF   IP Assist related definitions                                    */
- /*****************************************************************************/
- 
--extern unsigned char CM_ENABLE[];
-+extern const unsigned char CM_ENABLE[];
- #define CM_ENABLE_SIZE 0x63
- #define QETH_CM_ENABLE_ISSUER_RM_TOKEN(buffer) (buffer + 0x2c)
- #define QETH_CM_ENABLE_FILTER_TOKEN(buffer) (buffer + 0x53)
-@@ -868,7 +868,7 @@ extern unsigned char CM_ENABLE[];
- 		(PDU_ENCAPSULATION(buffer) + 0x13)
- 
- 
--extern unsigned char CM_SETUP[];
-+extern const unsigned char CM_SETUP[];
- #define CM_SETUP_SIZE 0x64
- #define QETH_CM_SETUP_DEST_ADDR(buffer) (buffer + 0x2c)
- #define QETH_CM_SETUP_CONNECTION_TOKEN(buffer) (buffer + 0x51)
-@@ -877,7 +877,7 @@ extern unsigned char CM_SETUP[];
- #define QETH_CM_SETUP_RESP_DEST_ADDR(buffer) \
- 		(PDU_ENCAPSULATION(buffer) + 0x1a)
- 
--extern unsigned char ULP_ENABLE[];
-+extern const unsigned char ULP_ENABLE[];
- #define ULP_ENABLE_SIZE 0x6b
- #define QETH_ULP_ENABLE_LINKNUM(buffer) (buffer + 0x61)
- #define QETH_ULP_ENABLE_DEST_ADDR(buffer) (buffer + 0x2c)
-@@ -898,7 +898,7 @@ extern unsigned char ULP_ENABLE[];
- #define QETH_ULP_ENABLE_PROT_TYPE(buffer) (buffer + 0x50)
- #define QETH_IPA_CMD_PROT_TYPE(buffer) (buffer + 0x19)
- 
--extern unsigned char ULP_SETUP[];
-+extern const unsigned char ULP_SETUP[];
- #define ULP_SETUP_SIZE 0x6c
- #define QETH_ULP_SETUP_DEST_ADDR(buffer) (buffer + 0x2c)
- #define QETH_ULP_SETUP_CONNECTION_TOKEN(buffer) (buffer + 0x51)
-@@ -910,7 +910,7 @@ extern unsigned char ULP_SETUP[];
- 		(PDU_ENCAPSULATION(buffer) + 0x1a)
- 
- 
--extern unsigned char DM_ACT[];
-+extern const unsigned char DM_ACT[];
- #define DM_ACT_SIZE 0x55
- #define QETH_DM_ACT_DEST_ADDR(buffer) (buffer + 0x2c)
- #define QETH_DM_ACT_CONNECTION_TOKEN(buffer) (buffer + 0x51)
-@@ -921,9 +921,8 @@ extern unsigned char DM_ACT[];
- #define QETH_PDU_HEADER_SEQ_NO(buffer) (buffer + 0x1c)
- #define QETH_PDU_HEADER_ACK_SEQ_NO(buffer) (buffer + 0x20)
- 
--extern unsigned char IDX_ACTIVATE_READ[];
--extern unsigned char IDX_ACTIVATE_WRITE[];
--
-+extern const unsigned char IDX_ACTIVATE_READ[];
-+extern const unsigned char IDX_ACTIVATE_WRITE[];
- #define IDX_ACTIVATE_SIZE	0x22
- #define QETH_IDX_ACT_PNO(buffer) (buffer+0x0b)
- #define QETH_IDX_ACT_ISSUER_RM_TOKEN(buffer) (buffer + 0x0c)
+ /* s390-specific vcpu->requests bit members */
 -- 
-2.17.1
+2.25.1
 
