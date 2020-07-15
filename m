@@ -2,54 +2,157 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 175A6220566
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2020 08:48:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC83A220749
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2020 10:31:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgGOGs6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Jul 2020 02:48:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgGOGs5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 Jul 2020 02:48:57 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A82D0C061755;
-        Tue, 14 Jul 2020 23:48:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2Xu0wDeMJVr4Fso9VMDrFXFtdZDxizg0iRDFYzL7qxg=; b=PikKUoj5RJk+gJSIrWoefNe2LO
-        MYOdcsUH5TxR9dW7uwJKsy17jAfuJ68+U0y8Qd2Boo79ZpjG7i+/mGPnPuUhHrn1X9OVT8OCn7CkE
-        HGUV+gjxVRrEBumyrkMN8s8w4drtjOo1QxCdtRfY50bc9dr1Ndg4ujsY2TrzrqQWT3aNS4YOoUQ/J
-        ctjMTk/gE2+9zKkomv0jMdroxC7KQu4Pu4ID3wlCIt7PB69AXfRkb4eF8hUnivTE4hFAKPa+gKwZb
-        VHplUcokz24V5bF+MDO9RaOMyHyBdIqySdrMkdGCMTbA0jrrTda/wBy+NjUkFUp48yLWPhE6mj2hH
-        OktsMzUw==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jvbDq-0001Vp-VP; Wed, 15 Jul 2020 06:48:55 +0000
-Date:   Wed, 15 Jul 2020 07:48:54 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Stefan Haberland <sth@linux.ibm.com>, linux-block@vger.kernel.org,
-        hoeppner@linux.ibm.com, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com
-Subject: Re: [PATCH 1/2] s390/dasd: fix inability to use DASD with DIAG driver
-Message-ID: <20200715064854.GA5409@infradead.org>
-References: <20200714200327.40927-1-sth@linux.ibm.com>
- <20200714200327.40927-2-sth@linux.ibm.com>
- <c368fa07-4a7d-3eae-6143-a2db298c204e@kernel.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c368fa07-4a7d-3eae-6143-a2db298c204e@kernel.dk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        id S1727925AbgGOIbb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Jul 2020 04:31:31 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57786 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728505AbgGOIbZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 15 Jul 2020 04:31:25 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06F84baI176448;
+        Wed, 15 Jul 2020 04:31:16 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3298wve0vf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 04:31:16 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06F85vDk183395;
+        Wed, 15 Jul 2020 04:31:16 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3298wve0ur-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 04:31:16 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06F8RNAM018243;
+        Wed, 15 Jul 2020 08:31:14 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 3274pgv3au-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jul 2020 08:31:14 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06F8VBC924576290
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jul 2020 08:31:11 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 090035204F;
+        Wed, 15 Jul 2020 08:31:11 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.79.52])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 276C052051;
+        Wed, 15 Jul 2020 08:31:10 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: [PATCH v7 0/2] s390: virtio: let arch validate VIRTIO features
+Date:   Wed, 15 Jul 2020 10:31:07 +0200
+Message-Id: <1594801869-13365-1-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-15_05:2020-07-15,2020-07-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=1 adultscore=0
+ impostorscore=0 spamscore=0 phishscore=0 malwarescore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2007150068
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jul 14, 2020 at 02:12:27PM -0600, Jens Axboe wrote:
-> Just curious, any reason this isn't just using bio_alloc()?
+Hi all,
 
-The dasd_diag_bio doesn't seem to have anything to do with the
-block layer struct bio..
+The goal of the series is to give a chance to the architecture
+to validate VIRTIO device features.
+
+in this respin:
+
+1) I kept removed the ack from Jason as I reworked the patch
+   @Jason, the nature and goal of the patch did not really changed
+           please can I get back your acked-by with these changes?
+
+2) Rewording for warning messages
+
+Regards,
+Pierre
+
+Pierre Morel (2):
+  virtio: let arch validate VIRTIO features
+  s390: virtio: PV needs VIRTIO I/O device protection
+
+ arch/s390/mm/init.c           | 28 ++++++++++++++++++++++++++++
+ drivers/virtio/virtio.c       | 19 +++++++++++++++++++
+ include/linux/virtio_config.h |  1 +
+ 3 files changed, 48 insertions(+)
+
+-- 
+2.25.1
+
+Changelog
+
+to v7:
+
+- typo in warning message
+  (Connie)
+to v6:
+
+- rewording warning messages
+  (Connie, Halil)
+
+to v5:
+
+- return directly from S390 arch_validate_virtio_features()
+  when the guest is not protected.
+  (Connie)
+
+- Somme rewording
+  (Connie, Michael)
+
+- moved back code from arch/s390/ ...kernel/uv.c to ...mm/init.c
+  (Christian)
+
+to v4:
+
+- separate virtio and arch code
+  (Pierre)
+
+- moved code from arch/s390/mm/init.c to arch/s390/kernel/uv.c
+  (as interpreted from Heiko's comment)
+
+- moved validation inside the arch code
+  (Connie)
+
+- moved the call to arch validation before VIRTIO_F_1 test
+  (Michael)
+
+to v3:
+
+- add warning
+  (Connie, Christian)
+
+- add comment
+  (Connie)
+
+- change hook name
+  (Halil, Connie)
+
+to v2:
+
+- put the test in virtio_finalize_features()
+  (Connie)
+
+- put the test inside VIRTIO core
+  (Jason)
+
+- pass a virtio device as parameter
+  (Halil)
+
+
