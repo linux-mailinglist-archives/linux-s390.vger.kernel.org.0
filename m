@@ -2,97 +2,69 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ADDA220780
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2020 10:36:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 852B922087F
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2020 11:17:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729291AbgGOIgX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Jul 2020 04:36:23 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37446 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729192AbgGOIgX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 Jul 2020 04:36:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1594802181;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MNvetRDl2vilUXFbqgzafA8aBGGCQYNGMYLuLzvct9U=;
-        b=fXC04ivGnYcpZ+AKbuKcDvS4nAvX4gV5vtY888hObzn8xhJnZbwYvpHohOputvC69t/h/A
-        M14Z+RxcI/o88tWk354j6ayyWYnZBHyCeFQht04nLlBZYupGDgKCSs0wLnU5nkOele/Say
-        uUhT/T1+afxEEZIBXbrGUVJOSYzZKIA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-195-WsPBMdGtNm-5uARAGULH1w-1; Wed, 15 Jul 2020 04:36:19 -0400
-X-MC-Unique: WsPBMdGtNm-5uARAGULH1w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D42101083E94;
-        Wed, 15 Jul 2020 08:36:17 +0000 (UTC)
-Received: from [10.72.13.230] (ovpn-13-230.pek2.redhat.com [10.72.13.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C4D679CE4;
-        Wed, 15 Jul 2020 08:36:11 +0000 (UTC)
-Subject: Re: [PATCH v7 0/2] s390: virtio: let arch validate VIRTIO features
-To:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, cohuck@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-References: <1594801869-13365-1-git-send-email-pmorel@linux.ibm.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <73459586-3315-44cf-8d82-13a394bdf115@redhat.com>
-Date:   Wed, 15 Jul 2020 16:36:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1730555AbgGOJRa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Jul 2020 05:17:30 -0400
+Received: from 8bytes.org ([81.169.241.247]:57566 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729592AbgGOJR3 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 15 Jul 2020 05:17:29 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 5C98829A; Wed, 15 Jul 2020 11:17:27 +0200 (CEST)
+Date:   Wed, 15 Jul 2020 11:17:20 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Cc:     Joerg Roedel <jroedel@suse.de>, Andy Gross <agross@kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Drake <drake@endlessm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        jonathan.derrick@intel.com, Jonathan Hunter <jonathanh@nvidia.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        David Rientjes <rientjes@google.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        virtualization@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>
+Subject: Re: AMD IOMMU + SME + amdgpu regression
+Message-ID: <20200715091720.GV27672@8bytes.org>
+References: <1591915710.rakbpzst8h.none.ref@localhost>
+ <1591915710.rakbpzst8h.none@localhost>
+ <20200622100257.GD31822@suse.de>
+ <1592839701.mxvvths2x9.none@localhost>
 MIME-Version: 1.0
-In-Reply-To: <1594801869-13365-1-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592839701.mxvvths2x9.none@localhost>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Mon, Jun 22, 2020 at 11:30:04AM -0400, Alex Xu (Hello71) wrote:
+> Yes, it works with SME off with dbed452a078 ("dma-pool: decouple 
+> DMA_REMAP from DMA_COHERENT_POOL") applied.
 
-On 2020/7/15 下午4:31, Pierre Morel wrote:
-> Hi all,
->
-> The goal of the series is to give a chance to the architecture
-> to validate VIRTIO device features.
->
-> in this respin:
->
-> 1) I kept removed the ack from Jason as I reworked the patch
->     @Jason, the nature and goal of the patch did not really changed
->             please can I get back your acked-by with these changes?
+Okay, I can reproduce the problem on my Ryzen System, and the boot log
+shows various warnings/bugs from the amdgpu driver. I think this should
+be looked at by the AMDGPU folks first, as I didn't really got far
+looking into the GPU drivers code.
 
+Regards,
 
-Yes.
-
-Acked-by: Jason Wang <jasowang@redhat.com>
-
-Thanks
-
-
->
-> 2) Rewording for warning messages
->
-> Regards,
-> Pierre
->
-> Pierre Morel (2):
->    virtio: let arch validate VIRTIO features
->    s390: virtio: PV needs VIRTIO I/O device protection
->
->   arch/s390/mm/init.c           | 28 ++++++++++++++++++++++++++++
->   drivers/virtio/virtio.c       | 19 +++++++++++++++++++
->   include/linux/virtio_config.h |  1 +
->   3 files changed, 48 insertions(+)
->
-
+	Joerg
