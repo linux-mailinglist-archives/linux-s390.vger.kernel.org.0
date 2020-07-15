@@ -2,49 +2,54 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C244D220054
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jul 2020 23:54:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 175A6220566
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2020 08:48:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgGNVyG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Jul 2020 17:54:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39382 "EHLO
+        id S1727990AbgGOGs6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Jul 2020 02:48:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgGNVyG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Jul 2020 17:54:06 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E08C061755;
-        Tue, 14 Jul 2020 14:54:05 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 439B915E442E7;
-        Tue, 14 Jul 2020 14:54:05 -0700 (PDT)
-Date:   Tue, 14 Jul 2020 14:54:04 -0700 (PDT)
-Message-Id: <20200714.145404.1649791951202238667.davem@davemloft.net>
-To:     jwi@linux.ibm.com
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, hca@linux.ibm.com,
-        ubraun@linux.ibm.com, kgraul@linux.ibm.com
-Subject: Re: [PATCH net-next 00/10] s390/qeth: updates 2020-07-14
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200714142305.29297-1-jwi@linux.ibm.com>
-References: <20200714142305.29297-1-jwi@linux.ibm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 14 Jul 2020 14:54:05 -0700 (PDT)
+        with ESMTP id S1725924AbgGOGs5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 Jul 2020 02:48:57 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A82D0C061755;
+        Tue, 14 Jul 2020 23:48:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=2Xu0wDeMJVr4Fso9VMDrFXFtdZDxizg0iRDFYzL7qxg=; b=PikKUoj5RJk+gJSIrWoefNe2LO
+        MYOdcsUH5TxR9dW7uwJKsy17jAfuJ68+U0y8Qd2Boo79ZpjG7i+/mGPnPuUhHrn1X9OVT8OCn7CkE
+        HGUV+gjxVRrEBumyrkMN8s8w4drtjOo1QxCdtRfY50bc9dr1Ndg4ujsY2TrzrqQWT3aNS4YOoUQ/J
+        ctjMTk/gE2+9zKkomv0jMdroxC7KQu4Pu4ID3wlCIt7PB69AXfRkb4eF8hUnivTE4hFAKPa+gKwZb
+        VHplUcokz24V5bF+MDO9RaOMyHyBdIqySdrMkdGCMTbA0jrrTda/wBy+NjUkFUp48yLWPhE6mj2hH
+        OktsMzUw==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jvbDq-0001Vp-VP; Wed, 15 Jul 2020 06:48:55 +0000
+Date:   Wed, 15 Jul 2020 07:48:54 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Stefan Haberland <sth@linux.ibm.com>, linux-block@vger.kernel.org,
+        hoeppner@linux.ibm.com, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com
+Subject: Re: [PATCH 1/2] s390/dasd: fix inability to use DASD with DIAG driver
+Message-ID: <20200715064854.GA5409@infradead.org>
+References: <20200714200327.40927-1-sth@linux.ibm.com>
+ <20200714200327.40927-2-sth@linux.ibm.com>
+ <c368fa07-4a7d-3eae-6143-a2db298c204e@kernel.dk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c368fa07-4a7d-3eae-6143-a2db298c204e@kernel.dk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
-Date: Tue, 14 Jul 2020 16:22:55 +0200
+On Tue, Jul 14, 2020 at 02:12:27PM -0600, Jens Axboe wrote:
+> Just curious, any reason this isn't just using bio_alloc()?
 
-> please apply the following patch series for qeth to netdev's net-next tree.
-> 
-> This brings a mix of cleanups for various parts of the control code.
-
-Series applied, thanks Julian.
+The dasd_diag_bio doesn't seem to have anything to do with the
+block layer struct bio..
