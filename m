@@ -2,97 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 038BD222731
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 17:38:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D663222828
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 18:20:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbgGPPiV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jul 2020 11:38:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18162 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729130AbgGPPiG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Jul 2020 11:38:06 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GFX3k8139370;
-        Thu, 16 Jul 2020 11:38:06 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32afv0km8k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 11:38:05 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GFZMgZ009781;
-        Thu, 16 Jul 2020 15:38:03 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma05fra.de.ibm.com with ESMTP id 327q2y2jkj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 15:38:03 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GFbw9D61407502
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 15:37:58 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EEA2B42047;
-        Thu, 16 Jul 2020 15:37:57 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4E2042041;
-        Thu, 16 Jul 2020 15:37:57 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Jul 2020 15:37:57 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: [PATCH net 10/10] net/smc: fix restoring of fallback changes
-Date:   Thu, 16 Jul 2020 17:37:46 +0200
-Message-Id: <20200716153746.77303-11-kgraul@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200716153746.77303-1-kgraul@linux.ibm.com>
-References: <20200716153746.77303-1-kgraul@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-16_07:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- clxscore=1015 mlxscore=0 priorityscore=1501 impostorscore=0
- mlxlogscore=846 lowpriorityscore=0 malwarescore=0 suspectscore=1
- adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160114
+        id S1728951AbgGPQUd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jul 2020 12:20:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728837AbgGPQUd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 Jul 2020 12:20:33 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33BB52065F;
+        Thu, 16 Jul 2020 16:20:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1594916432;
+        bh=PQee4AgUCogpdQDHjbReNKdVn4/HmPns+3W+57MW024=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JT0hUr3L+wdrMfMmF4x7T3mOiKvbORNaf+cg8byMoUqpCF/R8tQuHUC9zY4oK6e0y
+         maThQaJ3F32XtkVS48seOhsmAlBGXCHIBMJHffyQNXRsEmgLyH+Rc/hikEd+NxVBTN
+         xGGgSlc30fdsiLwwygFoRts3sW9CXnTL5JJYHi9A=
+Date:   Thu, 16 Jul 2020 17:20:22 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
+Message-ID: <20200716162022.GD5105@sirena.org.uk>
+References: <20200715202821.12220-1-broonie@kernel.org>
+ <20200715202821.12220-4-broonie@kernel.org>
+ <alpine.LSU.2.21.2007161342290.3958@pobox.suse.cz>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Xm/fll+QQv+hsKip"
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.2007161342290.3958@pobox.suse.cz>
+X-Cookie: This login session: $13.99
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-When a listen socket is closed then all non-accepted sockets in its
-accept queue are to be released. Inside __smc_release() the helper
-smc_restore_fallback_changes() restores the changes done to the socket
-without to check if the clcsocket has a file set. This can result in
-a crash. Fix this by checking the file pointer first.
 
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
-Fixes: f536dffc0b79 ("net/smc: fix closing of fallback SMC sockets")
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
----
- net/smc/af_smc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+--Xm/fll+QQv+hsKip
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index d091509b5982..1163d51196da 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -126,8 +126,10 @@ EXPORT_SYMBOL_GPL(smc_proto6);
- 
- static void smc_restore_fallback_changes(struct smc_sock *smc)
- {
--	smc->clcsock->file->private_data = smc->sk.sk_socket;
--	smc->clcsock->file = NULL;
-+	if (smc->clcsock->file) { /* non-accepted sockets have no file yet */
-+		smc->clcsock->file->private_data = smc->sk.sk_socket;
-+		smc->clcsock->file = NULL;
-+	}
- }
- 
- static int __smc_release(struct smc_sock *smc)
--- 
-2.17.1
+On Thu, Jul 16, 2020 at 01:56:13PM +0200, Miroslav Benes wrote:
+> On Wed, 15 Jul 2020, Mark Brown wrote:
 
+> > -void save_stack_trace(struct stack_trace *trace)
+> > -{
+> > -	__save_stack_trace(current, trace, 0);
+> > +	walk_stackframe(task, &frame, consume_entry, cookie);
+> >  }
+
+> just an idea for further improvement (and it might be a matter of taste).=
+=20
+
+Yeah, there's some more stuff that can be done - the reason I'm looking
+at this code is to do reliable stack trace which is going to require at
+least some changes to the actual unwinder, this just seemed like a
+useful block moving things forwards in itself and I particularly wanted
+feedback on patch 1.
+
+> Wouldn't it be slightly better to do one more step and define "struct=20
+> unwind_state" instead of "struct stackframe" and also some iterator for=
+=20
+> the unwinding and use that right in new arch_stack_walk() instead of=20
+> walk_stackframe()? I mean, take the unbounded loop, "inline" it to=20
+> arch_stack_walk() and replace the loop with the iterator. The body of the=
+=20
+> iterator would call to unwind_frame() and consume_entry() and that's it.=
+=20
+> It would make arm64 implementation very similar to x86 and s390 and thus=
+=20
+> easier to follow when one switches between architectures all the time.
+
+That's definitely on the radar, the unwinding stuff needs other changes
+for the reliable stack trace (if nothing else we need to distinguish
+between "errors" due to reaching the bottom of the stack and errors due
+to bogosity) which so far looked sensible to bundle up together.
+
+> Tangential to this patch, but another idea for improvement is in=20
+> unwind_frame(). If I am not missing something, everything in=20
+> CONFIG_FUNCTION_GRAPH_TRACER could be replaced by a simple call to=20
+> ftrace_graph_ret_addr(). Again see for example unwind_next_frame() in
+> arch/s390/kernel/unwind_bc.c (x86 has it too).
+
+Yes, I'd noticed some divergence there and was going to look into it.
+
+--Xm/fll+QQv+hsKip
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8QfkYACgkQJNaLcl1U
+h9AnkAf/cGt+i9TOTKfVzPwxvPOYxIgZQpSMlmklR0SY1sWmcGtHD2GGLY5vutZq
+ew2RXblS1fSUHU/84tOR89SZP7ly/ojyOKifIZPvsxti8/cQK+UadByeJYCagHiu
+25hGCUDK509xYFPbhqOUI7jb8PWSdwGqBYBV9SPZS4nZEEQpK4FaHNIs/Wu6vC+k
+kuq976EB9160ZfH1k/iMUzNU4Sj2AKMqM70J8hEgMFxX8SlxkASobyqsS+nG0s9R
+7Xsr/icmleu1Mi2Xli7p/+QZFsTXESSAv8yZusyAXu+Fz9YNK4JNBI9BaetkDV6A
+9nPWgwOXONiJKps0DAdipNj5frMfmw==
+=/UMo
+-----END PGP SIGNATURE-----
+
+--Xm/fll+QQv+hsKip--
