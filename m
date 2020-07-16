@@ -2,122 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D663222828
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 18:20:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AAA22228B1
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 19:05:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbgGPQUd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jul 2020 12:20:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728837AbgGPQUd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Jul 2020 12:20:33 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33BB52065F;
-        Thu, 16 Jul 2020 16:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594916432;
-        bh=PQee4AgUCogpdQDHjbReNKdVn4/HmPns+3W+57MW024=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JT0hUr3L+wdrMfMmF4x7T3mOiKvbORNaf+cg8byMoUqpCF/R8tQuHUC9zY4oK6e0y
-         maThQaJ3F32XtkVS48seOhsmAlBGXCHIBMJHffyQNXRsEmgLyH+Rc/hikEd+NxVBTN
-         xGGgSlc30fdsiLwwygFoRts3sW9CXnTL5JJYHi9A=
-Date:   Thu, 16 Jul 2020 17:20:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
-Message-ID: <20200716162022.GD5105@sirena.org.uk>
-References: <20200715202821.12220-1-broonie@kernel.org>
- <20200715202821.12220-4-broonie@kernel.org>
- <alpine.LSU.2.21.2007161342290.3958@pobox.suse.cz>
+        id S1729026AbgGPRFM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jul 2020 13:05:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728182AbgGPRFM (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Jul 2020 13:05:12 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AB6DC061755
+        for <linux-s390@vger.kernel.org>; Thu, 16 Jul 2020 10:05:12 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id w17so4123364ply.11
+        for <linux-s390@vger.kernel.org>; Thu, 16 Jul 2020 10:05:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j14+opphqNF4U86DBZtMYzwDu8f+tRjw4XJQRMpPA4I=;
+        b=FKj1PFU+S6dmuzsw937AQmptM4LAiNQtHyfYVXDS1tCSj/+Ux+hMuXQXGuN+JAuE80
+         6UyWV4dL5L4+xnnONe2RL+AntOtYm1CN4HF4wevPhrCJtH5LP1yffZKTIpSAE5XlAWgl
+         lFO/+PuAi+J0onuXjtskW1Edvo+9U3djYppG7Vo8VOSwT5xcz7vKgofq8oRoR/ooK2oW
+         9k0+J6SKNyoYfBUvS4S6camqKWCSwd5uxkHkz0yYdJuVKe13Jljh/fWazhU0WSrDtFkz
+         qcJCUurDxlboEOtHhHFCZ3+rmmAHQ3VOb3y/BkFeeuQy441tbt/HQvF5SlrxVEocujEt
+         hPtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j14+opphqNF4U86DBZtMYzwDu8f+tRjw4XJQRMpPA4I=;
+        b=nak0bQJtOt5EpMLMQRwWRAM3Y7sPIMSnSXOFVaMYy977xSnu0alHyDyhEWwW4PZRGT
+         vPLILnyl0Nsnh/x6pp5U0kEdujCkTvDctSIfRJZQzXWQ4OcpNnD4RITLRfZ1sbIK5w23
+         0565HjsDCT6hmcj6kDv/gB8RPyot75sQXAP9+z81QSaMBbfierLdGvpKBx3td8cId3D1
+         1+ejvhstgsF54rOu38XD2U92IMIYJ0T84rdbsh2Bb4I/68xEoepYNsabdoXSoqryo/hD
+         xDZOXqXttZGDAksQB1QxhRGbAmbvMd6+tASO0+p4+msgDuz9ExhxYawYf8Z5042i3rxK
+         7gCg==
+X-Gm-Message-State: AOAM530JVhrUqNbHrl0mdQV3Ae1V76DIUqAZfXbXPPig1Ezi6BbSMa93
+        qbMPUeRtdUZh+LygO75Z+75gOVNRIy9uaasZJBnFhw==
+X-Google-Smtp-Source: ABdhPJyWwbg4wI79SuNeMUuIsVSWr5bmDV2q1y+lOxsjw2961NgYNuV+yKqK3mKd0cwtSwtUhyGH3SKwQie614RBRaA=
+X-Received: by 2002:a17:90a:30ea:: with SMTP id h97mr5949275pjb.32.1594919111381;
+ Thu, 16 Jul 2020 10:05:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Xm/fll+QQv+hsKip"
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2007161342290.3958@pobox.suse.cz>
-X-Cookie: This login session: $13.99
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAKwvOdn-2E=v_7Uie71pz2jjYCKnk98K1Ly8EkpxzvC6M5pXFA@mail.gmail.com>
+ <20200716112840.GC8484@osiris>
+In-Reply-To: <20200716112840.GC8484@osiris>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 16 Jul 2020 10:05:00 -0700
+Message-ID: <CAKwvOd=_JL3+L7dY0W8LDTSer3iWvcwSqWoLN=_gR6zc86hDvw@mail.gmail.com>
+Subject: Re: linux plumbers + clang + s390 virtualized testing
+To:     Heiko Carstens <hca@linux.ibm.com>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Thu, Jul 16, 2020 at 4:28 AM Heiko Carstens <hca@linux.ibm.com> wrote:
+>
+> Hi Nick,
+>
+> > We were very excited to see your patches going by for enabling Clang
+> > support for s390.  Since then, we've added s390 builds to our
+> > continuous integration setup.
+> >
+> > We've been running into a few issues with doing virtualized boot tests
+> > of our kernels on s390.
+> >
+> > I was curious if you'll both be attending Linux plumbers conf?  If we
+> > carve out time for an s390+clang talk, would this be of interest to
+> > you to attend?
+>
+> I will not attend, however cannot speak for Vasily. He will have to
+> answer as soon as he returns - besides that enabling Clang support for
+> s390 was done by Vasily anyway :)
 
---Xm/fll+QQv+hsKip
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hey,
+Thanks for following up; I got a bounce back from your previous email
+address.  I had just noticed your update to .mailmap+MAINTAINERS last
+night.  You beat me to the punch.
 
-On Thu, Jul 16, 2020 at 01:56:13PM +0200, Miroslav Benes wrote:
-> On Wed, 15 Jul 2020, Mark Brown wrote:
+No worries.
 
-> > -void save_stack_trace(struct stack_trace *trace)
-> > -{
-> > -	__save_stack_trace(current, trace, 0);
-> > +	walk_stackframe(task, &frame, consume_entry, cookie);
-> >  }
-
-> just an idea for further improvement (and it might be a matter of taste).=
-=20
-
-Yeah, there's some more stuff that can be done - the reason I'm looking
-at this code is to do reliable stack trace which is going to require at
-least some changes to the actual unwinder, this just seemed like a
-useful block moving things forwards in itself and I particularly wanted
-feedback on patch 1.
-
-> Wouldn't it be slightly better to do one more step and define "struct=20
-> unwind_state" instead of "struct stackframe" and also some iterator for=
-=20
-> the unwinding and use that right in new arch_stack_walk() instead of=20
-> walk_stackframe()? I mean, take the unbounded loop, "inline" it to=20
-> arch_stack_walk() and replace the loop with the iterator. The body of the=
-=20
-> iterator would call to unwind_frame() and consume_entry() and that's it.=
-=20
-> It would make arm64 implementation very similar to x86 and s390 and thus=
-=20
-> easier to follow when one switches between architectures all the time.
-
-That's definitely on the radar, the unwinding stuff needs other changes
-for the reliable stack trace (if nothing else we need to distinguish
-between "errors" due to reaching the bottom of the stack and errors due
-to bogosity) which so far looked sensible to bundle up together.
-
-> Tangential to this patch, but another idea for improvement is in=20
-> unwind_frame(). If I am not missing something, everything in=20
-> CONFIG_FUNCTION_GRAPH_TRACER could be replaced by a simple call to=20
-> ftrace_graph_ret_addr(). Again see for example unwind_next_frame() in
-> arch/s390/kernel/unwind_bc.c (x86 has it too).
-
-Yes, I'd noticed some divergence there and was going to look into it.
-
---Xm/fll+QQv+hsKip
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8QfkYACgkQJNaLcl1U
-h9AnkAf/cGt+i9TOTKfVzPwxvPOYxIgZQpSMlmklR0SY1sWmcGtHD2GGLY5vutZq
-ew2RXblS1fSUHU/84tOR89SZP7ly/ojyOKifIZPvsxti8/cQK+UadByeJYCagHiu
-25hGCUDK509xYFPbhqOUI7jb8PWSdwGqBYBV9SPZS4nZEEQpK4FaHNIs/Wu6vC+k
-kuq976EB9160ZfH1k/iMUzNU4Sj2AKMqM70J8hEgMFxX8SlxkASobyqsS+nG0s9R
-7Xsr/icmleu1Mi2Xli7p/+QZFsTXESSAv8yZusyAXu+Fz9YNK4JNBI9BaetkDV6A
-9nPWgwOXONiJKps0DAdipNj5frMfmw==
-=/UMo
------END PGP SIGNATURE-----
-
---Xm/fll+QQv+hsKip--
+-- 
+Thanks,
+~Nick Desaulniers
