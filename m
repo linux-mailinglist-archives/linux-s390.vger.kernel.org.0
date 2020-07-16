@@ -2,81 +2,118 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ADC7222151
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 13:26:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50DBC22215A
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 13:29:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgGPL0n (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jul 2020 07:26:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62290 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726350AbgGPL0n (ORCPT
+        id S1728129AbgGPL1p (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jul 2020 07:27:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1600 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726383AbgGPL1n (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:26:43 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GB2Ipa100156;
-        Thu, 16 Jul 2020 07:26:38 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 329uejfmn9-1
+        Thu, 16 Jul 2020 07:27:43 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GB0dtu188182;
+        Thu, 16 Jul 2020 07:27:42 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32aj747u28-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 07:26:37 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GBPgFm009090;
-        Thu, 16 Jul 2020 11:26:35 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma02fra.de.ibm.com with ESMTP id 327527wnx8-1
+        Thu, 16 Jul 2020 07:27:42 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GBRgp0083372;
+        Thu, 16 Jul 2020 07:27:42 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32aj747u1d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 11:26:35 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GBQW4J18481230
+        Thu, 16 Jul 2020 07:27:41 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GBQ7n7003995;
+        Thu, 16 Jul 2020 11:27:40 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 329nmyhr7m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jul 2020 11:27:40 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GBQFt245416814
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 11:26:32 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AA41811C050;
-        Thu, 16 Jul 2020 11:26:32 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F12A11C04C;
-        Thu, 16 Jul 2020 11:26:32 +0000 (GMT)
-Received: from osiris (unknown [9.171.13.43])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 Jul 2020 11:26:32 +0000 (GMT)
-Date:   Thu, 16 Jul 2020 13:26:30 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH -next] s390/mm: Convert to DEFINE_SHOW_ATTRIBUTE
-Message-ID: <20200716112630.GB8484@osiris>
-References: <20200716090703.14315-1-miaoqinglang@huawei.com>
+        Thu, 16 Jul 2020 11:26:15 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E181442042;
+        Thu, 16 Jul 2020 11:27:37 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 25CD94203F;
+        Thu, 16 Jul 2020 11:27:37 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.61.186])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Jul 2020 11:27:37 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v13 6/9] s390x: Library resources for CSS
+ tests
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
+        cohuck@redhat.com, drjones@redhat.com
+References: <1594887809-10521-1-git-send-email-pmorel@linux.ibm.com>
+ <1594887809-10521-7-git-send-email-pmorel@linux.ibm.com>
+ <9d6f0445-9c13-c23b-6095-0699ad09be87@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <196f3522-1880-c178-6ddd-56dd2d0b5256@linux.ibm.com>
+Date:   Thu, 16 Jul 2020 13:27:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716090703.14315-1-miaoqinglang@huawei.com>
+In-Reply-To: <9d6f0445-9c13-c23b-6095-0699ad09be87@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-16_05:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- malwarescore=0 priorityscore=1501 spamscore=0 phishscore=0 adultscore=0
- suspectscore=1 mlxlogscore=999 clxscore=1011 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007160084
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ mlxscore=0 impostorscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ adultscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007160084
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 05:07:03PM +0800, Qinglang Miao wrote:
-> From: Chen Huang <chenhuang5@huawei.com>
-> 
-> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
-> 
-> Signed-off-by: Chen Huang <chenhuang5@huawei.com>
-> ---
->  arch/s390/mm/dump_pagetables.c | 12 +-----------
->  1 file changed, 1 insertion(+), 11 deletions(-)
 
-Thanks for the patch, however we are going to convert the s390 page
-table dumper to generic code, so I'm not going to apply any cleanup
-patches for this code anymore.
+
+On 2020-07-16 13:15, Janosch Frank wrote:
+> On 7/16/20 10:23 AM, Pierre Morel wrote:
+>> Provide some definitions and library routines that can be used by
+>> tests targeting the channel subsystem.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> Acked-by: Thomas Huth <thuth@redhat.com>
+>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+>> Acked-by: Janosch Frank <frankja@de.ibm.com>
+>> ---
+> [...]
+>> diff --git a/s390x/Makefile b/s390x/Makefile
+>> index ddb4b48..050c40b 100644
+>> --- a/s390x/Makefile
+>> +++ b/s390x/Makefile
+>> @@ -51,6 +51,7 @@ cflatobjs += lib/s390x/sclp-console.o
+>>   cflatobjs += lib/s390x/interrupt.o
+>>   cflatobjs += lib/s390x/mmu.o
+>>   cflatobjs += lib/s390x/smp.o
+>> +cflatobjs += lib/s390x/css_dump.o
+>>   
+>>   OBJDIRS += lib/s390x
+>>   
+> 
+> I need to fix this up when picking because Thomas added vm.o after smp.o.
+> Can I do that or do you want to rebase on my next branch?
+> 
+> 
+
+I can do it and respin, that will give me the occasion to suppress the 
+goto as demanded by Thomas.
+
+Is it OK?
+
+
+-- 
+Pierre Morel
+IBM Lab Boeblingen
