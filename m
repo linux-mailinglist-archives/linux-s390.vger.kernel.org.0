@@ -2,73 +2,83 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6DFB221F56
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 11:04:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2F70221F6D
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 11:07:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgGPJDN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jul 2020 05:03:13 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7766 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726954AbgGPJDN (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Jul 2020 05:03:13 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 820352C239CB7879DE26;
-        Thu, 16 Jul 2020 17:03:10 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 16 Jul 2020 17:03:07 +0800
-From:   Qinglang Miao <miaoqinglang@huawei.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-CC:     <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] s390/mm: Convert to DEFINE_SHOW_ATTRIBUTE
-Date:   Thu, 16 Jul 2020 17:07:03 +0800
-Message-ID: <20200716090703.14315-1-miaoqinglang@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726687AbgGPJHd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jul 2020 05:07:33 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21065 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725975AbgGPJH3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 Jul 2020 05:07:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594890447;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jQSzeGypPfKC8REuEDh9oIg7I8NHjZR/1SSWiYSFzJ0=;
+        b=QCqdZ/gTr8DpMpBS7X1MDVzsJ5UPjGmzsB8nU6xFs8spUa8p6sofCozLMcomYLD8U9QILn
+        fyidqcp/FLMgn3uiUX5cDP7tUth9JiqQSQTGCnVr2Bv0ROHVaYU5GfJEf0uXRXUiKw+1FE
+        sEyUOehk+fsAhGaKTO4X11smdr+eFKY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-405-ly3g8WMqPw2Cc4g0QqJUJw-1; Thu, 16 Jul 2020 05:07:25 -0400
+X-MC-Unique: ly3g8WMqPw2Cc4g0QqJUJw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 60F9A100AA21;
+        Thu, 16 Jul 2020 09:07:24 +0000 (UTC)
+Received: from gondolin (ovpn-113-57.ams2.redhat.com [10.36.113.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3030519729;
+        Thu, 16 Jul 2020 09:07:20 +0000 (UTC)
+Date:   Thu, 16 Jul 2020 11:07:17 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com,
+        drjones@redhat.com
+Subject: Re: [kvm-unit-tests PATCH v13 9/9] s390x: css: ssch/tsch with sense
+ and interrupt
+Message-ID: <20200716110717.4c399cd0.cohuck@redhat.com>
+In-Reply-To: <1594887809-10521-10-git-send-email-pmorel@linux.ibm.com>
+References: <1594887809-10521-1-git-send-email-pmorel@linux.ibm.com>
+        <1594887809-10521-10-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Chen Huang <chenhuang5@huawei.com>
+On Thu, 16 Jul 2020 10:23:29 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+> After a channel is enabled we start a SENSE_ID command using
+> the SSCH instruction to recognize the control unit and device.
+> 
+> This tests the success of SSCH, the I/O interruption and the TSCH
+> instructions.
+> 
+> The SENSE_ID command response is tested to report 0xff inside
+> its reserved field and to report the same control unit type
+> as the cu_type kernel argument.
+> 
+> Without the cu_type kernel argument, the test expects a device
+> with a default control unit type of 0x3832, a.k.a virtio-net-ccw.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  lib/s390x/asm/arch_def.h |   1 +
+>  lib/s390x/css.h          |  35 ++++++++
+>  lib/s390x/css_lib.c      | 180 +++++++++++++++++++++++++++++++++++++++
+>  s390x/css.c              |  80 +++++++++++++++++
+>  4 files changed, 296 insertions(+)
 
-Signed-off-by: Chen Huang <chenhuang5@huawei.com>
----
- arch/s390/mm/dump_pagetables.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
-
-diff --git a/arch/s390/mm/dump_pagetables.c b/arch/s390/mm/dump_pagetables.c
-index 9adb10a05..ce65bea17 100644
---- a/arch/s390/mm/dump_pagetables.c
-+++ b/arch/s390/mm/dump_pagetables.c
-@@ -261,17 +261,7 @@ static int ptdump_show(struct seq_file *m, void *v)
- 	return 0;
- }
- 
--static int ptdump_open(struct inode *inode, struct file *filp)
--{
--	return single_open(filp, ptdump_show, NULL);
--}
--
--static const struct file_operations ptdump_fops = {
--	.open		= ptdump_open,
--	.read_iter		= seq_read_iter,
--	.llseek		= seq_lseek,
--	.release	= single_release,
--};
-+DEFINE_SHOW_ATTRIBUTE(ptdump);
- 
- static int pt_dump_init(void)
- {
--- 
-2.17.1
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
