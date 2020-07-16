@@ -2,173 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88B36221682
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jul 2020 22:45:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C08E2221CAB
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 08:38:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgGOUpF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Jul 2020 16:45:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37842 "EHLO mail.kernel.org"
+        id S1728102AbgGPGiB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jul 2020 02:38:01 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:39386 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727795AbgGOUpE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 Jul 2020 16:45:04 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7D37206F4;
-        Wed, 15 Jul 2020 20:45:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594845904;
-        bh=gVhm0qHw2C0oU3jdc90/zh0vydyUyZwG4isb1i2FhXE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tL7O+hQTWBhARXWVboSckD7lRK5U9VcQyBFhkx1rluhuQ+DaILcqdRxoif3WtcviR
-         FpyUOcwyM/uoC+hv6DIhRzATjkKSPknwLOpOt1XM/uXx8CVNxrkZknDpHqZQBQ3SIB
-         FdjoQsK4qISURAaVwPQ85Fz0bj94v91hi+QP6WB8=
-From:   Mark Brown <broonie@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
+        id S1726069AbgGPGiA (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 Jul 2020 02:38:00 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1jvxVi-0002fN-3n; Thu, 16 Jul 2020 16:36:51 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 16 Jul 2020 16:36:50 +1000
+Date:   Thu, 16 Jul 2020 16:36:50 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
-Date:   Wed, 15 Jul 2020 21:28:21 +0100
-Message-Id: <20200715202821.12220-4-broonie@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200715202821.12220-1-broonie@kernel.org>
-References: <20200715202821.12220-1-broonie@kernel.org>
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH RESEND] lockdep: Move list.h inclusion into lockdep.h
+Message-ID: <20200716063649.GA23065@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Historically architectures have had duplicated code in their stack trace
-implementations for filtering what gets traced. In order to avoid this
-duplication some generic code has been provided using a new interface
-arch_stack_walk(), enabled by selecting ARCH_STACKWALK in Kconfig, which
-factors all this out into the generic stack trace code. Convert arm64
-to use this common infrastructure.
+Currently lockdep_types.h includes list.h without actually using any
+of its macros or functions.  All it needs are the type definitions
+which were moved into types.h long ago.  This potentially causes
+inclusion loops because both are included by many core header
+files.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- arch/arm64/Kconfig             |  1 +
- arch/arm64/kernel/stacktrace.c | 79 ++++------------------------------
- 2 files changed, 9 insertions(+), 71 deletions(-)
+This patch moves the list.h inclusion into lockdep.h.  Note that
+we could probably remove it completely but that could potentially
+result in compile failures should any end users not include list.h
+directly and also be unlucky enough to not get list.h via some other
+header file.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 5d4f02b3dfe9..6ed4b6c6df95 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -29,6 +29,7 @@ config ARM64
- 	select ARCH_HAS_SETUP_DMA_OPS
- 	select ARCH_HAS_SET_DIRECT_MAP
- 	select ARCH_HAS_SET_MEMORY
-+	select ARCH_STACKWALK
- 	select ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_HAS_STRICT_MODULE_RWX
- 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
-diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
-index 743cf11fbfca..a33fba048954 100644
---- a/arch/arm64/kernel/stacktrace.c
-+++ b/arch/arm64/kernel/stacktrace.c
-@@ -133,82 +133,19 @@ void notrace walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
- NOKPROBE_SYMBOL(walk_stackframe);
+Reported-by: Petr Mladek <pmladek@suse.com>
+Tested-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 3b73cf84f77d..b1ad5c045353 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -21,6 +21,7 @@ extern int lock_stat;
+ #ifdef CONFIG_LOCKDEP
  
- #ifdef CONFIG_STACKTRACE
--struct stack_trace_data {
--	struct stack_trace *trace;
--	unsigned int no_sched_functions;
--	unsigned int skip;
--};
+ #include <linux/linkage.h>
++#include <linux/list.h>
+ #include <linux/debug_locks.h>
+ #include <linux/stacktrace.h>
  
--static bool save_trace(void *d, unsigned long addr)
-+void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
-+		     struct task_struct *task, struct pt_regs *regs)
- {
--	struct stack_trace_data *data = d;
--	struct stack_trace *trace = data->trace;
--
--	if (data->no_sched_functions && in_sched_functions(addr))
--		return false;
--	if (data->skip) {
--		data->skip--;
--		return false;
--	}
--
--	trace->entries[trace->nr_entries++] = addr;
--
--	return trace->nr_entries >= trace->max_entries;
--}
--
--void save_stack_trace_regs(struct pt_regs *regs, struct stack_trace *trace)
--{
--	struct stack_trace_data data;
--	struct stackframe frame;
--
--	data.trace = trace;
--	data.skip = trace->skip;
--	data.no_sched_functions = 0;
--
--	start_backtrace(&frame, regs->regs[29], regs->pc);
--	walk_stackframe(current, &frame, save_trace, &data);
--}
--EXPORT_SYMBOL_GPL(save_stack_trace_regs);
--
--static noinline void __save_stack_trace(struct task_struct *tsk,
--	struct stack_trace *trace, unsigned int nosched)
--{
--	struct stack_trace_data data;
- 	struct stackframe frame;
+diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
+index 7b9350624577..bb35b449f533 100644
+--- a/include/linux/lockdep_types.h
++++ b/include/linux/lockdep_types.h
+@@ -32,8 +32,6 @@ enum lockdep_wait_type {
  
--	if (!try_get_task_stack(tsk))
--		return;
-+	if (regs)
-+		start_backtrace(&frame, regs->regs[29], regs->pc);
-+	else
-+		start_backtrace(&frame, thread_saved_fp(task),
-+				thread_saved_pc(task));
+ #ifdef CONFIG_LOCKDEP
  
--	data.trace = trace;
--	data.skip = trace->skip;
--	data.no_sched_functions = nosched;
+-#include <linux/list.h>
 -
--	if (tsk != current) {
--		start_backtrace(&frame, thread_saved_fp(tsk),
--				thread_saved_pc(tsk));
--	} else {
--		/* We don't want this function nor the caller */
--		data.skip += 2;
--		start_backtrace(&frame,
--				(unsigned long)__builtin_frame_address(0),
--				(unsigned long)__save_stack_trace);
--	}
--
--	walk_stackframe(tsk, &frame, save_trace, &data);
--
--	put_task_stack(tsk);
--}
--
--void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
--{
--	__save_stack_trace(tsk, trace, 1);
--}
--EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
--
--void save_stack_trace(struct stack_trace *trace)
--{
--	__save_stack_trace(current, trace, 0);
-+	walk_stackframe(task, &frame, consume_entry, cookie);
- }
- 
--EXPORT_SYMBOL_GPL(save_stack_trace);
- #endif
+ /*
+  * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
+  * the total number of states... :-(
 -- 
-2.20.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
