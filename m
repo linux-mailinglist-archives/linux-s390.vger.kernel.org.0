@@ -2,118 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50DBC22215A
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 13:29:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF36022216B
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 13:29:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgGPL1p (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jul 2020 07:27:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1600 "EHLO
+        id S1728238AbgGPL2s (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jul 2020 07:28:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17662 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726383AbgGPL1n (ORCPT
+        by vger.kernel.org with ESMTP id S1726515AbgGPL2s (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Jul 2020 07:27:43 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GB0dtu188182;
-        Thu, 16 Jul 2020 07:27:42 -0400
+        Thu, 16 Jul 2020 07:28:48 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06GB0dF3117895;
+        Thu, 16 Jul 2020 07:28:47 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32aj747u28-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 329r1jw0k3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 07:27:42 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GBRgp0083372;
-        Thu, 16 Jul 2020 07:27:42 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32aj747u1d-1
+        Thu, 16 Jul 2020 07:28:47 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06GB1awn122780;
+        Thu, 16 Jul 2020 07:28:46 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 329r1jw0je-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 07:27:41 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GBQ7n7003995;
-        Thu, 16 Jul 2020 11:27:40 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 329nmyhr7m-1
+        Thu, 16 Jul 2020 07:28:46 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06GBPgp3003813;
+        Thu, 16 Jul 2020 11:28:45 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma05fra.de.ibm.com with ESMTP id 327q2y2f01-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jul 2020 11:27:40 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GBQFt245416814
+        Thu, 16 Jul 2020 11:28:44 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06GBSgSX30671044
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jul 2020 11:26:15 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E181442042;
-        Thu, 16 Jul 2020 11:27:37 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25CD94203F;
-        Thu, 16 Jul 2020 11:27:37 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.61.186])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 16 Jul 2020 11:27:37 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v13 6/9] s390x: Library resources for CSS
- tests
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
-        cohuck@redhat.com, drjones@redhat.com
-References: <1594887809-10521-1-git-send-email-pmorel@linux.ibm.com>
- <1594887809-10521-7-git-send-email-pmorel@linux.ibm.com>
- <9d6f0445-9c13-c23b-6095-0699ad09be87@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <196f3522-1880-c178-6ddd-56dd2d0b5256@linux.ibm.com>
-Date:   Thu, 16 Jul 2020 13:27:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 16 Jul 2020 11:28:42 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 76AC84C050;
+        Thu, 16 Jul 2020 11:28:42 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B8804C046;
+        Thu, 16 Jul 2020 11:28:42 +0000 (GMT)
+Received: from osiris (unknown [9.171.13.43])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 16 Jul 2020 11:28:42 +0000 (GMT)
+Date:   Thu, 16 Jul 2020 13:28:40 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: linux plumbers + clang + s390 virtualized testing
+Message-ID: <20200716112840.GC8484@osiris>
+References: <CAKwvOdn-2E=v_7Uie71pz2jjYCKnk98K1Ly8EkpxzvC6M5pXFA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <9d6f0445-9c13-c23b-6095-0699ad09be87@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdn-2E=v_7Uie71pz2jjYCKnk98K1Ly8EkpxzvC6M5pXFA@mail.gmail.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-07-16_05:2020-07-16,2020-07-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- mlxscore=0 impostorscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
- adultscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007160084
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ priorityscore=1501 spamscore=0 mlxlogscore=999 lowpriorityscore=0
+ impostorscore=0 adultscore=0 mlxscore=0 bulkscore=0 phishscore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007160084
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Nick,
 
-
-On 2020-07-16 13:15, Janosch Frank wrote:
-> On 7/16/20 10:23 AM, Pierre Morel wrote:
->> Provide some definitions and library routines that can be used by
->> tests targeting the channel subsystem.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> Acked-by: Thomas Huth <thuth@redhat.com>
->> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
->> Acked-by: Janosch Frank <frankja@de.ibm.com>
->> ---
-> [...]
->> diff --git a/s390x/Makefile b/s390x/Makefile
->> index ddb4b48..050c40b 100644
->> --- a/s390x/Makefile
->> +++ b/s390x/Makefile
->> @@ -51,6 +51,7 @@ cflatobjs += lib/s390x/sclp-console.o
->>   cflatobjs += lib/s390x/interrupt.o
->>   cflatobjs += lib/s390x/mmu.o
->>   cflatobjs += lib/s390x/smp.o
->> +cflatobjs += lib/s390x/css_dump.o
->>   
->>   OBJDIRS += lib/s390x
->>   
+> We were very excited to see your patches going by for enabling Clang
+> support for s390.  Since then, we've added s390 builds to our
+> continuous integration setup.
 > 
-> I need to fix this up when picking because Thomas added vm.o after smp.o.
-> Can I do that or do you want to rebase on my next branch?
+> We've been running into a few issues with doing virtualized boot tests
+> of our kernels on s390.
 > 
-> 
+> I was curious if you'll both be attending Linux plumbers conf?  If we
+> carve out time for an s390+clang talk, would this be of interest to
+> you to attend?
 
-I can do it and respin, that will give me the occasion to suppress the 
-goto as demanded by Thomas.
-
-Is it OK?
-
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
+I will not attend, however cannot speak for Vasily. He will have to
+answer as soon as he returns - besides that enabling Clang support for
+s390 was done by Vasily anyway :)
