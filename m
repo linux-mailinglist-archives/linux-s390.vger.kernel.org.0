@@ -2,73 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39BC2221E5D
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 10:30:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7D96221ED6
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jul 2020 10:47:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgGPIaz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jul 2020 04:30:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726547AbgGPIaz (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Jul 2020 04:30:55 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727815AbgGPIrK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jul 2020 04:47:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41448 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726332AbgGPIrK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Jul 2020 04:47:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1594889229;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=bRGA0Q+UclbwdgBkfmYT8NDUVsoq4uGQ9cVIJMesGxU=;
+        b=J9yTBRFGm42R5VPhqA8e9i6knAcAd7oOugenQ+Q+n+rBN4Ozgew5e++YizqNvG7mnD6bxB
+        lL7lm6HeQxbWuwoNWSivxh9YWkp0kYiyorLuBpr0ZDMonrWIo6aT8DrXvYjapv5BhHxh44
+        9iL+OeNnbhsEWolP9Qr1HPyrjv74bzc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-472-5dj8blDzNCGUJCo5B-0v-w-1; Thu, 16 Jul 2020 04:47:04 -0400
+X-MC-Unique: 5dj8blDzNCGUJCo5B-0v-w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87E4F2064C;
-        Thu, 16 Jul 2020 08:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1594888254;
-        bh=j2zfoYVTc58A9JeoCfrkQ7rAq8KE5rHDqXF799MrGI0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=srmlhbOzMGAuRa/PYoyRR7ZVP7g9qozdMB8DP7Z3MNJCxMGKk7g/R6YVeo3NnMgns
-         oPeuqeim7BR13M4JyjF7ilK4BcmpBujuB5ozsZlcIgfT+4xEKFDX5PWG4mqzVx8am8
-         N5YIRwmz7Fm86KFQTdviMgglL+qBFn8L4BayhyJE=
-Date:   Thu, 16 Jul 2020 09:30:49 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH RESEND] lockdep: Move list.h inclusion into lockdep.h
-Message-ID: <20200716083049.GA6771@willie-the-truck>
-References: <20200716063649.GA23065@gondor.apana.org.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A23331085;
+        Thu, 16 Jul 2020 08:47:03 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-112-234.ams2.redhat.com [10.36.112.234])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0BFAB78482;
+        Thu, 16 Jul 2020 08:46:58 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v13 9/9] s390x: css: ssch/tsch with sense
+ and interrupt
+To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com, drjones@redhat.com
+References: <1594887809-10521-1-git-send-email-pmorel@linux.ibm.com>
+ <1594887809-10521-10-git-send-email-pmorel@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <d60336e9-9038-89b3-f1d6-82c9ee4b3aaa@redhat.com>
+Date:   Thu, 16 Jul 2020 10:46:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200716063649.GA23065@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1594887809-10521-10-git-send-email-pmorel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 04:36:50PM +1000, Herbert Xu wrote:
-> Currently lockdep_types.h includes list.h without actually using any
-> of its macros or functions.  All it needs are the type definitions
-> which were moved into types.h long ago.  This potentially causes
-> inclusion loops because both are included by many core header
-> files.
+On 16/07/2020 10.23, Pierre Morel wrote:
+> After a channel is enabled we start a SENSE_ID command using
+> the SSCH instruction to recognize the control unit and device.
 > 
-> This patch moves the list.h inclusion into lockdep.h.  Note that
-> we could probably remove it completely but that could potentially
-> result in compile failures should any end users not include list.h
-> directly and also be unlucky enough to not get list.h via some other
-> header file.
+> This tests the success of SSCH, the I/O interruption and the TSCH
+> instructions.
 > 
-> Reported-by: Petr Mladek <pmladek@suse.com>
-> Tested-by: Petr Mladek <pmladek@suse.com>
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> The SENSE_ID command response is tested to report 0xff inside
+> its reserved field and to report the same control unit type
+> as the cu_type kernel argument.
+> 
+> Without the cu_type kernel argument, the test expects a device
+> with a default control unit type of 0x3832, a.k.a virtio-net-ccw.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+[...]
+> +/*
+> + * css_residual_count
+> + * Return the residual count, if it is valid.
+> + *
+> + * Return value:
+> + * Success: the residual count
+> + * Not meaningful: -1 (-1 can not be a valid count)
+> + */
+> +int css_residual_count(unsigned int schid)
+> +{
+> +
+> +	if (!(irb.scsw.ctrl & (SCSW_SC_PENDING | SCSW_SC_PRIMARY)))
+> +		goto invalid;
+> +
+> +	if (irb.scsw.dev_stat)
+> +		if (irb.scsw.sch_stat & ~(SCSW_SCHS_PCI | SCSW_SCHS_IL))
+> +			goto invalid;
+> +
+> +	return irb.scsw.count;
+> +
+> +invalid:
+> +	return -1;
+> +}
 
-Acked-by: Will Deacon <will@kernel.org>
+I still think this would look nicer without gotos. Anyway,
 
-Will
+Acked-by: Thomas Huth <thuth@redhat.com>
+
