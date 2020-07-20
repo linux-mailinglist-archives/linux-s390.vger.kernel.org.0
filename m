@@ -2,258 +2,169 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DB852262DC
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Jul 2020 17:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77CF52263A2
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Jul 2020 17:39:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbgGTPEm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 Jul 2020 11:04:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64694 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726675AbgGTPEi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 Jul 2020 11:04:38 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KF4LK4171685;
-        Mon, 20 Jul 2020 11:04:37 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d2m3arsb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 11:04:36 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KF4RI7172033;
-        Mon, 20 Jul 2020 11:04:28 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32d2m3armh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 11:04:27 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KEk1x6006386;
-        Mon, 20 Jul 2020 15:04:15 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma04dal.us.ibm.com with ESMTP id 32d5dpm8vw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Jul 2020 15:04:15 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KF4BJo44695902
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jul 2020 15:04:11 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B690C6E04E;
-        Mon, 20 Jul 2020 15:04:11 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E23E6E054;
-        Mon, 20 Jul 2020 15:04:10 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com.com (unknown [9.85.188.6])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jul 2020 15:04:10 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v9 15/15] s390/vfio-ap: handle probe/remove not due to host AP config changes
-Date:   Mon, 20 Jul 2020 11:03:44 -0400
-Message-Id: <20200720150344.24488-16-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200720150344.24488-1-akrowiak@linux.ibm.com>
-References: <20200720150344.24488-1-akrowiak@linux.ibm.com>
+        id S1729324AbgGTPiw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 Jul 2020 11:38:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36568 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729313AbgGTPiw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 20 Jul 2020 11:38:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595259530;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nj5CVbO042d9zu7TAo3vkfTDVgfDO82EbmPSLZjSnng=;
+        b=YGk74o4E7uSId8YWXcYIRbJ43WRiqDauxevrhc885P5mzGGAvRbVz9r3QfD6/JMXJhpBa1
+        Yh8UBIZ3jmCigAfMyWg2w+5SEqEhNtMluPR8WU9XhOboPKG5qNxXB70xQ/xFGpsFipukg/
+        E0/7u35+q5dsfLSlFW+B+BMw6Yt6Alg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-141-n8nRwOJfNmeINbcE0cT-lQ-1; Mon, 20 Jul 2020 11:38:45 -0400
+X-MC-Unique: n8nRwOJfNmeINbcE0cT-lQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99E5F1932480;
+        Mon, 20 Jul 2020 15:38:43 +0000 (UTC)
+Received: from localhost (ovpn-116-11.gru2.redhat.com [10.97.116.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B5F0274F45;
+        Mon, 20 Jul 2020 15:38:42 +0000 (UTC)
+Date:   Mon, 20 Jul 2020 12:38:41 -0300
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Nayna <nayna@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-integrity@vger.kernel.org,
+        erichte@linux.ibm.com, nayna@linux.ibm.com, stable@vger.kernel.org
+Subject: Re: [PATCH v6] ima: move APPRAISE_BOOTPARAM dependency on
+ ARCH_POLICY to runtime
+Message-ID: <20200720153841.GG10323@glitch>
+References: <20200713164830.101165-1-bmeneg@redhat.com>
+ <d337cbba-e996-e898-1e75-9f142d480e5e@linux.vnet.ibm.com>
+ <1595257015.5055.8.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-20_09:2020-07-20,2020-07-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- clxscore=1015 suspectscore=3 phishscore=0 spamscore=0 lowpriorityscore=0
- mlxlogscore=999 bulkscore=0 priorityscore=1501 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007200104
+In-Reply-To: <1595257015.5055.8.camel@linux.ibm.com>
+X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zGQnqpIoxlsbsOfg"
+Content-Disposition: inline
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-AP queue devices are probed or removed for reasons other than changes
-to the host AP configuration. For example:
+--zGQnqpIoxlsbsOfg
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-* The state of an AP adapter can be dynamically changed from standby to
-  online via the SE or by execution of the SCLP Configure AP command. When
-  the state changes, each queue device associated with the card device
-  representing the adapter will get created and probed.
+On Mon, Jul 20, 2020 at 10:56:55AM -0400, Mimi Zohar wrote:
+> On Mon, 2020-07-20 at 10:40 -0400, Nayna wrote:
+> > On 7/13/20 12:48 PM, Bruno Meneguele wrote:
+> > > The IMA_APPRAISE_BOOTPARAM config allows enabling different "ima_appr=
+aise=3D"
+> > > modes - log, fix, enforce - at run time, but not when IMA architectur=
+e
+> > > specific policies are enabled. =A0This prevents properly labeling the
+> > > filesystem on systems where secure boot is supported, but not enabled=
+ on the
+> > > platform. =A0Only when secure boot is actually enabled should these I=
+MA
+> > > appraise modes be disabled.
+> > >
+> > > This patch removes the compile time dependency and makes it a runtime
+> > > decision, based on the secure boot state of that platform.
+> > >
+> > > Test results as follows:
+> > >
+> > > -> x86-64 with secure boot enabled
+> > >
+> > > [    0.015637] Kernel command line: <...> ima_policy=3Dappraise_tcb i=
+ma_appraise=3Dfix
+> > > [    0.015668] ima: Secure boot enabled: ignoring ima_appraise=3Dfix =
+boot parameter option
+> > >
+>=20
+> Is it common to have two colons in the same line? =A0Is the colon being
+> used as a delimiter when parsing the kernel logs? =A0Should the second
+> colon be replaced with a hyphen? =A0(No need to repost. =A0I'll fix it
+> up.)
+> =A0
 
-* The state of an AP adapter can be dynamically changed from online to
-  standby via the SE or by execution of the SCLP Deconfigure AP command.
-  When the state changes, each queue device associated with the card device
-  representing the adapter will get removed.
+AFAICS it has been used without any limitations, e.g:
 
-* Each queue device associated with a card device will get removed
-  when the type of the AP adapter represented by the card device
-  dynamically changes.
+PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 13=
+3484873504 ns
+microcode: CPU0: patch_level=3D0x08701013
+Lockdown: modprobe: unsigned module loading is restricted; see man kernel_l=
+ockdown.7
+...
 
-* Each queue device associated with a card device will get removed
-  when the status of the queue represented by the queue device changes
-  from operating to check stop.
+I'd say we're fine using it.
 
-* AP queue devices can be manually bound to or unbound from the vfio_ap
-  device driver by a root user via the sysfs bind/unbind attributes of the
-  driver.
+>=20
+> > > -> powerpc with secure boot disabled
+> > >
+> > > [    0.000000] Kernel command line: <...> ima_policy=3Dappraise_tcb i=
+ma_appraise=3Dfix
+> > > [    0.000000] Secure boot mode disabled
+> > >
+> > > -> Running the system without secure boot and with both options set:
+> > >
+> > > CONFIG_IMA_APPRAISE_BOOTPARAM=3Dy
+> > > CONFIG_IMA_ARCH_POLICY=3Dy
+> > >
+> > > Audit prompts "missing-hash" but still allow execution and, consequen=
+tly,
+> > > filesystem labeling:
+> > >
+> > > type=3DINTEGRITY_DATA msg=3Daudit(07/09/2020 12:30:27.778:1691) : pid=
+=3D4976
+> > > uid=3Droot auid=3Droot ses=3D2
+> > > subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=3Dapp=
+raise_data
+> > > cause=3Dmissing-hash comm=3Dbash name=3D/usr/bin/evmctl dev=3D"dm-0" =
+ino=3D493150
+> > > res=3Dno
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Fixes: d958083a8f64 ("x86/ima: define arch_get_ima_policy() for x86")
+> > > Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
+> >=20
+> >=20
+> > Reviewed-by: Nayna Jain<nayna@linux.ibm.com>
+> > Tested-by: Nayna Jain<nayna@linux.ibm.com>
+>=20
+> Thanks, Nayna.
+>=20
+> Mimi
+>=20
 
-In response to a queue device probe or remove that is not the result of a
-change to the host's AP configuration, if a KVM guest is using the matrix
-mdev to which the APQN of the queue device is assigned, the vfio_ap device
-driver must respond accordingly. In an ideal world, the queue device being
-probed would be hot plugged into the guest. Likewise, the queue
-corresponding to the queue device being removed would
-be hot unplugged from the guest. Unfortunately, the AP architecture
-precludes plugging or unplugging individual queues, so let's handle
-the probe or remove of an AP queue device as follows:
+--=20
+bmeneg=20
+PGP Key: http://bmeneg.com/pubkey.txt
 
-Handling Probe
---------------
-There are two requirements that must be met in order to give a
-guest access to the queue corresponding to the queue device being probed:
+--zGQnqpIoxlsbsOfg
+Content-Type: application/pgp-signature; name="signature.asc"
 
-* Each APQN derived from the APID of the queue device and the APQIs of the
-  domains already assigned to the guest's AP configuration must reference
-  a queue device bound to the vfio_ap device driver.
+-----BEGIN PGP SIGNATURE-----
 
-* Each APQN derived from the APQI of the queue device and the APIDs of the
-  adapters assigned to the guest's AP configuration must reference a queue
-  device bound to the vfio_ap device driver.
+iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl8VuoEACgkQYdRkFR+R
+okPE9AgAzeX+81xWo21ombBBIIV7StgWU8qS6SadvIvUksysp8K1+912UFK1SAVA
+IKLtwrRnv0HH4f3syFCsnQNb8m2Z5HRiBwj/kr/1h+xUkujfolpUgLdgQvlscVTD
+HkHUTSA86vjACGW7YvnyumWroHwirVUOovA91k0mk9pfkUq57Wrmr5G5rmacjMeK
+SKEu3NZlQKF6NTr0LUwxQ6y4e9i4skeNCIBFNFVR6re92LNhEAASVNMF6rhU7DCy
+9BQmy9QSvIwyDd0o+b3/FeskWyxYj6g40gtXYjlrl3BBMWk1oGF5KRdboclfL21U
+GioxjG6g710tRaCOZwB+9Wkwk/I49g==
+=1i4d
+-----END PGP SIGNATURE-----
 
-If the above conditions are met, the APQN will be assigned to the guest's
-AP configuration and the guest will be given access to the queue.
-
-Handling Remove
----------------
-Since the AP architecture precludes us from taking access to an individual
-queue from a guest, we are left with the choice of taking access away from
-either the adapter or the domain to which the queue is connected. Access to
-the adapter will be taken away because it is likely that most of the time,
-the remove callback will be invoked because the adapter state has
-transitioned from online to standby. In such a case, no queue connected
-to the adapter will be available to access.
-
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c | 84 +++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
-
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index e6480f31a42b..b6a1e280991d 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -1682,6 +1682,61 @@ static void vfio_ap_queue_link_mdev(struct vfio_ap_queue *q)
- 	}
- }
- 
-+static bool vfio_ap_mdev_assign_shadow_apid(struct ap_matrix_mdev *matrix_mdev,
-+					    unsigned long apid)
-+{
-+	unsigned long apqi;
-+
-+	for_each_set_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm,
-+			     matrix_mdev->shadow_apcb.aqm_max + 1) {
-+		if (!vfio_ap_get_queue(AP_MKQID(apid, apqi)))
-+			return false;
-+	}
-+
-+	set_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
-+
-+	return true;
-+}
-+
-+static bool vfio_ap_mdev_assign_shadow_apqi(struct ap_matrix_mdev *matrix_mdev,
-+					    unsigned long apqi)
-+{
-+	unsigned long apid;
-+
-+	for_each_set_bit_inv(apid, matrix_mdev->shadow_apcb.apm,
-+			     matrix_mdev->shadow_apcb.apm_max + 1) {
-+		if (!vfio_ap_get_queue(AP_MKQID(apid, apqi)))
-+			return false;
-+	}
-+
-+	set_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
-+
-+	return true;
-+}
-+
-+static void vfio_ap_mdev_hot_plug_queue(struct vfio_ap_queue *q)
-+{
-+	bool commit = false;
-+	unsigned long apid = AP_QID_CARD(q->apqn);
-+	unsigned long apqi = AP_QID_QUEUE(q->apqn);
-+
-+	if ((q->matrix_mdev == NULL) || !vfio_ap_mdev_has_crycb(q->matrix_mdev))
-+		return;
-+
-+	if (!test_bit_inv(apid, q->matrix_mdev->matrix.apm) ||
-+	    !test_bit_inv(apqi, q->matrix_mdev->matrix.aqm))
-+		return;
-+
-+	if (!test_bit_inv(apid, q->matrix_mdev->shadow_apcb.apm))
-+		commit |= vfio_ap_mdev_assign_shadow_apid(q->matrix_mdev, apid);
-+
-+	if (!test_bit_inv(apqi, q->matrix_mdev->shadow_apcb.aqm))
-+		commit |= vfio_ap_mdev_assign_shadow_apqi(q->matrix_mdev, apqi);
-+
-+	if (commit)
-+		vfio_ap_mdev_commit_shadow_apcb(q->matrix_mdev);
-+}
-+
- int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
- {
- 	struct vfio_ap_queue *q;
-@@ -1695,11 +1750,35 @@ int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
- 	q->apqn = queue->qid;
- 	q->saved_isc = VFIO_AP_ISC_INVALID;
- 	vfio_ap_queue_link_mdev(q);
-+	/* Make sure we're not in the middle of an AP configuration change. */
-+	if (!(matrix_dev->flags & AP_MATRIX_CFG_CHG))
-+		vfio_ap_mdev_hot_plug_queue(q);
- 	mutex_unlock(&matrix_dev->lock);
- 
- 	return 0;
- }
- 
-+void vfio_ap_mdev_hot_unplug_queue(struct vfio_ap_queue *q)
-+{
-+	unsigned long apid = AP_QID_CARD(q->apqn);
-+	unsigned long apqi = AP_QID_QUEUE(q->apqn);
-+
-+	if ((q->matrix_mdev == NULL) || !vfio_ap_mdev_has_crycb(q->matrix_mdev))
-+		return;
-+
-+	/*
-+	 * If the APQN is assigned to the guest, then let's
-+	 * go ahead and unplug the adapter since the
-+	 * architecture does not provide a means to unplug
-+	 * an individual queue.
-+	 */
-+	if (test_bit_inv(apid, q->matrix_mdev->shadow_apcb.apm) &&
-+	    test_bit_inv(apqi, q->matrix_mdev->shadow_apcb.aqm)) {
-+		if (vfio_ap_mdev_unassign_guest_apid(q->matrix_mdev, apid))
-+			vfio_ap_mdev_commit_shadow_apcb(q->matrix_mdev);
-+	}
-+}
-+
- void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
- {
- 	struct vfio_ap_queue *q;
-@@ -1707,6 +1786,11 @@ void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
- 
- 	mutex_lock(&matrix_dev->lock);
- 	q = dev_get_drvdata(&queue->ap_dev.device);
-+
-+	/* Make sure we're not in the middle of an AP configuration change. */
-+	if (!(matrix_dev->flags & AP_MATRIX_CFG_CHG))
-+		vfio_ap_mdev_hot_unplug_queue(q);
-+
- 	dev_set_drvdata(&queue->ap_dev.device, NULL);
- 	apid = AP_QID_CARD(q->apqn);
- 	apqi = AP_QID_QUEUE(q->apqn);
--- 
-2.21.1
+--zGQnqpIoxlsbsOfg--
 
