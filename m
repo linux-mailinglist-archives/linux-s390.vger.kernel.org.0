@@ -2,55 +2,132 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD27B225485
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Jul 2020 00:30:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0F59225CE6
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Jul 2020 12:50:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgGSWal (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 19 Jul 2020 18:30:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgGSWal (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 19 Jul 2020 18:30:41 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21636C0619D2;
-        Sun, 19 Jul 2020 15:30:41 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 36BE71281AB30;
-        Sun, 19 Jul 2020 15:30:40 -0700 (PDT)
-Date:   Sun, 19 Jul 2020 15:30:38 -0700 (PDT)
-Message-Id: <20200719.153038.2294671622833273160.davem@davemloft.net>
-To:     kgraul@linux.ibm.com
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: Re: [PATCH net v2 00/10] net/smc: fixes 2020-07-16
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200718130618.16724-1-kgraul@linux.ibm.com>
-References: <20200718130618.16724-1-kgraul@linux.ibm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        id S1728455AbgGTKuD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 Jul 2020 06:50:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11708 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728200AbgGTKuD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 20 Jul 2020 06:50:03 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06KAVtQC180969;
+        Mon, 20 Jul 2020 06:50:01 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d91u1cmt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 06:50:01 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06KAW6mx181616;
+        Mon, 20 Jul 2020 06:50:01 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32d91u1cm3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 06:50:01 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06KAUkTm011101;
+        Mon, 20 Jul 2020 10:49:59 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04fra.de.ibm.com with ESMTP id 32brq819vx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Jul 2020 10:49:58 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06KAnuep57409738
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jul 2020 10:49:56 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03D46AE055;
+        Mon, 20 Jul 2020 10:49:56 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 802C6AE045;
+        Mon, 20 Jul 2020 10:49:55 +0000 (GMT)
+Received: from ibm-vm (unknown [9.145.8.245])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 Jul 2020 10:49:55 +0000 (GMT)
+Date:   Mon, 20 Jul 2020 12:37:07 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, thuth@redhat.com, linux-s390@vger.kernel.org,
+        david@redhat.com, borntraeger@de.ibm.com, cohuck@redhat.com
+Subject: Re: [kvm-unit-tests PATCH 1/3] s390x: Add custom pgm cleanup
+ function
+Message-ID: <20200720123707.1c7eec25@ibm-vm>
+In-Reply-To: <20200717145813.62573-2-frankja@linux.ibm.com>
+References: <20200717145813.62573-1-frankja@linux.ibm.com>
+        <20200717145813.62573-2-frankja@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 19 Jul 2020 15:30:40 -0700 (PDT)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-20_05:2020-07-20,2020-07-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ spamscore=0 priorityscore=1501 impostorscore=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 clxscore=1015
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007200074
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
-Date: Sat, 18 Jul 2020 15:06:08 +0200
+On Fri, 17 Jul 2020 10:58:11 -0400
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-> Please apply the following patch series for smc to netdev's net tree.
+> Sometimes we need to do cleanup which we don't necessarily want to add
+> to interrupt.c, so lets add a way to register a cleanup function.
 > 
-> The patches address problems caused by late or unexpected link layer
-> control packets, dma sync calls for unmapped memory, freed buffers
-> that are not removed from the buffer list and a possible null pointer
-> access that results in a crash.
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  lib/s390x/asm/interrupt.h | 1 +
+>  lib/s390x/interrupt.c     | 9 +++++++++
+>  2 files changed, 10 insertions(+)
 > 
-> v1->v2: in patch 4, improve patch description and correct the comment
->         for the new mutex
+> diff --git a/lib/s390x/asm/interrupt.h b/lib/s390x/asm/interrupt.h
+> index 4cfade9..b2a7c83 100644
+> --- a/lib/s390x/asm/interrupt.h
+> +++ b/lib/s390x/asm/interrupt.h
+> @@ -15,6 +15,7 @@
+>  #define EXT_IRQ_EXTERNAL_CALL	0x1202
+>  #define EXT_IRQ_SERVICE_SIG	0x2401
+>  
+> +void register_pgm_int_func(void (*f)(void));
+>  void handle_pgm_int(void);
+>  void handle_ext_int(void);
+>  void handle_mcck_int(void);
+> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
+> index 243b9c2..36ba720 100644
+> --- a/lib/s390x/interrupt.c
+> +++ b/lib/s390x/interrupt.c
+> @@ -16,6 +16,7 @@
+>  
+>  static bool pgm_int_expected;
+>  static bool ext_int_expected;
+> +static void (*pgm_int_func)(void);
+>  static struct lowcore *lc;
+>  
+>  void expect_pgm_int(void)
+> @@ -51,8 +52,16 @@ void check_pgm_int_code(uint16_t code)
+>  	       lc->pgm_int_code);
+>  }
+>  
+> +void register_pgm_int_func(void (*f)(void))
+> +{
+> +	pgm_int_func = f;
+> +}
+> +
+>  static void fixup_pgm_int(void)
+>  {
+> +	if (pgm_int_func)
+> +		return (*pgm_int_func)();
+> +
+>  	switch (lc->pgm_int_code) {
+>  	case PGM_INT_CODE_PRIVILEGED_OPERATION:
+>  		/* Normal operation is in supervisor state, so this
+> exception
 
-Series applied, thanks.
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
