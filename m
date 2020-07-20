@@ -2,169 +2,151 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77CF52263A2
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Jul 2020 17:39:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5926F226AF1
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Jul 2020 18:40:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbgGTPiw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 Jul 2020 11:38:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36568 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729313AbgGTPiw (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 20 Jul 2020 11:38:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595259530;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Nj5CVbO042d9zu7TAo3vkfTDVgfDO82EbmPSLZjSnng=;
-        b=YGk74o4E7uSId8YWXcYIRbJ43WRiqDauxevrhc885P5mzGGAvRbVz9r3QfD6/JMXJhpBa1
-        Yh8UBIZ3jmCigAfMyWg2w+5SEqEhNtMluPR8WU9XhOboPKG5qNxXB70xQ/xFGpsFipukg/
-        E0/7u35+q5dsfLSlFW+B+BMw6Yt6Alg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-141-n8nRwOJfNmeINbcE0cT-lQ-1; Mon, 20 Jul 2020 11:38:45 -0400
-X-MC-Unique: n8nRwOJfNmeINbcE0cT-lQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2388902AbgGTQhx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 Jul 2020 12:37:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730889AbgGTQhv (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 20 Jul 2020 12:37:51 -0400
+Received: from gmail.com (unknown [104.132.1.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99E5F1932480;
-        Mon, 20 Jul 2020 15:38:43 +0000 (UTC)
-Received: from localhost (ovpn-116-11.gru2.redhat.com [10.97.116.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B5F0274F45;
-        Mon, 20 Jul 2020 15:38:42 +0000 (UTC)
-Date:   Mon, 20 Jul 2020 12:38:41 -0300
-From:   Bruno Meneguele <bmeneg@redhat.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Nayna <nayna@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-integrity@vger.kernel.org,
-        erichte@linux.ibm.com, nayna@linux.ibm.com, stable@vger.kernel.org
-Subject: Re: [PATCH v6] ima: move APPRAISE_BOOTPARAM dependency on
- ARCH_POLICY to runtime
-Message-ID: <20200720153841.GG10323@glitch>
-References: <20200713164830.101165-1-bmeneg@redhat.com>
- <d337cbba-e996-e898-1e75-9f142d480e5e@linux.vnet.ibm.com>
- <1595257015.5055.8.camel@linux.ibm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9248320734;
+        Mon, 20 Jul 2020 16:37:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595263070;
+        bh=smDDaCk04kMr6EUzVkdVBl94CFmKvpleITLelmvA8+8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JJC8sbphJDydEPEmQ9bsAOdVV0pki83XX29vWiTOyf6AsmPXVOTyRrnnrci7D6Bhd
+         g+Lq7h/M7GIp2Q3yjvb33D7hXLYV7+QkF/cJUlgxrp5Jsp6dTPG3ALVp7AD8PFZTTR
+         fVVidPSEdf7dnCSggZDPP0jvSNjJIbQpG4SHFy4k=
+Date:   Mon, 20 Jul 2020 09:37:48 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-decnet-user@lists.sourceforge.net,
+        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
+        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
+Subject: Re: [PATCH 03/24] net: add a new sockptr_t type
+Message-ID: <20200720163748.GA1292162@gmail.com>
+References: <20200720124737.118617-1-hch@lst.de>
+ <20200720124737.118617-4-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <1595257015.5055.8.camel@linux.ibm.com>
-X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zGQnqpIoxlsbsOfg"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200720124737.118617-4-hch@lst.de>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---zGQnqpIoxlsbsOfg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Jul 20, 2020 at 02:47:16PM +0200, Christoph Hellwig wrote:
+> Add a uptr_t type that can hold a pointer to either a user or kernel
+> memory region, and simply helpers to copy to and from it.  For
+> architectures like x86 that have non-overlapping user and kernel
+> address space it just is a union and uses a TASK_SIZE check to
+> select the proper copy routine.  For architectures with overlapping
+> address spaces a flag to indicate the address space is used instead.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  include/linux/sockptr.h | 121 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 121 insertions(+)
+>  create mode 100644 include/linux/sockptr.h
+> 
+> diff --git a/include/linux/sockptr.h b/include/linux/sockptr.h
+> new file mode 100644
+> index 00000000000000..e41dfa52555dec
+> --- /dev/null
+> +++ b/include/linux/sockptr.h
+> @@ -0,0 +1,121 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2020 Christoph Hellwig.
+> + *
+> + * Support for "universal" pointers that can point to either kernel or userspace
+> + * memory.
+> + */
+> +#ifndef _LINUX_SOCKPTR_H
+> +#define _LINUX_SOCKPTR_H
+> +
+> +#include <linux/slab.h>
+> +#include <linux/uaccess.h>
+> +
+> +#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+> +typedef union {
+> +	void		*kernel;
+> +	void __user	*user;
+> +} sockptr_t;
+> +
+> +static inline bool sockptr_is_kernel(sockptr_t sockptr)
+> +{
+> +	return (unsigned long)sockptr.kernel >= TASK_SIZE;
+> +}
+> +
+> +static inline sockptr_t KERNEL_SOCKPTR(void *p)
+> +{
+> +	return (sockptr_t) { .kernel = p };
+> +}
+> +#else /* CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE */
+> +typedef struct {
+> +	union {
+> +		void		*kernel;
+> +		void __user	*user;
+> +	};
+> +	bool		is_kernel : 1;
+> +} sockptr_t;
+> +
+> +static inline bool sockptr_is_kernel(sockptr_t sockptr)
+> +{
+> +	return sockptr.is_kernel;
+> +}
+> +
+> +static inline sockptr_t KERNEL_SOCKPTR(void *p)
+> +{
+> +	return (sockptr_t) { .kernel = p, .is_kernel = true };
+> +}
+> +#endif /* CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE */
+> +
+> +static inline sockptr_t USER_SOCKPTR(void __user *p)
+> +{
+> +	return (sockptr_t) { .user = p };
+> +}
+> +
+> +static inline bool sockptr_is_null(sockptr_t sockptr)
+> +{
+> +	return !sockptr.user && !sockptr.kernel;
+> +}
+> +
+> +static inline int copy_from_sockptr(void *dst, sockptr_t src, size_t size)
+> +{
+> +	if (!sockptr_is_kernel(src))
+> +		return copy_from_user(dst, src.user, size);
+> +	memcpy(dst, src.kernel, size);
+> +	return 0;
+> +}
 
-On Mon, Jul 20, 2020 at 10:56:55AM -0400, Mimi Zohar wrote:
-> On Mon, 2020-07-20 at 10:40 -0400, Nayna wrote:
-> > On 7/13/20 12:48 PM, Bruno Meneguele wrote:
-> > > The IMA_APPRAISE_BOOTPARAM config allows enabling different "ima_appr=
-aise=3D"
-> > > modes - log, fix, enforce - at run time, but not when IMA architectur=
-e
-> > > specific policies are enabled. =A0This prevents properly labeling the
-> > > filesystem on systems where secure boot is supported, but not enabled=
- on the
-> > > platform. =A0Only when secure boot is actually enabled should these I=
-MA
-> > > appraise modes be disabled.
-> > >
-> > > This patch removes the compile time dependency and makes it a runtime
-> > > decision, based on the secure boot state of that platform.
-> > >
-> > > Test results as follows:
-> > >
-> > > -> x86-64 with secure boot enabled
-> > >
-> > > [    0.015637] Kernel command line: <...> ima_policy=3Dappraise_tcb i=
-ma_appraise=3Dfix
-> > > [    0.015668] ima: Secure boot enabled: ignoring ima_appraise=3Dfix =
-boot parameter option
-> > >
->=20
-> Is it common to have two colons in the same line? =A0Is the colon being
-> used as a delimiter when parsing the kernel logs? =A0Should the second
-> colon be replaced with a hyphen? =A0(No need to repost. =A0I'll fix it
-> up.)
-> =A0
+How does this not introduce a massive security hole when
+CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE?
 
-AFAICS it has been used without any limitations, e.g:
+AFAICS, userspace can pass in a pointer >= TASK_SIZE,
+and this code makes it be treated as a kernel pointer.
 
-PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
-clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 13=
-3484873504 ns
-microcode: CPU0: patch_level=3D0x08701013
-Lockdown: modprobe: unsigned module loading is restricted; see man kernel_l=
-ockdown.7
-...
-
-I'd say we're fine using it.
-
->=20
-> > > -> powerpc with secure boot disabled
-> > >
-> > > [    0.000000] Kernel command line: <...> ima_policy=3Dappraise_tcb i=
-ma_appraise=3Dfix
-> > > [    0.000000] Secure boot mode disabled
-> > >
-> > > -> Running the system without secure boot and with both options set:
-> > >
-> > > CONFIG_IMA_APPRAISE_BOOTPARAM=3Dy
-> > > CONFIG_IMA_ARCH_POLICY=3Dy
-> > >
-> > > Audit prompts "missing-hash" but still allow execution and, consequen=
-tly,
-> > > filesystem labeling:
-> > >
-> > > type=3DINTEGRITY_DATA msg=3Daudit(07/09/2020 12:30:27.778:1691) : pid=
-=3D4976
-> > > uid=3Droot auid=3Droot ses=3D2
-> > > subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 op=3Dapp=
-raise_data
-> > > cause=3Dmissing-hash comm=3Dbash name=3D/usr/bin/evmctl dev=3D"dm-0" =
-ino=3D493150
-> > > res=3Dno
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: d958083a8f64 ("x86/ima: define arch_get_ima_policy() for x86")
-> > > Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
-> >=20
-> >=20
-> > Reviewed-by: Nayna Jain<nayna@linux.ibm.com>
-> > Tested-by: Nayna Jain<nayna@linux.ibm.com>
->=20
-> Thanks, Nayna.
->=20
-> Mimi
->=20
-
---=20
-bmeneg=20
-PGP Key: http://bmeneg.com/pubkey.txt
-
---zGQnqpIoxlsbsOfg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl8VuoEACgkQYdRkFR+R
-okPE9AgAzeX+81xWo21ombBBIIV7StgWU8qS6SadvIvUksysp8K1+912UFK1SAVA
-IKLtwrRnv0HH4f3syFCsnQNb8m2Z5HRiBwj/kr/1h+xUkujfolpUgLdgQvlscVTD
-HkHUTSA86vjACGW7YvnyumWroHwirVUOovA91k0mk9pfkUq57Wrmr5G5rmacjMeK
-SKEu3NZlQKF6NTr0LUwxQ6y4e9i4skeNCIBFNFVR6re92LNhEAASVNMF6rhU7DCy
-9BQmy9QSvIwyDd0o+b3/FeskWyxYj6g40gtXYjlrl3BBMWk1oGF5KRdboclfL21U
-GioxjG6g710tRaCOZwB+9Wkwk/I49g==
-=1i4d
------END PGP SIGNATURE-----
-
---zGQnqpIoxlsbsOfg--
-
+- Eric
