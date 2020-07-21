@@ -2,101 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57ACF227992
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Jul 2020 09:37:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C56D4227ACA
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Jul 2020 10:37:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbgGUHhD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Jul 2020 03:37:03 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32019 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgGUHhC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 Jul 2020 03:37:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595317021;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=oksf99ITGFpbsCHdjOcyrbcdYJuUicm3jnYnD8JMZPw=;
-        b=Xc8olk5TaJLIcJi0M7jryhMNiGuumhXE7ZFoCbJim0KVtba1393cfeo4exOjoo/Og3XVwF
-        pNYQL6k8mnwF24ysyhfLZn7mvUcczxnmrO8/QDDMxZQbldepQ2Vfs1L+0Fg5Fwoo+f1roB
-        8Rkf/+dsMDwdSXbdnzFtBSRn2l1a5Uw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-pxUnVv55PK-VXV8JQBcHxA-1; Tue, 21 Jul 2020 03:36:59 -0400
-X-MC-Unique: pxUnVv55PK-VXV8JQBcHxA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9211C800466;
-        Tue, 21 Jul 2020 07:36:58 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-112-102.ams2.redhat.com [10.36.112.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 261211001B2C;
-        Tue, 21 Jul 2020 07:36:53 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v2] s390x: Ultavisor guest API test
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com,
-        borntraeger@de.ibm.com, cohuck@redhat.com, imbrenda@linux.ibm.com
-References: <20200717145813.62573-4-frankja@linux.ibm.com>
- <20200720133559.69898-1-frankja@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <73b1afb9-b4ce-7e1b-a8d2-15b642dea803@redhat.com>
-Date:   Tue, 21 Jul 2020 09:36:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200720133559.69898-1-frankja@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+        id S1728418AbgGUIhC convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Tue, 21 Jul 2020 04:37:02 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:51496 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726607AbgGUIhC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 21 Jul 2020 04:37:02 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-210-Hj1lpiGkPReD_62cmwnEEw-1; Tue, 21 Jul 2020 09:36:58 +0100
+X-MC-Unique: Hj1lpiGkPReD_62cmwnEEw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 21 Jul 2020 09:36:57 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 21 Jul 2020 09:36:57 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-decnet-user@lists.sourceforge.net" 
+        <linux-decnet-user@lists.sourceforge.net>,
+        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "mptcp@lists.01.org" <mptcp@lists.01.org>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
+Subject: RE: [PATCH 12/24] bpfilter: switch bpfilter_ip_set_sockopt to
+ sockptr_t
+Thread-Topic: [PATCH 12/24] bpfilter: switch bpfilter_ip_set_sockopt to
+ sockptr_t
+Thread-Index: AQHWXznUwerjSVAdx0W80SUXvcknn6kRtZIA
+Date:   Tue, 21 Jul 2020 08:36:57 +0000
+Message-ID: <f9493b4c514441b4b51bc7e4e75e8c40@AcuMS.aculab.com>
+References: <20200720124737.118617-1-hch@lst.de>
+ <20200720124737.118617-13-hch@lst.de>
+In-Reply-To: <20200720124737.118617-13-hch@lst.de>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 20/07/2020 15.35, Janosch Frank wrote:
-> Test the error conditions of guest 2 Ultravisor calls, namely:
->      * Query Ultravisor information
->      * Set shared access
->      * Remove shared access
+From: Christoph Hellwig
+> Sent: 20 July 2020 13:47
 > 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> ---
->  lib/s390x/asm/uv.h  |  68 +++++++++++++++++++
->  s390x/Makefile      |   1 +
->  s390x/unittests.cfg |   3 +
->  s390x/uv-guest.c    | 158 ++++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 230 insertions(+)
->  create mode 100644 lib/s390x/asm/uv.h
->  create mode 100644 s390x/uv-guest.c
-[...]
-> +int main(void)
-> +{
-> +	bool has_uvc = test_facility(158);
-> +
-> +	report_prefix_push("uvc");
-> +	if (!has_uvc) {
-> +		report_skip("Ultravisor call facility is not available");
-> +		goto done;
-> +	}
-> +
-> +	page = (unsigned long)alloc_page();
-> +	test_priv();
-> +	test_invalid();
-> +	test_query();
-> +	test_sharing();
-> +	free_page((void *)page);
-> +done:
+> This is mostly to prepare for cleaning up the callers, as bpfilter by
+> design can't handle kernel pointers.
+                      ^^^ user ??
 
-It likely does not matter much, but for cleanliness, please add a
-report_prefix_pop() here.
+	David
 
-> +	return report_summary();
-> +}
-> 
-
- Thomas
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
