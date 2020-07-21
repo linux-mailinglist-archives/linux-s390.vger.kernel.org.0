@@ -2,203 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E718A2278D1
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Jul 2020 08:23:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5877422794E
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Jul 2020 09:12:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgGUGXt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Jul 2020 02:23:49 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:56478 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725294AbgGUGXs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 21 Jul 2020 02:23:48 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jxlfs-0001TC-Be; Tue, 21 Jul 2020 16:22:49 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 21 Jul 2020 16:22:48 +1000
-Date:   Tue, 21 Jul 2020 16:22:48 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [v3 PATCH RESEND] printk: Make linux/printk.h self-contained
-Message-ID: <20200721062248.GA18383@gondor.apana.org.au>
+        id S1726852AbgGUHMq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 Jul 2020 03:12:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56412 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726719AbgGUHMp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 Jul 2020 03:12:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595315564;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=FTLLsW6xXZH3ZFjwjuR01VT2YKHBFMnvxqR4hnfwWvs=;
+        b=hgODTqaTYsiaPQi3842hZXlvGRl6frOs4vEnHjJHzXjzhOZGoZzERbQitdrkq9EQE4etc5
+        66uqQje7VuagXQUUJkvHEUFQgqmzhuFb/M3DdUd6DigymEcN2jC9NZPlm4iqTlVIkUEMT/
+        0PTr1/tvpVzcpkOb36UnrmFGnWYIZ4E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-427-PTFQGQvAMgWYPgi2Stvl4A-1; Tue, 21 Jul 2020 03:12:41 -0400
+X-MC-Unique: PTFQGQvAMgWYPgi2Stvl4A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8AD48018A1;
+        Tue, 21 Jul 2020 07:12:40 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-112-102.ams2.redhat.com [10.36.112.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 14DF687319;
+        Tue, 21 Jul 2020 07:12:35 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH 1/3] s390x: Add custom pgm cleanup function
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com, imbrenda@linux.ibm.com
+References: <20200717145813.62573-1-frankja@linux.ibm.com>
+ <20200717145813.62573-2-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <c8a26cde-5e1f-5e49-c631-2bed93d911ea@redhat.com>
+Date:   Tue, 21 Jul 2020 09:12:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200717145813.62573-2-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-As it stands if you include printk.h by itself it will fail to
-compile because it requires definitions from ratelimit.h.  However,
-simply including ratelimit.h from printk.h does not work due to
-inclusion loops involving sched.h and kernel.h.
+On 17/07/2020 16.58, Janosch Frank wrote:
+> Sometimes we need to do cleanup which we don't necessarily want to add
+> to interrupt.c, so lets add a way to register a cleanup function.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  lib/s390x/asm/interrupt.h | 1 +
+>  lib/s390x/interrupt.c     | 9 +++++++++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/lib/s390x/asm/interrupt.h b/lib/s390x/asm/interrupt.h
+> index 4cfade9..b2a7c83 100644
+> --- a/lib/s390x/asm/interrupt.h
+> +++ b/lib/s390x/asm/interrupt.h
+> @@ -15,6 +15,7 @@
+>  #define EXT_IRQ_EXTERNAL_CALL	0x1202
+>  #define EXT_IRQ_SERVICE_SIG	0x2401
+>  
+> +void register_pgm_int_func(void (*f)(void));
+>  void handle_pgm_int(void);
+>  void handle_ext_int(void);
+>  void handle_mcck_int(void);
+> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
+> index 243b9c2..36ba720 100644
+> --- a/lib/s390x/interrupt.c
+> +++ b/lib/s390x/interrupt.c
+> @@ -16,6 +16,7 @@
+>  
+>  static bool pgm_int_expected;
+>  static bool ext_int_expected;
+> +static void (*pgm_int_func)(void);
+>  static struct lowcore *lc;
+>  
+>  void expect_pgm_int(void)
+> @@ -51,8 +52,16 @@ void check_pgm_int_code(uint16_t code)
+>  	       lc->pgm_int_code);
+>  }
+>  
+> +void register_pgm_int_func(void (*f)(void))
+> +{
+> +	pgm_int_func = f;
+> +}
+> +
+>  static void fixup_pgm_int(void)
+>  {
+> +	if (pgm_int_func)
+> +		return (*pgm_int_func)();
+> +
+>  	switch (lc->pgm_int_code) {
+>  	case PGM_INT_CODE_PRIVILEGED_OPERATION:
+>  		/* Normal operation is in supervisor state, so this exception
+> 
 
-This patch solves this by moving bits from ratelimit.h into a new
-header file which can then be included by printk.h without any
-worries about header loops.
+Reviewed-by: Thomas Huth <thuth@redhat.com>
 
-The build bot then revealed some intriguing failures arising out
-of this patch.  On s390 there is an inclusion loop with asm/bug.h
-and linux/kernel.h that triggers a compile failure, because kernel.h
-will cause asm-generic/bug.h to be included before s390's own
-asm/bug.h has finished processing.  This has been fixed by not
-including kernel.h in arch/s390/include/asm/bug.h.
-
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Acked-by: Petr Mladek <pmladek@suse.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-
- arch/s390/include/asm/bug.h     |    2 -
- include/linux/printk.h          |    1 
- include/linux/ratelimit.h       |   36 ---------------------------------
- include/linux/ratelimit_types.h |   43 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 46 insertions(+), 36 deletions(-)
-
-diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
-index 7725f8006fdfb..0b25f28351edc 100644
---- a/arch/s390/include/asm/bug.h
-+++ b/arch/s390/include/asm/bug.h
-@@ -2,7 +2,7 @@
- #ifndef _ASM_S390_BUG_H
- #define _ASM_S390_BUG_H
- 
--#include <linux/kernel.h>
-+#include <linux/compiler.h>
- 
- #ifdef CONFIG_BUG
- 
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index fc8f03c545430..34c1a7be3e014 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -7,6 +7,7 @@
- #include <linux/kern_levels.h>
- #include <linux/linkage.h>
- #include <linux/cache.h>
-+#include <linux/ratelimit_types.h>
- 
- extern const char linux_banner[];
- extern const char linux_proc_banner[];
-diff --git a/include/linux/ratelimit.h b/include/linux/ratelimit.h
-index 8ddf79e9207a9..b17e0cd0a30cf 100644
---- a/include/linux/ratelimit.h
-+++ b/include/linux/ratelimit.h
-@@ -2,41 +2,10 @@
- #ifndef _LINUX_RATELIMIT_H
- #define _LINUX_RATELIMIT_H
- 
--#include <linux/param.h>
-+#include <linux/ratelimit_types.h>
- #include <linux/sched.h>
- #include <linux/spinlock.h>
- 
--#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
--#define DEFAULT_RATELIMIT_BURST		10
--
--/* issue num suppressed message on exit */
--#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
--
--struct ratelimit_state {
--	raw_spinlock_t	lock;		/* protect the state */
--
--	int		interval;
--	int		burst;
--	int		printed;
--	int		missed;
--	unsigned long	begin;
--	unsigned long	flags;
--};
--
--#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
--		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
--		.interval	= interval_init,			\
--		.burst		= burst_init,				\
--	}
--
--#define RATELIMIT_STATE_INIT_DISABLED					\
--	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
--
--#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
--									\
--	struct ratelimit_state name =					\
--		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
--
- static inline void ratelimit_state_init(struct ratelimit_state *rs,
- 					int interval, int burst)
- {
-@@ -73,9 +42,6 @@ ratelimit_set_flags(struct ratelimit_state *rs, unsigned long flags)
- 
- extern struct ratelimit_state printk_ratelimit_state;
- 
--extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
--#define __ratelimit(state) ___ratelimit(state, __func__)
--
- #ifdef CONFIG_PRINTK
- 
- #define WARN_ON_RATELIMIT(condition, state)	({		\
-diff --git a/include/linux/ratelimit_types.h b/include/linux/ratelimit_types.h
-new file mode 100644
-index 0000000000000..b676aa419eef8
---- /dev/null
-+++ b/include/linux/ratelimit_types.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_RATELIMIT_TYPES_H
-+#define _LINUX_RATELIMIT_TYPES_H
-+
-+#include <linux/bits.h>
-+#include <linux/param.h>
-+#include <linux/spinlock_types.h>
-+
-+#define DEFAULT_RATELIMIT_INTERVAL	(5 * HZ)
-+#define DEFAULT_RATELIMIT_BURST		10
-+
-+/* issue num suppressed message on exit */
-+#define RATELIMIT_MSG_ON_RELEASE	BIT(0)
-+
-+struct ratelimit_state {
-+	raw_spinlock_t	lock;		/* protect the state */
-+
-+	int		interval;
-+	int		burst;
-+	int		printed;
-+	int		missed;
-+	unsigned long	begin;
-+	unsigned long	flags;
-+};
-+
-+#define RATELIMIT_STATE_INIT(name, interval_init, burst_init) {		\
-+		.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
-+		.interval	= interval_init,			\
-+		.burst		= burst_init,				\
-+	}
-+
-+#define RATELIMIT_STATE_INIT_DISABLED					\
-+	RATELIMIT_STATE_INIT(ratelimit_state, 0, DEFAULT_RATELIMIT_BURST)
-+
-+#define DEFINE_RATELIMIT_STATE(name, interval_init, burst_init)		\
-+									\
-+	struct ratelimit_state name =					\
-+		RATELIMIT_STATE_INIT(name, interval_init, burst_init)	\
-+
-+extern int ___ratelimit(struct ratelimit_state *rs, const char *func);
-+#define __ratelimit(state) ___ratelimit(state, __func__)
-+
-+#endif /* _LINUX_RATELIMIT_TYPES_H */
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
