@@ -2,100 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D37B4229E08
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Jul 2020 19:10:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEF3D22A10A
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Jul 2020 23:06:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731362AbgGVRJ4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 Jul 2020 13:09:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgGVRJz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 22 Jul 2020 13:09:55 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBCACC0619DC;
-        Wed, 22 Jul 2020 10:09:54 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h19so3257561ljg.13;
-        Wed, 22 Jul 2020 10:09:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nqelWpCqH7nOe0oSyngzrBNpGRC3PyDyz91JHpls3Xk=;
-        b=QbFOpYWq197fvdaI4E7hogiJ5z6DhlnMwFbSAyObyOYxQk/ojAWvAxU5xeCwIzRoyp
-         bGpv6okHRbaDCk3F5IJgGXS3Wesi1t0HKLxD0rWbntKFa+o4FEuZ/aNqddB2gT9rJhFi
-         ekTLt46VwAAqYYSOS+Ti6gpiM2sULyDbPlDxrV2EC1wYfvYmkCiCMfUA2sia4+eUOZSm
-         DpKqJKTrsnJtuquGnG9/42hXesw1S5DhQmqbpijEy6OLbaHF8RyBbV+paN+wC914K+DB
-         Om2JyFGEZL8bVoXG7xFZFOn3b/hxnJAALpQKOVax/+9YzLSzmIzDLinAT6/sMjMDDXxC
-         pBiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nqelWpCqH7nOe0oSyngzrBNpGRC3PyDyz91JHpls3Xk=;
-        b=k3wIByikShOaLkMc1Od1tLGwmab7hG9iKbyDULD2uOU+twM7jxZwJn7IWxMKu4MHdb
-         2Um8GRz1pnUx6Or1zrBKsXK1VsWCVoqGK+g00uoLdXwN0ZIjQs2SY1NcE1kAF8LDVTbU
-         yec/VCQcloskNDtE/ZzYq3LleNJ4xRU3nJ3wI0s/geljdUP2TUb94FrsAN6b/v2V85qz
-         Jc8CdA/0064dg3bpth9PgXEMbwg5daPhBpS5N9zJpR/T9aF3Yn/Utf8++olez5sBFyLk
-         PhS8JcXdC8vjOKTUaUQOoc6YRUqpWtVVYj0gjyhYOFPmkN984ejeamHM/Bn02+cBPon8
-         gMPw==
-X-Gm-Message-State: AOAM531Eo1Acr/3nE2b3iA/QDxbQGbfSLq/pJjtA4rrQ+YuHqM+38kBs
-        PxMKDcJqZcbVcOCj/Ts6eT4QBe1XJMs+YgpX9dqBNA==
-X-Google-Smtp-Source: ABdhPJzXtI3YBeORsJYQmEu28fVJCUtGV7rd5sI5b8tsC3G9617tl0t2hP5zU+hEdegWolMtC+F/64n4emjrett5jt8=
-X-Received: by 2002:a2e:90da:: with SMTP id o26mr95292ljg.91.1595437793253;
- Wed, 22 Jul 2020 10:09:53 -0700 (PDT)
+        id S1731931AbgGVVG0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 Jul 2020 17:06:26 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53924 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726447AbgGVVGZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 22 Jul 2020 17:06:25 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06ML49ow107103;
+        Wed, 22 Jul 2020 17:06:23 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32ecpaxggc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 17:06:23 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06ML0rto032441;
+        Wed, 22 Jul 2020 21:01:20 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 32brq85eh2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Jul 2020 21:01:20 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06ML1HuS59703400
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jul 2020 21:01:17 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BFABEA4054;
+        Wed, 22 Jul 2020 21:01:17 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7360DA4060;
+        Wed, 22 Jul 2020 21:01:17 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 22 Jul 2020 21:01:17 +0000 (GMT)
+From:   Schnelle <svens@linux.ibm.com>
+To:     seth.forshee@canonical.com
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: test_bpf regressions on s390 since 5.4
+References: <20200716152306.GH3644@ubuntu-x1>
+Date:   Wed, 22 Jul 2020 23:01:17 +0200
+In-Reply-To: <20200716152306.GH3644@ubuntu-x1> (seth forshee's message of
+        "Thu, 16 Jul 2020 10:23:06 -0500")
+Message-ID: <yt9dtuxzs1r6.fsf@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200720124737.118617-1-hch@lst.de> <20200720204756.iengwcguikj2yrxt@ast-mbp.dhcp.thefacebook.com>
- <20200722075657.GB26554@lst.de>
-In-Reply-To: <20200722075657.GB26554@lst.de>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 22 Jul 2020 10:09:41 -0700
-Message-ID: <CAADnVQKy0+rsRftEzp4PvxQtj7uOwybz0Nd4_h0FR37p2Q=X4w@mail.gmail.com>
-Subject: Re: get rid of the address_space override in setsockopt
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        netfilter-devel <netfilter-devel@vger.kernel.org>,
-        coreteam@netfilter.org, linux-sctp@vger.kernel.org,
-        linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        "moderated list:ETHERNET BRIDGE" <bridge@lists.linux-foundation.org>,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org,
-        linux-s390 <linux-s390@vger.kernel.org>, mptcp@lists.01.org,
-        lvs-devel@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-22_13:2020-07-22,2020-07-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=9 bulkscore=0 spamscore=9
+ impostorscore=0 clxscore=1011 suspectscore=3 phishscore=0 malwarescore=0
+ priorityscore=1501 adultscore=0 mlxlogscore=101 mlxscore=9
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007220128
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 12:56 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Mon, Jul 20, 2020 at 01:47:56PM -0700, Alexei Starovoitov wrote:
-> > > a kernel pointer.  This is something that works for most common sockopts
-> > > (and is something that the ePBF support relies on), but unfortunately
-> > > in various corner cases we either don't use the passed in length, or in
-> > > one case actually copy data back from setsockopt, so we unfortunately
-> > > can't just always do the copy in the highlevel code, which would have
-> > > been much nicer.
-> >
-> > could you rebase on bpf-next tree and we can route it this way then?
-> > we'll also test the whole thing before applying.
->
-> The bpf-next tree is missing all my previous setsockopt cleanups, so
-> there series won't apply.
+Hi Seth,
 
-Right. I've realized that after sending that email two days ago.
-Now bpf-next->net-next PR is pending and as soon as it's merged
-bpf-next will have all the recent bits.
+seth.forshee@canonical.com writes:
+
+> The tests in lib/test_bpf.c were all passing in 5.4 when using the JIT,
+> but some are failing in 5.7/5.8. Some of the failures are due to the
+> removal of BPF_SIZE_MAX causing some expected failures to pass, which I
+> have already send a patch for [1]. The remaining failures appear to be
+> regressions. I haven't tried 5.5 or 5.6, so I'm not sure exactly when
+> they first appeared.
+>
+> These are the tests which currently fail:
+>
+>  test_bpf: #37 INT: MUL_X jited:1 ret -1 != 1 FAIL (1 times)
+>  test_bpf: #42 INT: SUB jited:1 ret -55 != 11 FAIL (1 times)
+>  test_bpf: #44 INT: MUL jited:1 ret 439084800 != 903446258 FAIL (1 times)
+>  test_bpf: #49 INT: shifts by register jited:1 ret -617 != -1 FAIL (1 times)
+>  test_bpf: #371 JNE signed compare, test 1 jited:1 ret 2 != 1 FAIL (1 times)
+>  test_bpf: #372 JNE signed compare, test 2 jited:1 ret 2 != 1 FAIL (1 times)
+>  test_bpf: #374 JNE signed compare, test 4 jited:1 ret 1 != 2 FAIL (1 times)
+>  test_bpf: #375 JNE signed compare, test 5 jited:1 ret 2 != 1 FAIL (1 times)
+
+The problem seems to be that the s390 JIT code generates a clgfi (compare
+logical 64 - 32 Bit) for JNE:
+
+kernel: test_bpf: #37 INT: MUL_X 
+bpf_jit: flen=8 proglen=66 pass=4 image=0000000035b17790 from=insmod pid=574
+kernel: JIT code: 00000000: a7 f4 00 03 07 e0 eb bf f0 70 00 24 c0 e1 ff ff
+kernel: JIT code: 00000010: ff ff c0 21 ff ff ff ff c0 31 00 00 00 03 b9 0c
+kernel: JIT code: 00000020: 00 23 c2 2e ff ff ff fd a7 84 00 04 a7 f4 00 05
+kernel: JIT code: 00000030: c0 e1 00 00 00 01 b9 04 00 2e eb bf f0 70 00 04
+kernel: JIT code: 00000040: 07 fe
+kernel: 000003ff800a0a48: a7f40003            brc        15,000003ff800a0a4e
+kernel: 000003ff800a0a4c: 07e0                bcr        14,%r0
+kernel: 000003ff800a0a4e: ebbff0700024        stmg       %r11,%r15,112(%r15)
+kernel: 000003ff800a0a54: c0e1ffffffff        lgfi       %r14,-1
+kernel: 000003ff800a0a5a: c021ffffffff        lgfi       %r2,-1
+kernel: 000003ff800a0a60: c03100000003        lgfi       %r3,3
+kernel: 000003ff800a0a66: b90c0023            msgr       %r2,%r3
+kernel: 000003ff800a0a6a: c22efffffffd        clgfi      %r2,4294967293
+kernel: 000003ff800a0a70: a7840004            brc        8,000003ff800a0a78
+kernel: 000003ff800a0a74: a7f40005            brc        15,000003ff800a0a7e
+kernel: 000003ff800a0a78: c0e100000001        lgfi       %r14,1
+kernel: 000003ff800a0a7e: b904002e            lgr        %r2,%r14
+kernel: 000003ff800a0a82: ebbff0700004        lmg        %r11,%r15,112(%r15)
+kernel: 000003ff800a0a88: 07fe                bcr        15,%r14
+kernel: jited:1 ret -1 != 1 FAIL (1 times)
+
+which in the MUL_X case compares than 0xfffffffffffffffd with
+0xfffffffd, which is wrong. Changing this to a proper compare fixes all
+the test cases for me. Thanks for reporting!
+
+Regards
+Sven
