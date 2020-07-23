@@ -2,73 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC78D22AE2F
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Jul 2020 13:45:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E70DB22AE89
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Jul 2020 14:01:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgGWLpF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 Jul 2020 07:45:05 -0400
-Received: from verein.lst.de ([213.95.11.211]:59827 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgGWLpE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 23 Jul 2020 07:45:04 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 82EBD68AFE; Thu, 23 Jul 2020 13:44:58 +0200 (CEST)
-Date:   Thu, 23 Jul 2020 13:44:58 +0200
-From:   'Christoph Hellwig' <hch@lst.de>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Christoph Hellwig' <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
-Subject: Re: [PATCH 13/26] bpfilter: switch bpfilter_ip_set_sockopt to
- sockptr_t
-Message-ID: <20200723114458.GA31363@lst.de>
-References: <20200723060908.50081-1-hch@lst.de> <20200723060908.50081-14-hch@lst.de> <621e193e4af74d8198ed87d6a9ce8260@AcuMS.aculab.com>
+        id S1727885AbgGWMB0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 Jul 2020 08:01:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29274 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726558AbgGWMB0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 23 Jul 2020 08:01:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595505684;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cPGyi1XLifSOA1yXGeuHZfsgFwwkLUi8q0Ep7G+DUCY=;
+        b=gAH9d1jrWKhSlMKU892Zcxtx52SuoobXzZLTK4wj79KrJdV51AW+MptnX14h4LWQrWXByJ
+        c8vKz9GIjRGrl9SbRQcSMxn3KfD4nK9KkzBseT6a63MaPgbzT95f701XTiR4LDEx2KpGko
+        wL5WbnTsAJI0R3x2bkxEY0rSNGuXKKw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-31-F-ByViL0PHWhKmEDT2pKwQ-1; Thu, 23 Jul 2020 08:01:20 -0400
+X-MC-Unique: F-ByViL0PHWhKmEDT2pKwQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1EE638064DE;
+        Thu, 23 Jul 2020 12:01:19 +0000 (UTC)
+Received: from gondolin (ovpn-112-228.ams2.redhat.com [10.36.112.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF78219C4F;
+        Thu, 23 Jul 2020 12:01:14 +0000 (UTC)
+Date:   Thu, 23 Jul 2020 14:01:12 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, thuth@redhat.com, linux-s390@vger.kernel.org,
+        david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com
+Subject: Re: [kvm-unit-tests PATCH 1/3] s390x: Add custom pgm cleanup
+ function
+Message-ID: <20200723140112.6525ddba.cohuck@redhat.com>
+In-Reply-To: <20200717145813.62573-2-frankja@linux.ibm.com>
+References: <20200717145813.62573-1-frankja@linux.ibm.com>
+        <20200717145813.62573-2-frankja@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <621e193e4af74d8198ed87d6a9ce8260@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 11:16:16AM +0000, David Laight wrote:
-> From: Christoph Hellwig
-> > Sent: 23 July 2020 07:09
-> > 
-> > This is mostly to prepare for cleaning up the callers, as bpfilter by
-> > design can't handle kernel pointers.
-> 
-> You've failed to fix the sense of the above...
+On Fri, 17 Jul 2020 10:58:11 -0400
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-The sense still is correct.
+> Sometimes we need to do cleanup which we don't necessarily want to add
+> to interrupt.c, so lets add a way to register a cleanup function.
+
+s/lets/let's/ :)
+
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  lib/s390x/asm/interrupt.h | 1 +
+>  lib/s390x/interrupt.c     | 9 +++++++++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/lib/s390x/asm/interrupt.h b/lib/s390x/asm/interrupt.h
+> index 4cfade9..b2a7c83 100644
+> --- a/lib/s390x/asm/interrupt.h
+> +++ b/lib/s390x/asm/interrupt.h
+> @@ -15,6 +15,7 @@
+>  #define EXT_IRQ_EXTERNAL_CALL	0x1202
+>  #define EXT_IRQ_SERVICE_SIG	0x2401
+>  
+> +void register_pgm_int_func(void (*f)(void));
+>  void handle_pgm_int(void);
+>  void handle_ext_int(void);
+>  void handle_mcck_int(void);
+> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
+> index 243b9c2..36ba720 100644
+> --- a/lib/s390x/interrupt.c
+> +++ b/lib/s390x/interrupt.c
+> @@ -16,6 +16,7 @@
+>  
+>  static bool pgm_int_expected;
+>  static bool ext_int_expected;
+> +static void (*pgm_int_func)(void);
+>  static struct lowcore *lc;
+>  
+>  void expect_pgm_int(void)
+> @@ -51,8 +52,16 @@ void check_pgm_int_code(uint16_t code)
+>  	       lc->pgm_int_code);
+>  }
+>  
+> +void register_pgm_int_func(void (*f)(void))
+> +{
+> +	pgm_int_func = f;
+> +}
+> +
+>  static void fixup_pgm_int(void)
+>  {
+> +	if (pgm_int_func)
+> +		return (*pgm_int_func)();
+> +
+
+Maybe rather call this function, if set, instead of fixup_pgm_int() in
+handle_pgm_int()? Feels a bit cleaner to me.
+		
+>  	switch (lc->pgm_int_code) {
+>  	case PGM_INT_CODE_PRIVILEGED_OPERATION:
+>  		/* Normal operation is in supervisor state, so this exception
+
