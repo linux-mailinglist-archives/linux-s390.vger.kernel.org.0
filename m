@@ -2,99 +2,153 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E5E122E83A
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Jul 2020 10:53:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2FBF22E983
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Jul 2020 11:52:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgG0IxL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 Jul 2020 04:53:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgG0IxL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 27 Jul 2020 04:53:11 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06883C061794;
-        Mon, 27 Jul 2020 01:53:11 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id c6so2314293pje.1;
-        Mon, 27 Jul 2020 01:53:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NCfXf8WOmtA2IUxBJzSQxTBQrQqF9PVCIrC60H56Exo=;
-        b=OFdfEPcJFl2T27EH2T+kq4cP2/lNJblPK9whqMS8JwUToaZ6c7g0P7tDaHEiCetLTi
-         XLVWMLmwwVpxlfNlIWbW/SURNBk10dPdRs/BXcf1cBp/wqXq9ZB8zeP2Y3KvWO1argOe
-         9FZc5gX4qPSJqKwxsxi4SABf+hTOgJV3H5JoqLdGUr2Yk+UZCstXwu5v+VknFWAYq5qi
-         WqWCmljrN0zwRXKvUrEO6WO1Q023awVGbMfcfEQnkfWWSreHvQWYvznVskoT+6ZdBtBP
-         VQbRRGsYFm1yPT5B1qwywSy7mLetjxkq2oqxhbeVwJwFR9JHrbJynDfdjBsdYjHwzf+D
-         bjOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NCfXf8WOmtA2IUxBJzSQxTBQrQqF9PVCIrC60H56Exo=;
-        b=J8Ah9ouCzJxHKFFiAanQUB36qIkZCrUhSXxDoY1RHXk6hkaoSlL/tutoi5vTwy0x4Y
-         STvbDtffekZdQOFrQDPMx5h5vFNjL9GQu3jKVjGeXwiO4VsvCbrlLXACuxxFPS4mswDz
-         PC128km0Y/VxewP6ihSPW+ZueGKfOjgUiesC3YA5mkfZPIPIQ81U5Pkxj6xKUqc53o1p
-         mBKLyL1pyMDh2aexlX8SyDC4j158QGOJJdOEyqLjPZ0emyMcxKxi8cjayq4M2hqiV5xv
-         URoJ/xV6HdYRM1Zx2xT6Xm6vn9ZIDCEdc5ZD8SPs0a2/ikozB9P8IOB5asjlxMBNBVJp
-         3VPQ==
-X-Gm-Message-State: AOAM5330EMQ3dkBmhuxzbvqLwwWVlsVi4mo+oVOUXDPST9rosar67Cmk
-        BiisKcZvUMbpnx3JyoUh99k=
-X-Google-Smtp-Source: ABdhPJyNaMdlpQ3AwoP7H3S3OxqRlhliSqoOA8hmKa9Cx8v/1LLppfqf9JPH9t52ILX2hBAJkzzJGg==
-X-Received: by 2002:a17:90a:c68e:: with SMTP id n14mr17086238pjt.182.1595839990572;
-        Mon, 27 Jul 2020 01:53:10 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id r204sm14346668pfc.134.2020.07.27.01.53.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2020 01:53:09 -0700 (PDT)
-Date:   Mon, 27 Jul 2020 17:53:08 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [v3 PATCH RESEND] printk: Make linux/printk.h self-contained
-Message-ID: <20200727085308.GE1386@jagdpanzerIV.localdomain>
-References: <20200721062248.GA18383@gondor.apana.org.au>
+        id S1727840AbgG0Jvw convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Mon, 27 Jul 2020 05:51:52 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:46580 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727828AbgG0Jvv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 27 Jul 2020 05:51:51 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-157-rSG2T3OdNGGcdmdBioAAVQ-1; Mon, 27 Jul 2020 10:51:47 +0100
+X-MC-Unique: rSG2T3OdNGGcdmdBioAAVQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 27 Jul 2020 10:51:45 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 27 Jul 2020 10:51:45 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'David Miller' <davem@davemloft.net>, "hch@lst.de" <hch@lst.de>
+CC:     "kuba@kernel.org" <kuba@kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-decnet-user@lists.sourceforge.net" 
+        <linux-decnet-user@lists.sourceforge.net>,
+        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "mptcp@lists.01.org" <mptcp@lists.01.org>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
+Subject: RE: get rid of the address_space override in setsockopt v2
+Thread-Topic: get rid of the address_space override in setsockopt v2
+Thread-Index: AQHWYgvqDt5Xt3HFu0u82UKLVqcKxKkbLTEQ
+Date:   Mon, 27 Jul 2020 09:51:45 +0000
+Message-ID: <8ae792c27f144d4bb5cbea0c1cce4eed@AcuMS.aculab.com>
+References: <20200723060908.50081-1-hch@lst.de>
+ <20200724.154342.1433271593505001306.davem@davemloft.net>
+In-Reply-To: <20200724.154342.1433271593505001306.davem@davemloft.net>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721062248.GA18383@gondor.apana.org.au>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On (20/07/21 16:22), Herbert Xu wrote:
-> As it stands if you include printk.h by itself it will fail to
-> compile because it requires definitions from ratelimit.h.  However,
-> simply including ratelimit.h from printk.h does not work due to
-> inclusion loops involving sched.h and kernel.h.
+From: David Miller
+> Sent: 24 July 2020 23:44
 > 
-> This patch solves this by moving bits from ratelimit.h into a new
-> header file which can then be included by printk.h without any
-> worries about header loops.
+> From: Christoph Hellwig <hch@lst.de>
+> Date: Thu, 23 Jul 2020 08:08:42 +0200
 > 
-> The build bot then revealed some intriguing failures arising out
-> of this patch.  On s390 there is an inclusion loop with asm/bug.h
-> and linux/kernel.h that triggers a compile failure, because kernel.h
-> will cause asm-generic/bug.h to be included before s390's own
-> asm/bug.h has finished processing.  This has been fixed by not
-> including kernel.h in arch/s390/include/asm/bug.h.
+> > setsockopt is the last place in architecture-independ code that still
+> > uses set_fs to force the uaccess routines to operate on kernel pointers.
+> >
+> > This series adds a new sockptr_t type that can contained either a kernel
+> > or user pointer, and which has accessors that do the right thing, and
+> > then uses it for setsockopt, starting by refactoring some low-level
+> > helpers and moving them over to it before finally doing the main
+> > setsockopt method.
+> >
+> > Note that apparently the eBPF selftests do not even cover this path, so
+> > the series has been tested with a testing patch that always copies the
+> > data first and passes a kernel pointer.  This is something that works for
+> > most common sockopts (and is something that the ePBF support relies on),
+> > but unfortunately in various corner cases we either don't use the passed
+> > in length, or in one case actually copy data back from setsockopt, or in
+> > case of bpfilter straight out do not work with kernel pointers at all.
+> >
+> > Against net-next/master.
+> >
+> > Changes since v1:
+> >  - check that users don't pass in kernel addresses
+> >  - more bpfilter cleanups
+> >  - cosmetic mptcp tweak
 > 
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> Acked-by: Petr Mladek <pmladek@suse.com>
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Series applied to net-next, I'm build testing and will push this out when
+> that is done.
 
-Applied to for-5.9, thanks.
+Hmmm... this code does:
 
-	-ss
+int __sys_setsockopt(int fd, int level, int optname, char __user *user_optval,
+		int optlen)
+{
+	sockptr_t optval;
+	char *kernel_optval = NULL;
+	int err, fput_needed;
+	struct socket *sock;
+
+	if (optlen < 0)
+		return -EINVAL;
+
+	err = init_user_sockptr(&optval, user_optval);
+	if (err)
+		return err;
+
+And the called code does:
+	if (copy_from_sockptr(&opt, optbuf, sizeof(opt)))
+		return -EFAULT;
+
+
+Which means that only the base of the user's buffer is checked
+for being in userspace.
+
+I'm sure there is code that processes options in chunks.
+This probably means it is possible to put a chunk boundary
+at the end of userspace and continue processing the very start
+of kernel memory.
+
+At best this faults on the kernel copy code and crashes the system.
+
+Maybe there wasn't any code that actually incremented the user address.
+But it is hardly robust.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
