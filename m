@@ -2,150 +2,99 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D77CB22E200
-	for <lists+linux-s390@lfdr.de>; Sun, 26 Jul 2020 20:34:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E5E122E83A
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Jul 2020 10:53:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726043AbgGZSe4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 26 Jul 2020 14:34:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27332 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726081AbgGZSe4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 26 Jul 2020 14:34:56 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06QIVbd2106680;
-        Sun, 26 Jul 2020 14:34:53 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32ggmexepu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 14:34:53 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06QILCXX031192;
-        Sun, 26 Jul 2020 18:34:52 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 32gcy4hdmr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 26 Jul 2020 18:34:52 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06QIYnBM58065008
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 26 Jul 2020 18:34:49 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C14D52051;
-        Sun, 26 Jul 2020 18:34:49 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 1C3A752050;
-        Sun, 26 Jul 2020 18:34:49 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: [PATCH net-next 2/2] net/smc: unique reason code for exceeded max dmb count
-Date:   Sun, 26 Jul 2020 20:34:28 +0200
-Message-Id: <20200726183428.3284-3-kgraul@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200726183428.3284-1-kgraul@linux.ibm.com>
-References: <20200726183428.3284-1-kgraul@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-26_09:2020-07-24,2020-07-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- lowpriorityscore=0 impostorscore=0 spamscore=0 clxscore=1015 phishscore=0
- mlxlogscore=999 priorityscore=1501 adultscore=0 bulkscore=0 suspectscore=3
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007260143
+        id S1726839AbgG0IxL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 Jul 2020 04:53:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgG0IxL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 27 Jul 2020 04:53:11 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06883C061794;
+        Mon, 27 Jul 2020 01:53:11 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id c6so2314293pje.1;
+        Mon, 27 Jul 2020 01:53:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NCfXf8WOmtA2IUxBJzSQxTBQrQqF9PVCIrC60H56Exo=;
+        b=OFdfEPcJFl2T27EH2T+kq4cP2/lNJblPK9whqMS8JwUToaZ6c7g0P7tDaHEiCetLTi
+         XLVWMLmwwVpxlfNlIWbW/SURNBk10dPdRs/BXcf1cBp/wqXq9ZB8zeP2Y3KvWO1argOe
+         9FZc5gX4qPSJqKwxsxi4SABf+hTOgJV3H5JoqLdGUr2Yk+UZCstXwu5v+VknFWAYq5qi
+         WqWCmljrN0zwRXKvUrEO6WO1Q023awVGbMfcfEQnkfWWSreHvQWYvznVskoT+6ZdBtBP
+         VQbRRGsYFm1yPT5B1qwywSy7mLetjxkq2oqxhbeVwJwFR9JHrbJynDfdjBsdYjHwzf+D
+         bjOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NCfXf8WOmtA2IUxBJzSQxTBQrQqF9PVCIrC60H56Exo=;
+        b=J8Ah9ouCzJxHKFFiAanQUB36qIkZCrUhSXxDoY1RHXk6hkaoSlL/tutoi5vTwy0x4Y
+         STvbDtffekZdQOFrQDPMx5h5vFNjL9GQu3jKVjGeXwiO4VsvCbrlLXACuxxFPS4mswDz
+         PC128km0Y/VxewP6ihSPW+ZueGKfOjgUiesC3YA5mkfZPIPIQ81U5Pkxj6xKUqc53o1p
+         mBKLyL1pyMDh2aexlX8SyDC4j158QGOJJdOEyqLjPZ0emyMcxKxi8cjayq4M2hqiV5xv
+         URoJ/xV6HdYRM1Zx2xT6Xm6vn9ZIDCEdc5ZD8SPs0a2/ikozB9P8IOB5asjlxMBNBVJp
+         3VPQ==
+X-Gm-Message-State: AOAM5330EMQ3dkBmhuxzbvqLwwWVlsVi4mo+oVOUXDPST9rosar67Cmk
+        BiisKcZvUMbpnx3JyoUh99k=
+X-Google-Smtp-Source: ABdhPJyNaMdlpQ3AwoP7H3S3OxqRlhliSqoOA8hmKa9Cx8v/1LLppfqf9JPH9t52ILX2hBAJkzzJGg==
+X-Received: by 2002:a17:90a:c68e:: with SMTP id n14mr17086238pjt.182.1595839990572;
+        Mon, 27 Jul 2020 01:53:10 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id r204sm14346668pfc.134.2020.07.27.01.53.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 01:53:09 -0700 (PDT)
+Date:   Mon, 27 Jul 2020 17:53:08 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [v3 PATCH RESEND] printk: Make linux/printk.h self-contained
+Message-ID: <20200727085308.GE1386@jagdpanzerIV.localdomain>
+References: <20200721062248.GA18383@gondor.apana.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721062248.GA18383@gondor.apana.org.au>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-When the maximum dmb buffer limit for an ism device is reached no more
-dmb buffers can be registered. When this happens the reason code is set
-to SMC_CLC_DECL_MEM indicating out-of-memory. This is the same reason
-code that is used when no memory could be allocated for the new dmb
-buffer.
-This is confusing for users when they see this error but there is more
-memory available. To solve this set a separate new reason code when the
-maximum dmb limit exceeded.
+On (20/07/21 16:22), Herbert Xu wrote:
+> As it stands if you include printk.h by itself it will fail to
+> compile because it requires definitions from ratelimit.h.  However,
+> simply including ratelimit.h from printk.h does not work due to
+> inclusion loops involving sched.h and kernel.h.
+> 
+> This patch solves this by moving bits from ratelimit.h into a new
+> header file which can then be included by printk.h without any
+> worries about header loops.
+> 
+> The build bot then revealed some intriguing failures arising out
+> of this patch.  On s390 there is an inclusion loop with asm/bug.h
+> and linux/kernel.h that triggers a compile failure, because kernel.h
+> will cause asm-generic/bug.h to be included before s390's own
+> asm/bug.h has finished processing.  This has been fixed by not
+> including kernel.h in arch/s390/include/asm/bug.h.
+> 
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> Acked-by: Petr Mladek <pmladek@suse.com>
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
----
- net/smc/af_smc.c   | 13 +++++++++----
- net/smc/smc_clc.h  |  1 +
- net/smc/smc_core.c |  4 ++--
- 3 files changed, 12 insertions(+), 6 deletions(-)
+Applied to for-5.9, thanks.
 
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index 832e36269b10..e7649bbc2b87 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -719,8 +719,11 @@ static int smc_connect_ism(struct smc_sock *smc,
- 	}
- 
- 	/* Create send and receive buffers */
--	if (smc_buf_create(smc, true))
--		return smc_connect_abort(smc, SMC_CLC_DECL_MEM,
-+	rc = smc_buf_create(smc, true);
-+	if (rc)
-+		return smc_connect_abort(smc, (rc == -ENOSPC) ?
-+					      SMC_CLC_DECL_MAX_DMB :
-+					      SMC_CLC_DECL_MEM,
- 					 ini->cln_first_contact);
- 
- 	smc_conn_save_peer_info(smc, aclc);
-@@ -1200,12 +1203,14 @@ static int smc_listen_ism_init(struct smc_sock *new_smc,
- 	}
- 
- 	/* Create send and receive buffers */
--	if (smc_buf_create(new_smc, true)) {
-+	rc = smc_buf_create(new_smc, true);
-+	if (rc) {
- 		if (ini->cln_first_contact == SMC_FIRST_CONTACT)
- 			smc_lgr_cleanup_early(&new_smc->conn);
- 		else
- 			smc_conn_free(&new_smc->conn);
--		return SMC_CLC_DECL_MEM;
-+		return (rc == -ENOSPC) ? SMC_CLC_DECL_MAX_DMB :
-+					 SMC_CLC_DECL_MEM;
- 	}
- 
- 	return 0;
-diff --git a/net/smc/smc_clc.h b/net/smc/smc_clc.h
-index 76c2b150d040..cf7b45306f4e 100644
---- a/net/smc/smc_clc.h
-+++ b/net/smc/smc_clc.h
-@@ -48,6 +48,7 @@
- #define SMC_CLC_DECL_NOACTLINK	0x030a0000  /* no active smc-r link in lgr    */
- #define SMC_CLC_DECL_NOSRVLINK	0x030b0000  /* SMC-R link from srv not found  */
- #define SMC_CLC_DECL_VERSMISMAT	0x030c0000  /* SMC version mismatch	      */
-+#define SMC_CLC_DECL_MAX_DMB	0x030d0000  /* SMC-D DMB limit exceeded       */
- #define SMC_CLC_DECL_SYNCERR	0x04000000  /* synchronization error          */
- #define SMC_CLC_DECL_PEERDECL	0x05000000  /* peer declined during handshake */
- #define SMC_CLC_DECL_INTERR	0x09990000  /* internal error		      */
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index f82a2e599917..b42fa3b00d00 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -1614,7 +1614,7 @@ static struct smc_buf_desc *smcd_new_buf_create(struct smc_link_group *lgr,
- 		rc = smc_ism_register_dmb(lgr, bufsize, buf_desc);
- 		if (rc) {
- 			kfree(buf_desc);
--			return ERR_PTR(-EAGAIN);
-+			return (rc == -ENOMEM) ? ERR_PTR(-EAGAIN) : ERR_PTR(rc);
- 		}
- 		buf_desc->pages = virt_to_page(buf_desc->cpu_addr);
- 		/* CDC header stored in buf. So, pretend it was smaller */
-@@ -1688,7 +1688,7 @@ static int __smc_buf_create(struct smc_sock *smc, bool is_smcd, bool is_rmb)
- 	}
- 
- 	if (IS_ERR(buf_desc))
--		return -ENOMEM;
-+		return PTR_ERR(buf_desc);
- 
- 	if (!is_smcd) {
- 		if (smcr_buf_map_usable_links(lgr, buf_desc, is_rmb)) {
--- 
-2.17.1
-
+	-ss
