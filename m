@@ -2,153 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2FBF22E983
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Jul 2020 11:52:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AE4822E992
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Jul 2020 11:54:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgG0Jvw convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Mon, 27 Jul 2020 05:51:52 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:46580 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727828AbgG0Jvv (ORCPT
+        id S1726196AbgG0Jya (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 Jul 2020 05:54:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40228 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726140AbgG0Jya (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 27 Jul 2020 05:51:51 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-157-rSG2T3OdNGGcdmdBioAAVQ-1; Mon, 27 Jul 2020 10:51:47 +0100
-X-MC-Unique: rSG2T3OdNGGcdmdBioAAVQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 27 Jul 2020 10:51:45 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 27 Jul 2020 10:51:45 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'David Miller' <davem@davemloft.net>, "hch@lst.de" <hch@lst.de>
-CC:     "kuba@kernel.org" <kuba@kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
-Subject: RE: get rid of the address_space override in setsockopt v2
-Thread-Topic: get rid of the address_space override in setsockopt v2
-Thread-Index: AQHWYgvqDt5Xt3HFu0u82UKLVqcKxKkbLTEQ
-Date:   Mon, 27 Jul 2020 09:51:45 +0000
-Message-ID: <8ae792c27f144d4bb5cbea0c1cce4eed@AcuMS.aculab.com>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200724.154342.1433271593505001306.davem@davemloft.net>
-In-Reply-To: <20200724.154342.1433271593505001306.davem@davemloft.net>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 27 Jul 2020 05:54:30 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06R9XN3X094221;
+        Mon, 27 Jul 2020 05:54:29 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32htsjuasc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 05:54:29 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06R9XYkh094604;
+        Mon, 27 Jul 2020 05:54:29 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32htsjuarf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 05:54:28 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06R9qTul012138;
+        Mon, 27 Jul 2020 09:54:26 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04fra.de.ibm.com with ESMTP id 32gcpw98pr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 09:54:26 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06R9sNmT26149208
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 09:54:23 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8201F4C05C;
+        Mon, 27 Jul 2020 09:54:23 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B29364C046;
+        Mon, 27 Jul 2020 09:54:22 +0000 (GMT)
+Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jul 2020 09:54:22 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     thuth@redhat.com, linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com, imbrenda@linux.ibm.com
+Subject: [kvm-unit-tests PATCH v2 0/3] PV tests part 1
+Date:   Mon, 27 Jul 2020 05:54:12 -0400
+Message-Id: <20200727095415.494318-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_06:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ priorityscore=1501 mlxlogscore=873 phishscore=0 lowpriorityscore=0
+ bulkscore=0 malwarescore=0 mlxscore=0 spamscore=0 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270069
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: David Miller
-> Sent: 24 July 2020 23:44
-> 
-> From: Christoph Hellwig <hch@lst.de>
-> Date: Thu, 23 Jul 2020 08:08:42 +0200
-> 
-> > setsockopt is the last place in architecture-independ code that still
-> > uses set_fs to force the uaccess routines to operate on kernel pointers.
-> >
-> > This series adds a new sockptr_t type that can contained either a kernel
-> > or user pointer, and which has accessors that do the right thing, and
-> > then uses it for setsockopt, starting by refactoring some low-level
-> > helpers and moving them over to it before finally doing the main
-> > setsockopt method.
-> >
-> > Note that apparently the eBPF selftests do not even cover this path, so
-> > the series has been tested with a testing patch that always copies the
-> > data first and passes a kernel pointer.  This is something that works for
-> > most common sockopts (and is something that the ePBF support relies on),
-> > but unfortunately in various corner cases we either don't use the passed
-> > in length, or in one case actually copy data back from setsockopt, or in
-> > case of bpfilter straight out do not work with kernel pointers at all.
-> >
-> > Against net-next/master.
-> >
-> > Changes since v1:
-> >  - check that users don't pass in kernel addresses
-> >  - more bpfilter cleanups
-> >  - cosmetic mptcp tweak
-> 
-> Series applied to net-next, I'm build testing and will push this out when
-> that is done.
+Let's start bringing in some more PV related code.
 
-Hmmm... this code does:
+Somehow I missed that we can also have a key in a exception new
+PSW. The interesting bit is that if such a PSW is loaded on an
+exception it will result in a specification exception and not a
+special operation exception.
 
-int __sys_setsockopt(int fd, int level, int optname, char __user *user_optval,
-		int optlen)
-{
-	sockptr_t optval;
-	char *kernel_optval = NULL;
-	int err, fput_needed;
-	struct socket *sock;
-
-	if (optlen < 0)
-		return -EINVAL;
-
-	err = init_user_sockptr(&optval, user_optval);
-	if (err)
-		return err;
-
-And the called code does:
-	if (copy_from_sockptr(&opt, optbuf, sizeof(opt)))
-		return -EFAULT;
+The third patch adds a basic guest UV call API test. It has mostly
+been used for firmware testing but I also think it's good to have a
+building block like this for more PV tests.
 
 
-Which means that only the base of the user's buffer is checked
-for being in userspace.
+GIT: https://github.com/frankjaa/kvm-unit-tests/tree/queue
 
-I'm sure there is code that processes options in chunks.
-This probably means it is possible to put a chunk boundary
-at the end of userspace and continue processing the very start
-of kernel memory.
+v2:
+	* Page alloc instead of static memory reservation
+	* Moved pgm cleanup function call to pgm handler
+	* Commit message changes
 
-At best this faults on the kernel copy code and crashes the system.
 
-Maybe there wasn't any code that actually incremented the user address.
-But it is hardly robust.
+Janosch Frank (3):
+  s390x: Add custom pgm cleanup function
+  s390x: skrf: Add exception new skey test and add test to unittests.cfg
+  s390x: Ultravisor guest API test
 
-	David
+ lib/s390x/asm/interrupt.h |   1 +
+ lib/s390x/asm/uv.h        |  68 ++++++++++++++++
+ lib/s390x/interrupt.c     |  10 +++
+ s390x/Makefile            |   1 +
+ s390x/skrf.c              |  80 +++++++++++++++++++
+ s390x/unittests.cfg       |   7 ++
+ s390x/uv-guest.c          | 159 ++++++++++++++++++++++++++++++++++++++
+ 7 files changed, 326 insertions(+)
+ create mode 100644 lib/s390x/asm/uv.h
+ create mode 100644 s390x/uv-guest.c
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+-- 
+2.25.1
 
