@@ -2,126 +2,226 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A021422F28A
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Jul 2020 16:40:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FFFA22F244
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Jul 2020 16:38:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbgG0OJP convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Mon, 27 Jul 2020 10:09:15 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:51961 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729580AbgG0OJP (ORCPT
+        id S1729211AbgG0OKY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 Jul 2020 10:10:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11908 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729829AbgG0OKX (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 27 Jul 2020 10:09:15 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-250-GXr1mpTxOlmxyosLYcC-jw-1; Mon, 27 Jul 2020 15:09:11 +0100
-X-MC-Unique: GXr1mpTxOlmxyosLYcC-jw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 27 Jul 2020 15:09:10 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 27 Jul 2020 15:09:10 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Al Viro' <viro@zeniv.linux.org.uk>
-CC:     'David Miller' <davem@davemloft.net>, "hch@lst.de" <hch@lst.de>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>
-Subject: RE: get rid of the address_space override in setsockopt v2
-Thread-Topic: get rid of the address_space override in setsockopt v2
-Thread-Index: AQHWYgvqDt5Xt3HFu0u82UKLVqcKxKkbLTEQgAA3GQCAABNbQA==
-Date:   Mon, 27 Jul 2020 14:09:09 +0000
-Message-ID: <5d958e937db54849b4ef9046e7e12277@AcuMS.aculab.com>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200724.154342.1433271593505001306.davem@davemloft.net>
- <8ae792c27f144d4bb5cbea0c1cce4eed@AcuMS.aculab.com>
- <20200727134814.GD794331@ZenIV.linux.org.uk>
-In-Reply-To: <20200727134814.GD794331@ZenIV.linux.org.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 27 Jul 2020 10:10:23 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06RE0qlp162323;
+        Mon, 27 Jul 2020 10:10:04 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32hvhdqhmm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 10:10:04 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06RE0uYE162713;
+        Mon, 27 Jul 2020 10:10:03 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32hvhdqhm1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 10:10:03 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06RDoQQ0032136;
+        Mon, 27 Jul 2020 14:10:02 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03dal.us.ibm.com with ESMTP id 32gcy6p1qj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Jul 2020 14:10:02 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06RE9xjE41419180
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Jul 2020 14:09:59 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 75B786A05A;
+        Mon, 27 Jul 2020 14:09:59 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 288766A057;
+        Mon, 27 Jul 2020 14:09:58 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.167.215])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Jul 2020 14:09:57 +0000 (GMT)
+Subject: Re: [PATCH v9 02/15] s390/vfio-ap: use new AP bus interface to search
+ for queue devices
+To:     Pierre Morel <pmorel@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, kernel test robot <lkp@intel.com>
+References: <20200720150344.24488-1-akrowiak@linux.ibm.com>
+ <20200720150344.24488-3-akrowiak@linux.ibm.com>
+ <a946e992-ff36-ca45-1811-7c6b0aaa161f@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <4b0bd2a8-4c28-7daa-8ea4-397926c9054b@linux.ibm.com>
+Date:   Mon, 27 Jul 2020 10:09:57 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <a946e992-ff36-ca45-1811-7c6b0aaa161f@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-27_08:2020-07-27,2020-07-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 phishscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ clxscore=1015 mlxscore=0 priorityscore=1501 suspectscore=3 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007270096
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Al Viro
-> Sent: 27 July 2020 14:48
-> 
-> On Mon, Jul 27, 2020 at 09:51:45AM +0000, David Laight wrote:
-> 
-> > I'm sure there is code that processes options in chunks.
-> > This probably means it is possible to put a chunk boundary
-> > at the end of userspace and continue processing the very start
-> > of kernel memory.
-> >
-> > At best this faults on the kernel copy code and crashes the system.
-> 
-> Really?  Care to provide some details, or is it another of your "I can't
-> be possibly arsed to check what I'm saying, but it stands for reason
-> that..." specials?
 
-I did more 'homework' than sometimes :-)
-Slightly difficult without a searchable net-next tree.
-However, as has been pointed out is a different thread
-this code is used to update IPv6 flow labels:
 
-> > -		if (copy_from_user(fl->opt+1, optval+CMSG_ALIGN(sizeof(*freq)), olen))
-> > +		sockptr_advance(optval, CMSG_ALIGN(sizeof(*freq)));
-> > +		if (copy_from_sockptr(fl->opt + 1, optval, olen))
-> >  			goto done;
+On 7/24/20 4:38 AM, Pierre Morel wrote:
+>
+>
+> On 2020-07-20 17:03, Tony Krowiak wrote:
+>> This patch refactor's the vfio_ap device driver to use the AP bus's
+>> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
+>> information about a queue that is bound to the vfio_ap device driver.
+>> The bus's ap_get_qdev() function retrieves the queue device from a
+>> hashtable keyed by APQN. This is much more efficient than looping over
+>> the list of devices attached to the AP bus by several orders of
+>> magnitude.
+>
+> The patch does much more than modifying this line. ;)
+>
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_drv.c     | 27 ++-------
+>>   drivers/s390/crypto/vfio_ap_ops.c     | 86 +++++++++++++++------------
+>>   drivers/s390/crypto/vfio_ap_private.h |  8 ++-
+>>   3 files changed, 59 insertions(+), 62 deletions(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_drv.c 
+>> b/drivers/s390/crypto/vfio_ap_drv.c
+>> index f4ceb380dd61..24cdef60039a 100644
+>> --- a/drivers/s390/crypto/vfio_ap_drv.c
+>> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+>> @@ -53,15 +53,9 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
+>>    */
+>>   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+>>   {
+>> -    struct vfio_ap_queue *q;
+>> -
+>> -    q = kzalloc(sizeof(*q), GFP_KERNEL);
+>> -    if (!q)
+>> -        return -ENOMEM;
+>> -    dev_set_drvdata(&apdev->device, q);
+>> -    q->apqn = to_ap_queue(&apdev->device)->qid;
+>> -    q->saved_isc = VFIO_AP_ISC_INVALID;
+>> -    return 0;
+>> +    struct ap_queue *queue = to_ap_queue(&apdev->device);
+>> +
+>> +    return vfio_ap_mdev_probe_queue(queue);
+>>   }
+>
+> You should explain the reason why this function is modified.
+>
+>>     /**
+>> @@ -72,18 +66,9 @@ static int vfio_ap_queue_dev_probe(struct 
+>> ap_device *apdev)
+>>    */
+>>   static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
+>>   {
+>> -    struct vfio_ap_queue *q;
+>> -    int apid, apqi;
+>> -
+>> -    mutex_lock(&matrix_dev->lock);
+>> -    q = dev_get_drvdata(&apdev->device);
+>> -    dev_set_drvdata(&apdev->device, NULL);
+>> -    apid = AP_QID_CARD(q->apqn);
+>> -    apqi = AP_QID_QUEUE(q->apqn);
+>> -    vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>> -    vfio_ap_irq_disable(q);
+>> -    kfree(q);
+>> -    mutex_unlock(&matrix_dev->lock);
+>> +    struct ap_queue *queue = to_ap_queue(&apdev->device);
+>> +
+>> +    vfio_ap_mdev_remove_queue(queue);
+>>   }
+>
+> ... and this one?
+>
+>>     static void vfio_ap_matrix_dev_release(struct device *dev)
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
+>> b/drivers/s390/crypto/vfio_ap_ops.c
+>> index e0bde8518745..ad3925f04f61 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -26,43 +26,26 @@
+>>     static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
+>>   -static int match_apqn(struct device *dev, const void *data)
+>> -{
+>> -    struct vfio_ap_queue *q = dev_get_drvdata(dev);
+>> -
+>> -    return (q->apqn == *(int *)(data)) ? 1 : 0;
+>> -}
+>> -
+>>   /**
+>> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
+>> - * @matrix_mdev: the associated mediated matrix
+>> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
+>>    * @apqn: The queue APQN
+>>    *
+>> - * Retrieve a queue with a specific APQN from the list of the
+>> - * devices of the vfio_ap_drv.
+>> - * Verify that the APID and the APQI are set in the matrix.
+>> + * Retrieve a queue with a specific APQN from the AP queue devices 
+>> attached to
+>> + * the AP bus.
+>>    *
+>> - * Returns the pointer to the associated vfio_ap_queue
+>> + * Returns the pointer to the vfio_ap_queue with the specified APQN, 
+>> or NULL.
+>>    */
+>> -static struct vfio_ap_queue *vfio_ap_get_queue(
+>> -                    struct ap_matrix_mdev *matrix_mdev,
+>> -                    int apqn)
+>> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
+>>   {
+>> +    struct ap_queue *queue;
+>>       struct vfio_ap_queue *q;
+>> -    struct device *dev;
+>>   -    if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
+>> -        return NULL;
+>> -    if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
+>> +    queue = ap_get_qdev(apqn);
+>> +    if (!queue)
+>>           return NULL;
+>>   -    dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+>> -                 &apqn, match_apqn);
+>> -    if (!dev)
+>> -        return NULL;
+>> -    q = dev_get_drvdata(dev);
+>> -    q->matrix_mdev = matrix_mdev;
+>> -    put_device(dev);
+>> +    q = dev_get_drvdata(&queue->ap_dev.device);
+>> +    put_device(&queue->ap_dev.device);
+>>         return q;
+>>   }
+>
+> this function changed a lot too, you should explain the goal in the 
+> patch comment.
 
-and doesn't work because the advances are no longer cumulative.
+This is precisely what the current patch comment describes.
 
-Now access_ok() has to take the base address and length to stop
-'running into' kernel space, but the code above can advance from
-a valid user pointer (which won't fault) to a kernel address.
-
-If there were always an unmapped 'guard' page in the user address
-space the access_ok() check prior to copy_to/from_user() wouldn't
-need the length.
-So I surmise that no such guard page exists and so the above
-can advance from user addresses into kernel ones.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+>
+> ...snip...
+>
+> Regards,
+> Pierre
+>
 
