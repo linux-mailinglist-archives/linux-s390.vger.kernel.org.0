@@ -2,200 +2,208 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D13322EBDA
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Jul 2020 14:15:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCA8C22EBF6
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Jul 2020 14:20:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbgG0MPO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 Jul 2020 08:15:14 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:43557 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726555AbgG0MPN (ORCPT
+        id S1727088AbgG0MUw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 Jul 2020 08:20:52 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52055 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726890AbgG0MUw (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 27 Jul 2020 08:15:13 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 858ED580626;
-        Mon, 27 Jul 2020 08:15:11 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 27 Jul 2020 08:15:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=zQ5cK+
-        UyqnfJ5Bs5mc2l5CGTYqkVGioSJ7/rqh6pAKo=; b=cz67FKlM5wTYH6ZHs8cumN
-        6Lloe5U6Wof104VdSstoZvBZVPQWGdAx/fMZfPQxIwG0p8iESwpGeuM7tUbH7y0c
-        5nwF6SEQIGjZVO/5CmL/kqzdqg9Btv1iK/m/DFBcSQvbdxe/OqRzITPeS2TcH/Y+
-        Rprx9Vp4fYTO6goik0AFPtlzp/RTh1KyjaQJAaV4CWXK+yEGSMO73vw2Bvs3jvH/
-        xn05lT9HilG+7jY3vY3UhaljUx6pT7HHVwgspZ5cqQnXh6v+NBrjfYm4b9qLqHRM
-        BmrV61GpLVJpu1JgeZoeM7zuzyCKx+b8Xqsjra7JohU70SIOprEe6DltCaWHoeSQ
-        ==
-X-ME-Sender: <xms:TcUeX_6kVxk3W7PFyY8aD2OpbpNtNrYvJvqdVELMLD3-WQTkXX8Hmg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedriedtgdehtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepkfguohcuufgt
-    hhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecuggftrfgrthhtvg
-    hrnheptdffkeekfeduffevgeeujeffjefhtefgueeugfevtdeiheduueeukefhudehleet
-    necukfhppeejledrudekuddrvddrudejleenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehiughoshgthhesihguohhstghhrdhorhhg
-X-ME-Proxy: <xmx:TcUeX06Qqy5aEJFW6Jpg_LZa1dJ4eY6nkkQcVlz4XOtHLjqmQNDxTw>
-    <xmx:TcUeX2fd-qWfehY8_YaMTYqQAxXos584gd2IyW8HI9rJNz3B9JOvMg>
-    <xmx:TcUeXwI7ksA1oOAl1pVV8mG18oLCDmnkFZDN6_zUljX6iXpa1GFghA>
-    <xmx:T8UeXw5_98Jq_Ux1_bj8TbKmStoIGlRImlxpRg8bsqiWWADoZ6hKgA>
-Received: from localhost (bzq-79-181-2-179.red.bezeqint.net [79.181.2.179])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 80C84328005D;
-        Mon, 27 Jul 2020 08:15:08 -0400 (EDT)
-Date:   Mon, 27 Jul 2020 15:15:05 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: Re: [PATCH 19/26] net/ipv6: switch ipv6_flowlabel_opt to sockptr_t
-Message-ID: <20200727121505.GA1804864@shredder>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200723060908.50081-20-hch@lst.de>
+        Mon, 27 Jul 2020 08:20:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595852450;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=iauMB52mqXOIqXTYfmHeVxFCv5nckIDI3t6Hqn0OjUI=;
+        b=HAmXK0ypgHgujjOat3f2xloEd/o+bDXWUNWRZkucvmkFYDEB7MHlcphoE2CnAV6h04uPIQ
+        wmpVyloXgh1uoxcbLEtwWYHyOgLUCGbXPbhPVhWMECFBivdg43ap0PhbkCTrydOTxII2dk
+        xuYn2SZjhLH7uNN3Z00OJZdwBYRgqBs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-229-oS3ABpabNACmXxhTn-uoZQ-1; Mon, 27 Jul 2020 08:20:48 -0400
+X-MC-Unique: oS3ABpabNACmXxhTn-uoZQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC114102C853;
+        Mon, 27 Jul 2020 12:20:36 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-112-156.ams2.redhat.com [10.36.112.156])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2A93079D02;
+        Mon, 27 Jul 2020 12:20:34 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v2 2/3] s390x: skrf: Add exception new skey
+ test and add test to unittests.cfg
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com, imbrenda@linux.ibm.com
+References: <20200727095415.494318-1-frankja@linux.ibm.com>
+ <20200727095415.494318-3-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <b5b0f9d1-075d-edf6-8a30-39cb84f7b42c@redhat.com>
+Date:   Mon, 27 Jul 2020 14:20:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200723060908.50081-20-hch@lst.de>
+In-Reply-To: <20200727095415.494318-3-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 08:09:01AM +0200, Christoph Hellwig wrote:
-> Pass a sockptr_t to prepare for set_fs-less handling of the kernel
-> pointer from bpf-cgroup.
+On 27/07/2020 11.54, Janosch Frank wrote:
+> When an exception new psw with a storage key in its mask is loaded
+> from lowcore, a specification exception is raised. This differs from
+> the behavior when trying to execute skey related instructions, which
+> will result in special operation exceptions.
 > 
-> Note that the get case is pretty weird in that it actually copies data
-> back to userspace from setsockopt.
+> Also let's add the test unittests.cfg so it is run more often.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 > ---
->  include/net/ipv6.h       |  2 +-
->  net/ipv6/ip6_flowlabel.c | 16 +++++++++-------
->  net/ipv6/ipv6_sockglue.c |  2 +-
->  3 files changed, 11 insertions(+), 9 deletions(-)
+>  s390x/skrf.c        | 80 +++++++++++++++++++++++++++++++++++++++++++++
+>  s390x/unittests.cfg |  4 +++
+>  2 files changed, 84 insertions(+)
 > 
-> diff --git a/include/net/ipv6.h b/include/net/ipv6.h
-> index 262fc88dbd7e2f..4c9d89b5d73268 100644
-> --- a/include/net/ipv6.h
-> +++ b/include/net/ipv6.h
-> @@ -406,7 +406,7 @@ struct ipv6_txoptions *fl6_merge_options(struct ipv6_txoptions *opt_space,
->  					 struct ip6_flowlabel *fl,
->  					 struct ipv6_txoptions *fopt);
->  void fl6_free_socklist(struct sock *sk);
-> -int ipv6_flowlabel_opt(struct sock *sk, char __user *optval, int optlen);
-> +int ipv6_flowlabel_opt(struct sock *sk, sockptr_t optval, int optlen);
->  int ipv6_flowlabel_opt_get(struct sock *sk, struct in6_flowlabel_req *freq,
->  			   int flags);
->  int ip6_flowlabel_init(void);
-> diff --git a/net/ipv6/ip6_flowlabel.c b/net/ipv6/ip6_flowlabel.c
-> index 27ee6de9beffc4..6b3c315f3d461a 100644
-> --- a/net/ipv6/ip6_flowlabel.c
-> +++ b/net/ipv6/ip6_flowlabel.c
-> @@ -371,7 +371,7 @@ static int fl6_renew(struct ip6_flowlabel *fl, unsigned long linger, unsigned lo
+> diff --git a/s390x/skrf.c b/s390x/skrf.c
+> index 9cae589..fe78711 100644
+> --- a/s390x/skrf.c
+> +++ b/s390x/skrf.c
+> @@ -11,12 +11,16 @@
+>   */
+>  #include <libcflat.h>
+>  #include <asm/asm-offsets.h>
+> +#include <asm-generic/barrier.h>
+>  #include <asm/interrupt.h>
+>  #include <asm/page.h>
+>  #include <asm/facility.h>
+>  #include <asm/mem.h>
+> +#include <asm/sigp.h>
+> +#include <smp.h>
 >  
->  static struct ip6_flowlabel *
->  fl_create(struct net *net, struct sock *sk, struct in6_flowlabel_req *freq,
-> -	  char __user *optval, int optlen, int *err_p)
-> +	  sockptr_t optval, int optlen, int *err_p)
+>  static uint8_t pagebuf[PAGE_SIZE * 2] __attribute__((aligned(PAGE_SIZE * 2)));
+> +static int testflag = 0;
+>  
+>  static void test_facilities(void)
 >  {
->  	struct ip6_flowlabel *fl = NULL;
->  	int olen;
-> @@ -401,7 +401,8 @@ fl_create(struct net *net, struct sock *sk, struct in6_flowlabel_req *freq,
->  		memset(fl->opt, 0, sizeof(*fl->opt));
->  		fl->opt->tot_len = sizeof(*fl->opt) + olen;
->  		err = -EFAULT;
-> -		if (copy_from_user(fl->opt+1, optval+CMSG_ALIGN(sizeof(*freq)), olen))
-> +		sockptr_advance(optval, CMSG_ALIGN(sizeof(*freq)));
-> +		if (copy_from_sockptr(fl->opt + 1, optval, olen))
->  			goto done;
->  
->  		msg.msg_controllen = olen;
-> @@ -604,7 +605,7 @@ static int ipv6_flowlabel_renew(struct sock *sk, struct in6_flowlabel_req *freq)
+> @@ -106,6 +110,81 @@ static void test_tprot(void)
+>  	report_prefix_pop();
 >  }
 >  
->  static int ipv6_flowlabel_get(struct sock *sk, struct in6_flowlabel_req *freq,
-> -		void __user *optval, int optlen)
-> +		sockptr_t optval, int optlen)
+> +static void wait_for_flag(void)
+> +{
+> +	while (!testflag)
+> +		mb();
+> +}
+> +
+> +static void set_flag(int val)
+> +{
+> +	mb();
+> +	testflag = val;
+> +	mb();
+> +}
+> +
+> +static void ecall_cleanup(void)
+> +{
+> +	struct lowcore *lc = (void *)0x0;
+> +
+> +	lc->ext_new_psw.mask = 0x0000000180000000UL;
+> +	lc->sw_int_crs[0] = 0x0000000000040000;
+> +
+> +	/*
+> +	 * PGM old contains the ext new PSW, we need to clean it up,
+> +	 * so we don't get a special operation exception on the lpswe
+> +	 * of pgm old.
+> +	 */
+> +	lc->pgm_old_psw.mask = 0x0000000180000000UL;
+> +	lc->pgm_old_psw.addr = (unsigned long)wait_for_flag;
+
+I don't quite understand why you are using wait_for_flag here? Won't
+that function return immediately due to the set_flag(1) below? And if it
+returns, where does the cpu continue to exec code in that case? Wouldn't
+it be better to leave the .addr unchanged, so that the CPU returns to
+the endless loop in smp_cpu_setup_state ?
+
+ Thomas
+
+
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	set_flag(1);
+> +}
+> +
+> +/* Set a key into the external new psw mask and open external call masks */
+> +static void ecall_setup(void)
+> +{
+> +	struct lowcore *lc = (void *)0x0;
+> +	uint64_t mask;
+> +
+> +	register_pgm_int_func(ecall_cleanup);
+> +	expect_pgm_int();
+> +	/* Put a skey into the ext new psw */
+> +	lc->ext_new_psw.mask = 0x00F0000180000000UL;
+> +	/* Open up ext masks */
+> +	ctl_set_bit(0, 13);
+> +	mask = extract_psw_mask();
+> +	mask |= PSW_MASK_EXT;
+> +	load_psw_mask(mask);
+> +	/* Tell cpu 0 that we're ready */
+> +	set_flag(1);
+> +}
+> +
+> +static void test_exception_ext_new(void)
+> +{
+> +	struct psw psw = {
+> +		.mask = extract_psw_mask(),
+> +		.addr = (unsigned long)ecall_setup
+> +	};
+> +
+> +	report_prefix_push("exception external new");
+> +	if (smp_query_num_cpus() < 2) {
+> +		report_skip("Need second cpu for exception external new test.");
+> +		report_prefix_pop();
+> +		return;
+> +	}
+> +
+> +	smp_cpu_setup(1, psw);
+> +	wait_for_flag();
+> +	set_flag(0);
+> +
+> +	sigp(1, SIGP_EXTERNAL_CALL, 0, NULL);
+> +	wait_for_flag();
+> +	smp_cpu_stop(1);
+> +	report_prefix_pop();
+> +}
+> +
+>  int main(void)
 >  {
->  	struct ipv6_fl_socklist *sfl, *sfl1 = NULL;
->  	struct ip6_flowlabel *fl, *fl1 = NULL;
-> @@ -702,8 +703,9 @@ static int ipv6_flowlabel_get(struct sock *sk, struct in6_flowlabel_req *freq,
->  		goto recheck;
+>  	report_prefix_push("skrf");
+> @@ -121,6 +200,7 @@ int main(void)
+>  	test_mvcos();
+>  	test_spka();
+>  	test_tprot();
+> +	test_exception_ext_new();
 >  
->  	if (!freq->flr_label) {
-> -		if (copy_to_user(&((struct in6_flowlabel_req __user *) optval)->flr_label,
-> -				 &fl->label, sizeof(fl->label))) {
-> +		sockptr_advance(optval,
-> +				offsetof(struct in6_flowlabel_req, flr_label));
-
-Christoph,
-
-I see a regression with IPv6 flowlabel that I bisected to this patch.
-When passing '-F 0' to 'ping' the flow label should be random, yet it's
-the same every time after this patch.
-
-It seems that the pointer is never advanced after the call to
-sockptr_advance() because it is passed by value and not by reference.
-Even if you were to pass it by reference I think you would later need to
-call sockptr_decrease() or something similar. Otherwise it is very
-error-prone.
-
-Maybe adding an offset to copy_to_sockptr() and copy_from_sockptr() is
-better?
-
-Thanks
-
-> +		if (copy_to_sockptr(optval, &fl->label, sizeof(fl->label))) {
->  			/* Intentionally ignore fault. */
->  		}
->  	}
-> @@ -716,13 +718,13 @@ static int ipv6_flowlabel_get(struct sock *sk, struct in6_flowlabel_req *freq,
->  	return err;
->  }
->  
-> -int ipv6_flowlabel_opt(struct sock *sk, char __user *optval, int optlen)
-> +int ipv6_flowlabel_opt(struct sock *sk, sockptr_t optval, int optlen)
->  {
->  	struct in6_flowlabel_req freq;
->  
->  	if (optlen < sizeof(freq))
->  		return -EINVAL;
-> -	if (copy_from_user(&freq, optval, sizeof(freq)))
-> +	if (copy_from_sockptr(&freq, optval, sizeof(freq)))
->  		return -EFAULT;
->  
->  	switch (freq.flr_action) {
-> diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
-> index 119dfaf5f4bb26..3897fb55372d38 100644
-> --- a/net/ipv6/ipv6_sockglue.c
-> +++ b/net/ipv6/ipv6_sockglue.c
-> @@ -929,7 +929,7 @@ static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
->  		retv = 0;
->  		break;
->  	case IPV6_FLOWLABEL_MGR:
-> -		retv = ipv6_flowlabel_opt(sk, optval, optlen);
-> +		retv = ipv6_flowlabel_opt(sk, USER_SOCKPTR(optval), optlen);
->  		break;
->  	case IPV6_IPSEC_POLICY:
->  	case IPV6_XFRM_POLICY:
-> -- 
-> 2.27.0
+>  done:
+>  	report_prefix_pop();
+> diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
+> index 0f156af..b35269b 100644
+> --- a/s390x/unittests.cfg
+> +++ b/s390x/unittests.cfg
+> @@ -88,3 +88,7 @@ extra_params = -m 3G
+>  [css]
+>  file = css.elf
+>  extra_params = -device virtio-net-ccw
+> +
+> +[skrf]
+> +file = skrf.elf
+> +smp = 2
 > 
+
