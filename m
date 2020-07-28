@@ -2,133 +2,84 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8916A2308BA
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Jul 2020 13:31:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A8B02308CE
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Jul 2020 13:35:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbgG1Lbe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 28 Jul 2020 07:31:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36328 "EHLO
+        id S1729036AbgG1Lfc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 Jul 2020 07:35:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729056AbgG1Lbc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 28 Jul 2020 07:31:32 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB96C061794;
-        Tue, 28 Jul 2020 04:31:31 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id g11so8513136ejr.0;
-        Tue, 28 Jul 2020 04:31:31 -0700 (PDT)
+        with ESMTP id S1729081AbgG1Lfb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 28 Jul 2020 07:35:31 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F86DC0619D2
+        for <linux-s390@vger.kernel.org>; Tue, 28 Jul 2020 04:35:31 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so17970931wrw.1
+        for <linux-s390@vger.kernel.org>; Tue, 28 Jul 2020 04:35:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=y5PIG9gv3+Q65q73c5WJL/D8ixTHr55LzcpS0la2b94=;
-        b=P7HSEqdJclVd5Bnzob/XF2RdTn0Nmb3HUJySlROmL68osljlcfCEFlV3HJYGTsfk+b
-         VHrJ1f+xMExFZ+YSvv8Rmeh1N5GaQQ3p6pZuSDQBx0nbSt1s4XPLJfYIDrJpBvMTIQ3T
-         tnPlkWxuMjJu8J60O/OlnbAruEsKB2973ivyYANGexg1cYLi5G1vwz7DY7w0Hk/PvarE
-         qINCzPe5al7+9kODm2QQrbeaDo+Ef9vruELr0bSlzbcnvJrfytMgRRiJ5yKDr3S0B9bh
-         pUq4JqHBAw9f6ZNp7JiPY7EX8klIc+e+asMdZK9Yz7BoN21wjEsZd5KQdrrR+TAABie5
-         JrSQ==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=z88eUg589kIPbwfcJkBbHKFa4QR0wOZWGk2diK1jFPM=;
+        b=jGbR+BroflfeASW0BmhNgavxERROPJDC3LM981cRpip1WnTz/wWbtxWiBDlu4Yaojm
+         kj5kHBMFRpMinmwdtRVtfAC8gH2OzcQUptbx2YD7HsdmcvUpsQipJSKbbtZgkmF6Ym5z
+         89kC4pHLXnaXEKTQJ+77T0sm58QENHze4YBVlD5iL9P1SkGMRh0N1JTNHGtixOkANX5o
+         gh9HkrU04fZEESpKc8DoXZlkB7biX01fl7D8AH4M3K0FfSQCMEB/rRLwuugE+0NYcm5u
+         5sjqFJJlTDtWz1Iw5tMV6paQ5xg2/1tn6leJOdG8hCP1RRxaXbfGPsoHwmtIqiklcZtr
+         g22A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=y5PIG9gv3+Q65q73c5WJL/D8ixTHr55LzcpS0la2b94=;
-        b=OOzFgRSu/DvjBP+3eKmGLIftrUVRhrB6OCXZ7oI2ZKitEKe/7hOLHMA2fChf3XyTpy
-         C/Th+ceg3zrQt4MJt63pZXHsRvYbvbwIzdi11gA2GVWubw6Bi5U4qLHR1GLlmB5sXo+c
-         Qn9yJjRW/dW3grvrpRiPd+RcAzbbu67hXsAIujKJkQqt3jx32eutYjeHmJYMmO3ktPIH
-         Te1JETAsO1UKem6WhMYMY//je33oKgHo5SFX3uBFNJ9Q5SnWGqnoyn6NGr3PkBy54Due
-         JCanvJO0i8JQollrWJNEvSpGwd1kSRM58A9wC7DP9DKSirPwszFXHRTSqGLAK02rEwn+
-         cnNw==
-X-Gm-Message-State: AOAM533fxYOvBNmJhet9bMjHRrwqic3bShiFK8FVomFCweRS2L2toODh
-        MIrI9LjpDNApb2rNBcUVJ88=
-X-Google-Smtp-Source: ABdhPJyQbAVtd7rvh28AKuUuAlpNq5u8pcARe+eVx7W3hTuAzpqofzarCSjsJ0a8Qe+YPenFOSGRUQ==
-X-Received: by 2002:a17:906:22c1:: with SMTP id q1mr16036266eja.443.1595935889994;
-        Tue, 28 Jul 2020 04:31:29 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id qw19sm7634705ejb.46.2020.07.28.04.31.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 04:31:29 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 13:31:26 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: Re: [PATCH 14/15] x86/numa: remove redundant iteration over
- memblock.reserved
-Message-ID: <20200728113126.GB233444@gmail.com>
-References: <20200728051153.1590-1-rppt@kernel.org>
- <20200728051153.1590-15-rppt@kernel.org>
- <20200728104440.GA222284@gmail.com>
- <20200728105602.GB3655207@kernel.org>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=z88eUg589kIPbwfcJkBbHKFa4QR0wOZWGk2diK1jFPM=;
+        b=EAy3Qu+ys1lRylXpKR9/82kTBHt2w5du4mBn58S+beS+DNxnvVIA3U+vbTFSVlxVQr
+         EzpzrdLzcS5wfu9VgkxOCI8C2ATDImwDhrVT9kmFd9nDERwXt2Ghw9mq94vQCcp0OqxJ
+         1DhK/gjQ0Bl+PaztEno9D592vdn07OvJaOjkRg+tb/EGnqEI9TDheC72zQmAY0ls6dn3
+         z3cbhn6RZnHZcmD3zB92chLyfbZ/vIfeKM1FckJNF0LbL9eyBJwy58ST9FyKRtWhoaMg
+         mhq1lXrxQWMq+R2J8xBlQUGd5VHHxUD09eJu0mc0D96NQivzs+5mF9STDG17tO69MmiL
+         voug==
+X-Gm-Message-State: AOAM532nlq39foS20A9HPfHUWe+j4zqSWkYC7YTarnbFMk1FGz7YTUej
+        LDABxCrY8pMIObnt8OoDvDCUHDHaUOHbe68iNts=
+X-Google-Smtp-Source: ABdhPJyUinJNMXgpEBf1VWsgfHhxiiLH4kvEoQnIK1sFLXm1DpRZoN9SdVC1/5oYl/IHnX1nq9adjEetiHqykBE0gMY=
+X-Received: by 2002:adf:ec45:: with SMTP id w5mr25037760wrn.415.1595936126990;
+ Tue, 28 Jul 2020 04:35:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728105602.GB3655207@kernel.org>
+Received: by 2002:a5d:65cb:0:0:0:0:0 with HTTP; Tue, 28 Jul 2020 04:35:25
+ -0700 (PDT)
+From:   Rashid Al-Wahaibi <pdlarsen550@gmail.com>
+Date:   Tue, 28 Jul 2020 12:35:25 +0100
+Message-ID: <CAE00X2EX5AP8HhkEBjK4YTFk_ZTSs8W+siY+uKV2Uz1-BOGfOg@mail.gmail.com>
+Subject: Your Partnership
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+-- 
+Good day,
+My name is Rashid Al-Wahaibi, I am from Oman but base here in the UK
+and a Managing Partner of BP Partnership Ltd, a Financial Consultancy
+Firm with office in the United Kingdom. I am contacting you based on
+the request of Ms Rosmah Mansor Najib Razak, wife of Najib Razak, the
+immediate past Malaysian Prime Minister.
 
-* Mike Rapoport <rppt@kernel.org> wrote:
+I found your profile satisfying and decided to contact you based on Ms
+Rosmah Mansor Najib Razak desire to invest in any viable project in
+your region.
 
-> On Tue, Jul 28, 2020 at 12:44:40PM +0200, Ingo Molnar wrote:
-> > 
-> > * Mike Rapoport <rppt@kernel.org> wrote:
-> > 
-> > > From: Mike Rapoport <rppt@linux.ibm.com>
-> > > 
-> > > numa_clear_kernel_node_hotplug() function first traverses numa_meminfo
-> > > regions to set node ID in memblock.reserved and than traverses
-> > > memblock.reserved to update reserved_nodemask to include node IDs that were
-> > > set in the first loop.
-> > > 
-> > > Remove redundant traversal over memblock.reserved and update
-> > > reserved_nodemask while iterating over numa_meminfo.
-> > > 
-> > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > > ---
-> > >  arch/x86/mm/numa.c | 26 ++++++++++----------------
-> > >  1 file changed, 10 insertions(+), 16 deletions(-)
-> > 
-> > I suspect you'd like to carry this in the -mm tree?
-> 
-> Yes.
->  
-> > Acked-by: Ingo Molnar <mingo@kernel.org>
-> 
-> Thanks!
+I need you to guide me on the type of investment that will be of best
+interest and provide good return on investment in your country and
+also act as her investment manager. She is ready to invest $25m to
+$50m USD
 
-Assuming it is correct and works. :-)
+I will explain further detail of this business proposal when you reply
+to this email indicating your interest.
 
-Thanks,
 
-	Ingo
+Regards,
+
+Rashid Al-Wahaibi,
+Bp Partnership Ltd
+60 Raglan Road
+Reigate, ENG RH2 0HN,
+United Kingdom
