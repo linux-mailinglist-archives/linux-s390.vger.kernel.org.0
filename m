@@ -2,106 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42A7722F7B2
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Jul 2020 20:23:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0687623003E
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Jul 2020 05:35:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbgG0SXI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 Jul 2020 14:23:08 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:46683 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729205AbgG0SXH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 27 Jul 2020 14:23:07 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id D24DDE02;
-        Mon, 27 Jul 2020 14:23:04 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 27 Jul 2020 14:23:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=Afhna7
-        9fjG2N/ESpGlT1yod24pbovs9kG7jTtRp8uec=; b=pxd6lnhAQY6lq36Rw0t2Wr
-        FNTj7Aqv7utLvfCSPVSKK7zYkP/Oi6k9NUUf7rFRtAgNJ4ISpkANzMes5KPdO5xP
-        uQhBAs0exKeEZWKHlguK1wyxAhd7/2StnncNBaDA+r1X7J3jOA/5IUqtqukcS8Zy
-        6b1F7WsC7K7Gxls+h+LpTkFCZf/cBDkEzEii5uRHhbH0he4RqOm0VhtaaNhJ0ONh
-        sA1OegTDCQaheFhFJspfeBf1dkuokHpdFLa9JDtSfErlJ23gF/vUAREvveiVNSbI
-        s2U0p/YcHBpouuo2EToObgfipcm60uYWCoTDshKh/Ld62ZeuhBlR0923rp/WSgug
-        ==
-X-ME-Sender: <xms:hhsfXw256bt5Qvmk7qwJktXsYXMYpGtJEPiP9Uh0o4S3z4J60JG_Ug>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedriedtgdduvdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
-    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtth
-    gvrhhnpedtffekkeefudffveegueejffejhfetgfeuuefgvedtieehudeuueekhfduheel
-    teenucfkphepjeelrddukedurddvrddujeelnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrgh
-X-ME-Proxy: <xmx:hhsfX7GUtyQL-qzWlnNrDA6BRLNqA_sVqs6SkDPZ3OFYz2rLpuLPKA>
-    <xmx:hhsfX46tTRqe9_4re0uj3hKI21pc6E5kOG5GBQ_4I2GbhCEFmzhFVQ>
-    <xmx:hhsfX53ly2RhKyVXpSc-AP7Py8h3bUEfu3XyInk15A9EOdXPwhk-DQ>
-    <xmx:iBsfX7VuEFOpnGbNFKVSKt3rokiDITnfnJBSqLDGQ8efu7Vwr-9kkM4RTJM>
-Received: from localhost (bzq-79-181-2-179.red.bezeqint.net [79.181.2.179])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BA5ED328005D;
-        Mon, 27 Jul 2020 14:23:01 -0400 (EDT)
-Date:   Mon, 27 Jul 2020 21:22:59 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        linux-sctp@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-can@vger.kernel.org, dccp@vger.kernel.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
-        mptcp@lists.01.org, lvs-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-        tipc-discussion@lists.sourceforge.net, linux-x25@vger.kernel.org
-Subject: Re: [PATCH 19/26] net/ipv6: switch ipv6_flowlabel_opt to sockptr_t
-Message-ID: <20200727182259.GA1931870@shredder>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200723060908.50081-20-hch@lst.de>
- <20200727121505.GA1804864@shredder>
- <20200727130029.GA26393@lst.de>
- <20200727133331.GA1851348@shredder>
- <20200727161555.GA7817@lst.de>
+        id S1727977AbgG1Df3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 Jul 2020 23:35:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727941AbgG1Df2 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 27 Jul 2020 23:35:28 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88E14C061794;
+        Mon, 27 Jul 2020 20:35:28 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o13so11134494pgf.0;
+        Mon, 27 Jul 2020 20:35:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zBLkp4ACPTazmjPNrlv/57ssiAbYaRhM1wboTYBBHDY=;
+        b=dVK/1EliSimIRnUstbAmbx25mSwdR+Js0puQBQW3DsLX1VrptOUZVyUDjo7npj1Mhx
+         L3e5K36rO3npq4glvDBg4YqqkI4XpYAFUSzxOS1MTAz6RO3a7P1MeyS9q/dW3kz/gxle
+         /9G3Jbo4dq+aolt4j2XDZLDyfRLvX2Bu2gB0/UlCQhw8WzxyINP0JWeWmD6swLpTVbI9
+         MkiRqfViP/O5kKgY773WmCUMGAj6Io26pzg5z2lJr2jlGjHo5EWu36iiYvJct6hdmDjs
+         xEXi9awKzb8oLJA64GjYb8TUmyGvAEj44+0XmvekMAPPeQqnnY3LYvisXSyA/Q5guxNk
+         tF3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zBLkp4ACPTazmjPNrlv/57ssiAbYaRhM1wboTYBBHDY=;
+        b=gdkVPJifBk/+tHWKmJ5D3MHdQqQEboSQje7lqIbTjreRsyIbPEAs9GWsha+w8kn8QT
+         xcehuMMbZeZ5KzCC15z0H3tMzvvcS0Vmna5LpJ5jQrkOZmewHv4qTEzZmyZx5dshEjgP
+         Hh6oQ0G/yLyDLGM+4W0Mw8nMZw/xEm8jyXqiJK52WC5yCYlsBquJOK6M6KNKE3bvX6V7
+         oIBJzNq0dBDXfRM1iBWrUS4tuI7Pt6mV3QwEvdJB4IXPVy2YrguhhWzU5X/qVDJf16ZT
+         6EOyZmse8GMePrEEy4q1rFMGpazqQGovXWFjTZdeQtiPcoVqP0tqbJTwcKSlqLWAAnwW
+         oIUw==
+X-Gm-Message-State: AOAM533Pg88ZQJ6OFKsnr2sbP4u5ghn7wCXKuB5TarPo7hvoetoXULHa
+        E8Vi4esALs7lTQi+45G1VGTxMJP0
+X-Google-Smtp-Source: ABdhPJwAK20YJK9/QxvuhDFbG5k71L1N7JplcOMAW7nPJfoIn8DDaWASYvwHqmKUD5r7MPuX4k/MPw==
+X-Received: by 2002:a62:3207:: with SMTP id y7mr22632527pfy.95.1595907327960;
+        Mon, 27 Jul 2020 20:35:27 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (110-174-173-27.tpgi.com.au. [110.174.173.27])
+        by smtp.gmail.com with ESMTPSA id r4sm998707pji.37.2020.07.27.20.35.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jul 2020 20:35:27 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 18/24] s390: use asm-generic/mmu_context.h for no-op implementations
+Date:   Tue, 28 Jul 2020 13:33:59 +1000
+Message-Id: <20200728033405.78469-19-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200728033405.78469-1-npiggin@gmail.com>
+References: <20200728033405.78469-1-npiggin@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727161555.GA7817@lst.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 06:15:55PM +0200, Christoph Hellwig wrote:
-> I have to admit I didn't spot the difference between the good and the
-> bad output even after trying hard..
-> 
-> But can you try the patch below?
-> 
-> ---
-> From cce2d2e1b43ecee5f4af7cf116808b74b330080f Mon Sep 17 00:00:00 2001
-> From: Christoph Hellwig <hch@lst.de>
-> Date: Mon, 27 Jul 2020 17:42:27 +0200
-> Subject: net: remove sockptr_advance
-> 
-> sockptr_advance never properly worked.  Replace it with _offset variants
-> of copy_from_sockptr and copy_to_sockptr.
-> 
-> Fixes: ba423fdaa589 ("net: add a new sockptr_t type")
-> Reported-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Reported-by: Ido Schimmel <idosch@idosch.org>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+ arch/s390/include/asm/mmu_context.h | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Tested-by: Ido Schimmel <idosch@mellanox.com>
+diff --git a/arch/s390/include/asm/mmu_context.h b/arch/s390/include/asm/mmu_context.h
+index c9f3d8a52756..66f9cf0a07e3 100644
+--- a/arch/s390/include/asm/mmu_context.h
++++ b/arch/s390/include/asm/mmu_context.h
+@@ -15,6 +15,7 @@
+ #include <asm/ctl_reg.h>
+ #include <asm-generic/mm_hooks.h>
+ 
++#define init_new_context init_new_context
+ static inline int init_new_context(struct task_struct *tsk,
+ 				   struct mm_struct *mm)
+ {
+@@ -69,8 +70,6 @@ static inline int init_new_context(struct task_struct *tsk,
+ 	return 0;
+ }
+ 
+-#define destroy_context(mm)             do { } while (0)
+-
+ static inline void set_user_asce(struct mm_struct *mm)
+ {
+ 	S390_lowcore.user_asce = mm->context.asce;
+@@ -125,9 +124,7 @@ static inline void finish_arch_post_lock_switch(void)
+ 	set_fs(current->thread.mm_segment);
+ }
+ 
+-#define enter_lazy_tlb(mm,tsk)	do { } while (0)
+-#define deactivate_mm(tsk,mm)	do { } while (0)
+-
++#define activate_mm activate_mm
+ static inline void activate_mm(struct mm_struct *prev,
+                                struct mm_struct *next)
+ {
+@@ -136,4 +133,6 @@ static inline void activate_mm(struct mm_struct *prev,
+ 	set_user_asce(next);
+ }
+ 
++#include <asm-generic/mmu_context.h>
++
+ #endif /* __S390_MMU_CONTEXT_H */
+-- 
+2.23.0
 
-Thanks!
