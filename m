@@ -2,113 +2,118 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50FC22304E6
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Jul 2020 10:07:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 739842304FE
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Jul 2020 10:10:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgG1IHR convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Tue, 28 Jul 2020 04:07:17 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:27895 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727918AbgG1IHR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 28 Jul 2020 04:07:17 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-122-o5x9Q9SyNzqkeSG6S-qBgw-1; Tue, 28 Jul 2020 09:07:12 +0100
-X-MC-Unique: o5x9Q9SyNzqkeSG6S-qBgw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 28 Jul 2020 09:07:11 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 28 Jul 2020 09:07:11 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christoph Hellwig' <hch@lst.de>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: RE: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
-Thread-Topic: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
-Thread-Index: AQHWZDJbUYsuJ1QOc0ujZBN9RDfEqKkcofVA
-Date:   Tue, 28 Jul 2020 08:07:11 +0000
-Message-ID: <908ed73081cc42d58a5b01e0c97dbe47@AcuMS.aculab.com>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200723060908.50081-13-hch@lst.de> <20200727150310.GA1632472@zx2c4.com>
- <20200727150601.GA3447@lst.de>
- <CAHmME9ric=chLJayn7Erve7WBa+qCKn-+Gjri=zqydoY6623aA@mail.gmail.com>
- <20200727162357.GA8022@lst.de>
-In-Reply-To: <20200727162357.GA8022@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        id S1727973AbgG1IJ6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 Jul 2020 04:09:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727957AbgG1IJ5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 28 Jul 2020 04:09:57 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B5DBC061794;
+        Tue, 28 Jul 2020 01:09:57 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id c6so4500536pje.1;
+        Tue, 28 Jul 2020 01:09:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mO4UW6jhce2IwLYWJIjyNoNVa+Gr5PBQ2rV1LkhhIeA=;
+        b=bNG6JL/O5TVQki3sHfHEOfTczEIMUXR0OLqZGWSVnVXN0YvSLXQj4R1CZin1hIrLmj
+         rDRSSHKktD8YAK18dQ3Ix7Lo07yJ8erIxBxxxxqVLyUXKDeyjbkBvyU6KTuEXDNL+VQr
+         1QQzuFpqB0CYmf+5pX3A4eJDz9R/FeezQPycBuGnXY4EFLSYZVijwWE1t6E2M5B99qAH
+         FniHRX5RxN1gZw65OKCdqnG/UzIrS3ICQ278hYR6IoGyzyd6ykow+PajTtCN7ldzFD83
+         Hcz6o03i9dPHjv0yz+B7ucVCSupfsp/DKM7XkQQq14g4beE60uqTFBLLU79wWmkWweg4
+         xE4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mO4UW6jhce2IwLYWJIjyNoNVa+Gr5PBQ2rV1LkhhIeA=;
+        b=iKbMqv6YWFfTuQyp7LJGhYnHsT7VISK/ULa68hwOyFUZI/8BDvhjrTMntvHOyAhDX4
+         UynKhAIJxwNiSXzNkFYp9E/GcRGLfyKXv2A7lVy8936IjWzzNF44XcisMb6IcKP2rL1M
+         ba3qj5ONlWNertiHBRm8KTIjMBjBocdNSSuOpsWKSGLPBHbo50DY3YUd6BX7+bKEqTrC
+         Ht51HhDDxhNQDotRTCLm9rjvL3zBmGOuVlXUdmTCU65DPAcCGEGdbs88oLpFR64hEZgM
+         DCJ1+I+bAMi8ySkhYONeVzPUaisUoBFYTXkHv5YycxyaqxfS56oAoZFmFYsqR0oFhMzy
+         7QiA==
+X-Gm-Message-State: AOAM533neudT2JA6Nl4ernTNisviKdbOXElKFmdL60zeWfA5qp27R35M
+        hcLkeZiVaZitgDHBJ6PcWz6FUQVmul333YbMd9I=
+X-Google-Smtp-Source: ABdhPJwl2tr9ClL3asn7D0daWCLxpbWcicGBHl3RglmUadciWpYNtKvtb4F0xzOXS215QqSA9z2se3QNEhc8iGYlMEA=
+X-Received: by 2002:a17:90a:8918:: with SMTP id u24mr3082134pjn.7.1595923796912;
+ Tue, 28 Jul 2020 01:09:56 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20200728051153.1590-1-rppt@kernel.org> <20200728051153.1590-4-rppt@kernel.org>
+In-Reply-To: <20200728051153.1590-4-rppt@kernel.org>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Tue, 28 Jul 2020 01:09:45 -0700
+Message-ID: <CAMo8Bf+VKHmAm1GV=0D9Um2mpsxjnwp9WrAJq_eKW1MK+_8r6g@mail.gmail.com>
+Subject: Re: [PATCH 03/15] arm, xtensa: simplify initialization of high memory pages
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-mips@vger.kernel.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-riscv@lists.infradead.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        "open list:SUPERH" <linux-sh@vger.kernel.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org,
+        "open list:SPARC + UltraSPAR..." <sparclinux@vger.kernel.org>,
+        "moderated list:H8/300 ARCHITECTURE" 
+        <uclinux-h8-devel@lists.sourceforge.jp>,
+        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Christoph Hellwig
-> Sent: 27 July 2020 17:24
-> 
-> On Mon, Jul 27, 2020 at 06:16:32PM +0200, Jason A. Donenfeld wrote:
-> > Maybe sockptr_advance should have some safety checks and sometimes
-> > return -EFAULT? Or you should always use the implementation where
-> > being a kernel address is an explicit bit of sockptr_t, rather than
-> > being implicit?
-> 
-> I already have a patch to use access_ok to check the whole range in
-> init_user_sockptr.
+On Mon, Jul 27, 2020 at 10:12 PM Mike Rapoport <rppt@kernel.org> wrote:
+>
+> From: Mike Rapoport <rppt@linux.ibm.com>
+>
+> The function free_highpages() in both arm and xtensa essentially open-code
+> for_each_free_mem_range() loop to detect high memory pages that were not
+> reserved and that should be initialized and passed to the buddy allocator.
+>
+> Replace open-coded implementation of for_each_free_mem_range() with usage
+> of memblock API to simplify the code.
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  arch/arm/mm/init.c    | 48 +++++++------------------------------
+>  arch/xtensa/mm/init.c | 55 ++++++++-----------------------------------
+>  2 files changed, 18 insertions(+), 85 deletions(-)
 
-That doesn't make (much) difference to the code paths that ignore
-the user-supplied length.
-OTOH doing the user/kernel check on the base address (not an
-incremented one) means that the correct copy function is always
-selected.
+For the xtensa part:
+Reviewed-by: Max Filippov <jcmvbkbc@gmail.com>
+Tested-by: Max Filippov <jcmvbkbc@gmail.com>
 
-Perhaps the functions should all be passed a 'const sockptr_t'.
-The typedef could be made 'const' - requiring non-const items
-explicitly use the union/struct itself.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+-- 
+Thanks.
+-- Max
