@@ -2,80 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2680A230312
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Jul 2020 08:37:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50FC22304E6
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Jul 2020 10:07:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgG1Gh4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 28 Jul 2020 02:37:56 -0400
-Received: from verein.lst.de ([213.95.11.211]:46850 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726790AbgG1Gh4 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 28 Jul 2020 02:37:56 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id EF4D868B05; Tue, 28 Jul 2020 08:37:49 +0200 (CEST)
-Date:   Tue, 28 Jul 2020 08:37:49 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: Re: [PATCH 02/15] dma-contiguous: simplify
- cma_early_percent_memory()
-Message-ID: <20200728063749.GA21221@lst.de>
-References: <20200728051153.1590-1-rppt@kernel.org> <20200728051153.1590-3-rppt@kernel.org>
+        id S1727929AbgG1IHR convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Tue, 28 Jul 2020 04:07:17 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:27895 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727918AbgG1IHR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 28 Jul 2020 04:07:17 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-122-o5x9Q9SyNzqkeSG6S-qBgw-1; Tue, 28 Jul 2020 09:07:12 +0100
+X-MC-Unique: o5x9Q9SyNzqkeSG6S-qBgw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 28 Jul 2020 09:07:11 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 28 Jul 2020 09:07:11 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
+        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+        "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
+        "linux-decnet-user@lists.sourceforge.net" 
+        <linux-decnet-user@lists.sourceforge.net>,
+        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "mptcp@lists.01.org" <mptcp@lists.01.org>,
+        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "tipc-discussion@lists.sourceforge.net" 
+        <tipc-discussion@lists.sourceforge.net>,
+        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: RE: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
+Thread-Topic: [PATCH 12/26] netfilter: switch nf_setsockopt to sockptr_t
+Thread-Index: AQHWZDJbUYsuJ1QOc0ujZBN9RDfEqKkcofVA
+Date:   Tue, 28 Jul 2020 08:07:11 +0000
+Message-ID: <908ed73081cc42d58a5b01e0c97dbe47@AcuMS.aculab.com>
+References: <20200723060908.50081-1-hch@lst.de>
+ <20200723060908.50081-13-hch@lst.de> <20200727150310.GA1632472@zx2c4.com>
+ <20200727150601.GA3447@lst.de>
+ <CAHmME9ric=chLJayn7Erve7WBa+qCKn-+Gjri=zqydoY6623aA@mail.gmail.com>
+ <20200727162357.GA8022@lst.de>
+In-Reply-To: <20200727162357.GA8022@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728051153.1590-3-rppt@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 08:11:40AM +0300, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
+From: Christoph Hellwig
+> Sent: 27 July 2020 17:24
 > 
-> The memory size calculation in cma_early_percent_memory() traverses
-> memblock.memory rather than simply call memblock_phys_mem_size(). The
-> comment in that function suggests that at some point there should have been
-> call to memblock_analyze() before memblock_phys_mem_size() could be used.
-> As of now, there is no memblock_analyze() at all and
-> memblock_phys_mem_size() can be used as soon as cold-plug memory is
-> registerd with memblock.
+> On Mon, Jul 27, 2020 at 06:16:32PM +0200, Jason A. Donenfeld wrote:
+> > Maybe sockptr_advance should have some safety checks and sometimes
+> > return -EFAULT? Or you should always use the implementation where
+> > being a kernel address is an explicit bit of sockptr_t, rather than
+> > being implicit?
 > 
-> Replace loop over memblock.memory with a call to memblock_phys_mem_size().
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> I already have a patch to use access_ok to check the whole range in
+> init_user_sockptr.
 
-Looks good:
+That doesn't make (much) difference to the code paths that ignore
+the user-supplied length.
+OTOH doing the user/kernel check on the base address (not an
+incremented one) means that the correct copy function is always
+selected.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Perhaps the functions should all be passed a 'const sockptr_t'.
+The typedef could be made 'const' - requiring non-const items
+explicitly use the union/struct itself.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
