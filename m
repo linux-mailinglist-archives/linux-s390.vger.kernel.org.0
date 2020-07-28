@@ -2,54 +2,30 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 054292307F0
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Jul 2020 12:44:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD48D230830
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Jul 2020 12:56:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbgG1Koq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 28 Jul 2020 06:44:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728566AbgG1Koq (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 28 Jul 2020 06:44:46 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B836FC061794;
-        Tue, 28 Jul 2020 03:44:45 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id c2so8588299edx.8;
-        Tue, 28 Jul 2020 03:44:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3Jtd/NLDfEi5mS55S0K4WbnSIzqpGJbZScZKeEtsXAQ=;
-        b=rFUcMCUj2AwdC69csGGjJVjr3K/8WS4HC4QuFwZtg451Qj4L37BpO16QBPnCSOnEqP
-         0XLFh6CAcMNi+86g1xCyy/bqdVTYRHcM+S9kEIZb7EWJKKOmGB7fGMyBy9goHLKaJvij
-         l3J//FegCgxfC20hSO+SeOOi0ojcNdANd874jllkW9bgWXdBSGjDZ+KKsJ5ItnWu5ElM
-         TutsV7Y/UWKyR2rEXX1BEUlxaWMHKF0PMaSsOZWNK/0D0ZH9xxW9nIbDP8AygACtKk6q
-         SuVbplxJKZehbky/ztC2U7bihOneNjqjj52Fn1yyk39lDMDQeAEZqoI3viUUxFXSv5vl
-         9XJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=3Jtd/NLDfEi5mS55S0K4WbnSIzqpGJbZScZKeEtsXAQ=;
-        b=ZSQUTmefeWtLK+CEQ054R8zMjwmMr1kQGHV//SrV/Y7NrFrRJ4LYlseGfoN/hq3CMG
-         I8GvY7tiADo4UFH7Is3XoHqXnHo/DvY1E4xdG8kI5X92lzDEg624ps0HiRRY6FjAQdo1
-         IdZjS0135VXkU7hpgT8x2Q1QSC3ceQkZ6/8g+BJezbXSo+KU/3BhgJirmIqHSHwaIheD
-         9hUvgz+0qewAIgFn0bZBTtEMyBT5kyOJnGsyAQZgYlhE8h2YDAKRsYfjuMdhTDmSPpy3
-         TJTUWePl+6L4iEHGGhEU9iwwQmNHPKbuxNGnpykm8Nu27GRT4TsyvefzlxZ+sgA5r5F6
-         K1DA==
-X-Gm-Message-State: AOAM5320ckPRT4QDJ4QrsdqQf3JNcI55zxYPlDM3R9GhQb13GjHrfS/b
-        BBdHsWr5QRCXwQoFBbH/UIg=
-X-Google-Smtp-Source: ABdhPJztizS2/FT37W5GVOnd6egL7RbIXP7ubjCB3LMqpraJ3F9fNNOV7TQhtwANWplTQvf13TbOQg==
-X-Received: by 2002:aa7:dd15:: with SMTP id i21mr12013673edv.153.1595933084517;
-        Tue, 28 Jul 2020 03:44:44 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id cf10sm460841ejb.4.2020.07.28.03.44.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jul 2020 03:44:43 -0700 (PDT)
-Date:   Tue, 28 Jul 2020 12:44:40 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Mike Rapoport <rppt@kernel.org>
+        id S1728797AbgG1K4U (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 Jul 2020 06:56:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728763AbgG1K4U (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 28 Jul 2020 06:56:20 -0400
+Received: from kernel.org (unknown [87.71.40.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F93A204EA;
+        Tue, 28 Jul 2020 10:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1595933779;
+        bh=rNeOQgk8Ja8EnwwwD3eYzStK24lMrD6z0cTMgy9a9QQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GaqX56Rbj+N1Mz6UyTAyoeiV2UjmyQ1JRRE5tNv2GNU4C8YMxHr+kbNtL4JzJlsAy
+         ScdjYPyI8moETB7oZ34zmIQmli78wpYsgkku4f7CIjv3woY2fEo2HxXSUsaNO4HEay
+         kodVMJnUU7dTJtF+OWGSFGl3TO2fwrpo3QfCz2LQ=
+Date:   Tue, 28 Jul 2020 13:56:02 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Andy Lutomirski <luto@kernel.org>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -83,40 +59,50 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
 Subject: Re: [PATCH 14/15] x86/numa: remove redundant iteration over
  memblock.reserved
-Message-ID: <20200728104440.GA222284@gmail.com>
+Message-ID: <20200728105602.GB3655207@kernel.org>
 References: <20200728051153.1590-1-rppt@kernel.org>
  <20200728051153.1590-15-rppt@kernel.org>
+ <20200728104440.GA222284@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200728051153.1590-15-rppt@kernel.org>
+In-Reply-To: <20200728104440.GA222284@gmail.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-* Mike Rapoport <rppt@kernel.org> wrote:
-
-> From: Mike Rapoport <rppt@linux.ibm.com>
+On Tue, Jul 28, 2020 at 12:44:40PM +0200, Ingo Molnar wrote:
 > 
-> numa_clear_kernel_node_hotplug() function first traverses numa_meminfo
-> regions to set node ID in memblock.reserved and than traverses
-> memblock.reserved to update reserved_nodemask to include node IDs that were
-> set in the first loop.
+> * Mike Rapoport <rppt@kernel.org> wrote:
 > 
-> Remove redundant traversal over memblock.reserved and update
-> reserved_nodemask while iterating over numa_meminfo.
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> > 
+> > numa_clear_kernel_node_hotplug() function first traverses numa_meminfo
+> > regions to set node ID in memblock.reserved and than traverses
+> > memblock.reserved to update reserved_nodemask to include node IDs that were
+> > set in the first loop.
+> > 
+> > Remove redundant traversal over memblock.reserved and update
+> > reserved_nodemask while iterating over numa_meminfo.
+> > 
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > ---
+> >  arch/x86/mm/numa.c | 26 ++++++++++----------------
+> >  1 file changed, 10 insertions(+), 16 deletions(-)
 > 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/x86/mm/numa.c | 26 ++++++++++----------------
->  1 file changed, 10 insertions(+), 16 deletions(-)
+> I suspect you'd like to carry this in the -mm tree?
 
-I suspect you'd like to carry this in the -mm tree?
+Yes.
+ 
+> Acked-by: Ingo Molnar <mingo@kernel.org>
 
-Acked-by: Ingo Molnar <mingo@kernel.org>
+Thanks!
 
-Thanks,
+> Thanks,
+> 
+> 	Ingo
 
-	Ingo
+-- 
+Sincerely yours,
+Mike.
