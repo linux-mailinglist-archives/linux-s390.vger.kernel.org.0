@@ -2,139 +2,105 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7B58231D8D
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Jul 2020 13:42:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D547231F99
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Jul 2020 15:51:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgG2LmC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 29 Jul 2020 07:42:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726341AbgG2LmC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 29 Jul 2020 07:42:02 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1626AC061794;
-        Wed, 29 Jul 2020 04:42:02 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t6so14123109pgq.1;
-        Wed, 29 Jul 2020 04:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FyoxCr0A58f1XavZrIV1VkDI4AyZt3GTW0GxGRW15PU=;
-        b=ErgMzYX2rlBnfYHmvHv9Kb0jAk9sTy/cgwUC91LEM8hW88sSiXCtCju4DtSraYOdN6
-         Iz7cbIFHeP/OokbCsIndQn1W0/LL6legP5rUG8YuTLcO1oJBa0Q3JVGulGwjco0UElqI
-         VvU/wz6i9utUjGjHa4JZVJYJZv72u/uWssFs8dC69IKpZ4vHIedaLdUQ404Jx+JIDGcj
-         xtC8Sy1W9N1QM1A5lPVwWKGR7s1VkCc/Z0Han0x8lhUlPGexDzIucGIkbsBs70Eg0SOc
-         poCa7kET1lEBIE2/zAVCwyCXmjvm7W2acmjhWVo6kPWsms3mfhSxEZ1uLiCnzlFIY+r2
-         7Ntw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FyoxCr0A58f1XavZrIV1VkDI4AyZt3GTW0GxGRW15PU=;
-        b=aKGPZfVcS1+8YeHIlXDnOaZ21M9aoBATKrSH2S8ZQIONrJ6YGEe89tREMIpf0QEbHA
-         MRyQvfnYSU4r2pZxdJ2UetM7KQeXiIz7gOB6Qw/lhCvdmXtn0DK636+DitnIwFUs+v7F
-         QJALWTs6HnJWu44GbOXqE9bMiee4I2CkgokJcJ3draASz4XaXAW87WZJB9r1UqzGV7dG
-         XHGjz5M4LS1wi1RexBJ6eV85b8gOTChdP0jsLu388EX/h1oWjQ/PxDOqfb42fB4UnjzD
-         hQAB8VxJH5+YEu54N3ejhpnbw6AOztAAsvwqrcCGneq4f2VszgAFpEazFWGrlY3kXTZw
-         5F9w==
-X-Gm-Message-State: AOAM5328wfOvR2sn/U+5e3sLu3NrRy0D/OTMDpk13UfZkqIJ8rdLx2/m
-        /F1kkiczwpRpxIJYUDm7ZjY=
-X-Google-Smtp-Source: ABdhPJwp4puneP0dTsVKBe6dB1tdiT/38z6QwdAB9b3TkM+HxCNc29Y6zwoL2ht5YGJJkcQZn4i23Q==
-X-Received: by 2002:a65:64c7:: with SMTP id t7mr27611626pgv.89.1596022921588;
-        Wed, 29 Jul 2020 04:42:01 -0700 (PDT)
-Received: from localhost (g155.222-224-148.ppp.wakwak.ne.jp. [222.224.148.155])
-        by smtp.gmail.com with ESMTPSA id y18sm2097780pff.10.2020.07.29.04.42.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 04:42:00 -0700 (PDT)
-Date:   Wed, 29 Jul 2020 20:41:57 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: Re: [PATCH 05/15] h8300, nds32, openrisc: simplify detection of
- memory extents
-Message-ID: <20200729114157.GF80756@lianli.shorne-pla.net>
-References: <20200728051153.1590-1-rppt@kernel.org>
- <20200728051153.1590-6-rppt@kernel.org>
+        id S1726353AbgG2Nvc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 29 Jul 2020 09:51:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2474 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726054AbgG2Nvc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 29 Jul 2020 09:51:32 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06TDWsVU119229;
+        Wed, 29 Jul 2020 09:51:30 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32jpwdq5ej-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 09:51:30 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06TDXBaj119834;
+        Wed, 29 Jul 2020 09:51:28 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32jpwdq5dk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 09:51:28 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06TDjqDQ027428;
+        Wed, 29 Jul 2020 13:51:27 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 32gcpx553j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 29 Jul 2020 13:51:26 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06TDnwVX61473274
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 Jul 2020 13:49:59 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1BE834C052;
+        Wed, 29 Jul 2020 13:51:24 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B8B2A4C044;
+        Wed, 29 Jul 2020 13:51:23 +0000 (GMT)
+Received: from localhost (unknown [9.145.151.1])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 29 Jul 2020 13:51:23 +0000 (GMT)
+Date:   Wed, 29 Jul 2020 15:51:22 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: linux plumbers + clang + s390 virtualized testing
+Message-ID: <your-ad-here.call-01596030682-ext-1369@work.hours>
+References: <CAKwvOdn-2E=v_7Uie71pz2jjYCKnk98K1Ly8EkpxzvC6M5pXFA@mail.gmail.com>
+ <20200716112840.GC8484@osiris>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200728051153.1590-6-rppt@kernel.org>
+In-Reply-To: <20200716112840.GC8484@osiris>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-29_07:2020-07-29,2020-07-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=912 mlxscore=0 bulkscore=0 impostorscore=0 spamscore=0
+ adultscore=0 suspectscore=1 clxscore=1011 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007290091
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 08:11:43AM +0300, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
+On Thu, Jul 16, 2020 at 01:28:40PM +0200, Heiko Carstens wrote:
+> Hi Nick,
 > 
-> Instead of traversing memblock.memory regions to find memory_start and
-> memory_end, simply query memblock_{start,end}_of_DRAM().
+> > We were very excited to see your patches going by for enabling Clang
+> > support for s390.  Since then, we've added s390 builds to our
+> > continuous integration setup.
+> > 
+> > We've been running into a few issues with doing virtualized boot tests
+> > of our kernels on s390.
+> > 
+> > I was curious if you'll both be attending Linux plumbers conf?  If we
+> > carve out time for an s390+clang talk, would this be of interest to
+> > you to attend?
 > 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/h8300/kernel/setup.c    | 8 +++-----
->  arch/nds32/kernel/setup.c    | 8 ++------
->  arch/openrisc/kernel/setup.c | 9 ++-------
->  3 files changed, 7 insertions(+), 18 deletions(-)
+> I will not attend, however cannot speak for Vasily. He will have to
+> answer as soon as he returns - besides that enabling Clang support for
+> s390 was done by Vasily anyway :)
 
-Hi Mike,
+I will attend and it would surely be interesting to me and other
+s390 folks. Your efforts are greatly appreciated!
 
-For the openrisc part:
+BTW I believe basic Clang support for s390 came earlier in 5.2 with
+a lot of efforts from Arnd Bergmann.
 
-Acked-by: Stafford Horne <shorne@gmail.com>
-
-> --- a/arch/openrisc/kernel/setup.c
-> +++ b/arch/openrisc/kernel/setup.c
-> @@ -48,17 +48,12 @@ static void __init setup_memory(void)
->  	unsigned long ram_start_pfn;
->  	unsigned long ram_end_pfn;
->  	phys_addr_t memory_start, memory_end;
-> -	struct memblock_region *region;
->  
->  	memory_end = memory_start = 0;
->  
->  	/* Find main memory where is the kernel, we assume its the only one */
-> -	for_each_memblock(memory, region) {
-> -		memory_start = region->base;
-> -		memory_end = region->base + region->size;
-> -		printk(KERN_INFO "%s: Memory: 0x%x-0x%x\n", __func__,
-> -		       memory_start, memory_end);
-> -	}
-> +	memory_start = memblock_start_of_DRAM();
-> +	memory_end = memblock_end_of_DRAM();
->  
->  	if (!memory_end) {
->  		panic("No memory!");
-> -- 
-> 2.26.2
-> 
+My part was fixing recent breakages and bugging our s390 clang team
+(which did all the great work) to get kernel specific features support
+in clang 10 and 11 to reach features parity with gcc. And eventually
+doing few adjustments so that features which came with clang 10 and
+11 are working smoothly. That is s390 "asm goto" support and specific
+compiler flags for ftrace support and stack packing.
