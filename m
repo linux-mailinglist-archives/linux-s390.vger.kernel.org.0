@@ -2,218 +2,139 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0078E231B37
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Jul 2020 10:32:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7B58231D8D
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Jul 2020 13:42:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgG2IcC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 29 Jul 2020 04:32:02 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2548 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726707AbgG2IcB (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 29 Jul 2020 04:32:01 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 2439AD46260FB3D2AD69;
-        Wed, 29 Jul 2020 09:31:58 +0100 (IST)
-Received: from localhost (10.52.120.141) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 29 Jul
- 2020 09:31:56 +0100
-Date:   Wed, 29 Jul 2020 09:30:31 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+        id S1726817AbgG2LmC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 29 Jul 2020 07:42:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726341AbgG2LmC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 29 Jul 2020 07:42:02 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1626AC061794;
+        Wed, 29 Jul 2020 04:42:02 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t6so14123109pgq.1;
+        Wed, 29 Jul 2020 04:42:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FyoxCr0A58f1XavZrIV1VkDI4AyZt3GTW0GxGRW15PU=;
+        b=ErgMzYX2rlBnfYHmvHv9Kb0jAk9sTy/cgwUC91LEM8hW88sSiXCtCju4DtSraYOdN6
+         Iz7cbIFHeP/OokbCsIndQn1W0/LL6legP5rUG8YuTLcO1oJBa0Q3JVGulGwjco0UElqI
+         VvU/wz6i9utUjGjHa4JZVJYJZv72u/uWssFs8dC69IKpZ4vHIedaLdUQ404Jx+JIDGcj
+         xtC8Sy1W9N1QM1A5lPVwWKGR7s1VkCc/Z0Han0x8lhUlPGexDzIucGIkbsBs70Eg0SOc
+         poCa7kET1lEBIE2/zAVCwyCXmjvm7W2acmjhWVo6kPWsms3mfhSxEZ1uLiCnzlFIY+r2
+         7Ntw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FyoxCr0A58f1XavZrIV1VkDI4AyZt3GTW0GxGRW15PU=;
+        b=aKGPZfVcS1+8YeHIlXDnOaZ21M9aoBATKrSH2S8ZQIONrJ6YGEe89tREMIpf0QEbHA
+         MRyQvfnYSU4r2pZxdJ2UetM7KQeXiIz7gOB6Qw/lhCvdmXtn0DK636+DitnIwFUs+v7F
+         QJALWTs6HnJWu44GbOXqE9bMiee4I2CkgokJcJ3draASz4XaXAW87WZJB9r1UqzGV7dG
+         XHGjz5M4LS1wi1RexBJ6eV85b8gOTChdP0jsLu388EX/h1oWjQ/PxDOqfb42fB4UnjzD
+         hQAB8VxJH5+YEu54N3ejhpnbw6AOztAAsvwqrcCGneq4f2VszgAFpEazFWGrlY3kXTZw
+         5F9w==
+X-Gm-Message-State: AOAM5328wfOvR2sn/U+5e3sLu3NrRy0D/OTMDpk13UfZkqIJ8rdLx2/m
+        /F1kkiczwpRpxIJYUDm7ZjY=
+X-Google-Smtp-Source: ABdhPJwp4puneP0dTsVKBe6dB1tdiT/38z6QwdAB9b3TkM+HxCNc29Y6zwoL2ht5YGJJkcQZn4i23Q==
+X-Received: by 2002:a65:64c7:: with SMTP id t7mr27611626pgv.89.1596022921588;
+        Wed, 29 Jul 2020 04:42:01 -0700 (PDT)
+Received: from localhost (g155.222-224-148.ppp.wakwak.ne.jp. [222.224.148.155])
+        by smtp.gmail.com with ESMTPSA id y18sm2097780pff.10.2020.07.29.04.42.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 04:42:00 -0700 (PDT)
+Date:   Wed, 29 Jul 2020 20:41:57 +0900
+From:   Stafford Horne <shorne@gmail.com>
 To:     Mike Rapoport <rppt@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        <linux-sh@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        <linux-mips@vger.kernel.org>, Max Filippov <jcmvbkbc@gmail.com>,
-        "Paul Mackerras" <paulus@samba.org>, <sparclinux@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, Will Deacon <will@kernel.org>,
-        "Stafford Horne" <shorne@gmail.com>, <linux-s390@vger.kernel.org>,
-        <linux-c6x-dev@linux-c6x.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michael Ellerman <mpe@ellerman.id.au>, <x86@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        <clang-built-linux@googlegroups.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        <uclinux-h8-devel@lists.sourceforge.jp>,
-        <linux-xtensa@linux-xtensa.org>, <openrisc@lists.librecores.org>,
         Borislav Petkov <bp@alien8.de>,
-        "Andy Lutomirski" <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
         Thomas Gleixner <tglx@linutronix.de>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Michal Simek <monstr@monstr.eu>, <linux-mm@kvack.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <iommu@lists.linux-foundation.org>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 04/15] arm64: numa: simplify dummy_numa_init()
-Message-ID: <20200729093031.0000316b@Huawei.com>
-In-Reply-To: <20200728051153.1590-5-rppt@kernel.org>
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: Re: [PATCH 05/15] h8300, nds32, openrisc: simplify detection of
+ memory extents
+Message-ID: <20200729114157.GF80756@lianli.shorne-pla.net>
 References: <20200728051153.1590-1-rppt@kernel.org>
-        <20200728051153.1590-5-rppt@kernel.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+ <20200728051153.1590-6-rppt@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.120.141]
-X-ClientProxiedBy: lhreml738-chm.china.huawei.com (10.201.108.188) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728051153.1590-6-rppt@kernel.org>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 28 Jul 2020 08:11:42 +0300
-Mike Rapoport <rppt@kernel.org> wrote:
-
+On Tue, Jul 28, 2020 at 08:11:43AM +0300, Mike Rapoport wrote:
 > From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> dummy_numa_init() loops over memblock.memory and passes nid=0 to
-> numa_add_memblk() which essentially wraps memblock_set_node(). However,
-> memblock_set_node() can cope with entire memory span itself, so the loop
-> over memblock.memory regions is redundant.
+> Instead of traversing memblock.memory regions to find memory_start and
+> memory_end, simply query memblock_{start,end}_of_DRAM().
 > 
-> Replace the loop with a single call to memblock_set_node() to the entire
-> memory.
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  arch/h8300/kernel/setup.c    | 8 +++-----
+>  arch/nds32/kernel/setup.c    | 8 ++------
+>  arch/openrisc/kernel/setup.c | 9 ++-------
+>  3 files changed, 7 insertions(+), 18 deletions(-)
 
 Hi Mike,
 
-I had a similar patch I was going to post shortly so can add a bit more
-on the advantages of this one.
+For the openrisc part:
 
-Beyond cleaning up, it also fixes an issue with a buggy ACPI firmware in which the SRAT
-table covers some but not all of the memory in the EFI memory map.  Stealing bits
-from the draft cover letter I had for that...
+Acked-by: Stafford Horne <shorne@gmail.com>
 
-> This issue can be easily triggered by having an SRAT table which fails
-> to cover all elements of the EFI memory map.
-> 
-> This firmware error is detected and a warning printed. e.g.
-> "NUMA: Warning: invalid memblk node 64 [mem 0x240000000-0x27fffffff]"
-> At that point we fall back to dummy_numa_init().
-> 
-> However, the failed ACPI init has left us with our memblocks all broken
-> up as we split them when trying to assign them to NUMA nodes.
-> 
-> We then iterate over the memblocks and add them to node 0.
-> 
-> for_each_memblock(memory, mblk) {
-> 	ret = numa_add_memblk(0, mblk->base, mblk->base + mblk->size);
-> 	if (!ret)
-> 		continue;
-> 	pr_err("NUMA init failed\n");
-> 	return ret;
-> }
-> 
-> numa_add_memblk() calls memblock_set_node() which merges regions that
-> were previously split up during the earlier attempt to add them to different
-> nodes during parsing of SRAT.
-> 
-> This means elements are moved in the memblock array and we can end up
-> in a different memblock after the call to numa_add_memblk().
-> Result is:
-> 
-> Unable to handle kernel paging request at virtual address 0000000000003a40
-> Mem abort info:
->   ESR = 0x96000004
->   EC = 0x25: DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
-> Data abort info:
->   ISV = 0, ISS = 0x00000004
->   CM = 0, WnR = 0
-> [0000000000003a40] user address but active_mm is swapper
-> Internal error: Oops: 96000004 [#1] PREEMPT SMP
-> 
-> ...
-> 
-> Call trace:
->   sparse_init_nid+0x5c/0x2b0
->   sparse_init+0x138/0x170
->   bootmem_init+0x80/0xe0
->   setup_arch+0x2a0/0x5fc
->   start_kernel+0x8c/0x648
-> 
-> As an illustrative example:
-> EFI table has one block of memory.
-> memblks[0] = [0...0x2f]  so we start with a single memblock.
-> 
-> SRAT has
-> [0x00...0x0f] in node 0
-> [0x10...0x1f] in node 1
-> but no entry covering 
-> [0x20...0x2f].
-> 
-> Whilst parsing SRAT the single memblock is broken into 3.
-> memblks[0] = [0x00...0x0f] in node 0
-> memblks[1] = [0x10...0x1f] in node 1
-> memblks[2] = [0x20...0x2f] in node MAX_NUM_NODES (invalid value)
-> 
-> A sanity check parse then detects the invalid section and acpi_numa_init
-> fails.  We then fall back to the dummy path.
-> 
-> That iterates over the memblocks.  We'll use i an index in the array of memblocks
-> 
-> i = 0;
-> memblks[0] = [0x00...0x0f] set to node0.
->    merge doesn't do anything because the neighbouring memblock is still in node1.
-> 
-> i = 1
-> memblks[1] = [0x10...0x1f] set to node 0.
->    merge combines memblock 0 and 1 to give a new set of memblocks.
-> 
-> memblks[0] = [0x00..0x1f] in node 0
-> memblks[1] = [0x20..0x2f] in node MAX_NUM_NODES.
-> 
-> i = 2 off the end of the now reduced array of memblocks, so exit the loop.
-> (if we restart the loop here everything will be fine).
-> 
-> Later sparse_init_nid tries to use the node of the second memblock to index
-> somethings and boom.
-
-
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  arch/arm64/mm/numa.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-> index aafcee3e3f7e..0cbdbcc885fb 100644
-> --- a/arch/arm64/mm/numa.c
-> +++ b/arch/arm64/mm/numa.c
-> @@ -423,19 +423,16 @@ static int __init numa_init(int (*init_func)(void))
->   */
->  static int __init dummy_numa_init(void)
->  {
-> +	phys_addr_t start = memblock_start_of_DRAM();
-> +	phys_addr_t end = memblock_end_of_DRAM();
->  	int ret;
-> -	struct memblock_region *mblk;
+> --- a/arch/openrisc/kernel/setup.c
+> +++ b/arch/openrisc/kernel/setup.c
+> @@ -48,17 +48,12 @@ static void __init setup_memory(void)
+>  	unsigned long ram_start_pfn;
+>  	unsigned long ram_end_pfn;
+>  	phys_addr_t memory_start, memory_end;
+> -	struct memblock_region *region;
 >  
->  	if (numa_off)
->  		pr_info("NUMA disabled\n"); /* Forced off on command line. */
-> -	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
-> -		memblock_start_of_DRAM(), memblock_end_of_DRAM() - 1);
-> -
-> -	for_each_memblock(memory, mblk) {
-> -		ret = numa_add_memblk(0, mblk->base, mblk->base + mblk->size);
-> -		if (!ret)
-> -			continue;
-> +	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n", start, end - 1);
+>  	memory_end = memory_start = 0;
 >  
-> +	ret = numa_add_memblk(0, start, end);
-> +	if (ret) {
->  		pr_err("NUMA init failed\n");
->  		return ret;
->  	}
-
-
+>  	/* Find main memory where is the kernel, we assume its the only one */
+> -	for_each_memblock(memory, region) {
+> -		memory_start = region->base;
+> -		memory_end = region->base + region->size;
+> -		printk(KERN_INFO "%s: Memory: 0x%x-0x%x\n", __func__,
+> -		       memory_start, memory_end);
+> -	}
+> +	memory_start = memblock_start_of_DRAM();
+> +	memory_end = memblock_end_of_DRAM();
+>  
+>  	if (!memory_end) {
+>  		panic("No memory!");
+> -- 
+> 2.26.2
+> 
