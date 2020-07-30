@@ -2,135 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 036DE2331CF
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Jul 2020 14:15:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81F642334E2
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Jul 2020 17:01:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgG3MPY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Jul 2020 08:15:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727852AbgG3MPX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Jul 2020 08:15:23 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54853C061794;
-        Thu, 30 Jul 2020 05:15:23 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BHTrL6Fgfz9sRN;
-        Thu, 30 Jul 2020 22:15:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1596111321;
-        bh=YNSVJAmG6iTLprr4AXeykiRRbuPWau8/ePuc4CoRMGM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=dDG2HeGveH8jvsO0a3nV+Tp8BcGIZDu65BOPDvIIBo9wVTyiHzeoVy9VEea0rigvp
-         Y31hCYMQ/HUQJyt9f4Ns+ZWd4J0yauoOrKc1q24QkaP65G5RtKXvj8BnxizCtGPCIs
-         4Qc5Gy9BbRkYcfHS9FaL2IesmCw9kHwdS0i+jJ5INj6RLnsR8z4hMy+N03Q+rveLd0
-         2v5hfX/mFHnRdxjBR0pUmOS4LXqz54J4KK7TRfoGZVmsUzhhMnBhUvMn3FR8lvfRl/
-         Ax9t5/4az9jOznaLXvwqANu/Zl8pK6CgRrdLYmMHTgYkBan25IQFsKLy25EXJBUiYn
-         TCPH/khAUMFFQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Mike Rapoport <rppt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org,
-        Hari Bathini <hbathini@in.ibm.com>
-Subject: Re: [PATCH 06/15] powerpc: fadamp: simplify fadump_reserve_crash_area()
-In-Reply-To: <20200728051153.1590-7-rppt@kernel.org>
-References: <20200728051153.1590-1-rppt@kernel.org> <20200728051153.1590-7-rppt@kernel.org>
-Date:   Thu, 30 Jul 2020 22:15:13 +1000
-Message-ID: <87d04d5hda.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        id S1729685AbgG3PBb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Jul 2020 11:01:31 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12820 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726275AbgG3PBa (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 30 Jul 2020 11:01:30 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06UF02rl130557;
+        Thu, 30 Jul 2020 11:01:27 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32m0f181gw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jul 2020 11:01:26 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06UErMD4023210;
+        Thu, 30 Jul 2020 15:01:25 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06fra.de.ibm.com with ESMTP id 32jgvpsvx5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jul 2020 15:01:25 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06UF1Md120578668
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 30 Jul 2020 15:01:22 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 54DE9A4051;
+        Thu, 30 Jul 2020 15:01:22 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0A97BA4053;
+        Thu, 30 Jul 2020 15:01:22 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 30 Jul 2020 15:01:21 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev <netdev@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH net-next 0/4] s390/qeth: updates 2020-07-30
+Date:   Thu, 30 Jul 2020 17:01:17 +0200
+Message-Id: <20200730150121.18005-1-jwi@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-30_11:2020-07-30,2020-07-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ impostorscore=0 spamscore=0 clxscore=1015 mlxlogscore=966 phishscore=0
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007300103
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Mike Rapoport <rppt@kernel.org> writes:
-> From: Mike Rapoport <rppt@linux.ibm.com>
->
-> fadump_reserve_crash_area() reserves memory from a specified base address
-> till the end of the RAM.
->
-> Replace iteration through the memblock.memory with a single call to
-> memblock_reserve() with appropriate  that will take care of proper memory
-                                     ^
-                                     parameters?
-> reservation.
->
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/powerpc/kernel/fadump.c | 20 +-------------------
->  1 file changed, 1 insertion(+), 19 deletions(-)
+Hi Dave & Jakub,
 
-I think this looks OK to me, but I don't have a setup to test it easily.
-I've added Hari to Cc who might be able to.
+please apply the following patch series for qeth to netdev's net-next tree.
 
-But I'll give you an ack in the hope that it works :)
+This primarily brings some modernization to the RX path, laying the
+groundwork for smarter RX refill policies.
+Some of the patches are tagged as fixes, but really target only rare /
+theoretical issues. So given where we are in the release cycle and that we
+touch the main RX path, taking them through net-next seems more appropriate.
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+Thanks,
+Julian
 
+Julian Wiedmann (4):
+  s390/qeth: tolerate pre-filled RX buffer
+  s390/qeth: integrate RX refill worker with NAPI
+  s390/qeth: don't process empty bridge port events
+  s390/qeth: use all configured RX buffers
 
-> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-> index 78ab9a6ee6ac..2446a61e3c25 100644
-> --- a/arch/powerpc/kernel/fadump.c
-> +++ b/arch/powerpc/kernel/fadump.c
-> @@ -1658,25 +1658,7 @@ int __init fadump_reserve_mem(void)
->  /* Preserve everything above the base address */
->  static void __init fadump_reserve_crash_area(u64 base)
->  {
-> -	struct memblock_region *reg;
-> -	u64 mstart, msize;
-> -
-> -	for_each_memblock(memory, reg) {
-> -		mstart = reg->base;
-> -		msize  = reg->size;
-> -
-> -		if ((mstart + msize) < base)
-> -			continue;
-> -
-> -		if (mstart < base) {
-> -			msize -= (base - mstart);
-> -			mstart = base;
-> -		}
-> -
-> -		pr_info("Reserving %lluMB of memory at %#016llx for preserving crash data",
-> -			(msize >> 20), mstart);
-> -		memblock_reserve(mstart, msize);
-> -	}
-> +	memblock_reserve(base, memblock_end_of_DRAM() - base);
->  }
->  
->  unsigned long __init arch_reserved_kernel_pages(void)
-> -- 
-> 2.26.2
+ drivers/s390/net/qeth_core.h      |  2 +-
+ drivers/s390/net/qeth_core_main.c | 76 +++++++++++++++++--------------
+ drivers/s390/net/qeth_l2_main.c   |  5 +-
+ drivers/s390/net/qeth_l3_main.c   |  1 -
+ 4 files changed, 48 insertions(+), 36 deletions(-)
+
+-- 
+2.17.1
+
