@@ -2,111 +2,111 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A0DD233624
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Jul 2020 17:59:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29757233834
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Jul 2020 20:14:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbgG3P7B (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Jul 2020 11:59:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55349 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726275AbgG3P7B (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Jul 2020 11:59:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596124740;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=yvixA7AnuX+SIl1eVGj6Lt/rHsyqN1zKTYG6L6GtgFY=;
-        b=LSPXezCr/PbkJAluoJnq8MoVnDL74RMpeQNhfqhbauM+IzQF8ilmnu9k3MxayRe1YdFZ9k
-        vrqzMtPISglqD0HsuxVJiM5UYbuiKrNvKRuQH60GeBcs3GtiGc+jPC0cMgjw7P6qTKiRVX
-        8n4++xOZqnx88UZe7wd2crW0qlfmAM8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-7kPf4hY3MiOEn1K890EMag-1; Thu, 30 Jul 2020 11:58:56 -0400
-X-MC-Unique: 7kPf4hY3MiOEn1K890EMag-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 863DC8015CE;
-        Thu, 30 Jul 2020 15:58:55 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-112-85.ams2.redhat.com [10.36.112.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00D0269324;
-        Thu, 30 Jul 2020 15:58:50 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v2 3/3] s390x: Ultravisor guest API test
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, david@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com
-References: <20200727095415.494318-1-frankja@linux.ibm.com>
- <20200727095415.494318-4-frankja@linux.ibm.com>
- <20200730131617.7f7d5e5f.cohuck@redhat.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <1a407971-0b43-879e-0aac-65c7f9e29606@redhat.com>
-Date:   Thu, 30 Jul 2020 17:58:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1730021AbgG3SOy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Jul 2020 14:14:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgG3SOx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Jul 2020 14:14:53 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C5BC061574
+        for <linux-s390@vger.kernel.org>; Thu, 30 Jul 2020 11:14:53 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id g19so2322359plq.0
+        for <linux-s390@vger.kernel.org>; Thu, 30 Jul 2020 11:14:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=R3XH19x0j9mpAwBbmALhrl+K1g6ws6AmAQc8yDsKxwc=;
+        b=Rd+sngN9fVYhzl82nqy0DTTR682+o7qxhCC/+ghYliHvyO1hzJDTm0Q4K9N2e2sjvd
+         N6jmVrVP1K+zH7o8lQSP7igJY1O84vbHMVMFz6s9vC7DFwyG9aRzqW/9TFWhy9bGwJDD
+         8rWbAMt/fh9RSp/q+tWRyrXHkaKeB34igvVHo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=R3XH19x0j9mpAwBbmALhrl+K1g6ws6AmAQc8yDsKxwc=;
+        b=alJFyKhyhzy5LHnaHxU9SHQVarLon7KmGVrlcHg1BqSRb6nzgLjiuWG3O8TvO5HT2Y
+         bXKSaAhDG2vyHEuDCGCwuM/3b1MvHtf5dLL4VQzd6j6l0iOrWA1p3vOsky0TWATYnDzG
+         DCjClPg/v+9DcpXOW80n2rsGALw3vUcwdeujVVsHsinfvW57BxDsxXTKBzNVc8xE3+p3
+         wcbRMo2DC2pfmUyfuDJ4rqavzKoj4G576KISuNiFZhuygxmKo8ejW0HmOHFouZsZ5A28
+         ZNS0iqP/ENFgXYqBgGHKHGuOM2WHia25gjohbphi/147wREJyOlM/o53j4YdU8YXCdgD
+         nftw==
+X-Gm-Message-State: AOAM530ktCXIg+AQoZBxzvJHm1qtZhRWbegK4/rJaxrlI5yx+e3vqA2H
+        YW4ue9rueCvTM5zmrjyHG23HBw==
+X-Google-Smtp-Source: ABdhPJxh4YSRJo64KtvfOflwHcynTg8W1GmMjR98OKYM43hau9SWD31eOcjpDevGju3jfuntinpu7g==
+X-Received: by 2002:a17:90a:884:: with SMTP id v4mr318901pjc.27.1596132893170;
+        Thu, 30 Jul 2020 11:14:53 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b63sm7067818pfg.43.2020.07.30.11.14.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 11:14:52 -0700 (PDT)
+Date:   Thu, 30 Jul 2020 11:14:50 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allen Pais <allen.lkml@gmail.com>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        Romain Perier <romain.perier@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-usb@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        alsa-devel@alsa-project.org, kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH 0/3] Modernize tasklet callback API
+Message-ID: <202007301113.45D24C9D@keescook>
+References: <20200716030847.1564131-1-keescook@chromium.org>
+ <87h7tpa3hg.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200730131617.7f7d5e5f.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h7tpa3hg.fsf@nanos.tec.linutronix.de>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 30/07/2020 13.16, Cornelia Huck wrote:
-> On Mon, 27 Jul 2020 05:54:15 -0400
-> Janosch Frank <frankja@linux.ibm.com> wrote:
-> 
->> Test the error conditions of guest 2 Ultravisor calls, namely:
->>      * Query Ultravisor information
->>      * Set shared access
->>      * Remove shared access
->>
->> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
->> ---
->>  lib/s390x/asm/uv.h  |  68 +++++++++++++++++++
->>  s390x/Makefile      |   1 +
->>  s390x/unittests.cfg |   3 +
->>  s390x/uv-guest.c    | 159 ++++++++++++++++++++++++++++++++++++++++++++
->>  4 files changed, 231 insertions(+)
->>  create mode 100644 lib/s390x/asm/uv.h
->>  create mode 100644 s390x/uv-guest.c
->>
-> 
-> (...)
-> 
->> +static inline int uv_call(unsigned long r1, unsigned long r2)
->> +{
->> +	int cc;
->> +
->> +	asm volatile(
->> +		"0:	.insn rrf,0xB9A40000,%[r1],%[r2],0,0\n"
->> +		"		brc	3,0b\n"
->> +		"		ipm	%[cc]\n"
->> +		"		srl	%[cc],28\n"
->> +		: [cc] "=d" (cc)
->> +		: [r1] "a" (r1), [r2] "a" (r2)
->> +		: "memory", "cc");
->> +	return cc;
->> +}
-> 
-> This returns the condition code, but no caller seems to check it
-> (instead, they look at header.rc, which is presumably only set if the
-> instruction executed successfully in some way?)
-> 
-> Looking at the kernel, it retries for cc > 1 (presumably busy
-> conditions), and cc != 0 seems to be considered a failure. Do we want
-> to look at the cc here as well?
+[heavily trimmed CC list because I think lkml is ignoring this
+thread...]
 
-It's there - but here it's in the assembly code, the "brc 3,0b".
+On Thu, Jul 30, 2020 at 09:03:55AM +0200, Thomas Gleixner wrote:
+> Kees,
+> 
+> Kees Cook <keescook@chromium.org> writes:
+> > This is the infrastructure changes to prepare the tasklet API for
+> > conversion to passing the tasklet struct as the callback argument instead
+> > of an arbitrary unsigned long. The first patch details why this is useful
+> > (it's the same rationale as the timer_struct changes from a bit ago:
+> > less abuse during memory corruption attacks, more in line with existing
+> > ways of doing things in the kernel, save a little space in struct,
+> > etc). Notably, the existing tasklet API use is much less messy, so there
+> > is less to clean up.
+> >
+> > It's not clear to me which tree this should go through... Greg since it
+> > starts with a USB clean-up, -tip for timer or interrupt, or if I should
+> > just carry it. I'm open to suggestions, but if I don't hear otherwise,
+> > I'll just carry it.
+> >
+> > My goal is to have this merged for v5.9-rc1 so that during the v5.10
+> > development cycle the new API will be available. The entire tree of
+> > changes is here[1] currently, but to split it up by maintainer the
+> > infrastructure changes need to be landed first.
+> >
+> > Review and Acks appreciated! :)
+> 
+> I'd rather see tasklets vanish from the planet completely, but that's
+> going to be a daring feat. So, grudgingly:
 
-Patch looks ok to me (but I didn't do a full review):
+Understood! I will update the comments near the tasklet API.
 
-Acked-by: Thomas Huth <thuth@redhat.com>
+> Acked-by: Thomas Gleixner <tglx@linutronix.de>
 
+Thanks!
+
+-- 
+Kees Cook
