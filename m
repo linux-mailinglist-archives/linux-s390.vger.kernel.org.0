@@ -2,85 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9B852321E8
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Jul 2020 17:49:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CCBE2329B3
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Jul 2020 03:52:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgG2PtE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 29 Jul 2020 11:49:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgG2PtE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 29 Jul 2020 11:49:04 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA51C061794
-        for <linux-s390@vger.kernel.org>; Wed, 29 Jul 2020 08:49:04 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id t6so14461894pgq.1
-        for <linux-s390@vger.kernel.org>; Wed, 29 Jul 2020 08:49:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=Rze3q4WgyIxzG63CFKl6d1ylwsL33lBvaPpka1ifYpo=;
-        b=eBPQV+0swkUK3ZuUHXEmBaFE81JxVn5DPUHl69vHxEUEqxTg2inCtNnKDvqdqqwYFE
-         iDMLyW6El1Bq4DGABz/k6NIaby7rY5x8zVnHcmhNLy8C1Mnpzn9bQRskjir6WhG51kx7
-         Vw2jrUT0OHvhHX5j5jrwpCUldFRYG/qAgm6C+18KVH+7oKO33m30a4TATAIPZS/d7UGj
-         oV4cIm3tyVtbP0kBgGJu3+nbvuA+mWzuQwEQ23Z8sdoC8caalSHk1+i+uioNXTdceMMd
-         ou8QZ8r30Xi1IuvIEpQM1f1lLwPsR4DZWh2FL/c9PxngeQgj1T5bfuNPx7/Q/M7TmtCG
-         OSZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=Rze3q4WgyIxzG63CFKl6d1ylwsL33lBvaPpka1ifYpo=;
-        b=qHE6RgZU3MKgRbF070RByB4jTNYb9n3xQZjGSoEpzsC5kXqQ3Pqw4WSTMZmhC/YJOG
-         0hYMnUSk+RFmWWBfL6JyPwGI1mRk0dNCNn/W2yRi8oANh2GZJ9CFa/pl6SoYxAI51PWZ
-         eUFwaimelfLyyW7ano9x4tcXHPGmX/jvFLahkmzT5cFVlHvSVT3nZTA0dt5h3z7bjmMi
-         biS4td3TD3I9kWNX8j9S61NW9L2x32wGJKw7mfa72WWW7lFk+XhcYli3xndMyclfGLaZ
-         d76anD7/R7Eb5Vg4Bny0weYoxffshua/LRyEpJWnpNL//xccEMLE+dvhp7EMcsTjzckw
-         2pUg==
-X-Gm-Message-State: AOAM532u4z8eQBJIgOel+WywsPUGzTF8Ka33GkKIyYMQYkf9ixvQVSv4
-        9C7ntuYsXHkzW4EoMqhr3GGO82gIt1zG+7rvDX4=
-X-Google-Smtp-Source: ABdhPJy62Dl/6tEKUU3synyPvsxU9oVGqJtZNtrfCN0+0NwFl6kFDGk9tDrUn+I1oytDGJaEQYMyZGX6RvnAOQx84lY=
-X-Received: by 2002:a62:7794:: with SMTP id s142mr11967750pfc.99.1596037743633;
- Wed, 29 Jul 2020 08:49:03 -0700 (PDT)
+        id S1728297AbgG3Bwo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 29 Jul 2020 21:52:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60882 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728309AbgG3Bwl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 29 Jul 2020 21:52:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596073959;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Wr/vxuRMCyMaqxtO9q8uf3t1cVc0k0F6Dgt7vG6jHBM=;
+        b=aBhw3tWRZefQIBzuMK7MB9IbwUcjun42aeewRNDlN5wALbcL3JvpIO1/mxkYwjY3G1PBcE
+        d7lQGs4tJRovG22Fboyc9wGygmn0NnReZss0iDjt1lfiqZ77cuU1EJbsQGqI/y5pprn4Zu
+        bGVgBk5QdtElrbllzKMuUU6A/wp7Q1w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-146-29YBKjvJP4OrLqv9mdWq_A-1; Wed, 29 Jul 2020 21:52:35 -0400
+X-MC-Unique: 29YBKjvJP4OrLqv9mdWq_A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1F7459;
+        Thu, 30 Jul 2020 01:52:29 +0000 (UTC)
+Received: from localhost (ovpn-12-125.pek2.redhat.com [10.72.12.125])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E3136179C;
+        Thu, 30 Jul 2020 01:52:27 +0000 (UTC)
+Date:   Thu, 30 Jul 2020 09:52:21 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: Re: [PATCH 09/15] memblock: make for_each_memblock_type() iterator
+ private
+Message-ID: <20200730015221.GI14854@MiWiFi-R3L-srv>
+References: <20200728051153.1590-1-rppt@kernel.org>
+ <20200728051153.1590-10-rppt@kernel.org>
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:c58a:0:0:0:0 with HTTP; Wed, 29 Jul 2020 08:49:03
- -0700 (PDT)
-Reply-To: mis.haleema.zamani1@gmail.com
-From:   Mis Haleema Zamani <mariamabudl123@gmail.com>
-Date:   Wed, 29 Jul 2020 23:49:03 +0800
-Message-ID: <CABPXeb1cOd32t9su7dd1fUnB5biRObcxf91OgkNjLBvU2NH9KQ@mail.gmail.com>
-Subject: =?UTF-8?Q?BITTE_BRAUCHE_ICH_IHRE_UNTERST=C3=9CTZUNG?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728051153.1590-10-rppt@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Gr=C3=BC=C3=9Fe an dich, mein lieber Freund,
+On 07/28/20 at 08:11am, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> for_each_memblock_type() is not used outside mm/memblock.c, move it there
+> from include/linux/memblock.h
+> 
+> ---
+>  include/linux/memblock.h | 5 -----
+>  mm/memblock.c            | 5 +++++
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index 017fae833d4a..220b5f0dad42 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -532,11 +532,6 @@ static inline unsigned long memblock_region_reserved_end_pfn(const struct memblo
+>  	     region < (memblock.memblock_type.regions + memblock.memblock_type.cnt);	\
+>  	     region++)
+>  
+> -#define for_each_memblock_type(i, memblock_type, rgn)			\
+> -	for (i = 0, rgn = &memblock_type->regions[0];			\
+> -	     i < memblock_type->cnt;					\
+> -	     i++, rgn = &memblock_type->regions[i])
+> -
+>  extern void *alloc_large_system_hash(const char *tablename,
+>  				     unsigned long bucketsize,
+>  				     unsigned long numentries,
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 39aceafc57f6..a5b9b3df81fc 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -129,6 +129,11 @@ struct memblock memblock __initdata_memblock = {
+>  	.current_limit		= MEMBLOCK_ALLOC_ANYWHERE,
+>  };
+>  
+> +#define for_each_memblock_type(i, memblock_type, rgn)			\
+> +	for (i = 0, rgn = &memblock_type->regions[0];			\
+> +	     i < memblock_type->cnt;					\
+> +	     i++, rgn = &memblock_type->regions[i])
+> +
 
-Mein Name ist Haleema Zamani, ich schreibe Ihnen diese Nachricht mit
-Tr=C3=A4nen in den Augen. Der andauernde B=C3=BCrgerkrieg in meinem Land Sy=
-rien
-hat mein Leben so sehr beeinflusst. Ich habe meine Familie letztes
-Jahr verloren. Bevor der Tod meines Vaters eine feste Einzahlung von
-(VIER MILLIONEN F=C3=9CNF HUNDERT TAUSEND VEREINIGTE STAATEN DOLLAR) auf
-ein Domizilkonto bei einer Bank in den Vereinigten Arabischen Emiraten
-hat, bin ich der n=C3=A4chste Verwandte.
+Reviewed-by: Baoquan He <bhe@redhat.com>
 
-Ich brauche dem=C3=BCtig Ihre Unterst=C3=BCtzung bei der =C3=9Cbertragung d=
-ieses
-Fonds f=C3=BCr Investitionen in Ihrem Land. Ich werde bereit sein, Ihnen
-einen Prozentsatz f=C3=BCr Ihre Unterst=C3=BCtzung anzubieten. Bitte
-
-Lassen Sie mich wissen, ob Sie dies f=C3=BCr mich tun k=C3=B6nnen. Dies ist
-meine wahre Geschichte. Bitte, ich brauche Ihre Hilfe. Sie
-kontaktieren mich per E-Mail
-
-(mis.haleema.zamani@gmail.com)
-
-Dein,
-
-Mis Haleema Zamani
