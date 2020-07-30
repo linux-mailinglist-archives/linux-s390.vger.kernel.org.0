@@ -2,98 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0632232CA2
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Jul 2020 09:35:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4245232FCF
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Jul 2020 11:49:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgG3Hfb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Jul 2020 03:35:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8894 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726194AbgG3Hfa (ORCPT
+        id S1727067AbgG3JtF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Jul 2020 05:49:05 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25874 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726925AbgG3JtF (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Jul 2020 03:35:30 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06U7VrDG129127;
-        Thu, 30 Jul 2020 03:35:21 -0400
+        Thu, 30 Jul 2020 05:49:05 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06U9XHcu163117;
+        Thu, 30 Jul 2020 05:49:05 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32k2sc7gdc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 30 Jul 2020 05:49:04 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06U9Yx18179825;
+        Thu, 30 Jul 2020 05:49:04 -0400
 Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32jpw53eu7-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32k2sc7gca-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jul 2020 03:35:21 -0400
+        Thu, 30 Jul 2020 05:49:04 -0400
 Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06U7VsxZ020674;
-        Thu, 30 Jul 2020 07:35:19 GMT
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06U9g4mM027645;
+        Thu, 30 Jul 2020 09:49:01 GMT
 Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06fra.de.ibm.com with ESMTP id 32jgvpsnkt-1
+        by ppma06fra.de.ibm.com with ESMTP id 32jgvpsqm5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jul 2020 07:35:19 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06U7ZGFk56033544
+        Thu, 30 Jul 2020 09:49:01 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06U9mwRS64225602
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jul 2020 07:35:16 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88CE9A4040;
-        Thu, 30 Jul 2020 07:35:16 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C61ACA4057;
-        Thu, 30 Jul 2020 07:35:15 +0000 (GMT)
-Received: from sig-9-145-12-12.uk.ibm.com (unknown [9.145.12.12])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Jul 2020 07:35:15 +0000 (GMT)
-Message-ID: <247044acbf1dbae8e3b48c2dcc1457cd2e59cfef.camel@linux.ibm.com>
-Subject: Re: [PATCH] s390/test_unwind: fix possible memleak in test_unwind()
-From:   Ilya Leoshkevich <iii@linux.ibm.com>
-To:     Wang Hai <wanghai38@huawei.com>, hca@linux.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, colin.king@canonical.com
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 30 Jul 2020 09:35:15 +0200
-In-Reply-To: <20200730063602.31581-1-wanghai38@huawei.com>
-References: <20200730063602.31581-1-wanghai38@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Thu, 30 Jul 2020 09:48:58 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C5014204D;
+        Thu, 30 Jul 2020 09:48:58 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 12FB942047;
+        Thu, 30 Jul 2020 09:48:58 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 30 Jul 2020 09:48:58 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id B3376E0661; Thu, 30 Jul 2020 11:48:57 +0200 (CEST)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>, Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Collin Walling <walling@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: [GIT PULL 0/2] KVM: s390: feature for 5.9
+Date:   Thu, 30 Jul 2020 11:48:55 +0200
+Message-Id: <20200730094857.175501-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-30_04:2020-07-30,2020-07-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- adultscore=0 lowpriorityscore=0 priorityscore=1501 mlxlogscore=770
- malwarescore=0 spamscore=0 impostorscore=0 suspectscore=3 clxscore=1011
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007300052
+ definitions=2020-07-30_05:2020-07-30,2020-07-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ adultscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007300069
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 2020-07-30 at 14:36 +0800, Wang Hai wrote:
-> test_unwind() misses to call kfree(bt) in an error path.
-> Add the missed function call to fix it.
-> 
-> Fixes: 0610154650f1 ("s390/test_unwind: print verbose unwinding
-> results")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
-> ---
->  arch/s390/lib/test_unwind.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/s390/lib/test_unwind.c
-> b/arch/s390/lib/test_unwind.c
-> index 32b7a30b2485..b0b12b46bc57 100644
-> --- a/arch/s390/lib/test_unwind.c
-> +++ b/arch/s390/lib/test_unwind.c
-> @@ -63,6 +63,7 @@ static noinline int test_unwind(struct task_struct
-> *task, struct pt_regs *regs,
->  			break;
->  		if (state.reliable && !addr) {
->  			pr_err("unwind state reliable but addr is
-> 0\n");
-> +			kfree(bt);
->  			return -EINVAL;
->  		}
->  		sprint_symbol(sym, addr);
+Paolo,
 
-Looks good to me, thanks!
+just one feature for the next merge window (diag318).
+I have agreed with Heiko to carry the non-kvm pathc also via the kvm tree.
 
-Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-next-5.9-1
+
+for you to fetch changes up to 23a60f834406c8e3805328b630d09d5546b460c1:
+
+  s390/kvm: diagnose 0x318 sync and reset (2020-06-23 10:55:33 +0200)
+
+----------------------------------------------------------------
+KVM: s390: Enhancement for 5.9
+- implement diagnose 318
+
+----------------------------------------------------------------
+Collin Walling (2):
+      s390/setup: diag 318: refactor struct
+      s390/kvm: diagnose 0x318 sync and reset
+
+ arch/s390/include/asm/diag.h     |  6 ++----
+ arch/s390/include/asm/kvm_host.h |  4 +++-
+ arch/s390/include/uapi/asm/kvm.h |  7 +++++--
+ arch/s390/kernel/setup.c         |  3 +--
+ arch/s390/kvm/kvm-s390.c         | 11 ++++++++++-
+ arch/s390/kvm/vsie.c             |  1 +
+ include/uapi/linux/kvm.h         |  1 +
+ 7 files changed, 23 insertions(+), 10 deletions(-)
