@@ -2,28 +2,28 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D878233C33
-	for <lists+linux-s390@lfdr.de>; Fri, 31 Jul 2020 01:37:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FB92233C36
+	for <lists+linux-s390@lfdr.de>; Fri, 31 Jul 2020 01:39:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbgG3XhR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Jul 2020 19:37:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58590 "EHLO mail.kernel.org"
+        id S1730737AbgG3XjG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Jul 2020 19:39:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728588AbgG3XhR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Jul 2020 19:37:17 -0400
+        id S1728588AbgG3XjF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 30 Jul 2020 19:39:05 -0400
 Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7886C20829;
-        Thu, 30 Jul 2020 23:37:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5440F20829;
+        Thu, 30 Jul 2020 23:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596152236;
-        bh=AQRB1MFq+ualDllV5T2e5pkh5TEsStq7EiGhrRptrgs=;
+        s=default; t=1596152345;
+        bh=SvS/XCiOujXAhARua2c/qZzQDkWcOIx8TMvOXmq2or4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=n+i9W0Lk2WF9l3gxKDYtAZ3s+aS222OkE+k9Js9gJ3DcxI91XCgzdr5C7Yua3S6QZ
-         whpxQq3Bmi+JjSDFkYdfF7+Sn0n8/LbOlwA2nFAyYpxib5WEJqbHWSemdo2i8QQ/DW
-         UWCHdF+a9e9Xb0ROIQI4i6v7BAJjhwBr9R1cqht8=
-Date:   Thu, 30 Jul 2020 16:37:14 -0700
+        b=OgWM8vR492lr7jG2x3ns/3t2txQf8S11GtACTJKKTOJK2qXko6UnAoDLjEugUFPtu
+         hBsdMBRo8AmSPyYnuntgeKS/eCHD5dQqPU+HTDBAml8j3+fGfskg4asGvEwPYvmAqQ
+         OR3pmCorDtALTuZgdbkqyruW10/Wham2qGWzUnl4=
+Date:   Thu, 30 Jul 2020 16:39:03 -0700
 From:   Jakub Kicinski <kuba@kernel.org>
 To:     Julian Wiedmann <jwi@linux.ibm.com>
 Cc:     David Miller <davem@davemloft.net>,
@@ -32,11 +32,10 @@ Cc:     David Miller <davem@davemloft.net>,
         Heiko Carstens <hca@linux.ibm.com>,
         Ursula Braun <ubraun@linux.ibm.com>,
         Karsten Graul <kgraul@linux.ibm.com>
-Subject: Re: [PATCH net-next 4/4] s390/qeth: use all configured RX buffers
-Message-ID: <20200730163714.7d6a5017@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200730150121.18005-5-jwi@linux.ibm.com>
+Subject: Re: [PATCH net-next 0/4] s390/qeth: updates 2020-07-30
+Message-ID: <20200730163903.002a49d6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200730150121.18005-1-jwi@linux.ibm.com>
 References: <20200730150121.18005-1-jwi@linux.ibm.com>
-        <20200730150121.18005-5-jwi@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -45,13 +44,17 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 30 Jul 2020 17:01:21 +0200 Julian Wiedmann wrote:
-> The (misplaced) comment doesn't make any sense, enforcing an
-> uninitialized RX buffer won't help with IRQ reduction.
+On Thu, 30 Jul 2020 17:01:17 +0200 Julian Wiedmann wrote:
+> Hi Dave & Jakub,
 > 
-> So make the best use of all available RX buffers.
+> please apply the following patch series for qeth to netdev's net-next tree.
+> 
+> This primarily brings some modernization to the RX path, laying the
+> groundwork for smarter RX refill policies.
+> Some of the patches are tagged as fixes, but really target only rare /
+> theoretical issues. So given where we are in the release cycle and that we
+> touch the main RX path, taking them through net-next seems more appropriate.
 
-Often one entry in the ring is left free to make it easy to
-differentiate between empty and full conditions. 
+First 2 patches look good to me:
 
-Is this not the reason here?
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
