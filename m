@@ -2,96 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72DED23407E
-	for <lists+linux-s390@lfdr.de>; Fri, 31 Jul 2020 09:50:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3473234165
+	for <lists+linux-s390@lfdr.de>; Fri, 31 Jul 2020 10:42:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731706AbgGaHuw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 31 Jul 2020 03:50:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29620 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731702AbgGaHuw (ORCPT
+        id S1731374AbgGaIma (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 31 Jul 2020 04:42:30 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40783 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731112AbgGaIma (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 31 Jul 2020 03:50:52 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06V7YKQ5168076;
-        Fri, 31 Jul 2020 03:50:49 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32md1yu2ye-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 03:50:48 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06V7im39030341;
-        Fri, 31 Jul 2020 07:50:47 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03fra.de.ibm.com with ESMTP id 32gcr0m9ec-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 07:50:47 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06V7oipN63045902
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jul 2020 07:50:44 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1835F4204C;
-        Fri, 31 Jul 2020 07:50:44 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9D4EC4203F;
-        Fri, 31 Jul 2020 07:50:43 +0000 (GMT)
-Received: from [9.145.25.216] (unknown [9.145.25.216])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 31 Jul 2020 07:50:43 +0000 (GMT)
-Subject: Re: [PATCH net-next 4/4] s390/qeth: use all configured RX buffers
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>
-References: <20200730150121.18005-1-jwi@linux.ibm.com>
- <20200730150121.18005-5-jwi@linux.ibm.com>
- <20200730163714.7d6a5017@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-Message-ID: <dcc95391-0dea-e7d4-1901-25c00c7a3c60@linux.ibm.com>
-Date:   Fri, 31 Jul 2020 09:50:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Fri, 31 Jul 2020 04:42:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596184948;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=g6rCQ77cJ3KGTfJIcUziTCt2axfJDlPmcw2swo9EzwM=;
+        b=NbTYClu2ijVnP5P0/0dPP4MLIckv5dJ9pj43pSIQYmCXwYCzDdSxBd60/T4M8LuFIrK0Et
+        LceOJmy29/l5WCSzBq5QZnUE7vuYS3Gk+EkmTO/vOtgKW8ivStO710bAgg8OUzhywfSVEa
+        OCg+ecTV/ir3LvLVUsVmBYdTS6AG3AU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-47-wvXEsELBOwOBwnJwsv7DDA-1; Fri, 31 Jul 2020 04:42:26 -0400
+X-MC-Unique: wvXEsELBOwOBwnJwsv7DDA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12874803822;
+        Fri, 31 Jul 2020 08:42:25 +0000 (UTC)
+Received: from gondolin (ovpn-113-36.ams2.redhat.com [10.36.113.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AE5555DA75;
+        Fri, 31 Jul 2020 08:42:17 +0000 (UTC)
+Date:   Fri, 31 Jul 2020 10:42:05 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com
+Subject: Re: [kvm-unit-tests PATCH v2 3/3] s390x: Ultravisor guest API test
+Message-ID: <20200731104205.37add810.cohuck@redhat.com>
+In-Reply-To: <d9333547-b93e-629b-e004-53f1b581914f@linux.ibm.com>
+References: <20200727095415.494318-1-frankja@linux.ibm.com>
+        <20200727095415.494318-4-frankja@linux.ibm.com>
+        <20200730131617.7f7d5e5f.cohuck@redhat.com>
+        <1a407971-0b43-879e-0aac-65c7f9e29606@redhat.com>
+        <d9333547-b93e-629b-e004-53f1b581914f@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200730163714.7d6a5017@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-31_02:2020-07-31,2020-07-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- clxscore=1015 priorityscore=1501 malwarescore=0 mlxlogscore=999
- adultscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 suspectscore=2
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007310054
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=cohuck@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; boundary="Sig_/8eQUDJuxBj0OzNO_W=EyW7w";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 31.07.20 01:37, Jakub Kicinski wrote:
-> On Thu, 30 Jul 2020 17:01:21 +0200 Julian Wiedmann wrote:
->> The (misplaced) comment doesn't make any sense, enforcing an
->> uninitialized RX buffer won't help with IRQ reduction.
->>
->> So make the best use of all available RX buffers.
-> 
-> Often one entry in the ring is left free to make it easy to
-> differentiate between empty and full conditions. 
-> 
-> Is this not the reason here?
-> 
+--Sig_/8eQUDJuxBj0OzNO_W=EyW7w
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hmm no, the HW architecture works slightly different.
+On Fri, 31 Jul 2020 09:34:41 +0200
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-There's no index register that we could query for HW progress,
-each ring entry has an associated state byte that needs to be
-inspected and indicates HW progress (among other things).
+> On 7/30/20 5:58 PM, Thomas Huth wrote:
+> > On 30/07/2020 13.16, Cornelia Huck wrote: =20
+> >> On Mon, 27 Jul 2020 05:54:15 -0400
+> >> Janosch Frank <frankja@linux.ibm.com> wrote:
+> >> =20
+> >>> Test the error conditions of guest 2 Ultravisor calls, namely:
+> >>>      * Query Ultravisor information
+> >>>      * Set shared access
+> >>>      * Remove shared access
+> >>>
+> >>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> >>> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> >>> ---
+> >>>  lib/s390x/asm/uv.h  |  68 +++++++++++++++++++
+> >>>  s390x/Makefile      |   1 +
+> >>>  s390x/unittests.cfg |   3 +
+> >>>  s390x/uv-guest.c    | 159 ++++++++++++++++++++++++++++++++++++++++++=
+++
+> >>>  4 files changed, 231 insertions(+)
+> >>>  create mode 100644 lib/s390x/asm/uv.h
+> >>>  create mode 100644 s390x/uv-guest.c
+> >>> =20
+> >>
+> >> (...)
+> >> =20
+> >>> +static inline int uv_call(unsigned long r1, unsigned long r2)
+> >>> +{
+> >>> +=09int cc;
+> >>> +
+> >>> +=09asm volatile(
+> >>> +=09=09"0:=09.insn rrf,0xB9A40000,%[r1],%[r2],0,0\n"
+> >>> +=09=09"=09=09brc=093,0b\n"
+> >>> +=09=09"=09=09ipm=09%[cc]\n"
+> >>> +=09=09"=09=09srl=09%[cc],28\n"
+> >>> +=09=09: [cc] "=3Dd" (cc)
+> >>> +=09=09: [r1] "a" (r1), [r2] "a" (r2)
+> >>> +=09=09: "memory", "cc");
+> >>> +=09return cc;
+> >>> +} =20
+> >>
+> >> This returns the condition code, but no caller seems to check it
+> >> (instead, they look at header.rc, which is presumably only set if the
+> >> instruction executed successfully in some way?)
+> >>
+> >> Looking at the kernel, it retries for cc > 1 (presumably busy
+> >> conditions), and cc !=3D 0 seems to be considered a failure. Do we wan=
+t
+> >> to look at the cc here as well? =20
+> >=20
+> > It's there - but here it's in the assembly code, the "brc 3,0b". =20
 
-So this was more likely just a mis-interpretation of how the
-(quirky) IRQ reduction mechanism works in HW, or maybe part of
-a code path that got removed during the NAPI conversion.
+Ah yes, I missed that.
+
+>=20
+> Yes, we needed to factor that out in KVM because we sometimes need to
+> schedule and then it looks nicer handling that in C code. The branch on
+> condition will jump back for cc 2 and 3. cc 0 and 1 are success and
+> error respectively and only then the rc and rrc in the UV header are set.
+
+Yeah, it's a bit surprising that rc/rrc are also set with cc 1.
+
+(Can you add a comment? Just so that it is clear that callers never
+need to check the cc, as rc/rrc already contain more information than
+that.)
+
+>=20
+> >=20
+> > Patch looks ok to me (but I didn't do a full review):
+> >=20
+> > Acked-by: Thomas Huth <thuth@redhat.com>
+> >  =20
+>=20
+>=20
+
+
+--Sig_/8eQUDJuxBj0OzNO_W=EyW7w
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEw9DWbcNiT/aowBjO3s9rk8bwL68FAl8j2V0ACgkQ3s9rk8bw
+L6+cmQ//YOsiSCQXbZfHRB7uLvY+MkhLsapdTrehS/6feRPBihr+1cGdJWGdgWJq
+XLYAFVb0hqJGgjRM/tgaHHApzvpWg9+QYSUKb0DMxqJtMtGOCkkWc7f1fxygVSEg
+rolnMDV42tTNjccWSSVrHbpyEitAC1AuQXWscxvEZmPXpkClzovLUwJzggxjE1JB
+ffcnIR/Y/CNUvY0+rZtLrGGoCSLylVvNg2K1d66nyHvmqbazdEVrR31R94v9zo3A
+omKZcaUlXAjhu1mdj+r2reLF1QTraIde0+KAZ9Ca1dlfied0gRLvxH2xjCaMH59a
+fdkiEapFFfFUuMM+5pbIprZ4vQ5gu9Wh81WRVhj83rxFia8tmXo6PXSzJ/bF6v2k
+iyCsaMPunUTQ8+X5F1dc+6t0JZJCMectyPyDQvR8WT7jkGc79JDKPTZGj4Tz1WBE
+X9GK9wq3wOvDvD8gX4yJisbBK2iArJZ6nC2nTV9YetEXlGMMkkaY5IPaGDGASs5M
+gINunXoCXN8jbZKIyFmV4Lf+l/msk1IY6rJmXR9daoge3CVZxazSdQXLg1FRH9hl
+faietukjxmLW80tMCs8tFsDv1LZmBMr0ic5lH2Aw+XAwvpRINtAZvndkBvJZAstj
+qA2ryGZw8uCq7+xmlnUJKXUMeMTlVWU9pNsh1jEXq0frk6EtHFo=
+=FQDR
+-----END PGP SIGNATURE-----
+
+--Sig_/8eQUDJuxBj0OzNO_W=EyW7w--
+
