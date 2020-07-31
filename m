@@ -2,187 +2,138 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B20C23425D
-	for <lists+linux-s390@lfdr.de>; Fri, 31 Jul 2020 11:21:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7888B23439F
+	for <lists+linux-s390@lfdr.de>; Fri, 31 Jul 2020 11:46:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732014AbgGaJVm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 31 Jul 2020 05:21:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48160 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731964AbgGaJVm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 31 Jul 2020 05:21:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596187300;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=p/AbGD85AC3D05R3PpUdXYBBm4gZ2fwTONMaPVeH3Tg=;
-        b=QK9Ju4hER0L89xsfxZI/bKQtBcZWXzHMUHsgmbKKXsNBDVNDYyduRSnr7d+nyc+KzIfS+3
-        3JBrvd0h+Y8SZ9fiRwEumI6mtDJspS0JmLiaXMOc94OzGXprzvSFZMVjmPQqkYomgIfBSN
-        0xQhk+iitKJpMHsDfeVXFcSrXFTct8M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-KFm2PxtFO8KX9e0MmqignA-1; Fri, 31 Jul 2020 05:21:38 -0400
-X-MC-Unique: KFm2PxtFO8KX9e0MmqignA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 37AE41005504;
-        Fri, 31 Jul 2020 09:21:37 +0000 (UTC)
-Received: from gondolin (ovpn-113-36.ams2.redhat.com [10.36.113.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E641C5D9F1;
-        Fri, 31 Jul 2020 09:21:32 +0000 (UTC)
-Date:   Fri, 31 Jul 2020 11:21:22 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, david@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com
-Subject: Re: [kvm-unit-tests PATCH v2 3/3] s390x: Ultravisor guest API test
-Message-ID: <20200731112122.1db14419.cohuck@redhat.com>
-In-Reply-To: <16eee269-d773-26df-a517-08f2265318c4@linux.ibm.com>
-References: <20200727095415.494318-1-frankja@linux.ibm.com>
-        <20200727095415.494318-4-frankja@linux.ibm.com>
-        <20200730131617.7f7d5e5f.cohuck@redhat.com>
-        <1a407971-0b43-879e-0aac-65c7f9e29606@redhat.com>
-        <d9333547-b93e-629b-e004-53f1b581914f@linux.ibm.com>
-        <20200731104205.37add810.cohuck@redhat.com>
-        <16eee269-d773-26df-a517-08f2265318c4@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1732335AbgGaJq2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 31 Jul 2020 05:46:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9072 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731922AbgGaJq0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 31 Jul 2020 05:46:26 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06V9Vi7q046934;
+        Fri, 31 Jul 2020 05:46:24 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32mfpj20wq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jul 2020 05:46:24 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 06V9Vkr2047072;
+        Fri, 31 Jul 2020 05:46:24 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32mfpj20w4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jul 2020 05:46:24 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06V9kAIS001654;
+        Fri, 31 Jul 2020 09:46:22 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 32gcpx740n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Jul 2020 09:46:22 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06V9kJDS62193928
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 31 Jul 2020 09:46:19 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9451AAE053;
+        Fri, 31 Jul 2020 09:46:19 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 23C1DAE04D;
+        Fri, 31 Jul 2020 09:46:19 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.145.62.184])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 31 Jul 2020 09:46:19 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     pbonzini@redhat.com
+Cc:     kvm@vger.kernel.org, frankja@linux.vnet.ibm.com, david@redhat.com,
+        thuth@redhat.com, pmorel@linux.ibm.com, linux-s390@vger.kernel.org,
+        imbrenda@linux.ibm.com
+Subject: [kvm-unit-tests GIT PULL 00/11] s390x patches
+Date:   Fri, 31 Jul 2020 11:45:56 +0200
+Message-Id: <20200731094607.15204-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; boundary="Sig_/85AWDb/urtlSoUNPc2_4Ym3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-07-31_02:2020-07-31,2020-07-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ priorityscore=1501 impostorscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007310068
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---Sig_/85AWDb/urtlSoUNPc2_4Ym3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Paolo,
 
-On Fri, 31 Jul 2020 11:06:25 +0200
-Janosch Frank <frankja@linux.ibm.com> wrote:
+The following changes since commit 82147b77199bbfec2c61c97685cfb34f3f97c889:
 
-> On 7/31/20 10:42 AM, Cornelia Huck wrote:
-> > On Fri, 31 Jul 2020 09:34:41 +0200
-> > Janosch Frank <frankja@linux.ibm.com> wrote:
-> >  =20
-> >> On 7/30/20 5:58 PM, Thomas Huth wrote: =20
-> >>> On 30/07/2020 13.16, Cornelia Huck wrote:   =20
-> >>>> On Mon, 27 Jul 2020 05:54:15 -0400
-> >>>> Janosch Frank <frankja@linux.ibm.com> wrote:
-> >>>>   =20
-> >>>>> Test the error conditions of guest 2 Ultravisor calls, namely:
-> >>>>>      * Query Ultravisor information
-> >>>>>      * Set shared access
-> >>>>>      * Remove shared access
-> >>>>>
-> >>>>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> >>>>> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> >>>>> ---
-> >>>>>  lib/s390x/asm/uv.h  |  68 +++++++++++++++++++
-> >>>>>  s390x/Makefile      |   1 +
-> >>>>>  s390x/unittests.cfg |   3 +
-> >>>>>  s390x/uv-guest.c    | 159 ++++++++++++++++++++++++++++++++++++++++=
-++++
-> >>>>>  4 files changed, 231 insertions(+)
-> >>>>>  create mode 100644 lib/s390x/asm/uv.h
-> >>>>>  create mode 100644 s390x/uv-guest.c
-> >>>>>   =20
-> >>>>
-> >>>> (...)
-> >>>>   =20
-> >>>>> +static inline int uv_call(unsigned long r1, unsigned long r2)
-> >>>>> +{
-> >>>>> +=09int cc;
-> >>>>> +
-> >>>>> +=09asm volatile(
-> >>>>> +=09=09"0:=09.insn rrf,0xB9A40000,%[r1],%[r2],0,0\n"
-> >>>>> +=09=09"=09=09brc=093,0b\n"
-> >>>>> +=09=09"=09=09ipm=09%[cc]\n"
-> >>>>> +=09=09"=09=09srl=09%[cc],28\n"
-> >>>>> +=09=09: [cc] "=3Dd" (cc)
-> >>>>> +=09=09: [r1] "a" (r1), [r2] "a" (r2)
-> >>>>> +=09=09: "memory", "cc");
-> >>>>> +=09return cc;
-> >>>>> +}   =20
-> >>>>
-> >>>> This returns the condition code, but no caller seems to check it
-> >>>> (instead, they look at header.rc, which is presumably only set if th=
-e
-> >>>> instruction executed successfully in some way?)
-> >>>>
-> >>>> Looking at the kernel, it retries for cc > 1 (presumably busy
-> >>>> conditions), and cc !=3D 0 seems to be considered a failure. Do we w=
-ant
-> >>>> to look at the cc here as well?   =20
-> >>>
-> >>> It's there - but here it's in the assembly code, the "brc 3,0b".   =
-=20
-> >=20
-> > Ah yes, I missed that.
-> >  =20
-> >>
-> >> Yes, we needed to factor that out in KVM because we sometimes need to
-> >> schedule and then it looks nicer handling that in C code. The branch o=
-n
-> >> condition will jump back for cc 2 and 3. cc 0 and 1 are success and
-> >> error respectively and only then the rc and rrc in the UV header are s=
-et. =20
-> >=20
-> > Yeah, it's a bit surprising that rc/rrc are also set with cc 1. =20
->=20
-> Is it?
-> The (r)rc *only* contain meaningful information on CC 1.
-> On CC 0 they will simply say everything is fine which CC 0 states
-> already anyway.
+  fw_cfg: avoid index out of bounds (2020-07-30 17:57:55 -0400)
 
-I would consider "things worked" to actually be meaningful :)
+are available in the Git repository at:
 
-(I've seen other instructions indicating different kinds of success.)
+  https://github.com/frankjaa/kvm-unit-tests.git tags/s390x-2020-31-07
 
->=20
-> >=20
-> > (Can you add a comment? Just so that it is clear that callers never
-> > need to check the cc, as rc/rrc already contain more information than
-> > that.) =20
->=20
-> I'd rather fix my test code and also check the CC.
-> I did check it for my other UV tests so I've no idea why I didn't do it
-> here...
->=20
->=20
-> How about adding a comment for the cc 2/3 case?
-> "The brc instruction will take care of the cc 2/3 case where we need to
-> continue the execution because we were interrupted.
-> The inline assembly will only return on success/error i.e. cc 0/1."
+for you to fetch changes up to c2f4799a861993b82950b9e5a3a44fc65ba05ec6:
 
-Sounds good.
+  s390x: fix inline asm on gcc10 (2020-07-31 04:35:33 -0400)
 
---Sig_/85AWDb/urtlSoUNPc2_4Ym3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+----------------------------------------------------------------
+* IO tests from Pierre
+* GCC 10 compile fix from Claudio
+* CPU model test fix from Thomas
+----------------------------------------------------------------
 
------BEGIN PGP SIGNATURE-----
+Claudio Imbrenda (1):
+  s390x: fix inline asm on gcc10
 
-iQIzBAEBCAAdFiEEw9DWbcNiT/aowBjO3s9rk8bwL68FAl8j4pIACgkQ3s9rk8bw
-L6+I0RAAmoCKVRrXzu8om3hAovHTbKnIf7+8PPW5tKHGnQZNaHVeo3jmioJBU6Ur
-NYuMapYIwMxiBkOXkBpm/WFhLMZunWCKMmjrwZNGZGtp/sFHFvDTUAan2A1eCfZ4
-23o4wHpQnMCHR3LkRgaHOvVbKrGwDwMr4n7K0btmsOQWQHFS0Ot2xEIHVwXrJj+k
-xWPFVs66ylYwMPNifrtwHSejWtBvlN8QM0GvA9MDAYZCyQExRNfSyS9Ebx41+jg6
-TGR3eUWrKoewmtv6JozCaCEiv3kIaRMCJkTR26FiCgUb0ZuiqtRBeMan9uxm5Yji
-S+5u2Gty+yJSC6bKdhvITpDQ92mjMbVApQF6Hq4FGUY0APKXQa9+TL7CDX4ySBam
-YNOVDn7gWnuzLE7pP+uRHWznYEj2SCvolDmU3zKSnYMVhKLvTqUdr/6/dwVCwq8A
-JEnc8R3sXjhA3PhYaf2i4EpfPcivEBH1yuVYHtZh4t2V1+JQ2Uz7EfpAil63ACpH
-dbOJj5hIYO8wBsS0e3KoNpXVPTyEmmKX1UuOqdumZzS7YUoAPZ2mGMG3Pb2ABCQW
-nc9hdK31I4UGG8LDYy+nkWDpqcSA/ns0W+Cf0nW1IoyPVmiBvdWSNQZPfguNZlKJ
-KSEhdsq1u0l8SllxLNWUYAbK0p0ws31p5+OiNa+IelnMJH2ry8I=
-=Ib/4
------END PGP SIGNATURE-----
+Pierre Morel (9):
+  s390x: saving regs for interrupts
+  s390x: I/O interrupt registration
+  s390x: export the clock get_clock_ms() utility
+  s390x: clock and delays calculations
+  s390x: define function to wait for interrupt
+  s390x: Library resources for CSS tests
+  s390x: css: stsch, enumeration test
+  s390x: css: msch, enable test
+  s390x: css: ssch/tsch with sense and interrupt
 
---Sig_/85AWDb/urtlSoUNPc2_4Ym3--
+Thomas Huth (1):
+  s390x/cpumodel: The missing DFP facility on TCG is expected
+
+ lib/s390x/asm/arch_def.h |  14 ++
+ lib/s390x/asm/cpacf.h    |   5 +-
+ lib/s390x/asm/time.h     |  50 ++++++
+ lib/s390x/css.h          | 294 +++++++++++++++++++++++++++++++++++
+ lib/s390x/css_dump.c     | 152 +++++++++++++++++++
+ lib/s390x/css_lib.c      | 320 +++++++++++++++++++++++++++++++++++++++
+ lib/s390x/interrupt.c    |  23 ++-
+ lib/s390x/interrupt.h    |   8 +
+ lib/s390x/vm.c           |  46 ++++++
+ lib/s390x/vm.h           |  14 ++
+ s390x/Makefile           |   4 +
+ s390x/cpumodel.c         |  19 ++-
+ s390x/css.c              | 150 ++++++++++++++++++
+ s390x/cstart64.S         |  41 ++++-
+ s390x/emulator.c         |  25 +--
+ s390x/intercept.c        |  11 +-
+ s390x/unittests.cfg      |   4 +
+ 17 files changed, 1147 insertions(+), 33 deletions(-)
+ create mode 100644 lib/s390x/asm/time.h
+ create mode 100644 lib/s390x/css.h
+ create mode 100644 lib/s390x/css_dump.c
+ create mode 100644 lib/s390x/css_lib.c
+ create mode 100644 lib/s390x/interrupt.h
+ create mode 100644 lib/s390x/vm.c
+ create mode 100644 lib/s390x/vm.h
+ create mode 100644 s390x/css.c
+
+-- 
+2.25.4
 
