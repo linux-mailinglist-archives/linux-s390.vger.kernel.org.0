@@ -2,101 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6633E2344DB
-	for <lists+linux-s390@lfdr.de>; Fri, 31 Jul 2020 13:52:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7FA623454E
+	for <lists+linux-s390@lfdr.de>; Fri, 31 Jul 2020 14:09:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732699AbgGaLwp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 31 Jul 2020 07:52:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6314 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732690AbgGaLwp (ORCPT
+        id S1732842AbgGaMJs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 31 Jul 2020 08:09:48 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47720 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732776AbgGaMJs (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 31 Jul 2020 07:52:45 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 06VBWwbk067877;
-        Fri, 31 Jul 2020 07:52:33 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32md200pwu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 07:52:32 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 06VBkT35025791;
-        Fri, 31 Jul 2020 11:52:31 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 32gcqgq6un-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 31 Jul 2020 11:52:31 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 06VBqSKM61735376
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jul 2020 11:52:28 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 54AC2A4057;
-        Fri, 31 Jul 2020 11:52:28 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED0EDA4051;
-        Fri, 31 Jul 2020 11:52:27 +0000 (GMT)
-Received: from osiris (unknown [9.171.43.11])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 31 Jul 2020 11:52:27 +0000 (GMT)
-Date:   Fri, 31 Jul 2020 13:52:26 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Ilya Leoshkevich <iii@linux.ibm.com>
-Cc:     Wang Hai <wanghai38@huawei.com>, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, colin.king@canonical.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/test_unwind: fix possible memleak in test_unwind()
-Message-ID: <20200731115226.GD11581@osiris>
-References: <20200730063602.31581-1-wanghai38@huawei.com>
- <247044acbf1dbae8e3b48c2dcc1457cd2e59cfef.camel@linux.ibm.com>
+        Fri, 31 Jul 2020 08:09:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596197386;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=TRRTfZ7A/GWI6BWj05qLLb8nll1+A6buSHfRoaYqMxg=;
+        b=TrEDyk7WtWhDbBFRd0/OCy4iOnmrU3636Pk6nCkkB90vS7eMg7rh4xEfZJ6b0oZ6kQr5rh
+        3BEJO6Wp+LzatTQy7263bbajejBdmaqUqO6ILM51z/fzurzLKQrx5E0xMkUuRu/KZFvzgt
+        8/ow32KoPPNSSsgwvTYVgxyaQC+F4OA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-371--9uCdJxzMSa4QDTGERhgbA-1; Fri, 31 Jul 2020 08:09:40 -0400
+X-MC-Unique: -9uCdJxzMSa4QDTGERhgbA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41A3E8015F3;
+        Fri, 31 Jul 2020 12:09:39 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-112-153.ams2.redhat.com [10.36.112.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 741D319D7F;
+        Fri, 31 Jul 2020 12:09:34 +0000 (UTC)
+Subject: Re: [kvm-unit-tests GIT PULL 00/11] s390x patches
+To:     Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, frankja@linux.vnet.ibm.com, david@redhat.com,
+        pmorel@linux.ibm.com, linux-s390@vger.kernel.org,
+        imbrenda@linux.ibm.com
+References: <20200731094607.15204-1-frankja@linux.ibm.com>
+ <dfce14f4-5e7b-9060-6520-06e7dd69cfa4@redhat.com>
+ <524d5b00-94ec-da47-601a-a5909e3ed63e@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <00cc99d2-6020-3111-38a4-232991ffcf0d@redhat.com>
+Date:   Fri, 31 Jul 2020 14:09:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <247044acbf1dbae8e3b48c2dcc1457cd2e59cfef.camel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-07-31_04:2020-07-31,2020-07-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- clxscore=1011 priorityscore=1501 malwarescore=0 mlxlogscore=777
- adultscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 suspectscore=1
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007310088
+In-Reply-To: <524d5b00-94ec-da47-601a-a5909e3ed63e@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 09:35:15AM +0200, Ilya Leoshkevich wrote:
-> On Thu, 2020-07-30 at 14:36 +0800, Wang Hai wrote:
-> > test_unwind() misses to call kfree(bt) in an error path.
-> > Add the missed function call to fix it.
-> > 
-> > Fixes: 0610154650f1 ("s390/test_unwind: print verbose unwinding
-> > results")
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: Wang Hai <wanghai38@huawei.com>
-> > ---
-> >  arch/s390/lib/test_unwind.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/s390/lib/test_unwind.c
-> > b/arch/s390/lib/test_unwind.c
-> > index 32b7a30b2485..b0b12b46bc57 100644
-> > --- a/arch/s390/lib/test_unwind.c
-> > +++ b/arch/s390/lib/test_unwind.c
-> > @@ -63,6 +63,7 @@ static noinline int test_unwind(struct task_struct
-> > *task, struct pt_regs *regs,
-> >  			break;
-> >  		if (state.reliable && !addr) {
-> >  			pr_err("unwind state reliable but addr is
-> > 0\n");
-> > +			kfree(bt);
-> >  			return -EINVAL;
-> >  		}
-> >  		sprint_symbol(sym, addr);
+On 31/07/2020 13.31, Janosch Frank wrote:
+> On 7/31/20 12:31 PM, Paolo Bonzini wrote:
+>> On 31/07/20 11:45, Janosch Frank wrote:
+>>>   https://github.com/frankjaa/kvm-unit-tests.git tags/s390x-2020-31-07
+>>
+>> Pulled, thanks.  FWIW you may want to gitlab in order to get the CI.
+>>
+>> Paolo
+>>
 > 
-> Looks good to me, thanks!
+> Hey Paolo, that repository is hooked up to travis already:
+> https://travis-ci.com/github/frankjaa/kvm-unit-tests/builds/177931162
 > 
-> Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+> I'll consider it if it has any benefit.
+> @Thomas: Are there differences in the CI?
 
-Applied, thanks!
+Not that much, you get a good build test coverage with both. Travis uses
+real (nested) KVM tests, but the compiler and QEMU versions are a little
+bit backlevel (still using Ubuntu bionic). Gitlab-CI uses newer versions
+(thanks to Fedora 32), but there is no KVM support here, so the tests
+run with TCG only (I'm thinking of adding the cirrus-run script to the
+Gitlab-CI, maybe we could get some KVM-coverage that way there, too, but
+that will certainly take some time to figure it out).
+
+ Thomas
+
