@@ -2,186 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B62752351C6
-	for <lists+linux-s390@lfdr.de>; Sat,  1 Aug 2020 12:54:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51D40235432
+	for <lists+linux-s390@lfdr.de>; Sat,  1 Aug 2020 21:46:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728498AbgHAKy4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 1 Aug 2020 06:54:56 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45114 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725931AbgHAKy4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 1 Aug 2020 06:54:56 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 071AWipj009926;
-        Sat, 1 Aug 2020 06:53:31 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32n4j1tj4p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 01 Aug 2020 06:53:31 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 071AineF032275;
-        Sat, 1 Aug 2020 06:53:30 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32n4j1tj43-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 01 Aug 2020 06:53:30 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 071AoAw0031317;
-        Sat, 1 Aug 2020 10:53:27 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 32n01809gg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 01 Aug 2020 10:53:27 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 071ArONv53215310
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 1 Aug 2020 10:53:24 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6E75411C04A;
-        Sat,  1 Aug 2020 10:53:24 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5269A11C04C;
-        Sat,  1 Aug 2020 10:53:16 +0000 (GMT)
-Received: from [9.102.1.22] (unknown [9.102.1.22])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sat,  1 Aug 2020 10:53:16 +0000 (GMT)
-Subject: Re: [PATCH 06/15] powerpc: fadamp: simplify
- fadump_reserve_crash_area()
-To:     Mike Rapoport <rppt@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Hari Bathini <hbathini@in.ibm.com>, linux-mips@vger.kernel.org,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Will Deacon <will@kernel.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>, x86@kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        clang-built-linux@googlegroups.com, Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        linux-xtensa@linux-xtensa.org, openrisc@lists.librecores.org,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Michal Simek <monstr@monstr.eu>, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200728051153.1590-1-rppt@kernel.org>
- <20200728051153.1590-7-rppt@kernel.org> <87d04d5hda.fsf@mpe.ellerman.id.au>
- <20200801101854.GD534153@kernel.org>
-From:   Hari Bathini <hbathini@linux.ibm.com>
-Message-ID: <bb86fb93-4d52-6b58-0914-eab45b74c028@linux.ibm.com>
-Date:   Sat, 1 Aug 2020 16:23:15 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727076AbgHATqY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 1 Aug 2020 15:46:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgHATqY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 1 Aug 2020 15:46:24 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0BCCC06174A;
+        Sat,  1 Aug 2020 12:46:23 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id ed14so15704056qvb.2;
+        Sat, 01 Aug 2020 12:46:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ujYsQMCZbecD6bJOJC4Hkc6cL1ixRi2Hw1s2+qYZ8Ac=;
+        b=HIEyUOLPHv84IyjfJfi3d8BatiT6NbFRFo4ij+cTD9CJeCkKTEmiTauwNMEbVi8j5H
+         WUZk8m1BLwfiRWVb/wKvdceJhb+sY6NCjWQVGC56HCCpLqP8zDWFjm4kNyQhRqidxJK/
+         GrbwW9CqiPTw3gwxE4WQTnfvh5FV2F6v/RG3ky/Ehr3oRjhInC6MwSGDAT8Tu7+ySwQB
+         7TPBs+ODPpzT1BgGkvhTYQNjj3SRHZGocz9wc2pyerSBVQd9LsATV+T2rl2ZZV8DS4t6
+         Ad5bWemDX+rR3mc/tjNrx1Skb3x52oGEei/Dj7QD3NQ8w8GxHtqhJ8E/YQtdDX0rIWBJ
+         OVqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ujYsQMCZbecD6bJOJC4Hkc6cL1ixRi2Hw1s2+qYZ8Ac=;
+        b=HpN+mWIJyZcxs6qyrW+HwJ9rhkc9BcZVwqNgSfWyEx+ioDe847+yQmxiYU6RhChNWg
+         /bzb1aCgCOsUagDWLq18jr+QFOFnmxacevECEOb7sxXECe4JCNpqImQS6df1mLCHIQ3R
+         vsY4WDjRL7ZPJ8EyAjSXY4qr7zYQ1Cx0u8l2ppd1Q9gQxqJcrtiEn3Kk0+b/wfzgbapJ
+         +4fbDH8v6bsnD8LquXC2Ji9bqaoNSNTN5kBQVfg4evroAEdDDVArZQ8KzaNaGwmxj1M6
+         G66r6pJtmHf0nxopRmp1ltKMABFdUc+ZDPpGJda5F+nQ3eK1AwMWdkhASQSxaI8ruO1k
+         hUpQ==
+X-Gm-Message-State: AOAM532wEaNNawhoa2A4TSyHHpERAxlIpPYL+SJBYoSEqQOTxqoSpMNa
+        SgI6hn2GuhmmGKbIKEdbxg==
+X-Google-Smtp-Source: ABdhPJzDVgh81xMg4udcLC8TIzADu8oMa6/Aiz82VsTpmlIIxc01ZpgOmmLKGcMXX1gdukgbZPM0XA==
+X-Received: by 2002:a0c:d7c9:: with SMTP id g9mr10286039qvj.83.1596311183058;
+        Sat, 01 Aug 2020 12:46:23 -0700 (PDT)
+Received: from localhost.localdomain (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
+        by smtp.gmail.com with ESMTPSA id q17sm7791343qte.61.2020.08.01.12.46.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Aug 2020 12:46:22 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        Hans Wippel <hwippel@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH net] net/smc: Prevent kernel-infoleak in __smc_diag_dump()
+Date:   Sat,  1 Aug 2020 15:44:40 -0400
+Message-Id: <20200801194440.246747-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200801101854.GD534153@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-01_07:2020-07-31,2020-08-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- bulkscore=0 mlxlogscore=999 adultscore=0 phishscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 lowpriorityscore=0 clxscore=1011
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008010079
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+__smc_diag_dump() is potentially copying uninitialized kernel stack memory
+into socket buffers, since the compiler may leave a 4-byte hole near the
+beginning of `struct smcd_diag_dmbinfo`. Fix it by initializing `dinfo`
+with memset().
 
+Cc: stable@vger.kernel.org
+Fixes: 4b1b7d3b30a6 ("net/smc: add SMC-D diag support")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+Reference: https://lwn.net/Articles/417989/
 
-On 01/08/20 3:48 pm, Mike Rapoport wrote:
-> On Thu, Jul 30, 2020 at 10:15:13PM +1000, Michael Ellerman wrote:
->> Mike Rapoport <rppt@kernel.org> writes:
->>> From: Mike Rapoport <rppt@linux.ibm.com>
->>>
->>> fadump_reserve_crash_area() reserves memory from a specified base address
->>> till the end of the RAM.
->>>
->>> Replace iteration through the memblock.memory with a single call to
->>> memblock_reserve() with appropriate  that will take care of proper memory
->>                                       ^
->>                                       parameters?
->>> reservation.
->>>
->>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
->>> ---
->>>   arch/powerpc/kernel/fadump.c | 20 +-------------------
->>>   1 file changed, 1 insertion(+), 19 deletions(-)
->>
->> I think this looks OK to me, but I don't have a setup to test it easily.
->> I've added Hari to Cc who might be able to.
->>
->> But I'll give you an ack in the hope that it works :)
-> 
-> Actually, I did some digging in the git log and the traversal was added
-> there on purpose by the commit b71a693d3db3 ("powerpc/fadump: exclude
-> memory holes while reserving memory in second kernel")
+$ pahole -C "smcd_diag_dmbinfo" net/smc/smc_diag.o
+struct smcd_diag_dmbinfo {
+	__u32                      linkid;               /*     0     4 */
 
-I was about to comment on the same :)
-memblock_reserve() was being used until we ran into the issue talked 
-about in the above commit...
+	/* XXX 4 bytes hole, try to pack */
 
-> Presuming this is still reqruired I'm going to drop this patch and will
+	__u64                      peer_gid __attribute__((__aligned__(8))); /*     8     8 */
+	__u64                      my_gid __attribute__((__aligned__(8))); /*    16     8 */
+	__u64                      token __attribute__((__aligned__(8))); /*    24     8 */
+	__u64                      peer_token __attribute__((__aligned__(8))); /*    32     8 */
 
-Yeah, it is still required..
+	/* size: 40, cachelines: 1, members: 5 */
+	/* sum members: 36, holes: 1, sum holes: 4 */
+	/* forced alignments: 4, forced holes: 1, sum forced holes: 4 */
+	/* last cacheline: 40 bytes */
+} __attribute__((__aligned__(8)));
+$ _
 
-> simply replace for_each_memblock() with for_each_mem_range() in v2.
+ net/smc/smc_diag.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-Sounds right.
+diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
+index e1f64f4ba236..da9ba6d1679b 100644
+--- a/net/smc/smc_diag.c
++++ b/net/smc/smc_diag.c
+@@ -170,13 +170,15 @@ static int __smc_diag_dump(struct sock *sk, struct sk_buff *skb,
+ 	    (req->diag_ext & (1 << (SMC_DIAG_DMBINFO - 1))) &&
+ 	    !list_empty(&smc->conn.lgr->list)) {
+ 		struct smc_connection *conn = &smc->conn;
+-		struct smcd_diag_dmbinfo dinfo = {
+-			.linkid = *((u32 *)conn->lgr->id),
+-			.peer_gid = conn->lgr->peer_gid,
+-			.my_gid = conn->lgr->smcd->local_gid,
+-			.token = conn->rmb_desc->token,
+-			.peer_token = conn->peer_token
+-		};
++		struct smcd_diag_dmbinfo dinfo;
++
++		memset(&dinfo, 0, sizeof(dinfo));
++
++		dinfo.linkid = *((u32 *)conn->lgr->id);
++		dinfo.peer_gid = conn->lgr->peer_gid;
++		dinfo.my_gid = conn->lgr->smcd->local_gid;
++		dinfo.token = conn->rmb_desc->token;
++		dinfo.peer_token = conn->peer_token;
+ 
+ 		if (nla_put(skb, SMC_DIAG_DMBINFO, sizeof(dinfo), &dinfo) < 0)
+ 			goto errout;
+-- 
+2.25.1
 
->   
->> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
->>
->>
->>> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
->>> index 78ab9a6ee6ac..2446a61e3c25 100644
->>> --- a/arch/powerpc/kernel/fadump.c
->>> +++ b/arch/powerpc/kernel/fadump.c
->>> @@ -1658,25 +1658,7 @@ int __init fadump_reserve_mem(void)
->>>   /* Preserve everything above the base address */
->>>   static void __init fadump_reserve_crash_area(u64 base)
->>>   {
->>> -	struct memblock_region *reg;
->>> -	u64 mstart, msize;
->>> -
->>> -	for_each_memblock(memory, reg) {
->>> -		mstart = reg->base;
->>> -		msize  = reg->size;
->>> -
->>> -		if ((mstart + msize) < base)
->>> -			continue;
->>> -
->>> -		if (mstart < base) {
->>> -			msize -= (base - mstart);
->>> -			mstart = base;
->>> -		}
->>> -
->>> -		pr_info("Reserving %lluMB of memory at %#016llx for preserving crash data",
->>> -			(msize >> 20), mstart);
->>> -		memblock_reserve(mstart, msize);
->>> -	}
->>> +	memblock_reserve(base, memblock_end_of_DRAM() - base);
->>>   }
->>>   
->>>   unsigned long __init arch_reserved_kernel_pages(void)
->>> -- 
->>> 2.26.2
-> 
-
-Thanks
-Hari
