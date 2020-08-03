@@ -2,129 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F8952359B1
-	for <lists+linux-s390@lfdr.de>; Sun,  2 Aug 2020 20:04:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13E2923A033
+	for <lists+linux-s390@lfdr.de>; Mon,  3 Aug 2020 09:18:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgHBSDL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 2 Aug 2020 14:03:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgHBSDK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 2 Aug 2020 14:03:10 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D827FC06174A;
-        Sun,  2 Aug 2020 11:03:09 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id jp10so9776333ejb.0;
-        Sun, 02 Aug 2020 11:03:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fQZKbY0rONiHjM83HibQy63AEJaxpKeGQhQtY04gDSU=;
-        b=NClt20d7Ft+K6FkgUCUu4JaE3tIZQCut3LntjJUJhXUsmJc9/hAN8f1uhRfdf1xDS4
-         v+mVxDX9o4kozVR+Ah8Xum0mBupoLJJ8sGRFuq+zGUPap92vHCw3QWRVbrRdpExOLg1f
-         PfYSYoa+08lkV+ejUHsbzm11vb6ZXDx9wG5OH/PIC6kGD+/IwmcMBK0f+S9Q47Ilfp0r
-         CnDK0w5UJZcBtyEbi0uelKFQBUpbqi9svF4nCggxxWbCeGrL/RSClOw7dY42O+RKurT4
-         SeQmDc1qACQRwd/qkF4Bl6+EBF1g484NpzCeNGAZebTMM88+MrzhcW/7+ogo+dclYvqf
-         xJRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=fQZKbY0rONiHjM83HibQy63AEJaxpKeGQhQtY04gDSU=;
-        b=J9bfHA8A/41k+4z40K5dbRSczRTSYHZP8ZoibcIi2PXvAxiaaeAmJp6DZE/v8M0BOe
-         +QYeM8sVKSd0L60ZkDl/QPn8RuUfORZWZeVbXco++sid8s3oCHuNO/rzDH9/vZf9WRpU
-         pA3rfwxFjT1bkLIOmsfckW6sE7x/c1yX0vFqSjxtrHQ2S9fOxBSTn26MUdEqZYntKtLR
-         rUrndwmo0gDqQT/e8/7ua3It6PWAzCKsewbzvpQ0sWlkfUQIjtnjTCmACoGAxE9YU6+c
-         LyWgHOLDlmBe6/plUiXUyUsPzoBfXbCe8EW7ShjPkd63cyNJqlAYogmzOAq2OPWunHI7
-         Ejng==
-X-Gm-Message-State: AOAM533GptcbZRwGUbnFs+LWlYZQkw7CO/XrElRuad6u7ky210BMVb5o
-        G2J19gMCX4Dj5/wG4dcaJ/iJ2Cl1
-X-Google-Smtp-Source: ABdhPJwRVVa9oTHFz53Gep6kufj7aL7kFTxC9FLC9t+X6tOc6fXoy+b82cv+AC/Z1BhRkxvbjIG1Og==
-X-Received: by 2002:a17:907:94ce:: with SMTP id dn14mr12944760ejc.351.1596391388538;
-        Sun, 02 Aug 2020 11:03:08 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id x1sm13599477ejc.119.2020.08.02.11.03.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 11:03:07 -0700 (PDT)
-Date:   Sun, 2 Aug 2020 20:03:04 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: Re: [PATCH v2 17/17] memblock: use separate iterators for memory and
- reserved regions
-Message-ID: <20200802180304.GC86614@gmail.com>
-References: <20200802163601.8189-1-rppt@kernel.org>
- <20200802163601.8189-18-rppt@kernel.org>
+        id S1725867AbgHCHSG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 3 Aug 2020 03:18:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16096 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725806AbgHCHSG (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 3 Aug 2020 03:18:06 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07373wVO130488;
+        Mon, 3 Aug 2020 03:18:05 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32pa5rwcfu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 03:18:05 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07376IgH138173;
+        Mon, 3 Aug 2020 03:18:05 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32pa5rwcf8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 03:18:05 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07376gmC003714;
+        Mon, 3 Aug 2020 07:18:03 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 32mynh1wsb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 07:18:03 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0737I0Mh30540090
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Aug 2020 07:18:00 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 680B542042;
+        Mon,  3 Aug 2020 07:18:00 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E408A4204B;
+        Mon,  3 Aug 2020 07:17:59 +0000 (GMT)
+Received: from funtu.home (unknown [9.171.45.189])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Aug 2020 07:17:59 +0000 (GMT)
+Subject: Re: [PATCH] s390/pkey: Remove redundant variable initialization
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        ifranzki@linux.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tianjia.zhang@alibaba.com
+References: <20200802111526.4883-1-tianjia.zhang@linux.alibaba.com>
+From:   Harald Freudenberger <freude@linux.ibm.com>
+Message-ID: <297c9d42-14ed-8972-d3f0-954a6fe9859f@linux.ibm.com>
+Date:   Mon, 3 Aug 2020 09:18:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200802163601.8189-18-rppt@kernel.org>
+In-Reply-To: <20200802111526.4883-1-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_04:2020-07-31,2020-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 impostorscore=0 mlxscore=0 bulkscore=0 clxscore=1011
+ priorityscore=1501 adultscore=0 phishscore=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008030046
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-* Mike Rapoport <rppt@kernel.org> wrote:
-
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> for_each_memblock() is used to iterate over memblock.memory in
-> a few places that use data from memblock_region rather than the memory
-> ranges.
-> 
-> Introduce separate for_each_mem_region() and for_each_reserved_mem_region()
-> to improve encapsulation of memblock internals from its users.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+On 02.08.20 13:15, Tianjia Zhang wrote:
+> In the first place, the initialization value of `rc` is wrong.
+> It is unnecessary to initialize `rc` variables, so remove their
+> initialization operation.
+>
+> Fixes: f2bbc96e7cfad ("s390/pkey: add CCA AES cipher key support")
+> Cc: Harald Freudenberger <freude@linux.ibm.com>
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 > ---
->  .clang-format                  |  3 ++-
->  arch/arm64/kernel/setup.c      |  2 +-
->  arch/arm64/mm/numa.c           |  2 +-
->  arch/mips/netlogic/xlp/setup.c |  2 +-
->  arch/x86/mm/numa.c             |  2 +-
->  include/linux/memblock.h       | 19 ++++++++++++++++---
->  mm/memblock.c                  |  4 ++--
->  mm/page_alloc.c                |  8 ++++----
->  8 files changed, 28 insertions(+), 14 deletions(-)
-
-The x86 part:
-
-Acked-by: Ingo Molnar <mingo@kernel.org>
-
-Thanks,
-
-	Ingo
+>  drivers/s390/crypto/pkey_api.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
+> index 74e63ec49068..58140506a8e7 100644
+> --- a/drivers/s390/crypto/pkey_api.c
+> +++ b/drivers/s390/crypto/pkey_api.c
+> @@ -818,7 +818,7 @@ static int pkey_keyblob2pkey2(const struct pkey_apqn *apqns, size_t nr_apqns,
+>  static int pkey_apqns4key(const u8 *key, size_t keylen, u32 flags,
+>  			  struct pkey_apqn *apqns, size_t *nr_apqns)
+>  {
+> -	int rc = EINVAL;
+> +	int rc;
+>  	u32 _nr_apqns, *_apqns = NULL;
+>  	struct keytoken_header *hdr = (struct keytoken_header *)key;
+>  
+> @@ -886,7 +886,7 @@ static int pkey_apqns4keytype(enum pkey_key_type ktype,
+>  			      u8 cur_mkvp[32], u8 alt_mkvp[32], u32 flags,
+>  			      struct pkey_apqn *apqns, size_t *nr_apqns)
+>  {
+> -	int rc = -EINVAL;
+> +	int rc;
+>  	u32 _nr_apqns, *_apqns = NULL;
+>  
+>  	if (ktype == PKEY_TYPE_CCA_DATA || ktype == PKEY_TYPE_CCA_CIPHER) {
+Thanks, I've picked this one and committed to the s390 subsystem.
