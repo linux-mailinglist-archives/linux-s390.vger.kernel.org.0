@@ -2,152 +2,157 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C71023A3F2
-	for <lists+linux-s390@lfdr.de>; Mon,  3 Aug 2020 14:18:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 354F323A815
+	for <lists+linux-s390@lfdr.de>; Mon,  3 Aug 2020 16:10:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgHCMS1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 3 Aug 2020 08:18:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16312 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726130AbgHCMS0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 3 Aug 2020 08:18:26 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073C3cka095492;
-        Mon, 3 Aug 2020 08:18:17 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32pd7v8a4n-1
+        id S1727941AbgHCOKB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 3 Aug 2020 10:10:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63782 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727039AbgHCOKB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 3 Aug 2020 10:10:01 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073E3R5p110915;
+        Mon, 3 Aug 2020 10:09:53 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32pktugjfv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 08:18:16 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 073C3hQd095610;
-        Mon, 3 Aug 2020 08:18:16 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32pd7v8a3s-1
+        Mon, 03 Aug 2020 10:09:53 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 073E5lg0010478;
+        Mon, 3 Aug 2020 14:09:51 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma05fra.de.ibm.com with ESMTP id 32n017sbyb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 08:18:16 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 073CFsRK000313;
-        Mon, 3 Aug 2020 12:18:13 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 32n01825m0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 12:18:13 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 073CIBNo55705918
+        Mon, 03 Aug 2020 14:09:51 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 073E9nkF15860212
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Aug 2020 12:18:11 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3892A4C040;
-        Mon,  3 Aug 2020 12:18:11 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C0DD84C046;
-        Mon,  3 Aug 2020 12:18:10 +0000 (GMT)
-Received: from oc5311105230.ibm.com (unknown [9.145.63.67])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  3 Aug 2020 12:18:10 +0000 (GMT)
-Subject: Re: [Linux-kernel-mentees] [PATCH net] net/smc: Prevent
- kernel-infoleak in __smc_diag_dump()
-To:     Peilin Ye <yepeilin.cs@gmail.com>,
-        Karsten Graul <kgraul@linux.ibm.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-References: <20200801194440.246747-1-yepeilin.cs@gmail.com>
-From:   Ursula Braun <ubraun@linux.ibm.com>
-Message-ID: <7f07ed70-25eb-7eee-fac6-cc2226ef01e7@linux.ibm.com>
-Date:   Mon, 3 Aug 2020 14:18:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 14:09:49 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4E0C7A4051;
+        Mon,  3 Aug 2020 14:09:49 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1797CA4055;
+        Mon,  3 Aug 2020 14:09:49 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  3 Aug 2020 14:09:49 +0000 (GMT)
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-s390@vger.kernel.org, hca@linux.ibm.com
+Subject: Re: [PATCH 2/2] s390: convert to GENERIC_VDSO
+References: <20200803055645.79042-1-svens@linux.ibm.com>
+        <20200803055645.79042-3-svens@linux.ibm.com>
+        <87ft93ncaa.fsf@nanos.tec.linutronix.de>
+Date:   Mon, 03 Aug 2020 16:09:48 +0200
+In-Reply-To: <87ft93ncaa.fsf@nanos.tec.linutronix.de> (Thomas Gleixner's
+        message of "Mon, 03 Aug 2020 14:29:01 +0200")
+Message-ID: <yt9dmu3b3jo3.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200801194440.246747-1-yepeilin.cs@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-03_10:2020-08-03,2020-08-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 malwarescore=0
- suspectscore=0 clxscore=1011 mlxscore=0 lowpriorityscore=0 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008030091
+ definitions=2020-08-03_13:2020-08-03,2020-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 mlxlogscore=999 adultscore=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 malwarescore=0 priorityscore=1501
+ bulkscore=0 mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008030106
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Thomas Gleixner <tglx@linutronix.de> writes:
 
+> Sven Schnelle <svens@linux.ibm.com> writes:
+>
+>> - CPUCLOCK_VIRT is now handled with a syscall fallback, which might
+>>   be slower/less accurate than the old implementation.
+>
+> I can understand the slower, but why does it become less accurate?
 
-On 8/1/20 9:44 PM, Peilin Ye wrote:
-> __smc_diag_dump() is potentially copying uninitialized kernel stack memory
-> into socket buffers, since the compiler may leave a 4-byte hole near the
-> beginning of `struct smcd_diag_dmbinfo`. Fix it by initializing `dinfo`
-> with memset().
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 4b1b7d3b30a6 ("net/smc: add SMC-D diag support")
-> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-> ---
-> Reference: https://lwn.net/Articles/417989/
-> 
-> $ pahole -C "smcd_diag_dmbinfo" net/smc/smc_diag.o
-> struct smcd_diag_dmbinfo {
-> 	__u32                      linkid;               /*     0     4 */
-> 
-> 	/* XXX 4 bytes hole, try to pack */
-> 
-> 	__u64                      peer_gid __attribute__((__aligned__(8))); /*     8     8 */
-> 	__u64                      my_gid __attribute__((__aligned__(8))); /*    16     8 */
-> 	__u64                      token __attribute__((__aligned__(8))); /*    24     8 */
-> 	__u64                      peer_token __attribute__((__aligned__(8))); /*    32     8 */
-> 
-> 	/* size: 40, cachelines: 1, members: 5 */
-> 	/* sum members: 36, holes: 1, sum holes: 4 */
-> 	/* forced alignments: 4, forced holes: 1, sum forced holes: 4 */
-> 	/* last cacheline: 40 bytes */
-> } __attribute__((__aligned__(8)));
-> $ _
-> 
+Because we saved the system/user times as almost the last instruction
+when leaving the kernel to userspace. Now it's a bit earlier, because
+it is done in the C code. So it's not really related to the syscall
+fallback, but the switch from assembly to C.
 
-Thanks, patch is added to our local library and will be part of our
-next shipment of smc patches for the net-tree.
+>> Performance number from my system do 100 mio gettimeofday() calls:
+>>
+>> Plain syscall: 8.6s
+>> Generic VDSO:  1.3s
+>> old ASM VDSO:  1s
+>>
+>> So it's a bit slower but still much faster than syscalls.
+>
+> Where is the overhead coming from?
 
-Regards, Ursula
+It's because we have to allocate a stackframe which we didn't do before,
+and the compiler generated code is less optimized than the hand-crafted
+assembly code we had before.
 
->  net/smc/smc_diag.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
-> 
-> diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
-> index e1f64f4ba236..da9ba6d1679b 100644
-> --- a/net/smc/smc_diag.c
-> +++ b/net/smc/smc_diag.c
-> @@ -170,13 +170,15 @@ static int __smc_diag_dump(struct sock *sk, struct sk_buff *skb,
->  	    (req->diag_ext & (1 << (SMC_DIAG_DMBINFO - 1))) &&
->  	    !list_empty(&smc->conn.lgr->list)) {
->  		struct smc_connection *conn = &smc->conn;
-> -		struct smcd_diag_dmbinfo dinfo = {
-> -			.linkid = *((u32 *)conn->lgr->id),
-> -			.peer_gid = conn->lgr->peer_gid,
-> -			.my_gid = conn->lgr->smcd->local_gid,
-> -			.token = conn->rmb_desc->token,
-> -			.peer_token = conn->peer_token
-> -		};
-> +		struct smcd_diag_dmbinfo dinfo;
-> +
-> +		memset(&dinfo, 0, sizeof(dinfo));
-> +
-> +		dinfo.linkid = *((u32 *)conn->lgr->id);
-> +		dinfo.peer_gid = conn->lgr->peer_gid;
-> +		dinfo.my_gid = conn->lgr->smcd->local_gid;
-> +		dinfo.token = conn->rmb_desc->token;
-> +		dinfo.peer_token = conn->peer_token;
->  
->  		if (nla_put(skb, SMC_DIAG_DMBINFO, sizeof(dinfo), &dinfo) < 0)
->  			goto errout;
-> 
+>> +static inline u64 __arch_get_hw_counter(s32 clock_mode)
+>> +{
+>> +	const struct vdso_data *vdso = __arch_get_vdso_data();
+>> +	u64 adj, now;
+>> +	int cnt;
+>> +
+>> +	do {
+>> +		do {
+>> +			cnt = READ_ONCE(vdso->arch.tb_update_cnt);
+>> +		} while (cnt & 1);
+>
+>                 smp_rmb() ?
+
+>> +		now = get_tod_clock();
+>> +		adj = vdso->arch.tod_steering_end - now;
+>> +		if (unlikely((s64) adj > 0))
+>> +			now += (vdso->arch.tod_steering_delta < 0) ? (adj >> 15) : -(adj >> 15);
+>
+>                 smp_rmb() ?
+>
+>> +	} while (cnt != READ_ONCE(vdso->arch.tb_update_cnt));
+>> +	return now;
+>>  	if (ptff_query(PTFF_QTO) && ptff(&qto, sizeof(qto), PTFF_QTO) == 0)
+>>  		lpar_offset = qto.tod_epoch_difference;
+>> @@ -599,6 +550,13 @@ static int stp_sync_clock(void *data)
+>>  		if (stp_info.todoff[0] || stp_info.todoff[1] ||
+>>  		    stp_info.todoff[2] || stp_info.todoff[3] ||
+>>  		    stp_info.tmd != 2) {
+>> +			vdso_data->arch.tb_update_cnt++;
+>> +			/*
+>> +			 * This barrier isn't really needed as we're called
+>> +			 * from stop_machine_cpuslocked(). However it doesn't
+>> +			 * hurt in case the code gets changed.
+>> +			 */
+>> +			smp_wmb();
+>
+> WMB without a corresponding RMB and an explanation what's ordered
+> against what is voodoo at best.
+>
+>>  			rc = chsc_sstpc(stp_page, STP_OP_SYNC, 0,
+>>  					&clock_delta);
+>>  			if (rc == 0) {
+>> @@ -609,6 +567,8 @@ static int stp_sync_clock(void *data)
+>>  				if (rc == 0 && stp_info.tmd != 2)
+>>  					rc = -EAGAIN;
+>>  			}
+>> +			smp_wmb(); /* see comment above */
+>
+> See my comments above :)
+
+:-)
+
+What do you think about my question on using vdso_write_begin/end()?
+__arch_get_hw_counter() is called inside a vdso_read_retry() loop, so i
+would think that just enclosing this update with vdso_write_begin/end()
+should sufficient. But i'm not sure whether arch/ should call these
+functions.
+
+Thanks
+Sven
