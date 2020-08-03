@@ -2,204 +2,84 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B195523AA26
-	for <lists+linux-s390@lfdr.de>; Mon,  3 Aug 2020 18:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 133F823AC3E
+	for <lists+linux-s390@lfdr.de>; Mon,  3 Aug 2020 20:20:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbgHCQF2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 3 Aug 2020 12:05:28 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37166 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbgHCQF1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 3 Aug 2020 12:05:27 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596470725;
+        id S1727076AbgHCSSz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 3 Aug 2020 14:18:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44946 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728466AbgHCSSz (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 3 Aug 2020 14:18:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596478734;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cjQTCHJ3y4DCe0XgrxEsW/lCFVYz3XtncIs9t2KFDWo=;
-        b=EffEtYrtRBMLVtJXM7+7hG8uxCdzx7hhyRA3cvJilaJdtMn9hxMjuVfyfSdHYFFADGTfYT
-        cX0wzmKxApuNteQZgaGezuvlaGYRUxXEmh//UmD8WUrHKuNLoJ2X6jACzJ+bCKKWGKRS6T
-        Ze7ShKjud+8Q89ibfrQiOVaGrl5NpESoLojyt+g54oSUignh2cITub++ty/ezi80oPtzTD
-        pfJt4AAy3xKEY6UF0wabSMAjvQJWrvzLIbWHNRi9oE2BkXvt1I2EIT4C7D8b/mrzRNWJDw
-        2R8ops7ds7t3QIR+E4puS5eLc29HmvFjTm3ZBtg/7dSS8in+DZLPUFIoVXpXnQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596470725;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cjQTCHJ3y4DCe0XgrxEsW/lCFVYz3XtncIs9t2KFDWo=;
-        b=2OHatuhcfrikbBZ3q7Z3YDoAaiFa4hvsDYhozvIhnqBz5gClQ5RAMRdNpDItrOLLnO6KLJ
-        U5RzVquCNm1yfICA==
-To:     Sven Schnelle <svens@linux.ibm.com>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-s390@vger.kernel.org, hca@linux.ibm.com
-Subject: Re: [PATCH 2/2] s390: convert to GENERIC_VDSO
-In-Reply-To: <yt9dmu3b3jo3.fsf@linux.ibm.com>
-References: <20200803055645.79042-1-svens@linux.ibm.com> <20200803055645.79042-3-svens@linux.ibm.com> <87ft93ncaa.fsf@nanos.tec.linutronix.de> <yt9dmu3b3jo3.fsf@linux.ibm.com>
-Date:   Mon, 03 Aug 2020 18:05:24 +0200
-Message-ID: <87a6zbn29n.fsf@nanos.tec.linutronix.de>
+        bh=yPKDeMAAn3g8NgJRsWCV0tXrMbTpTCdEV09ubLsqzjc=;
+        b=gtPmz+EovclmGIU+g500zerCWsMnyXTrhO4tDgx+oth3E0ZM0ezkAcfjZtN/RuqWp3KjVb
+        IThkjd1fTy0hhkG/TyybveQsEBRyrNdRkvyXElneOgAqjdDgT/PxZvZeMmumdVIQ3nLJu7
+        mDDVGUxxnl89XEvE9cyLA863B+wZmxU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-100-hZihhdNDMIS8DJlsh76VvQ-1; Mon, 03 Aug 2020 14:18:52 -0400
+X-MC-Unique: hZihhdNDMIS8DJlsh76VvQ-1
+Received: by mail-wm1-f69.google.com with SMTP id a207so99439wme.9
+        for <linux-s390@vger.kernel.org>; Mon, 03 Aug 2020 11:18:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yPKDeMAAn3g8NgJRsWCV0tXrMbTpTCdEV09ubLsqzjc=;
+        b=LnTQ8h3AcLZoQdDZAIbh6p6KUmyT9EIl/oj7aNsbCVWxWmDRxhMAJZV29FiZemhGnt
+         Zu2VAokyoLmpUJfdl8RxsQeD/ruGjdbppFcJ2bd2Pa6jUOrBIr3BxZG2x5NFv64kWCNQ
+         5UYxTlAQUzP9KjNFxzcB0RnJcJp2iWFaiChhbSfdRqPkCcK3x/gxX9eqfAtn4qWRVH7B
+         D5sd1VLhNkL8mvh17mUuI0AEn9iceaGECIRJ8aO4LJmSQWumU1cZVUv5ZnKkMW+dM2IU
+         TxVxYN2gNczlkPtf603Iu9xc0yxXzkTdFjomLdd6Px7ZJbldOeVsf/0aa5NvBKNGFKfh
+         22VQ==
+X-Gm-Message-State: AOAM531273kefQZH83D4Ug1moDn4sZFVEg923HB/vzb+sq6x1Djj9kie
+        eu0jJTeb0YG/XkgT9rtdwTggGNxULWGqUjYh8f/stxFW32nRyrpwa06dztJHJXc7eqrdSlQUd4P
+        fU0Hc1CcKJzdOX8m8rdhNLg==
+X-Received: by 2002:a1c:a3c4:: with SMTP id m187mr397244wme.43.1596478731219;
+        Mon, 03 Aug 2020 11:18:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyGD9HBEfhlRLyGlm/2kLSdE4Zk4T6dBgmZJE1M6Fy+nfUqrm4TvyTkpuhyCUN5QEnwNLqf6Q==
+X-Received: by 2002:a1c:a3c4:: with SMTP id m187mr397234wme.43.1596478731015;
+        Mon, 03 Aug 2020 11:18:51 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7841:78cc:18c6:1e20? ([2001:b07:6468:f312:7841:78cc:18c6:1e20])
+        by smtp.gmail.com with ESMTPSA id y203sm694574wmc.29.2020.08.03.11.18.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 11:18:50 -0700 (PDT)
+Subject: Re: [GIT PULL 0/2] KVM: s390: feature for 5.9
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Collin Walling <walling@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+References: <20200730094857.175501-1-borntraeger@de.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <cfdecb8b-726c-63ae-8438-5f9c7338435f@redhat.com>
+Date:   Mon, 3 Aug 2020 20:18:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200730094857.175501-1-borntraeger@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Sven,
+On 30/07/20 11:48, Christian Borntraeger wrote:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-next-5.9-1
 
-Sven Schnelle <svens@linux.ibm.com> writes:
-> Thomas Gleixner <tglx@linutronix.de> writes:
->>>  			rc = chsc_sstpc(stp_page, STP_OP_SYNC, 0,
->>>  					&clock_delta);
->>>  			if (rc == 0) {
->>> @@ -609,6 +567,8 @@ static int stp_sync_clock(void *data)
->>>  				if (rc == 0 && stp_info.tmd != 2)
->>>  					rc = -EAGAIN;
->>>  			}
->>> +			smp_wmb(); /* see comment above */
->>
->> See my comments above :)
->
-> :-)
->
-> What do you think about my question on using vdso_write_begin/end()?
-> __arch_get_hw_counter() is called inside a vdso_read_retry() loop, so i
-> would think that just enclosing this update with vdso_write_begin/end()
-> should sufficient. But i'm not sure whether arch/ should call these
-> functions.
+Pulled, thanks.
 
-My knee jerk reaction is obviously NO, but OTOH it makes sense to
-utilize the existing sequence count for that.
+Paolo
 
-Though that want's a bit more than just fiddling with the sequence
-counter to be future proof and not restricted to the horrors of stomp
-machine context or some other orchestration mechanism. Something like
-the below.
-
-Thanks,
-
-        tglx
-
-----
-Subject: timekeeping/vsyscall: Provide vdso_update_begin/end()
-From: Thomas Gleixner <tglx@linutronix.de>
-Date: Mon, 03 Aug 2020 17:25:31 +0200
-
-Architectures can have the requirement to add additional architecture
-specific data to the VDSO data page which needs to be updated independent
-of the timekeeper updates.
-
-To protect these updates vs. concurrent readers and a conflicting update
-through timekeeping, provide helper functions to make such updates safe.
-
-vdso_update_begin() takes the timekeeper_lock to protect against a
-potential update from timekeeper code and increments the VDSO sequence
-count to signal data inconsistency to concurrent readers. vdso_update_end()
-makes the sequence count even again to signal data consistency and drops
-the timekeeper lock.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- include/vdso/vsyscall.h            |    3 +++
- kernel/time/timekeeping.c          |    2 +-
- kernel/time/timekeeping_internal.h |   11 ++++++++---
- kernel/time/vsyscall.c             |   30 ++++++++++++++++++++++++++++++
- 4 files changed, 42 insertions(+), 4 deletions(-)
-
---- a/include/vdso/vsyscall.h
-+++ b/include/vdso/vsyscall.h
-@@ -6,6 +6,9 @@
- 
- #include <asm/vdso/vsyscall.h>
- 
-+void vdso_update_begin(void);
-+void vdso_update_end(void);
-+
- #endif /* !__ASSEMBLY__ */
- 
- #endif /* __VDSO_VSYSCALL_H */
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -50,7 +50,7 @@ static struct {
- 	.seq = SEQCNT_ZERO(tk_core.seq),
- };
- 
--static DEFINE_RAW_SPINLOCK(timekeeper_lock);
-+DEFINE_RAW_SPINLOCK(timekeeper_lock);
- static struct timekeeper shadow_timekeeper;
- 
- /**
---- a/kernel/time/timekeeping_internal.h
-+++ b/kernel/time/timekeeping_internal.h
-@@ -1,12 +1,14 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- #ifndef _TIMEKEEPING_INTERNAL_H
- #define _TIMEKEEPING_INTERNAL_H
--/*
-- * timekeeping debug functions
-- */
-+
- #include <linux/clocksource.h>
-+#include <linux/spinlock.h>
- #include <linux/time.h>
- 
-+/*
-+ * timekeeping debug functions
-+ */
- #ifdef CONFIG_DEBUG_FS
- extern void tk_debug_account_sleep_time(const struct timespec64 *t);
- #else
-@@ -31,4 +33,7 @@ static inline u64 clocksource_delta(u64
- }
- #endif
- 
-+/* Semi public for serialization of non timekeeper VDSO updates. */
-+extern raw_spinlock_t timekeeper_lock;
-+
- #endif /* _TIMEKEEPING_INTERNAL_H */
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -13,6 +13,8 @@
- #include <vdso/helpers.h>
- #include <vdso/vsyscall.h>
- 
-+#include "timekeeping_internal.h"
-+
- static inline void update_vdso_data(struct vdso_data *vdata,
- 				    struct timekeeper *tk)
- {
-@@ -127,3 +129,31 @@ void update_vsyscall_tz(void)
- 
- 	__arch_sync_vdso_data(vdata);
- }
-+
-+/**
-+ * vdso_update_begin - Start of a VDSO update section
-+ *
-+ * Allows architecture code to safely update the architecture specific VDSO
-+ * data.
-+ */
-+void vdso_update_begin(void)
-+{
-+	struct vdso_data *vdata = __arch_get_k_vdso_data();
-+
-+	raw_spin_lock(&timekeeper_lock);
-+	vdso_write_begin(vdata);
-+}
-+
-+/**
-+ * vdso_update_end - End of a VDSO update section
-+ *
-+ * Pairs with vdso_update_begin().
-+ */
-+void vdso_update_end(void)
-+{
-+	struct vdso_data *vdata = __arch_get_k_vdso_data();
-+
-+	vdso_write_end(vdata);
-+	__arch_sync_vdso_data(vdata);
-+	raw_spin_unlock(&timekeeper_lock);
-+}
