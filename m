@@ -2,84 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 133F823AC3E
-	for <lists+linux-s390@lfdr.de>; Mon,  3 Aug 2020 20:20:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD7E123AC90
+	for <lists+linux-s390@lfdr.de>; Mon,  3 Aug 2020 20:44:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgHCSSz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 3 Aug 2020 14:18:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44946 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728466AbgHCSSz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 3 Aug 2020 14:18:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596478734;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yPKDeMAAn3g8NgJRsWCV0tXrMbTpTCdEV09ubLsqzjc=;
-        b=gtPmz+EovclmGIU+g500zerCWsMnyXTrhO4tDgx+oth3E0ZM0ezkAcfjZtN/RuqWp3KjVb
-        IThkjd1fTy0hhkG/TyybveQsEBRyrNdRkvyXElneOgAqjdDgT/PxZvZeMmumdVIQ3nLJu7
-        mDDVGUxxnl89XEvE9cyLA863B+wZmxU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-100-hZihhdNDMIS8DJlsh76VvQ-1; Mon, 03 Aug 2020 14:18:52 -0400
-X-MC-Unique: hZihhdNDMIS8DJlsh76VvQ-1
-Received: by mail-wm1-f69.google.com with SMTP id a207so99439wme.9
-        for <linux-s390@vger.kernel.org>; Mon, 03 Aug 2020 11:18:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yPKDeMAAn3g8NgJRsWCV0tXrMbTpTCdEV09ubLsqzjc=;
-        b=LnTQ8h3AcLZoQdDZAIbh6p6KUmyT9EIl/oj7aNsbCVWxWmDRxhMAJZV29FiZemhGnt
-         Zu2VAokyoLmpUJfdl8RxsQeD/ruGjdbppFcJ2bd2Pa6jUOrBIr3BxZG2x5NFv64kWCNQ
-         5UYxTlAQUzP9KjNFxzcB0RnJcJp2iWFaiChhbSfdRqPkCcK3x/gxX9eqfAtn4qWRVH7B
-         D5sd1VLhNkL8mvh17mUuI0AEn9iceaGECIRJ8aO4LJmSQWumU1cZVUv5ZnKkMW+dM2IU
-         TxVxYN2gNczlkPtf603Iu9xc0yxXzkTdFjomLdd6Px7ZJbldOeVsf/0aa5NvBKNGFKfh
-         22VQ==
-X-Gm-Message-State: AOAM531273kefQZH83D4Ug1moDn4sZFVEg923HB/vzb+sq6x1Djj9kie
-        eu0jJTeb0YG/XkgT9rtdwTggGNxULWGqUjYh8f/stxFW32nRyrpwa06dztJHJXc7eqrdSlQUd4P
-        fU0Hc1CcKJzdOX8m8rdhNLg==
-X-Received: by 2002:a1c:a3c4:: with SMTP id m187mr397244wme.43.1596478731219;
-        Mon, 03 Aug 2020 11:18:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyGD9HBEfhlRLyGlm/2kLSdE4Zk4T6dBgmZJE1M6Fy+nfUqrm4TvyTkpuhyCUN5QEnwNLqf6Q==
-X-Received: by 2002:a1c:a3c4:: with SMTP id m187mr397234wme.43.1596478731015;
-        Mon, 03 Aug 2020 11:18:51 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:7841:78cc:18c6:1e20? ([2001:b07:6468:f312:7841:78cc:18c6:1e20])
-        by smtp.gmail.com with ESMTPSA id y203sm694574wmc.29.2020.08.03.11.18.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 11:18:50 -0700 (PDT)
-Subject: Re: [GIT PULL 0/2] KVM: s390: feature for 5.9
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Collin Walling <walling@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-References: <20200730094857.175501-1-borntraeger@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <cfdecb8b-726c-63ae-8438-5f9c7338435f@redhat.com>
-Date:   Mon, 3 Aug 2020 20:18:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1728742AbgHCSop (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 3 Aug 2020 14:44:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60358 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728515AbgHCSoo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 3 Aug 2020 14:44:44 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073Ib0ZV174990;
+        Mon, 3 Aug 2020 14:44:34 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32pqdhh08t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 14:44:34 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 073IZZvK021220;
+        Mon, 3 Aug 2020 18:44:32 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 32n0182fgb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 18:44:32 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 073IiU6Q28901674
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Aug 2020 18:44:30 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED73E11C050;
+        Mon,  3 Aug 2020 18:44:29 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A5C0C11C04C;
+        Mon,  3 Aug 2020 18:44:29 +0000 (GMT)
+Received: from osiris (unknown [9.171.25.113])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  3 Aug 2020 18:44:29 +0000 (GMT)
+Date:   Mon, 3 Aug 2020 20:44:28 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 2/2] s390: convert to GENERIC_VDSO
+Message-ID: <20200803184428.GA3973@osiris>
+References: <20200803055645.79042-1-svens@linux.ibm.com>
+ <20200803055645.79042-3-svens@linux.ibm.com>
+ <87ft93ncaa.fsf@nanos.tec.linutronix.de>
+ <yt9dmu3b3jo3.fsf@linux.ibm.com>
+ <87a6zbn29n.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200730094857.175501-1-borntraeger@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87a6zbn29n.fsf@nanos.tec.linutronix.de>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_15:2020-08-03,2020-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ bulkscore=0 impostorscore=0 mlxlogscore=772 priorityscore=1501
+ clxscore=1011 suspectscore=1 phishscore=0 spamscore=0 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008030130
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 30/07/20 11:48, Christian Borntraeger wrote:
->   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-next-5.9-1
+On Mon, Aug 03, 2020 at 06:05:24PM +0200, Thomas Gleixner wrote:
+> +/**
+> + * vdso_update_begin - Start of a VDSO update section
+> + *
+> + * Allows architecture code to safely update the architecture specific VDSO
+> + * data.
+> + */
+> +void vdso_update_begin(void)
+> +{
+> +	struct vdso_data *vdata = __arch_get_k_vdso_data();
+> +
+> +	raw_spin_lock(&timekeeper_lock);
+> +	vdso_write_begin(vdata);
+> +}
 
-Pulled, thanks.
+I would assume that this only works if vdso_update_begin() is called
+with irqs disabled, otherwise it could deadlock, no?
 
-Paolo
+Maybe something like:
 
+void vdso_update_begin(unsigned long *flags)
+{
+	struct vdso_data *vdata = __arch_get_k_vdso_data();
+
+	raw_spin_lock_irqsave(&timekeeper_lock, *flags);
+	vdso_write_begin(vdata);
+}
+
+void vdso_update_end(unsigned long *flags)
+{
+	struct vdso_data *vdata = __arch_get_k_vdso_data();
+
+	vdso_write_end(vdata);
+	__arch_sync_vdso_data(vdata);
+	raw_spin_unlock_irqrestore(&timekeeper_lock, *flags);
+}
+
+? Just wondering.
