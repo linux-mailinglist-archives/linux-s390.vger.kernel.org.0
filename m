@@ -2,54 +2,50 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D774923AF9E
-	for <lists+linux-s390@lfdr.de>; Mon,  3 Aug 2020 23:25:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 602CB23B463
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Aug 2020 07:28:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgHCVZD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 3 Aug 2020 17:25:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbgHCVZD (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 3 Aug 2020 17:25:03 -0400
-Subject: Re: [GIT PULL] s390 updates for 5.9 merge window
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596489903;
-        bh=o6h9CJEoeX8/ejE7QhxPsgxoQEHkTR7/BMMiMJeNSNU=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Qq91mfsdh5v5jkEnyWaVoPL+1AQn+GAFQwO0MadjQLB9QZeBfIXjUWg3z8Y8QpgCe
-         6e1CIN6OpmOrPE51OjwxqvSKXVSXq3bKdcZaF0P7hf6/39isj6vQ8n4sir8EVVLVb0
-         MuoR+dMc+2bvBpV+2Yrp7aq4rxxAIxc/uVpG098A=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200803093315.GA4083@osiris>
-References: <20200803093315.GA4083@osiris>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200803093315.GA4083@osiris>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.9-1
-X-PR-Tracked-Commit-Id: 9a996c67a65d937b23408e56935ef23404c9418e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 45365a06aa305c9eca1cbf48aef48a7a0cea3b4e
-Message-Id: <159648990348.7765.12917815378039110463.pr-tracker-bot@kernel.org>
-Date:   Mon, 03 Aug 2020 21:25:03 +0000
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        id S1726797AbgHDF2J convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Tue, 4 Aug 2020 01:28:09 -0400
+Received: from lx0001.riocuarto.gov.ar ([181.15.158.195]:50750 "EHLO
+        lx0001.riocuarto.gov.ar" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgHDF2J (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Aug 2020 01:28:09 -0400
+X-Greylist: delayed 998 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Aug 2020 01:28:08 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.riocuarto.gov.ar (Postfix) with ESMTP id 8204360529406;
+        Tue,  4 Aug 2020 02:09:15 -0300 (-03)
+Received: from lx0001.riocuarto.gov.ar ([127.0.0.1])
+        by localhost (zimbra.riocuarto.gov.ar [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id F43q1ar0NbCG; Tue,  4 Aug 2020 02:09:15 -0300 (-03)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.riocuarto.gov.ar (Postfix) with ESMTP id 79C1B605AC07E;
+        Tue,  4 Aug 2020 02:09:14 -0300 (-03)
+X-Virus-Scanned: amavisd-new at riocuarto.gov.ar
+Received: from lx0001.riocuarto.gov.ar ([127.0.0.1])
+        by localhost (zimbra.riocuarto.gov.ar [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id iKWtwmQlI0FI; Tue,  4 Aug 2020 02:09:14 -0300 (-03)
+Received: from zimbra.riocuarto.gov.ar (localhost [127.0.0.1])
+        by zimbra.riocuarto.gov.ar (Postfix) with ESMTP id 7DD5E605846B6;
+        Tue,  4 Aug 2020 02:09:12 -0300 (-03)
+Date:   Tue, 4 Aug 2020 02:09:12 -0300 (ART)
+From:   Jorge Meroni <jmeroni@riocuarto.gov.ar>
+Reply-To: DANIEL MADRE <danielsmadre6@gmail.com>
+Message-ID: <1912407759.1366401.1596517752469.JavaMail.zimbra@riocuarto.gov.ar>
+Subject: SPENDE
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [105.9.103.250]
+X-Mailer: Zimbra 8.8.15_GA_3918 (zclient/8.8.15_GA_3918)
+Thread-Index: pTTd2CZz4KNO9bbQ7tJ7vr4D8TqaKw==
+Thread-Topic: SPENDE
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Mon, 3 Aug 2020 11:33:15 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.9-1
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/45365a06aa305c9eca1cbf48aef48a7a0cea3b4e
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Ich habe eine Spende von 5,5 Millionen Euro für Sie. Bitte antworten Sie.
