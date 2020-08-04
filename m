@@ -2,126 +2,156 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9711323B9D6
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Aug 2020 13:47:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E09DB23BB70
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Aug 2020 15:53:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbgHDLrB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Aug 2020 07:47:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60586 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728028AbgHDLrB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Aug 2020 07:47:01 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 074BX2UW089118;
-        Tue, 4 Aug 2020 07:46:56 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32q4wsm246-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Aug 2020 07:46:55 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 074BfGB1029221;
-        Tue, 4 Aug 2020 11:46:53 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03fra.de.ibm.com with ESMTP id 32nyyd16sb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Aug 2020 11:46:53 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 074BkpnQ23331110
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Aug 2020 11:46:51 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F0A8742042;
-        Tue,  4 Aug 2020 11:46:50 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B86D34204D;
-        Tue,  4 Aug 2020 11:46:50 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  4 Aug 2020 11:46:50 +0000 (GMT)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        hca@linux.ibm.com
-Subject: Re: [PATCH 1/3] vdso: allow to add architecture-specific vdso data
-References: <20200804093607.69841-1-svens@linux.ibm.com>
-        <20200804093607.69841-2-svens@linux.ibm.com>
-Date:   Tue, 04 Aug 2020 13:46:50 +0200
-In-Reply-To: <20200804093607.69841-2-svens@linux.ibm.com> (Sven Schnelle's
-        message of "Tue, 4 Aug 2020 11:36:05 +0200")
-Message-ID: <yt9dk0yed45x.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        id S1728450AbgHDNxd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Aug 2020 09:53:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728408AbgHDNxc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Aug 2020 09:53:32 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5CDCC0617A0
+        for <linux-s390@vger.kernel.org>; Tue,  4 Aug 2020 06:53:20 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 74so12011789pfx.13
+        for <linux-s390@vger.kernel.org>; Tue, 04 Aug 2020 06:53:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=nig2/fJdYyt3b0Q5A/SU+0msFseeyybXCaAI4dDRdTg=;
+        b=jumdjySCSXZVJzizm9OUzoU9OXCS+Cfq57D4M9+nOmcjFx/ImlUYxx8bn1JnW+143W
+         B6tMiLN9WKIVbxAyKxyw81HdIULr1/GZN+VKaYR0TvHVg/4jcAFDj42GWXCA2Swm1Yfw
+         5v27iYJTlRgBYWmLp+/HqtnWpSjejedeiZ1fo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=nig2/fJdYyt3b0Q5A/SU+0msFseeyybXCaAI4dDRdTg=;
+        b=jHgZ1OwoIqh/S5/btpE3hjv4s7ZkGrRROPk3IEnp8HbAd6EEHXyUGaYW/WYD1cY1rd
+         /+8hCCKk+KYHgj93Tgge/zswU5rZ24LekesYEu8fn8Vp1vyMFmYlBhtxI+dqGeVpqzyr
+         0rzjlBHT5i1fAEedIXmn9d/q7oVzybJZyBMCQGdeqc757AORozCsyjl8gFQZCZuppzo4
+         odrNEoPe+N7CwX77rpHzT/xeFqyncWF5hGhCNsu2KxmZdcMck60GMvATaozLbD7iD2o3
+         0LiBv4IF+5Oz/EZuki+Toy7EPU2BzvtGnTLJt5ovt1kCT7n/Zr/Gx8pxqXw3MhPvswRZ
+         4HZg==
+X-Gm-Message-State: AOAM530Sakvcn7/bS+5twFdlaG+I6ycJ3wbLV9PBVbxw9rTWvI6110mV
+        Bcd63XvHG4iEoC5jiFoLct8GQQ==
+X-Google-Smtp-Source: ABdhPJzULAmNSkaX32weXl1O34te5NSuX9EJVhPlxbPjsXptEZqiJedi5i9MSO/avpj2cLsHaUiFtw==
+X-Received: by 2002:a63:3587:: with SMTP id c129mr20025647pga.322.1596549199803;
+        Tue, 04 Aug 2020 06:53:19 -0700 (PDT)
+Received: from localhost (2001-44b8-1113-6700-0414-2e33-60ed-75ec.static.ipv6.internode.on.net. [2001:44b8:1113:6700:414:2e33:60ed:75ec])
+        by smtp.gmail.com with ESMTPSA id g8sm9981404pfo.132.2020.08.04.06.53.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 06:53:19 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Mike Rapoport <rppt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: Re: [PATCH v2 01/17] KVM: PPC: Book3S HV: simplify kvm_cma_reserve()
+In-Reply-To: <20200802163601.8189-2-rppt@kernel.org>
+References: <20200802163601.8189-1-rppt@kernel.org> <20200802163601.8189-2-rppt@kernel.org>
+Date:   Tue, 04 Aug 2020 23:53:15 +1000
+Message-ID: <87tuxio6us.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-04_03:2020-08-03,2020-08-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- clxscore=1015 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
- phishscore=0 priorityscore=1501 adultscore=0 spamscore=0 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008040086
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi,
+Hi Mike,
 
-Sven Schnelle <svens@linux.ibm.com> writes:
-
-> Add the possibility to add architecture specific vDSO
-> data to struct vdso_data. This is useful if the arch specific
-> user space VDSO code needs additional data during execution.
-> If CONFIG_ARCH_HAS_VDSO_DATA is defined, the generic code will
-> include asm/vdso/data.h which should contain 'struct arch_vdso_data'.
-> This structure will be embedded in the generic vDSO data.
 >
-> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+> The memory size calculation in kvm_cma_reserve() traverses memblock.memory
+> rather than simply call memblock_phys_mem_size(). The comment in that
+> function suggests that at some point there should have been call to
+> memblock_analyze() before memblock_phys_mem_size() could be used.
+> As of now, there is no memblock_analyze() at all and
+> memblock_phys_mem_size() can be used as soon as cold-plug memory is
+> registerd with memblock.
+>
+> Replace loop over memblock.memory with a call to memblock_phys_mem_size().
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 > ---
->  arch/Kconfig            | 3 +++
->  include/vdso/datapage.h | 7 +++++++
->  2 files changed, 10 insertions(+)
+>  arch/powerpc/kvm/book3s_hv_builtin.c | 11 ++---------
+>  1 file changed, 2 insertions(+), 9 deletions(-)
 >
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 8cc35dc556c7..e1017ce979e2 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -979,6 +979,9 @@ config HAVE_SPARSE_SYSCALL_NR
->  	  entries at 4000, 5000 and 6000 locations. This option turns on syscall
->  	  related optimizations for a given architecture.
+> diff --git a/arch/powerpc/kvm/book3s_hv_builtin.c b/arch/powerpc/kvm/book3s_hv_builtin.c
+> index 7cd3cf3d366b..56ab0d28de2a 100644
+> --- a/arch/powerpc/kvm/book3s_hv_builtin.c
+> +++ b/arch/powerpc/kvm/book3s_hv_builtin.c
+> @@ -95,22 +95,15 @@ EXPORT_SYMBOL_GPL(kvm_free_hpt_cma);
+>  void __init kvm_cma_reserve(void)
+>  {
+>  	unsigned long align_size;
+> -	struct memblock_region *reg;
+> -	phys_addr_t selected_size = 0;
+> +	phys_addr_t selected_size;
 >  
-> +config ARCH_HAS_VDSO_DATA
-> +	bool
-> +
->  source "kernel/gcov/Kconfig"
+>  	/*
+>  	 * We need CMA reservation only when we are in HV mode
+>  	 */
+>  	if (!cpu_has_feature(CPU_FTR_HVMODE))
+>  		return;
+> -	/*
+> -	 * We cannot use memblock_phys_mem_size() here, because
+> -	 * memblock_analyze() has not been called yet.
+> -	 */
+> -	for_each_memblock(memory, reg)
+> -		selected_size += memblock_region_memory_end_pfn(reg) -
+> -				 memblock_region_memory_base_pfn(reg);
 >  
->  source "scripts/gcc-plugins/Kconfig"
-> diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-> index 7955c56d6b3c..74e730238ce6 100644
-> --- a/include/vdso/datapage.h
-> +++ b/include/vdso/datapage.h
-> @@ -19,6 +19,10 @@
->  #include <vdso/time32.h>
->  #include <vdso/time64.h>
->  
-> +#ifdef CONFIG_ARCH_HAS_VDSO_DATA
-> +#include <asm/vdso/data.h>
-> +#endif
-> +
->  #define VDSO_BASES	(CLOCK_TAI + 1)
->  #define VDSO_HRES	(BIT(CLOCK_REALTIME)		| \
->  			 BIT(CLOCK_MONOTONIC)		| \
-> @@ -97,6 +101,9 @@ struct vdso_data {
->  	s32			tz_dsttime;
->  	u32			hrtimer_res;
->  	u32			__unused;
-> +#ifdef CONFIG_ARCH_HAS_VDSO_DATA
-> +	struct arch_vdso_data arch;
-> +#endif
->  };
->  
->  /*
+> +	selected_size = PHYS_PFN(memblock_phys_mem_size());
+>  	selected_size = (selected_size * kvm_cma_resv_ratio / 100) << PAGE_SHIFT;
 
-I've sent the wrong version of this patch. I'll send a revised version
-with the requested changes later.
+I think this is correct, but PHYS_PFN does x >> PAGE_SHIFT and then the
+next line does x << PAGE_SHIFT, so I think we could combine those two
+lines as:
+
+selected_size = PAGE_ALIGN(memblock_phys_mem_size() * kvm_cma_resv_ratio / 100);
+
+(I think that might technically change it from aligning down to aligning
+up but I don't think 1 page matters here.)
+
+Kind regards,
+Daniel
+
+
+>  	if (selected_size) {
+>  		pr_debug("%s: reserving %ld MiB for global area\n", __func__,
+> -- 
+> 2.26.2
