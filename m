@@ -2,37 +2,37 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A1F923C7C9
-	for <lists+linux-s390@lfdr.de>; Wed,  5 Aug 2020 10:30:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B793323C8C0
+	for <lists+linux-s390@lfdr.de>; Wed,  5 Aug 2020 11:14:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgHEI3s (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 5 Aug 2020 04:29:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58218 "EHLO
+        id S1728134AbgHEJLv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 5 Aug 2020 05:11:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30577 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727930AbgHEI3r (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Aug 2020 04:29:47 -0400
+        with ESMTP id S1728385AbgHEJLW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Aug 2020 05:11:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596616184;
+        s=mimecast20190719; t=1596618680;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=FvaMXP5a+m7YjPK069Q+H34K0fPtN+F8dCVJuIAUPpY=;
-        b=UUTWGjMaC589yMqIkc0P3tcJrgvfrnzLO8GogIGJlXgVmu4mZ8riSGVZ80gJd910sZWZnH
-        x/6LkzLnS3lm3aS9tSyXrJKXxfyikTxKoZ52heun1ooQqpuN/VBShPPPSyIpZ1aw8AoC7W
-        o+e4SIr3MyXoeyUk2C1AfLQ7axybcPE=
+        bh=4ozBDa1/xPHY8DQkaA9JqUMmSyVVQ14zD1Crd0znMso=;
+        b=PKa1vVZ2ktwBbfJkH7uBUaodNzgQ70N4m/jCCX7g/UIAZUY8lbCvw7c9g+fCCXqVyht8ex
+        9nC4o/YKAN4lSfzxNsQjmVN66prsFkDwEUcJYUhezxiXCa9yG0tA9vq0Ik9tc6LfFXIAx8
+        0LsaCfLZyY43EVbe7qQasoabcd3WOxU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-459-Fs5bhd50MLqa0hbUoos07g-1; Wed, 05 Aug 2020 04:29:36 -0400
-X-MC-Unique: Fs5bhd50MLqa0hbUoos07g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-16-yG35Dv0sMVyPaqKEAb-z_A-1; Wed, 05 Aug 2020 05:11:16 -0400
+X-MC-Unique: yG35Dv0sMVyPaqKEAb-z_A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F02638064AB;
-        Wed,  5 Aug 2020 08:29:30 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB37818C63C1;
+        Wed,  5 Aug 2020 09:11:11 +0000 (UTC)
 Received: from localhost (ovpn-12-71.pek2.redhat.com [10.72.12.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E2DCC10013D0;
-        Wed,  5 Aug 2020 08:29:26 +0000 (UTC)
-Date:   Wed, 5 Aug 2020 16:29:24 +0800
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E2D2772E4F;
+        Wed,  5 Aug 2020 09:11:07 +0000 (UTC)
+Date:   Wed, 5 Aug 2020 17:11:05 +0800
 From:   Baoquan He <bhe@redhat.com>
 To:     Mike Rapoport <rppt@kernel.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -68,67 +68,43 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
         openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
         uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: Re: [PATCH v2 15/17] memblock: remove unused memblock_mem_size()
-Message-ID: <20200805082924.GV10792@MiWiFi-R3L-srv>
+Subject: Re: [PATCH v2 16/17] memblock: implement
+ for_each_reserved_mem_region() using __next_mem_region()
+Message-ID: <20200805091105.GW10792@MiWiFi-R3L-srv>
 References: <20200802163601.8189-1-rppt@kernel.org>
- <20200802163601.8189-16-rppt@kernel.org>
+ <20200802163601.8189-17-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200802163601.8189-16-rppt@kernel.org>
+In-Reply-To: <20200802163601.8189-17-rppt@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 08/02/20 at 07:35pm, Mike Rapoport wrote:
+On 08/02/20 at 07:36pm, Mike Rapoport wrote:
 > From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> The only user of memblock_mem_size() was x86 setup code, it is gone now and
-> memblock_mem_size() funciton can be removed.
+> Iteration over memblock.reserved with for_each_reserved_mem_region() used
+> __next_reserved_mem_region() that implemented a subset of
+> __next_mem_region().
+> 
+> Use __for_each_mem_range() and, essentially, __next_mem_region() with
+> appropriate parameters to reduce code duplication.
+> 
+> While on it, rename for_each_reserved_mem_region() to
+> for_each_reserved_mem_range() for consistency.
 > 
 > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 > ---
->  include/linux/memblock.h |  1 -
->  mm/memblock.c            | 15 ---------------
->  2 files changed, 16 deletions(-)
-> 
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index d70c2835e913..ec2fd8f32a19 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -450,7 +450,6 @@ static inline bool memblock_bottom_up(void)
->  
->  phys_addr_t memblock_phys_mem_size(void);
->  phys_addr_t memblock_reserved_size(void);
-> -phys_addr_t memblock_mem_size(unsigned long limit_pfn);
->  phys_addr_t memblock_start_of_DRAM(void);
->  phys_addr_t memblock_end_of_DRAM(void);
->  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index c1a4c8798973..48d614352b25 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -1656,21 +1656,6 @@ phys_addr_t __init_memblock memblock_reserved_size(void)
->  	return memblock.reserved.total_size;
->  }
->  
-> -phys_addr_t __init memblock_mem_size(unsigned long limit_pfn)
-> -{
-> -	unsigned long pages = 0;
-> -	unsigned long start_pfn, end_pfn;
-> -	int i;
-> -
-> -	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, NULL) {
-> -		start_pfn = min_t(unsigned long, start_pfn, limit_pfn);
-> -		end_pfn = min_t(unsigned long, end_pfn, limit_pfn);
-> -		pages += end_pfn - start_pfn;
-> -	}
-> -
-> -	return PFN_PHYS(pages);
-> -}
+>  .clang-format                    |  2 +-
+>  arch/arm64/kernel/setup.c        |  2 +-
+>  drivers/irqchip/irq-gic-v3-its.c |  2 +-
+>  include/linux/memblock.h         | 12 +++------
+>  mm/memblock.c                    | 46 +++++++-------------------------
+>  5 files changed, 17 insertions(+), 47 deletions(-)
 
 Reviewed-by: Baoquan He <bhe@redhat.com>
 
