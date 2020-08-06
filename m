@@ -2,40 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C260223D70B
-	for <lists+linux-s390@lfdr.de>; Thu,  6 Aug 2020 08:51:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 177E023DA3D
+	for <lists+linux-s390@lfdr.de>; Thu,  6 Aug 2020 14:19:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgHFGvf convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Thu, 6 Aug 2020 02:51:35 -0400
-Received: from [125.140.134.231] ([125.140.134.231]:62606 "EHLO
-        WIN-DAONO245HJF" rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728142AbgHFGvf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 6 Aug 2020 02:51:35 -0400
-Received: from [185.191.231.247] ([185.191.231.247]) by WIN-DAONO245HJF with Microsoft SMTPSVC(8.5.9600.16384);
-         Thu, 6 Aug 2020 15:51:26 +0900
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1727991AbgHFMRm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 6 Aug 2020 08:17:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34762 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727006AbgHFLPl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 6 Aug 2020 07:15:41 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 076AWtuR103123;
+        Thu, 6 Aug 2020 07:00:16 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32rfpx1gjw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 07:00:15 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 076B0D8t018097;
+        Thu, 6 Aug 2020 11:00:14 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma05fra.de.ibm.com with ESMTP id 32n017u9ku-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Aug 2020 11:00:14 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 076B0BHF19595764
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Aug 2020 11:00:11 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C415AE055;
+        Thu,  6 Aug 2020 11:00:11 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6979AE04D;
+        Thu,  6 Aug 2020 11:00:10 +0000 (GMT)
+Received: from osiris (unknown [9.171.40.123])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  6 Aug 2020 11:00:10 +0000 (GMT)
+Date:   Thu, 6 Aug 2020 13:00:09 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/Kconfig: add missing ZCRYPT dependency to VFIO_AP
+Message-ID: <20200806110009.GA68234@osiris>
+References: <20200805155053.3739-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: INVESTMENT
-To:     linux-s390@vger.kernel.org
-From:   campbellclark016@gmail.com
-Date:   Wed, 05 Aug 2020 23:51:31 -0700
-Reply-To: campbell.clark24@yahoo.com
-Message-ID: <WIN-DAONO245HJFoH9n00aab5c7@WIN-DAONO245HJF>
-X-OriginalArrivalTime: 06 Aug 2020 06:51:26.0314 (UTC) FILETIME=[014314A0:01D66BBE]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805155053.3739-1-krzk@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-06_06:2020-08-06,2020-08-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1011
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxscore=0
+ malwarescore=0 spamscore=0 suspectscore=1 adultscore=0 impostorscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008060071
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Wed, Aug 05, 2020 at 05:50:53PM +0200, Krzysztof Kozlowski wrote:
+> The VFIO_AP uses ap_driver_register() (and deregister) functions
+> implemented in ap_bus.c (compiled into ap.o).  However the ap.o will be
+> built only if CONFIG_ZCRYPT is selected.
+> 
+> This was not visible before commit e93a1695d7fb ("iommu: Enable compile
+> testing for some of drivers") because the CONFIG_VFIO_AP depends on
+> CONFIG_S390_AP_IOMMU which depends on the missing CONFIG_ZCRYPT.  After
+> adding COMPILE_TEST, it is possible to select a configuration with
+> VFIO_AP and S390_AP_IOMMU but without the ZCRYPT.
+> 
+> Add proper dependency to the VFIO_AP to fix build errors:
+> 
+> ERROR: modpost: "ap_driver_register" [drivers/s390/crypto/vfio_ap.ko] undefined!
+> ERROR: modpost: "ap_driver_unregister" [drivers/s390/crypto/vfio_ap.ko] undefined!
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Fixes: e93a1695d7fb ("iommu: Enable compile testing for some of drivers")
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/s390/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-Good day,
-
- You were recommended by a mutual associate. I write you regarding an investment of bearer bonds I made on behalf of a client. The investment was made in 2009 and has been under my management. The said investor is deceased. The window is now available to assign these bonds to any name or company of my choice. I have all the necessary information to achieve this within 10 banking days. The total value of the bond is 100 million pounds sterling, in a million pound denominations. If you can handle this, do contact me at your earliest convenience via my email campbell.clark24@yahoo.com So we can discuss the finer details
-
-
-Thank you
-
-
-Mr Campbell Clark
+Applied, thanks.
