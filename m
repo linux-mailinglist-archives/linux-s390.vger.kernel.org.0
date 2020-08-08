@@ -2,207 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E7B923F2B4
-	for <lists+linux-s390@lfdr.de>; Fri,  7 Aug 2020 20:29:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8594D23F778
+	for <lists+linux-s390@lfdr.de>; Sat,  8 Aug 2020 14:11:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgHGS3Z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 7 Aug 2020 14:29:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54102 "EHLO
+        id S1726361AbgHHMLG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 8 Aug 2020 08:11:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgHGS3Y (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 7 Aug 2020 14:29:24 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D3A7C061756;
-        Fri,  7 Aug 2020 11:29:23 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ha11so1330588pjb.1;
-        Fri, 07 Aug 2020 11:29:23 -0700 (PDT)
+        with ESMTP id S1725957AbgHHMKx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 8 Aug 2020 08:10:53 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7238EC061756
+        for <linux-s390@vger.kernel.org>; Sat,  8 Aug 2020 05:10:52 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d19so2372113pgl.10
+        for <linux-s390@vger.kernel.org>; Sat, 08 Aug 2020 05:10:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Z120/2fGgMoMEJFP3y/UN7XiDtbeEapazuzyhr8LDZE=;
-        b=QBJVGJ0GG4JwOGjOXDhn/ptRbCpViFRSryd/D1uD/PPByb8ofXHghQtBL4zAWGT9Xe
-         QK/cUuMjhxG0m1Hgc9zv3PWjG85dcSZ3U99MdqgrJZlSJ7yNitbrWEKj0pKrpQ5j4U2+
-         mYi6rg0gFPqzK2WTohJzzlVFs9f88hQH3fpr0BAInmFjUAgk2jPvQt5YPhc+dRklJCLA
-         1PiMOZ7kUlZdKKqrhoSbKIrPYqUmIDmxZL7Nhpp4CbVKZHsjBzyt1SbkbQp0snfBQJX6
-         D0ebWljTdKFZBlaqVyAN81FA6P/pxFRTidd7EBz+FBfE/yEz78eEPIzn3SALlg9BIULK
-         bJSQ==
+        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EuDMSmp04hSHSVLRHL1PUWBPuYB4U3JnGDB9t2qv6ho=;
+        b=a27s0HjDAgd0N2W+2hyaEb/r9U8rPWgKPcToKVqzsY6g1RHey3lP/n73NLKJYe/Ok9
+         55O55oJSSu9auuHd0IZZMeayaFYrB0XkDdzao+sYMQoIml9w00hFjBH8r/pwdPpew/sz
+         D4U3ycTuRW2hhSyGQ/+vQPPBrkxE9ZKOeqrJhg7L0PM3vPL7tG3pJcxpNVs3aBK4ByJe
+         KCqGQqzLjn/hShsU0zUkoh4exC0lP0KHzK4vtrIfJ3N9ohkhYUxOT1oj/NDw/OG3J1d+
+         9y8hysX2pQorUHhg24RtZ6E+WgR2WN28nXtkQnzysvPpbbsZGt1ljbQWW59Kk3ViJl54
+         tcqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z120/2fGgMoMEJFP3y/UN7XiDtbeEapazuzyhr8LDZE=;
-        b=XBEw5BfjOhO7TRexKhdv3xqccXF1PsfVX1ssuCVYLzOJsNiEXk+gJCAgqn9rFwdB1g
-         2YIqOfMExR995vdEmm3U+cadypuRcInt+JC1mKShBlYGFMM6Q1ojgtyjf5LsD1rFarjy
-         DiC86o0dqen+w2Hnx8zSgGOFasa+tJc9YjIiENzOsBm/8zX9gpyz/RahTCncT3IO1eKA
-         jlTPXIH3pVHtjwV8a1hOvDAReyMYud61o5TRGFScvC9BUEJyDw1YmdhVzRy8ZAI7o1H6
-         8gYpYWkOtGeVvG+plRYX9PBzjltSKvq6zXNrVPF+6PDhTsx9IPAwDk1QP8Em/8p5IZ1F
-         22lw==
-X-Gm-Message-State: AOAM531B/YdZD5B+DWTBrQ6T+kMGGS75NFQ0qi3qNuaN2rKUoDL4LLDq
-        GOhATJJRfGrQwKE/goXhZZ0=
-X-Google-Smtp-Source: ABdhPJwIAkNKceIOzLVjCyNTLbqqQvdxFebKOpJzF9rIr6w9P+XPfBqJiKCvAm7AAVFD3CFXOteoEw==
-X-Received: by 2002:a17:902:b210:: with SMTP id t16mr13276026plr.90.1596824962910;
-        Fri, 07 Aug 2020 11:29:22 -0700 (PDT)
-Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id q66sm11499854pjq.17.2020.08.07.11.29.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Aug 2020 11:29:21 -0700 (PDT)
-Subject: Re: [PATCH 25/26] net: pass a sockptr_t into ->setsockopt
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Eric Dumazet' <eric.dumazet@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-decnet-user@lists.sourceforge.net" 
-        <linux-decnet-user@lists.sourceforge.net>,
-        "linux-wpan@vger.kernel.org" <linux-wpan@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "mptcp@lists.01.org" <mptcp@lists.01.org>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-x25@vger.kernel.org" <linux-x25@vger.kernel.org>,
-        Stefan Schmidt <stefan@datenfreihafen.org>
-References: <20200723060908.50081-1-hch@lst.de>
- <20200723060908.50081-26-hch@lst.de>
- <6357942b-0b6e-1901-7dce-e308c9fac347@gmail.com>
- <f21589f1262640b09ca27ed20f8e6790@AcuMS.aculab.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <90f626a4-d9e5-91a5-b71d-498e3b125da1@gmail.com>
-Date:   Fri, 7 Aug 2020 11:29:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EuDMSmp04hSHSVLRHL1PUWBPuYB4U3JnGDB9t2qv6ho=;
+        b=ZP5GytSS/d4lxZnO8T///uzKGvwMAXWVHR4vmay83oGu6EjjFkH8SD2iEPcoyydyk6
+         pwGbQLt60Jw6/z8qDBnILAywMwJDVOIQSQ5kHuoc9XLXtgRgRYruHv4lH8QVhAibzzYM
+         Ois9pyKXHXFz713d69dPQjSqVFrx6um1tvogHvRWPLk4mlRjhE+E+NJtLK4YRXaoIBDf
+         lMS72AsMI3Xglz3tITZjQNyx8TSjYydPIXO0PsWlGEKeysdAc5yv36TgHvlTTvNCXZdl
+         4DNzbeCIx6hmqap4eV3c3da88wy3aAWC9C3FUfrJ4r13jp8L4dhCqrgChqgjEs6DmqBm
+         +Vag==
+X-Gm-Message-State: AOAM5315B0vGMGzYXuEKmn/uS3gcuNIpJsbVR9ixVMTTTALuAWtvzFUN
+        LmAmma4pnnAEvVwGvt/8WvzhXqzKy8p7l4fdWAU0+g==
+X-Google-Smtp-Source: ABdhPJzM1muWFLwLDSvo0MoNAYjZ2t7+UNajWvXxXMkjymrpkaeIPbZuHepCLbtxZZBVSatO1nbVYIIZ+/IHe775HYM=
+X-Received: by 2002:a63:4b44:: with SMTP id k4mr15861573pgl.305.1596888644708;
+ Sat, 08 Aug 2020 05:10:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f21589f1262640b09ca27ed20f8e6790@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200807162010.18979-1-andrei.botila@oss.nxp.com> <20200807162010.18979-17-andrei.botila@oss.nxp.com>
+In-Reply-To: <20200807162010.18979-17-andrei.botila@oss.nxp.com>
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+Date:   Sat, 8 Aug 2020 15:10:33 +0300
+Message-ID: <CAOtvUMero-gF5ZE1unnD_wcDnzZX_SL0tQ2yJNqzc3rg5RhuDA@mail.gmail.com>
+Subject: Re: [PATCH 16/22] crypto: ccree - add check for xts input length
+ equal to zero
+To:     Andrei Botila <andrei.botila@oss.nxp.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390@vger.kernel.org, x86@kernel.org,
+        linux-arm-kernel@axis.com, Andrei Botila <andrei.botila@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Fri, Aug 7, 2020 at 7:22 PM Andrei Botila <andrei.botila@oss.nxp.com> wr=
+ote:
+>
+> From: Andrei Botila <andrei.botila@nxp.com>
+>
+> Standardize the way input lengths equal to 0 are handled in all skcipher
+> algorithms. All the algorithms return 0 for input lengths equal to zero.
+> This change has implications not only for xts(aes) but also for cts(cbc(a=
+es))
+> and cts(cbc(paes)).
+>
+> Cc: Gilad Ben-Yossef <gilad@benyossef.com>
+> Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
+> ---
+>  drivers/crypto/ccree/cc_cipher.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_c=
+ipher.c
+> index 076669dc1035..112bb8b4dce6 100644
+> --- a/drivers/crypto/ccree/cc_cipher.c
+> +++ b/drivers/crypto/ccree/cc_cipher.c
+> @@ -912,17 +912,18 @@ static int cc_cipher_process(struct skcipher_reques=
+t *req,
+>
+>         /* STAT_PHASE_0: Init and sanity checks */
+>
+> -       if (validate_data_size(ctx_p, nbytes)) {
+> -               dev_dbg(dev, "Unsupported data size %d.\n", nbytes);
+> -               rc =3D -EINVAL;
+> -               goto exit_process;
+> -       }
+>         if (nbytes =3D=3D 0) {
+>                 /* No data to process is valid */
+>                 rc =3D 0;
+>                 goto exit_process;
+>         }
+>
+> +       if (validate_data_size(ctx_p, nbytes)) {
+> +               dev_dbg(dev, "Unsupported data size %d.\n", nbytes);
+> +               rc =3D -EINVAL;
+> +               goto exit_process;
+> +       }
+> +
+>         if (ctx_p->fallback_on) {
+>                 struct skcipher_request *subreq =3D skcipher_request_ctx(=
+req);
+>
+> --
+> 2.17.1
+>
 
+Acked-by: Gilad Ben-Yossef <gilad@benyossef.com>
 
-On 8/7/20 2:18 AM, David Laight wrote:
-> From: Eric Dumazet
->> Sent: 06 August 2020 23:21
->>
->> On 7/22/20 11:09 PM, Christoph Hellwig wrote:
->>> Rework the remaining setsockopt code to pass a sockptr_t instead of a
->>> plain user pointer.  This removes the last remaining set_fs(KERNEL_DS)
->>> outside of architecture specific code.
->>>
->>> Signed-off-by: Christoph Hellwig <hch@lst.de>
->>> Acked-by: Stefan Schmidt <stefan@datenfreihafen.org> [ieee802154]
->>> ---
->>
->>
->> ...
->>
->>> diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
->>> index 594e01ad670aa6..874f01cd7aec42 100644
->>> --- a/net/ipv6/raw.c
->>> +++ b/net/ipv6/raw.c
->>> @@ -972,13 +972,13 @@ static int rawv6_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>>  }
->>>
->>
->> ...
->>
->>>  static int do_rawv6_setsockopt(struct sock *sk, int level, int optname,
->>> -			    char __user *optval, unsigned int optlen)
->>> +			       sockptr_t optval, unsigned int optlen)
->>>  {
->>>  	struct raw6_sock *rp = raw6_sk(sk);
->>>  	int val;
->>>
->>> -	if (get_user(val, (int __user *)optval))
->>> +	if (copy_from_sockptr(&val, optval, sizeof(val)))
->>>  		return -EFAULT;
->>>
->>
->> converting get_user(...)   to  copy_from_sockptr(...) really assumed the optlen
->> has been validated to be >= sizeof(int) earlier.
->>
->> Which is not always the case, for example here.
->>
->> User application can fool us passing optlen=0, and a user pointer of exactly TASK_SIZE-1
-> 
-> Won't the user pointer force copy_from_sockptr() to call
-> copy_from_user() which will then do access_ok() on the entire
-> range and so return -EFAULT.
-> 
-> The only problems arise if the kernel code adds an offset to the
-> user address.
-> And the later patch added an offset to the copy functions.
+Thanks,
+Gilad
 
-I dunno, I definitely got the following syzbot crash 
+--=20
+Gilad Ben-Yossef
+Chief Coffee Drinker
 
-No repro found by syzbot yet, but I suspect a 32bit binary program
-did :
-
-setsockopt(fd, 0x29, 0x24, 0xffffffffffffffff, 0x0)
-
-
-BUG: KASAN: wild-memory-access in memcpy include/linux/string.h:406 [inline]
-BUG: KASAN: wild-memory-access in copy_from_sockptr_offset include/linux/sockptr.h:71 [inline]
-BUG: KASAN: wild-memory-access in copy_from_sockptr include/linux/sockptr.h:77 [inline]
-BUG: KASAN: wild-memory-access in do_rawv6_setsockopt net/ipv6/raw.c:1023 [inline]
-BUG: KASAN: wild-memory-access in rawv6_setsockopt+0x1a1/0x6f0 net/ipv6/raw.c:1084
-Read of size 4 at addr 00000000ffffffff by task syz-executor.0/28251
-
-CPU: 3 PID: 28251 Comm: syz-executor.0 Not tainted 5.8.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- __kasan_report mm/kasan/report.c:517 [inline]
- kasan_report.cold+0x5/0x37 mm/kasan/report.c:530
- check_memory_region_inline mm/kasan/generic.c:186 [inline]
- check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
- memcpy+0x20/0x60 mm/kasan/common.c:105
- memcpy include/linux/string.h:406 [inline]
- copy_from_sockptr_offset include/linux/sockptr.h:71 [inline]
- copy_from_sockptr include/linux/sockptr.h:77 [inline]
- do_rawv6_setsockopt net/ipv6/raw.c:1023 [inline]
- rawv6_setsockopt+0x1a1/0x6f0 net/ipv6/raw.c:1084
- __sys_setsockopt+0x2ad/0x6d0 net/socket.c:2138
- __do_sys_setsockopt net/socket.c:2149 [inline]
- __se_sys_setsockopt net/socket.c:2146 [inline]
- __ia32_sys_setsockopt+0xb9/0x150 net/socket.c:2146
- do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
- __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
- do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-RIP: 0023:0xf7f22569
-Code: c4 01 10 03 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000f551c0bc EFLAGS: 00000296 ORIG_RAX: 000000000000016e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000029
-RDX: 0000000000000024 RSI: 00000000ffffffff RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-==================================================================
-
+values of =CE=B2 will give rise to dom!
