@@ -2,130 +2,143 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8594D23F778
-	for <lists+linux-s390@lfdr.de>; Sat,  8 Aug 2020 14:11:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36F6423F7C1
+	for <lists+linux-s390@lfdr.de>; Sat,  8 Aug 2020 15:06:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgHHMLG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 8 Aug 2020 08:11:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgHHMKx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 8 Aug 2020 08:10:53 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7238EC061756
-        for <linux-s390@vger.kernel.org>; Sat,  8 Aug 2020 05:10:52 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d19so2372113pgl.10
-        for <linux-s390@vger.kernel.org>; Sat, 08 Aug 2020 05:10:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EuDMSmp04hSHSVLRHL1PUWBPuYB4U3JnGDB9t2qv6ho=;
-        b=a27s0HjDAgd0N2W+2hyaEb/r9U8rPWgKPcToKVqzsY6g1RHey3lP/n73NLKJYe/Ok9
-         55O55oJSSu9auuHd0IZZMeayaFYrB0XkDdzao+sYMQoIml9w00hFjBH8r/pwdPpew/sz
-         D4U3ycTuRW2hhSyGQ/+vQPPBrkxE9ZKOeqrJhg7L0PM3vPL7tG3pJcxpNVs3aBK4ByJe
-         KCqGQqzLjn/hShsU0zUkoh4exC0lP0KHzK4vtrIfJ3N9ohkhYUxOT1oj/NDw/OG3J1d+
-         9y8hysX2pQorUHhg24RtZ6E+WgR2WN28nXtkQnzysvPpbbsZGt1ljbQWW59Kk3ViJl54
-         tcqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EuDMSmp04hSHSVLRHL1PUWBPuYB4U3JnGDB9t2qv6ho=;
-        b=ZP5GytSS/d4lxZnO8T///uzKGvwMAXWVHR4vmay83oGu6EjjFkH8SD2iEPcoyydyk6
-         pwGbQLt60Jw6/z8qDBnILAywMwJDVOIQSQ5kHuoc9XLXtgRgRYruHv4lH8QVhAibzzYM
-         Ois9pyKXHXFz713d69dPQjSqVFrx6um1tvogHvRWPLk4mlRjhE+E+NJtLK4YRXaoIBDf
-         lMS72AsMI3Xglz3tITZjQNyx8TSjYydPIXO0PsWlGEKeysdAc5yv36TgHvlTTvNCXZdl
-         4DNzbeCIx6hmqap4eV3c3da88wy3aAWC9C3FUfrJ4r13jp8L4dhCqrgChqgjEs6DmqBm
-         +Vag==
-X-Gm-Message-State: AOAM5315B0vGMGzYXuEKmn/uS3gcuNIpJsbVR9ixVMTTTALuAWtvzFUN
-        LmAmma4pnnAEvVwGvt/8WvzhXqzKy8p7l4fdWAU0+g==
-X-Google-Smtp-Source: ABdhPJzM1muWFLwLDSvo0MoNAYjZ2t7+UNajWvXxXMkjymrpkaeIPbZuHepCLbtxZZBVSatO1nbVYIIZ+/IHe775HYM=
-X-Received: by 2002:a63:4b44:: with SMTP id k4mr15861573pgl.305.1596888644708;
- Sat, 08 Aug 2020 05:10:44 -0700 (PDT)
+        id S1726190AbgHHNGI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 8 Aug 2020 09:06:08 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60936 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726125AbgHHNGH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 8 Aug 2020 09:06:07 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 078D15j3134717;
+        Sat, 8 Aug 2020 09:06:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=U8X6qRYCXP4zF6uXjsokluM1K/PbdmKCnP7Vf5VhsAs=;
+ b=LRb5LpcQUo/o33OEtF9v6XO3l9udI1cHs2ZTHPoVTm6+SA8kSve993zbSPL/kBaQvZoS
+ vQ0fFfhUya21sLF2TYGJYAp8fCIwD+Zy/u+XmprYsa30E3GcWSZgc/Z4+zJi7SI0lwDz
+ wvln1q79iEoTIrxWahghtO98oRGgdWVK+9IrMyVauy4sZv7cok48VgobR8DsdKA5tEe1
+ xGmXY1PzJK/1sa+cK+TyVSg1xZx/XQMi99VVjrjdGYtDsRhvQOtSqcu0NozQIC2C9J54
+ q/vCDT3h88963vj061nbYlKTDgkmZCC6j5uT9D5kk8sdJq9Icb5kAMoQPOYPAK8rFIyi 0A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32srbycpjy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 08 Aug 2020 09:06:05 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 078D1Cos135111;
+        Sat, 8 Aug 2020 09:06:05 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32srbycpjm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 08 Aug 2020 09:06:05 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 078D4fP6023661;
+        Sat, 8 Aug 2020 13:06:03 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 32skp88ct9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 08 Aug 2020 13:06:02 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 078D5v3U30998942
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 8 Aug 2020 13:05:58 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C9F2311C04A;
+        Sat,  8 Aug 2020 13:05:57 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 50E7011C054;
+        Sat,  8 Aug 2020 13:05:57 +0000 (GMT)
+Received: from localhost (unknown [9.145.77.129])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat,  8 Aug 2020 13:05:57 +0000 (GMT)
+Date:   Sat, 8 Aug 2020 15:05:55 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Ulrich Weigand <ulrich.weigand@de.ibm.com>,
+        Jonas Paulsson <paulsson@linux.vnet.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: linux plumbers + clang + s390 virtualized testing
+Message-ID: <your-ad-here.call-01596891955-ext-8436@work.hours>
+References: <CAKwvOdn-2E=v_7Uie71pz2jjYCKnk98K1Ly8EkpxzvC6M5pXFA@mail.gmail.com>
+ <20200716112840.GC8484@osiris>
+ <your-ad-here.call-01596030682-ext-1369@work.hours>
+ <CAKwvOd=1E+90VHwzh9cYGz9YKy_ECMJuK6gZhzLqBFw9kS4Cww@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200807162010.18979-1-andrei.botila@oss.nxp.com> <20200807162010.18979-17-andrei.botila@oss.nxp.com>
-In-Reply-To: <20200807162010.18979-17-andrei.botila@oss.nxp.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Sat, 8 Aug 2020 15:10:33 +0300
-Message-ID: <CAOtvUMero-gF5ZE1unnD_wcDnzZX_SL0tQ2yJNqzc3rg5RhuDA@mail.gmail.com>
-Subject: Re: [PATCH 16/22] crypto: ccree - add check for xts input length
- equal to zero
-To:     Andrei Botila <andrei.botila@oss.nxp.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390@vger.kernel.org, x86@kernel.org,
-        linux-arm-kernel@axis.com, Andrei Botila <andrei.botila@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=1E+90VHwzh9cYGz9YKy_ECMJuK6gZhzLqBFw9kS4Cww@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-08_05:2020-08-06,2020-08-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 malwarescore=0 priorityscore=1501 impostorscore=0
+ spamscore=0 phishscore=0 mlxscore=0 bulkscore=0 adultscore=0
+ suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008080092
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 7:22 PM Andrei Botila <andrei.botila@oss.nxp.com> wr=
-ote:
->
-> From: Andrei Botila <andrei.botila@nxp.com>
->
-> Standardize the way input lengths equal to 0 are handled in all skcipher
-> algorithms. All the algorithms return 0 for input lengths equal to zero.
-> This change has implications not only for xts(aes) but also for cts(cbc(a=
-es))
-> and cts(cbc(paes)).
->
-> Cc: Gilad Ben-Yossef <gilad@benyossef.com>
-> Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
-> ---
->  drivers/crypto/ccree/cc_cipher.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_c=
-ipher.c
-> index 076669dc1035..112bb8b4dce6 100644
-> --- a/drivers/crypto/ccree/cc_cipher.c
-> +++ b/drivers/crypto/ccree/cc_cipher.c
-> @@ -912,17 +912,18 @@ static int cc_cipher_process(struct skcipher_reques=
-t *req,
->
->         /* STAT_PHASE_0: Init and sanity checks */
->
-> -       if (validate_data_size(ctx_p, nbytes)) {
-> -               dev_dbg(dev, "Unsupported data size %d.\n", nbytes);
-> -               rc =3D -EINVAL;
-> -               goto exit_process;
-> -       }
->         if (nbytes =3D=3D 0) {
->                 /* No data to process is valid */
->                 rc =3D 0;
->                 goto exit_process;
->         }
->
-> +       if (validate_data_size(ctx_p, nbytes)) {
-> +               dev_dbg(dev, "Unsupported data size %d.\n", nbytes);
-> +               rc =3D -EINVAL;
-> +               goto exit_process;
-> +       }
-> +
->         if (ctx_p->fallback_on) {
->                 struct skcipher_request *subreq =3D skcipher_request_ctx(=
-req);
->
-> --
-> 2.17.1
->
+On Thu, Aug 06, 2020 at 12:02:52PM -0700, Nick Desaulniers wrote:
+> On Wed, Jul 29, 2020 at 6:51 AM Vasily Gorbik <gor@linux.ibm.com> wrote:
+> >
+> > > > We were very excited to see your patches going by for enabling Clang
+> > > > support for s390.  Since then, we've added s390 builds to our
+> > > > continuous integration setup.
+> > > >
+> > > > We've been running into a few issues with doing virtualized boot tests
+> > > > of our kernels on s390.
+> > > >
+> > > > I was curious if you'll both be attending Linux plumbers conf?  If we
+> > > > carve out time for an s390+clang talk, would this be of interest to
+> > > > you to attend?
+> > I will attend and it would surely be interesting to me and other
+> > s390 folks. Your efforts are greatly appreciated!
+> 
+> Cool, so our MC has been approved:
+> https://www.linuxplumbersconf.org/event/7/page/80-accepted-microconferences#llvm-cr
+> 
+> But we're super tight on time and probably won't be able to do a
+> session on s390 at the MC.  That said, I have just submitted a BoF
+> proposal since we have more topics internal to our group we'd like to
+> have more time to discuss.  I've added s390 testing to the list of
+> potential topics, too.  I'll re-ping this thread once I hear back
+> about whether it gets approved or not.
+> 
+> That said, we do meet once every other week virtually online, see
+> links: https://clangbuiltlinux.github.io/.
+> 
+> >
+> > BTW I believe basic Clang support for s390 came earlier in 5.2 with
+> > a lot of efforts from Arnd Bergmann.
+> >
+> > My part was fixing recent breakages and bugging our s390 clang team
+> > (which did all the great work) to get kernel specific features support
+> > in clang 10 and 11 to reach features parity with gcc. And eventually
+> > doing few adjustments so that features which came with clang 10 and
+> > 11 are working smoothly. That is s390 "asm goto" support and specific
+> > compiler flags for ftrace support and stack packing.
+> 
+> That's awesome; I'd love to get the chance to meet your s390 LLVM
+> team; in general it can take a while to get bugs routed to folks most
+> empowered to fix them until you know who they are.
+> 
+> Would you, any fellow s390 kernel and LLVM folks be interested in
+> attending one of our virtual meetings, even if it's just to say "hi"
+> quickly? Next one is next Wednesday.
+> 
+> Usually we go over whatever firedrills we've been running the past two
+> weeks, but sometimes have presentations of folks projects and
+> research.  I think it would be cool to get more background on s390 and
+> work out the issues we're running into with testing.
 
-Acked-by: Gilad Ben-Yossef <gilad@benyossef.com>
-
-Thanks,
-Gilad
-
---=20
-Gilad Ben-Yossef
-Chief Coffee Drinker
-
-values of =CE=B2 will give rise to dom!
+I've added few more people in To. We'll try to make it next Wednesday,
+but no promises since we are based in Germany and this is quite late
+for us.
