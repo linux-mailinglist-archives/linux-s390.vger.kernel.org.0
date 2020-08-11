@@ -2,161 +2,190 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E671724127D
-	for <lists+linux-s390@lfdr.de>; Mon, 10 Aug 2020 23:44:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2872F24170B
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Aug 2020 09:18:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgHJVoL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 10 Aug 2020 17:44:11 -0400
-Received: from us-smtp-delivery-148.mimecast.com ([216.205.24.148]:52774 "EHLO
-        us-smtp-delivery-148.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726481AbgHJVoK (ORCPT
+        id S1726421AbgHKHS3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Aug 2020 03:18:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43524 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726397AbgHKHS2 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 10 Aug 2020 17:44:10 -0400
-X-Greylist: delayed 369 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Aug 2020 17:44:08 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rambus.com;
-        s=mimecast20161209; t=1597095847;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gVHUBHeCKkJaUDRIPfd4sS6m//pNDe/Jm9pq2CRDcd8=;
-        b=Eu+5FkGxZTiPErk4YaUY1sGZInhwewvu/CMfCtjAMgeebO/V+HM9mvFhGxHtIR25WxY8ge
-        IhhNpia3i0fsMV/kCP6j0bQX8xe6RZTKFFUV+M4WdtriSOGWCdB3bENeLaKfoRHyY+e6bG
-        0Z0FrNnDGpmyk4hIBJTKLxT9uCriy04=
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com
- (mail-bn1nam07lp2044.outbound.protection.outlook.com [104.47.51.44]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- us-mta-215-qxPfULz_NWySIIJJWanSQQ-1; Mon, 10 Aug 2020 17:37:56 -0400
-X-MC-Unique: qxPfULz_NWySIIJJWanSQQ-1
-Received: from CY4PR0401MB3652.namprd04.prod.outlook.com
- (2603:10b6:910:8a::27) by CY4PR04MB3720.namprd04.prod.outlook.com
- (2603:10b6:903:e5::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.20; Mon, 10 Aug
- 2020 21:37:50 +0000
-Received: from CY4PR0401MB3652.namprd04.prod.outlook.com
- ([fe80::a0ee:e26e:64fc:61b2]) by CY4PR0401MB3652.namprd04.prod.outlook.com
- ([fe80::a0ee:e26e:64fc:61b2%3]) with mapi id 15.20.3261.023; Mon, 10 Aug 2020
- 21:37:50 +0000
-From:   "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>
-To:     =?utf-8?B?SG9yaWEgR2VhbnTEgw==?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-CC:     "Andrei Botila (OSS)" <andrei.botila@oss.nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-arm-kernel@axis.com" <linux-arm-kernel@axis.com>,
-        Andrei Botila <andrei.botila@nxp.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>
-Subject: RE: [PATCH 19/22] crypto: inside-secure - add check for xts input
- length equal to zero
-Thread-Topic: [PATCH 19/22] crypto: inside-secure - add check for xts input
- length equal to zero
-Thread-Index: AQHWbNc/iDlrjFSjSECEGLk+jBQoDKkxJAfggAA7LACAAA2YgIAAcKtA
-Date:   Mon, 10 Aug 2020 21:37:50 +0000
-Message-ID: <CY4PR0401MB36527830624AD214E801BE53C3440@CY4PR0401MB3652.namprd04.prod.outlook.com>
-References: <20200807162010.18979-1-andrei.botila@oss.nxp.com>
- <20200807162010.18979-20-andrei.botila@oss.nxp.com>
- <CY4PR0401MB36528610C3ABF802F8CBF35FC3440@CY4PR0401MB3652.namprd04.prod.outlook.com>
- <20200810134500.GA22914@gondor.apana.org.au>
- <fd3e5862-3357-7dfc-6c75-30086ab19f82@nxp.com>
-In-Reply-To: <fd3e5862-3357-7dfc-6c75-30086ab19f82@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [89.220.222.106]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 67080066-10ee-45b2-29e6-08d83d75a184
-x-ms-traffictypediagnostic: CY4PR04MB3720:
-x-microsoft-antispam-prvs: <CY4PR04MB3720DD2069116A5AD4932C39C3440@CY4PR04MB3720.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AyCKpE7ZRcxayWpI3m6U0tGaZFY8jZad36j2/9C7cwTQZxi7hUVUdcbVxQaOMrBHnonEywCqJf6U83Nf37fvadDnU2A7jLfeKZhPJ2YGcuR8BmaP8Ui7I5klUxoFOvVRT5OYXC1KoNSE6AotRbtD5OrGb9eaR7Qf9GM3k9ExuaFXJjxKdslmrGh1jkTbYqJvXQOd2kLJDxLyLlZpjIlOxLjQRcU2+YPfDz5kANq3yyZNxfHn2hnXvcP9bH39n0j4eZNqGrmy2kpIQc51MpCllBWm2dYzMcZtQf0nLvH2J6Fg2VJE1CtwteQf44bV9OBFchZHuiDcpeNUVg/lpzP9ZA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR0401MB3652.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(39840400004)(136003)(376002)(346002)(366004)(186003)(2906002)(71200400001)(53546011)(6506007)(33656002)(7416002)(26005)(316002)(4326008)(7696005)(83380400001)(8936002)(86362001)(64756008)(66556008)(66476007)(52536014)(8676002)(66446008)(66946007)(76116006)(55016002)(110136005)(54906003)(9686003)(5660300002)(478600001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: R4O0anq/O7I+BfEbT8iz5IIfTyLON0AKQZ2EBDpYIIJ4ye56MPEapQcPfRoFJ1YMB17XuCVwsGXKmjP5WSudCEa2etCR9oxc2BwvnIpUBkqoeomo6L6mDr5uwxKT3bSBYDn9z46QgWEMFMlOnt6EiF6ZaF0p66Np9bsAr4rSowV5Clnec/LHmA3DNIeaZFzyiUW/rP7REGzumCZs34c52fHfsGp5iy5B3yLTufTAd7n7ff64lkA82GamBKyUq+BmovFzpX094bJwt/jVnP/Vu3mtvhUtvPILQ46mgammvOZZhuCS58ct1Yzkm7nnD8POanLfnq4or07b/Mffe420/fl5cX9mDSoPXPCasTfU6NMcss/GYT5fv2QKi84MGBPVCOV/lZeiegYof8HY5AIQ03uwUrTJ7TdLiV/8S/JzhZia98B/LQFEprmfFbaZQBowj6zrCcWvAoOdIktO5DlRH63T3+TzyqBZOVW5NVdfDHTFZieVfOpz4OuAnebd6UZoV+DDxOGhLMxo02p8c2EkYA6lv8DyvdYqKEVu8ETYmiSbt/lehByzlfzS9py0ICeZuy5mSDQwAtnuaPWLL+gsf/b5vBt7vvXQ3Xev7Sc2YQmsZatvbWlYXDly156TXuSQhBT3JZTO1HLaq9lqLT1byQ==
-x-ms-exchange-transport-forked: True
+        Tue, 11 Aug 2020 03:18:28 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07B73RL7146669;
+        Tue, 11 Aug 2020 03:18:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type; s=pp1; bh=33ntM1UVsEuMr3xPb6tffIzaYUKMnEjjRQerxU41p2I=;
+ b=fchuoKaitM4due8QhQglR6/Sa2mtVBeUtkisD7uNDsUWUYf+JGegIMwu9TjzJVpUnyjm
+ 980v7qkHD12wdyNz5DTXG2b5hrGyt2Iuon5mp0SCHkfzPVwbR8C7ySsUz/pfRmufg8+f
+ On8X28vbicWL+9POUDg6ZXLMajzPiho4PlPmNiBCJNhfbRX6lIJxbd3lI7tueNHRsfba
+ f7ahIErtF2q2TdRygErklZC2NC3qFs+VYZqKZZETHRTzpuMcBymH2Q5sB7QfNBjeSlU3
+ pk9JUqE3vtuJ8kt7LigzvER+qSl6lCratQXSj5XlZ1YWLI07Rg/c/PlQkDu4egZe5v6X mA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32sr7vcybr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Aug 2020 03:18:26 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07B753GF152631;
+        Tue, 11 Aug 2020 03:18:26 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32sr7vcyb2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Aug 2020 03:18:25 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07B7GBmS018044;
+        Tue, 11 Aug 2020 07:18:24 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma05fra.de.ibm.com with ESMTP id 32skp81vky-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Aug 2020 07:18:24 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07B7IKT629622660
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Aug 2020 07:18:21 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D2F994C052;
+        Tue, 11 Aug 2020 07:18:20 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72A3D4C050;
+        Tue, 11 Aug 2020 07:18:20 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.158.66])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Aug 2020 07:18:20 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v3] s390x: Ultravisor guest API test
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, thuth@redhat.com, linux-s390@vger.kernel.org,
+        david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com
+References: <20200810173205.2daaaca1.cohuck@redhat.com>
+ <20200810154541.32974-1-frankja@linux.ibm.com>
+ <20200810175015.23b7fcf7.cohuck@redhat.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <a72a494c-0f7d-b4aa-1767-72b5ecd57930@linux.ibm.com>
+Date:   Tue, 11 Aug 2020 09:18:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: rambus.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR0401MB3652.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67080066-10ee-45b2-29e6-08d83d75a184
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Aug 2020 21:37:50.1987
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: bd0ba799-c2b9-413c-9c56-5d1731c4827c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HIIjV8lsOpVf79jH31+x4RrCvKAk5xZX4QyAASDzzEo59zMAZBd3NGlIg9/3fmNzMtev5jTlF9Ljd0PlzEu6Cw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB3720
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA48A24 smtp.mailfrom=pvanleeuwen@rambus.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: rambus.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200810175015.23b7fcf7.cohuck@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="qiXJYt1g92oZeQ68Il2KdGoXjUxMPN7ZL"
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-11_04:2020-08-06,2020-08-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 malwarescore=0 bulkscore=0 mlxscore=0
+ adultscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0
+ clxscore=1015 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008110041
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBIb3JpYSBHZWFudMSDIDxob3Jp
-YS5nZWFudGFAbnhwLmNvbT4NCj4gU2VudDogTW9uZGF5LCBBdWd1c3QgMTAsIDIwMjAgNDozNCBQ
-TQ0KPiBUbzogSGVyYmVydCBYdSA8aGVyYmVydEBnb25kb3IuYXBhbmEub3JnLmF1PjsgVmFuIExl
-ZXV3ZW4sIFBhc2NhbCA8cHZhbmxlZXV3ZW5AcmFtYnVzLmNvbT4NCj4gQ2M6IEFuZHJlaSBCb3Rp
-bGEgKE9TUykgPGFuZHJlaS5ib3RpbGFAb3NzLm54cC5jb20+OyBEYXZpZCBTLiBNaWxsZXIgPGRh
-dmVtQGRhdmVtbG9mdC5uZXQ+OyBsaW51eC1jcnlwdG9Admdlci5rZXJuZWwub3JnOyBsaW51eC0N
-Cj4gYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgbGludXgtczM5MEB2Z2VyLmtl
-cm5lbC5vcmc7DQo+IHg4NkBrZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGF4aXMuY29tOyBB
-bmRyZWkgQm90aWxhIDxhbmRyZWkuYm90aWxhQG54cC5jb20+OyBBbnRvaW5lIFRlbmFydCA8YW50
-b2luZS50ZW5hcnRAYm9vdGxpbi5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMTkvMjJdIGNy
-eXB0bzogaW5zaWRlLXNlY3VyZSAtIGFkZCBjaGVjayBmb3IgeHRzIGlucHV0IGxlbmd0aCBlcXVh
-bCB0byB6ZXJvDQo+DQo+IDw8PCBFeHRlcm5hbCBFbWFpbCA+Pj4NCj4gT24gOC8xMC8yMDIwIDQ6
-NDUgUE0sIEhlcmJlcnQgWHUgd3JvdGU6DQo+ID4gT24gTW9uLCBBdWcgMTAsIDIwMjAgYXQgMTA6
-MjA6MjBBTSArMDAwMCwgVmFuIExlZXV3ZW4sIFBhc2NhbCB3cm90ZToNCj4gPj4NCj4gPj4gV2l0
-aCBhbGwgZHVlIHJlc3BlY3QsIGJ1dCB0aGlzIG1ha2VzIG5vIHNlbnNlLg0KPiA+DQo+ID4gSSBh
-Z3JlZS4gIFRoaXMgaXMgYSBsb3Qgb2YgY2h1cm4gZm9yIG5vIGdhaW4uDQo+ID4NCj4gSSB3b3Vs
-ZCBzYXkgdGhlIGdhaW4gaXMgdGhhdCBhbGwgc2tjaXBoZXIgYWxnb3JpdGhtcyB3b3VsZCBiZWhh
-dmUgdGhlIHNhbWUNCj4gd2hlbiBpbnB1dCBsZW5ndGggZXF1YWxzIHplcm8gLSBpLmUuIHRyZWF0
-IHRoZSByZXF1ZXN0IGFzIGEgbm8tb3AuDQo+DQpYVFMgYWxyZWFkeSBiZWhhdmVzIGRpZmZlcmVu
-dGx5IGJlY2F1c2UgaXQgY2FuIGFjY2VwdCBhbnkgYnl0ZSBhbW91bnQgYXMgbG9uZw0KYXMgaXQg
-aXMgbm90IGluIHRoZSByYW5nZSAwIC0xNi4gU28gZmFyLCB5b3UgZ290IGFuIEVJTlZBTCBlcnJv
-ciBmb3IgbGVuZ3RocyA8IDE2Lg0KVGhlIHNwZWNpYWwgZXhjZXB0aW9uIG9uIHRvcCBvZiB0aGF0
-IGZvciBsZW5ndGggMCBkb2VzIG5vdCBpbXByb3ZlIGFueXRoaW5nLg0KDQpUcmVhdGluZyBhIHJl
-cXVlc3Qgb2YgbGVuZ3RoIDAgYXMgYSBuby1vcCBpcyBub3QgYSB1c2VmdWwgZmVhdHVyZSBoZXJl
-LCBhcyB0aGVyZQ0KaXMgbm8gdXNlIGNhc2Ugd2hlcmUgdGhhdCB3b3VsZCBtYWtlIHNlbnNlLiBY
-VFMgZW5jcnlwdHMgYmxvY2tzICh1c3VhbGx5IGRpc2sNCnNlY3RvcnMpLCBhbmQgY2Fubm90IGJl
-IGNoYWluZWQuIFNvIGFuIGF0dGVtcHQgdG8gZW5jcnlwdCBhIHplcm8gbGVuZ3RoIGJsb2NrDQpp
-cyBtb3N0IGNlcnRhaW5seSBzb21lIGtpbmQgb2YgZXJyb3IgKGUuZy4gdHJ5aW5nIHRvIHVzZSBY
-VFMgZm9yIHNvbWV0aGluZyBpdA0Kd2FzIG5vdCBkZXNpZ25lZCB0byBkbyAtIGJpZyBzZWN1cml0
-eSBtaXN0YWtlISkuDQoNCj4gV2UgY2FuJ3Qgc2F5ICJubyBpbnB1dCIgaGFzIGFueSBtZWFuaW5n
-IHRvIHRoZSBvdGhlciBza2NpcGhlciBhbGdvcml0aG1zLA0KPiBidXQgdGhlIGNvbnZlbnRpb24g
-aXMgdG8gYWNjZXB0IHRoaXMgY2FzZSBhbmQganVzdCByZXR1cm4gMC4NCj4gSSBkb24ndCBzZWUg
-d2h5IFhUUyBoYXMgdG8gYmUgaGFuZGxlZCBkaWZmZXJlbnRseS4NCj4NCkkgZG9uJ3Qgc2VlIHdo
-eSB5b3Ugd291bGQgYmxpbmRseSBmb2xsb3cgc29tZSBoaXN0b3JpY2FsIGNvbnZlbnRpb24gLi4u
-DQp1bmxlc3MgbWF5YmUgdGhlcmUgd2FzIHNvbWUgZXhpc3RpbmcgcmVhbCB1c2UgY2FzZSB0aGF0
-IHdvdWxkIGJlbmVmaXQ/DQoNCkJUVzogZm9yIGdlbmVyaWMgY2lwaGVycyBJIGNvdWxkIHRoaW5r
-IG9mIHNvbWUgdXNlIGNhc2VzIHdoZXJlIHRoZSB6ZXJvDQpsZW5ndGggcmVxdWVzdCBiZWluZyBh
-IG5vLW9wIG1ha2VzIHNlbnNlIGlmIHRoZSBhcHBsaWNhdGlvbiBkb2VzIG5vdA0KYm90aGVyIHRv
-IGNoZWNrIGhvdyBtdWNoIGRhdGEgaXQgaGFzIGdhdGhlcmVkIHRvIHByb2Nlc3MgKHdoaWNoIG1h
-eSBiZQ0Kbm90aGluZyksIGJ1dCBJIGNhbid0IHNlZSBob3cgdGhpcyBjb3VsZCBhcHBseSB0byBY
-VFMsIGJlaW5nIGJsb2NrLWJhc2VkLg0KDQo+IFRoYW5rcywNCj4gSG9yaWENCg0KUmVnYXJkcywN
-ClBhc2NhbCB2YW4gTGVldXdlbg0KU2lsaWNvbiBJUCBBcmNoaXRlY3QgTXVsdGktUHJvdG9jb2wg
-RW5naW5lcywgUmFtYnVzIFNlY3VyaXR5DQpSYW1idXMgUk9UVyBIb2xkaW5nIEJWDQorMzEtNzMg
-NjU4MTk1Mw0KDQpOb3RlOiBUaGUgSW5zaWRlIFNlY3VyZS9WZXJpbWF0cml4IFNpbGljb24gSVAg
-dGVhbSB3YXMgcmVjZW50bHkgYWNxdWlyZWQgYnkgUmFtYnVzLg0KUGxlYXNlIGJlIHNvIGtpbmQg
-dG8gdXBkYXRlIHlvdXIgZS1tYWlsIGFkZHJlc3MgYm9vayB3aXRoIG15IG5ldyBlLW1haWwgYWRk
-cmVzcy4NCg0KDQoqKiBUaGlzIG1lc3NhZ2UgYW5kIGFueSBhdHRhY2htZW50cyBhcmUgZm9yIHRo
-ZSBzb2xlIHVzZSBvZiB0aGUgaW50ZW5kZWQgcmVjaXBpZW50KHMpLiBJdCBtYXkgY29udGFpbiBp
-bmZvcm1hdGlvbiB0aGF0IGlzIGNvbmZpZGVudGlhbCBhbmQgcHJpdmlsZWdlZC4gSWYgeW91IGFy
-ZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIG1lc3NhZ2UsIHlvdSBhcmUgcHJv
-aGliaXRlZCBmcm9tIHByaW50aW5nLCBjb3B5aW5nLCBmb3J3YXJkaW5nIG9yIHNhdmluZyBpdC4g
-UGxlYXNlIGRlbGV0ZSB0aGUgbWVzc2FnZSBhbmQgYXR0YWNobWVudHMgYW5kIG5vdGlmeSB0aGUg
-c2VuZGVyIGltbWVkaWF0ZWx5LiAqKg0KDQpSYW1idXMgSW5jLjxodHRwOi8vd3d3LnJhbWJ1cy5j
-b20+DQo=
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--qiXJYt1g92oZeQ68Il2KdGoXjUxMPN7ZL
+Content-Type: multipart/mixed; boundary="p6CPQPXxsbNrBTO6cJTYtxZ3xfheOBmsk"
+
+--p6CPQPXxsbNrBTO6cJTYtxZ3xfheOBmsk
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 8/10/20 5:50 PM, Cornelia Huck wrote:
+> On Mon, 10 Aug 2020 11:45:41 -0400
+> Janosch Frank <frankja@linux.ibm.com> wrote:
+>=20
+>> Test the error conditions of guest 2 Ultravisor calls, namely:
+>>      * Query Ultravisor information
+>>      * Set shared access
+>>      * Remove shared access
+>>
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+>> Acked-by: Thomas Huth <thuth@redhat.com>
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> ---
+>>  lib/s390x/asm/uv.h  |  74 ++++++++++++++++++++++
+>>  s390x/Makefile      |   1 +
+>>  s390x/unittests.cfg |   3 +
+>>  s390x/uv-guest.c    | 150 +++++++++++++++++++++++++++++++++++++++++++=
++
+>>  4 files changed, 228 insertions(+)
+>>  create mode 100644 lib/s390x/asm/uv.h
+>>  create mode 100644 s390x/uv-guest.c
+>=20
+> Acked-by: Cornelia Huck <cohuck@redhat.com>
+>=20
+Thanks!
+
+
+--p6CPQPXxsbNrBTO6cJTYtxZ3xfheOBmsk--
+
+--qiXJYt1g92oZeQ68Il2KdGoXjUxMPN7ZL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl8yRjwACgkQ41TmuOI4
+ufjlsA/9EnCyDusGamiEDzLhF/1EGnBHcYK6HNPKXJIOdbuk1gLJLnHkiosD7sR4
+jgzc7tzTss2wXI2YouhjXNrSDaGVMGa6hPrAX+X+IUd23A2hIsJnD4koNAixOtXh
+a5RKQ6hICOth83AWJAfl0ZJnH/lZux98DD4vrWigYhIG7SFrTt0V1pl8DAxzUPOP
+fCpYkjh6gwTAvGC+XuVh79z6ZkRF7btqmEWIyNzIjiPt2ltUvJT6ZohPewtmYeiV
+aGaZEJEw5r9rOFbRxb6mj6E337h9fVWCGaTFnHXf5PbJmaJSLLtLtdP+hSoJtQ9o
+Neemd3Sv7mDEQalEc6p4mSaLhgrUtQ5GO+qJXXlwblhIihwKqUtWeGX1o0rffec3
+Dt0aN19eesNtGINbI92hX3LQQd2WRjS3x0r1YZGdi3LDuNUPIsd/K9zpQeS4T4QA
+JqBd40qjwojzWLPvgzrqThpSz2PblQeXOM9MQzSgQ8Ga6oIqP9HyMeSHOrFm9Q1T
+rVGyvjg83XMXW9EmdgyEX+amKfsyXwZXvXdGg/fe6JvLs45dJKVMZFStGXNl2Twn
+JwuRZAtr1GDfXdFrlmNa2HZ/WUdhFxOHYEOFRzvtsEwkkTlvpdsTUsFEBJu4CqHo
+8H/oQro/eh062oKI5Lm1TAbLr13uZYGM/qA+ZX36P8/FHpJPgbs=
+=Juxt
+-----END PGP SIGNATURE-----
+
+--qiXJYt1g92oZeQ68Il2KdGoXjUxMPN7ZL--
 
