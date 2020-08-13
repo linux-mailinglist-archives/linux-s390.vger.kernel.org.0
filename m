@@ -2,109 +2,215 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23D9424396A
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Aug 2020 13:38:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3F23243985
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Aug 2020 13:58:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgHMLh7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Aug 2020 07:37:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61482 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726100AbgHMLh6 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 13 Aug 2020 07:37:58 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07DBWOJA023758;
-        Thu, 13 Aug 2020 07:37:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : in-reply-to : references : date : message-id : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=pd6SAGeoE53YwR14OlYzUFs6bwrO5/qxPbt5UZS/3Zc=;
- b=maBpY8F5tyCgnk/WtKuv8ckhXVyv5+h+Pssf/TNZSDBqIqbA0ICL8buXS+BruluQM6dh
- vG91pTPIh/4du/2KPcdlm0moKuXqL3QipanwG7Uqi2Z3hVkENpcB3BUZIeEVmFw+iLGH
- 6gNHmnkZefD2v4l2Jko358X26kWq8gcsabHIoXzWcxKwAdK6vnQYts2VduKTd4RNZlM2
- Rr0Y1sWWpeyKHwID+VH0gvapsIlWJS3L/pX0a4bTNZt05ny3BjppFdM4MSayBF01pD21
- zq6Hnp7skW1GnOkg5NNTsMnNtIm0zYq7MTyCx34o0HWji/3N9RQ2FDnjL+dTv9OCaWY8 fw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32w4b58u05-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 07:37:57 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07DBWOoM023863;
-        Thu, 13 Aug 2020 07:37:57 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32w4b58tyg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 07:37:57 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07DBUsf8006581;
-        Thu, 13 Aug 2020 11:37:55 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 32skp8dfy5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 11:37:54 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07DBbqIr22282734
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Aug 2020 11:37:52 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B81F911C054;
-        Thu, 13 Aug 2020 11:37:52 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B99511C04C;
-        Thu, 13 Aug 2020 11:37:52 +0000 (GMT)
-Received: from marcibm (unknown [9.145.178.142])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 13 Aug 2020 11:37:52 +0000 (GMT)
-From:   Marc Hartmayer <mhartmay@linux.ibm.com>
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests RFC v2 1/4] common.bash: run `cmd` only if a test case was found
-In-Reply-To: <20200813074059.y4qvrne5thm2olf2@kamzik.brq.redhat.com>
-References: <20200812092705.17774-1-mhartmay@linux.ibm.com> <20200812092705.17774-2-mhartmay@linux.ibm.com> <20200813074059.y4qvrne5thm2olf2@kamzik.brq.redhat.com>
-Date:   Thu, 13 Aug 2020 13:37:50 +0200
-Message-ID: <87o8nehj3l.fsf@linux.ibm.com>
+        id S1726713AbgHML6h (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Aug 2020 07:58:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44934 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726632AbgHML4y (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 13 Aug 2020 07:56:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597319812;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=T2adinmHfJvUDKoCJtxWeLxcPFFPkkiVZwiU0FDrjdQ=;
+        b=T3jkHKOaTMYYd2egN1ozoJuvmZo0KTEf0XrMhWT+NPbCMxx7Oj+ZSORx1csG01La3Uxh+Q
+        gvgGM9AAg8kFulStYAPSz4doGZzvqTqykGb127THUgS1VhEgoiCa56fDDYV/zHAPqQpX+h
+        sU6xK4vFLfISW4AQUrta1j+aS++jZio=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-B6lnio5tNQCiW7c87Xi3lw-1; Thu, 13 Aug 2020 07:56:50 -0400
+X-MC-Unique: B6lnio5tNQCiW7c87Xi3lw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8447F800D53;
+        Thu, 13 Aug 2020 11:56:49 +0000 (UTC)
+Received: from gondolin (ovpn-112-216.ams2.redhat.com [10.36.112.216])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E1FEB60BFA;
+        Thu, 13 Aug 2020 11:56:44 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 13:56:42 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Marc Hartmayer <mhartmay@linux.ibm.com>
+Cc:     <kvm@vger.kernel.org>, Thomas Huth <thuth@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [kvm-unit-tests RFC v2 4/4] s390x: add Protected VM support
+Message-ID: <20200813135642.4f493049.cohuck@redhat.com>
+In-Reply-To: <20200812092705.17774-5-mhartmay@linux.ibm.com>
+References: <20200812092705.17774-1-mhartmay@linux.ibm.com>
+        <20200812092705.17774-5-mhartmay@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-13_10:2020-08-13,2020-08-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 spamscore=0
- adultscore=0 suspectscore=2 phishscore=0 bulkscore=0 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008130084
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 09:40 AM +0200, Andrew Jones <drjones@redhat.com> w=
-rote:
-> On Wed, Aug 12, 2020 at 11:27:02AM +0200, Marc Hartmayer wrote:
->> It's only useful to run `cmd` in `for_each_unittest` if a test case
->> was found. This change allows us to remove the guards from the
->> functions `run_task` and `mkstandalone`.
->>=20
->> Signed-off-by: Marc Hartmayer <mhartmay@linux.ibm.com>
->> ---
->>  run_tests.sh            | 3 ---
->>  scripts/common.bash     | 8 ++++++--
->>  scripts/mkstandalone.sh | 4 ----
->>  3 files changed, 6 insertions(+), 9 deletions(-)
->>
->
-> Reviewed-by: Andrew Jones <drjones@redhat.com>
->
+On Wed, 12 Aug 2020 11:27:05 +0200
+Marc Hartmayer <mhartmay@linux.ibm.com> wrote:
 
-Thanks.
+> Add support for Protected Virtual Machine (PVM) tests. For starting a
+> PVM guest we must be able to generate a PVM image by using the
+> `genprotimg` tool from the s390-tools collection. This requires the
+> ability to pass a machine-specific host-key document, so the option
+> `--host-key-document` is added to the configure script.
+> 
+> Signed-off-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+> ---
+>  configure               |  8 ++++++++
+>  s390x/Makefile          | 17 +++++++++++++++--
+>  s390x/selftest.parmfile |  1 +
+>  s390x/unittests.cfg     |  1 +
+>  scripts/s390x/func.bash | 18 ++++++++++++++++++
+>  5 files changed, 43 insertions(+), 2 deletions(-)
+>  create mode 100644 s390x/selftest.parmfile
+>  create mode 100644 scripts/s390x/func.bash
+> 
+> diff --git a/configure b/configure
+> index f9d030fd2f03..aa528af72534 100755
+> --- a/configure
+> +++ b/configure
+> @@ -18,6 +18,7 @@ u32_long=
+>  vmm="qemu"
+>  errata_force=0
+>  erratatxt="$srcdir/errata.txt"
+> +host_key_document=
+>  
+>  usage() {
+>      cat <<-EOF
+> @@ -40,6 +41,8 @@ usage() {
+>  	                           no environ is provided by the user (enabled by default)
+>  	    --erratatxt=FILE       specify a file to use instead of errata.txt. Use
+>  	                           '--erratatxt=' to ensure no file is used.
+> +	    --host-key-document=HOST_KEY_DOCUMENT
+> +	                           host-key-document to use (s390x only)
 
---=20
-Kind regards / Beste Gr=C3=BC=C3=9Fe
-   Marc Hartmayer
+Maybe a bit more verbose? If I see only this option, I have no idea
+what it is used for and where to get it.
 
-IBM Deutschland Research & Development GmbH
-Vorsitzender des Aufsichtsrats: Gregor Pillen=20
-Gesch=C3=A4ftsf=C3=BChrung: Dirk Wittkopp
-Sitz der Gesellschaft: B=C3=B6blingen
-Registergericht: Amtsgericht Stuttgart, HRB 243294
+>  EOF
+>      exit 1
+>  }
+> @@ -92,6 +95,9 @@ while [[ "$1" = -* ]]; do
+>  	    erratatxt=
+>  	    [ "$arg" ] && erratatxt=$(eval realpath "$arg")
+>  	    ;;
+> +	--host-key-document)
+> +	    host_key_document="$arg"
+> +	    ;;
+>  	--help)
+>  	    usage
+>  	    ;;
+> @@ -205,6 +211,8 @@ PRETTY_PRINT_STACKS=$pretty_print_stacks
+>  ENVIRON_DEFAULT=$environ_default
+>  ERRATATXT=$erratatxt
+>  U32_LONG_FMT=$u32_long
+> +GENPROTIMG=${GENPROTIMG-genprotimg}
+> +HOST_KEY_DOCUMENT=$host_key_document
+>  EOF
+>  
+>  cat <<EOF > lib/config.h
+> diff --git a/s390x/Makefile b/s390x/Makefile
+> index 0f54bf43bfb7..cd4e270952ec 100644
+> --- a/s390x/Makefile
+> +++ b/s390x/Makefile
+> @@ -18,12 +18,19 @@ tests += $(TEST_DIR)/skrf.elf
+>  tests += $(TEST_DIR)/smp.elf
+>  tests += $(TEST_DIR)/sclp.elf
+>  tests += $(TEST_DIR)/css.elf
+> -tests_binary = $(patsubst %.elf,%.bin,$(tests))
+>  
+> -all: directories test_cases test_cases_binary
+> +tests_binary = $(patsubst %.elf,%.bin,$(tests))
+> +ifneq ($(HOST_KEY_DOCUMENT),)
+> +tests_pv_binary = $(patsubst %.bin,%.pv.bin,$(tests_binary))
+> +else
+> +tests_pv_binary =
+> +endif
+> +
+> +all: directories test_cases test_cases_binary test_cases_pv
+>  
+>  test_cases: $(tests)
+>  test_cases_binary: $(tests_binary)
+> +test_cases_pv: $(tests_pv_binary)
+>  
+>  CFLAGS += -std=gnu99
+>  CFLAGS += -ffreestanding
+> @@ -72,6 +79,12 @@ FLATLIBS = $(libcflat)
+>  %.bin: %.elf
+>  	$(OBJCOPY) -O binary  $< $@
+>  
+> +%selftest.pv.bin: %selftest.bin $(HOST_KEY_DOCUMENT) $(patsubst %.pv.bin,%.parmfile,$@)
+> +	$(GENPROTIMG) --host-key-document $(HOST_KEY_DOCUMENT) --parmfile $(patsubst %.pv.bin,%.parmfile,$@) --no-verify --image $< -o $@
+> +
+> +%.pv.bin: %.bin $(HOST_KEY_DOCUMENT)
+> +	$(GENPROTIMG) --host-key-document $(HOST_KEY_DOCUMENT) --no-verify --image $< -o $@
+> +
+>  arch_clean: asm_offsets_clean
+>  	$(RM) $(TEST_DIR)/*.{o,elf,bin} $(TEST_DIR)/.*.d lib/s390x/.*.d
+>  
+> diff --git a/s390x/selftest.parmfile b/s390x/selftest.parmfile
+> new file mode 100644
+> index 000000000000..5613931aa5c6
+> --- /dev/null
+> +++ b/s390x/selftest.parmfile
+> @@ -0,0 +1 @@
+> +test 123
+> \ No newline at end of file
+
+Maybe add one? :)
+
+> diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
+> index 0f156afbe741..12f6fb613995 100644
+> --- a/s390x/unittests.cfg
+> +++ b/s390x/unittests.cfg
+> @@ -21,6 +21,7 @@
+>  [selftest-setup]
+>  file = selftest.elf
+>  groups = selftest
+> +# please keep the kernel cmdline in sync with $(TEST_DIR)/selftest.parmfile
+>  extra_params = -append 'test 123'
+>  
+>  [intercept]
+> diff --git a/scripts/s390x/func.bash b/scripts/s390x/func.bash
+> new file mode 100644
+> index 000000000000..5c682cb47f73
+> --- /dev/null
+> +++ b/scripts/s390x/func.bash
+> @@ -0,0 +1,18 @@
+> +# Run Protected VM test
+> +function arch_cmd()
+> +{
+> +	local cmd=$1
+> +	local testname=$2
+> +	local groups=$3
+> +	local smp=$4
+> +	local kernel=$5
+> +	local opts=$6
+> +	local arch=$7
+> +	local check=$8
+> +	local accel=$9
+> +	local timeout=${10}
+> +
+> +	kernel=${kernel%.elf}.pv.bin
+> +	# do not run PV test cases by default
+> +	"$cmd" "${testname}_PV" "$groups pv nodefault" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+
+If we don't run this test, can we maybe print some informative message
+like "PV tests not run; specify --host-key-document to enable" or so?
+(At whichever point that makes the most sense.)
+
+> +}
+
