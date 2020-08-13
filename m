@@ -2,184 +2,176 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3B9E24358B
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Aug 2020 09:54:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49EB62435F7
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Aug 2020 10:30:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgHMHyk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Aug 2020 03:54:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10960 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726574AbgHMHyj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 13 Aug 2020 03:54:39 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07D7XLor098999;
-        Thu, 13 Aug 2020 03:54:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=pvGpKk/te6wBrI+pp2guEgQc15OWxh2xznhiozF4vwo=;
- b=HhXmpc/felX4qtADi4vUIKF8kMcmVNbRzYF1X51Jj0/NU1jqJnPuBbgtsfBwPE26viZ0
- iVlm+QEP5uRr1QWvj9rRYOmDUm92JTfxLRqk4dIPeyyzDOmFraCFsB1RqJnVa8rMHdHp
- ABFWseoOzlWEMoKn0QNjFR93MMruiMZ/huAWb3TAujmHZ5eSvJapndNcBlpaMzp1sJO6
- RsE/p7/HtHQL3ylNp2x6T/s+Vq6nU0ZyHXe+VrD3DboNls8mAdEMvIjCjIUHRSvU5lP/
- Mh34Of93SED6xqlLeMJVpZMxa0A4+ALJvmaWAyN3NDVMI4rVrTQRxLnyZTIR6/xy0d2u fA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32w0n09qk5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 03:54:32 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07D7ZNcl105533;
-        Thu, 13 Aug 2020 03:54:31 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32w0n09qjf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 03:54:31 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07D7ns1a000342;
-        Thu, 13 Aug 2020 07:54:29 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03fra.de.ibm.com with ESMTP id 32skp838g2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 07:54:29 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07D7sQKF34013482
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Aug 2020 07:54:27 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D2CAF4C046;
-        Thu, 13 Aug 2020 07:54:26 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A7944C044;
-        Thu, 13 Aug 2020 07:54:26 +0000 (GMT)
-Received: from oc5500677777.ibm.com (unknown [9.145.93.1])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Aug 2020 07:54:26 +0000 (GMT)
-Subject: Re: [PATCH v2] PCI: Introduce flag for detached virtual functions
-To:     "Oliver O'Halloran" <oohall@gmail.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, pmorel@linux.ibm.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-s390@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-References: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
- <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com>
- <20200812143254.2f080c38@x1.home>
- <CAOSf1CFh4ygZeeqpjpbWFWxJJEpDjHD+Q_L4dUaU_3wx7_35pg@mail.gmail.com>
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-Message-ID: <19bb6ca8-f6bb-841c-e4dd-cd9e8e6e430f@linux.ibm.com>
-Date:   Thu, 13 Aug 2020 09:54:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726100AbgHMIaU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Aug 2020 04:30:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32655 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726102AbgHMIaU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 13 Aug 2020 04:30:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597307418;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KqhI5Q8sClvpgxYuJqBvjt7ffftT1d+Bz/45Zz2EEQc=;
+        b=dT2oLlzztxd1KM1pdg0Yk0aQavHKY4w1/GRCp0esc/zHaG4ryJ2QPL6ooLnjHfzVIJc2Yt
+        eN1pGeeTnY2or933/OZoZr0d/QMEJkglEedQAeflFovK4vKfUsnfh7rLF10m4b1sn3jbFO
+        i43FbXX58u49c1w8iCJcud833mVItfo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-387-AIFhAaiZO1aHAiZnflsoTQ-1; Thu, 13 Aug 2020 04:30:15 -0400
+X-MC-Unique: AIFhAaiZO1aHAiZnflsoTQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B56FE800D55;
+        Thu, 13 Aug 2020 08:30:14 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.192.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 21D79100AE54;
+        Thu, 13 Aug 2020 08:30:02 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 10:30:00 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Marc Hartmayer <mhartmay@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [kvm-unit-tests RFC v2 3/4] run_tests/mkstandalone: add arch
+ dependent function to `for_each_unittest`
+Message-ID: <20200813083000.e4bscohuhgl3jdv4@kamzik.brq.redhat.com>
+References: <20200812092705.17774-1-mhartmay@linux.ibm.com>
+ <20200812092705.17774-4-mhartmay@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAOSf1CFh4ygZeeqpjpbWFWxJJEpDjHD+Q_L4dUaU_3wx7_35pg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-13_05:2020-08-13,2020-08-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 clxscore=1011 malwarescore=0 impostorscore=0
- adultscore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008130057
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812092705.17774-4-mhartmay@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 8/13/20 3:59 AM, Oliver O'Halloran wrote:
-> On Thu, Aug 13, 2020 at 6:33 AM Alex Williamson
-> <alex.williamson@redhat.com> wrote:
->>
->> On Wed, 12 Aug 2020 15:21:11 -0400
->> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
->>
-... snip ...
->>
->> Is there too much implicit knowledge in defining a "detached VF"?  For
->> example, why do we know that we can skip the portion of
->> vfio_config_init() that copies the vendor and device IDs from the
->> struct pci_dev into the virtual config space?  It's true on s390x, but
->> I think that's because we know that firmware emulates those registers
->> for us.
->>
->> We also skip the INTx pin register sanity checking.  Do we do
->> that because we haven't installed the broken device into an s390x
->> system?  Because we know firmware manages that for us too?  Or simply
->> because s390x doesn't support INTx anyway, and therefore it's another
->> architecture implicit decision?
+On Wed, Aug 12, 2020 at 11:27:04AM +0200, Marc Hartmayer wrote:
+> This allows us, for example, to auto generate a new test case based on
+> an existing test case.
 > 
-> Agreed. Any hacks we put in for normal VFs are going to be needed for
-> the passed-though VF case. Only applying the memory space enable
-> workaround doesn't make sense to me either.
-
-We did actually have the detached_vf check in that if in
-a previous patch version, turning on the INTx and quirk checks.
-We decided to send a minimal version for the discussion.
-That said I agree that this is currently too specific to our
-case.
-
+> Signed-off-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+> ---
+>  run_tests.sh            |  2 +-
+>  scripts/common.bash     | 13 +++++++++++++
+>  scripts/mkstandalone.sh |  2 +-
+>  3 files changed, 15 insertions(+), 2 deletions(-)
 > 
->> If detached_vf is really equivalent to is_virtfn for all cases that
->> don't care about referencing physfn on the pci_dev, then we should
->> probably have a macro to that effect.
+> diff --git a/run_tests.sh b/run_tests.sh
+> index 24aba9cc3a98..23658392c488 100755
+> --- a/run_tests.sh
+> +++ b/run_tests.sh
+> @@ -160,7 +160,7 @@ trap "wait; exit 130" SIGINT
+>     # preserve stdout so that process_test_output output can write TAP to it
+>     exec 3>&1
+>     test "$tap_output" == "yes" && exec > /dev/null
+> -   for_each_unittest $config run_task
+> +   for_each_unittest $config run_task arch_cmd
 
-In my opinion it really is, that's why we initially tried to just
-set pdev->is_virtfn leaving the physfn pointer NULL for these
-detached VFs. 
-But as you said that gets uncomfortable because of the union and existing code
-assuming that pdev->is_virtfn always means physfn is set.
+Let's just require that arch cmd hook be specified by the "$arch_cmd"
+variable. Then we don't need to pass it to for_each_unittest.
 
-I think the underlying problem here is, that the current use
-of pdev->is_virtfn conflates the two reasons we need to know whether
-something is a VF:
+>  ) | postprocess_suite_output
+>  
+>  # wait until all tasks finish
+> diff --git a/scripts/common.bash b/scripts/common.bash
+> index f9c15fd304bd..62931a40b79a 100644
+> --- a/scripts/common.bash
+> +++ b/scripts/common.bash
+> @@ -1,8 +1,15 @@
+> +function arch_cmd()
+> +{
+> +	# Dummy function, can be overwritten by architecture dependent
+> +	# code
+> +	return
+> +}
 
-1. For dealing with the differences in how a VF presents itself vs a PF
-2. For knowing whether the physfn/sriov union is a pointer to the parent PF
+This dummy function appears unused and can be dropped.
 
-If we could untangle this in a sane way I think that would
-be the best long term solution.
+>  
+>  function for_each_unittest()
+>  {
+>  	local unittests="$1"
+>  	local cmd="$2"
+> +	local arch_cmd="${3-}"
+>  	local testname
+>  	local smp
+>  	local kernel
+> @@ -19,6 +26,9 @@ function for_each_unittest()
+>  		if [[ "$line" =~ ^\[(.*)\]$ ]]; then
+>  			if [ -n "${testname}" ]; then
+>  				"$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+> +				if [ "${arch_cmd}" ]; then
+> +					"${arch_cmd}" "$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+> +				fi
 
-> 
-> A pci_is_virtfn() helper would be better than open coding both checks
-> everywhere. That said, it might be solving the wrong problem. The
-> union between ->physfn and ->sriov has always seemed like a footgun to
-> me so we might be better off switching the users who want a physfn to
-> a helper instead. i.e.
-> 
-> struct pci_dev *pci_get_vf_physfn(struct pci_dev *vf)
-> {
->         if (!vf->is_virtfn)
->                 return NULL;
-> 
->         return vf->physfn;
-> }
+Rather than assuming we should run both $cmd ... and $arch_cmd $cmd ...,
+let's just run $arch_cmd $cmd ..., when it exists. If $arch_cmd wants to
+run $cmd ... first, then it can do so itself.
 
-Hmm, this is almost exactly  include/linux/pci.h:pci_physfn()
-except that returns the argument pdev itself when is_virtfn
-is not set.
+>  			fi
+>  			testname=${BASH_REMATCH[1]}
+>  			smp=1
+> @@ -49,6 +59,9 @@ function for_each_unittest()
+>  	done
+>  	if [ -n "${testname}" ]; then
+>  		"$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+> +		if [ "${arch_cmd}" ]; then
+> +			"${arch_cmd}" "$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+> +		fi
+>  	fi
+>  	exec {fd}<&-
+>  }
+> diff --git a/scripts/mkstandalone.sh b/scripts/mkstandalone.sh
+> index cefdec30cb33..3b18c0cf090b 100755
+> --- a/scripts/mkstandalone.sh
+> +++ b/scripts/mkstandalone.sh
+> @@ -128,4 +128,4 @@ fi
+>  
+>  mkdir -p tests
+>  
+> -for_each_unittest $cfg mkstandalone
+> +for_each_unittest $cfg mkstandalone arch_cmd
+> -- 
+> 2.25.4
+>
 
-> 
-> ...
-> 
-> pf = pci_get_vf_physfn(vf)
-> if (pf)
->     /* do pf things */
-> 
-> Then we can just use ->is_virtfn for the normal and detached cases.
+In summary, I think this patch should just be
 
-I'm asssuming you mean by setting vf->is_virtfn = 1; vf->physfn = NULL
-for the detached case? I think that actually also works with the existing
-pci_physfn() helper but it requires handling a returned NULL at
-all callsites.
+diff --git a/scripts/common.bash b/scripts/common.bash
+index 9a6ebbd7f287..b409b0529ea6 100644
+--- a/scripts/common.bash
++++ b/scripts/common.bash
+@@ -17,7 +17,7 @@ function for_each_unittest()
+ 
+        while read -r -u $fd line; do
+                if [[ "$line" =~ ^\[(.*)\]$ ]]; then
+-                       "$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
++                       "$arch_cmd" "$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+                        testname=${BASH_REMATCH[1]}
+                        smp=1
+                        kernel=""
+@@ -45,6 +45,6 @@ function for_each_unittest()
+                        timeout=${BASH_REMATCH[1]}
+                fi
+        done
+-       "$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
++       "$arch_cmd" "$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+        exec {fd}<&-
+ }
+ 
 
-> 
-> Oliver
-> 
+Thanks,
+drew
+
