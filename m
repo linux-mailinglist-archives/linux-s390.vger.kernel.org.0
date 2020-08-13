@@ -2,153 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D5D8243C78
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Aug 2020 17:29:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71AAA243CB0
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Aug 2020 17:41:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgHMP33 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Aug 2020 11:29:29 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17134 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726249AbgHMP32 (ORCPT
+        id S1726772AbgHMPk7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Aug 2020 11:40:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60028 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726131AbgHMPk6 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 13 Aug 2020 11:29:28 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07DF5fWu062752;
-        Thu, 13 Aug 2020 11:29:26 -0400
+        Thu, 13 Aug 2020 11:40:58 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07DFVrD8134486;
+        Thu, 13 Aug 2020 11:40:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id; s=pp1;
- bh=fEApjQ32ZlCsV+pRD9M5xHULiwiX0puoetNqBdtPEcE=;
- b=mD8zyB9gXYSZW4HuuN/u4nuYL9t7hhb/1OMkIIfaqbiRc76Tu0CWpmwnqVxMB/NFO9cj
- iGGIiHwUuIEszjyn3aRpo7fP9Cro4Ro74Xz7F1hNjAiwMqFDVUEYd32CoWcTU6b6gMVw
- du0Vbszs3be3yPBrgLuj7J1ySUvfwEt29aFAGh6NsxZvQoVgw8W0IUawNm1k9IQ0EcgR
- y5m7qkH0j6ARFnV9YVpu/SI0n73cSS37ULsiuc2uHPB/fHg8WVKb2QnyuigIQvpmQ0rf
- OgaqLbOetiPGPZkvooEsX/03TxEOqZLCWSObi/tpRBhOfxqN+U6Cuc7SEnlqbQcn6PNO Qg== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32w5mwdt78-1
+ bh=Dvgq+CZDKhUP01c00QbT4Vc/o4cdqzwBrzo+M+z0pfs=;
+ b=MXl677QCSmPqHzfhKEUjnIKgCnDjglOFx/8nrLck4kGTCBE9NRFKwLhsbganywtycp8w
+ v6/06HWYqE8pipQbHqwcQJpnUnYEHpMUjgBw+axmjwhoWhuPg/euufttbSqIqvnS0GZh
+ FPvqGWiB5LSoZ40uW4AZRfg9TeHvv6PR/dG+C7aZiZnHSefE9hm7vbFOrKp28ebfIn08
+ 7+DpU5R0Iter99hTVmriBn1li9Kwk6usXqe5HMZEoqop8CJUVW3IaD9WqEA84uHQ4dky
+ aYXPzA/7/5+Ngv5TqkS8mQtbhmZuYi/2wklPez3goZncYbu8/f2rsucrVel/ATqbVpXx Gg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32w706366d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 11:29:25 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07DFOo4H024475;
-        Thu, 13 Aug 2020 15:29:23 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 32skp8dpep-1
+        Thu, 13 Aug 2020 11:40:51 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07DFVxmQ135117;
+        Thu, 13 Aug 2020 11:40:50 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32w706365v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 15:29:23 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07DFTKID27132204
+        Thu, 13 Aug 2020 11:40:50 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07DFLCHB002809;
+        Thu, 13 Aug 2020 15:40:50 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma03dal.us.ibm.com with ESMTP id 32skp9nx30-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Aug 2020 15:40:50 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07DFenh651773752
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Aug 2020 15:29:20 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C717AE05F;
-        Thu, 13 Aug 2020 15:29:20 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D85C6AE057;
-        Thu, 13 Aug 2020 15:29:19 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Aug 2020 15:29:19 +0000 (GMT)
-From:   Steffen Maier <maier@linux.ibm.com>
-To:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>, stable@vger.kernel.org
-Subject: [PATCH] zfcp: fix use-after-free in request timeout handlers
-Date:   Thu, 13 Aug 2020 17:28:56 +0200
-Message-Id: <20200813152856.50088-1-maier@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 13 Aug 2020 15:40:49 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2BA04AE063;
+        Thu, 13 Aug 2020 15:40:49 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A6DA1AE066;
+        Thu, 13 Aug 2020 15:40:46 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.163.7.238])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 13 Aug 2020 15:40:46 +0000 (GMT)
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+To:     alex.williamson@redhat.com, bhelgaas@google.com
+Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v3] PCI: Identifying detached virtual functions
+Date:   Thu, 13 Aug 2020 11:40:42 -0400
+Message-Id: <1597333243-29483-1-git-send-email-mjrosato@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-13_14:2020-08-13,2020-08-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- suspectscore=2 clxscore=1011 impostorscore=0 spamscore=0
- priorityscore=1501 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
- phishscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008130114
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ mlxscore=0 bulkscore=0 priorityscore=1501 impostorscore=0 phishscore=0
+ lowpriorityscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008130114
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Before v4.15 commit 75492a51568b ("s390/scsi: Convert timers to use
-timer_setup()"), we intentionally only passed zfcp_adapter as context
-argument to zfcp_fsf_request_timeout_handler(). Since we only trigger
-adapter recovery, it was unnecessary to sync against races between timeout
-and (late) completion.
-Likewise, we only passed zfcp_erp_action as context argument to
-zfcp_erp_timeout_handler(). Since we only wakeup an ERP action, it was
-unnecessary to sync against races between timeout and (late) completion.
+Changes for v3:
+- Moved detached_vf setting to pcibios_bus_add_device
+- Extended the change in vfio_config_init to be generic (include 
+  vendor / device ID / INTx emulation)
+- Added a dev_is_vf macro in the same style as dev_is_pf to
+  encapsualate the checking of is_virtfn || detached_vf
 
-Meanwhile the timeout handlers get timer_list as context argument
-and do a timer-specific container-of to zfcp_fsf_req which can have
-been freed.
+Changes for v2:
+- Added code to vfio_basic_config_read() and vfio_config_init() to
+  extend emulation to userspace
+- Added detached_vf check to vfio_bar_restore()
+- @Niklas/@Pierre, I removed your review tags since I made changes,
+  please have another look
 
-Fix it by making sure that any request timeout handlers, that might
-just have started before del_timer(), are completed by using
-del_timer_sync() instead. This ensures the request free happens
-afterwards.
 
-Space time diagram of potential use-after-free:
+As discussed previously in a qemu-devel thread:
 
-Basic idea is to have 2 or more pending requests whose timeouts run
-out at almost the same time.
+https://www.mail-archive.com/qemu-devel@nongnu.org/msg725141.html
 
-req 1 timeout     ERP thread        req 2 timeout
-----------------  ----------------  ---------------------------------------
-zfcp_fsf_request_timeout_handler
-fsf_req = from_timer(fsf_req, t, timer)
-adapter = fsf_req->adapter
-zfcp_qdio_siosl(adapter)
-zfcp_erp_adapter_reopen(adapter,...)
-                  zfcp_erp_strategy
-                  ...
-                  zfcp_fsf_req_dismiss_all
-                  list_for_each_entry_safe
-                    zfcp_fsf_req_complete 1
-                    del_timer 1
-                    zfcp_fsf_req_free 1
-                    zfcp_fsf_req_complete 2
-                                    zfcp_fsf_request_timeout_handler
-                    del_timer 2
-                                    fsf_req = from_timer(fsf_req, t, timer)
-                    zfcp_fsf_req_free 2
-                                    adapter = fsf_req->adapter
-                                              ^^^^^^^ already freed
+s390x has the notion of unlinked VFs being available at the LPAR-level
+(Virtual Functions where the kernel does not have access to the associated
+Physical Function).  These devices are currently not marked as is_virtfn.
+There seems to be some precedent (ex: in powerpc, eeh_debugfs_break_device())
+where pdev->is_virtfn && pdev->physfn == 0 is used to detect these sort of
+detached VFs.  We toyed with the idea of doing this but it causes additional
+fallout as various other areas of kernel code have an expectation that
+is_virtfn=1 implies there is a linked PF available to the kernel. 
 
-Suggested-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Julian Wiedmann <jwi@linux.ibm.com>
-Fixes: 75492a51568b ("s390/scsi: Convert timers to use timer_setup()")
-Cc: <stable@vger.kernel.org> #4.15+
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
----
- drivers/s390/scsi/zfcp_fsf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+In the s390x case, the firmware layer underneath handles the VF emulation
+as it still has access to the PF that the LPAR (and thus the kernel) cannot
+see.  But one thing this firmware layer does not do is emulate the
+PCI_COMMAND_MEMORY bit, which was OK until vfio-pci started enforcing it
+via abafbc55.  The vfio-pci check is waived for VFs as of ebfa440c, but
+vfio-pci can't actually tell that these particular devices are VFs.
 
-diff --git a/drivers/s390/scsi/zfcp_fsf.c b/drivers/s390/scsi/zfcp_fsf.c
-index c795f22249d8..140186fe1d1e 100644
---- a/drivers/s390/scsi/zfcp_fsf.c
-+++ b/drivers/s390/scsi/zfcp_fsf.c
-@@ -434,7 +434,7 @@ static void zfcp_fsf_req_complete(struct zfcp_fsf_req *req)
- 		return;
- 	}
- 
--	del_timer(&req->timer);
-+	del_timer_sync(&req->timer);
- 	zfcp_fsf_protstatus_eval(req);
- 	zfcp_fsf_fsfstatus_eval(req);
- 	req->handler(req);
-@@ -867,7 +867,7 @@ static int zfcp_fsf_req_send(struct zfcp_fsf_req *req)
- 	req->qdio_req.qdio_outb_usage = atomic_read(&qdio->req_q_free);
- 	req->issued = get_tod_clock();
- 	if (zfcp_qdio_send(qdio, &req->qdio_req)) {
--		del_timer(&req->timer);
-+		del_timer_sync(&req->timer);
- 		/* lookup request again, list might have changed */
- 		zfcp_reqlist_find_rm(adapter->req_list, req_id);
- 		zfcp_erp_adapter_reopen(adapter, 0, "fsrs__1");
+The proposed patch attempts to identify these detached VFs and subsequently
+provide this information to vfio-pci so that it knows to also accept the
+lack of PCI_COMMAND_MEMORY for these sorts of devices.  For now the bit is
+only set for s390x but other architectures could opt in to it as well if
+needed.
+
+Matthew Rosato (1):
+  PCI: Introduce flag for detached virtual functions
+
+ arch/s390/pci/pci_bus.c            | 13 +++++++++++++
+ drivers/vfio/pci/vfio_pci_config.c |  8 ++++----
+ include/linux/pci.h                |  4 ++++
+ 3 files changed, 21 insertions(+), 4 deletions(-)
+
 -- 
-2.17.1
+1.8.3.1
 
