@@ -2,170 +2,185 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71603243ACB
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Aug 2020 15:29:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 447D0243B7C
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Aug 2020 16:22:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgHMN3D (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Aug 2020 09:29:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37692 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726102AbgHMN3D (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 13 Aug 2020 09:29:03 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07DD3HWE185766;
-        Thu, 13 Aug 2020 09:28:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=EjBWs1XLXJ3XQrKu6R6+m8xBwYJxjpkGFS0zt7Y9MQk=;
- b=cuHLptR3OwTZ/jcxf1v7/aa/uRrD1tF926Rklm7GH6fXQ5ZvejHEtb90xZrUkOosl+s+
- SYj6HcKYK5y8PQ9s4Hcihjvs+ZLfYMxBJVyyHzTfjaBhZCDN27ThBBUzMr4GroV30y0t
- A0cDrT9EKfo07as8ZyAQhzy68WXHeB7fypC7dbhFmLDuFo/VCGXwSpBAah+4IJ6r1qpU
- Py9Jq4TOYIHIxDmx+mA+t6rdSGc0qcF76t263TBrRHd/uwhFpnRx/5I2JCodPWrhyHJK
- RjRiN0NXifKy/QiAOn5xqnjR644usyPgAZKHCu9Vy8a87oj63ltB8ACvxM4cPwv/jCP2 bQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32vqcprv2j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 09:28:58 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07DD3SNk186940;
-        Thu, 13 Aug 2020 09:28:58 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32vqcprv18-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 09:28:57 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07DDR2TP032580;
-        Thu, 13 Aug 2020 13:28:55 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03fra.de.ibm.com with ESMTP id 32skp83eg7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Aug 2020 13:28:55 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07DDSqdE64750054
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Aug 2020 13:28:52 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 937FB4C04A;
-        Thu, 13 Aug 2020 13:28:52 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E369B4C046;
-        Thu, 13 Aug 2020 13:28:51 +0000 (GMT)
-Received: from oc5500677777.ibm.com (unknown [9.145.93.1])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Aug 2020 13:28:51 +0000 (GMT)
-Subject: Re: [PATCH v2] PCI: Introduce flag for detached virtual functions
-To:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, pmorel@linux.ibm.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-s390@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>
-References: <1597260071-2219-1-git-send-email-mjrosato@linux.ibm.com>
- <1597260071-2219-2-git-send-email-mjrosato@linux.ibm.com>
- <CAOSf1CFjaVoeTyk=cLmWhBB6YQrHQkcD8Aj=ZYrB4kYc-rqLiw@mail.gmail.com>
- <2a862199-16c8-2141-d27f-79761c1b1b25@linux.ibm.com>
- <CAOSf1CE6UyL9P31S=rAG=VZKs-JL4Kbq3VMZNhyojHbkPHSw0Q@mail.gmail.com>
- <dc79c8a9-1bbc-380f-741f-bca270a34483@linux.ibm.com>
- <17be8c41-8989-f1da-a843-30f0761f42de@linux.ibm.com>
- <6ffa5f39-3607-88c7-81f9-dc97d12d09df@linux.ibm.com>
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-Message-ID: <f862f188-1f4d-d83d-452e-7fbda55426c7@linux.ibm.com>
-Date:   Thu, 13 Aug 2020 15:28:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726653AbgHMOWx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Aug 2020 10:22:53 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52706 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726631AbgHMOWt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 13 Aug 2020 10:22:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597328568;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=G++udBCxoR/wLpN6cjWAKuhfb/kHVkuG0cocPeBDxxY=;
+        b=U8/fydocNbIBO43/0yxJVdses3dqgSOJbp5J6LBGKZ4XLxqxGU0HX+0AqzMnxf5wnbXUOP
+        lh6FVrFMqFJP0yjayKLNBUEdxh7L8qmLlDYOaKWiGRJNHpsV+XzflP5yaLiqcIDZdd4ugW
+        8fL9hKzOLgSB8bvPJP95nrBTgKs7eLM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-575-lW1JyTvYNQa8BAIJAyCRng-1; Thu, 13 Aug 2020 10:22:44 -0400
+X-MC-Unique: lW1JyTvYNQa8BAIJAyCRng-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 148D91015DBC;
+        Thu, 13 Aug 2020 14:22:43 +0000 (UTC)
+Received: from gondolin (ovpn-112-216.ams2.redhat.com [10.36.112.216])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E2E162A82;
+        Thu, 13 Aug 2020 14:22:37 +0000 (UTC)
+Date:   Thu, 13 Aug 2020 16:22:34 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Marc Hartmayer <mhartmay@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [kvm-unit-tests RFC v2 4/4] s390x: add Protected VM support
+Message-ID: <20200813162234.01db539f.cohuck@redhat.com>
+In-Reply-To: <87d03uhevw.fsf@linux.ibm.com>
+References: <20200812092705.17774-1-mhartmay@linux.ibm.com>
+        <20200812092705.17774-5-mhartmay@linux.ibm.com>
+        <20200813135642.4f493049.cohuck@redhat.com>
+        <87d03uhevw.fsf@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <6ffa5f39-3607-88c7-81f9-dc97d12d09df@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-13_10:2020-08-13,2020-08-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- spamscore=0 impostorscore=0 mlxscore=0 phishscore=0 suspectscore=0
- lowpriorityscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008130098
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Thu, 13 Aug 2020 15:08:51 +0200
+Marc Hartmayer <mhartmay@linux.ibm.com> wrote:
 
+> On Thu, Aug 13, 2020 at 01:56 PM +0200, Cornelia Huck <cohuck@redhat.com>=
+ wrote:
+> > On Wed, 12 Aug 2020 11:27:05 +0200
+> > Marc Hartmayer <mhartmay@linux.ibm.com> wrote:
+> > =20
+> >> Add support for Protected Virtual Machine (PVM) tests. For starting a
+> >> PVM guest we must be able to generate a PVM image by using the
+> >> `genprotimg` tool from the s390-tools collection. This requires the
+> >> ability to pass a machine-specific host-key document, so the option
+> >> `--host-key-document` is added to the configure script.
+> >>=20
+> >> Signed-off-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+> >> ---
+> >>  configure               |  8 ++++++++
+> >>  s390x/Makefile          | 17 +++++++++++++++--
+> >>  s390x/selftest.parmfile |  1 +
+> >>  s390x/unittests.cfg     |  1 +
+> >>  scripts/s390x/func.bash | 18 ++++++++++++++++++
+> >>  5 files changed, 43 insertions(+), 2 deletions(-)
+> >>  create mode 100644 s390x/selftest.parmfile
+> >>  create mode 100644 scripts/s390x/func.bash
+> >>=20
+> >> diff --git a/configure b/configure
+> >> index f9d030fd2f03..aa528af72534 100755
+> >> --- a/configure
+> >> +++ b/configure
+> >> @@ -18,6 +18,7 @@ u32_long=3D
+> >>  vmm=3D"qemu"
+> >>  errata_force=3D0
+> >>  erratatxt=3D"$srcdir/errata.txt"
+> >> +host_key_document=3D
+> >> =20
+> >>  usage() {
+> >>      cat <<-EOF
+> >> @@ -40,6 +41,8 @@ usage() {
+> >>  	                           no environ is provided by the user (enabl=
+ed by default)
+> >>  	    --erratatxt=3DFILE       specify a file to use instead of errata=
+.txt. Use
+> >>  	                           '--erratatxt=3D' to ensure no file is use=
+d.
+> >> +	    --host-key-document=3DHOST_KEY_DOCUMENT
+> >> +	                           host-key-document to use (s390x only) =20
+> >
+> > Maybe a bit more verbose? If I see only this option, I have no idea
+> > what it is used for and where to get it. =20
+>=20
+> =E2=80=9CSpecifies the machine-specific host-key document required to cre=
+ate a
+> PVM image using the `genprotimg` tool from the s390-tools collection
+> (s390x only)=E2=80=9D
+>=20
+> Better?
 
-On 8/13/20 3:11 PM, Matthew Rosato wrote:
-> On 8/13/20 8:34 AM, Niklas Schnelle wrote:
->>
->>
->> On 8/13/20 12:40 PM, Niklas Schnelle wrote:
->>>
->>>
->>> On 8/13/20 11:59 AM, Oliver O'Halloran wrote:
->>>> On Thu, Aug 13, 2020 at 7:00 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
->>>>>
->>>>>
->>>>> On 8/13/20 3:55 AM, Oliver O'Halloran wrote:
->>>>>> On Thu, Aug 13, 2020 at 5:21 AM Matthew Rosato <mjrosato@linux.ibm.com> wrote:
->>>>>>> *snip*
->>>>>>> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
->>>>>>> index 3902c9f..04ac76d 100644
->>>>>>> --- a/arch/s390/pci/pci.c
->>>>>>> +++ b/arch/s390/pci/pci.c
->>>>>>> @@ -581,6 +581,14 @@ int pcibios_enable_device(struct pci_dev *pdev, int mask)
->>>>>>>   {
->>>>>>>          struct zpci_dev *zdev = to_zpci(pdev);
->>>>>>>
->>>>>>> +       /*
->>>>>>> +        * If we have a VF on a non-multifunction bus, it must be a VF that is
->>>>>>> +        * detached from its parent PF.  We rely on firmware emulation to
->>>>>>> +        * provide underlying PF details.
->>>>>>> +        */
->>>>>>> +       if (zdev->vfn && !zdev->zbus->multifunction)
->>>>>>> +               pdev->detached_vf = 1;
->>>>>>
->>>>>> The enable hook seems like it's a bit too late for this sort of
->>>>>> screwing around with the pci_dev. Anything in the setup path that
->>>>>> looks at ->detached_vf would see it cleared while anything that looks
->>>>>> after the device is enabled will see it set. Can this go into
->>>>>> pcibios_add_device() or a fixup instead?
->>>>>>
->>>>>
->>>>> This particular check could go into pcibios_add_device() yes.
->>>>> We're also currently working on a slight rework of how
->>>>> we establish the VF to parent PF linking including the sysfs
->>>>> part of that. The latter sadly can only go after the sysfs
->>>>> for the virtfn has been created and that only happens
->>>>> after all fixups. We would like to do both together because
->>>>> the latter sets pdev->is_virtfn which I think is closely related.
->>>>>
->>>>> I was thinking of starting another discussion
->>>>> about adding a hook that is executed just after the sysfs entries
->>>>> for the PCI device are created but haven't yet.
->>>>
->>>> if all you need is sysfs then pcibios_bus_add_device() or a bus
->>>> notifier should work
->>>
->>> So this might go a bit off track but the problem is that
->>> on s390 a VF can be disabled and reenabled with disable_slot()/enable_slot().
->>> In this case pcibios_bus_add_device() is not called again but
->>> the PF/VF link needs to be reestablished.
->>
->> Scratch that I must have made some stupid mistake last time I tried
->> this, with your suggestion I tried again and it works perfectly
->> moving the setup into pcibios_bus_add_device().
->> Thank you, this is actually much nicer!
->>
-> 
-> OK, and I can likewise relocate the setting of detached_vf to pcibios_bus_add_device().
-> 
-Yes and I would suggest we add it in arch/s390/pci_bus.c just
-after the the setup_virtfn stuff, then that can stay static
-and the fix minimal.
-I'll send a new version of my patches internally later, still
-running it on the different configurations.
+"specify the machine-specific host-key document for creating a PVM
+image with 'genprotimg' (s390x only)"
+
+I think you can figure out where to get genprotimg if you actually know
+that you want it ;)
+
+(...)
+
+> >> diff --git a/scripts/s390x/func.bash b/scripts/s390x/func.bash
+> >> new file mode 100644
+> >> index 000000000000..5c682cb47f73
+> >> --- /dev/null
+> >> +++ b/scripts/s390x/func.bash
+> >> @@ -0,0 +1,18 @@
+> >> +# Run Protected VM test
+> >> +function arch_cmd()
+> >> +{
+> >> +	local cmd=3D$1
+> >> +	local testname=3D$2
+> >> +	local groups=3D$3
+> >> +	local smp=3D$4
+> >> +	local kernel=3D$5
+> >> +	local opts=3D$6
+> >> +	local arch=3D$7
+> >> +	local check=3D$8
+> >> +	local accel=3D$9
+> >> +	local timeout=3D${10}
+> >> +
+> >> +	kernel=3D${kernel%.elf}.pv.bin
+> >> +	# do not run PV test cases by default
+> >> +	"$cmd" "${testname}_PV" "$groups pv nodefault" "$smp" "$kernel" "$op=
+ts" "$arch" "$check" "$accel" "$timeout" =20
+> >
+> > If we don't run this test, can we maybe print some informative message
+> > like "PV tests not run; specify --host-key-document to enable" or so?
+> > (At whichever point that makes the most sense.) =20
+>=20
+> Currently, the output looks like this:
+>=20
+> $ ./run_tests.sh   =20
+> PASS selftest-setup (14 tests)
+> SKIP selftest-setup_PV (test marked as manual run only)
+> PASS intercept (20 tests)
+> SKIP intercept_PV (test marked as manual run only)
+> =E2=80=A6
+>=20
+> And if you=E2=80=99re trying to run the PV tests without specifying the h=
+ost-key
+> document it results in:
+>=20
+> $ ./run_tests.sh -a
+> PASS selftest-setup (14 tests)
+> FAIL selftest-setup_PV=20
+> PASS intercept (20 tests)
+> FAIL intercept_PV=20
+> =E2=80=A6
+>=20
+> But if you like I can return a hint that the PVM image was not
+> generated. Should the PV test case then be skipped?
+
+Yes, I was expecting something like
+
+SKIP selftest-setup_PV (no host-key document specified)
+SKIP intercept_PV (no host-key document specified)
+
+so that you get a hint what you may want to set up.
+
