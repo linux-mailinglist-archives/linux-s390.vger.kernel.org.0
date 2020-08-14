@@ -2,140 +2,65 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49FB0244A69
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Aug 2020 15:30:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B6EF244AF9
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Aug 2020 15:58:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgHNNaL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Aug 2020 09:30:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46485 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726139AbgHNNaL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 14 Aug 2020 09:30:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597411809;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oO8vbb5DPD+VaHo5QiT6wYbHvsMyE2vXIzFYhvHPGIE=;
-        b=EQCgi3b6wm9QUAMJ2fKWlzwAYBfvSJ+ZEjCd/8+iyqLSB3b8Ua9TqdHxpZcHNboAE8PQpP
-        Juoem532Blxt5h8JYKLfVxcMEtyvQAwLE1pPIQjUSn6rJBHzQaUef3qsrOP73hZJ+PS6UG
-        5vqMydi3MqZq4sSH/y1DgWaJkFX11sI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-sw5m96_nM6SbvBDtu6Hpeg-1; Fri, 14 Aug 2020 09:30:07 -0400
-X-MC-Unique: sw5m96_nM6SbvBDtu6Hpeg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6024F100CFCA;
-        Fri, 14 Aug 2020 13:30:06 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.40.192.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B37A71C4;
-        Fri, 14 Aug 2020 13:30:00 +0000 (UTC)
-Date:   Fri, 14 Aug 2020 15:29:57 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Marc Hartmayer <mhartmay@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests RFC v2 3/4] run_tests/mkstandalone: add arch
- dependent function to `for_each_unittest`
-Message-ID: <20200814132957.szwmbw6w26fhkroo@kamzik.brq.redhat.com>
-References: <20200812092705.17774-1-mhartmay@linux.ibm.com>
- <20200812092705.17774-4-mhartmay@linux.ibm.com>
- <20200813083000.e4bscohuhgl3jdv4@kamzik.brq.redhat.com>
- <87h7t51in7.fsf@linux.ibm.com>
+        id S1728132AbgHNN6c (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Aug 2020 09:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbgHNN63 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 14 Aug 2020 09:58:29 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7428C061345
+        for <linux-s390@vger.kernel.org>; Fri, 14 Aug 2020 06:58:27 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id p191so5263407ybg.0
+        for <linux-s390@vger.kernel.org>; Fri, 14 Aug 2020 06:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=ADSxHTiClFeEpnekIgxMm+4vNveMDrQOPCHPEgxRQmY=;
+        b=OuCR0lVGqzd5H5FQmJLbFMNQ+eyV0gzEwr4HY3cd3GF6Lnsu1xJVt3zglMz7Jw3m6g
+         6tlQS1f9t9BYgSgXfDaRlV7w8WD3il1PEMBvmswjf0OZgEHzc1jHtX67zkOtBSyBoxLc
+         xSp/eQJ4+Ex7HAoy43U5Nx1I2rFcFsarYX4GCS2LVaBXZjUMWYC5HD7BH4nlOsnKw5vX
+         zu9ygJ4Ak8kbLaUIR+Wg4wOkXpQbQFuB6AS3nSIngBGrfhH2iurIYvgHPK9vFRdVn4tn
+         No2wYXX7H+1SF39WsLEjuvUdeAfdZx1+eqojEu1sK7RLckN57Cb59z1zh3/DfitQjmxg
+         khiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=ADSxHTiClFeEpnekIgxMm+4vNveMDrQOPCHPEgxRQmY=;
+        b=MX24Sn9F6YQm38EAeLCX47o0igvc6+gAJ485Z6JDYi+2fhuITDjWLAAySMs6k1zGsQ
+         XBXjz7RgE5fE5X49Hzo19/6s/YrcYe7MZaIRbhzMh4WXWubRvlwfR5gKHV95CzqRqSW9
+         i41wSj18PHqrhkMuPAjWtVvXPPokdjXV/otgJR74PWTUBsJlW6NDvsG7iWWfYD/WeIzA
+         eGV6fMxmiCiiKUGpaBw6lNw+2qJXEiSYVr+RROFvvdaj3ZlE9z+4MnHlsTCioTkqJi9G
+         /UttxsO0d2yg39OQVg0JZpJj9deUF6sb1cVeWH8fm4S78l6uyhiYnEPIhk7AqSAZAypY
+         +wMg==
+X-Gm-Message-State: AOAM532iEnVSMuMF3BCO+u7Yk+kebtodLELV8xkmheMtNshcAyLdywVB
+        Toxwq8rI1mxD1XwKsofrrG78VOQEl0xQnjV+/6Q=
+X-Google-Smtp-Source: ABdhPJxSW2CH4l3gAV3UQbiDhKcbIln2aHe6a5DgwtK9XXMnm22hlYpRVpHOZ1RfSDgnZMpqgrmaN7TH4tMfw5Vx2lE=
+X-Received: by 2002:a25:7c01:: with SMTP id x1mr782217ybc.357.1597413505967;
+ Fri, 14 Aug 2020 06:58:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h7t51in7.fsf@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Received: by 2002:a25:ce42:0:0:0:0:0 with HTTP; Fri, 14 Aug 2020 06:58:25
+ -0700 (PDT)
+Reply-To: alexanadi111@gmail.com
+From:   Alex Anadi <debtpaymentsettlementcenter201@gmail.com>
+Date:   Fri, 14 Aug 2020 14:58:25 +0100
+Message-ID: <CANm_i2ZZaffMNzbC+-T=vYbsmQZ-2aL-nGfz+G8fS=qjR86-6w@mail.gmail.com>
+Subject: OK.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 03:06:36PM +0200, Marc Hartmayer wrote:
-> On Thu, Aug 13, 2020 at 10:30 AM +0200, Andrew Jones <drjones@redhat.com> wrote:
-> > On Wed, Aug 12, 2020 at 11:27:04AM +0200, Marc Hartmayer wrote:
-> >> This allows us, for example, to auto generate a new test case based on
-> >> an existing test case.
-> >> 
-> >> Signed-off-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-> >> ---
-> >>  run_tests.sh            |  2 +-
-> >>  scripts/common.bash     | 13 +++++++++++++
-> >>  scripts/mkstandalone.sh |  2 +-
-> >>  3 files changed, 15 insertions(+), 2 deletions(-)
-> >> 
-> >> diff --git a/run_tests.sh b/run_tests.sh
-> >> index 24aba9cc3a98..23658392c488 100755
-> >> --- a/run_tests.sh
-> >> +++ b/run_tests.sh
-> >> @@ -160,7 +160,7 @@ trap "wait; exit 130" SIGINT
-> >>     # preserve stdout so that process_test_output output can write TAP to it
-> >>     exec 3>&1
-> >>     test "$tap_output" == "yes" && exec > /dev/null
-> >> -   for_each_unittest $config run_task
-> >> +   for_each_unittest $config run_task arch_cmd
-> >
-> > Let's just require that arch cmd hook be specified by the "$arch_cmd"
-> > variable. Then we don't need to pass it to for_each_unittest.
-> 
-> Where is it then specified?
+Dear Sir/Madam,
 
-Just using it that way in the source is enough. We should probably call
-it $ARCH_CMD to indicate that it's a special variable. Also, we could
-return it from a $(arch_cmd) function, which is how $(migration_cmd) and
-$(timeout_cmd) work.
+I want to know if you authorized Ms Diane Webb to put claims for your
+funds valued at $10.6M
 
-> 
-> >
-> >>  ) | postprocess_suite_output
-> >>  
-> >>  # wait until all tasks finish
-> >> diff --git a/scripts/common.bash b/scripts/common.bash
-> >> index f9c15fd304bd..62931a40b79a 100644
-> >> --- a/scripts/common.bash
-> >> +++ b/scripts/common.bash
-> >> @@ -1,8 +1,15 @@
-> >> +function arch_cmd()
-> >> +{
-> >> +	# Dummy function, can be overwritten by architecture dependent
-> >> +	# code
-> >> +	return
-> >> +}
-> >
-> > This dummy function appears unused and can be dropped.
-> 
-> So what is then used if the function is not defined by the architecture
-> specific code?
-
-Nothing, which works fine
-
- $ arch_cmd=
- $ $arch_cmd echo foo   # just do 'echo foo'
-
-However, with what I wrote above, we now need a common arch_cmd function.
-Something like
-
- arch_cmd()
- {
-   [ "$ARCH_CMD" ] && return "$ARCH_CMD"
- }
-
-Which would allow us to write
-
-$(arch_cmd) $cmd ...
-
-That does the same thing as above, but it now follows the pattern of
-migration_cmd and timeout_cmd.
-
-Thanks,
-drew
-
+Regards,
+Alex Anadi.
