@@ -2,65 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B6EF244AF9
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Aug 2020 15:58:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D4E8245808
+	for <lists+linux-s390@lfdr.de>; Sun, 16 Aug 2020 16:31:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgHNN6c (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Aug 2020 09:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32922 "EHLO
+        id S1729620AbgHPObb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 16 Aug 2020 10:31:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbgHNN63 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 14 Aug 2020 09:58:29 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7428C061345
-        for <linux-s390@vger.kernel.org>; Fri, 14 Aug 2020 06:58:27 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id p191so5263407ybg.0
-        for <linux-s390@vger.kernel.org>; Fri, 14 Aug 2020 06:58:27 -0700 (PDT)
+        with ESMTP id S1729539AbgHPO35 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 16 Aug 2020 10:29:57 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17ACAC06136E
+        for <linux-s390@vger.kernel.org>; Sun, 16 Aug 2020 07:28:37 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id t14so11863574wmi.3
+        for <linux-s390@vger.kernel.org>; Sun, 16 Aug 2020 07:28:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=ADSxHTiClFeEpnekIgxMm+4vNveMDrQOPCHPEgxRQmY=;
-        b=OuCR0lVGqzd5H5FQmJLbFMNQ+eyV0gzEwr4HY3cd3GF6Lnsu1xJVt3zglMz7Jw3m6g
-         6tlQS1f9t9BYgSgXfDaRlV7w8WD3il1PEMBvmswjf0OZgEHzc1jHtX67zkOtBSyBoxLc
-         xSp/eQJ4+Ex7HAoy43U5Nx1I2rFcFsarYX4GCS2LVaBXZjUMWYC5HD7BH4nlOsnKw5vX
-         zu9ygJ4Ak8kbLaUIR+Wg4wOkXpQbQFuB6AS3nSIngBGrfhH2iurIYvgHPK9vFRdVn4tn
-         No2wYXX7H+1SF39WsLEjuvUdeAfdZx1+eqojEu1sK7RLckN57Cb59z1zh3/DfitQjmxg
-         khiA==
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=Duxa+mmNF3T3C2WDKsmzowR2OzvdY892XFjTPp0RWRI=;
+        b=NAKDDu3zYGlp6/1rTFA3zLXzfLNUWElMFpld1DGXTqZ3f2C1G5vMMGgQBtzYdv61gR
+         j0gW2VjYzcAEQEK9JcrA+yGSHFEXNhE9RNkaz3uxkanP37gacJrIVytgT7/c7zGkA2Dy
+         XJB3L8ToVDoWAD9Rvm7U849RIrxncLk9xI9S/Uu5ZGT/cXsim2IUQmYeZsKFSBsv6kJT
+         3kDR9KLYjND6JPpx0YTAndrQaTelzP3558OkivI4ykhj79/nak1F6z80uX1/EQIXmTKV
+         I+kUa6Zt2XAbNuMItIuLndMdaWWyo32PYvWKoOywYCMLUV2UDlYdbpJ66arhF+MiPCa0
+         yMKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=ADSxHTiClFeEpnekIgxMm+4vNveMDrQOPCHPEgxRQmY=;
-        b=MX24Sn9F6YQm38EAeLCX47o0igvc6+gAJ485Z6JDYi+2fhuITDjWLAAySMs6k1zGsQ
-         XBXjz7RgE5fE5X49Hzo19/6s/YrcYe7MZaIRbhzMh4WXWubRvlwfR5gKHV95CzqRqSW9
-         i41wSj18PHqrhkMuPAjWtVvXPPokdjXV/otgJR74PWTUBsJlW6NDvsG7iWWfYD/WeIzA
-         eGV6fMxmiCiiKUGpaBw6lNw+2qJXEiSYVr+RROFvvdaj3ZlE9z+4MnHlsTCioTkqJi9G
-         /UttxsO0d2yg39OQVg0JZpJj9deUF6sb1cVeWH8fm4S78l6uyhiYnEPIhk7AqSAZAypY
-         +wMg==
-X-Gm-Message-State: AOAM532iEnVSMuMF3BCO+u7Yk+kebtodLELV8xkmheMtNshcAyLdywVB
-        Toxwq8rI1mxD1XwKsofrrG78VOQEl0xQnjV+/6Q=
-X-Google-Smtp-Source: ABdhPJxSW2CH4l3gAV3UQbiDhKcbIln2aHe6a5DgwtK9XXMnm22hlYpRVpHOZ1RfSDgnZMpqgrmaN7TH4tMfw5Vx2lE=
-X-Received: by 2002:a25:7c01:: with SMTP id x1mr782217ybc.357.1597413505967;
- Fri, 14 Aug 2020 06:58:25 -0700 (PDT)
+         :subject:to:content-transfer-encoding;
+        bh=Duxa+mmNF3T3C2WDKsmzowR2OzvdY892XFjTPp0RWRI=;
+        b=S07Lh2HBasGKhp7c2Vr5V4yLwFaQphhf1ajzimj+q0lRQliwp8LMDC5/k9jiwgjgNO
+         TQ06Db5uUQNXWBacujkHJc1KmcF/iKtEII/qO8ou3WpCoqdp4JCAh1mdrJ+FAiyWedoR
+         gqvmU4gO1YhLGYzWwjfaqXWcKIv68+N2GrCi9hHXippKUw/WkF4+a2aqhLdzbmP3+OHL
+         9jwuZkiscEMXziwQIEm5NS4KAJB0XB09Vw6WkvRT37iU55k15P80E5dJL4mxENrbuxd4
+         s6He1vEnenl/x8SJdxAAGztXhP10JKXjYj4qc7jT6ntbPXGMHFdtWGZnTwbjXFbWfVfq
+         fuaA==
+X-Gm-Message-State: AOAM531ywrW6xhYDx/G2o7fCsF3s9+w21I6sP+aLttEKeQaLdgRBgkFJ
+        WSo7vHc1yGZ5HIJaajn1BAW0mdadzuV78LLIsVs=
+X-Google-Smtp-Source: ABdhPJydZZ8FQlFGmrB/EDLy0Z8gH5X03F6EFXypW4K1vf8iv94WhLhI3iwPKgeJEaRZZocHWED4lUmYPOBkTFPeX+4=
+X-Received: by 2002:a1c:a1c7:: with SMTP id k190mr10461870wme.1.1597588111746;
+ Sun, 16 Aug 2020 07:28:31 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a25:ce42:0:0:0:0:0 with HTTP; Fri, 14 Aug 2020 06:58:25
+Received: by 2002:a5d:6cd3:0:0:0:0:0 with HTTP; Sun, 16 Aug 2020 07:28:30
  -0700 (PDT)
-Reply-To: alexanadi111@gmail.com
-From:   Alex Anadi <debtpaymentsettlementcenter201@gmail.com>
-Date:   Fri, 14 Aug 2020 14:58:25 +0100
-Message-ID: <CANm_i2ZZaffMNzbC+-T=vYbsmQZ-2aL-nGfz+G8fS=qjR86-6w@mail.gmail.com>
-Subject: OK.
+Reply-To: sctnld11170@tlen.pl
+From:   "Mr. Scott Donald" <confianzayrentabilidad@gmail.com>
+Date:   Sun, 16 Aug 2020 07:28:30 -0700
+Message-ID: <CANrrfX7wwL97G=jb--8nb9jH8oRO8T90L6NGSfg1HfnzMyyHcw@mail.gmail.com>
+Subject: Hello, Please
 To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Dear Sir/Madam,
+--=20
+Dear Friend,
 
-I want to know if you authorized Ms Diane Webb to put claims for your
-funds valued at $10.6M
+I'm Mr. Scott Donald a Successful businessMan dealing with
+Exportation, I got your mail contact through search to let you know my
+intension and my Ugly Situation Am a dying Man here in Los Angeles
+California Hospital Bed in (USA), I Lost my Wife and my only Daughter
+for Covid-19 and I also have a problem in my Health and I can die
+anytime I Know,
 
-Regards,
-Alex Anadi.
+I have a project that I am about to hand over to you. and I already
+instructed the Bankia S.A. Madrid, Spain(BSA) to transfer my fund sum
+of =C2=A33,7M GBP. Equivalent to =E2=82=AC4,077,033.91 EUR, to you as to en=
+able you
+to give 50% of this fund to Charitable Home in your State and take 50%
+don't think otherwise and why would anybody send someone you barely
+know to help you deliver a message, help me do this for the happiness
+of my soul and for God to mercy me and my Family and give Us a good
+place.
+
+please, do as I said there was someone from your State that I deeply
+love so very very much and I miss her so badly I have no means to
+reach any Charitable Home there. that is why I go for a personal
+search of the Country and State and I got your mail contact through
+search to let you know my Bitterness and please, help me is getting
+Dark I ask my Doctor to help me keep you notice failure for me to
+reach you in person Your urgent Response, here is my Doctor Whats-app
+Number for urgent notice +13019692737
+
+Hope To Hear From You. I'm sending this email to you for the second
+time yet no response from you.
+
+My Regards.
+
+Mr. Scott Donald
+CEO
