@@ -2,48 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48F9A246635
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Aug 2020 14:20:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64AB12467D3
+	for <lists+linux-s390@lfdr.de>; Mon, 17 Aug 2020 15:57:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgHQMT5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 17 Aug 2020 08:19:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60900 "EHLO
+        id S1728741AbgHQN5P (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 17 Aug 2020 09:57:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbgHQMTx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 17 Aug 2020 08:19:53 -0400
-Received: from proxima.lasnet.de (proxima.lasnet.de [IPv6:2a01:4f8:121:31eb:3::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21800C061389
-        for <linux-s390@vger.kernel.org>; Mon, 17 Aug 2020 05:19:52 -0700 (PDT)
-Received: from localhost.localdomain (p200300e9d747fd86eda1c6650823d2bd.dip0.t-ipconnect.de [IPv6:2003:e9:d747:fd86:eda1:c665:823:d2bd])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: stefan@datenfreihafen.org)
-        by proxima.lasnet.de (Postfix) with ESMTPSA id 49FCBC25F9;
-        Mon, 17 Aug 2020 14:19:40 +0200 (CEST)
-Subject: Re: [PATCH 4/8] net: mac802154: convert tasklets to use new
- tasklet_setup() API
-To:     Allen Pais <allen.cryptic@gmail.com>, gerrit@erg.abdn.ac.uk,
-        davem@davemloft.net, kuba@kernel.org, edumazet@google.com,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        johannes@sipsolutions.net, alex.aring@gmail.com,
-        santosh.shilimkar@oracle.com, jhs@mojatatu.com,
-        xiyou.wangcong@gmail.com, jiri@resnulli.us
-Cc:     keescook@chromium.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-s390@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>,
+        with ESMTP id S1728749AbgHQN46 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 17 Aug 2020 09:56:58 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39324C061348
+        for <linux-s390@vger.kernel.org>; Mon, 17 Aug 2020 06:56:52 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ha11so7730744pjb.1
+        for <linux-s390@vger.kernel.org>; Mon, 17 Aug 2020 06:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EwBPUmMzjIeHY9w/IO7ylAcRHQqFTujUKmssL35PKKE=;
+        b=NhI2wzO1qeTXti9CRXY54ifwyBrtv+1cyUKGAnmLB+qkI/Ad/ttTAE4MS6frrQZTIy
+         UklMiOldDLEg/2iq8o/kwL7QcnM4PW5x4zDPOAw4vqJqExEiAt2la0jdn4Ko8+gWedCF
+         YIOSIbD3Jt5xipp76Tv/sgFbnT9Vmjtq3ZshhjIZbjUpZ022ydnqam/S1LuGECtVj9bX
+         fhuNy/pMsrgoBavqvtwD02Cnk4L6GfjTSHc6OhNlNM0LbhTMd5LzQmrN32S4NyJuGq7q
+         aUyvx/VivDzdk17iJjbU5VzwHeSWBXq4ZhyaJmooHCDVq0kk5DtBsme/8jiml+FhEGej
+         4Ozw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EwBPUmMzjIeHY9w/IO7ylAcRHQqFTujUKmssL35PKKE=;
+        b=sGpRclU30siU4hi6t1ROg3LL8yaokBX4OqXTqa+ODggcCJ0Nt3FwqZnLZ/Sz7R74Xl
+         9mC8WcK+EepWYVfSGjKJqJ1KOIpeNSpQCGmTcApGCvbUDDmR/EkspJqYHDR2VVFz4z6O
+         pEH9ME+RQ4LdFXa5pki7dW87tJ3hPtSvN2rlHKzoHN5JW1+S7iAZWG4M7SgipqEPkne6
+         hsDy06T8kIARp6B6bfVlFLaUL/Ms5xaqlW76CG98+8/ugjPzWRCKjNYRNKGKnrglzPX4
+         BEBLD6SCQZJltUR5RhfU58hFXk/1rc+PoxEF6p0SD/CrXpX6zSZhGGh74km8XvB07N75
+         AzQQ==
+X-Gm-Message-State: AOAM530/+tjzlngcbqU1+rjsOtaW6w7AD5TLySKn7YVEKyKL2JksNvcN
+        U2OThvUo+ZDNkU5t44XNFmjwHQ==
+X-Google-Smtp-Source: ABdhPJwFH7lYBEvzR88kR4QnSmlWPYxSL+tz5BkwayIdACL+uMf+Xuv3Zqrzz0fKeCUB4oQlNJhqsQ==
+X-Received: by 2002:a17:90a:5aa2:: with SMTP id n31mr12383701pji.33.1597672611292;
+        Mon, 17 Aug 2020 06:56:51 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:ff2c:a74f:a461:daa2? ([2605:e000:100e:8c61:ff2c:a74f:a461:daa2])
+        by smtp.gmail.com with ESMTPSA id y126sm5565062pfy.138.2020.08.17.06.56.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2020 06:56:50 -0700 (PDT)
+Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
+To:     Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
+        stefanr@s5r6.in-berlin.de, airlied@linux.ie, daniel@ffwll.ch,
+        sre@kernel.org, James.Bottomley@HansenPartnership.com,
+        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
+        jassisinghbrar@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
+        ulf.hansson@linaro.org, mporter@kernel.crashing.org,
+        alex.bou9@gmail.com, broonie@kernel.org, martyn@welchs.me.uk,
+        manohar.vanga@gmail.com, mitch@sfgoth.com, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     keescook@chromium.org, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux1394-devel@lists.sourceforge.net,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
+        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
+        Allen Pais <allen.lkml@gmail.com>,
         Romain Perier <romain.perier@gmail.com>
-References: <20200817085120.24894-1-allen.cryptic@gmail.com>
- <20200817085120.24894-4-allen.cryptic@gmail.com>
-From:   Stefan Schmidt <stefan@datenfreihafen.org>
-Message-ID: <5309b90a-1caa-ec22-ddb9-49eca3581957@datenfreihafen.org>
-Date:   Mon, 17 Aug 2020 14:19:39 +0200
+References: <20200817091617.28119-1-allen.cryptic@gmail.com>
+ <20200817091617.28119-2-allen.cryptic@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
+Date:   Mon, 17 Aug 2020 06:56:47 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200817085120.24894-4-allen.cryptic@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200817091617.28119-2-allen.cryptic@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
@@ -51,53 +90,20 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello.
-
-On 17.08.20 10:51, Allen Pais wrote:
+On 8/17/20 2:15 AM, Allen Pais wrote:
 > From: Allen Pais <allen.lkml@gmail.com>
 > 
 > In preparation for unconditionally passing the
 > struct tasklet_struct pointer to all tasklet
 > callbacks, switch to using the new tasklet_setup()
 > and from_tasklet() to pass the tasklet pointer explicitly.
-> 
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> ---
->   net/mac802154/main.c | 8 +++-----
->   1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/net/mac802154/main.c b/net/mac802154/main.c
-> index 06ea0f8bfd5c..520cedc594e1 100644
-> --- a/net/mac802154/main.c
-> +++ b/net/mac802154/main.c
-> @@ -20,9 +20,9 @@
->   #include "ieee802154_i.h"
->   #include "cfg.h"
->   
-> -static void ieee802154_tasklet_handler(unsigned long data)
-> +static void ieee802154_tasklet_handler(struct tasklet_struct *t)
->   {
-> -	struct ieee802154_local *local = (struct ieee802154_local *)data;
-> +	struct ieee802154_local *local = from_tasklet(local, t, tasklet);
->   	struct sk_buff *skb;
->   
->   	while ((skb = skb_dequeue(&local->skb_queue))) {
-> @@ -91,9 +91,7 @@ ieee802154_alloc_hw(size_t priv_data_len, const struct ieee802154_ops *ops)
->   	INIT_LIST_HEAD(&local->interfaces);
->   	mutex_init(&local->iflist_mtx);
->   
-> -	tasklet_init(&local->tasklet,
-> -		     ieee802154_tasklet_handler,
-> -		     (unsigned long)local);
-> +	tasklet_setup(&local->tasklet, ieee802154_tasklet_handler);
->   
->   	skb_queue_head_init(&local->skb_queue);
->   
-> 
 
+Who came up with the idea to add a macro 'from_tasklet' that is just
+container_of? container_of in the code would be _much_ more readable,
+and not leave anyone guessing wtf from_tasklet is doing.
 
-Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
+I'd fix that up now before everything else goes in...
 
-regards
-Stefan Schmidt
+-- 
+Jens Axboe
+
