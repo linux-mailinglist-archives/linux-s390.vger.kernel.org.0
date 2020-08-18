@@ -2,133 +2,161 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40336248191
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Aug 2020 11:13:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F01112481AF
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Aug 2020 11:16:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgHRJN6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 18 Aug 2020 05:13:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51766 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726043AbgHRJN4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:13:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597742034;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yNYUKzkrnV8NK/br9GHQs0zaO6FCvgguT47+sGQtDzA=;
-        b=WmanQjYq6nPOQDCAYkozQodzmdfizrqRxwq+8r5BstJawb3Wdy57aJLQGnGQQE/Ki2DK2Q
-        DBcs9UGBtHYl4MCA2ebrCtnny1LqpRLatP9uvJIWR/qMr3lzjQohdhVRvKv8eE+gInZOiq
-        PWEoCeRC2t+IQAWInxQw5rvoPBs4kc4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-526-yNoXktQCO5-uSXSX3l5G_w-1; Tue, 18 Aug 2020 05:13:52 -0400
-X-MC-Unique: yNoXktQCO5-uSXSX3l5G_w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7C0F81F02B;
-        Tue, 18 Aug 2020 09:13:51 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.40.192.141])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8432A600DA;
-        Tue, 18 Aug 2020 09:13:46 +0000 (UTC)
-Date:   Tue, 18 Aug 2020 11:13:43 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Marc Hartmayer <mhartmay@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests RFC v2 3/4] run_tests/mkstandalone: add arch
- dependent function to `for_each_unittest`
-Message-ID: <20200818091343.vp7eiyrrz34tyiy3@kamzik.brq.redhat.com>
-References: <20200812092705.17774-1-mhartmay@linux.ibm.com>
- <20200812092705.17774-4-mhartmay@linux.ibm.com>
- <20200813083000.e4bscohuhgl3jdv4@kamzik.brq.redhat.com>
- <87h7t51in7.fsf@linux.ibm.com>
- <20200814132957.szwmbw6w26fhkroo@kamzik.brq.redhat.com>
- <87ft8k497k.fsf@linux.ibm.com>
+        id S1726754AbgHRJQh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 Aug 2020 05:16:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgHRJQf (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 18 Aug 2020 05:16:35 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF31C061389;
+        Tue, 18 Aug 2020 02:16:35 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id l204so17340888oib.3;
+        Tue, 18 Aug 2020 02:16:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XZ5gSn6/zxDXq0JbeRnX/CK1QRoCv2dl+iqkeCW1pS8=;
+        b=oAk9KLz4zf32ff8AWoLjc9RpJCU0tp2pqYqSeAskrK0ZuvgefHaPfMSjLFyZsdmGPe
+         te4G+1pjgni1LPzEs8ACMIxIUvuyoHAcuLUM0MtETeGVCh8WdwKiKS7tJajtKiiKuEyx
+         nSe+wjaCOjY/H+YXbeH9/w5O+j8asiWzGL7zUumlH8Xb/MaDp1vsFa9oDik3gP5W3Oy7
+         HRujZb5rqlu9TSahSfcAn2YGlPMcHISk8UGHumVZMc/13KMA90JvU03ivC2rMRSghxXu
+         ie9/eP5XbwHCE84n2rwd4SGlM0keNy0vyT0/ZYaZo7htPQZLV5eKfkX6krYhP46i5znY
+         prXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XZ5gSn6/zxDXq0JbeRnX/CK1QRoCv2dl+iqkeCW1pS8=;
+        b=UTo4EPj5RG9tHDXgrFu1W0vkTVu4J4Vy7O6sYuKU7Xv0hiEedXcmRcoCCLUYubO47u
+         ObYdCcnQ+xCkM1JpdAXIg7+ptd0i9JHADwG39PDI10pEijukFyP8rgpJIoyju6RNd944
+         rsC8te1Vs+1UU5YCqy7gq328Zrh7Txx7j8wLbjcuGcYF6JMUqLxQVn6cwP6j6udOYA0n
+         zlOMf+5MKXYbmK0uxBB3GdIeAvilPt1ltNE2sdyWBk9mxWqBRp308+pCn+lx8/KrXA92
+         ONV3oyargdVK7wINdwkkvzarGE90Zi4PfTDFTBLMfpcfVR6MEQkMlxOTikqYK9NbAGpO
+         5azA==
+X-Gm-Message-State: AOAM532YOKsaFrEUqbuDBbzpC7kSQ3AYra3Hru5xbAsjVKnUvW8h37EQ
+        EcP0O8/YmLsVhKbjLtdjWmjGxNITrSPb2xesxmw=
+X-Google-Smtp-Source: ABdhPJzoZrDFJA/sZSMB5eCKUKMwLIoW6MWAoom1GEFglhx9K88XCdrK0saLkhUm1iVXF7PVM6hI174/8O0mwAcreAA=
+X-Received: by 2002:aca:6c6:: with SMTP id 189mr11628018oig.134.1597742194718;
+ Tue, 18 Aug 2020 02:16:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87ft8k497k.fsf@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200817091617.28119-1-allen.cryptic@gmail.com>
+ <20200817091617.28119-3-allen.cryptic@gmail.com> <20200817121514.GE2865@minyard.net>
+In-Reply-To: <20200817121514.GE2865@minyard.net>
+From:   Allen <allen.lkml@gmail.com>
+Date:   Tue, 18 Aug 2020 14:46:23 +0530
+Message-ID: <CAOMdWSJXCn5KYHen4kynH1A5Oixo+yPzs3oathsfa8gtKZGkjg@mail.gmail.com>
+Subject: Re: [PATCH] char: ipmi: convert tasklets to use new tasklet_setup() API
+To:     minyard@acm.org
+Cc:     Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
+        axboe@kernel.dk, stefanr@s5r6.in-berlin.de, airlied@linux.ie,
+        daniel@ffwll.ch, sre@kernel.org,
+        James.Bottomley@hansenpartnership.com, kys@microsoft.com,
+        deller@gmx.de, dmitry.torokhov@gmail.com, jassisinghbrar@gmail.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        maximlevitsky@gmail.com, oakad@yahoo.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        mporter@kernel.crashing.org, alex.bou9@gmail.com,
+        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
+        mitch@sfgoth.com, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux1394-devel@lists.sourceforge.net,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
+        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
+        Romain Perier <romain.perier@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:03:27AM +0200, Marc Hartmayer wrote:
-> On Fri, Aug 14, 2020 at 03:29 PM +0200, Andrew Jones <drjones@redhat.com> wrote:
-> > On Fri, Aug 14, 2020 at 03:06:36PM +0200, Marc Hartmayer wrote:
-> >> On Thu, Aug 13, 2020 at 10:30 AM +0200, Andrew Jones <drjones@redhat.com> wrote:
-> >> > On Wed, Aug 12, 2020 at 11:27:04AM +0200, Marc Hartmayer wrote:
-> >> >> This allows us, for example, to auto generate a new test case based on
-> >> >> an existing test case.
-> >> >> 
-> >> >> Signed-off-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-> >> >> ---
-> >> >>  run_tests.sh            |  2 +-
-> >> >>  scripts/common.bash     | 13 +++++++++++++
-> >> >>  scripts/mkstandalone.sh |  2 +-
-> >> >>  3 files changed, 15 insertions(+), 2 deletions(-)
-> >> >> 
-> >> >> diff --git a/run_tests.sh b/run_tests.sh
-> >> >> index 24aba9cc3a98..23658392c488 100755
-> >> >> --- a/run_tests.sh
-> >> >> +++ b/run_tests.sh
-> >> >> @@ -160,7 +160,7 @@ trap "wait; exit 130" SIGINT
-> >> >>     # preserve stdout so that process_test_output output can write TAP to it
-> >> >>     exec 3>&1
-> >> >>     test "$tap_output" == "yes" && exec > /dev/null
-> >> >> -   for_each_unittest $config run_task
-> >> >> +   for_each_unittest $config run_task arch_cmd
-> >> >
-> >> > Let's just require that arch cmd hook be specified by the "$arch_cmd"
-> >> > variable. Then we don't need to pass it to for_each_unittest.
-> >> 
-> >> Where is it then specified?
 > >
-> > Just using it that way in the source is enough. We should probably call
-> > it $ARCH_CMD to indicate that it's a special variable. Also, we could
-> > return it from a $(arch_cmd) function, which is how $(migration_cmd) and
-> > $(timeout_cmd) work.
-> 
-> My first approach was different…
-> 
-> First we source the (common) functions that could be overridden by
-> architecture dependent code, and then source the architecture dependent
-> code. But I’m not sure which approach is cleaner - if you prefer your
-> proposed solution with the global variables I can change it.
+> > Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> > Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+>
+> This looks good to me.
+>
+> Reviewed-by: Corey Minyard <cminyard@mvista.com>
+>
+> Are you planning to push this, or do you want me to take it?  If you
+> want me to take it, what is the urgency?
 
-I prefer my proposed solution. It's not necessary to provide and
-source an arch-neutral function that will never do anything. And,
-it will never do anything, because the function is supposed to be
-arch-specific. If an arch doesn't implement the function, then
-we don't need to call anything at all.
+ Thanks. Well, not hurry, as long as it goes into 5.9 with all other
+changes.
 
-Thanks,
-drew
 
-> 
-> Thanks for the feedback!
-> 
-> […snip]
-> 
-> -- 
-> Kind regards / Beste Grüße
->    Marc Hartmayer
-> 
-> IBM Deutschland Research & Development GmbH
-> Vorsitzender des Aufsichtsrats: Gregor Pillen 
-> Geschäftsführung: Dirk Wittkopp
-> Sitz der Gesellschaft: Böblingen
-> Registergericht: Amtsgericht Stuttgart, HRB 243294
-> 
+>
+> -corey
+>
+> > ---
+> >  drivers/char/ipmi/ipmi_msghandler.c | 13 ++++++-------
+> >  1 file changed, 6 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+> > index 737c0b6b24ea..e1814b6a1225 100644
+> > --- a/drivers/char/ipmi/ipmi_msghandler.c
+> > +++ b/drivers/char/ipmi/ipmi_msghandler.c
+> > @@ -39,7 +39,7 @@
+> >
+> >  static struct ipmi_recv_msg *ipmi_alloc_recv_msg(void);
+> >  static int ipmi_init_msghandler(void);
+> > -static void smi_recv_tasklet(unsigned long);
+> > +static void smi_recv_tasklet(struct tasklet_struct *t);
+> >  static void handle_new_recv_msgs(struct ipmi_smi *intf);
+> >  static void need_waiter(struct ipmi_smi *intf);
+> >  static int handle_one_recv_msg(struct ipmi_smi *intf,
+> > @@ -3430,9 +3430,8 @@ int ipmi_add_smi(struct module         *owner,
+> >       intf->curr_seq = 0;
+> >       spin_lock_init(&intf->waiting_rcv_msgs_lock);
+> >       INIT_LIST_HEAD(&intf->waiting_rcv_msgs);
+> > -     tasklet_init(&intf->recv_tasklet,
+> > -                  smi_recv_tasklet,
+> > -                  (unsigned long) intf);
+> > +     tasklet_setup(&intf->recv_tasklet,
+> > +                  smi_recv_tasklet);
+> >       atomic_set(&intf->watchdog_pretimeouts_to_deliver, 0);
+> >       spin_lock_init(&intf->xmit_msgs_lock);
+> >       INIT_LIST_HEAD(&intf->xmit_msgs);
+> > @@ -4467,10 +4466,10 @@ static void handle_new_recv_msgs(struct ipmi_smi *intf)
+> >       }
+> >  }
+> >
+> > -static void smi_recv_tasklet(unsigned long val)
+> > +static void smi_recv_tasklet(struct tasklet_struct *t)
+> >  {
+> >       unsigned long flags = 0; /* keep us warning-free. */
+> > -     struct ipmi_smi *intf = (struct ipmi_smi *) val;
+> > +     struct ipmi_smi *intf = from_tasklet(intf, t, recv_tasklet);
+> >       int run_to_completion = intf->run_to_completion;
+> >       struct ipmi_smi_msg *newmsg = NULL;
+> >
+> > @@ -4542,7 +4541,7 @@ void ipmi_smi_msg_received(struct ipmi_smi *intf,
+> >               spin_unlock_irqrestore(&intf->xmit_msgs_lock, flags);
+> >
+> >       if (run_to_completion)
+> > -             smi_recv_tasklet((unsigned long) intf);
+> > +             smi_recv_tasklet(&intf->recv_tasklet);
+> >       else
+> >               tasklet_schedule(&intf->recv_tasklet);
+> >  }
+> > --
+> > 2.17.1
+> >
 
+
+
+-- 
+       - Allen
