@@ -2,62 +2,41 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51BD024814D
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Aug 2020 11:03:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40336248191
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Aug 2020 11:13:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbgHRJDh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 18 Aug 2020 05:03:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5530 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726043AbgHRJDh (ORCPT
+        id S1726203AbgHRJN6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 Aug 2020 05:13:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51766 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726043AbgHRJN4 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 18 Aug 2020 05:03:37 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07I8Xj1P088845;
-        Tue, 18 Aug 2020 05:03:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : in-reply-to : references : date : message-id : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=jsd16TsVP1LXEEs6ZppSlgaKKt0JaYPxy1LtKDNq3zc=;
- b=ZY0l4bTNw1RnuRp1s+eBnP7DIOTuJw1Hw6/fYIgU4dkd06hvns0Phd72R0bbHnlK2lu0
- h9tz5vppQCnMT4JoskduvAGr0FrtDi+fqNr5o99HjvBY1069DyvmzF/xNRQiAgcWiQvm
- 841+dOCPTr2J4cV40RTtgiJKjy6L3u3OwevECQ2D6kpPYAihje9hVk8QscklLj6cDXhs
- 0fmsi282YqyxYQwqtsk+af1FIRNTslSBQFbEsYx3w6FT2g0nPTkxhpSxnqSCwxzjuK6J
- 9EQtKhHhpcZc9rprpHYfugKM0nwnQcLLnao7vE243yu7dX+erkucuTAy9Nf2TPvLAI5E fw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3304r32k0k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 05:03:36 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07I8kE3a129043;
-        Tue, 18 Aug 2020 05:03:36 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3304r32jxg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 05:03:36 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07I90l1U012126;
-        Tue, 18 Aug 2020 09:03:32 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 3304cc0eey-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Aug 2020 09:03:32 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07I93U4x57016688
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Aug 2020 09:03:30 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E18D84C05A;
-        Tue, 18 Aug 2020 09:03:29 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6615A4C046;
-        Tue, 18 Aug 2020 09:03:29 +0000 (GMT)
-Received: from marcibm (unknown [9.145.52.109])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 18 Aug 2020 09:03:29 +0000 (GMT)
-From:   Marc Hartmayer <mhartmay@linux.ibm.com>
-To:     Andrew Jones <drjones@redhat.com>,
-        Marc Hartmayer <mhartmay@linux.ibm.com>
+        Tue, 18 Aug 2020 05:13:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597742034;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yNYUKzkrnV8NK/br9GHQs0zaO6FCvgguT47+sGQtDzA=;
+        b=WmanQjYq6nPOQDCAYkozQodzmdfizrqRxwq+8r5BstJawb3Wdy57aJLQGnGQQE/Ki2DK2Q
+        DBcs9UGBtHYl4MCA2ebrCtnny1LqpRLatP9uvJIWR/qMr3lzjQohdhVRvKv8eE+gInZOiq
+        PWEoCeRC2t+IQAWInxQw5rvoPBs4kc4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-526-yNoXktQCO5-uSXSX3l5G_w-1; Tue, 18 Aug 2020 05:13:52 -0400
+X-MC-Unique: yNoXktQCO5-uSXSX3l5G_w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7C0F81F02B;
+        Tue, 18 Aug 2020 09:13:51 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.192.141])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8432A600DA;
+        Tue, 18 Aug 2020 09:13:46 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 11:13:43 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Marc Hartmayer <mhartmay@linux.ibm.com>
 Cc:     kvm@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
         David Hildenbrand <david@redhat.com>,
         Janosch Frank <frankja@linux.ibm.com>,
@@ -65,83 +44,91 @@ Cc:     kvm@vger.kernel.org, Thomas Huth <thuth@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests RFC v2 3/4] run_tests/mkstandalone: add arch dependent function to `for_each_unittest`
-In-Reply-To: <20200814132957.szwmbw6w26fhkroo@kamzik.brq.redhat.com>
-References: <20200812092705.17774-1-mhartmay@linux.ibm.com> <20200812092705.17774-4-mhartmay@linux.ibm.com> <20200813083000.e4bscohuhgl3jdv4@kamzik.brq.redhat.com> <87h7t51in7.fsf@linux.ibm.com> <20200814132957.szwmbw6w26fhkroo@kamzik.brq.redhat.com>
-Date:   Tue, 18 Aug 2020 11:03:27 +0200
-Message-ID: <87ft8k497k.fsf@linux.ibm.com>
+Subject: Re: [kvm-unit-tests RFC v2 3/4] run_tests/mkstandalone: add arch
+ dependent function to `for_each_unittest`
+Message-ID: <20200818091343.vp7eiyrrz34tyiy3@kamzik.brq.redhat.com>
+References: <20200812092705.17774-1-mhartmay@linux.ibm.com>
+ <20200812092705.17774-4-mhartmay@linux.ibm.com>
+ <20200813083000.e4bscohuhgl3jdv4@kamzik.brq.redhat.com>
+ <87h7t51in7.fsf@linux.ibm.com>
+ <20200814132957.szwmbw6w26fhkroo@kamzik.brq.redhat.com>
+ <87ft8k497k.fsf@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-18_06:2020-08-18,2020-08-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=2 priorityscore=1501
- malwarescore=0 impostorscore=0 adultscore=0 clxscore=1015 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008180060
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87ft8k497k.fsf@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 03:29 PM +0200, Andrew Jones <drjones@redhat.com> w=
-rote:
-> On Fri, Aug 14, 2020 at 03:06:36PM +0200, Marc Hartmayer wrote:
->> On Thu, Aug 13, 2020 at 10:30 AM +0200, Andrew Jones <drjones@redhat.com=
-> wrote:
->> > On Wed, Aug 12, 2020 at 11:27:04AM +0200, Marc Hartmayer wrote:
->> >> This allows us, for example, to auto generate a new test case based on
->> >> an existing test case.
->> >>=20
->> >> Signed-off-by: Marc Hartmayer <mhartmay@linux.ibm.com>
->> >> ---
->> >>  run_tests.sh            |  2 +-
->> >>  scripts/common.bash     | 13 +++++++++++++
->> >>  scripts/mkstandalone.sh |  2 +-
->> >>  3 files changed, 15 insertions(+), 2 deletions(-)
->> >>=20
->> >> diff --git a/run_tests.sh b/run_tests.sh
->> >> index 24aba9cc3a98..23658392c488 100755
->> >> --- a/run_tests.sh
->> >> +++ b/run_tests.sh
->> >> @@ -160,7 +160,7 @@ trap "wait; exit 130" SIGINT
->> >>     # preserve stdout so that process_test_output output can write TA=
-P to it
->> >>     exec 3>&1
->> >>     test "$tap_output" =3D=3D "yes" && exec > /dev/null
->> >> -   for_each_unittest $config run_task
->> >> +   for_each_unittest $config run_task arch_cmd
->> >
->> > Let's just require that arch cmd hook be specified by the "$arch_cmd"
->> > variable. Then we don't need to pass it to for_each_unittest.
->>=20
->> Where is it then specified?
->
-> Just using it that way in the source is enough. We should probably call
-> it $ARCH_CMD to indicate that it's a special variable. Also, we could
-> return it from a $(arch_cmd) function, which is how $(migration_cmd) and
-> $(timeout_cmd) work.
+On Tue, Aug 18, 2020 at 11:03:27AM +0200, Marc Hartmayer wrote:
+> On Fri, Aug 14, 2020 at 03:29 PM +0200, Andrew Jones <drjones@redhat.com> wrote:
+> > On Fri, Aug 14, 2020 at 03:06:36PM +0200, Marc Hartmayer wrote:
+> >> On Thu, Aug 13, 2020 at 10:30 AM +0200, Andrew Jones <drjones@redhat.com> wrote:
+> >> > On Wed, Aug 12, 2020 at 11:27:04AM +0200, Marc Hartmayer wrote:
+> >> >> This allows us, for example, to auto generate a new test case based on
+> >> >> an existing test case.
+> >> >> 
+> >> >> Signed-off-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+> >> >> ---
+> >> >>  run_tests.sh            |  2 +-
+> >> >>  scripts/common.bash     | 13 +++++++++++++
+> >> >>  scripts/mkstandalone.sh |  2 +-
+> >> >>  3 files changed, 15 insertions(+), 2 deletions(-)
+> >> >> 
+> >> >> diff --git a/run_tests.sh b/run_tests.sh
+> >> >> index 24aba9cc3a98..23658392c488 100755
+> >> >> --- a/run_tests.sh
+> >> >> +++ b/run_tests.sh
+> >> >> @@ -160,7 +160,7 @@ trap "wait; exit 130" SIGINT
+> >> >>     # preserve stdout so that process_test_output output can write TAP to it
+> >> >>     exec 3>&1
+> >> >>     test "$tap_output" == "yes" && exec > /dev/null
+> >> >> -   for_each_unittest $config run_task
+> >> >> +   for_each_unittest $config run_task arch_cmd
+> >> >
+> >> > Let's just require that arch cmd hook be specified by the "$arch_cmd"
+> >> > variable. Then we don't need to pass it to for_each_unittest.
+> >> 
+> >> Where is it then specified?
+> >
+> > Just using it that way in the source is enough. We should probably call
+> > it $ARCH_CMD to indicate that it's a special variable. Also, we could
+> > return it from a $(arch_cmd) function, which is how $(migration_cmd) and
+> > $(timeout_cmd) work.
+> 
+> My first approach was different…
+> 
+> First we source the (common) functions that could be overridden by
+> architecture dependent code, and then source the architecture dependent
+> code. But I’m not sure which approach is cleaner - if you prefer your
+> proposed solution with the global variables I can change it.
 
-My first approach was different=E2=80=A6
+I prefer my proposed solution. It's not necessary to provide and
+source an arch-neutral function that will never do anything. And,
+it will never do anything, because the function is supposed to be
+arch-specific. If an arch doesn't implement the function, then
+we don't need to call anything at all.
 
-First we source the (common) functions that could be overridden by
-architecture dependent code, and then source the architecture dependent
-code. But I=E2=80=99m not sure which approach is cleaner - if you prefer yo=
-ur
-proposed solution with the global variables I can change it.
+Thanks,
+drew
 
-Thanks for the feedback!
+> 
+> Thanks for the feedback!
+> 
+> […snip]
+> 
+> -- 
+> Kind regards / Beste Grüße
+>    Marc Hartmayer
+> 
+> IBM Deutschland Research & Development GmbH
+> Vorsitzender des Aufsichtsrats: Gregor Pillen 
+> Geschäftsführung: Dirk Wittkopp
+> Sitz der Gesellschaft: Böblingen
+> Registergericht: Amtsgericht Stuttgart, HRB 243294
+> 
 
-[=E2=80=A6snip]
-
---=20
-Kind regards / Beste Gr=C3=BC=C3=9Fe
-   Marc Hartmayer
-
-IBM Deutschland Research & Development GmbH
-Vorsitzender des Aufsichtsrats: Gregor Pillen=20
-Gesch=C3=A4ftsf=C3=BChrung: Dirk Wittkopp
-Sitz der Gesellschaft: B=C3=B6blingen
-Registergericht: Amtsgericht Stuttgart, HRB 243294
