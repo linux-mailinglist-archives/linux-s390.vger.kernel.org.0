@@ -2,40 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24022249A8A
-	for <lists+linux-s390@lfdr.de>; Wed, 19 Aug 2020 12:39:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85DB5249AA3
+	for <lists+linux-s390@lfdr.de>; Wed, 19 Aug 2020 12:42:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgHSKjg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 19 Aug 2020 06:39:36 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26106 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727896AbgHSKje (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:39:34 -0400
+        id S1727986AbgHSKmp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 19 Aug 2020 06:42:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39725 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727981AbgHSKmn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 19 Aug 2020 06:42:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597833572;
+        s=mimecast20190719; t=1597833761;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=/z/BW5gb9KyQ8VVul1eAAbi1Z26u5gCTAYYCmNOc5mA=;
-        b=haHT0EVjSRfCY/hxxAYcGKjociD82em9stiz3pd7WxwSu5XLCnmXpZRZ1xhqbhwHS7z9uX
-        2O6dV4Jowh6c3AaRAyk96eSEy2ulA6a1iT9+g4Q36Mwd8y++FP4wO9V8UCWs6IzPlJY7IB
-        G9SIM8gDrImn85XXCtIKAIoXOmRZgdk=
+        bh=nZW4s9FeqLjI1KM/USeUAWtHEwJS0SglT7K1qDAzNnI=;
+        b=Tpe7oxVs3VOGabu+9O8hXfXefNVdOJO+y2pl9CGATz9x6YyZIrTZTNjbFPveQTyqEnJDPF
+        bIZNoeeAsiC+XxG84Pgn2evwdceVcqoLb25abIahhxHkShmPfcnnfmifUuQZ534LR0FIb7
+        1Qlg9cu5C0XxoUmwXURv3mda08o6dts=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-P72P3bpNOsyMCFhl7v5iTw-1; Wed, 19 Aug 2020 06:39:30 -0400
-X-MC-Unique: P72P3bpNOsyMCFhl7v5iTw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-307-UJYq841_P2SVqk9HkZQF6Q-1; Wed, 19 Aug 2020 06:42:39 -0400
+X-MC-Unique: UJYq841_P2SVqk9HkZQF6Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B621A1008549;
-        Wed, 19 Aug 2020 10:39:29 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C248801AAF;
+        Wed, 19 Aug 2020 10:42:38 +0000 (UTC)
 Received: from [10.36.114.11] (ovpn-114-11.ams2.redhat.com [10.36.114.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DD6505DA30;
-        Wed, 19 Aug 2020 10:39:27 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH 3/4] run_tests/mkstandalone: add arch_cmd
- hook
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 38803277DD;
+        Wed, 19 Aug 2020 10:42:36 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH 4/4] s390x: add Protected VM support
 To:     Marc Hartmayer <mhartmay@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     Thomas Huth <thuth@redhat.com>,
         Janosch Frank <frankja@linux.ibm.com>,
@@ -45,7 +43,7 @@ Cc:     Thomas Huth <thuth@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         linux-s390@vger.kernel.org
 References: <20200818130424.20522-1-mhartmay@linux.ibm.com>
- <20200818130424.20522-4-mhartmay@linux.ibm.com>
+ <20200818130424.20522-5-mhartmay@linux.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -92,67 +90,191 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat GmbH
-Message-ID: <61b2aa71-6b2d-acbf-204d-e3d9909fe30b@redhat.com>
-Date:   Wed, 19 Aug 2020 12:39:27 +0200
+Message-ID: <6bd69c28-12df-f300-9cb2-9da1d80672f1@redhat.com>
+Date:   Wed, 19 Aug 2020 12:42:35 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200818130424.20522-4-mhartmay@linux.ibm.com>
+In-Reply-To: <20200818130424.20522-5-mhartmay@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 18.08.20 15:04, Marc Hartmayer wrote:
-> This allows us, for example, to auto generate a new test case based on
-> an existing test case.
-
-An example would have been nice :)
-
+> Add support for Protected Virtual Machine (PVM) tests. For starting a
+> PVM guest we must be able to generate a PVM image by using the
+> `genprotimg` tool from the s390-tools collection. This requires the
+> ability to pass a machine-specific host-key document, so the option
+> `--host-key-document` is added to the configure script.
 > 
 > Signed-off-by: Marc Hartmayer <mhartmay@linux.ibm.com>
 > ---
->  scripts/common.bash | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+>  configure               |  9 +++++++++
+>  s390x/Makefile          | 17 +++++++++++++++--
+>  s390x/selftest.parmfile |  1 +
+>  s390x/unittests.cfg     |  1 +
+>  scripts/s390x/func.bash | 35 +++++++++++++++++++++++++++++++++++
+>  5 files changed, 61 insertions(+), 2 deletions(-)
+>  create mode 100644 s390x/selftest.parmfile
+>  create mode 100644 scripts/s390x/func.bash
 > 
-> diff --git a/scripts/common.bash b/scripts/common.bash
-> index c7acdf14a835..a6044b7c6c35 100644
-> --- a/scripts/common.bash
-> +++ b/scripts/common.bash
-> @@ -19,7 +19,7 @@ function for_each_unittest()
->  	while read -r -u $fd line; do
->  		if [[ "$line" =~ ^\[(.*)\]$ ]]; then
->  			if [ -n "${testname}" ]; then
-> -				"$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
-> +				$(arch_cmd) "$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
->  			fi
->  			testname=${BASH_REMATCH[1]}
->  			smp=1
-> @@ -49,11 +49,16 @@ function for_each_unittest()
->  		fi
->  	done
->  	if [ -n "${testname}" ]; then
-> -		"$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
-> +		$(arch_cmd) "$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
->  	fi
->  	exec {fd}<&-
->  }
+> diff --git a/configure b/configure
+> index f9d030fd2f03..0e64af58b3c1 100755
+> --- a/configure
+> +++ b/configure
+> @@ -18,6 +18,7 @@ u32_long=
+>  vmm="qemu"
+>  errata_force=0
+>  erratatxt="$srcdir/errata.txt"
+> +host_key_document=
 >  
-> +function arch_cmd()
-> +{
-> +	[ "${ARCH_CMD}" ] && echo "${ARCH_CMD}"
-> +}
+>  usage() {
+>      cat <<-EOF
+> @@ -40,6 +41,9 @@ usage() {
+>  	                           no environ is provided by the user (enabled by default)
+>  	    --erratatxt=FILE       specify a file to use instead of errata.txt. Use
+>  	                           '--erratatxt=' to ensure no file is used.
+> +	    --host-key-document=HOST_KEY_DOCUMENT
+> +	                           Specify the machine-specific host-key document for creating
+> +	                           a PVM image with 'genprotimg' (s390x only)
+>  EOF
+>      exit 1
+>  }
+> @@ -92,6 +96,9 @@ while [[ "$1" = -* ]]; do
+>  	    erratatxt=
+>  	    [ "$arg" ] && erratatxt=$(eval realpath "$arg")
+>  	    ;;
+> +	--host-key-document)
+> +	    host_key_document="$arg"
+> +	    ;;
+>  	--help)
+>  	    usage
+>  	    ;;
+> @@ -205,6 +212,8 @@ PRETTY_PRINT_STACKS=$pretty_print_stacks
+>  ENVIRON_DEFAULT=$environ_default
+>  ERRATATXT=$erratatxt
+>  U32_LONG_FMT=$u32_long
+> +GENPROTIMG=${GENPROTIMG-genprotimg}
+> +HOST_KEY_DOCUMENT=$host_key_document
+>  EOF
+>  
+>  cat <<EOF > lib/config.h
+> diff --git a/s390x/Makefile b/s390x/Makefile
+> index 0f54bf43bfb7..cd4e270952ec 100644
+> --- a/s390x/Makefile
+> +++ b/s390x/Makefile
+> @@ -18,12 +18,19 @@ tests += $(TEST_DIR)/skrf.elf
+>  tests += $(TEST_DIR)/smp.elf
+>  tests += $(TEST_DIR)/sclp.elf
+>  tests += $(TEST_DIR)/css.elf
+> -tests_binary = $(patsubst %.elf,%.bin,$(tests))
+>  
+> -all: directories test_cases test_cases_binary
+> +tests_binary = $(patsubst %.elf,%.bin,$(tests))
+> +ifneq ($(HOST_KEY_DOCUMENT),)
+> +tests_pv_binary = $(patsubst %.bin,%.pv.bin,$(tests_binary))
+> +else
+> +tests_pv_binary =
+> +endif
 > +
->  # The current file has to be the only file sourcing the arch helper
->  # file
->  ARCH_FUNC=scripts/${ARCH}/func.bash
+> +all: directories test_cases test_cases_binary test_cases_pv
+>  
+>  test_cases: $(tests)
+>  test_cases_binary: $(tests_binary)
+> +test_cases_pv: $(tests_pv_binary)
+>  
+>  CFLAGS += -std=gnu99
+>  CFLAGS += -ffreestanding
+> @@ -72,6 +79,12 @@ FLATLIBS = $(libcflat)
+>  %.bin: %.elf
+>  	$(OBJCOPY) -O binary  $< $@
+>  
+> +%selftest.pv.bin: %selftest.bin $(HOST_KEY_DOCUMENT) $(patsubst %.pv.bin,%.parmfile,$@)
+> +	$(GENPROTIMG) --host-key-document $(HOST_KEY_DOCUMENT) --parmfile $(patsubst %.pv.bin,%.parmfile,$@) --no-verify --image $< -o $@
+> +
+> +%.pv.bin: %.bin $(HOST_KEY_DOCUMENT)
+> +	$(GENPROTIMG) --host-key-document $(HOST_KEY_DOCUMENT) --no-verify --image $< -o $@
+> +
+>  arch_clean: asm_offsets_clean
+>  	$(RM) $(TEST_DIR)/*.{o,elf,bin} $(TEST_DIR)/.*.d lib/s390x/.*.d
+>  
+> diff --git a/s390x/selftest.parmfile b/s390x/selftest.parmfile
+> new file mode 100644
+> index 000000000000..5613931aa5c6
+> --- /dev/null
+> +++ b/s390x/selftest.parmfile
+> @@ -0,0 +1 @@
+> +test 123
+> \ No newline at end of file
+> diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
+> index 0f156afbe741..12f6fb613995 100644
+> --- a/s390x/unittests.cfg
+> +++ b/s390x/unittests.cfg
+> @@ -21,6 +21,7 @@
+>  [selftest-setup]
+>  file = selftest.elf
+>  groups = selftest
+> +# please keep the kernel cmdline in sync with $(TEST_DIR)/selftest.parmfile
+>  extra_params = -append 'test 123'
+
+This is ugly, can't we somehow create the parmfiles dynamically?
+
+>  
+>  [intercept]
+> diff --git a/scripts/s390x/func.bash b/scripts/s390x/func.bash
+> new file mode 100644
+> index 000000000000..b2d59d0d6f25
+> --- /dev/null
+> +++ b/scripts/s390x/func.bash
+> @@ -0,0 +1,35 @@
+> +# The file scripts/common.bash has to be the only file sourcing this
+> +# arch helper file
+> +source config.mak
+> +
+> +ARCH_CMD=arch_cmd_s390x
+> +
+> +function arch_cmd_s390x()
+> +{
+> +	local cmd=$1
+> +	local testname=$2
+> +	local groups=$3
+> +	local smp=$4
+> +	local kernel=$5
+> +	local opts=$6
+> +	local arch=$7
+> +	local check=$8
+> +	local accel=$9
+> +	local timeout=${10}
+> +
+> +	# run the normal test case
+> +	"$cmd" "${testname}" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+> +
+
+Why ${testname} instead of $testname ?
+
+> +	# run PV test case
+> +	kernel=${kernel%.elf}.pv.bin
+> +	if [ ! -f "${kernel}" ]; then
+> +		if [ -z "${HOST_KEY_DOCUMENT}" ]; then
+> +			print_result 'SKIP' $testname '(no host-key document specified)'
+> +			return 2
+> +		fi
+> +
+> +		print_result 'SKIP' $testname '(PVM image was not created)'
+> +		return 2
+> +	fi
+> +	"$cmd" "${testname}_PV" "$groups pv" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+
+dito
+
+> +}
 > 
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Thanks,
