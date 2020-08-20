@@ -2,137 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F32CF24A8A7
-	for <lists+linux-s390@lfdr.de>; Wed, 19 Aug 2020 23:39:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 753D724C0AA
+	for <lists+linux-s390@lfdr.de>; Thu, 20 Aug 2020 16:31:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgHSVjj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 19 Aug 2020 17:39:39 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:47048 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726482AbgHSVji (ORCPT
+        id S1728372AbgHTOb1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 20 Aug 2020 10:31:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4908 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727877AbgHTObW (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:39:38 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 770738EE1F3;
-        Wed, 19 Aug 2020 14:39:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597873176;
-        bh=P5Nf0m7rIb0VsmSGOAvsuubsuKdLazFJ3PWgYJpOQYo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QZWzNY/RNv5GTOLC344QkDqvWPLVlJoIZZa/1SvyuRWg2n4Pm6sT1giNF3hS4dmal
-         2AgGeohtLxDuIx9MBYzKgKxS5vVGSeJVIhAssuqGCPXbCp5oJD0WlnV+VnG46ikJ5j
-         S3mk3MHG2hrcnsbyoMzE7CI3TS+/7QS3hnb2Remw=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bHKZiEX-QbYl; Wed, 19 Aug 2020 14:39:36 -0700 (PDT)
-Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 07F3F8EE0E9;
-        Wed, 19 Aug 2020 14:39:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1597873176;
-        bh=P5Nf0m7rIb0VsmSGOAvsuubsuKdLazFJ3PWgYJpOQYo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QZWzNY/RNv5GTOLC344QkDqvWPLVlJoIZZa/1SvyuRWg2n4Pm6sT1giNF3hS4dmal
-         2AgGeohtLxDuIx9MBYzKgKxS5vVGSeJVIhAssuqGCPXbCp5oJD0WlnV+VnG46ikJ5j
-         S3mk3MHG2hrcnsbyoMzE7CI3TS+/7QS3hnb2Remw=
-Message-ID: <1597873172.4030.2.camel@HansenPartnership.com>
-Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Allen <allen.lkml@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Kees Cook <keescook@chromium.org>,
-        Allen Pais <allen.cryptic@gmail.com>, jdike@addtoit.com,
-        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
-        stefanr@s5r6.in-berlin.de, airlied@linux.ie,
-        Daniel Vetter <daniel@ffwll.ch>, sre@kernel.org,
-        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
-        jassisinghbrar@gmail.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        mporter@kernel.crashing.org, alex.bou9@gmail.com,
-        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
-        mitch@sfgoth.com, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux1394-devel@lists.sourceforge.net,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
-        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
-        Romain Perier <romain.perier@gmail.com>
-Date:   Wed, 19 Aug 2020 14:39:32 -0700
-In-Reply-To: <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
-References: <20200817091617.28119-1-allen.cryptic@gmail.com>
-         <20200817091617.28119-2-allen.cryptic@gmail.com>
-         <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
-         <202008171228.29E6B3BB@keescook>
-         <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
-         <202008171246.80287CDCA@keescook>
-         <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
-         <1597780833.3978.3.camel@HansenPartnership.com>
-         <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
-         <1597849185.3875.7.camel@HansenPartnership.com>
-         <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 20 Aug 2020 10:31:22 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KE36em065123;
+        Thu, 20 Aug 2020 10:31:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=MfrU6TL1rYD19LW+lxW+g78RJigO2sbUjyVpLvd9GEM=;
+ b=YsB6fr96v40rvQQ2Ou/DMfBKiM4w5f+eASEfm7pjqGP0AJLLefx8BrEK/TMz9pwk8vQh
+ LgV5tVpE1R9eqvmeJ/Ee3zaDpQITZ5B2bsCI0SdxHVMFM51h9l/DT1XlgpRVElFxNTWC
+ 3C20TsZwTa2BnrPdNvMALdew4tiKK849ezFCSiz66aHRqzdQwnxuhcYszyTxCMHeNy6j
+ 7VWBeb4fNomoRKqxeR6GueylYK/ZZlaB7PMgKZVBe2WJWzBxt99USITl4DRHVITY+APW
+ mB0KOg5KGncJm4s9tou4KX8sRqIip8Eg14aHV7xpoxvffdoJ6gh72Zf7GPSP7OFAnhRQ XA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3314mwqn9j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 10:31:17 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07KE40uQ069252;
+        Thu, 20 Aug 2020 10:31:17 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3314mwqn88-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 10:31:17 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KELQ1T028661;
+        Thu, 20 Aug 2020 14:31:15 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 3304um37xg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 14:31:15 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KEVAgv20971834
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Aug 2020 14:31:10 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E241E52050;
+        Thu, 20 Aug 2020 14:31:09 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 8F82652054;
+        Thu, 20 Aug 2020 14:31:09 +0000 (GMT)
+From:   Ursula Braun <ubraun@linux.ibm.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, kgraul@linux.ibm.com,
+        raspl@linux.ibm.com, yepeilin.cs@gmail.com, ubraun@linux.ibm.com
+Subject: [PATCH net 1/1] net/smc: Prevent kernel-infoleak in __smc_diag_dump()
+Date:   Thu, 20 Aug 2020 16:30:52 +0200
+Message-Id: <20200820143052.99114-1-ubraun@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 adultscore=0 impostorscore=0 phishscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 suspectscore=1 mlxlogscore=999 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008200117
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 2020-08-19 at 21:54 +0530, Allen wrote:
-> > [...]
-> > > > Since both threads seem to have petered out, let me suggest in
-> > > > kernel.h:
-> > > > 
-> > > > #define cast_out(ptr, container, member) \
-> > > >     container_of(ptr, typeof(*container), member)
-> > > > 
-> > > > It does what you want, the argument order is the same as
-> > > > container_of with the only difference being you name the
-> > > > containing structure instead of having to specify its type.
-> > > 
-> > > Not to incessantly bike shed on the naming, but I don't like
-> > > cast_out, it's not very descriptive. And it has connotations of
-> > > getting rid of something, which isn't really true.
-> > 
-> > Um, I thought it was exactly descriptive: you're casting to the
-> > outer container.  I thought about following the C++ dynamic casting
-> > style, so out_cast(), but that seemed a bit pejorative.  What about
-> > outer_cast()?
-> > 
-> > > FWIW, I like the from_ part of the original naming, as it has
-> > > some clues as to what is being done here. Why not just
-> > > from_container()? That should immediately tell people what it
-> > > does without having to look up the implementation, even before
-> > > this becomes a part of the accepted coding norm.
-> > 
-> > I'm not opposed to container_from() but it seems a little less
-> > descriptive than outer_cast() but I don't really care.  I always
-> > have to look up container_of() when I'm using it so this would just
-> > be another macro of that type ...
-> > 
-> 
->  So far we have a few which have been suggested as replacement
-> for from_tasklet()
-> 
-> - out_cast() or outer_cast()
-> - from_member().
-> - container_from() or from_container()
-> 
-> from_container() sounds fine, would trimming it a bit work? like
-> from_cont().
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-I'm fine with container_from().  It's the same form as container_of()
-and I think we need urgent agreement to not stall everything else so
-the most innocuous name is likely to get the widest acceptance.
+__smc_diag_dump() is potentially copying uninitialized kernel stack memory
+into socket buffers, since the compiler may leave a 4-byte hole near the
+beginning of `struct smcd_diag_dmbinfo`. Fix it by initializing `dinfo`
+with memset().
 
-James
+Cc: stable@vger.kernel.org
+Fixes: 4b1b7d3b30a6 ("net/smc: add SMC-D diag support")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+---
+ net/smc/smc_diag.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
+index e1f64f4ba236..da9ba6d1679b 100644
+--- a/net/smc/smc_diag.c
++++ b/net/smc/smc_diag.c
+@@ -170,13 +170,15 @@ static int __smc_diag_dump(struct sock *sk, struct sk_buff *skb,
+ 	    (req->diag_ext & (1 << (SMC_DIAG_DMBINFO - 1))) &&
+ 	    !list_empty(&smc->conn.lgr->list)) {
+ 		struct smc_connection *conn = &smc->conn;
+-		struct smcd_diag_dmbinfo dinfo = {
+-			.linkid = *((u32 *)conn->lgr->id),
+-			.peer_gid = conn->lgr->peer_gid,
+-			.my_gid = conn->lgr->smcd->local_gid,
+-			.token = conn->rmb_desc->token,
+-			.peer_token = conn->peer_token
+-		};
++		struct smcd_diag_dmbinfo dinfo;
++
++		memset(&dinfo, 0, sizeof(dinfo));
++
++		dinfo.linkid = *((u32 *)conn->lgr->id);
++		dinfo.peer_gid = conn->lgr->peer_gid;
++		dinfo.my_gid = conn->lgr->smcd->local_gid;
++		dinfo.token = conn->rmb_desc->token;
++		dinfo.peer_token = conn->peer_token;
+ 
+ 		if (nla_put(skb, SMC_DIAG_DMBINFO, sizeof(dinfo), &dinfo) < 0)
+ 			goto errout;
+-- 
+2.17.1
 
