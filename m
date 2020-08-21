@@ -2,59 +2,59 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EF0A24E165
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Aug 2020 21:56:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33FDB24E1A0
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Aug 2020 22:00:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgHUT4n (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 21 Aug 2020 15:56:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50214 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726799AbgHUT4k (ORCPT
+        id S1727856AbgHUUAA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Aug 2020 16:00:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6268 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727018AbgHUT4m (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 21 Aug 2020 15:56:42 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LJXQkd065199;
         Fri, 21 Aug 2020 15:56:40 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LJX7uo154579;
-        Fri, 21 Aug 2020 15:56:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=YeMv20HgYFdDqTqlofBZiWTx2uk6+q+V/Ippzz8KwoI=;
- b=NkVAiYWFTQEwJTPwikeHACRWRG0dhEZzraqEJpbp+Ue+QYExT2fbpnKleqB3IWkDvu8V
- XW6P0ubUINDNO40jOOD5kzD6nvd5NhceOAGRnlxzwC4LiJikHo/fCFOmoxFtyK08uvG/
- NBKEw4BVUERCAIyOKOEvJRoZkfa11zfn64SKHEUHd7FqqrRtgxXLdPe6aqoYC0CKx2+/
- isjHNInr+i0QGV/2xWQx0OqSYXdiupWet+EoYOmU3N+ggpGzaBW2rCn1QRJnQ0qEEw8K
- Ke1kJiB3k52DUI3l+dbJOYJ8uuvVXWhpKakbU8TrueG0clUBXLMMcwbiOqzL/YvuZaAr tA== 
+ bh=o9D+ibd9iW4J8eEFqd99w505aNq/EjzI4JCfJIlJN/E=;
+ b=knWEIyf7gKKd6Lb4d8xZXxV4OSKRSaFcIp05jvClqw6gBRyewA5+NLr+AN2i7sdyUh+I
+ L6ytYOPLtYOGSZQ+5n9HCXnt47mNFaMO7mszGQBwCv5L99oVAS//xU3MpOXurtSD05W9
+ 7FqSdLNhMHzwLLg2NzdyOQJtjeyB0DNN+g+O66WD11AOSdIzPfA7XCK1yUDVF3ppYrty
+ SzyW4TGJ0Ikutpby5cCzA5YU4Ly2nkguPnLN5y++QoFX0orz1rqlMO1fjulhZjO8AWAr
+ XYJjOKoDvEj6WMBI5i1uoxngmzTD9iGa3z1Nv763qpAVxVaynxxZayi2qjlVHKZtQ29q nQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3328e9n41s-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3322nnuda4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 15:56:40 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LJXZw1065636;
+        Fri, 21 Aug 2020 15:56:39 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3322nnud9v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Fri, 21 Aug 2020 15:56:39 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LJeYm3176961;
-        Fri, 21 Aug 2020 15:56:38 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3328e9n414-1
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LJsqXS013481;
+        Fri, 21 Aug 2020 19:56:39 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma01wdc.us.ibm.com with ESMTP id 3304tm6m8d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 15:56:38 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LJsPiw005410;
-        Fri, 21 Aug 2020 19:56:37 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma03wdc.us.ibm.com with ESMTP id 3304ceprxq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 19:56:37 +0000
+        Fri, 21 Aug 2020 19:56:39 +0000
 Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LJuVlF18416330
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LJuarO41484708
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 19:56:31 GMT
+        Fri, 21 Aug 2020 19:56:36 GMT
 Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5AC877805F;
+        by IMSVA (Postfix) with ESMTP id 1092A78063;
+        Fri, 21 Aug 2020 19:56:36 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8ABB47805F;
         Fri, 21 Aug 2020 19:56:34 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E419D7805C;
-        Fri, 21 Aug 2020 19:56:32 +0000 (GMT)
 Received: from cpe-172-100-175-116.stny.res.rr.com.com (unknown [9.85.191.76])
         by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Aug 2020 19:56:32 +0000 (GMT)
+        Fri, 21 Aug 2020 19:56:34 +0000 (GMT)
 From:   Tony Krowiak <akrowiak@linux.ibm.com>
 To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -64,9 +64,9 @@ Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
         fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
         imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
         Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v10 06/16] s390/vfio-ap: introduce shadow APCB
-Date:   Fri, 21 Aug 2020 15:56:06 -0400
-Message-Id: <20200821195616.13554-7-akrowiak@linux.ibm.com>
+Subject: [PATCH v10 07/16] s390/vfio-ap: sysfs attribute to display the guest's matrix
+Date:   Fri, 21 Aug 2020 15:56:07 -0400
+Message-Id: <20200821195616.13554-8-akrowiak@linux.ibm.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200821195616.13554-1-akrowiak@linux.ibm.com>
 References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
@@ -74,114 +74,109 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_09:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- malwarescore=0 mlxscore=0 lowpriorityscore=0 suspectscore=3 adultscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 clxscore=1015 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210183
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=3
+ lowpriorityscore=0 impostorscore=0 phishscore=0 priorityscore=1501
+ clxscore=1015 spamscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0
+ mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210183
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The APCB is a field within the CRYCB that provides the AP configuration
-to a KVM guest. Let's introduce a shadow copy of the KVM guest's APCB and
-maintain it for the lifespan of the guest.
+The matrix of adapters and domains configured in a guest's CRYCB may
+differ from the matrix of adapters and domains assigned to the matrix mdev,
+so this patch introduces a sysfs attribute to display the matrix of a guest
+using the matrix mdev. For a matrix mdev denoted by $uuid, the crycb for a
+guest using the matrix mdev can be displayed as follows:
+
+   cat /sys/devices/vfio_ap/matrix/$uuid/guest_matrix
+
+If a guest is not using the matrix mdev at the time the crycb is displayed,
+an error (ENODEV) will be returned.
 
 Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 ---
- drivers/s390/crypto/vfio_ap_ops.c     | 32 ++++++++++++++++++++++-----
- drivers/s390/crypto/vfio_ap_private.h |  2 ++
- 2 files changed, 29 insertions(+), 5 deletions(-)
+ drivers/s390/crypto/vfio_ap_ops.c | 58 +++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
 diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index fc1aa6f947eb..efb229033f9e 100644
+index efb229033f9e..30bf23734af6 100644
 --- a/drivers/s390/crypto/vfio_ap_ops.c
 +++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -305,14 +305,35 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
- 	return 0;
+@@ -1119,6 +1119,63 @@ static ssize_t matrix_show(struct device *dev, struct device_attribute *attr,
  }
+ static DEVICE_ATTR_RO(matrix);
  
-+static void vfio_ap_matrix_clear_masks(struct ap_matrix *matrix)
++static ssize_t guest_matrix_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
 +{
-+	bitmap_clear(matrix->apm, 0, AP_DEVICES);
-+	bitmap_clear(matrix->aqm, 0, AP_DOMAINS);
-+	bitmap_clear(matrix->adm, 0, AP_DOMAINS);
-+}
++	struct mdev_device *mdev = mdev_from_dev(dev);
++	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
++	char *bufpos = buf;
++	unsigned long apid;
++	unsigned long apqi;
++	unsigned long apid1;
++	unsigned long apqi1;
++	unsigned long napm_bits = matrix_mdev->shadow_apcb.apm_max + 1;
++	unsigned long naqm_bits = matrix_mdev->shadow_apcb.aqm_max + 1;
++	int nchars = 0;
++	int n;
 +
- static void vfio_ap_matrix_init(struct ap_config_info *info,
- 				struct ap_matrix *matrix)
- {
-+	vfio_ap_matrix_clear_masks(matrix);
- 	matrix->apm_max = info->apxa ? info->Na : 63;
- 	matrix->aqm_max = info->apxa ? info->Nd : 15;
- 	matrix->adm_max = info->apxa ? info->Nd : 15;
- }
- 
-+static bool vfio_ap_mdev_has_crycb(struct ap_matrix_mdev *matrix_mdev)
-+{
-+	return (matrix_mdev->kvm && matrix_mdev->kvm->arch.crypto.crycbd);
-+}
-+
-+static void vfio_ap_mdev_commit_crycb(struct ap_matrix_mdev *matrix_mdev)
-+{
-+	kvm_arch_crypto_set_masks(matrix_mdev->kvm,
-+				  matrix_mdev->shadow_apcb.apm,
-+				  matrix_mdev->shadow_apcb.aqm,
-+				  matrix_mdev->shadow_apcb.adm);
-+}
-+
- static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
- {
- 	struct ap_matrix_mdev *matrix_mdev;
-@@ -1202,13 +1223,12 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
- 	if (ret)
- 		return NOTIFY_DONE;
- 
--	/* If there is no CRYCB pointer, then we can't copy the masks */
--	if (!matrix_mdev->kvm->arch.crypto.crycbd)
 +	if (!vfio_ap_mdev_has_crycb(matrix_mdev))
- 		return NOTIFY_DONE;
- 
--	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
--				  matrix_mdev->matrix.aqm,
--				  matrix_mdev->matrix.adm);
-+	memcpy(&matrix_mdev->shadow_apcb, &matrix_mdev->matrix,
-+	       sizeof(matrix_mdev->shadow_apcb));
-+	vfio_ap_mdev_commit_crycb(matrix_mdev);
- 
- 	return NOTIFY_OK;
- }
-@@ -1323,6 +1343,8 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
- 		kvm_put_kvm(matrix_mdev->kvm);
- 		matrix_mdev->kvm = NULL;
- 	}
++		return -ENODEV;
 +
-+	vfio_ap_matrix_clear_masks(&matrix_mdev->shadow_apcb);
- 	mutex_unlock(&matrix_dev->lock);
++	apid1 = find_first_bit_inv(matrix_mdev->shadow_apcb.apm, napm_bits);
++	apqi1 = find_first_bit_inv(matrix_mdev->shadow_apcb.aqm, naqm_bits);
++
++	mutex_lock(&matrix_dev->lock);
++
++	if ((apid1 < napm_bits) && (apqi1 < naqm_bits)) {
++		for_each_set_bit_inv(apid, matrix_mdev->shadow_apcb.apm,
++				     napm_bits) {
++			for_each_set_bit_inv(apqi,
++					     matrix_mdev->shadow_apcb.aqm,
++					     naqm_bits) {
++				n = sprintf(bufpos, "%02lx.%04lx\n", apid,
++					    apqi);
++				bufpos += n;
++				nchars += n;
++			}
++		}
++	} else if (apid1 < napm_bits) {
++		for_each_set_bit_inv(apid, matrix_mdev->shadow_apcb.apm,
++				     napm_bits) {
++			n = sprintf(bufpos, "%02lx.\n", apid);
++			bufpos += n;
++			nchars += n;
++		}
++	} else if (apqi1 < naqm_bits) {
++		for_each_set_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm,
++				     naqm_bits) {
++			n = sprintf(bufpos, ".%04lx\n", apqi);
++			bufpos += n;
++			nchars += n;
++		}
++	}
++
++	mutex_unlock(&matrix_dev->lock);
++
++	return nchars;
++}
++static DEVICE_ATTR_RO(guest_matrix);
++
+ static struct attribute *vfio_ap_mdev_attrs[] = {
+ 	&dev_attr_assign_adapter.attr,
+ 	&dev_attr_unassign_adapter.attr,
+@@ -1128,6 +1185,7 @@ static struct attribute *vfio_ap_mdev_attrs[] = {
+ 	&dev_attr_unassign_control_domain.attr,
+ 	&dev_attr_control_domains.attr,
+ 	&dev_attr_matrix.attr,
++	&dev_attr_guest_matrix.attr,
+ 	NULL,
+ };
  
- 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
-diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index 0c796ef11426..055bce6d45db 100644
---- a/drivers/s390/crypto/vfio_ap_private.h
-+++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -75,6 +75,7 @@ struct ap_matrix {
-  * @list:	allows the ap_matrix_mdev struct to be added to a list
-  * @matrix:	the adapters, usage domains and control domains assigned to the
-  *		mediated matrix device.
-+ * @shadow_apcb:    the shadow copy of the APCB field of the KVM guest's CRYCB
-  * @group_notifier: notifier block used for specifying callback function for
-  *		    handling the VFIO_GROUP_NOTIFY_SET_KVM event
-  * @kvm:	the struct holding guest's state
-@@ -82,6 +83,7 @@ struct ap_matrix {
- struct ap_matrix_mdev {
- 	struct list_head node;
- 	struct ap_matrix matrix;
-+	struct ap_matrix shadow_apcb;
- 	struct notifier_block group_notifier;
- 	struct notifier_block iommu_notifier;
- 	struct kvm *kvm;
 -- 
 2.21.1
 
