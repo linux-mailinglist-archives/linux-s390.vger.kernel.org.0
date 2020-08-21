@@ -2,102 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0876F24C870
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Aug 2020 01:20:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 371D624D0DB
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Aug 2020 10:52:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728678AbgHTXUt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 20 Aug 2020 19:20:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728600AbgHTXUr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 20 Aug 2020 19:20:47 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62031C061385;
-        Thu, 20 Aug 2020 16:20:47 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id g15so26313plj.6;
-        Thu, 20 Aug 2020 16:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=UkH8Mq/WpiesfkXrapLTRLCROpdsRyoJty+98OOSpss=;
-        b=hoOgqZhGHiVLpZeCypo4yuc1a8zxVmMSd4yoH7tyVhF3yOb7NtMj1zSNv5XfOuI8DT
-         AlWGPfC0Tt9WPeOHXgkAJrJ/ujCTJum25ZaPdnCViQhCDmL0ejq62ZpTP2MGf4xcxoG8
-         //dWA4yoVM2FcKhy57jS98tWjNVY/WXBREVn+qyRrzr0dNU9BFecxR1XvgAZn8URED5w
-         +wPjTvUxEMZMZxwJorp0FAVs6Dzx3oks+bUOWlOL32lAOOxtFLtLFbeFQ7+BB6ZrSXwE
-         1dNhIXaStLdULE8UgwJGkL+NBxfVbloj5Xsb4QHOV2z6TzlIER2wWcUh9flW3IGobrpm
-         XDxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UkH8Mq/WpiesfkXrapLTRLCROpdsRyoJty+98OOSpss=;
-        b=VfzOpAUGCub3lAiIZ5YKZdKAWNV05Y2N8OuKnUgfP4btaJT8iEFY3dt8shIlSz03ft
-         R1fCGpsckPZ/UwyPl1gzsEWCoafKa3uJCBaMQh0/5BOZNRn1WyNiHkBgdByRYImAJvix
-         G9WI5evU/FVLx/FsECZz77aS+pXka9SwqdU0yqiHHQv4mwsNwjYHA3si5GOSFKobhXvd
-         H3AG5CDCAXJJeVufKNgJ64W52HxzznVSVQraC+6+hb2Xx+mL3aYkbNaIfoumWjQHlAax
-         zRO1LXG/hM8Uw/VSdha2itdajHCqNyDWZyHlMqmtITk6vHPOsuvvTdL1KYPXVp5f5Cr0
-         L4Wg==
-X-Gm-Message-State: AOAM530DznaMRkTOLg1iCszwYwNjc/g/S4Nb84TSf3Ee0yCGHluCHO7U
-        w9zNk5kr2vSPsznoHXrPm+rp94TNC3sQ3Q==
-X-Google-Smtp-Source: ABdhPJy6feg2kk7nTvSUH+AHBQAq+ZwdrDgcKqcb43pyrkAEQJqGzIlQH6xWUZuZ1neelwbWE1oCvA==
-X-Received: by 2002:a17:90b:255:: with SMTP id fz21mr202213pjb.50.1597965646928;
-        Thu, 20 Aug 2020 16:20:46 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id b15sm112786pgk.14.2020.08.20.16.20.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 16:20:46 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com
-Cc:     hch@lst.de, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFT][PATCH 4/7] s390/pci_dma: Avoid overflow at boundary_size
-Date:   Thu, 20 Aug 2020 16:20:32 -0700
-Message-Id: <20200820232032.23846-1-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        id S1727827AbgHUIwE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Aug 2020 04:52:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:56110 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727008AbgHUIwE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 21 Aug 2020 04:52:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDEF030E;
+        Fri, 21 Aug 2020 01:52:03 -0700 (PDT)
+Received: from [10.163.67.49] (unknown [10.163.67.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFDDB3F66B;
+        Fri, 21 Aug 2020 01:51:58 -0700 (PDT)
+Subject: Re: [PATCH v2 00/13] mm/debug_vm_pgtable fixes
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-mm@kvack.org, akpm@linux-foundation.org
+Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, Qian Cai <cai@lca.pw>,
+        "x86@kernel.org" <x86@kernel.org>
+References: <20200819130107.478414-1-aneesh.kumar@linux.ibm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <52e9743e-fa2f-3fd2-f50e-2c6c38464b96@arm.com>
+Date:   Fri, 21 Aug 2020 14:21:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200819130107.478414-1-aneesh.kumar@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The boundary_size might be as large as ULONG_MAX, which means
-that a device has no specific boundary limit. So either "+ 1"
-or passing it to ALIGN() would potentially overflow.
 
-According to kernel defines:
-    #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
-    #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
+On 08/19/2020 06:30 PM, Aneesh Kumar K.V wrote:
+> This patch series includes fixes for debug_vm_pgtable test code so that
+> they follow page table updates rules correctly. The first two patches introduce
+> changes w.r.t ppc64. The patches are included in this series for completeness. We can
+> merge them via ppc64 tree if required.
+> 
+> Hugetlb test is disabled on ppc64 because that needs larger change to satisfy
+> page table update rules.
+> 
+> Changes from V1:
+> * Address review feedback
+> * drop test specific pfn_pte and pfn_pmd.
+> * Update ppc64 page table helper to add _PAGE_PTE 
+> 
+> Aneesh Kumar K.V (13):
+>   powerpc/mm: Add DEBUG_VM WARN for pmd_clear
+>   powerpc/mm: Move setting pte specific flags to pfn_pte
+>   mm/debug_vm_pgtable/ppc64: Avoid setting top bits in radom value
+>   mm/debug_vm_pgtables/hugevmap: Use the arch helper to identify huge
+>     vmap support.
+>   mm/debug_vm_pgtable/savedwrite: Enable savedwrite test with
+>     CONFIG_NUMA_BALANCING
+>   mm/debug_vm_pgtable/THP: Mark the pte entry huge before using
+>     set_pmd/pud_at
+>   mm/debug_vm_pgtable/set_pte/pmd/pud: Don't use set_*_at to update an
+>     existing pte entry
+>   mm/debug_vm_pgtable/thp: Use page table depost/withdraw with THP
+>   mm/debug_vm_pgtable/locks: Move non page table modifying test together
+>   mm/debug_vm_pgtable/locks: Take correct page table lock
+>   mm/debug_vm_pgtable/pmd_clear: Don't use pmd/pud_clear on pte entries
+>   mm/debug_vm_pgtable/hugetlb: Disable hugetlb test on ppc64
+>   mm/debug_vm_pgtable: populate a pte entry before fetching it
+> 
+>  arch/powerpc/include/asm/book3s/64/pgtable.h |  29 +++-
+>  arch/powerpc/include/asm/nohash/pgtable.h    |   5 -
+>  arch/powerpc/mm/book3s64/pgtable.c           |   2 +-
+>  arch/powerpc/mm/pgtable.c                    |   5 -
+>  include/linux/io.h                           |  12 ++
+>  mm/debug_vm_pgtable.c                        | 151 +++++++++++--------
+>  6 files changed, 127 insertions(+), 77 deletions(-)
+> 
 
-We can simplify the logic here:
-  ALIGN(boundary + 1, 1 << shift) >> shift
-= ALIGN_MASK(b + 1, (1 << s) - 1) >> s
-= {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
-= [b + 1 + (1 << s) - 1] >> s
-= [b + (1 << s)] >> s
-= (b >> s) + 1
+Changes proposed here will impact other enabled platforms as well.
+Adding the following folks and mailing lists, and hoping to get a
+broader review and test coverage. Please do include them in the
+next iteration as well.
 
-So fixing a potential overflow with the safer shortcut.
++ linux-arm-kernel@lists.infradead.org
++ linux-s390@vger.kernel.org
++ linux-snps-arc@lists.infradead.org
++ x86@kernel.org
++ linux-arch@vger.kernel.org
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>
----
- arch/s390/pci/pci_dma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
-index 64b1399a73f0..ecb067acc6d5 100644
---- a/arch/s390/pci/pci_dma.c
-+++ b/arch/s390/pci/pci_dma.c
-@@ -263,8 +263,8 @@ static unsigned long __dma_alloc_iommu(struct device *dev,
- 	struct zpci_dev *zdev = to_zpci(to_pci_dev(dev));
- 	unsigned long boundary_size;
- 
--	boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
--			      PAGE_SIZE) >> PAGE_SHIFT;
-+	/* Overflow-free shortcut for: ALIGN(b + 1, 1 << s) >> s */
-+	boundary_size = (dma_get_seg_boundary(dev) >> PAGE_SHIFT) + 1;
- 	return iommu_area_alloc(zdev->iommu_bitmap, zdev->iommu_pages,
- 				start, size, zdev->start_dma >> PAGE_SHIFT,
- 				boundary_size, 0);
--- 
-2.17.1
-
++ Gerald Schaefer <gerald.schaefer@de.ibm.com>
++ Christophe Leroy <christophe.leroy@c-s.fr>
++ Christophe Leroy <christophe.leroy@csgroup.eu>
++ Vineet Gupta <vgupta@synopsys.com>
++ Mike Rapoport <rppt@linux.ibm.com>
++ Qian Cai <cai@lca.pw>
