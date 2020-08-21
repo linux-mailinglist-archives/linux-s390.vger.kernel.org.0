@@ -2,208 +2,315 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E633024D71A
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Aug 2020 16:14:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39A2F24E160
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Aug 2020 21:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgHUOOR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 21 Aug 2020 10:14:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42000 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgHUOOP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 21 Aug 2020 10:14:15 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4136DC061573
-        for <linux-s390@vger.kernel.org>; Fri, 21 Aug 2020 07:14:15 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id o18so2440223eje.7
-        for <linux-s390@vger.kernel.org>; Fri, 21 Aug 2020 07:14:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=YstexqFUHqnza2So/pgz538X7yBx5mx6OedITJ2r3mk=;
-        b=UVOk7Sn/8uMkdygaRaWxGOoJjIJ1fMdIJ9y971DKZyJfkbgy+G3t+nKbL9LGbC51Dr
-         ZVaqwGHIFY5p7a5Q+SJLuJ4GJYI8d1OSBZ4/WNBDVJqczsZci3DlxZdpJZJQYdPs/6XN
-         ScJwVaYH81e7Sqt0K7NB2eApDPWFn6PU4Z79VZcOpX4t14ku63PeMQ+PyhSVDBpeYRMS
-         WZZa7JBzbbVK4e6OZ7xU5mQIrDJk4wnO4kaHZYztZaEciNq6GByYyO6oOqUcqsUT34KS
-         umGHmqD73I4OTBV8pu6cS2elzrAHufBO6co8CIwhKlyblE0vTJCDg23FE9zRe+tvxyLx
-         no9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=YstexqFUHqnza2So/pgz538X7yBx5mx6OedITJ2r3mk=;
-        b=UUqKZlsM3xrlxXlQWDNmK0v3WO3PTEiBEqStRTONVR3B7mhiMXWviGTna1DQEwlgVI
-         ySFZQBqtyzXlPaJ93wQ421Acm0HHmxToacukw4fWXpyLTwr2M62x0+K734qYkpOlq+72
-         dwVbMOHDrd9r+6ni2gCbN6lWUArlPdFqOa5eZN8jU/hYf158LXxZ6KSwqVxcE8lH8A38
-         +7R2YIqG3hcAQRSzFEbMiKATfEpAExKQWkAViGkF4R5zVUtj7XInjGzwri66ElmIW/Jk
-         MR9JTSFZxEQQsNPT4jEQtAtini/7ILvRif+bVj6oB0oGlkAvUU5ahZATYqgaRjJGmTM7
-         j9xA==
-X-Gm-Message-State: AOAM5335tpRZoVMYExonMDlLTTlvPUxHFt7QlfXVA5obV5M7uxsUpSLi
-        9GhsFBsNSNs2Tl+SldRanRXJRknPLXTqy0Zu8L4=
-X-Google-Smtp-Source: ABdhPJxUFmq25CHJxbu3SSWxISWqkDJ0GNI//QPDTVcreM3wW+0ev2Z8JOJw9pXe84blpc/WgLLxdxZbsxChuQbPsNE=
-X-Received: by 2002:a17:906:2a14:: with SMTP id j20mr3267956eje.376.1598019253497;
- Fri, 21 Aug 2020 07:14:13 -0700 (PDT)
+        id S1726466AbgHUT4b (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Aug 2020 15:56:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63820 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725834AbgHUT4a (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 21 Aug 2020 15:56:30 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LJWNDS018412;
+        Fri, 21 Aug 2020 15:56:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=UivKltWhGz1qGYEXb8lV5/pWX0Y9fnoh05VVhjvcyGk=;
+ b=lLNvEKIxixLdRZE+ynSIFBxIX1NgL1czD1qRL7C44kD8+FEsrRdtenUQABKuSSJ3bG3X
+ XCVyerivYTQOzCTO8Z8PXE1BLtkUcjRYtkMAh/GYJxRfugAbfVUjjQ7VastrReWlEcP2
+ IBN0Al8q1k2puRQuXIta869eOZuI2J0k9+REuicjaw3Se95hTLDzuIXOh3J4U+etpmh4
+ Bh2GmC2RmvFesL4Ca7Iwjq4zj9XWvDkHBvuft/lFBxaOLc2yE5o+G48TpOD57o/vkQaS
+ K78eBptZDq2RghKXNirStGi8rVu+3loJbw9n559SSR2pTb75cXtYCdEmSbmHa3FsoZgA bQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 331uj4sax4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 15:56:29 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LJWjAM019084;
+        Fri, 21 Aug 2020 15:56:28 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 331uj4sawt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 15:56:28 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LJtO5l004569;
+        Fri, 21 Aug 2020 19:56:27 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma04dal.us.ibm.com with ESMTP id 3304ure9gj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 19:56:27 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LJuOSx29491472
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 19:56:24 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1691A7805F;
+        Fri, 21 Aug 2020 19:56:24 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98B297805E;
+        Fri, 21 Aug 2020 19:56:22 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com.com (unknown [9.85.191.76])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Aug 2020 19:56:22 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH v10 00/16]  s390/vfio-ap: dynamic configuration support
+Date:   Fri, 21 Aug 2020 15:56:00 -0400
+Message-Id: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Received: by 2002:a54:2bd0:0:0:0:0:0 with HTTP; Fri, 21 Aug 2020 07:14:12
- -0700 (PDT)
-From:   BRAZILIAN AMBASSY <brasemb.abidjaccitamaraty@gmail.com>
-Date:   Fri, 21 Aug 2020 15:14:12 +0100
-Message-ID: <CAJFpJsSpz8o8wu1Tko=pu7LB3ja5YrTj3fpaV33t3cJns1X4Cg@mail.gmail.com>
-Subject: PLEASE ENDEAVOR TO USE IT FOR THE ORPHANAGE CHILDREN.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_09:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 priorityscore=1501 malwarescore=0 clxscore=1011
+ mlxlogscore=999 mlxscore=0 adultscore=0 spamscore=0 suspectscore=3
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210178
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-PLEASE ENDEAVOR TO USE IT FOR THE ORPHANAGE CHILDREN.
+The current design for AP pass-through does not support making dynamic
+changes to the AP matrix of a running guest resulting in a few 
+deficiencies this patch series is intended to mitigate:
 
-As you read this, I don't want you to feel sorry for me, because, I
-believe everyone will die someday. My name is Mrs.Mariame Maham from
-Australia; I am 80 years old; I was married to late Mr.Andrin Maham, a
-contractor and diamond dealer for Thirty-two years before he died in
-the year 2018. I am suffering from a long-time cancer of the breast
-which also affected my brain. From all indication my condition is
-really deteriorating, and my doctors have courageously advised me that
-I may not live beyond the next two months; this is because the cancer
-stage has reached a critical stage.
+1. Adapters, domains and control domains can not be added to or removed
+   from a running guest. In order to modify a guest's AP configuration,
+   the guest must be terminated; only then can AP resources be assigned
+   to or unassigned from the guest's matrix mdev. The new AP 
+   configuration becomes available to the guest when it is subsequently
+   restarted.
 
+2. The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask interfaces can
+   be modified by a root user without any restrictions. A change to
+   either mask can result in AP queue devices being unbound from the
+   vfio_ap device driver and bound to a zcrypt device driver even if a
+   guest is using the queues, thus giving the host access to the guest's
+   private crypto data and vice versa.
 
-I was brought up in a motherless baby's home, and was married to my
-late husband for twenty years without a child. My husband and I are
-true Christians, but unfortunately, my husband Died from Complications
-from Diabetes.
+3. The APQNs derived from the Cartesian product of the APIDs of the
+   adapters and APQIs of the domains assigned to a matrix mdev must
+   reference an AP queue device bound to the vfio_ap device driver. The
+   AP architecture allows assignment of AP resources that are not
+   available to the system, so this artificial restriction is not 
+   compliant with the architecture.
 
+4. The AP configuration profile can be dynamically changed for the linux
+   host after a KVM guest is started. For example, a new domain can be
+   dynamically added to the configuration profile via the SE or an HMC
+   connected to a DPM enabled lpar. Likewise, AP adapters can be 
+   dynamically configured (online state) and deconfigured (standby state)
+   using the SE, an SCLP command or an HMC connected to a DPM enabled
+   lpar. This can result in inadvertent sharing of AP queues between the
+   guest and host.
 
-Since the death of my husband I decided not to re-marry, when my late
-husband was alive, he deposited the sum of $2,500,000.00 Two million
-Five hundred thousand U.S Dollars, with a Bank in Abidjan - Cote D'
-Ivoire, where we spend our life together.
+5. A root user can manually unbind an AP queue device representing a 
+   queue in use by a KVM guest via the vfio_ap device driver's sysfs 
+   unbind attribute. In this case, the guest will be using a queue that
+   is not bound to the driver which violates the device model.
 
+This patch series introduces the following changes to the current design
+to alleviate the shortcomings described above as well as to implement
+more of the AP architecture:
 
-Presently, this money is still in their custody, and the management
-just wrote me as the Legitimate beneficiary to come forward to receive
-the money after keeping it for so long or rather issue a letter of
-authorization to somebody to receive it on my behalf since I cannot
-come over as a result of my illness, or they get it confiscated.
+1. A root user will be prevented from making changes to the AP bus's
+   /sys/bus/ap/apmask or /sys/bus/ap/aqmask if the ownership of an APQN
+   changes from the vfio_ap device driver to a zcrypt driver when the
+   APQN is assigned to a matrix mdev.
 
-Presently, I'm with my laptop in a hospital where I have been
-undergoing treatment. I have since lost my ability to talk and my
-doctors have told me that I have only a few months to live.
+2. Allow a root user to hot plug/unplug AP adapters, domains and control
+   domains using the matrix mdev's assign/unassign attributes.
 
-It is my last wish to see that this money is invested in any
-organization of your choice and distributed each year among the
-charity organization, the poor and the motherless baby's home where I
-come from since i do not have any child that can inherit the fund.
+4. Allow assignment of an AP adapter or domain to a matrix mdev even if
+   it results in assignment of an APQN that does not reference an AP
+   queue device bound to the vfio_ap device driver, as long as the APQN
+   is not reserved for use by the default zcrypt drivers (also known as
+   over-provisioning of AP resources). Allowing over-provisioning of AP
+   resources better models the architecture which does not preclude
+   assigning AP resources that are not yet available in the system. Such
+   APQNs, however, will not be assigned to the guest using the matrix
+   mdev; only APQNs referencing AP queue devices bound to the vfio_ap
+   device driver will actually get assigned to the guest.
 
+5. Handle dynamic changes to the AP device model. 
 
-I want your good humanitarian, to also use this money to fund charity
-works, orphanages and homeless children. I must let you know that this
-was a very hard decision, but I had to take a bold step towards this
-issue because I have no further option. I hope you will help see me
-last wishes come true. As soon as I receive your reply, I shall give
-you the contact of the Bank. I will also issue you a letter of
-authority which will prove that you are the new beneficiary of my
-funds, and the documents concerning the deposit.
+1. Rationale for changes to AP bus's apmask/aqmask interfaces:
+----------------------------------------------------------
+Due to the extremely sensitive nature of cryptographic data, it is
+imperative that great care be taken to ensure that such data is secured.
+Allowing a root user, either inadvertently or maliciously, to configure
+these masks such that a queue is shared between the host and a guest is
+not only avoidable, it is advisable. It was suggested that this scenario
+is better handled in user space with management software, but that does
+not preclude a malicious administrator from using the sysfs interfaces
+to gain access to a guest's crypto data. It was also suggested that this
+scenario could be avoided by taking access to the adapter away from the
+guest and zeroing out the queues prior to the vfio_ap driver releasing the
+device; however, stealing an adapter in use from a guest as a by-product
+of an operation is bad and will likely cause problems for the guest
+unnecessarily. It was decided that the most effective solution with the
+least number of negative side effects is to prevent the situation at the
+source.
 
-Please assure me that you will act accordingly
-as I stated herein. Hope to hear from you Soonest.
-I am waiting your response.
+2. Rationale for hot plug/unplug using matrix mdev sysfs interfaces:
+----------------------------------------------------------------
+Allowing a user to hot plug/unplug AP resources using the matrix mdev
+sysfs interfaces circumvents the need to terminate the guest in order to
+modify its AP configuration. Allowing dynamic configuration makes 
+reconfiguring a guest's AP matrix much less disruptive.
 
-Yours in Christ,
+3. Rationale for allowing over-provisioning of AP resources:
+----------------------------------------------------------- 
+Allowing assignment of AP resources to a matrix mdev and ultimately to a
+guest better models the AP architecture. The architecture does not
+preclude assignment of unavailable AP resources. If a queue subsequently
+becomes available while a guest using the matrix mdev to which its APQN
+is assigned, the guest will be given access to it. If an APQN
+is dynamically unassigned from the underlying host system, it will 
+automatically become unavailable to the guest.
 
-Mrs.Mariame Maham.
+Change log v9-v10:
+-----------------
+* Updated the documentation in vfio-ap.rst to include information about the
+  AP dynamic configuration support
 
-Please contact me through my email for further details: mrsmahamm@protonmai=
-l.com
+Change log v8-v9:
+----------------
+* Fixed errors flagged by the kernel test robot
 
+* Fixed issue with guest losing queues when a new queue is probed due to
+  manual bind operation.
 
+Change log v7-v8:
+----------------
+* Now logging a message when an attempt to reserve APQNs for the zcrypt
+  drivers will result in taking a queue away from a KVM guest to provide
+  the sysadmin a way to ascertain why the sysfs operation failed.
 
+* Created locked and unlocked versions of the ap_parse_mask_str() function.
 
+* Now using new interface provided by an AP bus patch -
+  s390/ap: introduce new ap function ap_get_qdev() - to retrieve
+  struct ap_queue representing an AP queue device. This patch is not a
+  part of this series but is a prerequisite for this series. 
 
+Change log v6-v7:
+----------------
+* Added callbacks to AP bus:
+  - on_config_changed: Notifies implementing drivers that
+    the AP configuration has changed since last AP device scan.
+  - on_scan_complete: Notifies implementing drivers that the device scan
+    has completed.
+  - implemented on_config_changed and on_scan_complete callbacks for
+    vfio_ap device driver.
+  - updated vfio_ap device driver's probe and remove callbacks to handle
+    dynamic changes to the AP device model. 
+* Added code to filter APQNs when assigning AP resources to a KVM guest's
+  CRYCB
 
+Change log v5-v6:
+----------------
+* Fixed a bug in ap_bus.c introduced with patch 2/7 of the v5 
+  series. Harald Freudenberer pointed out that the mutex lock
+  for ap_perms_mutex in the apmask_store and aqmask_store functions
+  was not being freed. 
 
+* Removed patch 6/7 which added logging to the vfio_ap driver
+  to expedite acceptance of this series. The logging will be introduced
+  with a separate patch series to allow more time to explore options
+  such as DBF logging vs. tracepoints.
 
+* Added 3 patches related to ensuring that APQNs that do not reference
+  AP queue devices bound to the vfio_ap device driver are not assigned
+  to the guest CRYCB:
 
+  Patch 4: Filter CRYCB bits for unavailable queue devices
+  Patch 5: sysfs attribute to display the guest CRYCB
+  Patch 6: update guest CRYCB in vfio_ap probe and remove callbacks
 
+* Added a patch (Patch 9) to version the vfio_ap module.
 
-Por favor, esforce-se para us=C3=A1-lo PARA CRIAN=C3=87AS DE ORFANATO.
+* Reshuffled patches to allow the in_use callback implementation to
+  invoke the vfio_ap_mdev_verify_no_sharing() function introduced in
+  patch 2. 
 
-Enquanto voc=C3=AA l=C3=AA isto, n=C3=A3o quero que sinta pena de mim, porq=
-ue
-acredito que todo mundo morrer=C3=A1 um dia. Meu nome =C3=A9 Mrs.Mariame Ma=
-ham,
-da Austr=C3=A1lia; Tenho 80 anos; Fui casada com o falecido Sr. Andrin
-Maham, um empreiteiro e negociante de diamantes por trinta e dois anos
-antes de ele morrer em 2018. Estou sofrendo de um c=C3=A2ncer de mama de
-longa data que tamb=C3=A9m afetou meu c=C3=A9rebro. Ao que tudo indica, min=
-ha
-condi=C3=A7=C3=A3o est=C3=A1 realmente piorando, e meus m=C3=A9dicos corajo=
-samente me
-aconselharam que talvez eu n=C3=A3o viva al=C3=A9m dos pr=C3=B3ximos dois m=
-eses; isso
-ocorre porque o est=C3=A1gio do c=C3=A2ncer atingiu um est=C3=A1gio cr=C3=
-=ADtico.
+Change log v4-v5:
+----------------
+* Added a patch to provide kernel s390dbf debug logs for VFIO AP
 
+Change log v3->v4:
+-----------------
+* Restored patches preventing root user from changing ownership of
+  APQNs from zcrypt drivers to the vfio_ap driver if the APQN is
+  assigned to an mdev.
 
-Fui criada em uma casa com um beb=C3=AA sem m=C3=A3e e fui casada com meu
-falecido marido por vinte anos sem filhos. Meu marido e eu somos
-crist=C3=A3os verdadeiros, mas, infelizmente, meu marido morreu de
-complica=C3=A7=C3=B5es de diabetes.
+* No longer enforcing requirement restricting guest access to
+  queues represented by a queue device bound to the vfio_ap
+  device driver.
 
+* Removed shadow CRYCB and now directly updating the guest CRYCB
+  from the matrix mdev's matrix.
 
-Desde a morte do meu marido decidi n=C3=A3o voltar a casar, quando o meu
-falecido marido estava vivo, ele depositou a quantia de $ 2.500.000,00
-Dois milh=C3=B5es Quinhentos mil d=C3=B3lares americanos, num banco em Abid=
-jan -
-C=C3=B4te D 'Ivoire, onde passamos o nosso vida juntos.
+* Rebased the patch series on top of 'vfio: ap: AP Queue Interrupt
+  Control' patches.
 
+* Disabled bind/unbind sysfs interfaces for vfio_ap driver
 
-Atualmente, esse dinheiro ainda est=C3=A1 sob sua cust=C3=B3dia, e a
-administra=C3=A7=C3=A3o apenas me escreveu como o leg=C3=ADtimo benefici=C3=
-=A1rio para
-apresentar o recebimento do dinheiro ap=C3=B3s mant=C3=AA-lo por tanto temp=
-o ou,
-melhor, emitir uma carta de autoriza=C3=A7=C3=A3o para algu=C3=A9m receb=C3=
-=AA-lo em meu
-nome, j=C3=A1 que eu n=C3=A3o posso vir como resultado da minha doen=C3=A7a=
-, ou eles
-o confiscar=C3=A3o.
+Change log v2->v3:
+-----------------
+* Allow guest access to an AP queue only if the queue is bound to
+  the vfio_ap device driver.
 
-Atualmente, estou com meu laptop em um hospital onde estou em
-tratamento. Desde ent=C3=A3o, perdi minha capacidade de falar e meus
-m=C3=A9dicos me disseram que tenho apenas alguns meses de vida.
+* Removed the patch to test CRYCB masks before taking the vCPUs
+  out of SIE. Now checking the shadow CRYCB in the vfio_ap driver.
 
-=C3=89 meu =C3=BAltimo desejo ver que esse dinheiro seja investido em qualq=
-uer
-organiza=C3=A7=C3=A3o de sua escolha e distribu=C3=ADdo anualmente entre a
-organiza=C3=A7=C3=A3o de caridade, os pobres e os =C3=B3rf=C3=A3os da casa =
-de onde venho,
-pois n=C3=A3o tenho nenhum filho que possa herdar o fundo .
+Change log v1->v2:
+-----------------
+* Removed patches preventing root user from unbinding AP queues from 
+  the vfio_ap device driver
+* Introduced a shadow CRYCB in the vfio_ap driver to manage dynamic 
+  changes to the AP guest configuration due to root user interventions
+  or hardware anomalies.
 
+Tony Krowiak (16):
+  s390/vfio-ap: add version vfio_ap module
+  s390/vfio-ap: use new AP bus interface to search for queue devices
+  s390/vfio-ap: manage link between queue struct and matrix mdev
+  s390/zcrypt: driver callback to indicate resource in use
+  s390/vfio-ap: implement in-use callback for vfio_ap driver
+  s390/vfio-ap: introduce shadow APCB
+  s390/vfio-ap: sysfs attribute to display the guest's matrix
+  s390/vfio-ap: filter matrix for unavailable queue devices
+  s390/vfio-ap: allow assignment of unavailable AP queues to mdev device
+  s390/vfio-ap: allow configuration of matrix mdev in use by a KVM guest
+  s390/vfio-ap: allow hot plug/unplug of AP resources using mdev device
+  s390/zcrypt: Notify driver on config changed and scan complete
+    callbacks
+  s390/vfio-ap: handle host AP config change notification
+  s390/vfio-ap: handle AP bus scan completed notification
+  s390/vfio-ap: handle probe/remove not due to host AP config changes
+  s390/vfio-ap: update docs to include dynamic config support
 
-Quero que o seu bom humanit=C3=A1rio tamb=C3=A9m use esse dinheiro para
-financiar obras de caridade, orfanatos e crian=C3=A7as sem-teto. Devo
-inform=C3=A1-lo de que foi uma decis=C3=A3o muito dif=C3=ADcil, mas tive de=
- dar um
-passo ousado em rela=C3=A7=C3=A3o a esse problema porque n=C3=A3o tenho out=
-ra op=C3=A7=C3=A3o.
-Eu espero que voc=C3=AA ajude a ver meus =C3=BAltimos desejos se tornando
-realidade. Assim que receber sua resposta, passarei o contato do
-Banco. Tamb=C3=A9m vou emitir uma carta de autoriza=C3=A7=C3=A3o que provar=
-=C3=A1 que voc=C3=AA
-=C3=A9 o novo benefici=C3=A1rio de meus fundos e os documentos relativos ao
-dep=C3=B3sito.
+ Documentation/s390/vfio-ap.rst        |  362 ++++++--
+ drivers/s390/crypto/ap_bus.c          |  233 ++++-
+ drivers/s390/crypto/ap_bus.h          |   16 +
+ drivers/s390/crypto/vfio_ap_drv.c     |   36 +-
+ drivers/s390/crypto/vfio_ap_ops.c     | 1216 ++++++++++++++++++++-----
+ drivers/s390/crypto/vfio_ap_private.h |   23 +-
+ 6 files changed, 1533 insertions(+), 353 deletions(-)
 
-Por favor, garanta que voc=C3=AA agir=C3=A1 de acordo
-como afirmei aqui. Espero ouvir de voc=C3=AA logo.
-Estou esperando sua resposta.
+-- 
+2.21.1
 
-Seu em Cristo,
-
-Mrs.Mariame Maham.
-
-Entre em contato comigo atrav=C3=A9s do meu e-mail para maiores detalhes:
-mrsmahamm@protonmail.com
