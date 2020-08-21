@@ -2,109 +2,62 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 371D624D0DB
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Aug 2020 10:52:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 337EE24D101
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Aug 2020 10:57:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgHUIwE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 21 Aug 2020 04:52:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:56110 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgHUIwE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:52:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BDEF030E;
-        Fri, 21 Aug 2020 01:52:03 -0700 (PDT)
-Received: from [10.163.67.49] (unknown [10.163.67.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFDDB3F66B;
-        Fri, 21 Aug 2020 01:51:58 -0700 (PDT)
-Subject: Re: [PATCH v2 00/13] mm/debug_vm_pgtable fixes
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, Qian Cai <cai@lca.pw>,
-        "x86@kernel.org" <x86@kernel.org>
-References: <20200819130107.478414-1-aneesh.kumar@linux.ibm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <52e9743e-fa2f-3fd2-f50e-2c6c38464b96@arm.com>
-Date:   Fri, 21 Aug 2020 14:21:27 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725948AbgHUI5L (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Aug 2020 04:57:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728361AbgHUI47 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 21 Aug 2020 04:56:59 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ACA4C061387;
+        Fri, 21 Aug 2020 01:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=EVl8E61DXgRR1ZNIk2YxGikvQ2O1Ac8Y751dPUZf5kA=; b=Mahqk11P0dtVI6WvpVZ3wbPfd6
+        TOLmouapre5P0kVTzEU3HqwZFByZlxCfsG6R4LCAQEde65aGjIHnOELkSeXiwBiVLsCgnaiFc5MSt
+        bvGYyrZ9NusMwXnv+hlzhDJ+I4OVdlWF/WhR7di5/YwH+8C/4tFLNJRZdH9NKDu3+jfaCADVNAeGN
+        ktm0Qw0jD8zXP93Qm5deyNsGMKjxkuKyjwIUIvulughoawMKj7P036hpaE1C8BhnQ1KNpjW7ltyqz
+        UB5eZs1ummTyPWBBdfzQmKKtQe7CWVkU7RMOrEnMA4elIOFazI/1fyVNV75dx+bpdv3LTg5BtDuoO
+        VVT7V/RQ==;
+Received: from [2001:4bb8:198:f3b2:a2b:85ba:fb78:c253] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k92qE-0007el-7k; Fri, 21 Aug 2020 08:56:07 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Justin Sanders <justin@coraid.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Xianting Tian <xianting_tian@126.com>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: fix block device size update serialization
+Date:   Fri, 21 Aug 2020 10:55:58 +0200
+Message-Id: <20200821085600.2395666-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20200819130107.478414-1-aneesh.kumar@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Jens,
 
-On 08/19/2020 06:30 PM, Aneesh Kumar K.V wrote:
-> This patch series includes fixes for debug_vm_pgtable test code so that
-> they follow page table updates rules correctly. The first two patches introduce
-> changes w.r.t ppc64. The patches are included in this series for completeness. We can
-> merge them via ppc64 tree if required.
-> 
-> Hugetlb test is disabled on ppc64 because that needs larger change to satisfy
-> page table update rules.
-> 
-> Changes from V1:
-> * Address review feedback
-> * drop test specific pfn_pte and pfn_pmd.
-> * Update ppc64 page table helper to add _PAGE_PTE 
-> 
-> Aneesh Kumar K.V (13):
->   powerpc/mm: Add DEBUG_VM WARN for pmd_clear
->   powerpc/mm: Move setting pte specific flags to pfn_pte
->   mm/debug_vm_pgtable/ppc64: Avoid setting top bits in radom value
->   mm/debug_vm_pgtables/hugevmap: Use the arch helper to identify huge
->     vmap support.
->   mm/debug_vm_pgtable/savedwrite: Enable savedwrite test with
->     CONFIG_NUMA_BALANCING
->   mm/debug_vm_pgtable/THP: Mark the pte entry huge before using
->     set_pmd/pud_at
->   mm/debug_vm_pgtable/set_pte/pmd/pud: Don't use set_*_at to update an
->     existing pte entry
->   mm/debug_vm_pgtable/thp: Use page table depost/withdraw with THP
->   mm/debug_vm_pgtable/locks: Move non page table modifying test together
->   mm/debug_vm_pgtable/locks: Take correct page table lock
->   mm/debug_vm_pgtable/pmd_clear: Don't use pmd/pud_clear on pte entries
->   mm/debug_vm_pgtable/hugetlb: Disable hugetlb test on ppc64
->   mm/debug_vm_pgtable: populate a pte entry before fetching it
-> 
->  arch/powerpc/include/asm/book3s/64/pgtable.h |  29 +++-
->  arch/powerpc/include/asm/nohash/pgtable.h    |   5 -
->  arch/powerpc/mm/book3s64/pgtable.c           |   2 +-
->  arch/powerpc/mm/pgtable.c                    |   5 -
->  include/linux/io.h                           |  12 ++
->  mm/debug_vm_pgtable.c                        | 151 +++++++++++--------
->  6 files changed, 127 insertions(+), 77 deletions(-)
-> 
+this series fixes how we update i_size for the block device inodes (and
+thus the block device).  Different helpers use two different locks
+(bd_mutex and i_rwsem) to protect the update, and it appears device
+mapper uses yet another internal lock.  A lot of the drivers do the
+update handcrafted in often crufty ways.  And in addition to that mess
+it turns out that the "main" lock, bd_mutex is pretty dead lock prone
+vs other spots in the block layer that acquire it during revalidation
+operations, as reported by Xianting.
 
-Changes proposed here will impact other enabled platforms as well.
-Adding the following folks and mailing lists, and hoping to get a
-broader review and test coverage. Please do include them in the
-next iteration as well.
-
-+ linux-arm-kernel@lists.infradead.org
-+ linux-s390@vger.kernel.org
-+ linux-snps-arc@lists.infradead.org
-+ x86@kernel.org
-+ linux-arch@vger.kernel.org
-
-+ Gerald Schaefer <gerald.schaefer@de.ibm.com>
-+ Christophe Leroy <christophe.leroy@c-s.fr>
-+ Christophe Leroy <christophe.leroy@csgroup.eu>
-+ Vineet Gupta <vgupta@synopsys.com>
-+ Mike Rapoport <rppt@linux.ibm.com>
-+ Qian Cai <cai@lca.pw>
+Fix all that by adding a dedicated spinlock just for the size updates.
