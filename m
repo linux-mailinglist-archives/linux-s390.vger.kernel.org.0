@@ -2,176 +2,208 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1F6324D5CE
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Aug 2020 15:08:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E633024D71A
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Aug 2020 16:14:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgHUNIu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 21 Aug 2020 09:08:50 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20060 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726345AbgHUNIt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:08:49 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LD3lYP105348;
-        Fri, 21 Aug 2020 09:08:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=XHpFRlBvLhzPbNUy/WcR7Iba8tVUXqJsA+kYx9ImcwQ=;
- b=EMRP2UcRsr3sZwUzXHOWWexcYGjU2w0YVHsaQkP68KAgzlTSDrRFQB5khT8JiiaQIrAS
- pEQwHETzP1EQvf2nmoNReYSShT4NJEjjD00afwBF7hv9e9SQ+NFxBT50uH0NZUnfD6E6
- 5N0m8RJGkhESMM5KwK0nMsJlLJk8lSWCNC6/GhhCShzJlWIu4R8FdjIeHAYYSGx/GXRs
- KICBhHfeSx6Z1CklvxIMMbpCNo/yPbQD7yz6bGrWv8IWFPaV3xXYNGQYqQu64rlIbW4j
- EHMJqEL5sD3gC5RpSjTjpAt9BAQ3XJi95JcG5TToHEiyEbNwMbMGdb+IqKfOMtbBenZB sg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3328e9ay0d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 09:08:44 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LD40OG106366;
-        Fri, 21 Aug 2020 09:08:43 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3328e9axxh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 09:08:43 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LD4U0d020685;
-        Fri, 21 Aug 2020 13:08:41 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03fra.de.ibm.com with ESMTP id 3304c92pmj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Aug 2020 13:08:40 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LD8bGS61604294
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 13:08:37 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A7057A405D;
-        Fri, 21 Aug 2020 13:08:37 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0BFC6A4055;
-        Fri, 21 Aug 2020 13:08:37 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.168.20])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Aug 2020 13:08:36 +0000 (GMT)
-Subject: Re: [PATCH v9 1/2] virtio: let arch advertise guest's memory access
- restrictions
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-References: <1597854198-2871-1-git-send-email-pmorel@linux.ibm.com>
- <1597854198-2871-2-git-send-email-pmorel@linux.ibm.com>
- <20200821135906.1c6bede3.cohuck@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <91c83bba-9a75-4ed4-b682-fcdce26edd54@linux.ibm.com>
-Date:   Fri, 21 Aug 2020 15:08:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727049AbgHUOOR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Aug 2020 10:14:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgHUOOP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 21 Aug 2020 10:14:15 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4136DC061573
+        for <linux-s390@vger.kernel.org>; Fri, 21 Aug 2020 07:14:15 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id o18so2440223eje.7
+        for <linux-s390@vger.kernel.org>; Fri, 21 Aug 2020 07:14:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=YstexqFUHqnza2So/pgz538X7yBx5mx6OedITJ2r3mk=;
+        b=UVOk7Sn/8uMkdygaRaWxGOoJjIJ1fMdIJ9y971DKZyJfkbgy+G3t+nKbL9LGbC51Dr
+         ZVaqwGHIFY5p7a5Q+SJLuJ4GJYI8d1OSBZ4/WNBDVJqczsZci3DlxZdpJZJQYdPs/6XN
+         ScJwVaYH81e7Sqt0K7NB2eApDPWFn6PU4Z79VZcOpX4t14ku63PeMQ+PyhSVDBpeYRMS
+         WZZa7JBzbbVK4e6OZ7xU5mQIrDJk4wnO4kaHZYztZaEciNq6GByYyO6oOqUcqsUT34KS
+         umGHmqD73I4OTBV8pu6cS2elzrAHufBO6co8CIwhKlyblE0vTJCDg23FE9zRe+tvxyLx
+         no9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=YstexqFUHqnza2So/pgz538X7yBx5mx6OedITJ2r3mk=;
+        b=UUqKZlsM3xrlxXlQWDNmK0v3WO3PTEiBEqStRTONVR3B7mhiMXWviGTna1DQEwlgVI
+         ySFZQBqtyzXlPaJ93wQ421Acm0HHmxToacukw4fWXpyLTwr2M62x0+K734qYkpOlq+72
+         dwVbMOHDrd9r+6ni2gCbN6lWUArlPdFqOa5eZN8jU/hYf158LXxZ6KSwqVxcE8lH8A38
+         +7R2YIqG3hcAQRSzFEbMiKATfEpAExKQWkAViGkF4R5zVUtj7XInjGzwri66ElmIW/Jk
+         MR9JTSFZxEQQsNPT4jEQtAtini/7ILvRif+bVj6oB0oGlkAvUU5ahZATYqgaRjJGmTM7
+         j9xA==
+X-Gm-Message-State: AOAM5335tpRZoVMYExonMDlLTTlvPUxHFt7QlfXVA5obV5M7uxsUpSLi
+        9GhsFBsNSNs2Tl+SldRanRXJRknPLXTqy0Zu8L4=
+X-Google-Smtp-Source: ABdhPJxUFmq25CHJxbu3SSWxISWqkDJ0GNI//QPDTVcreM3wW+0ev2Z8JOJw9pXe84blpc/WgLLxdxZbsxChuQbPsNE=
+X-Received: by 2002:a17:906:2a14:: with SMTP id j20mr3267956eje.376.1598019253497;
+ Fri, 21 Aug 2020 07:14:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200821135906.1c6bede3.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- malwarescore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 clxscore=1015 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210120
+Received: by 2002:a54:2bd0:0:0:0:0:0 with HTTP; Fri, 21 Aug 2020 07:14:12
+ -0700 (PDT)
+From:   BRAZILIAN AMBASSY <brasemb.abidjaccitamaraty@gmail.com>
+Date:   Fri, 21 Aug 2020 15:14:12 +0100
+Message-ID: <CAJFpJsSpz8o8wu1Tko=pu7LB3ja5YrTj3fpaV33t3cJns1X4Cg@mail.gmail.com>
+Subject: PLEASE ENDEAVOR TO USE IT FOR THE ORPHANAGE CHILDREN.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+PLEASE ENDEAVOR TO USE IT FOR THE ORPHANAGE CHILDREN.
+
+As you read this, I don't want you to feel sorry for me, because, I
+believe everyone will die someday. My name is Mrs.Mariame Maham from
+Australia; I am 80 years old; I was married to late Mr.Andrin Maham, a
+contractor and diamond dealer for Thirty-two years before he died in
+the year 2018. I am suffering from a long-time cancer of the breast
+which also affected my brain. From all indication my condition is
+really deteriorating, and my doctors have courageously advised me that
+I may not live beyond the next two months; this is because the cancer
+stage has reached a critical stage.
 
 
-On 2020-08-21 13:59, Cornelia Huck wrote:
-> On Wed, 19 Aug 2020 18:23:17 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> An architecture may restrict host access to guest memory.
-> 
-> "e.g. IBM s390 Secure Execution or AMD SEV"
-> 
-> Just to make clearer what you are referring to?
+I was brought up in a motherless baby's home, and was married to my
+late husband for twenty years without a child. My husband and I are
+true Christians, but unfortunately, my husband Died from Complications
+from Diabetes.
 
-yes, thanks
 
-> 
->>
->> Provide a new Kconfig entry the architecture can select,
->> CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS, when it provides
->> the arch_has_restricted_virtio_memory_access callback to advertise
-> 
-> s/advertise/advertise to/
+Since the death of my husband I decided not to re-marry, when my late
+husband was alive, he deposited the sum of $2,500,000.00 Two million
+Five hundred thousand U.S Dollars, with a Bank in Abidjan - Cote D'
+Ivoire, where we spend our life together.
 
-OK
 
-> 
->> VIRTIO common code when the architecture restricts memory access
->> from the host.
-> 
-> "The common code can then fail the probe for any device where
-> VIRTIO_F_IOMMU_PLATFORM is required, but not set."
-> 
-> ?
+Presently, this money is still in their custody, and the management
+just wrote me as the Legitimate beneficiary to come forward to receive
+the money after keeping it for so long or rather issue a letter of
+authorization to somebody to receive it on my behalf since I cannot
+come over as a result of my illness, or they get it confiscated.
 
-Yes, better thanks
+Presently, I'm with my laptop in a hospital where I have been
+undergoing treatment. I have since lost my ability to talk and my
+doctors have told me that I have only a few months to live.
 
-> 
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
->>   drivers/virtio/Kconfig        |  6 ++++++
->>   drivers/virtio/virtio.c       | 15 +++++++++++++++
->>   include/linux/virtio_config.h |  9 +++++++++
->>   3 files changed, 30 insertions(+)
->>
->> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
->> index 5809e5f5b157..509f3b4d8ba1 100644
->> --- a/drivers/virtio/Kconfig
->> +++ b/drivers/virtio/Kconfig
->> @@ -6,6 +6,12 @@ config VIRTIO
->>   	  bus, such as CONFIG_VIRTIO_PCI, CONFIG_VIRTIO_MMIO, CONFIG_RPMSG
->>   	  or CONFIG_S390_GUEST.
->>   
->> +config ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
->> +	bool
->> +	help
->> +	  This option is selected by any architecture enforcing
->> +	  VIRTIO_F_IOMMU_PLATFORM
-> 
-> "This option is selected if the architecture may need to enforce
-> VIRTIO_F_IOMMU_PLATFORM."
-> 
-> ?
+It is my last wish to see that this money is invested in any
+organization of your choice and distributed each year among the
+charity organization, the poor and the motherless baby's home where I
+come from since i do not have any child that can inherit the fund.
 
-yes, better thanks
 
-> 
->> +
->>   menuconfig VIRTIO_MENU
->>   	bool "Virtio drivers"
->>   	default y
-> 
-> (...)
-> 
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> 
+I want your good humanitarian, to also use this money to fund charity
+works, orphanages and homeless children. I must let you know that this
+was a very hard decision, but I had to take a bold step towards this
+issue because I have no further option. I hope you will help see me
+last wishes come true. As soon as I receive your reply, I shall give
+you the contact of the Bank. I will also issue you a letter of
+authority which will prove that you are the new beneficiary of my
+funds, and the documents concerning the deposit.
 
-I will make the rewordings.
+Please assure me that you will act accordingly
+as I stated herein. Hope to hear from you Soonest.
+I am waiting your response.
 
-Thanks,
-Pierre
+Yours in Christ,
 
--- 
-Pierre Morel
-IBM Lab Boeblingen
+Mrs.Mariame Maham.
+
+Please contact me through my email for further details: mrsmahamm@protonmai=
+l.com
+
+
+
+
+
+
+
+
+
+
+
+Por favor, esforce-se para us=C3=A1-lo PARA CRIAN=C3=87AS DE ORFANATO.
+
+Enquanto voc=C3=AA l=C3=AA isto, n=C3=A3o quero que sinta pena de mim, porq=
+ue
+acredito que todo mundo morrer=C3=A1 um dia. Meu nome =C3=A9 Mrs.Mariame Ma=
+ham,
+da Austr=C3=A1lia; Tenho 80 anos; Fui casada com o falecido Sr. Andrin
+Maham, um empreiteiro e negociante de diamantes por trinta e dois anos
+antes de ele morrer em 2018. Estou sofrendo de um c=C3=A2ncer de mama de
+longa data que tamb=C3=A9m afetou meu c=C3=A9rebro. Ao que tudo indica, min=
+ha
+condi=C3=A7=C3=A3o est=C3=A1 realmente piorando, e meus m=C3=A9dicos corajo=
+samente me
+aconselharam que talvez eu n=C3=A3o viva al=C3=A9m dos pr=C3=B3ximos dois m=
+eses; isso
+ocorre porque o est=C3=A1gio do c=C3=A2ncer atingiu um est=C3=A1gio cr=C3=
+=ADtico.
+
+
+Fui criada em uma casa com um beb=C3=AA sem m=C3=A3e e fui casada com meu
+falecido marido por vinte anos sem filhos. Meu marido e eu somos
+crist=C3=A3os verdadeiros, mas, infelizmente, meu marido morreu de
+complica=C3=A7=C3=B5es de diabetes.
+
+
+Desde a morte do meu marido decidi n=C3=A3o voltar a casar, quando o meu
+falecido marido estava vivo, ele depositou a quantia de $ 2.500.000,00
+Dois milh=C3=B5es Quinhentos mil d=C3=B3lares americanos, num banco em Abid=
+jan -
+C=C3=B4te D 'Ivoire, onde passamos o nosso vida juntos.
+
+
+Atualmente, esse dinheiro ainda est=C3=A1 sob sua cust=C3=B3dia, e a
+administra=C3=A7=C3=A3o apenas me escreveu como o leg=C3=ADtimo benefici=C3=
+=A1rio para
+apresentar o recebimento do dinheiro ap=C3=B3s mant=C3=AA-lo por tanto temp=
+o ou,
+melhor, emitir uma carta de autoriza=C3=A7=C3=A3o para algu=C3=A9m receb=C3=
+=AA-lo em meu
+nome, j=C3=A1 que eu n=C3=A3o posso vir como resultado da minha doen=C3=A7a=
+, ou eles
+o confiscar=C3=A3o.
+
+Atualmente, estou com meu laptop em um hospital onde estou em
+tratamento. Desde ent=C3=A3o, perdi minha capacidade de falar e meus
+m=C3=A9dicos me disseram que tenho apenas alguns meses de vida.
+
+=C3=89 meu =C3=BAltimo desejo ver que esse dinheiro seja investido em qualq=
+uer
+organiza=C3=A7=C3=A3o de sua escolha e distribu=C3=ADdo anualmente entre a
+organiza=C3=A7=C3=A3o de caridade, os pobres e os =C3=B3rf=C3=A3os da casa =
+de onde venho,
+pois n=C3=A3o tenho nenhum filho que possa herdar o fundo .
+
+
+Quero que o seu bom humanit=C3=A1rio tamb=C3=A9m use esse dinheiro para
+financiar obras de caridade, orfanatos e crian=C3=A7as sem-teto. Devo
+inform=C3=A1-lo de que foi uma decis=C3=A3o muito dif=C3=ADcil, mas tive de=
+ dar um
+passo ousado em rela=C3=A7=C3=A3o a esse problema porque n=C3=A3o tenho out=
+ra op=C3=A7=C3=A3o.
+Eu espero que voc=C3=AA ajude a ver meus =C3=BAltimos desejos se tornando
+realidade. Assim que receber sua resposta, passarei o contato do
+Banco. Tamb=C3=A9m vou emitir uma carta de autoriza=C3=A7=C3=A3o que provar=
+=C3=A1 que voc=C3=AA
+=C3=A9 o novo benefici=C3=A1rio de meus fundos e os documentos relativos ao
+dep=C3=B3sito.
+
+Por favor, garanta que voc=C3=AA agir=C3=A1 de acordo
+como afirmei aqui. Espero ouvir de voc=C3=AA logo.
+Estou esperando sua resposta.
+
+Seu em Cristo,
+
+Mrs.Mariame Maham.
+
+Entre em contato comigo atrav=C3=A9s do meu e-mail para maiores detalhes:
+mrsmahamm@protonmail.com
