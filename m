@@ -2,54 +2,49 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC12824E90D
-	for <lists+linux-s390@lfdr.de>; Sat, 22 Aug 2020 19:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCF2C24EC59
+	for <lists+linux-s390@lfdr.de>; Sun, 23 Aug 2020 11:09:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgHVRcj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 22 Aug 2020 13:32:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56424 "EHLO mail.kernel.org"
+        id S1726431AbgHWJJU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 23 Aug 2020 05:09:20 -0400
+Received: from verein.lst.de ([213.95.11.211]:51686 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbgHVRce (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 22 Aug 2020 13:32:34 -0400
-Subject: Re: [GIT PULL] s390 updates for 5.9-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598117552;
-        bh=CzYNej7Bmko+kt1RfFOa/VGRN0A7q81Z62XQNDUiTjs=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=m+/dnEugpRRhIQyloerdknHdnivaGWFT8X0x/aTbZvDMAG82Yrap5vG0T0KwfSzMm
-         PMzXSgAiGiMb40E5VGypPJrtbyKilgWxXDRiW/oxyHRIkD3RmYbVFcBDBf49swgvtR
-         A1LmV5AssEO4bZjAXCtHHuYffc2syeKSG7hZQLq4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <your-ad-here.call-01598099860-ext-4027@work.hours>
-References: <your-ad-here.call-01598099860-ext-4027@work.hours>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <your-ad-here.call-01598099860-ext-4027@work.hours>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.9-3
-X-PR-Tracked-Commit-Id: b97bf44f99155e57088e16974afb1f2d7b5287aa
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d57ce84004a0d13ada89fbceec21539559cb72f2
-Message-Id: <159811755218.17427.17303690224388315333.pr-tracker-bot@kernel.org>
-Date:   Sat, 22 Aug 2020 17:32:32 +0000
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        id S1726347AbgHWJJT (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 23 Aug 2020 05:09:19 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9836468AFE; Sun, 23 Aug 2020 11:09:15 +0200 (CEST)
+Date:   Sun, 23 Aug 2020 11:09:15 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     =?utf-8?B?55Sw?= <xianting_tian@126.com>
+Cc:     Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@kernel.dk>,
+        Justin Sanders <justin@coraid.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nbd@other.debian.org" <nbd@other.debian.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>
+Subject: Re: [PATCH 2/2] block: fix locking for struct block_device size
+ updates
+Message-ID: <20200823090915.GA2764@lst.de>
+References: <20200821085600.2395666-1-hch@lst.de> <20200821085600.2395666-3-hch@lst.de> <4df016bc-570c-d166-47dd-36a9f21fad13@suse.de> <133efc8b.1649.17410784734.Coremail.xianting_tian@126.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <133efc8b.1649.17410784734.Coremail.xianting_tian@126.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Sat, 22 Aug 2020 14:37:40 +0200:
+On Fri, Aug 21, 2020 at 06:02:32PM +0800, 田 wrote:
+> thanks Hellwig for your kindly reply and your fix and add report by me :)
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.9-3
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d57ce84004a0d13ada89fbceec21539559cb72f2
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+I found an issue with the patch, and will send a new version in a bit.
+If this works for your reproducer, can you add a Tested-by: tag?
