@@ -2,154 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 161DD24F0A2
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Aug 2020 02:04:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBA4824F323
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Aug 2020 09:36:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgHXAE4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 23 Aug 2020 20:04:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727830AbgHXAEv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 23 Aug 2020 20:04:51 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 574A4C061795
-        for <linux-s390@vger.kernel.org>; Sun, 23 Aug 2020 17:04:47 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id c6so5773771ilo.13
-        for <linux-s390@vger.kernel.org>; Sun, 23 Aug 2020 17:04:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2qvzvkep7ZlQHNyjrGsuXQAp+x7s+RjdNiOv81NxtoQ=;
-        b=ph3cmZeijsQTsHnHnrr9eCGgxMPexaLwCGnu3F9Od9T7oE9SJ1xriseSecoaLR+A31
-         cxdttU99z8vHmtpSvs9wLGOOgPOY6GzwuKuovZh4UMjplaxKJu/wyAtKKGV99cTnuUCc
-         b9jW667DJd78gpOSqL093TQrnCvZ9zpW4sDgc9e3s4gqdpHbIh0cqwIbSVLaQrTLqDAX
-         thER0vKrZAtqkOJvYQeGZuITMeh4kPZ6AWC1kOvIEmnWvuxZr35lD2OOnlXMpkqB5GBo
-         XlqFU7D/ggoXmysuTUVEiDWk1jvnBEMzHRuwpliqu/K2HYrSEPvB6WXxqYArt4mYifKa
-         QdMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2qvzvkep7ZlQHNyjrGsuXQAp+x7s+RjdNiOv81NxtoQ=;
-        b=b015YUMSnbtcMSUuBQ9WhVYtRLpl54qr9+MypBy8cRqOX6eEbcqkr2UKUqTg1nXtS8
-         hE3CLO4GbX1V7d3ut3lXEdWo6Ap0o1a6LT6Q1AeN87AIE9wRcKcKgD2JOY6hdLS/WiQt
-         9MADBCI/t4Bdp+/hAEH21Jd7v6WGtbV5zdDSoYf+Zz/BU6/AAF+xAWzV5JjaKOAewWhP
-         UfHr6CG4+VSr/PgHcUt6J6I7yOeHXilUBBYDS/4Ak73TuxxqIJwSSu1jBoyCp8iboApX
-         MEPndEqeDdDGz0btS5EmqrohMtr1BZIaHGfz7mkOQhouLLRoZnS+B4K+is89QwtR1qAy
-         94pA==
-X-Gm-Message-State: AOAM533Ce1QgI78uDLgcSkd4rloTygkeJFfeJVaRmomqxf4e/fj9FR01
-        5CXH6kRfDFc/M7ibu5SbEMQshr2Ndq+/mRbxLLeTGA==
-X-Google-Smtp-Source: ABdhPJx+Rb9Dh5afCkPV93ubbfa83YINwHuyBNL6aGGIC9gNFt/GVdQQ5DqMV2LQPpqLPd5cGrS+QMzugsAJ9rHE3h4=
-X-Received: by 2002:a92:4f:: with SMTP id 76mr2640989ila.11.1598227486317;
- Sun, 23 Aug 2020 17:04:46 -0700 (PDT)
+        id S1725850AbgHXHgk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Aug 2020 03:36:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46456 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgHXHgk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 24 Aug 2020 03:36:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B65ACAF38;
+        Mon, 24 Aug 2020 07:37:08 +0000 (UTC)
+Subject: Re: [PATCH 2/3] block: fix locking for struct block_device size
+ updates
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Justin Sanders <justin@coraid.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Xianting Tian <xianting_tian@126.com>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org
+References: <20200823091043.2600261-1-hch@lst.de>
+ <20200823091043.2600261-3-hch@lst.de>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <73653f9e-2d39-48fb-9842-3a1851fb5bed@suse.de>
+Date:   Mon, 24 Aug 2020 09:36:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20191221150402.13868-1-murphyt7@tcd.ie> <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
- <20200529124523.GA11817@infradead.org> <CGME20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d@eucas1p2.samsung.com>
- <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com> <ef2150d5-7b6a-df25-c10d-e43316fe7812@samsung.com>
- <b9140772-0370-a858-578c-af503a06d8e9@deltatee.com>
-In-Reply-To: <b9140772-0370-a858-578c-af503a06d8e9@deltatee.com>
-From:   Tom Murphy <murphyt7@tcd.ie>
-Date:   Mon, 24 Aug 2020 01:04:35 +0100
-Message-ID: <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
-Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-mediatek@lists.infradead.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200823091043.2600261-3-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Logan/All,
+On 8/23/20 11:10 AM, Christoph Hellwig wrote:
+> Two different callers use two different mutexes for updating the
+> block device size, which obviously doesn't help to actually protect
+> against concurrent updates from the different callers.  In addition
+> one of the locks, bd_mutex is rather prone to deadlocks with other
+> parts of the block stack that use it for high level synchronization.
+> 
+> Switch to using a new spinlock protecting just the size updates, as
+> that is all we need, and make sure everyone does the update through
+> the proper helper.
+> 
+> This fixes a bug reported with the nvme revalidating disks during a
+> hot removal operation, which can currently deadlock on bd_mutex.
+> 
+> Reported-by: Xianting Tian <xianting_tian@126.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  block/partitions/core.c         |  4 ++--
+>  drivers/block/aoe/aoecmd.c      |  4 +---
+>  drivers/md/dm.c                 | 15 ++-------------
+>  drivers/s390/block/dasd_ioctl.c |  9 ++-------
+>  fs/block_dev.c                  | 25 ++++++++++++++-----------
+>  include/linux/blk_types.h       |  1 +
+>  6 files changed, 22 insertions(+), 36 deletions(-)
+> Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-I have added a check for the sg_dma_len == 0 :
-"""
- } __sgt_iter(struct scatterlist *sgl, bool dma) {
-        struct sgt_iter s = { .sgp = sgl };
+Cheers,
 
-+       if (sgl && sg_dma_len(sgl) == 0)
-+           s.sgp = NULL;
-
-        if (s.sgp) {
-            .....
-"""
-at location [1].
-but it doens't fix the problem.
-
-You're right though, this change does need to be made, this code
-doesn't handle pages of sg_dma_len(sg) == 0 correctly
-So my guess is that we have more bugs in other parts of the i915
-driver (or there is a problem with my "sg_dma_len == 0" fix above).
-I have been trying to spot where else the code might be buggy but I
-haven't had any luck so far.
-
-I'm doing a microconfernce (at LPC 2020) this wednesdays [1] on this
-if you're interested in attending.
-I'm hoping I can chat about it with a few people and find how can
-reproduce and fix this issues. I don't have any more time I can give
-to this unfortunately and it would be a shame for the work to go to
-waste.
-
-[0] https://github.com/torvalds/linux/blob/d012a7190fc1fd72ed48911e77ca97ba4521bccd/drivers/gpu/drm/i915/i915_scatterlist.h#L28
-[1] https://linuxplumbersconf.org/event/7/contributions/846/
-
-On Fri, 29 May 2020 at 22:21, Logan Gunthorpe <logang@deltatee.com> wrote:
->
->
->
-> On 2020-05-29 3:11 p.m., Marek Szyprowski wrote:
-> > Patches are pending:
-> > https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
->
-> Cool, nice! Though, I still don't think that fixes the issue in
-> i915_scatterlist.h given it still ignores sg_dma_len() and strictly
-> relies on sg_next()/sg_is_last() to stop iterating -- and I suspect this
-> is the bug that got in Tom's way.
->
-> >> However, as Robin pointed out, there are other ugly tricks like stopping
-> >> iterating through the SGL when sg_dma_len() is zero. For example, the
-> >> AMD driver appears to use drm_prime_sg_to_page_addr_arrays() which does
-> >> this trick and thus likely isn't buggy (otherwise, I'd expect someone to
-> >> have complained by now seeing AMD has already switched to IOMMU-DMA.
-> >
-> > I'm not sure that this is a trick. Stopping at zero sg_dma_len() was
-> > somewhere documented.
->
-> Well whatever you want to call it, it is ugly to have some drivers doing
-> one thing with the returned value and others assuming there's an extra
-> zero at the end. It just causes confusion for people reading/copying the
-> code. It would be better if they are all consistent. However, I concede
-> stopping at zero should not be broken, presently.
->
-> Logan
+Hannes
+-- 
+Dr. Hannes Reinecke		           Kernel Storage Architect
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
