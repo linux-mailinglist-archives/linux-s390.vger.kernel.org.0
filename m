@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E00C125038D
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Aug 2020 18:46:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1341B25031F
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Aug 2020 18:39:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbgHXQpu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Aug 2020 12:45:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47194 "EHLO mail.kernel.org"
+        id S1728613AbgHXQjn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Aug 2020 12:39:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728586AbgHXQjX (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:39:23 -0400
+        id S1728601AbgHXQjj (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:39:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A33D22CB1;
-        Mon, 24 Aug 2020 16:39:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F8DC22D3E;
+        Mon, 24 Aug 2020 16:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287163;
-        bh=4TG4KMIY0v5Q13GLnA/64q9bgsmokJekESKQfdHsjfM=;
+        s=default; t=1598287177;
+        bh=p8BE7X+nZ6st4U/GVQwBf0Sc/g1a6v51AjLXWy+aJXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ooHO/LAYaVVxBXlO4WkbAZ74n6SUBGoWdlBb8lf624HN3fx1zge4ugzww+plaDIht
-         iAqK7JP55N6XGT1OvzPjr2VATvfvf42qYBfOc6EAIVujCw474LFsOkdKJp2YsqbULN
-         7979X0Satwtymic4d19z63+YvOvnbHqsxHdpdV6E=
+        b=XuXpSbZKKMQeJJEAmX6wqSu6fH12guoA5eCdI0MWB0h1vtu/sgP42E0JMrjOy7z1Z
+         XSLefBtf8F6oZKSwP/wdjDaKvInEPTl4AeGwAur7z0TUxHIvD8ILIFE9P9QC1hhgv0
+         CIMK9NTV77WG685foqmnvNkNga58a7rbzJ8iipn8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Vineeth Vijayan <vneethv@linux.ibm.com>,
         Peter Oberparleiter <oberpar@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/11] s390/cio: add cond_resched() in the slow_eval_known_fn() loop
-Date:   Mon, 24 Aug 2020 12:39:09 -0400
-Message-Id: <20200824163914.607152-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 4/8] s390/cio: add cond_resched() in the slow_eval_known_fn() loop
+Date:   Mon, 24 Aug 2020 12:39:27 -0400
+Message-Id: <20200824163931.607291-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163914.607152-1-sashal@kernel.org>
-References: <20200824163914.607152-1-sashal@kernel.org>
+In-Reply-To: <20200824163931.607291-1-sashal@kernel.org>
+References: <20200824163931.607291-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,10 +64,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+)
 
 diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-index dadff1838fec1..e2026d54dd375 100644
+index 39a2b0cde9e42..d81fdcd6a1fe0 100644
 --- a/drivers/s390/cio/css.c
 +++ b/drivers/s390/cio/css.c
-@@ -581,6 +581,11 @@ static int slow_eval_known_fn(struct subchannel *sch, void *data)
+@@ -529,6 +529,11 @@ static int slow_eval_known_fn(struct subchannel *sch, void *data)
  		rc = css_evaluate_known_subchannel(sch, 1);
  		if (rc == -EAGAIN)
  			css_schedule_eval(sch->schid);
