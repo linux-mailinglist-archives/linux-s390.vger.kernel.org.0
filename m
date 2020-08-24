@@ -2,21 +2,21 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBA4824F323
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Aug 2020 09:36:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7D9924F32E
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Aug 2020 09:38:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725850AbgHXHgk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Aug 2020 03:36:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46456 "EHLO mx2.suse.de"
+        id S1726638AbgHXHiD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Aug 2020 03:38:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49982 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgHXHgk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 24 Aug 2020 03:36:40 -0400
+        id S1726635AbgHXHh6 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 24 Aug 2020 03:37:58 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B65ACAF38;
-        Mon, 24 Aug 2020 07:37:08 +0000 (UTC)
-Subject: Re: [PATCH 2/3] block: fix locking for struct block_device size
- updates
+        by mx2.suse.de (Postfix) with ESMTP id 6B2A5AF38;
+        Mon, 24 Aug 2020 07:38:26 +0000 (UTC)
+Subject: Re: [PATCH 3/3] nvme: don't call revalidate_disk from
+ nvme_set_queue_dying
 To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
 Cc:     Justin Sanders <justin@coraid.com>,
         Josef Bacik <josef@toxicpanda.com>,
@@ -27,7 +27,7 @@ Cc:     Justin Sanders <justin@coraid.com>,
         linux-kernel@vger.kernel.org, nbd@other.debian.org,
         linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org
 References: <20200823091043.2600261-1-hch@lst.de>
- <20200823091043.2600261-3-hch@lst.de>
+ <20200823091043.2600261-4-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
 Openpgp: preference=signencrypt
 Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
@@ -73,12 +73,12 @@ Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
  ZtWlhGRERnDH17PUXDglsOA08HCls0PHx8itYsjYCAyETlxlLApXWdVl9YVwbQpQ+i693t/Y
  PGu8jotn0++P19d3JwXW8t6TVvBIQ1dRZHx1IxGLMn+CkDJMOmHAUMWTAXX2rf5tUjas8/v2
  azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <73653f9e-2d39-48fb-9842-3a1851fb5bed@suse.de>
-Date:   Mon, 24 Aug 2020 09:36:38 +0200
+Message-ID: <bec1889c-5e0f-cd33-f74a-a7d44161a0ee@suse.de>
+Date:   Mon, 24 Aug 2020 09:37:56 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200823091043.2600261-3-hch@lst.de>
+In-Reply-To: <20200823091043.2600261-4-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -88,30 +88,24 @@ List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 8/23/20 11:10 AM, Christoph Hellwig wrote:
-> Two different callers use two different mutexes for updating the
-> block device size, which obviously doesn't help to actually protect
-> against concurrent updates from the different callers.  In addition
-> one of the locks, bd_mutex is rather prone to deadlocks with other
-> parts of the block stack that use it for high level synchronization.
+> In nvme_set_queue_dying we really just want to ensure the disk and bdev
+> sizes are set to zero.  Going through revalidate_disk leads to a somewhat
+> arcance and complex callchain relying on special behavior in a few
+> places.  Instead just lift the set_capacity directly to
+> nvme_set_queue_dying, and rename and move the nvme_mpath_update_disk_size
+> helper so that we can use it in nvme_set_queue_dying to propagate the
+> size to the bdev without detours.
 > 
-> Switch to using a new spinlock protecting just the size updates, as
-> that is all we need, and make sure everyone does the update through
-> the proper helper.
-> 
-> This fixes a bug reported with the nvme revalidating disks during a
-> hot removal operation, which can currently deadlock on bd_mutex.
-> 
-> Reported-by: Xianting Tian <xianting_tian@126.com>
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  block/partitions/core.c         |  4 ++--
->  drivers/block/aoe/aoecmd.c      |  4 +---
->  drivers/md/dm.c                 | 15 ++-------------
->  drivers/s390/block/dasd_ioctl.c |  9 ++-------
->  fs/block_dev.c                  | 25 ++++++++++++++-----------
->  include/linux/blk_types.h       |  1 +
->  6 files changed, 22 insertions(+), 36 deletions(-)
-> Reviewed-by: Hannes Reinecke <hare@suse.de>
+>  drivers/nvme/host/core.c | 33 +++++++++++++++++++++++----------
+>  drivers/nvme/host/nvme.h | 13 -------------
+>  2 files changed, 23 insertions(+), 23 deletions(-)
+> 
+YES!
+I've been bitten by this far too often.
+
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
 Cheers,
 
