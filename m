@@ -2,126 +2,201 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 128582516D2
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Aug 2020 12:45:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D645D25220F
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Aug 2020 22:43:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729884AbgHYKps (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Aug 2020 06:45:48 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25464 "EHLO
+        id S1726149AbgHYUnk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Aug 2020 16:43:40 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31014 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729858AbgHYKps (ORCPT
+        by vger.kernel.org with ESMTP id S1726222AbgHYUnk (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:45:48 -0400
+        Tue, 25 Aug 2020 16:43:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598352346;
+        s=mimecast20190719; t=1598388216;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Zqomz7pBodrPJvyElkg6GCnIebmEo0ZuVsFwZptpcLA=;
-        b=d5+h2MR8SdrT9nDvHmmK7Uz6B+dZntYDf6wV/D16Nyuw4Hg511m/0RbgyWxmoETEIRUsJ9
-        GJ9UZpb4A0OIo+vpi2PVe0CQtDILH2cT26CvoHVQgtNhzMnE8zAoqvrcRkLcYlgTkboLhT
-        GdmTRENOsSW5yJi6fpc7hU/sCm5vLaQ=
+        bh=cxP4EgaB0Xz0w6dYf0l2wcvtIDiO0CRcIDu5KxI9VFs=;
+        b=Q8kQdKE/pN5eSEkRQwvojgjuTp4rmZIYlMapzXpHfQts8kJh5lMoDIXAsv9jJmD8lbAm5o
+        FnnAyNMDqwp4FIVBkZzCNZmEo7HgHnYulAr2P5WRG8af86/r7xu/Tj1WuDmbyVhECvsKAe
+        wkHfE/JuZlnzmiguj4Oa7RNJGpdGjYg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-436-G_MjPm9LOrG-Ln1KLW4msQ-1; Tue, 25 Aug 2020 06:45:42 -0400
-X-MC-Unique: G_MjPm9LOrG-Ln1KLW4msQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-429-7wO29EiuOyeMIOLpHIkNRQ-1; Tue, 25 Aug 2020 16:43:34 -0400
+X-MC-Unique: 7wO29EiuOyeMIOLpHIkNRQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B7FE81F01A;
-        Tue, 25 Aug 2020 10:45:40 +0000 (UTC)
-Received: from gondolin (ovpn-112-248.ams2.redhat.com [10.36.112.248])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5BCB160C0F;
-        Tue, 25 Aug 2020 10:45:32 +0000 (UTC)
-Date:   Tue, 25 Aug 2020 12:45:29 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v10 16/16] s390/vfio-ap: update docs to include dynamic
- config support
-Message-ID: <20200825124529.7b51d825.cohuck@redhat.com>
-In-Reply-To: <20200821195616.13554-17-akrowiak@linux.ibm.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
-        <20200821195616.13554-17-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 175A71DDE0;
+        Tue, 25 Aug 2020 20:43:32 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3723119C58;
+        Tue, 25 Aug 2020 20:43:31 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 14:43:30 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     bhelgaas@google.com, schnelle@linux.ibm.com, pmorel@linux.ibm.com,
+        mpe@ellerman.id.au, oohall@gmail.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: Introduce flag for detached virtual functions
+Message-ID: <20200825144330.70530629@x1.home>
+In-Reply-To: <6917634d-0976-6f7b-6efc-a7a855686fb9@linux.ibm.com>
+References: <1597333243-29483-1-git-send-email-mjrosato@linux.ibm.com>
+        <1597333243-29483-2-git-send-email-mjrosato@linux.ibm.com>
+        <6917634d-0976-6f7b-6efc-a7a855686fb9@linux.ibm.com>
+Organization: Red Hat
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 21 Aug 2020 15:56:16 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On Mon, 24 Aug 2020 10:21:24 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-> Update the documentation in vfio-ap.rst to include information about the
-> AP dynamic configuration support (i.e., hot plug of adapters, domains
-> and control domains via the matrix mediated device's sysfs assignment
-> attributes).
+> On 8/13/20 11:40 AM, Matthew Rosato wrote:
+> > s390x has the notion of providing VFs to the kernel in a manner
+> > where the associated PF is inaccessible other than via firmware.
+> > These are not treated as typical VFs and access to them is emulated
+> > by underlying firmware which can still access the PF.  After
+> > the referened commit however these detached VFs were no longer able
+> > to work with vfio-pci as the firmware does not provide emulation of
+> > the PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
+> > these detached VFs so that vfio-pci can allow memory access to
+> > them again. >
+> > Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
+> > Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>  
 > 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  Documentation/s390/vfio-ap.rst | 362 ++++++++++++++++++++++++++-------
->  1 file changed, 285 insertions(+), 77 deletions(-)
+> Polite ping - If unhappy with the approach moving in this direction, I 
+> have also played around with Alex's prior suggestion of a dev_flags bit 
+> that denotes a device that doesn't implement PCI_COMMAND_MEMORY.  Please 
+> advise.
+
+
+I'm not unhappy with it, but there are quite a number of users of
+is_virtfn and I wonder to what extent we can replace all of them.  For
+instance if the longer term plan would be to consider is_virtfn private
+then I think there are places in vfio-pci where we'd need to test
+(pci_physfn(pdev) != pdev) in order to make sure we're working on the
+topology we expect (see VF token handling).  If we want to consider
+these detached VFs as actual VFs (minus the PF) everywhere in the code,
+rather than a PF that doesn't implement random features as determined
+by the bare metal hypervisor, then this might be the way to go.  The
+former implies that we'd migrate away from is_virtfn to this new
+interface, potentially changing the code path these devices would take
+as that adoption proceeds.  Have you taken a look at other is_virtfn
+use cases to see if any would be strictly undesirable for this class of
+devices?  Otherwise I think Bjorn needs to weigh in since the PCI-core
+change is a central aspect to this proposal.  Thanks,
+
+Alex
+
+
+> > ---
+> >   arch/s390/pci/pci_bus.c            | 13 +++++++++++++
+> >   drivers/vfio/pci/vfio_pci_config.c |  8 ++++----
+> >   include/linux/pci.h                |  4 ++++
+> >   3 files changed, 21 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
+> > index 642a993..1b33076 100644
+> > --- a/arch/s390/pci/pci_bus.c
+> > +++ b/arch/s390/pci/pci_bus.c
+> > @@ -184,6 +184,19 @@ static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
+> >   }
+> >   #endif
+> >   
+> > +void pcibios_bus_add_device(struct pci_dev *pdev)
+> > +{
+> > +	struct zpci_dev *zdev = to_zpci(pdev);
+> > +
+> > +	/*
+> > +	 * If we have a VF on a non-multifunction bus, it must be a VF that is
+> > +	 * detached from its parent PF.  We rely on firmware emulation to
+> > +	 * provide underlying PF details.
+> > +	 */
+> > +	if (zdev->vfn && !zdev->zbus->multifunction)
+> > +		pdev->detached_vf = 1;
+> > +}
+> > +
+> >   static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
+> >   {
+> >   	struct pci_bus *bus;
+> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> > index d98843f..98f93d1 100644
+> > --- a/drivers/vfio/pci/vfio_pci_config.c
+> > +++ b/drivers/vfio/pci/vfio_pci_config.c
+> > @@ -406,7 +406,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
+> >   	 * PF SR-IOV capability, there's therefore no need to trigger
+> >   	 * faults based on the virtual value.
+> >   	 */
+> > -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
+> > +	return dev_is_vf(&pdev->dev) || (cmd & PCI_COMMAND_MEMORY);
+> >   }
+> >   
+> >   /*
+> > @@ -420,7 +420,7 @@ static void vfio_bar_restore(struct vfio_pci_device *vdev)
+> >   	u16 cmd;
+> >   	int i;
+> >   
+> > -	if (pdev->is_virtfn)
+> > +	if (dev_is_vf(&pdev->dev))
+> >   		return;
+> >   
+> >   	pci_info(pdev, "%s: reset recovery - restoring BARs\n", __func__);
+> > @@ -521,7 +521,7 @@ static int vfio_basic_config_read(struct vfio_pci_device *vdev, int pos,
+> >   	count = vfio_default_config_read(vdev, pos, count, perm, offset, val);
+> >   
+> >   	/* Mask in virtual memory enable for SR-IOV devices */
+> > -	if (offset == PCI_COMMAND && vdev->pdev->is_virtfn) {
+> > +	if ((offset == PCI_COMMAND) && (dev_is_vf(&vdev->pdev->dev))) {
+> >   		u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
+> >   		u32 tmp_val = le32_to_cpu(*val);
+> >   
+> > @@ -1713,7 +1713,7 @@ int vfio_config_init(struct vfio_pci_device *vdev)
+> >   	vdev->rbar[5] = le32_to_cpu(*(__le32 *)&vconfig[PCI_BASE_ADDRESS_5]);
+> >   	vdev->rbar[6] = le32_to_cpu(*(__le32 *)&vconfig[PCI_ROM_ADDRESS]);
+> >   
+> > -	if (pdev->is_virtfn) {
+> > +	if (dev_is_vf(&pdev->dev)) {
+> >   		*(__le16 *)&vconfig[PCI_VENDOR_ID] = cpu_to_le16(pdev->vendor);
+> >   		*(__le16 *)&vconfig[PCI_DEVICE_ID] = cpu_to_le16(pdev->device);
+> >   
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 8355306..7c062de 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -445,6 +445,7 @@ struct pci_dev {
+> >   	unsigned int	is_probed:1;		/* Device probing in progress */
+> >   	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
+> >   	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
+> > +	unsigned int	detached_vf:1;		/* VF without local PF access */
+> >   	pci_dev_flags_t dev_flags;
+> >   	atomic_t	enable_cnt;	/* pci_enable_device has been called */
+> >   
+> > @@ -1057,6 +1058,8 @@ struct resource *pci_find_parent_resource(const struct pci_dev *dev,
+> >   void pci_sort_breadthfirst(void);
+> >   #define dev_is_pci(d) ((d)->bus == &pci_bus_type)
+> >   #define dev_is_pf(d) ((dev_is_pci(d) ? to_pci_dev(d)->is_physfn : false))
+> > +#define dev_is_vf(d) ((dev_is_pci(d) ? (to_pci_dev(d)->is_virtfn || \
+> > +					to_pci_dev(d)->detached_vf) : false))
+> >   
+> >   /* Generic PCI functions exported to card drivers */
+> >   
+> > @@ -1764,6 +1767,7 @@ static inline struct pci_dev *pci_get_domain_bus_and_slot(int domain,
+> >   
+> >   #define dev_is_pci(d) (false)
+> >   #define dev_is_pf(d) (false)
+> > +#define dev_is_vf(d) (false)
+> >   static inline bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags)
+> >   { return false; }
+> >   static inline int pci_irqd_intx_xlate(struct irq_domain *d,
+> >   
 > 
-> diff --git a/Documentation/s390/vfio-ap.rst b/Documentation/s390/vfio-ap.rst
-> index e15436599086..8907aeca8fb7 100644
-> --- a/Documentation/s390/vfio-ap.rst
-> +++ b/Documentation/s390/vfio-ap.rst
-> @@ -253,7 +253,7 @@ The process for reserving an AP queue for use by a KVM guest is:
->  1. The administrator loads the vfio_ap device driver
->  2. The vfio-ap driver during its initialization will register a single 'matrix'
->     device with the device core. This will serve as the parent device for
-> -   all mediated matrix devices used to configure an AP matrix for a guest.
-> +   all matrix mediated devices used to configure an AP matrix for a guest.
-
-This (and many other changes here) seems to be unrelated to the new
-feature. Split that out into a separate patch that can be applied right
-away? That would make this patch smaller and easier to review; it's
-hard to figure out which parts deal with the new feature, and which parts
-simply got an update.
-
-Also, do you want to do similar wording changes in the QEMU
-documentation for vfio-ap?
-
->  3. The /sys/devices/vfio_ap/matrix device is created by the device core
->  4. The vfio_ap device driver will register with the AP bus for AP queue devices
->     of type 10 and higher (CEX4 and newer). The driver will provide the vfio_ap
-
-(...)
-
-> @@ -435,6 +481,10 @@ available to a KVM guest via the following CPU model features:
->     can be made available to the guest only if it is available on the host (i.e.,
->     facility bit 12 is set).
->  
-> +4. apqi: Indicates AP queue interrupts are available on the guest. This facility
-> +   can be made available to the guest only if it is available on the host (i.e.,
-> +   facility bit 65 is set).
-> +
->  Note: If the user chooses to specify a CPU model different than the 'host'
->  model to QEMU, the CPU model features and facilities need to be turned on
->  explicitly; for example::
-> @@ -444,7 +494,7 @@ explicitly; for example::
->  A guest can be precluded from using AP features/facilities by turning them off
->  explicitly; for example::
->  
-> -     /usr/bin/qemu-system-s390x ... -cpu host,ap=off,apqci=off,apft=off
-> +     /usr/bin/qemu-system-s390x ... -cpu host,ap=off,apqci=off,apft=off,apqi=off
-
-Isn't that an already existing facility that was simply lacking
-documentation? If yes, split it off?
-
->  
->  Note: If the APFT facility is turned off (apft=off) for the guest, the guest
->  will not see any AP devices. The zcrypt device drivers that register for type 10
-
-(...)
 
