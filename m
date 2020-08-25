@@ -2,165 +2,195 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3070D25166F
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Aug 2020 12:17:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8AA325169A
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Aug 2020 12:25:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbgHYKRg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Aug 2020 06:17:36 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16426 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728117AbgHYKRf (ORCPT
+        id S1729827AbgHYKZY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Aug 2020 06:25:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53945 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729710AbgHYKZU (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:17:35 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PA4pWp154169;
-        Tue, 25 Aug 2020 06:16:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=EOBUoNumc+lfxeSxOyM8nxTJchcZ8SasJG/UKpKCePc=;
- b=FLMfaI34xTiJCIrm5uFNqbuk0uT2DGykGFonCKV9ValbKJI3Gb8aJ1pjUCvH1rBMViHH
- a+46qMxkOoSEKYil9BF1E0fCNjqHrqN02uE3u63nGbSY/ajxgIwKwmxxu46FESXlA2nM
- CSrGWVcVfhlmX34vqVger2iojhSeXB+dFv+4FsmjCV6iJGBcX6jS2sIknOsTSUArI8jv
- pWnbWazaY41s/AVuWDg2oC/WN57VTsUafbWj+P2oGiWZap4gTf8wGpUUY7J7pjuNx8tf
- G6kTrWxeMCgWUXkLDaUJi/CEnjLBtbu0oz+Lo59EIPqzoCxSQsIPS9X7KAhGXPUvR8Iv 7g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 334yc52e4u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 06:16:35 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07PA7kP9161517;
-        Tue, 25 Aug 2020 06:16:34 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 334yc52e43-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 06:16:34 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07PAFFq5019135;
-        Tue, 25 Aug 2020 10:16:32 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 33498u97t7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 10:16:32 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07PAGT9N24445372
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 10:16:29 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B3F1A4054;
-        Tue, 25 Aug 2020 10:16:29 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C6052A4062;
-        Tue, 25 Aug 2020 10:16:27 +0000 (GMT)
-Received: from oc5500677777.ibm.com (unknown [9.145.83.242])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Aug 2020 10:16:27 +0000 (GMT)
-Subject: Re: [RFT][PATCH 0/7] Avoid overflow at boundary_size
-To:     Nicolin Chen <nicoleotsuka@gmail.com>, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, paulus@samba.org, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com, tony.luck@intel.com,
-        fenghua.yu@intel.com, gerald.schaefer@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
-        davem@davemloft.net, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        James.Bottomley@HansenPartnership.com, deller@gmx.de
-Cc:     sfr@canb.auug.org.au, hch@lst.de, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org
-References: <20200820231923.23678-1-nicoleotsuka@gmail.com>
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-Message-ID: <4321af30-9554-6897-5281-05afd88f2631@linux.ibm.com>
-Date:   Tue, 25 Aug 2020 12:16:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 25 Aug 2020 06:25:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598351118;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TQO2UOBn1MOgRwNvmVPJopGiZ9cQGSGDLytuuuQO4uY=;
+        b=aUyypsbIhKih0uTusA7/7Ws72wgFbHriGf7Ibweun7P94d1D/6qvQzC/iJtQRTiL3XHxap
+        IgoOdgTR8wgXN/aBG4gFHqKB0VXNfE+bUan7IBZqbMWsI0eX5GAa4ah+ETpOnHjbcLLsdB
+        hTV/rLMlObmMXpEcs3VYRYfOO4BlBJk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-477-jCTQBosbMsSI6ipAkSitDQ-1; Tue, 25 Aug 2020 06:25:14 -0400
+X-MC-Unique: jCTQBosbMsSI6ipAkSitDQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02B8381F01D;
+        Tue, 25 Aug 2020 10:25:13 +0000 (UTC)
+Received: from gondolin (ovpn-112-248.ams2.redhat.com [10.36.112.248])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BD36419144;
+        Tue, 25 Aug 2020 10:25:03 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 12:25:01 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v10 03/16] s390/vfio-ap: manage link between queue
+ struct and matrix mdev
+Message-ID: <20200825122501.624474df.cohuck@redhat.com>
+In-Reply-To: <20200821195616.13554-4-akrowiak@linux.ibm.com>
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+        <20200821195616.13554-4-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200820231923.23678-1-nicoleotsuka@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-25_02:2020-08-24,2020-08-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- spamscore=0 impostorscore=0 priorityscore=1501 clxscore=1011
- mlxlogscore=999 malwarescore=0 suspectscore=2 adultscore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250073
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Fri, 21 Aug 2020 15:56:03 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
+> Let's create links between each queue device bound to the vfio_ap device
+> driver and the matrix mdev to which the queue is assigned. The idea is to
+> facilitate efficient retrieval of the objects representing the queue
+> devices and matrix mdevs as well as to verify that a queue assigned to
+> a matrix mdev is bound to the driver.
+> 
+> The links will be created as follows:
+> 
+>    * When the queue device is probed, if its APQN is assigned to a matrix
+>      mdev, the structures representing the queue device and the matrix mdev
+>      will be linked.
+> 
+>    * When an adapter or domain is assigned to a matrix mdev, for each new
+>      APQN assigned that references a queue device bound to the vfio_ap
+>      device driver, the structures representing the queue device and the
+>      matrix mdev will be linked.
+> 
+> The links will be removed as follows:
+> 
+>    * When the queue device is removed, if its APQN is assigned to a matrix
+>      mdev, the structures representing the queue device and the matrix mdev
+>      will be unlinked.
+> 
+>    * When an adapter or domain is unassigned from a matrix mdev, for each
+>      APQN unassigned that references a queue device bound to the vfio_ap
+>      device driver, the structures representing the queue device and the
+>      matrix mdev will be unlinked.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_ops.c     | 132 +++++++++++++++++++++++++-
+>  drivers/s390/crypto/vfio_ap_private.h |   2 +
+>  2 files changed, 129 insertions(+), 5 deletions(-)
+> 
 
-On 8/21/20 1:19 AM, Nicolin Chen wrote:
-> We are expending the default DMA segmentation boundary to its
-> possible maximum value (ULONG_MAX) to indicate that a device
-> doesn't specify a boundary limit. So all dma_get_seg_boundary
-> callers should take a precaution with the return values since
-> it would easily get overflowed.
-> 
-> I scanned the entire kernel tree for all the existing callers
-> and found that most of callers may get overflowed in two ways:
-> either "+ 1" or passing it to ALIGN() that does "+ mask".
-> 
-> According to kernel defines:
->     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
->     #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
-> 
-> We can simplify the logic here:
->   ALIGN(boundary + 1, 1 << shift) >> shift
-> = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
-> = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
-> = [b + 1 + (1 << s) - 1] >> s
-> = [b + (1 << s)] >> s
-> = (b >> s) + 1
-> 
-> So this series of patches fix the potential overflow with this
-> overflow-free shortcut.
+(...)
 
-Hi Nicolin,
+> @@ -548,6 +557,87 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+>  	return 0;
+>  }
+>  
+> +enum qlink_type {
 
-haven't seen any other feedback from other maintainers,
-so I guess you will resend this?
-On first glance it seems to make sense.
-I'm a little confused why it is only a "potential overflow"
-while this part
+<bikeshed>I think this is less of a type, and more of an action, so
+maybe call this 'qlink_action' (and the function parameter below
+'action'?)</bikeshed>
 
-"We are expending the default DMA segmentation boundary to its
- possible maximum value (ULONG_MAX) to indicate that a device
- doesn't specify a boundary limit"
+> +	LINK_APID,
+> +	LINK_APQI,
+> +	UNLINK_APID,
+> +	UNLINK_APQI,
+> +};
+> +
+> +static void vfio_ap_mdev_link_queue(struct ap_matrix_mdev *matrix_mdev,
+> +				    unsigned long apid, unsigned long apqi)
+> +{
+> +	struct vfio_ap_queue *q;
+> +
+> +	q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+> +	if (q) {
+> +		q->matrix_mdev = matrix_mdev;
+> +		hash_add(matrix_mdev->qtable,
+> +			 &q->mdev_qnode, q->apqn);
+> +	}
+> +}
+> +
+> +static void vfio_ap_mdev_unlink_queue(unsigned long apid, unsigned long apqi)
+> +{
+> +	struct vfio_ap_queue *q;
+> +
+> +	q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+> +	if (q) {
+> +		q->matrix_mdev = NULL;
+> +		hash_del(&q->mdev_qnode);
+> +	}
+> +}
+> +
+> +/**
+> + * vfio_ap_mdev_link_queues
+> + *
+> + * @matrix_mdev: The matrix mdev to link.
+> + * @type:	 The type of @qlink_id.
+> + * @qlink_id:	 The APID or APQI of the queues to link.
+> + *
+> + * Sets or clears the links between the queues with the specified @qlink_id
+> + * and the @matrix_mdev:
+> + *     @type == LINK_APID: Set the links between the @matrix_mdev and the
+> + *                         queues with the specified @qlink_id (APID)
+> + *     @type == LINK_APQI: Set the links between the @matrix_mdev and the
+> + *                         queues with the specified @qlink_id (APQI)
+> + *     @type == UNLINK_APID: Clear the links between the @matrix_mdev and the
+> + *                           queues with the specified @qlink_id (APID)
+> + *     @type == UNLINK_APQI: Clear the links between the @matrix_mdev and the
+> + *                           queues with the specified @qlink_id (APQI)
+> + */
+> +static void vfio_ap_mdev_link_queues(struct ap_matrix_mdev *matrix_mdev,
+> +				     enum qlink_type type,
+> +				     unsigned long qlink_id)
+> +{
+> +	unsigned long id;
+> +
+> +	switch (type) {
+> +	case LINK_APID:
+> +		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
+> +				     matrix_mdev->matrix.aqm_max + 1)
+> +			vfio_ap_mdev_link_queue(matrix_mdev, qlink_id, id);
+> +		break;
+> +	case UNLINK_APID:
+> +		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
+> +				     matrix_mdev->matrix.aqm_max + 1)
+> +			vfio_ap_mdev_unlink_queue(qlink_id, id);
+> +		break;
+> +	case LINK_APQI:
+> +		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
+> +				     matrix_mdev->matrix.apm_max + 1)
+> +			vfio_ap_mdev_link_queue(matrix_mdev, id, qlink_id);
+> +		break;
+> +	case UNLINK_APQI:
+> +		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
+> +				     matrix_mdev->matrix.apm_max + 1)
+> +			vfio_ap_mdev_link_queue(matrix_mdev, id, qlink_id);
+> +		break;
+> +	default:
+> +		WARN_ON_ONCE(1);
+> +	}
+> +}
+> +
 
-sounds to me like ULONG_MAX is actually used, does that
-mean there are currently no devices which do not specify a
-boundary limit?
+(...)
 
+I have not reviewed this deeply, but at a glance, it seems fine.
 
-> 
-> As I don't think that I have these platforms, marking RFT.
-> 
-> Thanks
-> Nic
-> 
-> Nicolin Chen (7):
->   powerpc/iommu: Avoid overflow at boundary_size
->   alpha: Avoid overflow at boundary_size
->   ia64/sba_iommu: Avoid overflow at boundary_size
->   s390/pci_dma: Avoid overflow at boundary_size
->   sparc: Avoid overflow at boundary_size
->   x86/amd_gart: Avoid overflow at boundary_size
->   parisc: Avoid overflow at boundary_size
-> 
->  arch/alpha/kernel/pci_iommu.c    | 10 ++++------
->  arch/ia64/hp/common/sba_iommu.c  |  4 ++--
->  arch/powerpc/kernel/iommu.c      | 11 +++++------
->  arch/s390/pci/pci_dma.c          |  4 ++--
->  arch/sparc/kernel/iommu-common.c |  9 +++------
->  arch/sparc/kernel/iommu.c        |  4 ++--
->  arch/sparc/kernel/pci_sun4v.c    |  4 ++--
->  arch/x86/kernel/amd_gart_64.c    |  4 ++--
->  drivers/parisc/ccio-dma.c        |  4 ++--
->  drivers/parisc/sba_iommu.c       |  4 ++--
->  10 files changed, 26 insertions(+), 32 deletions(-)
-> 
