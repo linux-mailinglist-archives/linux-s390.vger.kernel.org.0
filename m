@@ -2,201 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D645D25220F
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Aug 2020 22:43:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC012252406
+	for <lists+linux-s390@lfdr.de>; Wed, 26 Aug 2020 01:19:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbgHYUnk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Aug 2020 16:43:40 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31014 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726222AbgHYUnk (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:43:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598388216;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cxP4EgaB0Xz0w6dYf0l2wcvtIDiO0CRcIDu5KxI9VFs=;
-        b=Q8kQdKE/pN5eSEkRQwvojgjuTp4rmZIYlMapzXpHfQts8kJh5lMoDIXAsv9jJmD8lbAm5o
-        FnnAyNMDqwp4FIVBkZzCNZmEo7HgHnYulAr2P5WRG8af86/r7xu/Tj1WuDmbyVhECvsKAe
-        wkHfE/JuZlnzmiguj4Oa7RNJGpdGjYg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-7wO29EiuOyeMIOLpHIkNRQ-1; Tue, 25 Aug 2020 16:43:34 -0400
-X-MC-Unique: 7wO29EiuOyeMIOLpHIkNRQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 175A71DDE0;
-        Tue, 25 Aug 2020 20:43:32 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3723119C58;
-        Tue, 25 Aug 2020 20:43:31 +0000 (UTC)
-Date:   Tue, 25 Aug 2020 14:43:30 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     bhelgaas@google.com, schnelle@linux.ibm.com, pmorel@linux.ibm.com,
-        mpe@ellerman.id.au, oohall@gmail.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Introduce flag for detached virtual functions
-Message-ID: <20200825144330.70530629@x1.home>
-In-Reply-To: <6917634d-0976-6f7b-6efc-a7a855686fb9@linux.ibm.com>
-References: <1597333243-29483-1-git-send-email-mjrosato@linux.ibm.com>
-        <1597333243-29483-2-git-send-email-mjrosato@linux.ibm.com>
-        <6917634d-0976-6f7b-6efc-a7a855686fb9@linux.ibm.com>
-Organization: Red Hat
+        id S1726610AbgHYXTO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Aug 2020 19:19:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgHYXTN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 25 Aug 2020 19:19:13 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75C00C061574;
+        Tue, 25 Aug 2020 16:19:12 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 31so64876pgy.13;
+        Tue, 25 Aug 2020 16:19:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nzT4cIv5aZloZUa85ooGLcuJKku+lTzXEIFwdhhhrM4=;
+        b=g17iV+Lc6aSBOLe+PXWahWJW6Y2WovRbdTAFwXkgWGEBHeis8BwaGJ1/CrBTJ6wOxj
+         UKRTRHo+JKIkjHdtn9pMcUYhCibnMervY6vIJWwS4RQlE3LSjVqmLUTaL39UbAGj4g6L
+         0j0826j4CHEZnT2exq6W7xhcrJUuL+xeGwEr2VpfFjtGbo9lANRsknS4EVWyKfxKl7Il
+         /yIG9aDg8s8XYB33HFnAKY/2MhxQ2vY2S/m+geHEPThOE90LQ6W/H7XBdg78bySpsa/G
+         t/9acHQaOTqhr0MpHdKlJO7fxd8cXHOELXVJXXUfDBije2GdrgU/aZZQogR8XNVpmWFo
+         c4uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nzT4cIv5aZloZUa85ooGLcuJKku+lTzXEIFwdhhhrM4=;
+        b=UH/AJUyQZxDqGfdAJrvy99L/wXSWNJqoMJeRcOnBBVJkiv0FnY3SySyXVH/LTKr60j
+         oMvu9nv0sFDYhJGzELcZ3RObUu37x69fdGcXhnuzNpOqe6MNKC7y+Fn7gv64q8XuMMJg
+         Fl/eP0aSuFiu5pTmLOrzpLx8br1sQTZlQyXUhzOSibkUz4oxHdSfWryc4Mc3Ow+lQf8E
+         kXR5NI9FQOkmvVvLv3n6ToXl9kjbhk8F9gnPIuR0Y24DQJNCdYMdb/zSgrZW+vXqnDjT
+         1raRdZuevUW5Y4ua4eq/gaf4K5OnDme1ys2qxDCmhnOMw7tV2rXShWxAGLpeAT/rDtzH
+         8pFg==
+X-Gm-Message-State: AOAM531RQ2CB+J5qzUPdxAeAslK88XaaXW/rHNA4fX23yd1QFCE7iQE3
+        XhNF4EW1mA0cye4p0n3KMpM=
+X-Google-Smtp-Source: ABdhPJyK06Dvh5ZLh8ZEvQMG4jqMYYcFE+LKTmieWcScqEbOmexcuH0IBvKor0u/mjocM4FCOCK/kw==
+X-Received: by 2002:a63:4545:: with SMTP id u5mr8237031pgk.229.1598397551754;
+        Tue, 25 Aug 2020 16:19:11 -0700 (PDT)
+Received: from Asurada-Nvidia (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id v78sm344700pfc.121.2020.08.25.16.19.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 16:19:11 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 16:19:00 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        tony.luck@intel.com, fenghua.yu@intel.com,
+        gerald.schaefer@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, davem@davemloft.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, sfr@canb.auug.org.au, hch@lst.de,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-parisc@vger.kernel.org
+Subject: Re: [RFT][PATCH 0/7] Avoid overflow at boundary_size
+Message-ID: <20200825231900.GA4726@Asurada-Nvidia>
+References: <20200820231923.23678-1-nicoleotsuka@gmail.com>
+ <4321af30-9554-6897-5281-05afd88f2631@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4321af30-9554-6897-5281-05afd88f2631@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 24 Aug 2020 10:21:24 -0400
-Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+Hi Niklas,
 
-> On 8/13/20 11:40 AM, Matthew Rosato wrote:
-> > s390x has the notion of providing VFs to the kernel in a manner
-> > where the associated PF is inaccessible other than via firmware.
-> > These are not treated as typical VFs and access to them is emulated
-> > by underlying firmware which can still access the PF.  After
-> > the referened commit however these detached VFs were no longer able
-> > to work with vfio-pci as the firmware does not provide emulation of
-> > the PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
-> > these detached VFs so that vfio-pci can allow memory access to
-> > them again. >
-> > Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-> > Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>  
-> 
-> Polite ping - If unhappy with the approach moving in this direction, I 
-> have also played around with Alex's prior suggestion of a dev_flags bit 
-> that denotes a device that doesn't implement PCI_COMMAND_MEMORY.  Please 
-> advise.
-
-
-I'm not unhappy with it, but there are quite a number of users of
-is_virtfn and I wonder to what extent we can replace all of them.  For
-instance if the longer term plan would be to consider is_virtfn private
-then I think there are places in vfio-pci where we'd need to test
-(pci_physfn(pdev) != pdev) in order to make sure we're working on the
-topology we expect (see VF token handling).  If we want to consider
-these detached VFs as actual VFs (minus the PF) everywhere in the code,
-rather than a PF that doesn't implement random features as determined
-by the bare metal hypervisor, then this might be the way to go.  The
-former implies that we'd migrate away from is_virtfn to this new
-interface, potentially changing the code path these devices would take
-as that adoption proceeds.  Have you taken a look at other is_virtfn
-use cases to see if any would be strictly undesirable for this class of
-devices?  Otherwise I think Bjorn needs to weigh in since the PCI-core
-change is a central aspect to this proposal.  Thanks,
-
-Alex
-
-
-> > ---
-> >   arch/s390/pci/pci_bus.c            | 13 +++++++++++++
-> >   drivers/vfio/pci/vfio_pci_config.c |  8 ++++----
-> >   include/linux/pci.h                |  4 ++++
-> >   3 files changed, 21 insertions(+), 4 deletions(-)
+On Tue, Aug 25, 2020 at 12:16:27PM +0200, Niklas Schnelle wrote:
+> On 8/21/20 1:19 AM, Nicolin Chen wrote:
+> > We are expending the default DMA segmentation boundary to its
+> > possible maximum value (ULONG_MAX) to indicate that a device
+> > doesn't specify a boundary limit. So all dma_get_seg_boundary
+> > callers should take a precaution with the return values since
+> > it would easily get overflowed.
 > > 
-> > diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-> > index 642a993..1b33076 100644
-> > --- a/arch/s390/pci/pci_bus.c
-> > +++ b/arch/s390/pci/pci_bus.c
-> > @@ -184,6 +184,19 @@ static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
-> >   }
-> >   #endif
-> >   
-> > +void pcibios_bus_add_device(struct pci_dev *pdev)
-> > +{
-> > +	struct zpci_dev *zdev = to_zpci(pdev);
-> > +
-> > +	/*
-> > +	 * If we have a VF on a non-multifunction bus, it must be a VF that is
-> > +	 * detached from its parent PF.  We rely on firmware emulation to
-> > +	 * provide underlying PF details.
-> > +	 */
-> > +	if (zdev->vfn && !zdev->zbus->multifunction)
-> > +		pdev->detached_vf = 1;
-> > +}
-> > +
-> >   static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
-> >   {
-> >   	struct pci_bus *bus;
-> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> > index d98843f..98f93d1 100644
-> > --- a/drivers/vfio/pci/vfio_pci_config.c
-> > +++ b/drivers/vfio/pci/vfio_pci_config.c
-> > @@ -406,7 +406,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
-> >   	 * PF SR-IOV capability, there's therefore no need to trigger
-> >   	 * faults based on the virtual value.
-> >   	 */
-> > -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
-> > +	return dev_is_vf(&pdev->dev) || (cmd & PCI_COMMAND_MEMORY);
-> >   }
-> >   
-> >   /*
-> > @@ -420,7 +420,7 @@ static void vfio_bar_restore(struct vfio_pci_device *vdev)
-> >   	u16 cmd;
-> >   	int i;
-> >   
-> > -	if (pdev->is_virtfn)
-> > +	if (dev_is_vf(&pdev->dev))
-> >   		return;
-> >   
-> >   	pci_info(pdev, "%s: reset recovery - restoring BARs\n", __func__);
-> > @@ -521,7 +521,7 @@ static int vfio_basic_config_read(struct vfio_pci_device *vdev, int pos,
-> >   	count = vfio_default_config_read(vdev, pos, count, perm, offset, val);
-> >   
-> >   	/* Mask in virtual memory enable for SR-IOV devices */
-> > -	if (offset == PCI_COMMAND && vdev->pdev->is_virtfn) {
-> > +	if ((offset == PCI_COMMAND) && (dev_is_vf(&vdev->pdev->dev))) {
-> >   		u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
-> >   		u32 tmp_val = le32_to_cpu(*val);
-> >   
-> > @@ -1713,7 +1713,7 @@ int vfio_config_init(struct vfio_pci_device *vdev)
-> >   	vdev->rbar[5] = le32_to_cpu(*(__le32 *)&vconfig[PCI_BASE_ADDRESS_5]);
-> >   	vdev->rbar[6] = le32_to_cpu(*(__le32 *)&vconfig[PCI_ROM_ADDRESS]);
-> >   
-> > -	if (pdev->is_virtfn) {
-> > +	if (dev_is_vf(&pdev->dev)) {
-> >   		*(__le16 *)&vconfig[PCI_VENDOR_ID] = cpu_to_le16(pdev->vendor);
-> >   		*(__le16 *)&vconfig[PCI_DEVICE_ID] = cpu_to_le16(pdev->device);
-> >   
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 8355306..7c062de 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -445,6 +445,7 @@ struct pci_dev {
-> >   	unsigned int	is_probed:1;		/* Device probing in progress */
-> >   	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
-> >   	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
-> > +	unsigned int	detached_vf:1;		/* VF without local PF access */
-> >   	pci_dev_flags_t dev_flags;
-> >   	atomic_t	enable_cnt;	/* pci_enable_device has been called */
-> >   
-> > @@ -1057,6 +1058,8 @@ struct resource *pci_find_parent_resource(const struct pci_dev *dev,
-> >   void pci_sort_breadthfirst(void);
-> >   #define dev_is_pci(d) ((d)->bus == &pci_bus_type)
-> >   #define dev_is_pf(d) ((dev_is_pci(d) ? to_pci_dev(d)->is_physfn : false))
-> > +#define dev_is_vf(d) ((dev_is_pci(d) ? (to_pci_dev(d)->is_virtfn || \
-> > +					to_pci_dev(d)->detached_vf) : false))
-> >   
-> >   /* Generic PCI functions exported to card drivers */
-> >   
-> > @@ -1764,6 +1767,7 @@ static inline struct pci_dev *pci_get_domain_bus_and_slot(int domain,
-> >   
-> >   #define dev_is_pci(d) (false)
-> >   #define dev_is_pf(d) (false)
-> > +#define dev_is_vf(d) (false)
-> >   static inline bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags)
-> >   { return false; }
-> >   static inline int pci_irqd_intx_xlate(struct irq_domain *d,
-> >   
-> 
+> > I scanned the entire kernel tree for all the existing callers
+> > and found that most of callers may get overflowed in two ways:
+> > either "+ 1" or passing it to ALIGN() that does "+ mask".
+> > 
+> > According to kernel defines:
+> >     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
+> >     #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
+> > 
+> > We can simplify the logic here:
+> >   ALIGN(boundary + 1, 1 << shift) >> shift
+> > = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
+> > = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
+> > = [b + 1 + (1 << s) - 1] >> s
+> > = [b + (1 << s)] >> s
+> > = (b >> s) + 1
+> > 
+> > So this series of patches fix the potential overflow with this
+> > overflow-free shortcut.
+ 
+> haven't seen any other feedback from other maintainers,
 
+I am wondering this too...whether I sent correctly or not.
+
+> so I guess you will resend this?
+
+Do I need to? Though I won't mind doing so if it's necessary..
+
+> On first glance it seems to make sense.
+> I'm a little confused why it is only a "potential overflow"
+> while this part
+> 
+> "We are expending the default DMA segmentation boundary to its
+>  possible maximum value (ULONG_MAX) to indicate that a device
+>  doesn't specify a boundary limit"
+> 
+> sounds to me like ULONG_MAX is actually used, does that
+> mean there are currently no devices which do not specify a
+> boundary limit?
+
+Sorry for the confusion. We actually applied ULONG_MAX change
+last week but reverted it right after, due to a bug report at
+one of these "potential" overflows. So at this moment the top
+of the tree doesn't set default boundary to ULONG_MAX yet.
+
+Thanks
+Nic
