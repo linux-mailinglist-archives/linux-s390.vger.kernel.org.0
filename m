@@ -2,73 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C740C251146
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Aug 2020 07:05:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75F7225163A
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Aug 2020 12:04:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgHYFFu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Aug 2020 01:05:50 -0400
-Received: from smtprelay0185.hostedemail.com ([216.40.44.185]:53866 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728445AbgHYFFu (ORCPT
+        id S1729709AbgHYKEw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Aug 2020 06:04:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:22907 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729627AbgHYKEv (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 Aug 2020 01:05:50 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave02.hostedemail.com (Postfix) with ESMTP id CC86C18012729
-        for <linux-s390@vger.kernel.org>; Tue, 25 Aug 2020 04:57:20 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id DA32C181D337B;
-        Tue, 25 Aug 2020 04:57:17 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:541:800:960:973:988:989:1260:1311:1314:1345:1359:1437:1515:1534:1540:1711:1714:1730:1747:1777:1792:2198:2199:2393:2559:2562:2895:3138:3139:3140:3141:3142:3351:3865:3866:3868:4321:5007:6119:6261:10004:10848:11026:11658:11914:12043:12296:12297:12438:12555:12895:13069:13311:13357:13894:14181:14384:14394:14721:21080:21627:21740:30003:30054:30070,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: low63_3a0323c27059
-X-Filterd-Recvd-Size: 1653
-Received: from joe-laptop.perches.com (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 25 Aug 2020 04:57:16 +0000 (UTC)
-From:   Joe Perches <joe@perches.com>
-To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 19/29] s390/tty3270: Avoid comma separated statements
-Date:   Mon, 24 Aug 2020 21:56:16 -0700
-Message-Id: <9988babd9cca4ac841961d9f0bbf5e49caa87659.1598331149.git.joe@perches.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <cover.1598331148.git.joe@perches.com>
-References: <cover.1598331148.git.joe@perches.com>
+        Tue, 25 Aug 2020 06:04:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598349890;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1guKzsu1f7vE3cUpyLB5EkhBDdCRY0IBR0GpJ2ik82Y=;
+        b=DuRl78mAZkgJ0xgsfEAjeCIdKYVbSm5E4wv5o8iraahS0qBtbRmV+cJTJOKQzRTYTEbPpa
+        eiHRPKR5tbwfXCUFQbVPnjt6P5703onbi564Rx5OoMP9souYesbwYbOSoymjucztcPSo8J
+        Lb3CfM/Hkla7CK387/17SxDlFAhAI/E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-gjMOj3BUPVuF33NDiuVR3w-1; Tue, 25 Aug 2020 06:04:46 -0400
+X-MC-Unique: gjMOj3BUPVuF33NDiuVR3w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 732A2800050;
+        Tue, 25 Aug 2020 10:04:44 +0000 (UTC)
+Received: from gondolin (ovpn-112-248.ams2.redhat.com [10.36.112.248])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B8F1D5C1CF;
+        Tue, 25 Aug 2020 10:04:34 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 12:04:32 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v10 01/16] s390/vfio-ap: add version vfio_ap module
+Message-ID: <20200825120432.13a1b444.cohuck@redhat.com>
+In-Reply-To: <20200821195616.13554-2-akrowiak@linux.ibm.com>
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+        <20200821195616.13554-2-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Use semicolons and braces.
+On Fri, 21 Aug 2020 15:56:01 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- drivers/s390/char/tty3270.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> Let's set a version for the vfio_ap module so that automated regression
+> tests can determine whether dynamic configuration tests can be run or
+> not.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_drv.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> index be2520cc010b..f4ceb380dd61 100644
+> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> @@ -17,10 +17,12 @@
+>  
+>  #define VFIO_AP_ROOT_NAME "vfio_ap"
+>  #define VFIO_AP_DEV_NAME "matrix"
+> +#define VFIO_AP_MODULE_VERSION "1.2.0"
+>  
+>  MODULE_AUTHOR("IBM Corporation");
+>  MODULE_DESCRIPTION("VFIO AP device driver, Copyright IBM Corp. 2018");
+>  MODULE_LICENSE("GPL v2");
+> +MODULE_VERSION(VFIO_AP_MODULE_VERSION);
+>  
+>  static struct ap_driver vfio_ap_drv;
+>  
 
-diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
-index aec996de44d9..6acce975df26 100644
---- a/drivers/s390/char/tty3270.c
-+++ b/drivers/s390/char/tty3270.c
-@@ -424,8 +424,10 @@ tty3270_update(struct timer_list *t)
- 			 * last output position matches the start address
- 			 * of this line.
- 			 */
--			if (s->string[1] == sba[0] && s->string[2] == sba[1])
--				str += 3, len -= 3;
-+			if (s->string[1] == sba[0] && s->string[2] == sba[1]) {
-+				str += 3;
-+				len -= 3;
-+			}
- 			if (raw3270_request_add_data(wrq, str, len) != 0)
- 				break;
- 			list_del_init(&s->update);
--- 
-2.26.0
+Setting a version manually has some drawbacks:
+- tools wanting to check for capabilities need to keep track which
+  versions support which features
+- you need to remember to actually bump the version when adding a new,
+  visible feature
+(- selective downstream backports may get into a pickle, but that's
+arguably not your problem)
+
+Is there no way for a tool to figure out whether this is supported?
+E.g., via existence of a sysfs file, or via a known error that will
+occur. If not, it's maybe better to expose known capabilities via a
+generic interface.
 
