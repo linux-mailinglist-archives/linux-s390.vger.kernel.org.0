@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8AA325169A
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Aug 2020 12:25:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 128582516D2
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Aug 2020 12:45:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729827AbgHYKZY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Aug 2020 06:25:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53945 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729710AbgHYKZU (ORCPT
+        id S1729884AbgHYKps (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Aug 2020 06:45:48 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25464 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729858AbgHYKps (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:25:20 -0400
+        Tue, 25 Aug 2020 06:45:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598351118;
+        s=mimecast20190719; t=1598352346;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TQO2UOBn1MOgRwNvmVPJopGiZ9cQGSGDLytuuuQO4uY=;
-        b=aUyypsbIhKih0uTusA7/7Ws72wgFbHriGf7Ibweun7P94d1D/6qvQzC/iJtQRTiL3XHxap
-        IgoOdgTR8wgXN/aBG4gFHqKB0VXNfE+bUan7IBZqbMWsI0eX5GAa4ah+ETpOnHjbcLLsdB
-        hTV/rLMlObmMXpEcs3VYRYfOO4BlBJk=
+        bh=Zqomz7pBodrPJvyElkg6GCnIebmEo0ZuVsFwZptpcLA=;
+        b=d5+h2MR8SdrT9nDvHmmK7Uz6B+dZntYDf6wV/D16Nyuw4Hg511m/0RbgyWxmoETEIRUsJ9
+        GJ9UZpb4A0OIo+vpi2PVe0CQtDILH2cT26CvoHVQgtNhzMnE8zAoqvrcRkLcYlgTkboLhT
+        GdmTRENOsSW5yJi6fpc7hU/sCm5vLaQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-477-jCTQBosbMsSI6ipAkSitDQ-1; Tue, 25 Aug 2020 06:25:14 -0400
-X-MC-Unique: jCTQBosbMsSI6ipAkSitDQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-436-G_MjPm9LOrG-Ln1KLW4msQ-1; Tue, 25 Aug 2020 06:45:42 -0400
+X-MC-Unique: G_MjPm9LOrG-Ln1KLW4msQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02B8381F01D;
-        Tue, 25 Aug 2020 10:25:13 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B7FE81F01A;
+        Tue, 25 Aug 2020 10:45:40 +0000 (UTC)
 Received: from gondolin (ovpn-112-248.ams2.redhat.com [10.36.112.248])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BD36419144;
-        Tue, 25 Aug 2020 10:25:03 +0000 (UTC)
-Date:   Tue, 25 Aug 2020 12:25:01 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5BCB160C0F;
+        Tue, 25 Aug 2020 10:45:32 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 12:45:29 +0200
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Tony Krowiak <akrowiak@linux.ibm.com>
 Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -43,154 +43,85 @@ Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         alex.williamson@redhat.com, kwankhede@nvidia.com,
         fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
         imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v10 03/16] s390/vfio-ap: manage link between queue
- struct and matrix mdev
-Message-ID: <20200825122501.624474df.cohuck@redhat.com>
-In-Reply-To: <20200821195616.13554-4-akrowiak@linux.ibm.com>
+Subject: Re: [PATCH v10 16/16] s390/vfio-ap: update docs to include dynamic
+ config support
+Message-ID: <20200825124529.7b51d825.cohuck@redhat.com>
+In-Reply-To: <20200821195616.13554-17-akrowiak@linux.ibm.com>
 References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
-        <20200821195616.13554-4-akrowiak@linux.ibm.com>
+        <20200821195616.13554-17-akrowiak@linux.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 21 Aug 2020 15:56:03 -0400
+On Fri, 21 Aug 2020 15:56:16 -0400
 Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> Let's create links between each queue device bound to the vfio_ap device
-> driver and the matrix mdev to which the queue is assigned. The idea is to
-> facilitate efficient retrieval of the objects representing the queue
-> devices and matrix mdevs as well as to verify that a queue assigned to
-> a matrix mdev is bound to the driver.
-> 
-> The links will be created as follows:
-> 
->    * When the queue device is probed, if its APQN is assigned to a matrix
->      mdev, the structures representing the queue device and the matrix mdev
->      will be linked.
-> 
->    * When an adapter or domain is assigned to a matrix mdev, for each new
->      APQN assigned that references a queue device bound to the vfio_ap
->      device driver, the structures representing the queue device and the
->      matrix mdev will be linked.
-> 
-> The links will be removed as follows:
-> 
->    * When the queue device is removed, if its APQN is assigned to a matrix
->      mdev, the structures representing the queue device and the matrix mdev
->      will be unlinked.
-> 
->    * When an adapter or domain is unassigned from a matrix mdev, for each
->      APQN unassigned that references a queue device bound to the vfio_ap
->      device driver, the structures representing the queue device and the
->      matrix mdev will be unlinked.
+> Update the documentation in vfio-ap.rst to include information about the
+> AP dynamic configuration support (i.e., hot plug of adapters, domains
+> and control domains via the matrix mediated device's sysfs assignment
+> attributes).
 > 
 > Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 > ---
->  drivers/s390/crypto/vfio_ap_ops.c     | 132 +++++++++++++++++++++++++-
->  drivers/s390/crypto/vfio_ap_private.h |   2 +
->  2 files changed, 129 insertions(+), 5 deletions(-)
+>  Documentation/s390/vfio-ap.rst | 362 ++++++++++++++++++++++++++-------
+>  1 file changed, 285 insertions(+), 77 deletions(-)
 > 
+> diff --git a/Documentation/s390/vfio-ap.rst b/Documentation/s390/vfio-ap.rst
+> index e15436599086..8907aeca8fb7 100644
+> --- a/Documentation/s390/vfio-ap.rst
+> +++ b/Documentation/s390/vfio-ap.rst
+> @@ -253,7 +253,7 @@ The process for reserving an AP queue for use by a KVM guest is:
+>  1. The administrator loads the vfio_ap device driver
+>  2. The vfio-ap driver during its initialization will register a single 'matrix'
+>     device with the device core. This will serve as the parent device for
+> -   all mediated matrix devices used to configure an AP matrix for a guest.
+> +   all matrix mediated devices used to configure an AP matrix for a guest.
+
+This (and many other changes here) seems to be unrelated to the new
+feature. Split that out into a separate patch that can be applied right
+away? That would make this patch smaller and easier to review; it's
+hard to figure out which parts deal with the new feature, and which parts
+simply got an update.
+
+Also, do you want to do similar wording changes in the QEMU
+documentation for vfio-ap?
+
+>  3. The /sys/devices/vfio_ap/matrix device is created by the device core
+>  4. The vfio_ap device driver will register with the AP bus for AP queue devices
+>     of type 10 and higher (CEX4 and newer). The driver will provide the vfio_ap
 
 (...)
 
-> @@ -548,6 +557,87 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
->  	return 0;
->  }
+> @@ -435,6 +481,10 @@ available to a KVM guest via the following CPU model features:
+>     can be made available to the guest only if it is available on the host (i.e.,
+>     facility bit 12 is set).
 >  
-> +enum qlink_type {
+> +4. apqi: Indicates AP queue interrupts are available on the guest. This facility
+> +   can be made available to the guest only if it is available on the host (i.e.,
+> +   facility bit 65 is set).
+> +
+>  Note: If the user chooses to specify a CPU model different than the 'host'
+>  model to QEMU, the CPU model features and facilities need to be turned on
+>  explicitly; for example::
+> @@ -444,7 +494,7 @@ explicitly; for example::
+>  A guest can be precluded from using AP features/facilities by turning them off
+>  explicitly; for example::
+>  
+> -     /usr/bin/qemu-system-s390x ... -cpu host,ap=off,apqci=off,apft=off
+> +     /usr/bin/qemu-system-s390x ... -cpu host,ap=off,apqci=off,apft=off,apqi=off
 
-<bikeshed>I think this is less of a type, and more of an action, so
-maybe call this 'qlink_action' (and the function parameter below
-'action'?)</bikeshed>
+Isn't that an already existing facility that was simply lacking
+documentation? If yes, split it off?
 
-> +	LINK_APID,
-> +	LINK_APQI,
-> +	UNLINK_APID,
-> +	UNLINK_APQI,
-> +};
-> +
-> +static void vfio_ap_mdev_link_queue(struct ap_matrix_mdev *matrix_mdev,
-> +				    unsigned long apid, unsigned long apqi)
-> +{
-> +	struct vfio_ap_queue *q;
-> +
-> +	q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
-> +	if (q) {
-> +		q->matrix_mdev = matrix_mdev;
-> +		hash_add(matrix_mdev->qtable,
-> +			 &q->mdev_qnode, q->apqn);
-> +	}
-> +}
-> +
-> +static void vfio_ap_mdev_unlink_queue(unsigned long apid, unsigned long apqi)
-> +{
-> +	struct vfio_ap_queue *q;
-> +
-> +	q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
-> +	if (q) {
-> +		q->matrix_mdev = NULL;
-> +		hash_del(&q->mdev_qnode);
-> +	}
-> +}
-> +
-> +/**
-> + * vfio_ap_mdev_link_queues
-> + *
-> + * @matrix_mdev: The matrix mdev to link.
-> + * @type:	 The type of @qlink_id.
-> + * @qlink_id:	 The APID or APQI of the queues to link.
-> + *
-> + * Sets or clears the links between the queues with the specified @qlink_id
-> + * and the @matrix_mdev:
-> + *     @type == LINK_APID: Set the links between the @matrix_mdev and the
-> + *                         queues with the specified @qlink_id (APID)
-> + *     @type == LINK_APQI: Set the links between the @matrix_mdev and the
-> + *                         queues with the specified @qlink_id (APQI)
-> + *     @type == UNLINK_APID: Clear the links between the @matrix_mdev and the
-> + *                           queues with the specified @qlink_id (APID)
-> + *     @type == UNLINK_APQI: Clear the links between the @matrix_mdev and the
-> + *                           queues with the specified @qlink_id (APQI)
-> + */
-> +static void vfio_ap_mdev_link_queues(struct ap_matrix_mdev *matrix_mdev,
-> +				     enum qlink_type type,
-> +				     unsigned long qlink_id)
-> +{
-> +	unsigned long id;
-> +
-> +	switch (type) {
-> +	case LINK_APID:
-> +		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
-> +				     matrix_mdev->matrix.aqm_max + 1)
-> +			vfio_ap_mdev_link_queue(matrix_mdev, qlink_id, id);
-> +		break;
-> +	case UNLINK_APID:
-> +		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
-> +				     matrix_mdev->matrix.aqm_max + 1)
-> +			vfio_ap_mdev_unlink_queue(qlink_id, id);
-> +		break;
-> +	case LINK_APQI:
-> +		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
-> +				     matrix_mdev->matrix.apm_max + 1)
-> +			vfio_ap_mdev_link_queue(matrix_mdev, id, qlink_id);
-> +		break;
-> +	case UNLINK_APQI:
-> +		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
-> +				     matrix_mdev->matrix.apm_max + 1)
-> +			vfio_ap_mdev_link_queue(matrix_mdev, id, qlink_id);
-> +		break;
-> +	default:
-> +		WARN_ON_ONCE(1);
-> +	}
-> +}
-> +
+>  
+>  Note: If the APFT facility is turned off (apft=off) for the guest, the guest
+>  will not see any AP devices. The zcrypt device drivers that register for type 10
 
 (...)
-
-I have not reviewed this deeply, but at a glance, it seems fine.
 
