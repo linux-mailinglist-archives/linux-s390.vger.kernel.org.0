@@ -2,151 +2,165 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F6A7251660
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Aug 2020 12:14:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3070D25166F
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Aug 2020 12:17:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgHYKN4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Aug 2020 06:13:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60652 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729795AbgHYKNy (ORCPT
+        id S1729586AbgHYKRg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Aug 2020 06:17:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16426 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728117AbgHYKRf (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:13:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598350433;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IfBjE/lnsE6zqa6amkpr22aF2GJzSWSxCKj8gx+aUU8=;
-        b=eE5YCzAa3gSQ/bw7+QxfyiPsqIrY5JgNq3TiI+A3UBkbCJBEUt7ES/GtVi5QfIW2LrGkDA
-        rw5MB3MDeoM9PqS/IHGst5Mah4lZUAREjfs8YrEWarJy4waRh+vi6ptIQHSwgwBvSl0hwH
-        HBNnL8c9xuYvrOY7UECK7b0nYTQMOcA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104-Arl8Ua1PPfOCKcnBE9UipA-1; Tue, 25 Aug 2020 06:13:49 -0400
-X-MC-Unique: Arl8Ua1PPfOCKcnBE9UipA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54D2E18BA282;
-        Tue, 25 Aug 2020 10:13:46 +0000 (UTC)
-Received: from gondolin (ovpn-112-248.ams2.redhat.com [10.36.112.248])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E6D2319144;
-        Tue, 25 Aug 2020 10:13:36 +0000 (UTC)
-Date:   Tue, 25 Aug 2020 12:13:34 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v10 02/16] s390/vfio-ap: use new AP bus interface to
- search for queue devices
-Message-ID: <20200825121334.0ff35d7a.cohuck@redhat.com>
-In-Reply-To: <20200821195616.13554-3-akrowiak@linux.ibm.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
-        <20200821195616.13554-3-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+        Tue, 25 Aug 2020 06:17:35 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PA4pWp154169;
+        Tue, 25 Aug 2020 06:16:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=EOBUoNumc+lfxeSxOyM8nxTJchcZ8SasJG/UKpKCePc=;
+ b=FLMfaI34xTiJCIrm5uFNqbuk0uT2DGykGFonCKV9ValbKJI3Gb8aJ1pjUCvH1rBMViHH
+ a+46qMxkOoSEKYil9BF1E0fCNjqHrqN02uE3u63nGbSY/ajxgIwKwmxxu46FESXlA2nM
+ CSrGWVcVfhlmX34vqVger2iojhSeXB+dFv+4FsmjCV6iJGBcX6jS2sIknOsTSUArI8jv
+ pWnbWazaY41s/AVuWDg2oC/WN57VTsUafbWj+P2oGiWZap4gTf8wGpUUY7J7pjuNx8tf
+ G6kTrWxeMCgWUXkLDaUJi/CEnjLBtbu0oz+Lo59EIPqzoCxSQsIPS9X7KAhGXPUvR8Iv 7g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 334yc52e4u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 06:16:35 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07PA7kP9161517;
+        Tue, 25 Aug 2020 06:16:34 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 334yc52e43-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 06:16:34 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07PAFFq5019135;
+        Tue, 25 Aug 2020 10:16:32 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 33498u97t7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 10:16:32 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07PAGT9N24445372
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Aug 2020 10:16:29 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B3F1A4054;
+        Tue, 25 Aug 2020 10:16:29 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6052A4062;
+        Tue, 25 Aug 2020 10:16:27 +0000 (GMT)
+Received: from oc5500677777.ibm.com (unknown [9.145.83.242])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Aug 2020 10:16:27 +0000 (GMT)
+Subject: Re: [RFT][PATCH 0/7] Avoid overflow at boundary_size
+To:     Nicolin Chen <nicoleotsuka@gmail.com>, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com, tony.luck@intel.com,
+        fenghua.yu@intel.com, gerald.schaefer@linux.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        davem@davemloft.net, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        James.Bottomley@HansenPartnership.com, deller@gmx.de
+Cc:     sfr@canb.auug.org.au, hch@lst.de, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org
+References: <20200820231923.23678-1-nicoleotsuka@gmail.com>
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+Message-ID: <4321af30-9554-6897-5281-05afd88f2631@linux.ibm.com>
+Date:   Tue, 25 Aug 2020 12:16:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200820231923.23678-1-nicoleotsuka@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-25_02:2020-08-24,2020-08-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ spamscore=0 impostorscore=0 priorityscore=1501 clxscore=1011
+ mlxlogscore=999 malwarescore=0 suspectscore=2 adultscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250073
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 21 Aug 2020 15:56:02 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> This patch refactor's the vfio_ap device driver to use the AP bus's
 
-s/refactor's/refactors/
-
-> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
-> information about a queue that is bound to the vfio_ap device driver.
-> The bus's ap_get_qdev() function retrieves the queue device from a
-> hashtable keyed by APQN. This is much more efficient than looping over
-> the list of devices attached to the AP bus by several orders of
-> magnitude.
+On 8/21/20 1:19 AM, Nicolin Chen wrote:
+> We are expending the default DMA segmentation boundary to its
+> possible maximum value (ULONG_MAX) to indicate that a device
+> doesn't specify a boundary limit. So all dma_get_seg_boundary
+> callers should take a precaution with the return values since
+> it would easily get overflowed.
 > 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> ---
->  drivers/s390/crypto/vfio_ap_drv.c     | 27 ++-------
->  drivers/s390/crypto/vfio_ap_ops.c     | 86 +++++++++++++++------------
->  drivers/s390/crypto/vfio_ap_private.h |  8 ++-
->  3 files changed, 59 insertions(+), 62 deletions(-)
+> I scanned the entire kernel tree for all the existing callers
+> and found that most of callers may get overflowed in two ways:
+> either "+ 1" or passing it to ALIGN() that does "+ mask".
 > 
+> According to kernel defines:
+>     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
+>     #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
+> 
+> We can simplify the logic here:
+>   ALIGN(boundary + 1, 1 << shift) >> shift
+> = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
+> = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
+> = [b + 1 + (1 << s) - 1] >> s
+> = [b + (1 << s)] >> s
+> = (b >> s) + 1
+> 
+> So this series of patches fix the potential overflow with this
+> overflow-free shortcut.
 
-(...)
+Hi Nicolin,
 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index e0bde8518745..ad3925f04f61 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -26,43 +26,26 @@
->  
->  static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
->  
-> -static int match_apqn(struct device *dev, const void *data)
-> -{
-> -	struct vfio_ap_queue *q = dev_get_drvdata(dev);
-> -
-> -	return (q->apqn == *(int *)(data)) ? 1 : 0;
-> -}
-> -
->  /**
-> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
-> - * @matrix_mdev: the associated mediated matrix
-> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
->   * @apqn: The queue APQN
->   *
-> - * Retrieve a queue with a specific APQN from the list of the
-> - * devices of the vfio_ap_drv.
-> - * Verify that the APID and the APQI are set in the matrix.
-> + * Retrieve a queue with a specific APQN from the AP queue devices attached to
-> + * the AP bus.
->   *
-> - * Returns the pointer to the associated vfio_ap_queue
-> + * Returns the pointer to the vfio_ap_queue with the specified APQN, or NULL.
->   */
-> -static struct vfio_ap_queue *vfio_ap_get_queue(
-> -					struct ap_matrix_mdev *matrix_mdev,
-> -					int apqn)
-> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
->  {
-> +	struct ap_queue *queue;
->  	struct vfio_ap_queue *q;
-> -	struct device *dev;
->  
-> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
-> -		return NULL;
-> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
+haven't seen any other feedback from other maintainers,
+so I guess you will resend this?
+On first glance it seems to make sense.
+I'm a little confused why it is only a "potential overflow"
+while this part
 
-I think you should add some explanation to the patch description why
-testing the matrix bitmasks is not needed anymore.
+"We are expending the default DMA segmentation boundary to its
+ possible maximum value (ULONG_MAX) to indicate that a device
+ doesn't specify a boundary limit"
 
-> +	queue = ap_get_qdev(apqn);
-> +	if (!queue)
->  		return NULL;
->  
-> -	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
-> -				 &apqn, match_apqn);
-> -	if (!dev)
-> -		return NULL;
-> -	q = dev_get_drvdata(dev);
-> -	q->matrix_mdev = matrix_mdev;
-> -	put_device(dev);
-> +	q = dev_get_drvdata(&queue->ap_dev.device);
-> +	put_device(&queue->ap_dev.device);
->  
->  	return q;
->  }
+sounds to me like ULONG_MAX is actually used, does that
+mean there are currently no devices which do not specify a
+boundary limit?
 
-(...)
 
+> 
+> As I don't think that I have these platforms, marking RFT.
+> 
+> Thanks
+> Nic
+> 
+> Nicolin Chen (7):
+>   powerpc/iommu: Avoid overflow at boundary_size
+>   alpha: Avoid overflow at boundary_size
+>   ia64/sba_iommu: Avoid overflow at boundary_size
+>   s390/pci_dma: Avoid overflow at boundary_size
+>   sparc: Avoid overflow at boundary_size
+>   x86/amd_gart: Avoid overflow at boundary_size
+>   parisc: Avoid overflow at boundary_size
+> 
+>  arch/alpha/kernel/pci_iommu.c    | 10 ++++------
+>  arch/ia64/hp/common/sba_iommu.c  |  4 ++--
+>  arch/powerpc/kernel/iommu.c      | 11 +++++------
+>  arch/s390/pci/pci_dma.c          |  4 ++--
+>  arch/sparc/kernel/iommu-common.c |  9 +++------
+>  arch/sparc/kernel/iommu.c        |  4 ++--
+>  arch/sparc/kernel/pci_sun4v.c    |  4 ++--
+>  arch/x86/kernel/amd_gart_64.c    |  4 ++--
+>  drivers/parisc/ccio-dma.c        |  4 ++--
+>  drivers/parisc/sba_iommu.c       |  4 ++--
+>  10 files changed, 26 insertions(+), 32 deletions(-)
+> 
