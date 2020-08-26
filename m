@@ -2,169 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45608253329
-	for <lists+linux-s390@lfdr.de>; Wed, 26 Aug 2020 17:13:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44AF925365D
+	for <lists+linux-s390@lfdr.de>; Wed, 26 Aug 2020 20:14:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgHZPNj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 26 Aug 2020 11:13:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbgHZPNd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 26 Aug 2020 11:13:33 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FFC3C0613ED
-        for <linux-s390@vger.kernel.org>; Wed, 26 Aug 2020 08:13:32 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id g33so1177001pgb.4
-        for <linux-s390@vger.kernel.org>; Wed, 26 Aug 2020 08:13:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CmlsOBKmXTTcSfq5zGubBNNUb0gupInXkPP8EnZ3d+A=;
-        b=ZqQGx8lCIpp9MgN3WVINar6Fy8irHzrpJRsjxGoHQTeWbqHYD6il/g9q7DvpK/dmQm
-         0qW7aVa3Tr+PGt5edZDuPZxHNjlNPlIhusw3juLIWAAlHZXHD4KNjNATv1u3ZoCJvNEC
-         S2smx23jdqkXqQh3IP6NS4LTsP6Gm53DxBdKk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CmlsOBKmXTTcSfq5zGubBNNUb0gupInXkPP8EnZ3d+A=;
-        b=WN35trtIdohicp4Y1O63dnUcmW+M/okcDNNMSHj6R4aKDGDrnKD+kDGdWVQJHVKdzv
-         Xx/xV+j9yL55A1gQ7wh92UQJ0ddt6sGWd4Mdcv3CM/J85YkDSguvjiYArADu3rpdNVxZ
-         G0yebpr3b7I7vMzanHJTcuScyHjGKR/cd2N8IcLsEpP0M2jpZIFoCdJuTWAdli9pKZb3
-         W0fDzsiZOsVDQgJAg6OdzdMGBruK7qUIlhriK6pM9Jo2EW6eVPJ5woDSR1MmFomh3faC
-         0Ld95mEHzKwOjMXIvatzXBBOFJR7dq87jJamIEYGIryOz9MLVleO9xdQDV1AZM4R1poX
-         paKQ==
-X-Gm-Message-State: AOAM5318Wpr7ul12uzsz3nG9KT2NtKvtRiYZCySwoLE5hjRD7EhIo2Np
-        NC+1zriPtGQpiqGFeKpzSriACg==
-X-Google-Smtp-Source: ABdhPJz9xFq7qO/RuT9QubtB+V2mx2933Vq5WDSuN5fCly0WI0GYA2lIh7xhcXijBK2JnQjkWRm3gA==
-X-Received: by 2002:a63:f909:: with SMTP id h9mr10562477pgi.250.1598454811989;
-        Wed, 26 Aug 2020 08:13:31 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d127sm3380122pfc.175.2020.08.26.08.13.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 08:13:30 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 08:13:29 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Allen Pais <allen.cryptic@gmail.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-atm-general@lists.sourceforge.net, manohar.vanga@gmail.com,
-        airlied@linux.ie, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, sre@kernel.org,
-        anton.ivanov@cambridgegreys.com, devel@driverdev.osuosl.org,
-        linux-s390@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        maximlevitsky@gmail.com, richard@nod.at, deller@gmx.de,
-        jassisinghbrar@gmail.com, linux-spi@vger.kernel.org,
-        3chas3@gmail.com, intel-gfx@lists.freedesktop.org,
-        Jakub Kicinski <kuba@kernel.org>, mporter@kernel.crashing.org,
-        jdike@addtoit.com, oakad@yahoo.com, s.hauer@pengutronix.de,
-        linux-input@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-block@vger.kernel.org, broonie@kernel.org,
-        openipmi-developer@lists.sourceforge.net, mitch@sfgoth.com,
-        linux-arm-kernel@lists.infradead.org, Jens Axboe <axboe@kernel.dk>,
-        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
-        martyn@welchs.me.uk, dmitry.torokhov@gmail.com,
-        linux-mmc@vger.kernel.org, Allen <allen.lkml@gmail.com>,
-        linux-kernel@vger.kernel.org, alex.bou9@gmail.com,
-        stefanr@s5r6.in-berlin.de, Daniel Vetter <daniel@ffwll.ch>,
-        linux-ntb@googlegroups.com,
-        Romain Perier <romain.perier@gmail.com>, shawnguo@kernel.org,
-        David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
-Message-ID: <202008260811.1CE425B5C2@keescook>
-References: <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
- <202008171246.80287CDCA@keescook>
- <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
- <1597780833.3978.3.camel@HansenPartnership.com>
- <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
- <1597849185.3875.7.camel@HansenPartnership.com>
- <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
- <1597873172.4030.2.camel@HansenPartnership.com>
- <CAEogwTCH8qqjAnSpT0GDn+NuAps8dNbfcPVQ9h8kfOWNbzrD0w@mail.gmail.com>
- <20200826095528.GX1793@kadam>
+        id S1726734AbgHZSOi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 26 Aug 2020 14:14:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:49688 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726241AbgHZSOh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:14:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF4DA101E;
+        Wed, 26 Aug 2020 11:14:36 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6133E3F71F;
+        Wed, 26 Aug 2020 11:14:31 -0700 (PDT)
+Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
+To:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org
+Cc:     Heiko Stuebner <heiko@sntech.de>, kvm@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        dri-devel@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-tegra@vger.kernel.org, Julien Grall <julien.grall@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-mediatek@lists.infradead.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        virtualization@lists.linux-foundation.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20191221150402.13868-1-murphyt7@tcd.ie>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <03caf286-09e8-a072-8d3a-b6bcca991516@arm.com>
+Date:   Wed, 26 Aug 2020 19:14:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826095528.GX1793@kadam>
+In-Reply-To: <20191221150402.13868-1-murphyt7@tcd.ie>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:55:28PM +0300, Dan Carpenter wrote:
-> On Wed, Aug 26, 2020 at 07:21:35AM +0530, Allen Pais wrote:
-> > On Thu, Aug 20, 2020 at 3:09 AM James Bottomley
-> > <James.Bottomley@hansenpartnership.com> wrote:
-> > >
-> > > On Wed, 2020-08-19 at 21:54 +0530, Allen wrote:
-> > > > > [...]
-> > > > > > > Since both threads seem to have petered out, let me suggest in
-> > > > > > > kernel.h:
-> > > > > > >
-> > > > > > > #define cast_out(ptr, container, member) \
-> > > > > > >     container_of(ptr, typeof(*container), member)
-> > > > > > >
-> > > > > > > It does what you want, the argument order is the same as
-> > > > > > > container_of with the only difference being you name the
-> > > > > > > containing structure instead of having to specify its type.
-> > > > > >
-> > > > > > Not to incessantly bike shed on the naming, but I don't like
-> > > > > > cast_out, it's not very descriptive. And it has connotations of
-> > > > > > getting rid of something, which isn't really true.
-> > > > >
-> > > > > Um, I thought it was exactly descriptive: you're casting to the
-> > > > > outer container.  I thought about following the C++ dynamic casting
-> > > > > style, so out_cast(), but that seemed a bit pejorative.  What about
-> > > > > outer_cast()?
-> > > > >
-> > > > > > FWIW, I like the from_ part of the original naming, as it has
-> > > > > > some clues as to what is being done here. Why not just
-> > > > > > from_container()? That should immediately tell people what it
-> > > > > > does without having to look up the implementation, even before
-> > > > > > this becomes a part of the accepted coding norm.
-> > > > >
-> > > > > I'm not opposed to container_from() but it seems a little less
-> > > > > descriptive than outer_cast() but I don't really care.  I always
-> > > > > have to look up container_of() when I'm using it so this would just
-> > > > > be another macro of that type ...
-> > > > >
-> > > >
-> > > >  So far we have a few which have been suggested as replacement
-> > > > for from_tasklet()
-> > > >
-> > > > - out_cast() or outer_cast()
-> > > > - from_member().
-> > > > - container_from() or from_container()
-> > > >
-> > > > from_container() sounds fine, would trimming it a bit work? like
-> > > > from_cont().
-> > >
-> > > I'm fine with container_from().  It's the same form as container_of()
-> > > and I think we need urgent agreement to not stall everything else so
-> > > the most innocuous name is likely to get the widest acceptance.
-> > 
-> > Kees,
-> > 
-> >   Will you be  sending the newly proposed API to Linus? I have V2
-> > which uses container_from()
-> > ready to be sent out.
-> 
-> I liked that James swapped the first two arguments so that it matches
-> container_of().  Plus it's nice that when you have:
-> 
-> 	struct whatever *foo = container_from(ptr, foo, member);
-> 
-> Then it means that "ptr == &foo->member".
+Hi Tom,
 
-I'm a bit stalled right now -- the merge window was keeping me busy, and
-this week is the Linux Plumbers Conference. This is on my list, but I
-haven't gotten back around to it. If you want, feel free to send the
-container_from() patch; you might be able to unblock this faster than me
-right now. :)
+On 2019-12-21 15:03, Tom Murphy wrote:
+> This patchset converts the intel iommu driver to the dma-iommu api.
+> 
+> While converting the driver I exposed a bug in the intel i915 driver which causes a huge amount of artifacts on the screen of my laptop. You can see a picture of it here:
+> https://github.com/pippy360/kernelPatches/blob/master/IMG_20191219_225922.jpg
+> 
+> This issue is most likely in the i915 driver and is most likely caused by the driver not respecting the return value of the dma_map_ops::map_sg function. You can see the driver ignoring the return value here:
+> https://github.com/torvalds/linux/blob/7e0165b2f1a912a06e381e91f0f4e495f4ac3736/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c#L51
+> 
+> Previously this didn’t cause issues because the intel map_sg always returned the same number of elements as the input scatter gather list but with the change to this dma-iommu api this is no longer the case. I wasn’t able to track the bug down to a specific line of code unfortunately.
+> 
+> Could someone from the intel team look at this?
+> 
+> 
+> I have been testing on a lenovo x1 carbon 5th generation. Let me know if there’s any more information you need.
+> 
+> To allow my patch set to be tested I have added a patch (patch 8/8) in this series to disable combining sg segments in the dma-iommu api which fixes the bug but it doesn't fix the actual problem.
+> 
+> As part of this patch series I copied the intel bounce buffer code to the dma-iommu path. The addition of the bounce buffer code took me by surprise. I did most of my development on this patch series before the bounce buffer code was added and my reimplementation in the dma-iommu path is very rushed and not properly tested but I’m running out of time to work on this patch set.
+> 
+> On top of that I also didn’t port over the intel tracing code from this commit:
+> https://github.com/torvalds/linux/commit/3b53034c268d550d9e8522e613a14ab53b8840d8#diff-6b3e7c4993f05e76331e463ab1fc87e1
+> So all the work in that commit is now wasted. The code will need to be removed and reimplemented in the dma-iommu path. I would like to take the time to do this but I really don’t have the time at the moment and I want to get these changes out before the iommu code changes any more.
 
--Kees
+Further to what we just discussed at LPC, I've realised that tracepoints 
+are actually something I could do with *right now* for debugging my Arm 
+DMA ops series, so if I'm going to hack something up anyway I may as 
+well take responsibility for polishing it into a proper patch as well :)
 
--- 
-Kees Cook
+Robin.
+
+> 
+> Tom Murphy (8):
+>    iommu/vt-d: clean up 32bit si_domain assignment
+>    iommu/vt-d: Use default dma_direct_* mapping functions for direct
+>      mapped devices
+>    iommu/vt-d: Remove IOVA handling code from non-dma_ops path
+>    iommu: Handle freelists when using deferred flushing in iommu drivers
+>    iommu: Add iommu_dma_free_cpu_cached_iovas function
+>    iommu: allow the dma-iommu api to use bounce buffers
+>    iommu/vt-d: Convert intel iommu driver to the iommu ops
+>    DO NOT MERGE: iommu: disable list appending in dma-iommu
+> 
+>   drivers/iommu/Kconfig           |   1 +
+>   drivers/iommu/amd_iommu.c       |  14 +-
+>   drivers/iommu/arm-smmu-v3.c     |   3 +-
+>   drivers/iommu/arm-smmu.c        |   3 +-
+>   drivers/iommu/dma-iommu.c       | 183 +++++--
+>   drivers/iommu/exynos-iommu.c    |   3 +-
+>   drivers/iommu/intel-iommu.c     | 936 ++++----------------------------
+>   drivers/iommu/iommu.c           |  39 +-
+>   drivers/iommu/ipmmu-vmsa.c      |   3 +-
+>   drivers/iommu/msm_iommu.c       |   3 +-
+>   drivers/iommu/mtk_iommu.c       |   3 +-
+>   drivers/iommu/mtk_iommu_v1.c    |   3 +-
+>   drivers/iommu/omap-iommu.c      |   3 +-
+>   drivers/iommu/qcom_iommu.c      |   3 +-
+>   drivers/iommu/rockchip-iommu.c  |   3 +-
+>   drivers/iommu/s390-iommu.c      |   3 +-
+>   drivers/iommu/tegra-gart.c      |   3 +-
+>   drivers/iommu/tegra-smmu.c      |   3 +-
+>   drivers/iommu/virtio-iommu.c    |   3 +-
+>   drivers/vfio/vfio_iommu_type1.c |   2 +-
+>   include/linux/dma-iommu.h       |   3 +
+>   include/linux/intel-iommu.h     |   1 -
+>   include/linux/iommu.h           |  32 +-
+>   23 files changed, 345 insertions(+), 908 deletions(-)
+> 
