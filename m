@@ -2,150 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C93E1253206
-	for <lists+linux-s390@lfdr.de>; Wed, 26 Aug 2020 16:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAB7325326C
+	for <lists+linux-s390@lfdr.de>; Wed, 26 Aug 2020 16:56:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgHZOuE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 26 Aug 2020 10:50:04 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56720 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727897AbgHZOt7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:49:59 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QEiHGV129989;
-        Wed, 26 Aug 2020 10:49:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=FAa4RpnCZuYK+s+ZNYXHPAGY6k5np3T/aNePxfajimw=;
- b=mUgBvapbVqImeBl2yNFuD1RSCWJlJFK4C3Fhw6W02LUIcwhlD/KEvTn4dtF9CPusMO8A
- xHnoY0GfNPbY5be7dHMof775eYY1i7k9X/74sWA+mmK2+EJbdEOnLBCfvd4G8wfQnUBO
- PAKkwv+kNPaSI3s1gvQUyb+j58nh6qT45OSKHwz9gpz/CrxOnZi0e1PdTy5zlBvTnnLe
- +oEJHnNga72aWe6qUsmbRilPh8Jdq4QHnwMBbXuwZUFyiLk2vuYB81rpFZlx8CthBnQE
- qT4CetzXBwq94aWKisyWpIlb+HFFkkz/Ph7VQU91ET7ERYXqEUxqys+Z0Xd1mfDlWbjK xQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335srnr5mm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 10:49:54 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07QEjegj133786;
-        Wed, 26 Aug 2020 10:49:54 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335srnr5m0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 10:49:53 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07QEmXBB014148;
-        Wed, 26 Aug 2020 14:49:52 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma02wdc.us.ibm.com with ESMTP id 332ujqamn5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 14:49:52 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07QEnjss33292604
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 14:49:46 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 014B46E053;
-        Wed, 26 Aug 2020 14:49:49 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AEEAC6E050;
-        Wed, 26 Aug 2020 14:49:47 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.170.64])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Aug 2020 14:49:47 +0000 (GMT)
-Subject: Re: [PATCH v10 01/16] s390/vfio-ap: add version vfio_ap module
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
- <20200821195616.13554-2-akrowiak@linux.ibm.com>
- <20200825120432.13a1b444.cohuck@redhat.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <ca016eca-1ee7-2d0f-c2ec-3ef147b6216a@linux.ibm.com>
-Date:   Wed, 26 Aug 2020 10:49:47 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1728054AbgHZOzy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 26 Aug 2020 10:55:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728289AbgHZOyH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 26 Aug 2020 10:54:07 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93ADAC061574;
+        Wed, 26 Aug 2020 07:54:07 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id t9so1104550pfq.8;
+        Wed, 26 Aug 2020 07:54:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zBLkp4ACPTazmjPNrlv/57ssiAbYaRhM1wboTYBBHDY=;
+        b=uSNxJCClbqUuUEiL7mllj0REZCxj02jP+VSTCg3tcnylJDmNQH4a5oyn88Bt+3eHUt
+         bP6O5AD3MwNhFSH8Q0PFYDNR2VCysyCxqesgLG4NhSisN4fNx6swSxxr5Rn4iHq8S0fR
+         m8O5J5JhMom+ifRYFniXvRy6s3w5+Nct8qgQR1IHBC8WIjz1HmP73703CEUIx9Hr5CkA
+         q4E8oFBATyEdLyBKzG0ktNJA7Hpu1B2BrpUU2qNkZI2cRBpf1nDFb8H3uBFyGUBmqzWM
+         Okp80aCvl7+nj+4TXB2CG6EZhUETKljPPNG7PbsdJILAJIxpt4bc5ekzMY00SjK2awhR
+         u17w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zBLkp4ACPTazmjPNrlv/57ssiAbYaRhM1wboTYBBHDY=;
+        b=sXRgl2oImYdviApXrAyqE7eSnSr+FgvsSgy5WLzLRgddQUDNkdr2kIhf1/lv+Xblz8
+         taHfUlYWr+JKeuemeJJvjaE8l/qyyhhtRKHIJSldgm9DdlHHfr7ECrUAmk8OEOjj7WQd
+         E0KQ13XFZC0p0S/+ExNmMAtATjOZfSuch+z02iShtLu/VJgw9k/fbxylzO+NIFbAiatU
+         nzrQdzHpJNyW+dWmBToB0BN6dc3VdPWIYb0/NRA/TXyd/U9E1UHvI5+FP1IBnnRPXBlx
+         jYAcWfrkAo2vOYJh0wF+VCeuyAaEtWBsMXSFq2K5mv2RDInsFVgOeMrYnly7WGpW9Nbx
+         4SeQ==
+X-Gm-Message-State: AOAM530a37Xj9ULPjlJ8gdxVXpTPUGEH1LctpgR44T4AoU2yNCxza9vc
+        LHmMFBUn1PbzEuxhzpFWMi3NUF7nTfA=
+X-Google-Smtp-Source: ABdhPJxDJLTwl2v7C8g+nyXKqYtHmkN28jUfxjmjM3NvMv1M+2qk9vPQk9UmGDyP90WNq4KKmAi2Dg==
+X-Received: by 2002:aa7:8182:: with SMTP id g2mr12519947pfi.261.1598453646914;
+        Wed, 26 Aug 2020 07:54:06 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id r7sm3327140pfl.186.2020.08.26.07.54.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:54:06 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v2 18/23] s390: use asm-generic/mmu_context.h for no-op implementations
+Date:   Thu, 27 Aug 2020 00:52:44 +1000
+Message-Id: <20200826145249.745432-19-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200826145249.745432-1-npiggin@gmail.com>
+References: <20200826145249.745432-1-npiggin@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200825120432.13a1b444.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-26_09:2020-08-26,2020-08-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501
- bulkscore=0 impostorscore=0 clxscore=1015 adultscore=0 suspectscore=3
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008260110
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+ arch/s390/include/asm/mmu_context.h | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-
-On 8/25/20 6:04 AM, Cornelia Huck wrote:
-> On Fri, 21 Aug 2020 15:56:01 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->
->> Let's set a version for the vfio_ap module so that automated regression
->> tests can determine whether dynamic configuration tests can be run or
->> not.
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> ---
->>   drivers/s390/crypto/vfio_ap_drv.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
->> index be2520cc010b..f4ceb380dd61 100644
->> --- a/drivers/s390/crypto/vfio_ap_drv.c
->> +++ b/drivers/s390/crypto/vfio_ap_drv.c
->> @@ -17,10 +17,12 @@
->>   
->>   #define VFIO_AP_ROOT_NAME "vfio_ap"
->>   #define VFIO_AP_DEV_NAME "matrix"
->> +#define VFIO_AP_MODULE_VERSION "1.2.0"
->>   
->>   MODULE_AUTHOR("IBM Corporation");
->>   MODULE_DESCRIPTION("VFIO AP device driver, Copyright IBM Corp. 2018");
->>   MODULE_LICENSE("GPL v2");
->> +MODULE_VERSION(VFIO_AP_MODULE_VERSION);
->>   
->>   static struct ap_driver vfio_ap_drv;
->>   
-> Setting a version manually has some drawbacks:
-> - tools wanting to check for capabilities need to keep track which
->    versions support which features
-> - you need to remember to actually bump the version when adding a new,
->    visible feature
-> (- selective downstream backports may get into a pickle, but that's
-> arguably not your problem)
->
-> Is there no way for a tool to figure out whether this is supported?
-> E.g., via existence of a sysfs file, or via a known error that will
-> occur. If not, it's maybe better to expose known capabilities via a
-> generic interface.
-
-This patch series introduces a new mediated device sysfs attribute,
-guest_matrix, so the automated tests could check for the existence
-of that interface. The problem I have with that is it will work for
-this version of the vfio_ap device driver - which may be all that is
-ever needed - but does not account for future enhancements
-which may need to be detected by tooling or automated tests.
-It seems to me that regardless of how a tool detects whether
-a feature is supported or not, it will have to keep track of that
-somehow.
-
-Can you provide more details about this generic interface of
-which you speak?
-
->
+diff --git a/arch/s390/include/asm/mmu_context.h b/arch/s390/include/asm/mmu_context.h
+index c9f3d8a52756..66f9cf0a07e3 100644
+--- a/arch/s390/include/asm/mmu_context.h
++++ b/arch/s390/include/asm/mmu_context.h
+@@ -15,6 +15,7 @@
+ #include <asm/ctl_reg.h>
+ #include <asm-generic/mm_hooks.h>
+ 
++#define init_new_context init_new_context
+ static inline int init_new_context(struct task_struct *tsk,
+ 				   struct mm_struct *mm)
+ {
+@@ -69,8 +70,6 @@ static inline int init_new_context(struct task_struct *tsk,
+ 	return 0;
+ }
+ 
+-#define destroy_context(mm)             do { } while (0)
+-
+ static inline void set_user_asce(struct mm_struct *mm)
+ {
+ 	S390_lowcore.user_asce = mm->context.asce;
+@@ -125,9 +124,7 @@ static inline void finish_arch_post_lock_switch(void)
+ 	set_fs(current->thread.mm_segment);
+ }
+ 
+-#define enter_lazy_tlb(mm,tsk)	do { } while (0)
+-#define deactivate_mm(tsk,mm)	do { } while (0)
+-
++#define activate_mm activate_mm
+ static inline void activate_mm(struct mm_struct *prev,
+                                struct mm_struct *next)
+ {
+@@ -136,4 +133,6 @@ static inline void activate_mm(struct mm_struct *prev,
+ 	set_user_asce(next);
+ }
+ 
++#include <asm-generic/mmu_context.h>
++
+ #endif /* __S390_MMU_CONTEXT_H */
+-- 
+2.23.0
 
