@@ -2,148 +2,153 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4CCC255013
-	for <lists+linux-s390@lfdr.de>; Thu, 27 Aug 2020 22:33:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B23312550AD
+	for <lists+linux-s390@lfdr.de>; Thu, 27 Aug 2020 23:37:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgH0Udj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 27 Aug 2020 16:33:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbgH0Udi (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:33:38 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B08BA20825;
-        Thu, 27 Aug 2020 20:33:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598560417;
-        bh=VHsROdKs2GEdTQFMnkMuUYNmQM5R5a6tmWKg4n+BRpI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MYOLYhgB7+6C3asPTPP4/fTyye9AIK1HUr0ELcuS4+6DZiwJjOqeYc6sO0DfTud+6
-         sbcmnzXN6aGEIWGJaF3h+yhRZHckW8ylKPUywfBBJh6NXTNbeSFpg5YQf4n5SNNk1d
-         RZvwonxTZxp+afPkDp2zdcM9YXA7Chd+QjaPq3WY=
-Date:   Thu, 27 Aug 2020 15:33:35 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Matthew Rosato <mjrosato@linux.ibm.com>, bhelgaas@google.com,
-        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Introduce flag for detached virtual functions
-Message-ID: <20200827203335.GA2101829@bjorn-Precision-5520>
+        id S1727050AbgH0Vgt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 27 Aug 2020 17:36:49 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:56066 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgH0Vgp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 27 Aug 2020 17:36:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zdm0S2PWnmi/4XqIOhf530rvRuJxiVED1nzE9jKGFv8=; b=ppSg/+iqJxad7jlIdh8Y9MCuj8
+        eSljdwyCXvCK6jPPd1tDLxSyQS3OfNvWLb9rtPcYH0tWwPfWbqN/SiMzEXvytS1UAroOMpWq4CKsr
+        xfvgurd/B+ph0RQQQ1EzYI+0ZpzdPV5/Uswr2aB44f4wnSsg3hKjVRT5VB+fo6TYDz8WScdTIrB1a
+        lqtdPM5OflsEyE9zX8HxA1hW1slt1BtGeyEXEyB6sDZqrjj08vGYlUHqbHHMmg7U/d8+fLz2ulJyX
+        sTKVbt8qvuIIoPlaapegTlcU5pwKMVdug8+j4AwArHv8UF09Cs7kGZZdcUEzA8cBdrj5P5NOXyHnm
+        VcG2ZJyQ==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1kBPZG-0002Dd-OC; Thu, 27 Aug 2020 15:36:23 -0600
+To:     Tom Murphy <murphyt7@tcd.ie>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        linux-mediatek@lists.infradead.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        virtualization@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+References: <20191221150402.13868-1-murphyt7@tcd.ie>
+ <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
+ <20200529124523.GA11817@infradead.org>
+ <CGME20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d@eucas1p2.samsung.com>
+ <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com>
+ <ef2150d5-7b6a-df25-c10d-e43316fe7812@samsung.com>
+ <b9140772-0370-a858-578c-af503a06d8e9@deltatee.com>
+ <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <766525c3-4da9-6db7-cd90-fb4b82cd8083@deltatee.com>
+Date:   Thu, 27 Aug 2020 15:36:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827131748.46b3f8bc@x1.home>
+In-Reply-To: <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: joonas.lahtinen@linux.intel.com, jani.nikula@linux.intel.com, dwmw2@infradead.org, kgene@kernel.org, linux-kernel@vger.kernel.org, cohuck@redhat.com, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, virtualization@lists.linux-foundation.org, tglx@linutronix.de, linux-tegra@vger.kernel.org, rodrigo.vivi@intel.com, linux-mediatek@lists.infradead.org, alex.williamson@redhat.com, intel-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, linux-s390@vger.kernel.org, gerald.schaefer@de.ibm.com, agross@kernel.org, linux-rockchip@lists.infradead.org, jonathanh@nvidia.com, krzk@kernel.org, maz@kernel.org, linux-samsung-soc@vger.kernel.org, jean-philippe@linaro.org, will@kernel.org, thierry.reding@gmail.com, julien.grall@arm.com, matthias.bgg@gmail.com, bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, kvm@vger.kernel.org, iommu@lists.linux-foundation.org, hch@infradead.org, m.szyprowski@samsung.com, murphyt7@tcd.ie
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 01:17:48PM -0600, Alex Williamson wrote:
-> On Thu, 27 Aug 2020 13:31:38 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
+
+
+On 2020-08-23 6:04 p.m., Tom Murphy wrote:
+> I have added a check for the sg_dma_len == 0 :
+> """
+>  } __sgt_iter(struct scatterlist *sgl, bool dma) {
+>         struct sgt_iter s = { .sgp = sgl };
 > 
-> > Re the subject line, this patch does a lot more than just "introduce a
-> > flag"; AFAICT it actually enables important VFIO functionality, e.g.,
-> > something like:
-> > 
-> >   vfio/pci: Enable MMIO access for s390 detached VFs
-> > 
-> > On Thu, Aug 13, 2020 at 11:40:43AM -0400, Matthew Rosato wrote:
-> > > s390x has the notion of providing VFs to the kernel in a manner
-> > > where the associated PF is inaccessible other than via firmware.
-> > > These are not treated as typical VFs and access to them is emulated
-> > > by underlying firmware which can still access the PF.  After
-> > > the referened commit however these detached VFs were no longer able
-> > > to work with vfio-pci as the firmware does not provide emulation of
-> > > the PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
-> > > these detached VFs so that vfio-pci can allow memory access to
-> > > them again.  
-> > 
-> > Out of curiosity, in what sense is the PF inaccessible?  Is it
-> > *impossible* for Linux to access the PF, or is it just not enumerated
-> > by clp_list_pci() so Linux doesn't know about it?
-> > 
-> > VFs do not implement PCI_COMMAND, so I guess "firmware does not
-> > provide emulation of PCI_COMMAND_MEMORY" means something like "we
-> > can't access the PF so we can't enable/disable PCI_COMMAND_MEMORY"?
-> > 
-> > s/referened/referenced/
-> > 
-> > > Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-> > > Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> > > ---
-> > >  arch/s390/pci/pci_bus.c            | 13 +++++++++++++
-> > >  drivers/vfio/pci/vfio_pci_config.c |  8 ++++----
-> > >  include/linux/pci.h                |  4 ++++
-> > >  3 files changed, 21 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-> > > index 642a993..1b33076 100644
-> > > --- a/arch/s390/pci/pci_bus.c
-> > > +++ b/arch/s390/pci/pci_bus.c
-> > > @@ -184,6 +184,19 @@ static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
-> > >  }
-> > >  #endif
-> > >  
-> > > +void pcibios_bus_add_device(struct pci_dev *pdev)
-> > > +{
-> > > +	struct zpci_dev *zdev = to_zpci(pdev);
-> > > +
-> > > +	/*
-> > > +	 * If we have a VF on a non-multifunction bus, it must be a VF that is
-> > > +	 * detached from its parent PF.  We rely on firmware emulation to
-> > > +	 * provide underlying PF details.  
-> > 
-> > What exactly does "multifunction bus" mean?  I'm familiar with
-> > multi-function *devices*, but not multi-function buses.
-> > 
-> > > +	 */
-> > > +	if (zdev->vfn && !zdev->zbus->multifunction)
-> > > +		pdev->detached_vf = 1;
-> > > +}
-> > > +
-> > >  static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
-> > >  {
-> > >  	struct pci_bus *bus;
-> > > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> > > index d98843f..98f93d1 100644
-> > > --- a/drivers/vfio/pci/vfio_pci_config.c
-> > > +++ b/drivers/vfio/pci/vfio_pci_config.c
-> > > @@ -406,7 +406,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
-> > >  	 * PF SR-IOV capability, there's therefore no need to trigger
-> > >  	 * faults based on the virtual value.
-> > >  	 */
-> > > -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
-> > > +	return dev_is_vf(&pdev->dev) || (cmd & PCI_COMMAND_MEMORY);  
-> > 
-> > I'm not super keen on the idea of having two subtly different ways of
-> > identifying VFs.  I think that will be confusing.  This seems to be
-> > the critical line, so whatever we do here, it will be out of the
-> > ordinary and probably deserves a little comment.
-> > 
-> > If Linux doesn't see the PF, does pci_physfn(VF) return NULL, i.e., is
-> > VF->physfn NULL?
+> +       if (sgl && sg_dma_len(sgl) == 0)
+> +           s.sgp = NULL;
 > 
-> FWIW, pci_physfn() never returns NULL, it returns the provided pdev if
-> is_virtfn is not set.  This proposal wouldn't change that return value.
-> AIUI pci_physfn(), the caller needs to test that the returned device is
-> different from the provided device if there's really code that wants to
-> traverse to the PF.
+>         if (s.sgp) {
+>             .....
+> """
+> at location [1].
+> but it doens't fix the problem.
 
-Oh, so this VF has is_virtfn==0.  That seems weird.  There are lots of
-other ways that a VF is different: Vendor/Device IDs are 0xffff, BARs
-are zeroes, etc.
+Based on my read of the code, it looks like we also need to change usage
+of sgl->length... Something like the rough patch below, maybe?
 
-It sounds like you're sweeping those under the rug by avoiding the
-normal enumeration path (e.g., you don't have to size the BARs), but
-if it actually is a VF, it seems like there might be fewer surprises
-if we treat it as one.
+Also, Tom, do you have an updated version of the patchset to convert the
+Intel IOMMU to dma-iommu available? The last one I've found doesn't
+apply cleanly (I'm assuming parts of it have been merged in slightly
+modified forms).
 
-Why don't you just set is_virtfn=1 since it *is* a VF, and then deal
-with the special cases where you want to touch the PF?
+Thanks,
 
-Bjorn
+Logan
+
+--
+
+diff --git a/drivers/gpu/drm/i915/i915_scatterlist.h
+b/drivers/gpu/drm/i915/i915
+index b7b59328cb76..9367ac801f0c 100644
+--- a/drivers/gpu/drm/i915/i915_scatterlist.h
++++ b/drivers/gpu/drm/i915/i915_scatterlist.h
+@@ -27,13 +27,19 @@ static __always_inline struct sgt_iter {
+ } __sgt_iter(struct scatterlist *sgl, bool dma) {
+        struct sgt_iter s = { .sgp = sgl };
+
++       if (sgl && !sg_dma_len(s.sgp))
++               s.sgp = NULL;
++
+        if (s.sgp) {
+                s.max = s.curr = s.sgp->offset;
+-               s.max += s.sgp->length;
+-               if (dma)
++
++               if (dma) {
++                       s.max += sg_dma_len(s.sgp);
+                        s.dma = sg_dma_address(s.sgp);
+-               else
++               } else {
++                       s.max += s.sgp->length;
+                        s.pfn = page_to_pfn(sg_page(s.sgp));
++               }
+        }
+
+        return s;
