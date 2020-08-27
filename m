@@ -2,280 +2,139 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8427254074
-	for <lists+linux-s390@lfdr.de>; Thu, 27 Aug 2020 10:17:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3BBE2543C8
+	for <lists+linux-s390@lfdr.de>; Thu, 27 Aug 2020 12:33:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgH0IRV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 27 Aug 2020 04:17:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59152 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727903AbgH0IRR (ORCPT
+        id S1726266AbgH0KdG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 27 Aug 2020 06:33:06 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:25023 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726988AbgH0KdF (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:17:17 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07R852Cb045660;
-        Thu, 27 Aug 2020 04:17:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=xBouKza3uqgoCKGzgbYgwHUeIGRQ2fggV62Hutvx+7I=;
- b=QMLRiHRh5j2zAaZNxFjpC0LGW+ViKrBZPreIooprVMISQgSkGoerXwOBKvIY9T9Ftl4A
- IX3KgiHf8ra8OXTt7LLB/iUyse/bD6rd8BcCRd6rWiRAz9rc1qPS3D2TlrB9mdNa828F
- od1/qB1BAdbWO7HENGorFE8/GjRTXphTCnUMrQ+SP56rLvgMwBSLFPMdHl/vNIgKLOnP
- /05xn87E/q7Piz+KI09sUo5liaDCNkxSljuZ75k5F4nHx03G7/WFLwUNY3gQ1KqXZf8e
- CDFrlDGaUKMeX+ZaqkPQtHgXdZaAZ+25S89U0zEg0O75dFzBKRi9g+8sBkNBLev0DnEq Eg== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3367tsjfry-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 04:17:15 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07R8CVKS017682;
-        Thu, 27 Aug 2020 08:17:13 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 332ujkwekt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 08:17:13 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07R8HAtR54722980
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Aug 2020 08:17:10 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D0F54C05A;
-        Thu, 27 Aug 2020 08:17:10 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 542184C05C;
-        Thu, 27 Aug 2020 08:17:10 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Aug 2020 08:17:10 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 8/8] s390/qeth: strictly order bridge address events
-Date:   Thu, 27 Aug 2020 10:17:05 +0200
-Message-Id: <20200827081705.21922-9-jwi@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827081705.21922-1-jwi@linux.ibm.com>
-References: <20200827081705.21922-1-jwi@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-27_02:2020-08-27,2020-08-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
- impostorscore=0 adultscore=0 suspectscore=2 spamscore=0 mlxlogscore=999
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008270060
+        Thu, 27 Aug 2020 06:33:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598524383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xVl6R1XwWuiNXr6HJxlhlEi6Bd9mQNsLml7GXEW9cbY=;
+        b=KBNvfVk4wLbCc/T/Ta6KRmLbtmKwx4c5cQKU+lHP2ah3eRmMe/+ly7owokNLHn6AsWnH6H
+        4UFjgt43kV2cz7sECxWNrZazCM+6NF0bQ59K7aW3JSHFVBA/S00qT4dkN2tNIVTdTWdv1Y
+        TJ/LQEVgniya4j01jEk3L1q/dP4UUiA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-275-bdNbO0IPPrq-tf0swTDF9Q-1; Thu, 27 Aug 2020 06:33:00 -0400
+X-MC-Unique: bdNbO0IPPrq-tf0swTDF9Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84F94803F58;
+        Thu, 27 Aug 2020 10:32:46 +0000 (UTC)
+Received: from gondolin (ovpn-113-237.ams2.redhat.com [10.36.113.237])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E5D97196F3;
+        Thu, 27 Aug 2020 10:32:42 +0000 (UTC)
+Date:   Thu, 27 Aug 2020 12:32:40 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v10 01/16] s390/vfio-ap: add version vfio_ap module
+Message-ID: <20200827123240.42e0c787.cohuck@redhat.com>
+In-Reply-To: <ca016eca-1ee7-2d0f-c2ec-3ef147b6216a@linux.ibm.com>
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+        <20200821195616.13554-2-akrowiak@linux.ibm.com>
+        <20200825120432.13a1b444.cohuck@redhat.com>
+        <ca016eca-1ee7-2d0f-c2ec-3ef147b6216a@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The current code for bridge address events has two shortcomings in its
-control sequence:
+On Wed, 26 Aug 2020 10:49:47 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-1. after disabling address events via PNSO, we don't flush the remaining
-   events from the event_wq. So if the feature is re-enabled fast
-   enough, stale events could leak over.
-2. PNSO and the events' arrival via the READ ccw device are unordered.
-   So even if we flushed the workqueue, it's difficult to say whether
-   the READ device might produce more events onto the workqueue
-   afterwards.
+> On 8/25/20 6:04 AM, Cornelia Huck wrote:
+> > On Fri, 21 Aug 2020 15:56:01 -0400
+> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> >  
+> >> Let's set a version for the vfio_ap module so that automated regression
+> >> tests can determine whether dynamic configuration tests can be run or
+> >> not.
+> >>
+> >> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> >> ---
+> >>   drivers/s390/crypto/vfio_ap_drv.c | 2 ++
+> >>   1 file changed, 2 insertions(+)
+> >>
+> >> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> >> index be2520cc010b..f4ceb380dd61 100644
+> >> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> >> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> >> @@ -17,10 +17,12 @@
+> >>   
+> >>   #define VFIO_AP_ROOT_NAME "vfio_ap"
+> >>   #define VFIO_AP_DEV_NAME "matrix"
+> >> +#define VFIO_AP_MODULE_VERSION "1.2.0"
+> >>   
+> >>   MODULE_AUTHOR("IBM Corporation");
+> >>   MODULE_DESCRIPTION("VFIO AP device driver, Copyright IBM Corp. 2018");
+> >>   MODULE_LICENSE("GPL v2");
+> >> +MODULE_VERSION(VFIO_AP_MODULE_VERSION);
+> >>   
+> >>   static struct ap_driver vfio_ap_drv;
+> >>     
+> > Setting a version manually has some drawbacks:
+> > - tools wanting to check for capabilities need to keep track which
+> >    versions support which features
+> > - you need to remember to actually bump the version when adding a new,
+> >    visible feature
+> > (- selective downstream backports may get into a pickle, but that's
+> > arguably not your problem)
+> >
+> > Is there no way for a tool to figure out whether this is supported?
+> > E.g., via existence of a sysfs file, or via a known error that will
+> > occur. If not, it's maybe better to expose known capabilities via a
+> > generic interface.  
+> 
+> This patch series introduces a new mediated device sysfs attribute,
+> guest_matrix, so the automated tests could check for the existence
+> of that interface. The problem I have with that is it will work for
+> this version of the vfio_ap device driver - which may be all that is
+> ever needed - but does not account for future enhancements
+> which may need to be detected by tooling or automated tests.
+> It seems to me that regardless of how a tool detects whether
+> a feature is supported or not, it will have to keep track of that
+> somehow.
 
-Fix this by
-1. explicitly fencing off the events when we no longer care, in the
-   READ device's event handler. This ensures that once we flush the
-   workqueue, it doesn't get additional address events.
-2. Flush the workqueue after disabling the events & fencing them off.
-   As the code that triggers the flush will typically hold the sbp_lock,
-   we need to rework the worker code to avoid a deadlock here in case
-   of a 'notifications-stopped' event. In case of lock contention,
-   requeue such an event with a delay. We'll eventually aquire the lock,
-   or spot that the feature has been disabled and the event can thus be
-   discarded.
+Which enhancements? If you change the interface in an incompatible way,
+you have a different problem anyway. If someone trying to use the
+enhanced version of the interface gets an error on a kernel providing
+an older version of the interface, that's a reasonable way to discover
+support.
 
-This leaves the theoretical race that a stale event could arrive
-_after_ we re-enabled ourselves to receive events again. Such an event
-would be impossible to distinguish from a 'good' event, nothing we can
-do about it.
+I think "discover device driver capabilities by probing" is less
+burdensome and error prone than trying to match up capabilities with a
+version number. If you expose a version number, a tool would still have
+to probe that version number, and then consult with a list of features
+per version, which can easily go out of sync.
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
----
- drivers/s390/net/qeth_core.h    |  6 ++++
- drivers/s390/net/qeth_l2_main.c | 53 ++++++++++++++++++++++++++++-----
- drivers/s390/net/qeth_l2_sys.c  |  1 +
- 3 files changed, 52 insertions(+), 8 deletions(-)
+> Can you provide more details about this generic interface of
+> which you speak?
 
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index 00ed58428163..da46af682af8 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -674,6 +674,11 @@ struct qeth_card_blkt {
- 	int inter_packet_jumbo;
- };
- 
-+enum qeth_pnso_mode {
-+	QETH_PNSO_NONE,
-+	QETH_PNSO_BRIDGEPORT,
-+};
-+
- #define QETH_BROADCAST_WITH_ECHO    0x01
- #define QETH_BROADCAST_WITHOUT_ECHO 0x02
- struct qeth_card_info {
-@@ -690,6 +695,7 @@ struct qeth_card_info {
- 	/* no bitfield, we take a pointer on these two: */
- 	u8 has_lp2lp_cso_v6;
- 	u8 has_lp2lp_cso_v4;
-+	enum qeth_pnso_mode pnso_mode;
- 	enum qeth_card_types type;
- 	enum qeth_link_types link_type;
- 	int broadcast_capable;
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 1e3d64ab5e46..b5bef5345dd6 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -273,6 +273,17 @@ static int qeth_l2_vlan_rx_kill_vid(struct net_device *dev,
- 	return qeth_l2_send_setdelvlan(card, vid, IPA_CMD_DELVLAN);
- }
- 
-+static void qeth_l2_set_pnso_mode(struct qeth_card *card,
-+				  enum qeth_pnso_mode mode)
-+{
-+	spin_lock_irq(get_ccwdev_lock(CARD_RDEV(card)));
-+	WRITE_ONCE(card->info.pnso_mode, mode);
-+	spin_unlock_irq(get_ccwdev_lock(CARD_RDEV(card)));
-+
-+	if (mode == QETH_PNSO_NONE)
-+		drain_workqueue(card->event_wq);
-+}
-+
- static void qeth_l2_stop_card(struct qeth_card *card)
- {
- 	QETH_CARD_TEXT(card, 2, "stopcard");
-@@ -290,7 +301,7 @@ static void qeth_l2_stop_card(struct qeth_card *card)
- 
- 	qeth_qdio_clear_card(card, 0);
- 	qeth_clear_working_pool_list(card);
--	flush_workqueue(card->event_wq);
-+	qeth_l2_set_pnso_mode(card, QETH_PNSO_NONE);
- 	qeth_flush_local_addrs(card);
- 	card->info.promisc_mode = 0;
- }
-@@ -1153,19 +1164,34 @@ static void qeth_bridge_state_change(struct qeth_card *card,
- }
- 
- struct qeth_addr_change_data {
--	struct work_struct worker;
-+	struct delayed_work dwork;
- 	struct qeth_card *card;
- 	struct qeth_ipacmd_addr_change ac_event;
- };
- 
- static void qeth_addr_change_event_worker(struct work_struct *work)
- {
--	struct qeth_addr_change_data *data =
--		container_of(work, struct qeth_addr_change_data, worker);
-+	struct delayed_work *dwork = to_delayed_work(work);
-+	struct qeth_addr_change_data *data;
-+	struct qeth_card *card;
- 	int i;
- 
-+	data = container_of(dwork, struct qeth_addr_change_data, dwork);
-+	card = data->card;
-+
- 	QETH_CARD_TEXT(data->card, 4, "adrchgew");
-+
-+	if (READ_ONCE(card->info.pnso_mode) == QETH_PNSO_NONE)
-+		goto free;
-+
- 	if (data->ac_event.lost_event_mask) {
-+		/* Potential re-config in progress, try again later: */
-+		if (!mutex_trylock(&card->sbp_lock)) {
-+			queue_delayed_work(card->event_wq, dwork,
-+					   msecs_to_jiffies(100));
-+			return;
-+		}
-+
- 		dev_info(&data->card->gdev->dev,
- 			 "Address change notification stopped on %s (%s)\n",
- 			 data->card->dev->name,
-@@ -1174,8 +1200,9 @@ static void qeth_addr_change_event_worker(struct work_struct *work)
- 			: (data->ac_event.lost_event_mask == 0x02)
- 			? "Bridge port state change"
- 			: "Unknown reason");
--		mutex_lock(&data->card->sbp_lock);
-+
- 		data->card->options.sbp.hostnotification = 0;
-+		card->info.pnso_mode = QETH_PNSO_NONE;
- 		mutex_unlock(&data->card->sbp_lock);
- 		qeth_bridge_emit_host_event(data->card, anev_abort,
- 					    0, NULL, NULL);
-@@ -1189,6 +1216,8 @@ static void qeth_addr_change_event_worker(struct work_struct *work)
- 						    &entry->token,
- 						    &entry->addr_lnid);
- 		}
-+
-+free:
- 	kfree(data);
- }
- 
-@@ -1200,6 +1229,9 @@ static void qeth_addr_change_event(struct qeth_card *card,
- 	struct qeth_addr_change_data *data;
- 	int extrasize;
- 
-+	if (card->info.pnso_mode == QETH_PNSO_NONE)
-+		return;
-+
- 	QETH_CARD_TEXT(card, 4, "adrchgev");
- 	if (cmd->hdr.return_code != 0x0000) {
- 		if (cmd->hdr.return_code == 0x0010) {
-@@ -1219,11 +1251,11 @@ static void qeth_addr_change_event(struct qeth_card *card,
- 		QETH_CARD_TEXT(card, 2, "ACNalloc");
- 		return;
- 	}
--	INIT_WORK(&data->worker, qeth_addr_change_event_worker);
-+	INIT_DELAYED_WORK(&data->dwork, qeth_addr_change_event_worker);
- 	data->card = card;
- 	memcpy(&data->ac_event, hostevs,
- 			sizeof(struct qeth_ipacmd_addr_change) + extrasize);
--	queue_work(card->event_wq, &data->worker);
-+	queue_delayed_work(card->event_wq, &data->dwork, 0);
- }
- 
- /* SETBRIDGEPORT support; sending commands */
-@@ -1545,9 +1577,14 @@ int qeth_bridgeport_an_set(struct qeth_card *card, int enable)
- 
- 	if (enable) {
- 		qeth_bridge_emit_host_event(card, anev_reset, 0, NULL, NULL);
-+		qeth_l2_set_pnso_mode(card, QETH_PNSO_BRIDGEPORT);
- 		rc = qeth_l2_pnso(card, 1, qeth_bridgeport_an_set_cb, card);
--	} else
-+		if (rc)
-+			qeth_l2_set_pnso_mode(card, QETH_PNSO_NONE);
-+	} else {
- 		rc = qeth_l2_pnso(card, 0, NULL, NULL);
-+		qeth_l2_set_pnso_mode(card, QETH_PNSO_NONE);
-+	}
- 	return rc;
- }
- 
-diff --git a/drivers/s390/net/qeth_l2_sys.c b/drivers/s390/net/qeth_l2_sys.c
-index 86bcae992f72..4695d25e54f2 100644
---- a/drivers/s390/net/qeth_l2_sys.c
-+++ b/drivers/s390/net/qeth_l2_sys.c
-@@ -157,6 +157,7 @@ static ssize_t qeth_bridgeport_hostnotification_store(struct device *dev,
- 		rc = -EBUSY;
- 	else if (qeth_card_hw_is_reachable(card)) {
- 		rc = qeth_bridgeport_an_set(card, enable);
-+		/* sbp_lock ensures ordering vs notifications-stopped events */
- 		if (!rc)
- 			card->options.sbp.hostnotification = enable;
- 	} else
--- 
-2.17.1
+If that is really needed, I'd probably do a driver sysfs attribute that
+exposes a list of documented capabilities (as integer values, or as a
+bit.) But since tools can simply check for guest_matrix to find out
+about support for this feature here, it seems like overkill to me --
+unless you have a multitude of features waiting in queue that need to
+be made discoverable.
 
