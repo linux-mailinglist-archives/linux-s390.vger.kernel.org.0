@@ -2,176 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E7BD255D82
-	for <lists+linux-s390@lfdr.de>; Fri, 28 Aug 2020 17:10:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9117E255DA9
+	for <lists+linux-s390@lfdr.de>; Fri, 28 Aug 2020 17:20:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgH1PKu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 28 Aug 2020 11:10:50 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60622 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726321AbgH1PKt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 28 Aug 2020 11:10:49 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07SF2buJ051711;
-        Fri, 28 Aug 2020 11:10:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=3eWNwJ8Wf00T2lz4qt2Y64JTbxe4wIQ4V+HqrirF7o0=;
- b=Kdwrpox8RZyZLjPsNBQesttHtL561tqh77XdQBROZhEVW7Org3nf5YAUddwcQTx9jw8o
- H6E6C/CTXLnTu4DFZXizBHFHtdwFQbuDVr4RC2vurylXCr5Im/+G0SJxTopCW5u5lgTJ
- P1C6FDMRJWW6If0slJO9Lzrbj/6ftYFzCG7/XZSRHZYUq357vAjkZLAdBYtF2WIwwTxT
- P/3ru8x0k5Z9ZNhPK6ky3AMPM832CKvZUK+ifJ9a3IXtRgSSn1VGsMhm4CDVNJNikKwI
- YO/aJbAHbhgTkoe/VpDQ/3UhhbtzesNAPNjRGn3lVosJR8cPw/Z4Khoq12hRduUucHmu rQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3372fykrue-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 11:10:47 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07SF2fJZ051904;
-        Fri, 28 Aug 2020 11:10:46 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3372fykrte-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 11:10:46 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07SF2cfP019974;
-        Fri, 28 Aug 2020 15:10:45 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03wdc.us.ibm.com with ESMTP id 332utrjrmp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 15:10:45 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07SFAgd956819982
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Aug 2020 15:10:42 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E3BA7805C;
-        Fri, 28 Aug 2020 15:10:42 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C013778067;
-        Fri, 28 Aug 2020 15:10:40 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.170.64])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Aug 2020 15:10:40 +0000 (GMT)
-Subject: Re: [PATCH v10 02/16] s390/vfio-ap: use new AP bus interface to
- search for queue devices
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        kernel test robot <lkp@intel.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
- <20200821195616.13554-3-akrowiak@linux.ibm.com>
- <20200825121334.0ff35d7a.cohuck@redhat.com>
- <b1c6bad8-3ec6-183c-3e35-9962e9c721c7@linux.ibm.com>
- <20200828101357.2ccbc39a.cohuck@redhat.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <d4faf910-ea86-bcda-13e1-544243477568@linux.ibm.com>
-Date:   Fri, 28 Aug 2020 11:10:40 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1728021AbgH1PUL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 28 Aug 2020 11:20:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726720AbgH1PUJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 28 Aug 2020 11:20:09 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B350CC061264
+        for <linux-s390@vger.kernel.org>; Fri, 28 Aug 2020 08:20:08 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id u3so1247613qkd.9
+        for <linux-s390@vger.kernel.org>; Fri, 28 Aug 2020 08:20:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hmAVQxaLJpSgHlGpdC6W2VwrKbmge9YTpG2rcbgWFRY=;
+        b=nacZRdtevNeYT9CJ6nLA4NoNXEAyPImxNMxzlfmMca1i8stapDOrP+Kxip7McKhAV5
+         9l08gUo+8TyO6SN7VJAQU4gEAh0vE61+p3F5SrGs1jt0HPdwN0EihHO615GS6tH3XX//
+         A0nOV+WX2a0KXUWY77Rer07c9z3S74bV4v2Bb585J/p8y5I44riACgPdeFN811woipZp
+         TD72hirXsZeWcK+F8I5M2JyC0qJQZ/JdoITLLoxkYgfLPw2wtf7zY5nMI9Zk4ewPdMIL
+         E5GAHWmTEy4YROGgjL9tDeBgbPku0C+eQHKQQ1SjhXL1STugmflpgEmdEcM/svZScCzw
+         LjLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hmAVQxaLJpSgHlGpdC6W2VwrKbmge9YTpG2rcbgWFRY=;
+        b=oOg46I+cM9fJt/KKA4PYWJhBGicbhAOPFlaqCddSifj0GXBpRFNNYIjqiOjtQLDkkC
+         fBl2O1SLlomJqfoYhoNOoP7hajA6NVXLfEqKu5a3OpjLH0k2J34Akf3y5JKl3P2W3iRB
+         ymu6j1UsL8uk6ukqD8Sr2wCIbQ+OrexuWhh/+mF9ArG2hFHgb075njKAIDa/9WjQUDzG
+         RzrkLSe9G1AwnY2/w8uVxgay6URZbsj6VespAX6yjh8iBXA1iVwAtyTjUpzsrFHXTCOA
+         WUIl91mcEVKpPcJlNX2xXLZ8JIAe/WRwxz9G6AevIRtXVh7i66UEAw97TiWKV2fVSqh9
+         56FQ==
+X-Gm-Message-State: AOAM532CbpO4VdLegrWmfPNAIlupjxbSawgcG/Hz4UB/RWawewDR26m3
+        VvESKqvayaV02Ubjjm7Ua9b+ltQwNQoOmQ==
+X-Google-Smtp-Source: ABdhPJzcd9CgTfJl/sRgwevfrnu6z/jWnfmDFGgqlGh6cAgk0HZk1toJqs+TYqzoKCtlM+546U/ncQ==
+X-Received: by 2002:a05:620a:1185:: with SMTP id b5mr1652758qkk.293.1598628008018;
+        Fri, 28 Aug 2020 08:20:08 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id v136sm1031904qkb.31.2020.08.28.08.20.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 08:20:07 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kBgAg-000vxD-HJ; Fri, 28 Aug 2020 12:20:06 -0300
+Date:   Fri, 28 Aug 2020 12:20:06 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [RFC PATCH 0/2] mm/gup: fix gup_fast with dynamic page table
+ folding
+Message-ID: <20200828152006.GY24045@ziepe.ca>
+References: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
+ <20200828142137.GX24045@ziepe.ca>
+ <20200828170103.6d954d95@thinkpad>
 MIME-Version: 1.0
-In-Reply-To: <20200828101357.2ccbc39a.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-28_08:2020-08-28,2020-08-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1011 bulkscore=0 suspectscore=3 priorityscore=1501 malwarescore=0
- mlxlogscore=915 impostorscore=0 spamscore=0 adultscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008280112
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828170103.6d954d95@thinkpad>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Fri, Aug 28, 2020 at 05:01:03PM +0200, Gerald Schaefer wrote:
 
+> Just to make sure, you are referring to some future / planned
+> changes to mm/pagewalk.c, and not some currently existing
+> pagetable walkers already using the READ_ONCE logic w/o
+> spinlocks? 
 
-On 8/28/20 4:13 AM, Cornelia Huck wrote:
-> On Thu, 27 Aug 2020 10:24:07 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->
->> On 8/25/20 6:13 AM, Cornelia Huck wrote:
->>> On Fri, 21 Aug 2020 15:56:02 -0400
->>> Tony Krowiak<akrowiak@linux.ibm.com>  wrote:
->>>>    /**
->>>> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
->>>> - * @matrix_mdev: the associated mediated matrix
->>>> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
->>>>     * @apqn: The queue APQN
->>>>     *
->>>> - * Retrieve a queue with a specific APQN from the list of the
->>>> - * devices of the vfio_ap_drv.
->>>> - * Verify that the APID and the APQI are set in the matrix.
->>>> + * Retrieve a queue with a specific APQN from the AP queue devices attached to
->>>> + * the AP bus.
->>>>     *
->>>> - * Returns the pointer to the associated vfio_ap_queue
->>>> + * Returns the pointer to the vfio_ap_queue with the specified APQN, or NULL.
->>>>     */
->>>> -static struct vfio_ap_queue *vfio_ap_get_queue(
->>>> -					struct ap_matrix_mdev *matrix_mdev,
->>>> -					int apqn)
->>>> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
->>>>    {
->>>> +	struct ap_queue *queue;
->>>>    	struct vfio_ap_queue *q;
->>>> -	struct device *dev;
->>>>    
->>>> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
->>>> -		return NULL;
->>>> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
->>> I think you should add some explanation to the patch description why
->>> testing the matrix bitmasks is not needed anymore.
->> As a result of this comment, I took a closer look at the code to
->> determine the reason for eliminating the matrix_mdev
->> parameter. The reason is because the code below (i.e., find the device
->> and get the driver data) was also repeated in the vfio_ap_irq_disable_apqn()
->> function, so I replaced it with a call to the function above; however, the
->> vfio_ap_irq_disable_apqn() function  does not have a reference to the
->> matrix_mdev, so I eliminated the matrix_mdev parameter. Note that the
->> vfio_ap_irq_disable_apqn() is called for each APQN assigned to a matrix
->> mdev, so there is no need to test the bitmasks there.
->>
->> The other place from which the function above is called is
->> the handle_pqap() function which does have a reference to the
->> matrix_mdev. In order to ensure the integrity of the instruction
->> being intercepted - i.e., PQAP(AQIC) enable/disable IRQ for aN
->> AP queue - the testing of the matrix bitmasks probably ought to
->> be performed, so it will be done there instead of in the
->> vfio_ap_get_queue() function above.
-> Should you add a comment that vfio_ap_get_queue() assumes that the
-> caller makes sure that this is only called for APQNs that are assigned
-> to a matrix?
+Yes no current code, just something I've been looking at slowly.
 
-I suppose it wouldn't hurt.
-
->
->>
->>> +	queue = ap_get_qdev(apqn);
->>> +	if (!queue)
->>>    		return NULL;
->>>    
->>> -	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
->>> -				 &apqn, match_apqn);
->>> -	if (!dev)
->>> -		return NULL;
->>> -	q = dev_get_drvdata(dev);
->>> -	q->matrix_mdev = matrix_mdev;
->>> -	put_device(dev);
->>> +	q = dev_get_drvdata(&queue->ap_dev.device);
->>> +	put_device(&queue->ap_dev.device);
->>>    
->>>    	return q;
->>>    }
->>> (...)
->>>   
-
+Jason
