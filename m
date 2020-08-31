@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B45CB257CE0
-	for <lists+linux-s390@lfdr.de>; Mon, 31 Aug 2020 17:35:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ACB5257CE9
+	for <lists+linux-s390@lfdr.de>; Mon, 31 Aug 2020 17:35:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgHaPbv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 31 Aug 2020 11:31:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43006 "EHLO mail.kernel.org"
+        id S1729031AbgHaPcA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 31 Aug 2020 11:32:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728994AbgHaPbs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:31:48 -0400
+        id S1729005AbgHaPb7 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:31:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C91A21527;
-        Mon, 31 Aug 2020 15:31:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B295021556;
+        Mon, 31 Aug 2020 15:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887907;
-        bh=yFj9wFJzRYj+I4nblJ/YqFf6MOl/OYX7fko2fanX+cE=;
+        s=default; t=1598887918;
+        bh=Rd1MFRgUDEkTx/wiIJII+ZUZaJaafXMLUlnBw2t2XPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q81ha4LIL8Ma5DEcpo0tcHLEXxB488GPVUnXX+/Gy0VnpA3dkMbaBHxAoi+8pAW4t
-         hyUBvNrqyQDk0QVrfQWL8xUFzOrIAX3yCM4z+Ebmq9P5ToJqV1uc6YaoiGJMYhYgdn
-         VfoPi7v2+GSbyS8DF79y5StiV7wCTIBnUshgG8ac=
+        b=yO35Jj6JTKRBtcmuAmo+Oiw4ErknciAdO/UhITbWmlRdUb7V+D44FgoLKorRQDhmN
+         IlC3sfccao4KHeydHBY+3d8LUkqAjugrsZwSqxy6/RK0Ngtr8u+It+05Nhydal+51b
+         bEUDJadUwL0ndmeEgJjhUC7ZfwXLgvQIDB1rHQMw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Sven Schnelle <svens@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 8/9] s390: don't trace preemption in percpu macros
-Date:   Mon, 31 Aug 2020 11:31:35 -0400
-Message-Id: <20200831153136.1024676-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 5/6] s390: don't trace preemption in percpu macros
+Date:   Mon, 31 Aug 2020 11:31:48 -0400
+Message-Id: <20200831153150.1024799-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831153136.1024676-1-sashal@kernel.org>
-References: <20200831153136.1024676-1-sashal@kernel.org>
+In-Reply-To: <20200831153150.1024799-1-sashal@kernel.org>
+References: <20200831153150.1024799-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,10 +61,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/arch/s390/include/asm/percpu.h b/arch/s390/include/asm/percpu.h
-index 0095ddb58ff69..50f6661ba5664 100644
+index 90240dfef76a1..5889c1ed84c46 100644
 --- a/arch/s390/include/asm/percpu.h
 +++ b/arch/s390/include/asm/percpu.h
-@@ -29,7 +29,7 @@
+@@ -28,7 +28,7 @@
  	typedef typeof(pcp) pcp_op_T__;					\
  	pcp_op_T__ old__, new__, prev__;				\
  	pcp_op_T__ *ptr__;						\
@@ -73,7 +73,7 @@ index 0095ddb58ff69..50f6661ba5664 100644
  	ptr__ = raw_cpu_ptr(&(pcp));					\
  	prev__ = *ptr__;						\
  	do {								\
-@@ -37,7 +37,7 @@
+@@ -36,7 +36,7 @@
  		new__ = old__ op (val);					\
  		prev__ = cmpxchg(ptr__, old__, new__);			\
  	} while (prev__ != old__);					\
@@ -82,7 +82,7 @@ index 0095ddb58ff69..50f6661ba5664 100644
  	new__;								\
  })
  
-@@ -68,7 +68,7 @@
+@@ -67,7 +67,7 @@
  	typedef typeof(pcp) pcp_op_T__; 				\
  	pcp_op_T__ val__ = (val);					\
  	pcp_op_T__ old__, *ptr__;					\
@@ -91,7 +91,7 @@ index 0095ddb58ff69..50f6661ba5664 100644
  	ptr__ = raw_cpu_ptr(&(pcp)); 				\
  	if (__builtin_constant_p(val__) &&				\
  	    ((szcast)val__ > -129) && ((szcast)val__ < 128)) {		\
-@@ -84,7 +84,7 @@
+@@ -83,7 +83,7 @@
  			: [val__] "d" (val__)				\
  			: "cc");					\
  	}								\
@@ -100,7 +100,7 @@ index 0095ddb58ff69..50f6661ba5664 100644
  }
  
  #define this_cpu_add_4(pcp, val) arch_this_cpu_add(pcp, val, "laa", "asi", int)
-@@ -95,14 +95,14 @@
+@@ -94,14 +94,14 @@
  	typedef typeof(pcp) pcp_op_T__; 				\
  	pcp_op_T__ val__ = (val);					\
  	pcp_op_T__ old__, *ptr__;					\
@@ -117,7 +117,7 @@ index 0095ddb58ff69..50f6661ba5664 100644
  	old__ + val__;							\
  })
  
-@@ -114,14 +114,14 @@
+@@ -113,14 +113,14 @@
  	typedef typeof(pcp) pcp_op_T__; 				\
  	pcp_op_T__ val__ = (val);					\
  	pcp_op_T__ old__, *ptr__;					\
@@ -134,7 +134,7 @@ index 0095ddb58ff69..50f6661ba5664 100644
  }
  
  #define this_cpu_and_4(pcp, val)	arch_this_cpu_to_op(pcp, val, "lan")
-@@ -136,10 +136,10 @@
+@@ -135,10 +135,10 @@
  	typedef typeof(pcp) pcp_op_T__;					\
  	pcp_op_T__ ret__;						\
  	pcp_op_T__ *ptr__;						\
@@ -147,7 +147,7 @@ index 0095ddb58ff69..50f6661ba5664 100644
  	ret__;								\
  })
  
-@@ -152,10 +152,10 @@
+@@ -151,10 +151,10 @@
  ({									\
  	typeof(pcp) *ptr__;						\
  	typeof(pcp) ret__;						\
@@ -160,7 +160,7 @@ index 0095ddb58ff69..50f6661ba5664 100644
  	ret__;								\
  })
  
-@@ -171,11 +171,11 @@
+@@ -170,11 +170,11 @@
  	typeof(pcp1) *p1__;						\
  	typeof(pcp2) *p2__;						\
  	int ret__;							\
