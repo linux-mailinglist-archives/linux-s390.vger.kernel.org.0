@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D29A4257D3D
-	for <lists+linux-s390@lfdr.de>; Mon, 31 Aug 2020 17:36:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84B8C257CD0
+	for <lists+linux-s390@lfdr.de>; Mon, 31 Aug 2020 17:35:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbgHaPbJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 31 Aug 2020 11:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41540 "EHLO mail.kernel.org"
+        id S1728933AbgHaPbh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 31 Aug 2020 11:31:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728803AbgHaPbH (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:31:07 -0400
+        id S1728912AbgHaPbd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:31:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24ED72192A;
-        Mon, 31 Aug 2020 15:31:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A08820FC3;
+        Mon, 31 Aug 2020 15:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887867;
-        bh=9xF3pCnhJDst3nnSSl/WT0nA5l0CMHpfotCF6C81O0s=;
+        s=default; t=1598887893;
+        bh=yFj9wFJzRYj+I4nblJ/YqFf6MOl/OYX7fko2fanX+cE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=159UmC4+i6GfcoAbezyrDAHgsI60mck7Fs9g0CDNTkl9/gpn+6r43AXJvuGf+YXhZ
-         7stBAuEFTyQgLngaEUz3pOW80/MxoWlLzTR8X8Ai+yad0IW6Q2NuvEisNhoc8MWl0u
-         LV8uBPdXSljs+kPd1V9M21quNfSO13wfdyHKTqtI=
+        b=jRVs9zvsd6IHPU871L+TZwHe9dQvTKrGPHPxQ0RgdrtED8Z9teOsLyswfgDEaoukp
+         G+S0C7DNdgdkbjikE50a/fyZ0kSCqLATofNALGvKISUGirG9cf4VrRt5gvpBZ9Khi2
+         6foJh+nHCTgx9t6LGdQvMOq+yVXdq3i0OTsRSq/k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Sven Schnelle <svens@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 17/23] s390: don't trace preemption in percpu macros
-Date:   Mon, 31 Aug 2020 11:30:33 -0400
-Message-Id: <20200831153039.1024302-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 10/11] s390: don't trace preemption in percpu macros
+Date:   Mon, 31 Aug 2020 11:31:16 -0400
+Message-Id: <20200831153117.1024537-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831153039.1024302-1-sashal@kernel.org>
-References: <20200831153039.1024302-1-sashal@kernel.org>
+In-Reply-To: <20200831153117.1024537-1-sashal@kernel.org>
+References: <20200831153117.1024537-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,7 +61,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/arch/s390/include/asm/percpu.h b/arch/s390/include/asm/percpu.h
-index 50b4ce8cddfdc..918f0ba4f4d20 100644
+index 0095ddb58ff69..50f6661ba5664 100644
 --- a/arch/s390/include/asm/percpu.h
 +++ b/arch/s390/include/asm/percpu.h
 @@ -29,7 +29,7 @@
