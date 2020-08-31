@@ -2,144 +2,189 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A10BD256F32
-	for <lists+linux-s390@lfdr.de>; Sun, 30 Aug 2020 17:52:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3A1C25761D
+	for <lists+linux-s390@lfdr.de>; Mon, 31 Aug 2020 11:10:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgH3Pwt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 30 Aug 2020 11:52:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbgH3Pwq (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 30 Aug 2020 11:52:46 -0400
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF2D52087D
-        for <linux-s390@vger.kernel.org>; Sun, 30 Aug 2020 15:52:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598802766;
-        bh=OS6SXiqY+lshjjjCn0KjODoLYajvf991ognvS2HPuKs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NdzyBPliWINf0MX6JY+vAWcuFhZ24x7rCOZuGvhkw/NRRrQwv1fKvEf8LsNV0EpCN
-         jzYoFt5T8CAo/RDgIKSC7RZoaIJ5Z/VPNiH5FqMahOxm2I85y2vpEVELc3hw0R1oYg
-         2CzJSFHAy66HEqL5iHS/tTolWHetNUqGT8agDlaw=
-Received: by mail-wm1-f49.google.com with SMTP id x9so3199494wmi.2
-        for <linux-s390@vger.kernel.org>; Sun, 30 Aug 2020 08:52:45 -0700 (PDT)
-X-Gm-Message-State: AOAM533p3CWtzu1FafFks+7DZUc0D9qIlRg35ZjxiccE0P3UchXljnG6
-        G4OOeIRNV1so00iEBdtO+VMtjx1aB4oFqjE59XpmRA==
-X-Google-Smtp-Source: ABdhPJztsRRiZUaHkgWepEkB/Pn9/0WW0xMy61f55qTGBnf2A1p6r3o9jA8KDreDbwx5okjYm0jVUfFo4sMGnre0bQc=
-X-Received: by 2002:a05:600c:2183:: with SMTP id e3mr7795286wme.49.1598802764333;
- Sun, 30 Aug 2020 08:52:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com>
- <CAMzpN2hmR+0-Yse1csbiVOiqgZ0e+VRkCBBXUKoPSTSMOOOFAQ@mail.gmail.com>
-In-Reply-To: <CAMzpN2hmR+0-Yse1csbiVOiqgZ0e+VRkCBBXUKoPSTSMOOOFAQ@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 30 Aug 2020 08:52:33 -0700
-X-Gmail-Original-Message-ID: <CALCETrXY1x0MReMoTOG2awcZvr4c7gp99JVNthK37vUUk-kyew@mail.gmail.com>
-Message-ID: <CALCETrXY1x0MReMoTOG2awcZvr4c7gp99JVNthK37vUUk-kyew@mail.gmail.com>
-Subject: Re: ptrace_syscall_32 is failing
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1728418AbgHaJKa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 31 Aug 2020 05:10:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28458 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728165AbgHaJKG (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 31 Aug 2020 05:10:06 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07V91wx3132558;
+        Mon, 31 Aug 2020 05:09:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=LAaTEag7rfqT6w9lcK2QWR89UbUVGYDylsa7lF6cjIw=;
+ b=UZWmdfeQoqE0x29aj2NVKcoTg1HZsmPFyABaLWS0BSdsXmf2DPiM92qUF/DVUDsFY1ht
+ 36BYzw2PGlwJ541c7GpHQKNy+uyfqCXOQ3t8VAjwGgPQUjc3mOnCbqBLaFtUR1ADgZEd
+ RuF3pM2L2qUgIcCR3PktDwm3xuYFqF4bDZ119CBL42qaPTELKZK13T/Ri6bYx6Bpbrla
+ feQ898e8ROMXbSNfMm1TiPZN5wH7HpLnZR2K1y1mgbZYcFii7NeyM9K+X0ayB6ixGu5u
+ C42zUin0fpZb69J/nsdxmwuOAK8KHoFU7WpsRlLWZ10qK848+GXYhPAHL9wDoQzSkwOM sQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 338x2dgcxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 31 Aug 2020 05:09:56 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07V92Nv4133765;
+        Mon, 31 Aug 2020 05:09:55 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 338x2dgcw4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 31 Aug 2020 05:09:55 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07V8TlVg007596;
+        Mon, 31 Aug 2020 09:09:51 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 337en81yac-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 31 Aug 2020 09:09:51 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07V99mDt29032762
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 31 Aug 2020 09:09:48 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 24C4EAE051;
+        Mon, 31 Aug 2020 09:09:48 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6D51DAE045;
+        Mon, 31 Aug 2020 09:09:47 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.40.55])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 31 Aug 2020 09:09:47 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: [PATCH v10 0/2] s390: virtio: let arch validate VIRTIO features
+Date:   Mon, 31 Aug 2020 11:09:44 +0200
+Message-Id: <1598864986-13875-1-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-31_01:2020-08-28,2020-08-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ suspectscore=1 bulkscore=0 spamscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008310051
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 9:40 PM Brian Gerst <brgerst@gmail.com> wrote:
->
-> On Sat, Aug 29, 2020 at 12:52 PM Andy Lutomirski <luto@kernel.org> wrote:
-> >
-> > Seems to be a recent regression, maybe related to entry/exit work changes.
-> >
-> > # ./tools/testing/selftests/x86/ptrace_syscall_32
-> > [RUN]    Check int80 return regs
-> > [OK]    getpid() preserves regs
-> > [OK]    kill(getpid(), SIGUSR1) preserves regs
-> > [RUN]    Check AT_SYSINFO return regs
-> > [OK]    getpid() preserves regs
-> > [OK]    kill(getpid(), SIGUSR1) preserves regs
-> > [RUN]    ptrace-induced syscall restart
-> >     Child will make one syscall
-> > [RUN]    SYSEMU
-> > [FAIL]    Initial args are wrong (nr=224, args=10 11 12 13 14 4289172732)
-> > [RUN]    Restart the syscall (ip = 0xf7f3b549)
-> > [OK]    Restarted nr and args are correct
-> > [RUN]    Change nr and args and restart the syscall (ip = 0xf7f3b549)
-> > [OK]    Replacement nr and args are correct
-> > [OK]    Child exited cleanly
-> > [RUN]    kernel syscall restart under ptrace
-> >     Child will take a nap until signaled
-> > [RUN]    SYSCALL
-> > [FAIL]    Initial args are wrong (nr=29, args=0 0 0 0 0 4289172732)
-> > [RUN]    SYSCALL
-> > [OK]    Args after SIGUSR1 are correct (ax = -514)
-> > [OK]    Child got SIGUSR1
-> > [RUN]    Step again
-> > [OK]    pause(2) restarted correctly
->
-> Bisected to commit 0b085e68f407 ("x86/entry: Consolidate 32/64 bit
-> syscall entry").
-> It looks like it is because syscall_enter_from_user_mode() is called
-> before reading the 6th argument from the user stack.
+Hi all,
 
-Ugh.  I caught, in review, a potential related issue with exit (not a
-problem in current kernels), but I missed the entry version.
+The goal of the series is to give a chance to the architecture
+to validate VIRTIO device features.
 
-Thomas, can we revert the syscall_enter() and syscall_exit() part of
-the series?  I think that they almost work for x86, but not quite as
-indicated by this bug.  Even if we imagine we can somehow hack around
-this bug, I imagine we're going to find other problems with this
-model, e.g. the potential upcoming exit problem I noted in my review.
+The tests are back to virtio_finalize_features.
 
-I really think the model should be:
+No more argument for the architecture callback which only reports
+if the architecture needs guest memory access restrictions for
+VIRTIO.
 
-void do_syscall_whatever(...)
-{
-  irqentry_enter(...);
-  instrumentation_begin();
 
-  /* Do whatever arch ABI oddities are needed on entry. */
+I renamed the callback to arch_has_restricted_virtio_memory_access,
+and the config option to ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS.
 
-  Then either:
-  syscall_begin(arch, nr, regs);
-  dispatch the syscall;
-  syscall_end(arch, nr, regs);
+Regards,
+Pierre
 
-  Or just:
-  generic_do_syscall(arch, nr, regs);
+Pierre Morel (2):
+  virtio: let arch advertise guest's memory access restrictions
+  s390: virtio: PV needs VIRTIO I/O device protection
 
-  /* Do whatever arch ABI oddities are needed on exit from the syscall. */
+ arch/s390/Kconfig             |  1 +
+ arch/s390/mm/init.c           | 10 ++++++++++
+ drivers/virtio/Kconfig        |  6 ++++++
+ drivers/virtio/virtio.c       | 15 +++++++++++++++
+ include/linux/virtio_config.h |  9 +++++++++
+ 5 files changed, 41 insertions(+)
 
-  instrumentation_end();
-  irqentry_exit(...);
-}
+-- 
+2.25.1
 
-x86 has an ABI oddity needed on entry: this fast syscall argument
-fixup.  We also might end up with ABI oddities on exit if we ever try
-to make single-stepping of syscalls work fully correctly.  x86 sort of
-gets away without specifying arch because the arch helpers that get
-called for audit, etc can deduce the arch, but this is kind of gross.
-I suppose we could omit arch as an explicit parameter.
+Changelog
 
-Or I suppose we could try to rejigger the API in time for 5.9.
-Fortunately only x86 uses the new APIs so far.  I cc'd a bunch of
-other arch maintainers to see if other architectures fit well in the
-new syscall_enter() model, but I feel like the fact that x86 is
-already broken indicates that we messed it up a bit.
+to v10:
+- removed virtio_config.h unnecessary include
+- wording
+  (Connie)
 
---Andy
+to v9:
+
+- move virtio tests back to virtio_finalize_features
+  (Connie)
+
+- remove virtio device argument
+
+to v8:
+
+- refactoring by using an optional callback
+  (Connie)
+
+to v7:
+
+- typo in warning message
+  (Connie)
+to v6:
+
+- rewording warning messages
+  (Connie, Halil)
+
+to v5:
+
+- return directly from S390 arch_validate_virtio_features()
+  when the guest is not protected.
+  (Connie)
+
+- Somme rewording
+  (Connie, Michael)
+
+- moved back code from arch/s390/ ...kernel/uv.c to ...mm/init.c
+  (Christian)
+
+to v4:
+
+- separate virtio and arch code
+  (Pierre)
+
+- moved code from arch/s390/mm/init.c to arch/s390/kernel/uv.c
+  (as interpreted from Heiko's comment)
+
+- moved validation inside the arch code
+  (Connie)
+
+- moved the call to arch validation before VIRTIO_F_1 test
+  (Michael)
+
+to v3:
+
+- add warning
+  (Connie, Christian)
+
+- add comment
+  (Connie)
+
+- change hook name
+  (Halil, Connie)
+
+to v2:
+
+- put the test in virtio_finalize_features()
+  (Connie)
+
+- put the test inside VIRTIO core
+  (Jason)
+
+- pass a virtio device as parameter
+  (Halil)
+
+
