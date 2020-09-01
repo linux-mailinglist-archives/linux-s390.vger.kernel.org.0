@@ -2,128 +2,100 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 775302582C3
-	for <lists+linux-s390@lfdr.de>; Mon, 31 Aug 2020 22:39:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6F02258608
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 05:13:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbgHaUjI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 31 Aug 2020 16:39:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729028AbgHaUiy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 31 Aug 2020 16:38:54 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93804C06123A;
-        Mon, 31 Aug 2020 13:38:53 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mm21so491705pjb.4;
-        Mon, 31 Aug 2020 13:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/pybmE7a8FIpjQvJ6DGP3d+JulP7r92A2J59iMGiCLM=;
-        b=oHRLDva7bE8NCj84o3Pw6XZLnP1yvvF0hDph2uVI7flXevbbdOYILUTOYyZCQ8otre
-         cCxr652BWFhSBLsdzy27Cb7Mddqacgb0iPwA8elKbwwEAVUBN15xECe0ThRuaHCOMdkR
-         dc3HEMkslEYv9RGiOcoN0hJsz9vazpaaDe3s/dlsGh7DjUCEhA4GdnYvIBBSn8VtTHcx
-         lvbLByvCgW0dL5AoLO91GPQcrbxAg2llOaYkOG9iH1BZqv6X0lnc9Cwlvy6dFLfDqm2M
-         w4tgaSsKeklGE8LZkIFRnECIGasMSWsPpNmoSLShXelmGeMJiFCs2p43c9vhVvKrOpPS
-         4Bvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/pybmE7a8FIpjQvJ6DGP3d+JulP7r92A2J59iMGiCLM=;
-        b=UnSbHLKTXEq1A8r6vt0UX7AC46YWjUgPNwUSQmcDyh49u8duuD56N1q9VtIK8vZB33
-         11c3dUM/7aPVdAn/V2NZJkNee7mBF38lvS2CQl1Za7dNdGPkkwvKJGPRlVncKjJWqXfn
-         y3hO1EOkqq/pOiGvO8Obr4418D1uoqzS+dCQtFApcgtBH7mgzmxHBdcD/jP9aJJAlEyP
-         jhcD+knCtmv8dLwFQBuxvM7mF/xVkuuHh8d6RGA0ITa1qJk1PhMzfPg3RAwCQy1jooM1
-         7+pBr0CIMvxpywuLeib5AdtmsLJBcXQzRSsf+lnD5rd4cr9Dy1KZAEZz7aMJ5K1bg5j+
-         3dwA==
-X-Gm-Message-State: AOAM5319ivjbF5lsnhOXqIx1O0V3y2VLArZgw2lkuUOFbbVH6UdwGB6x
-        JfOyZ9QVZyrGeBRReaSXaUM=
-X-Google-Smtp-Source: ABdhPJzxmla8Fw1rXgmVa/RE16rISQFkMFWRT5MPsRMrCIi9V2DCsAyGzGk3H5CzIrYzvPZULqAD2A==
-X-Received: by 2002:a17:902:a412:: with SMTP id p18mr2318693plq.283.1598906333078;
-        Mon, 31 Aug 2020 13:38:53 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id a26sm116850pfn.93.2020.08.31.13.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 13:38:52 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        tony.luck@intel.com, fenghua.yu@intel.com, schnelle@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, davem@davemloft.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, James.Bottomley@HansenPartnership.com, deller@gmx.de
-Cc:     sfr@canb.auug.org.au, hch@lst.de, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org
-Subject: [RESEND][PATCH 7/7] parisc: Avoid overflow at boundary_size
-Date:   Mon, 31 Aug 2020 13:38:11 -0700
-Message-Id: <20200831203811.8494-8-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200831203811.8494-1-nicoleotsuka@gmail.com>
-References: <20200831203811.8494-1-nicoleotsuka@gmail.com>
+        id S1726020AbgIADNf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 31 Aug 2020 23:13:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:35716 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725993AbgIADNe (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 31 Aug 2020 23:13:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 594C330E;
+        Mon, 31 Aug 2020 20:13:34 -0700 (PDT)
+Received: from [192.168.0.130] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 820923F68F;
+        Mon, 31 Aug 2020 20:13:29 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH v3 01/13] powerpc/mm: Add DEBUG_VM WARN for pmd_clear
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-mm@kvack.org, akpm@linux-foundation.org
+Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, x86@kernel.org,
+        linux-arch@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, Qian Cai <cai@lca.pw>
+References: <20200827080438.315345-1-aneesh.kumar@linux.ibm.com>
+ <20200827080438.315345-2-aneesh.kumar@linux.ibm.com>
+Message-ID: <e90b9886-1fbf-eacc-5108-acc1af2cac59@arm.com>
+Date:   Tue, 1 Sep 2020 08:42:56 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200827080438.315345-2-aneesh.kumar@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The boundary_size might be as large as ULONG_MAX, which means
-that a device has no specific boundary limit. So either "+ 1"
-or passing it to ALIGN() would potentially overflow.
 
-According to kernel defines:
-    #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
-    #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
 
-We can simplify the logic here:
-  ALIGN(boundary + 1, 1 << shift) >> shift
-= ALIGN_MASK(b + 1, (1 << s) - 1) >> s
-= {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
-= [b + 1 + (1 << s) - 1] >> s
-= [b + (1 << s)] >> s
-= (b >> s) + 1
+On 08/27/2020 01:34 PM, Aneesh Kumar K.V wrote:
+> With the hash page table, the kernel should not use pmd_clear for clearing
+> huge pte entries. Add a DEBUG_VM WARN to catch the wrong usage.
+> 
+> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> ---
+>  arch/powerpc/include/asm/book3s/64/pgtable.h | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+> index 6de56c3b33c4..079211968987 100644
+> --- a/arch/powerpc/include/asm/book3s/64/pgtable.h
+> +++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+> @@ -868,6 +868,13 @@ static inline bool pte_ci(pte_t pte)
+>  
+>  static inline void pmd_clear(pmd_t *pmdp)
+>  {
+> +	if (IS_ENABLED(CONFIG_DEBUG_VM) && !radix_enabled()) {
+> +		/*
+> +		 * Don't use this if we can possibly have a hash page table
+> +		 * entry mapping this.
+> +		 */
+> +		WARN_ON((pmd_val(*pmdp) & (H_PAGE_HASHPTE | _PAGE_PTE)) == (H_PAGE_HASHPTE | _PAGE_PTE));
+> +	}
+>  	*pmdp = __pmd(0);
+>  }
+>  
+> @@ -916,6 +923,13 @@ static inline int pmd_bad(pmd_t pmd)
+>  
+>  static inline void pud_clear(pud_t *pudp)
+>  {
+> +	if (IS_ENABLED(CONFIG_DEBUG_VM) && !radix_enabled()) {
+> +		/*
+> +		 * Don't use this if we can possibly have a hash page table
+> +		 * entry mapping this.
+> +		 */
+> +		WARN_ON((pud_val(*pudp) & (H_PAGE_HASHPTE | _PAGE_PTE)) == (H_PAGE_HASHPTE | _PAGE_PTE));
+> +	}
+>  	*pudp = __pud(0);
+>  }
 
-So fixing a potential overflow with the safer shortcut.
+There are two checkpatch.pl warnings for this patch.
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>
----
- drivers/parisc/ccio-dma.c  | 4 ++--
- drivers/parisc/sba_iommu.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+WARNING: line length of 105 exceeds 100 columns
+#27: FILE: arch/powerpc/include/asm/book3s/64/pgtable.h:876:
++               WARN_ON((pmd_val(*pmdp) & (H_PAGE_HASHPTE | _PAGE_PTE)) == (H_PAGE_HASHPTE | _PAGE_PTE));
 
-diff --git a/drivers/parisc/ccio-dma.c b/drivers/parisc/ccio-dma.c
-index a5507f75b524..c667d6aba764 100644
---- a/drivers/parisc/ccio-dma.c
-+++ b/drivers/parisc/ccio-dma.c
-@@ -356,8 +356,8 @@ ccio_alloc_range(struct ioc *ioc, struct device *dev, size_t size)
- 	** ggg sacrifices another 710 to the computer gods.
- 	*/
- 
--	boundary_size = ALIGN((unsigned long long)dma_get_seg_boundary(dev) + 1,
--			      1ULL << IOVP_SHIFT) >> IOVP_SHIFT;
-+	/* Overflow-free shortcut for: ALIGN(b + 1, 1 << s) >> s */
-+	boundary_size = (dma_get_seg_boundary(dev) >> IOVP_SHIFT) + 1;
- 
- 	if (pages_needed <= 8) {
- 		/*
-diff --git a/drivers/parisc/sba_iommu.c b/drivers/parisc/sba_iommu.c
-index d4314fba0269..96bc2c617cbd 100644
---- a/drivers/parisc/sba_iommu.c
-+++ b/drivers/parisc/sba_iommu.c
-@@ -342,8 +342,8 @@ sba_search_bitmap(struct ioc *ioc, struct device *dev,
- 	unsigned long shift;
- 	int ret;
- 
--	boundary_size = ALIGN((unsigned long long)dma_get_seg_boundary(dev) + 1,
--			      1ULL << IOVP_SHIFT) >> IOVP_SHIFT;
-+	/* Overflow-free shortcut for: ALIGN(b + 1, 1 << s) >> s */
-+	boundary_size = (dma_get_seg_boundary(dev) >> IOVP_SHIFT) + 1;
- 
- #if defined(ZX1_SUPPORT)
- 	BUG_ON(ioc->ibase & ~IOVP_MASK);
--- 
-2.17.1
+WARNING: line length of 105 exceeds 100 columns
+#41: FILE: arch/powerpc/include/asm/book3s/64/pgtable.h:931:
++               WARN_ON((pud_val(*pudp) & (H_PAGE_HASHPTE | _PAGE_PTE)) == (H_PAGE_HASHPTE | _PAGE_PTE));
 
+total: 0 errors, 2 warnings, 26 lines checked
