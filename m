@@ -2,112 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56D14258C30
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 11:59:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 364CB258F0F
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 15:29:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgIAJ7L (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Sep 2020 05:59:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:39678 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgIAJ7K (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:59:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC11630E;
-        Tue,  1 Sep 2020 02:59:09 -0700 (PDT)
-Received: from [10.163.69.134] (unknown [10.163.69.134])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1711B3F71F;
-        Tue,  1 Sep 2020 02:59:04 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH v3 09/13] mm/debug_vm_pgtable/locks: Move non page table
- modifying test together
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, x86@kernel.org,
-        linux-arch@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, Qian Cai <cai@lca.pw>
-References: <20200827080438.315345-1-aneesh.kumar@linux.ibm.com>
- <20200827080438.315345-10-aneesh.kumar@linux.ibm.com>
- <d0a0a50c-702b-c63a-edf2-263e4e7bd4a5@arm.com>
- <b6240372-4554-8c17-186a-cdc0b0a9089c@linux.ibm.com>
- <9b75b175-f319-d40e-a95e-b323b3db654a@arm.com>
- <58a5280f-4882-4a36-c52d-15ad879209d6@linux.ibm.com>
-Message-ID: <4fad7c4b-14ca-b558-504b-6b20a6c85ec3@arm.com>
-Date:   Tue, 1 Sep 2020 15:28:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1728173AbgIAN2m (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Sep 2020 09:28:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728047AbgIAN1x (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 09:27:53 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD23C061245;
+        Tue,  1 Sep 2020 06:27:52 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bgntf72DLz9sTN;
+        Tue,  1 Sep 2020 23:27:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1598966866;
+        bh=b8fBMPirmgEDaVPbjXdRIYPwIrTUtQaTXRmfGBF/egk=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=pXwfFcp7DEZhdSaVT5PD8DrmDNJcZnA4u3LePXbs+Xb49cAmRXaxJrmXg/VJlWIzR
+         Q9Z+EfZBm7r6mhEVXxyXQhUmW0fa5OWGfrmOVAZI3itGQAU61ebluXbCJK+AIc60vF
+         1lpEQtozskWFVBMd7eJLB6Kr3ed2+dixG5IYLvugFo8ywj0S6XpgkfnAthm3BhrzXv
+         8D0og0Lq9pFYRuwgHyCnfhfBZXrYFBGSojjeGeHhiOdKVVtQpLLH9UWs9qF4OuV5Cr
+         KzxdsR4L7qCBMFnd1HxBtLQKZU2Du8AyMTHI6pRxfwvNsOSSUSd9mxXbEuet6K+c7h
+         OfGS3/kjMeThw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>, benh@kernel.crashing.org,
+        paulus@samba.org, rth@twiddle.net, ink@jurassic.park.msu.ru,
+        mattst88@gmail.com, tony.luck@intel.com, fenghua.yu@intel.com,
+        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        davem@davemloft.net, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        James.Bottomley@HansenPartnership.com, deller@gmx.de
+Cc:     sfr@canb.auug.org.au, hch@lst.de, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org
+Subject: Re: [RESEND][PATCH 1/7] powerpc/iommu: Avoid overflow at boundary_size
+In-Reply-To: <20200831203811.8494-2-nicoleotsuka@gmail.com>
+References: <20200831203811.8494-1-nicoleotsuka@gmail.com> <20200831203811.8494-2-nicoleotsuka@gmail.com>
+Date:   Tue, 01 Sep 2020 23:27:36 +1000
+Message-ID: <87lfht1vav.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <58a5280f-4882-4a36-c52d-15ad879209d6@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Nicolin Chen <nicoleotsuka@gmail.com> writes:
+> The boundary_size might be as large as ULONG_MAX, which means
+> that a device has no specific boundary limit. So either "+ 1"
+> or passing it to ALIGN() would potentially overflow.
+>
+> According to kernel defines:
+>     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
+>     #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
+>
+> We can simplify the logic here:
+>   ALIGN(boundary + 1, 1 << shift) >> shift
+> = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
+> = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
+> = [b + 1 + (1 << s) - 1] >> s
+> = [b + (1 << s)] >> s
+> = (b >> s) + 1
+>
+> So fixing a potential overflow with the safer shortcut.
+>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/powerpc/kernel/iommu.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
+
+Are you asking for acks, or for maintainers to merge the patches
+individually?
+
+> diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
+> index 9704f3f76e63..c01ccbf8afdd 100644
+> --- a/arch/powerpc/kernel/iommu.c
+> +++ b/arch/powerpc/kernel/iommu.c
+> @@ -236,15 +236,14 @@ static unsigned long iommu_range_alloc(struct device *dev,
+>  		}
+>  	}
+>  
+> -	if (dev)
+> -		boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
+> -				      1 << tbl->it_page_shift);
+> -	else
+> -		boundary_size = ALIGN(1UL << 32, 1 << tbl->it_page_shift);
+>  	/* 4GB boundary for iseries_hv_alloc and iseries_hv_map */
+> +	boundary_size = dev ? dma_get_seg_boundary(dev) : U32_MAX;
+
+Is there any path that passes a NULL dev anymore?
+
+Both iseries_hv_alloc() and iseries_hv_map() were removed years ago.
+See:
+  8ee3e0d69623 ("powerpc: Remove the main legacy iSerie platform code")
 
 
-On 09/01/2020 03:06 PM, Aneesh Kumar K.V wrote:
-> 
->>>>
->>>> [   17.080644] ------------[ cut here ]------------
->>>> [   17.081342] kernel BUG at mm/pgtable-generic.c:164!
->>>> [   17.082091] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
->>>> [   17.082977] Modules linked in:
->>>> [   17.083481] CPU: 79 PID: 1 Comm: swapper/0 Tainted: G        W         5.9.0-rc2-00105-g740e72cd6717 #14
->>>> [   17.084998] Hardware name: linux,dummy-virt (DT)
->>>> [   17.085745] pstate: 60400005 (nZCv daif +PAN -UAO BTYPE=--)
->>>> [   17.086645] pc : pgtable_trans_huge_deposit+0x58/0x60
->>>> [   17.087462] lr : debug_vm_pgtable+0x4dc/0x8f0
->>>> [   17.088168] sp : ffff80001219bcf0
->>>> [   17.088710] x29: ffff80001219bcf0 x28: ffff8000114ac000
->>>> [   17.089574] x27: ffff8000114ac000 x26: 0020000000000fd3
->>>> [   17.090431] x25: 0020000081400fd3 x24: fffffe00175c12c0
->>>> [   17.091286] x23: ffff0005df04d1a8 x22: 0000f18d6e035000
->>>> [   17.092143] x21: ffff0005dd790000 x20: ffff0005df18e1a8
->>>> [   17.093003] x19: ffff0005df04cb80 x18: 0000000000000014
->>>> [   17.093859] x17: 00000000b76667d0 x16: 00000000fd4e6611
->>>> [   17.094716] x15: 0000000000000001 x14: 0000000000000002
->>>> [   17.095572] x13: 000000000055d966 x12: fffffe001755e400
->>>> [   17.096429] x11: 0000000000000008 x10: ffff0005fcb6e210
->>>> [   17.097292] x9 : ffff0005fcb6e210 x8 : 0020000081590fd3
->>>> [   17.098149] x7 : ffff0005dd71e0c0 x6 : ffff0005df18e1a8
->>>> [   17.099006] x5 : 0020000081590fd3 x4 : 0020000081590fd3
->>>> [   17.099862] x3 : ffff0005df18e1a8 x2 : fffffe00175c12c0
->>>> [   17.100718] x1 : fffffe00175c1300 x0 : 0000000000000000
->>>> [   17.101583] Call trace:
->>>> [   17.101993]  pgtable_trans_huge_deposit+0x58/0x60
->>>> [   17.102754]  do_one_initcall+0x74/0x1cc
->>>> [   17.103381]  kernel_init_freeable+0x1d0/0x238
->>>> [   17.104089]  kernel_init+0x14/0x118
->>>> [   17.104658]  ret_from_fork+0x10/0x34
->>>> [   17.105251] Code: f9000443 f9000843 f9000822 d65f03c0 (d4210000)
->>>> [   17.106303] ---[ end trace e63471e00f8c147f ]---
->>>>
->>>
->>> IIUC, this should happen even without the series right? This is
->>>
->>>      assert_spin_locked(pmd_lockptr(mm, pmdp));
->>
->> Crash does not happen without this series. A previous patch [PATCH v3 08/13]
->> added pgtable_trans_huge_deposit/withdraw() in pmd_advanced_tests(). arm64
->> does not define __HAVE_ARCH_PGTABLE_DEPOSIT and hence falls back on generic
->> pgtable_trans_huge_deposit() which the asserts the lock.
->>
-> 
-> 
-> I fixed that by moving the pgtable deposit after adding the pmd locks correctly.
-> 
-> mm/debug_vm_pgtable/locks: Move non page table modifying test together
-> mm/debug_vm_pgtable/locks: Take correct page table lock
-> mm/debug_vm_pgtable/thp: Use page table depost/withdraw with THP
+So maybe we should do a lead-up patch that drops the NULL dev support,
+which will then make this patch simpler.
 
-Right, it does fix. But then both those patches should be folded/merged in
-order to preserve git bisect ability, besides test classification reasons
-as mentioned in a previous response and a possible redundant movement of
-hugetlb_basic_tests().
+cheers
+
+
+> +	/* Overflow-free shortcut for: ALIGN(b + 1, 1 << s) >> s */
+> +	boundary_size = (boundary_size >> tbl->it_page_shift) + 1;
+>  
+>  	n = iommu_area_alloc(tbl->it_map, limit, start, npages, tbl->it_offset,
+> -			     boundary_size >> tbl->it_page_shift, align_mask);
+> +			     boundary_size, align_mask);
+>  	if (n == -1) {
+>  		if (likely(pass == 0)) {
+>  			/* First try the pool from the start */
+> -- 
+> 2.17.1
