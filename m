@@ -2,110 +2,119 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85E0425A14B
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 00:17:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC11325A1DA
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 01:22:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgIAWR1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Sep 2020 18:17:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbgIAWR0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 18:17:26 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D65CC061246;
-        Tue,  1 Sep 2020 15:17:24 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id h2so1270791plr.0;
-        Tue, 01 Sep 2020 15:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8oVSt+XXgts9V9hBX8ORH+AS6m2J43vGA4wo7bjMGSw=;
-        b=qlO5fZKXWIaweztfSZt5lscCfMeb95G8MhWsQ/lSaJ+FDb1SNokcNpp+7z3DLE4rF3
-         2dysm9rS4OSd3k64RrCb2iDLfTihhQIBsWHIM4pO3zun/ZZiHw5M0ZYz7xotRRp0Vl6H
-         gVuKb6zzb+/D4Aziqs+kgokfp0Tdgx+wAi7EGpiAZ/wFNGynAtvTJuP+UbdooYJgbhjP
-         o7AepCWbCypJyziUVIcTQr08TEiIxGgWthqCZQfDFV+gKNvojJajEcK9KwneuTuD6th6
-         msoaUb3F3Quj/oIp2iNYcujpjaBrVxAyuvNikmWWuoEg7qjTdOjx5lIdZ2jVaiaUQPfR
-         XRDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=8oVSt+XXgts9V9hBX8ORH+AS6m2J43vGA4wo7bjMGSw=;
-        b=ALIO8OW2BRqHXGaYnyIl/Br/NpqTSmuVlnURkFmOfol4rrjvPy28qBySBvtCU0Xw4a
-         nOp5ziw1gVD11xhNMXKyuoOONB3ah0FmHOQsc1o22xchaM1466JGjb+nvHuKUE7H5FIN
-         GAmoJFJ64QoXygxNEeYAKf+i3iqwnGz8Qk1oq0p91tBicYNKOkIN0299/JcNMUUcaAPw
-         Y8ZJ8Ka6Gz5CqJiWBeqW/TChjoOLE4Ke3CsvU18jwutVYAL2nkEzx+vPXEVIHMk4U/Qd
-         4bBlNGHSSut061V9KmU4mtKvvsi29x2A5dyxTpRXCmRYTNyCFwZmktWdjekqfNc8Ox+r
-         5qyw==
-X-Gm-Message-State: AOAM530wSMOLbikDFwlzmeAvrJKnn23hzuTcFSeCnOj03FMhTRU3JHSB
-        SZsVqRujl3KuXy48mV21kMs=
-X-Google-Smtp-Source: ABdhPJzdJq9eyRVuKNEYyNWukVThnPxVvwkVZFW01G6oPEDkIuTUBku5fZJKBabSN7o4EGbI7+mmXA==
-X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr3270568plt.71.1598998644148;
-        Tue, 01 Sep 2020 15:17:24 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id w203sm3201356pfc.97.2020.09.01.15.17.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 15:17:23 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     hch@lst.de
-Cc:     sfr@canb.auug.org.au, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        linux-alpha@vger.kernel.org, tony.luck@intel.com,
-        fenghua.yu@intel.com, linux-ia64@vger.kernel.org,
-        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, davem@davemloft.net,
-        sparclinux@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        James.Bottomley@HansenPartnership.com, deller@gmx.de,
-        linux-parisc@vger.kernel.org
-Subject: [PATCH 2/2] dma-mapping: set default segment_boundary_mask to ULONG_MAX
-Date:   Tue,  1 Sep 2020 15:16:46 -0700
-Message-Id: <20200901221646.26491-3-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901221646.26491-1-nicoleotsuka@gmail.com>
-References: <20200901221646.26491-1-nicoleotsuka@gmail.com>
+        id S1726091AbgIAXWY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Sep 2020 19:22:24 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12500 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725949AbgIAXWX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 19:22:23 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4ed7800000>; Tue, 01 Sep 2020 16:21:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 01 Sep 2020 16:22:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 01 Sep 2020 16:22:23 -0700
+Received: from [10.2.63.6] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 1 Sep
+ 2020 23:22:22 +0000
+Subject: Re: [RFC PATCH 0/2] mm/gup: fix gup_fast with dynamic page table
+ folding
+To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        <linux-s390@vger.kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+References: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
+ <9071c9fa-ba6a-90dc-2d7a-8b155141d890@de.ibm.com>
+ <20200831121553.8be5dcdbdbc5256846ac513e@linux-foundation.org>
+ <20200901194020.418da486@thinkpad>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <91988792-069c-31a6-7840-0122357538c7@nvidia.com>
+Date:   Tue, 1 Sep 2020 16:22:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <20200901194020.418da486@thinkpad>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599002497; bh=QvEpBawqMk10IWgyHYMp7W4/aQgWqCyGEhNMfoN1Ads=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=dtNXtT3aM/7U29OmKL/4t8Db0SE3cimmEHykFmH8ItKI5gjmIXjUR+mnyPW8cVLmW
+         mR70cVpyoxMhRq7H8uMqxWxh1dOTWdcUPLcOGdQ+e0IMh/lX7JCvEi/dBI1N+bqq32
+         KJSBbhWG1BbjoUjnjwfZvYCDFlDVqoCOinEAfmY+lvENy7k8E622R3tTzHx23Rj025
+         FQ8a6RdLHVnnpAIv0TQd4l4gsxdVApYlMiwGddrn7Pfgn7drA3ISqLenbW+r13xWDh
+         Z34N7SoueSzam/8fHaBNW2nxZR3Uh2xr8EmQF2YNTqGcG3XYLFFVjNW5YqgQJqIHyB
+         4RR+4z/i8oHcQ==
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The default segment_boundary_mask was set to DMA_BIT_MAKS(32)
-a decade ago by referencing SCSI/block subsystem, as a 32-bit
-mask was good enough for most of the devices.
+On 9/1/20 10:40 AM, Gerald Schaefer wrote:
+> On Mon, 31 Aug 2020 12:15:53 -0700
+> Andrew Morton <akpm@linux-foundation.org> wrote:
+...
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index e8cbc2e795d5..43dacbce823f 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -681,6 +681,38 @@ static inline int arch_unmap_one(struct mm_struct *mm,
+>   })
+>   #endif
+>   
+> +/*
+> + * With dynamic page table levels on s390, the static pXd_addr_end() functions
+> + * will not return corresponding dynamic boundaries. This is no problem as long
+> + * as only pXd pointers are passed down during page table walk, because
+> + * pXd_offset() will simply return the given pointer for folded levels, and the
+> + * pointer iteration over a range simply happens at the correct page table
+> + * level.
+> + * It is however a problem with gup_fast, or other places walking the page
+> + * tables w/o locks using READ_ONCE(), and passing down the pXd values instead
+> + * of pointers. In this case, the pointer given to pXd_offset() is a pointer to
+> + * a stack variable, which cannot be used for pointer iteration at the correct
+> + * level. Instead, the iteration then has to happen by going up to pgd level
+> + * again. To allow this, provide pXd_addr_end_folded() functions with an
+> + * additional pXd value parameter, which can be used on s390 to determine the
+> + * folding level and return the corresponding boundary.
 
-Now more and more drivers set dma_masks above DMA_BIT_MAKS(32)
-while only a handful of them call dma_set_seg_boundary(). This
-means that most drivers have a 4GB segmention boundary because
-DMA API returns a 32-bit default value, though they might not
-really have such a limit.
+Ah OK, I finally see what you have in mind. And as Jason noted, if we just
+pass an additional parameter to pXd_addr_end() that's going to be
+cleaner. And doing so puts this in line with other page table
+abstractions that also carry more information than some architectures
+need. For example, on x86, set_pte_at() ignores the first two
+parameters:
 
-The default segment_boundary_mask should mean "no limit" since
-the device doesn't explicitly set the mask. But a 32-bit mask
-certainly limits those devices capable of 32+ bits addressing.
+#define set_pte_at(mm, addr, ptep, pte)	native_set_pte_at(mm, addr, ptep, pte)
 
-So this patch sets default segment_boundary_mask to ULONG_MAX.
+static inline void native_set_pte_at(struct mm_struct *mm, unsigned long addr,
+				     pte_t *ptep , pte_t pte)
+{
+	native_set_pte(ptep, pte);
+}
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
- include/linux/dma-mapping.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This type of abstraction has worked out very well, IMHO.
 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index faab0a8210b9..df0bff2ea750 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -629,7 +629,7 @@ static inline unsigned long dma_get_seg_boundary(struct device *dev)
- {
- 	if (dev->dma_parms && dev->dma_parms->segment_boundary_mask)
- 		return dev->dma_parms->segment_boundary_mask;
--	return DMA_BIT_MASK(32);
-+	return ULONG_MAX;
- }
- 
- /**
--- 
-2.17.1
 
+thanks,
+--
+John Hubbard
+NVIDIA
