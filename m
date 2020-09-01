@@ -2,124 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7104F2590D0
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 16:39:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 430C12596BC
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 18:06:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgIAOjf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Sep 2020 10:39:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728021AbgIAORC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 10:17:02 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1283C061265;
-        Tue,  1 Sep 2020 07:16:59 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k13so585183plk.13;
-        Tue, 01 Sep 2020 07:16:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3gjRN/KamVH3sWTz8RDBj5bBWnJISflepDch8HJoRKQ=;
-        b=clQYQjHEqBLvSIfYOAtUdto16FpX8DmsWPL+uidGuhdurAKPF6RNx3tBPXa3DwTJLh
-         NIu3DHt9WdtfSYzBystNWWHPgSGcSyaKtlwG30k8Pu/LCGvYFGzC6RliYcDO55n5mrf0
-         6X2Fz2L36/qasOAQmhtLf3BXzKL0BxOuTuqorV0WR04sxZ4yCc2wZQqyHQI9XY4uAPLx
-         dLCWCtwe7paXbmcd71RHt6E0KKaeNufjYOLTEVtT2j/KKqbYAKdovfzS9wdxiOeGqqnH
-         F6Tz+2wtvSqA2N2eLnVINcH406141kCrDiwHmiwXYfjgxrxi6iHEFZCXlv79r5awdqht
-         +2IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3gjRN/KamVH3sWTz8RDBj5bBWnJISflepDch8HJoRKQ=;
-        b=NVjH1m5naQOtFk1RL9QCDFTNfDJoKexPboBnBBHskW2o5/9jjK9Td5qHOFm+Q8kICg
-         9MINTzBL0URrk07/cJF6Pg+RnVqTHAR9qTxXW24OWnoQEUoboh0UTc+rgUlBVb838Ei9
-         otC3bzk2GAduwJ1mTafhwWhlu1lakZiaSKJwSRNygZ06Ws1S4m3ZiSdzpWjRPomW78n5
-         UZAURHt+Mk9DbonuqgTOXcLoukcGOcOuees/mez2JGKp4ndoTtQiUDaulKgksGfj8sXB
-         L9GBmgBC5SFc5nCFU7yYLjYGU/xom716oOau4wDFtOdQ9pEbhSiOvGVEgLJIYcZaiQzD
-         zTNw==
-X-Gm-Message-State: AOAM530OsDiUtlIGSuZYdB8IiTxTq0gqcr1s0zmdFkhruNtHPvuY9Gt8
-        kuJEa/7mzRtjbKHTZ1H3klsB5hsYwDE=
-X-Google-Smtp-Source: ABdhPJwf8o5Z+3C/zuq69JbjA8nGkrebFYBg2C9BnrWEmZQgV4d152UpPBXmoBoHaJDILG4ogxQpJA==
-X-Received: by 2002:a17:902:b405:: with SMTP id x5mr1545946plr.267.1598969819246;
-        Tue, 01 Sep 2020 07:16:59 -0700 (PDT)
-Received: from bobo.ibm.com ([203.185.249.227])
-        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.16.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 07:16:58 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     linux-arch@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
-        Heiko Carstens <hca@linux.ibm.com>,
+        id S1731677AbgIAQGd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Sep 2020 12:06:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:44880 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731549AbgIAQGc (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:06:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC8E81045;
+        Tue,  1 Sep 2020 09:06:31 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.10.252])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF7303F71F;
+        Tue,  1 Sep 2020 09:06:28 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 17:06:26 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v3 18/23] s390: use asm-generic/mmu_context.h for no-op implementations
-Date:   Wed,  2 Sep 2020 00:15:34 +1000
-Message-Id: <20200901141539.1757549-19-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
-References: <20200901141539.1757549-1-npiggin@gmail.com>
+        Ingo Molnar <mingo@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [PATCH v2 0/3] arm64: Convert to ARCH_STACKWALK
+Message-ID: <20200901160626.GE95447@C02TD0UTHF1T.local>
+References: <20200819124913.37261-1-broonie@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200819124913.37261-1-broonie@kernel.org>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: linux-s390@vger.kernel.org
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
----
+Hi,
 
-Please ack or nack if you object to this being mered via
-Arnd's tree.
+On Wed, Aug 19, 2020 at 01:49:10PM +0100, Mark Brown wrote:
+> This series updates the arm64 stacktrace code to use the newer and much
+> simpler arch_stack_walk() interface, the main benefit being a single
+> entry point to the arch code with no need for the arch code to worry
+> about skipping frames. Along the way I noticed that the reliable
+> parameter to the arch_stack_walk() callback appears to be redundant
+> so there's also a patch here removing that from the existing code to
+> simplify the interface.
+> 
+> This is preparatory work for implementing reliable stack trace for
+> arm64.
 
- arch/s390/include/asm/mmu_context.h | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+This all looks pretty nice!
 
-diff --git a/arch/s390/include/asm/mmu_context.h b/arch/s390/include/asm/mmu_context.h
-index c9f3d8a52756..66f9cf0a07e3 100644
---- a/arch/s390/include/asm/mmu_context.h
-+++ b/arch/s390/include/asm/mmu_context.h
-@@ -15,6 +15,7 @@
- #include <asm/ctl_reg.h>
- #include <asm-generic/mm_hooks.h>
- 
-+#define init_new_context init_new_context
- static inline int init_new_context(struct task_struct *tsk,
- 				   struct mm_struct *mm)
- {
-@@ -69,8 +70,6 @@ static inline int init_new_context(struct task_struct *tsk,
- 	return 0;
- }
- 
--#define destroy_context(mm)             do { } while (0)
--
- static inline void set_user_asce(struct mm_struct *mm)
- {
- 	S390_lowcore.user_asce = mm->context.asce;
-@@ -125,9 +124,7 @@ static inline void finish_arch_post_lock_switch(void)
- 	set_fs(current->thread.mm_segment);
- }
- 
--#define enter_lazy_tlb(mm,tsk)	do { } while (0)
--#define deactivate_mm(tsk,mm)	do { } while (0)
--
-+#define activate_mm activate_mm
- static inline void activate_mm(struct mm_struct *prev,
-                                struct mm_struct *next)
- {
-@@ -136,4 +133,6 @@ static inline void activate_mm(struct mm_struct *prev,
- 	set_user_asce(next);
- }
- 
-+#include <asm-generic/mmu_context.h>
-+
- #endif /* __S390_MMU_CONTEXT_H */
--- 
-2.23.0
+Just to check, has the skipping logic been tested to work equivalently
+to what we had before? By inspection I think it should, but since it
+relies on function call boundaries it always strikes me as fragile.
 
+If you could confirm that (e.g. with LKDTM perhaps?) that'd be great.
+Assuming that looks right, for the series:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> 
+> v2: Rebase onto v5.9-rc1.
+> 
+> Mark Brown (3):
+>   stacktrace: Remove reliable argument from arch_stack_walk() callback
+>   arm64: stacktrace: Make stack walk callback consistent with generic
+>     code
+>   arm64: stacktrace: Convert to ARCH_STACKWALK
+> 
+>  arch/arm64/Kconfig                  |  1 +
+>  arch/arm64/include/asm/stacktrace.h |  2 +-
+>  arch/arm64/kernel/perf_callchain.c  |  6 +--
+>  arch/arm64/kernel/return_address.c  |  8 +--
+>  arch/arm64/kernel/stacktrace.c      | 84 ++++-------------------------
+>  arch/s390/kernel/stacktrace.c       |  4 +-
+>  arch/x86/kernel/stacktrace.c        | 10 ++--
+>  include/linux/stacktrace.h          |  5 +-
+>  kernel/stacktrace.c                 |  8 ++-
+>  9 files changed, 30 insertions(+), 98 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
