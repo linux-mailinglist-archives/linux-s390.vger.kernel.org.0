@@ -2,125 +2,185 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 364CB258F0F
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 15:29:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 143752591E4
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 16:57:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgIAN2m (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Sep 2020 09:28:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35202 "EHLO
+        id S1728705AbgIAOzV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Sep 2020 10:55:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbgIAN1x (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 09:27:53 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD23C061245;
-        Tue,  1 Sep 2020 06:27:52 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bgntf72DLz9sTN;
-        Tue,  1 Sep 2020 23:27:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1598966866;
-        bh=b8fBMPirmgEDaVPbjXdRIYPwIrTUtQaTXRmfGBF/egk=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=pXwfFcp7DEZhdSaVT5PD8DrmDNJcZnA4u3LePXbs+Xb49cAmRXaxJrmXg/VJlWIzR
-         Q9Z+EfZBm7r6mhEVXxyXQhUmW0fa5OWGfrmOVAZI3itGQAU61ebluXbCJK+AIc60vF
-         1lpEQtozskWFVBMd7eJLB6Kr3ed2+dixG5IYLvugFo8ywj0S6XpgkfnAthm3BhrzXv
-         8D0og0Lq9pFYRuwgHyCnfhfBZXrYFBGSojjeGeHhiOdKVVtQpLLH9UWs9qF4OuV5Cr
-         KzxdsR4L7qCBMFnd1HxBtLQKZU2Du8AyMTHI6pRxfwvNsOSSUSd9mxXbEuet6K+c7h
-         OfGS3/kjMeThw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>, benh@kernel.crashing.org,
-        paulus@samba.org, rth@twiddle.net, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, tony.luck@intel.com, fenghua.yu@intel.com,
-        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
-        davem@davemloft.net, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        James.Bottomley@HansenPartnership.com, deller@gmx.de
-Cc:     sfr@canb.auug.org.au, hch@lst.de, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org
-Subject: Re: [RESEND][PATCH 1/7] powerpc/iommu: Avoid overflow at boundary_size
-In-Reply-To: <20200831203811.8494-2-nicoleotsuka@gmail.com>
-References: <20200831203811.8494-1-nicoleotsuka@gmail.com> <20200831203811.8494-2-nicoleotsuka@gmail.com>
-Date:   Tue, 01 Sep 2020 23:27:36 +1000
-Message-ID: <87lfht1vav.fsf@mpe.ellerman.id.au>
+        with ESMTP id S1726623AbgIALbA (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 07:31:00 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 504A6C061247;
+        Tue,  1 Sep 2020 04:29:57 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id d27so550478qtg.4;
+        Tue, 01 Sep 2020 04:29:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Bmg6XgtUWDx4HuERt6+WNca9MkrxDIzUrFEsZ8s0eNY=;
+        b=IERvtpprRpsI2hed0dHnnYBJc2bTsfXDoVwNNjG0Ec1Sz8CRuOUarz+Porf5yRfHFu
+         30cRoDkuZP41QRrigZa6y9lS/Q9+jFle0rPTgtwQN4bp84V8ocprAVuzMQ9FqTehBEzY
+         4MDJIPAYpDQqg5MZ+6ZUTXTmOnuGZXEK8IgCV4orCkGUrRtsYcj/Ywc1ICPwnctC/GyI
+         dJzhbEYwl61cZTl24h34xARkW2Zaqa/kOmK3OayGekDtkeFds1gFNQRmSyQ/QvyDfdw+
+         OEnwNuiuobwmd/AEPMOV6cmL4S085Ju8J83/4o3yZA4u2o3mkHjbyG61560pFu+G2c5p
+         TvfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Bmg6XgtUWDx4HuERt6+WNca9MkrxDIzUrFEsZ8s0eNY=;
+        b=G71dvjwIu488zUUjmMoWDTLeZ/wY1GVSDhux2sTucSujqYmKot2Nq0A7QY/g/nSguk
+         /2MnBBotSaK6dVANc/725/FqCJ76wRfpBHGaoIQpdxZboGa8QSBikS/eS7DotIMV2Lpx
+         pEokqnWf1EyBjlovce/6LFBQ3llUYbjDuc5giQkAmfxyAggVnhdEsMWUvidyqlE3Fd3y
+         UDfTeqfiWixrCUALqrS1wMQOuD08ftGEfcq+JpnG/SM6w/3+Oj7sYZNQ6HLBn6eheGwt
+         AYPQFxmmu6mwzEpbar+V42Lj/Trs6OQ6qurh7R/AmS/xm1yJIBrnGIKCFrSGA6j5jkSv
+         RqYw==
+X-Gm-Message-State: AOAM533xxmhHTiJ3mQLWUvys/hzohLIhit6UpntJGSYOiftYuztVxs46
+        oApsWFtjQW14glwe6JoEiU9T3HzlHpIhxU9GPEArsfF1lf43xA==
+X-Google-Smtp-Source: ABdhPJwVT407rq1wSU6XLfBx35x7TqzLfOV0jdufGiWqhxHXDja0Uvn0+tpPRWaGd0lmv1UnRMyszboqVwIOVOloAYU=
+X-Received: by 2002:ac8:7741:: with SMTP id g1mr1183471qtu.28.1598959796622;
+ Tue, 01 Sep 2020 04:29:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200831182239.480317-1-masahiroy@kernel.org>
+In-Reply-To: <20200831182239.480317-1-masahiroy@kernel.org>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Tue, 1 Sep 2020 19:29:19 +0800
+Message-ID: <CAEbi=3cqogHs=p_y=_jfcC+D5a9e5=Nic=ECr_YvJ9p-DZEAJQ@mail.gmail.com>
+Subject: Re: [PATCH] arch: vdso: add vdso linker script to 'targets' instead
+ of extra-y
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Nicolin Chen <nicoleotsuka@gmail.com> writes:
-> The boundary_size might be as large as ULONG_MAX, which means
-> that a device has no specific boundary limit. So either "+ 1"
-> or passing it to ALIGN() would potentially overflow.
+Masahiro Yamada <masahiroy@kernel.org> =E6=96=BC 2020=E5=B9=B49=E6=9C=881=
+=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=882:23=E5=AF=AB=E9=81=93=EF=BC=
+=9A
 >
-> According to kernel defines:
->     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
->     #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
+> The vdso linker script is preprocessed on demand.
+> Adding it to 'targets' is enough to include the .cmd file.
 >
-> We can simplify the logic here:
->   ALIGN(boundary + 1, 1 << shift) >> shift
-> = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
-> = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
-> = [b + 1 + (1 << s) - 1] >> s
-> = [b + (1 << s)] >> s
-> = (b >> s) + 1
->
-> So fixing a potential overflow with the safer shortcut.
->
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> Cc: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
->  arch/powerpc/kernel/iommu.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
+>
+>  arch/arm64/kernel/vdso/Makefile     | 2 +-
+>  arch/arm64/kernel/vdso32/Makefile   | 2 +-
+>  arch/nds32/kernel/vdso/Makefile     | 2 +-
+>  arch/powerpc/kernel/vdso32/Makefile | 2 +-
+>  arch/powerpc/kernel/vdso64/Makefile | 2 +-
+>  arch/s390/kernel/vdso64/Makefile    | 2 +-
+>  6 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Mak=
+efile
+> index 45d5cfe46429..7cd8aafbe96e 100644
+> --- a/arch/arm64/kernel/vdso/Makefile
+> +++ b/arch/arm64/kernel/vdso/Makefile
+> @@ -54,7 +54,7 @@ endif
+>  GCOV_PROFILE :=3D n
+>
+>  obj-y +=3D vdso.o
+> -extra-y +=3D vdso.lds
+> +targets +=3D vdso.lds
+>  CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
+>
+>  # Force dependency (incbin is bad)
+> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32=
+/Makefile
+> index d6adb4677c25..572475b7b7ed 100644
+> --- a/arch/arm64/kernel/vdso32/Makefile
+> +++ b/arch/arm64/kernel/vdso32/Makefile
+> @@ -155,7 +155,7 @@ asm-obj-vdso :=3D $(addprefix $(obj)/, $(asm-obj-vdso=
+))
+>  obj-vdso :=3D $(c-obj-vdso) $(c-obj-vdso-gettimeofday) $(asm-obj-vdso)
+>
+>  obj-y +=3D vdso.o
+> -extra-y +=3D vdso.lds
+> +targets +=3D vdso.lds
+>  CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
+>
+>  # Force dependency (vdso.s includes vdso.so through incbin)
+> diff --git a/arch/nds32/kernel/vdso/Makefile b/arch/nds32/kernel/vdso/Mak=
+efile
+> index 7c3c1ccb196e..55df25ef0057 100644
+> --- a/arch/nds32/kernel/vdso/Makefile
+> +++ b/arch/nds32/kernel/vdso/Makefile
+> @@ -20,7 +20,7 @@ GCOV_PROFILE :=3D n
+>
+>
+>  obj-y +=3D vdso.o
+> -extra-y +=3D vdso.lds
+> +targets +=3D vdso.lds
+>  CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
+>
+>  # Force dependency
+> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vd=
+so32/Makefile
+> index 87ab1152d5ce..fd5072a4c73c 100644
+> --- a/arch/powerpc/kernel/vdso32/Makefile
+> +++ b/arch/powerpc/kernel/vdso32/Makefile
+> @@ -29,7 +29,7 @@ ccflags-y :=3D -shared -fno-common -fno-builtin -nostdl=
+ib \
+>  asflags-y :=3D -D__VDSO32__ -s
+>
+>  obj-y +=3D vdso32_wrapper.o
+> -extra-y +=3D vdso32.lds
+> +targets +=3D vdso32.lds
+>  CPPFLAGS_vdso32.lds +=3D -P -C -Upowerpc
+>
+>  # Force dependency (incbin is bad)
+> diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vd=
+so64/Makefile
+> index 38c317f25141..c737b3ea3207 100644
+> --- a/arch/powerpc/kernel/vdso64/Makefile
+> +++ b/arch/powerpc/kernel/vdso64/Makefile
+> @@ -17,7 +17,7 @@ ccflags-y :=3D -shared -fno-common -fno-builtin -nostdl=
+ib \
+>  asflags-y :=3D -D__VDSO64__ -s
+>
+>  obj-y +=3D vdso64_wrapper.o
+> -extra-y +=3D vdso64.lds
+> +targets +=3D vdso64.lds
+>  CPPFLAGS_vdso64.lds +=3D -P -C -U$(ARCH)
+>
+>  # Force dependency (incbin is bad)
+> diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/M=
+akefile
+> index 4a66a1cb919b..d0d406cfffa9 100644
+> --- a/arch/s390/kernel/vdso64/Makefile
+> +++ b/arch/s390/kernel/vdso64/Makefile
+> @@ -25,7 +25,7 @@ $(targets:%=3D$(obj)/%.dbg): KBUILD_CFLAGS =3D $(KBUILD=
+_CFLAGS_64)
+>  $(targets:%=3D$(obj)/%.dbg): KBUILD_AFLAGS =3D $(KBUILD_AFLAGS_64)
+>
+>  obj-y +=3D vdso64_wrapper.o
+> -extra-y +=3D vdso64.lds
+> +targets +=3D vdso64.lds
+>  CPPFLAGS_vdso64.lds +=3D -P -C -U$(ARCH)
+>
+>  # Disable gcov profiling, ubsan and kasan for VDSO code
 
-Are you asking for acks, or for maintainers to merge the patches
-individually?
+For nds32:
 
-> diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
-> index 9704f3f76e63..c01ccbf8afdd 100644
-> --- a/arch/powerpc/kernel/iommu.c
-> +++ b/arch/powerpc/kernel/iommu.c
-> @@ -236,15 +236,14 @@ static unsigned long iommu_range_alloc(struct device *dev,
->  		}
->  	}
->  
-> -	if (dev)
-> -		boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
-> -				      1 << tbl->it_page_shift);
-> -	else
-> -		boundary_size = ALIGN(1UL << 32, 1 << tbl->it_page_shift);
->  	/* 4GB boundary for iseries_hv_alloc and iseries_hv_map */
-> +	boundary_size = dev ? dma_get_seg_boundary(dev) : U32_MAX;
-
-Is there any path that passes a NULL dev anymore?
-
-Both iseries_hv_alloc() and iseries_hv_map() were removed years ago.
-See:
-  8ee3e0d69623 ("powerpc: Remove the main legacy iSerie platform code")
-
-
-So maybe we should do a lead-up patch that drops the NULL dev support,
-which will then make this patch simpler.
-
-cheers
-
-
-> +	/* Overflow-free shortcut for: ALIGN(b + 1, 1 << s) >> s */
-> +	boundary_size = (boundary_size >> tbl->it_page_shift) + 1;
->  
->  	n = iommu_area_alloc(tbl->it_map, limit, start, npages, tbl->it_offset,
-> -			     boundary_size >> tbl->it_page_shift, align_mask);
-> +			     boundary_size, align_mask);
->  	if (n == -1) {
->  		if (likely(pass == 0)) {
->  			/* First try the pool from the start */
-> -- 
-> 2.17.1
+Acked-by: Greentime Hu <green.hu@gmail.com>
