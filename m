@@ -2,102 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73190258A06
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 10:04:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CC20258B1A
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 11:11:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgIAID7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Sep 2020 04:03:59 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:31502 "EHLO pegase1.c-s.fr"
+        id S1726116AbgIAJLK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Sep 2020 05:11:10 -0400
+Received: from verein.lst.de ([213.95.11.211]:52607 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgIAIDz (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:03:55 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Bgfj35351z9v0Hp;
-        Tue,  1 Sep 2020 10:03:51 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id o-eFXfCEiBu6; Tue,  1 Sep 2020 10:03:51 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bgfj348tSz9v0Hm;
-        Tue,  1 Sep 2020 10:03:51 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7698C8B774;
-        Tue,  1 Sep 2020 10:03:52 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id UvDPBkwWDzC9; Tue,  1 Sep 2020 10:03:52 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 838268B75E;
-        Tue,  1 Sep 2020 10:03:51 +0200 (CEST)
-Subject: Re: [PATCH v2 00/13] mm/debug_vm_pgtable fixes
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, Qian Cai <cai@lca.pw>,
-        "x86@kernel.org" <x86@kernel.org>
-References: <20200819130107.478414-1-aneesh.kumar@linux.ibm.com>
- <52e9743e-fa2f-3fd2-f50e-2c6c38464b96@arm.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <c0de2c68-826b-bf0f-dc2c-a501fa7bef38@csgroup.eu>
-Date:   Tue, 1 Sep 2020 10:03:43 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1726064AbgIAJLK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:11:10 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 5724168B05; Tue,  1 Sep 2020 11:11:05 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 11:11:05 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com, tony.luck@intel.com,
+        fenghua.yu@intel.com, schnelle@linux.ibm.com,
+        gerald.schaefer@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, davem@davemloft.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, sfr@canb.auug.org.au, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org
+Subject: Re: [RESEND][PATCH 0/7] Avoid overflow at boundary_size
+Message-ID: <20200901091105.GA4959@lst.de>
+References: <20200831203811.8494-1-nicoleotsuka@gmail.com> <20200901073623.GA30418@lst.de> <20200901075401.GA5667@Asurada-Nvidia>
 MIME-Version: 1.0
-In-Reply-To: <52e9743e-fa2f-3fd2-f50e-2c6c38464b96@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901075401.GA5667@Asurada-Nvidia>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-Le 21/08/2020 à 10:51, Anshuman Khandual a écrit :
+On Tue, Sep 01, 2020 at 12:54:01AM -0700, Nicolin Chen wrote:
+> Hi Christoph,
 > 
-> On 08/19/2020 06:30 PM, Aneesh Kumar K.V wrote:
->> This patch series includes fixes for debug_vm_pgtable test code so that
->> they follow page table updates rules correctly. The first two patches introduce
->> changes w.r.t ppc64. The patches are included in this series for completeness. We can
->> merge them via ppc64 tree if required.
->>
->> Hugetlb test is disabled on ppc64 because that needs larger change to satisfy
->> page table update rules.
->>
-
+> On Tue, Sep 01, 2020 at 09:36:23AM +0200, Christoph Hellwig wrote:
+> > I really don't like all the open coded smarts in the various drivers.
+> > What do you think about a helper like the one in the untested patch
 > 
-> Changes proposed here will impact other enabled platforms as well.
-> Adding the following folks and mailing lists, and hoping to get a
-> broader review and test coverage. Please do include them in the
-> next iteration as well.
+> A helper function will be actually better. I was thinking of
+> one yet not very sure about the naming and where to put it.
 > 
-> + linux-arm-kernel@lists.infradead.org
-> + linux-s390@vger.kernel.org
-> + linux-snps-arc@lists.infradead.org
-> + x86@kernel.org
-> + linux-arch@vger.kernel.org
+> > below (on top of your series).  Also please include the original
+> > segment boundary patch with the next resend so that the series has
+> > the full context.
 > 
-> + Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> + Christophe Leroy <christophe.leroy@c-s.fr>
-
-Please don't use anymore the above address. Only use the one below.
-
-> + Christophe Leroy <christophe.leroy@csgroup.eu>
-> + Vineet Gupta <vgupta@synopsys.com>
-> + Mike Rapoport <rppt@linux.ibm.com>
-> + Qian Cai <cai@lca.pw>
+> I will use your change instead and resend with the ULONG_MAX
+> change. But in that case, should I make separate changes for
+> different files like this series, or just one single change
+> like yours?
 > 
+> Asking this as I was expecting that those changes would get
+> applied by different maintainers. But now it feels like you
+> will merge it to your tree at once?
 
-Thanks
-Christophe
+I guess one patch is fine.  I can queue it up in the dma-mapping
+tree as a prep patch for the default boundary change.
