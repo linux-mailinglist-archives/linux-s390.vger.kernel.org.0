@@ -2,122 +2,159 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2638B259DEE
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 20:14:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9917725A037
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 22:54:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbgIASOQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Sep 2020 14:14:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51426 "EHLO
+        id S1727927AbgIAUyY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Sep 2020 16:54:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbgIASOP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 14:14:15 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD735C061244
-        for <linux-s390@vger.kernel.org>; Tue,  1 Sep 2020 11:14:14 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id cy2so974793qvb.0
-        for <linux-s390@vger.kernel.org>; Tue, 01 Sep 2020 11:14:14 -0700 (PDT)
+        with ESMTP id S1726091AbgIAUyX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 16:54:23 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19E6AC061244;
+        Tue,  1 Sep 2020 13:54:22 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id m8so1542295pfh.3;
+        Tue, 01 Sep 2020 13:54:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4A3hPsjtdOjipSjaJeT1UcVHO23/CVQ2IpCQthxyHBw=;
-        b=EHILGkhVsKeiCP6z45SoutVPM+jA7upQKYGslQ7Q4Dl4PucwRSZxe8vXQm+WQenWUd
-         mQH48T5ue18fETXWnvjz5Wx0qyCBTup2nDgxleJXbZo+Gp/0QMb/oeHF9KTRl+obxy9+
-         76Ku0JMrTeKENh3LuA26FCgW1oHIGGaZn86M+d9Lj2t7QXL0eKKAVFeU0KfW7EigDtGa
-         7SybFavuEQT2XuvcQP+IuEFMkDijuHfAvhOCkdeTLAE7kS3scSIiw2qWpojyKJNsfGOM
-         SsqTw9tAVuVs9EWnojQQ4pE/OF+CFPhdx0hQd9wicX/GuziDiMMdwW8ueGdHcY189NSK
-         lz1A==
+         :content-disposition:in-reply-to:user-agent;
+        bh=FRTR1pQ5xaQZ2uOprnJ9rvvshbUxSZlhlKoxnO7URRM=;
+        b=eELfQzbSGjuv8KyOMVHl+sTrzSe3ziixFesUVCgWOu7/Z9muIvFP7Bi4DRJZMs6RcJ
+         uhMvWISw8EQN1/7gxRmFAFsNBG5Sh9QbZV6QgcFDjmSpu/uuHUY9boYcGOBpACpZ2QKm
+         2xrLnc3Zu6wcDZtzf6kTWiFrA/YhL2qcA9RPBXgRzmQs/uy/H7Jn+SzylyQeVuoHjASv
+         vAVeYbXCILJrBBwG1cAuMAGgHRm6simSr4if2kYJM3hqSroABMSvzIJAMe0A2WueufHt
+         t5wBEp5mZqpgLu3vzcoJLecspOTik/9RM6BJkEqtdcJgnSSWtV2vjAN/aVdEovSHd2Tj
+         jceg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4A3hPsjtdOjipSjaJeT1UcVHO23/CVQ2IpCQthxyHBw=;
-        b=CQjLCQp1PBoCw1/sQZ8bgvCb3L6TTgJY/ljudar/yYeamJ7D+6nfAxn1mbDbGwpwdt
-         j0bMcDT9fZvhwiUCR6E4u9aVxOKXGkMnYJScmgKsX8s0WRz0bSNbeeU6UU4e8hc/ar9w
-         pJZt/zvysFl1qpX/7IXVi99vam3Fi9h1OMtS5Sbviw4FyGSHnBL9CP409c7It1QTE0ZM
-         VzxB07BbQZop9ak8GhpIY2Q9HXwh5JfZmCCuc9WESsrFRzDbr1usFtGfLPAC3Vecx9UG
-         yiG/WzGMMoJiUdrVa6lxAehzJF8zUBkUQGGEt650YhE/fqdqgUBNG5mbLfA2zww1MwFQ
-         urrg==
-X-Gm-Message-State: AOAM531b22c8ya9IUTuhySh64LLHQKjyqy5GEyhztwOAZl1jBP0PGfZT
-        yGK1+iL1F4UfYLwnrQ+KYJ7zbA==
-X-Google-Smtp-Source: ABdhPJyS7IcgtYtB2wNGX+Xo0eMaeBEI0j+77VrEcdnZRuTRVP0UtmztL9vqX9/MJnXvw4b2RGS8aw==
-X-Received: by 2002:a0c:e783:: with SMTP id x3mr3317618qvn.114.1598984054019;
-        Tue, 01 Sep 2020 11:14:14 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id k185sm2420678qkd.94.2020.09.01.11.14.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 11:14:13 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kDAnM-004ex1-GH; Tue, 01 Sep 2020 15:14:12 -0300
-Date:   Tue, 1 Sep 2020 15:14:12 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [RFC PATCH 0/2] mm/gup: fix gup_fast with dynamic page table
- folding
-Message-ID: <20200901181412.GE24045@ziepe.ca>
-References: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
- <9071c9fa-ba6a-90dc-2d7a-8b155141d890@de.ibm.com>
- <20200831121553.8be5dcdbdbc5256846ac513e@linux-foundation.org>
- <20200901194020.418da486@thinkpad>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FRTR1pQ5xaQZ2uOprnJ9rvvshbUxSZlhlKoxnO7URRM=;
+        b=N5aNCXzxJApOPZFxE4JGLzB6qJYXuGF2hBysLwgYBRO0rMQLtkR5JMIM4tBdOsM9u6
+         R05VHXGifDA9tjY9aSxNRt06ZcqvyJm0LQtWHS2QihRFCKLmf0yR8hyrWOHVF11dBLKk
+         CK3xj6M017lQcXyQM9lInXZhLEBd86YFdVsJh1aPUtvmwIMp4KkwvTfUQoGmZVEX+/n9
+         Jck4BRaxSITI7vxUNATMP2XxDJ/aOLZDLWsSLJYf6c3W98rLlOcUQLXHLHjY2Dh5vqHH
+         btVzDhBru9ZC0fNcku3cL8CVQS6NgVySlRyhb4WABlDoJzy8jLTQm88oNQHpj7/gYk4g
+         292g==
+X-Gm-Message-State: AOAM531aw/rl0fXU/RIE2O7CVcyV6csCx6lLGeSpu7ZTkNav71UdcbbY
+        ZeIkpYqTdxJKS5Zwmeywrlw=
+X-Google-Smtp-Source: ABdhPJybz8lKswfhAONDTigR0brpOOZSb0wvBo43ZZyZYaJi6PxdmqR6MUqDZmJI2ioaYEYqLLibGw==
+X-Received: by 2002:a63:384b:: with SMTP id h11mr3124012pgn.113.1598993661459;
+        Tue, 01 Sep 2020 13:54:21 -0700 (PDT)
+Received: from Asurada-Nvidia (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id y1sm3016263pgr.3.2020.09.01.13.54.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 01 Sep 2020 13:54:21 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 13:53:47 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     benh@kernel.crashing.org, paulus@samba.org, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com, tony.luck@intel.com,
+        fenghua.yu@intel.com, schnelle@linux.ibm.com,
+        gerald.schaefer@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, davem@davemloft.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, sfr@canb.auug.org.au, hch@lst.de,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-parisc@vger.kernel.org
+Subject: Re: [RESEND][PATCH 1/7] powerpc/iommu: Avoid overflow at
+ boundary_size
+Message-ID: <20200901205346.GA17362@Asurada-Nvidia>
+References: <20200831203811.8494-1-nicoleotsuka@gmail.com>
+ <20200831203811.8494-2-nicoleotsuka@gmail.com>
+ <87lfht1vav.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200901194020.418da486@thinkpad>
+In-Reply-To: <87lfht1vav.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 07:40:20PM +0200, Gerald Schaefer wrote:
-> +/*
-> + * With dynamic page table levels on s390, the static pXd_addr_end() functions
-> + * will not return corresponding dynamic boundaries. This is no problem as long
-> + * as only pXd pointers are passed down during page table walk, because
-> + * pXd_offset() will simply return the given pointer for folded levels, and the
-> + * pointer iteration over a range simply happens at the correct page table
-> + * level.
-> + * It is however a problem with gup_fast, or other places walking the page
-> + * tables w/o locks using READ_ONCE(), and passing down the pXd values instead
-> + * of pointers. In this case, the pointer given to pXd_offset() is a pointer to
-> + * a stack variable, which cannot be used for pointer iteration at the correct
-> + * level. Instead, the iteration then has to happen by going up to pgd level
-> + * again. To allow this, provide pXd_addr_end_folded() functions with an
-> + * additional pXd value parameter, which can be used on s390 to determine the
-> + * folding level and return the corresponding boundary.
-> + */
-> +#ifndef pgd_addr_end_folded
-> +#define pgd_addr_end_folded(pgd, addr, end)	pgd_addr_end(addr, end)
-> +#endif
-> +
-> +#ifndef p4d_addr_end_folded
-> +#define p4d_addr_end_folded(p4d, addr, end)	p4d_addr_end(addr, end)
-> +#endif
-> +
-> +#ifndef pud_addr_end_folded
-> +#define pud_addr_end_folded(pud, addr, end)	pud_addr_end(addr, end)
-> +#endif
-> +
-> +#ifndef pmd_addr_end_folded
-> +#define pmd_addr_end_folded(pmd, addr, end)	pmd_addr_end(addr, end)
-> +#endif
+On Tue, Sep 01, 2020 at 11:27:36PM +1000, Michael Ellerman wrote:
+> Nicolin Chen <nicoleotsuka@gmail.com> writes:
+> > The boundary_size might be as large as ULONG_MAX, which means
+> > that a device has no specific boundary limit. So either "+ 1"
+> > or passing it to ALIGN() would potentially overflow.
+> >
+> > According to kernel defines:
+> >     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
+> >     #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
+> >
+> > We can simplify the logic here:
+> >   ALIGN(boundary + 1, 1 << shift) >> shift
+> > = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
+> > = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
+> > = [b + 1 + (1 << s) - 1] >> s
+> > = [b + (1 << s)] >> s
+> > = (b >> s) + 1
+> >
+> > So fixing a potential overflow with the safer shortcut.
+> >
+> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  arch/powerpc/kernel/iommu.c | 11 +++++------
+> >  1 file changed, 5 insertions(+), 6 deletions(-)
+> 
+> Are you asking for acks, or for maintainers to merge the patches
+> individually?
 
-Feels like it would be cleaner to globally change pmd_addr_end() /etc
-to require the extra pmd input rather that introduce this special rule
-when *_folded needs to be used? NOP on all arches execpt s390..
+I was expecting that but Christoph just suggested me to squash them
+into one so he would merge it: https://lkml.org/lkml/2020/9/1/159
 
-There are not so many call sites that it seems too scary, and I
-wouldn't be surprised if there are going to be more cases beyond GUP
-that *should* be using the READ_ONCE trick.
+Though I feel it'd be nice to get maintainers' acks before merging.
 
-Jason
+> > diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
+> > index 9704f3f76e63..c01ccbf8afdd 100644
+> > --- a/arch/powerpc/kernel/iommu.c
+> > +++ b/arch/powerpc/kernel/iommu.c
+> > @@ -236,15 +236,14 @@ static unsigned long iommu_range_alloc(struct device *dev,
+> >  		}
+> >  	}
+> >  
+> > -	if (dev)
+> > -		boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
+> > -				      1 << tbl->it_page_shift);
+> > -	else
+> > -		boundary_size = ALIGN(1UL << 32, 1 << tbl->it_page_shift);
+> >  	/* 4GB boundary for iseries_hv_alloc and iseries_hv_map */
+> > +	boundary_size = dev ? dma_get_seg_boundary(dev) : U32_MAX;
+> 
+> Is there any path that passes a NULL dev anymore?
+> 
+> Both iseries_hv_alloc() and iseries_hv_map() were removed years ago.
+> See:
+>   8ee3e0d69623 ("powerpc: Remove the main legacy iSerie platform code")
+> 
+> 
+> So maybe we should do a lead-up patch that drops the NULL dev support,
+> which will then make this patch simpler.
+
+The next version of this change will follow Christoph's suggestion
+by having a helper function that takes care of !dev internally.
+
+Thanks
+Nic
+
+> 
+> 
+> > +	/* Overflow-free shortcut for: ALIGN(b + 1, 1 << s) >> s */
+> > +	boundary_size = (boundary_size >> tbl->it_page_shift) + 1;
+> >  
+> >  	n = iommu_area_alloc(tbl->it_map, limit, start, npages, tbl->it_offset,
+> > -			     boundary_size >> tbl->it_page_shift, align_mask);
+> > +			     boundary_size, align_mask);
+> >  	if (n == -1) {
+> >  		if (likely(pass == 0)) {
+> >  			/* First try the pool from the start */
+> > -- 
+> > 2.17.1
