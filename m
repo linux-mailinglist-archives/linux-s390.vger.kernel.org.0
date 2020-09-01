@@ -2,185 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 143752591E4
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 16:57:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7104F2590D0
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 16:39:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgIAOzV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Sep 2020 10:55:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45262 "EHLO
+        id S1728546AbgIAOjf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Sep 2020 10:39:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgIALbA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 07:31:00 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 504A6C061247;
-        Tue,  1 Sep 2020 04:29:57 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so550478qtg.4;
-        Tue, 01 Sep 2020 04:29:57 -0700 (PDT)
+        with ESMTP id S1728021AbgIAORC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 10:17:02 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1283C061265;
+        Tue,  1 Sep 2020 07:16:59 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k13so585183plk.13;
+        Tue, 01 Sep 2020 07:16:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Bmg6XgtUWDx4HuERt6+WNca9MkrxDIzUrFEsZ8s0eNY=;
-        b=IERvtpprRpsI2hed0dHnnYBJc2bTsfXDoVwNNjG0Ec1Sz8CRuOUarz+Porf5yRfHFu
-         30cRoDkuZP41QRrigZa6y9lS/Q9+jFle0rPTgtwQN4bp84V8ocprAVuzMQ9FqTehBEzY
-         4MDJIPAYpDQqg5MZ+6ZUTXTmOnuGZXEK8IgCV4orCkGUrRtsYcj/Ywc1ICPwnctC/GyI
-         dJzhbEYwl61cZTl24h34xARkW2Zaqa/kOmK3OayGekDtkeFds1gFNQRmSyQ/QvyDfdw+
-         OEnwNuiuobwmd/AEPMOV6cmL4S085Ju8J83/4o3yZA4u2o3mkHjbyG61560pFu+G2c5p
-         TvfA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3gjRN/KamVH3sWTz8RDBj5bBWnJISflepDch8HJoRKQ=;
+        b=clQYQjHEqBLvSIfYOAtUdto16FpX8DmsWPL+uidGuhdurAKPF6RNx3tBPXa3DwTJLh
+         NIu3DHt9WdtfSYzBystNWWHPgSGcSyaKtlwG30k8Pu/LCGvYFGzC6RliYcDO55n5mrf0
+         6X2Fz2L36/qasOAQmhtLf3BXzKL0BxOuTuqorV0WR04sxZ4yCc2wZQqyHQI9XY4uAPLx
+         dLCWCtwe7paXbmcd71RHt6E0KKaeNufjYOLTEVtT2j/KKqbYAKdovfzS9wdxiOeGqqnH
+         F6Tz+2wtvSqA2N2eLnVINcH406141kCrDiwHmiwXYfjgxrxi6iHEFZCXlv79r5awdqht
+         +2IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Bmg6XgtUWDx4HuERt6+WNca9MkrxDIzUrFEsZ8s0eNY=;
-        b=G71dvjwIu488zUUjmMoWDTLeZ/wY1GVSDhux2sTucSujqYmKot2Nq0A7QY/g/nSguk
-         /2MnBBotSaK6dVANc/725/FqCJ76wRfpBHGaoIQpdxZboGa8QSBikS/eS7DotIMV2Lpx
-         pEokqnWf1EyBjlovce/6LFBQ3llUYbjDuc5giQkAmfxyAggVnhdEsMWUvidyqlE3Fd3y
-         UDfTeqfiWixrCUALqrS1wMQOuD08ftGEfcq+JpnG/SM6w/3+Oj7sYZNQ6HLBn6eheGwt
-         AYPQFxmmu6mwzEpbar+V42Lj/Trs6OQ6qurh7R/AmS/xm1yJIBrnGIKCFrSGA6j5jkSv
-         RqYw==
-X-Gm-Message-State: AOAM533xxmhHTiJ3mQLWUvys/hzohLIhit6UpntJGSYOiftYuztVxs46
-        oApsWFtjQW14glwe6JoEiU9T3HzlHpIhxU9GPEArsfF1lf43xA==
-X-Google-Smtp-Source: ABdhPJwVT407rq1wSU6XLfBx35x7TqzLfOV0jdufGiWqhxHXDja0Uvn0+tpPRWaGd0lmv1UnRMyszboqVwIOVOloAYU=
-X-Received: by 2002:ac8:7741:: with SMTP id g1mr1183471qtu.28.1598959796622;
- Tue, 01 Sep 2020 04:29:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200831182239.480317-1-masahiroy@kernel.org>
-In-Reply-To: <20200831182239.480317-1-masahiroy@kernel.org>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Tue, 1 Sep 2020 19:29:19 +0800
-Message-ID: <CAEbi=3cqogHs=p_y=_jfcC+D5a9e5=Nic=ECr_YvJ9p-DZEAJQ@mail.gmail.com>
-Subject: Re: [PATCH] arch: vdso: add vdso linker script to 'targets' instead
- of extra-y
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3gjRN/KamVH3sWTz8RDBj5bBWnJISflepDch8HJoRKQ=;
+        b=NVjH1m5naQOtFk1RL9QCDFTNfDJoKexPboBnBBHskW2o5/9jjK9Td5qHOFm+Q8kICg
+         9MINTzBL0URrk07/cJF6Pg+RnVqTHAR9qTxXW24OWnoQEUoboh0UTc+rgUlBVb838Ei9
+         otC3bzk2GAduwJ1mTafhwWhlu1lakZiaSKJwSRNygZ06Ws1S4m3ZiSdzpWjRPomW78n5
+         UZAURHt+Mk9DbonuqgTOXcLoukcGOcOuees/mez2JGKp4ndoTtQiUDaulKgksGfj8sXB
+         L9GBmgBC5SFc5nCFU7yYLjYGU/xom716oOau4wDFtOdQ9pEbhSiOvGVEgLJIYcZaiQzD
+         zTNw==
+X-Gm-Message-State: AOAM530OsDiUtlIGSuZYdB8IiTxTq0gqcr1s0zmdFkhruNtHPvuY9Gt8
+        kuJEa/7mzRtjbKHTZ1H3klsB5hsYwDE=
+X-Google-Smtp-Source: ABdhPJwf8o5Z+3C/zuq69JbjA8nGkrebFYBg2C9BnrWEmZQgV4d152UpPBXmoBoHaJDILG4ogxQpJA==
+X-Received: by 2002:a17:902:b405:: with SMTP id x5mr1545946plr.267.1598969819246;
+        Tue, 01 Sep 2020 07:16:59 -0700 (PDT)
+Received: from bobo.ibm.com ([203.185.249.227])
+        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.16.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 07:16:58 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
         Heiko Carstens <hca@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Mackerras <paulus@samba.org>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v3 18/23] s390: use asm-generic/mmu_context.h for no-op implementations
+Date:   Wed,  2 Sep 2020 00:15:34 +1000
+Message-Id: <20200901141539.1757549-19-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
+References: <20200901141539.1757549-1-npiggin@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Masahiro Yamada <masahiroy@kernel.org> =E6=96=BC 2020=E5=B9=B49=E6=9C=881=
-=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=882:23=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> The vdso linker script is preprocessed on demand.
-> Adding it to 'targets' is enough to include the .cmd file.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  arch/arm64/kernel/vdso/Makefile     | 2 +-
->  arch/arm64/kernel/vdso32/Makefile   | 2 +-
->  arch/nds32/kernel/vdso/Makefile     | 2 +-
->  arch/powerpc/kernel/vdso32/Makefile | 2 +-
->  arch/powerpc/kernel/vdso64/Makefile | 2 +-
->  arch/s390/kernel/vdso64/Makefile    | 2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Mak=
-efile
-> index 45d5cfe46429..7cd8aafbe96e 100644
-> --- a/arch/arm64/kernel/vdso/Makefile
-> +++ b/arch/arm64/kernel/vdso/Makefile
-> @@ -54,7 +54,7 @@ endif
->  GCOV_PROFILE :=3D n
->
->  obj-y +=3D vdso.o
-> -extra-y +=3D vdso.lds
-> +targets +=3D vdso.lds
->  CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
->
->  # Force dependency (incbin is bad)
-> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32=
-/Makefile
-> index d6adb4677c25..572475b7b7ed 100644
-> --- a/arch/arm64/kernel/vdso32/Makefile
-> +++ b/arch/arm64/kernel/vdso32/Makefile
-> @@ -155,7 +155,7 @@ asm-obj-vdso :=3D $(addprefix $(obj)/, $(asm-obj-vdso=
-))
->  obj-vdso :=3D $(c-obj-vdso) $(c-obj-vdso-gettimeofday) $(asm-obj-vdso)
->
->  obj-y +=3D vdso.o
-> -extra-y +=3D vdso.lds
-> +targets +=3D vdso.lds
->  CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
->
->  # Force dependency (vdso.s includes vdso.so through incbin)
-> diff --git a/arch/nds32/kernel/vdso/Makefile b/arch/nds32/kernel/vdso/Mak=
-efile
-> index 7c3c1ccb196e..55df25ef0057 100644
-> --- a/arch/nds32/kernel/vdso/Makefile
-> +++ b/arch/nds32/kernel/vdso/Makefile
-> @@ -20,7 +20,7 @@ GCOV_PROFILE :=3D n
->
->
->  obj-y +=3D vdso.o
-> -extra-y +=3D vdso.lds
-> +targets +=3D vdso.lds
->  CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
->
->  # Force dependency
-> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vd=
-so32/Makefile
-> index 87ab1152d5ce..fd5072a4c73c 100644
-> --- a/arch/powerpc/kernel/vdso32/Makefile
-> +++ b/arch/powerpc/kernel/vdso32/Makefile
-> @@ -29,7 +29,7 @@ ccflags-y :=3D -shared -fno-common -fno-builtin -nostdl=
-ib \
->  asflags-y :=3D -D__VDSO32__ -s
->
->  obj-y +=3D vdso32_wrapper.o
-> -extra-y +=3D vdso32.lds
-> +targets +=3D vdso32.lds
->  CPPFLAGS_vdso32.lds +=3D -P -C -Upowerpc
->
->  # Force dependency (incbin is bad)
-> diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vd=
-so64/Makefile
-> index 38c317f25141..c737b3ea3207 100644
-> --- a/arch/powerpc/kernel/vdso64/Makefile
-> +++ b/arch/powerpc/kernel/vdso64/Makefile
-> @@ -17,7 +17,7 @@ ccflags-y :=3D -shared -fno-common -fno-builtin -nostdl=
-ib \
->  asflags-y :=3D -D__VDSO64__ -s
->
->  obj-y +=3D vdso64_wrapper.o
-> -extra-y +=3D vdso64.lds
-> +targets +=3D vdso64.lds
->  CPPFLAGS_vdso64.lds +=3D -P -C -U$(ARCH)
->
->  # Force dependency (incbin is bad)
-> diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/M=
-akefile
-> index 4a66a1cb919b..d0d406cfffa9 100644
-> --- a/arch/s390/kernel/vdso64/Makefile
-> +++ b/arch/s390/kernel/vdso64/Makefile
-> @@ -25,7 +25,7 @@ $(targets:%=3D$(obj)/%.dbg): KBUILD_CFLAGS =3D $(KBUILD=
-_CFLAGS_64)
->  $(targets:%=3D$(obj)/%.dbg): KBUILD_AFLAGS =3D $(KBUILD_AFLAGS_64)
->
->  obj-y +=3D vdso64_wrapper.o
-> -extra-y +=3D vdso64.lds
-> +targets +=3D vdso64.lds
->  CPPFLAGS_vdso64.lds +=3D -P -C -U$(ARCH)
->
->  # Disable gcov profiling, ubsan and kasan for VDSO code
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
 
-For nds32:
+Please ack or nack if you object to this being mered via
+Arnd's tree.
 
-Acked-by: Greentime Hu <green.hu@gmail.com>
+ arch/s390/include/asm/mmu_context.h | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/arch/s390/include/asm/mmu_context.h b/arch/s390/include/asm/mmu_context.h
+index c9f3d8a52756..66f9cf0a07e3 100644
+--- a/arch/s390/include/asm/mmu_context.h
++++ b/arch/s390/include/asm/mmu_context.h
+@@ -15,6 +15,7 @@
+ #include <asm/ctl_reg.h>
+ #include <asm-generic/mm_hooks.h>
+ 
++#define init_new_context init_new_context
+ static inline int init_new_context(struct task_struct *tsk,
+ 				   struct mm_struct *mm)
+ {
+@@ -69,8 +70,6 @@ static inline int init_new_context(struct task_struct *tsk,
+ 	return 0;
+ }
+ 
+-#define destroy_context(mm)             do { } while (0)
+-
+ static inline void set_user_asce(struct mm_struct *mm)
+ {
+ 	S390_lowcore.user_asce = mm->context.asce;
+@@ -125,9 +124,7 @@ static inline void finish_arch_post_lock_switch(void)
+ 	set_fs(current->thread.mm_segment);
+ }
+ 
+-#define enter_lazy_tlb(mm,tsk)	do { } while (0)
+-#define deactivate_mm(tsk,mm)	do { } while (0)
+-
++#define activate_mm activate_mm
+ static inline void activate_mm(struct mm_struct *prev,
+                                struct mm_struct *next)
+ {
+@@ -136,4 +133,6 @@ static inline void activate_mm(struct mm_struct *prev,
+ 	set_user_asce(next);
+ }
+ 
++#include <asm-generic/mmu_context.h>
++
+ #endif /* __S390_MMU_CONTEXT_H */
+-- 
+2.23.0
+
