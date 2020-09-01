@@ -2,97 +2,138 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E56D0258B1F
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 11:12:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CCD1258B45
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 11:18:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgIAJMe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Sep 2020 05:12:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:38950 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgIAJMd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:12:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D4D330E;
-        Tue,  1 Sep 2020 02:12:33 -0700 (PDT)
-Received: from [10.163.69.134] (unknown [10.163.69.134])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13CEF3F71F;
-        Tue,  1 Sep 2020 02:12:27 -0700 (PDT)
-Subject: Re: [PATCH v2 00/13] mm/debug_vm_pgtable fixes
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, Qian Cai <cai@lca.pw>,
-        "x86@kernel.org" <x86@kernel.org>
-References: <20200819130107.478414-1-aneesh.kumar@linux.ibm.com>
- <52e9743e-fa2f-3fd2-f50e-2c6c38464b96@arm.com>
- <c0de2c68-826b-bf0f-dc2c-a501fa7bef38@csgroup.eu>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <74db4583-36a3-629b-9423-4e4961a91ea6@arm.com>
-Date:   Tue, 1 Sep 2020 14:41:55 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726117AbgIAJSs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Sep 2020 05:18:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62650 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726064AbgIAJSo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 05:18:44 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08192BNA072232;
+        Tue, 1 Sep 2020 05:18:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=YPtWkQi0eSQq6qd/NvhgsXggL4arpiXRt718grYJzIk=;
+ b=sDtQLGkwgeaoTn8wTe9ZLOkPIvQBVuPyYppM0bBY9OrpnfXKkUX8STkfcG8VraTjkv7U
+ sT4G04uHPI6c92/2N3GQtOK4eEEzo/XhYf0W2CZjX0q6fTARQpRPXeFGyd4EBMY0rkOj
+ kCJIiStdbHZqtmxGYR6TeONplpohU1cmaW4WUkP6hJzBwNcfRcxSroYMwM904D85BjB8
+ wESzRpuhIxHaZZlSGHih7KX/NB3U94H4tZr3xk460WNgAJPGg0Gjt7UCn4rfmPa7yqGs
+ 8cikMglBU0JF7wCjShbbnkpRnI0PXQTBxRMoLesTRTCqx0QX9lRsFZzxGwQTqOZbppNp GA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 339gd0nwx1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 05:18:43 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08192CgC072408;
+        Tue, 1 Sep 2020 05:18:43 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 339gd0nwv0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 05:18:43 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0819Cmpd004135;
+        Tue, 1 Sep 2020 09:18:40 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04fra.de.ibm.com with ESMTP id 339ap7r9n9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 09:18:40 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0819Ibap11731408
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Sep 2020 09:18:37 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DEB84C044;
+        Tue,  1 Sep 2020 09:18:37 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 117794C04E;
+        Tue,  1 Sep 2020 09:18:37 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.145.37.233])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  1 Sep 2020 09:18:36 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     pbonzini@redhat.com
+Cc:     kvm@vger.kernel.org, frankja@linux.vnet.ibm.com, david@redhat.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com,
+        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com
+Subject: [kvm-unit-tests GIT PULL 0/3] s390x skrf and ultravisor patches
+Date:   Tue,  1 Sep 2020 11:18:20 +0200
+Message-Id: <20200901091823.14477-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <c0de2c68-826b-bf0f-dc2c-a501fa7bef38@csgroup.eu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-01_04:2020-09-01,2020-09-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ suspectscore=0 malwarescore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015
+ adultscore=0 priorityscore=1501 mlxlogscore=999 mlxscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009010075
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Paolo,
+
+initially I wanted to wait with this pull until I picked more patches,
+but it doesn't look like that will happen soon and my vacation is
+getting closer. So here we go:
+
+The following changes since commit 1b53866b0b494277ab41c7c0cec4ee00969dd32e:
+
+  Merge tag 's390x-2020-31-07' of https://github.com/frankjaa/kvm-unit-tests into HEAD (2020-08-09 18:06:26 +0200)
+
+are available in the Git repository at:
+
+  git@gitlab.com:frankja/kvm-unit-tests.git tags/s390x-2020-01-09
+
+for you to fetch changes up to 2ea7afb64d34b5dd841334f72b99251ab56433cd:
+
+  s390x: Ultravisor guest API test (2020-08-11 03:19:46 -0400)
+
+----------------------------------------------------------------
+* Added first Ultravisor tests
+* Added SKRF key in PSW test
+* Added custom program exception cleanup hook
+----------------------------------------------------------------
+Janosch Frank (3):
+      s390x: Add custom pgm cleanup function
+      s390x: skrf: Add exception new skey test and add test to unittests.cfg
+      s390x: Ultravisor guest API test
+
+ lib/s390x/asm/interrupt.h |   1 +
+ lib/s390x/asm/uv.h        |  74 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ lib/s390x/interrupt.c     |  12 +++++++++++-
+ s390x/Makefile            |   1 +
+ s390x/skrf.c              |  79 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ s390x/unittests.cfg       |   7 +++++++
+ s390x/uv-guest.c          | 150 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 7 files changed, 323 insertions(+), 1 deletion(-)
+ create mode 100644 lib/s390x/asm/uv.h
+ create mode 100644 s390x/uv-guest.c
 
 
-On 09/01/2020 01:33 PM, Christophe Leroy wrote:
-> 
-> 
-> Le 21/08/2020 à 10:51, Anshuman Khandual a écrit :
->>
->> On 08/19/2020 06:30 PM, Aneesh Kumar K.V wrote:
->>> This patch series includes fixes for debug_vm_pgtable test code so that
->>> they follow page table updates rules correctly. The first two patches introduce
->>> changes w.r.t ppc64. The patches are included in this series for completeness. We can
->>> merge them via ppc64 tree if required.
->>>
->>> Hugetlb test is disabled on ppc64 because that needs larger change to satisfy
->>> page table update rules.
->>>
-> 
->>
->> Changes proposed here will impact other enabled platforms as well.
->> Adding the following folks and mailing lists, and hoping to get a
->> broader review and test coverage. Please do include them in the
->> next iteration as well.
->>
->> + linux-arm-kernel@lists.infradead.org
->> + linux-s390@vger.kernel.org
->> + linux-snps-arc@lists.infradead.org
->> + x86@kernel.org
->> + linux-arch@vger.kernel.org
->>
->> + Gerald Schaefer <gerald.schaefer@de.ibm.com>
->> + Christophe Leroy <christophe.leroy@c-s.fr>
-> 
-> Please don't use anymore the above address. Only use the one below.
-> 
->> + Christophe Leroy <christophe.leroy@csgroup.eu>
 
-Sure, noted.
+Janosch Frank (3):
+  s390x: Add custom pgm cleanup function
+  s390x: skrf: Add exception new skey test and add test to unittests.cfg
+  s390x: Ultravisor guest API test
 
->> + Vineet Gupta <vgupta@synopsys.com>
->> + Mike Rapoport <rppt@linux.ibm.com>
->> + Qian Cai <cai@lca.pw>
->>
-> 
-> Thanks
-> Christophe
-> 
->
+ lib/s390x/asm/interrupt.h |   1 +
+ lib/s390x/asm/uv.h        |  74 +++++++++++++++++++
+ lib/s390x/interrupt.c     |  12 ++-
+ s390x/Makefile            |   1 +
+ s390x/skrf.c              |  79 ++++++++++++++++++++
+ s390x/unittests.cfg       |   7 ++
+ s390x/uv-guest.c          | 150 ++++++++++++++++++++++++++++++++++++++
+ 7 files changed, 323 insertions(+), 1 deletion(-)
+ create mode 100644 lib/s390x/asm/uv.h
+ create mode 100644 s390x/uv-guest.c
+
+-- 
+2.25.4
+
