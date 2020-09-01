@@ -2,159 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9917725A037
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Sep 2020 22:54:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E76B25A145
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 00:17:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgIAUyY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Sep 2020 16:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47892 "EHLO
+        id S1726979AbgIAWR1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Sep 2020 18:17:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgIAUyX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 16:54:23 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19E6AC061244;
-        Tue,  1 Sep 2020 13:54:22 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id m8so1542295pfh.3;
-        Tue, 01 Sep 2020 13:54:22 -0700 (PDT)
+        with ESMTP id S1726050AbgIAWRX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Sep 2020 18:17:23 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EDA3C061244;
+        Tue,  1 Sep 2020 15:17:22 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id bh1so1250044plb.12;
+        Tue, 01 Sep 2020 15:17:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FRTR1pQ5xaQZ2uOprnJ9rvvshbUxSZlhlKoxnO7URRM=;
-        b=eELfQzbSGjuv8KyOMVHl+sTrzSe3ziixFesUVCgWOu7/Z9muIvFP7Bi4DRJZMs6RcJ
-         uhMvWISw8EQN1/7gxRmFAFsNBG5Sh9QbZV6QgcFDjmSpu/uuHUY9boYcGOBpACpZ2QKm
-         2xrLnc3Zu6wcDZtzf6kTWiFrA/YhL2qcA9RPBXgRzmQs/uy/H7Jn+SzylyQeVuoHjASv
-         vAVeYbXCILJrBBwG1cAuMAGgHRm6simSr4if2kYJM3hqSroABMSvzIJAMe0A2WueufHt
-         t5wBEp5mZqpgLu3vzcoJLecspOTik/9RM6BJkEqtdcJgnSSWtV2vjAN/aVdEovSHd2Tj
-         jceg==
+        h=from:to:cc:subject:date:message-id;
+        bh=M8j6Ldkq7Y6L6HNtPJpdtArkg82hNoz7EQt2ZZQpQiE=;
+        b=p925V7snElOQZXlWMLip8xP1dwydX4MO40+mVFj0KyAvGYuTSaLzAdLMfBDDV081Yc
+         fEnLq463d09UGAfhsrrBF62cGT/GqQtYjv0nq5ng6OZ5m4jKNTDM86uafLdc6j721eOg
+         6f1p/HTw+taNTu4O7whEf+6bZmHYqxDOIiy5obUbw/5UsCVHJ9vf6MEnKgvy+pQvF+5J
+         IeXr6w2XCQR8Hs6QTtvSXHW9D7hGl2Fnpi3RZZppFwo5+UafHLipz4crtYIUn/PHLBWc
+         C/yluXJaWRsBj31/j7ffRgYozI9+twYp8EsiVCVuCJtaxWo11IwJJw/rhIA2CmV/TP98
+         71mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FRTR1pQ5xaQZ2uOprnJ9rvvshbUxSZlhlKoxnO7URRM=;
-        b=N5aNCXzxJApOPZFxE4JGLzB6qJYXuGF2hBysLwgYBRO0rMQLtkR5JMIM4tBdOsM9u6
-         R05VHXGifDA9tjY9aSxNRt06ZcqvyJm0LQtWHS2QihRFCKLmf0yR8hyrWOHVF11dBLKk
-         CK3xj6M017lQcXyQM9lInXZhLEBd86YFdVsJh1aPUtvmwIMp4KkwvTfUQoGmZVEX+/n9
-         Jck4BRaxSITI7vxUNATMP2XxDJ/aOLZDLWsSLJYf6c3W98rLlOcUQLXHLHjY2Dh5vqHH
-         btVzDhBru9ZC0fNcku3cL8CVQS6NgVySlRyhb4WABlDoJzy8jLTQm88oNQHpj7/gYk4g
-         292g==
-X-Gm-Message-State: AOAM531aw/rl0fXU/RIE2O7CVcyV6csCx6lLGeSpu7ZTkNav71UdcbbY
-        ZeIkpYqTdxJKS5Zwmeywrlw=
-X-Google-Smtp-Source: ABdhPJybz8lKswfhAONDTigR0brpOOZSb0wvBo43ZZyZYaJi6PxdmqR6MUqDZmJI2ioaYEYqLLibGw==
-X-Received: by 2002:a63:384b:: with SMTP id h11mr3124012pgn.113.1598993661459;
-        Tue, 01 Sep 2020 13:54:21 -0700 (PDT)
-Received: from Asurada-Nvidia (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id y1sm3016263pgr.3.2020.09.01.13.54.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 01 Sep 2020 13:54:21 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 13:53:47 -0700
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=M8j6Ldkq7Y6L6HNtPJpdtArkg82hNoz7EQt2ZZQpQiE=;
+        b=ukiO7dtpVcqm5U0EAXKmIP27VKHX+8Bs1ZWdRZa8PwOYzbaOPPIpuyl87MrfGMTJyz
+         eYCGkjOJagJRVBgo7Xl76Ztgs2xAWKp/x7ndYaJjFr5ly9aO36nv15e+KE1EpKClSmsa
+         BWCTdX/VvUpbEZvSOfZyXhj7Gn92W89u39rSwTDB97OMcs+IER6A8Vb8E6QdvA4511dz
+         3L9zGOaDmQqYmBfyjx4DamA9T5TORD9SRBbo3KVqByrECbtBkBONAFWMnhu4bld1ocqt
+         5tXDiE2cWmKCgkdtwU/bN98WF6qck23f5pIosoeWjF1YAwDxlaWLBk0hQFfam2UHbp2I
+         Lg3A==
+X-Gm-Message-State: AOAM531YpBLHTLqDhPC3ziij+PMqoz/A5sqRFukzjNDOWexbPH4W4rCD
+        MIswmKABJS4C7N+C+YvIA468EtmGpQPMsg==
+X-Google-Smtp-Source: ABdhPJzHMtqQ9oWwXWEViAEvRErMfjdDqEOcrOWlNbyGgorcxLjtTk6m7wzAANlJgigaSW1gJ7x2hQ==
+X-Received: by 2002:a17:902:9a8e:: with SMTP id w14mr3206869plp.6.1598998641433;
+        Tue, 01 Sep 2020 15:17:21 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id w203sm3201356pfc.97.2020.09.01.15.17.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 15:17:21 -0700 (PDT)
 From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     benh@kernel.crashing.org, paulus@samba.org, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com, tony.luck@intel.com,
-        fenghua.yu@intel.com, schnelle@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, davem@davemloft.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, James.Bottomley@HansenPartnership.com,
-        deller@gmx.de, sfr@canb.auug.org.au, hch@lst.de,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+To:     hch@lst.de
+Cc:     sfr@canb.auug.org.au, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        linux-alpha@vger.kernel.org, tony.luck@intel.com,
+        fenghua.yu@intel.com, linux-ia64@vger.kernel.org,
+        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, davem@davemloft.net,
+        sparclinux@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        James.Bottomley@HansenPartnership.com, deller@gmx.de,
         linux-parisc@vger.kernel.org
-Subject: Re: [RESEND][PATCH 1/7] powerpc/iommu: Avoid overflow at
- boundary_size
-Message-ID: <20200901205346.GA17362@Asurada-Nvidia>
-References: <20200831203811.8494-1-nicoleotsuka@gmail.com>
- <20200831203811.8494-2-nicoleotsuka@gmail.com>
- <87lfht1vav.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87lfht1vav.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Subject: [PATCH 0/2] dma-mapping: update default segment_boundary_mask
+Date:   Tue,  1 Sep 2020 15:16:44 -0700
+Message-Id: <20200901221646.26491-1-nicoleotsuka@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 11:27:36PM +1000, Michael Ellerman wrote:
-> Nicolin Chen <nicoleotsuka@gmail.com> writes:
-> > The boundary_size might be as large as ULONG_MAX, which means
-> > that a device has no specific boundary limit. So either "+ 1"
-> > or passing it to ALIGN() would potentially overflow.
-> >
-> > According to kernel defines:
-> >     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
-> >     #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
-> >
-> > We can simplify the logic here:
-> >   ALIGN(boundary + 1, 1 << shift) >> shift
-> > = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
-> > = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
-> > = [b + 1 + (1 << s) - 1] >> s
-> > = [b + (1 << s)] >> s
-> > = (b >> s) + 1
-> >
-> > So fixing a potential overflow with the safer shortcut.
-> >
-> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  arch/powerpc/kernel/iommu.c | 11 +++++------
-> >  1 file changed, 5 insertions(+), 6 deletions(-)
-> 
-> Are you asking for acks, or for maintainers to merge the patches
-> individually?
+These two patches are to update default segment_boundary_mask.
 
-I was expecting that but Christoph just suggested me to squash them
-into one so he would merge it: https://lkml.org/lkml/2020/9/1/159
+PATCH-1 fixes overflow issues in callers of dma_get_seg_boundary.
+Previous version was a series: https://lkml.org/lkml/2020/8/31/1026
 
-Though I feel it'd be nice to get maintainers' acks before merging.
+Then PATCH-2 sets default segment_boundary_mask to ULONG_MAX.
 
-> > diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
-> > index 9704f3f76e63..c01ccbf8afdd 100644
-> > --- a/arch/powerpc/kernel/iommu.c
-> > +++ b/arch/powerpc/kernel/iommu.c
-> > @@ -236,15 +236,14 @@ static unsigned long iommu_range_alloc(struct device *dev,
-> >  		}
-> >  	}
-> >  
-> > -	if (dev)
-> > -		boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
-> > -				      1 << tbl->it_page_shift);
-> > -	else
-> > -		boundary_size = ALIGN(1UL << 32, 1 << tbl->it_page_shift);
-> >  	/* 4GB boundary for iseries_hv_alloc and iseries_hv_map */
-> > +	boundary_size = dev ? dma_get_seg_boundary(dev) : U32_MAX;
-> 
-> Is there any path that passes a NULL dev anymore?
-> 
-> Both iseries_hv_alloc() and iseries_hv_map() were removed years ago.
-> See:
->   8ee3e0d69623 ("powerpc: Remove the main legacy iSerie platform code")
-> 
-> 
-> So maybe we should do a lead-up patch that drops the NULL dev support,
-> which will then make this patch simpler.
+Nicolin Chen (2):
+  dma-mapping: introduce dma_get_seg_boundary_nr_pages()
+  dma-mapping: set default segment_boundary_mask to ULONG_MAX
 
-The next version of this change will follow Christoph's suggestion
-by having a helper function that takes care of !dev internally.
+ arch/alpha/kernel/pci_iommu.c    |  7 +------
+ arch/ia64/hp/common/sba_iommu.c  |  3 +--
+ arch/powerpc/kernel/iommu.c      |  9 ++-------
+ arch/s390/pci/pci_dma.c          |  6 ++----
+ arch/sparc/kernel/iommu-common.c | 10 +++-------
+ arch/sparc/kernel/iommu.c        |  3 +--
+ arch/sparc/kernel/pci_sun4v.c    |  3 +--
+ arch/x86/kernel/amd_gart_64.c    |  3 +--
+ drivers/parisc/ccio-dma.c        |  3 +--
+ drivers/parisc/sba_iommu.c       |  3 +--
+ include/linux/dma-mapping.h      | 21 ++++++++++++++++++++-
+ 11 files changed, 34 insertions(+), 37 deletions(-)
 
-Thanks
-Nic
+-- 
+2.17.1
 
-> 
-> 
-> > +	/* Overflow-free shortcut for: ALIGN(b + 1, 1 << s) >> s */
-> > +	boundary_size = (boundary_size >> tbl->it_page_shift) + 1;
-> >  
-> >  	n = iommu_area_alloc(tbl->it_map, limit, start, npages, tbl->it_offset,
-> > -			     boundary_size >> tbl->it_page_shift, align_mask);
-> > +			     boundary_size, align_mask);
-> >  	if (n == -1) {
-> >  		if (likely(pass == 0)) {
-> >  			/* First try the pool from the start */
-> > -- 
-> > 2.17.1
