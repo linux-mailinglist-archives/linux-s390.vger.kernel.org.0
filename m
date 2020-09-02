@@ -2,190 +2,128 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 566DC25A22A
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 02:09:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7388D25A41C
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 05:46:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgIBAJx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Sep 2020 20:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37368 "EHLO mail.kernel.org"
+        id S1726212AbgIBDqA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Sep 2020 23:46:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:56714 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbgIBAJt (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 1 Sep 2020 20:09:49 -0400
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8354921582
-        for <linux-s390@vger.kernel.org>; Wed,  2 Sep 2020 00:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599005388;
-        bh=ue8KFmWAURt4lhvOfblC/6hWxuPhGkaF5B0T2fLxa7I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TMu2S3IzHfz+o6ohiqDLBmmcmE/E3rINy8vvAXGieza4ImIhAEf776UnghnDuHvzd
-         5RUSUwl4gq1gDaK4mi1DBXXH+ZDeKELWu02LXQKCNxeqTYN929b+1mZTWtyLPaPna1
-         +yVVQs19uJk+DPC0V7/4RRNdHi/w9iCHs5rjuS/c=
-Received: by mail-wm1-f51.google.com with SMTP id b79so2766352wmb.4
-        for <linux-s390@vger.kernel.org>; Tue, 01 Sep 2020 17:09:48 -0700 (PDT)
-X-Gm-Message-State: AOAM533s7QLPpcmbdEhoYTxPJwAtFNJBdP+BbzupBIIMndXS3gVGKu9B
-        WrUYc2881P9ib7jTgWsowDyuI+s+k+wal049ooMWpQ==
-X-Google-Smtp-Source: ABdhPJyyfibJgmTm5WYzNGqNFdu9nOVgGk+6VQWbLUP3cCSoL53YNiq4XcCEUyla/kGQQVBTYc7jpCQ/5AYmCiDL+Ho=
-X-Received: by 2002:a1c:7e02:: with SMTP id z2mr4078821wmc.138.1599005386776;
- Tue, 01 Sep 2020 17:09:46 -0700 (PDT)
+        id S1726140AbgIBDp7 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 1 Sep 2020 23:45:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 370CDD6E;
+        Tue,  1 Sep 2020 20:45:59 -0700 (PDT)
+Received: from [192.168.0.130] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 382A73F66F;
+        Tue,  1 Sep 2020 20:45:54 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH v3 03/13] mm/debug_vm_pgtable/ppc64: Avoid setting top
+ bits in radom value
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-mm@kvack.org, akpm@linux-foundation.org
+Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, x86@kernel.org,
+        linux-arch@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, Qian Cai <cai@lca.pw>
+References: <20200827080438.315345-1-aneesh.kumar@linux.ibm.com>
+ <20200827080438.315345-4-aneesh.kumar@linux.ibm.com>
+ <3a0b0101-e6ec-26c5-e104-5b0bb95c3e51@arm.com>
+ <1a8abe92-032b-f60f-1df1-52bb409b35a3@linux.ibm.com>
+ <75771782-734b-69f6-4a07-2d3542458319@arm.com>
+ <e5d32d12-d904-ed8c-8963-d43d2c3744d9@linux.ibm.com>
+ <c371e316-7533-62c7-a1c6-9b6745d8d1ea@arm.com>
+ <3f20130a-f9fc-db9d-50a9-76aca5a1a6d7@linux.ibm.com>
+Message-ID: <2f6f2e26-5c77-d9cb-667c-0f7d35923e31@arm.com>
+Date:   Wed, 2 Sep 2020 09:15:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com>
- <CAMzpN2hmR+0-Yse1csbiVOiqgZ0e+VRkCBBXUKoPSTSMOOOFAQ@mail.gmail.com>
- <CALCETrXY1x0MReMoTOG2awcZvr4c7gp99JVNthK37vUUk-kyew@mail.gmail.com> <87k0xdjbtt.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87k0xdjbtt.fsf@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 1 Sep 2020 17:09:35 -0700
-X-Gmail-Original-Message-ID: <CALCETrUpjUPPvnPuS9fP4jgid7U_qdU_yTKSq9PjJ=z2w9HvHg@mail.gmail.com>
-Message-ID: <CALCETrUpjUPPvnPuS9fP4jgid7U_qdU_yTKSq9PjJ=z2w9HvHg@mail.gmail.com>
-Subject: Re: ptrace_syscall_32 is failing
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3f20130a-f9fc-db9d-50a9-76aca5a1a6d7@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 4:50 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Sun, Aug 30 2020 at 08:52, Andy Lutomirski wrote:
-> >> > [RUN]    SYSCALL
-> >> > [FAIL]    Initial args are wrong (nr=29, args=0 0 0 0 0 4289172732)
-> >> > [RUN]    SYSCALL
-> >> > [OK]    Args after SIGUSR1 are correct (ax = -514)
-> >> > [OK]    Child got SIGUSR1
-> >> > [RUN]    Step again
-> >> > [OK]    pause(2) restarted correctly
-> >>
-> >> Bisected to commit 0b085e68f407 ("x86/entry: Consolidate 32/64 bit
-> >> syscall entry").
-> >> It looks like it is because syscall_enter_from_user_mode() is called
-> >> before reading the 6th argument from the user stack.
->
-> Bah.I don't know how I managed to miss that part and interestingly
-> enough that none of the robots caught that either
->
-> > Thomas, can we revert the syscall_enter() and syscall_exit() part of
-> > the series?
->
-> Hrm.
->
-> > I think that they almost work for x86, but not quite as
-> > indicated by this bug.  Even if we imagine we can somehow hack around
-> > this bug, I imagine we're going to find other problems with this
-> > model, e.g. the potential upcoming exit problem I noted in my review.
->
-> What's the upcoming problem?
 
-If we ever want to get single-stepping fully correct across syscalls,
-we might need to inject SIGTRAP on syscall return. This would be more
-awkward if we can't run instrumentable code after the syscall part of
-the syscall is done.
 
->
-> > I really think the model should be:
-> >
-> > void do_syscall_whatever(...)
-> > {
-> >   irqentry_enter(...);
-> >   instrumentation_begin();
-> >
-> >   /* Do whatever arch ABI oddities are needed on entry. */
-> >
-> >   Then either:
-> >   syscall_begin(arch, nr, regs);
-> >   dispatch the syscall;
-> >   syscall_end(arch, nr, regs);
-> >
-> >   Or just:
-> >   generic_do_syscall(arch, nr, regs);
-> >
-> >   /* Do whatever arch ABI oddities are needed on exit from the syscall. */
-> >
-> >   instrumentation_end();
-> >   irqentry_exit(...);
-> > }
->
-> I don't think we want that in general. The current variant is perfectly
-> fine for everything except the 32bit fast syscall nonsense. Also
-> irqentry_entry/exit is not equivalent to the syscall_enter/exit
-> counterparts.
-
-If there are any architectures in which actual work is needed to
-figure out whether something is a syscall in the first place, they'll
-want to do the usual kernel entry work before the syscall entry work.
-Maybe your patch actually makes this possible -- I haven't digested
-all the details yet.
-
-Who advised you to drop the arch parameter?
-
-> ---
->  arch/x86/entry/common.c      |   29 ++++++++++++++++--------
->  include/linux/entry-common.h |   51 +++++++++++++++++++++++++++++++++++--------
->  kernel/entry/common.c        |   35 ++++++++++++++++++++++++-----
->  3 files changed, 91 insertions(+), 24 deletions(-)
->
-> --- a/arch/x86/entry/common.c
-> +++ b/arch/x86/entry/common.c
-> @@ -60,16 +60,10 @@
->  #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
->  static __always_inline unsigned int syscall_32_enter(struct pt_regs *regs)
->  {
-> -       unsigned int nr = (unsigned int)regs->orig_ax;
-> -
->         if (IS_ENABLED(CONFIG_IA32_EMULATION))
->                 current_thread_info()->status |= TS_COMPAT;
-> -       /*
-> -        * Subtlety here: if ptrace pokes something larger than 2^32-1 into
-> -        * orig_ax, the unsigned int return value truncates it.  This may
-> -        * or may not be necessary, but it matches the old asm behavior.
-> -        */
-> -       return (unsigned int)syscall_enter_from_user_mode(regs, nr);
-> +
-> +       return (unsigned int)regs->orig_ax;
->  }
->
->  /*
-> @@ -91,15 +85,29 @@ static __always_inline void do_syscall_3
->  {
->         unsigned int nr = syscall_32_enter(regs);
->
-> +       /*
-> +        * Subtlety here: if ptrace pokes something larger than 2^32-1 into
-> +        * orig_ax, the unsigned int return value truncates it.  This may
-> +        * or may not be necessary, but it matches the old asm behavior.
-> +        */
-> +       nr = (unsigned int)syscall_enter_from_user_mode(regs, nr);
-> +
->         do_syscall_32_irqs_on(regs, nr);
->         syscall_exit_to_user_mode(regs);
->  }
->
->  static noinstr bool __do_fast_syscall_32(struct pt_regs *regs)
->  {
-> -       unsigned int nr = syscall_32_enter(regs);
-> +       unsigned int nr = syscall_32_enter(regs);
->         int res;
->
-> +       /*
-> +        * This cannot use syscall_enter_from_user_mode() as it has to
-> +        * fetch EBP before invoking any of the syscall entry work
-> +        * functions.
-> +        */
-> +       syscall_enter_from_user_mode_prepare(regs);
-
-I'm getting lost in all these "enter" functions...
+On 09/01/2020 01:25 PM, Aneesh Kumar K.V wrote:
+> On 9/1/20 1:16 PM, Anshuman Khandual wrote:
+>>
+>>
+>> On 09/01/2020 01:06 PM, Aneesh Kumar K.V wrote:
+>>> On 9/1/20 1:02 PM, Anshuman Khandual wrote:
+>>>>
+>>>>
+>>>> On 09/01/2020 11:51 AM, Aneesh Kumar K.V wrote:
+>>>>> On 9/1/20 8:45 AM, Anshuman Khandual wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 08/27/2020 01:34 PM, Aneesh Kumar K.V wrote:
+>>>>>>> ppc64 use bit 62 to indicate a pte entry (_PAGE_PTE). Avoid setting that bit in
+>>>>>>> random value.
+>>>>>>>
+>>>>>>> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>>>>>>> ---
+>>>>>>>     mm/debug_vm_pgtable.c | 13 ++++++++++---
+>>>>>>>     1 file changed, 10 insertions(+), 3 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+>>>>>>> index 086309fb9b6f..bbf9df0e64c6 100644
+>>>>>>> --- a/mm/debug_vm_pgtable.c
+>>>>>>> +++ b/mm/debug_vm_pgtable.c
+>>>>>>> @@ -44,10 +44,17 @@
+>>>>>>>      * entry type. But these bits might affect the ability to clear entries with
+>>>>>>>      * pxx_clear() because of how dynamic page table folding works on s390. So
+>>>>>>>      * while loading up the entries do not change the lower 4 bits. It does not
+>>>>>>> - * have affect any other platform.
+>>>>>>> + * have affect any other platform. Also avoid the 62nd bit on ppc64 that is
+>>>>>>> + * used to mark a pte entry.
+>>>>>>>      */
+>>>>>>> -#define S390_MASK_BITS    4
+>>>>>>> -#define RANDOM_ORVALUE    GENMASK(BITS_PER_LONG - 1, S390_MASK_BITS)
+>>>>>>> +#define S390_SKIP_MASK        GENMASK(3, 0)
+>>>>>>> +#ifdef CONFIG_PPC_BOOK3S_64
+>>>>>>> +#define PPC64_SKIP_MASK        GENMASK(62, 62)
+>>>>>>> +#else
+>>>>>>> +#define PPC64_SKIP_MASK        0x0
+>>>>>>> +#endif
+>>>>>>
+>>>>>> Please drop the #ifdef CONFIG_PPC_BOOK3S_64 here. We already accommodate skip
+>>>>>> bits for a s390 platform requirement and can also do so for ppc64 as well. As
+>>>>>> mentioned before, please avoid adding any platform specific constructs in the
+>>>>>> test.
+>>>>>>
+>>>>>
+>>>>>
+>>>>> that is needed so that it can be built on 32 bit architectures.I did face build errors with arch-linux
+>>>>
+>>>> Could not (#if __BITS_PER_LONG == 32) be used instead or something like
+>>>> that. But should be a generic conditional check identifying 32 bit arch
+>>>> not anything platform specific.
+>>>>
+>>>
+>>> that _PAGE_PTE bit is pretty much specific to PPC BOOK3S_64.  Not sure why other architectures need to bothered about ignoring bit 62.
+>>
+>> Thats okay as long it does not adversely affect other architectures, ignoring
+>> some more bits is acceptable. Like existing S390_MASK_BITS gets ignored on all
+>> other platforms even if it is a s390 specific constraint. Not having platform
+>> specific #ifdef here, is essential.
+>>
+> 
+> Why is it essential?
+IIRC, I might have already replied on this couple of times. But let me try once more.
+It is a generic test aimed at finding inconsistencies between different architectures
+in terms of the page table helper semantics. Any platform specific construct here, to
+'make things work' has the potential to hide such inconsistencies and defeat the very
+purpose. The test/file here follows this rule consistently i.e there is not a single
+platform specific #ifdef right now and would really like to continue maintaining this
+property, unless until absolutely necessary. Current situation here wrt 32 bit archs
+can easily be accommodated with a generic check such as __BITS_PER_LONG.
