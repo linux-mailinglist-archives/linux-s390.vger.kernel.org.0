@@ -2,195 +2,222 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BCA925AE75
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 17:10:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 383EF25B20C
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 18:50:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgIBPKr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Sep 2020 11:10:47 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59602 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727907AbgIBPKO (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Sep 2020 11:10:14 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 082F2gkI099692;
-        Wed, 2 Sep 2020 11:10:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=idFinTFt53LnBLvBNw1JCHMSrI/TFogzCHjKFuTZk7w=;
- b=fHwgFWQe4VRFJtY3lLw2/Gx3mIZkKhdJ2OAHVHG+OQ/C6YEOLjhjClMXttv5EOPFJx9j
- tZwvyT85dnEgULjJ3YYSSDOy7tzbkJfYHNyOyeMQHdA2jcPXj+eQtsaBKAHfYbUI8xva
- miaUz49cOt5Rr8maAgHW1XQMa7ZuxqTp0MuKGUfPe6rv83mTzoI7mXnzqJko+K+9eILe
- 8lVBmfkCG4o7Rkeumgk9cTr504HFUUS9JObkPxBXTZqsHQcHGbUVeOGvdiBxaFC9daMn
- 8tYmMLBuu522NrXBabqJTgn4Ba5kFaxV4H4GjxJVaz0NtRxK678lnFQbZtSJxOjiQQXF xQ== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33adk58h5k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 11:10:06 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 082F7M88031536;
-        Wed, 2 Sep 2020 15:10:03 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 337en8cuk0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 15:10:03 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 082FA0BO30409090
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Sep 2020 15:10:00 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9A18952052;
-        Wed,  2 Sep 2020 15:10:00 +0000 (GMT)
-Received: from thinkpad (unknown [9.171.44.120])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 284C05204F;
-        Wed,  2 Sep 2020 15:10:00 +0000 (GMT)
-Date:   Wed, 2 Sep 2020 17:09:58 +0200
-From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        <linux-s390@vger.kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [RFC PATCH 0/2] mm/gup: fix gup_fast with dynamic page table
- folding
-Message-ID: <20200902170958.09be0c3e@thinkpad>
-In-Reply-To: <20200902142437.5f39b4bb@thinkpad>
-References: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
-        <9071c9fa-ba6a-90dc-2d7a-8b155141d890@de.ibm.com>
-        <20200831121553.8be5dcdbdbc5256846ac513e@linux-foundation.org>
-        <20200901194020.418da486@thinkpad>
-        <91988792-069c-31a6-7840-0122357538c7@nvidia.com>
-        <20200902142437.5f39b4bb@thinkpad>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1726310AbgIBQtb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Sep 2020 12:49:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbgIBQt2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:49:28 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82DCB208B3
+        for <linux-s390@vger.kernel.org>; Wed,  2 Sep 2020 16:49:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599065365;
+        bh=XR0ioxTHhgnmW+APV6MJ8653PvIb+IbdXMJ/L262yIQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yCKm0wrVB74qj3jw82cs0MgZUIlwGzPQXQFP6ZuO40pNawuw4cIufN3xECk17Q68D
+         +XJK88TBkbspRcpkaD+qfTrn1Yj8kN01YzDEIW+cTtdjW9IQd/vWVAcNf2HS+YpAQw
+         Qub36Ra1vc8yn5M1Qyepr+GdktruN1W9YMf13gzM=
+Received: by mail-wr1-f54.google.com with SMTP id w5so111458wrp.8
+        for <linux-s390@vger.kernel.org>; Wed, 02 Sep 2020 09:49:25 -0700 (PDT)
+X-Gm-Message-State: AOAM531WMv1yopH5fQYuqFw3USmBFByz0pcAb6p7nUp84ndqOFNGEafG
+        LW7NUYTWJauSWI3auEh9uOgzNCIxx/DarIh1Yw1MlA==
+X-Google-Smtp-Source: ABdhPJzuKT0sfcowI/nWvlApJfMvKhzeXclG1LZhrt0Xb8lws/Eopixjlgz5qHcNlR7RUw8PQzrZUHdg4O8Gmb7W1mQ=
+X-Received: by 2002:adf:ce8e:: with SMTP id r14mr7992214wrn.257.1599065364055;
+ Wed, 02 Sep 2020 09:49:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-02_09:2020-09-02,2020-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0 suspectscore=0
- spamscore=0 phishscore=0 adultscore=0 priorityscore=1501 impostorscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009020144
+References: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com>
+ <CAMzpN2hmR+0-Yse1csbiVOiqgZ0e+VRkCBBXUKoPSTSMOOOFAQ@mail.gmail.com>
+ <CALCETrXY1x0MReMoTOG2awcZvr4c7gp99JVNthK37vUUk-kyew@mail.gmail.com>
+ <87k0xdjbtt.fsf@nanos.tec.linutronix.de> <CALCETrUpjUPPvnPuS9fP4jgid7U_qdU_yTKSq9PjJ=z2w9HvHg@mail.gmail.com>
+ <87blioinub.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87blioinub.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 2 Sep 2020 09:49:12 -0700
+X-Gmail-Original-Message-ID: <CALCETrUuyXpG0Vhrb-9m-G8J94+2bGqdrJkKfz+-5z7dsGLK8Q@mail.gmail.com>
+Message-ID: <CALCETrUuyXpG0Vhrb-9m-G8J94+2bGqdrJkKfz+-5z7dsGLK8Q@mail.gmail.com>
+Subject: Re: ptrace_syscall_32 is failing
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 2 Sep 2020 14:24:37 +0200
-Gerald Schaefer <gerald.schaefer@linux.ibm.com> wrote:
+On Wed, Sep 2, 2020 at 1:29 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Tue, Sep 01 2020 at 17:09, Andy Lutomirski wrote:
+> > On Tue, Sep 1, 2020 at 4:50 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> > I think that they almost work for x86, but not quite as
+> >> > indicated by this bug.  Even if we imagine we can somehow hack around
+> >> > this bug, I imagine we're going to find other problems with this
+> >> > model, e.g. the potential upcoming exit problem I noted in my review.
+> >>
+> >> What's the upcoming problem?
+> >
+> > If we ever want to get single-stepping fully correct across syscalls,
+> > we might need to inject SIGTRAP on syscall return. This would be more
+> > awkward if we can't run instrumentable code after the syscall part of
+> > the syscall is done.
+>
+> We run a lot of instrumentable code after sys_foo() returns. Otherwise
+> all the TIF work would not be possible at all.
+>
+> But you might tell me where exactly you want to inject the SIGTRAP in
+> the syscall exit code flow.
 
-> On Tue, 1 Sep 2020 16:22:22 -0700
-> John Hubbard <jhubbard@nvidia.com> wrote:
-> 
-> > On 9/1/20 10:40 AM, Gerald Schaefer wrote:
-> > > On Mon, 31 Aug 2020 12:15:53 -0700
-> > > Andrew Morton <akpm@linux-foundation.org> wrote:
-> > ...
-> > > diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> > > index e8cbc2e795d5..43dacbce823f 100644
-> > > --- a/include/linux/pgtable.h
-> > > +++ b/include/linux/pgtable.h
-> > > @@ -681,6 +681,38 @@ static inline int arch_unmap_one(struct mm_struct *mm,
-> > >   })
-> > >   #endif
-> > >   
-> > > +/*
-> > > + * With dynamic page table levels on s390, the static pXd_addr_end() functions
-> > > + * will not return corresponding dynamic boundaries. This is no problem as long
-> > > + * as only pXd pointers are passed down during page table walk, because
-> > > + * pXd_offset() will simply return the given pointer for folded levels, and the
-> > > + * pointer iteration over a range simply happens at the correct page table
-> > > + * level.
-> > > + * It is however a problem with gup_fast, or other places walking the page
-> > > + * tables w/o locks using READ_ONCE(), and passing down the pXd values instead
-> > > + * of pointers. In this case, the pointer given to pXd_offset() is a pointer to
-> > > + * a stack variable, which cannot be used for pointer iteration at the correct
-> > > + * level. Instead, the iteration then has to happen by going up to pgd level
-> > > + * again. To allow this, provide pXd_addr_end_folded() functions with an
-> > > + * additional pXd value parameter, which can be used on s390 to determine the
-> > > + * folding level and return the corresponding boundary.
-> > 
-> > Ah OK, I finally see what you have in mind. And as Jason noted, if we just
-> > pass an additional parameter to pXd_addr_end() that's going to be
-> > cleaner. And doing so puts this in line with other page table
-> > abstractions that also carry more information than some architectures
-> > need. For example, on x86, set_pte_at() ignores the first two
-> > parameters:
-> > 
-> > #define set_pte_at(mm, addr, ptep, pte)	native_set_pte_at(mm, addr, ptep, pte)
-> > 
-> > static inline void native_set_pte_at(struct mm_struct *mm, unsigned long addr,
-> > 				     pte_t *ptep , pte_t pte)
-> > {
-> > 	native_set_pte(ptep, pte);
-> > }
-> > 
-> > This type of abstraction has worked out very well, IMHO.
-> 
-> Yes, it certainly feels like the right way to do it, and it would
-> not affect other archs in a functional way. It would however introduce
-> a subtle change for s390 behavior on _all_ page table walkers, not
-> just the READ_ONCE gup_fast path, i.e. it changes the level at which
-> the pointer iteration is done. Of course, that *should* not have any
-> functional issues, or else it would also be broken in gup_fast, but
-> in this area we often were wrong with should / could assumptions...
+It would be a bit complicated.  Definitely after any signals from the
+syscall are delivered.  Right now, I think that we don't deliver a
+SIGTRAP on the instruction boundary after SYSCALL while
+single-stepping.  (I think we used to, but only sometimes, and now we
+are at least consistent.)  This is because IRET will not trap if it
+starts with TF clear and ends up setting it.  (I asked Intel to
+document this, and I think they finally did, although I haven't gotten
+around to reading the new docs.  Certainly the old docs as of a year
+or two ago had no description whatsoever of how TF changes worked.)
 
-Hmm, not so sure about that "not affect other archs", that might also
-be one of those *should*s. Consider this change to mm/mlock.c from
-our current internal generalization work, for example:
+Deciding exactly *when* a trap should occur would be nontrivial -- we
+can't trap on sigreturn() from a SIGTRAP, for example.
 
-diff --git a/mm/mlock.c b/mm/mlock.c
-index 93ca2bf30b4f..dbde97f317d4 100644
---- a/mm/mlock.c
-+++ b/mm/mlock.c
-@@ -374,8 +374,12 @@ static unsigned long __munlock_pagevec_fill(struct pagevec *pvec,
- 			struct vm_area_struct *vma, struct zone *zone,
- 			unsigned long start, unsigned long end)
- {
--	pte_t *pte;
- 	spinlock_t *ptl;
-+	pte_t *pte;
-+	pmd_t *pmd;
-+	pud_t *pud;
-+	p4d_t *p4d;
-+	pgd_t *pgd;
- 
- 	/*
- 	 * Initialize pte walk starting at the already pinned page where we
-@@ -384,10 +388,14 @@ static unsigned long __munlock_pagevec_fill(struct pagevec *pvec,
- 	 */
- 	pte = get_locked_pte(vma->vm_mm, start,	&ptl);
- 	/* Make sure we do not cross the page table boundary */
--	end = pgd_addr_end(start, end);
--	end = p4d_addr_end(start, end);
--	end = pud_addr_end(start, end);
--	end = pmd_addr_end(start, end);
-+	pgd = pgd_offset(vma->vm_mm, start);
-+	end = pgd_addr_end(*pgd, start, end);
-+	p4d = p4d_offset(pgd, start);
-+	end = p4d_addr_end(*p4d, start, end);
-+	pud = pud_offset(p4d, start);
-+	end = pud_addr_end(*pud, start, end);
-+	pmd = pmd_offset(pud, start);
-+	end = pmd_addr_end(*pmd, start, end);
- 
- 	/* The page next to the pinned page is the first we will try to get */
- 	start += PAGE_SIZE;
+So this isn't fully worked out.
 
-I guess we *could* assume that all the extra pXd_offset() calls and
-also the de-referencing would be optimized out by the compiler for other
-archs, but it is one example where my gut tells me that this might not
-be so trivial and w/o unwanted effects after all.
+>
+> >> I don't think we want that in general. The current variant is perfectly
+> >> fine for everything except the 32bit fast syscall nonsense. Also
+> >> irqentry_entry/exit is not equivalent to the syscall_enter/exit
+> >> counterparts.
+> >
+> > If there are any architectures in which actual work is needed to
+> > figure out whether something is a syscall in the first place, they'll
+> > want to do the usual kernel entry work before the syscall entry work.
+>
+> That's low level entry code which does not require RCU, lockdep, tracing
+> or whatever muck we setup before actual work can be done.
+>
+> arch_asm_entry()
+>   ...
+>   arch_c_entry(cause) {
+>     switch(cause) {
+>       case EXCEPTION: arch_c_exception(...);
+>       case SYSCALL: arch_c_syscall(...);
+>       ...
+>     }
 
-Anyway, stay tuned, we will send a v2 of this RFC with going the
-"modify pXd_addr_end" approach, including the minimal gup-specific
-patch plus on top the generalization work. Then we might get a better
-picture of this.
+You're assuming that figuring out the cause doesn't need the kernel
+entry code to run first.  In the case of the 32-bit vDSO fast
+syscalls, we arguably don't know whether an entry is a syscall until
+we have done a user memory access.  Logically, we're doing:
+
+if (get_user() < 0) {
+  /* Not a syscall.  This is actually a silly operation that sets AX =
+-EFAULT and returns.  Do not audit or invoke ptrace. */
+} else {
+  /* This actually is a syscall. */
+}
+
+So we really do want to stick arch code between the
+enter_from_user_mode() and the audit check.  We *can't* audit because
+we don't know the syscall args.  Now maybe we could invent new
+semantics for this in which a fault here is still somehow a syscall,
+but I think that would be a real ABI change and would want very
+careful thought.  And it would be weird -- syscalls are supposed to
+actually call the syscall handler, aren't they?  (Arguably we should
+go back in time and make this a SIGSEGV.  We have the infrastructure
+to do this cleanly, but when I wrote the code I just copied the ABI
+from code that was before my time.  Even so, it would be an exception,
+not a syscall.)
+
+>
+> You really want to differentiate between exception and syscall
+> entry/exit.
+>
+
+Why do we want to distinguish between exception and syscall
+entry/exit?  For the enter part, AFAICS the exception case boils down
+to enter_from_user_mode() and the syscall case is:
+
+        enter_from_user_mode(regs);
+        instrumentation_begin();
+
+        local_irq_enable();
+        ti_work = READ_ONCE(current_thread_info()->flags);
+        if (ti_work & SYSCALL_ENTER_WORK)
+                syscall = syscall_trace_enter(regs, syscall, ti_work);
+        instrumentation_end();
+
+Which would decompose quite nicely as a regular (non-syscall) entry
+plus the syscall part later.
+
+> The splitting of syscall_enter_from_user_mode() is only necessary for
+> that 32bit fast syscall thing on x86 and there is no point to open code
+> it with two calls for e.g. do_syscall_64().
+>
+> > Maybe your patch actually makes this possible -- I haven't digested
+> > all the details yet.
+> >
+> > Who advised you to drop the arch parameter?
+>
+> Kees, IIRC, but I would have to search through the gazillions of mail
+> threads to be sure.
+>
+> >> +       syscall_enter_from_user_mode_prepare(regs);
+> >
+> > I'm getting lost in all these "enter" functions...
+>
+> It's not that hard.
+>
+>      syscall_enter_from_user_mode_prepare()
+> +    syscall_enter_from_user_mode_work()
+> =    syscall_enter_from_user_mode()
+>
+> That's exactly what you suggested just with the difference that it is
+> explicit for syscalls and not using irqentry_enter/exit().
+>
+> If we would do that then instead of having a single call for sane
+> syscall pathes:
+>
+>   arch_c_entry()
+>      nr = syscall_enter_from_user_mode();
+>
+> or for that 32bit fast syscall nonsense the split variant:
+>
+>   arch_c_entry()
+>      syscall_enter_from_user_mode_prepare();
+>      do_fast_syscall_muck();
+>      nr = syscall_enter_from_user_mode_work();
+>
+> we'd have:
+>
+>   arch_c_entry()
+>      irqentry_enter();
+>      local_irq_enble();
+>      nr = syscall_enter_from_user_mode_work();
+>      ...
+>
+> which enforces two calls for sane entries and more code in arch/....
+
+This is why I still like my:
+
+arch_c_entry()
+  irqentry_enter_from_user_mode();
+  generic_syscall();
+  exit...
+}
