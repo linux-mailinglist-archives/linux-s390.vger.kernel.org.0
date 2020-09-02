@@ -2,90 +2,82 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E86325B30C
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 19:38:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8596A25B315
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 19:41:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgIBRir (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Sep 2020 13:38:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgIBRip (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:38:45 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86587207EA;
-        Wed,  2 Sep 2020 17:38:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599068324;
-        bh=892k+dIylN07Z0BoztCYZcV5Ytx97ziH7oUUHRgPXqo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YPzU8gtmGBeTUanqpXk7UJRNk6O69/FSTFV8yQVQKfTwJ3X1RGCVRYfU9wkciD2qF
-         oYtTBnekZnRir41Ch1d5oIwLQ4e46jxgMlQXFwagw7ttAfw2RxYwtsttkENJr5geDp
-         O/e7vzV/ldyN8zGyd0/SMs35pcCpruT4H9gowlpk=
-Date:   Wed, 2 Sep 2020 18:38:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [PATCH v2 0/3] arm64: Convert to ARCH_STACKWALK
-Message-ID: <20200902173803.GE6162@sirena.org.uk>
-References: <20200819124913.37261-1-broonie@kernel.org>
- <20200901160626.GE95447@C02TD0UTHF1T.local>
+        id S1726310AbgIBRlt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Sep 2020 13:41:49 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36878 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727088AbgIBRlo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Sep 2020 13:41:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599068502;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6xAT+ftsMSzlsQJaTtQj9xlDJAYlVlX6xJr8D9dNUi0=;
+        b=d9+5B6yWlkASnqh1Y1CJ1SrTxZQcksHSs12TEg+B3pOjRXUIR/IKQ2sK4LuKJBT6hVfUYF
+        43YBEGPM9VYOFFhEdJyQ0OwVIK1qW0sH86k77cLnaXlc5LWhBOmAP4uKWuiB6R2S+ykSzA
+        w+Ha9SLQh+ccjsBxtEkLVV5QyEwZmv4=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-443-CYKDd0EaMVeQIZhGDh8Tjg-1; Wed, 02 Sep 2020 13:41:38 -0400
+X-MC-Unique: CYKDd0EaMVeQIZhGDh8Tjg-1
+Received: by mail-wr1-f71.google.com with SMTP id b8so2375047wrr.2
+        for <linux-s390@vger.kernel.org>; Wed, 02 Sep 2020 10:41:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6xAT+ftsMSzlsQJaTtQj9xlDJAYlVlX6xJr8D9dNUi0=;
+        b=Cebv4yQxO9SBhVKRibUhjiZNZExdD/ctTbnIjK3ZJMmjey8Z3h9UO9YRYqL+e2kTo6
+         Iv6SHeCCo2fzPEbHhEvGJz87QlNPVmt5WD+cKDllITUktkvrYT1AKJrmoOIsTI2Y0eDD
+         uHqLrvqBalCToeZfdVBF7a0Vq8R216TPw+OWzauT303wnjnCkPObbNx3r6FDCZvVYnCU
+         DoQa5iYYO/udjV+BwhPHz7mkFeAu1ZU6eixrd0DORZLkqT2Qa/SWqIPJ+wUAbPBYpTql
+         JPzUZAMsilf/l4oVodhQA3aO1DSWypnwSpAaGFEZYfAms4FjBZTSZOMa+IWS4bc9mSYf
+         2YHw==
+X-Gm-Message-State: AOAM530d8ZnU6TC2DGjayHrvAAJU6CoyIlvU8C2KsJzP+zrprxUDBkhk
+        TZPARn9gmr32yPK2iURrX6iMkdpCxFEuYLFltkhuBIWrQQwPTyI5SWUpOVH/cpvRI965TjatrjL
+        8VG41qlUEAS3Y0bPt1di2qQ==
+X-Received: by 2002:a1c:f30f:: with SMTP id q15mr1732071wmq.60.1599068497784;
+        Wed, 02 Sep 2020 10:41:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwJI4/fSfohZhzg0zq2mOil1DcOIoF66i9w6QgGSiGMttgmkpJk+kP5A0dUG4eAzfWa19MfuA==
+X-Received: by 2002:a1c:f30f:: with SMTP id q15mr1732054wmq.60.1599068497518;
+        Wed, 02 Sep 2020 10:41:37 -0700 (PDT)
+Received: from [192.168.178.58] ([151.21.173.193])
+        by smtp.gmail.com with ESMTPSA id j7sm601707wrw.35.2020.09.02.10.41.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Sep 2020 10:41:37 -0700 (PDT)
+Subject: Re: [kvm-unit-tests GIT PULL 0/3] s390x skrf and ultravisor patches
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, frankja@linux.vnet.ibm.com, david@redhat.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com,
+        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com
+References: <20200901091823.14477-1-frankja@linux.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <34c80837-208f-bb29-cb0b-b9029fdad29d@redhat.com>
+Date:   Wed, 2 Sep 2020 19:41:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jTMWTj4UTAEmbWeb"
-Content-Disposition: inline
-In-Reply-To: <20200901160626.GE95447@C02TD0UTHF1T.local>
-X-Cookie: Prices higher in Alaska and Hawaii.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200901091823.14477-1-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 01/09/20 11:18, Janosch Frank wrote:
+>   git@gitlab.com:frankja/kvm-unit-tests.git tags/s390x-2020-01-09
 
---jTMWTj4UTAEmbWeb
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Pulled, thanks.
 
-On Tue, Sep 01, 2020 at 05:06:26PM +0100, Mark Rutland wrote:
+(Yes, I am alive).
 
-> Just to check, has the skipping logic been tested to work equivalently
-> to what we had before? By inspection I think it should, but since it
-> relies on function call boundaries it always strikes me as fragile.
+Paolo
 
-> If you could confirm that (e.g. with LKDTM perhaps?)=A0that'd be great.
-> Assuming that looks right, for the series:
-
-I've tested this with LKDTM and otherwise and didn't spot any issues
-(and just did a bit of retesting) but it is a pretty manual process so
-it's possible I missed something.
-
---jTMWTj4UTAEmbWeb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9P2HoACgkQJNaLcl1U
-h9BFyAf/WmL+czCJwJk4VCBeI8Qs2/FFr8HfxOjvcihHhHLoo47xrAWoGVeJcoGB
-B0KxiGvi/sgW230Q8vgawFwzN5pte2FFt8RoXRKNste1aMWTVp2d66nHXg4T3Xa+
-1tzhUh1MBWkQCDW2lKroA6RFs4UIX8b0ulYz26VFwpE/is4vcAv77AnCYNIMfqa1
-cC/FbZO4VJfSu5vgdtrMSmt0NAczKRI5OpO056olErHtnSmBxagekOrMyDofUwjz
-TKcOHNMwH/BdiQFL7BjqDZykxwV1MKNcaXSEd/HTsnCurMbMTCfAsakolqbDDDiL
-DG06jT7beQldWH9+cTAb45lPf08ifQ==
-=knFg
------END PGP SIGNATURE-----
-
---jTMWTj4UTAEmbWeb--
