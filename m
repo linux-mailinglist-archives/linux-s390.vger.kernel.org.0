@@ -2,222 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 383EF25B20C
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 18:50:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E86325B30C
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 19:38:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgIBQtb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Sep 2020 12:49:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51034 "EHLO mail.kernel.org"
+        id S1727001AbgIBRir (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Sep 2020 13:38:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbgIBQt2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:49:28 -0400
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726310AbgIBRip (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:38:45 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82DCB208B3
-        for <linux-s390@vger.kernel.org>; Wed,  2 Sep 2020 16:49:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86587207EA;
+        Wed,  2 Sep 2020 17:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599065365;
-        bh=XR0ioxTHhgnmW+APV6MJ8653PvIb+IbdXMJ/L262yIQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=yCKm0wrVB74qj3jw82cs0MgZUIlwGzPQXQFP6ZuO40pNawuw4cIufN3xECk17Q68D
-         +XJK88TBkbspRcpkaD+qfTrn1Yj8kN01YzDEIW+cTtdjW9IQd/vWVAcNf2HS+YpAQw
-         Qub36Ra1vc8yn5M1Qyepr+GdktruN1W9YMf13gzM=
-Received: by mail-wr1-f54.google.com with SMTP id w5so111458wrp.8
-        for <linux-s390@vger.kernel.org>; Wed, 02 Sep 2020 09:49:25 -0700 (PDT)
-X-Gm-Message-State: AOAM531WMv1yopH5fQYuqFw3USmBFByz0pcAb6p7nUp84ndqOFNGEafG
-        LW7NUYTWJauSWI3auEh9uOgzNCIxx/DarIh1Yw1MlA==
-X-Google-Smtp-Source: ABdhPJzuKT0sfcowI/nWvlApJfMvKhzeXclG1LZhrt0Xb8lws/Eopixjlgz5qHcNlR7RUw8PQzrZUHdg4O8Gmb7W1mQ=
-X-Received: by 2002:adf:ce8e:: with SMTP id r14mr7992214wrn.257.1599065364055;
- Wed, 02 Sep 2020 09:49:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com>
- <CAMzpN2hmR+0-Yse1csbiVOiqgZ0e+VRkCBBXUKoPSTSMOOOFAQ@mail.gmail.com>
- <CALCETrXY1x0MReMoTOG2awcZvr4c7gp99JVNthK37vUUk-kyew@mail.gmail.com>
- <87k0xdjbtt.fsf@nanos.tec.linutronix.de> <CALCETrUpjUPPvnPuS9fP4jgid7U_qdU_yTKSq9PjJ=z2w9HvHg@mail.gmail.com>
- <87blioinub.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87blioinub.fsf@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 2 Sep 2020 09:49:12 -0700
-X-Gmail-Original-Message-ID: <CALCETrUuyXpG0Vhrb-9m-G8J94+2bGqdrJkKfz+-5z7dsGLK8Q@mail.gmail.com>
-Message-ID: <CALCETrUuyXpG0Vhrb-9m-G8J94+2bGqdrJkKfz+-5z7dsGLK8Q@mail.gmail.com>
-Subject: Re: ptrace_syscall_32 is failing
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        s=default; t=1599068324;
+        bh=892k+dIylN07Z0BoztCYZcV5Ytx97ziH7oUUHRgPXqo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YPzU8gtmGBeTUanqpXk7UJRNk6O69/FSTFV8yQVQKfTwJ3X1RGCVRYfU9wkciD2qF
+         oYtTBnekZnRir41Ch1d5oIwLQ4e46jxgMlQXFwagw7ttAfw2RxYwtsttkENJr5geDp
+         O/e7vzV/ldyN8zGyd0/SMs35pcCpruT4H9gowlpk=
+Date:   Wed, 2 Sep 2020 18:38:03 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+        Heiko Carstens <hca@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [PATCH v2 0/3] arm64: Convert to ARCH_STACKWALK
+Message-ID: <20200902173803.GE6162@sirena.org.uk>
+References: <20200819124913.37261-1-broonie@kernel.org>
+ <20200901160626.GE95447@C02TD0UTHF1T.local>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jTMWTj4UTAEmbWeb"
+Content-Disposition: inline
+In-Reply-To: <20200901160626.GE95447@C02TD0UTHF1T.local>
+X-Cookie: Prices higher in Alaska and Hawaii.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 1:29 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Tue, Sep 01 2020 at 17:09, Andy Lutomirski wrote:
-> > On Tue, Sep 1, 2020 at 4:50 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> > I think that they almost work for x86, but not quite as
-> >> > indicated by this bug.  Even if we imagine we can somehow hack around
-> >> > this bug, I imagine we're going to find other problems with this
-> >> > model, e.g. the potential upcoming exit problem I noted in my review.
-> >>
-> >> What's the upcoming problem?
-> >
-> > If we ever want to get single-stepping fully correct across syscalls,
-> > we might need to inject SIGTRAP on syscall return. This would be more
-> > awkward if we can't run instrumentable code after the syscall part of
-> > the syscall is done.
->
-> We run a lot of instrumentable code after sys_foo() returns. Otherwise
-> all the TIF work would not be possible at all.
->
-> But you might tell me where exactly you want to inject the SIGTRAP in
-> the syscall exit code flow.
 
-It would be a bit complicated.  Definitely after any signals from the
-syscall are delivered.  Right now, I think that we don't deliver a
-SIGTRAP on the instruction boundary after SYSCALL while
-single-stepping.  (I think we used to, but only sometimes, and now we
-are at least consistent.)  This is because IRET will not trap if it
-starts with TF clear and ends up setting it.  (I asked Intel to
-document this, and I think they finally did, although I haven't gotten
-around to reading the new docs.  Certainly the old docs as of a year
-or two ago had no description whatsoever of how TF changes worked.)
+--jTMWTj4UTAEmbWeb
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Deciding exactly *when* a trap should occur would be nontrivial -- we
-can't trap on sigreturn() from a SIGTRAP, for example.
+On Tue, Sep 01, 2020 at 05:06:26PM +0100, Mark Rutland wrote:
 
-So this isn't fully worked out.
+> Just to check, has the skipping logic been tested to work equivalently
+> to what we had before? By inspection I think it should, but since it
+> relies on function call boundaries it always strikes me as fragile.
 
->
-> >> I don't think we want that in general. The current variant is perfectly
-> >> fine for everything except the 32bit fast syscall nonsense. Also
-> >> irqentry_entry/exit is not equivalent to the syscall_enter/exit
-> >> counterparts.
-> >
-> > If there are any architectures in which actual work is needed to
-> > figure out whether something is a syscall in the first place, they'll
-> > want to do the usual kernel entry work before the syscall entry work.
->
-> That's low level entry code which does not require RCU, lockdep, tracing
-> or whatever muck we setup before actual work can be done.
->
-> arch_asm_entry()
->   ...
->   arch_c_entry(cause) {
->     switch(cause) {
->       case EXCEPTION: arch_c_exception(...);
->       case SYSCALL: arch_c_syscall(...);
->       ...
->     }
+> If you could confirm that (e.g. with LKDTM perhaps?)=A0that'd be great.
+> Assuming that looks right, for the series:
 
-You're assuming that figuring out the cause doesn't need the kernel
-entry code to run first.  In the case of the 32-bit vDSO fast
-syscalls, we arguably don't know whether an entry is a syscall until
-we have done a user memory access.  Logically, we're doing:
+I've tested this with LKDTM and otherwise and didn't spot any issues
+(and just did a bit of retesting) but it is a pretty manual process so
+it's possible I missed something.
 
-if (get_user() < 0) {
-  /* Not a syscall.  This is actually a silly operation that sets AX =
--EFAULT and returns.  Do not audit or invoke ptrace. */
-} else {
-  /* This actually is a syscall. */
-}
+--jTMWTj4UTAEmbWeb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-So we really do want to stick arch code between the
-enter_from_user_mode() and the audit check.  We *can't* audit because
-we don't know the syscall args.  Now maybe we could invent new
-semantics for this in which a fault here is still somehow a syscall,
-but I think that would be a real ABI change and would want very
-careful thought.  And it would be weird -- syscalls are supposed to
-actually call the syscall handler, aren't they?  (Arguably we should
-go back in time and make this a SIGSEGV.  We have the infrastructure
-to do this cleanly, but when I wrote the code I just copied the ABI
-from code that was before my time.  Even so, it would be an exception,
-not a syscall.)
+-----BEGIN PGP SIGNATURE-----
 
->
-> You really want to differentiate between exception and syscall
-> entry/exit.
->
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9P2HoACgkQJNaLcl1U
+h9BFyAf/WmL+czCJwJk4VCBeI8Qs2/FFr8HfxOjvcihHhHLoo47xrAWoGVeJcoGB
+B0KxiGvi/sgW230Q8vgawFwzN5pte2FFt8RoXRKNste1aMWTVp2d66nHXg4T3Xa+
+1tzhUh1MBWkQCDW2lKroA6RFs4UIX8b0ulYz26VFwpE/is4vcAv77AnCYNIMfqa1
+cC/FbZO4VJfSu5vgdtrMSmt0NAczKRI5OpO056olErHtnSmBxagekOrMyDofUwjz
+TKcOHNMwH/BdiQFL7BjqDZykxwV1MKNcaXSEd/HTsnCurMbMTCfAsakolqbDDDiL
+DG06jT7beQldWH9+cTAb45lPf08ifQ==
+=knFg
+-----END PGP SIGNATURE-----
 
-Why do we want to distinguish between exception and syscall
-entry/exit?  For the enter part, AFAICS the exception case boils down
-to enter_from_user_mode() and the syscall case is:
-
-        enter_from_user_mode(regs);
-        instrumentation_begin();
-
-        local_irq_enable();
-        ti_work = READ_ONCE(current_thread_info()->flags);
-        if (ti_work & SYSCALL_ENTER_WORK)
-                syscall = syscall_trace_enter(regs, syscall, ti_work);
-        instrumentation_end();
-
-Which would decompose quite nicely as a regular (non-syscall) entry
-plus the syscall part later.
-
-> The splitting of syscall_enter_from_user_mode() is only necessary for
-> that 32bit fast syscall thing on x86 and there is no point to open code
-> it with two calls for e.g. do_syscall_64().
->
-> > Maybe your patch actually makes this possible -- I haven't digested
-> > all the details yet.
-> >
-> > Who advised you to drop the arch parameter?
->
-> Kees, IIRC, but I would have to search through the gazillions of mail
-> threads to be sure.
->
-> >> +       syscall_enter_from_user_mode_prepare(regs);
-> >
-> > I'm getting lost in all these "enter" functions...
->
-> It's not that hard.
->
->      syscall_enter_from_user_mode_prepare()
-> +    syscall_enter_from_user_mode_work()
-> =    syscall_enter_from_user_mode()
->
-> That's exactly what you suggested just with the difference that it is
-> explicit for syscalls and not using irqentry_enter/exit().
->
-> If we would do that then instead of having a single call for sane
-> syscall pathes:
->
->   arch_c_entry()
->      nr = syscall_enter_from_user_mode();
->
-> or for that 32bit fast syscall nonsense the split variant:
->
->   arch_c_entry()
->      syscall_enter_from_user_mode_prepare();
->      do_fast_syscall_muck();
->      nr = syscall_enter_from_user_mode_work();
->
-> we'd have:
->
->   arch_c_entry()
->      irqentry_enter();
->      local_irq_enble();
->      nr = syscall_enter_from_user_mode_work();
->      ...
->
-> which enforces two calls for sane entries and more code in arch/....
-
-This is why I still like my:
-
-arch_c_entry()
-  irqentry_enter_from_user_mode();
-  generic_syscall();
-  exit...
-}
+--jTMWTj4UTAEmbWeb--
