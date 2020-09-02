@@ -2,20 +2,20 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A4DC25A88F
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 11:26:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE81A25A8A2
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 11:32:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726301AbgIBJ05 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Sep 2020 05:26:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60722 "EHLO mx2.suse.de"
+        id S1726183AbgIBJcQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Sep 2020 05:32:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34788 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgIBJ05 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:26:57 -0400
+        id S1726173AbgIBJcP (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 2 Sep 2020 05:32:15 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id F2EC8B6A4;
-        Wed,  2 Sep 2020 09:26:56 +0000 (UTC)
-Date:   Wed, 2 Sep 2020 11:26:55 +0200 (CEST)
+        by mx2.suse.de (Postfix) with ESMTP id F3008B68E;
+        Wed,  2 Sep 2020 09:32:14 +0000 (UTC)
+Date:   Wed, 2 Sep 2020 11:32:13 +0200 (CEST)
 From:   Miroslav Benes <mbenes@suse.cz>
 To:     Mark Brown <broonie@kernel.org>
 cc:     Catalin Marinas <catalin.marinas@arm.com>,
@@ -30,11 +30,10 @@ cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] arm64: stacktrace: Make stack walk callback
- consistent with generic code
-In-Reply-To: <20200819124913.37261-3-broonie@kernel.org>
-Message-ID: <alpine.LSU.2.21.2009021126360.23200@pobox.suse.cz>
-References: <20200819124913.37261-1-broonie@kernel.org> <20200819124913.37261-3-broonie@kernel.org>
+Subject: Re: [PATCH v2 3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
+In-Reply-To: <20200819124913.37261-4-broonie@kernel.org>
+Message-ID: <alpine.LSU.2.21.2009021128500.23200@pobox.suse.cz>
+References: <20200819124913.37261-1-broonie@kernel.org> <20200819124913.37261-4-broonie@kernel.org>
 User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -43,22 +42,26 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 19 Aug 2020, Mark Brown wrote:
+Hi,
 
-> As with the generic arch_stack_walk() code the arm64 stack walk code takes
-> a callback that is called per stack frame. Currently the arm64 code always
-> passes a struct stackframe to the callback and the generic code just passes
-> the pc, however none of the users ever reference anything in the struct
-> other than the pc value. The arm64 code also uses a return type of int
-> while the generic code uses a return type of bool though in both cases the
-> return value is a boolean value.
-> 
-> In order to reduce code duplication when arm64 is converted to use
-> arch_stack_walk() change the signature of the arm64 specific callback to
-> match that of the generic code.
-> 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+it could be a silly question, but better to ask...
 
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+> +	if (regs)
+> +		start_backtrace(&frame, regs->regs[29], regs->pc);
+> +	else
+> +		start_backtrace(&frame, thread_saved_fp(task),
+> +				thread_saved_pc(task));
 
-M
+Would this also work for task == current? Given that the original code had
+
+> -		start_backtrace(&frame,
+> -				(unsigned long)__builtin_frame_address(0),
+> -				(unsigned long)__save_stack_trace);
+
+for the case, which seems correct (but I don't know much about arm64 arch 
+in the kernel).
+
+Otherwise, I did not spot anything suspicious or wrong.
+
+Regards
+Miroslav
