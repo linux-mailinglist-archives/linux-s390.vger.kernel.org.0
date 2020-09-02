@@ -2,150 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1545925B4B6
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 21:47:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5031725B524
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Sep 2020 22:14:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgIBTrG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Sep 2020 15:47:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64852 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726140AbgIBTq7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Sep 2020 15:46:59 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 082JcWUp140331;
-        Wed, 2 Sep 2020 15:46:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=8/C8JQ3wK5JYnjDHq/mtYiEA53PNcTVmNBtBJewdsaA=;
- b=ZgvexCUhDobDdKuX1e1Pl1rTte9uWkNrSMLeH3IdmCERNWlSr3J4ouKWx6zzNMBQ4qoJ
- 8E0SIwo55SJgqS/qM+iWolNs8EVjU3B1aIZ3OTRMM8HpqBIc+eZQkTC/Cn1JJrDmn8a6
- F8peUobEJ3++dMCUY49ANvmOd6e9THLk7dd34d7POROxWt/pqEEjIVaEsJQoCtHvP0FM
- Z5m03mB3k5LlcZ9aVrQYsVuKjiIRMgvfxLtq28hRroHscK7XganHXYYYpX4M6+DdxqXJ
- hCU/Wtgb/MolVY7qC8ZfINkFUM0uU1N5MLCd+hnAgbrXBDDx6nOqoQMC3ygayOZhoee2 XA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33agm4syr4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 15:46:53 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 082Jct4e141352;
-        Wed, 2 Sep 2020 15:46:52 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33agm4syqs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 15:46:52 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 082JfMAB012026;
-        Wed, 2 Sep 2020 19:46:51 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma01wdc.us.ibm.com with ESMTP id 337en9aek1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 19:46:51 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 082JkoJX54722922
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Sep 2020 19:46:51 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D914F28058;
-        Wed,  2 Sep 2020 19:46:50 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BDDC928064;
-        Wed,  2 Sep 2020 19:46:48 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.163.10.164])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Sep 2020 19:46:48 +0000 (GMT)
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-To:     alex.williamson@redhat.com, bhelgaas@google.com
-Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: [PATCH v4 3/3] vfio/pci: Decouple MSE bit checks from is_virtfn
-Date:   Wed,  2 Sep 2020 15:46:36 -0400
-Message-Id: <1599075996-9826-4-git-send-email-mjrosato@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1599075996-9826-1-git-send-email-mjrosato@linux.ibm.com>
-References: <1599075996-9826-1-git-send-email-mjrosato@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-02_14:2020-09-02,2020-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 phishscore=0 spamscore=0 bulkscore=0
- mlxlogscore=999 malwarescore=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009020178
+        id S1726298AbgIBUN7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Sep 2020 16:13:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbgIBUN6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Sep 2020 16:13:58 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E70C061245
+        for <linux-s390@vger.kernel.org>; Wed,  2 Sep 2020 13:13:57 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id w186so1005316qkd.1
+        for <linux-s390@vger.kernel.org>; Wed, 02 Sep 2020 13:13:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VtKLlAudRnA2vKDoZNQw5csEIPXvQwIKm3VyTbaIKFY=;
+        b=Qwf6X/kGgSmY9tKp7Kmk3c8MgxIjvqFpEQAe+tb1+XOXXgvyehDPKeYG7dZ/Yg3IX6
+         htTDkWFcqvo513Hi/a7qgs846lJoqXVAXRLY91hdU61Y6OJwM73W0pMKYYASAJzRG86+
+         Dg/4lQzFDbgl69fZkKJw7LZwiwF3cwnrxKfHjCVxdDezuLssdPD1RCUPY998/GHXvD66
+         vXdCC47ctdTSW43mZLLck7PEVdwrveAum6OrxzF6kuLEFcjT+1LtRvd1cwQbcz8kXeCO
+         1YqtVf246V4JoEYZACerGXbT/EI/gGjAeg6BCbC2etnr610vhlV/2Mf9s7fG3C/sl3Zf
+         cwzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VtKLlAudRnA2vKDoZNQw5csEIPXvQwIKm3VyTbaIKFY=;
+        b=PsFmk64g6aiOOEhUCyKUlz3M3MDFh+8ptZtnbCXuC2nuDZCV2ddqA5oMGT/ZziM5yy
+         XiAJPGpZED1lJ1efmzpG51xeW6JG9YHtq3a4E26w85qmmpc5uPQXs0YYNek6y5YzGZuc
+         VgtUXhy/Ic+tq5btYs/uCjWzOQuI6X6NhQtcshzny0hSHTnYxXWAkSR4hNk4enarxlNK
+         qpOJFWlV0YQIhCy5V4yAVVfWZTZTS2Fm8bAnFd4bWTTyHmbOlEUYZvjLpzfEBUd8wJry
+         kkVSSO+EQl2W+lFN2pbcknRPpeIWJv/W8ECgzObnOmKaY4asahMCzAIwNile2STrjata
+         uXwg==
+X-Gm-Message-State: AOAM530YKzYP4u09yhLuQEf2Bcpn8eiXJxPJiKseT5KRHGcEWPNTrMXp
+        cRn18rhuWmFxcq6OqQXe3HGT3g==
+X-Google-Smtp-Source: ABdhPJxP9sYQMnp7dADWRBTcdNFumTmUhJGfW+FF9H/GSd4vNcNPJ3p18WOwE1ej6gXtP23Bzcc3NA==
+X-Received: by 2002:a37:a484:: with SMTP id n126mr8834583qke.5.1599077636904;
+        Wed, 02 Sep 2020 13:13:56 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id g18sm347980qtu.69.2020.09.02.13.13.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2020 13:13:56 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kDZ8l-0068s3-Em; Wed, 02 Sep 2020 17:13:55 -0300
+Date:   Wed, 2 Sep 2020 17:13:55 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: Re: [RFC PATCH 0/2] mm/gup: fix gup_fast with dynamic page table
+ folding
+Message-ID: <20200902201355.GJ24045@ziepe.ca>
+References: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
+ <9071c9fa-ba6a-90dc-2d7a-8b155141d890@de.ibm.com>
+ <20200831121553.8be5dcdbdbc5256846ac513e@linux-foundation.org>
+ <20200901194020.418da486@thinkpad>
+ <91988792-069c-31a6-7840-0122357538c7@nvidia.com>
+ <20200902142437.5f39b4bb@thinkpad>
+ <20200902170958.09be0c3e@thinkpad>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200902170958.09be0c3e@thinkpad>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-While it is true that devices with is_virtfn=1 will have an
-MSE that is hard-wired to 0, this is not the only case where
-we see this behavior -- For example some bare-metal hypervisors
-lack MSE bit emulation for devices not setting is_virtfn (s390).
-Fix this by instead checking for the newly-added
-PCI_DEV_FLAGS_FORCE_COMMAND_MEM flag which directly denotes the
-need for MSE bit emulation in vfio.
+On Wed, Sep 02, 2020 at 05:09:58PM +0200, Gerald Schaefer wrote:
+> I guess we *could* assume that all the extra pXd_offset() calls and
+> also the de-referencing would be optimized out by the compiler for other
+> archs, but it is one example where my gut tells me that this might not
+> be so trivial and w/o unwanted effects after all.
 
-Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
- drivers/vfio/pci/vfio_pci_config.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+Assigning to a variable that is never read should be eliminated.. If
+things are very complex then the pXX_offset function might need to be
+marked with attribute pure, but I think this should be reliable?
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index d98843f..47fb3c7 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -406,7 +406,8 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
- 	 * PF SR-IOV capability, there's therefore no need to trigger
- 	 * faults based on the virtual value.
- 	 */
--	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
-+	return (pdev->dev_flags & PCI_DEV_FLAGS_FORCE_COMMAND_MEM) ||
-+	       (cmd & PCI_COMMAND_MEMORY);
- }
- 
- /*
-@@ -520,8 +521,9 @@ static int vfio_basic_config_read(struct vfio_pci_device *vdev, int pos,
- 
- 	count = vfio_default_config_read(vdev, pos, count, perm, offset, val);
- 
--	/* Mask in virtual memory enable for SR-IOV devices */
--	if (offset == PCI_COMMAND && vdev->pdev->is_virtfn) {
-+	/* Mask in virtual memory enable */
-+	if ((offset == PCI_COMMAND) &&
-+	    (vdev->pdev->dev_flags & PCI_DEV_FLAGS_FORCE_COMMAND_MEM)) {
- 		u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
- 		u32 tmp_val = le32_to_cpu(*val);
- 
-@@ -589,9 +591,11 @@ static int vfio_basic_config_write(struct vfio_pci_device *vdev, int pos,
- 		 * shows it disabled (phys_mem/io, then the device has
- 		 * undergone some kind of backdoor reset and needs to be
- 		 * restored before we allow it to enable the bars.
--		 * SR-IOV devices will trigger this, but we catch them later
-+		 * SR-IOV devices will trigger this - for mem enable let's
-+		 * catch this now and for io enable it will be caught later
- 		 */
--		if ((new_mem && virt_mem && !phys_mem) ||
-+		if ((new_mem && virt_mem && !phys_mem &&
-+		    !(pdev->dev_flags & PCI_DEV_FLAGS_FORCE_COMMAND_MEM)) ||
- 		    (new_io && virt_io && !phys_io) ||
- 		    vfio_need_bar_restore(vdev))
- 			vfio_bar_restore(vdev);
-@@ -1734,9 +1738,11 @@ int vfio_config_init(struct vfio_pci_device *vdev)
- 				 vconfig[PCI_INTERRUPT_PIN]);
- 
- 		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
--
-+	}
-+	if (pdev->dev_flags & PCI_DEV_FLAGS_FORCE_COMMAND_MEM) {
- 		/*
--		 * VFs do no implement the memory enable bit of the COMMAND
-+		 * VFs and devices that set PCI_DEV_FLAGS_FORCE_COMMAND_MEM
-+		 * do not implement the memory enable bit of the COMMAND
- 		 * register therefore we'll not have it set in our initial
- 		 * copy of config space after pci_enable_device().  For
- 		 * consistency with PFs, set the virtual enable bit here.
--- 
-1.8.3.1
-
+Jason
