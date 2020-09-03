@@ -2,55 +2,63 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 666DA25BD28
-	for <lists+linux-s390@lfdr.de>; Thu,  3 Sep 2020 10:26:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C854225BD4C
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Sep 2020 10:30:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgICI0O (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 3 Sep 2020 04:26:14 -0400
-Received: from verein.lst.de ([213.95.11.211]:36890 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725984AbgICI0N (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 3 Sep 2020 04:26:13 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 727D868BEB; Thu,  3 Sep 2020 10:26:09 +0200 (CEST)
-Date:   Thu, 3 Sep 2020 10:26:09 +0200
+        id S1728061AbgICIa0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 3 Sep 2020 04:30:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726489AbgICIaY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Sep 2020 04:30:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B742C061244;
+        Thu,  3 Sep 2020 01:30:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=3MgBkKtO18c1EGgyVlxbiG0QwjmCjivVqUDJFotKWhw=; b=AurlFm8EevE2HbHY/aFA76ArzX
+        ZBwOIqNTzMC5qmJ7aoNTXabOe03S3PpLbHwsFeYcJEyfsRR4CuUPOAIeYECk2gJFdQWoVBD3erlJd
+        5fO2fh/liMAOffe79oXQ8i0+tRjMgEsygbC7Nb88FFmnspv7TUSVC/t0kCinBA/adAzi5pSfSnZA3
+        N7tK6PuMVpWBg0+FkW3uTJ8oRS/YCXuKgau2xHeOWeIg/FnZlxOXj8xPXTjce/Pi8DxUU+wEoO6n8
+        NL/BlxTZv5tjmH8R7WY7f1xERYuNTDMdmSUPqrSjDlg/FeyHg23ymRGqa04hgK+b8qdavg6BjG3Zs
+        t0p4y8Wg==;
+Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDkdP-0000yv-Df; Thu, 03 Sep 2020 08:30:19 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        dm-devel@redhat.com,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        drbd-dev@lists.linbit.com, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-s390@vger.kernel.org,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        target-devel@vger.kernel.org
-Subject: Re: [PATCH 2/9] block: add a bdev_is_partition helper
-Message-ID: <20200903082609.GA23498@lst.de>
-References: <20200903054104.228829-1-hch@lst.de> <20200903054104.228829-3-hch@lst.de> <CAPDyKFrkcpziGFPmSd8Kx4bzhoN6zxF1E8MagLQSa4sBmnicOg@mail.gmail.com>
+To:     sth@linux.ibm.com, hoeppner@linux.ibm.com
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dasd: remove the unused dasd_enable_device export
+Date:   Thu,  3 Sep 2020 10:30:18 +0200
+Message-Id: <20200903083018.507894-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFrkcpziGFPmSd8Kx4bzhoN6zxF1E8MagLQSa4sBmnicOg@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 10:19:34AM +0200, Ulf Hansson wrote:
-> On Thu, 3 Sep 2020 at 07:42, Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > Add a littler helper to make the somewhat arcane bd_contains checks a
-> > little more obvious.
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> 
-> Not sure why we have both "bd_contains" and "bd_partno", nevertheless,
-> feel free to add:
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/s390/block/dasd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Right now both are needed for how blkdev_get/put work.  But I plan to
-eventual kill off bd_contains after some major surgery to that code.
+diff --git a/drivers/s390/block/dasd.c b/drivers/s390/block/dasd.c
+index eb17fea8075c6f..6ab992b3eed004 100644
+--- a/drivers/s390/block/dasd.c
++++ b/drivers/s390/block/dasd.c
+@@ -683,7 +683,6 @@ void dasd_enable_device(struct dasd_device *device)
+ 	if (device->discipline->kick_validate)
+ 		device->discipline->kick_validate(device);
+ }
+-EXPORT_SYMBOL(dasd_enable_device);
+ 
+ /*
+  * SECTION: device operation (interrupt handler, start i/o, term i/o ...)
+-- 
+2.28.0
 
