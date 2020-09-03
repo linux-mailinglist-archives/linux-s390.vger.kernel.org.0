@@ -2,130 +2,151 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F61D25BFD7
-	for <lists+linux-s390@lfdr.de>; Thu,  3 Sep 2020 13:05:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 303FD25C24E
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Sep 2020 16:15:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725984AbgICLAX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 3 Sep 2020 07:00:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728354AbgICK6A (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Sep 2020 06:58:00 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250A4C061246;
-        Thu,  3 Sep 2020 03:57:57 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u20so2048061pfn.0;
-        Thu, 03 Sep 2020 03:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XvxPmxtC0Bk31a11OwZrMge+dU3uUM43arNhidKdfeY=;
-        b=q1yCvbZ8w01P8xuPxnIcZnEF3Hr07ImVQMcXxZgqnSncr+zba54pN3npDYYOjJXhbm
-         XIqjp77VnYo3sJUa9nsc/OkcPZ2a5Y90boSJn50VaZ74haoOIwzEqzuApddDmuRsWA4t
-         5LlNWMh47eFOI/t/pn9hyEBoN/9bMzFwyvwPxAFUkJ5XUIrhRgszLM/M8If1a/RC8WmZ
-         6qZ5sWP8uitmybmf3cwkB0qwBCXj3OoX/HrhU+S1S1dHFyplWZAkXiQoi27iG3iQmbnm
-         EQGK1zrcCUMrp+7WqPhSebA3XqqW6nM8d6/yeJZq7qMNXZRfKdpHSJtV5y0ESKKzTh/Z
-         pJhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XvxPmxtC0Bk31a11OwZrMge+dU3uUM43arNhidKdfeY=;
-        b=V3pK3e2Oog1j3HPAQsghba8wYWj1Mtrhpt2ehqrEjsJ/S4lckjMeBl1zy6AwYJ2p07
-         MjPkKE7T6pPseQHyQLb/nrp9N3e0hdaj4sSktyHB2neM406UB+Yd413XzbV+Atn0xfmi
-         Z415AMeFtnBVcs2QNmQPnp891RycLLVRTCwu7GNg8GQcCm7n2+tdQ223nOUWqHELKhlp
-         u7qcXnhY5V0qAnNkJbPbP7rFC2ceG2XU4Au4AOtVXvkUEeqOpVkdX6DTXWd5NrV9057N
-         T4aesZBQZhCHkbWOsAsjy9N8T14T8c3k09Hdw8Puo/L9/9FIaZo2JFKYirXYLYVJMTjH
-         cHRQ==
-X-Gm-Message-State: AOAM533pykzo0Pq5/z+hkZSIkPMwFxvqBvegu3w859zL2aEj/0LXi3qV
-        gKQzm5BlGL2x4mqc/QdhI7FMysM+vkWi7I45vieAzSzRLXUY+g==
-X-Google-Smtp-Source: ABdhPJzWVo7SnArbq5BTD4S1cYWUGvNIOFTqyxYbAJGJHhEbl/k7IWPLuudMRiwWjgcOrgrKPL+6Qt7HKDzE/CcnN7Y=
-X-Received: by 2002:a62:6083:0:b029:13c:1611:66c4 with SMTP id
- u125-20020a6260830000b029013c161166c4mr1648433pfb.15.1599130676695; Thu, 03
- Sep 2020 03:57:56 -0700 (PDT)
+        id S1729148AbgICOOi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 3 Sep 2020 10:14:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4636 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728910AbgICOO2 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Sep 2020 10:14:28 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 083D3HwY070668;
+        Thu, 3 Sep 2020 09:15:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=6Cw0JEv1jZT7no0DnmTQ+qpN112s9Nits6RfuEnvZ5w=;
+ b=O0hfhNVs+3EJuhS9N0/EwptP/Ix7UaS9wrHqaUyPGQMAm+dtVXBh2BD4NH59UVVMxQaH
+ 5se15cMfwKEJpBSVLlySJUCWGyZ/jV0OyVHHhyX7oFXoIUnzV2D4DmpDv54o77f+Lp17
+ sA+AmdnXpE2WPQvxbRDJltVmrqpxE1sVkLv3+CUJbw1vIJfHKZPAg+xCfSVuGmxLz8C9
+ oV9y8PT4jWdHMYg6/gaDYQPKxiyuw7PLyduIjgySob22ci3kLq3cPh/p5JrQzffWbaHS
+ +BHvaBX6wrCP/si+peFzq+d8aRIH4q+rvMa0K15q3gH0/OFLLVZ7p4pf68vbB/rj2Wsf dA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33b0rbh3bn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Sep 2020 09:15:06 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 083D3HJY070689;
+        Thu, 3 Sep 2020 09:15:06 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33b0rbh3ax-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Sep 2020 09:15:06 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 083D70qv004026;
+        Thu, 3 Sep 2020 13:15:04 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma02fra.de.ibm.com with ESMTP id 337en7kks0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Sep 2020 13:15:04 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 083DF1uZ29032746
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 3 Sep 2020 13:15:01 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5E272AE056;
+        Thu,  3 Sep 2020 13:15:01 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A3AF3AE051;
+        Thu,  3 Sep 2020 13:15:00 +0000 (GMT)
+Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  3 Sep 2020 13:15:00 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     linux-s390@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, gor@linux.ibm.com, imbrenda@linux.ibm.com,
+        kvm@vger.kernel.org, david@redhat.com
+Subject: [PATCH 2/2] s390x: Add 3f program exception handler
+Date:   Thu,  3 Sep 2020 09:14:35 -0400
+Message-Id: <20200903131435.2535-3-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200903131435.2535-1-frankja@linux.ibm.com>
+References: <20200903131435.2535-1-frankja@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200901221646.26491-1-nicoleotsuka@gmail.com> <20200901221646.26491-2-nicoleotsuka@gmail.com>
-In-Reply-To: <20200901221646.26491-2-nicoleotsuka@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 3 Sep 2020 13:57:39 +0300
-Message-ID: <CAHp75VcVJBSnPQ6NfdF8FdEDfM+oQ=Sr+cH5VGX4SrAqrgpf-g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dma-mapping: introduce dma_get_seg_boundary_nr_pages()
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        rth@twiddle.net, ink@jurassic.park.msu.ru,
-        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        hca@linux.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>, linux-parisc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-03_06:2020-09-03,2020-09-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 mlxscore=0 bulkscore=0
+ adultscore=0 mlxlogscore=999 impostorscore=0 suspectscore=1 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009030122
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 1:20 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> We found that callers of dma_get_seg_boundary mostly do an ALIGN
-> with page mask and then do a page shift to get number of pages:
->     ALIGN(boundary + 1, 1 << shift) >> shift
->
-> However, the boundary might be as large as ULONG_MAX, which means
-> that a device has no specific boundary limit. So either "+ 1" or
-> passing it to ALIGN() would potentially overflow.
->
-> According to kernel defines:
->     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
->     #define ALIGN(x, a) ALIGN_MASK(x, (typeof(x))(a) - 1)
->
-> We can simplify the logic here into a helper function doing:
->   ALIGN(boundary + 1, 1 << shift) >> shift
-> = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
-> = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
-> = [b + 1 + (1 << s) - 1] >> s
-> = [b + (1 << s)] >> s
-> = (b >> s) + 1
->
-> This patch introduces and applies dma_get_seg_boundary_nr_pages()
-> as an overflow-free helper for the dma_get_seg_boundary() callers
-> to get numbers of pages. It also takes care of the NULL dev case
-> for non-DMA API callers.
+Program exception 3f (secure storage violation) can only be detected
+when the CPU is running in SIE with a format 4 state description,
+e.g. running a protected guest. Because of this and because user
+space partly controls the guest memory mapping and can trigger this
+exception, we want to send a SIGSEGV to the process running the guest
+and not panic the kernel.
 
-...
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+CC: <stable@vger.kernel.org> # 5.7+
+Fixes: 084ea4d611a3 ("s390/mm: add (non)secure page access exceptions handlers")
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+---
+ arch/s390/kernel/pgm_check.S |  2 +-
+ arch/s390/mm/fault.c         | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+), 1 deletion(-)
 
-> +static inline unsigned long dma_get_seg_boundary_nr_pages(struct device *dev,
-> +               unsigned int page_shift)
-> +{
-> +       if (!dev)
-> +               return (U32_MAX >> page_shift) + 1;
-> +       return (dma_get_seg_boundary(dev) >> page_shift) + 1;
-
-Can it be better to do something like
-  unsigned long boundary = dev ? dma_get_seg_boundary(dev) : U32_MAX;
-
-  return (boundary >> page_shift) + 1;
-
-?
-
-> +}
-
+diff --git a/arch/s390/kernel/pgm_check.S b/arch/s390/kernel/pgm_check.S
+index 2c27907a5ffc..9a92638360ee 100644
+--- a/arch/s390/kernel/pgm_check.S
++++ b/arch/s390/kernel/pgm_check.S
+@@ -80,7 +80,7 @@ PGM_CHECK(do_dat_exception)		/* 3b */
+ PGM_CHECK_DEFAULT			/* 3c */
+ PGM_CHECK(do_secure_storage_access)	/* 3d */
+ PGM_CHECK(do_non_secure_storage_access)	/* 3e */
+-PGM_CHECK_DEFAULT			/* 3f */
++PGM_CHECK(do_secure_storage_violation)	/* 3f */
+ PGM_CHECK(monitor_event_exception)	/* 40 */
+ PGM_CHECK_DEFAULT			/* 41 */
+ PGM_CHECK_DEFAULT			/* 42 */
+diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+index 4c8c063bce5b..20abb7c5c540 100644
+--- a/arch/s390/mm/fault.c
++++ b/arch/s390/mm/fault.c
+@@ -859,6 +859,24 @@ void do_non_secure_storage_access(struct pt_regs *regs)
+ }
+ NOKPROBE_SYMBOL(do_non_secure_storage_access);
+ 
++void do_secure_storage_violation(struct pt_regs *regs)
++{
++	char buf[TASK_COMM_LEN];
++
++	/*
++	 * Either KVM messed up the secure guest mapping or the same
++	 * page is mapped into multiple secure guests.
++	 *
++	 * This exception is only triggered when a guest 2 is running
++	 * and can therefore never occur in kernel context.
++	 */
++	printk_ratelimited(KERN_WARNING
++			   "Secure storage violation in task: %s, pid %d\n",
++			   get_task_comm(buf, current), task_pid_nr(current));
++	send_sig(SIGSEGV, current, 0);
++}
++NOKPROBE_SYMBOL(do_secure_storage_violation);
++
+ #else
+ void do_secure_storage_access(struct pt_regs *regs)
+ {
+@@ -869,4 +887,9 @@ void do_non_secure_storage_access(struct pt_regs *regs)
+ {
+ 	default_trap_handler(regs);
+ }
++
++void do_secure_storage_violation(struct pt_regs *regs)
++{
++	default_trap_handler(regs);
++}
+ #endif
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
