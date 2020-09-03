@@ -2,85 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDE6725B95D
-	for <lists+linux-s390@lfdr.de>; Thu,  3 Sep 2020 05:47:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C972125BA45
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Sep 2020 07:44:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgICDr6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Sep 2020 23:47:58 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57905 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726776AbgICDr5 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 2 Sep 2020 23:47:57 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bhmwh08jXz9sR4;
-        Thu,  3 Sep 2020 13:47:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1599104874;
-        bh=4yAcDTxLmVtFlFmBwViPiQqBxkMUq1/v+ltMjACdmTw=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=sLw7B6tBL0tYeiS7UbUp4SBXAdWw1BiuX1rzRD7UWBO4tYjHsDcRVzXhtw9LnwBSb
-         TVkfoqm3UH9AlqDYsgMpWDtdLM9KmPlrSHeDnjaQHBRgQyRaye8SGf9zquJweA35N7
-         ilN3da+kZMlwnOIFaqVvO5w2y0IGDyDnVFG1VcyDqd8GjM2NTURgLs8goa8r9z4rAX
-         bS7CaEKouymf+JkB9pMsYKQDB1pDC1x6WHKsbhAVF7YeLmzAfKXrfbmEv+zmCeShnW
-         T7ZxEkdC9W8WnKJu7u5s2wHJv1TU45hmfsmEVHLbTCR7rbxTHbwfqjSrB0uc+2ymCK
-         IggJReIsXvpLw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>, hch@lst.de
-Cc:     sfr@canb.auug.org.au, benh@kernel.crashing.org, paulus@samba.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        linux-alpha@vger.kernel.org, tony.luck@intel.com,
-        fenghua.yu@intel.com, linux-ia64@vger.kernel.org,
-        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, davem@davemloft.net,
-        sparclinux@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        James.Bottomley@HansenPartnership.com, deller@gmx.de,
-        linux-parisc@vger.kernel.org
-Subject: Re: [PATCH 1/2] dma-mapping: introduce dma_get_seg_boundary_nr_pages()
-In-Reply-To: <20200901221646.26491-2-nicoleotsuka@gmail.com>
-References: <20200901221646.26491-1-nicoleotsuka@gmail.com> <20200901221646.26491-2-nicoleotsuka@gmail.com>
-Date:   Thu, 03 Sep 2020 13:47:43 +1000
-Message-ID: <87363z1py8.fsf@mpe.ellerman.id.au>
+        id S1728035AbgICFlP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 3 Sep 2020 01:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbgICFlJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Sep 2020 01:41:09 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33960C061245;
+        Wed,  2 Sep 2020 22:41:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=riJwVtK2AUEGowy/fSK/NSeugqK+94BEz4FUf/LJHss=; b=iOs4ePOHKq0RO554D6Q23NPYpM
+        kwtgxb2xzQYHh8cHDRvtLLOM4dAD3ho9sU4MR7rhGZel6Ko+UkaQDih11UE6vIpvieSjfgzD8+vDy
+        Ud7bzdIESe2a4ikxe4yX3drmeTge4pTq9s7qQd4BflpUDgFbaPzO7azWHCe9tJ7JdZRa2KydRDCTo
+        n/Z2QEqHQvIShl/ZNKqz4ZnSGv6LMmCSsxRqP5bp2GtG5+ocEaPhCOc/HHhvfjKCF4DJrf+wPenIH
+        LqwkQ0ylE5E5LkLlLH3rcuAFho96CiQyaoF5EYlJ09nND9cB7hjOLK+Kctrawd838Szt9G0g6IuFt
+        MUFZHS2g==;
+Received: from [2001:4bb8:184:af1:c70:4a89:bc61:2] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDhzd-0007OB-Dx; Thu, 03 Sep 2020 05:41:05 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     dm-devel@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: clean up is partition checks
+Date:   Thu,  3 Sep 2020 07:40:55 +0200
+Message-Id: <20200903054104.228829-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Nicolin Chen <nicoleotsuka@gmail.com> writes:
-> diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
-> index 9704f3f76e63..cbc2e62db597 100644
-> --- a/arch/powerpc/kernel/iommu.c
-> +++ b/arch/powerpc/kernel/iommu.c
-> @@ -236,15 +236,10 @@ static unsigned long iommu_range_alloc(struct device *dev,
->  		}
->  	}
->  
-> -	if (dev)
-> -		boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
-> -				      1 << tbl->it_page_shift);
-> -	else
-> -		boundary_size = ALIGN(1UL << 32, 1 << tbl->it_page_shift);
-> -	/* 4GB boundary for iseries_hv_alloc and iseries_hv_map */
-> +	boundary_size = dma_get_seg_boundary_nr_pages(dev, tbl->it_page_shift);
->  
->  	n = iommu_area_alloc(tbl->it_map, limit, start, npages, tbl->it_offset,
-> -			     boundary_size >> tbl->it_page_shift, align_mask);
-> +			     boundary_size, align_mask);
+Hi Jens,
 
-This has changed the units of boundary_size, but it's unused elsewhere
-in the function so that's OK.
+this series add a new helepr to check if a struct block_device represents
+a parition, and removes most direct access to ->bd_contained from
+drivers.
 
-If you need to do a v2 for any other reason, then I'd just drop
-boundary_size and call dma_get_seg_boundary_nr_pages() directly in the
-function call.
-
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-
-cheers
+Diffstat:
+ Documentation/userspace-api/ioctl/hdio.rst |   24 ++++++++++++------------
+ block/blk-lib.c                            |    2 +-
+ block/genhd.c                              |    2 +-
+ block/ioctl.c                              |    4 ++--
+ block/scsi_ioctl.c                         |    2 +-
+ drivers/block/drbd/drbd_main.c             |    2 --
+ drivers/block/drbd/drbd_receiver.c         |    2 +-
+ drivers/block/drbd/drbd_worker.c           |    2 +-
+ drivers/ide/ide-ioctls.c                   |    4 ++--
+ drivers/md/dm-table.c                      |    2 +-
+ drivers/md/md.c                            |    9 ++++-----
+ drivers/md/md.h                            |    2 +-
+ drivers/mmc/core/block.c                   |    2 +-
+ drivers/s390/block/dasd_ioctl.c            |    8 ++++----
+ drivers/target/target_core_iblock.c        |    5 ++---
+ fs/nfsd/blocklayout.c                      |    4 ++--
+ include/linux/blkdev.h                     |    9 +++++++--
+ kernel/trace/blktrace.c                    |    2 +-
+ lib/vsprintf.c                             |    4 ++--
+ 19 files changed, 46 insertions(+), 45 deletions(-)
