@@ -2,42 +2,127 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1099725D1AB
-	for <lists+linux-s390@lfdr.de>; Fri,  4 Sep 2020 08:48:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36C9825D341
+	for <lists+linux-s390@lfdr.de>; Fri,  4 Sep 2020 10:12:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgIDGsq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 4 Sep 2020 02:48:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:44834 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726575AbgIDGsq (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:48:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B589F1045;
-        Thu,  3 Sep 2020 23:48:41 -0700 (PDT)
-Received: from [10.163.70.23] (unknown [10.163.70.23])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 575CA3F66F;
-        Thu,  3 Sep 2020 23:48:38 -0700 (PDT)
-Subject: Re: [PATCH v4 00/13] mm/debug_vm_pgtable fixes
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>
-References: <20200902114222.181353-1-aneesh.kumar@linux.ibm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <bb0f3427-e2bd-f713-3ea8-d264be0e690b@arm.com>
-Date:   Fri, 4 Sep 2020 12:18:05 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1729572AbgIDIMP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 4 Sep 2020 04:12:15 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2238 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728588AbgIDIMO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 4 Sep 2020 04:12:14 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08482LEp114049;
+        Fri, 4 Sep 2020 04:12:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=HW3wLJLgTKa2meNrNXFCjDGp+871qsoWEP1YUDTzivM=;
+ b=He2WPYCyHFUprcjX+6nruZ7D112OYtDh9JvV5nqumFui6r1h0FLpu1o4D8JdCOA+TFhH
+ Gxiuh5J3c1A+FmE+qgyLhb1fPEBoq7OdOkE+FKz7gRo5m/rboFGWaznz++MOhyiBpTvo
+ f2irKD2ZK7jV7Nz7L/mUESBq+KE4T/76pBzKZLLAri5GoFUe/KWvF+xri+OUnE5XDfy6
+ 7lnzjUVvsTt2FCDx2AxswzRQKkuB4h3Y+5a/x6L59cVuQLqTVCRqVLmvA6BqCiMbr1V+
+ zlyzisL2lD3+E8NPSdTq0HdrrHnDc8+iULQMRjHbph67E1Rx742j1ZRDu3v3harJ/rVt fg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33bhpu0a3g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Sep 2020 04:12:06 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08482LJ9114023;
+        Fri, 4 Sep 2020 04:12:06 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33bhpu0a30-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Sep 2020 04:12:06 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08486cjd017996;
+        Fri, 4 Sep 2020 08:12:04 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma02fra.de.ibm.com with ESMTP id 337en7m33s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Sep 2020 08:12:04 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0848C03839518534
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 4 Sep 2020 08:12:01 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D70FF52050;
+        Fri,  4 Sep 2020 08:12:00 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.53.155])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 035805204E;
+        Fri,  4 Sep 2020 08:11:59 +0000 (GMT)
+Subject: Re: [PATCH v10 02/16] s390/vfio-ap: use new AP bus interface to
+ search for queue devices
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
+        pasic@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, fiuczy@linux.ibm.com, frankja@linux.ibm.com,
+        david@redhat.com, imbrenda@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, kernel test robot <lkp@intel.com>
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+ <20200821195616.13554-3-akrowiak@linux.ibm.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <37cd9b7e-a619-6603-7e47-f5e85814d673@de.ibm.com>
+Date:   Fri, 4 Sep 2020 10:11:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200902114222.181353-1-aneesh.kumar@linux.ibm.com>
+In-Reply-To: <20200821195616.13554-3-akrowiak@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-04_03:2020-09-04,2020-09-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ bulkscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 adultscore=0
+ impostorscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009040068
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -45,76 +130,37 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 09/02/2020 05:12 PM, Aneesh Kumar K.V wrote:
-> This patch series includes fixes for debug_vm_pgtable test code so that
-> they follow page table updates rules correctly. The first two patches introduce
-> changes w.r.t ppc64. The patches are included in this series for completeness. We can
-> merge them via ppc64 tree if required.
+On 21.08.20 21:56, Tony Krowiak wrote:
+> This patch refactor's the vfio_ap device driver to use the AP bus's
+> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
+> information about a queue that is bound to the vfio_ap device driver.
+> The bus's ap_get_qdev() function retrieves the queue device from a
+> hashtable keyed by APQN. This is much more efficient than looping over
+> the list of devices attached to the AP bus by several orders of
+> magnitude.
 > 
-> Hugetlb test is disabled on ppc64 because that needs larger change to satisfy
-> page table update rules.
-> 
-> These tests are broken w.r.t page table update rules and results in kernel
-> crash as below. 
-> 
-> [   21.083519] kernel BUG at arch/powerpc/mm/pgtable.c:304!
-> cpu 0x0: Vector: 700 (Program Check) at [c000000c6d1e76c0]
->     pc: c00000000009a5ec: assert_pte_locked+0x14c/0x380
->     lr: c0000000005eeeec: pte_update+0x11c/0x190
->     sp: c000000c6d1e7950
->    msr: 8000000002029033
->   current = 0xc000000c6d172c80
->   paca    = 0xc000000003ba0000   irqmask: 0x03   irq_happened: 0x01
->     pid   = 1, comm = swapper/0
-> kernel BUG at arch/powerpc/mm/pgtable.c:304!
-> [link register   ] c0000000005eeeec pte_update+0x11c/0x190
-> [c000000c6d1e7950] 0000000000000001 (unreliable)
-> [c000000c6d1e79b0] c0000000005eee14 pte_update+0x44/0x190
-> [c000000c6d1e7a10] c000000001a2ca9c pte_advanced_tests+0x160/0x3d8
-> [c000000c6d1e7ab0] c000000001a2d4fc debug_vm_pgtable+0x7e8/0x1338
-> [c000000c6d1e7ba0] c0000000000116ec do_one_initcall+0xac/0x5f0
-> [c000000c6d1e7c80] c0000000019e4fac kernel_init_freeable+0x4dc/0x5a4
-> [c000000c6d1e7db0] c000000000012474 kernel_init+0x24/0x160
-> [c000000c6d1e7e20] c00000000000cbd0 ret_from_kernel_thread+0x5c/0x6c
-> 
-> With DEBUG_VM disabled
-> 
-> [   20.530152] BUG: Kernel NULL pointer dereference on read at 0x00000000
-> [   20.530183] Faulting instruction address: 0xc0000000000df330
-> cpu 0x33: Vector: 380 (Data SLB Access) at [c000000c6d19f700]
->     pc: c0000000000df330: memset+0x68/0x104
->     lr: c00000000009f6d8: hash__pmdp_huge_get_and_clear+0xe8/0x1b0
->     sp: c000000c6d19f990
->    msr: 8000000002009033
->    dar: 0
->   current = 0xc000000c6d177480
->   paca    = 0xc00000001ec4f400   irqmask: 0x03   irq_happened: 0x01
->     pid   = 1, comm = swapper/0
-> [link register   ] c00000000009f6d8 hash__pmdp_huge_get_and_clear+0xe8/0x1b0
-> [c000000c6d19f990] c00000000009f748 hash__pmdp_huge_get_and_clear+0x158/0x1b0 (unreliable)
-> [c000000c6d19fa10] c0000000019ebf30 pmd_advanced_tests+0x1f0/0x378
-> [c000000c6d19fab0] c0000000019ed088 debug_vm_pgtable+0x79c/0x1244
-> [c000000c6d19fba0] c0000000000116ec do_one_initcall+0xac/0x5f0
-> [c000000c6d19fc80] c0000000019a4fac kernel_init_freeable+0x4dc/0x5a4
-> [c000000c6d19fdb0] c000000000012474 kernel_init+0x24/0x160
-> [c000000c6d19fe20] c00000000000cbd0 ret_from_kernel_thread+0x5c/0x6c
-> 
-> Changes from v3:
-> * Address review feedback
-> * Move page table depost and withdraw patch after adding pmdlock to avoid bisect failure.
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 
-This version
+> Reported-by: kernel test robot <lkp@intel.com>
 
-- Builds on x86, arm64, s390, arc, powerpc and riscv (defconfig with DEBUG_VM_PGTABLE)
-- Runs on arm64 and x86 without any regression, atleast nothing that I have noticed
-- Will be great if this could get tested on s390, arc, riscv, ppc32 platforms as well
+I think this can go. No need to mark that an earlier version of this patch had an issue.
 
-+ linux-riscv <linux-riscv@lists.infradead.org>
-+ linux-snps-arc@lists.infradead.org <linux-snps-arc@lists.infradead.org>
-+ linux-s390@vger.kernel.org
-+ Gerald Schaefer <gerald.schaefer@de.ibm.com>
-+ Vineet Gupta <vgupta@synopsys.com>
 
-There is still an open git bisect issue on arm64 platform which ideally should be fixed.
+[...]
 
-- Anshuman
+> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+> index f46dde56b464..a2aa05bec718 100644
+> --- a/drivers/s390/crypto/vfio_ap_private.h
+> +++ b/drivers/s390/crypto/vfio_ap_private.h
+> @@ -18,6 +18,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/mutex.h>
+>  #include <linux/kvm_host.h>
+> +#include <linux/hashtable.h>
+
+I dont think that this header file needs it. Any user of it will now include this. 
+Can you move this include into the respective C file when the hash stuff is
+used?
+
+
+Other than that this looks good. 
