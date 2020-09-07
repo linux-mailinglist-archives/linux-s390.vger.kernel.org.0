@@ -2,157 +2,80 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08C3625FF57
-	for <lists+linux-s390@lfdr.de>; Mon,  7 Sep 2020 18:30:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04FCD2600AD
+	for <lists+linux-s390@lfdr.de>; Mon,  7 Sep 2020 18:52:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729543AbgIGQax (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 7 Sep 2020 12:30:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52705 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730352AbgIGQar (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Sep 2020 12:30:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599496242;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=503jdRShNeXJBj5etNIKp6BGryYcmN2VmjoESlRLKlM=;
-        b=V8kMnaY9ouwQLoNEZYCmREGOrZA2SV+rxs9CTthgtn77WcCtqPUf4n54LXo5Rb8fDL+7HT
-        Sg9sZyKi8TnAuu7HtSpnQFRsDkMcyncE6qJj/TaBTg2fWJzWEB0FskrlEC2LBELIQEP5e1
-        X7k4oGRmcJ3oKDIYGE43RsUnpLX1G4w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-314-Yt8nzi7aOWCn-soEKTch9g-1; Mon, 07 Sep 2020 12:30:38 -0400
-X-MC-Unique: Yt8nzi7aOWCn-soEKTch9g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE50D800471;
-        Mon,  7 Sep 2020 16:30:37 +0000 (UTC)
-Received: from gondolin (ovpn-112-249.ams2.redhat.com [10.36.112.249])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7490510027AB;
-        Mon,  7 Sep 2020 16:30:33 +0000 (UTC)
-Date:   Mon, 7 Sep 2020 18:30:30 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, borntraeger@de.ibm.com,
-        imbrenda@linux.ibm.com, david@redhat.com,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v2] KVM: s390: Introduce storage key removal facility
-Message-ID: <20200907183030.07333af7.cohuck@redhat.com>
-In-Reply-To: <20200907143352.96618-1-frankja@linux.ibm.com>
-References: <b34e559a-8292-873f-8d33-1e7ce819f4d5@de.ibm.com>
-        <20200907143352.96618-1-frankja@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1731152AbgIGQwh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 7 Sep 2020 12:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731158AbgIGQwe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Sep 2020 12:52:34 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A68C061573
+        for <linux-s390@vger.kernel.org>; Mon,  7 Sep 2020 09:52:34 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id e11so12685119wme.0
+        for <linux-s390@vger.kernel.org>; Mon, 07 Sep 2020 09:52:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=ABmPV5buimzO6XQ5s6EUSJ63eHUIp0T3veqrRJZb+MU=;
+        b=nune2XF6duhtdxYiZU3dzyh7OCMPtPDM18Vr11i7qoeydWDLPS3pcDbVWpogBGtTDh
+         MfLauDKlCeSIQ+O+PKVGCcyCS6E+QGUByKo5aOFhHfN4DEj1L1pP7uDTUSZpO/6Ekwec
+         /RsMjuV7xYwLCyWII+G6LLGxt60uxVDy3eB58xcI9R2GajS1D79Kjunwod9JQQIkvS9c
+         37t/mMMvPsrhnSLGXANKRTbkSPZvcm3yhx4mYBoPzyqt86NqG9iDWAtBCjWfTJa6UW6S
+         hf6/Ims7FqeUYjb0NugTmNXYTYtTwQfOLq8BH+sSGZlj6k/I+bMOc1LtZkevCiVBecBH
+         iIBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=ABmPV5buimzO6XQ5s6EUSJ63eHUIp0T3veqrRJZb+MU=;
+        b=IcZaA9ldT52GavcyLxIZcTFHNybTzu0UDV9utchkQuuYvPu91h6tQxdMTMEQSetEMT
+         eN9xq+i5iU97nZqNrckLJFfeEx9NqkDY8pzsQBc6ANzJ2mrSFRhzHE8y1epB9b60rhJf
+         GZl0+qWwyqde/sC2lHJWNomOAHBG4j4Fv1znBCUfbLC+PC0thU6I7CocNuAGaDN/BYVg
+         0B+LhK+qH/HytkM7X902t8mFZh7WDdEOz8ktmU9iQ4TPnfoZFRUC0i16+XqVhzTBTf1j
+         4TUYeG7eH5fDgV4yWG2eoe4ZPAW030GJRgi5E3dUC7CtLCBUNo2o0AUs9flbr1wARxZF
+         nEuQ==
+X-Gm-Message-State: AOAM531moVow+gMr/IHPZSxda/NxmqsGl3iToZpZUk28dVGX/eay4VUI
+        NPgvjPZJdYZd39GQwDWKpP3GbO6cxE/pu3w2qCI=
+X-Google-Smtp-Source: ABdhPJzN/uQvoEkC05zXm9PJ3zojRpky4Ey7PkrMDY8jPlvsM02/EB4UbCzBFTEW0eWOx9at3kHS0t9Y12Nw5eAZqc8=
+X-Received: by 2002:a1c:4d12:: with SMTP id o18mr200065wmh.177.1599497553150;
+ Mon, 07 Sep 2020 09:52:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Received: by 2002:adf:f6d1:0:0:0:0:0 with HTTP; Mon, 7 Sep 2020 09:52:32 -0700 (PDT)
+Reply-To: sascha_grenda@aol.com
+From:   Sascha Grenda <tony.cruzloanfirm@gmail.com>
+Date:   Mon, 7 Sep 2020 19:52:32 +0300
+Message-ID: <CANyHexzqz8C5-2ZPRU9xGaAo523mqrqJ3=rWntSxmMP1ysVFdQ@mail.gmail.com>
+Subject: Darlehen Angebot
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon,  7 Sep 2020 10:33:52 -0400
-Janosch Frank <frankja@linux.ibm.com> wrote:
+--=20
+Hallo,
 
-> The storage key removal facility makes skey related instructions
-> result in special operation program exceptions. It is based on the
-> Keyless Subset Facility.
-> 
-> The usual suspects are iske, sske, rrbe and their respective
-> variants. lpsw(e), pfmf and tprot can also specify a key and essa with
-> an ORC of 4 will consult the change bit, hence they all result in
-> exceptions.
-> 
-> Unfortunately storage keys were so essential to the architecture, that
-> there is no facility bit that we could deactivate. That's why the
-> removal facility (bit 169) was introduced which makes it necessary,
-> that, if active, the skey related facilities 10, 14, 66, 145 and 149
-> are zero. Managing this requirement and migratability has to be done
-> in userspace, as KVM does not check the facilities it receives to be
-> able to easily implement userspace emulation.
-> 
-> Removing storage key support allows us to circumvent complicated
-> emulation code and makes huge page support tremendously easier.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
-> 
-> v2:
-> 	* Removed the likely
-> 	* Updated and re-shuffeled the comments which had the wrong information
-> 
-> ---
->  arch/s390/kvm/intercept.c | 40 ++++++++++++++++++++++++++++++++++++++-
->  arch/s390/kvm/kvm-s390.c  |  5 +++++
->  arch/s390/kvm/priv.c      | 26 ++++++++++++++++++++++---
->  3 files changed, 67 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
-> index e7a7c499a73f..983647ea2abe 100644
-> --- a/arch/s390/kvm/intercept.c
-> +++ b/arch/s390/kvm/intercept.c
-> @@ -33,6 +33,7 @@ u8 kvm_s390_get_ilen(struct kvm_vcpu *vcpu)
->  	case ICPT_OPEREXC:
->  	case ICPT_PARTEXEC:
->  	case ICPT_IOINST:
-> +	case ICPT_KSS:
->  		/* instruction only stored for these icptcodes */
->  		ilen = insn_length(vcpu->arch.sie_block->ipa >> 8);
->  		/* Use the length of the EXECUTE instruction if necessary */
-> @@ -565,7 +566,44 @@ int kvm_handle_sie_intercept(struct kvm_vcpu *vcpu)
->  		rc = handle_partial_execution(vcpu);
->  		break;
->  	case ICPT_KSS:
-> -		rc = kvm_s390_skey_check_enable(vcpu);
-> +		if (!test_kvm_facility(vcpu->kvm, 169)) {
-> +			rc = kvm_s390_skey_check_enable(vcpu);
-> +		} else {
+  Ich bin Frau Sascha Grenda, eine legitime, seri=C3=B6se Geldverleiherin.
+Wir sind ein Unternehmen mit finanzieller Unterst=C3=BCtzung. Wir leihen
+Gelder an Personen aus, die finanzielle Unterst=C3=BCtzung ben=C3=B6tigen o=
+der
+Geld ben=C3=B6tigen, um Rechnungen zu bezahlen und in Unternehmen zu
+investieren. Gerne biete ich Ihnen einen Kredit an. Mailen Sie uns
+jetzt =C3=BCber (sascha_grenda@aol.com)
 
-<bikeshed>Introduce a helper function? This is getting a bit hard to
-read.</bikeshed>
+Name des Beg=C3=BCnstigten:.........
+Land:............
+Ben=C3=B6tigte Menge...........
+Leihdauer: ..........
+Telefonnummer............
+Sex:............
+Heimatadresse:............
 
-> +			/*
-> +			 * Storage key removal facility emulation.
-> +			 *
-> +			 * KSS is the same priority as an instruction
-> +			 * interception. Hence we need handling here
-> +			 * and in the instruction emulation code.
-> +			 *
-> +			 * KSS is nullifying (no psw forward), SKRF
-> +			 * issues suppressing SPECIAL OPS, so we need
-> +			 * to forward by hand.
-> +			 */
-> +			switch (vcpu->arch.sie_block->ipa) {
-> +			case 0xb2b2:
-> +				kvm_s390_forward_psw(vcpu, kvm_s390_get_ilen(vcpu));
-> +				rc = kvm_s390_handle_b2(vcpu);
-> +				break;
-> +			case 0x8200:
-
-Can we have speaking names? I can only guess that this is an lpsw...
-
-> +				kvm_s390_forward_psw(vcpu, kvm_s390_get_ilen(vcpu));
-> +				rc = kvm_s390_handle_lpsw(vcpu);
-> +				break;
-> +			case 0:
-> +				/*
-> +				 * Interception caused by a key in a
-> +				 * exception new PSW mask. The guest
-> +				 * PSW has already been updated to the
-> +				 * non-valid PSW so we only need to
-> +				 * inject a PGM.
-> +				 */
-> +				rc = kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
-> +				break;
-> +			default:
-> +				kvm_s390_forward_psw(vcpu, kvm_s390_get_ilen(vcpu));
-> +				rc = kvm_s390_inject_program_int(vcpu, PGM_SPECIAL_OPERATION);
-> +			}
-> +		}
->  		break;
->  	case ICPT_MCHKREQ:
->  	case ICPT_INT_ENABLE:
-
+Gr=C3=BC=C3=9Fe.
+Frau Sascha Grenda
