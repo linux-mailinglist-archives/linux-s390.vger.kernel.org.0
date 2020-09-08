@@ -2,164 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83841261493
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 18:27:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13455261439
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 18:10:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730737AbgIHQ1g (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Sep 2020 12:27:36 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2302 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731958AbgIHQ1R (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 12:27:17 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088D3Olg133343;
-        Tue, 8 Sep 2020 09:05:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=rdyzONfAjlQKywvb8PXpfSL9Mb1tE/stNvI+MMrDpDE=;
- b=IOP7gFXWoXksOBcYP2rJa1AZF3ddyycLv23cdx1zvHGrylPNgEz3s188ugQIW4eBEho2
- IXVNm5VaIgTbk3m9vBZLg9qzUoCQzPZaRSat891QIyZbw5hkI0aocNb3XiEoVnfeMf53
- +wVPWW21tIu/79xnAxoPu+85eXCRZKCd6KKZflsBoeuSjIzRB5/NWoHKRu0DDS+5CYn8
- /3Rea0fH6qOEKRZVUbaqkyshpo5ylfF/OtE72cd+y46tKmveaNPhs/35I6NJxEZmbSnM
- cJFD/DRniiws2jXLWzTFUQYb1tEKlLoiNPfZ4zH7v+332UxaHXGWSX0cPcShmLvpeueq 1A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33ea0c96st-1
+        id S1731302AbgIHQKW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Sep 2020 12:10:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17062 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730607AbgIHQJr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 12:09:47 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088DVXE9184251;
+        Tue, 8 Sep 2020 09:41:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=b3/S8z+XcaaneUPd0EkP9D6v+v/IBiNDUrZwO6+VVqU=;
+ b=PxQ3DtuIBtdFPySbUQO+rKJRdIUg9KQ8b2RVHhIxmeJ3XpQYz57ze6WAW7AHBAD2EqMU
+ ho5QC+zU9Q6L54085XtrhluZ6ynYToJU0MIf9HoQ9t9OlVx3ZnJ+3LIdd9dytpAplxnc
+ 4zfD+xMMhALdVm0RE0z78h25N7F8JGBLBtjgaaeBDN0cXkdwJKU/r8Zx/+W1ZlnRDwal
+ EvAZPmsmCfEKf9QOt6zOlkXdduHB6AUiL8JaN0iBHdO5zDxxO+DQqkN/Uj9qrliDY8G7
+ THM84qhlk79sI4/1wqYkLV+wigcbB5XEIiH/IECfucDCbA0A0f3yyLenDhYOo2jSzxgp zQ== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33eat2gk3x-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 09:05:12 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088D4dP2139018;
-        Tue, 8 Sep 2020 09:05:12 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33ea0c96rb-1
+        Tue, 08 Sep 2020 09:41:50 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088DcMhS019719;
+        Tue, 8 Sep 2020 13:41:48 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 33c2a8bgev-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 09:05:12 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088Cw9al030320;
-        Tue, 8 Sep 2020 13:05:10 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03fra.de.ibm.com with ESMTP id 33c2a8a468-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 13:05:09 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088D57EI62521774
+        Tue, 08 Sep 2020 13:41:48 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088Dfkjf36897102
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Sep 2020 13:05:07 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2283F11C04C;
-        Tue,  8 Sep 2020 13:05:07 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3F9C911C052;
-        Tue,  8 Sep 2020 13:05:06 +0000 (GMT)
-Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  8 Sep 2020 13:05:06 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     linux-s390@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, gor@linux.ibm.com, imbrenda@linux.ibm.com,
-        kvm@vger.kernel.org, david@redhat.com, hca@linux.ibm.com,
-        cohuck@redhat.com, thuth@redhat.com
-Subject: [PATCH v3] s390x: Add 3f program exception handler
-Date:   Tue,  8 Sep 2020 09:05:04 -0400
-Message-Id: <20200908130504.24641-1-frankja@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200908075337.GA9170@osiris>
-References: <20200908075337.GA9170@osiris>
+        Tue, 8 Sep 2020 13:41:46 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1D4CC4C059;
+        Tue,  8 Sep 2020 13:41:46 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D07984C040;
+        Tue,  8 Sep 2020 13:41:45 +0000 (GMT)
+Received: from osiris (unknown [9.171.47.162])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  8 Sep 2020 13:41:45 +0000 (GMT)
+Date:   Tue, 8 Sep 2020 15:41:44 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        rafael.j.wysocki@intel.com, svens@linux.ibm.com
+Subject: Re: [PATCH] s390/idle: Fix suspicious RCU usage
+Message-ID: <20200908134144.GH14136@osiris>
+References: <20200908133031.GT1362448@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908133031.GT1362448@hirez.programming.kicks-ass.net>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-09-08_06:2020-09-08,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- suspectscore=1 phishscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009080123
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ adultscore=0 mlxlogscore=863 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 suspectscore=3 mlxscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080124
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Program exception 3f (secure storage violation) can only be detected
-when the CPU is running in SIE with a format 4 state description,
-e.g. running a protected guest. Because of this and because user
-space partly controls the guest memory mapping and can trigger this
-exception, we want to send a SIGSEGV to the process running the guest
-and not panic the kernel.
+On Tue, Sep 08, 2020 at 03:30:31PM +0200, peterz@infradead.org wrote:
+> 
+> After commit eb1f00237aca ("lockdep,trace: Expose tracepoints") the
+> lock tracepoints are visible to lockdep and RCU-lockdep is finding a
+> bunch more RCU violations that were previously hidden.
+> 
+> Switch the idle->seqcount over to using raw_write_*() to avoid the
+> lockdep annotation and thus the lock tracepoints.
+> 
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/s390/kernel/idle.c |    5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-CC: <stable@vger.kernel.org> # 5.7+
-Fixes: 084ea4d611a3 ("s390/mm: add (non)secure page access exceptions handlers")
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
----
- arch/s390/kernel/entry.h     |  1 +
- arch/s390/kernel/pgm_check.S |  2 +-
- arch/s390/mm/fault.c         | 20 ++++++++++++++++++++
- 3 files changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/arch/s390/kernel/entry.h b/arch/s390/kernel/entry.h
-index faca269d5f27..a44ddc2f2dec 100644
---- a/arch/s390/kernel/entry.h
-+++ b/arch/s390/kernel/entry.h
-@@ -26,6 +26,7 @@ void do_protection_exception(struct pt_regs *regs);
- void do_dat_exception(struct pt_regs *regs);
- void do_secure_storage_access(struct pt_regs *regs);
- void do_non_secure_storage_access(struct pt_regs *regs);
-+void do_secure_storage_violation(struct pt_regs *regs);
- 
- void addressing_exception(struct pt_regs *regs);
- void data_exception(struct pt_regs *regs);
-diff --git a/arch/s390/kernel/pgm_check.S b/arch/s390/kernel/pgm_check.S
-index 2c27907a5ffc..9a92638360ee 100644
---- a/arch/s390/kernel/pgm_check.S
-+++ b/arch/s390/kernel/pgm_check.S
-@@ -80,7 +80,7 @@ PGM_CHECK(do_dat_exception)		/* 3b */
- PGM_CHECK_DEFAULT			/* 3c */
- PGM_CHECK(do_secure_storage_access)	/* 3d */
- PGM_CHECK(do_non_secure_storage_access)	/* 3e */
--PGM_CHECK_DEFAULT			/* 3f */
-+PGM_CHECK(do_secure_storage_violation)	/* 3f */
- PGM_CHECK(monitor_event_exception)	/* 40 */
- PGM_CHECK_DEFAULT			/* 41 */
- PGM_CHECK_DEFAULT			/* 42 */
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index 4c8c063bce5b..996884dcc9fd 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -859,6 +859,21 @@ void do_non_secure_storage_access(struct pt_regs *regs)
- }
- NOKPROBE_SYMBOL(do_non_secure_storage_access);
- 
-+void do_secure_storage_violation(struct pt_regs *regs)
-+{
-+	/*
-+	 * Either KVM messed up the secure guest mapping or the same
-+	 * page is mapped into multiple secure guests.
-+	 *
-+	 * This exception is only triggered when a guest 2 is running
-+	 * and can therefore never occur in kernel context.
-+	 */
-+	printk_ratelimited(KERN_WARNING
-+			   "Secure storage violation in task: %s, pid %d\n",
-+			   current->comm, current->pid);
-+	send_sig(SIGSEGV, current, 0);
-+}
-+
- #else
- void do_secure_storage_access(struct pt_regs *regs)
- {
-@@ -869,4 +884,9 @@ void do_non_secure_storage_access(struct pt_regs *regs)
- {
- 	default_trap_handler(regs);
- }
-+
-+void do_secure_storage_violation(struct pt_regs *regs)
-+{
-+	default_trap_handler(regs);
-+}
- #endif
--- 
-2.25.1
-
+Applied, thank you!
