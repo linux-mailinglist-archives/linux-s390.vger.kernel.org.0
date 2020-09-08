@@ -2,88 +2,139 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13455261439
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 18:10:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96621261496
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 18:27:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731302AbgIHQKW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Sep 2020 12:10:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17062 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730607AbgIHQJr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 12:09:47 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088DVXE9184251;
-        Tue, 8 Sep 2020 09:41:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=b3/S8z+XcaaneUPd0EkP9D6v+v/IBiNDUrZwO6+VVqU=;
- b=PxQ3DtuIBtdFPySbUQO+rKJRdIUg9KQ8b2RVHhIxmeJ3XpQYz57ze6WAW7AHBAD2EqMU
- ho5QC+zU9Q6L54085XtrhluZ6ynYToJU0MIf9HoQ9t9OlVx3ZnJ+3LIdd9dytpAplxnc
- 4zfD+xMMhALdVm0RE0z78h25N7F8JGBLBtjgaaeBDN0cXkdwJKU/r8Zx/+W1ZlnRDwal
- EvAZPmsmCfEKf9QOt6zOlkXdduHB6AUiL8JaN0iBHdO5zDxxO+DQqkN/Uj9qrliDY8G7
- THM84qhlk79sI4/1wqYkLV+wigcbB5XEIiH/IECfucDCbA0A0f3yyLenDhYOo2jSzxgp zQ== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33eat2gk3x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 09:41:50 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088DcMhS019719;
-        Tue, 8 Sep 2020 13:41:48 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 33c2a8bgev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 13:41:48 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088Dfkjf36897102
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Sep 2020 13:41:46 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1D4CC4C059;
-        Tue,  8 Sep 2020 13:41:46 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D07984C040;
-        Tue,  8 Sep 2020 13:41:45 +0000 (GMT)
-Received: from osiris (unknown [9.171.47.162])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  8 Sep 2020 13:41:45 +0000 (GMT)
-Date:   Tue, 8 Sep 2020 15:41:44 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        rafael.j.wysocki@intel.com, svens@linux.ibm.com
-Subject: Re: [PATCH] s390/idle: Fix suspicious RCU usage
-Message-ID: <20200908134144.GH14136@osiris>
-References: <20200908133031.GT1362448@hirez.programming.kicks-ass.net>
+        id S1731673AbgIHQ1m (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Sep 2020 12:27:42 -0400
+Received: from ale.deltatee.com ([204.191.154.188]:52582 "EHLO
+        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731915AbgIHQ1k (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 12:27:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DvSiEr2JCy+2h9dy7CIecEenG2gQsa0A5OP2d9PI/p0=; b=dbg0PtMPK+HbvI6GMZzh/J5E8Z
+        Q/TWc7UsDFhg1cOVJt/pysWKo3QQRWraF1mqHM6mdRGQ6y0rj+OXqZUSgbgyS5kW1MF22xpb3bm/M
+        J9Rf7mpjgRlZVOcx1SZJ6EJp7lFy55R6nqk8PsS8AEsD0hf0g4vJC65mDtFEAYzf7cE0mQHAAVUlU
+        S7bbDUQqTHtHsrq5f8RHYZU0yCa5rG3lpeqMLTKlNXStV+C6+vhM0UL/8Wjc5CgLnNZYF3jPybjc/
+        ulyb1L7dumDVfTJQeMlSwf7IyaVvWKGWBe0b9ikUV9lDLMezAf5m+fY9DJk+AU+8aTTS01s/mCgwR
+        I5zJe2Ew==;
+Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
+        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1kFfnI-0008Go-Gj; Tue, 08 Sep 2020 09:44:29 -0600
+To:     Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Tom Murphy <murphyt7@tcd.ie>
+Cc:     kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-tegra@vger.kernel.org, Julien Grall <julien.grall@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        virtualization@lists.linux-foundation.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, Kukjin Kim <kgene@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20191221150402.13868-1-murphyt7@tcd.ie>
+ <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
+ <20200529124523.GA11817@infradead.org>
+ <CGME20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d@eucas1p2.samsung.com>
+ <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com>
+ <ef2150d5-7b6a-df25-c10d-e43316fe7812@samsung.com>
+ <b9140772-0370-a858-578c-af503a06d8e9@deltatee.com>
+ <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
+ <766525c3-4da9-6db7-cd90-fb4b82cd8083@deltatee.com>
+ <60a82319-cbee-4cd1-0d5e-3c407cc51330@linux.intel.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <e598fb31-ef7a-c2ee-8a54-bf62d50c480c@deltatee.com>
+Date:   Tue, 8 Sep 2020 09:44:24 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908133031.GT1362448@hirez.programming.kicks-ass.net>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_06:2020-09-08,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- adultscore=0 mlxlogscore=863 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 suspectscore=3 mlxscore=0 bulkscore=0 spamscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009080124
+In-Reply-To: <60a82319-cbee-4cd1-0d5e-3c407cc51330@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 24.64.145.4
+X-SA-Exim-Rcpt-To: robin.murphy@arm.com, kgene@kernel.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, cohuck@redhat.com, dwmw2@infradead.org, gerald.schaefer@de.ibm.com, virtualization@lists.linux-foundation.org, tglx@linutronix.de, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, intel-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org, agross@kernel.org, linux-rockchip@lists.infradead.org, hch@infradead.org, jonathanh@nvidia.com, krzk@kernel.org, maz@kernel.org, linux-samsung-soc@vger.kernel.org, jean-philippe@linaro.org, m.szyprowski@samsung.com, will@kernel.org, julien.grall@arm.com, linux-tegra@vger.kernel.org, bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, kvm@vger.kernel.org, murphyt7@tcd.ie, tvrtko.ursulin@linux.intel.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.5 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [Intel-gfx] [PATCH 0/8] Convert the intel iommu driver to the
+ dma-iommu api
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 03:30:31PM +0200, peterz@infradead.org wrote:
-> 
-> After commit eb1f00237aca ("lockdep,trace: Expose tracepoints") the
-> lock tracepoints are visible to lockdep and RCU-lockdep is finding a
-> bunch more RCU violations that were previously hidden.
-> 
-> Switch the idle->seqcount over to using raw_write_*() to avoid the
-> lockdep annotation and thus the lock tracepoints.
-> 
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/s390/kernel/idle.c |    5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
 
-Applied, thank you!
+
+On 2020-09-08 9:28 a.m., Tvrtko Ursulin wrote:
+>>
+>> diff --git a/drivers/gpu/drm/i915/i915_scatterlist.h
+>> b/drivers/gpu/drm/i915/i915
+>> index b7b59328cb76..9367ac801f0c 100644
+>> --- a/drivers/gpu/drm/i915/i915_scatterlist.h
+>> +++ b/drivers/gpu/drm/i915/i915_scatterlist.h
+>> @@ -27,13 +27,19 @@ static __always_inline struct sgt_iter {
+>>   } __sgt_iter(struct scatterlist *sgl, bool dma) {
+>>          struct sgt_iter s = { .sgp = sgl };
+>>
+>> +       if (sgl && !sg_dma_len(s.sgp))
+> 
+> I'd extend the condition to be, just to be safe:
+>     if (dma && sgl && !sg_dma_len(s.sgp))
+>
+
+Right, good catch, that's definitely necessary.
+
+>> +               s.sgp = NULL;
+>> +
+>>          if (s.sgp) {
+>>                  s.max = s.curr = s.sgp->offset;
+>> -               s.max += s.sgp->length;
+>> -               if (dma)
+>> +
+>> +               if (dma) {
+>> +                       s.max += sg_dma_len(s.sgp);
+>>                          s.dma = sg_dma_address(s.sgp);
+>> -               else
+>> +               } else {
+>> +                       s.max += s.sgp->length;
+>>                          s.pfn = page_to_pfn(sg_page(s.sgp));
+>> +               }
+> 
+> Otherwise has this been tested or alternatively how to test it? (How to
+> repro the issue.)
+
+It has not been tested. To test it, you need Tom's patch set without the
+last "DO NOT MERGE" patch:
+
+https://lkml.kernel.org/lkml/20200907070035.GA25114@infradead.org/T/
+
+Thanks,
+
+Logan
