@@ -2,177 +2,144 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9E1626106C
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 13:06:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F05F6261303
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 16:53:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbgIHLF7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Sep 2020 07:05:59 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57347 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729210AbgIHLBb (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 07:01:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599562889;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=j8FrwxyoS3UOPyBBrpb+SxDIPN8JxjKtNQqfng3d1cU=;
-        b=En7u8b6qSZhI0g/rqL/UwJH2875C5eti2iyfIiZu8Z/HhOC7IAef5v0T6FzahwHe30ZyxY
-        PWr/bE6hKMORWGK4F0HcfRHtmjyPlBCAa/YOtiuQEQnmIc6z97ptqpHhHUoFwBqPXUcNXy
-        25ZHPxInLEIwpJfaDJ5lznckqICv4jY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-148-cgHk6IHIN264oiUSOu8L1w-1; Tue, 08 Sep 2020 07:01:27 -0400
-X-MC-Unique: cgHk6IHIN264oiUSOu8L1w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A5A110BBECD;
-        Tue,  8 Sep 2020 11:01:26 +0000 (UTC)
-Received: from gondolin (ovpn-112-243.ams2.redhat.com [10.36.112.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6DBBC27CC2;
-        Tue,  8 Sep 2020 11:01:20 +0000 (UTC)
-Date:   Tue, 8 Sep 2020 13:01:17 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, borntraeger@de.ibm.com,
-        imbrenda@linux.ibm.com, david@redhat.com,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v3] KVM: s390: Introduce storage key removal facility
-Message-ID: <20200908130117.1a8fd4ea.cohuck@redhat.com>
-In-Reply-To: <20200908100249.23150-1-frankja@linux.ibm.com>
-References: <20200908100249.23150-1-frankja@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1729912AbgIHO0E (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Sep 2020 10:26:04 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:35692 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729725AbgIHOY4 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 8 Sep 2020 10:24:56 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4Bm4Vr1mvXz9tysg;
+        Tue,  8 Sep 2020 14:40:20 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id cIMhaNVcmlrN; Tue,  8 Sep 2020 14:40:20 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bm4Vr0fBLz9tysZ;
+        Tue,  8 Sep 2020 14:40:20 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5BBAE8B7C1;
+        Tue,  8 Sep 2020 14:40:21 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id xwRqAZ7QC05H; Tue,  8 Sep 2020 14:40:21 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B7AA88B7BE;
+        Tue,  8 Sep 2020 14:40:18 +0200 (CEST)
+Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
+ folding
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+ <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
+ <82fbe8f9-f199-5fc2-4168-eb43ad0b0346@csgroup.eu>
+ <70a3dcb5-5ed1-6efa-6158-d0573d6927da@de.ibm.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <96b80926-cf5b-1afa-9b7a-949a2188e61f@csgroup.eu>
+Date:   Tue, 8 Sep 2020 14:40:10 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <70a3dcb5-5ed1-6efa-6158-d0573d6927da@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue,  8 Sep 2020 06:02:49 -0400
-Janosch Frank <frankja@linux.ibm.com> wrote:
 
-> The storage key removal facility makes skey related instructions
-> result in special operation program exceptions. It is based on the
-> Keyless Subset Facility.
+
+Le 08/09/2020 à 14:09, Christian Borntraeger a écrit :
 > 
-> The usual suspects are iske, sske, rrbe and their respective
-> variants. lpsw(e), pfmf and tprot can also specify a key and essa with
-> an ORC of 4 will consult the change bit, hence they all result in
-> exceptions.
 > 
-> Unfortunately storage keys were so essential to the architecture, that
-> there is no facility bit that we could deactivate. That's why the
-> removal facility (bit 169) was introduced which makes it necessary,
-> that, if active, the skey related facilities 10, 14, 66, 145 and 149
-> are zero. Managing this requirement and migratability has to be done
-> in userspace, as KVM does not check the facilities it receives to be
-> able to easily implement userspace emulation.
+> On 08.09.20 07:06, Christophe Leroy wrote:
+>>
+>>
+>> Le 07/09/2020 à 20:00, Gerald Schaefer a écrit :
+>>> From: Alexander Gordeev <agordeev@linux.ibm.com>
+>>>
+>>> Commit 1a42010cdc26 ("s390/mm: convert to the generic get_user_pages_fast
+>>> code") introduced a subtle but severe bug on s390 with gup_fast, due to
+>>> dynamic page table folding.
+>>>
+>>> The question "What would it require for the generic code to work for s390"
+>>> has already been discussed here
+>>> https://lkml.kernel.org/r/20190418100218.0a4afd51@mschwideX1
+>>> and ended with a promising approach here
+>>> https://lkml.kernel.org/r/20190419153307.4f2911b5@mschwideX1
+>>> which in the end unfortunately didn't quite work completely.
+>>>
+>>> We tried to mimic static level folding by changing pgd_offset to always
+>>> calculate top level page table offset, and do nothing in folded pXd_offset.
+>>> What has been overlooked is that PxD_SIZE/MASK and thus pXd_addr_end do
+>>> not reflect this dynamic behaviour, and still act like static 5-level
+>>> page tables.
+>>>
+>>
+>> [...]
+>>
+>>>
+>>> Fix this by introducing new pXd_addr_end_folded helpers, which take an
+>>> additional pXd entry value parameter, that can be used on s390
+>>> to determine the correct page table level and return corresponding
+>>> end / boundary. With that, the pointer iteration will always
+>>> happen in gup_pgd_range for s390. No change for other architectures
+>>> introduced.
+>>
+>> Not sure pXd_addr_end_folded() is the best understandable name, allthough I don't have any alternative suggestion at the moment.
+>> Maybe could be something like pXd_addr_end_fixup() as it will disappear in the next patch, or pXd_addr_end_gup() ?
+>>
+>> Also, if it happens to be acceptable to get patch 2 in stable, I think you should switch patch 1 and patch 2 to avoid the step through pXd_addr_end_folded()
 > 
-> Removing storage key support allows us to circumvent complicated
-> emulation code and makes huge page support tremendously easier.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
-> 
-> v3:
-> 	* Put kss handling into own function
-> 	* Removed some unneeded catch statements and converted others to ifs
-> 
-> v2:
-> 	* Removed the likely
-> 	* Updated and re-shuffeled the comments which had the wrong information
-> 
-> ---
->  arch/s390/kvm/intercept.c | 34 +++++++++++++++++++++++++++++++++-
->  arch/s390/kvm/kvm-s390.c  |  5 +++++
->  arch/s390/kvm/priv.c      | 26 +++++++++++++++++++++++---
->  3 files changed, 61 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
-> index e7a7c499a73f..9c699c3fcf84 100644
-> --- a/arch/s390/kvm/intercept.c
-> +++ b/arch/s390/kvm/intercept.c
-> @@ -33,6 +33,7 @@ u8 kvm_s390_get_ilen(struct kvm_vcpu *vcpu)
->  	case ICPT_OPEREXC:
->  	case ICPT_PARTEXEC:
->  	case ICPT_IOINST:
-> +	case ICPT_KSS:
->  		/* instruction only stored for these icptcodes */
->  		ilen = insn_length(vcpu->arch.sie_block->ipa >> 8);
->  		/* Use the length of the EXECUTE instruction if necessary */
-> @@ -531,6 +532,37 @@ static int handle_pv_notification(struct kvm_vcpu *vcpu)
->  	return handle_instruction(vcpu);
->  }
->  
-> +static int handle_kss(struct kvm_vcpu *vcpu)
-> +{
-> +	if (!test_kvm_facility(vcpu->kvm, 169))
-> +		return kvm_s390_skey_check_enable(vcpu);
-> +
-> +	/*
-> +	 * Storage key removal facility emulation.
-> +	 *
-> +	 * KSS is the same priority as an instruction
-> +	 * interception. Hence we need handling here
+> given that this fixes a data corruption issue, wouldnt it be the best to go forward
+> with this patch ASAP and then handle the other patches on top with all the time that
+> we need?
 
-s/here/both here/ ?
+I have no strong opinion on this, but I feel rather tricky to have to 
+change generic part of GUP to use a new fonction then revert that change 
+in the following patch, just because you want the first patch in stable 
+and not the second one.
 
-(I think you can also format this slightly wider, now that indentation
-is not so deep anymore.)
+Regardless, I was wondering, why do we need a reference to the pXd at 
+all when calling pXd_addr_end() ?
 
-> +	 * and in the instruction emulation code.
-> +	 *
-> +	 * KSS is nullifying (no psw forward), SKRF
-> +	 * issues suppressing SPECIAL OPS, so we need
-> +	 * to forward by hand.
-> +	 */
-> +	if  (vcpu->arch.sie_block->ipa == 0) {
-> +		/*
-> +		 * Interception caused by a key in a
-> +		 * exception new PSW mask. The guest
-> +		 * PSW has already been updated to the
-> +		 * non-valid PSW so we only need to
-> +		 * inject a PGM.
-> +		 */
-> +		return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
-> +	}
-> +
-> +	kvm_s390_forward_psw(vcpu, kvm_s390_get_ilen(vcpu));
-> +	return kvm_s390_inject_program_int(vcpu, PGM_SPECIAL_OPERATION);
-> +}
-> +
->  int kvm_handle_sie_intercept(struct kvm_vcpu *vcpu)
->  {
->  	int rc, per_rc = 0;
-> @@ -565,7 +597,7 @@ int kvm_handle_sie_intercept(struct kvm_vcpu *vcpu)
->  		rc = handle_partial_execution(vcpu);
->  		break;
->  	case ICPT_KSS:
-> -		rc = kvm_s390_skey_check_enable(vcpu);
-> +		rc = handle_kss(vcpu);
->  		break;
->  	case ICPT_MCHKREQ:
->  	case ICPT_INT_ENABLE:
+Couldn't S390 retrieve the pXd by using the pXd_offset() dance with the 
+passed addr ?
 
-(...)
-
-> @@ -257,7 +264,7 @@ static int handle_iske(struct kvm_vcpu *vcpu)
->  
->  	rc = try_handle_skey(vcpu);
->  	if (rc)
-> -		return rc != -EAGAIN ? rc : 0;
-> +		return (rc != -EAGAIN || rc != -EOPNOTSUPP) ? rc : 0;
-
-As noticed by David, this probably needs to be &&, or maybe flipped to
-
-		return (rc == -EAGAIN || rc == -EOPNOTSUPP) ? 0 : rc;
-
->  
->  	kvm_s390_get_regs_rre(vcpu, &reg1, &reg2);
->  
-
+Christophe
