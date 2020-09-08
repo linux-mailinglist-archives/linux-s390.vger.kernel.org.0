@@ -2,139 +2,156 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96621261496
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 18:27:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5989A261581
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 18:52:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731673AbgIHQ1m (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Sep 2020 12:27:42 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:52582 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731915AbgIHQ1k (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 12:27:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=DvSiEr2JCy+2h9dy7CIecEenG2gQsa0A5OP2d9PI/p0=; b=dbg0PtMPK+HbvI6GMZzh/J5E8Z
-        Q/TWc7UsDFhg1cOVJt/pysWKo3QQRWraF1mqHM6mdRGQ6y0rj+OXqZUSgbgyS5kW1MF22xpb3bm/M
-        J9Rf7mpjgRlZVOcx1SZJ6EJp7lFy55R6nqk8PsS8AEsD0hf0g4vJC65mDtFEAYzf7cE0mQHAAVUlU
-        S7bbDUQqTHtHsrq5f8RHYZU0yCa5rG3lpeqMLTKlNXStV+C6+vhM0UL/8Wjc5CgLnNZYF3jPybjc/
-        ulyb1L7dumDVfTJQeMlSwf7IyaVvWKGWBe0b9ikUV9lDLMezAf5m+fY9DJk+AU+8aTTS01s/mCgwR
-        I5zJe2Ew==;
-Received: from s01060023bee90a7d.cg.shawcable.net ([24.64.145.4] helo=[192.168.0.10])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1kFfnI-0008Go-Gj; Tue, 08 Sep 2020 09:44:29 -0600
-To:     Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Tom Murphy <murphyt7@tcd.ie>
-Cc:     kvm@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-tegra@vger.kernel.org, Julien Grall <julien.grall@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org,
+        id S1732062AbgIHQv5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Sep 2020 12:51:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59652 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731719AbgIHQvu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 12:51:50 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088FWpHb171716;
+        Tue, 8 Sep 2020 11:39:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=ZE+1EhFZPApaQ3SkZgij3eeFLeg8ZYl8QKvXMOibk88=;
+ b=Hsc7CUzPcbzMB449ZNIyiwu7auIacUK/KbK57QmebxNxhUTWMsMygOWglxZtDXj+0i1y
+ XFXY0irNoWjh4N6uPI59bbRUPSGcYoLJoYvnEm3IYo8E5MNPxj200xVqAqfLFukbblef
+ uqyobHXmKZZoCfNzPOu562aVBVbHkmLnfTdo8+bqck8tZ99zVFcT0ZvJcOQ4SCgQQayF
+ 7DMEaQFZe2eZSI8PPdKcl4JON2SkPif+vx2CaGvcO3+OvnKrbAhlg5zakqh5hsyraTow
+ Mpm6JF2rPq+tCf7fr9oiOMziws4rejNcMEUcXi+4qzVkD6/d1NtTQAoUue0+4KnUvZuA Iw== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33ecjvre0f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 11:39:13 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088FcDbR023147;
+        Tue, 8 Sep 2020 15:39:11 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 33c2a8bkja-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 15:39:11 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088Fd8vA32965056
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 8 Sep 2020 15:39:08 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 687F611C05C;
+        Tue,  8 Sep 2020 15:39:08 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7B1F11C04A;
+        Tue,  8 Sep 2020 15:39:07 +0000 (GMT)
+Received: from thinkpad (unknown [9.171.25.197])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue,  8 Sep 2020 15:39:07 +0000 (GMT)
+Date:   Tue, 8 Sep 2020 17:39:06 +0200
+From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-mm@kvack.org, akpm@linux-foundation.org, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
         Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, Kukjin Kim <kgene@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20191221150402.13868-1-murphyt7@tcd.ie>
- <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
- <20200529124523.GA11817@infradead.org>
- <CGME20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d@eucas1p2.samsung.com>
- <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com>
- <ef2150d5-7b6a-df25-c10d-e43316fe7812@samsung.com>
- <b9140772-0370-a858-578c-af503a06d8e9@deltatee.com>
- <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
- <766525c3-4da9-6db7-cd90-fb4b82cd8083@deltatee.com>
- <60a82319-cbee-4cd1-0d5e-3c407cc51330@linux.intel.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <e598fb31-ef7a-c2ee-8a54-bf62d50c480c@deltatee.com>
-Date:   Tue, 8 Sep 2020 09:44:24 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: Re: [PATCH v4 00/13] mm/debug_vm_pgtable fixes
+Message-ID: <20200908173906.30fffaa0@thinkpad>
+In-Reply-To: <20200904180115.07ee5f00@thinkpad>
+References: <20200902114222.181353-1-aneesh.kumar@linux.ibm.com>
+        <bb0f3427-e2bd-f713-3ea8-d264be0e690b@arm.com>
+        <20200904172647.002113d3@thinkpad>
+        <20200904180115.07ee5f00@thinkpad>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <60a82319-cbee-4cd1-0d5e-3c407cc51330@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 24.64.145.4
-X-SA-Exim-Rcpt-To: robin.murphy@arm.com, kgene@kernel.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, cohuck@redhat.com, dwmw2@infradead.org, gerald.schaefer@de.ibm.com, virtualization@lists.linux-foundation.org, tglx@linutronix.de, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, intel-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org, agross@kernel.org, linux-rockchip@lists.infradead.org, hch@infradead.org, jonathanh@nvidia.com, krzk@kernel.org, maz@kernel.org, linux-samsung-soc@vger.kernel.org, jean-philippe@linaro.org, m.szyprowski@samsung.com, will@kernel.org, julien.grall@arm.com, linux-tegra@vger.kernel.org, bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org, airlied@linux.ie, kvm@vger.kernel.org, murphyt7@tcd.ie, tvrtko.ursulin@linux.intel.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [Intel-gfx] [PATCH 0/8] Convert the intel iommu driver to the
- dma-iommu api
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_08:2020-09-08,2020-09-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 spamscore=0
+ phishscore=0 mlxlogscore=999 malwarescore=0 adultscore=0 impostorscore=0
+ bulkscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009080148
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Fri, 4 Sep 2020 18:01:15 +0200
+Gerald Schaefer <gerald.schaefer@linux.ibm.com> wrote:
 
-
-On 2020-09-08 9:28 a.m., Tvrtko Ursulin wrote:
->>
->> diff --git a/drivers/gpu/drm/i915/i915_scatterlist.h
->> b/drivers/gpu/drm/i915/i915
->> index b7b59328cb76..9367ac801f0c 100644
->> --- a/drivers/gpu/drm/i915/i915_scatterlist.h
->> +++ b/drivers/gpu/drm/i915/i915_scatterlist.h
->> @@ -27,13 +27,19 @@ static __always_inline struct sgt_iter {
->>   } __sgt_iter(struct scatterlist *sgl, bool dma) {
->>          struct sgt_iter s = { .sgp = sgl };
->>
->> +       if (sgl && !sg_dma_len(s.sgp))
+[...]
 > 
-> I'd extend the condition to be, just to be safe:
->     if (dma && sgl && !sg_dma_len(s.sgp))
->
-
-Right, good catch, that's definitely necessary.
-
->> +               s.sgp = NULL;
->> +
->>          if (s.sgp) {
->>                  s.max = s.curr = s.sgp->offset;
->> -               s.max += s.sgp->length;
->> -               if (dma)
->> +
->> +               if (dma) {
->> +                       s.max += sg_dma_len(s.sgp);
->>                          s.dma = sg_dma_address(s.sgp);
->> -               else
->> +               } else {
->> +                       s.max += s.sgp->length;
->>                          s.pfn = page_to_pfn(sg_page(s.sgp));
->> +               }
+> BTW2, a quick test with this change (so far) made the issues on s390
+> go away:
 > 
-> Otherwise has this been tested or alternatively how to test it? (How to
-> repro the issue.)
+> @@ -1069,7 +1074,7 @@ static int __init debug_vm_pgtable(void)
+>         spin_unlock(ptl);
+> 
+>  #ifndef CONFIG_PPC_BOOK3S_64
+> -       hugetlb_advanced_tests(mm, vma, ptep, pte_aligned, vaddr, prot);
+> +       hugetlb_advanced_tests(mm, vma, (pte_t *) pmdp, pmd_aligned, vaddr, prot);
+>  #endif
+> 
+>         spin_lock(&mm->page_table_lock);
+> 
+> That would more match the "pte_t pointer" usage for hugetlb code,
+> i.e. just cast a pmd_t pointer to it. Also changed to pmd_aligned,
+> but I think the root cause is the pte_t pointer.
+> 
+> Not entirely sure though if that would really be the correct fix.
+> I somehow lost whatever little track I had about what these tests
+> really want to check, and if that would still be valid with that
+> change.
 
-It has not been tested. To test it, you need Tom's patch set without the
-last "DO NOT MERGE" patch:
+Uh oh, wasn't aware that this (or some predecessor) already went
+upstream, and broke our debug kernel today.
 
-https://lkml.kernel.org/lkml/20200907070035.GA25114@infradead.org/T/
+I found out now what goes (horribly) wrong on s390, see below for
+more details. In short, using hugetlb primitives with ptep pointers
+that do _not_ point to a pmd or pud entry will not work on s390.
+It also seems to make no sense to verify / test such a thing in general,
+as it would also be a severe bug if any kernel code would do that.
+After all, with hugepages, there are no pte tables, only pmd etc.
+tables.
 
-Thanks,
+My change above would fix the issue for s390, but I can still not
+completely judge if that would not break other things for your
+tests. In general, for normal kernel code, much of what you do would
+be very broken, but I guess your tests are doing such "special" things
+because they can. E.g. because they operate on some "sandbox" mm
+and page tables, and you also do not need properly populated page
+tables for some exit / free cleanup, you just throw them away
+explicitly with pXd_free at the end. So it might just be "the right
+thing" to pass a casted pmd pointer to hugetlb_advanced_tests(),
+to simulate and test (proper) usage of the hugetlb primitives.
+I also see no other way to make this work for s390, than using a
+proper pmd/pud pointer. If not possible, please add us to the
+#ifndef.
 
-Logan
+So, for all those interested, here is what goes wrong on s390.
+huge_ptep_get_and_clear() uses the "idte" instruction for the
+clearing (and TLB invalidation) part. That instruction expects
+a "region or segment table" origin, which is a pmd/pud/p4d/pgd,
+but not a pte table. Even worse, when we calculate the table
+origin from the given ptep (which *should* not point to a pte),
+due to different table sizes for pte / pXd tables, we end up
+at some place before the given pte table.
+
+The "idte" instruction also gets the virtual address, and does
+corresponding index addition to the given table origin. Depending
+on the pmd_index we now end up either within the pte table again,
+in which case we see a panic because idte complains about seeing
+a pte value. If we are unlucky, then we end up outside the pte
+table, and depending on the content of that memory location, idte
+might succeed, effectively corrupting that memory.
+
+That explains why we only see the panic sometimes, depending on
+random vaddr, other symptoms other times, and probably completely
+silent memory corruption for the rest...
