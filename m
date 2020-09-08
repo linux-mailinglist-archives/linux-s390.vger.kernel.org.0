@@ -2,76 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4418D260B50
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 08:55:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68F90260C1C
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 09:33:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgIHGzk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Sep 2020 02:55:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22352 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728895AbgIHGzj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 02:55:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599548139;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZJLwkK7lK8i/QhLFQOeO0BZqdoTLdZuycajPAvv67h8=;
-        b=QstJdR7A9rYMG9mmN+KVQfcxR9bO/D92hGRY4YllNH5kJoIoYUW+dNz87VBmsRqOhItJUX
-        3FRFm0wDYCQq3gXIArE89QY9ac3ryYoT9tTtcBb/cJSZeZZHPjz17y5NPMEqv6ZfXjjz2g
-        7fVEdXvMu2yqKNTv3AU5h2fXxpSNiFU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-256-TwQ8Aw_uOUmrRmno2GWVaA-1; Tue, 08 Sep 2020 02:55:35 -0400
-X-MC-Unique: TwQ8Aw_uOUmrRmno2GWVaA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A4F7801AC2;
-        Tue,  8 Sep 2020 06:55:32 +0000 (UTC)
-Received: from gondolin (ovpn-112-243.ams2.redhat.com [10.36.112.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 93DDC838A6;
-        Tue,  8 Sep 2020 06:55:25 +0000 (UTC)
-Date:   Tue, 8 Sep 2020 08:55:21 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v11 0/2] s390: virtio: let arch validate VIRTIO features
-Message-ID: <20200908085521.4db22680.cohuck@redhat.com>
-In-Reply-To: <20200908003951.233e47f3.pasic@linux.ibm.com>
-References: <1599471547-28631-1-git-send-email-pmorel@linux.ibm.com>
-        <20200908003951.233e47f3.pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1729296AbgIHHd5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Sep 2020 03:33:57 -0400
+Received: from mail-il1-f208.google.com ([209.85.166.208]:44512 "EHLO
+        mail-il1-f208.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728786AbgIHHdV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 03:33:21 -0400
+Received: by mail-il1-f208.google.com with SMTP id j11so11390357ilr.11
+        for <linux-s390@vger.kernel.org>; Tue, 08 Sep 2020 00:33:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=BOREg4ynb+fPnN3e6LDGE1Wyh7kbbVZvm+CMgLSzhTY=;
+        b=avI2AROotkDR5DDn/Ec5bXss0Kp3NEYqILKzM2OhsRrseXOe+glMk2uLykeNL5kY3O
+         jVFfMJVw30W21aNkV9pfWk7mKAq2PXUDwxmytq9dol6JzRS6D879Gk90fwUb9rPO1aOw
+         pCqJ7umGZX63mhvV8f715A1fZ6nbJX1akPwLcGkMGMYE2AcBnNHbHrwPWYn699NPkDDy
+         OKqvm2yZtpDW98jGPWSWzOfLURKQsUw+Q8FqEGHymJsXjBIKtNWlFaPLIMfVnT2FPplB
+         YnV1AFMRRoykvtmyEpC4m/wsgsodAvcP0VFDj+LD6yHVQ3XVjug72+K7Vs1NZBzGXpuo
+         NbCg==
+X-Gm-Message-State: AOAM531AC9mqNhsgSDcLEVW0SoDaWYkoYXli6dmMPg7DD6qXK2oW4Z+F
+        Qx2x/zI8752ebftrLzGdYP8r8WwGJn3RoLQS5GItJiGw3Kaw
+X-Google-Smtp-Source: ABdhPJwaTImHa51NL/wpTIwANersbSYjuM915z1X5HNmgz9VWgEKlDBrYRSzvTFLD0PjXXNrskhwTGUMvkvCt9jKLsX2U7M894mG
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Received: by 2002:a05:6638:1381:: with SMTP id w1mr1167608jad.34.1599550399784;
+ Tue, 08 Sep 2020 00:33:19 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 00:33:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000061311205aec85935@google.com>
+Subject: WARNING: refcount bug in smc_release (3)
+From:   syzbot <syzbot+8b963fe6ec74e5dac8d7@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kgraul@linux.ibm.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        ubraun@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 8 Sep 2020 00:39:51 +0200
-Halil Pasic <pasic@linux.ibm.com> wrote:
+Hello,
 
-> On Mon,  7 Sep 2020 11:39:05 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
-> > Hi all,
-> > 
-> > The goal of the series is to give a chance to the architecture
-> > to validate VIRTIO device features.  
-> 
-> Michael, is this going in via your tree?
-> 
+syzbot found the following issue on:
 
-I believe Michael's tree is the right place for this, but I can also
-queue it if I get an ack on patch 1.
+HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=114602f2900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
+dashboard link: https://syzkaller.appspot.com/bug?extid=8b963fe6ec74e5dac8d7
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+8b963fe6ec74e5dac8d7@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+refcount_t: addition on 0; use-after-free.
+WARNING: CPU: 1 PID: 28422 at lib/refcount.c:25 refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 28422 Comm: syz-executor.3 Not tainted 5.9.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x4a kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
+Code: 07 31 ff 89 de e8 97 d2 d8 fd 84 db 0f 85 36 ff ff ff e8 4a d6 d8 fd 48 c7 c7 a0 da 93 88 c6 05 43 e5 11 07 01 e8 39 e7 a9 fd <0f> 0b e9 17 ff ff ff e8 2b d6 d8 fd 0f b6 1d 28 e5 11 07 31 ff 89
+RSP: 0018:ffffc90017fafdd8 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: ffff8880477d43c0 RSI: ffffffff815dafc7 RDI: fffff52002ff5fad
+RBP: 0000000000000002 R08: 0000000000000001 R09: ffff8880ae720f8b
+R10: 0000000000000000 R11: 0000000000000001 R12: ffff888084ef0540
+R13: ffff88800011aa80 R14: ffff888084ef0558 R15: 0000000000000000
+ refcount_add include/linux/refcount.h:204 [inline]
+ refcount_inc include/linux/refcount.h:241 [inline]
+ sock_hold include/net/sock.h:692 [inline]
+ smc_release+0x41d/0x490 net/smc/af_smc.c:180
+ __sock_release+0xcd/0x280 net/socket.c:596
+ sock_close+0x18/0x20 net/socket.c:1277
+ __fput+0x285/0x920 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:141
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
+ exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
+ syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x416f01
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:000000000169fbe0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000416f01
+RDX: 0000000000000000 RSI: 000000000000097b RDI: 0000000000000004
+RBP: 0000000000000001 R08: 0000000000d9297a R09: 0000000000d9297e
+R10: 000000000169fcd0 R11: 0000000000000293 R12: 000000000118d940
+R13: 000000000118d940 R14: ffffffffffffffff R15: 000000000118cfec
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
