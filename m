@@ -2,95 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 713002606F9
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 00:40:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07A952609A1
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 06:43:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgIGWkI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 7 Sep 2020 18:40:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40364 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727771AbgIGWkH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Sep 2020 18:40:07 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 087MWdTM103088;
-        Mon, 7 Sep 2020 18:39:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=s3ToOn8Ca1MnXNW3hVaRvT7mu1YPbHGaIjqEqF+KQzs=;
- b=M9mgpPIK68ryG245V05SNN2vW7ed7kKb6ctcZnU8hQyQnvyVWgwyOkSzyzDWFggvuJkP
- oYfQv9AMfj+cWqq1eLz5FrurYX7mCuw4GWKgb1K/zk9awqsGsIXD5LkXjxywImYeIbn4
- TbvwRKtavwYEWAojDirGZWLTu9/EdLco+SxGPf4Sldh3BmxudtX8AhMrfCS9ZxJulVb4
- YEmn7Rvz7lr6k3jKqa2Sxw8ndTfHoKkmbVAu7xjAWXyw2ukS9mTqo+VbzrLaKv4x1uya
- AA7gnQVizoEBsx/FiX6AsaXNgZWbBpFaRdliUaApsuUrpcBB/ak0f0lU9v/jjlJX5pHh ag== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33dwgrraws-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 18:39:58 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 087MccZZ115767;
-        Mon, 7 Sep 2020 18:39:58 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33dwgrrawh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 18:39:58 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 087McB78008597;
-        Mon, 7 Sep 2020 22:39:56 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 33c2a8at43-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 22:39:56 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 087MdsXE27787736
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Sep 2020 22:39:54 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0358FA4075;
-        Mon,  7 Sep 2020 22:39:54 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B570A4071;
-        Mon,  7 Sep 2020 22:39:53 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.173.93])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Sep 2020 22:39:53 +0000 (GMT)
-Date:   Tue, 8 Sep 2020 00:39:51 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, mst@redhat.com, jasowang@redhat.com,
-        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v11 0/2] s390: virtio: let arch validate VIRTIO features
-Message-ID: <20200908003951.233e47f3.pasic@linux.ibm.com>
-In-Reply-To: <1599471547-28631-1-git-send-email-pmorel@linux.ibm.com>
-References: <1599471547-28631-1-git-send-email-pmorel@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1728474AbgIHEnD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Sep 2020 00:43:03 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:64482 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728576AbgIHEnD (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 8 Sep 2020 00:43:03 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4Blsw04dynz9v07M;
+        Tue,  8 Sep 2020 06:42:56 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 1zRgiYU2XgXP; Tue,  8 Sep 2020 06:42:56 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4Blsw02Lphz9v07L;
+        Tue,  8 Sep 2020 06:42:56 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0E1EE8B775;
+        Tue,  8 Sep 2020 06:42:57 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id IWq5rXD7F6WV; Tue,  8 Sep 2020 06:42:56 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D80618B768;
+        Tue,  8 Sep 2020 06:42:54 +0200 (CEST)
+Subject: Re: [RFC PATCH v2 0/3] mm/gup: fix gup_fast with dynamic page table
+ folding
+To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <9f9acde7-c400-53b0-38ec-ad3e48de5371@csgroup.eu>
+Date:   Tue, 8 Sep 2020 06:42:50 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-07_11:2020-09-07,2020-09-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 clxscore=1015
- lowpriorityscore=0 suspectscore=0 mlxlogscore=664 bulkscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009070213
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon,  7 Sep 2020 11:39:05 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> Hi all,
+
+Le 07/09/2020 à 20:00, Gerald Schaefer a écrit :
+> This is v2 of an RFC previously discussed here:
+> https://lore.kernel.org/lkml/20200828140314.8556-1-gerald.schaefer@linux.ibm.com/
 > 
-> The goal of the series is to give a chance to the architecture
-> to validate VIRTIO device features.
+> Patch 1 is a fix for a regression in gup_fast on s390, after our conversion
+> to common gup_fast code. It will introduce special helper functions
+> pXd_addr_end_folded(), which have to be used in places where pagetable walk
+> is done w/o lock and with READ_ONCE, so currently only in gup_fast.
+> 
+> Patch 2 is an attempt to make that more generic, i.e. change pXd_addr_end()
+> themselves by adding an extra pXd value parameter. That was suggested by
+> Jason during v1 discussion, because he is already thinking of some other
+> places where he might want to switch to the READ_ONCE logic for pagetable
+> walks. In general, that would be the cleanest / safest solution, but there
+> is some impact on other architectures and common code, hence the new and
+> greatly enlarged recipient list.
+> 
+> Patch 3 is a "nice to have" add-on, which makes pXd_addr_end() inline
+> functions instead of #defines, so that we get some type checking for the
+> new pXd value parameter.
+> 
+> Not sure about Fixes/stable tags for the generic solution. Only patch 1
+> fixes a real bug on s390, and has Fixes/stable tags. Patches 2 + 3 might
+> still be nice to have in stable, to ease future backports, but I guess
+> "nice to have" does not really qualify for stable backports.
 
-Michael, is this going in via your tree?
+If one day you have to backport a fix that requires patch 2 and/or 3, 
+just mark it "depends-on:" and the patches will go in stable at the 
+relevant time.
+
+Christophe
