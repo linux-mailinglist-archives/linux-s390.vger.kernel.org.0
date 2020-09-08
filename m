@@ -2,56 +2,77 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 018A7260AFB
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 08:31:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5BF6260B0E
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 08:39:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbgIHGbg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Sep 2020 02:31:36 -0400
-Received: from verein.lst.de ([213.95.11.211]:51513 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbgIHGbg (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:31:36 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id E4B0568AFE; Tue,  8 Sep 2020 08:31:33 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 08:31:33 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org
-Subject: set_fs removal for s390
-Message-ID: <20200908063133.GA14217@lst.de>
+        id S1728501AbgIHGjt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Sep 2020 02:39:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30330 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728115AbgIHGjt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 02:39:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599547188;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rsoJDQwHbzc2FzKEG0oCLi6Fz8Nuu83Q3N2T5Y49xnI=;
+        b=JQBV5Yw7QjKpO0FO4RK293Jb70WEEh5xuWK7ec3tqHP4E6GmDIU7hTOZn8RngK25ZirV0q
+        m2+MObSV8DuIpbW4bOKKDx/Tj1Df7DLn8X7SUcjFCzbEi38ov1IjhDesir/sgkbwaRI6ec
+        T1BNUKrI5xWoKr8g8dMCYklYDSxUfrM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-505-x0lSHKwiNkWjOzRbOYRvKg-1; Tue, 08 Sep 2020 02:39:46 -0400
+X-MC-Unique: x0lSHKwiNkWjOzRbOYRvKg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B5988800688;
+        Tue,  8 Sep 2020 06:39:44 +0000 (UTC)
+Received: from gondolin (ovpn-112-243.ams2.redhat.com [10.36.112.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 493B927BCD;
+        Tue,  8 Sep 2020 06:39:40 +0000 (UTC)
+Date:   Tue, 8 Sep 2020 08:39:37 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
+        gor@linux.ibm.com, imbrenda@linux.ibm.com, kvm@vger.kernel.org,
+        david@redhat.com, hca@linux.ibm.com
+Subject: Re: [PATCH v2 2/2] s390x: Add 3f program exception handler
+Message-ID: <20200908083937.5eae4a4b.cohuck@redhat.com>
+In-Reply-To: <20200907124700.10374-3-frankja@linux.ibm.com>
+References: <20200907124700.10374-1-frankja@linux.ibm.com>
+        <20200907124700.10374-3-frankja@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi s390 maintainers,
+On Mon,  7 Sep 2020 08:47:00 -0400
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-the base work to remove address space overrides using set_fs() has
-landed in linux-next through this tree:
+> Program exception 3f (secure storage violation) can only be detected
+> when the CPU is running in SIE with a format 4 state description,
+> e.g. running a protected guest. Because of this and because user
+> space partly controls the guest memory mapping and can trigger this
+> exception, we want to send a SIGSEGV to the process running the guest
+> and not panic the kernel.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> CC: <stable@vger.kernel.org> # 5.7+
+> Fixes: 084ea4d611a3 ("s390/mm: add (non)secure page access exceptions handlers")
+> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> ---
+>  arch/s390/kernel/pgm_check.S |  2 +-
+>  arch/s390/mm/fault.c         | 20 ++++++++++++++++++++
+>  2 files changed, 21 insertions(+), 1 deletion(-)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/log/?h=base.set_fs
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
-and in addition to x86 and powerpc converted there, we have arm, arm64
-and RISC-V conversion in progress.  That means s390 is the only "tier 1"
-architecture still missing.  Due to the special instructions for
-accessing the user space address space I don't really feel like doing
-the conversion myself, but it would be great if we could get s390 done
-for 5.10 as well.
-
-The rought TODO list is:
- (1) actually stop using set_fs in the zrcypt driver.  I could prepare
-     a crude untested patch for that if it helps.
- (2) implement the __get_user_nofault and __put_user_nofault helpers to
-     safely access kernel memory.  These should behave like
-     get_user/put_user under set_fs(KERNEL_DS), but not actually
-     manipulate any task state to do so
- (3) unselect CONFIG_SET_FS and remove all the code related to overriding
-     the address space(3) unselect CONFIG_SET_FS and remove all the code
-     related to overriding the address space limit
