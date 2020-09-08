@@ -2,134 +2,107 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54D10261B23
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 20:56:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 404F9261D03
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 21:30:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgIHSz2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Sep 2020 14:55:28 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20110 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728350AbgIHSyu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 14:54:50 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088IXZZd060588;
-        Tue, 8 Sep 2020 14:54:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=YPY+Z8lLZHccuoXJgk288xOmQXMV5vbQugXDWW9wyfA=;
- b=MKo8FGI8UaVB8fVz8LVcnNXD1HBUwimVgyVP22Yp9/7MyX1skYNyAHZRGRzDh0cf4bFT
- igBOGrtVs43YfSjlIJbl7qqdUZjTXQoxo6thNdkC0B66vK1vLpb2tF2yvdd6N5vwdq9U
- ZWuvzYs2wP38AklKx6N7LOLWUqRnWy7XBfugB6FdA40/QbPnpoCu2ppwASHXipIIki+I
- rTy8HsKIpytCHpIbWqyUmI60DtNoLIk3I8L6+6zFDDROaItKGl6Et3T33dy6nvj6puE+
- 0AHFBC9CUQyTxDupoTkeueOuMGucINf4/yT/N98Jgq6kjVp0jYD+ZA0vsQyFixgkc4rz UA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33edfjcqr0-1
+        id S1731026AbgIHT3y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Sep 2020 15:29:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56306 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731021AbgIHP62 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 11:58:28 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088C2A7s083483;
+        Tue, 8 Sep 2020 08:26:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=IIy7YCbdmkAGinScQBY8PxTdMyMAVk1trgEY205z6XM=;
+ b=Or3aEEAXhzWN2slMZXeHMQdkZOsGzTkjoBVO0oSukkxRg6WtT99skEQy9hxIw8+dEvpJ
+ vpjSvYYiXNpGkdIjjQi23YQ1yJ58GK6jmweVuIJWXLU39mW6AMII401dQup20NtCp8px
+ a/zofu+0iyFTgCT/CA9JJCurqUMyNzxsjrpR4zidD5J1XGa3i+/C+mUlkBRXkQdDM9w0
+ ZuF7y9Y97sqgHOX3B8cLpBpp6yOMBSpzxMs1OFIDr1CcmiHagV2CMYWpgGcfE4YpW1Ap
+ Pp5fO6U6+ZZPwucNbUxASP3fP77l+BYNDCvis+0lphI6cy0TBw2EAZnbewbzUA8werNZ cg== 
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33e939j6jy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 14:54:46 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088IY337063620;
-        Tue, 8 Sep 2020 14:54:46 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33edfjcqqb-1
+        Tue, 08 Sep 2020 08:26:43 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088CMrqb006874;
+        Tue, 8 Sep 2020 12:26:42 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma02fra.de.ibm.com with ESMTP id 33c2a823re-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 14:54:46 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088IqGOZ028541;
-        Tue, 8 Sep 2020 18:54:45 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma03dal.us.ibm.com with ESMTP id 33c2a8ywgq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 18:54:45 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088Ish9e53870928
+        Tue, 08 Sep 2020 12:26:41 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088CQdSi33489244
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Sep 2020 18:54:43 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60D7FB205F;
-        Tue,  8 Sep 2020 18:54:43 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 917EEB2064;
-        Tue,  8 Sep 2020 18:54:42 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.141.115])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  8 Sep 2020 18:54:42 +0000 (GMT)
-Subject: Re: [PATCH v10 02/16] s390/vfio-ap: use new AP bus interface to
- search for queue devices
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
-        pasic@linux.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com, fiuczy@linux.ibm.com, frankja@linux.ibm.com,
-        david@redhat.com, imbrenda@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, kernel test robot <lkp@intel.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
- <20200821195616.13554-3-akrowiak@linux.ibm.com>
- <37cd9b7e-a619-6603-7e47-f5e85814d673@de.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <34c10327-8640-24e8-b882-96962cae5050@linux.ibm.com>
-Date:   Tue, 8 Sep 2020 14:54:42 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 8 Sep 2020 12:26:39 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 090B342045;
+        Tue,  8 Sep 2020 12:26:39 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BADB24203F;
+        Tue,  8 Sep 2020 12:26:38 +0000 (GMT)
+Received: from osiris (unknown [9.171.47.162])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  8 Sep 2020 12:26:38 +0000 (GMT)
+Date:   Tue, 8 Sep 2020 14:26:37 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: set_fs removal for s390
+Message-ID: <20200908122637.GB14136@osiris>
+References: <20200908063133.GA14217@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <37cd9b7e-a619-6603-7e47-f5e85814d673@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908063133.GA14217@lst.de>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_09:2020-09-08,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- suspectscore=0 clxscore=1015 impostorscore=0 adultscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009080171
+ definitions=2020-09-08_06:2020-09-08,2020-09-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ clxscore=1011 phishscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080108
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Tue, Sep 08, 2020 at 08:31:33AM +0200, Christoph Hellwig wrote:
+> Hi s390 maintainers,
+> 
+> the base work to remove address space overrides using set_fs() has
+> landed in linux-next through this tree:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/log/?h=base.set_fs
+> 
+> and in addition to x86 and powerpc converted there, we have arm, arm64
+> and RISC-V conversion in progress.  That means s390 is the only "tier 1"
+> architecture still missing.  Due to the special instructions for
+> accessing the user space address space I don't really feel like doing
+> the conversion myself, but it would be great if we could get s390 done
+> for 5.10 as well.
+> 
+> The rought TODO list is:
+>  (1) actually stop using set_fs in the zrcypt driver.  I could prepare
+>      a crude untested patch for that if it helps.
 
+Hmm.. Harald's initial implementation years ago was without set_fs(),
+if I remember correctly, and then he was talked into using set_fs() ;)
 
-On 9/4/20 4:11 AM, Christian Borntraeger wrote:
->
-> On 21.08.20 21:56, Tony Krowiak wrote:
->> This patch refactor's the vfio_ap device driver to use the AP bus's
->> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
->> information about a queue that is bound to the vfio_ap device driver.
->> The bus's ap_get_qdev() function retrieves the queue device from a
->> hashtable keyed by APQN. This is much more efficient than looping over
->> the list of devices attached to the AP bus by several orders of
->> magnitude.
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> Reported-by: kernel test robot <lkp@intel.com>
-> I think this can go. No need to mark that an earlier version of this patch had an issue.
+Harald, can you take care of this part?
 
-I was just following the instructions in the robot comments. I'll get 
-rid of it.
+>  (2) implement the __get_user_nofault and __put_user_nofault helpers to
+>      safely access kernel memory.  These should behave like
+>      get_user/put_user under set_fs(KERNEL_DS), but not actually
+>      manipulate any task state to do so
+>  (3) unselect CONFIG_SET_FS and remove all the code related to overriding
+>      the address space(3) unselect CONFIG_SET_FS and remove all the code
+>      related to overriding the address space limit
 
->
->
-> [...]
->
->> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
->> index f46dde56b464..a2aa05bec718 100644
->> --- a/drivers/s390/crypto/vfio_ap_private.h
->> +++ b/drivers/s390/crypto/vfio_ap_private.h
->> @@ -18,6 +18,7 @@
->>   #include <linux/delay.h>
->>   #include <linux/mutex.h>
->>   #include <linux/kvm_host.h>
->> +#include <linux/hashtable.h>
-> I dont think that this header file needs it. Any user of it will now include this.
-> Can you move this include into the respective C file when the hash stuff is
-> used?
-
-I can.
-
->
->
-> Other than that this looks good.
-
+Ok, I guess everything will have to land in vfs.git then.
