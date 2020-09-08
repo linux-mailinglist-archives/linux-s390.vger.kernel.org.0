@@ -2,140 +2,83 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6BD5261DEE
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 21:44:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A981C261F71
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Sep 2020 22:03:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730662AbgIHTnk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Sep 2020 15:43:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49038 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730833AbgIHPvu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 11:51:50 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088FmxJI086290;
-        Tue, 8 Sep 2020 11:49:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=x24BGm+Fgj3ZmsKuCsewlqbYqVJ7sKXiAIAB+WpCSQQ=;
- b=o9fodx6aD+G5ovOeGdx+fReCygo8F9juW4hJnKEQD/cPODCcYnB/bESRUSSg0txDwJ3T
- s3+8p48PIEQWOvgrXNsEgEOlEzy9WhCb+NqT4vAKVPisD+cU5b/bX7skoEK8XLbP+Y2/
- z4thcEr1pcmoVBsucNvfM7/C+irxyK4o0Mp5+etHK2oTpTvs2PA5zNNYd/qI0Cb/fq4r
- 9yKNDycsJ40VLR6idpwh8cvjjexSVGQm/V5bFxNG58QYlfmrKN9+JGS+EOXURr3eSM2O
- 1S2JxrYWDL29kHIrcM4vKfxAe9F4fONUsRq7PHz468Oh8/bKKjjJy4VhxIp+qO9wdxci Nw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33earbnp3s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 11:49:09 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088Fn8gU087247;
-        Tue, 8 Sep 2020 11:49:08 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33earbnp29-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 11:49:08 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088FlvUq015855;
-        Tue, 8 Sep 2020 15:49:05 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 33dxdr0ryw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 15:49:05 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088Fn2TJ55312698
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Sep 2020 15:49:02 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B866C52050;
-        Tue,  8 Sep 2020 15:49:02 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.58.21])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 3B0BF52054;
-        Tue,  8 Sep 2020 15:49:01 +0000 (GMT)
-Date:   Tue, 8 Sep 2020 17:48:59 +0200
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>
-Subject: Re: [RFC PATCH v2 3/3] mm: make generic pXd_addr_end() macros inline
- functions
-Message-ID: <20200908154859.GA11583@oc3871087118.ibm.com>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
- <20200907180058.64880-4-gerald.schaefer@linux.ibm.com>
- <4c101685-5b29-dace-9dd2-b6f0ae193a9c@csgroup.eu>
+        id S1731359AbgIHUC7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Sep 2020 16:02:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730402AbgIHPYC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Sep 2020 11:24:02 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 189FEC06123D;
+        Tue,  8 Sep 2020 06:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=nqYpYzEbjozD6K+HBUuZ/V3Y3lp7izkRsPy7CYAzW8s=; b=KWkydcidVX5ZYdeTTD+VUnCru3
+        A0kIT8bLZoCsFP23bNI2PrXTyN1+Sc+YbimoJtsPKZ/lRkY7tmseqwSSSMmXiCaKZBxXHOAgdwQM7
+        FwrbfVI18HYOeBmhIMbYwtMW/FbeKCp+v18VIZcbIz04L1PCLT2yzSP2MQ9sQ9eIj0I6bZlD8jcR1
+        xU8jlj8Q02FT3Qb4lzubn6bKy5qovrUhqwUfdoxc20kAST2QWV9SiAcR2jcm834YlLxYRJzzRnhJr
+        MWuzdxK310tXSz0R2vngYhcXk7DwtH65jjfx3KyxE4Drt+lCwjC/0j3+rayY439qgOYD+aNeCcF4+
+        6dEXNlMw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFdhh-00074x-NE; Tue, 08 Sep 2020 13:30:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DAEF93010D2;
+        Tue,  8 Sep 2020 15:30:31 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 70A8821219223; Tue,  8 Sep 2020 15:30:31 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 15:30:31 +0200
+From:   peterz@infradead.org
+To:     hca@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        rafael.j.wysocki@intel.com, svens@linux.ibm.com
+Subject: [PATCH] s390/idle: Fix suspicious RCU usage
+Message-ID: <20200908133031.GT1362448@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4c101685-5b29-dace-9dd2-b6f0ae193a9c@csgroup.eu>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_08:2020-09-08,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- adultscore=0 mlxscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- phishscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009080143
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 07:19:38AM +0200, Christophe Leroy wrote:
 
-[...]
+After commit eb1f00237aca ("lockdep,trace: Expose tracepoints") the
+lock tracepoints are visible to lockdep and RCU-lockdep is finding a
+bunch more RCU violations that were previously hidden.
 
-> >diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> >index 67ebc22cf83d..d9e7d16c2263 100644
-> >--- a/include/linux/pgtable.h
-> >+++ b/include/linux/pgtable.h
-> >@@ -656,31 +656,35 @@ static inline int arch_unmap_one(struct mm_struct *mm,
-> >   */
-> >  #ifndef pgd_addr_end
-> >-#define pgd_addr_end(pgd, addr, end)					\
-> >-({	unsigned long __boundary = ((addr) + PGDIR_SIZE) & PGDIR_MASK;	\
-> >-	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
-> >-})
-> >+#define pgd_addr_end pgd_addr_end
-> 
-> I think that #define is pointless, usually there is no such #define
-> for the default case.
+Switch the idle->seqcount over to using raw_write_*() to avoid the
+lockdep annotation and thus the lock tracepoints.
 
-Default pgd_addr_end() gets overriden on s390 (arch/s390/include/asm/pgtable.h):
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/s390/kernel/idle.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-#define pgd_addr_end pgd_addr_end
-static inline unsigned long pgd_addr_end(pgd_t pgd, unsigned long addr, unsigned long end)
-{
-	return rste_addr_end_folded(pgd_val(pgd), addr, end);
-}
-
-> >+static inline unsigned long pgd_addr_end(pgd_t pgd, unsigned long addr, unsigned long end)
-> >+{	unsigned long __boundary = (addr + PGDIR_SIZE) & PGDIR_MASK;
-> >+	return (__boundary - 1 < end - 1) ? __boundary : end;
-> >+}
+--- a/arch/s390/kernel/idle.c
++++ b/arch/s390/kernel/idle.c
+@@ -39,14 +39,13 @@ void enabled_wait(void)
+ 	local_irq_restore(flags);
+ 
+ 	/* Account time spent with enabled wait psw loaded as idle time. */
+-	/* XXX seqcount has tracepoints that require RCU */
+-	write_seqcount_begin(&idle->seqcount);
++	raw_write_seqcount_begin(&idle->seqcount);
+ 	idle_time = idle->clock_idle_exit - idle->clock_idle_enter;
+ 	idle->clock_idle_enter = idle->clock_idle_exit = 0ULL;
+ 	idle->idle_time += idle_time;
+ 	idle->idle_count++;
+ 	account_idle_time(cputime_to_nsecs(idle_time));
+-	write_seqcount_end(&idle->seqcount);
++	raw_write_seqcount_end(&idle->seqcount);
+ }
+ NOKPROBE_SYMBOL(enabled_wait);
+ 
