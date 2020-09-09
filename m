@@ -2,44 +2,80 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75303262A8C
-	for <lists+linux-s390@lfdr.de>; Wed,  9 Sep 2020 10:39:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AE5D262B92
+	for <lists+linux-s390@lfdr.de>; Wed,  9 Sep 2020 11:17:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgIIIjb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 9 Sep 2020 04:39:31 -0400
-Received: from foss.arm.com ([217.140.110.172]:39874 "EHLO foss.arm.com"
+        id S1725917AbgIIJRK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 9 Sep 2020 05:17:10 -0400
+Received: from mga18.intel.com ([134.134.136.126]:62578 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbgIIIjb (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 9 Sep 2020 04:39:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AAA11FB;
-        Wed,  9 Sep 2020 01:39:30 -0700 (PDT)
-Received: from [10.163.71.250] (unknown [10.163.71.250])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F9E33F66E;
-        Wed,  9 Sep 2020 01:39:26 -0700 (PDT)
-Subject: Re: [PATCH v4 00/13] mm/debug_vm_pgtable fixes
-To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linux-mm@kvack.org, akpm@linux-foundation.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        id S1725826AbgIIJRI (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 9 Sep 2020 05:17:08 -0400
+IronPort-SDR: 4UfoviER+163ZOfzvllxRS/M+W5Ldi8Ryv0yri+p+qHvLJVmuHgWLSYY5x76tEdwZa0KKFqs3/
+ diG40ofYg8CQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="146013094"
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="146013094"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:16:52 -0700
+IronPort-SDR: Eu5LFEF7mQvPvjaKgHiNi+EAI6twzANJVXLRWHJjqt2BIA4DKeAAOOzWigLRgh7pJRkcZk2JZB
+ paZ/kvhmY5KQ==
+X-IronPort-AV: E=Sophos;i="5.76,409,1592895600"; 
+   d="scan'208";a="480390735"
+Received: from vdc-station-04.ger.corp.intel.com (HELO [10.251.165.91]) ([10.251.165.91])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2020 02:16:41 -0700
+Subject: Re: [Intel-gfx] [PATCH 0/8] Convert the intel iommu driver to the
+ dma-iommu api
+To:     Tom Murphy <murphyt7@tcd.ie>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, kvm@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-tegra@vger.kernel.org, Julien Grall <julien.grall@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        virtualization@lists.linux-foundation.org,
         Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>
-References: <20200902114222.181353-1-aneesh.kumar@linux.ibm.com>
- <bb0f3427-e2bd-f713-3ea8-d264be0e690b@arm.com>
- <20200904172647.002113d3@thinkpad> <20200904180115.07ee5f00@thinkpad>
- <20200904195346.6d57ff9f@thinkpad>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <c6f4857e-4523-ad32-cbc1-fee417fc3f37@arm.com>
-Date:   Wed, 9 Sep 2020 14:08:55 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        David Woodhouse <dwmw2@infradead.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, Kukjin Kim <kgene@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+References: <20191221150402.13868-1-murphyt7@tcd.ie>
+ <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
+ <20200529124523.GA11817@infradead.org>
+ <CGME20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d@eucas1p2.samsung.com>
+ <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com>
+ <ef2150d5-7b6a-df25-c10d-e43316fe7812@samsung.com>
+ <b9140772-0370-a858-578c-af503a06d8e9@deltatee.com>
+ <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
+ <766525c3-4da9-6db7-cd90-fb4b82cd8083@deltatee.com>
+ <60a82319-cbee-4cd1-0d5e-3c407cc51330@linux.intel.com>
+ <e598fb31-ef7a-c2ee-8a54-bf62d50c480c@deltatee.com>
+ <b27cae1f-07ff-bef2-f125-a5f0d968016d@linux.intel.com>
+ <CALQxJut5c=cWdi+SVkN3JnbkhPSYmLkOyRUhduL-UJ9gyKn9Ow@mail.gmail.com>
+From:   Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Organization: Intel Corporation UK Plc
+Message-ID: <7106602a-9964-851e-9c4e-d8acf4033b89@linux.intel.com>
+Date:   Wed, 9 Sep 2020 10:16:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200904195346.6d57ff9f@thinkpad>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CALQxJut5c=cWdi+SVkN3JnbkhPSYmLkOyRUhduL-UJ9gyKn9Ow@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
@@ -47,142 +83,100 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 09/04/2020 11:23 PM, Gerald Schaefer wrote:
-> On Fri, 4 Sep 2020 18:01:15 +0200
-> Gerald Schaefer <gerald.schaefer@linux.ibm.com> wrote:
-> 
->> On Fri, 4 Sep 2020 17:26:47 +0200
->> Gerald Schaefer <gerald.schaefer@linux.ibm.com> wrote:
->>
->>> On Fri, 4 Sep 2020 12:18:05 +0530
->>> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
->>>
->>>>
->>>>
->>>> On 09/02/2020 05:12 PM, Aneesh Kumar K.V wrote:
->>>>> This patch series includes fixes for debug_vm_pgtable test code so that
->>>>> they follow page table updates rules correctly. The first two patches introduce
->>>>> changes w.r.t ppc64. The patches are included in this series for completeness. We can
->>>>> merge them via ppc64 tree if required.
->>>>>
->>>>> Hugetlb test is disabled on ppc64 because that needs larger change to satisfy
->>>>> page table update rules.
->>>>>
->>>>> These tests are broken w.r.t page table update rules and results in kernel
->>>>> crash as below. 
->>>>>
->>>>> [   21.083519] kernel BUG at arch/powerpc/mm/pgtable.c:304!
->>>>> cpu 0x0: Vector: 700 (Program Check) at [c000000c6d1e76c0]
->>>>>     pc: c00000000009a5ec: assert_pte_locked+0x14c/0x380
->>>>>     lr: c0000000005eeeec: pte_update+0x11c/0x190
->>>>>     sp: c000000c6d1e7950
->>>>>    msr: 8000000002029033
->>>>>   current = 0xc000000c6d172c80
->>>>>   paca    = 0xc000000003ba0000   irqmask: 0x03   irq_happened: 0x01
->>>>>     pid   = 1, comm = swapper/0
->>>>> kernel BUG at arch/powerpc/mm/pgtable.c:304!
->>>>> [link register   ] c0000000005eeeec pte_update+0x11c/0x190
->>>>> [c000000c6d1e7950] 0000000000000001 (unreliable)
->>>>> [c000000c6d1e79b0] c0000000005eee14 pte_update+0x44/0x190
->>>>> [c000000c6d1e7a10] c000000001a2ca9c pte_advanced_tests+0x160/0x3d8
->>>>> [c000000c6d1e7ab0] c000000001a2d4fc debug_vm_pgtable+0x7e8/0x1338
->>>>> [c000000c6d1e7ba0] c0000000000116ec do_one_initcall+0xac/0x5f0
->>>>> [c000000c6d1e7c80] c0000000019e4fac kernel_init_freeable+0x4dc/0x5a4
->>>>> [c000000c6d1e7db0] c000000000012474 kernel_init+0x24/0x160
->>>>> [c000000c6d1e7e20] c00000000000cbd0 ret_from_kernel_thread+0x5c/0x6c
->>>>>
->>>>> With DEBUG_VM disabled
->>>>>
->>>>> [   20.530152] BUG: Kernel NULL pointer dereference on read at 0x00000000
->>>>> [   20.530183] Faulting instruction address: 0xc0000000000df330
->>>>> cpu 0x33: Vector: 380 (Data SLB Access) at [c000000c6d19f700]
->>>>>     pc: c0000000000df330: memset+0x68/0x104
->>>>>     lr: c00000000009f6d8: hash__pmdp_huge_get_and_clear+0xe8/0x1b0
->>>>>     sp: c000000c6d19f990
->>>>>    msr: 8000000002009033
->>>>>    dar: 0
->>>>>   current = 0xc000000c6d177480
->>>>>   paca    = 0xc00000001ec4f400   irqmask: 0x03   irq_happened: 0x01
->>>>>     pid   = 1, comm = swapper/0
->>>>> [link register   ] c00000000009f6d8 hash__pmdp_huge_get_and_clear+0xe8/0x1b0
->>>>> [c000000c6d19f990] c00000000009f748 hash__pmdp_huge_get_and_clear+0x158/0x1b0 (unreliable)
->>>>> [c000000c6d19fa10] c0000000019ebf30 pmd_advanced_tests+0x1f0/0x378
->>>>> [c000000c6d19fab0] c0000000019ed088 debug_vm_pgtable+0x79c/0x1244
->>>>> [c000000c6d19fba0] c0000000000116ec do_one_initcall+0xac/0x5f0
->>>>> [c000000c6d19fc80] c0000000019a4fac kernel_init_freeable+0x4dc/0x5a4
->>>>> [c000000c6d19fdb0] c000000000012474 kernel_init+0x24/0x160
->>>>> [c000000c6d19fe20] c00000000000cbd0 ret_from_kernel_thread+0x5c/0x6c
->>>>>
->>>>> Changes from v3:
->>>>> * Address review feedback
->>>>> * Move page table depost and withdraw patch after adding pmdlock to avoid bisect failure.
->>>>
->>>> This version
->>>>
->>>> - Builds on x86, arm64, s390, arc, powerpc and riscv (defconfig with DEBUG_VM_PGTABLE)
->>>> - Runs on arm64 and x86 without any regression, atleast nothing that I have noticed
->>>> - Will be great if this could get tested on s390, arc, riscv, ppc32 platforms as well
->>>
->>> When I quickly tested v3, it worked fine, but now it turned out to
->>> only work fine "sometimes", both v3 and v4. I need to look into it
->>> further, but so far it seems related to the hugetlb_advanced_tests().
->>>
->>> I guess there was already some discussion on this test, but we did
->>> not receive all of the thread(s). Please always add at least
->>> linux-s390@vger.kernel.org and maybe myself and Vasily Gorbik <gor@linux.ibm.com>
->>> for further discussions.
->>
->> BTW, with myself I mean the new address gerald.schaefer@linux.ibm.com.
->> The old gerald.schaefer@de.ibm.com seems to work (again), but is not
->> very reliable.
->>
->> BTW2, a quick test with this change (so far) made the issues on s390
->> go away:
->>
->> @@ -1069,7 +1074,7 @@ static int __init debug_vm_pgtable(void)
->>         spin_unlock(ptl);
->>
->>  #ifndef CONFIG_PPC_BOOK3S_64
->> -       hugetlb_advanced_tests(mm, vma, ptep, pte_aligned, vaddr, prot);
->> +       hugetlb_advanced_tests(mm, vma, (pte_t *) pmdp, pmd_aligned, vaddr, prot);
->>  #endif
->>
->>         spin_lock(&mm->page_table_lock);
->>
->> That would more match the "pte_t pointer" usage for hugetlb code,
->> i.e. just cast a pmd_t pointer to it. Also changed to pmd_aligned,
->> but I think the root cause is the pte_t pointer.
->>
->> Not entirely sure though if that would really be the correct fix.
->> I somehow lost whatever little track I had about what these tests
->> really want to check, and if that would still be valid with that
->> change.
-> 
-> Another potential issue, apparently not for s390, but maybe for
-> others, is that the vaddr passed to hugetlb_advanced_tests() is
-> also not pmd/pud size aligned, like you did in pmd/pud_advanced_tests().
-> 
-> I guess for the hugetlb_advanced_tests() you need to choose if
-> you want to test pmd or pud hugepages, and accordingly prepare
-> the *ptep, pfn and vaddr input. If you only check for CONFIG_HUGETLB_PAGE,
-> then probably only pmd hugepages would be safe, there might be
-> architectures only supporting one hugepage size.
 
-I guess preparing for PMD based HugeTLB tests should be sufficient
-for now, which can be improved later on to cover other levels.
+On 08/09/2020 23:43, Tom Murphy wrote:
+> On Tue, 8 Sep 2020 at 16:56, Tvrtko Ursulin
+> <tvrtko.ursulin@linux.intel.com> wrote:
+>>
+>>
+>> On 08/09/2020 16:44, Logan Gunthorpe wrote:
+>>> On 2020-09-08 9:28 a.m., Tvrtko Ursulin wrote:
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/i915/i915_scatterlist.h
+>>>>> b/drivers/gpu/drm/i915/i915
+>>>>> index b7b59328cb76..9367ac801f0c 100644
+>>>>> --- a/drivers/gpu/drm/i915/i915_scatterlist.h
+>>>>> +++ b/drivers/gpu/drm/i915/i915_scatterlist.h
+>>>>> @@ -27,13 +27,19 @@ static __always_inline struct sgt_iter {
+>>>>>     } __sgt_iter(struct scatterlist *sgl, bool dma) {
+>>>>>            struct sgt_iter s = { .sgp = sgl };
+>>>>>
+>>>>> +       if (sgl && !sg_dma_len(s.sgp))
+>>>>
+>>>> I'd extend the condition to be, just to be safe:
+>>>>       if (dma && sgl && !sg_dma_len(s.sgp))
+>>>>
+>>>
+>>> Right, good catch, that's definitely necessary.
+>>>
+>>>>> +               s.sgp = NULL;
+>>>>> +
+>>>>>            if (s.sgp) {
+>>>>>                    s.max = s.curr = s.sgp->offset;
+>>>>> -               s.max += s.sgp->length;
+>>>>> -               if (dma)
+>>>>> +
+>>>>> +               if (dma) {
+>>>>> +                       s.max += sg_dma_len(s.sgp);
+>>>>>                            s.dma = sg_dma_address(s.sgp);
+>>>>> -               else
+>>>>> +               } else {
+>>>>> +                       s.max += s.sgp->length;
+>>>>>                            s.pfn = page_to_pfn(sg_page(s.sgp));
+>>>>> +               }
+>>>>
+>>>> Otherwise has this been tested or alternatively how to test it? (How to
+>>>> repro the issue.)
+>>>
+>>> It has not been tested. To test it, you need Tom's patch set without the
+>>> last "DO NOT MERGE" patch:
+>>>
+>>> https://lkml.kernel.org/lkml/20200907070035.GA25114@infradead.org/T/
+>>
+>> Tom, do you have a branch somewhere I could pull from? (Just being lazy
+>> about downloading a bunch of messages from the archives.)
+> 
+> I don't unfortunately. I'm working locally with poor internet.
+> 
+>>
+>> What GPU is in your Lenovo x1 carbon 5th generation and what
+>> graphical/desktop setup I need to repro?
+> 
+> 
+> Is this enough info?:
+> 
+> $ lspci -vnn | grep VGA -A 12
+> 00:02.0 VGA compatible controller [0300]: Intel Corporation HD
+> Graphics 620 [8086:5916] (rev 02) (prog-if 00 [VGA controller])
+>      Subsystem: Lenovo ThinkPad X1 Carbon 5th Gen [17aa:224f]
+>      Flags: bus master, fast devsel, latency 0, IRQ 148
+>      Memory at eb000000 (64-bit, non-prefetchable) [size=16M]
+>      Memory at 60000000 (64-bit, prefetchable) [size=256M]
+>      I/O ports at e000 [size=64]
+>      [virtual] Expansion ROM at 000c0000 [disabled] [size=128K]
+>      Capabilities: [40] Vendor Specific Information: Len=0c <?>
+>      Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
+>      Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>      Capabilities: [d0] Power Management version 2
+>      Capabilities: [100] Process Address Space ID (PASID)
+>      Capabilities: [200] Address Translation Service (ATS)
 
-> 
-> So, for s390, at least the ptep input value is a problem. Still
-> need to better understand how it goes wrong, but it seems to be
-> fixed when using proper pmdp, and also works with pudp.
-> 
-> For others, especially the apparent issues on ppc64, the other
-> non-hugepage aligned input pfn and vaddr might also be an issue,
-> e.g. power at least seems to use the vaddr in its set_huge_pte_at()
-> implementation for some pmd_off(mm, addr) calculation.
-> 
-> Again, sorry if this was already discussed, I missed most of it
-> and honestly didn't properly look at the scarce mails that we did
-> receive...
+Works for a start. What about the steps to repro? Any desktop 
+environment and it is just visual corruption, no hangs/stalls or such?
 
-Sure, will consider these points and try improve tests afterwards.
+I've submitted a series consisting of what I understood are the patches 
+needed to repro the issue to our automated CI here:
+
+https://patchwork.freedesktop.org/series/81489/
+
+So will see if it will catch something, or more targeted testing will be 
+required. Hopefully it does trip over in which case I can add the patch 
+suggested by Logan on top and see if that fixes it. Or I'll need to 
+write a new test case.
+
+If you could glance over my series to check I identified the patches 
+correctly it would be appreciated.
+
+Regards,
+
+Tvrtko
