@@ -2,101 +2,166 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2427E263A54
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Sep 2020 04:27:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01F4E263A44
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Sep 2020 04:25:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730494AbgIJC1E (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 9 Sep 2020 22:27:04 -0400
-Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:41384 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729413AbgIJCYQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 9 Sep 2020 22:24:16 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave01.hostedemail.com (Postfix) with ESMTP id 55AC918027FA3;
-        Wed,  9 Sep 2020 22:47:33 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id A42B7181D337B;
-        Wed,  9 Sep 2020 22:47:32 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:800:960:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2553:2559:2562:2828:2898:3138:3139:3140:3141:3142:3352:3622:3865:3866:3867:3868:3870:3871:3872:3873:4321:5007:6742:6743:8700:10004:10400:10848:11232:11658:11914:12043:12297:12740:12760:12895:13069:13311:13357:13439:14181:14659:14721:21080:21433:21627:21939:30054:30070:30090:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: sort28_6003546270e1
-X-Filterd-Recvd-Size: 3292
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf20.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  9 Sep 2020 22:47:25 +0000 (UTC)
-Message-ID: <b3d6f71aea87f4bb88554f1a3fdaee0b2feb158c.camel@perches.com>
-Subject: Re: [trivial PATCH] treewide: Convert switch/case fallthrough; to
- break;
-From:   Joe Perches <joe@perches.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Jiri Kosina <trivial@kernel.org>,
-        Kees Cook <kees.cook@canonical.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-rdma@vger.kernel.org,
-        iommu@lists.linux-foundation.org, dm-devel@redhat.com,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
-        oss-drivers@netronome.com, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
-        storagedev@microchip.com, sparclinux@vger.kernel.org,
-        linux-serial@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-parisc@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, bpf@vger.kernel.org,
-        dccp@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, linux-sctp@vger.kernel.org,
-        alsa-devel <alsa-devel@alsa-project.org>
-Date:   Wed, 09 Sep 2020 15:47:24 -0700
-In-Reply-To: <20200909223602.GJ87483@ziepe.ca>
-References: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
-         <20200909223602.GJ87483@ziepe.ca>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        id S1730726AbgIJCYg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 9 Sep 2020 22:24:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53754 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730684AbgIJCIi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 9 Sep 2020 22:08:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599703717;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9lUmVHlRg0jPhlantuCk3hiT6WHd/nIzITZFw+wGi90=;
+        b=ATCEs4iarH6CiAeGnelgL9WXp+fL2etKppxLdsXEkK3w42lMmjX0/VCN+huEfWEmHk89Po
+        IECVmvxKpbfW9a8Qm5FmV1BTnUuBABUEoiJCGU5hpUwxGqgRD+O6NOAlHQFB3p+Y/mc5vw
+        kRjxnA1JqRa5L+MaH+6hLuKSCW+bU48=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-381-PdjO5lmxOoqImIc6M2pBzA-1; Wed, 09 Sep 2020 19:07:52 -0400
+X-MC-Unique: PdjO5lmxOoqImIc6M2pBzA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97082801F98;
+        Wed,  9 Sep 2020 23:07:50 +0000 (UTC)
+Received: from w520.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 209F57EED4;
+        Wed,  9 Sep 2020 23:07:48 +0000 (UTC)
+Date:   Wed, 9 Sep 2020 17:07:46 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
+        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] PCI/IOV: Mark VFs as not implementing MSE bit
+Message-ID: <20200909170746.2286b83a@w520.home>
+In-Reply-To: <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
+References: <20200903164117.GA312152@bjorn-Precision-5520>
+        <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 2020-09-09 at 19:36 -0300, Jason Gunthorpe wrote:
-> On Wed, Sep 09, 2020 at 01:06:39PM -0700, Joe Perches wrote:
-> > fallthrough to a separate case/default label break; isn't very readable.
-> > 
-> > Convert pseudo-keyword fallthrough; statements to a simple break; when
-> > the next label is case or default and the only statement in the next
-> > label block is break;
-> > 
-> > Found using:
-> > 
-> > $ grep-2.5.4 -rP --include=*.[ch] -n "fallthrough;(\s*(case\s+\w+|default)\s*:\s*){1,7}break;" *
-> > 
-> > Miscellanea:
-> > 
-> > o Move or coalesce a couple label blocks above a default: block.
-> > 
-> > Signed-off-by: Joe Perches <joe@perches.com>
-> > ---
-> > 
-> > Compiled allyesconfig x86-64 only.
-> > A few files for other arches were not compiled.
-> 
-> IB part looks OK, I prefer it like this
-> 
-> You could do the same for continue as well, I saw a few of those..
+On Thu, 3 Sep 2020 13:10:02 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-I saw some continue uses as well but wasn't sure
-and didn't look to see if the switch/case with
-continue was in a for/while loop.
+> On 9/3/20 12:41 PM, Bjorn Helgaas wrote:
+> > On Wed, Sep 02, 2020 at 03:46:34PM -0400, Matthew Rosato wrote:  
+> >> Per the PCIe spec, VFs cannot implement the MSE bit
+> >> AKA PCI_COMMAND_MEMORY, and it must be hard-wired to 0.
+> >> Use a dev_flags bit to signify this requirement.  
+> > 
+> > This approach seems sensible to me, but
+> > 
+> >    - This is confusing because while the spec does not use "MSE" to
+> >      refer to the Command Register "Memory Space Enable" bit
+> >      (PCI_COMMAND_MEMORY), it *does* use "MSE" in the context of the
+> >      "VF MSE" bit, which is in the PF SR-IOV Capability.  But of
+> >      course, you're not talking about that here.  Maybe something like
+> >      this?
+> > 
+> >        For VFs, the Memory Space Enable bit in the Command Register is
+> >        hard-wired to 0.
+> > 
+> >        Add a dev_flags bit to signify devices where the Command
+> >        Register Memory Space Enable bit does not control the device's
+> >        response to MMIO accesses.  
+> 
+> Will do.  I'll change the usage of the MSE acronym in the other patches 
+> as well.
+> 
+> > 
+> >    - "PCI_DEV_FLAGS_FORCE_COMMAND_MEM" says something about how you
+> >      plan to *use* this, but I'd rather use a term that describes the
+> >      hardware, e.g., "PCI_DEV_FLAGS_NO_COMMAND_MEMORY".  
+> 
+> Sure, I will change.
+> 
+> > 
+> >    - How do we decide whether to use dev_flags vs a bitfield like
+> >      dev->is_virtfn?  The latter seems simpler unless there's a reason
+> >      to use dev_flags.  If there's a reason, maybe we could add a
+> >      comment at pci_dev_flags for future reference.
+> >   
+> 
+> Something like:
+> 
+> /*
+>   * Device does not implement PCI_COMMAND_MEMORY - this is true for any
+>   * device marked is_virtfn, but is also true for any VF passed-through
+>   * a lower-level hypervisor where emulation of the Memory Space Enable
+>   * bit was not provided.
+>   */
+> PCI_DEV_FLAGS_NO_COMMAND_MEMORY = (__force pci_dev_flags_t) (1 << 12),
+> 
+> ?
+> 
+> >    - Wrap the commit log to fill a 75-char line.  It's arbitrary, but
+> >      that's what I use for consistency.  
+> 
+> Sure, will do.  I'll roll up a new version once I have feedback from 
+> Alex on the vfio changes.
 
+The usage of MSE threw me a bit too, as Bjorn notes that's specific to
+the SR-IOV capability.  I think this also uncovers a latent bug in our
+calling of vfio_bar_restore(), it really doesn't do a good job of
+determining whether an enable bit is implemented, regardless of whether
+it's a VF or the device simply doesn't use that address space.  For
+example I imagine you could reproduce triggering a reset recovery on
+s390 by trying to write the VF command register to 1 with setpci from a
+guest (since you won't have is_virtfn to bail out of the recovery
+function).  I think we'll still need this dev_flag to differentiate
+unimplmented and enabled versus simply unimplemented to resolve that
+though, so the change looks ok to me. Thanks,
+
+Alex
+
+> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> >> ---
+> >>   drivers/pci/iov.c   | 1 +
+> >>   include/linux/pci.h | 2 ++
+> >>   2 files changed, 3 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> >> index b37e08c..2bec77c 100644
+> >> --- a/drivers/pci/iov.c
+> >> +++ b/drivers/pci/iov.c
+> >> @@ -180,6 +180,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+> >>   	virtfn->device = iov->vf_device;
+> >>   	virtfn->is_virtfn = 1;
+> >>   	virtfn->physfn = pci_dev_get(dev);
+> >> +	virtfn->dev_flags |= PCI_DEV_FLAGS_FORCE_COMMAND_MEM;
+> >>   
+> >>   	if (id == 0)
+> >>   		pci_read_vf_config_common(virtfn);
+> >> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> >> index 8355306..9316cce 100644
+> >> --- a/include/linux/pci.h
+> >> +++ b/include/linux/pci.h
+> >> @@ -227,6 +227,8 @@ enum pci_dev_flags {
+> >>   	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
+> >>   	/* Don't use Relaxed Ordering for TLPs directed at this device */
+> >>   	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
+> >> +	/* Device does not implement PCI_COMMAND_MEMORY (e.g. a VF) */
+> >> +	PCI_DEV_FLAGS_FORCE_COMMAND_MEM = (__force pci_dev_flags_t) (1 << 12),
+> >>   };
+> >>   
+> >>   enum pci_irq_reroute_variant {
+> >> -- 
+> >> 1.8.3.1
+> >>  
+> 
 
