@@ -2,39 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14349265A80
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Sep 2020 09:27:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A81EC265B03
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Sep 2020 10:02:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725550AbgIKH1i (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 11 Sep 2020 03:27:38 -0400
-Received: from verein.lst.de ([213.95.11.211]:35852 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbgIKH1g (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 11 Sep 2020 03:27:36 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 778A768B02; Fri, 11 Sep 2020 09:27:34 +0200 (CEST)
-Date:   Fri, 11 Sep 2020 09:27:34 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org
-Subject: s390 PCI dma ops
-Message-ID: <20200911072734.GA23043@lst.de>
+        id S1725800AbgIKICZ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Fri, 11 Sep 2020 04:02:25 -0400
+Received: from mail.flex.co.jp ([211.8.82.123]:34907 "EHLO www.flex.co.jp"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725616AbgIKICU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 11 Sep 2020 04:02:20 -0400
+Received: from live.com.mx ([103.89.89.225])
+        (authenticated bits=0)
+        by www.flex.co.jp (MTA) with ESMTP id 0898ns8h009806
+        for <linux-s390@vger.kernel.org>; Wed, 9 Sep 2020 17:49:56 +0900
+Reply-To: powerinthewords@yahoo.co.jp
+From:   piyin.crhe@live.com.mx
+To:     linux-s390@vger.kernel.org
+Subject: =?utf-8?Q?=5BSpam=5D?=
+ We are still waiting for your email...
+Date:   09 Sep 2020 01:49:54 -0700
+Message-ID: <20200909014954.9E93E008591044BA@live.com.mx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-SpamInfo: FortiGuard-AntiSpam ip, connection black ip 103.89.89.225
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi S/390 PCI and IOMMU maintainers,
+Dear Beneficiary,
 
-We've recently tried to convert all implementations of the IOMMU API to
-use drivers/iommu/dma-iommu.c instead of their local IOMMU ops.  I've
-looked at S/390 and while some comments mention things about the iommu
-API the implementation looks quite separate.  Do arch/s390/pci/pci_dma.c
-and drivers/iommu/s390-iommu.c driver the same hardware?  If so would a
-switch to drivers/iommu/dma-iommu.c be feasibel?
+We wish to inform you that a power of attorney was forwarded to 
+our office  by two gentlemen regarding your unclaimed fund of $56 
+Million Dollar. One of them is an American citizen named Mr. 
+Robert Porter and the other is Mr. Wilhelm Berg a Swedish 
+citizen.We have be waiting for you to contact us since last year.
+
+The document claims these gentlemen to be your authorized 
+representatives, and the power of attorney states that you are 
+already deceased.  It further states that your death was due to 
+lung cancer, with your date of death being January 27th, 2020.
+
+They have now submitted a new account to replace the receiving 
+account that was in the original claim of funds. These funds have 
+remained unclaimed for quite some time and the need for 
+resolution is pressing. Below is the new account they have 
+submitted.
+
+Account Name's :  Robert Porter /Wilhelm Berg
+Account: 5007-29 438 66
+IBAN-nr: SE4150000000050072943866
+Bic-kod: ESSESESS
+Skandinaviska Enskilda Banken. (SEB :)
+SWEDEN .
+
+In the event that you are in fact still alive, we ask that you 
+confirm your existence by responding to this email. You are to 
+view this as a matter requiring immediate attention and response. 
+We have 48 hr monitoring of all activities within Federal Reserve 
+Bank.On this regard,you will be directed to any of our office 
+center that you will go in person to sign the final papers,
+because we have our payment center in Europe,Asia,America and 
+Canada.You will go to any of the office that you will be directed 
+to with the copy of the documents of your fund.
+
+We have contacted the bank in the Sweden asking them to wait for 
+further directives from Federal Reserve Bank, prior to 
+authorizing any withdrawals in any form.  Our request is based 
+entirely on our attempt to verify that you are in fact deceased, 
+before money is wrongly disbursed.
+
+Your in Service,
+
+Robert Steven Kaplan
+2200 N Pearl St, Dallas, TX 75201, United States
