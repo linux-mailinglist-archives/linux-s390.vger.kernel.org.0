@@ -2,109 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67B1D264B95
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Sep 2020 19:40:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62241264BDE
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Sep 2020 19:51:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgIJRkU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Sep 2020 13:40:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbgIJRfC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:35:02 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 642B8206A1;
-        Thu, 10 Sep 2020 17:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599759300;
-        bh=eoZV/4n0ptuA8626OxlGlZVQ5Lm/f4NMMJfN4yyY/ZU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ysjUja//f6Wumt5D2oORZzXD8C7F+uQkRoyqYKW5382EG2mSf0ffkyHMAEXQnK9on
-         I9zwfQgggE9Vf1Yq6qyTiRWrq+p53U6LzQmY4Q08fH5hAdG1wMTZKKfozs4yKqDmMc
-         24F4mn6pALcKKpr6Lu2BcI7FWRUxMOqqGQ46yKO8=
-Date:   Thu, 10 Sep 2020 18:34:14 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
+        id S1727099AbgIJRvv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Sep 2020 13:51:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgIJRl5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Sep 2020 13:41:57 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301D3C061573
+        for <linux-s390@vger.kernel.org>; Thu, 10 Sep 2020 10:41:56 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id i1so7214749edv.2
+        for <linux-s390@vger.kernel.org>; Thu, 10 Sep 2020 10:41:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tV9NvYryEbzez94zd9hdsCWt3FfBuGGawTOfDap0eBk=;
+        b=CyoQUM+SKXH6085O6WtByg3nDuki2CTSBORvYvwm25BqShZutFnNs6mSZACayZwSEH
+         qcd6gDs3XmrAOcCBysWWLpsCbEXmLRDCQnQxo0ENK46fWC+ppV/l5rSOr47qH79HuDsY
+         BAC6cJAHl7u65bYmrM5WLZPBZBfoI7ltEXEKA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tV9NvYryEbzez94zd9hdsCWt3FfBuGGawTOfDap0eBk=;
+        b=TA/+UjG2nWATYyG+rgPUqY5pE5jv9qhxm/2nVIUX12z2KpYCvBc28fF2r+I1JzkMJW
+         CDLLFn1iqyO9jLYDAywC/3Dp1sP/QefaU4xQGl1jc7Gsgi5t6JWBGai7mResBY2rJ0TR
+         lirnqFlcxZH79wOSLuIOgF44jbXjS+pLfrm64VLmP59IK7LMEa+4W5CFeTpyPHYaeZq/
+         lqUwQktkdCHxvv/GV1pFUSbrqwHBCaDAn+rV9Eqy3gDgBD9KFU5kUwcAi5htCcCFyE/7
+         bVy4NeX8N4ojU4bcT3yDWbMgu+8q4kdIJUe+gr1UJY13slzWkyqZ3ozgSiChMF3y54Gv
+         aO7A==
+X-Gm-Message-State: AOAM533NOl5PCU15uD9vTF9re6FtskRiqHAyolwFBCVjkj5dl41sT4zM
+        fJ6YbxqDWOEURRQDmgGQKVdsxSd8EmirVQ==
+X-Google-Smtp-Source: ABdhPJwoYw16eTFv47wfzAlW5XW8jcXLgv/ggFFF8kDn7cs39BW2HDF8LN2SIUFYKsCYBrWZvsgsrw==
+X-Received: by 2002:aa7:cb92:: with SMTP id r18mr10588395edt.158.1599759714652;
+        Thu, 10 Sep 2020 10:41:54 -0700 (PDT)
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
+        by smtp.gmail.com with ESMTPSA id w8sm8151954ejo.117.2020.09.10.10.41.54
+        for <linux-s390@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 10:41:54 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id b12so7165596edz.11
+        for <linux-s390@vger.kernel.org>; Thu, 10 Sep 2020 10:41:54 -0700 (PDT)
+X-Received: by 2002:a19:7d8b:: with SMTP id y133mr4765702lfc.152.1599759354367;
+ Thu, 10 Sep 2020 10:35:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+ <20200907180058.64880-2-gerald.schaefer@linux.ibm.com> <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
+ <20200909142904.00b72921@thinkpad> <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
+ <20200909192534.442f8984@thinkpad> <20200909180324.GI87483@ziepe.ca> <20200910093925.GB29166@oc3871087118.ibm.com>
+In-Reply-To: <20200910093925.GB29166@oc3871087118.ibm.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 10 Sep 2020 10:35:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
+Message-ID: <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table folding
+To:     Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-x86 <x86@kernel.org>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
-Message-ID: <20200910173414.GD4898@sirena.org.uk>
-References: <20200819124913.37261-1-broonie@kernel.org>
- <20200819124913.37261-4-broonie@kernel.org>
- <alpine.LSU.2.21.2009021128500.23200@pobox.suse.cz>
- <20200902184935.GA5875@C02TD0UTHF1T.local>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pQhZXvAqiZgbeUkD"
-Content-Disposition: inline
-In-Reply-To: <20200902184935.GA5875@C02TD0UTHF1T.local>
-X-Cookie: I disagree with unanimity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Thu, Sep 10, 2020 at 2:40 AM Alexander Gordeev
+<agordeev@linux.ibm.com> wrote:
+>
+> It is only gup_fast case that exposes the issue. It hits because
+> pointers to stack copies are passed to gup_pXd_range iterators, not
+> pointers to real page tables itself.
 
---pQhZXvAqiZgbeUkD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Can we possibly change fast-gup to not do the stack copies?
 
-On Wed, Sep 02, 2020 at 07:50:27PM +0100, Mark Rutland wrote:
-> On Wed, Sep 02, 2020 at 11:32:13AM +0200, Miroslav Benes wrote:
+I'd actually rather do something like that, than the "addr_end" thing.
 
-> > > -		start_backtrace(&frame,
-> > > -				(unsigned long)__builtin_frame_address(0),
-> > > -				(unsigned long)__save_stack_trace);
+As you say, none of the other page table walking code does what the
+GUP code does, and I don't think it's required.
 
-> Oh whoops; I'm annoyed I didn't spot that.
+The GUP code is kind of strange, I'm not quite sure why. Some of it
+unusually came from the powerpc code that handled their special odd
+hugepage model, and that may be why it's so different.
 
-> With that gone this cannot work for (task == current && regs == NULL), as
-> we'll erroneously use stale values from the task struct.
+How painful would it be to just pass the pmd (etc) _pointers_ around,
+rather than do the odd "take the address of local copies"?
 
-I remember somehow convincing myself at the time I originally did this
-that doing the above was redundant with the new interface but that was
-quite some time ago and I can't reconstruct my reasoning any more, I'm
-pretty sure I was just mistaken.  I've added it back in, thanks for
-spotting this.
-
-> It looks like the LKDTM tests only trigger cases with non-NULL regs, but
-> IIUC this should show up with show_stack(NULL, NULL, KERN_INFO), as
-> drivers/tty/sysrq.c does for other cpus.
-
-show_stack() doesn't go through this bit of the stacktrace code, it goes
-through dump_backtrace() in traps.c which used the underlying arch
-specific unwinder directly so is unaffected by arch_stack_walk().
-Actually now I look at LKDTM it's ending up using show_stack() mostly
-if not entirely so my testing with it was not exercising this change
-as much as might be expected anyway (the modified code was getting hit
-by other things like /proc/N/stack).
-
---pQhZXvAqiZgbeUkD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9aY5YACgkQJNaLcl1U
-h9AoNgf/bxtql5YMDWhCmeDMNhMAagB2dVCtaee/UDna+zUsH1N44ptx9JFeXcW/
-f9sDitnklB+I+tyAlXTeej76l/ohXZL6jkVGL1SYOQZZDgGw+bUkf9KsZLYjrtK/
-TY4aybyOzZdHrwtImEb9GlLPZ65UWrzsUdDgnWOmWy0sBgsoa2g0YwkrM5EhbS/5
-WHttMds5ootnjvB6znsKHoLOvi84gnIEAZf1F+gYDshZFdpeDVK7Zk4E7t+ZRpeE
-wE1kUJd2UKJhZsyaqE2ewXL+0N9wIJgQ1F17aOqcRfHcWBrsyzyZzJSib6ygUfax
-pWT5j9mXTEP/L6TiDwy/FIsH1+X2ZA==
-=Vsd/
------END PGP SIGNATURE-----
-
---pQhZXvAqiZgbeUkD--
+                  Linus
