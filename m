@@ -2,166 +2,76 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01F4E263A44
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Sep 2020 04:25:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E03482639D3
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Sep 2020 04:06:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730726AbgIJCYg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 9 Sep 2020 22:24:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53754 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730684AbgIJCIi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 9 Sep 2020 22:08:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599703717;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9lUmVHlRg0jPhlantuCk3hiT6WHd/nIzITZFw+wGi90=;
-        b=ATCEs4iarH6CiAeGnelgL9WXp+fL2etKppxLdsXEkK3w42lMmjX0/VCN+huEfWEmHk89Po
-        IECVmvxKpbfW9a8Qm5FmV1BTnUuBABUEoiJCGU5hpUwxGqgRD+O6NOAlHQFB3p+Y/mc5vw
-        kRjxnA1JqRa5L+MaH+6hLuKSCW+bU48=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-PdjO5lmxOoqImIc6M2pBzA-1; Wed, 09 Sep 2020 19:07:52 -0400
-X-MC-Unique: PdjO5lmxOoqImIc6M2pBzA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1730165AbgIJCBP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 9 Sep 2020 22:01:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730175AbgIJBza (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 9 Sep 2020 21:55:30 -0400
+Received: from localhost (52.sub-72-107-123.myvzw.com [72.107.123.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97082801F98;
-        Wed,  9 Sep 2020 23:07:50 +0000 (UTC)
-Received: from w520.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 209F57EED4;
-        Wed,  9 Sep 2020 23:07:48 +0000 (UTC)
-Date:   Wed, 9 Sep 2020 17:07:46 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 38D5E22204;
+        Thu, 10 Sep 2020 00:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599698358;
+        bh=DUreE3/B8B60ExKVpkn5deA+5RXtXj3rT/zpM+ipKM8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=fxbGvae5PiiQEAyf5ZOsc1H1PIbu/Dtuxhr4F+6DiH4VkMLBe6b8vAQvKMaITSQTk
+         lEZycuYgzorka6kWEpyiTs/w+GnoMbixvkjYtFueggSDVnfjsYIpwv0dMs2CU8jlJ/
+         Sxkfy16axgN5dv42JNKPDgfSrCN+JbHDZlGTfmbI=
+Date:   Wed, 9 Sep 2020 19:39:16 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com,
+Cc:     alex.williamson@redhat.com, bhelgaas@google.com,
         schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
         oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
         linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, linux-pci@vger.kernel.org
 Subject: Re: [PATCH v4 1/3] PCI/IOV: Mark VFs as not implementing MSE bit
-Message-ID: <20200909170746.2286b83a@w520.home>
-In-Reply-To: <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
-References: <20200903164117.GA312152@bjorn-Precision-5520>
-        <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
+Message-ID: <20200910003916.GA741660@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <38f95349-237e-34e2-66ef-e626cd4aec25@linux.ibm.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 3 Sep 2020 13:10:02 -0400
-Matthew Rosato <mjrosato@linux.ibm.com> wrote:
-
+On Thu, Sep 03, 2020 at 01:10:02PM -0400, Matthew Rosato wrote:
 > On 9/3/20 12:41 PM, Bjorn Helgaas wrote:
-> > On Wed, Sep 02, 2020 at 03:46:34PM -0400, Matthew Rosato wrote:  
-> >> Per the PCIe spec, VFs cannot implement the MSE bit
-> >> AKA PCI_COMMAND_MEMORY, and it must be hard-wired to 0.
-> >> Use a dev_flags bit to signify this requirement.  
-> > 
-> > This approach seems sensible to me, but
-> > 
-> >    - This is confusing because while the spec does not use "MSE" to
-> >      refer to the Command Register "Memory Space Enable" bit
-> >      (PCI_COMMAND_MEMORY), it *does* use "MSE" in the context of the
-> >      "VF MSE" bit, which is in the PF SR-IOV Capability.  But of
-> >      course, you're not talking about that here.  Maybe something like
-> >      this?
-> > 
-> >        For VFs, the Memory Space Enable bit in the Command Register is
-> >        hard-wired to 0.
-> > 
-> >        Add a dev_flags bit to signify devices where the Command
-> >        Register Memory Space Enable bit does not control the device's
-> >        response to MMIO accesses.  
-> 
-> Will do.  I'll change the usage of the MSE acronym in the other patches 
-> as well.
-> 
-> > 
-> >    - "PCI_DEV_FLAGS_FORCE_COMMAND_MEM" says something about how you
-> >      plan to *use* this, but I'd rather use a term that describes the
-> >      hardware, e.g., "PCI_DEV_FLAGS_NO_COMMAND_MEMORY".  
-> 
-> Sure, I will change.
-> 
-> > 
+
 > >    - How do we decide whether to use dev_flags vs a bitfield like
 > >      dev->is_virtfn?  The latter seems simpler unless there's a reason
 > >      to use dev_flags.  If there's a reason, maybe we could add a
 > >      comment at pci_dev_flags for future reference.
-> >   
 > 
 > Something like:
 > 
 > /*
->   * Device does not implement PCI_COMMAND_MEMORY - this is true for any
->   * device marked is_virtfn, but is also true for any VF passed-through
->   * a lower-level hypervisor where emulation of the Memory Space Enable
->   * bit was not provided.
->   */
+>  * Device does not implement PCI_COMMAND_MEMORY - this is true for any
+>  * device marked is_virtfn, but is also true for any VF passed-through
+>  * a lower-level hypervisor where emulation of the Memory Space Enable
+>  * bit was not provided.
+>  */
 > PCI_DEV_FLAGS_NO_COMMAND_MEMORY = (__force pci_dev_flags_t) (1 << 12),
-> 
-> ?
-> 
-> >    - Wrap the commit log to fill a 75-char line.  It's arbitrary, but
-> >      that's what I use for consistency.  
-> 
-> Sure, will do.  I'll roll up a new version once I have feedback from 
-> Alex on the vfio changes.
 
-The usage of MSE threw me a bit too, as Bjorn notes that's specific to
-the SR-IOV capability.  I think this also uncovers a latent bug in our
-calling of vfio_bar_restore(), it really doesn't do a good job of
-determining whether an enable bit is implemented, regardless of whether
-it's a VF or the device simply doesn't use that address space.  For
-example I imagine you could reproduce triggering a reset recovery on
-s390 by trying to write the VF command register to 1 with setpci from a
-guest (since you won't have is_virtfn to bail out of the recovery
-function).  I think we'll still need this dev_flag to differentiate
-unimplmented and enabled versus simply unimplemented to resolve that
-though, so the change looks ok to me. Thanks,
+Sorry, I wasn't clear about this.  I was trying to suggest that if
+there are some situations where we need to use pci_dev_flags instead
+of a bitfield, it would be useful to have a generic comment to help
+decide between them.
 
-Alex
+I don't know that there *is* a good reason, and unless somebody can
+think of one, I'd like to get rid of pci_dev_flags completely and
+convert them all to bitfields.
 
-> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> >> ---
-> >>   drivers/pci/iov.c   | 1 +
-> >>   include/linux/pci.h | 2 ++
-> >>   2 files changed, 3 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> >> index b37e08c..2bec77c 100644
-> >> --- a/drivers/pci/iov.c
-> >> +++ b/drivers/pci/iov.c
-> >> @@ -180,6 +180,7 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
-> >>   	virtfn->device = iov->vf_device;
-> >>   	virtfn->is_virtfn = 1;
-> >>   	virtfn->physfn = pci_dev_get(dev);
-> >> +	virtfn->dev_flags |= PCI_DEV_FLAGS_FORCE_COMMAND_MEM;
-> >>   
-> >>   	if (id == 0)
-> >>   		pci_read_vf_config_common(virtfn);
-> >> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> >> index 8355306..9316cce 100644
-> >> --- a/include/linux/pci.h
-> >> +++ b/include/linux/pci.h
-> >> @@ -227,6 +227,8 @@ enum pci_dev_flags {
-> >>   	PCI_DEV_FLAGS_NO_FLR_RESET = (__force pci_dev_flags_t) (1 << 10),
-> >>   	/* Don't use Relaxed Ordering for TLPs directed at this device */
-> >>   	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
-> >> +	/* Device does not implement PCI_COMMAND_MEMORY (e.g. a VF) */
-> >> +	PCI_DEV_FLAGS_FORCE_COMMAND_MEM = (__force pci_dev_flags_t) (1 << 12),
-> >>   };
-> >>   
-> >>   enum pci_irq_reroute_variant {
-> >> -- 
-> >> 1.8.3.1
-> >>  
-> 
+Given that, my preference would be to just add a new bitfield,
+something like this:
 
+  struct pci_dev {
+    ...
+    unsigned int no_command_memory:1;  /* No PCI_COMMAND_MEMORY */
