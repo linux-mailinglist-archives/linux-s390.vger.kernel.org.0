@@ -2,147 +2,140 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C00A264FB2
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Sep 2020 21:50:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F05F626503D
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Sep 2020 22:08:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgIJTuP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Sep 2020 15:50:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50446 "EHLO
+        id S1727024AbgIJUIl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Sep 2020 16:08:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61852 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726847AbgIJTta (ORCPT
+        by vger.kernel.org with ESMTP id S1730859AbgIJPAn (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 10 Sep 2020 15:49:30 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AJUs5L122237;
-        Thu, 10 Sep 2020 15:49:23 -0400
+        Thu, 10 Sep 2020 11:00:43 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AEi4YI192630;
+        Thu, 10 Sep 2020 11:00:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : sender; s=pp1;
- bh=i7JBPvdd60neM6rxo1EKqoMekpXsXBVik7L2XppxG1Q=;
- b=ikuJDct3ysKrb2mciuEJ//WpQuEpAo3o9o5yQTM5OvoelLzgdok9bS8MfIMlP32fFGTY
- seq2XZB+0fqKDKbgDTjrXPcssBLvVXpxE9soKUHinSBCEBF9t+JTvPctRzlpDcw/cmXB
- GYIy1p90Od0AbmGszGC9onu/QZe89I6r/v+Mye2g2iLKtdPYEokfKH4V5W5G3p87q9IA
- U/3utru3zVKMzlnW5bodPk0Gn19D6T2bKrFBuhkNjQDTA4hgiNkPmOCjRf59XrzkyU2V
- bnRrar9AmlyhNEuSkckyOPhMwtuGJomV6IZStxjWJ/KUn+uBqO8k1pi0jpTxCmfS1kHr NA== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33fqts5mbt-1
+ : date : message-id; s=pp1;
+ bh=5VXKsHTc2YlCV3PXBFCbmF1hTMHTSBXPxb9CKodxcuc=;
+ b=lJm0/tYKVnLWLps2+W6cAz1a9vrIWBEiP+kwk1q2U+Ibr3tK9hHfmZoMaZ7sHL4AOzFG
+ U8MF73hxTxtHjYbp0vBLEb92NkHzmKnOhS/u21GYrVf3OdLrsa7h7TQHZKyALnhekAjo
+ nKXwusdMDgbyylGqJ1WSDugrkjpm2fcrQ+t0h8aSm/92l+ZV3JK/cliqzGPxJ4jZlzMZ
+ da2I0XmeJAYCxvHw+l7r2ceDyk78W3+gRRTLx1nHTrEG94Euogl/XhE/by94e7BT5SNn
+ 48fbqOVVb7A3D2xgiKi3CzcaUtJ8k2udWAmivgmg0FDa3PkDt/Z/Kpfc5gNYS1a2gcgF zA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33fnyv0wgf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 15:49:23 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AJm3Um007401;
-        Thu, 10 Sep 2020 19:49:21 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 33c2a86df4-1
+        Thu, 10 Sep 2020 11:00:07 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08AEq17J025485;
+        Thu, 10 Sep 2020 11:00:07 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33fnyv0wew-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 19:49:21 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AJnIfo30736648
+        Thu, 10 Sep 2020 11:00:06 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AEqMb2000343;
+        Thu, 10 Sep 2020 15:00:06 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma03dal.us.ibm.com with ESMTP id 33c2a9jbjd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 15:00:05 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AF00At32702764
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 19:49:18 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A29B6A4064;
-        Thu, 10 Sep 2020 19:49:18 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8DF38A4054;
-        Thu, 10 Sep 2020 19:49:18 +0000 (GMT)
-Received: from t480-pf1aa2c2 (unknown [9.145.32.17])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 10 Sep 2020 19:49:18 +0000 (GMT)
-Received: from bblock by t480-pf1aa2c2 with local (Exim 4.94)
-        (envelope-from <bblock@linux.ibm.com>)
-        id 1kGSZJ-00AFA2-Hz; Thu, 10 Sep 2020 21:49:17 +0200
-From:   Benjamin Block <bblock@linux.ibm.com>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Fedor Loshakov <loshakov@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH 2/2] zfcp: clarify access to erp_action in zfcp_fsf_req_complete()
-Date:   Thu, 10 Sep 2020 21:49:16 +0200
-Message-Id: <c500eac301fcbba5af942bbd200f2d6b14e46994.1599765652.git.bblock@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599765652.git.bblock@linux.ibm.com>
-References: <cover.1599765652.git.bblock@linux.ibm.com>
-MIME-Version: 1.0
-Organization: IBM Deutschland Research & Development GmbH, Vorsitz. AufsR. Gregor Pillen, Geschaeftsfuehrung Dirk Wittkopp, Sitz der Gesellschaft Boeblingen, Registergericht AmtsG Stuttgart, HRB 243294
-Content-Transfer-Encoding: 8bit
+        Thu, 10 Sep 2020 15:00:00 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 984DF7806E;
+        Thu, 10 Sep 2020 15:00:02 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0909778064;
+        Thu, 10 Sep 2020 15:00:00 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.211.91.207])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 10 Sep 2020 15:00:00 +0000 (GMT)
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+To:     alex.williamson@redhat.com, bhelgaas@google.com
+Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
+        oohall@gmail.com, cohuck@redhat.com, kevin.tian@intel.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [PATCH v5 0/3] vfio/pci: Restore MMIO access for s390 detached VFs
+Date:   Thu, 10 Sep 2020 10:59:54 -0400
+Message-Id: <1599749997-30489-1-git-send-email-mjrosato@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-10_08:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- mlxlogscore=999 suspectscore=2 clxscore=1015 malwarescore=0 adultscore=0
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100173
+ definitions=2020-09-10_03:2020-09-10,2020-09-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 phishscore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 mlxlogscore=864 spamscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100130
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+Changes from v4:
+- Switch from dev_flags to a bitfield
+- Scrubbed improper use of MSE acronym
+- Restored the fixes tag to patch 3 (but the other 2 patches are
+  now pre-reqs -- cc stable 5.8?) 
 
-While reviewing
-commit 936e6b85da04 ("scsi: zfcp: Fix panic on ERP timeout for previously
-dismissed ERP action"),
-I stumbled over zfcp_fsf_req_complete() and wondered whether it has
-similar issues wrt concurrent modification of req->erp_action
-by zfcp_erp_strategy_check_fsfreq().
+Since commit abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO
+access on disabled memory") VFIO now rejects guest MMIO access when the
+PCI_COMMAND_MEMORY bit is OFF.  This is however not the case for VFs
+(fixed in commit ebfa440ce38b ("vfio/pci: Fix SR-IOV VF handling with
+MMIO blocking")).  Furthermore, on s390 where we always run with at
+least a bare-metal hypervisor (LPAR) PCI_COMMAND_MEMORY, unlike Device/
+Vendor IDs and BARs, is not emulated when VFs are passed-through to the
+OS independently.
 
-But a closer look shows that both its two callers
-[zfcp_fsf_reqid_check(), zfcp_fsf_req_dismiss_all()] remove the request
-from the adapter's req_list under the req_list's lock.
-Hence we can trust that if zfcp_erp_strategy_check_fsfreq() concurrently
-looks up the corresponding req_id, it won't find this request and is thus
-unable to modify it while it's being processed by zfcp_fsf_req_complete().
+Based upon Bjorn's most recent comment [1], I investigated the notion of
+setting is_virtfn=1 for VFs passed-through to Linux and not linked to a
+parent PF (referred to as a 'detached VF' in my prior post).  However,
+we rapidly run into issues on how to treat an is_virtfn device with no
+linked PF. Further complicating the issue is when you consider the guest
+kernel has a passed-through VF but has CONFIG_PCI_IOV=n as in many 
+locations is_virtfn checking is ifdef'd out altogether and the device is
+assumed to be an independent PCI function.
 
-Add a code comment that hopefully makes this easier for future readers,
-and condense the two accesses to ->erp_action that made me trip over
-this code path in the first place.
+The decision made by VFIO whether to require or emulate a PCI feature 
+(in this case PCI_COMMAND_MEMORY) is based upon the knowledge it has 
+about the device, including implicit expectations of what/is not
+emulated below VFIO. (ex: is it safe to read vendor/id from config
+space?) -- Our firmware layer attempts similar behavior by emulating
+things such as vendor/id/BAR access - without these an unlinked VF would
+not be usable. But what is or is not emulated by the layer below may be
+different based upon which entity is providing the emulation (vfio,
+LPAR, some other hypervisor)
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
----
- drivers/s390/scsi/zfcp_fsf.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+So, the proposal here aims to fix the immediate issue of s390
+pass-through VFs becoming suddenly unusable by vfio by using a new 
+bit to identify a VF feature that we know is hardwired to 0 for any
+VF (PCI_COMMAND_MEMORY) and de-coupling the need for emulating
+PCI_COMMAND_MEMORY from the is_virtfn flag. The exact scope of is_virtfn
+and physfn for bare-metal vs guest scenarios and identifying what
+features are / are not emulated by the lower-level hypervisors is a much
+bigger discussion independent of this limited proposal.
 
-diff --git a/drivers/s390/scsi/zfcp_fsf.c b/drivers/s390/scsi/zfcp_fsf.c
-index c795f22249d8..d9de26157da2 100644
---- a/drivers/s390/scsi/zfcp_fsf.c
-+++ b/drivers/s390/scsi/zfcp_fsf.c
-@@ -426,9 +426,14 @@ static void zfcp_fsf_protstatus_eval(struct zfcp_fsf_req *req)
-  * or it has been dismissed due to a queue shutdown, this function
-  * is called to process the completion status and trigger further
-  * events related to the FSF request.
-+ * Caller must ensure that the request has been removed from
-+ * adapter->req_list, to protect against concurrent modification
-+ * by zfcp_erp_strategy_check_fsfreq().
-  */
- static void zfcp_fsf_req_complete(struct zfcp_fsf_req *req)
- {
-+	struct zfcp_erp_action *erp_action;
-+
- 	if (unlikely(zfcp_fsf_req_is_status_read_buffer(req))) {
- 		zfcp_fsf_status_read_handler(req);
- 		return;
-@@ -439,8 +444,9 @@ static void zfcp_fsf_req_complete(struct zfcp_fsf_req *req)
- 	zfcp_fsf_fsfstatus_eval(req);
- 	req->handler(req);
- 
--	if (req->erp_action)
--		zfcp_erp_notify(req->erp_action, 0);
-+	erp_action = req->erp_action;
-+	if (erp_action)
-+		zfcp_erp_notify(erp_action, 0);
- 
- 	if (likely(req->status & ZFCP_STATUS_FSFREQ_CLEANUP))
- 		zfcp_fsf_req_free(req);
+[1]: https://marc.info/?l=linux-pci&m=159856041930022&w=2
+
+
+
+Matthew Rosato (3):
+  PCI/IOV: Mark VFs as not implementing PCI_COMMAND_MEMORY
+  s390/pci: Mark all VFs as not implementing PCI_COMMAND_MEMORY
+  vfio/pci: Decouple PCI_COMMAND_MEMORY bit checks from is_virtfn
+
+ arch/s390/pci/pci_bus.c            |  5 +++--
+ drivers/pci/iov.c                  |  1 +
+ drivers/vfio/pci/vfio_pci_config.c | 24 ++++++++++++++----------
+ include/linux/pci.h                |  1 +
+ 4 files changed, 19 insertions(+), 12 deletions(-)
+
 -- 
-2.26.2
+1.8.3.1
 
