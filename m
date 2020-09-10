@@ -2,58 +2,58 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39C8A264B2E
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Sep 2020 19:26:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1CED264B54
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Sep 2020 19:32:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgIJR0a (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Sep 2020 13:26:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2642 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727025AbgIJRYL (ORCPT
+        id S1727023AbgIJRb3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Sep 2020 13:31:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10936 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726991AbgIJRYG (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 10 Sep 2020 13:24:11 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AH2ilc006898;
-        Thu, 10 Sep 2020 13:24:04 -0400
+        Thu, 10 Sep 2020 13:24:06 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08AH4nZo156039;
+        Thu, 10 Sep 2020 13:24:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references; s=pp1;
- bh=Va2B/cjq9t4I0v4Q/XK0hTd57VL2MKXafpQC+HFjP0w=;
- b=eb+MXQrCjl1Xys5BdVBjsqDA3rj2cWFV/kfODTbMpziQteDaTsi18DCO1zh7LFAigNy0
- U5Uqtt3zbXWHVMzEt2UvFQLpYlhWvhwh1U+48HriaDo9Z4nxQqoZFDMPkZz2d6ul4st8
- wgcLFl/YA2I497YAE95ntt7PpJuZr8P2kGKr9NVEJOafjY4xaH7hKI8L4BC7mJx4cF9B
- UCsxT0JiT7HTEOiXyEmeIMPBexcU1yrv90PyCs310caJImGDGQfqqvP41b59p2IgMs7M
- 3JblVKx/cNg4S4CYAP4CKaiMeGt6B7rHrOIhaBWRT4EryhvMwWbxucd/4kpweDoXJ41/ 3g== 
+ bh=NpYWB3MFQVMsksJBqKwyymwg89YmhPDDZTi9+06voI4=;
+ b=JgRxTQB6epHt0Ea+mtGy6m1aCFWhq+WsLUZ2km7XZGATB5hkC3xqEz+zDAy5IOvu3h3k
+ rTpoeCnREL11ASRfDHVJU+fdAXuhQ58gCXo3hEje+Tv7QdURYaxKbwnHMBwiDd3Hry71
+ ieILuG0anCUTF+tQPb0ztHgrf+9fJh7dd1vkZOMHA5glj1PognDopwfCkh0B+L6IJZgR
+ UALrmV5iuvqCC7f0S1DdaAtPsf6hdXLkVHsyRZVgkoE2VbozAl9Y7FwAY8ASwWHIfE3h
+ e4tuluBdzKYsXcVbKJ34tzJ55z+M8DDC1qebqtReYJKxVbx9KSMz3FZZqw7GQZx80akl WQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fq9s24ht-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 13:24:04 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08AH2sHP007379;
-        Thu, 10 Sep 2020 13:24:04 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33fq9s24h3-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33fqts1bxt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 10 Sep 2020 13:24:03 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AHHtb7017012;
-        Thu, 10 Sep 2020 17:24:02 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 33c2a86a45-1
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08AHM6EH053604;
+        Thu, 10 Sep 2020 13:24:02 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33fqts1bwm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 10 Sep 2020 17:24:02 +0000
+        Thu, 10 Sep 2020 13:24:02 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08AHHsGL001043;
+        Thu, 10 Sep 2020 17:24:00 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma02fra.de.ibm.com with ESMTP id 33c2a83mjp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Sep 2020 17:23:59 +0000
 Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AHNxCX35979754
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08AHNvZb28639730
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 17:23:59 GMT
+        Thu, 10 Sep 2020 17:23:57 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2300C42041;
-        Thu, 10 Sep 2020 17:23:59 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 1F56142041;
+        Thu, 10 Sep 2020 17:23:57 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A7BE042042;
-        Thu, 10 Sep 2020 17:23:58 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id A321C42047;
+        Thu, 10 Sep 2020 17:23:56 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 10 Sep 2020 17:23:58 +0000 (GMT)
+        Thu, 10 Sep 2020 17:23:56 +0000 (GMT)
 From:   Julian Wiedmann <jwi@linux.ibm.com>
 To:     David Miller <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -67,19 +67,19 @@ Cc:     netdev <netdev@vger.kernel.org>,
         Roopa Prabhu <roopa@nvidia.com>,
         Nikolay Aleksandrov <nikolay@nvidia.com>,
         Jiri Pirko <jiri@resnulli.us>, Ivan Vecera <ivecera@redhat.com>
-Subject: [PATCH net-next 8/8] s390/qeth: implement ndo_bridge_setlink for learning_sync
-Date:   Thu, 10 Sep 2020 19:23:51 +0200
-Message-Id: <20200910172351.5622-9-jwi@linux.ibm.com>
+Subject: [PATCH net-next 4/8] s390/qeth: Translate address events into switchdev notifiers
+Date:   Thu, 10 Sep 2020 19:23:47 +0200
+Message-Id: <20200910172351.5622-5-jwi@linux.ibm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200910172351.5622-1-jwi@linux.ibm.com>
 References: <20200910172351.5622-1-jwi@linux.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-09-10_05:2020-09-10,2020-09-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- suspectscore=0 bulkscore=0 impostorscore=0 clxscore=1015 phishscore=0
- priorityscore=1501 malwarescore=0 lowpriorityscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ phishscore=0 clxscore=1015 mlxlogscore=999 spamscore=0 malwarescore=0
+ impostorscore=0 adultscore=0 bulkscore=0 priorityscore=1501
+ suspectscore=13 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2009100157
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
@@ -88,214 +88,212 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 From: Alexandra Winter <wintera@linux.ibm.com>
 
-Documentation/networking/switchdev.txt and 'man bridge' indicate that the
-learning_sync bridge attribute is used to control whether a given
-device will sync MAC addresses learned on its device port to a master
-bridge FDB, where they will show up as 'extern_learn offload'. So we map
-qeth_l2_dev2br_an_set() to the learning_sync bridge link attribute.
+A qeth-l2 HiperSockets card can show switch-ish behaviour in the sense,
+that it can report all MACs that are reachable via this interface. Just
+like a switch device, it can notify the software bridge about changes
+to its fdb. This patch exploits this device-to-bridge-notification and
+extracts the relevant information from the hardware events to generate
+notifications to an attached software bridge.
 
-Turning off learning_sync will flush all extern_learn entries from the
-bridge fdb and all pending events from the card's work queue.
+There are 2 sources for this information:
+1) The reply message of Perform-Network-Subchannel-Operations (PNSO)
+(operation code ADDR_INFO) reports all addresses that are currently
+reachable (implemented in a later patch).
+2) As long as device-to-bridge-notification is enabled, hardware will
+generate address change notification events, whenever the content of
+the hardware fdb changes (this patch).
 
-When the hardware interface goes offline with learning_sync on
-(e.g. for HW recovery), all extern_learn entries will be flushed from the
-bridge fdb and all pending events from the card's work queue. When the
-interface goes online again, it will send new notifications for all then
-valid MACs. learning_sync attribute can not be modified while interface is
-offline. See
-'commit e6e771b3d897 ("s390/qeth: detach netdevice while card is offline")'
+The bridge_hostnotify feature (PNSO operation code BRIDGE_INFO) uses
+the same address change notification events. We need to distinguish
+between qeth_pnso_mode QETH_PNSO_BRIDGEPORT and QETH_PNSO_ADDR_INFO
+and call a different handler. In both cases deadlocks must be
+prevented, if the workqueue is drained under lock and QETH_PNSO_NONE,
+when notification is disabled.
 
-An alternative implementation would be to always offload the 'learning'
-attribute of a software bridge to the hardware interface attached to it
-and thus implicitly enable fdb notification. This was not chosen for 2
-reasons:
-1) In our case the software bridge is NOT a representation of a hardware
-switch. It is just connected to a smart NIC that is able to inform
-about the addresses attached to it. It is not necessarily using source
-MAC learning for this and other bridgeports can be attached to other
-NICs with different properties.
-2) We want a means to enable this notification explicitly. There may be
-cases where a bridgeport is set to 'learning', but we do not want to
-enable the notification.
+bridge_hostnotify generates udev events, there is no intend to do the same
+for dev2br. Instead this patch will generate SWITCHDEV_FDB_ADD_TO_BRIDGE
+and SWITCHDEV_FDB_DEL_TO_BRIDGE notifications, that will cause the
+software bridge to add (or delete) entries to its fdb as 'extern_learn
+offload'.
+
+Documentation/networking/switchdev.txt proposes to add
+"depends NET_SWITCHDEV" to driver's Kconfig. This is not done here,
+so even in absence of the NET_SWITCHDEV module, the QETH_L2 module will
+still be built, but then the switchdev notifiers will have no effect.
+
+No VLAN filtering is done on the entries and VLAN information is not
+passed on to the bridge fdb entries. This could be added later.
+For now VLAN interfaces can be defined on the upper bridge interface.
+
+Multicast entries are not passed on to the bridge fdb.
+This could be added later. For now mcast flooding can be used in the
+bridge.
+
+The card reports all MACs that are in its FDB, but we must not pass on
+MACs that are registered for this interface.
 
 Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
 Reviewed-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 ---
- drivers/s390/net/qeth_l2_main.c | 125 ++++++++++++++++++++++++++++++++
- 1 file changed, 125 insertions(+)
+ drivers/s390/net/qeth_core.h    |   1 +
+ drivers/s390/net/qeth_l2_main.c | 110 +++++++++++++++++++++++++++++++-
+ 2 files changed, 110 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
+index 14c583b5ea11..4c8134a953c9 100644
+--- a/drivers/s390/net/qeth_core.h
++++ b/drivers/s390/net/qeth_core.h
+@@ -677,6 +677,7 @@ struct qeth_card_blkt {
+ enum qeth_pnso_mode {
+ 	QETH_PNSO_NONE,
+ 	QETH_PNSO_BRIDGEPORT,
++	QETH_PNSO_ADDR_INFO,
+ };
+ 
+ #define QETH_BROADCAST_WITH_ECHO    0x01
 diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 338bc62556cf..54e02518ce08 100644
+index 7cba3d0035bf..fffbc50cadc6 100644
 --- a/drivers/s390/net/qeth_l2_main.c
 +++ b/drivers/s390/net/qeth_l2_main.c
-@@ -306,6 +306,8 @@ static void qeth_l2_dev2br_fdb_flush(struct qeth_card *card)
- 
- static void qeth_l2_stop_card(struct qeth_card *card)
- {
-+	struct qeth_priv *priv = netdev_priv(card->dev);
-+
- 	QETH_CARD_TEXT(card, 2, "stopcard");
- 
- 	qeth_set_allowed_threads(card, 0, 1);
-@@ -324,6 +326,12 @@ static void qeth_l2_stop_card(struct qeth_card *card)
- 	qeth_l2_set_pnso_mode(card, QETH_PNSO_NONE);
- 	qeth_flush_local_addrs(card);
- 	card->info.promisc_mode = 0;
-+
-+	if (priv->brport_features & BR_LEARNING_SYNC) {
-+		rtnl_lock();
-+		qeth_l2_dev2br_fdb_flush(card);
-+		rtnl_unlock();
-+	}
+@@ -21,6 +21,7 @@
+ #include <linux/list.h>
+ #include <linux/hash.h>
+ #include <linux/hashtable.h>
++#include <net/switchdev.h>
+ #include <asm/chsc.h>
+ #include <asm/css_chars.h>
+ #include <asm/setup.h>
+@@ -709,6 +710,68 @@ static int qeth_l2_pnso(struct qeth_card *card, u8 oc, int cnc,
+ 	return rc;
  }
  
- static int qeth_l2_request_initial_mac(struct qeth_card *card)
-@@ -856,6 +864,89 @@ static int qeth_l2_bridge_getlink(struct sk_buff *skb, u32 pid, u32 seq,
- 				       nlflags, filter_mask, NULL);
- }
- 
-+static const struct nla_policy qeth_brport_policy[IFLA_BRPORT_MAX + 1] = {
-+	[IFLA_BRPORT_LEARNING_SYNC]	= { .type = NLA_U8 },
-+};
++static bool qeth_is_my_net_if_token(struct qeth_card *card,
++				    struct net_if_token *token)
++{
++	return ((card->info.ddev_devno == token->devnum) &&
++		(card->info.cssid == token->cssid) &&
++		(card->info.iid == token->iid) &&
++		(card->info.ssid == token->ssid) &&
++		(card->info.chpid == token->chpid) &&
++		(card->info.chid == token->chid));
++}
 +
 +/**
-+ *	qeth_l2_bridge_setlink() - set bridgeport attributes
-+ *	@dev: netdevice
-+ *	@nlh: netlink message header
-+ *	@flags: bridge flags (here: BRIDGE_FLAGS_SELF)
-+ *	@extack: extended ACK report struct
-+ *
-+ *	Called under rtnl_lock
++ *	qeth_l2_dev2br_fdb_notify() - update fdb of master bridge
++ *	@card:	qeth_card structure pointer
++ *	@code:	event bitmask: high order bit 0x80 set to
++ *				1 - removal of an object
++ *				0 - addition of an object
++ *			       Object type(s):
++ *				0x01 - VLAN, 0x02 - MAC, 0x03 - VLAN and MAC
++ *	@token: "network token" structure identifying 'physical' location
++ *		of the target
++ *	@addr_lnid: structure with MAC address and VLAN ID of the target
 + */
-+static int qeth_l2_bridge_setlink(struct net_device *dev, struct nlmsghdr *nlh,
-+				  u16 flags, struct netlink_ext_ack *extack)
++static void qeth_l2_dev2br_fdb_notify(struct qeth_card *card, u8 code,
++				      struct net_if_token *token,
++				      struct mac_addr_lnid *addr_lnid)
 +{
-+	struct qeth_priv *priv = netdev_priv(dev);
-+	struct nlattr *bp_tb[IFLA_BRPORT_MAX + 1];
-+	struct qeth_card *card = dev->ml_priv;
-+	struct nlattr *attr, *nested_attr;
-+	bool enable, has_protinfo = false;
-+	int rem1, rem2;
-+	int rc;
++	struct switchdev_notifier_fdb_info info;
++	u8 ntfy_mac[ETH_ALEN];
 +
-+	if (!netif_device_present(dev))
-+		return -ENODEV;
-+	if (!(priv->brport_hw_features))
-+		return -EOPNOTSUPP;
++	ether_addr_copy(ntfy_mac, addr_lnid->mac);
++	/* Ignore VLAN only changes */
++	if (!(code & IPA_ADDR_CHANGE_CODE_MACADDR))
++		return;
++	/* Ignore mcast entries */
++	if (is_multicast_ether_addr(ntfy_mac))
++		return;
++	/* Ignore my own addresses */
++	if (qeth_is_my_net_if_token(card, token))
++		return;
 +
-+	nlmsg_for_each_attr(attr, nlh, sizeof(struct ifinfomsg), rem1) {
-+		if (nla_type(attr) == IFLA_PROTINFO) {
-+			rc = nla_parse_nested(bp_tb, IFLA_BRPORT_MAX, attr,
-+					      qeth_brport_policy, extack);
-+			if (rc)
-+				return rc;
-+			has_protinfo = true;
-+		} else if (nla_type(attr) == IFLA_AF_SPEC) {
-+			nla_for_each_nested(nested_attr, attr, rem2) {
-+				if (nla_type(nested_attr) == IFLA_BRIDGE_FLAGS)
-+					continue;
-+				NL_SET_ERR_MSG_ATTR(extack, nested_attr,
-+						    "Unsupported attribute");
-+				return -EINVAL;
-+			}
-+		} else {
-+			NL_SET_ERR_MSG_ATTR(extack, attr, "Unsupported attribute");
-+			return -EINVAL;
-+		}
-+	}
-+	if (!has_protinfo)
-+		return 0;
-+	if (!bp_tb[IFLA_BRPORT_LEARNING_SYNC])
-+		return -EINVAL;
-+	enable = !!nla_get_u8(bp_tb[IFLA_BRPORT_LEARNING_SYNC]);
++	info.addr = ntfy_mac;
++	/* don't report VLAN IDs */
++	info.vid = 0;
++	info.added_by_user = false;
++	info.offloaded = true;
 +
-+	if (enable == !!(priv->brport_features & BR_LEARNING_SYNC))
-+		return 0;
-+
-+	mutex_lock(&card->sbp_lock);
-+	/* do not change anything if BridgePort is enabled */
-+	if (qeth_bridgeport_is_in_use(card)) {
-+		NL_SET_ERR_MSG(extack, "n/a (BridgePort)");
-+		rc = -EBUSY;
-+	} else if (enable) {
-+		qeth_l2_set_pnso_mode(card, QETH_PNSO_ADDR_INFO);
-+		rc = qeth_l2_dev2br_an_set(card, true);
-+		if (rc)
-+			qeth_l2_set_pnso_mode(card, QETH_PNSO_NONE);
-+		else
-+			priv->brport_features |= BR_LEARNING_SYNC;
++	if (code & IPA_ADDR_CHANGE_CODE_REMOVAL) {
++		call_switchdev_notifiers(SWITCHDEV_FDB_DEL_TO_BRIDGE,
++					 card->dev, &info.info, NULL);
++		QETH_CARD_TEXT(card, 4, "andelmac");
++		QETH_CARD_TEXT_(card, 4,
++				"mc%012lx", ether_addr_to_u64(ntfy_mac));
 +	} else {
-+		rc = qeth_l2_dev2br_an_set(card, false);
-+		if (!rc) {
-+			qeth_l2_set_pnso_mode(card, QETH_PNSO_NONE);
-+			priv->brport_features ^= BR_LEARNING_SYNC;
-+			qeth_l2_dev2br_fdb_flush(card);
-+		}
++		call_switchdev_notifiers(SWITCHDEV_FDB_ADD_TO_BRIDGE,
++					 card->dev, &info.info, NULL);
++		QETH_CARD_TEXT(card, 4, "anaddmac");
++		QETH_CARD_TEXT_(card, 4,
++				"mc%012lx", ether_addr_to_u64(ntfy_mac));
 +	}
-+	mutex_unlock(&card->sbp_lock);
-+
-+	return rc;
 +}
 +
  static const struct net_device_ops qeth_l2_netdev_ops = {
  	.ndo_open		= qeth_open,
  	.ndo_stop		= qeth_stop,
-@@ -873,6 +964,7 @@ static const struct net_device_ops qeth_l2_netdev_ops = {
- 	.ndo_fix_features	= qeth_fix_features,
- 	.ndo_set_features	= qeth_set_features,
- 	.ndo_bridge_getlink	= qeth_l2_bridge_getlink,
-+	.ndo_bridge_setlink	= qeth_l2_bridge_setlink,
+@@ -1216,6 +1279,48 @@ struct qeth_addr_change_data {
+ 	struct qeth_ipacmd_addr_change ac_event;
  };
  
- static const struct net_device_ops qeth_osn_netdev_ops = {
-@@ -1016,6 +1108,38 @@ static void qeth_l2_detect_dev2br_support(struct qeth_card *card)
- 		priv->brport_hw_features &= ~BR_LEARNING_SYNC;
- }
- 
-+static void qeth_l2_enable_brport_features(struct qeth_card *card)
++static void qeth_l2_dev2br_worker(struct work_struct *work)
 +{
-+	struct qeth_priv *priv = netdev_priv(card->dev);
-+	int rc;
++	struct delayed_work *dwork = to_delayed_work(work);
++	struct qeth_addr_change_data *data;
++	struct qeth_card *card;
++	unsigned int i;
 +
-+	if (priv->brport_features & BR_LEARNING_SYNC) {
-+		if (priv->brport_hw_features & BR_LEARNING_SYNC) {
-+			qeth_l2_set_pnso_mode(card, QETH_PNSO_ADDR_INFO);
-+			rc = qeth_l2_dev2br_an_set(card, true);
-+			if (rc == -EAGAIN) {
-+				/* Recoverable error, retry once */
-+				qeth_l2_set_pnso_mode(card, QETH_PNSO_NONE);
-+				qeth_l2_dev2br_fdb_flush(card);
-+				qeth_l2_set_pnso_mode(card, QETH_PNSO_ADDR_INFO);
-+				rc = qeth_l2_dev2br_an_set(card, true);
-+			}
-+			if (rc) {
-+				netdev_err(card->dev,
-+					   "failed to enable bridge learning_sync: %d\n",
-+					   rc);
-+				qeth_l2_set_pnso_mode(card, QETH_PNSO_NONE);
-+				qeth_l2_dev2br_fdb_flush(card);
-+				priv->brport_features ^= BR_LEARNING_SYNC;
-+			}
-+		} else {
-+			dev_warn(&card->gdev->dev,
-+				"bridge learning_sync not supported\n");
-+			priv->brport_features ^= BR_LEARNING_SYNC;
++	data = container_of(dwork, struct qeth_addr_change_data, dwork);
++	card = data->card;
++
++	QETH_CARD_TEXT(card, 4, "dev2brew");
++
++	if (READ_ONCE(card->info.pnso_mode) == QETH_PNSO_NONE)
++		goto free;
++
++	/* Potential re-config in progress, try again later: */
++	if (!rtnl_trylock()) {
++		queue_delayed_work(card->event_wq, dwork,
++				   msecs_to_jiffies(100));
++		return;
++	}
++
++	if (data->ac_event.lost_event_mask) {
++		QETH_DBF_MESSAGE(3,
++				 "Address change notification overflow on device %x\n",
++				 CARD_DEVID(card));
++	} else {
++		for (i = 0; i < data->ac_event.num_entries; i++) {
++			struct qeth_ipacmd_addr_change_entry *entry =
++					&data->ac_event.entry[i];
++			qeth_l2_dev2br_fdb_notify(card,
++						  entry->change_code,
++						  &entry->token,
++						  &entry->addr_lnid);
 +		}
 +	}
++	rtnl_unlock();
++
++free:
++	kfree(data);
 +}
 +
- static int qeth_l2_set_online(struct qeth_card *card)
+ static void qeth_addr_change_event_worker(struct work_struct *work)
  {
- 	struct ccwgroup_device *gdev = card->gdev;
-@@ -1075,6 +1199,7 @@ static int qeth_l2_set_online(struct qeth_card *card)
- 
- 		netif_device_attach(dev);
- 		qeth_enable_hw_features(dev);
-+		qeth_l2_enable_brport_features(card);
- 
- 		if (card->info.open_when_online) {
- 			card->info.open_when_online = 0;
+ 	struct delayed_work *dwork = to_delayed_work(work);
+@@ -1298,7 +1403,10 @@ static void qeth_addr_change_event(struct qeth_card *card,
+ 		QETH_CARD_TEXT(card, 2, "ACNalloc");
+ 		return;
+ 	}
+-	INIT_DELAYED_WORK(&data->dwork, qeth_addr_change_event_worker);
++	if (card->info.pnso_mode == QETH_PNSO_BRIDGEPORT)
++		INIT_DELAYED_WORK(&data->dwork, qeth_addr_change_event_worker);
++	else
++		INIT_DELAYED_WORK(&data->dwork, qeth_l2_dev2br_worker);
+ 	data->card = card;
+ 	memcpy(&data->ac_event, hostevs,
+ 			sizeof(struct qeth_ipacmd_addr_change) + extrasize);
 -- 
 2.17.1
 
