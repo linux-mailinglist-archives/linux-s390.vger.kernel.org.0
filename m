@@ -2,57 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2BFE264C80
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Sep 2020 20:14:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6651D264D4D
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Sep 2020 20:40:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgIJSNu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Sep 2020 14:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34748 "EHLO
+        id S1726947AbgIJSik (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Sep 2020 14:38:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727032AbgIJSNe (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Sep 2020 14:13:34 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845C5C061757
-        for <linux-s390@vger.kernel.org>; Thu, 10 Sep 2020 11:13:21 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id h6so5600427qtd.6
-        for <linux-s390@vger.kernel.org>; Thu, 10 Sep 2020 11:13:21 -0700 (PDT)
+        with ESMTP id S1726901AbgIJSdj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Sep 2020 14:33:39 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69334C061786
+        for <linux-s390@vger.kernel.org>; Thu, 10 Sep 2020 11:33:38 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id p9so10196732ejf.6
+        for <linux-s390@vger.kernel.org>; Thu, 10 Sep 2020 11:33:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vsgOBuvd+PmHZlIl6zNL7J0E+9iuQlAQQf0cZFL5gMI=;
-        b=QjySHJ/1iTMrz5prM8y+VncJt3fFZa9ZyFpYw/Th/jKpZaffgf1LyWVdNJm/j/vjyA
-         nLjh8OzRb1c9mhAkanY5btD+efOqZZ+Udi6ZslYCr7YtJIfes2snd5UrIRKpUyv8hkdr
-         36M2e6eOhe91VaA9oyoKzmgg9xjBknxyQhh5BZGAXX5wie19agL2HJs44WBmda9L90te
-         rB4sfQyqX1cSC/80uyvJQCn48IBDTjUyr7fuRqyi1tok7cmTDWGXQTd1b0rwTzF0s+WH
-         TbjL9aVyKRcQ18FE4ZG1EMR1arXpN/YNqyXD5nLN+6IKf2BR7oX+4/YatX70bdzY6jl7
-         k0sw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qxUvMosCQmqJOT3+XnukK6QXCPsj7s8SUCtblFuQCtk=;
+        b=KlHKM3khaRQUhJpR9UdzFB5LWAQF17Brw1Ft7CKtiriIUBpvA7+djFgchHKossZjUO
+         VhqJr4lFUYp9ylSJpdlZ0hFaIz/Ssta/iioJv0jWuQQR7zk9LpCYLPwRfEoZmfrs0FFc
+         eJ9cpxyshw+kFNXrIvj9XAnDrbJSgUK0YSwsk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vsgOBuvd+PmHZlIl6zNL7J0E+9iuQlAQQf0cZFL5gMI=;
-        b=osXn7Frv3lDs5SNTnWG913pq94jUXlxUtviG2D4NoifbE25dVLgzUrV1Wn8AAj8VnB
-         dzFkL/IofHtX+OftAq0CeDLosyDW14YR7xt/zSL5cglJXxyhtPSwK/usEOqN+V57CVmx
-         hp0XKGeEPaCq1cUlFDitfmXhHOKtCqVyCBmf0ZArh4wbVaIH8GeVGws4lWDs1L/xeLzx
-         Z94XmzGxJpEduXIVYm2kouMekKaVqNL4116KltkBAHvpGKhgHWKemd0NAdP31q6E//9O
-         O1CVLcggelFBSj2wj5iaqzwn1Fsk9MVxl8LSgTG38DRvU7JeE/4j2Ba2L6nya0JGGxoQ
-         kZgg==
-X-Gm-Message-State: AOAM531YruCwUfFRacrYbb502PxTduLk1UqrbtdCX1UWx7f/UCZ5hQyD
-        2+tuH6fFQhl0k0SoNO36XqGpzA==
-X-Google-Smtp-Source: ABdhPJz+K3felhpgzzPG4kmFLTMR9ObyhixIit5uSjGLCBi1hY0YGP7pJ4KyC/qC7hkyspfqqr9PsQ==
-X-Received: by 2002:ac8:7108:: with SMTP id z8mr9521321qto.55.1599761600525;
-        Thu, 10 Sep 2020 11:13:20 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id c43sm8103713qtk.24.2020.09.10.11.13.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Sep 2020 11:13:19 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kGR4R-004OkZ-38; Thu, 10 Sep 2020 15:13:19 -0300
-Date:   Thu, 10 Sep 2020 15:13:19 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qxUvMosCQmqJOT3+XnukK6QXCPsj7s8SUCtblFuQCtk=;
+        b=tg9SExHqN4TCmwjZs+/Qc4MnYMys3Hm6kQpDeWIXWOLcTxc4SRGlwhwM/48nJVo3Ku
+         Tx9KpijhcQbm1CLDkgv3uCiXp0gLXO5TTIbQXZjuZf4yHm0lY2a0GE0BYJwgFX/JHYF3
+         LK109FtvAfsKdeT8cHt5pTTEr2AquxwUupqD1djcl3IuY+lW9I+JN2n8lZnZOML2e8xM
+         1anpbag9PtXNDFOFVCCt8d0Ia+HaS+ImO2hehQs9SV4xUMm/10hFi4BdZkE7g821EIDi
+         eyin3hSbwxZfCnrCpZpo742Yuo1aRp87tv23+BznqZuVrczdXl7J5qKHtLNK/hUMPOdp
+         09Rg==
+X-Gm-Message-State: AOAM533yYtS6qp2qtOeDAFAbdKEdyCfpN28h0/zw1pdZ59rmwcOkL1Mh
+        Bm9L7JYV2j3hWEEeR0yEp9JGsh6y+59DHA==
+X-Google-Smtp-Source: ABdhPJxn4QA3T4QtozANDW3JxY8yXVXsBbOnuhke9N5BH+UF+PuJtjQ5bUT2kIWagzq7q+qBImsE6g==
+X-Received: by 2002:a17:906:aac7:: with SMTP id kt7mr10125076ejb.548.1599762816778;
+        Thu, 10 Sep 2020 11:33:36 -0700 (PDT)
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
+        by smtp.gmail.com with ESMTPSA id 40sm8572242edr.67.2020.09.10.11.33.35
+        for <linux-s390@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Sep 2020 11:33:36 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id t10so7981777wrv.1
+        for <linux-s390@vger.kernel.org>; Thu, 10 Sep 2020 11:33:35 -0700 (PDT)
+X-Received: by 2002:a05:651c:104c:: with SMTP id x12mr5572300ljm.285.1599762813344;
+ Thu, 10 Sep 2020 11:33:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+ <20200907180058.64880-2-gerald.schaefer@linux.ibm.com> <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
+ <20200909142904.00b72921@thinkpad> <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
+ <20200909192534.442f8984@thinkpad> <20200909180324.GI87483@ziepe.ca>
+ <20200910093925.GB29166@oc3871087118.ibm.com> <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
+ <20200910181319.GO87483@ziepe.ca>
+In-Reply-To: <20200910181319.GO87483@ziepe.ca>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 10 Sep 2020 11:33:17 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh3SjOE2r4WCfagL5Zq4Oj4Jsu1=1jTTi2GxGDTxP-J0Q@mail.gmail.com>
+Message-ID: <CAHk-=wh3SjOE2r4WCfagL5Zq4Oj4Jsu1=1jTTi2GxGDTxP-J0Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table folding
+To:     Jason Gunthorpe <jgg@ziepe.ca>
 Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
         Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
         Dave Hansen <dave.hansen@intel.com>,
@@ -87,75 +97,42 @@ Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
- folding
-Message-ID: <20200910181319.GO87483@ziepe.ca>
-References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
- <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
- <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
- <20200909142904.00b72921@thinkpad>
- <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
- <20200909192534.442f8984@thinkpad>
- <20200909180324.GI87483@ziepe.ca>
- <20200910093925.GB29166@oc3871087118.ibm.com>
- <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Sep 10, 2020 at 10:35:38AM -0700, Linus Torvalds wrote:
-> On Thu, Sep 10, 2020 at 2:40 AM Alexander Gordeev
-> <agordeev@linux.ibm.com> wrote:
-> >
-> > It is only gup_fast case that exposes the issue. It hits because
-> > pointers to stack copies are passed to gup_pXd_range iterators, not
-> > pointers to real page tables itself.
-> 
-> Can we possibly change fast-gup to not do the stack copies?
+On Thu, Sep 10, 2020 at 11:13 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 >
-> I'd actually rather do something like that, than the "addr_end" thing.
+> So.. To change away from the stack option I think we'd have to pass
+> the READ_ONCE value to pXX_offset() as an extra argument instead of it
+> derefing the pointer internally.
 
-> As you say, none of the other page table walking code does what the
-> GUP code does, and I don't think it's required.
+Yeah, but I think that would actually be the better model than passing
+an address to a random stack location.
 
-As I understand it, the requirement is because fast-gup walks without
-the page table spinlock, or mmap_sem held so it must READ_ONCE the
-*pXX.
+It's also effectively what we do in some other places, eg the whole
+logic with "orig" in the regular pte fault handling is basically doing
+unlocked loads of the pte, various decisions on that, and then doing a
+final "is this still the same pte" after it has gotten the page table
+lock.
 
-It then checks that it is a valid page table pointer, then calls
-pXX_offset().
+(And yes, those other pte fault handling cases are different, since
+they _do_ hold the mmap lock, so they know the page *tables* are
+stable, and it's only the last level that then gets re-checked against
+the pte once the pte itself has also been stabilized with the page
+table lock).
 
-The arch implementation of pXX_offset() derefs again the passed pXX
-pointer. So it defeats the READ_ONCE and the 2nd load could observe
-something that is no longer a page table pointer and crash.
+So I think it would actually be a better conceptual match to make the
+page table walking interface be "here, this is the value I read once
+carefully, and this is the address, now give me the next address".
 
-Passing it the address of the stack value is a way to force
-pXX_offset() to use the READ_ONCE result which has already been tested
-to be a page table pointer.
+The folded case would then just return the address it was given, and
+the non-folded case would return the inner page table based on the
+value.
 
-Other page walking code that holds the mmap_sem tends to use
-pmd_trans_unstable() which solves this problem by injecting a
-barrier. The load hidden in pte_offset() after a pmd_trans_unstable()
-can't be re-ordered and will only see a page table entry under the
-mmap_sem.
+I dunno. I don't actually feel all that strongly about this, so
+whatever works, I guess.
 
-However, I think that logic would have been much clearer following the
-GUP model of READ_ONCE vs extra reads and a hidden barrier. At least
-it took me a long time to work it out :(
-
-I also think there are real bugs here where places are reading *pXX
-multiple times without locking the page table. One was found recently
-in the wild in the huge tlb code IIRC.
-
-The mm/pagewalk.c has these missing READ_ONCE bugs too.
-
-So.. To change away from the stack option I think we'd have to pass
-the READ_ONCE value to pXX_offset() as an extra argument instead of it
-derefing the pointer internally.
-
-Jason
+                Linus
