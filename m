@@ -2,123 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ADB26266521
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Sep 2020 18:54:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D33BD26674C
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Sep 2020 19:41:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725992AbgIKQyD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 11 Sep 2020 12:54:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgIKQxd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 11 Sep 2020 12:53:33 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA55C061757
-        for <linux-s390@vger.kernel.org>; Fri, 11 Sep 2020 09:53:33 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id d15so6500981lfq.11
-        for <linux-s390@vger.kernel.org>; Fri, 11 Sep 2020 09:53:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ymUunqCLw2vPuQ1VbXcUDi5LPgcqHOLwtMhV+h1hP00=;
-        b=LzixW8IE64pueJHPc4pkVfB4hu8uL7V9KR6+6qOQDiBrSui1M4vSI9xeqysgklBESL
-         0IQ4jxvW89dAuyt0txhLnLuupNLcl3TzUTNbKM8yk1mUHFyRH5GgOM7DPBaXlmnovHXl
-         RwxBgeTE5qnMUevVAeinQ8lEe8Rzs7ehh51xA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ymUunqCLw2vPuQ1VbXcUDi5LPgcqHOLwtMhV+h1hP00=;
-        b=Pixnp2uNBuiTmDSQs9aaTMGS7CJGbWVmPdBxWjgJtFpoW3+a+v9Z+h3hnccEcYYzgb
-         oKTSZyHOIsmgEociOeiwQGs5sLpFcGSWiQdiKNTXQuJAYCeg6D6KXl0syarl6/6R8njf
-         qb/SHzuVq0AhApdQQyOneNGFMOYP2ZikEUU7lwWKMlbkRzn4Hq4Seb11lU3RdJYdIv/5
-         E6OfvUMOLpZHemfjIl72GXEFfKZyq5KmY6gd/f+4MUGQihT2t5M3MxqQc+nBCKHY6X8z
-         eyXNAIW4/300SjyHchAC2vuSzZQvAY1/GktNkSynFpd7x6BjrDRqV4eUs8DGxZYI3zVo
-         PWrw==
-X-Gm-Message-State: AOAM530ed+hkX+VO+ByaGbQEB2USYroE1Z253X+HzJkcDbW8dtjEC2LF
-        6w1YsBxu6kotLkKJzsYkzcKRURVYuHjy0g==
-X-Google-Smtp-Source: ABdhPJxFwAS6OIA0Hniwpjy8W5VSU7FNwqtrm6y0brh39ANBD7H0dMJBQFGGivhy5Xl9tp9QxgKyBQ==
-X-Received: by 2002:ac2:518d:: with SMTP id u13mr607994lfi.589.1599843211319;
-        Fri, 11 Sep 2020 09:53:31 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id m16sm592834ljb.67.2020.09.11.09.53.30
-        for <linux-s390@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Sep 2020 09:53:31 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id y17so6523623lfa.8
-        for <linux-s390@vger.kernel.org>; Fri, 11 Sep 2020 09:53:30 -0700 (PDT)
-X-Received: by 2002:ac2:5594:: with SMTP id v20mr585120lfg.344.1599842749970;
- Fri, 11 Sep 2020 09:45:49 -0700 (PDT)
+        id S1726384AbgIKRli (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 11 Sep 2020 13:41:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46179 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725982AbgIKMlZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 11 Sep 2020 08:41:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599828069;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ScUjzYeMKL2oNRc7AhTDlDfSyj77AbtBTspQLIULrBA=;
+        b=a4ZiEWTvpHNBOHWUftGtFJixqQKWqY59YqyWhIvYsbIWp5NLR5BRGOH/81TpjKzhR2bhBG
+        gTFDbt8NfOirf1V/22C3nup47QrP8NkdLnZTRd1VYSALp6MeaTREUM0K6R4yV5D8qDoIT0
+        1f1acIY8MkoDvgA6ffZs76KaT5JyHgs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-591-yEKvR8T3OSCNHhxfAzO5kQ-1; Fri, 11 Sep 2020 08:41:06 -0400
+X-MC-Unique: yEKvR8T3OSCNHhxfAzO5kQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8E76DF7C0;
+        Fri, 11 Sep 2020 12:41:04 +0000 (UTC)
+Received: from gondolin (ovpn-112-170.ams2.redhat.com [10.36.112.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9A27F75128;
+        Fri, 11 Sep 2020 12:41:00 +0000 (UTC)
+Date:   Fri, 11 Sep 2020 14:40:58 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
+Subject: Re: [PATCH v1 2/3] s390: define UV compatible I/O allocation
+Message-ID: <20200911144058.5fe82f26.cohuck@redhat.com>
+In-Reply-To: <1598875533-19947-3-git-send-email-pmorel@linux.ibm.com>
+References: <1598875533-19947-1-git-send-email-pmorel@linux.ibm.com>
+        <1598875533-19947-3-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
- <20200909142904.00b72921@thinkpad> <aacad1b7-f121-44a5-f01d-385cb0f6351e@intel.com>
- <20200909192534.442f8984@thinkpad> <20200909180324.GI87483@ziepe.ca>
- <20200910093925.GB29166@oc3871087118.ibm.com> <CAHk-=wh4SuNvThq1nBiqk0N-fW6NsY5w=VawC=rJs7ekmjAhjA@mail.gmail.com>
- <20200910181319.GO87483@ziepe.ca> <0c9bcb54-914b-e582-dd6d-3861267b6c94@nvidia.com>
- <20200910221116.GQ87483@ziepe.ca> <20200911121955.GA10250@oc3871087118.ibm.com>
-In-Reply-To: <20200911121955.GA10250@oc3871087118.ibm.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 11 Sep 2020 09:45:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiiEUD_XvNnXysYsKiT4B3SajWbZ4VKY3jYk-17EEaaiA@mail.gmail.com>
-Message-ID: <CAHk-=wiiEUD_XvNnXysYsKiT4B3SajWbZ4VKY3jYk-17EEaaiA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table folding
-To:     Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Mike Rapoport <rppt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linux-x86 <x86@kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        linux-power <linuxppc-dev@lists.ozlabs.org>,
-        linux-sparc <sparclinux@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Sep 11, 2020 at 5:20 AM Alexander Gordeev
-<agordeev@linux.ibm.com> wrote:
->
-> What if the entry is still pud_present, but got remapped after
-> READ_ONCE(*pudp)? IOW, it is still valid, but points elsewhere?
+On Mon, 31 Aug 2020 14:05:32 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-That can't happen.
+> To centralize the memory allocation for I/O we define
+> the alloc/free_io_page() functions which share the I/O
+> memory with the host in case the guest runs with
+> protected virtualization.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  lib/s390x/malloc_io.c | 53 +++++++++++++++++++++++++++++++++++++++++++
+>  lib/s390x/malloc_io.h | 14 ++++++++++++
+>  s390x/Makefile        |  1 +
+>  3 files changed, 68 insertions(+)
+>  create mode 100644 lib/s390x/malloc_io.c
+>  create mode 100644 lib/s390x/malloc_io.h
+> 
+> diff --git a/lib/s390x/malloc_io.c b/lib/s390x/malloc_io.c
+> new file mode 100644
+> index 0000000..0e67aab
+> --- /dev/null
+> +++ b/lib/s390x/malloc_io.c
+> @@ -0,0 +1,53 @@
+> +/*
+> + * I/O page allocation
+> + *
+> + * Copyright (c) 2020 IBM Corp
+> + *
+> + * Authors:
+> + *  Pierre Morel <pmorel@linux.ibm.com>
+> + *
+> + * This code is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2.
+> + *
+> + * Using this interface provide host access to the allocated pages in
+> + * case the guest is a secure guest.
+> + * This is needed for I/O buffers.
+> + *
+> + */
+> +
+> +#include <libcflat.h>
+> +#include <alloc_page.h>
+> +#include <asm/page.h>
+> +#include <asm/uv.h>
+> +#include <malloc_io.h>
+> +#include <asm/facility.h>
+> +
+> +
+> +void *alloc_io_page(int size)
+> +{
+> +	void *p;
+> +
+> +	assert(size <= PAGE_SIZE);
+> +	p = alloc_page();
 
-The GUP walk doesn't hold any locks, but it *is* done with interrupts
-disabled, and anybody who is modifying the page tables needs to do the
-TLB flush, and/or RCU-free them.
+I see that you use this for some I/O structures in the next patch. Is
+this guaranteed to be under 2G all the time?
 
-The interrupt disable means that on architectures where the TLB flush
-involves an IPI, it will be delayed until afterwards, but it also acts
-as a big RCU read lock hammer.
-
-So the page tables can get modified under us, but the old pages won't
-be released and re-used.
-
-                Linus
