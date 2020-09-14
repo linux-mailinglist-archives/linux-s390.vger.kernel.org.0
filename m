@@ -2,121 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0707268721
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Sep 2020 10:23:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82AD3268A52
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Sep 2020 13:47:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbgINIXT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Sep 2020 04:23:19 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7838 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726239AbgINIXT (ORCPT
+        id S1726132AbgINLr0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Sep 2020 07:47:26 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53578 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726043AbgINLqv (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 14 Sep 2020 04:23:19 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08E83gIU182934;
-        Mon, 14 Sep 2020 04:23:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=Ia2xoZWuCYpL76lyzhv4kCcuFhG1ZdZJGayL4NCUbTg=;
- b=n//a407UpuYZylocjDNsyKy7xjwkHkCi29u2eAslqi7ixBdCvhPWU2Qclv7wEmBIe/wP
- v/mWFIojmOZcLkB7aAfKEePFWX5G5oYho8qvL6homlo58L+4yOQ2x+q7HfF6gojA8k62
- 0r4cbNpCJhKrL1nxMsjr4D+MXsTx1aa8SDcQkycyq4fyytcMpNTtPXUXwi6sCOeMvCmZ
- H+y1abDCUhr3NipW7W4b0pGAd6GzYQQEEhp1mAM8R6Kpwmcs8Bx3VMZ/LXoQvfoc+rXc
- Z7YhE74WA2t8XrxYnazQh5o4zCRWUUdJX1JrM6oxUQmZUkQrZQbk3NvEx1f4Rjnd2Q6U NQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33j21k4bu2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Sep 2020 04:23:18 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08E83jwj183011;
-        Mon, 14 Sep 2020 04:23:18 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33j21k4bte-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Sep 2020 04:23:17 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08E8MP73013804;
-        Mon, 14 Sep 2020 08:23:15 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 33gny8a1ks-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Sep 2020 08:23:15 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08E8NDDD18350528
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Sep 2020 08:23:13 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6A006AE04D;
-        Mon, 14 Sep 2020 08:23:13 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 176E6AE045;
-        Mon, 14 Sep 2020 08:23:13 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.38.148])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 14 Sep 2020 08:23:13 +0000 (GMT)
-Subject: Re: [PATCH v1 2/3] s390: define UV compatible I/O allocation
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-References: <1598875533-19947-1-git-send-email-pmorel@linux.ibm.com>
- <1598875533-19947-3-git-send-email-pmorel@linux.ibm.com>
- <20200911144058.5fe82f26.cohuck@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <4e09343a-6eed-7270-2157-dc65f4fb47aa@linux.ibm.com>
-Date:   Mon, 14 Sep 2020 10:23:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 14 Sep 2020 07:46:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600084010;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8gfwnHD9dHu8uZfZ5YjjFWhs2d5AsnLOmKJgI0VS09M=;
+        b=KVJ3XcHCxaB2JSO8W8a7LtNDCPaFZOv4zWg2TTgu1a9xWsnQUeHkS5ViYjJ7oUzQ+mI6PB
+        4XRoH4tnqqTdQxOvQ9nW3A44Wh5toQVL0winlNMCujLAR/Wr/OEbegwz5DAc71Dz56U3SV
+        /Nt9t+OjLFbW1ilqpM8zOl8cabulZF0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-557-N7txhOc0NXi9aI1uiONIWg-1; Mon, 14 Sep 2020 07:46:48 -0400
+X-MC-Unique: N7txhOc0NXi9aI1uiONIWg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81D41801AAB;
+        Mon, 14 Sep 2020 11:46:46 +0000 (UTC)
+Received: from gondolin (ovpn-112-214.ams2.redhat.com [10.36.112.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F1BDD7839F;
+        Mon, 14 Sep 2020 11:46:44 +0000 (UTC)
+Date:   Mon, 14 Sep 2020 13:46:42 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc:     Vineeth Vijayan <vneethv@linux.vnet.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Boris Fiuczynski <fiuczy@linux.ibm.com>
+Subject: Re: [RFD] uevent handling for subchannels
+Message-ID: <20200914134642.5e2e2c0e.cohuck@redhat.com>
+In-Reply-To: <20200701112313.62a22156.cohuck@redhat.com>
+References: <20200403124032.5e70603d.cohuck@redhat.com>
+        <20200417143811.7e6ecb2c.cohuck@redhat.com>
+        <8649ea94-8617-07b6-170e-65c278d9383b@linux.vnet.ibm.com>
+        <c69da1c0-d151-257b-fe43-786e47a3cf9b@linux.vnet.ibm.com>
+        <20200423182001.40345df8.cohuck@redhat.com>
+        <53d7d08d-c1d2-dad3-7f01-a165b24b0359@linux.ibm.com>
+        <20200430124316.023a82b0.cohuck@redhat.com>
+        <20200629135631.10db3c32.cohuck@redhat.com>
+        <20200701112313.62a22156.cohuck@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200911144058.5fe82f26.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-13_09:2020-09-10,2020-09-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- clxscore=1015 mlxscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
- suspectscore=2 phishscore=0 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009140067
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+<casts "reanimate" on dead thread>
 
+On Wed, 1 Jul 2020 11:23:13 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-On 2020-09-11 14:40, Cornelia Huck wrote:
-> On Mon, 31 Aug 2020 14:05:32 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> On Mon, 29 Jun 2020 13:56:31 +0200
+> Cornelia Huck <cohuck@redhat.com> wrote:
 > 
->> To centralize the memory allocation for I/O we define
->> the alloc/free_io_page() functions which share the I/O
->> memory with the host in case the guest runs with
->> protected virtualization.
-
-...
-
->> +
->> +void *alloc_io_page(int size)
->> +{
->> +	void *p;
->> +
->> +	assert(size <= PAGE_SIZE);
->> +	p = alloc_page();
+> > Ok, so I've resumed the thinking process, and I think getting rid of
+> > the "no I/O subchannel without functional device" approach is a good
+> > idea, and allows us to make handling driver matches more similar to
+> > everyone else.  
 > 
-> I see that you use this for some I/O structures in the next patch. Is
-> this guaranteed to be under 2G all the time?
+> As an aside, there's another odd construct: the I/O subchannel driver
+> *always* binds to the subchannel device, even if there is a problem,
+> and schedules an unregistration of the subchannel device on error. This
+> was introduced because events from machine check handling are not
+> processed if there isn't a driver (at least I thought back then that it
+> was a good idea.) I think a more correct way to handle this would be to
+> do the following:
 > 
+> * If something doesn't work, clean up and return an error in the probe
+>   function. The subchannel device stays around, it's just not bound.
+> * Have the css bus do some basic processing for subchannels not bound
+>   to any driver (e.g., check dnv/w). This would also make it possible
+>   to unregister dead message subchannels if a machine check is received
+>   for them (don't know if that's an actual problem in pratice.)
+> 
+> > 
+> > What changes would be needed?
+> > * The whole logic to suppress uevents for subchannels and generate one
+> >   later will go. (Touches the various subchannel driver, including
+> >   vfio-ccw.)
+> > * ccw_device_todo() can just unregister the ccw device, and there's no
+> >   longer a need for ccw_device_call_sch_unregister(). (IIUC, this also
+> >   covers setting disconnected devices offline.)  
+> 
+> I'm actually not sure if unregistration-by-driver is the right thing
+> for most cases (except for something like disconnected device removal),
+> that should be done by the bus. Maybe something for later (don't fear,
+> I don't plan to work on the common I/O layer again :)
+> 
+> > * As the I/O subchannel driver now needs to deal with cases where no
+> >   ccw device is available, the code for that needs to be checked.
+> >   (That's probably the most time-consuming task.)  
+> 
+> Had a quick look, doesn't actually look too bad (most places already
+> check for !cdev.)
+> 
+> > 
+> > Userspace should be fine with I/O subchannels without ccw device,
+> > that's nothing new.
+> > 
+> > Does that sound reasonable?  
 
-Good catch.
-I forgot that I already worked on this problem a while ago, I will 
-rework the allocation.
+Is anybody looking at this? The delayed uevent handling is a bit of a
+mess for management of vfio-ccw devices...
 
-Thanks,
-Pierre
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
