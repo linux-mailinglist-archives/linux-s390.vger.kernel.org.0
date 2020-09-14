@@ -2,91 +2,140 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 633C0268B20
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Sep 2020 14:38:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DE47268FF6
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Sep 2020 17:31:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgINMiU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Sep 2020 08:38:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54398 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726183AbgINMg5 (ORCPT
+        id S1726116AbgINPap (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Sep 2020 11:30:45 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21661 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725961AbgINPaO (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 14 Sep 2020 08:36:57 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08EBfmNb001619;
-        Mon, 14 Sep 2020 07:56:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=pp1;
- bh=5Fv8kTlNA8GN8jW9Iq4dhFANuKdCe5Yzvf+1bvyv1nw=;
- b=ZA94u7eLnBKk6SAJNd4dHDd/vizukt4OJDCeo8GJNSLkQCO8VwLi8WWlN+RvtSrRhGiQ
- 8A7mbih5oXs7TQMoK1wXkksS+tYaUjB/V4T6eJrpFp4wzQ5yeC8vFDGUwZN2UKvDYpL3
- dYr3DgII0vj5QIQQMphLO/ncRTdjYGkjJ9UWS/o2mup2SVE1QRePiwgK0DxGqaNbgdYc
- dS4Wtv1iDtsere7O6JRL0Y9IGkLPypxkVrdYH9DYPmN7ilpoVBU6o2ner1z6mTzAXMQc
- Lw0tNNCP1yv5Ax+GtRn1qxWzT0D0mSjQ+zLrh3K0RU9DP2agKv2jKKcUhyza0WXZp/uJ Jw== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33j7v50cr7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Sep 2020 07:56:52 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08EBr97o015057;
-        Mon, 14 Sep 2020 11:56:51 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma06ams.nl.ibm.com with ESMTP id 33hb1j19a0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Sep 2020 11:56:50 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08EBtENl19333396
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Sep 2020 11:55:14 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 284D54C046;
-        Mon, 14 Sep 2020 11:56:48 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 14A324C040;
-        Mon, 14 Sep 2020 11:56:48 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 14 Sep 2020 11:56:48 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
-        id A1EA4E03DF; Mon, 14 Sep 2020 13:56:47 +0200 (CEST)
-From:   Stefan Haberland <sth@linux.ibm.com>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com
-Subject: [PATCH 0/1] DASD: fix discard for FBA devices
-Date:   Mon, 14 Sep 2020 13:56:46 +0200
-Message-Id: <20200914115647.94062-1-sth@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 14 Sep 2020 11:30:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600097412;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AsQvpIFhmm7rdxQQSEFycj3eA12Y+/biDDpofX0AblY=;
+        b=VwM3Wxfm1QZPZ1ko8vYLM5ngwdIIrBbjhlGXHs51PeX0sQWML9ct6oT6H610M0I8w/Bw/r
+        kVxTwTjf+Dofu6OCriQoW2GQfOqsyoDr+rVAs6YbveJKc32TmIe3x4t7ELGN9GoOLn78uH
+        LtoBOGUcn/D2BGnnnfH5OvdVudfC4lo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-455-DCdC4BPTMJ6m8a83aCuvBw-1; Mon, 14 Sep 2020 11:30:08 -0400
+X-MC-Unique: DCdC4BPTMJ6m8a83aCuvBw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F080801AC2;
+        Mon, 14 Sep 2020 15:30:06 +0000 (UTC)
+Received: from gondolin (ovpn-112-214.ams2.redhat.com [10.36.112.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1029060BE2;
+        Mon, 14 Sep 2020 15:29:49 +0000 (UTC)
+Date:   Mon, 14 Sep 2020 17:29:47 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v10 04/16] s390/zcrypt: driver callback to indicate
+ resource in use
+Message-ID: <20200914172947.533ddf56.cohuck@redhat.com>
+In-Reply-To: <20200821195616.13554-5-akrowiak@linux.ibm.com>
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+        <20200821195616.13554-5-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-14_02:2020-09-10,2020-09-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 suspectscore=1 adultscore=0 mlxlogscore=465 mlxscore=0
- phishscore=0 clxscore=1011 malwarescore=0 lowpriorityscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009140091
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Jens,
+On Fri, 21 Aug 2020 15:56:04 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-please see the following patch that fixes zero writes for DASD FBA devices under certain conditions.
+> Introduces a new driver callback to prevent a root user from unbinding
+> an AP queue from its device driver if the queue is in use. The intent of
+> this callback is to provide a driver with the means to prevent a root user
+> from inadvertently taking a queue away from a matrix mdev and giving it to
+> the host while it is assigned to the matrix mdev. The callback will
+> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
+> attributes would result in one or more AP queues being removed from its
+> driver. If the callback responds in the affirmative for any driver
+> queried, the change to the apmask or aqmask will be rejected with a device
+> in use error.
+> 
+> For this patch, only non-default drivers will be queried. Currently,
+> there is only one non-default driver, the vfio_ap device driver. The
+> vfio_ap device driver facilitates pass-through of an AP queue to a
+> guest. The idea here is that a guest may be administered by a different
+> sysadmin than the host and we don't want AP resources to unexpectedly
+> disappear from a guest's AP configuration (i.e., adapters, domains and
+> control domains assigned to the matrix mdev). This will enforce the proper
+> procedure for removing AP resources intended for guest usage which is to
+> first unassign them from the matrix mdev, then unbind them from the
+> vfio_ap device driver.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> Reported-by: kernel test robot <lkp@intel.com>
 
-Do you mind to take this for 5.9?
+This looks a bit odd...
 
-Jan Höppner (1):
-  s390/dasd: Fix zero write for FBA devices
+> ---
+>  drivers/s390/crypto/ap_bus.c | 148 ++++++++++++++++++++++++++++++++---
+>  drivers/s390/crypto/ap_bus.h |   4 +
+>  2 files changed, 142 insertions(+), 10 deletions(-)
+> 
 
- drivers/s390/block/dasd_fba.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+(...)
 
--- 
-2.17.1
+> @@ -1107,12 +1118,70 @@ static ssize_t apmask_show(struct bus_type *bus, char *buf)
+>  	return rc;
+>  }
+>  
+> +static int __verify_card_reservations(struct device_driver *drv, void *data)
+> +{
+> +	int rc = 0;
+> +	struct ap_driver *ap_drv = to_ap_drv(drv);
+> +	unsigned long *newapm = (unsigned long *)data;
+> +
+> +	/*
+> +	 * No need to verify whether the driver is using the queues if it is the
+> +	 * default driver.
+> +	 */
+> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
+> +		return 0;
+> +
+> +	/* The non-default driver's module must be loaded */
+> +	if (!try_module_get(drv->owner))
+> +		return 0;
+> +
+> +	if (ap_drv->in_use)
+> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
+> +			rc = -EADDRINUSE;
+
+ISTR that Christian suggested -EBUSY in a past revision of this series?
+I think that would be more appropriate.
+
+Also, I know we have discussed this before, but it is very hard to
+figure out the offending device(s) if the sysfs manipulation failed. Can
+we at least drop something into the syslog? That would be far from
+perfect, but it gives an admin at least a chance to figure out why they
+got an error. Some more structured way that would be usable from tools
+can still be added later.
+
+> +
+> +	module_put(drv->owner);
+> +
+> +	return rc;
+> +}
 
