@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DE47268FF6
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Sep 2020 17:31:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFC5D269024
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Sep 2020 17:38:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgINPap (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Sep 2020 11:30:45 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21661 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725961AbgINPaO (ORCPT
+        id S1726331AbgINPhh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Sep 2020 11:37:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:27257 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725978AbgINPcM (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 14 Sep 2020 11:30:14 -0400
+        Mon, 14 Sep 2020 11:32:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600097412;
+        s=mimecast20190719; t=1600097529;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=AsQvpIFhmm7rdxQQSEFycj3eA12Y+/biDDpofX0AblY=;
-        b=VwM3Wxfm1QZPZ1ko8vYLM5ngwdIIrBbjhlGXHs51PeX0sQWML9ct6oT6H610M0I8w/Bw/r
-        kVxTwTjf+Dofu6OCriQoW2GQfOqsyoDr+rVAs6YbveJKc32TmIe3x4t7ELGN9GoOLn78uH
-        LtoBOGUcn/D2BGnnnfH5OvdVudfC4lo=
+        bh=hYwIPUBVeru2C0Pit6Q9ISN4S7/HsDvY1EPeSpcccVM=;
+        b=LQuQpX9f9EWiy3Ak6ldiEouM4QEucsMgFjX2FhtMadDtr9Ykjcfdv8pCHIFCX/VI0O7YZc
+        PvkZGtVSzS2QAcKsPtIhbcQwEV9jxr+m32RzguoUrYVCttw7u0+o2o4uf/Wo+ceCTAsdlH
+        Ja3YwoiQdVjynt1msgIq7/FJ4wsCOWs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-455-DCdC4BPTMJ6m8a83aCuvBw-1; Mon, 14 Sep 2020 11:30:08 -0400
-X-MC-Unique: DCdC4BPTMJ6m8a83aCuvBw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-263-3FfxvtFdMpeMPgPdPi2dfQ-1; Mon, 14 Sep 2020 11:32:05 -0400
+X-MC-Unique: 3FfxvtFdMpeMPgPdPi2dfQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F080801AC2;
-        Mon, 14 Sep 2020 15:30:06 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D008E800C60;
+        Mon, 14 Sep 2020 15:32:02 +0000 (UTC)
 Received: from gondolin (ovpn-112-214.ams2.redhat.com [10.36.112.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1029060BE2;
-        Mon, 14 Sep 2020 15:29:49 +0000 (UTC)
-Date:   Mon, 14 Sep 2020 17:29:47 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D8ECD7A1FC;
+        Mon, 14 Sep 2020 15:31:52 +0000 (UTC)
+Date:   Mon, 14 Sep 2020 17:31:49 +0200
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Tony Krowiak <akrowiak@linux.ibm.com>
 Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -42,100 +42,63 @@ Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         mjrosato@linux.ibm.com, pasic@linux.ibm.com,
         alex.williamson@redhat.com, kwankhede@nvidia.com,
         fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v10 04/16] s390/zcrypt: driver callback to indicate
- resource in use
-Message-ID: <20200914172947.533ddf56.cohuck@redhat.com>
-In-Reply-To: <20200821195616.13554-5-akrowiak@linux.ibm.com>
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v10 05/16] s390/vfio-ap: implement in-use callback for
+ vfio_ap driver
+Message-ID: <20200914173149.70fa59d9.cohuck@redhat.com>
+In-Reply-To: <20200821195616.13554-6-akrowiak@linux.ibm.com>
 References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
-        <20200821195616.13554-5-akrowiak@linux.ibm.com>
+        <20200821195616.13554-6-akrowiak@linux.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 21 Aug 2020 15:56:04 -0400
+On Fri, 21 Aug 2020 15:56:05 -0400
 Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> Introduces a new driver callback to prevent a root user from unbinding
-> an AP queue from its device driver if the queue is in use. The intent of
-> this callback is to provide a driver with the means to prevent a root user
-> from inadvertently taking a queue away from a matrix mdev and giving it to
-> the host while it is assigned to the matrix mdev. The callback will
-> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
-> attributes would result in one or more AP queues being removed from its
-> driver. If the callback responds in the affirmative for any driver
-> queried, the change to the apmask or aqmask will be rejected with a device
-> in use error.
-> 
-> For this patch, only non-default drivers will be queried. Currently,
-> there is only one non-default driver, the vfio_ap device driver. The
-> vfio_ap device driver facilitates pass-through of an AP queue to a
-> guest. The idea here is that a guest may be administered by a different
-> sysadmin than the host and we don't want AP resources to unexpectedly
-> disappear from a guest's AP configuration (i.e., adapters, domains and
-> control domains assigned to the matrix mdev). This will enforce the proper
-> procedure for removing AP resources intended for guest usage which is to
-> first unassign them from the matrix mdev, then unbind them from the
-> vfio_ap device driver.
+> Let's implement the callback to indicate when an APQN
+> is in use by the vfio_ap device driver. The callback is
+> invoked whenever a change to the apmask or aqmask would
+> result in one or more queue devices being removed from the driver. The
+> vfio_ap device driver will indicate a resource is in use
+> if the APQN of any of the queue devices to be removed are assigned to
+> any of the matrix mdevs under the driver's control.
 > 
 > Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-
-This looks a bit odd...
-
 > ---
->  drivers/s390/crypto/ap_bus.c | 148 ++++++++++++++++++++++++++++++++---
->  drivers/s390/crypto/ap_bus.h |   4 +
->  2 files changed, 142 insertions(+), 10 deletions(-)
+>  drivers/s390/crypto/vfio_ap_drv.c     |  1 +
+>  drivers/s390/crypto/vfio_ap_ops.c     | 68 ++++++++++++++++++++-------
+>  drivers/s390/crypto/vfio_ap_private.h |  2 +
+>  3 files changed, 53 insertions(+), 18 deletions(-)
 > 
-
-(...)
-
-> @@ -1107,12 +1118,70 @@ static ssize_t apmask_show(struct bus_type *bus, char *buf)
->  	return rc;
+> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> index 24cdef60039a..aae5b3d8e3fa 100644
+> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> @@ -175,6 +175,7 @@ static int __init vfio_ap_init(void)
+>  	memset(&vfio_ap_drv, 0, sizeof(vfio_ap_drv));
+>  	vfio_ap_drv.probe = vfio_ap_queue_dev_probe;
+>  	vfio_ap_drv.remove = vfio_ap_queue_dev_remove;
+> +	vfio_ap_drv.in_use = vfio_ap_mdev_resource_in_use;
+>  	vfio_ap_drv.ids = ap_queue_ids;
+>  
+>  	ret = ap_driver_register(&vfio_ap_drv, THIS_MODULE, VFIO_AP_DRV_NAME);
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 2e37ee82e422..fc1aa6f947eb 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -515,18 +515,36 @@ vfio_ap_mdev_verify_queues_reserved_for_apid(struct ap_matrix_mdev *matrix_mdev,
+>  	return 0;
 >  }
 >  
-> +static int __verify_card_reservations(struct device_driver *drv, void *data)
-> +{
-> +	int rc = 0;
-> +	struct ap_driver *ap_drv = to_ap_drv(drv);
-> +	unsigned long *newapm = (unsigned long *)data;
-> +
-> +	/*
-> +	 * No need to verify whether the driver is using the queues if it is the
-> +	 * default driver.
-> +	 */
-> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
-> +		return 0;
-> +
-> +	/* The non-default driver's module must be loaded */
-> +	if (!try_module_get(drv->owner))
-> +		return 0;
-> +
-> +	if (ap_drv->in_use)
-> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
-> +			rc = -EADDRINUSE;
+> +#define MDEV_SHARING_ERR "Userspace may not re-assign queue %02lx.%04lx " \
+> +			 "already assigned to %s"
 
-ISTR that Christian suggested -EBUSY in a past revision of this series?
-I think that would be more appropriate.
-
-Also, I know we have discussed this before, but it is very hard to
-figure out the offending device(s) if the sysfs manipulation failed. Can
-we at least drop something into the syslog? That would be far from
-perfect, but it gives an admin at least a chance to figure out why they
-got an error. Some more structured way that would be usable from tools
-can still be added later.
-
-> +
-> +	module_put(drv->owner);
-> +
-> +	return rc;
-> +}
+Ah, I spoke too soon; this is what I had been looking for :)
 
