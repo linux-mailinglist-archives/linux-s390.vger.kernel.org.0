@@ -2,88 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76FB826869C
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Sep 2020 09:56:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF9B226871E
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Sep 2020 10:22:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbgINH4C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Sep 2020 03:56:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25016 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726125AbgINHz4 (ORCPT
+        id S1726238AbgINIWk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Sep 2020 04:22:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11726 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726239AbgINIWc (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 14 Sep 2020 03:55:56 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08E7VhQE069780;
-        Mon, 14 Sep 2020 03:55:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=paEL0PaoPgSc9IEP40AlUAUmQ6zab0AuVqqu/4/YaCI=;
- b=jgGN0BrMLz5wPrdbx/zx8UHL5qqk9FN5pS2vevbhM0KSz8a5Uz1IpQjLhHKaIgel+xWq
- uokUpk/P8YnzZj+1bZ38f0mHNxJcZ607wfioLJiKLFE+hBMyvnlmNJ56lDSRjh3V+QZO
- rhC2wbgGMLgSO6jUNmRt75DeOcjHQAOJG7RMx/R7QLxD4nuFbhRlglcEGU0Jkf0378JO
- r4C2/wmec2qYxXI61gId4A4IB+wKXfRy05kOoD62wZhbJjUBDJubr/N8D3YK18+Ttd39
- MOSLTKY/VLTRsEtiajakR4bj2XyG6rQL90xUYd6lGmajDGPdtOXxz9kNRapTYcVFD1qC Xw== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33j44qrpks-1
+        Mon, 14 Sep 2020 04:22:32 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08E82pPR126012;
+        Mon, 14 Sep 2020 04:22:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=WnIPdjUKoeLAe7veVDsA/TJZABPslb4ZWvsP/a6LVyw=;
+ b=VrYMcWxhmskx9LGYvMFOdNOnYm93z02JgpABsII4LuQv5f4w7t25eBNrPU2+j9nvQtBP
+ ldQ6DnrJTvkOS4U75qA5oEzzLtyYCs0739sUpvqecFja4tT4294Nby9M+Codj6MhInGj
+ 14trxij3n1o6A40qiG+7GqRlOz11Y4ZH992wWT+sJWrOtohQ9KkN5hdHAkMU7Xn0qUm5
+ UbS3kF0w4tVFUV2O3d/eX5x0V5ZNTNvyO2CybG8/9X/31dC0Qhsky3r8EswJSghaglE7
+ cQu3aIVeZ6Po4ueWVUhVNCth4pZf1fNmqau+FAs4WoK3hVaprxoHQmOTo8YdWp+MK1F7 lw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33j2m5khye-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Sep 2020 03:55:52 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08E7r0PO024889;
-        Mon, 14 Sep 2020 07:55:51 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma06fra.de.ibm.com with ESMTP id 33hjgdrcjy-1
+        Mon, 14 Sep 2020 04:22:31 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08E8357Z126780;
+        Mon, 14 Sep 2020 04:22:30 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33j2m5khu2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Sep 2020 07:55:50 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08E7sEDt21954918
+        Mon, 14 Sep 2020 04:22:28 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08E8Lq66001852;
+        Mon, 14 Sep 2020 08:22:19 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 33hb1j134a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Sep 2020 08:22:19 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08E8MGiA18219338
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Sep 2020 07:54:14 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F027742042;
-        Mon, 14 Sep 2020 07:55:47 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ABED54203F;
-        Mon, 14 Sep 2020 07:55:47 +0000 (GMT)
-Received: from osiris (unknown [9.171.3.188])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 14 Sep 2020 07:55:47 +0000 (GMT)
-Date:   Mon, 14 Sep 2020 09:55:46 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Harald Freudenberger <freude@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, gor@linux.ibm.com,
-        borntraeger@de.ibm.com
-Subject: Re: [PATCH] s390/zcrypt: remove set_fs() invocation in zcrypt device
- driver
-Message-ID: <20200914075546.GA11573@osiris>
-References: <20200910102838.28887-1-freude@linux.ibm.com>
- <20200911062134.GB21597@lst.de>
- <e367fef4-1634-7b8e-0ef5-4cdc108edadd@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e367fef4-1634-7b8e-0ef5-4cdc108edadd@linux.ibm.com>
+        Mon, 14 Sep 2020 08:22:16 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BAC74C040;
+        Mon, 14 Sep 2020 08:22:16 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7903A4C059;
+        Mon, 14 Sep 2020 08:22:16 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 14 Sep 2020 08:22:16 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 31562E235D; Mon, 14 Sep 2020 10:22:16 +0200 (CEST)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>, Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Collin Walling <walling@linux.ibm.com>
+Subject: [GIT PULL 0/1] KVM: s390: add documentation for KVM_CAP_S390_DIAG318 (5.9)
+Date:   Mon, 14 Sep 2020 10:22:14 +0200
+Message-Id: <20200914082215.6143-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.25.4
 X-TM-AS-GCONF: 00
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-09-13_09:2020-09-10,2020-09-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=986 clxscore=1015 phishscore=0 spamscore=0 mlxscore=0
- priorityscore=1501 adultscore=0 impostorscore=0 bulkscore=0 suspectscore=2
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009140058
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=857
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ phishscore=0 impostorscore=0 mlxscore=0 malwarescore=0 suspectscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009140067
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Sep 14, 2020 at 09:36:07AM +0200, Harald Freudenberger wrote:
-> Otherwise how to we provide this fix then ? My recommendation would
-> be to go the 'usual' way: Commit this s390 internal and then let
-> this go out with the next kernel merge window when next time Linus
-> is pulling patches from the s390 subsystem for the 5.10 kernel
-> development cycle.
+Paolo,
 
-I will create a "set_fs" topic branch on kernel.org based on
-vfs.git/base.set_fs and add your patch there and also the rest of
-s390 set_fs related patches on top of that as soon as things are
-ready.
+one missing piece of documentation for the diag318 interface that was
+added in 5.9-rc1.
+
+The following changes since commit 37f66bbef0920429b8cb5eddba849ec4308a9f8e:
+
+  KVM: emulator: more strict rsm checks. (2020-09-12 12:22:55 -0400)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.9-1
+
+for you to fetch changes up to f20d4e924b4465822c4a35290b85aadf88ddf466:
+
+  docs: kvm: add documentation for KVM_CAP_S390_DIAG318 (2020-09-14 09:08:10 +0200)
+
+----------------------------------------------------------------
+KVM: s390: add documentation for KVM_CAP_S390_DIAG318
+
+diag318 code was merged in 5.9-rc1, let us add some
+missing documentation
+
+----------------------------------------------------------------
+Collin Walling (1):
+      docs: kvm: add documentation for KVM_CAP_S390_DIAG318
+
+ Documentation/virt/kvm/api.rst | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
