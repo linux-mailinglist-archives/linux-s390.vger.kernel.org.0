@@ -2,103 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFC5D269024
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Sep 2020 17:38:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9744C26903D
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Sep 2020 17:41:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbgINPhh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Sep 2020 11:37:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:27257 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725978AbgINPcM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 14 Sep 2020 11:32:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600097529;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hYwIPUBVeru2C0Pit6Q9ISN4S7/HsDvY1EPeSpcccVM=;
-        b=LQuQpX9f9EWiy3Ak6ldiEouM4QEucsMgFjX2FhtMadDtr9Ykjcfdv8pCHIFCX/VI0O7YZc
-        PvkZGtVSzS2QAcKsPtIhbcQwEV9jxr+m32RzguoUrYVCttw7u0+o2o4uf/Wo+ceCTAsdlH
-        Ja3YwoiQdVjynt1msgIq7/FJ4wsCOWs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263-3FfxvtFdMpeMPgPdPi2dfQ-1; Mon, 14 Sep 2020 11:32:05 -0400
-X-MC-Unique: 3FfxvtFdMpeMPgPdPi2dfQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726470AbgINPlj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Sep 2020 11:41:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726065AbgINPjp (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 14 Sep 2020 11:39:45 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D008E800C60;
-        Mon, 14 Sep 2020 15:32:02 +0000 (UTC)
-Received: from gondolin (ovpn-112-214.ams2.redhat.com [10.36.112.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D8ECD7A1FC;
-        Mon, 14 Sep 2020 15:31:52 +0000 (UTC)
-Date:   Mon, 14 Sep 2020 17:31:49 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v10 05/16] s390/vfio-ap: implement in-use callback for
- vfio_ap driver
-Message-ID: <20200914173149.70fa59d9.cohuck@redhat.com>
-In-Reply-To: <20200821195616.13554-6-akrowiak@linux.ibm.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
-        <20200821195616.13554-6-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id A650520756;
+        Mon, 14 Sep 2020 15:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600097985;
+        bh=1/HRpWVLm3KozpwWOHhLU5lAY+Y9eor2wMD4c3TuAOk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0sLp88SevaVMui3fppmWjovac2mIWKCqW/heaoZNysr/TNOkFyrx477mDq0cl7XBD
+         WLQK1auUTfxVBFekcIw2ISS2ERAe5fjczE/IRG2oI7/pTNKz++tX2ZwTXMjvMRKFH2
+         NZzjzeZRq0d/xr6AnD0XOWKC9xK8uMwXiisY6k7o=
+From:   Mark Brown <broonie@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [PATCH v3 0/3] arm64: Convert to ARCH_STACKWALK
+Date:   Mon, 14 Sep 2020 16:34:06 +0100
+Message-Id: <20200914153409.25097-1-broonie@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 21 Aug 2020 15:56:05 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+This series updates the arm64 stacktrace code to use the newer and much
+simpler arch_stack_walk() interface, the main benefit being a single
+entry point to the arch code with no need for the arch code to worry
+about skipping frames. Along the way I noticed that the reliable
+parameter to the arch_stack_walk() callback appears to be redundant
+so there's also a patch here removing that from the existing code to
+simplify the interface.
 
-> Let's implement the callback to indicate when an APQN
-> is in use by the vfio_ap device driver. The callback is
-> invoked whenever a change to the apmask or aqmask would
-> result in one or more queue devices being removed from the driver. The
-> vfio_ap device driver will indicate a resource is in use
-> if the APQN of any of the queue devices to be removed are assigned to
-> any of the matrix mdevs under the driver's control.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_drv.c     |  1 +
->  drivers/s390/crypto/vfio_ap_ops.c     | 68 ++++++++++++++++++++-------
->  drivers/s390/crypto/vfio_ap_private.h |  2 +
->  3 files changed, 53 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-> index 24cdef60039a..aae5b3d8e3fa 100644
-> --- a/drivers/s390/crypto/vfio_ap_drv.c
-> +++ b/drivers/s390/crypto/vfio_ap_drv.c
-> @@ -175,6 +175,7 @@ static int __init vfio_ap_init(void)
->  	memset(&vfio_ap_drv, 0, sizeof(vfio_ap_drv));
->  	vfio_ap_drv.probe = vfio_ap_queue_dev_probe;
->  	vfio_ap_drv.remove = vfio_ap_queue_dev_remove;
-> +	vfio_ap_drv.in_use = vfio_ap_mdev_resource_in_use;
->  	vfio_ap_drv.ids = ap_queue_ids;
->  
->  	ret = ap_driver_register(&vfio_ap_drv, THIS_MODULE, VFIO_AP_DRV_NAME);
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index 2e37ee82e422..fc1aa6f947eb 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -515,18 +515,36 @@ vfio_ap_mdev_verify_queues_reserved_for_apid(struct ap_matrix_mdev *matrix_mdev,
->  	return 0;
->  }
->  
-> +#define MDEV_SHARING_ERR "Userspace may not re-assign queue %02lx.%04lx " \
-> +			 "already assigned to %s"
+This is preparatory work for implementing reliable stack trace for
+arm64.
 
-Ah, I spoke too soon; this is what I had been looking for :)
+v3:
+ - Rebase onto v5.9-rc3.
+ - Fix handling of task == current.
+ - Flip the sense of the walk_stackframe() callback.
+v2:
+ - Rebase onto v5.9-rc1.
+
+Mark Brown (3):
+  stacktrace: Remove reliable argument from arch_stack_walk() callback
+  arm64: stacktrace: Make stack walk callback consistent with generic
+    code
+  arm64: stacktrace: Convert to ARCH_STACKWALK
+
+ arch/arm64/Kconfig                  |  1 +
+ arch/arm64/include/asm/stacktrace.h |  2 +-
+ arch/arm64/kernel/perf_callchain.c  |  6 +--
+ arch/arm64/kernel/return_address.c  |  8 +--
+ arch/arm64/kernel/stacktrace.c      | 84 +++++------------------------
+ arch/s390/kernel/stacktrace.c       |  4 +-
+ arch/x86/kernel/stacktrace.c        | 10 ++--
+ include/linux/stacktrace.h          |  5 +-
+ kernel/stacktrace.c                 |  8 ++-
+ 9 files changed, 32 insertions(+), 96 deletions(-)
+
+
+base-commit: f75aef392f869018f78cfedf3c320a6b3fcfda6b
+-- 
+2.20.1
 
