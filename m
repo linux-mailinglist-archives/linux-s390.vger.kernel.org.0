@@ -2,177 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F37BD269034
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Sep 2020 17:40:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAFF3269171
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Sep 2020 18:25:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgINPkI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Sep 2020 11:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49414 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbgINPjx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 14 Sep 2020 11:39:53 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726382AbgINQZd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Sep 2020 12:25:33 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60812 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726310AbgINQYw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 14 Sep 2020 12:24:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600100690;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Xef7Kk4IuwAVAYdz+twwXuQ+WpMqbHkK2OBlguMvPCA=;
+        b=fRJYSnx+9fOtIevIVfyBuVq5QO4wU0NDQDyaJ5IfC+zJ4HFMqz55xATuZRTqyswjPjBgPZ
+        YnfsBkfXe/1LuVVX7Rv4W1jquXn8pNCs3Twfw9zqsohndEvn8sJW8oGHr/xtQuWIMK8U61
+        KEnl1Mw1c17t5y/ZUEq+n5llP5BJiTA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-389-MgC-1ydvMpOSNtuIqUy37w-1; Mon, 14 Sep 2020 12:24:46 -0400
+X-MC-Unique: MgC-1ydvMpOSNtuIqUy37w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69386217BA;
-        Mon, 14 Sep 2020 15:39:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600097993;
-        bh=6M1OqRToiUTgnMl/vPaO+DwRv+FUZXkQrwMS6mXs/VE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z6apreYpZ7cth9nEtb/BMxH3V07tNTMp3Jo5Iv7jRTWllncpv71FKeWzAvab4263P
-         MwTJGbZnl04jSRe24D5hJwMxa6Y//dlq5XU+M0aXtWx424GAopVEDqwKM8dYJFi6om
-         aGNzL3V2yd0k5k9xAKn1BhmHuE4FJqcaUAXvZmDs=
-From:   Mark Brown <broonie@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [PATCH v3 3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
-Date:   Mon, 14 Sep 2020 16:34:09 +0100
-Message-Id: <20200914153409.25097-4-broonie@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200914153409.25097-1-broonie@kernel.org>
-References: <20200914153409.25097-1-broonie@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0EE461084D60;
+        Mon, 14 Sep 2020 16:24:45 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-112-134.ams2.redhat.com [10.36.112.134])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C3C8B34687;
+        Mon, 14 Sep 2020 16:24:37 +0000 (UTC)
+Subject: Re: [kvm-unit-tests GIT PULL 0/3] s390x skrf and ultravisor patches
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, frankja@linux.vnet.ibm.com, david@redhat.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com,
+        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com
+References: <20200901091823.14477-1-frankja@linux.ibm.com>
+ <34c80837-208f-bb29-cb0b-b9029fdad29d@redhat.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <71b38000-70ee-f45a-b80d-95f42dbcc497@redhat.com>
+Date:   Mon, 14 Sep 2020 18:24:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <34c80837-208f-bb29-cb0b-b9029fdad29d@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Historically architectures have had duplicated code in their stack trace
-implementations for filtering what gets traced. In order to avoid this
-duplication some generic code has been provided using a new interface
-arch_stack_walk(), enabled by selecting ARCH_STACKWALK in Kconfig, which
-factors all this out into the generic stack trace code. Convert arm64
-to use this common infrastructure.
+On 02/09/2020 19.41, Paolo Bonzini wrote:
+> On 01/09/20 11:18, Janosch Frank wrote:
+>>   git@gitlab.com:frankja/kvm-unit-tests.git tags/s390x-2020-01-09
+> 
+> Pulled, thanks.
+> 
+> (Yes, I am alive).
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- arch/arm64/Kconfig             |  1 +
- arch/arm64/kernel/stacktrace.c | 79 +++++-----------------------------
- 2 files changed, 11 insertions(+), 69 deletions(-)
+ Hi Paolo,
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 6d232837cbee..d1ba52e4b976 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -29,6 +29,7 @@ config ARM64
- 	select ARCH_HAS_SETUP_DMA_OPS
- 	select ARCH_HAS_SET_DIRECT_MAP
- 	select ARCH_HAS_SET_MEMORY
-+	select ARCH_STACKWALK
- 	select ARCH_HAS_STRICT_KERNEL_RWX
- 	select ARCH_HAS_STRICT_MODULE_RWX
- 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
-diff --git a/arch/arm64/kernel/stacktrace.c b/arch/arm64/kernel/stacktrace.c
-index 05eaba21fd46..804d076b02cb 100644
---- a/arch/arm64/kernel/stacktrace.c
-+++ b/arch/arm64/kernel/stacktrace.c
-@@ -133,82 +133,23 @@ void notrace walk_stackframe(struct task_struct *tsk, struct stackframe *frame,
- NOKPROBE_SYMBOL(walk_stackframe);
- 
- #ifdef CONFIG_STACKTRACE
--struct stack_trace_data {
--	struct stack_trace *trace;
--	unsigned int no_sched_functions;
--	unsigned int skip;
--};
- 
--static bool save_trace(void *d, unsigned long addr)
-+void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
-+		     struct task_struct *task, struct pt_regs *regs)
- {
--	struct stack_trace_data *data = d;
--	struct stack_trace *trace = data->trace;
--
--	if (data->no_sched_functions && in_sched_functions(addr))
--		return false;
--	if (data->skip) {
--		data->skip--;
--		return false;
--	}
--
--	trace->entries[trace->nr_entries++] = addr;
--
--	return trace->nr_entries >= trace->max_entries;
--}
--
--void save_stack_trace_regs(struct pt_regs *regs, struct stack_trace *trace)
--{
--	struct stack_trace_data data;
--	struct stackframe frame;
--
--	data.trace = trace;
--	data.skip = trace->skip;
--	data.no_sched_functions = 0;
--
--	start_backtrace(&frame, regs->regs[29], regs->pc);
--	walk_stackframe(current, &frame, save_trace, &data);
--}
--EXPORT_SYMBOL_GPL(save_stack_trace_regs);
--
--static noinline void __save_stack_trace(struct task_struct *tsk,
--	struct stack_trace *trace, unsigned int nosched)
--{
--	struct stack_trace_data data;
- 	struct stackframe frame;
- 
--	if (!try_get_task_stack(tsk))
--		return;
--
--	data.trace = trace;
--	data.skip = trace->skip;
--	data.no_sched_functions = nosched;
--
--	if (tsk != current) {
--		start_backtrace(&frame, thread_saved_fp(tsk),
--				thread_saved_pc(tsk));
--	} else {
--		/* We don't want this function nor the caller */
--		data.skip += 2;
-+	if (regs)
-+		start_backtrace(&frame, regs->regs[29], regs->pc);
-+	else if (task == current)
- 		start_backtrace(&frame,
- 				(unsigned long)__builtin_frame_address(0),
--				(unsigned long)__save_stack_trace);
--	}
--
--	walk_stackframe(tsk, &frame, save_trace, &data);
-+				(unsigned long)arch_stack_walk);
-+	else
-+		start_backtrace(&frame, thread_saved_fp(task),
-+				thread_saved_pc(task));
- 
--	put_task_stack(tsk);
--}
--
--void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
--{
--	__save_stack_trace(tsk, trace, 1);
--}
--EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
--
--void save_stack_trace(struct stack_trace *trace)
--{
--	__save_stack_trace(current, trace, 0);
-+	walk_stackframe(task, &frame, consume_entry, cookie);
- }
- 
--EXPORT_SYMBOL_GPL(save_stack_trace);
- #endif
--- 
-2.20.1
+I don't see the patches in the master branch - could you please push
+them to the repo?
+
+ Thanks,
+  Thomas
 
