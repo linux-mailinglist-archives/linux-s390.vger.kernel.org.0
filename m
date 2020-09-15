@@ -2,59 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35C7126B044
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Sep 2020 00:06:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0560326B02C
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Sep 2020 00:04:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgIOUZe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Sep 2020 16:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbgIOUXQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Sep 2020 16:23:16 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D947C06178B;
-        Tue, 15 Sep 2020 13:22:08 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8810E136821B9;
-        Tue, 15 Sep 2020 13:05:19 -0700 (PDT)
-Date:   Tue, 15 Sep 2020 13:22:05 -0700 (PDT)
-Message-Id: <20200915.132205.83625953736297072.davem@davemloft.net>
-To:     jwi@linux.ibm.com
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, hca@linux.ibm.com,
-        ubraun@linux.ibm.com, kgraul@linux.ibm.com, wintera@linux.ibm.com,
-        roopa@nvidia.com, nikolay@nvidia.com, jiri@resnulli.us,
-        ivecera@redhat.com
-Subject: Re: [PATCH net-next 0/8] s390/qeth: updates 2020-09-10
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200910172351.5622-1-jwi@linux.ibm.com>
-References: <20200910172351.5622-1-jwi@linux.ibm.com>
-X-Mailer: Mew version 6.8 on Emacs 27.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Tue, 15 Sep 2020 13:05:20 -0700 (PDT)
+        id S1728103AbgIOWEL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Sep 2020 18:04:11 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37154 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728011AbgIOWEC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Sep 2020 18:04:02 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08FM3ZxK053763;
+        Tue, 15 Sep 2020 22:03:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=evDIkCet3MXZbWTLcI4aGqAl2vL+iTUqGaWYtOR5eIU=;
+ b=xibrwDsIS7UAaykaeXQ/AmX+HNRKnu6NKRgM6di1qHLvnzNsG/JbxfOl0IqSmZjJpNPx
+ Vm7FJjOg1q6Ov2UyijfpQ2tuGOrBfmS6bUmdud3jWgY56T+t/wEdgonynoifNjQ8iB7x
+ ogY0eHzsAnfb1rzM7nzdJyJre3u2sOXMIUgYer9XzOFGIij3o2qzh4lBEXWN+UqFKQAQ
+ UapiqFEK7f7uc4YU6NCU6LdCU6gAxBPhbBkFBuj1+91C0JpFHyc8Ty1R2hv7A3LhoAiV
+ uWbhqiApGOlKVkA2XQNe5hpO/Jcb04uGgSKWs0DFiWPhaDwtdzGR7uLbNxqKpEJIZTZl BA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 33gnrqyubk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 15 Sep 2020 22:03:59 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08FM1Rxg101306;
+        Tue, 15 Sep 2020 22:03:58 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 33h8865t5e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Sep 2020 22:03:58 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08FM3ujQ005810;
+        Tue, 15 Sep 2020 22:03:57 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 15 Sep 2020 22:03:56 +0000
+To:     Benjamin Block <bblock@linux.ibm.com>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Fedor Loshakov <loshakov@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 0/2] zfcp: small changes for 5.10
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1k0wu4s06.fsf@ca-mkp.ca.oracle.com>
+References: <cover.1599765652.git.bblock@linux.ibm.com>
+Date:   Tue, 15 Sep 2020 18:03:53 -0400
+In-Reply-To: <cover.1599765652.git.bblock@linux.ibm.com> (Benjamin Block's
+        message of "Thu, 10 Sep 2020 21:49:14 +0200")
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9745 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
+ suspectscore=1 phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=971
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009150171
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9745 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 bulkscore=0 suspectscore=1
+ clxscore=1011 mlxlogscore=998 adultscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009150171
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
-Date: Thu, 10 Sep 2020 19:23:43 +0200
 
-> subject to positive review by the bridge maintainers on patch 5,
-> please apply the following patch series to netdev's net-next tree.
-> 
-> Alexandra adds BR_LEARNING_SYNC support to qeth. In addition to the
-> main qeth changes (controlling the feature, and raising switchdev
-> events), this also needs
-> - Patch 1 and 2 for some s390/cio infrastructure improvements
->   (acked by Heiko to go in via net-next), and
-> - Patch 5 to introduce a new switchdev_notifier_type, so that a driver
->   can clear all previously learned entries from the bridge FDB in case
->   things go out-of-sync later on.
+Benjamin,
 
-Series applied, thank you.
+> here are some small changes for zfcp I'd like to include in 5.10 if
+> possible.
+
+Applied to 5.10/scsi-staging, thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
