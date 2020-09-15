@@ -2,98 +2,59 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3A5C26B147
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Sep 2020 00:28:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35C7126B044
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Sep 2020 00:06:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbgIOW1f (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Sep 2020 18:27:35 -0400
-Received: from verein.lst.de ([213.95.11.211]:48387 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727635AbgIOQTy (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 15 Sep 2020 12:19:54 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9FDB068AFE; Tue, 15 Sep 2020 18:02:43 +0200 (CEST)
-Date:   Tue, 15 Sep 2020 18:02:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH 4/4] s390/uaccess: remove set_fs() interface
-Message-ID: <20200915160243.GB22056@lst.de>
-References: <20200915154340.4215-1-hca@linux.ibm.com> <20200915154340.4215-5-hca@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200915154340.4215-5-hca@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1727832AbgIOUZe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Sep 2020 16:25:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728004AbgIOUXQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Sep 2020 16:23:16 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D947C06178B;
+        Tue, 15 Sep 2020 13:22:08 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8810E136821B9;
+        Tue, 15 Sep 2020 13:05:19 -0700 (PDT)
+Date:   Tue, 15 Sep 2020 13:22:05 -0700 (PDT)
+Message-Id: <20200915.132205.83625953736297072.davem@davemloft.net>
+To:     jwi@linux.ibm.com
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, hca@linux.ibm.com,
+        ubraun@linux.ibm.com, kgraul@linux.ibm.com, wintera@linux.ibm.com,
+        roopa@nvidia.com, nikolay@nvidia.com, jiri@resnulli.us,
+        ivecera@redhat.com
+Subject: Re: [PATCH net-next 0/8] s390/qeth: updates 2020-09-10
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200910172351.5622-1-jwi@linux.ibm.com>
+References: <20200910172351.5622-1-jwi@linux.ibm.com>
+X-Mailer: Mew version 6.8 on Emacs 27.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Tue, 15 Sep 2020 13:05:20 -0700 (PDT)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 05:43:40PM +0200, Heiko Carstens wrote:
-> Address spaces still have to switched/changed for machines without the
-> mvcos instructions and especially for instructions like e.g. compare
-> and swap (-> futex) which must be executed in kernel address space but
-> access user address space. For such instructions enable_sacf_uaccess()
-> and disable_sacf_uaccess() must be used like before.
+From: Julian Wiedmann <jwi@linux.ibm.com>
+Date: Thu, 10 Sep 2020 19:23:43 +0200
 
-That logic always confused me and still keeps confusing me,
-dumb questions below:
+> subject to positive review by the bridge maintainers on patch 5,
+> please apply the following patch series to netdev's net-next tree.
+> 
+> Alexandra adds BR_LEARNING_SYNC support to qeth. In addition to the
+> main qeth changes (controlling the feature, and raising switchdev
+> events), this also needs
+> - Patch 1 and 2 for some s390/cio infrastructure improvements
+>   (acked by Heiko to go in via net-next), and
+> - Patch 5 to introduce a new switchdev_notifier_type, so that a driver
+>   can clear all previously learned entries from the bridge FDB in case
+>   things go out-of-sync later on.
 
->  	int oldval = 0, newval, ret;
-> -	mm_segment_t old_fs;
-> +	bool old;
->  
-> -	old_fs = enable_sacf_uaccess();
-> +	old = enable_sacf_uaccess();
->  	switch (op) {
->  	case FUTEX_OP_SET:
->  		__futex_atomic_op("lr %2,%5\n",
-> @@ -53,7 +53,7 @@ static inline int arch_futex_atomic_op_inuser(int op, int oparg, int *oval,
->  	default:
->  		ret = -ENOSYS;
->  	}
-> -	disable_sacf_uaccess(old_fs);
-> +	disable_sacf_uaccess(old);
-
-Do we need to return the old value here?  The way I understand it
-this is context switched with the thread, and given that only small
-isolated code bases now use it, sacf use can't nest, can it?
-
-> @@ -116,7 +114,7 @@ struct thread_struct {
->  	unsigned long hardirq_timer;	/* task cputime in hardirq context */
->  	unsigned long softirq_timer;	/* task cputime in softirq context */
->  	unsigned long sys_call_table;	/* system call table address */
-> -	mm_segment_t mm_segment;
-> +	bool sacf_uaccess;		/* uaccess with sacf enabled */
-
-Isn't there a flags field somewhere where this could be folded into?
-
-> -void set_fs_fixup(void)
-> -{
-> -	struct pt_regs *regs = current_pt_regs();
-> -	static bool warned;
-> -
-> -	set_fs(USER_DS);
-> -	if (warned)
-> -		return;
-> -	WARN(1, "Unbalanced set_fs - int code: 0x%x\n", regs->int_code);
-> -	show_registers(regs);
-> -	warned = true;
-
-Would a warning about an unbalanced sacf flag still make sense?  Or
-just objtool for compile time checks similar to the unsafe uaccess
-routines on x86?
-
-> +bool enable_sacf_uaccess(void)
-
-Maybe add a little comment documenting when to use the function
-
->  }
->  EXPORT_SYMBOL(enable_sacf_uaccess);
-
-Neither enable_sacf_uaccess nor disable_sacf_uaccess appear to be
-used in modular code, so these exports can probably be dropped.
+Series applied, thank you.
