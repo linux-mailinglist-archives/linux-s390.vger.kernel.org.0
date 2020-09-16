@@ -2,72 +2,62 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C0B226BA20
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Sep 2020 04:28:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C06426BCD0
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Sep 2020 08:23:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgIPC2I (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Sep 2020 22:28:08 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58392 "EHLO huawei.com"
+        id S1726403AbgIPGWq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 16 Sep 2020 02:22:46 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12724 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726397AbgIPC2C (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 15 Sep 2020 22:28:02 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A0472D58BABBA9BC5833;
-        Wed, 16 Sep 2020 10:28:00 +0800 (CST)
-Received: from huawei.com (10.175.113.32) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 16 Sep 2020
- 10:27:54 +0800
-From:   Liu Shixin <liushixin2@huawei.com>
-To:     Heiko Carstens <hca@linux.ibm.com>,
+        id S1726393AbgIPGVA (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 16 Sep 2020 02:21:00 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 24B353DBC1CD16BBCEBB;
+        Wed, 16 Sep 2020 14:20:59 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 16 Sep 2020 14:20:49 +0800
+From:   Qinglang Miao <miaoqinglang@huawei.com>
+To:     Harald Freudenberger <freude@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>
 CC:     <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Liu Shixin <liushixin2@huawei.com>
-Subject: [PATCH -next] s390/diag: convert to use DEFINE_SEQ_ATTRIBUTE macro
-Date:   Wed, 16 Sep 2020 10:50:29 +0800
-Message-ID: <20200916025029.3992939-1-liushixin2@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        "Qinglang Miao" <miaoqinglang@huawei.com>
+Subject: [PATCH -next] s390/ap: remove unnecessary spin_lock_init()
+Date:   Wed, 16 Sep 2020 14:21:30 +0800
+Message-ID: <20200916062130.190910-1-miaoqinglang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.32]
+X-Originating-IP: [10.175.113.25]
 X-CFilter-Loop: Reflected
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Use DEFINE_SEQ_ATTRIBUTE macro to simplify the code.
+The spinlock ap_poll_timer_lock is initialized statically. It is
+unnecessary to initialize by spin_lock_init().
 
-Signed-off-by: Liu Shixin <liushixin2@huawei.com>
+Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 ---
- arch/s390/kernel/diag.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ drivers/s390/crypto/ap_bus.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/s390/kernel/diag.c b/arch/s390/kernel/diag.c
-index ccba63aaeb47..b8b0cd7b008f 100644
---- a/arch/s390/kernel/diag.c
-+++ b/arch/s390/kernel/diag.c
-@@ -104,18 +104,7 @@ static const struct seq_operations show_diag_stat_sops = {
- 	.show	= show_diag_stat,
- };
+diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+index 24a1940b8..231a98c91 100644
+--- a/drivers/s390/crypto/ap_bus.c
++++ b/drivers/s390/crypto/ap_bus.c
+@@ -1575,7 +1575,6 @@ static int __init ap_module_init(void)
+ 	 */
+ 	if (MACHINE_IS_VM)
+ 		poll_timeout = 1500000;
+-	spin_lock_init(&ap_poll_timer_lock);
+ 	hrtimer_init(&ap_poll_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
+ 	ap_poll_timer.function = ap_poll_timeout;
  
--static int show_diag_stat_open(struct inode *inode, struct file *file)
--{
--	return seq_open(file, &show_diag_stat_sops);
--}
--
--static const struct file_operations show_diag_stat_fops = {
--	.open		= show_diag_stat_open,
--	.read		= seq_read,
--	.llseek		= seq_lseek,
--	.release	= seq_release,
--};
--
-+DEFINE_SEQ_ATTRIBUTE(show_diag_stat);
- 
- static int __init show_diag_stat_init(void)
- {
 -- 
-2.25.1
+2.23.0
 
