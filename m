@@ -2,147 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3718F26E5D7
-	for <lists+linux-s390@lfdr.de>; Thu, 17 Sep 2020 21:57:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ED5526E61F
+	for <lists+linux-s390@lfdr.de>; Thu, 17 Sep 2020 22:05:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgIQT5A (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 17 Sep 2020 15:57:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:35634 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727700AbgIQOoV (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 17 Sep 2020 10:44:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600353841;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D7Y4Bb0REAA01/yalsAXcLlACWLJwg5WgAp2JXMzOqo=;
-        b=K74uUQKRyIDButcC7WJD2pw53YraKSpBFIw1uIwqi6hDxJf1pal03rmDSEQKbMX60L6Or6
-        fcVbRooc731jp280uDyQ4YckTjTtKCwO1xog8F29mM6HyKEn30J4gobvUzFcv2ypa1b521
-        PpshwXgQEUskCLao8hhq/xuoGLqwah8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-213-7lN7k9JmO2CNErGYpNJHpA-1; Thu, 17 Sep 2020 10:35:02 -0400
-X-MC-Unique: 7lN7k9JmO2CNErGYpNJHpA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B93A79CC03;
-        Thu, 17 Sep 2020 14:34:59 +0000 (UTC)
-Received: from gondolin (ovpn-113-19.ams2.redhat.com [10.36.113.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A7EE68871;
-        Thu, 17 Sep 2020 14:34:51 +0000 (UTC)
-Date:   Thu, 17 Sep 2020 16:34:48 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v10 07/16] s390/vfio-ap: sysfs attribute to display the
- guest's matrix
-Message-ID: <20200917163448.4db80db3.cohuck@redhat.com>
-In-Reply-To: <20200821195616.13554-8-akrowiak@linux.ibm.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
-        <20200821195616.13554-8-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1726644AbgIQUFf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 17 Sep 2020 16:05:35 -0400
+Received: from mga06.intel.com ([134.134.136.31]:35244 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726438AbgIQUFc (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 17 Sep 2020 16:05:32 -0400
+IronPort-SDR: 1EqDDV9SWySMMXQjgrHW1/Tq43ZTXe22s50bgNybd15hjg4bWdlaVn0ZUNNKZFGLILKPh0ZVw+
+ 9up+rZjLo4DQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9747"; a="221336979"
+X-IronPort-AV: E=Sophos;i="5.77,271,1596524400"; 
+   d="scan'208";a="221336979"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 12:40:16 -0700
+IronPort-SDR: OJtaUmUU2VRk9KtKnU2JOdZ0Wx6lNOu+0+CFBjlBeB4odozE5Gxp9wTpGmmaUJi2k6Nfsj2iiR
+ 1ryN5FpIrCvQ==
+X-IronPort-AV: E=Sophos;i="5.77,271,1596524400"; 
+   d="scan'208";a="483882946"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.212.151.155]) ([10.212.151.155])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2020 12:40:13 -0700
+Subject: Re: [trivial PATCH] treewide: Convert switch/case fallthrough; to
+ break;
+To:     Keith Busch <kbusch@kernel.org>, Joe Perches <joe@perches.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jiri Kosina <trivial@kernel.org>,
+        Kees Cook <kees.cook@canonical.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, linux-input@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-rdma@vger.kernel.org,
+        iommu@lists.linux-foundation.org, dm-devel@redhat.com,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+        oss-drivers@netronome.com, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-nvme@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        storagedev@microchip.com, sparclinux@vger.kernel.org,
+        linux-serial@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-parisc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, bpf@vger.kernel.org,
+        dccp@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, linux-sctp@vger.kernel.org,
+        alsa-devel <alsa-devel@alsa-project.org>
+References: <e6387578c75736d61b2fe70d9783d91329a97eb4.camel@perches.com>
+ <20200909205558.GA3384631@dhcp-10-100-145-180.wdl.wdc.com>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <321069c8-a4c1-56ff-49fb-4c2bce1e6352@intel.com>
+Date:   Thu, 17 Sep 2020 12:40:13 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200909205558.GA3384631@dhcp-10-100-145-180.wdl.wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 21 Aug 2020 15:56:07 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> The matrix of adapters and domains configured in a guest's CRYCB may
-> differ from the matrix of adapters and domains assigned to the matrix mdev,
-> so this patch introduces a sysfs attribute to display the matrix of a guest
-> using the matrix mdev. For a matrix mdev denoted by $uuid, the crycb for a
-> guest using the matrix mdev can be displayed as follows:
-> 
->    cat /sys/devices/vfio_ap/matrix/$uuid/guest_matrix
-> 
-> If a guest is not using the matrix mdev at the time the crycb is displayed,
-> an error (ENODEV) will be returned.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_ops.c | 58 +++++++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index efb229033f9e..30bf23734af6 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -1119,6 +1119,63 @@ static ssize_t matrix_show(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RO(matrix);
->  
-> +static ssize_t guest_matrix_show(struct device *dev,
-> +				 struct device_attribute *attr, char *buf)
-> +{
-> +	struct mdev_device *mdev = mdev_from_dev(dev);
-> +	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
-> +	char *bufpos = buf;
-> +	unsigned long apid;
-> +	unsigned long apqi;
-> +	unsigned long apid1;
-> +	unsigned long apqi1;
-> +	unsigned long napm_bits = matrix_mdev->shadow_apcb.apm_max + 1;
-> +	unsigned long naqm_bits = matrix_mdev->shadow_apcb.aqm_max + 1;
-> +	int nchars = 0;
-> +	int n;
-> +
-> +	if (!vfio_ap_mdev_has_crycb(matrix_mdev))
-> +		return -ENODEV;
-> +
-> +	apid1 = find_first_bit_inv(matrix_mdev->shadow_apcb.apm, napm_bits);
-> +	apqi1 = find_first_bit_inv(matrix_mdev->shadow_apcb.aqm, naqm_bits);
-> +
-> +	mutex_lock(&matrix_dev->lock);
-> +
-> +	if ((apid1 < napm_bits) && (apqi1 < naqm_bits)) {
-> +		for_each_set_bit_inv(apid, matrix_mdev->shadow_apcb.apm,
-> +				     napm_bits) {
-> +			for_each_set_bit_inv(apqi,
-> +					     matrix_mdev->shadow_apcb.aqm,
-> +					     naqm_bits) {
-> +				n = sprintf(bufpos, "%02lx.%04lx\n", apid,
-> +					    apqi);
-> +				bufpos += n;
-> +				nchars += n;
-> +			}
-> +		}
-> +	} else if (apid1 < napm_bits) {
-> +		for_each_set_bit_inv(apid, matrix_mdev->shadow_apcb.apm,
-> +				     napm_bits) {
-> +			n = sprintf(bufpos, "%02lx.\n", apid);
-> +			bufpos += n;
-> +			nchars += n;
-> +		}
-> +	} else if (apqi1 < naqm_bits) {
-> +		for_each_set_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm,
-> +				     naqm_bits) {
-> +			n = sprintf(bufpos, ".%04lx\n", apqi);
-> +			bufpos += n;
-> +			nchars += n;
-> +		}
-> +	}
-> +
-> +	mutex_unlock(&matrix_dev->lock);
-> +
-> +	return nchars;
-> +}
 
-This basically looks like a version of matrix_show() operating on the
-shadow apcb. I'm wondering if we could consolidate these two functions
-by passing in the structure to operate on as a parameter? Might not be
-worth the effort, though.
+On 9/9/2020 1:55 PM, Keith Busch wrote:
+> On Wed, Sep 09, 2020 at 01:06:39PM -0700, Joe Perches wrote:
+>> diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
+>> index eea0f453cfb6..8aac5bc60f4c 100644
+>> --- a/crypto/tcrypt.c
+>> +++ b/crypto/tcrypt.c
+>> @@ -2464,7 +2464,7 @@ static int do_test(const char *alg, u32 type, u32 mask, int m, u32 num_mb)
+>>  		test_hash_speed("streebog512", sec,
+>>  				generic_hash_speed_template);
+>>  		if (mode > 300 && mode < 400) break;
+>> -		fallthrough;
+>> +		break;
+>>  	case 399:
+>>  		break;
+> 
+> Just imho, this change makes the preceding 'if' look even more
+> pointless. Maybe the fallthrough was a deliberate choice? Not that my
+> opinion matters here as I don't know this module, but it looked a bit
+> odd to me.
+> 
 
+Yea this does look very odd..
