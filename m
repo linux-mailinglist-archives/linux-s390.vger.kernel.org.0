@@ -2,35 +2,36 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5125126F403
-	for <lists+linux-s390@lfdr.de>; Fri, 18 Sep 2020 05:12:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19A3126F338
+	for <lists+linux-s390@lfdr.de>; Fri, 18 Sep 2020 05:05:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgIRDLL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 17 Sep 2020 23:11:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47702 "EHLO mail.kernel.org"
+        id S1727298AbgIRDFL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 17 Sep 2020 23:05:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbgIRCCb (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 17 Sep 2020 22:02:31 -0400
+        id S1726348AbgIRCEb (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 17 Sep 2020 22:04:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B9152087D;
-        Fri, 18 Sep 2020 02:02:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E670B23741;
+        Fri, 18 Sep 2020 02:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600394550;
-        bh=o1UIEffgkGVqT10VkWmZfxY3hxOMHLjiuAxTGUvbeMk=;
+        s=default; t=1600394670;
+        bh=lCmNF/bJl1nytvv2s1UVQv6Cg4ZFuMUODfcoBieSl0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3+iUEDhPIu4R3JWxS7MDedZRM7G05xKu4SZZhtSBIjUIBnOcRVRPZVmG+JVL+sq9
-         SnzHM4vR3oK4StZmZ/2ANj0aTODzWwjW0iEQDf+2dn4H6J8W+5SNzin2gA/Jxw6kd5
-         sjMUuTLmyUNzWx0oY/M3rdGArZU4nDvhsx81w1Hk=
+        b=zlfJHH7I4VyJyWdHBnTDSbmwjDDbdopgavKB8ARSHKy74fYFfOfSu+RxoNOLXnqby
+         ZMjjPF55O1/s9t5UWB1IP/fd9Vt1V4xWLNa2JR/EuGDD/Qig/OVcCV8g1gc7REJfv6
+         KoIZniqO5PmRPgqDH1NpnQCen6pLFHdDP5Lq6DvY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 067/330] s390: avoid misusing CALL_ON_STACK for task stack setup
-Date:   Thu, 17 Sep 2020 21:56:47 -0400
-Message-Id: <20200918020110.2063155-67-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 163/330] s390/irq: replace setup_irq() by request_irq()
+Date:   Thu, 17 Sep 2020 21:58:23 -0400
+Message-Id: <20200918020110.2063155-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200918020110.2063155-1-sashal@kernel.org>
 References: <20200918020110.2063155-1-sashal@kernel.org>
@@ -42,91 +43,104 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: afzal mohammed <afzal.mohd.ma@gmail.com>
 
-[ Upstream commit 7bcaad1f9fac889f5fcd1a383acf7e00d006da41 ]
+[ Upstream commit 8719b6d29d2851fa84c4074bb2e5adc022911ab8 ]
 
-CALL_ON_STACK is intended to be used for temporary stack switching with
-potential return to the caller.
+request_irq() is preferred over setup_irq(). Invocations of setup_irq()
+occur after memory allocators are ready.
 
-When CALL_ON_STACK is misused to switch from nodat stack to task stack
-back_chain information would later lead stack unwinder from task stack into
-(per cpu) nodat stack which is reused for other purposes. This would
-yield confusing unwinding result or errors.
+Per tglx[1], setup_irq() existed in olden days when allocators were not
+ready by the time early interrupts were initialized.
 
-To avoid that introduce CALL_ON_STACK_NORETURN to be used instead. It
-makes sure that back_chain is zeroed and unwinder finishes gracefully
-ending up at task pt_regs.
+Hence replace setup_irq() by request_irq().
 
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+Message-Id: <20200304005049.5291-1-afzal.mohd.ma@gmail.com>
+[heiko.carstens@de.ibm.com: replace pr_err with panic]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/stacktrace.h | 11 +++++++++++
- arch/s390/kernel/setup.c           |  9 +--------
- arch/s390/kernel/smp.c             |  2 +-
- 3 files changed, 13 insertions(+), 9 deletions(-)
+ arch/s390/kernel/irq.c  | 8 ++------
+ drivers/s390/cio/airq.c | 8 ++------
+ drivers/s390/cio/cio.c  | 8 ++------
+ 3 files changed, 6 insertions(+), 18 deletions(-)
 
-diff --git a/arch/s390/include/asm/stacktrace.h b/arch/s390/include/asm/stacktrace.h
-index 0ae4bbf7779c8..3679d224fd3c5 100644
---- a/arch/s390/include/asm/stacktrace.h
-+++ b/arch/s390/include/asm/stacktrace.h
-@@ -111,4 +111,15 @@ struct stack_frame {
- 	r2;								\
- })
+diff --git a/arch/s390/kernel/irq.c b/arch/s390/kernel/irq.c
+index 8371855042dc2..da550cb8b31bd 100644
+--- a/arch/s390/kernel/irq.c
++++ b/arch/s390/kernel/irq.c
+@@ -294,11 +294,6 @@ static irqreturn_t do_ext_interrupt(int irq, void *dummy)
+ 	return IRQ_HANDLED;
+ }
  
-+#define CALL_ON_STACK_NORETURN(fn, stack)				\
-+({									\
-+	asm volatile(							\
-+		"	la	15,0(%[_stack])\n"			\
-+		"	xc	%[_bc](8,15),%[_bc](15)\n"		\
-+		"	brasl	14,%[_fn]\n"				\
-+		::[_bc] "i" (offsetof(struct stack_frame, back_chain)),	\
-+		  [_stack] "a" (stack), [_fn] "X" (fn));		\
-+	BUG();								\
-+})
-+
- #endif /* _ASM_S390_STACKTRACE_H */
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index 07b2b61a0289f..82ef081e7448e 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -356,7 +356,6 @@ early_initcall(async_stack_realloc);
- 
- void __init arch_call_rest_init(void)
+-static struct irqaction external_interrupt = {
+-	.name	 = "EXT",
+-	.handler = do_ext_interrupt,
+-};
+-
+ void __init init_ext_interrupts(void)
  {
--	struct stack_frame *frame;
- 	unsigned long stack;
+ 	int idx;
+@@ -308,7 +303,8 @@ void __init init_ext_interrupts(void)
  
- 	stack = stack_alloc();
-@@ -369,13 +368,7 @@ void __init arch_call_rest_init(void)
- 	set_task_stack_end_magic(current);
- 	stack += STACK_INIT_OFFSET;
- 	S390_lowcore.kernel_stack = stack;
--	frame = (struct stack_frame *) stack;
--	memset(frame, 0, sizeof(*frame));
--	/* Branch to rest_init on the new stack, never returns */
--	asm volatile(
--		"	la	15,0(%[_frame])\n"
--		"	jg	rest_init\n"
--		: : [_frame] "a" (frame));
-+	CALL_ON_STACK_NORETURN(rest_init, stack);
+ 	irq_set_chip_and_handler(EXT_INTERRUPT,
+ 				 &dummy_irq_chip, handle_percpu_irq);
+-	setup_irq(EXT_INTERRUPT, &external_interrupt);
++	if (request_irq(EXT_INTERRUPT, do_ext_interrupt, 0, "EXT", NULL))
++		panic("Failed to register EXT interrupt\n");
  }
  
- static void __init setup_lowcore_dat_off(void)
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index 66bf050d785cf..ad426cc656e56 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -878,7 +878,7 @@ static void __no_sanitize_address smp_start_secondary(void *cpuvoid)
- 	S390_lowcore.restart_source = -1UL;
- 	__ctl_load(S390_lowcore.cregs_save_area, 0, 15);
- 	__load_psw_mask(PSW_KERNEL_BITS | PSW_MASK_DAT);
--	CALL_ON_STACK(smp_init_secondary, S390_lowcore.kernel_stack, 0);
-+	CALL_ON_STACK_NORETURN(smp_init_secondary, S390_lowcore.kernel_stack);
+ static DEFINE_SPINLOCK(irq_subclass_lock);
+diff --git a/drivers/s390/cio/airq.c b/drivers/s390/cio/airq.c
+index 427b2e24a8cea..cb466ed7eb5ef 100644
+--- a/drivers/s390/cio/airq.c
++++ b/drivers/s390/cio/airq.c
+@@ -105,16 +105,12 @@ static irqreturn_t do_airq_interrupt(int irq, void *dummy)
+ 	return IRQ_HANDLED;
  }
  
- /* Upping and downing of CPUs */
+-static struct irqaction airq_interrupt = {
+-	.name	 = "AIO",
+-	.handler = do_airq_interrupt,
+-};
+-
+ void __init init_airq_interrupts(void)
+ {
+ 	irq_set_chip_and_handler(THIN_INTERRUPT,
+ 				 &dummy_irq_chip, handle_percpu_irq);
+-	setup_irq(THIN_INTERRUPT, &airq_interrupt);
++	if (request_irq(THIN_INTERRUPT, do_airq_interrupt, 0, "AIO", NULL))
++		panic("Failed to register AIO interrupt\n");
+ }
+ 
+ static inline unsigned long iv_size(unsigned long bits)
+diff --git a/drivers/s390/cio/cio.c b/drivers/s390/cio/cio.c
+index 18f5458f90e8f..6d716db2a46ab 100644
+--- a/drivers/s390/cio/cio.c
++++ b/drivers/s390/cio/cio.c
+@@ -563,16 +563,12 @@ static irqreturn_t do_cio_interrupt(int irq, void *dummy)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static struct irqaction io_interrupt = {
+-	.name	 = "I/O",
+-	.handler = do_cio_interrupt,
+-};
+-
+ void __init init_cio_interrupts(void)
+ {
+ 	irq_set_chip_and_handler(IO_INTERRUPT,
+ 				 &dummy_irq_chip, handle_percpu_irq);
+-	setup_irq(IO_INTERRUPT, &io_interrupt);
++	if (request_irq(IO_INTERRUPT, do_cio_interrupt, 0, "I/O", NULL))
++		panic("Failed to register I/O interrupt\n");
+ }
+ 
+ #ifdef CONFIG_CCW_CONSOLE
 -- 
 2.25.1
 
