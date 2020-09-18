@@ -2,78 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E631D2701ED
-	for <lists+linux-s390@lfdr.de>; Fri, 18 Sep 2020 18:17:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCCC72702C4
+	for <lists+linux-s390@lfdr.de>; Fri, 18 Sep 2020 19:02:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgIRQRa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 18 Sep 2020 12:17:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbgIRQRa (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 18 Sep 2020 12:17:30 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC98D2399A;
-        Fri, 18 Sep 2020 16:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600445849;
-        bh=bWaWgHlCKMnkQSTd3ojiyjNYs3adbyti+RhPmbW9poU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kz6OOmw2MYEH+26paB6sFtgioEOr+o9bWhd8Hk/loIzFQV/MfuUma89LmTwb6jCkG
-         83dVSwAlxAn2b21NZhpSVbtvB8hkRG1CFa5vGT9MMTkSfVGLmy3d6qDu2o4omVlQVb
-         iaSdLIX59AOlTom67T1akysOR0wvLcr+Bvp7BCGg=
-From:   Will Deacon <will@kernel.org>
-To:     Mark Brown <broonie@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     kernel-team@android.com, Will Deacon <will@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Miroslav Benes <mbenes@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v3 0/3] arm64: Convert to ARCH_STACKWALK
-Date:   Fri, 18 Sep 2020 17:17:14 +0100
-Message-Id: <160043545717.3786361.8451395410243102783.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200914153409.25097-1-broonie@kernel.org>
-References: <20200914153409.25097-1-broonie@kernel.org>
+        id S1726154AbgIRRCo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 18 Sep 2020 13:02:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33040 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726126AbgIRRCn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 18 Sep 2020 13:02:43 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08IGh6us040991;
+        Fri, 18 Sep 2020 13:02:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=uJlQTyDJq/ZC9OYXSXamF5qHhTszIWLOwi4hkKQ8vJM=;
+ b=aCdzapvwlWhTvcl/+zR0l4Pkh92kk2d7ENFlMAGpVhTpf3GbJEZyEJDWgD0o90TsdE9m
+ if9/5LWP20bGC6dlecfDztYeKyaMsVc2a5FMdN/gqZrdFlsoi8luUZ1Ia6fRy5PCLkPB
+ fVrLq9xRmq1pKRY5ITOPSf6OS4AW1FYY0INsBBSS0S8t6LUjUpY/2Bum2qzJ2A2snqa2
+ xE7Y3Qq/uVrGsby1e4hS8H6bRCZgd/wmH2fiFGb2RF1UkRcNoffKTE0EG/Eb6ne4imDv
+ AkidunNzmT8iD11ZsVXa8KBaxp7pKG8o45PwvnB8hS3zyzoQ60n13w7/nMDUOvrS5knL 8Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33n0nm0gj9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 18 Sep 2020 13:02:42 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08IGhkek041725;
+        Fri, 18 Sep 2020 13:02:42 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33n0nm0ghu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 18 Sep 2020 13:02:42 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08IGvUjU018423;
+        Fri, 18 Sep 2020 17:02:41 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma03wdc.us.ibm.com with ESMTP id 33k5wcwre0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 18 Sep 2020 17:02:41 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08IH2eJs61669728
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 18 Sep 2020 17:02:40 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B793C6055;
+        Fri, 18 Sep 2020 17:02:40 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E81D3C6059;
+        Fri, 18 Sep 2020 17:02:38 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.128.188])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 18 Sep 2020 17:02:38 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, cohuck@redhat.com,
+        kwankhede@nvidia.com, borntraeger@de.ibm.com,
+        Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH] s390/vfio-ap: fix unregister GISC when KVM is already gone results in OOPS
+Date:   Fri, 18 Sep 2020 13:02:34 -0400
+Message-Id: <20200918170234.5807-1-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-18_15:2020-09-16,2020-09-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
+ clxscore=1015 lowpriorityscore=0 bulkscore=0 phishscore=0 suspectscore=2
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009180135
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 14 Sep 2020 16:34:06 +0100, Mark Brown wrote:
-> This series updates the arm64 stacktrace code to use the newer and much
-> simpler arch_stack_walk() interface, the main benefit being a single
-> entry point to the arch code with no need for the arch code to worry
-> about skipping frames. Along the way I noticed that the reliable
-> parameter to the arch_stack_walk() callback appears to be redundant
-> so there's also a patch here removing that from the existing code to
-> simplify the interface.
-> 
-> [...]
+Attempting to unregister Guest Interruption Subclass (GISC) when the
+link between the matrix mdev and KVM has been removed results in the
+following:
 
-Applied to arm64 (for-next/stacktrace), thanks!
+   "Kernel panic -not syncing: Fatal exception: panic_on_oops"
 
-[1/3] stacktrace: Remove reliable argument from arch_stack_walk() callback
-      https://git.kernel.org/arm64/c/264c03a245de
-[2/3] arm64: stacktrace: Make stack walk callback consistent with generic code
-      https://git.kernel.org/arm64/c/baa2cd417053
-[3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
-      https://git.kernel.org/arm64/c/5fc57df2f6fd
+This patch fixes this bug by verifying the matrix mdev and KVM are still
+linked prior to unregistering the GISC.
 
-Cheers,
+Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index e0bde8518745..847a88642644 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -119,11 +119,15 @@ static void vfio_ap_wait_for_irqclear(int apqn)
+  */
+ static void vfio_ap_free_aqic_resources(struct vfio_ap_queue *q)
+ {
+-	if (q->saved_isc != VFIO_AP_ISC_INVALID && q->matrix_mdev)
+-		kvm_s390_gisc_unregister(q->matrix_mdev->kvm, q->saved_isc);
+-	if (q->saved_pfn && q->matrix_mdev)
+-		vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
+-				 &q->saved_pfn, 1);
++	if (q->matrix_mdev) {
++		if (q->saved_isc != VFIO_AP_ISC_INVALID && q->matrix_mdev->kvm)
++			kvm_s390_gisc_unregister(q->matrix_mdev->kvm,
++						 q->saved_isc);
++		if (q->saved_pfn)
++			vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
++					 &q->saved_pfn, 1);
++	}
++
+ 	q->saved_pfn = 0;
+ 	q->saved_isc = VFIO_AP_ISC_INVALID;
+ }
 -- 
-Will
+2.21.1
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
