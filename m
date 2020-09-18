@@ -2,95 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6598270186
-	for <lists+linux-s390@lfdr.de>; Fri, 18 Sep 2020 18:02:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E631D2701ED
+	for <lists+linux-s390@lfdr.de>; Fri, 18 Sep 2020 18:17:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbgIRQCM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 18 Sep 2020 12:02:12 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33602 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726115AbgIRQCL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 18 Sep 2020 12:02:11 -0400
-Received: by mail-oi1-f196.google.com with SMTP id m7so7616436oie.0;
-        Fri, 18 Sep 2020 09:02:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CLWLadygFzbacUrStlzsUwiQts54prWGYIH+pDEwe0A=;
-        b=dYrQVj2rSXLlWEWNr3I6U+LMUuW6xJDLNKqC4E7FszQEKpmQFodheM4yINYXSj//4h
-         NM1YRX+jum28PBQ41gM6/AMWC6ktoTFS+vbC0ZsBf0C4IZ81/JqC5U2qN3teCiFXUYF5
-         aMclzO4ylo+9ObumQp7O9zxoLga6nGnBAjVLRmBYZpb/W4WDJqFpCAqekLFudl8uIdrm
-         iZUoM+rZjj0dL8lXgqx86r2BiWszlUMFR0hF+gMXinVjoY1ajYGpU2/qz0vmVrtWtfIe
-         8vjRzXOjFrQek3EfiMKb3Z/THPKF02ZimCEIjh1aIrjZpTT3i80ps+NArBlU9whzMuCi
-         Hx5A==
-X-Gm-Message-State: AOAM532srrIyMv6hz9hJYp9Xi/nPRaCXHbVFToX9G1562zLHtuxhlyrr
-        u1M6ZZNVFkSe2LSw/75VDYwvB4h7zT4a159QT1I=
-X-Google-Smtp-Source: ABdhPJygTxTyjBXaRmjiZjnzUB9+LiiCBE3DDYWxmdEXB/AZO3s12ola6t96FwD5p8jaLrRmcTTRjtSYPzdoh/tzvoc=
-X-Received: by 2002:aca:df84:: with SMTP id w126mr10401882oig.103.1600444930764;
- Fri, 18 Sep 2020 09:02:10 -0700 (PDT)
+        id S1726406AbgIRQRa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 18 Sep 2020 12:17:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726200AbgIRQRa (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 18 Sep 2020 12:17:30 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC98D2399A;
+        Fri, 18 Sep 2020 16:17:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1600445849;
+        bh=bWaWgHlCKMnkQSTd3ojiyjNYs3adbyti+RhPmbW9poU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kz6OOmw2MYEH+26paB6sFtgioEOr+o9bWhd8Hk/loIzFQV/MfuUma89LmTwb6jCkG
+         83dVSwAlxAn2b21NZhpSVbtvB8hkRG1CFa5vGT9MMTkSfVGLmy3d6qDu2o4omVlQVb
+         iaSdLIX59AOlTom67T1akysOR0wvLcr+Bvp7BCGg=
+From:   Will Deacon <will@kernel.org>
+To:     Mark Brown <broonie@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc:     kernel-team@android.com, Will Deacon <will@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Miroslav Benes <mbenes@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v3 0/3] arm64: Convert to ARCH_STACKWALK
+Date:   Fri, 18 Sep 2020 17:17:14 +0100
+Message-Id: <160043545717.3786361.8451395410243102783.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200914153409.25097-1-broonie@kernel.org>
+References: <20200914153409.25097-1-broonie@kernel.org>
 MIME-Version: 1.0
-References: <20200917165720.3285256-1-hch@lst.de> <20200917165720.3285256-14-hch@lst.de>
-In-Reply-To: <20200917165720.3285256-14-hch@lst.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 18 Sep 2020 18:01:59 +0200
-Message-ID: <CAJZ5v0jAQnEHedZs7kQmfHx4KTw9G1wrObuEpid_m5uVk5qoJQ@mail.gmail.com>
-Subject: Re: [PATCH 13/14] PM: mm: cleanup swsusp_swap_check
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        nbd@other.debian.org,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, ocfs2-devel@oss.oracle.com,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Sep 17, 2020 at 7:39 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> Use blkdev_get_by_dev instead of bdget + blkdev_get.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Mon, 14 Sep 2020 16:34:06 +0100, Mark Brown wrote:
+> This series updates the arm64 stacktrace code to use the newer and much
+> simpler arch_stack_walk() interface, the main benefit being a single
+> entry point to the arch code with no need for the arch code to worry
+> about skipping frames. Along the way I noticed that the reliable
+> parameter to the arch_stack_walk() callback appears to be redundant
+> so there's also a patch here removing that from the existing code to
+> simplify the interface.
+> 
+> [...]
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Applied to arm64 (for-next/stacktrace), thanks!
 
-> ---
->  kernel/power/swap.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
->
-> diff --git a/kernel/power/swap.c b/kernel/power/swap.c
-> index 9d3ffbfe08dbf6..71385bedcc3a49 100644
-> --- a/kernel/power/swap.c
-> +++ b/kernel/power/swap.c
-> @@ -343,12 +343,10 @@ static int swsusp_swap_check(void)
->                 return res;
->         root_swap = res;
->
-> -       hib_resume_bdev = bdget(swsusp_resume_device);
-> -       if (!hib_resume_bdev)
-> -               return -ENOMEM;
-> -       res = blkdev_get(hib_resume_bdev, FMODE_WRITE, NULL);
-> -       if (res)
-> -               return res;
-> +       hib_resume_bdev = blkdev_get_by_dev(swsusp_resume_device, FMODE_WRITE,
-> +                       NULL);
-> +       if (IS_ERR(hib_resume_bdev))
-> +               return PTR_ERR(hib_resume_bdev);
->
->         res = set_blocksize(hib_resume_bdev, PAGE_SIZE);
->         if (res < 0)
-> --
-> 2.28.0
->
+[1/3] stacktrace: Remove reliable argument from arch_stack_walk() callback
+      https://git.kernel.org/arm64/c/264c03a245de
+[2/3] arm64: stacktrace: Make stack walk callback consistent with generic code
+      https://git.kernel.org/arm64/c/baa2cd417053
+[3/3] arm64: stacktrace: Convert to ARCH_STACKWALK
+      https://git.kernel.org/arm64/c/5fc57df2f6fd
+
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
