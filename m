@@ -2,100 +2,66 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2292271117
-	for <lists+linux-s390@lfdr.de>; Sun, 20 Sep 2020 00:24:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF0C727111B
+	for <lists+linux-s390@lfdr.de>; Sun, 20 Sep 2020 00:25:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgISWYD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 19 Sep 2020 18:24:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40760 "EHLO
+        id S1726598AbgISWZ7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 19 Sep 2020 18:25:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbgISWX4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 19 Sep 2020 18:23:56 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B29A1C0613CE
-        for <linux-s390@vger.kernel.org>; Sat, 19 Sep 2020 15:23:56 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d9so5847604pfd.3
-        for <linux-s390@vger.kernel.org>; Sat, 19 Sep 2020 15:23:56 -0700 (PDT)
+        with ESMTP id S1726660AbgISWZ6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 19 Sep 2020 18:25:58 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4009C0613D0
+        for <linux-s390@vger.kernel.org>; Sat, 19 Sep 2020 15:25:58 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id d20so10881305qka.5
+        for <linux-s390@vger.kernel.org>; Sat, 19 Sep 2020 15:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=Zt+NcwFtW78Ml5fABVrawYmyBt1OY97jVqUspSuSzso=;
-        b=JGo5Ok3UQlPkC13DKOsYdJnfzq73atFfYisEM+Hwumxj0suTBGssb+VorpwmGSdeCs
-         bcXUpcZN25SMMCskSZLqiZtD4YDbCCmBpaZRkf/XvoBbu4chMl2XKMFhFG1ni8TPjold
-         u1MXw/S5l0zIP2gSmcy2WrK2PhaeRtThtZVCQ2dBve9yiyZAijqQYE96b0yFOHC1wqdZ
-         7hEKxxWuktu0haCnifIZQak4CZt8BJYl2PwWFDdP87EmsRRAJSorXT5hINrPIcaUrT6Y
-         ZGcKD1NJTEIknksw7U+45Z60Vnnj162xs4+yz1Qx9fnmzqSyx2F/YY69FVIp1XlYNq6/
-         4JRQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=C8GBCgQbcL72bHfuvAY+Zdl7rDxtS++c+cKqr1GrZYs=;
+        b=PRzY4VELB64HTW5abySghitbur1MWh0LcR87iwwJyYMm82T4I8W+pXryiqGwXBSbcm
+         t1QMIbHrQCwRkVVi1uUPdiYIE7OJQ/yBNnOFqUSRN5dpWMrkHLz4yQhpbI+2HwlxXL2L
+         SokvCV3hFgz4cQW4LO+qY0AyCZ/TgAiPt569gawM13PmJT+hDDjC9WIhxGH3+EHdHjet
+         Gna7z8HBr9bYMTSyckSrDF9LSNiA0B6c6Zo5MJa9GeCNkkeVp5WqYmDwFdYclYyfNdJq
+         wRFASuAESroxp4z3dGzjtLFxA/q/EGrT+UgqJaLdc8w8be8YYjtd6po9EPPmwpylDrtb
+         wxpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=Zt+NcwFtW78Ml5fABVrawYmyBt1OY97jVqUspSuSzso=;
-        b=FBh1rVCn0HyA+XECWFltpYzRo0jOL01HrDWerlw7VurP34Ye8gOeYaa3rkR0PFnGU+
-         4B7uJUUrbNpftuceURTalZfVEHY8ptCJzP2qeblFDG2gGpEw4AaZ85TUaL+jmFxVyVfn
-         OLf49An8MViZgs0TNhUYA4ep9fHafgLT/IPeWvtHPUDV2E4eiO6DXDSmeyGxnWTdKYjw
-         lfzbLu3xHOBLIFX1B2Dpqy8Pzxu0ciP1+fjwSCbunDwcMT4hUg2GUuOtOo1IqZaY2G1l
-         Zm4zZjYdHEm980YJUyYS6cOyQsAbf6GVyksBYq1+5jQgZvTwCJt2N5zTuw82seHrBcM6
-         MFXQ==
-X-Gm-Message-State: AOAM530zZetEYF2lHw2fzPeOpiib5vDLxJQYYKq7lWefuL8NsuFpkH39
-        RjJPYFDA91MOMpo1XlsPgfbd5w==
-X-Google-Smtp-Source: ABdhPJzQlxXV5m1vFuZ7oLLvJBaRav6dyPvh+IWASrFhojswDAtpJrULIu1W68E3I7AE9Ae7seCzYQ==
-X-Received: by 2002:aa7:9583:0:b029:142:2501:396a with SMTP id z3-20020aa795830000b02901422501396amr21664408pfj.47.1600554235950;
-        Sat, 19 Sep 2020 15:23:55 -0700 (PDT)
-Received: from localhost.localdomain ([2601:646:c200:1ef2:e9da:b923:b529:3349])
-        by smtp.gmail.com with ESMTPSA id gb17sm6607151pjb.15.2020.09.19.15.23.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 19 Sep 2020 15:23:55 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 1/9] kernel: add a PF_FORCE_COMPAT flag
-Date:   Sat, 19 Sep 2020 15:23:54 -0700
-Message-Id: <AA2CFC7E-E685-4596-84AD-0E314137B93F@amacapital.net>
-References: <20200919220920.GI3421308@ZenIV.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        io-uring@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, netdev@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org
-In-Reply-To: <20200919220920.GI3421308@ZenIV.linux.org.uk>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-X-Mailer: iPhone Mail (18A373)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=C8GBCgQbcL72bHfuvAY+Zdl7rDxtS++c+cKqr1GrZYs=;
+        b=WVFmWC1BokJvgCXEx+kRpDBxPiAkQeBZlqw92/7uxyrf4TOQv2pEK6GhyPatlg/uz/
+         rFaxmEFpO2NDFaSIvmgU0yvH8Z0lSmmDR4COxvr+YLcotqquIeSUlWKJwkPZd0Zn6QEJ
+         N16gqHYu2IGBL6Y5j51KjLD6A6vfTCc4UnJuECsgC6HXAe/OsgYFN1uuwvEitCHPkEEH
+         dLFMwLUYeNLgOvgNOs6XFJcs+LwTZIwGaoAv6/tRfTyxhMgksgcfNJsp8nLAQ76co2u6
+         BfSQgPwTlGknaBLe2cXnsGOjr3vEy9DJrchcFS4iRzR61neCEwR6BUEV+SoD0RhGFyH1
+         YZJA==
+X-Gm-Message-State: AOAM533AdWFCnC8ElS3TUCBnIsQCq1ij7iv1oqDO+XNxspNDttdJsesT
+        q1Nxu9avpuTv7h1qV0WR6+7qH5kLa3LjxamYku4=
+X-Google-Smtp-Source: ABdhPJwH6eND8Kz7t+eqoUIjtq/ZHfGYelvEXuqi1eQ/2chGeRwoPj1lNc2U4eiDZ4WOfzcwKn1Aom5vcyhOPIG3oAc=
+X-Received: by 2002:a37:a113:: with SMTP id k19mr37216599qke.306.1600554357712;
+ Sat, 19 Sep 2020 15:25:57 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:ac8:7b32:0:0:0:0:0 with HTTP; Sat, 19 Sep 2020 15:25:56
+ -0700 (PDT)
+Reply-To: mfdp@tlen.pl
+From:   Mr Bill T Winters <mrsell69@gmail.com>
+Date:   Sat, 19 Sep 2020 15:25:56 -0700
+Message-ID: <CANv_9p9mZMSPsM8-U35G2BCosSszSDdjr+5JDc2hnRAYaxxEzA@mail.gmail.com>
+Subject: Good Morning!
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+-- 
+Greetings,
+I Mr Bill T, did you Receive the (FUND), that was paid to you?
+Let me know with your full name:...  immediately,
 
-> On Sep 19, 2020, at 3:09 PM, Al Viro <viro@zeniv.linux.org.uk> wrote:
->=20
-> =EF=BB=BFOn Fri, Sep 18, 2020 at 05:16:15PM +0200, Christoph Hellwig wrote=
-:
->>> On Fri, Sep 18, 2020 at 02:58:22PM +0100, Al Viro wrote:
->>> Said that, why not provide a variant that would take an explicit
->>> "is it compat" argument and use it there?  And have the normal
->>> one pass in_compat_syscall() to that...
->>=20
->> That would help to not introduce a regression with this series yes.
->> But it wouldn't fix existing bugs when io_uring is used to access
->> read or write methods that use in_compat_syscall().  One example that
->> I recently ran into is drivers/scsi/sg.c.
->=20
-> So screw such read/write methods - don't use them with io_uring.
-> That, BTW, is one of the reasons I'm sceptical about burying the
-> decisions deep into the callchain - we don't _want_ different
-> data layouts on read/write depending upon the 32bit vs. 64bit
-> caller, let alone the pointer-chasing garbage that is /dev/sg.
+Sincerely Yours, Respectfully,
 
-Well, we could remove in_compat_syscall(), etc and instead have an implicit p=
-arameter in DEFINE_SYSCALL.  Then everything would have to be explicit.  Thi=
-s would probably be a win, although it could be quite a bit of work.=
+Mr Bill T Winters,
+Group Chief Executive Officer & Executive Director,
