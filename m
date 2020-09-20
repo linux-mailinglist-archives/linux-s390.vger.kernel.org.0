@@ -2,95 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2883E27146F
-	for <lists+linux-s390@lfdr.de>; Sun, 20 Sep 2020 15:16:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57F702714B0
+	for <lists+linux-s390@lfdr.de>; Sun, 20 Sep 2020 15:56:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgITNQV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 20 Sep 2020 09:16:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23179 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726321AbgITNQV (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 20 Sep 2020 09:16:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600607779;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2V15ZxenVAjPKeDIDqr8ZmFP4OT+OuHu0OvG5XzUocc=;
-        b=aHbkBjV4shdEKdYyscyOOsMewnGEa0OJgweSzufbPf9ci+MpNHl6XvFqgEl9vtUzOgVM6z
-        ifZ10GHcJmSCTaTwCu/bOYEWwnjblDYobtYAijYMpeK75CVThywC1mn0Ji+SFpiykxD50F
-        tf0r7SH6/IhJzJhCOh4nQR7B68emQp4=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-458-BX_u7FizOGOcsm0AI7aYtg-1; Sun, 20 Sep 2020 09:16:18 -0400
-X-MC-Unique: BX_u7FizOGOcsm0AI7aYtg-1
-Received: by mail-wm1-f72.google.com with SMTP id t8so2008131wmj.6
-        for <linux-s390@vger.kernel.org>; Sun, 20 Sep 2020 06:16:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2V15ZxenVAjPKeDIDqr8ZmFP4OT+OuHu0OvG5XzUocc=;
-        b=ZPDf7nlwxn/EdvPtinhtzI8Rtbz1F8sFITzB5XQBKAX0HPIYYWZl/Sa/ZaBfKSVZls
-         4vExJy91K8p5qZS6yfN9tYV3NF9YwpQVCqOhNaB0iE19gHviQALef6nVV1U06UmuGfrJ
-         WXiwZE8KTVQZ8ekpARFVQ9qAuLiIUxefTCfLSEQql4uG3ezHqd09I+HuexbX1RA7COvW
-         zJeWnjJrMAUO4UezGXVHeU7oXB2L/p1a0QZfMo19sBMmWQXgXpKLhjirufmaK9Vg67Jm
-         ptSkwuDPZU3A5ur5Z88FpzfJxnAjef3vPP2TpnfKMvFGP3gFEd6fRF8T3KiSykk3ciun
-         AJdg==
-X-Gm-Message-State: AOAM531LcaaLfOF+mGKLXUtwjq7uX66ws3u3P1q0hRZMelKOZRpmy+a2
-        PhW3mCZG0qO5kvOP/D11KWo1eIpFrL1x/TniMTLmed/BQ+6uqYrBraMDgwiybyEfDvd2KiMOXql
-        Rg5X1chuZAG5hqP0y4LvG7A==
-X-Received: by 2002:adf:fd01:: with SMTP id e1mr44636094wrr.44.1600607776769;
-        Sun, 20 Sep 2020 06:16:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxGGTEHw/0rbsJt+G5fIJCQ6uEXtHxv2bG0np9KdCndDi4JTg2CnriFtDQLR39C+C5bSERRtQ==
-X-Received: by 2002:adf:fd01:: with SMTP id e1mr44636079wrr.44.1600607776602;
-        Sun, 20 Sep 2020 06:16:16 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:458b:b280:cf0:4acf? ([2001:b07:6468:f312:458b:b280:cf0:4acf])
-        by smtp.gmail.com with ESMTPSA id y1sm14589029wmi.36.2020.09.20.06.16.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 20 Sep 2020 06:16:16 -0700 (PDT)
-Subject: Re: [kvm-unit-tests GIT PULL 0/3] s390x skrf and ultravisor patches
-To:     Thomas Huth <thuth@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, frankja@linux.vnet.ibm.com, david@redhat.com,
-        borntraeger@de.ibm.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com
-References: <20200901091823.14477-1-frankja@linux.ibm.com>
- <34c80837-208f-bb29-cb0b-b9029fdad29d@redhat.com>
- <71b38000-70ee-f45a-b80d-95f42dbcc497@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <0c48075c-a922-6155-ff59-8ffa100cd209@redhat.com>
-Date:   Sun, 20 Sep 2020 15:16:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726437AbgITN4K (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 20 Sep 2020 09:56:10 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:46411 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbgITN4J (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 20 Sep 2020 09:56:09 -0400
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MMoOy-1k1Dwv2q28-00Ijbf; Sun, 20 Sep 2020 15:56:05 +0200
+Received: by mail-qk1-f179.google.com with SMTP id w16so12205786qkj.7;
+        Sun, 20 Sep 2020 06:56:04 -0700 (PDT)
+X-Gm-Message-State: AOAM533+Tg7GsRoHCgP40ir59ld5C/1Vm0N7+PC3SG26gIqEIleq3ONH
+        fksm3LFFVG+V0/cydp/yoybdjQO0QWCzFdtRnVg=
+X-Google-Smtp-Source: ABdhPJwjhkL3KLtOGKzNMPo/as4noBlQ9Jb8z4PXaKINeNIOOA3tWOtTq+bHeowiwT9kTTVa6K2ILOsBaWuTHLMSx30=
+X-Received: by 2002:a37:a495:: with SMTP id n143mr41151530qke.394.1600610163343;
+ Sun, 20 Sep 2020 06:56:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <71b38000-70ee-f45a-b80d-95f42dbcc497@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200918124533.3487701-1-hch@lst.de> <20200918124533.3487701-2-hch@lst.de>
+ <20200918134012.GY3421308@ZenIV.linux.org.uk> <20200918134406.GA17064@lst.de>
+ <20200918135822.GZ3421308@ZenIV.linux.org.uk> <20200918151615.GA23432@lst.de> <20200919220920.GI3421308@ZenIV.linux.org.uk>
+In-Reply-To: <20200919220920.GI3421308@ZenIV.linux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sun, 20 Sep 2020 15:55:47 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3QApj3isPu3TkLahArsfb5jaABb7DJ7EKMxey1T1YPbA@mail.gmail.com>
+Message-ID: <CAK8P3a3QApj3isPu3TkLahArsfb5jaABb7DJ7EKMxey1T1YPbA@mail.gmail.com>
+Subject: Re: [PATCH 1/9] kernel: add a PF_FORCE_COMPAT flag
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        David Howells <dhowells@redhat.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>, io-uring@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Networking <netdev@vger.kernel.org>, keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:DEeFGJUPrk6u/LSjSFLEBpcAP+oeK32PoUjTZYC6fPIs6n+k1mv
+ XDMz6XlgCh1Nyx4j17+27me+L64NgDjpVdd7dXJCFrjon/aTAyIu+oh95nm9X9KaWl6wa9w
+ jNEmllGRXAiSS7LrTZQ8rS4tQWtbNU8yEqoB7YoTh84C0NTdLZyWEaqn7c0+w0xlPbaxYu4
+ ur3P1v08FrYIfJVpNVfUg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6mkBVY6Bong=:SqXPt0trLeYLMHgx1cvXuJ
+ U5p4iiPSwCCzF8iboycWFBfO05sNkLPSd9pwnBrqqztOBcPkNasCWa49qwp+g4/XCsXhPAeIp
+ ZEo2wIs2JuHkQHCsr1J07cwiEuu+Jpl8XT2iP7S5i5y3yZeYsvvpW+zjEoGvo0lUUzt50b+DF
+ d+etXRDTAS4MI0KZwR66GwCASGNxKnFcidiAQ7uHqKF4jBCdVZRVVC3unjWR/zDQrf1UsSGl5
+ yiA+FMkQ1meD61zxEhK4DYTj39EHaC1fCYgevYfr50bwM5KeXfxunkJdrXZB40zmP6hwiP8U7
+ ZAYUI2x6IdnJZ7j005UTxSUKkFfiSfHKfIcRoNLVxmyXZFSZpZv1lHhqR5Lc7mlnrYMV7yfwX
+ jEWPWgGYdVS/0Pqp4mDctdka7FBBmnDQpnQCFWndo9r29o5kZmF/0FWZTAYaiXIc1zXQ0CNGs
+ ITo99AkK8c2i8ikDCjq3PgczN6CdTTM3aiqzqHKeSvyXfbkvI1hCX/5ydNZHKVZf8msKr2S8H
+ vq/kWx12tz5+znGWLFrLlf7992gz4tbGhg+ohl2KdxHhWBaLbGq7B7TrxKF2dX7bnaN+L5Zp/
+ vJ8JYq605hJO1se4r8NW3ew1++WG531E7DL/6Lx0YnzfRjxiToXb8Pg4KnyC0djlxEMEwUAlv
+ CmSJKACAV0HY6EMSYJ8+oWpo6MOxbBfBPrBaLdo9nEybAZsqUhO7gMBhw4FLPWxPNJ4TahNDG
+ ZB13aOM7zMIaLy9bXTcJUkAShP8ZyjBNl+F3C7ClxLkP593ksjcwF70rTpIg8nnqaoxY/0Dee
+ smdON9VOaGsvyMjHBc085FK8V3s316O5YhVW2qcAg2UzaNBdL/34eax1MABsisTpCdIrIGW
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 14/09/20 18:24, Thomas Huth wrote:
-> On 02/09/2020 19.41, Paolo Bonzini wrote:
->> On 01/09/20 11:18, Janosch Frank wrote:
->>>   git@gitlab.com:frankja/kvm-unit-tests.git tags/s390x-2020-01-09
->>
->> Pulled, thanks.
->>
->> (Yes, I am alive).
-> 
->  Hi Paolo,
-> 
-> I don't see the patches in the master branch - could you please push
-> them to the repo?
+On Sun, Sep 20, 2020 at 12:09 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Fri, Sep 18, 2020 at 05:16:15PM +0200, Christoph Hellwig wrote:
+> > On Fri, Sep 18, 2020 at 02:58:22PM +0100, Al Viro wrote:
+> > > Said that, why not provide a variant that would take an explicit
+> > > "is it compat" argument and use it there?  And have the normal
+> > > one pass in_compat_syscall() to that...
+> >
+> > That would help to not introduce a regression with this series yes.
+> > But it wouldn't fix existing bugs when io_uring is used to access
+> > read or write methods that use in_compat_syscall().  One example that
+> > I recently ran into is drivers/scsi/sg.c.
+>
+> So screw such read/write methods - don't use them with io_uring.
+> That, BTW, is one of the reasons I'm sceptical about burying the
+> decisions deep into the callchain - we don't _want_ different
+> data layouts on read/write depending upon the 32bit vs. 64bit
+> caller, let alone the pointer-chasing garbage that is /dev/sg.
 
-Oops, pulling had failed because Janosch used an ssh reference to the
-repo.  Fixed and pushed.
+Would it be too late to limit what kind of file descriptors we allow
+io_uring to read/write on?
 
-Paolo
+If io_uring can get changed to return -EINVAL on trying to
+read/write something other than S_IFREG file descriptors,
+that particular problem space gets a lot simpler, but this
+is of course only possible if nobody actually relies on it yet.
 
+      Arnd
