@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54DA427287E
-	for <lists+linux-s390@lfdr.de>; Mon, 21 Sep 2020 16:44:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F64A272813
+	for <lists+linux-s390@lfdr.de>; Mon, 21 Sep 2020 16:41:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgIUOnd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 21 Sep 2020 10:43:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49296 "EHLO mail.kernel.org"
+        id S1727983AbgIUOlL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 21 Sep 2020 10:41:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727847AbgIUOkk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 21 Sep 2020 10:40:40 -0400
+        id S1727928AbgIUOlF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 21 Sep 2020 10:41:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1F4123447;
-        Mon, 21 Sep 2020 14:40:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A3D2238A0;
+        Mon, 21 Sep 2020 14:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600699239;
-        bh=di3yULSM4+hdbZ5tqj+v7wIYucgeKwIWjwz7F8NA8nc=;
+        s=default; t=1600699265;
+        bh=E/eordJgpj414Zak6XySMtMq6zo0ro8d8JKgukVHNVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FAQOZ4pClGVlUCtanFVydWrYg8nozVjJUpV98i39PDT5RzbqF1bIe/hhOd2fEuPOx
-         2pwgTSyrFinFNX1JTbd4Y+oTXhh4JCLoRWTjqdKNSsT8BpVqnAutvt7slgAh92iqSw
-         0rxW9L1y5y+PhW0MzPO2zNC76WfpD56u95Fb6Q94=
+        b=MSyc+l7I3hKk9hb7IhZqvROZfXU0PoVbfJ3iuBa4hiEJR5A1UfZS9Hpkg6hY51yuX
+         FrhtyRVtcq9DzlRKwFB64g9na1HjlL9RMwfkY/2W75LgZVtCmHXwBQqcUvcV0ewcuK
+         LfZAHawvPcQpXbbF6npZ8nW2y64In9rOA4pizWv4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 09/20] s390/init: add missing __init annotations
-Date:   Mon, 21 Sep 2020 10:40:16 -0400
-Message-Id: <20200921144027.2135390-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 08/15] s390/init: add missing __init annotations
+Date:   Mon, 21 Sep 2020 10:40:47 -0400
+Message-Id: <20200921144054.2135602-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200921144027.2135390-1-sashal@kernel.org>
-References: <20200921144027.2135390-1-sashal@kernel.org>
+In-Reply-To: <20200921144054.2135602-1-sashal@kernel.org>
+References: <20200921144054.2135602-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,10 +60,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index 07aa15ba43b3e..faf30f37c6361 100644
+index 07b2b61a0289f..cc7726e962639 100644
 --- a/arch/s390/kernel/setup.c
 +++ b/arch/s390/kernel/setup.c
-@@ -619,7 +619,7 @@ static struct notifier_block kdump_mem_nb = {
+@@ -634,7 +634,7 @@ static struct notifier_block kdump_mem_nb = {
  /*
   * Make sure that the area behind memory_end is protected
   */
@@ -72,7 +72,7 @@ index 07aa15ba43b3e..faf30f37c6361 100644
  {
  	if (memory_end_set)
  		memblock_reserve(memory_end, ULONG_MAX);
-@@ -628,7 +628,7 @@ static void reserve_memory_end(void)
+@@ -643,7 +643,7 @@ static void reserve_memory_end(void)
  /*
   * Make sure that oldmem, where the dump is stored, is protected
   */
@@ -81,7 +81,7 @@ index 07aa15ba43b3e..faf30f37c6361 100644
  {
  #ifdef CONFIG_CRASH_DUMP
  	if (OLDMEM_BASE)
-@@ -640,7 +640,7 @@ static void reserve_oldmem(void)
+@@ -655,7 +655,7 @@ static void reserve_oldmem(void)
  /*
   * Make sure that oldmem, where the dump is stored, is protected
   */
