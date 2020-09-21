@@ -2,158 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F664272AA2
-	for <lists+linux-s390@lfdr.de>; Mon, 21 Sep 2020 17:47:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D50ED272AB1
+	for <lists+linux-s390@lfdr.de>; Mon, 21 Sep 2020 17:50:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgIUPrC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 21 Sep 2020 11:47:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11080 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726611AbgIUPrA (ORCPT
+        id S1727869AbgIUPuG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 21 Sep 2020 11:50:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:42685 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727845AbgIUPuG (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 21 Sep 2020 11:47:00 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08LFhplG080640;
-        Mon, 21 Sep 2020 11:46:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=nluNtsCp3JizD1agG20vlbu9kvrXab0gUsgwUArlytk=;
- b=GjudGODRy1hYrW5oWKcqPYkQIePG4efSE0Eiw6qZpat9OHLaM3mX64yMsdKkvNSAaD3U
- nmeNSPaSLPsfP7JQFQ2FrkXjb1viJh6sdi4ZFlKKT5PkfJ8vJRGFFJ5/slk9wZomhQWA
- b4tv/U87FiCSyfjcEWudICDN6duWFpH5rrCDlFMsTWJZAqiNMRqA29Oglkb1C2TXsBAJ
- 3bPFAqbadVhuxFCKWaQhJkcGo96gZv/G7+ex1pEkV8gcJ0cBgJRff9pFpqVq8fRRYhxb
- mkQubg2IeCKLFPzmlOlTmW71qAtjzPDav2Tp89VpIvkxjPMmPV22H/E6UraBMAjd/FYJ Lw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33py2u81gb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Sep 2020 11:46:59 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08LFjJi8083288;
-        Mon, 21 Sep 2020 11:46:58 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33py2u81fs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Sep 2020 11:46:58 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08LFS5XA013499;
-        Mon, 21 Sep 2020 15:46:56 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04fra.de.ibm.com with ESMTP id 33n9m7s4mn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Sep 2020 15:46:56 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08LFkrST16712018
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Sep 2020 15:46:53 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 53E81A4054;
-        Mon, 21 Sep 2020 15:46:53 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C6F98A4060;
-        Mon, 21 Sep 2020 15:46:52 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.8.1])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 21 Sep 2020 15:46:52 +0000 (GMT)
-Date:   Mon, 21 Sep 2020 17:45:36 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, pmorel@linux.ibm.com,
-        alex.williamson@redhat.com, cohuck@redhat.com,
-        kwankhede@nvidia.com, borntraeger@de.ibm.com
-Subject: Re: [PATCH] s390/vfio-ap: fix unregister GISC when KVM is already
- gone results in OOPS
-Message-ID: <20200921174536.49e45e68.pasic@linux.ibm.com>
-In-Reply-To: <20200918170234.5807-1-akrowiak@linux.ibm.com>
-References: <20200918170234.5807-1-akrowiak@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Mon, 21 Sep 2020 11:50:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600703405;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CUf1Gg0Y+WlMrDlKmw0q+94Ta9Us++O5H2uXtIQPidc=;
+        b=GKoh61h1kxMuZwqy+oNt2Wj/oDcMbAU4QzJ8xKx8y3B3luF8pIQeu9bUgY3aoPfr870Atr
+        h03r5Z1NqWohH7kRrnyrchVQe7+lVsvY5DeZm6G5xE8bb/+Fb+F9k87hrlW5ozAFsDHtTZ
+        k25N6YBF53PORCkCWX6UrQKpeaNdoGk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-78-_txek8QTMluRmPAeG7CPBw-1; Mon, 21 Sep 2020 11:50:01 -0400
+X-MC-Unique: _txek8QTMluRmPAeG7CPBw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9BF311074647;
+        Mon, 21 Sep 2020 15:49:59 +0000 (UTC)
+Received: from gondolin (ovpn-115-117.ams2.redhat.com [10.36.115.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3666755765;
+        Mon, 21 Sep 2020 15:49:54 +0000 (UTC)
+Date:   Mon, 21 Sep 2020 17:49:51 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     alex.williamson@redhat.com, schnelle@linux.ibm.com,
+        pmorel@linux.ibm.com, borntraeger@de.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] s390/pci: stash version in the zpci_dev
+Message-ID: <20200921174951.3b660003.cohuck@redhat.com>
+In-Reply-To: <ea53b58a-74f0-2a10-3f08-dbcca512ef86@linux.ibm.com>
+References: <1600529318-8996-1-git-send-email-mjrosato@linux.ibm.com>
+        <1600529318-8996-2-git-send-email-mjrosato@linux.ibm.com>
+        <20200921170158.1080d872.cohuck@redhat.com>
+        <ea53b58a-74f0-2a10-3f08-dbcca512ef86@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-21_05:2020-09-21,2020-09-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- impostorscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 suspectscore=2
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009210112
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 18 Sep 2020 13:02:34 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On Mon, 21 Sep 2020 11:44:20 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-> Attempting to unregister Guest Interruption Subclass (GISC) when the
-> link between the matrix mdev and KVM has been removed results in the
-> following:
+> On 9/21/20 11:01 AM, Cornelia Huck wrote:
+> > On Sat, 19 Sep 2020 11:28:35 -0400
+> > Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+> >   
+> >> In preparation for passing the info on to vfio-pci devices, stash the
+> >> supported PCI version for the target device in the zpci_dev.  
+> > 
+> > Hm, what kind of version is that? The version of the zPCI interface?
+> > 
+> > Inquiring minds want to know :)
+> >   
 > 
->    "Kernel panic -not syncing: Fatal exception: panic_on_oops"
-> 
-> This patch fixes this bug by verifying the matrix mdev and KVM are still
-> linked prior to unregistering the GISC.
+> Ha :) It's related to PCI-SIG spec versions and which one the zPCI 
+> facility supports for this device.
 
-
-I read from your commit message that this happens when the link between
-the KVM and the matrix mdev was established and then got severed. 
-
-I assume the interrupts were previously enabled, and were not been
-disabled or cleaned up because q->saved_isc != VFIO_AP_ISC_INVALID.
-
-That means the guest enabled  interrupts and then for whatever
-reason got destroyed, and this happens on mdev cleanup.
-
-Does it happen all the time or is it some sort of a race?
+Thanks for the info :)
 
 > 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_ops.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
+> >>
+> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> >> ---
+> >>   arch/s390/include/asm/pci.h | 1 +
+> >>   arch/s390/pci/pci_clp.c     | 1 +
+> >>   2 files changed, 2 insertions(+)  
+> >   
 > 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index e0bde8518745..847a88642644 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -119,11 +119,15 @@ static void vfio_ap_wait_for_irqclear(int apqn)
->   */
->  static void vfio_ap_free_aqic_resources(struct vfio_ap_queue *q)
->  {
-> -	if (q->saved_isc != VFIO_AP_ISC_INVALID && q->matrix_mdev)
-> -		kvm_s390_gisc_unregister(q->matrix_mdev->kvm, q->saved_isc);
-> -	if (q->saved_pfn && q->matrix_mdev)
-> -		vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
-> -				 &q->saved_pfn, 1);
-> +	if (q->matrix_mdev) {
-> +		if (q->saved_isc != VFIO_AP_ISC_INVALID && q->matrix_mdev->kvm)
-> +			kvm_s390_gisc_unregister(q->matrix_mdev->kvm,
-> +						 q->saved_isc);
 
-I don't quite understand the logic here. I suppose we need to ensure
-that the struct kvm is 'alive' at least until kvm_s390_gisc_unregister()
-is done. That is supposed be ensured by kvm_get_kvm() in
-vfio_ap_mdev_set_kvm() and kvm_put_kvm() in vfio_ap_mdev_release().
+FWIW,
 
-If the critical section in vfio_ap_mdev_release() is done and
-matrix_mdev->kvm was set to NULL there then I would expect that the
-queues are already reset and q->saved_isc == VFIO_AP_ISC_INVALID. So
-this should not blow up.
-
-Now if this happens before the critical section in
-vfio_ap_mdev_release() is done, I ask myself how are we going to do the
-kvm_put_kvm()?
-
-Another question. Do we hold the matrix_dev->lock here?
-
-> +		if (q->saved_pfn)
-> +			vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
-> +					 &q->saved_pfn, 1);
-> +	}
-> +
->  	q->saved_pfn = 0;
->  	q->saved_isc = VFIO_AP_ISC_INVALID;
->  }
+Acked-by: Cornelia Huck <cohuck@redhat.com>
 
