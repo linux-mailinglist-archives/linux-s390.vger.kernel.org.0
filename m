@@ -2,70 +2,73 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EED122728E2
-	for <lists+linux-s390@lfdr.de>; Mon, 21 Sep 2020 16:48:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 828BA27294B
+	for <lists+linux-s390@lfdr.de>; Mon, 21 Sep 2020 17:02:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgIUOsV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 21 Sep 2020 10:48:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728146AbgIUOsT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 21 Sep 2020 10:48:19 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EACAC061755;
-        Mon, 21 Sep 2020 07:48:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=GrLgQ81RMs4yZLkbL25hSswMVubhakBrsXk6y8LUTp8=; b=S8rXcGNBi4i4qPD575hId32KQP
-        nqI0uPNrzjdQyj4vl0WSsJjqoLdiHU15JD1QivHJE4gsE9/TJFijUkmzx5PTowCkBnlyPqxob4RLC
-        g2OXJsSYMe2XxF/qrlzQ7lUj5CLowOZfdUeitiDgvjL0vok0YlCDOptjFYkIwRz2amnUfKLAMpxWs
-        2L9E7YRIK5ucqdS/0WgivYaSwDXpH/HNj0bdbbrCRjJyIOhnR4envxalVmDy7Nd3SjyV7VPX22s6G
-        He+tEU28SCP4TsdzxKZjtGYCdDpqu2O8SYVePA8n7SQLKmiA0QJhgmYonOPb/A76qlqHpCJlQFCa1
-        Z1eFhQPA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kKN6v-0001MT-TO; Mon, 21 Sep 2020 14:48:09 +0000
-Date:   Mon, 21 Sep 2020 15:48:09 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        David Laight <David.Laight@aculab.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-aio@kvack.org, io-uring@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        netdev@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH 02/11] mm: call import_iovec() instead of
- rw_copy_check_uvector() in process_vm_rw()
-Message-ID: <20200921144809.GV32101@casper.infradead.org>
-References: <20200921143434.707844-1-hch@lst.de>
- <20200921143434.707844-3-hch@lst.de>
+        id S1726419AbgIUPCP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 21 Sep 2020 11:02:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30726 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726456AbgIUPCO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 21 Sep 2020 11:02:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600700533;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BTI2XQ4dBVSG0l81vNVUYguXCd5+anJLPOj3aZTSSK0=;
+        b=N1Q0f0h4VjUoaF0OZsm7M3IlQPzCad3gLFiAUs5Vhbyfym7kTqqIl4o3Yofrm3xPUh43LQ
+        xdfed7DT5wDEtkJfkeiztS4S1AUh5XXe247t5xO90dUtfo5d3zUaettkkaWW/ENo42WrOv
+        zqdJLUZrphebT5TUM+uCNWYMl0QIf7Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-306-frAxTQ8nPNeSLWbXq7riFg-1; Mon, 21 Sep 2020 11:02:09 -0400
+X-MC-Unique: frAxTQ8nPNeSLWbXq7riFg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97A2B807352;
+        Mon, 21 Sep 2020 15:02:07 +0000 (UTC)
+Received: from gondolin (ovpn-115-117.ams2.redhat.com [10.36.115.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AD3CD5D9CD;
+        Mon, 21 Sep 2020 15:02:01 +0000 (UTC)
+Date:   Mon, 21 Sep 2020 17:01:58 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     alex.williamson@redhat.com, schnelle@linux.ibm.com,
+        pmorel@linux.ibm.com, borntraeger@de.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] s390/pci: stash version in the zpci_dev
+Message-ID: <20200921170158.1080d872.cohuck@redhat.com>
+In-Reply-To: <1600529318-8996-2-git-send-email-mjrosato@linux.ibm.com>
+References: <1600529318-8996-1-git-send-email-mjrosato@linux.ibm.com>
+        <1600529318-8996-2-git-send-email-mjrosato@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200921143434.707844-3-hch@lst.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Sep 21, 2020 at 04:34:25PM +0200, Christoph Hellwig wrote:
->  {
-> -	WARN_ON(direction & ~(READ | WRITE));
-> +	WARN_ON(direction & ~(READ | WRITE | CHECK_IOVEC_ONLY));
+On Sat, 19 Sep 2020 11:28:35 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-This is now a no-op because:
+> In preparation for passing the info on to vfio-pci devices, stash the
+> supported PCI version for the target device in the zpci_dev.
 
-include/linux/fs.h:#define CHECK_IOVEC_ONLY -1
+Hm, what kind of version is that? The version of the zPCI interface?
 
-I'd suggest we renumber it to 2?
+Inquiring minds want to know :)
 
-(READ is 0, WRITE is 1.  This WARN_ON should probably be
-	WARN_ON(direction > CHECK_IOVEC_ONLY)
+> 
+> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> ---
+>  arch/s390/include/asm/pci.h | 1 +
+>  arch/s390/pci/pci_clp.c     | 1 +
+>  2 files changed, 2 insertions(+)
+
