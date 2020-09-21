@@ -2,107 +2,111 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E086272A78
-	for <lists+linux-s390@lfdr.de>; Mon, 21 Sep 2020 17:44:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57808272A88
+	for <lists+linux-s390@lfdr.de>; Mon, 21 Sep 2020 17:44:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbgIUPoH convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Mon, 21 Sep 2020 11:44:07 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:21079 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727030AbgIUPoG (ORCPT
+        id S1727838AbgIUPo2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 21 Sep 2020 11:44:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32272 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727671AbgIUPo2 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 21 Sep 2020 11:44:06 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-29--2oWre79P1qw86_f0GzqkQ-1; Mon, 21 Sep 2020 16:44:02 +0100
-X-MC-Unique: -2oWre79P1qw86_f0GzqkQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 21 Sep 2020 16:44:00 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 21 Sep 2020 16:44:00 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Al Viro' <viro@zeniv.linux.org.uk>
-CC:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>
-Subject: RE: [PATCH 02/11] mm: call import_iovec() instead of
- rw_copy_check_uvector() in process_vm_rw()
-Thread-Topic: [PATCH 02/11] mm: call import_iovec() instead of
- rw_copy_check_uvector() in process_vm_rw()
-Thread-Index: AQHWkCg9ha58Xpw3RkmKZfc82fYDTKlzMiEw///00oCAABILoA==
-Date:   Mon, 21 Sep 2020 15:44:00 +0000
-Message-ID: <226e03bf941844eba4d64af31633c177@AcuMS.aculab.com>
-References: <20200921143434.707844-1-hch@lst.de>
- <20200921143434.707844-3-hch@lst.de>
- <20200921150211.GS3421308@ZenIV.linux.org.uk>
- <ef67787edb2f48548d69caaaff6997ba@AcuMS.aculab.com>
- <20200921152937.GX3421308@ZenIV.linux.org.uk>
-In-Reply-To: <20200921152937.GX3421308@ZenIV.linux.org.uk>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 21 Sep 2020 11:44:28 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08LFXmh2186557;
+        Mon, 21 Sep 2020 11:44:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=lfsrNQ2PCtn6RCH67VHFuzYDD2Vf3DTR2ey+/aVJ1xU=;
+ b=mA9YWOq1+TJDkLHuh7O8DKgFGAfJvJxNIcjz3/S85+gv+rh8ityYMv8hpYZhFRskPqaQ
+ I3u75rWmuFhKznCWYVsUf+CVX+1lRiPtHOzGFh1j9j64ZVgn2CVX0+n5wCfA3jMQ81ef
+ XTxujAt/eZqMXTuYRi8QxkEcj46gorS814srXGAc1vKH0G7MGOiEsWz4HpJNznl4jLsH
+ JccuQJCHsiJCVstfXOwFA4qAnusW6ylSRGUPReljXZMMBVR7Y14dClshFWhpL0+07VwT
+ kdSSH36DjnUK8qTWQKNwO1gEdALB/JuyeVrDZnQ8INO2di330Ec7WJVrHZA0ZKNBoRbI 6Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33pwrxjxec-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 21 Sep 2020 11:44:27 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08LFY5bN188430;
+        Mon, 21 Sep 2020 11:44:27 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33pwrxjxdt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 21 Sep 2020 11:44:27 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08LFSdTT030455;
+        Mon, 21 Sep 2020 15:44:26 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma02wdc.us.ibm.com with ESMTP id 33n9m8r8h2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 21 Sep 2020 15:44:26 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08LFiJeN6160906
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 21 Sep 2020 15:44:19 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB4196A047;
+        Mon, 21 Sep 2020 15:44:22 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B152D6A04D;
+        Mon, 21 Sep 2020 15:44:21 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.163.16.144])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 21 Sep 2020 15:44:21 +0000 (GMT)
+Subject: Re: [PATCH 1/4] s390/pci: stash version in the zpci_dev
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     alex.williamson@redhat.com, schnelle@linux.ibm.com,
+        pmorel@linux.ibm.com, borntraeger@de.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1600529318-8996-1-git-send-email-mjrosato@linux.ibm.com>
+ <1600529318-8996-2-git-send-email-mjrosato@linux.ibm.com>
+ <20200921170158.1080d872.cohuck@redhat.com>
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+Message-ID: <ea53b58a-74f0-2a10-3f08-dbcca512ef86@linux.ibm.com>
+Date:   Mon, 21 Sep 2020 11:44:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200921170158.1080d872.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-21_05:2020-09-21,2020-09-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 malwarescore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 mlxlogscore=999 clxscore=1015 phishscore=0 adultscore=0
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009210112
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Al Viro
-> Sent: 21 September 2020 16:30
+On 9/21/20 11:01 AM, Cornelia Huck wrote:
+> On Sat, 19 Sep 2020 11:28:35 -0400
+> Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 > 
-> On Mon, Sep 21, 2020 at 03:21:35PM +0000, David Laight wrote:
+>> In preparation for passing the info on to vfio-pci devices, stash the
+>> supported PCI version for the target device in the zpci_dev.
 > 
-> > You really don't want to be looping through the array twice.
+> Hm, what kind of version is that? The version of the zPCI interface?
 > 
-> Profiles, please.
+> Inquiring minds want to know :)
+> 
 
-I did some profiling of send() v sendmsg() much earlier in the year.
-I can't remember the exact details but the extra cost of sendmsg()
-is far more than you might expect.
-(I was timing sending fully built IPv4 UDP packets using a raw socket.)
+Ha :) It's related to PCI-SIG spec versions and which one the zPCI 
+facility supports for this device.
 
-About half the difference does away if you change the
-copy_from_user() to __copy_from_user() when reading the struct msghdr
-and iov[] from userspace (user copy hardening is expensive).
-
-The rest is just code path, my gut feeling is that a lot of that
-is in import_iovec().
-
-Remember semdmsg() is likely to be called with an iov count of 1.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+>>
+>> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+>> ---
+>>   arch/s390/include/asm/pci.h | 1 +
+>>   arch/s390/pci/pci_clp.c     | 1 +
+>>   2 files changed, 2 insertions(+)
+> 
 
