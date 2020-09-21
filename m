@@ -2,92 +2,70 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1F2D272843
-	for <lists+linux-s390@lfdr.de>; Mon, 21 Sep 2020 16:43:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EED122728E2
+	for <lists+linux-s390@lfdr.de>; Mon, 21 Sep 2020 16:48:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgIUOlr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 21 Sep 2020 10:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728092AbgIUOlj (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 21 Sep 2020 10:41:39 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1647523447;
-        Mon, 21 Sep 2020 14:41:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600699298;
-        bh=1PR2f9q4ciLZz1AQCn23XYiF4qTzYugQqKbHT2FMAac=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BC2F4mCIIjbPOpLEV3dQPxEfed8gpIm/wag9vINcPpZorgNUrTfWdvTeS9uuZxQ2u
-         OHj0WOhbVRohTbNb1nIcLrAJQ70JBLuA0qPysaj9bf4K3j7Q6f3rUOcWqa4GKS4BrM
-         Ri+bvrcg3SsH9OVjuH7rCtwrqtnOJVMPUV8J9sEM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4] s390/init: add missing __init annotations
-Date:   Mon, 21 Sep 2020 10:41:36 -0400
-Message-Id: <20200921144136.2136046-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        id S1728166AbgIUOsV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 21 Sep 2020 10:48:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728146AbgIUOsT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 21 Sep 2020 10:48:19 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EACAC061755;
+        Mon, 21 Sep 2020 07:48:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=GrLgQ81RMs4yZLkbL25hSswMVubhakBrsXk6y8LUTp8=; b=S8rXcGNBi4i4qPD575hId32KQP
+        nqI0uPNrzjdQyj4vl0WSsJjqoLdiHU15JD1QivHJE4gsE9/TJFijUkmzx5PTowCkBnlyPqxob4RLC
+        g2OXJsSYMe2XxF/qrlzQ7lUj5CLowOZfdUeitiDgvjL0vok0YlCDOptjFYkIwRz2amnUfKLAMpxWs
+        2L9E7YRIK5ucqdS/0WgivYaSwDXpH/HNj0bdbbrCRjJyIOhnR4envxalVmDy7Nd3SjyV7VPX22s6G
+        He+tEU28SCP4TsdzxKZjtGYCdDpqu2O8SYVePA8n7SQLKmiA0QJhgmYonOPb/A76qlqHpCJlQFCa1
+        Z1eFhQPA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kKN6v-0001MT-TO; Mon, 21 Sep 2020 14:48:09 +0000
+Date:   Mon, 21 Sep 2020 15:48:09 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        David Laight <David.Laight@aculab.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-aio@kvack.org, io-uring@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        netdev@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 02/11] mm: call import_iovec() instead of
+ rw_copy_check_uvector() in process_vm_rw()
+Message-ID: <20200921144809.GV32101@casper.infradead.org>
+References: <20200921143434.707844-1-hch@lst.de>
+ <20200921143434.707844-3-hch@lst.de>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200921143434.707844-3-hch@lst.de>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+On Mon, Sep 21, 2020 at 04:34:25PM +0200, Christoph Hellwig wrote:
+>  {
+> -	WARN_ON(direction & ~(READ | WRITE));
+> +	WARN_ON(direction & ~(READ | WRITE | CHECK_IOVEC_ONLY));
 
-[ Upstream commit fcb2b70cdb194157678fb1a75f9ff499aeba3d2a ]
+This is now a no-op because:
 
-Add __init to reserve_memory_end, reserve_oldmem and remove_oldmem.
-Sometimes these functions are not inlined, and then the build
-complains about section mismatch.
+include/linux/fs.h:#define CHECK_IOVEC_ONLY -1
 
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/s390/kernel/setup.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I'd suggest we renumber it to 2?
 
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index 47692c78d09c5..fdc5e76e1f6b0 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -513,7 +513,7 @@ static struct notifier_block kdump_mem_nb = {
- /*
-  * Make sure that the area behind memory_end is protected
-  */
--static void reserve_memory_end(void)
-+static void __init reserve_memory_end(void)
- {
- #ifdef CONFIG_CRASH_DUMP
- 	if (ipl_info.type == IPL_TYPE_FCP_DUMP &&
-@@ -531,7 +531,7 @@ static void reserve_memory_end(void)
- /*
-  * Make sure that oldmem, where the dump is stored, is protected
-  */
--static void reserve_oldmem(void)
-+static void __init reserve_oldmem(void)
- {
- #ifdef CONFIG_CRASH_DUMP
- 	if (OLDMEM_BASE)
-@@ -543,7 +543,7 @@ static void reserve_oldmem(void)
- /*
-  * Make sure that oldmem, where the dump is stored, is protected
-  */
--static void remove_oldmem(void)
-+static void __init remove_oldmem(void)
- {
- #ifdef CONFIG_CRASH_DUMP
- 	if (OLDMEM_BASE)
--- 
-2.25.1
-
+(READ is 0, WRITE is 1.  This WARN_ON should probably be
+	WARN_ON(direction > CHECK_IOVEC_ONLY)
