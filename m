@@ -2,136 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98FF1271F13
-	for <lists+linux-s390@lfdr.de>; Mon, 21 Sep 2020 11:41:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 409A42721F0
+	for <lists+linux-s390@lfdr.de>; Mon, 21 Sep 2020 13:11:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgIUJlV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 21 Sep 2020 05:41:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46850 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726333AbgIUJlV (ORCPT
+        id S1726711AbgIULL2 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Mon, 21 Sep 2020 07:11:28 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:52280 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726576AbgIULL0 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 21 Sep 2020 05:41:21 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08L9Y8fk074423;
-        Mon, 21 Sep 2020 05:41:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=LEBz9TEx8uiFEPQqwx50Y1lcY4tdxdDUdEoGP0NDXDg=;
- b=F1ob1yrf0Y6/Rmv7hv95/yw8TZ1rfGfmnJZ4uUfIok3VEGmEViVRZmqh36IrgnNBSmsR
- 7a4S6Ira+h90T2k/fACErrLQKWr0k0pMA2MABKcgz/gQ1iHHoV+/rnF8p9padbKrVP93
- 6ES6kchi0iLhsUF/K11mozr2+Q84cro6A1laYIW4HfkpMOwpu1AIJFna6yz7GdzNd8ez
- 7tlBQtxOLfGGQd3faPDcVts2EYsaCV6rzKvzODNVbyJb7l3Xf3x3dVUTqSd14vA5bU4B
- nvebWvJofVwzUwxKDFYRnfsEmxejuA8Uc7KY4O5ABuglqQbabWXAyNAi45ZtGi6Mywxn EA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33psbtgr44-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Sep 2020 05:41:20 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08L9ZD8I080070;
-        Mon, 21 Sep 2020 05:41:20 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33psbtgr2f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Sep 2020 05:41:20 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08L9S71O013874;
-        Mon, 21 Sep 2020 09:41:18 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 33n9m7ry0q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Sep 2020 09:41:17 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08L9fFpN25100636
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Sep 2020 09:41:15 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F3AFAA405F;
-        Mon, 21 Sep 2020 09:41:14 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64763A405C;
-        Mon, 21 Sep 2020 09:41:14 +0000 (GMT)
-Received: from oc5500677777.ibm.com (unknown [9.145.29.18])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 21 Sep 2020 09:41:14 +0000 (GMT)
-Subject: Re: [PATCH 2/4] s390/pci: track whether util_str is valid in the
- zpci_dev
-To:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        alex.williamson@redhat.com, cohuck@redhat.com
-Cc:     pmorel@linux.ibm.com, borntraeger@de.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1600529318-8996-1-git-send-email-mjrosato@linux.ibm.com>
- <1600529318-8996-3-git-send-email-mjrosato@linux.ibm.com>
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-Message-ID: <d1bc0e6b-2a9b-3de0-4dd6-59e26d6c1da4@linux.ibm.com>
-Date:   Mon, 21 Sep 2020 11:41:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 21 Sep 2020 07:11:26 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-233-9UYq0ao9O6ejB4ujVxtO9g-1; Mon, 21 Sep 2020 12:11:22 +0100
+X-MC-Unique: 9UYq0ao9O6ejB4ujVxtO9g-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 21 Sep 2020 12:11:21 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 21 Sep 2020 12:11:21 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+Subject: RE: let import_iovec deal with compat_iovecs as well
+Thread-Topic: let import_iovec deal with compat_iovecs as well
+Thread-Index: AQHWjbnKEn35LxofhEeT1lmdzdUiWqlwBNiwgAJx3YCAAH2K4A==
+Date:   Mon, 21 Sep 2020 11:11:21 +0000
+Message-ID: <ac8a3691c4f5442f908c51298260ca0e@AcuMS.aculab.com>
+References: <20200918124533.3487701-1-hch@lst.de>
+ <2c7bf42ee4314484ae0177280cd8f5f3@AcuMS.aculab.com>
+ <20200921044125.GA16522@lst.de>
+In-Reply-To: <20200921044125.GA16522@lst.de>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <1600529318-8996-3-git-send-email-mjrosato@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-21_01:2020-09-21,2020-09-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
- mlxscore=0 suspectscore=0 impostorscore=0 phishscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009210069
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Matthew,
+> On Sat, Sep 19, 2020 at 02:24:10PM +0000, David Laight wrote:
+> > I thought about that change while writing my import_iovec() => iovec_import()
+> > patch - and thought that the io_uring code would (as usual) cause grief.
+> >
+> > Christoph - did you see those patches?
 
-On 9/19/20 5:28 PM, Matthew Rosato wrote:
-> We'll need to keep track of whether or not the byte string in util_str is
-> valid and thus needs to be passed to a vfio-pci passthrough device.
-> 
-> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> ---
->  arch/s390/include/asm/pci.h | 3 ++-
->  arch/s390/pci/pci_clp.c     | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-> index 882e233..32eb975 100644
-> --- a/arch/s390/include/asm/pci.h
-> +++ b/arch/s390/include/asm/pci.h
-> @@ -132,7 +132,8 @@ struct zpci_dev {
->  	u8		rid_available	: 1;
->  	u8		has_hp_slot	: 1;
->  	u8		is_physfn	: 1;
-> -	u8		reserved	: 5;
-> +	u8		util_avail	: 1;
+Link to cover email.
 
-Any reason you're not matching the util_str_avail name in the response struct?
-I think this is currently always an EBCDIC encoded string so the information that
-even if it looks like binary for anyone with a non-mainframe background
-it is in fact a string seems quite helpful.
-Other than that
+https://lkml.org/lkml/2020/9/15/661
 
-Acked-by: Niklas Schnelle <schnelle@linux.ibm.com>
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-> +	u8		reserved	: 4;
->  	unsigned int	devfn;		/* DEVFN part of the RID*/
->  
->  	struct mutex lock;
-> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-> index 48bf316..d011134 100644
-> --- a/arch/s390/pci/pci_clp.c
-> +++ b/arch/s390/pci/pci_clp.c
-> @@ -168,6 +168,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
->  	if (response->util_str_avail) {
->  		memcpy(zdev->util_str, response->util_str,
->  		       sizeof(zdev->util_str));
-> +		zdev->util_avail = 1;
->  	}
->  	zdev->mio_capable = response->mio_addr_avail;
->  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> 
