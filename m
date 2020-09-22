@@ -2,138 +2,161 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE63A2740A9
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Sep 2020 13:22:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 928862741E2
+	for <lists+linux-s390@lfdr.de>; Tue, 22 Sep 2020 14:15:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgIVLWy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Sep 2020 07:22:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30899 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726340AbgIVLWx (ORCPT
+        id S1726603AbgIVMPf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Sep 2020 08:15:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17216 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726505AbgIVMPf (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 22 Sep 2020 07:22:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600773773;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yWqXgKVOudzHOxmvqx4hQrEHAN/p0LKKU63yuRXDEKo=;
-        b=QqHuGPPaQvfTLtUe2hv4cyTZdYji4x5V4V+7SH1GJJoGzJxJ41NTGV93T0+Hrkp6BRvel4
-        M6jIGov58w/5TzhHaxtYfSS1Y2uhDJekZX/A6Gr5VOLOgeNTV9A5736nFcMN0tbfPU7gGm
-        7wpwXZvCwmGPXVHLpMWGpTPF/VR27HA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-239--ZDd0ej0N_e3pIzmhaBPTA-1; Tue, 22 Sep 2020 07:22:49 -0400
-X-MC-Unique: -ZDd0ej0N_e3pIzmhaBPTA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 15F1A800469;
-        Tue, 22 Sep 2020 11:22:47 +0000 (UTC)
-Received: from gondolin (ovpn-112-114.ams2.redhat.com [10.36.112.114])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BAC5B614F5;
-        Tue, 22 Sep 2020 11:22:41 +0000 (UTC)
-Date:   Tue, 22 Sep 2020 13:22:39 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     alex.williamson@redhat.com, schnelle@linux.ibm.com,
-        pmorel@linux.ibm.com, borntraeger@de.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] vfio-pci/zdev: use a device region to retrieve zPCI
- information
-Message-ID: <20200922132239.4be1e749.cohuck@redhat.com>
-In-Reply-To: <1600529318-8996-5-git-send-email-mjrosato@linux.ibm.com>
-References: <1600529318-8996-1-git-send-email-mjrosato@linux.ibm.com>
-        <1600529318-8996-5-git-send-email-mjrosato@linux.ibm.com>
-Organization: Red Hat GmbH
+        Tue, 22 Sep 2020 08:15:35 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08MC3LHt188500;
+        Tue, 22 Sep 2020 08:15:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=88Nbic0TnwmNWx6bfZZcvH3O8apXdxH108qrYCcHqWY=;
+ b=e95/b+GqIEQ70zg52cepQ6SIucKH+nj96J5V7vrr7SfAnKAlbA4ov4m6JZe6tLku1cmr
+ +uS4g6K8fsMS0n9srX/OXkf8bbbPlFQaw5uyqEsnC/bs44fxacyoxjYipg2uc0Q+CQUl
+ dhnY5qxBScN2OTJkY5tmliyDET+jWVrchWHICMr/1tj8SoHVAEC4jSQTt/pDWlAuktAt
+ 8+BXtg6toOLi+3qPE/8OegK6PZHlMHya94Hq8UJ/8a9mBibwCcUici+vPrnueryqfbBf
+ iqVq1WGrZNf7Zo2fyN7bhBMuV2LCpX0m6m6yxDFGIN070dEYG75p7emorGfpkB0yVlcs vQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33qdcyx41q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 22 Sep 2020 08:15:26 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08MC4FVl190981;
+        Tue, 22 Sep 2020 08:15:25 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33qdcyx3yr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 22 Sep 2020 08:15:25 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08MCC7tG011009;
+        Tue, 22 Sep 2020 12:15:21 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 33payu9sy3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 22 Sep 2020 12:15:21 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08MCDh8N32113106
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Sep 2020 12:13:43 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 319864C050;
+        Tue, 22 Sep 2020 12:15:18 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8582D4C04E;
+        Tue, 22 Sep 2020 12:15:17 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.94.117])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 22 Sep 2020 12:15:17 +0000 (GMT)
+Subject: Re: [PATCH v12 0/2] s390: virtio: let arch validate VIRTIO features
+To:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        mst@redhat.com
+Cc:     pasic@linux.ibm.com, frankja@linux.ibm.com, jasowang@redhat.com,
+        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+References: <1599728030-17085-1-git-send-email-pmorel@linux.ibm.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
+ J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
+ CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
+ 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
+ 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
+ +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
+ T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
+ OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
+ /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
+ IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABzUNDaHJpc3RpYW4g
+ Qm9ybnRyYWVnZXIgKDJuZCBJQk0gYWRkcmVzcykgPGJvcm50cmFlZ2VyQGxpbnV4LmlibS5j
+ b20+wsF5BBMBAgAjBQJdP/hMAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQEXu8
+ gLWmHHy/pA/+JHjpEnd01A0CCyfVnb5fmcOlQ0LdmoKWLWPvU840q65HycCBFTt6V62cDljB
+ kXFFxMNA4y/2wqU0H5/CiL963y3gWIiJsZa4ent+KrHl5GK1nIgbbesfJyA7JqlB0w/E/SuY
+ NRQwIWOo/uEvOgXnk/7+rtvBzNaPGoGiiV1LZzeaxBVWrqLtmdi1iulW/0X/AlQPuF9dD1Px
+ hx+0mPjZ8ClLpdSp5d0yfpwgHtM1B7KMuQPQZGFKMXXTUd3ceBUGGczsgIMipZWJukqMJiJj
+ QIMH0IN7XYErEnhf0GCxJ3xAn/J7iFpPFv8sFZTvukntJXSUssONnwiKuld6ttUaFhSuSoQg
+ OFYR5v7pOfinM0FcScPKTkrRsB5iUvpdthLq5qgwdQjmyINt3cb+5aSvBX2nNN135oGOtlb5
+ tf4dh00kUR8XFHRrFxXx4Dbaw4PKgV3QLIHKEENlqnthH5t0tahDygQPnSucuXbVQEcDZaL9
+ WgJqlRAAj0pG8M6JNU5+2ftTFXoTcoIUbb0KTOibaO9zHVeGegwAvPLLNlKHiHXcgLX1tkjC
+ DrvE2Z0e2/4q7wgZgn1kbvz7ZHQZB76OM2mjkFu7QNHlRJ2VXJA8tMXyTgBX6kq1cYMmd/Hl
+ OhFrAU3QO1SjCsXA2CDk9MM1471mYB3CTXQuKzXckJnxHkHOwU0ETpw8+AEQAJjyNXvMQdJN
+ t07BIPDtbAQk15FfB0hKuyZVs+0lsjPKBZCamAAexNRk11eVGXK/YrqwjChkk60rt3q5i42u
+ PpNMO9aS8cLPOfVft89Y654Qd3Rs1WRFIQq9xLjdLfHh0i0jMq5Ty+aiddSXpZ7oU6E+ud+X
+ Czs3k5RAnOdW6eV3+v10sUjEGiFNZwzN9Udd6PfKET0J70qjnpY3NuWn5Sp1ZEn6lkq2Zm+G
+ 9G3FlBRVClT30OWeiRHCYB6e6j1x1u/rSU4JiNYjPwSJA8EPKnt1s/Eeq37qXXvk+9DYiHdT
+ PcOa3aNCSbIygD3jyjkg6EV9ZLHibE2R/PMMid9FrqhKh/cwcYn9FrT0FE48/2IBW5mfDpAd
+ YvpawQlRz3XJr2rYZJwMUm1y+49+1ZmDclaF3s9dcz2JvuywNq78z/VsUfGz4Sbxy4ShpNpG
+ REojRcz/xOK+FqNuBk+HoWKw6OxgRzfNleDvScVmbY6cQQZfGx/T7xlgZjl5Mu/2z+ofeoxb
+ vWWM1YCJAT91GFvj29Wvm8OAPN/+SJj8LQazd9uGzVMTz6lFjVtH7YkeW/NZrP6znAwv5P1a
+ DdQfiB5F63AX++NlTiyA+GD/ggfRl68LheSskOcxDwgI5TqmaKtX1/8RkrLpnzO3evzkfJb1
+ D5qh3wM1t7PZ+JWTluSX8W25ABEBAAHCwV8EGAECAAkFAk6cPPgCGwwACgkQEXu8gLWmHHz8
+ 2w//VjRlX+tKF3szc0lQi4X0t+pf88uIsvR/a1GRZpppQbn1jgE44hgF559K6/yYemcvTR7r
+ 6Xt7cjWGS4wfaR0+pkWV+2dbw8Xi4DI07/fN00NoVEpYUUnOnupBgychtVpxkGqsplJZQpng
+ v6fauZtyEcUK3dLJH3TdVQDLbUcL4qZpzHbsuUnTWsmNmG4Vi0NsEt1xyd/Wuw+0kM/oFEH1
+ 4BN6X9xZcG8GYUbVUd8+bmio8ao8m0tzo4pseDZFo4ncDmlFWU6hHnAVfkAs4tqA6/fl7RLN
+ JuWBiOL/mP5B6HDQT9JsnaRdzqF73FnU2+WrZPjinHPLeE74istVgjbowvsgUqtzjPIG5pOj
+ cAsKoR0M1womzJVRfYauWhYiW/KeECklci4TPBDNx7YhahSUlexfoftltJA8swRshNA/M90/
+ i9zDo9ySSZHwsGxG06ZOH5/MzG6HpLja7g8NTgA0TD5YaFm/oOnsQVsf2DeAGPS2xNirmknD
+ jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
+ ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <de191c4d-cfe3-1414-53b8-e7a09cc15e32@de.ibm.com>
+Date:   Tue, 22 Sep 2020 14:15:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1599728030-17085-1-git-send-email-pmorel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-22_09:2020-09-21,2020-09-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=741 bulkscore=0 adultscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009220097
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, 19 Sep 2020 11:28:38 -0400
-Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+Michael,
 
-> Define a new configuration entry VFIO_PCI_ZDEV for VFIO/PCI.
+are you going to pick this series?
+
+
+On 10.09.20 10:53, Pierre Morel wrote:
+> Hi all,
 > 
-> When this s390-only feature is configured we initialize a new device
-> region, VFIO_REGION_SUBTYPE_IBM_ZPCI_CLP, to hold information provided
-> by the underlying hardware.
+> The goal of the series is to give a chance to the architecture
+> to validate VIRTIO device features.
 > 
-> This patch is based on work previously done by Pierre Morel.
+> I changed VIRTIO_F_IOMMU_PLATFORM to VIRTIO_F_ACCESS_PLATFORM
+> I forgot in drivers/virtio/Kconfig, and put back the inclusion
+> of virtio_config.h for the definition of the callback in
+> arch/s390/mm/init.c I wrongly removed in the last series.
 > 
-> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> ---
->  drivers/vfio/pci/Kconfig            |  13 ++
->  drivers/vfio/pci/Makefile           |   1 +
->  drivers/vfio/pci/vfio_pci.c         |   8 ++
->  drivers/vfio/pci/vfio_pci_private.h |  10 ++
->  drivers/vfio/pci/vfio_pci_zdev.c    | 242 ++++++++++++++++++++++++++++++++++++
-
-Maybe you want to add yourself to MAINTAINERS for the zdev-specific
-files? You're probably better suited to review changes to the
-zpci-specific code :)
-
->  5 files changed, 274 insertions(+)
->  create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
-
-(...)
-
-> +int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
-> +{
-> +	struct vfio_region_zpci_info *region;
-> +	struct zpci_dev *zdev;
-> +	size_t clp_offset;
-> +	int size;
-> +	int ret;
-> +
-> +	if (!vdev->pdev->bus)
-> +		return -ENODEV;
-> +
-> +	zdev = to_zpci(vdev->pdev);
-> +	if (!zdev)
-> +		return -ENODEV;
-> +
-> +	/* Calculate size needed for all supported CLP features  */
-> +	size = sizeof(*region) +
-> +	       sizeof(struct vfio_region_zpci_info_qpci) +
-> +	       sizeof(struct vfio_region_zpci_info_qpcifg) +
-> +	       (sizeof(struct vfio_region_zpci_info_util) + CLP_UTIL_STR_LEN) +
-> +	       (sizeof(struct vfio_region_zpci_info_pfip) +
-> +		CLP_PFIP_NR_SEGMENTS);
-> +
-> +	region = kmalloc(size, GFP_KERNEL);
-> +	if (!region)
-> +		return -ENOMEM;
-> +
-> +	/* Fill in header */
-> +	region->argsz = size;
-> +	clp_offset = region->offset = sizeof(struct vfio_region_zpci_info);
-> +
-> +	/* Fill the supported CLP features */
-> +	clp_offset = vfio_pci_zdev_add_qpci(zdev, region, clp_offset);
-> +	clp_offset = vfio_pci_zdev_add_qpcifg(zdev, region, clp_offset);
-> +	clp_offset = vfio_pci_zdev_add_util(zdev, region, clp_offset);
-> +	clp_offset = vfio_pci_zdev_add_pfip(zdev, region, clp_offset);
-
-So, the regions are populated once. Can any of the values in the
-hardware structures be modified by a guest? Or changed from the
-hardware side?
-
-> +
-> +	ret = vfio_pci_register_dev_region(vdev,
-> +		PCI_VENDOR_ID_IBM | VFIO_REGION_TYPE_PCI_VENDOR_TYPE,
-> +		VFIO_REGION_SUBTYPE_IBM_ZPCI_CLP, &vfio_pci_zdev_regops,
-> +		size, VFIO_REGION_INFO_FLAG_READ, region);
-> +	if (ret)
-> +		kfree(region);
-> +
-> +	return ret;
-> +}
-
+> Regards,
+> Pierre
+> 
+> 
+> Pierre Morel (2):
+>   virtio: let arch advertise guest's memory access restrictions
+>   s390: virtio: PV needs VIRTIO I/O device protection
+> 
+>  arch/s390/Kconfig             |  1 +
+>  arch/s390/mm/init.c           | 11 +++++++++++
+>  drivers/virtio/Kconfig        |  6 ++++++
+>  drivers/virtio/virtio.c       | 15 +++++++++++++++
+>  include/linux/virtio_config.h | 10 ++++++++++
+>  5 files changed, 43 insertions(+)
+> 
