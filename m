@@ -2,189 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67EB92737BC
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Sep 2020 02:58:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0688273A0D
+	for <lists+linux-s390@lfdr.de>; Tue, 22 Sep 2020 07:14:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbgIVA6i (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 21 Sep 2020 20:58:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51048 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726702AbgIVA6g (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 21 Sep 2020 20:58:36 -0400
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43F2023AA7
-        for <linux-s390@vger.kernel.org>; Tue, 22 Sep 2020 00:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1600736314;
-        bh=mO4DYr7N0RLjWZa37eU/VgHJpvS4aRf2iPegAH0iEtc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZvsltSwjMQQjZiYWUVNiO25TW5AUeBh08HcndWK7Xe35RS/hY9lrzTe2a+eWc93Vs
-         W63+BpGaM0/hEmj0H5NNiiF+B4Dto3ZfhGCuYSg/VL/ifmFADrmP21pnAjqQPEbpTf
-         GPIWfRyXGAJ/aoCVrG5ZycMOv5bit2MDE6Nn2vFw=
-Received: by mail-wm1-f42.google.com with SMTP id b79so1600431wmb.4
-        for <linux-s390@vger.kernel.org>; Mon, 21 Sep 2020 17:58:34 -0700 (PDT)
-X-Gm-Message-State: AOAM5300KuYw4lkrYste1yG+RaYhnoNE+oMfVJ5a/CwnuS1X2qM8U2CF
-        +3P2mwEnDqAeJWD56o/R4Mv9Y2XORLioOK7pYJIUiQ==
-X-Google-Smtp-Source: ABdhPJzzXZz8FGhOqJIy3SOg0uhFjle8bEWKILqBSG3M41u7cJLjsHkjpP4JLeSfHDUPrx8gGM2D3rP9PVKnU83D0i8=
-X-Received: by 2002:a1c:740c:: with SMTP id p12mr1761323wmc.176.1600736312695;
- Mon, 21 Sep 2020 17:58:32 -0700 (PDT)
+        id S1728290AbgIVFOR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Sep 2020 01:14:17 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:36682 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728880AbgIVFOO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Sep 2020 01:14:14 -0400
+X-Greylist: delayed 4495 seconds by postgrey-1.27 at vger.kernel.org; Tue, 22 Sep 2020 01:14:13 EDT
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08M3nSF0149212;
+        Tue, 22 Sep 2020 03:59:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=jXS0BhXEXcUXKw/flIqFt5Jc5tLUcUcCbsrIV4rFncU=;
+ b=rCPthy/UhhGLTz5o722CNXEvk0HZbIOyMjoqxffuEyMTiV2XP+7c0US/H/3eLzDV0f/i
+ i1BpBWCCsIRtraCqIMPABhh/MRe7LpvZaVyAaVPQIsqPan8z1Ij0iRhL1bqq/sHoKBMg
+ twI4eiV+Go1RxQU2RPRAhZ8Re6i9xEDjoda02IHMFEsoqUjZYrtSVDkMJ1+esMovm1tv
+ LzF81C/5iN6hL2eqfKWCa+JgusiabdfSGnCEdiVCnJVjPDzMWd+QpP9ORa96PK2Etmpm
+ uIJsr53EhDFZ6EpVRaWWZLRl5o+zuOKmkL3VWb3Ogjzd9tLJY1p+c1LPKFz7ki2tzkrI 0w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 33n7gad5y2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 22 Sep 2020 03:59:17 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08M3tLWW020837;
+        Tue, 22 Sep 2020 03:57:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 33nuwxk71m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Sep 2020 03:57:14 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08M3vDkh009418;
+        Tue, 22 Sep 2020 03:57:13 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 21 Sep 2020 20:57:13 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Benjamin Block <bblock@linux.ibm.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Fedor Loshakov <loshakov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH 0/2] zfcp: small changes for 5.10
+Date:   Mon, 21 Sep 2020 23:56:45 -0400
+Message-Id: <160074695008.411.13328105917017372358.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <cover.1599765652.git.bblock@linux.ibm.com>
+References: <cover.1599765652.git.bblock@linux.ibm.com>
 MIME-Version: 1.0
-References: <CAK8P3a2Mi+1yttyGk4k7HxRVrMtmFqJewouVhynqUL0PJycmog@mail.gmail.com>
- <D0791499-1190-4C3F-A984-0A313ECA81C7@amacapital.net> <563138b5-7073-74bc-f0c5-b2bad6277e87@gmail.com>
- <486c92d0-0f2e-bd61-1ab8-302524af5e08@gmail.com> <CALCETrW3rwGsgfLNnu_0JAcL5jvrPVTLTWM3JpbB5P9Hye6Fdw@mail.gmail.com>
- <d5c6736a-2cb4-4e22-78da-a667bda5c05a@gmail.com>
-In-Reply-To: <d5c6736a-2cb4-4e22-78da-a667bda5c05a@gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 21 Sep 2020 17:58:20 -0700
-X-Gmail-Original-Message-ID: <CALCETrUEC81va8-fuUXG1uA5rbKxnKDYsDOXC70_HtKD4LAeAg@mail.gmail.com>
-Message-ID: <CALCETrUEC81va8-fuUXG1uA5rbKxnKDYsDOXC70_HtKD4LAeAg@mail.gmail.com>
-Subject: Re: [PATCH 1/9] kernel: add a PF_FORCE_COMPAT flag
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        David Howells <dhowells@redhat.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>, io-uring@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Network Development <netdev@vger.kernel.org>,
-        keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9751 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 adultscore=0
+ bulkscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009220031
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9751 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
+ mlxscore=0 suspectscore=0 impostorscore=0 malwarescore=0 spamscore=0
+ phishscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009220030
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Sep 21, 2020 at 5:24 PM Pavel Begunkov <asml.silence@gmail.com> wro=
-te:
->
->
->
-> On 22/09/2020 02:51, Andy Lutomirski wrote:
-> > On Mon, Sep 21, 2020 at 9:15 AM Pavel Begunkov <asml.silence@gmail.com>=
- wrote:
-> >>
-> >> On 21/09/2020 19:10, Pavel Begunkov wrote:
-> >>> On 20/09/2020 01:22, Andy Lutomirski wrote:
-> >>>>
-> >>>>> On Sep 19, 2020, at 2:16 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >>>>>
-> >>>>> =EF=BB=BFOn Sat, Sep 19, 2020 at 6:21 PM Andy Lutomirski <luto@kern=
-el.org> wrote:
-> >>>>>>> On Fri, Sep 18, 2020 at 8:16 AM Christoph Hellwig <hch@lst.de> wr=
-ote:
-> >>>>>>> On Fri, Sep 18, 2020 at 02:58:22PM +0100, Al Viro wrote:
-> >>>>>>>> Said that, why not provide a variant that would take an explicit
-> >>>>>>>> "is it compat" argument and use it there?  And have the normal
-> >>>>>>>> one pass in_compat_syscall() to that...
-> >>>>>>>
-> >>>>>>> That would help to not introduce a regression with this series ye=
-s.
-> >>>>>>> But it wouldn't fix existing bugs when io_uring is used to access
-> >>>>>>> read or write methods that use in_compat_syscall().  One example =
-that
-> >>>>>>> I recently ran into is drivers/scsi/sg.c.
-> >>>>>
-> >>>>> Ah, so reading /dev/input/event* would suffer from the same issue,
-> >>>>> and that one would in fact be broken by your patch in the hypotheti=
-cal
-> >>>>> case that someone tried to use io_uring to read /dev/input/event on=
- x32...
-> >>>>>
-> >>>>> For reference, I checked the socket timestamp handling that has a
-> >>>>> number of corner cases with time32/time64 formats in compat mode,
-> >>>>> but none of those appear to be affected by the problem.
-> >>>>>
-> >>>>>> Aside from the potentially nasty use of per-task variables, one th=
-ing
-> >>>>>> I don't like about PF_FORCE_COMPAT is that it's one-way.  If we're
-> >>>>>> going to have a generic mechanism for this, shouldn't we allow a f=
-ull
-> >>>>>> override of the syscall arch instead of just allowing forcing comp=
-at
-> >>>>>> so that a compat syscall can do a non-compat operation?
-> >>>>>
-> >>>>> The only reason it's needed here is that the caller is in a kernel
-> >>>>> thread rather than a system call. Are there any possible scenarios
-> >>>>> where one would actually need the opposite?
-> >>>>>
-> >>>>
-> >>>> I can certainly imagine needing to force x32 mode from a kernel thre=
-ad.
-> >>>>
-> >>>> As for the other direction: what exactly are the desired bitness/arc=
-h semantics of io_uring?  Is the operation bitness chosen by the io_uring c=
-reation or by the io_uring_enter() bitness?
-> >>>
-> >>> It's rather the second one. Even though AFAIR it wasn't discussed
-> >>> specifically, that how it works now (_partially_).
-> >>
-> >> Double checked -- I'm wrong, that's the former one. Most of it is base=
-d
-> >> on a flag that was set an creation.
-> >>
-> >
-> > Could we get away with making io_uring_enter() return -EINVAL (or
-> > maybe -ENOTTY?) if you try to do it with bitness that doesn't match
-> > the io_uring?  And disable SQPOLL in compat mode?
->
-> Something like below. If PF_FORCE_COMPAT or any other solution
-> doesn't lend by the time, I'll take a look whether other io_uring's
-> syscalls need similar checks, etc.
->
->
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 0458f02d4ca8..aab20785fa9a 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -8671,6 +8671,10 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, =
-u32, to_submit,
->         if (ctx->flags & IORING_SETUP_R_DISABLED)
->                 goto out;
->
-> +       ret =3D -EINVAl;
-> +       if (ctx->compat !=3D in_compat_syscall())
-> +               goto out;
-> +
+On Thu, 10 Sep 2020 21:49:14 +0200, Benjamin Block wrote:
 
-This seems entirely reasonable to me.  Sharing an io_uring ring
-between programs with different ABIs seems a bit nutty.
+> here are some small changes for zfcp I'd like to include in 5.10 if
+> possible. They apply cleanly on Martin's `scsi-queue`, and James' `misc`
+> branches.
+> 
+> Both patches make the driver a bit cleaner, and hopefully easier to
+> maintain.
+> 
+> [...]
 
->         /*
->          * For SQ polling, the thread will do all submissions and complet=
-ions.
->          * Just return the requested submit count, and wake the thread if
-> @@ -9006,6 +9010,10 @@ static int io_uring_create(unsigned entries, struc=
-t io_uring_params *p,
->         if (ret)
->                 goto err;
->
-> +       ret =3D -EINVAL;
-> +       if (ctx->compat)
-> +               goto err;
-> +
+Applied to 5.10/scsi-queue, thanks!
 
-I may be looking at a different kernel than you, but aren't you
-preventing creating an io_uring regardless of whether SQPOLL is
-requested?
+[1/2] scsi: zfcp: Use list_first_entry_or_null() in zfcp_erp_thread()
+      https://git.kernel.org/mkp/scsi/c/addf13729615
+[2/2] scsi: zfcp: Clarify access to erp_action in zfcp_fsf_req_complete()
+      https://git.kernel.org/mkp/scsi/c/d251193d1732
 
->         /* Only gets the ring fd, doesn't install it in the file table */
->         fd =3D io_uring_get_fd(ctx, &file);
->         if (fd < 0) {
-> --
-> Pavel Begunkov
+-- 
+Martin K. Petersen	Oracle Linux Engineering
