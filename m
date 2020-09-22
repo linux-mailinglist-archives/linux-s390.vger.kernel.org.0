@@ -2,157 +2,245 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1550273FD8
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Sep 2020 12:47:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D25CA274001
+	for <lists+linux-s390@lfdr.de>; Tue, 22 Sep 2020 12:54:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbgIVKrQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Sep 2020 06:47:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1076 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726423AbgIVKrQ (ORCPT
+        id S1726513AbgIVKy1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Sep 2020 06:54:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:27379 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726604AbgIVKyY (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 22 Sep 2020 06:47:16 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08MAXQZr152375;
-        Tue, 22 Sep 2020 06:47:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=KFCG15WMf/4iA1ag+FZ0jOmqpdVA0pMM6w3vzBIZyWI=;
- b=nf7MVkX0/6dHRRpGPOj5iNy2BrlIBZCyctm81xcVZbNCb2JCmTtTs2yNHH2yktvoZZUA
- lqp4n04nkg1w70VMnkFaOrRWqGzyZ0Sqav9czvxk068WzFvNbj312lUghf8iUvTNHtxV
- Oqm31D0zPIX7hmcNY1hVPE0uYSnlwv/cjN4RIgnijf4+LRoCs9Sav7yMdWM7R3+Y4fk9
- W732DYbNk+aD9bompI4RfUu5d0t/V5XtGP8wb2t7lydh0vRYKvA+Du4zZudnaXVlE8sb
- 1EjALoOynDmVeHSNhGVqv/d4VTh/6fmQ0hm4j0GZw1jkQCmJb0xVoa90YVn6t17Dgl0p Bg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33qf6c93jh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 22 Sep 2020 06:47:16 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08MAkae5037623;
-        Tue, 22 Sep 2020 06:47:15 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33qf6c93h8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 22 Sep 2020 06:47:15 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08MAgPqH027712;
-        Tue, 22 Sep 2020 10:47:12 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04ams.nl.ibm.com with ESMTP id 33payu9qc4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 22 Sep 2020 10:47:12 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08MAl5rm30736770
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Sep 2020 10:47:05 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9FC99AE045;
-        Tue, 22 Sep 2020 10:47:05 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 48581AE056;
-        Tue, 22 Sep 2020 10:47:05 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.94.117])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 22 Sep 2020 10:47:05 +0000 (GMT)
-Subject: Re: [PATCH] s390/zcrypt: Fix a size determination in
- zcrypt_unlocked_ioctl()
-To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>,
+        Tue, 22 Sep 2020 06:54:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600772062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dpEhdICvzGe/Q7jOr7ZqeEuz8h6Dl2ELME+BxUXl1pc=;
+        b=J88WeBsNe3RqGRIbZS/A0n626FtMvdkoo+aJ815wIra820eNojjrVkfO7AwglxV9sYXOd6
+        c9zfGBTkuPnDeAsIHx7XscPiOQowDDCRkZI5ggPhRKRxB5hEncbImKGhmuoX6RcdBmjkFw
+        3n2jERFA1TsZfDsFP7ILdMrN+EmL9uY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-335-aCb-NBV0PgezXXKXYSHEhw-1; Tue, 22 Sep 2020 06:54:18 -0400
+X-MC-Unique: aCb-NBV0PgezXXKXYSHEhw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CF601007479;
+        Tue, 22 Sep 2020 10:54:17 +0000 (UTC)
+Received: from gondolin (ovpn-112-114.ams2.redhat.com [10.36.112.114])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B91A78803;
+        Tue, 22 Sep 2020 10:54:11 +0000 (UTC)
+Date:   Tue, 22 Sep 2020 12:54:09 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     alex.williamson@redhat.com, schnelle@linux.ibm.com,
+        pmorel@linux.ibm.com, borntraeger@de.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     freude@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        schwidefsky@de.ibm.com, linux-s390@vger.kernel.org
-References: <20200922103059.859-1-zhenzhong.duan@gmail.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <0091c0b5-ea48-dce2-1180-49a6b87113e4@de.ibm.com>
-Date:   Tue, 22 Sep 2020 12:47:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+Subject: Re: [PATCH 3/4] vfio-pci/zdev: define the vfio_zdev header
+Message-ID: <20200922125409.4127797c.cohuck@redhat.com>
+In-Reply-To: <1600529318-8996-4-git-send-email-mjrosato@linux.ibm.com>
+References: <1600529318-8996-1-git-send-email-mjrosato@linux.ibm.com>
+        <1600529318-8996-4-git-send-email-mjrosato@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200922103059.859-1-zhenzhong.duan@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-22_09:2020-09-21,2020-09-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- malwarescore=0 priorityscore=1501 mlxlogscore=999 suspectscore=0
- spamscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009220088
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 22.09.20 12:30, Zhenzhong Duan wrote:
-> With new ioctl(ZCRYPT_PERDEV_REQCNT) introduced, kernel use dynamic
-> allocation for the 256 element array of unsigned integers for the number
-> of successfully completed requests per device. It's not a static array of
-> 64 elements any more.
-> 
-> Fixes: af4a72276d49 ("s390/zcrypt: Support up to 256 crypto adapters.")
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+On Sat, 19 Sep 2020 11:28:37 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-Thanks for the patch, but we have a similar patch already queued internally.
-(Found with coccicheck). 
+> We define a new device region in vfio.h to be able to get the ZPCI CLP
+> information by reading this region from userspace.
+> 
+> We create a new file, vfio_zdev.h to define the structure of the new
+> region defined in vfio.h
+> 
+> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
 > ---
->  drivers/s390/crypto/zcrypt_api.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/uapi/linux/vfio.h      |   5 ++
+>  include/uapi/linux/vfio_zdev.h | 116 +++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 121 insertions(+)
+>  create mode 100644 include/uapi/linux/vfio_zdev.h
 > 
-> diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
-> index 4dbbfd88262c..5c3f3f89e2f3 100644
-> --- a/drivers/s390/crypto/zcrypt_api.c
-> +++ b/drivers/s390/crypto/zcrypt_api.c
-> @@ -1449,7 +1449,7 @@ static long zcrypt_unlocked_ioctl(struct file *filp, unsigned int cmd,
->  		if (!reqcnt)
->  			return -ENOMEM;
->  		zcrypt_perdev_reqcnt(reqcnt, AP_DEVICES);
-> -		if (copy_to_user((int __user *) arg, reqcnt, sizeof(reqcnt)))
-> +		if (copy_to_user((int __user *) arg, reqcnt, sizeof(u32) * AP_DEVICES))
->  			rc = -EFAULT;
->  		kfree(reqcnt);
->  		return rc;
-> 
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 9204705..65eb367 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -326,6 +326,11 @@ struct vfio_region_info_cap_type {
+>   * to do TLB invalidation on a GPU.
+>   */
+>  #define VFIO_REGION_SUBTYPE_IBM_NVLINK2_ATSD	(1)
+> +/*
+> + * IBM zPCI specific hardware feature information for a devcie.  The contents
+> + * of this region are mapped by struct vfio_region_zpci_info.
+> + */
+> +#define VFIO_REGION_SUBTYPE_IBM_ZPCI_CLP	(2)
+
+This is not really for a 10de vendor, but for all pci devices accessed
+via zpci, isn't it?
+
+We obviously want to avoid collisions here; not really sure how to
+cover all possible vendors. Maybe just pick a high number?
+
+>  
+>  /* sub-types for VFIO_REGION_TYPE_GFX */
+>  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
+> diff --git a/include/uapi/linux/vfio_zdev.h b/include/uapi/linux/vfio_zdev.h
+> new file mode 100644
+> index 0000000..c9e4891
+> --- /dev/null
+> +++ b/include/uapi/linux/vfio_zdev.h
+> @@ -0,0 +1,116 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +/*
+> + * Region definition for ZPCI devices
+> + *
+> + * Copyright IBM Corp. 2020
+> + *
+> + * Author(s): Pierre Morel <pmorel@linux.ibm.com>
+> + *            Matthew Rosato <mjrosato@linux.ibm.com>
+> + */
+> +
+> +#ifndef _VFIO_ZDEV_H_
+> +#define _VFIO_ZDEV_H_
+> +
+> +#include <linux/types.h>
+> +
+> +/**
+> + * struct vfio_region_zpci_info - ZPCI information
+> + *
+> + * This region provides zPCI specific hardware feature information for a
+> + * device.
+> + *
+> + * The ZPCI information structure is presented as a chain of CLP features
+
+"CLP features" == "features returned by the CLP instruction", I guess?
+Maybe mention that explicitly?
+
+> + * defined below. argsz provides the size of the entire region, and offset
+> + * provides the location of the first CLP feature in the chain.
+> + *
+> + */
+> +struct vfio_region_zpci_info {
+> +	__u32 argsz;		/* Size of entire payload */
+> +	__u32 offset;		/* Location of first entry */
+> +} __packed;
+
+This '__packed' annotation seems redundant. I think that all of these
+structures should be defined in a way that packing is unneeded (which
+seems to be the case on a quick browse.)
+
+> +
+> +/**
+> + * struct vfio_region_zpci_info_hdr - ZPCI header information
+> + *
+> + * This structure is included at the top of each CLP feature to define what
+> + * type of CLP feature is presented / the structure version. The next value
+> + * defines the offset of the next CLP feature, and is an offset from the very
+> + * beginning of the region (vfio_region_zpci_info).
+> + *
+> + * Each CLP feature must have it's own unique 'id'.
+
+s/it's/its/
+
+Is the 'id' something that is already provided by the CLP instruction?
+
+> + */
+> +struct vfio_region_zpci_info_hdr {
+> +	__u16 id;		/* Identifies the CLP type */
+> +	__u16	version;	/* version of the CLP data */
+> +	__u32 next;		/* Offset of next entry */
+> +} __packed;
+> +
+> +/**
+> + * struct vfio_region_zpci_info_qpci - Initial Query PCI information
+> + *
+> + * This region provides an initial set of data from the Query PCI Function
+
+What does 'initial' mean in this context? Information you get for a
+freshly initialized function?
+
+> + * CLP.
+> + */
+> +#define VFIO_REGION_ZPCI_INFO_QPCI	1
+> +
+> +struct vfio_region_zpci_info_qpci {
+> +	struct vfio_region_zpci_info_hdr hdr;
+> +	__u64 start_dma;	/* Start of available DMA addresses */
+> +	__u64 end_dma;		/* End of available DMA addresses */
+> +	__u16 pchid;		/* Physical Channel ID */
+> +	__u16 vfn;		/* Virtual function number */
+> +	__u16 fmb_length;	/* Measurement Block Length (in bytes) */
+> +	__u8 pft;		/* PCI Function Type */
+> +	__u8 gid;		/* PCI function group ID */
+> +} __packed;
+> +
+> +
+> +/**
+> + * struct vfio_region_zpci_info_qpcifg - Initial Query PCI Function Group info
+> + *
+> + * This region provides an initial set of data from the Query PCI Function
+> + * Group CLP.
+> + */
+> +#define VFIO_REGION_ZPCI_INFO_QPCIFG	2
+> +
+> +struct vfio_region_zpci_info_qpcifg {
+> +	struct vfio_region_zpci_info_hdr hdr;
+> +	__u64 dasm;		/* DMA Address space mask */
+> +	__u64 msi_addr;		/* MSI address */
+> +	__u64 flags;
+> +#define VFIO_PCI_ZDEV_FLAGS_REFRESH 1 /* Use program-specified TLB refresh */
+> +	__u16 mui;		/* Measurement Block Update Interval */
+> +	__u16 noi;		/* Maximum number of MSIs */
+> +	__u16 maxstbl;		/* Maximum Store Block Length */
+> +	__u8 version;		/* Supported PCI Version */
+> +} __packed;
+> +
+> +/**
+> + * struct vfio_region_zpci_info_util - Utility String
+> + *
+> + * This region provides the utility string for the associated device, which is
+> + * a device identifier string.
+
+Is there an upper boundary for this string?
+
+Is this a classic NUL-terminated string, or a list of EBCDIC characters?
+
+> + */
+> +#define VFIO_REGION_ZPCI_INFO_UTIL	3
+> +
+> +struct vfio_region_zpci_info_util {
+> +	struct vfio_region_zpci_info_hdr hdr;
+> +	__u32 size;
+> +	__u8 util_str[];
+> +} __packed;
+> +
+> +/**
+> + * struct vfio_region_zpci_info_pfip - PCI Function Path
+> + *
+> + * This region provides the PCI function path string, which is an identifier
+> + * that describes the internal hardware path of the device.
+
+Same question here.
+
+> + */
+> +#define VFIO_REGION_ZPCI_INFO_PFIP	4
+> +
+> +struct vfio_region_zpci_info_pfip {
+> +struct vfio_region_zpci_info_hdr hdr;
+> +	__u32 size;
+> +	__u8 pfip[];
+> +} __packed;
+> +
+> +#endif
+
