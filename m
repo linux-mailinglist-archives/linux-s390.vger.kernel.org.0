@@ -2,96 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0688273A0D
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Sep 2020 07:14:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 510A1273A83
+	for <lists+linux-s390@lfdr.de>; Tue, 22 Sep 2020 08:08:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgIVFOR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Sep 2020 01:14:17 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:36682 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728880AbgIVFOO (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Sep 2020 01:14:14 -0400
-X-Greylist: delayed 4495 seconds by postgrey-1.27 at vger.kernel.org; Tue, 22 Sep 2020 01:14:13 EDT
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08M3nSF0149212;
-        Tue, 22 Sep 2020 03:59:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=jXS0BhXEXcUXKw/flIqFt5Jc5tLUcUcCbsrIV4rFncU=;
- b=rCPthy/UhhGLTz5o722CNXEvk0HZbIOyMjoqxffuEyMTiV2XP+7c0US/H/3eLzDV0f/i
- i1BpBWCCsIRtraCqIMPABhh/MRe7LpvZaVyAaVPQIsqPan8z1Ij0iRhL1bqq/sHoKBMg
- twI4eiV+Go1RxQU2RPRAhZ8Re6i9xEDjoda02IHMFEsoqUjZYrtSVDkMJ1+esMovm1tv
- LzF81C/5iN6hL2eqfKWCa+JgusiabdfSGnCEdiVCnJVjPDzMWd+QpP9ORa96PK2Etmpm
- uIJsr53EhDFZ6EpVRaWWZLRl5o+zuOKmkL3VWb3Ogjzd9tLJY1p+c1LPKFz7ki2tzkrI 0w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 33n7gad5y2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 22 Sep 2020 03:59:17 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08M3tLWW020837;
-        Tue, 22 Sep 2020 03:57:16 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 33nuwxk71m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Sep 2020 03:57:14 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08M3vDkh009418;
-        Tue, 22 Sep 2020 03:57:13 GMT
-Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 21 Sep 2020 20:57:13 -0700
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Benjamin Block <bblock@linux.ibm.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Fedor Loshakov <loshakov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH 0/2] zfcp: small changes for 5.10
-Date:   Mon, 21 Sep 2020 23:56:45 -0400
-Message-Id: <160074695008.411.13328105917017372358.b4-ty@oracle.com>
+        id S1728592AbgIVGH5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Sep 2020 02:07:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgIVGH5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Sep 2020 02:07:57 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 210C7C061755;
+        Mon, 21 Sep 2020 23:07:57 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id cr8so8908585qvb.10;
+        Mon, 21 Sep 2020 23:07:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YtWt5LT1rZHUieitxqoZL94pXE9Kni8HrVa9DLq6ra8=;
+        b=iuUH7P98MAjsRlYJLK0TJlVvZeCzmYl9RV4YJokXxQqlQv7Wl7kR5ZHCp9MtlOlzKk
+         /1RP01X5p+SM3kTFYgEvk62jz44d/piRqzh8EXdfCfQmyBgRRa3jZ0xJgGBfL2TYW6tn
+         ede/YsJq2RHhP6OjTLHxVUg/RHQ1nexItE8RxNdloYtrMpaYRUzbXPWF7VnOLjpzZums
+         CY/p2InTF6IIF4O6CRVc14nFUBzT4GmCjfKIYzruKsehGb+bT4uXZzhSESh7tX6yA1Cj
+         L4hsw6xW7izWpTL7qRTsyjLb9Wnwa1exn47NZ3C9KFSk/ArtkDmN9SScS3ZUa1kEKfmM
+         R/1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YtWt5LT1rZHUieitxqoZL94pXE9Kni8HrVa9DLq6ra8=;
+        b=oGZDQWGrmItyu9iwgVTrB/b7P1W8R8ccSyLxPHDB6eGzDxyWwu6kLGvV7+m1Z2fWzB
+         ZhSJNfntZxni5jWn/EfXlUkekefEheQ4wlDTmE+JzuWWSZdLYX5IQ0VfNgDPTBpvpdcd
+         cfyPQNQQq9X6CjfdGMeqnPXeB/GtSULner2DhRsO2WTKn6wHR3chfNJ5+0POo454lt9w
+         JQLlH4fifPeIdK5FEXhODDYb+Lt+IpYUqK1D0+9wnTE9OhTQE99F7BJfnw1JSz3UnuIO
+         4mmmYRJnRE6ZTO5tNnU5dMvy4Ns+SF0pS6V+qhGUYJFAyKTWRXrepZUPjJRWRFq2dco7
+         ZNCQ==
+X-Gm-Message-State: AOAM531fUmhp3xVMW/Hvw06mxLba0JQRikiSEPSarFJlHbKAJ/xutVOL
+        MC4ltG8NrtozdsZgPyyLjTQ=
+X-Google-Smtp-Source: ABdhPJzYAkkRErXQKS5nPd9e9nFfwFnEtBGJUL1AQh/5PWzM/3iOlyBSVL9xx1MY6K5RCdOgRUtuYQ==
+X-Received: by 2002:a0c:8b02:: with SMTP id q2mr4425388qva.48.1600754876169;
+        Mon, 21 Sep 2020 23:07:56 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id x3sm12523533qta.53.2020.09.21.23.07.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Sep 2020 23:07:55 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     david@redhat.com
+Cc:     akpm@linux-foundation.org, ardb@kernel.org, bhe@redhat.com,
+        dan.j.williams@intel.com, jgg@ziepe.ca, keescook@chromium.org,
+        linux-acpi@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-s390@vger.kernel.org,
+        mhocko@suse.com, pankaj.gupta.linux@gmail.com,
+        richardw.yang@linux.intel.com,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] kernel/resource: Fix use of ternary condition in release_mem_region_adjustable
+Date:   Mon, 21 Sep 2020 23:07:48 -0700
+Message-Id: <20200922060748.2452056-1-natechancellor@gmail.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <cover.1599765652.git.bblock@linux.ibm.com>
-References: <cover.1599765652.git.bblock@linux.ibm.com>
+In-Reply-To: <20200911103459.10306-2-david@redhat.com>
+References: <20200911103459.10306-2-david@redhat.com>
 MIME-Version: 1.0
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9751 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 adultscore=0
- bulkscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009220031
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9751 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 bulkscore=0
- mlxscore=0 suspectscore=0 impostorscore=0 malwarescore=0 spamscore=0
- phishscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009220030
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 10 Sep 2020 21:49:14 +0200, Benjamin Block wrote:
+Clang warns:
 
-> here are some small changes for zfcp I'd like to include in 5.10 if
-> possible. They apply cleanly on Martin's `scsi-queue`, and James' `misc`
-> branches.
-> 
-> Both patches make the driver a bit cleaner, and hopefully easier to
-> maintain.
-> 
-> [...]
+kernel/resource.c:1281:53: warning: operator '?:' has lower precedence
+than '|'; '|' will be evaluated first
+[-Wbitwise-conditional-parentheses]
+        new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
+                                 ~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+kernel/resource.c:1281:53: note: place parentheses around the '|'
+expression to silence this warning
+        new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
+                                 ~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+kernel/resource.c:1281:53: note: place parentheses around the '?:'
+expression to evaluate it first
+        new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
+                                                           ^
+                                              (                              )
+1 warning generated.
 
-Applied to 5.10/scsi-queue, thanks!
+Add the parentheses as it was clearly intended for the ternary condition
+to be evaluated first.
 
-[1/2] scsi: zfcp: Use list_first_entry_or_null() in zfcp_erp_thread()
-      https://git.kernel.org/mkp/scsi/c/addf13729615
-[2/2] scsi: zfcp: Clarify access to erp_action in zfcp_fsf_req_complete()
-      https://git.kernel.org/mkp/scsi/c/d251193d1732
+Fixes: 5fd23bd0d739 ("kernel/resource: make release_mem_region_adjustable() never fail")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1159
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
 
+Presumably, this will be squashed but I included a fixes tag
+nonetheless. Apologies if this has already been noticed and fixed
+already, I did not find anything on LKML.
+
+ kernel/resource.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/resource.c b/kernel/resource.c
+index ca2a666e4317..3ae2f56cc79d 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -1278,7 +1278,7 @@ void release_mem_region_adjustable(resource_size_t start, resource_size_t size)
+ 	 * similarly).
+ 	 */
+ retry:
+-	new_res = alloc_resource(GFP_KERNEL | alloc_nofail ? __GFP_NOFAIL : 0);
++	new_res = alloc_resource(GFP_KERNEL | (alloc_nofail ? __GFP_NOFAIL : 0));
+ 
+ 	p = &parent->child;
+ 	write_lock(&resource_lock);
+
+base-commit: 40ee82f47bf297e31d0c47547cd8f24ede52415a
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.28.0
+
