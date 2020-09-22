@@ -2,112 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C50BD273F30
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Sep 2020 12:05:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 966EF273FA1
+	for <lists+linux-s390@lfdr.de>; Tue, 22 Sep 2020 12:31:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgIVKFm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Sep 2020 06:05:42 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64822 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726341AbgIVKFm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 22 Sep 2020 06:05:42 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08MA3Uvs023543;
-        Tue, 22 Sep 2020 06:05:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to : sender; s=pp1;
- bh=tDnVg5R8NbDuTgFyY82/UmIpQB8FASy8rzMuZwSzmcM=;
- b=U8/jxPZQevcnuxfMNtfV8HVIPb9piqqr6PozbvJ7VfSdSEylflFgRIKOegdgZS0MEyAe
- vb7uen++dphsbQ43WCXf6z/MRNYHQ1LnmILGZOBLS43oSlbZQE/5KSl8liPSaQmBntKn
- BOZaUQAAbHd8OHIguymFD0ZKxQGVlk0sRYpHE5hfQ9WCyRs6iwGF72bFfP1oN/fYyU/d
- tGTx7yIXUrF8DGDBEfOktSZt9I9ILdVXuuYule2sXaWomAe6RZHjOSGOzYBC0aWBTBgD
- WCFvijJFvBR4ZnpoMzmSzsi8EB1UkTglDzOx1j+bew2MP3FXgrSGE1A/Lm251mJYW7Z6 eg== 
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33qdcytxtg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 22 Sep 2020 06:05:38 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08MA3vOX003630;
-        Tue, 22 Sep 2020 10:05:36 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma01fra.de.ibm.com with ESMTP id 33n9m7sh1a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 22 Sep 2020 10:05:35 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08MA5VNV30409162
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Sep 2020 10:05:31 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7C324C05A;
-        Tue, 22 Sep 2020 10:05:32 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D27C64C050;
-        Tue, 22 Sep 2020 10:05:32 +0000 (GMT)
-Received: from t480-pf1aa2c2 (unknown [9.145.36.123])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 22 Sep 2020 10:05:32 +0000 (GMT)
-Received: from bblock by t480-pf1aa2c2 with local (Exim 4.94)
-        (envelope-from <bblock@linux.ibm.com>)
-        id 1kKfAx-0002Jg-Kk; Tue, 22 Sep 2020 12:05:31 +0200
-Date:   Tue, 22 Sep 2020 12:05:31 +0200
-From:   Benjamin Block <bblock@linux.ibm.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        id S1726508AbgIVKbR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Sep 2020 06:31:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgIVKbR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Sep 2020 06:31:17 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B0DCC061755;
+        Tue, 22 Sep 2020 03:31:17 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id l126so12034844pfd.5;
+        Tue, 22 Sep 2020 03:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4/HgkdPfwvx9hh+ecBAVGHQ12vx6oJVsY/D1hoj+iSw=;
+        b=dDn/CygKuT/cyzJ653BoeDbc8tMs8JGPl9cJTnkBnqPrn6KD6JuIcd6Z6R6j7Tcbwq
+         gfHocxme2l0h+bH/3F6E8Xe8DEbH8IuCkksDDXWeHkzgufezRBnoaEL/l3hKdeQZZdSj
+         2OnTLrSVqugDqWGU0C1N+dI+nOeMo832g+xP1LplaZ4+0aOj93QpMsK9Ydb6I56oMoZf
+         3BVrWn/3vH3BfyG6/F6Nxq2cwwtSwB3mNQFVTmzJaz8B9QtjsE+0nXgAHYFT7FwdtPFZ
+         9OWzllYjuRsj+7P1935RxKgrug3NthNuRjO79LWaDIgR/b6GtTYHgYBoJ+U4oJQlABJR
+         iWjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4/HgkdPfwvx9hh+ecBAVGHQ12vx6oJVsY/D1hoj+iSw=;
+        b=mQU56x8T42rJU0QxeG7WxgLbiqTCmx0tS8GiNGr1N2ta0gbZj0bAbv++9zDk0jsvsz
+         C8i+7FzKO+iyiRdv1nTsG5Mc+wL4rc1CoisWsWa+mKOKrb9tvfgDvmmwEdUC+1spqyMw
+         V/jhllYm96foUzhALBcpoefl1kuogJ8uN3tb2zZkOaBMoyKWztpfrgBOxINzks6AgWq/
+         nLO3fhX32M3K7mYegJYrUMveSfFi7DpQLaQAH9jhQXlK9pk14e1oNQHlsSUgKhF9BU38
+         X1YIcf8JAoXqWtCtvrbb7MWhS5hK+uMV/qIQUWxpIYwkVSpRb0xHEVARHwg45miEBnI7
+         eR3A==
+X-Gm-Message-State: AOAM532Pwd+HtEKb4ABxlmhLNTKtcEmx6yyc9V7Kka/FUBorNzTQmPqN
+        zs+j3k4BMt6ZH6Uf9p+mu/BgaJHMGFM=
+X-Google-Smtp-Source: ABdhPJwQBJ0OLn099skCFqE66FhmGKV43joXIdjsjthd+TU3R3U+LSfgsRocpGip6qE2yNgSKtZQ2w==
+X-Received: by 2002:a17:902:a413:b029:d2:1fde:d2af with SMTP id p19-20020a170902a413b02900d21fded2afmr3855104plq.56.1600770676596;
+        Tue, 22 Sep 2020 03:31:16 -0700 (PDT)
+Received: from ZB-PF0YQ8ZU.360buyad.local (f.a4.5177.ip4.static.sl-reverse.com. [119.81.164.15])
+        by smtp.gmail.com with ESMTPSA id 203sm14589028pfz.131.2020.09.22.03.31.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Sep 2020 03:31:15 -0700 (PDT)
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     freude@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, schwidefsky@de.ibm.com,
         linux-s390@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Fedor Loshakov <loshakov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: Re: [PATCH 0/2] zfcp: small changes for 5.10
-Message-ID: <20200922100531.GA6903@t480-pf1aa2c2>
-References: <cover.1599765652.git.bblock@linux.ibm.com>
- <160074695008.411.13328105917017372358.b4-ty@oracle.com>
+        Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Subject: [PATCH] s390/zcrypt: Fix a size determination in zcrypt_unlocked_ioctl()
+Date:   Tue, 22 Sep 2020 18:30:59 +0800
+Message-Id: <20200922103059.859-1-zhenzhong.duan@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <160074695008.411.13328105917017372358.b4-ty@oracle.com>
-Sender: Benjamin Block <bblock@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-22_06:2020-09-21,2020-09-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=999 bulkscore=0 adultscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009220082
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Sep 21, 2020 at 11:56:45PM -0400, Martin K. Petersen wrote:
-> On Thu, 10 Sep 2020 21:49:14 +0200, Benjamin Block wrote:
-> 
-> > here are some small changes for zfcp I'd like to include in 5.10 if
-> > possible. They apply cleanly on Martin's `scsi-queue`, and James' `misc`
-> > branches.
-> > 
-> > Both patches make the driver a bit cleaner, and hopefully easier to
-> > maintain.
-> > 
-> > [...]
-> 
-> Applied to 5.10/scsi-queue, thanks!
-> 
-> [1/2] scsi: zfcp: Use list_first_entry_or_null() in zfcp_erp_thread()
->       https://git.kernel.org/mkp/scsi/c/addf13729615
-> [2/2] scsi: zfcp: Clarify access to erp_action in zfcp_fsf_req_complete()
->       https://git.kernel.org/mkp/scsi/c/d251193d1732
-> 
+With new ioctl(ZCRYPT_PERDEV_REQCNT) introduced, kernel use dynamic
+allocation for the 256 element array of unsigned integers for the number
+of successfully completed requests per device. It's not a static array of
+64 elements any more.
 
-Thanks Martin!
+Fixes: af4a72276d49 ("s390/zcrypt: Support up to 256 crypto adapters.")
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+---
+ drivers/s390/crypto/zcrypt_api.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
+index 4dbbfd88262c..5c3f3f89e2f3 100644
+--- a/drivers/s390/crypto/zcrypt_api.c
++++ b/drivers/s390/crypto/zcrypt_api.c
+@@ -1449,7 +1449,7 @@ static long zcrypt_unlocked_ioctl(struct file *filp, unsigned int cmd,
+ 		if (!reqcnt)
+ 			return -ENOMEM;
+ 		zcrypt_perdev_reqcnt(reqcnt, AP_DEVICES);
+-		if (copy_to_user((int __user *) arg, reqcnt, sizeof(reqcnt)))
++		if (copy_to_user((int __user *) arg, reqcnt, sizeof(u32) * AP_DEVICES))
+ 			rc = -EFAULT;
+ 		kfree(reqcnt);
+ 		return rc;
 -- 
-Best Regards, Benjamin Block  / Linux on IBM Z Kernel Development / IBM Systems
-IBM Deutschland Research & Development GmbH    /    https://www.ibm.com/privacy
-Vorsitz. AufsR.: Gregor Pillen         /        Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: AmtsG Stuttgart, HRB 243294
+2.25.1
+
