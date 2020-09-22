@@ -2,146 +2,157 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48B4A27466C
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Sep 2020 18:20:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A99C2746D3
+	for <lists+linux-s390@lfdr.de>; Tue, 22 Sep 2020 18:40:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgIVQUO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Sep 2020 12:20:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbgIVQUO (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Sep 2020 12:20:14 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F421BC0613D6
-        for <linux-s390@vger.kernel.org>; Tue, 22 Sep 2020 09:20:13 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id k13so12399532pfg.1
-        for <linux-s390@vger.kernel.org>; Tue, 22 Sep 2020 09:20:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=OuYZ36WnxwIp9b6camA1INonBCd7PS5F7n5lbvDtQoE=;
-        b=vkrTbtOH4vHnR/84aYqVDHrQ5AGvI5gJZ+epaaRbPDginNWZ7IQOaHp0KiQGLoRIqK
-         lCtpCBfEppwh5xdm5Fg2E09yGBsQ1omUh0FsVnB0AGbc0KabsZevsMs5kdugIv8CVE5/
-         WA4g4A2X6yhuybhLsZ26G3b/9jK9koGpq3H8xumPWJXJrnSzbLUYbfDR++IgN0bKoBQq
-         n0DG/oDelKPnE35WpGCvEELD66Jz17cs7lC56sr6mITihQA1DVJ1mt9BGhniHUyWF6Lh
-         zzYPOu4uBf4nQ34xtWqSlA6XpnJ8NFviCNNpjE2H0nhrpatshwJ5hPmeTiRqtrX3VMpc
-         QmhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=OuYZ36WnxwIp9b6camA1INonBCd7PS5F7n5lbvDtQoE=;
-        b=Es/RJL7tcIxwBS7vnsFcnfbqL9fOa9D1RzCtpkCsemXXlV/cFoeWfkLZqbrmmmpm65
-         aVwEsgI9MKgkKwg23mA3ZasL3KOWMoYi4mCxU+JleJD15/Zm3FD0xc68EJ1YYq5/H+z5
-         JrTqqhiAuNYM566+gVPFtBz7FcafkPGytlrrVffneQItBq8Y5QR11hcF7Uyw0Ujr0jm6
-         JwBJSi8NGgbIxYK6rB/K18C1nZriZKCxveDQa8FsD86G6IdongpX1clxYN+343OKnO94
-         29XXuF90Tw0X3AKjAEFkgFe2MH5HJ71wHuHEMIWc+hjO6MgCvdqL04nsaQ1b8gSjysgN
-         Rjyg==
-X-Gm-Message-State: AOAM532MFFw0grVvktjlUWfV6k0Ub/FsU8zIX2G46giRKelyZJC9xVvj
-        spH9CV8CaOYrUgjOZwrNPSaYTg==
-X-Google-Smtp-Source: ABdhPJzVdW+N5Ufbpna8vjsXyt2h2YPelrT15cDlhJa791IGnC+04vroQZTdEBrKNKjccVmTF6OthA==
-X-Received: by 2002:a17:902:fe88:b029:d2:2a16:254 with SMTP id x8-20020a170902fe88b02900d22a160254mr5598643plm.23.1600791613205;
-        Tue, 22 Sep 2020 09:20:13 -0700 (PDT)
-Received: from localhost.localdomain ([2601:646:c200:1ef2:f4bd:fe2:85ed:ea92])
-        by smtp.gmail.com with ESMTPSA id gk14sm2982522pjb.41.2020.09.22.09.20.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Sep 2020 09:20:12 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 1/9] kernel: add a PF_FORCE_COMPAT flag
-Date:   Tue, 22 Sep 2020 09:20:07 -0700
-Message-Id: <446566DF-ECBC-449C-92A1-A7D5AEBE9935@amacapital.net>
-References: <CAK8P3a39jN+t2hhLg0oKZnbYATQXmYE2-Z1JkmFyc1EPdg1HXw@mail.gmail.com>
-Cc:     Pavel Begunkov <asml.silence@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        David Howells <dhowells@redhat.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>, io-uring@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Network Development <netdev@vger.kernel.org>,
-        keyrings@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>
-In-Reply-To: <CAK8P3a39jN+t2hhLg0oKZnbYATQXmYE2-Z1JkmFyc1EPdg1HXw@mail.gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-X-Mailer: iPhone Mail (18A373)
+        id S1726748AbgIVQkk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Sep 2020 12:40:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:53343 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726685AbgIVQkh (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 22 Sep 2020 12:40:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600792835;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=g/MCLyHoyvURQHbumQLHytYYwHvt80kkvgPCoRYfLTU=;
+        b=Xtc6J4/89Ho6d7xHfk9nid5OieapoImnIm5PCyajQKv5Vmh1Ot2bktlkECLU/CN75pVCuD
+        OOvaKGuvkUtR8njbPzn/ZSo/+HoXqWBq7pkny10t80ncwrHaVgJWQ1WY6QADtjxg78st+o
+        tbc/O7pQLw/RslvduhmGYvGXnms1nL4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-EWnkbm9VPH61cn_uCdsxUA-1; Tue, 22 Sep 2020 12:40:33 -0400
+X-MC-Unique: EWnkbm9VPH61cn_uCdsxUA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E43E7188C12B;
+        Tue, 22 Sep 2020 16:40:31 +0000 (UTC)
+Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D388178825;
+        Tue, 22 Sep 2020 16:40:30 +0000 (UTC)
+Date:   Tue, 22 Sep 2020 10:40:30 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     bhelgaas@google.com, schnelle@linux.ibm.com, pmorel@linux.ibm.com,
+        mpe@ellerman.id.au, oohall@gmail.com, cohuck@redhat.com,
+        kevin.tian@intel.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] vfio/pci: Decouple PCI_COMMAND_MEMORY bit checks
+ from is_virtfn
+Message-ID: <20200922104030.07e0dfd9@x1.home>
+In-Reply-To: <08afc6b2-7549-5440-a947-af0b598288c2@linux.ibm.com>
+References: <1599749997-30489-1-git-send-email-mjrosato@linux.ibm.com>
+        <1599749997-30489-4-git-send-email-mjrosato@linux.ibm.com>
+        <08afc6b2-7549-5440-a947-af0b598288c2@linux.ibm.com>
+Organization: Red Hat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Mon, 21 Sep 2020 08:43:29 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
+> On 9/10/20 10:59 AM, Matthew Rosato wrote:
+> > While it is true that devices with is_virtfn=1 will have a Memory Space
+> > Enable bit that is hard-wired to 0, this is not the only case where we
+> > see this behavior -- For example some bare-metal hypervisors lack
+> > Memory Space Enable bit emulation for devices not setting is_virtfn
+> > (s390). Fix this by instead checking for the newly-added
+> > no_command_memory bit which directly denotes the need for
+> > PCI_COMMAND_MEMORY emulation in vfio.
+> > 
+> > Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
+> > Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> > Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>  
+> 
+> Polite ping on this patch as the other 2 have now received maintainer 
+> ACKs or reviews.  I'm concerned about this popping up in distros as 
+> abafbc551fdd was a CVE fix.  Related, see question from the cover:
+> 
+> - Restored the fixes tag to patch 3 (but the other 2 patches are
+>    now pre-reqs -- cc stable 5.8?)
 
-> On Sep 22, 2020, at 2:01 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->=20
-> =EF=BB=BFOn Tue, Sep 22, 2020 at 9:59 AM Pavel Begunkov <asml.silence@gmai=
-l.com> wrote:
->>> On 22/09/2020 10:23, Arnd Bergmann wrote:
->>> On Tue, Sep 22, 2020 at 8:32 AM Pavel Begunkov <asml.silence@gmail.com> w=
-rote:
->>>> On 22/09/2020 03:58, Andy Lutomirski wrote:
->>>>> On Mon, Sep 21, 2020 at 5:24 PM Pavel Begunkov <asml.silence@gmail.com=
-> wrote:
->>>>> I may be looking at a different kernel than you, but aren't you
->>>>> preventing creating an io_uring regardless of whether SQPOLL is
->>>>> requested?
->>>>=20
->>>> I diffed a not-saved file on a sleepy head, thanks for noticing.
->>>> As you said, there should be an SQPOLL check.
->>>>=20
->>>> ...
->>>> if (ctx->compat && (p->flags & IORING_SETUP_SQPOLL))
->>>>        goto err;
->>>=20
->>> Wouldn't that mean that now 32-bit containers behave differently
->>> between compat and native execution?
->>>=20
->>> I think if you want to prevent 32-bit applications from using SQPOLL,
->>> it needs to be done the same way on both to be consistent:
->>=20
->> The intention was to disable only compat not native 32-bit.
->=20
-> I'm not following why that would be considered a valid option,
-> as that clearly breaks existing users that update from a 32-bit
-> kernel to a 64-bit one.
->=20
-> Taking away the features from users that are still on 32-bit kernels
-> already seems questionable to me, but being inconsistent
-> about it seems much worse, in particular when the regression
-> is on the upgrade path.
->=20
->>> Can we expect all existing and future user space to have a sane
->>> fallback when IORING_SETUP_SQPOLL fails?
->>=20
->> SQPOLL has a few differences with non-SQPOLL modes, but it's easy
->> to convert between them. Anyway, SQPOLL is a privileged special
->> case that's here for performance/latency reasons, I don't think
->> there will be any non-accidental users of it.
->=20
-> Ok, so the behavior of 32-bit tasks would be the same as running
-> the same application as unprivileged 64-bit tasks, with applications
-> already having to implement that fallback, right?
->=20
->=20
+I've got these queued in my local branch which I'll push to next for
+v5.10.  I'm thinking that perhaps the right thing would be to add the
+fixes tag to all three patches, otherwise I could see that the PCI/VF
+change might get picked as a dependency, but not the s390 specific one.
+Does this sound correct to everyone?  Thanks,
 
-I don=E2=80=99t have any real preference wrt SQPOLL, and it may be that we h=
-ave a problem even without SQPOLL when IO gets punted without one of the fix=
-es discussed.
+Alex
 
-But banning the mismatched io_uring and io_uring_enter seems like it may be w=
-orthwhile regardless.=
+> > ---
+> >   drivers/vfio/pci/vfio_pci_config.c | 24 ++++++++++++++----------
+> >   1 file changed, 14 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+> > index d98843f..5076d01 100644
+> > --- a/drivers/vfio/pci/vfio_pci_config.c
+> > +++ b/drivers/vfio/pci/vfio_pci_config.c
+> > @@ -406,7 +406,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
+> >   	 * PF SR-IOV capability, there's therefore no need to trigger
+> >   	 * faults based on the virtual value.
+> >   	 */
+> > -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
+> > +	return pdev->no_command_memory || (cmd & PCI_COMMAND_MEMORY);
+> >   }
+> >   
+> >   /*
+> > @@ -520,8 +520,8 @@ static int vfio_basic_config_read(struct vfio_pci_device *vdev, int pos,
+> >   
+> >   	count = vfio_default_config_read(vdev, pos, count, perm, offset, val);
+> >   
+> > -	/* Mask in virtual memory enable for SR-IOV devices */
+> > -	if (offset == PCI_COMMAND && vdev->pdev->is_virtfn) {
+> > +	/* Mask in virtual memory enable */
+> > +	if (offset == PCI_COMMAND && vdev->pdev->no_command_memory) {
+> >   		u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
+> >   		u32 tmp_val = le32_to_cpu(*val);
+> >   
+> > @@ -589,9 +589,11 @@ static int vfio_basic_config_write(struct vfio_pci_device *vdev, int pos,
+> >   		 * shows it disabled (phys_mem/io, then the device has
+> >   		 * undergone some kind of backdoor reset and needs to be
+> >   		 * restored before we allow it to enable the bars.
+> > -		 * SR-IOV devices will trigger this, but we catch them later
+> > +		 * SR-IOV devices will trigger this - for mem enable let's
+> > +		 * catch this now and for io enable it will be caught later
+> >   		 */
+> > -		if ((new_mem && virt_mem && !phys_mem) ||
+> > +		if ((new_mem && virt_mem && !phys_mem &&
+> > +		     !pdev->no_command_memory) ||
+> >   		    (new_io && virt_io && !phys_io) ||
+> >   		    vfio_need_bar_restore(vdev))
+> >   			vfio_bar_restore(vdev);
+> > @@ -1734,12 +1736,14 @@ int vfio_config_init(struct vfio_pci_device *vdev)
+> >   				 vconfig[PCI_INTERRUPT_PIN]);
+> >   
+> >   		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
+> > -
+> > +	}
+> > +	if (pdev->no_command_memory) {
+> >   		/*
+> > -		 * VFs do no implement the memory enable bit of the COMMAND
+> > -		 * register therefore we'll not have it set in our initial
+> > -		 * copy of config space after pci_enable_device().  For
+> > -		 * consistency with PFs, set the virtual enable bit here.
+> > +		 * VFs and devices that set pdev->no_command_memory do not
+> > +		 * implement the memory enable bit of the COMMAND register
+> > +		 * therefore we'll not have it set in our initial copy of
+> > +		 * config space after pci_enable_device().  For consistency
+> > +		 * with PFs, set the virtual enable bit here.
+> >   		 */
+> >   		*(__le16 *)&vconfig[PCI_COMMAND] |=
+> >   					cpu_to_le16(PCI_COMMAND_MEMORY);
+> >   
+> 
+
