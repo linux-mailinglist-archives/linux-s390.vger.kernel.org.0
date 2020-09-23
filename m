@@ -2,101 +2,169 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DA4F276316
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Sep 2020 23:30:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7573276329
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Sep 2020 23:33:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgIWVab (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 23 Sep 2020 17:30:31 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:32054 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726672AbgIWVaa (ORCPT
+        id S1726460AbgIWVdW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 23 Sep 2020 17:33:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25618 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726265AbgIWVdW (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 23 Sep 2020 17:30:30 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-222-k0JZSzTkPJOZPjS-rTcoJw-1; Wed, 23 Sep 2020 22:30:26 +0100
-X-MC-Unique: k0JZSzTkPJOZPjS-rTcoJw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 23 Sep 2020 22:30:25 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 23 Sep 2020 22:30:25 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Arnd Bergmann' <arnd@arndb.de>, Al Viro <viro@zeniv.linux.org.uk>
-CC:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        David Howells <dhowells@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Wed, 23 Sep 2020 17:33:22 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08NLWBAS088224;
+        Wed, 23 Sep 2020 17:33:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=sNGc7AEYpsb6fMt12GzlIzOFIEfRHZcBQwY48KatS7U=;
+ b=gRTEdHLSxmzfoCawjo9nevxXfnbXIytxlKzwBSDINeeJVtxsWqlmIuwHTpLgod6b6xS9
+ kM6lxb0BIqgkaf6Is40tdrQg4Q5IUXLoH5viY7kKR2QnZx00Rf0hoaemx5pYKbcMbExL
+ 9D/Rp+0OpHgn/GUXt8xluk6SRIxLHJzOsmdAaZo2QaAU3U/A0J/DnJXc5HTxjF+7fDxP
+ SQSAi20mPZ3kYnwqxLnPHlpk5leS5fEVyNfu+N4LWjo5fV/k8ogePUSIQarNBoUm8in7
+ c2WRae/e4Tjl5rJqN3QFBF98x2oW68HNQd6gnDovIDViB8ZZCvW79mE4dM8ra7nVuE+i 4g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33reber116-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 23 Sep 2020 17:33:19 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08NLXIxa090930;
+        Wed, 23 Sep 2020 17:33:18 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33reber10p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 23 Sep 2020 17:33:18 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08NLTVdC008568;
+        Wed, 23 Sep 2020 21:33:17 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 33n98gvkbc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 23 Sep 2020 21:33:17 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08NLXECr20447518
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 23 Sep 2020 21:33:14 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 250B742042;
+        Wed, 23 Sep 2020 21:33:14 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B366542041;
+        Wed, 23 Sep 2020 21:33:13 +0000 (GMT)
+Received: from thinkpad (unknown [9.171.62.28])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Wed, 23 Sep 2020 21:33:13 +0000 (GMT)
+Date:   Wed, 23 Sep 2020 23:33:06 +0200
+From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Xu <peterx@redhat.com>, Heiko Carstens <hca@linux.ibm.com>,
+        Qian Cai <cai@redhat.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         linux-s390 <linux-s390@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-aio <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
         Linux-MM <linux-mm@kvack.org>,
-        Networking <netdev@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>
-Subject: RE: [PATCH 5/9] fs: remove various compat readv/writev helpers
-Thread-Topic: [PATCH 5/9] fs: remove various compat readv/writev helpers
-Thread-Index: AQHWkdnPrERbulCBlEyrFz5+sRsKWql2urog
-Date:   Wed, 23 Sep 2020 21:30:25 +0000
-Message-ID: <2e11ea867c644c5d96f8e4930e5c730d@AcuMS.aculab.com>
-References: <20200923060547.16903-1-hch@lst.de>
- <20200923060547.16903-6-hch@lst.de>
- <20200923142549.GK3421308@ZenIV.linux.org.uk> <20200923143251.GA14062@lst.de>
- <20200923145901.GN3421308@ZenIV.linux.org.uk>
- <20200923163831.GO3421308@ZenIV.linux.org.uk>
- <CAK8P3a3nkLUOkR+jwz2_2LcYTUTqdVf8JOtZqKWbtEDotNhFZA@mail.gmail.com>
-In-Reply-To: <CAK8P3a3nkLUOkR+jwz2_2LcYTUTqdVf8JOtZqKWbtEDotNhFZA@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: BUG: Bad page state in process dirtyc0w_child
+Message-ID: <20200923233306.7c5666de@thinkpad>
+In-Reply-To: <CAHk-=wiMJu0_sLO78+nLoe=pxC-p=sSpC3moq0p5RyJc9KXC4Q@mail.gmail.com>
+References: <a46e9bbef2ed4e17778f5615e818526ef848d791.camel@redhat.com>
+        <20200916142806.GD7076@osiris>
+        <20200922190350.7a0e0ca5@thinkpad>
+        <20200923153938.5be5dd2c@thinkpad>
+        <CAHk-=wiMJu0_sLO78+nLoe=pxC-p=sSpC3moq0p5RyJc9KXC4Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-23_16:2020-09-23,2020-09-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=779
+ impostorscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 clxscore=1015 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009230160
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-RnJvbTogQXJuZCBCZXJnbWFubg0KPiBTZW50OiAyMyBTZXB0ZW1iZXIgMjAyMCAxOTo0Ng0KLi4u
-DQo+IFJlZ2FyZGxlc3Mgb2YgdGhhdCwgYW5vdGhlciBhZHZhbnRhZ2Ugb2YgaGF2aW5nIHRoZSBT
-WVNDQUxMX0RFQ0xBUkV4KCkNCj4gd291bGQgYmUgdGhlIGFiaWxpdHkgdG8gaW5jbHVkZSB0aGF0
-IGhlYWRlciBmaWxlIGZyb20gZWxzZXdoZXJlIHdpdGggYSBkaWZmZXJlbnQNCj4gbWFjcm8gZGVm
-aW5pdGlvbiB0byBjcmVhdGUgYSBtYWNoaW5lLXJlYWRhYmxlIHZlcnNpb24gb2YgdGhlIGludGVy
-ZmFjZSB3aGVuDQo+IGNvbWJpbmVkIHdpdGggdGhlIHN5c2NhbGwudGJsIGZpbGVzLiBUaGlzIGNv
-dWxkIGJlIHVzZWQgdG8gY3JlYXRlIGEgdXNlcg0KPiBzcGFjZSBzdHViIGZvciBjYWxsaW5nIGlu
-dG8gdGhlIGxvdy1sZXZlbCBzeXNjYWxsIHJlZ2FyZGxlc3Mgb2YgdGhlDQo+IGxpYmMgaW50ZXJm
-YWNlcywNCj4gb3IgZm9yIHN5bmNocm9uaXppbmcgdGhlIGludGVyZmFjZXMgd2l0aCBzdHJhY2Us
-IHFlbXUtdXNlciwgb3IgYW55dGhpbmcgdGhhdA0KPiBuZWVkcyB0byBkZWFsIHdpdGggdGhlIGxv
-dy1sZXZlbCBpbnRlcmZhY2UuDQoNCkEgc2ltaWxhciAndHJpY2snICh0aGF0IHByb2JhYmx5IHdv
-bid0IHdvcmsgaGVyZSkgaXMgdG8gcGFzcw0KdGhlIG5hbWUgb2YgYSAjZGVmaW5lIGZ1bmN0aW9u
-IGFzIGEgcGFyYW1ldGVyIHRvIGFub3RoZXIgZGVmaW5lLg0KVXNlZnVsIGZvciBkZWZpbmluZyBj
-b25zdGFudHMgYW5kIGVycm9yIHN0cmluZ3MgdG9nZXRoZXIuIGVnOg0KI2RlZmluZSBUUkFGRklD
-X0xJR0hUUyh4KSBcDQoJeChSRUQsIDAsICJSZWQiKSBcDQoJeChZRUxMT1csIDEsICJZZWxsb3cp
-IFwNCgl4KEdSRUVOLCAyLCAiR1JFRU4pDQoNCllvdSBjYW4gdGhlbiBkbyB0aGluZyBsaWtlOg0K
-I2RlZmluZSB4KHRva2VuLCB2YWx1ZSwgc3RyaW5nKSB0b2tlbiA9IHZhbHVlLA0KZW51bSB7VFJB
-RkZJQ19MSUdIVFMoeCkgTlVNX0xJR0hUU307DQojdW5kZWYgeA0KI2RlZmluZSB4KHRva2VuLCB2
-YWx1ZSwgc3RyaW5nKSBbdmFsdWVdID0gc3RyaW5nLA0KY29uc3QgY2hhciAqY29sb3Vyc1tdID0g
-e1RSQUZGSUNfTElHSFRTKHgpfTsNCiN1bmRlZiB4DQp0byBpbml0aWFsaXNlIGNvbnN0YW50cyBh
-bmQgYSBuYW1lIHRhYmxlIHRoYXQgYXJlIGFsd2F5cyBpbiBzeW5jLg0KDQpJdCBpcyBhbHNvIGEg
-Z29vZCB3YXkgdG8gZ2VuZXJhdGUgc291cmNlIGxpbmVzIHRoYXQgYXJlIG92ZXIgMU1CLg0KDQoJ
-RGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1v
-dW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEz
-OTczODYgKFdhbGVzKQ0K
+On Wed, 23 Sep 2020 13:00:45 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
+[...]
+> 
+> Ooh. One thing that is *very* different about s390 is that it frees
+> the page directly, and doesn't batch things up to happen after the TLB
+> flush.
+> 
+> Maybe THAT is the difference? Not that I can tell why it should
+> matter, for all the reasons outlines above. But on x86-64, the
+> __tlb_remove_page() function just adds the page to the "free this
+> later" TLB flush structure, and if it fills up it does the TLB flush
+> and then does the actual batched page freeing outside the page table
+> lock.
+> 
+> And that *has* been one of the things that the fast-gup code depended
+> on. We even have a big comment about it:
+> 
+>         /*
+>          * Disable interrupts. The nested form is used, in order to allow
+>          * full, general purpose use of this routine.
+>          *
+>          * With interrupts disabled, we block page table pages from being
+>          * freed from under us. See struct mmu_table_batch comments in
+>          * include/asm-generic/tlb.h for more details.
+>          *
+>          * We do not adopt an rcu_read_lock(.) here as we also want to
+>          * block IPIs that come from THPs splitting.
+>          */
+> 
+> and maybe that whole thing doesn't hold true for s390 at all.
+
+Thanks, very nice walk-through, need some time to digest this. The TLB
+aspect is interesting, and we do have our own __tlb_remove_page_size(),
+which directly calls free_page_and_swap_cache() instead of the generic
+batched approach.
+
+I faintly remember that we also did have some batched and rcu_sched based
+approach. It seems there was some rework with commit 9de7d833e370
+("s390/tlb: Convert to generic mmu_gather") and discussion in
+https://lore.kernel.org/linux-arch/20180918125151.31744-1-schwidefsky@de.ibm.com/
+
+Given the comment you mentioned and also this one from mm/gup.c:
+
+/*
+ * Fast GUP
+ *
+ * get_user_pages_fast attempts to pin user pages by walking the page
+ * tables directly and avoids taking locks. Thus the walker needs to be
+ * protected from page table pages being freed from under it, and should
+ * block any THP splits.
+ *
+ * One way to achieve this is to have the walker disable interrupts, and
+ * rely on IPIs from the TLB flushing code blocking before the page table
+ * pages are freed. This is unsuitable for architectures that do not need
+ * to broadcast an IPI when invalidating TLBs.
+ *
+ * Another way to achieve this is to batch up page table containing pages
+ * belonging to more than one mm_user, then rcu_sched a callback to free those
+ * pages. Disabling interrupts will allow the fast_gup walker to both block
+ * the rcu_sched callback, and an IPI that we broadcast for splitting THPs
+ * (which is a relatively rare event). The code below adopts this strategy.
+
+It really sounds like we might have yet another issue with (common code)
+gup_fast, and non-batched freeing of pagetable pages, though I wonder how
+that would have worked with the s390-specific version of gup_fast before.
+
+Certainly worth investigating, thanks a lot for the hint!
+
+Meanwhile, out of curiosity, while I still fail to comprehend commit
+09854ba94c6a ("mm: do_wp_page() simplification") in its entirety, there
+is one detail that I find most confusing: the unlock_page() has moved
+behind the wp_page_reuse(), while it was the other way round before.
+
+Does it simply not really matter, or was it done on purpose, possibly
+related to the "get rid of the nasty serialization on the page lock"
+description?
