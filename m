@@ -2,120 +2,74 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2E9727582C
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Sep 2020 14:47:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CB63275893
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Sep 2020 15:23:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgIWMrT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 23 Sep 2020 08:47:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:52086 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726558AbgIWMrS (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 23 Sep 2020 08:47:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600865238;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KJsdXhDDqjRHS8t5tnX7yDDdZ5IGSJuOwOp+o1xOXrs=;
-        b=NjUUS7eN5Y61beGmc69+F52HEGXvW+Os/HmO7vsFELYWLiUx0+OO1mnLrxY7hKcAZVyrFB
-        3BoVeuASOibRDEMa2OXn9q1VfwIkZGkWD504LTXHs3aq8iQ9JHk4/0zV20NzDUhhVIn6TZ
-        dS18KRmXlwCTHP5EybKz9TPL2nXqRs4=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-kkOm2th8MTK7j5ybIb4JVA-1; Wed, 23 Sep 2020 08:47:16 -0400
-X-MC-Unique: kkOm2th8MTK7j5ybIb4JVA-1
-Received: by mail-wm1-f70.google.com with SMTP id a7so2191567wmc.2
-        for <linux-s390@vger.kernel.org>; Wed, 23 Sep 2020 05:47:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KJsdXhDDqjRHS8t5tnX7yDDdZ5IGSJuOwOp+o1xOXrs=;
-        b=RxlUK7D1oYS5cI1wddi5X66hbAv7MaS1tPKjcDcjDYsx+8EKqf/eV9pfs7AE6Qt7OX
-         0vSv21z1/A5kv7zg8QH1SIFdNzQDbv6M5NplEeZNBdcQ6CXMVa0QoEUlZUH7WI5m+ySG
-         B3VGDHQNhay8MuqrD4UEdsGPBJ1rn9X6xUshxhzJ4V+mEWaBH9oJYGt1xdvZzSUt94yp
-         KMe3cRB+YQQg+DusUfyXQ/2+mdmodyRpxUKm8blVbhqdcGsdqZ7TZu3ABWEP266lgEJa
-         JUzPTQPyppuQuMUrlo/zKCl7zaUK77M1PTifRIqZerYzEtGi7wp7IN1ecpSkXoVo+30F
-         ncpw==
-X-Gm-Message-State: AOAM530e5cJUbrBOd8Rw0iThN8MZZ+5Ndq/h4U/MsS2z/3k8jdxyvzU/
-        0/LjJ3yc0K9RvKOvbsd0FTCdouXNSkSW7gcS5UPkQdvESbNlp3XaNd4jAol1/GeOH7IctKmZiTS
-        S8lFKmeGiKgKgIHCvv58G5w==
-X-Received: by 2002:a1c:f008:: with SMTP id a8mr6589356wmb.155.1600865234996;
-        Wed, 23 Sep 2020 05:47:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJygMVZid/MgX577mwoVfMTNg9cNIn89ro/qoGlGEac8toW1CeFDKmxTyu+mTjjfoo4HJnuGAg==
-X-Received: by 2002:a1c:f008:: with SMTP id a8mr6589323wmb.155.1600865234757;
-        Wed, 23 Sep 2020 05:47:14 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:15f1:648d:7de6:bad9? ([2001:b07:6468:f312:15f1:648d:7de6:bad9])
-        by smtp.gmail.com with ESMTPSA id z19sm7903333wmi.3.2020.09.23.05.47.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Sep 2020 05:47:14 -0700 (PDT)
-Subject: Re: [RFC Patch 0/2] KVM: SVM: Cgroup support for SVM SEV ASIDs
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vipin Sharma <vipinsh@google.com>
-Cc:     thomas.lendacky@amd.com, tj@kernel.org, lizefan@huawei.com,
-        joro@8bytes.org, corbet@lwn.net, brijesh.singh@amd.com,
-        jon.grimm@amd.com, eric.vantassell@amd.com, gingell@google.com,
-        rientjes@google.com, kvm@vger.kernel.org, x86@kernel.org,
-        cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "kvm-ppc@vger.kernel.org" <kvm-ppc@vger.kernel.org>,
+        id S1726565AbgIWNXJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 23 Sep 2020 09:23:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgIWNXI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 23 Sep 2020 09:23:08 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A9BC0613CE;
+        Wed, 23 Sep 2020 06:23:08 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kL4jW-004YbY-CV; Wed, 23 Sep 2020 13:22:54 +0000
+Date:   Wed, 23 Sep 2020 14:22:54 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Andy Lutomirski <luto@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        David Howells <dhowells@redhat.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         linux-s390 <linux-s390@vger.kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Janosch Frank <frankja@linux.ibm.com>
-References: <20200922004024.3699923-1-vipinsh@google.com>
- <20200922014836.GA26507@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <45117fcc-d6b8-fab9-11dc-79181058ed62@redhat.com>
-Date:   Wed, 23 Sep 2020 14:47:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-aio <linux-aio@kvack.org>, io-uring@vger.kernel.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Network Development <netdev@vger.kernel.org>,
+        keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH 1/9] kernel: add a PF_FORCE_COMPAT flag
+Message-ID: <20200923132254.GI3421308@ZenIV.linux.org.uk>
+References: <563138b5-7073-74bc-f0c5-b2bad6277e87@gmail.com>
+ <486c92d0-0f2e-bd61-1ab8-302524af5e08@gmail.com>
+ <CALCETrW3rwGsgfLNnu_0JAcL5jvrPVTLTWM3JpbB5P9Hye6Fdw@mail.gmail.com>
+ <d5c6736a-2cb4-4e22-78da-a667bda5c05a@gmail.com>
+ <CALCETrUEC81va8-fuUXG1uA5rbKxnKDYsDOXC70_HtKD4LAeAg@mail.gmail.com>
+ <e0a1b4d1-ff47-18d1-d535-c62812cb3105@gmail.com>
+ <CAK8P3a2-6JNS38EbZcLrk=cTT526oP=Rf0aoqWNSJ-k4XTYehQ@mail.gmail.com>
+ <f25b4708-eba6-78d6-03f9-5bfb04e07627@gmail.com>
+ <CAK8P3a39jN+t2hhLg0oKZnbYATQXmYE2-Z1JkmFyc1EPdg1HXw@mail.gmail.com>
+ <91209170-dcb4-d9ee-afa0-a819f8877b86@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200922014836.GA26507@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <91209170-dcb4-d9ee-afa0-a819f8877b86@gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 22/09/20 03:48, Sean Christopherson wrote:
-> This should be genericized to not be SEV specific.  TDX has a similar
-> scarcity issue in the form of key IDs, which IIUC are analogous to SEV ASIDs
-> (gave myself a quick crash course on SEV ASIDs).  Functionally, I doubt it
-> would change anything, I think it'd just be a bunch of renaming.  The hardest
-> part would probably be figuring out a name :-).
+On Wed, Sep 23, 2020 at 11:01:34AM +0300, Pavel Begunkov wrote:
+
+> > I'm not following why that would be considered a valid option,
+> > as that clearly breaks existing users that update from a 32-bit
+> > kernel to a 64-bit one.
 > 
-> Another idea would be to go even more generic and implement a KVM cgroup
-> that accounts the number of VMs of a particular type, e.g. legacy, SEV,
-> SEV-ES?, and TDX.  That has potential future problems though as it falls
-> apart if hardware every supports 1:MANY VMs:KEYS, or if there is a need to
-> account keys outside of KVM, e.g. if MKTME for non-KVM cases ever sees the
-> light of day.
+> Do you mean users who move 32-bit binaries (without recompiling) to a
+> new x64 kernel? Does the kernel guarantees that to work?
 
-Or also MANY:1 (we are thinking of having multiple VMs share the same
-SEV ASID).
+Yes.
 
-It might even be the same on s390 and PPC, in which case we probably
-want to implement this in virt/kvm.  Paul, Janosch, do you think this
-would make sense for you?  The original commit message is below.
-
-Paolo
-
-> On Mon, Sep 21, 2020 at 05:40:22PM -0700, Vipin Sharma wrote:
->> Hello,
->>
->> This patch series adds a new SEV controller for tracking and limiting
->> the usage of SEV ASIDs on the AMD SVM platform.
->>
->> SEV ASIDs are used in creating encrypted VM and lightweight sandboxes
->> but this resource is in very limited quantity on a host.
->>
->> This limited quantity creates issues like SEV ASID starvation and
->> unoptimized scheduling in the cloud infrastructure.
->>
->> SEV controller provides SEV ASID tracking and resource control
->> mechanisms.
-
+No further (printable) comments for now...
