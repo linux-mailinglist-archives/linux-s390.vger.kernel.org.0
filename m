@@ -2,90 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B993227760D
-	for <lists+linux-s390@lfdr.de>; Thu, 24 Sep 2020 17:58:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35F69277675
+	for <lists+linux-s390@lfdr.de>; Thu, 24 Sep 2020 18:18:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgIXP6i (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 24 Sep 2020 11:58:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728343AbgIXP6h (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 24 Sep 2020 11:58:37 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C692C0613CE
-        for <linux-s390@vger.kernel.org>; Thu, 24 Sep 2020 08:58:37 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id a15so3225527ljk.2
-        for <linux-s390@vger.kernel.org>; Thu, 24 Sep 2020 08:58:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CDlImHQG+WyGWW1Zw8OrcVApf/zvofomVSpORgyBHR8=;
-        b=gU9H8quw0ODZD5j2ATVueoHOBIrQbytcaQkpJ4BOa0yac1xXfdXp3nabz+lI1bwWGC
-         dGGlkRyJzpHFaqqmFSeoFPcO0NA7OALEi8rZ6V8mcAPas1TR0JLDs82By7cToOhXI/vl
-         5NkyAJespvEzlUiX6038sU2DCsPIsey/ykeCc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CDlImHQG+WyGWW1Zw8OrcVApf/zvofomVSpORgyBHR8=;
-        b=mEDcwMVbamZvUGADsBHqHnE6680nzH4sKopeCTgfV7Tt09cCh90zIdWKSOnTSMUkWh
-         viMaGL70UZSWjB82L/A0Fv5X8xLSt6iHb7ikPH93drSedwtx9O5iuN23wt2VF+V1u5qD
-         fttujmyWy/aPpQr0273z9VokO2S4mB9CyoGliLhzMiSF+CpM64zvRyYHfmgGTwuzm9C3
-         c7PUToYLnSCyJAvcSb1U5s9+WRmWr9H9TVgM4aVP58yGCXJtbAvMXzU4lo6h5nzZ0Xxk
-         jUgqllLl2QmO2AaAbs4j1guZEvGUzZ1Xf8XRHyaodJRm5DFtEFOG6no6jiDs3fWI8D6C
-         TjVw==
-X-Gm-Message-State: AOAM530wzL+hgRrB6lLKjBP9Fp6ckTZ2UQtnsiHv1VPTnYzvzUeEOsBS
-        zJoloaRvpien9gqdL5qk89B+nbKWq3V9bg==
-X-Google-Smtp-Source: ABdhPJw8DiHg4Dwb/1Yi/BVszyrra66mwOL/nbIpgnyXBhDgw0Rn+j14NGIeAJDMPVCCJmvgkwfR6Q==
-X-Received: by 2002:a2e:9cd5:: with SMTP id g21mr149005ljj.27.1600963115451;
-        Thu, 24 Sep 2020 08:58:35 -0700 (PDT)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id j23sm2002431ljh.96.2020.09.24.08.58.33
-        for <linux-s390@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Sep 2020 08:58:33 -0700 (PDT)
-Received: by mail-lf1-f54.google.com with SMTP id q8so4500826lfb.6
-        for <linux-s390@vger.kernel.org>; Thu, 24 Sep 2020 08:58:33 -0700 (PDT)
-X-Received: by 2002:ac2:5594:: with SMTP id v20mr47607lfg.344.1600963112812;
- Thu, 24 Sep 2020 08:58:32 -0700 (PDT)
+        id S1726958AbgIXQSE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 24 Sep 2020 12:18:04 -0400
+Received: from condef-01.nifty.com ([202.248.20.66]:36812 "EHLO
+        condef-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgIXQSE (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 24 Sep 2020 12:18:04 -0400
+X-Greylist: delayed 546 seconds by postgrey-1.27 at vger.kernel.org; Thu, 24 Sep 2020 12:18:02 EDT
+Received: from conssluserg-06.nifty.com ([10.126.8.85])by condef-01.nifty.com with ESMTP id 08OG4TTa003638;
+        Fri, 25 Sep 2020 01:04:29 +0900
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 08OG3ueY021485;
+        Fri, 25 Sep 2020 01:03:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 08OG3ueY021485
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1600963437;
+        bh=9ee9VwwvdZUxUdcXkkdp1U0lx4DpuWOQMZvDwgytdP8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hzTI5ClFT4hOzIoN61jwlSFslzZdSjOWWXR+OdW95+DN+iQjYnA0h0WUtB5ir816s
+         +DZ87UAF+nIACgqkwIw4F9pB0RMs1ARNQnZ4wFcSQGRMvfJthFhuGd/ENCPHOENHuh
+         octp/bzp1hYU7SieXdp8Wf8kOOIRC3q0kMMR+lkPNoxHYcUfwQ7enFrI2lNYZ4K/LV
+         gY9Q0QWN0Mw/Cl3KeRn0ZGc48MJPMumbOKVzGFiExWK6dhJe1YOlO3W3WCSsJW8CB2
+         QDxuQfR6FNom+nQiZKHYiceUnq0wFU2t6828TZmfd13Es7qIWNtebAxMt9+XnooEz8
+         GPoSxtqBHqrCQ==
+X-Nifty-SrcIP: [209.85.216.45]
+Received: by mail-pj1-f45.google.com with SMTP id mn7so1832280pjb.5;
+        Thu, 24 Sep 2020 09:03:57 -0700 (PDT)
+X-Gm-Message-State: AOAM532E/6rxKQqZv80fgjVzSR4P5DMuOr0TA7oxzNF+nlRbOyFTFdyI
+        JCQ8C1v7IQXa1ZjQpVToN0UStQjxlhdRB/QDge4=
+X-Google-Smtp-Source: ABdhPJyETrEzNzrVd1OXy91uCC2rbMXAsfzVerHQYhaGFjYLlItBVGJOuJ4Yzsw08mGvCA0s2iw7gEeNxhCwz3+/C+c=
+X-Received: by 2002:a17:90b:208:: with SMTP id fy8mr27540pjb.153.1600963436461;
+ Thu, 24 Sep 2020 09:03:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <a46e9bbef2ed4e17778f5615e818526ef848d791.camel@redhat.com>
- <20200916142806.GD7076@osiris> <20200922190350.7a0e0ca5@thinkpad>
- <20200923153938.5be5dd2c@thinkpad> <CAHk-=wiMJu0_sLO78+nLoe=pxC-p=sSpC3moq0p5RyJc9KXC4Q@mail.gmail.com>
- <20200923233306.7c5666de@thinkpad> <CAHk-=wgbfGCKKn=RTX9gF9Q+FYOGn2kD1OLnQuJSD+A0Rvg9Pw@mail.gmail.com>
- <20200924000226.06298978@thinkpad> <20200924140638.7bcb7765@thinkpad>
-In-Reply-To: <20200924140638.7bcb7765@thinkpad>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 24 Sep 2020 08:58:15 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjTKXJH1teKV3-tu1+qABMq0_tpdM9K4hYwbGCt7vwx7Q@mail.gmail.com>
-Message-ID: <CAHk-=wjTKXJH1teKV3-tu1+qABMq0_tpdM9K4hYwbGCt7vwx7Q@mail.gmail.com>
-Subject: Re: BUG: Bad page state in process dirtyc0w_child
-To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Peter Xu <peterx@redhat.com>, Heiko Carstens <hca@linux.ibm.com>,
-        Qian Cai <cai@redhat.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+References: <20200922232140.1994390-1-morbo@google.com>
+In-Reply-To: <20200922232140.1994390-1-morbo@google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 25 Sep 2020 01:03:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATjf+bVqkkoZgwu9sr-A+VXxEnW_R8nEwmH=aDEU6NAQw@mail.gmail.com>
+Message-ID: <CAK7LNATjf+bVqkkoZgwu9sr-A+VXxEnW_R8nEwmH=aDEU6NAQw@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: explicitly specify the build id style
+To:     Bill Wendling <morbo@google.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Will Deacon <will@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-mips@vger.kernel.org,
+        "open list:SIFIVE DRIVERS" <linux-riscv@lists.infradead.org>,
         linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        sparclinux <sparclinux@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nathan Chancellor <natechancellor@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 5:06 AM Gerald Schaefer
-<gerald.schaefer@linux.ibm.com> wrote:
+On Wed, Sep 23, 2020 at 8:21 AM Bill Wendling <morbo@google.com> wrote:
 >
-> It's all good now, no more occurrences with unlock_page() before
-> wp_page_reuse().
+> ld's --build-id defaults to "sha1" style, while lld defaults to "fast".
+> The build IDs are very different between the two, which may confuse
+> programs that reference them.
+>
+> Signed-off-by: Bill Wendling <morbo@google.com>
+> ---
+>  Makefile                             | 4 ++--
+>  arch/arm/vdso/Makefile               | 2 +-
+>  arch/arm64/kernel/vdso/Makefile      | 2 +-
+>  arch/arm64/kernel/vdso32/Makefile    | 2 +-
+>  arch/mips/vdso/Makefile              | 2 +-
+>  arch/riscv/kernel/vdso/Makefile      | 2 +-
+>  arch/s390/kernel/vdso64/Makefile     | 2 +-
+>  arch/sparc/vdso/Makefile             | 2 +-
+>  arch/x86/entry/vdso/Makefile         | 2 +-
+>  tools/testing/selftests/bpf/Makefile | 2 +-
+>  10 files changed, 11 insertions(+), 11 deletions(-)
 
-Thanks for the confirmation. When you pointed at that unlock_page()
-change, I was pretty sure that was it ("D'oh!"), but it's always good
-to have that verification.
 
-Committed,
+Applied to linux-kbuild.
+Thanks.
 
-              Linus
+-- 
+Best Regards
+Masahiro Yamada
