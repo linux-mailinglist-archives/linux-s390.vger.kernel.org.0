@@ -2,148 +2,105 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 108CE277DE6
-	for <lists+linux-s390@lfdr.de>; Fri, 25 Sep 2020 04:27:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3B5D277F83
+	for <lists+linux-s390@lfdr.de>; Fri, 25 Sep 2020 06:53:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgIYC1k (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 24 Sep 2020 22:27:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61734 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726448AbgIYC1k (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 24 Sep 2020 22:27:40 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08P1XmRU107643;
-        Thu, 24 Sep 2020 22:27:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=Npya7ZG50TR7LYBYqdAtUNgseBY9REIoX/lPcjA3eOk=;
- b=USh0iQzOi7aOsqFiWlw3KnNHgEDpmITq2mC9tIb/yEYiZTlKF5Rn8g2qcTBUEeJWucEo
- lvDN4XshJX7NrrnYUUk9aUV8BHxCfiUCoYSLeppPUrx/sDG4zUCJe1Dz5G7KLQv6dMQn
- 8Y5vP2/WM5bFItrUdAOj84cOc8sXJIigh7SRJ4VGSod3yksBI4kEQXHmOggCbyBUbS6u
- 9Dt0IpBE8+HCCDvyVGn/ewv5ml3YTT7TGxbY07Q7h57+DV1kfP3qAq2mZM5kd9ya/cOK
- ip5wtsjbnpjA9hGpVV/b/B6K+t3okwkWLd+ATalvf452BeZZkuN7OHnAPKsaIKSoUzVL +Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33s5j3jujf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 24 Sep 2020 22:27:37 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08P2Quon080904;
-        Thu, 24 Sep 2020 22:27:37 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33s5j3juhy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 24 Sep 2020 22:27:37 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08P2OSAn010755;
-        Fri, 25 Sep 2020 02:27:34 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03fra.de.ibm.com with ESMTP id 33s5a981md-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Sep 2020 02:27:34 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08P2RTof27394424
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Sep 2020 02:27:29 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D657652052;
-        Fri, 25 Sep 2020 02:27:31 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.190.191])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 130335204E;
-        Fri, 25 Sep 2020 02:27:31 +0000 (GMT)
-Date:   Fri, 25 Sep 2020 04:27:29 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        cohuck@redhat.com, mjrosato@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v10 02/16] s390/vfio-ap: use new AP bus interface to
- search for queue devices
-Message-ID: <20200925042729.3b9d5704.pasic@linux.ibm.com>
-In-Reply-To: <20200821195616.13554-3-akrowiak@linux.ibm.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
-        <20200821195616.13554-3-akrowiak@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1727184AbgIYEwE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 25 Sep 2020 00:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbgIYEwB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 25 Sep 2020 00:52:01 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA23C0613D5;
+        Thu, 24 Sep 2020 21:52:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=A+T/x3ppYi6QNsP2t+QiJ1AjmOgx9xWo2H6NAG0/aPM=; b=k9BJO212aIGjTM67lCOkTpCrht
+        B20Wf2zjNYR87uLFP2BRrzt5cCrEk0KFpOMk3+io62CblpW7Y77IqzHPhNFZqwDnVNpJgjcOWkhrs
+        Z8GRxpu7FjGxV+hNEbHeKyL912gkvTLvP4DBne8Te3c43Bttle2gfOVWfy6MwqIsof1MCTX4rxO24
+        Kx+lnKnrKhrsYvG/2XpbtSvE8DYXDyXxSwaM81JHTOVvJu9V5Jarcs/1LeXw6G549Mxci7m54zzCp
+        f1etRanliNQK8rGzJ9PmD1VPBy0Rci2ZVjpscKDGnzDGoBasw11g0MfksMIslOR+W3JyKfkaf/KsM
+        BhKY/8wQ==;
+Received: from p4fdb0c34.dip0.t-ipconnect.de ([79.219.12.52] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kLfi0-0002pf-1s; Fri, 25 Sep 2020 04:51:48 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        David Laight <David.Laight@aculab.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-aio@kvack.org, io-uring@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        netdev@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: let import_iovec deal with compat_iovecs as well v4
+Date:   Fri, 25 Sep 2020 06:51:37 +0200
+Message-Id: <20200925045146.1283714-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-24_18:2020-09-24,2020-09-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 spamscore=0 mlxscore=0 malwarescore=0 adultscore=0
- priorityscore=1501 phishscore=0 bulkscore=0 clxscore=1011 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009250007
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 21 Aug 2020 15:56:02 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+Hi Al,
 
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -26,43 +26,26 @@
->  
->  static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
->  
-> -static int match_apqn(struct device *dev, const void *data)
-> -{
-> -	struct vfio_ap_queue *q = dev_get_drvdata(dev);
-> -
-> -	return (q->apqn == *(int *)(data)) ? 1 : 0;
-> -}
-> -
->  /**
-> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
-> - * @matrix_mdev: the associated mediated matrix
-> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
->   * @apqn: The queue APQN
->   *
-> - * Retrieve a queue with a specific APQN from the list of the
-> - * devices of the vfio_ap_drv.
-> - * Verify that the APID and the APQI are set in the matrix.
-> + * Retrieve a queue with a specific APQN from the AP queue devices attached to
-> + * the AP bus.
->   *
-> - * Returns the pointer to the associated vfio_ap_queue
-> + * Returns the pointer to the vfio_ap_queue with the specified APQN, or NULL.
->   */
-> -static struct vfio_ap_queue *vfio_ap_get_queue(
-> -					struct ap_matrix_mdev *matrix_mdev,
-> -					int apqn)
-> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
->  {
-> +	struct ap_queue *queue;
->  	struct vfio_ap_queue *q;
-> -	struct device *dev;
->  
-> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
-> -		return NULL;
-> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
-> +	queue = ap_get_qdev(apqn);
-> +	if (!queue)
->  		return NULL;
->  
-> -	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
-> -				 &apqn, match_apqn);
-> -	if (!dev)
-> -		return NULL;
-> -	q = dev_get_drvdata(dev);
-> -	q->matrix_mdev = matrix_mdev;
-> -	put_device(dev);
-> +	q = dev_get_drvdata(&queue->ap_dev.device);
+this series changes import_iovec to transparently deal with compat iovec
+structures, and then cleanups up a lot of code dupliation.
 
-Is this cast here safe? (I don't think it is.)
+Changes since v3:
+ - fix up changed prototypes in compat.h as well
 
-> +	put_device(&queue->ap_dev.device);
->  
->  	return q;
->  }
+Changes since v2:
+ - revert the switch of the access process vm sysclls to iov_iter
+ - refactor the import_iovec internals differently
+ - switch aio to use __import_iovec
+
+Changes since v1:
+ - improve a commit message
+ - drop a pointless unlikely
+ - drop the PF_FORCE_COMPAT flag
+ - add a few more cleanups (including two from David Laight)
+
+Diffstat:
+ arch/arm64/include/asm/unistd32.h                  |   10 
+ arch/mips/kernel/syscalls/syscall_n32.tbl          |   10 
+ arch/mips/kernel/syscalls/syscall_o32.tbl          |   10 
+ arch/parisc/kernel/syscalls/syscall.tbl            |   10 
+ arch/powerpc/kernel/syscalls/syscall.tbl           |   10 
+ arch/s390/kernel/syscalls/syscall.tbl              |   10 
+ arch/sparc/kernel/syscalls/syscall.tbl             |   10 
+ arch/x86/entry/syscall_x32.c                       |    5 
+ arch/x86/entry/syscalls/syscall_32.tbl             |   10 
+ arch/x86/entry/syscalls/syscall_64.tbl             |   10 
+ block/scsi_ioctl.c                                 |   12 
+ drivers/scsi/sg.c                                  |    9 
+ fs/aio.c                                           |   38 --
+ fs/io_uring.c                                      |   20 -
+ fs/read_write.c                                    |  362 +--------------------
+ fs/splice.c                                        |   57 ---
+ include/linux/compat.h                             |   24 -
+ include/linux/fs.h                                 |   11 
+ include/linux/uio.h                                |   10 
+ include/uapi/asm-generic/unistd.h                  |   12 
+ lib/iov_iter.c                                     |  161 +++++++--
+ mm/process_vm_access.c                             |   85 ----
+ net/compat.c                                       |    4 
+ security/keys/compat.c                             |   37 --
+ security/keys/internal.h                           |    5 
+ security/keys/keyctl.c                             |    2 
+ tools/include/uapi/asm-generic/unistd.h            |   12 
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl |   10 
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl    |   10 
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  |   10 
+ 30 files changed, 280 insertions(+), 706 deletions(-)
