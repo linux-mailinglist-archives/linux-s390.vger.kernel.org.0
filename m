@@ -2,53 +2,84 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E00C279BBE
-	for <lists+linux-s390@lfdr.de>; Sat, 26 Sep 2020 20:03:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1BBF279C38
+	for <lists+linux-s390@lfdr.de>; Sat, 26 Sep 2020 21:41:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbgIZSDt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 26 Sep 2020 14:03:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726183AbgIZSDt (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 26 Sep 2020 14:03:49 -0400
-Subject: Re: [GIT PULL] s390 updates for 5.9-rc7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1601143428;
-        bh=3v0yKJBkaLDyEwbWC9bNvYuE5Kd671T/cBTtvHeAiRM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Av4U+0u+bkNhWzminbq/VaeWlqIrZyVEYgR8NZhO2ddFjhtFPfP3u37w+zImZv7Qh
-         MXVu+Oaw8EX6RZl8f/mAiVe4v6BlklFtYFWMbdnLwJ7kAge1uAcvOoTh+Y5nnwvqst
-         Yd2bGWn8YR8v+B1AuSr3ISJqQSuwJ5/9qqVDWY8A=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <your-ad-here.call-01601111002-ext-0188@work.hours>
-References: <your-ad-here.call-01601111002-ext-0188@work.hours>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <your-ad-here.call-01601111002-ext-0188@work.hours>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.9-7
-X-PR-Tracked-Commit-Id: f7e80983f0cf470bb82036e73bff4d5a7daf8fc2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: eeddbe6841cde5524b0b1d01f6e060be564453bf
-Message-Id: <160114342871.10659.10166910111191784371.pr-tracker-bot@kernel.org>
-Date:   Sat, 26 Sep 2020 18:03:48 +0000
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        id S1729291AbgIZTlS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 26 Sep 2020 15:41:18 -0400
+Received: from andersk.zulipdev.org ([107.170.241.23]:49744 "EHLO
+        zulip-bionic.lxd" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729106AbgIZTlS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 26 Sep 2020 15:41:18 -0400
+X-Greylist: delayed 522 seconds by postgrey-1.27 at vger.kernel.org; Sat, 26 Sep 2020 15:41:18 EDT
+Received: from User (localhost [127.0.0.1])
+        by zulip-bionic.lxd (Postfix) with SMTP id 8769614C80F;
+        Sat, 26 Sep 2020 19:30:57 +0000 (UTC)
+Reply-To: <imfdepartmentunit101@gmail.com>
+From:   "Mr. James Amsterdam (IMF Director)" <info@usa.net>
+Subject: Are You Dead Or Alive???
+Date:   Sat, 26 Sep 2020 20:31:17 +0100
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+X-Antivirus: Avast (VPS 200926-2, 09/26/2020), Outbound message
+X-Antivirus-Status: Clean
+Message-Id: <20200926193057.8769614C80F@zulip-bionic.lxd>
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Sat, 26 Sep 2020 11:03:22 +0200:
+INTERNATIONAL MONETARY FUND (IMF) OF BENIN REPUBLIC
+Address: Lot B14 PATTE D'OIE, BP 2163, Cotonou
+Officer In Charge Of Foreign Inheritance Payment
+File Registration No: 20431/29-IMF-CTN-BN
+Mr. James Amsterdam (IMF Director)
+E-mail: ( imfdepartmentunit101@gmail.com )
+Telephone Number: (+229) 6537 2627
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.9-7
+Attention: Dear Beneficiary,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/eeddbe6841cde5524b0b1d01f6e060be564453bf
+A power of attorney was forwarded to our office this morning by this woman, she is an American national and Her name is Regina Bryan Ranoa, This woman claimed to be your representative and this power of attorney stated that you are dead and she brought an account to replace your information in order to claim your inheritance fund worth of $1,500.000.00 (One  Million Five Hundred Thousand Dollars) which is now lying in a dormant account UNCLAIMED, below is the information she have submitted:
 
-Thank you!
+Full Name: Regina Bryan Ranoa.
+Full Address: 655 12TH 224 Oakland, CA 94607-3666 USA
+Telephone Number: 714-421-4900
+Occupation: Retired Accountant
+Marital Status: Married, 51 Years
+Bank Account: City Bank
+Account Number: 472 380 2115.
+Routing: 122006743
+
+Be further informed that this power of attorney stated that you suffered and died of a deadly disease but before you past away, she said you issued this power of attorney in her favor.  So we are given you 24 hours to confirm the truth in this information, If you are still alive, then you are to contact us back immediately, Because we are working 24 hours just to ensure that we monitor all the activities going on in regards to transfer beneficiaries inheritance and contract payment.
+You are to call this office once for clarifications on this matter as we shall be available 24 hours to speak with you and give you the necessary guidelines on how to ensure that your payment is wired to you possession and we also want to remind you that any further delay from your side could be dangerous, as we will not be held responsible for any wrong payment.
+So kindly contact us as matter of urgency if you are (REALLY ALIVE) as we have her identification and residence she provided for this payment to be wired to her account for us to get her arrested. Note that the only fee you are required to pay is the IMF Payment Release Bond Administrative Charge of $395.00 (Three Hundred And Ninety-Five Dollars).
+
+Kindly re-confirm your personal information to enable cross-check with the data's we have in our central computer if it's correct or not.
+
+(1) Full Name:......................
+(2) Country/State/ City Name:....................
+(3) Delivery Address:..................
+(4) Occupation:..............................
+(5) Sex:................................
+(6) Age:............................
+(7) Telephone Number:.......................
+(8) A Copy of Your Passport/ Drivers Licenses:...............
+
+As soon as you provide the information above, we will direct you on how to send the file endorsement processing fee of $395.00 (Three Hundred And Ninety-Five Dollars) via western union or money gram.
+Best Regards.
+
+Mr. James Amsterdam (IMF Director)
+Senior Representative Benin Republic
+E-mail:  ( imfdepartmentunit101@gmail.com )
+Telephone Number: (+229) 6537 2627
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
+
