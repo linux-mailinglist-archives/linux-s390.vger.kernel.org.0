@@ -2,142 +2,142 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5960B27AE93
-	for <lists+linux-s390@lfdr.de>; Mon, 28 Sep 2020 15:02:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E881427AFE7
+	for <lists+linux-s390@lfdr.de>; Mon, 28 Sep 2020 16:23:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgI1NCr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 28 Sep 2020 09:02:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbgI1NCr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 28 Sep 2020 09:02:47 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 008F4C061755
-        for <linux-s390@vger.kernel.org>; Mon, 28 Sep 2020 06:02:46 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id a4so628525qth.0
-        for <linux-s390@vger.kernel.org>; Mon, 28 Sep 2020 06:02:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0vw0hzc9LBmLPORF1IWKKNtSKYXmHXVZRRprHQAaYXo=;
-        b=GskZscDezG2KqdkACqV8aTol4TYVU67vtXhjpLjLmCHlsc8eztYkj/KyG0nACG75+R
-         rNXcSTO6VBIBqXAyqHCAAJSdD5fzv77e73XzOz1w28Mmdl/OIxqRk7eyhlZrjHnSem/a
-         UknUSWtU4yOGXyh1VjK3hZXYJstYNsRdBhJEgOic5any935sWaTBJDMjURDxaX7yzafb
-         Q6x9bblYnRjtCuKvu5dxw+A+srcuScuD9W/eelwqZphZeKEtrk9k4W8FEY0IUZH/1AKu
-         yVv+ZuBDofv3kNcMtRhxiCa6c985NzKdNUOYA6A2qDno6+R3gm3meQARiy+gYA3PbBZq
-         AogA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0vw0hzc9LBmLPORF1IWKKNtSKYXmHXVZRRprHQAaYXo=;
-        b=DOtgwZt4n+dgt3FofsE4f8siCVaZiNoiWgJZPJPVlWnZMnEh8+AK57P2M/6rSu8/Kv
-         rLKNuQrxmhuUc2JjzcrBEjXZwwUKbt7/bOxU5ReMyKfO8/4LDG/wVRH0qBliSiejMC2X
-         0+55mgSDTrv9NMjhEJhHJERlxN00/qsl1oaUNUOmJ/YXdtUi//1BKh7X3PxgCgdXGU9h
-         pWfklxoZv7r0IZc8weJ99dZwfLXT5wV5vmX3IRPl5rKbD/1RabCkafgDsmjbkB9350K9
-         +M5DjM19PhLa+08KhU5uRoAuO7eiV3sQIbuR6vZc3Cn52wzlZp3SUUI/AYYQkT608JxI
-         wLZw==
-X-Gm-Message-State: AOAM531H8o+3SJVJzbXRyzOlBf34IcTqHPgcsDlheqHXaZdMad0ZogeE
-        LEq9F/027XbydiROyYKGvrtYFg==
-X-Google-Smtp-Source: ABdhPJxNelY8OktJZyftNDCq39TaQIPExwt+riZUsci5Sw5qww94PXK5KPyw8lwkqStl+sFd9YRKLA==
-X-Received: by 2002:ac8:7b3d:: with SMTP id l29mr1463274qtu.366.1601298166224;
-        Mon, 28 Sep 2020 06:02:46 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id 76sm876952qkl.127.2020.09.28.06.02.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Sep 2020 06:02:45 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kMsnl-001us3-0v; Mon, 28 Sep 2020 10:02:45 -0300
-Date:   Mon, 28 Sep 2020 10:02:45 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Shuah Khan <shuah@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH 8/8] selftests/vm: hmm-tests: remove the libhugetlbfs
- dependency
-Message-ID: <20200928130245.GQ9916@ziepe.ca>
-References: <20200928062159.923212-1-jhubbard@nvidia.com>
- <20200928062159.923212-9-jhubbard@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200928062159.923212-9-jhubbard@nvidia.com>
+        id S1726534AbgI1OXp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 28 Sep 2020 10:23:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38292 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726327AbgI1OXp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 28 Sep 2020 10:23:45 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08SE2RmA090294;
+        Mon, 28 Sep 2020 10:23:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=XRXRkWlANitcZgKg896dnP8UeTTtQftCziZtY5iTuV8=;
+ b=r1lVjEDUQ4QEEs3T0cxtWEL6XsxI6uIzLS/UbioGcDpJA38TmQxGguHhXbk4CuXJ8D2b
+ Q5zZfzOh4hm+J5k12BlMK3QACHy+ZiB+DJbXd0MWYVR45x5yUsurTkMSfrXdOOXCSEi+
+ wbflvh6kYoNomezjKDfB+nGQqmR0+4wrmeCEy2jZIWjxjo8pl0hOP0bUdLU2x7TExAvf
+ RHChVeXl743sKo+4LCxd0j7HHGWnx76EbrQJh0Rr20dTRrtwcEzuYwaIhpk0y4HOd54w
+ Buq4AJx/v3/+FDilMzYONS5ZEStvsxbx0mvi3Q5FoYA8qBdrR8IwyqndhrqLP/3uaDpL BA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33ufvy441x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Sep 2020 10:23:44 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08SE2tcb092161;
+        Mon, 28 Sep 2020 10:23:44 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33ufvy4410-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Sep 2020 10:23:43 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08SENDwW009075;
+        Mon, 28 Sep 2020 14:23:41 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 33u5r9gmee-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Sep 2020 14:23:41 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08SENcUM31719790
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Sep 2020 14:23:39 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C5DF042049;
+        Mon, 28 Sep 2020 14:23:38 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6BD474203F;
+        Mon, 28 Sep 2020 14:23:38 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.66.164])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 28 Sep 2020 14:23:38 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, thuth@redhat.com, cohuck@redhat.com,
+        imbrenda@linux.ibm.com
+Subject: [kvm-unit-tests PATCH v2 0/4] s390x: css: pv: css test adaptation for PV
+Date:   Mon, 28 Sep 2020 16:23:33 +0200
+Message-Id: <1601303017-8176-1-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-28_14:2020-09-28,2020-09-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ mlxscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0 spamscore=0
+ bulkscore=0 mlxlogscore=999 malwarescore=0 priorityscore=1501
+ suspectscore=3 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009280108
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun, Sep 27, 2020 at 11:21:59PM -0700, John Hubbard wrote:
+Hi all,
 
-> @@ -76,8 +79,6 @@ TEST_FILES := test_vmalloc.sh
->  KSFT_KHDR_INSTALL := 1
->  include ../lib.mk
->  
-> -$(OUTPUT)/hmm-tests: LDLIBS += -lhugetlbfs
-> -
->  ifeq ($(ARCH),x86_64)
->  BINARIES_32 := $(patsubst %,$(OUTPUT)/%,$(BINARIES_32))
->  BINARIES_64 := $(patsubst %,$(OUTPUT)/%,$(BINARIES_64))
-> @@ -130,3 +131,22 @@ endif
->  $(OUTPUT)/mlock-random-test: LDLIBS += -lcap
->  
->  $(OUTPUT)/gup_test: ../../../../mm/gup_test.h
-> +
-> +$(OUTPUT)/hmm-tests: local_config.h
-> +
-> +# HMM_EXTRA_LIBS may get set in local_config.mk, or it may be left empty.
-> +$(OUTPUT)/hmm-tests: LDLIBS += $(HMM_EXTRA_LIBS)
-> +
-> +local_config.mk local_config.h: check_config.sh
-> +	./check_config.sh
-> +
-> +EXTRA_CLEAN += local_config.mk local_config.h
-> +
-> +ifeq ($(HMM_EXTRA_LIBS),)
-> +all: warn_missing_hugelibs
-> +
-> +warn_missing_hugelibs:
-> +	@echo ; \
-> +	echo "Warning: missing libhugetlbfs support. Some HMM tests will be skipped." ; \
-> +	echo
-> +endif
-> diff --git a/tools/testing/selftests/vm/check_config.sh b/tools/testing/selftests/vm/check_config.sh
-> new file mode 100755
-> index 000000000000..651a4b192479
-> +++ b/tools/testing/selftests/vm/check_config.sh
-> @@ -0,0 +1,30 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Probe for libraries and create header files to record the results. Both C
-> +# header files and Makefile include fragments are created.
-> +
-> +OUTPUT_H_FILE=local_config.h
-> +OUTPUT_MKFILE=local_config.mk
-> +
-> +# libhugetlbfs
-> +tmpname=$(mktemp)
-> +tmpfile_c=${tmpname}.c
-> +tmpfile_o=${tmpname}.o
-> +
-> +echo "#include <sys/types.h>"        > $tmpfile_c
-> +echo "#include <hugetlbfs.h>"       >> $tmpfile_c
-> +echo "int func(void) { return 0; }" >> $tmpfile_c
-> +
-> +gcc -c $tmpfile_c -o $tmpfile_o >/dev/null 2>&1
+I send a v2 even I got not a lot of answers for v1 because:
+1 I forgot the kvm-unit-test header
+2 the patch on uv.h was very bad
+3 I saw some stupid errors I can correct myself like
+  to zero the allocated page before use or free it on error.
 
-This gcc has to come from some makefile variable
+That said, here what is done:
 
-This is kind of janky :\
+To adapt the CSS I/O tests to protected virtualisation we need
+utilities to:
 
-Could we just not use libhugetlbfs? Doesn't it all just boil down to
-creating a file in /dev/huge? Eg look at tools/testing/selftests/vm/hugepage-mmap.c
+1- allocate the I/O buffers in a private page (patch 3)
+   It must be in a dedicated page to avoid exporting code or
+   guest private data to the host.
 
-Jason
+2- share  the I/O buffer with the host (patch 2)
+
+3- be sure to allocate memory under 2Gb (patch 1)
+
+The 3 first patches are the implementation of the tools,
+patch 4 is the modification of the css.c test for PV.
+
+regards,
+Pierre
+
+Pierre Morel (4):
+  memory: allocation in low memory
+  s390x: pv: implement routine to share/unshare memory
+  s390x: define UV compatible I/O allocation
+  s390x: css: pv: css test adaptation for PV
+
+ lib/alloc_dma_page.c  | 57 +++++++++++++++++++++++++++++++++++++++++++
+ lib/alloc_dma_page.h  | 24 ++++++++++++++++++
+ lib/s390x/asm/uv.h    | 50 +++++++++++++++++++++++++++++++++++++
+ lib/s390x/css.h       |  3 +--
+ lib/s390x/css_lib.c   | 28 ++++++---------------
+ lib/s390x/malloc_io.c | 49 +++++++++++++++++++++++++++++++++++++
+ lib/s390x/malloc_io.h | 18 ++++++++++++++
+ lib/s390x/sclp.c      |  2 ++
+ s390x/Makefile        |  2 ++
+ s390x/css.c           | 35 +++++++++++++++++---------
+ 10 files changed, 235 insertions(+), 33 deletions(-)
+ create mode 100644 lib/alloc_dma_page.c
+ create mode 100644 lib/alloc_dma_page.h
+ create mode 100644 lib/s390x/malloc_io.c
+ create mode 100644 lib/s390x/malloc_io.h
+
+-- 
+2.25.1
+
+changelog:
+
+from v1:
+
+- add the kvm-unit-test header
+
+- correct checks for errors on Set/Remove Shared Access
+
+- Add report for uv Set/Remove Shared Access
+
+- zero the allocated I/O page before use
+
+- free the page on error.
+
