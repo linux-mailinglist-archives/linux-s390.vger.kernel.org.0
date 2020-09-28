@@ -2,62 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70CE627A970
-	for <lists+linux-s390@lfdr.de>; Mon, 28 Sep 2020 10:22:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D41227AA79
+	for <lists+linux-s390@lfdr.de>; Mon, 28 Sep 2020 11:13:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgI1IWt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 28 Sep 2020 04:22:49 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45654 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726440AbgI1IWt (ORCPT
+        id S1726759AbgI1JNe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 28 Sep 2020 05:13:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34860 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726565AbgI1JNd (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 28 Sep 2020 04:22:49 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08S80hAs048950;
-        Mon, 28 Sep 2020 04:22:47 -0400
+        Mon, 28 Sep 2020 05:13:33 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08S91wIV125580;
+        Mon, 28 Sep 2020 05:13:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
- content-type; s=pp1; bh=7Co01wj5qUmlD+w9viGdemqJM0vjytfZ67RkZNJo4YY=;
- b=fQ33QUZ/7vUw8bAen8p6MLp+cBZed8eVs5WmGBmtssTtJcNU9pH8CQyiMK567bdIbT/m
- 8Z08OLBuxgECbEmasf3oidgMyaKYHy9kbz/B/VqSt4fu7qwmY6J6YFmAllAvB2lBbDDF
- +EpOIflCEIjGAQLPZLnZlVRcMzQoIKZ2QYZSWCStD8PU/i1PblP4eF//MJmCdXuI6n9x
- u+wvOYyDf0j+C9+yGMXiLV8evzGCMilFGTMcG7sBADjD+9FA6WMi+dF41eqhSrFhnuEO
- 96iQzoI6SofEdje99SbbpTc9iht5oBJBzOc0SaRc90pMfw8/WJNhpGm+dBfDeiIMDHQv Qw== 
+ content-type; s=pp1; bh=+fnxOmYt5Sd/B6QBpFPIwJ+OwUhbRhQuiUxDdpQAJG8=;
+ b=VqX7A/oK8O8BTHCmnkttJazPHP0R9O1olLHUCJikOygrAAQ17ity5TZtvYPZT5Tv9i6Y
+ sVCxlXTMZcRJlAUfB7Z2kJcpjrDbXfLdT3DryobkWVvWnFXv2Aa9QC4PS97eyoG3Ck02
+ CqCNuojJ28tI+hW27r7jwcoxxu5ORoRfWANoYIhgUWNhn1BAZKUVvjeMsyM2ZY6QgPAa
+ 40RcbvbLC494mOUWTp8vnirV1xKYs9qdqSn3yn+ngkOU5tamW50r+jZY60Rxon3TZ0F9
+ 6i1t+Sd9nCozfz244VTGm9PqPXC9iLtQ3QQzi6hiDlXpjmDuGwHcG99ZyzY05vUd5Y31 yA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33u9nbmpsn-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33uck8rs9s-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Sep 2020 04:22:47 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08S80sFb049986;
-        Mon, 28 Sep 2020 04:22:47 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33u9nbmpsa-1
+        Mon, 28 Sep 2020 05:13:05 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08S92GXJ127159;
+        Mon, 28 Sep 2020 05:13:05 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33uck8rs8s-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Sep 2020 04:22:47 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08S8I45Z009220;
-        Mon, 28 Sep 2020 08:22:45 GMT
+        Mon, 28 Sep 2020 05:13:05 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08S9CGiu009987;
+        Mon, 28 Sep 2020 09:13:02 GMT
 Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06fra.de.ibm.com with ESMTP id 33svwgryt5-1
+        by ppma06ams.nl.ibm.com with ESMTP id 33u5r9gbb2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Sep 2020 08:22:45 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08S8MgQh30081516
+        Mon, 28 Sep 2020 09:13:02 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08S9D0kg30409048
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Sep 2020 08:22:42 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7676F52051;
-        Mon, 28 Sep 2020 08:22:42 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.40.163])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 08DF952050;
-        Mon, 28 Sep 2020 08:22:41 +0000 (GMT)
-Subject: Re: [PATCH v1 2/4] s390x: pv: implement routine to share/unshare
- memory
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
-        cohuck@redhat.com, imbrenda@linux.ibm.com
-References: <1601049764-11784-1-git-send-email-pmorel@linux.ibm.com>
- <1601049764-11784-3-git-send-email-pmorel@linux.ibm.com>
+        Mon, 28 Sep 2020 09:13:00 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 75DE14C040;
+        Mon, 28 Sep 2020 09:13:00 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 690104C04A;
+        Mon, 28 Sep 2020 09:12:59 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.48.120])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 28 Sep 2020 09:12:59 +0000 (GMT)
+Subject: Re: [RFC Patch 0/2] KVM: SVM: Cgroup support for SVM SEV ASIDs
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vipin Sharma <vipinsh@google.com>
+Cc:     thomas.lendacky@amd.com, tj@kernel.org, lizefan@huawei.com,
+        joro@8bytes.org, corbet@lwn.net, brijesh.singh@amd.com,
+        jon.grimm@amd.com, eric.vantassell@amd.com, gingell@google.com,
+        rientjes@google.com, kvm@vger.kernel.org, x86@kernel.org,
+        cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "kvm-ppc@vger.kernel.org" <kvm-ppc@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20200922004024.3699923-1-vipinsh@google.com>
+ <20200922014836.GA26507@linux.intel.com>
+ <45117fcc-d6b8-fab9-11dc-79181058ed62@redhat.com>
 From:   Janosch Frank <frankja@linux.ibm.com>
 Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  mQINBFubpD4BEADX0uhkRhkj2AVn7kI4IuPY3A8xKat0ihuPDXbynUC77mNox7yvK3X5QBO6
@@ -101,123 +114,117 @@ Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
  Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
  phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
-Message-ID: <6c87a0ef-63ef-a0b8-58ff-d60e58bdb223@linux.ibm.com>
-Date:   Mon, 28 Sep 2020 10:22:40 +0200
+Message-ID: <b896ea83-7b98-7c86-f147-446faf2dbc44@linux.ibm.com>
+Date:   Mon, 28 Sep 2020 11:12:58 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <1601049764-11784-3-git-send-email-pmorel@linux.ibm.com>
+In-Reply-To: <45117fcc-d6b8-fab9-11dc-79181058ed62@redhat.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="wlCwQ6Ss9n5G0nlWIqOLmcEv41lkqv5Og"
+ boundary="VfA9Q2MEC6jqxTvBZM48CGM7TI8K8VyRY"
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-28_05:2020-09-24,2020-09-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- clxscore=1015 spamscore=0 lowpriorityscore=0 phishscore=0 malwarescore=0
- adultscore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009280063
+ definitions=2020-09-28_07:2020-09-24,2020-09-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1011 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 impostorscore=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2009280071
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---wlCwQ6Ss9n5G0nlWIqOLmcEv41lkqv5Og
-Content-Type: multipart/mixed; boundary="Rzxd9G4bNo0gXEvb26jVDBGQpEComrMrA"
+--VfA9Q2MEC6jqxTvBZM48CGM7TI8K8VyRY
+Content-Type: multipart/mixed; boundary="Kz97w4axyoHn1iOg02JLWtj5V7UOUmbLC"
 
---Rzxd9G4bNo0gXEvb26jVDBGQpEComrMrA
+--Kz97w4axyoHn1iOg02JLWtj5V7UOUmbLC
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On 9/25/20 6:02 PM, Pierre Morel wrote:
-> When communicating with the host we need to share part of
-> the memory.
+On 9/23/20 2:47 PM, Paolo Bonzini wrote:
+> On 22/09/20 03:48, Sean Christopherson wrote:
+>> This should be genericized to not be SEV specific.  TDX has a similar
+>> scarcity issue in the form of key IDs, which IIUC are analogous to SEV=
+ ASIDs
+>> (gave myself a quick crash course on SEV ASIDs).  Functionally, I doub=
+t it
+>> would change anything, I think it'd just be a bunch of renaming.  The =
+hardest
+>> part would probably be figuring out a name :-).
+>>
+>> Another idea would be to go even more generic and implement a KVM cgro=
+up
+>> that accounts the number of VMs of a particular type, e.g. legacy, SEV=
+,
+>> SEV-ES?, and TDX.  That has potential future problems though as it fal=
+ls
+>> apart if hardware every supports 1:MANY VMs:KEYS, or if there is a nee=
+d to
+>> account keys outside of KVM, e.g. if MKTME for non-KVM cases ever sees=
+ the
+>> light of day.
 >=20
-> Let's implement the ultravisor calls for this.
+> Or also MANY:1 (we are thinking of having multiple VMs share the same
+> SEV ASID).
 >=20
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Suggested-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  lib/s390x/asm/uv.h | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
+> It might even be the same on s390 and PPC, in which case we probably
+> want to implement this in virt/kvm.  Paul, Janosch, do you think this
+> would make sense for you?  The original commit message is below.
 >=20
-> diff --git a/lib/s390x/asm/uv.h b/lib/s390x/asm/uv.h
-> index 4c2fc48..19019e4 100644
-> --- a/lib/s390x/asm/uv.h
-> +++ b/lib/s390x/asm/uv.h
-> @@ -71,4 +71,37 @@ static inline int uv_call(unsigned long r1, unsigned=
- long r2)
->  	return cc;
->  }
-> =20
-> +static inline int share(unsigned long addr, u16 cmd)
-> +{
-> +	struct uv_cb_share uvcb =3D {
-> +		.header.cmd =3D cmd,
-> +		.header.len =3D sizeof(uvcb),
-> +		.paddr =3D addr
-> +	};
-> +
-> +	uv_call(0, (u64)&uvcb);
-> +	return uvcb.header.rc;
+> Paolo
+>=20
+>> On Mon, Sep 21, 2020 at 05:40:22PM -0700, Vipin Sharma wrote:
+>>> Hello,
+>>>
+>>> This patch series adds a new SEV controller for tracking and limiting=
 
-That's not a great idea, rc is > 1 for error codes...
-In the kernel we check for the cc instead since uv_call() has only 0/1
-as possible cc return values.
+>>> the usage of SEV ASIDs on the AMD SVM platform.
+>>>
+>>> SEV ASIDs are used in creating encrypted VM and lightweight sandboxes=
 
-> +}
-> +
-> +/*
-> + * Guest 2 request to the Ultravisor to make a page shared with the
-> + * hypervisor for IO.
-> + *
-> + * @addr: Real or absolute address of the page to be shared
-> + */
-> +static inline int uv_set_shared(unsigned long addr)
-> +{
-> +	return share(addr, UVC_CMD_SET_SHARED_ACCESS);
-> +}
-> +
-> +/*
-> + * Guest 2 request to the Ultravisor to make a page unshared.
-> + *
-> + * @addr: Real or absolute address of the page to be unshared
-> + */
-> +static inline int uv_remove_shared(unsigned long addr)
-> +{
-> +	return share(addr, UVC_CMD_REMOVE_SHARED_ACCESS);
-> +}
-> +
->  #endif
+>>> but this resource is in very limited quantity on a host.
+>>>
+>>> This limited quantity creates issues like SEV ASID starvation and
+>>> unoptimized scheduling in the cloud infrastructure.
+>>>
+>>> SEV controller provides SEV ASID tracking and resource control
+>>> mechanisms.
 >=20
 
+On s390 we currently support a few million protected guests per LPAR so
+guest IDs are not exactly scarce. However having accounting for them
+might add some value nevertheless, especially when having large amount
+of protected containers.
+
+@Christian: Any thoughts on this?
 
 
---Rzxd9G4bNo0gXEvb26jVDBGQpEComrMrA--
+--Kz97w4axyoHn1iOg02JLWtj5V7UOUmbLC--
 
---wlCwQ6Ss9n5G0nlWIqOLmcEv41lkqv5Og
+--VfA9Q2MEC6jqxTvBZM48CGM7TI8K8VyRY
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl9xnVEACgkQ41TmuOI4
-ufgrNg//SZGk2WtnjZ6BsyX9qY3dtFy4pt6J3yxgwnNMOAUPUbQ17nyRdXoTI20G
-1XW9IyXC/R5cijZ43ih6jcd4oz+l4HfbMIRIPZdEX32GMTjDGxbbmEqxfL9uHz1h
-1NXwJ5M8hE5GasyyZG50jlrp+awGgZ45K1/jDfuef2Okfa3+EjJWjgQ3mUrjxblC
-EctRzteBXQPGxy2nUP45CvESt0Q/bTOQsQZkCqWQpRcM6IvKDlNMAwdEZ2i00qb0
-wmIix5bEFfVPspd6vCJ/t1EQK1+FOef2BPafaL0ldadgQdS38KHYjtEgaPSkDlEE
-jlifaQJNvS1m2xN4oSRzXZEUJxmogAjyHy8Dv943YZJiOnPrBhavaEnas5jauojf
-dGVGOzYNUy7Tz2YYyLPIWaYKcY0pJJ+/DsH0jSoHQKY2Tiz8MIV2L0rugDQQzlVN
-QcHl2+FOvJ+crCKHUAhgTRvXJmjn5s2qqdnv2Fz6VJxEy4W6JM4Ey+E8ejimo2qt
-OGgPrgcMGmhTNDcm5hHvSJX1T10U1A+temW4jT9OsYKvLR1aPKOrDeM+3JOz8Zx6
-Sc56Kf1cTfvZs0VBj9FipsKn68KDlEGU9JafE/1iUcdJWsSbSOcIARdA82mVT+Br
-E6g5qEOKWhn0zUcp3aV8SMHJT1IvyqEH/QcvUF4F9bkFY6Fuwds=
-=Offx
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl9xqRoACgkQ41TmuOI4
+ufiRzw//RQLYgVIDnvQ53hh7q4lVn4eqNunUK4JM6ZVR6uv5/qUq49XGb1Qhnxf7
+HCNyzi4jR30hu/gs+Bp6YPAlyjc8KLQUDSFvHYSWwrkeJuQQ/MZAQfxOR6xX0lo4
+/TP3WrtxU+9gQSoa0Zr1QdZBmgMC2bkqgST7JEwVMrY9zNqQR9BfFPxcyEHoOcq9
+6dBqP4icN5fNA8p7naD/do70gNR80yji0InDPmKvNP4HEczXwH/gDEYt6LECwIKq
+cwL3MX6iJI0BHBrOxSHKvYvQlR7df0VyUPpdsTNXZrUUYpLyA7drX5jsJdRz5Fmq
+cOIJlmawm0LxAzYP9EtvzCIsSrysuSrgzqznCRWyi8dnJB2paEqKZ/UCs2nXH28v
+lWEu/B7UCEDKDZnZG/KStBiTkwvepN1Dvo2jGlee9S8zEzcniTVtIdl+lfyB4c/m
+ozSco0feBmH6m2KC3c6MHkYZTJR8eiLb7aZflWlxm5Mx0lrurH2vr8lTXC5BOrpw
+WTxc/OEJ3hxwdW0e7WecjvaAKMckDaJaS5bD2uJP1Lg5YZKcx7icp4Jn/DjXut98
+b4EzqcAlj8D9PwZXZizo135eyasTQ9b4GpZEUX5E5Yq2m53/GNdO1BhP4iP+B87W
+6oAKnmpbrgsGkuZaQlfmUMvxG0JEuq88gbRX15BvTKkivnPJG/c=
+=WSBY
 -----END PGP SIGNATURE-----
 
---wlCwQ6Ss9n5G0nlWIqOLmcEv41lkqv5Og--
+--VfA9Q2MEC6jqxTvBZM48CGM7TI8K8VyRY--
 
