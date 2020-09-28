@@ -2,133 +2,221 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 864A927ABF3
-	for <lists+linux-s390@lfdr.de>; Mon, 28 Sep 2020 12:37:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 875F227AD21
+	for <lists+linux-s390@lfdr.de>; Mon, 28 Sep 2020 13:45:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgI1Khs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 28 Sep 2020 06:37:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60210 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726576AbgI1Khr (ORCPT
+        id S1726694AbgI1LpJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 28 Sep 2020 07:45:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38483 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726617AbgI1LpG (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 28 Sep 2020 06:37:47 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08SAUeHq145167;
-        Mon, 28 Sep 2020 06:37:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=MtrwxyWrFvYnunZtd6yIx1cwXkZDozx9BbnSq/59vgc=;
- b=jruHA71TSV5UuMevJbl862Fm/nYcgSaKe+flDOkz1XjGz7EbOtwGX6WVDLcDIQxWUsGc
- 5wFlGjSCJHKsdZAR6+4Brskb55smur2ii0Ds810hSMnlB7TzebxyuFZpfD20EHx6A6AM
- cTJwGA+mKq7t4BS4aXSf66Gp26gcP6j14SLIZA79kvUbYelYA/LSj9rzXOk4gzJQsVxK
- E7wA47/mjlOyzbgOvz68CzInEhNE82YfEujkOrGHH8+1zu12LH1k0HKwwf+EK1TOcTqI
- FLuAEHEophXEPG/6rlu+BMI+spn6mAH+YK0gTH5ztLEBGcfzP47yqAyS9dRhrLyVPvIv VA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33uchp35wh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Sep 2020 06:37:46 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08SAUu7m146265;
-        Mon, 28 Sep 2020 06:37:45 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33uchp35w5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Sep 2020 06:37:45 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08SAb0sV006723;
-        Mon, 28 Sep 2020 10:37:44 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 33sw97t11a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Sep 2020 10:37:44 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08SAbf9S29688128
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Sep 2020 10:37:41 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 35AE211C04C;
-        Mon, 28 Sep 2020 10:37:41 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DCF2611C04A;
-        Mon, 28 Sep 2020 10:37:40 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.61.99])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 28 Sep 2020 10:37:40 +0000 (GMT)
-Subject: Re: [PATCH v1 2/4] s390x: pv: implement routine to share/unshare
- memory
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
-        cohuck@redhat.com, imbrenda@linux.ibm.com
-References: <1601049764-11784-1-git-send-email-pmorel@linux.ibm.com>
- <1601049764-11784-3-git-send-email-pmorel@linux.ibm.com>
- <6c87a0ef-63ef-a0b8-58ff-d60e58bdb223@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <9aa7e0ab-7013-db0b-4af5-8015ade5c40c@linux.ibm.com>
-Date:   Mon, 28 Sep 2020 12:37:40 +0200
+        Mon, 28 Sep 2020 07:45:06 -0400
+Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1601293504;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wBGTgIt7hg0wmSGDCOPgyYLo+7s8XByo7Hh4ay+hv4g=;
+        b=O43+w4wH8Wj8o+RqBGHlsQAGmL+f8qPFMNq1WN4XXZ7kMl7/ef6y/JW7/VKTWt+twuig4h
+        SK68b2a7Q23hgJjFOf08qbmemAhHnG3YO1CHW+AkFUkMDU4wbrh/LgQVfqerb60N4dAsPJ
+        HekHwKQujCRmx9sLLcyvII2OTf6fbw8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-185-2Yd2RrzXMrmmNkNZUWT2NA-1; Mon, 28 Sep 2020 07:45:02 -0400
+X-MC-Unique: 2Yd2RrzXMrmmNkNZUWT2NA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 402A8801FD7;
+        Mon, 28 Sep 2020 11:45:01 +0000 (UTC)
+Received: from thuth.remote.csb (unknown [10.40.192.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1501560C11;
+        Mon, 28 Sep 2020 11:44:54 +0000 (UTC)
+Subject: Re: [PATCH kvm-unit-tests v2 4/4] s390x: add Protected VM support
+To:     Marc Hartmayer <mhartmay@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, linux-s390@vger.kernel.org
+References: <20200923134758.19354-1-mhartmay@linux.ibm.com>
+ <20200923134758.19354-5-mhartmay@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <bb13ff8d-de62-4da6-3f99-4ccc5d7386a8@redhat.com>
+Date:   Mon, 28 Sep 2020 13:44:53 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <6c87a0ef-63ef-a0b8-58ff-d60e58bdb223@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200923134758.19354-5-mhartmay@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-28_07:2020-09-24,2020-09-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 phishscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0
- malwarescore=0 mlxscore=0 adultscore=0 impostorscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009280080
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 2020-09-28 10:22, Janosch Frank wrote:
-> On 9/25/20 6:02 PM, Pierre Morel wrote:
->> When communicating with the host we need to share part of
->> the memory.
->>
->> Let's implement the ultravisor calls for this.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> Suggested-by: Janosch Frank <frankja@linux.ibm.com>
->> ---
->>   lib/s390x/asm/uv.h | 33 +++++++++++++++++++++++++++++++++
->>   1 file changed, 33 insertions(+)
->>
->> diff --git a/lib/s390x/asm/uv.h b/lib/s390x/asm/uv.h
->> index 4c2fc48..19019e4 100644
->> --- a/lib/s390x/asm/uv.h
->> +++ b/lib/s390x/asm/uv.h
->> @@ -71,4 +71,37 @@ static inline int uv_call(unsigned long r1, unsigned long r2)
->>   	return cc;
->>   }
->>   
->> +static inline int share(unsigned long addr, u16 cmd)
->> +{
->> +	struct uv_cb_share uvcb = {
->> +		.header.cmd = cmd,
->> +		.header.len = sizeof(uvcb),
->> +		.paddr = addr
->> +	};
->> +
->> +	uv_call(0, (u64)&uvcb);
->> +	return uvcb.header.rc;
+On 23/09/2020 15.47, Marc Hartmayer wrote:
+> Add support for Protected Virtual Machine (PVM) tests. For starting a
+> PVM guest we must be able to generate a PVM image by using the
+> `genprotimg` tool from the s390-tools collection. This requires the
+> ability to pass a machine-specific host-key document, so the option
+> `--host-key-document` is added to the configure script.
 > 
-> That's not a great idea, rc is > 1 for error codes...
-> In the kernel we check for the cc instead since uv_call() has only 0/1
-> as possible cc return values.
+> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+> Signed-off-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+> ---
+>  configure               |  9 +++++++++
+>  s390x/Makefile          | 17 +++++++++++++++--
+>  s390x/selftest.parmfile |  1 +
+>  s390x/unittests.cfg     |  1 +
+>  scripts/s390x/func.bash | 36 ++++++++++++++++++++++++++++++++++++
+>  5 files changed, 62 insertions(+), 2 deletions(-)
+>  create mode 100644 s390x/selftest.parmfile
+>  create mode 100644 scripts/s390x/func.bash
+> 
+> diff --git a/configure b/configure
+> index f9305431a9cb..fe319233eb50 100755
+> --- a/configure
+> +++ b/configure
+> @@ -19,6 +19,7 @@ wa_divide=
+>  vmm="qemu"
+>  errata_force=0
+>  erratatxt="$srcdir/errata.txt"
+> +host_key_document=
+>  
+>  usage() {
+>      cat <<-EOF
+> @@ -41,6 +42,9 @@ usage() {
+>  	                           no environ is provided by the user (enabled by default)
+>  	    --erratatxt=FILE       specify a file to use instead of errata.txt. Use
+>  	                           '--erratatxt=' to ensure no file is used.
+> +	    --host-key-document=HOST_KEY_DOCUMENT
+> +	                           Specify the machine-specific host-key document for creating
+> +	                           a PVM image with 'genprotimg' (s390x only)
+>  EOF
+>      exit 1
+>  }
+> @@ -93,6 +97,9 @@ while [[ "$1" = -* ]]; do
+>  	    erratatxt=
+>  	    [ "$arg" ] && erratatxt=$(eval realpath "$arg")
+>  	    ;;
+> +	--host-key-document)
+> +	    host_key_document="$arg"
+> +	    ;;
+>  	--help)
+>  	    usage
+>  	    ;;
+> @@ -224,6 +231,8 @@ ENVIRON_DEFAULT=$environ_default
+>  ERRATATXT=$erratatxt
+>  U32_LONG_FMT=$u32_long
+>  WA_DIVIDE=$wa_divide
+> +GENPROTIMG=${GENPROTIMG-genprotimg}
+> +HOST_KEY_DOCUMENT=$host_key_document
+>  EOF
+>  
+>  cat <<EOF > lib/config.h
+> diff --git a/s390x/Makefile b/s390x/Makefile
+> index c2213ad92e0d..b079a26dffb7 100644
+> --- a/s390x/Makefile
+> +++ b/s390x/Makefile
+> @@ -19,12 +19,19 @@ tests += $(TEST_DIR)/smp.elf
+>  tests += $(TEST_DIR)/sclp.elf
+>  tests += $(TEST_DIR)/css.elf
+>  tests += $(TEST_DIR)/uv-guest.elf
+> -tests_binary = $(patsubst %.elf,%.bin,$(tests))
+>  
+> -all: directories test_cases test_cases_binary
+> +tests_binary = $(patsubst %.elf,%.bin,$(tests))
+> +ifneq ($(HOST_KEY_DOCUMENT),)
+> +tests_pv_binary = $(patsubst %.bin,%.pv.bin,$(tests_binary))
+> +else
+> +tests_pv_binary =
+> +endif
+> +
+> +all: directories test_cases test_cases_binary test_cases_pv
+>  
+>  test_cases: $(tests)
+>  test_cases_binary: $(tests_binary)
+> +test_cases_pv: $(tests_pv_binary)
+>  
+>  CFLAGS += -std=gnu99
+>  CFLAGS += -ffreestanding
+> @@ -73,6 +80,12 @@ FLATLIBS = $(libcflat)
+>  %.bin: %.elf
+>  	$(OBJCOPY) -O binary  $< $@
+>  
+> +%selftest.pv.bin: %selftest.bin $(HOST_KEY_DOCUMENT) $(patsubst %.pv.bin,%.parmfile,$@)
+> +	$(GENPROTIMG) --host-key-document $(HOST_KEY_DOCUMENT) --parmfile $(patsubst %.pv.bin,%.parmfile,$@) --no-verify --image $< -o $@
+> +
+> +%.pv.bin: %.bin $(HOST_KEY_DOCUMENT)
+> +	$(GENPROTIMG) --host-key-document $(HOST_KEY_DOCUMENT) --no-verify --image $< -o $@
+> +
+>  arch_clean: asm_offsets_clean
+>  	$(RM) $(TEST_DIR)/*.{o,elf,bin} $(TEST_DIR)/.*.d lib/s390x/.*.d
+>  
+> diff --git a/s390x/selftest.parmfile b/s390x/selftest.parmfile
+> new file mode 100644
+> index 000000000000..5613931aa5c6
+> --- /dev/null
+> +++ b/s390x/selftest.parmfile
+> @@ -0,0 +1 @@
+> +test 123
+> \ No newline at end of file
+> diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
+> index 6d50c634770f..3feb8bcaa13d 100644
+> --- a/s390x/unittests.cfg
+> +++ b/s390x/unittests.cfg
+> @@ -21,6 +21,7 @@
+>  [selftest-setup]
+>  file = selftest.elf
+>  groups = selftest
+> +# please keep the kernel cmdline in sync with $(TEST_DIR)/selftest.parmfile
+>  extra_params = -append 'test 123'
+>  
+>  [intercept]
+> diff --git a/scripts/s390x/func.bash b/scripts/s390x/func.bash
+> new file mode 100644
+> index 000000000000..4eae5e916c61
+> --- /dev/null
+> +++ b/scripts/s390x/func.bash
+> @@ -0,0 +1,36 @@
+> +# The file scripts/common.bash has to be the only file sourcing this
+> +# arch helper file
+> +source config.mak
+> +
+> +ARCH_CMD=arch_cmd_s390x
+> +
+> +function arch_cmd_s390x()
+> +{
+> +	local cmd=$1
+> +	local testname=$2
+> +	local groups=$3
+> +	local smp=$4
+> +	local kernel=$5
+> +	local opts=$6
+> +	local arch=$7
+> +	local check=$8
+> +	local accel=$9
+> +	local timeout=${10}
+> +
+> +	# run the normal test case
+> +	"$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+> +
+> +	# run PV test case
+> +	kernel=${kernel%.elf}.pv.bin
+> +	testname=${testname}_PV
+> +	if [ ! -f "${kernel}" ]; then
+> +		if [ -z "${HOST_KEY_DOCUMENT}" ]; then
+> +			print_result 'SKIP' $testname '' 'no host-key document specified'
 
-hum, Yes.
-I will add some report too here in case of error.
+I wonder whether we should not simply stay silent here ... ? Currently
+the output gets quite spoiled with a lot of these "no host-key document
+specified" messages when PV is not in use.
+If you agree, I could drop this line when picking up the patch (no need
+to respin just because of this).
 
+ Thomas
 
-
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
