@@ -2,59 +2,31 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2639B27D772
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Sep 2020 22:00:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6F2427D7BC
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Sep 2020 22:11:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgI2UAq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 29 Sep 2020 16:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727740AbgI2UAq (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 29 Sep 2020 16:00:46 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C1C7C0613D0
-        for <linux-s390@vger.kernel.org>; Tue, 29 Sep 2020 13:00:46 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id u126so6831659oif.13
-        for <linux-s390@vger.kernel.org>; Tue, 29 Sep 2020 13:00:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AmCsi2BDdE0wC8EuTHmuUbDB6XL/3OtoUvlKfVp4OPQ=;
-        b=JaM/LYlOqwadQ1GLoLRVv3Oj+9kSXFmsUfgwy1SU33RAhEzLUM/wZq0TfyxQVpePnP
-         vpmwQYk+Bm0P5EKjiUf0Jqdxudmx3PqfQXArmHqgth4hxoAtdasEj0YvUB7ENFAI3u5f
-         +bLmy9nILEhL2MBiJPYpYGRBg5QDgOdfkE1bw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AmCsi2BDdE0wC8EuTHmuUbDB6XL/3OtoUvlKfVp4OPQ=;
-        b=ZtZcBxf+0KNaVDk459PuJgx7hMQ2TbySBPvBnzHtMGz3RWpD2M8zMGWFLSxWIsglGF
-         eJwBayFPCH9tq/zZUsEaUKIgrFfMOMd1xUaEio03aj+iwwLhDoYJ5aXPQnqO0v7rE0I6
-         lUNCy5INF130iermDVtkhDYAJHxJ3IlSgrqTAmiRUzvtPlgG8IWS29hr6SXWbN6vsWIi
-         zJywSYnOXRqYA0U9LVUhyttB8L6Rv+8LCIvbKzy4NzeJLAarUxsNIqxxfZ1tXxMcOvp8
-         apaVwZM736KPHy/9N5TJ1PqQdgnTdfeAuCHcNy3o6fd1JcEsAQ/12S0TJ2d1ztSaG/8K
-         UXQg==
-X-Gm-Message-State: AOAM530wBKfDTgTdSzD1SVlP/tyJiE+quqfUiJljI6GXlmd0Kr9+j29X
-        wCsfoZU8oay8m5D9WWL3M+3JaA==
-X-Google-Smtp-Source: ABdhPJyKOoPZmEuXMRYFPdazhGdDQVw44SgQKBs3AgX2hDMLBj6VIr7dd1knTEulo8aEXP6lB2hiUg==
-X-Received: by 2002:aca:ab06:: with SMTP id u6mr3475700oie.84.1601409645845;
-        Tue, 29 Sep 2020 13:00:45 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id 126sm3124089oof.28.2020.09.29.13.00.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Sep 2020 13:00:45 -0700 (PDT)
+        id S1728908AbgI2ULf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 29 Sep 2020 16:11:35 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10423 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728825AbgI2ULe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 29 Sep 2020 16:11:34 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f7394c40000>; Tue, 29 Sep 2020 13:10:44 -0700
+Received: from [10.2.53.30] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 29 Sep
+ 2020 20:11:34 +0000
 Subject: Re: [PATCH 2/8] selftests/vm: use a common gup_test.h
-To:     Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
         Jonathan Corbet <corbet@lwn.net>,
         =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
         Ralph Campbell <rcampbell@nvidia.com>,
         Shuah Khan <shuah@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-s390@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-s390@vger.kernel.org>
 References: <20200928062159.923212-1-jhubbard@nvidia.com>
  <20200928062159.923212-3-jhubbard@nvidia.com>
  <20200928125739.GP9916@ziepe.ca>
@@ -66,66 +38,59 @@ References: <20200928062159.923212-1-jhubbard@nvidia.com>
  <20200929190816.GY9916@ziepe.ca>
  <3022912c-f11b-f564-3a8a-f516ca259a37@nvidia.com>
  <20200929195356.GZ9916@ziepe.ca>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <64bb5ba7-77f7-2f09-44f0-29ee9329b183@linuxfoundation.org>
-Date:   Tue, 29 Sep 2020 14:00:44 -0600
+ <64bb5ba7-77f7-2f09-44f0-29ee9329b183@linuxfoundation.org>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <554699c6-cc01-4c3c-3ed5-26d22ac3bac0@nvidia.com>
+Date:   Tue, 29 Sep 2020 13:11:34 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20200929195356.GZ9916@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <64bb5ba7-77f7-2f09-44f0-29ee9329b183@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1601410244; bh=h1cShwScpls1cxoBr43dDhqnFtUnjOc7/H7Y8HWxAgM=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=Wl4BhHVXCxnN2MbBzLUijMKatEV4a+hk1x1KprGMe7sx2IRfHuUPwV1G8DK3/Uym7
+         s1WqObC4zZUpHV8MazVJcK+ij9OSOyFSV41pcViWpH2droSzSXzO2B7YDNLd7btX+v
+         haigRF8z6Y+X6YrXltTZ9sMTl2J2ov5VYW9wkM18+El91/tvCj5Q9/Yyibh8hkZjR/
+         CCjieAzw/GA8k2JNpdvnBl+kTEbTLiCQ+v6NFpsRYWEhhojsy5RtmogBk/1lRFSKSG
+         W6hQ8eoCKGbLEkWXVX9fTyH4pp+F5n6hM7dxRfUwgc7DOtOQ+6DX/0KZ6eB51vLh2d
+         njiPyDcmUpJhw==
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 9/29/20 1:53 PM, Jason Gunthorpe wrote:
-> On Tue, Sep 29, 2020 at 12:48:43PM -0700, John Hubbard wrote:
->> On 9/29/20 12:08 PM, Jason Gunthorpe wrote:
->>> On Tue, Sep 29, 2020 at 11:59:55AM -0700, John Hubbard wrote:
->>>> On 9/29/20 10:55 AM, Jason Gunthorpe wrote:
->>>>> On Tue, Sep 29, 2020 at 10:44:31AM -0700, John Hubbard wrote:
->>>>>> On 9/29/20 9:35 AM, Jason Gunthorpe wrote:
->>>>>>> On Mon, Sep 28, 2020 at 01:10:24PM -0700, John Hubbard wrote:
->>>>>>>> On 9/28/20 5:57 AM, Jason Gunthorpe wrote:
->>>>>>>>> On Sun, Sep 27, 2020 at 11:21:53PM -0700, John Hubbard wrote:
->>>> ...
->>>>>> I don't see any "gcc -m" type of dependency generation pass happening
->>>>>> in this relatively simple Make system.
->>>>>
->>>>> It happens with -MD, all the deps are stored in files like mm/.init-mm.o.cmd
->>>>> and sucked into the build.
->>>>
->>>> You are thinking of kbuild. This is not kbuild. There are no such artifacts
->>>> being generated.
->>>
->>> Oh. Really? That's horrible.
->>>
+On 9/29/20 1:00 PM, Shuah Khan wrote:
+> On 9/29/20 1:53 PM, Jason Gunthorpe wrote:
+>> I only remarked because I didn't know it wasn't using kbuild. I
+>> thought it would have used the existing HOSTCC stuff, not sure why it
+>> is special.
 >>
->> Well, yes, it's not a perfect build system down here in selftests/. Are you saying
->> that it is worth upgrading? I'm open to suggestions and ideas for improvements,
->> and at the moment, I have the miniature build system here mostly loaded into my
->> head. So for a brief shining moment I can probably understand it well enough to
->> work on it. :)
+>> The only investment that seems worthwhile would be to switch it to use
+>> the normal kbuild stuff??
+>>
 > 
-> I only remarked because I didn't know it wasn't using kbuild. I
-> thought it would have used the existing HOSTCC stuff, not sure why it
-> is special.
+> I explored switching to kbuild at the kernel summit last year during
+> my kselftest where are we talk.
 > 
-> The only investment that seems worthwhile would be to switch it to use
-> the normal kbuild stuff??
+> There was push back from several developers. We can definitely explore
+> it as long as we can still support being able to build and run
+> individual subsystem tests and doesn't break workflow for developers.
 > 
 
-I explored switching to kbuild at the kernel summit last year during
-my kselftest where are we talk.
+Do you have a link or two for that? Especially about the pushback, and
+conclusions reached, if any.
 
-There was push back from several developers. We can definitely explore
-it as long as we can still support being able to build and run
-individual subsystem tests and doesn't break workflow for developers.
 
-If you are up for it, propose a patch and we can discuss it.
 
 thanks,
--- Shuah
-
+-- 
+John Hubbard
+NVIDIA
