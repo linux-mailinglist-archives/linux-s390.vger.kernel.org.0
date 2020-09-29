@@ -2,102 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F35227D377
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Sep 2020 18:19:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CCAB27D3BA
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Sep 2020 18:35:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgI2QTY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 29 Sep 2020 12:19:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12928 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728401AbgI2QTY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 29 Sep 2020 12:19:24 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08TG2Cdw047552;
-        Tue, 29 Sep 2020 12:19:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=yBrupHevIMwKgyyBuD4mcVM4xD+mgqDE3i4mmOQ/JRU=;
- b=U9OeUmVNAf5//JaKiW2Yaw1KlOx3DNQ0av8egtY5VUKVdG31zcYeDJNTBez3SEtD5Poa
- t8ffFpqOG8Xf+h4Amo3By0QNR3bfZ2NsSxEn6KY/XyaAMuf5imKeRjMebmLWDJdDU0O2
- Ua4q7TUrRZFLkM3Xia4/kTr+XcAYAZxVr/6iYl0/7RbIMO2NqVh7Mjf2qkX37OhfJn5M
- GQm8xkyTTd457qdu6xmcIX5mpNETz0UKxeWhEuiefi+8z70K0buECmIkSVHFQmch/cfV
- 5M6nVj+ZtAWZoFSX8ZSH08E/yS3aNhi34ScLeIKXQ/qNhjgWRpHKakLzZRgxBULRNtYh mQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33v7hahuwj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Sep 2020 12:19:22 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08TG3ChW053136;
-        Tue, 29 Sep 2020 12:19:22 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33v7hahuvw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Sep 2020 12:19:21 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08TGHG81007907;
-        Tue, 29 Sep 2020 16:19:20 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 33sw983hgu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Sep 2020 16:19:20 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08TGJHb526083780
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Sep 2020 16:19:17 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3939842045;
-        Tue, 29 Sep 2020 16:19:17 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C04B42059;
-        Tue, 29 Sep 2020 16:19:16 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.92.67])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 29 Sep 2020 16:19:16 +0000 (GMT)
-Date:   Tue, 29 Sep 2020 18:19:14 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        cohuck@redhat.com, mjrosato@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v10 06/16] s390/vfio-ap: introduce shadow APCB
-Message-ID: <20200929181914.64da90fd.pasic@linux.ibm.com>
-In-Reply-To: <5cca8962-4f08-9c92-032c-9b6d1b514e33@linux.ibm.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
-        <20200821195616.13554-7-akrowiak@linux.ibm.com>
-        <20200926033808.07e9d04f.pasic@linux.ibm.com>
-        <5cca8962-4f08-9c92-032c-9b6d1b514e33@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1728571AbgI2QfM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 29 Sep 2020 12:35:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728430AbgI2QfL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 29 Sep 2020 12:35:11 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 637F3C0613D2
+        for <linux-s390@vger.kernel.org>; Tue, 29 Sep 2020 09:35:10 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id c62so4948172qke.1
+        for <linux-s390@vger.kernel.org>; Tue, 29 Sep 2020 09:35:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=AvWrqu4w8v60zfj2vEQkFZY/xpWiyVwwYui+w1mVyjU=;
+        b=fR1L6woBIk8eiQBenugUHgU9eVdCRDD/5atyqGvpoCazfJHmOMjvTeBvJs2Xdjheej
+         jiV6lTQvsxMeEonqGZc2tVOZpqUQspfncpoVfSKFCqpn66Pohu9bIoAjIGrD6UGjMXrL
+         stvCCTBoORB27HXTQOyygRY7pqwDWjZAtQ1unwlRab6EPjDztL+9F9XlqDB86NXlOWAy
+         6LhARGXTHsRe0GBK4OAHZU9uZtcX+WqZ8c3q+cwp0000xZRGkSsdZnIg1RruYiey178l
+         TB34YjYUQaFhc8I7AYm2DnNVKv6vWocOkXlOgdqYUhrn9fSTSXeQcek2kBFyAUa+XXQI
+         aHEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=AvWrqu4w8v60zfj2vEQkFZY/xpWiyVwwYui+w1mVyjU=;
+        b=ihRK8xYtw8eBQ+nS6XeX03ECdkVddiSuiu7SCH0faqRKXLln75tZ4GQcT5LvItove+
+         F2NxrjydKceXpn8Lja/ZFbZ882vwkt80Btdctw99iaxaX/NA0LyFM28pcD/34W+iG0gb
+         gHOFURPfV6cmNaAJ/CuMk2WQuaxPjPLRkk+z/fx5kcajlcaWf5Ca7pL75sEt22Ymz79S
+         8Wd5HuWLIGoTGn9zOJPId/cK9NBpNKykOu3ezDQzrEzvYsSMGIRCeubsuvFcPN43+ua+
+         u6ORaoKg3ZKwAXRq83k0tUm8uE1jW2ZZ/XyqCXpz6zHEdDyPRyA3hfwU1ncdPrJFimn/
+         Oyrw==
+X-Gm-Message-State: AOAM53264dULJWcGKEOrvjG8G5q0c7z0jvDjiamzIXikqbVbgruyMJAy
+        H/YAJVKLMZV48u6BL6jpLZ2wGQ==
+X-Google-Smtp-Source: ABdhPJyewvSBGSVMwAlEAvWjCrriQubfC+7x0uBqT5YF2razgiDMHSz5KydCKgV0wLG7QOaWdDR93g==
+X-Received: by 2002:a37:a04e:: with SMTP id j75mr5059496qke.400.1601397309354;
+        Tue, 29 Sep 2020 09:35:09 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id z26sm4994871qkj.107.2020.09.29.09.35.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Sep 2020 09:35:08 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kNIap-003Aax-P1; Tue, 29 Sep 2020 13:35:07 -0300
+Date:   Tue, 29 Sep 2020 13:35:07 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Shuah Khan <shuah@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 2/8] selftests/vm: use a common gup_test.h
+Message-ID: <20200929163507.GV9916@ziepe.ca>
+References: <20200928062159.923212-1-jhubbard@nvidia.com>
+ <20200928062159.923212-3-jhubbard@nvidia.com>
+ <20200928125739.GP9916@ziepe.ca>
+ <6481e78f-c70d-133a-ff4a-325b5cd8fd5d@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-29_07:2020-09-29,2020-09-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- bulkscore=0 malwarescore=0 mlxlogscore=999 priorityscore=1501
- lowpriorityscore=0 suspectscore=0 adultscore=0 mlxscore=0 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009290135
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6481e78f-c70d-133a-ff4a-325b5cd8fd5d@nvidia.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 29 Sep 2020 12:04:25 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> >
-> > I suppose this is probably about no guest unolies no resources passed
-> > through at the moment. If that is the case maybe we can document it
-> > below.  
+On Mon, Sep 28, 2020 at 01:10:24PM -0700, John Hubbard wrote:
+> On 9/28/20 5:57 AM, Jason Gunthorpe wrote:
+> > On Sun, Sep 27, 2020 at 11:21:53PM -0700, John Hubbard wrote:
+> > > diff --git a/tools/testing/selftests/vm/Makefile b/tools/testing/selftests/vm/Makefile
+> > > index d1ae706d9927..9cc6bc087461 100644
+> > > +++ b/tools/testing/selftests/vm/Makefile
+> > > @@ -130,3 +130,5 @@ endif
+> > >   $(OUTPUT)/userfaultfd: LDLIBS += -lpthread
+> > >   $(OUTPUT)/mlock-random-test: LDLIBS += -lcap
+> > > +
+> > > +$(OUTPUT)/gup_test: ../../../../mm/gup_test.h
+> > 
+> > There is no reason to do this, the auto depends will pick up header
+> > files, and gup_test.h isn't a generated file
+> > 
 > 
-> I'm not quite sure what you are saying here or what I should be
-> documenting below.
+> It is less capable than you might think. Without the admittedly ugly technique
+> above, it fails to build, and as you can see, the include paths that are fed to
+> gcc are just a single one: usr/include:
+> 
+> $ make
+> make --no-builtin-rules ARCH=x86 -C ../../../.. headers_install
+> gcc -Wall -I ../../../../usr/include     gup_test.c
+> /kernel_work/linux-next-github/tools/testing/selftests/kselftest_harness.h
+> /kernel_work/linux-next-github/tools/testing/selftests/kselftest.h
+> ../../../../mm/gup_test.h -lrt -o
+> /kernel_work/linux-next-github/tools/testing/selftests/vm/gup_test
+> make[1]: Entering directory '/kernel_work/linux-next-github'
+> gup_test.c:10:10: fatal error: gup_test.h: No such file or directory
+>    10 | #include "gup_test.h"
+>       |          ^~~~~~~~~~~~
 
-No wonder, took me like 10 seconds to figure it out myself. The solution
-is s/unolies/implies. I was one off to the left when typing 'imp'. 
+You are supposed to use
+
+  #include "../../../../mm/gup_test.h"
+
+I have no idea what weird behavior the makefile is triggering that the
+above include works
+
+Jason
