@@ -2,58 +2,58 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 781D828424A
-	for <lists+linux-s390@lfdr.de>; Mon,  5 Oct 2020 23:50:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D0A212842CE
+	for <lists+linux-s390@lfdr.de>; Tue,  6 Oct 2020 01:05:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgJEVtA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 5 Oct 2020 17:49:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12408 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726813AbgJEVtA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 5 Oct 2020 17:49:00 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 095LYj4m070421;
-        Mon, 5 Oct 2020 17:48:58 -0400
+        id S1726209AbgJEXFU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 5 Oct 2020 19:05:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49628 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726006AbgJEXFT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 5 Oct 2020 19:05:19 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 095N2GNO039103;
+        Mon, 5 Oct 2020 19:05:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=jZDVkotQxi7x4Hly3cWa39JzA1ufcbu3Zf5hZiZHo3I=;
- b=TG4tFmkDfWDbrVLrqoa9pkkP16V+VkVQ+P0mWoWtDLf7nrzDN/dv1lwk4Dwo6VsK3snU
- aI6zMhIg6LPZHGW8eY5nnmxofw4J+AzuhHQqXoWIQKskBAQtF24cCRNGVoSWyLj0SDw8
- C4Q9fw5Z4JudmJ6BwEQwLibmYjvMLeMFg8DoSAmy9lDTNlCzrhslXTHZzGX4/zQRwgN1
- KmUF/9fcVog37d8RK2eluQUKBX0PKfFazI2MIWmulJ6IAY8vgX8gpA7oMLDiRAFncda/
- 7MB/jtlZcaCauD7jtPsFVGWKHmxsLHi2oTouY22CfSW4cr9ngov+0xcXFuEJpAfLMPwT dQ== 
+ bh=Kz9P4Uo+qzopXRXfBc0KXYOa2slT6/MfcHC8W+V9IhE=;
+ b=Eyf55H/XC0bzrccSKfkftW4Dfz3ZYswh0FAP5wgw51zieh7yjDYTmVAY1bCDXhuXsAcR
+ Yw8E79X9BIFU2wlWkO/kSz/rOQ2nnO5TPrO420iEb89Aqp0BVLcmtlSRoYXABwtp0o7R
+ DF9YRvBofrvCnIfSJlxonlhZHhLa7WTWSGMncR/rDkZ5ofllnoEEYze7suOWjEDzXZ+j
+ FABDR2pYXQHnWiKvzCMFf2dwhnPSgFiHF12eMJepuLF31JquNCnTX30aSSj6HYpxkENx
+ jK49sxZjAE3qdATThhu9GU6Q813atif6okXUVWKEGJhmNq75oWXwG58nJ13ilWMUP85b Uw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 340aub99s0-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 340bwjh40b-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 05 Oct 2020 17:48:58 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 095Le8dY081867;
-        Mon, 5 Oct 2020 17:48:58 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 340aub99rs-1
+        Mon, 05 Oct 2020 19:05:13 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 095N2JS5039337;
+        Mon, 5 Oct 2020 19:05:12 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 340bwjh3yq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 05 Oct 2020 17:48:58 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 095Llch7022227;
-        Mon, 5 Oct 2020 21:48:57 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma01dal.us.ibm.com with ESMTP id 33xgx97bw1-1
+        Mon, 05 Oct 2020 19:05:12 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 095N3Ojq008006;
+        Mon, 5 Oct 2020 23:05:11 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 33xgx97tq7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 05 Oct 2020 21:48:57 +0000
+        Mon, 05 Oct 2020 23:05:11 +0000
 Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 095Lmt9W52167116
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 095N59Zl56295880
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 5 Oct 2020 21:48:55 GMT
+        Mon, 5 Oct 2020 23:05:09 GMT
 Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5712EAC059;
-        Mon,  5 Oct 2020 21:48:55 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id A4743AC060;
+        Mon,  5 Oct 2020 23:05:09 +0000 (GMT)
 Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7D518AC060;
-        Mon,  5 Oct 2020 21:48:54 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id CE0C0AC059;
+        Mon,  5 Oct 2020 23:05:08 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.85.170.177])
         by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  5 Oct 2020 21:48:54 +0000 (GMT)
+        Mon,  5 Oct 2020 23:05:08 +0000 (GMT)
 Subject: Re: [PATCH v10 11/16] s390/vfio-ap: allow hot plug/unplug of AP
  resources using mdev device
 To:     Halil Pasic <pasic@linux.ibm.com>
@@ -69,8 +69,8 @@ References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
  <d6ba4248-77da-4963-5653-1548ced10712@linux.ibm.com>
  <20201005203003.5db3b1eb.pasic@linux.ibm.com>
 From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <75a3779d-f690-caad-cebd-467d1b4c2ff7@linux.ibm.com>
-Date:   Mon, 5 Oct 2020 17:48:53 -0400
+Message-ID: <bbbd941f-16fa-5276-093e-22d1dad42593@linux.ibm.com>
+Date:   Mon, 5 Oct 2020 19:05:08 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
@@ -81,16 +81,142 @@ Content-Language: en-US
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-10-05_16:2020-10-05,2020-10-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- bulkscore=0 phishscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- impostorscore=0 suspectscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2010050153
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 spamscore=0 clxscore=1015 malwarescore=0 adultscore=0
+ mlxlogscore=999 suspectscore=0 priorityscore=1501 impostorscore=0
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2010050157
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+I proposed two algorithms in my last response. The following summarizes the
+results from executing your scenario:
 
+bound queues:
+0.0
+0.1
+
+1.0
+
+2.0
+2.1
+
+algorithm: use filtering on assign/unassign
+scenario:
+echo 0 > assign_domain
+echo 1 > assign_domain
+echo 1 > assign_adapter
+
+matrix:
+1.0
+1.1
+guest_matrix:
+1.0
+
+echo 0 > assign_adapter
+
+matrix:
+0.0
+0.1
+1.0
+1.1
+guest_matrix:
+0.0
+0.1
+
+echo 1 > unassign_adapter
+0.0
+0.1
+guest_matrix:
+0.0
+0.1
+
+echo 2 > assign_adapter
+
+matrix:
+0.0
+0.1
+2.0
+2.1
+guest_matrix:
+0.0
+0.1
+2.0
+2.1
+
+echo 1 > assign_adapter
+
+matrix:
+0.0
+0.1
+1.0
+1.1
+2.0
+2.1
+guest_matrix:
+0.0
+0.1
+2.0
+2.1
+
+algorithm: do not plug adapter if all assigned APQNs are not bound
+scenario:
+echo 0 > assign_domain
+echo 1 > assign_domain
+echo 1 > assign_adapter
+
+matrix:
+1.0
+1.1
+guest_matrix:
+no bits set
+
+echo 0 > assign_adapter
+
+matrix:
+0.0
+0.1
+1.0
+1.1
+guest_matrix:
+0.0
+0.1
+
+echo 1 > unassign_adapter
+0.0
+0.1
+guest_matrix:
+0.0
+0.1
+
+echo 2 > assign_adapter
+
+matrix:
+0.0
+0.1
+2.0
+2.1
+guest_matrix:
+0.0
+0.1
+2.0
+2.1
+
+echo 1 > assign_adapter
+
+matrix:
+0.0
+0.1
+1.0
+1.1
+2.0
+2.1
+guest_matrix:
+0.0
+0.1
+2.0
+2.1
 
 On 10/5/20 2:30 PM, Halil Pasic wrote:
 > On Mon, 5 Oct 2020 12:24:39 -0400
@@ -151,26 +277,6 @@ On 10/5/20 2:30 PM, Halil Pasic wrote:
 >
 > If this is indeed just about that edge case, maybe we can live with a
 > simpler algorithm than this one.
-
-The simplest algorithm is:
-* Forego hot plug of an adapter if any APQN derived from the adapter's
-    APID and the APQIs of the domains assigned to the matrix mdev 
-references a
-    queue device not bound to the vfio_ap device driver. In your 
-scenario, this
-    would result in no queues for the guest at 3) despite the fact that 
-1.0 is bound
-    to the vfio_ap dd.
-
-As you stated, this is an edge case, so maybe this would be sufficient. 
-Do you
-have any alternative algorithm that makes sense?
-
-Also, keep in mind that one of my goals with this design was to avoid 
-leaving
-the guest without any queues if possible. Maybe that is not a critical 
-requirement.
-
 >
 >
 >>> Let's suppose we started with the matix containing only adapter
@@ -205,17 +311,6 @@ requirement.
 > past we always had an error. So if a full sequence of assignments could
 > be performed without an error, than any permutation would be performed
 > with the exact same result.
-
-I'm not sure that the exact same result can be achieved regardless
-of the order of assignments - other than possibly the simple algorithm
-I suggested above - it is something I would have to think about some
-more.
-
-Another option is to call the filtering mechanism introduced
-in patch 8/16 in which case the results will be consistent with the
-configuration of the shadow_apcb. This would be the same
-configuration as if the guest were started after the assignment.
-
 >
 > I'm all for only allowing guest access to queues represented by queue
 > devices bound to the vfio_ap device driver. I'm concerned with the
