@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2514A284EE1
-	for <lists+linux-s390@lfdr.de>; Tue,  6 Oct 2020 17:24:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A635E284EF2
+	for <lists+linux-s390@lfdr.de>; Tue,  6 Oct 2020 17:28:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgJFPY5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 6 Oct 2020 11:24:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59510 "EHLO
+        id S1726087AbgJFP2c (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 6 Oct 2020 11:28:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21784 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725902AbgJFPY5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 6 Oct 2020 11:24:57 -0400
+        by vger.kernel.org with ESMTP id S1726127AbgJFP2c (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 6 Oct 2020 11:28:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601997896;
+        s=mimecast20190719; t=1601998111;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=f+g/7D43QuwHAkfXKPNpc0Kb6jrG+FbW0jRAxNnLbmU=;
-        b=bx9aDn3g+CgKT3QUGAvsTJqKK5xKTqGwsDeHqARQUs+Q1mNFtzjgKfI9XuK7EfjDXhEqgI
-        fqaw76PrTWZ7Pc3/6Kb2ckraxMjCZ0XO45jtUrT5GFVSM25QAotzl3aNAyj70kZ/1vK19y
-        t4dxnduGjm9pBfKtTeNbsMunmJOVmAE=
+        bh=mYNNK59E+//vkdyVoaJfBYfCbmtPubUe+si5jONP6/c=;
+        b=Y3BviD7/nUQDrBc9WUG8+IZiS8w5Ac8mwQsF8llulHKRZD+X/5r0BMWwTbn8HINV6HbUhk
+        pLNbWtf7t1K1oEZMxYLK0qrFsracmK7jchcmB0h7e6l9MRHUv2jyaG/mR+9gGb3RoaPg10
+        Od6DfYv6cJ8tqoqC83oae7OrjXjG4oQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-1-3Wv_BLmNOBKqFPwvBRyHpg-1; Tue, 06 Oct 2020 11:24:54 -0400
-X-MC-Unique: 3Wv_BLmNOBKqFPwvBRyHpg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-240-HYQvmSj9OSeuAfdtz2WCbQ-1; Tue, 06 Oct 2020 11:28:29 -0400
+X-MC-Unique: HYQvmSj9OSeuAfdtz2WCbQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C6B3104D3E0;
-        Tue,  6 Oct 2020 15:24:52 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B03661084C80;
+        Tue,  6 Oct 2020 15:28:26 +0000 (UTC)
 Received: from gondolin (ovpn-112-156.ams2.redhat.com [10.36.112.156])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E43F6115F;
-        Tue,  6 Oct 2020 15:24:47 +0000 (UTC)
-Date:   Tue, 6 Oct 2020 17:24:44 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C2AB9614F5;
+        Tue,  6 Oct 2020 15:28:21 +0000 (UTC)
+Date:   Tue, 6 Oct 2020 17:27:18 +0200
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Matthew Rosato <mjrosato@linux.ibm.com>
 Cc:     alex.williamson@redhat.com, schnelle@linux.ibm.com,
@@ -41,36 +41,49 @@ Cc:     alex.williamson@redhat.com, schnelle@linux.ibm.com,
         gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
         linux-s390@vger.kernel.org, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] s390/pci: track whether util_str is valid in the
- zpci_dev
-Message-ID: <20201006172444.1c07ee02.cohuck@redhat.com>
-In-Reply-To: <1601668844-5798-3-git-send-email-mjrosato@linux.ibm.com>
+Subject: Re: [PATCH v2 5/5] MAINTAINERS: Add entry for s390 vfio-pci
+Message-ID: <20201006172718.121d2a26.cohuck@redhat.com>
+In-Reply-To: <1601668844-5798-6-git-send-email-mjrosato@linux.ibm.com>
 References: <1601668844-5798-1-git-send-email-mjrosato@linux.ibm.com>
-        <1601668844-5798-3-git-send-email-mjrosato@linux.ibm.com>
+        <1601668844-5798-6-git-send-email-mjrosato@linux.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri,  2 Oct 2020 16:00:41 -0400
+On Fri,  2 Oct 2020 16:00:44 -0400
 Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-> We'll need to keep track of whether or not the byte string in util_str is
-> valid and thus needs to be passed to a vfio-pci passthrough device.
+> Add myself to cover s390-specific items related to vfio-pci.
 > 
 > Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> Acked-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
 > ---
->  arch/s390/include/asm/pci.h | 3 ++-
->  arch/s390/pci/pci_clp.c     | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-
-FWIW:
+>  MAINTAINERS | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 190c7fa..389c4ad 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15162,6 +15162,14 @@ F:	Documentation/s390/vfio-ccw.rst
+>  F:	drivers/s390/cio/vfio_ccw*
+>  F:	include/uapi/linux/vfio_ccw.h
+>  
+> +S390 VFIO-PCI DRIVER
+> +M:	Matthew Rosato <mjrosato@linux.ibm.com>
+> +L:	linux-s390@vger.kernel.org
+> +L:	kvm@vger.kernel.org
+> +S:	Supported
+> +F:	drivers/vfio/pci/vfio_pci_zdev.c
+> +F:	include/uapi/linux/vfio_zdev.h
+> +
+>  S390 ZCRYPT DRIVER
+>  M:	Harald Freudenberger <freude@linux.ibm.com>
+>  L:	linux-s390@vger.kernel.org
 
 Acked-by: Cornelia Huck <cohuck@redhat.com>
 
