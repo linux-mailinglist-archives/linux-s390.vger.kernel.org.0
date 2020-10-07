@@ -2,115 +2,194 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EE79286891
-	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 21:47:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDC862868D4
+	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 22:10:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbgJGTrx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 7 Oct 2020 15:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgJGTru (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 15:47:50 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5D9C061755
-        for <linux-s390@vger.kernel.org>; Wed,  7 Oct 2020 12:47:50 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id u17so3779634oie.3
-        for <linux-s390@vger.kernel.org>; Wed, 07 Oct 2020 12:47:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=orhfCBuFEmd+KVAmHbcaixIkjSSik8aIdF2Y5AlSlTI=;
-        b=HqHL85aeU7x4vZRr8aFR2YVRrwspH04y26fUbXHdW1zHn9JiRP4t6c+95tolblKSFE
-         g6rmEte7OQz0vHT+Gxy0F+wmZQx2vj40nuDXq6VEJEgecoLqF0as8JHJF/ZRBUJmFjHz
-         fkLaTYyh9AGF6bz08/AxSynt04XwHMSoqg8zg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=orhfCBuFEmd+KVAmHbcaixIkjSSik8aIdF2Y5AlSlTI=;
-        b=qQW8kNXq0Ocb1Sa6oIEXe3OYxVR94TGmYdTK5D3gYTtsSOr59vf2+D0NwQpQ5esbtC
-         V7shDCQjBf99t6UBbjhqYv8JkHmkgjk/yXhaCrlwfMjtJxVDy5xiOFb1XTllVqfFoU8f
-         zAfoFSdJd5re/E+D/tLj/o/XZGssMOHC0r6Vwj09NWtE0uuAryoNvzCvrYz48fru6hHh
-         hAK3Y23AjRNw+Eu0xCrDdMggm478FN85I783DJmwXVUjT6rdKYwkBjUpb3d1D2qKDC/5
-         ntCt+SeZTGX7tqmKxAFKqHNu8V7Wc/y2zo4SY1Ed9de9Qt3KAlq+QDGRsw3eogVByhXx
-         YhHA==
-X-Gm-Message-State: AOAM533xlHFIwx2cPw8YbScYQg2YUD63v26SWx8qQAMtJubWfwxFXZ6c
-        CuUP6R0NfV/h/Akdw0te2+wN6VcJ3cRc7mrOOWKzy5ieGL58cw==
-X-Google-Smtp-Source: ABdhPJxToTx3ndOy1U0dVrBcYAKX9wm3X1TZHa+mGhrb1Py/rD32WJ5mouUCMFv7wj7Vm8hLjOzC1v6C7W/A3Mayy3I=
-X-Received: by 2002:aca:6083:: with SMTP id u125mr2978051oib.14.1602100069344;
- Wed, 07 Oct 2020 12:47:49 -0700 (PDT)
+        id S1726434AbgJGUKU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 7 Oct 2020 16:10:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19746 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727657AbgJGUKT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 16:10:19 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 097K32jL190351;
+        Wed, 7 Oct 2020 16:10:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=p/h6W+8bNgsf8JrMgBR/9A8eDqIvgXGhoHo0a39nb+A=;
+ b=q5eWdeLySPFKJSNZ+TCse5KbcQYVjOLbWnp18Lspm9ie28m1ist8qSQos0kDJyp7yz12
+ BC8Eh+8FhM00TNj0fFHkSgUYuB6hpUXgMRiFfQtgJhHgLBmGsxip0oGARIEIyfRn41GG
+ B1AXp+BdKHFhDov0EG0D6/+z2d+/SSQejiZRdHP+ZBdeLLQdgCd+FKdET0vvAWXgPckp
+ pK2bdA042oL5AikBXqY5wNvycbfOAhDiOyyztc4Hq0SzXDKLeK08jYBdEBwtNFVXJHOY
+ cw92Vqh0YgU+qbMAlRa3cXNmx3y7bmmz3Jv98lsoYTlItlISEk6+C/dq5Hw+YJWkljXg 5w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 341kd79s48-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Oct 2020 16:10:18 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 097K3fsi191653;
+        Wed, 7 Oct 2020 16:10:17 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 341kd79s3c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Oct 2020 16:10:17 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 097K6duf019502;
+        Wed, 7 Oct 2020 20:10:14 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma05fra.de.ibm.com with ESMTP id 33xgx82ds5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Oct 2020 20:10:14 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 097KABIl33620234
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 7 Oct 2020 20:10:11 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B91355204E;
+        Wed,  7 Oct 2020 20:10:11 +0000 (GMT)
+Received: from [9.145.166.36] (unknown [9.145.166.36])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5EE7F5204F;
+        Wed,  7 Oct 2020 20:10:11 +0000 (GMT)
+Subject: Re: [PATCH 08/10] s390/dasd: Display FC Endpoint Security information
+ via sysfs
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Stefan Haberland <sth@linux.ibm.com>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com
+References: <20201002193940.24012-1-sth@linux.ibm.com>
+ <20201002193940.24012-9-sth@linux.ibm.com>
+ <20201006122632.098149ba.cohuck@redhat.com>
+ <d88b8230-993e-d63d-394a-efcaf60f813d@linux.ibm.com>
+ <20201007114928.6a088a7d.cohuck@redhat.com>
+ <243fe10e-ce80-57de-a92c-3a6457cde40a@linux.ibm.com>
+ <20201007184011.6dece07f.cohuck@redhat.com>
+From:   =?UTF-8?Q?Jan_H=c3=b6ppner?= <hoeppner@linux.ibm.com>
+Message-ID: <702cf75e-5193-92d3-79a7-182ac86df16e@linux.ibm.com>
+Date:   Wed, 7 Oct 2020 22:10:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-References: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
- <20201007164426.1812530-11-daniel.vetter@ffwll.ch> <CAPcyv4hBL68A7CZa+YnooufDH2tevoxrx32DTJMQ6OHRnec7QQ@mail.gmail.com>
-In-Reply-To: <CAPcyv4hBL68A7CZa+YnooufDH2tevoxrx32DTJMQ6OHRnec7QQ@mail.gmail.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Wed, 7 Oct 2020 21:47:37 +0200
-Message-ID: <CAKMK7uFoxiPdjO-yhd-mKqumnTpjcENEReb1sOYhOwRRCL0wpQ@mail.gmail.com>
-Subject: Re: [PATCH 10/13] PCI: revoke mappings like devmem
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201007184011.6dece07f.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-10-07_10:2020-10-07,2020-10-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=999 suspectscore=2 impostorscore=0
+ clxscore=1015 spamscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2010070127
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Oct 7, 2020 at 9:33 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Wed, Oct 7, 2020 at 11:11 AM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
-> >
-> > Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
-> > the region") /dev/kmem zaps ptes when the kernel requests exclusive
-> > acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
-> > the default for all driver uses.
-> >
-> > Except there's two more ways to access pci bars: sysfs and proc mmap
-> > support. Let's plug that hole.
->
-> Ooh, yes, lets.
->
-> > For revoke_devmem() to work we need to link our vma into the same
-> > address_space, with consistent vma->vm_pgoff. ->pgoff is already
-> > adjusted, because that's how (io_)remap_pfn_range works, but for the
-> > mapping we need to adjust vma->vm_file->f_mapping. Usually that's done
-> > at ->open time, but that's a bit tricky here with all the entry points
-> > and arch code. So instead create a fake file and adjust vma->vm_file.
->
-> I don't think you want to share the devmem inode for this, this should
-> be based off the sysfs inode which I believe there is already only one
-> instance per resource. In contrast /dev/mem can have multiple inodes
-> because anyone can just mknod a new character device file, the same
-> problem does not exist for sysfs.
+On 10/7/20 6:40 PM, Cornelia Huck wrote:
+> On Wed, 7 Oct 2020 16:33:37 +0200
+> Jan Höppner <hoeppner@linux.ibm.com> wrote:
+> 
+>>>>>> +static inline void dasd_path_release(struct kobject *kobj)
+>>>>>> +{
+>>>>>> +/* Memory for the dasd_path kobject is freed when dasd_free_device() is called */
+>>>>>> +}
+>>>>>> +    
+>>>>>
+>>>>> As already said, I don't think that's a correct way to implement this.
+>>>>>     
+>>>>
+>>>> As you correctly pointed out, our release function doesn't do anything.
+>>>> This is because our path data is a (static) part of our device.
+>>>> This data is critical to keep our devices operational.
+>>>> We can't simply rely on allocated memory if systems are under stress.   
+>>>
+>>> Yes, avoiding freeing and reallocating memory certainly makes sense.
+>>>   
+>>>>
+>>>> Having this data dynamically allocated involves a lot of rework of our
+>>>> path handling as well. There are a few things that are subject to improvement
+>>>> and evaluating whether our dasd_path structures can be dynamic is one of
+>>>> these things. However, even then, the above concern persists and I
+>>>> highly doubt that dynamic dasd_paths objects are doable for us at this
+>>>> moment.
+>>>>
+>>>> I do understand the concerns, however, we release the memory for dasd_path
+>>>> structures eventually when dasd_free_device() is called. Until that point,
+>>>> the data has to be kept alive. The rest is taking care of by the kobject
+>>>> library.  
+>>>
+>>> Yes, there doesn't seem to be any memory leakage.
+>>>   
+>>>> In our path handling we also make sure that we can always verify/validate
+>>>> paths information even if a system is under high memory pressure. Another
+>>>> reason why it would contradictory for dasd_path objects to be dynamic.
+>>>>
+>>>> I hope this explains the reasoning behind the release function.  
+>>>
+>>> I understand where you're coming from.
+>>>
+>>> However, "static" kobjects (in the sense of "we may re-register the
+>>> same kobject") are still problematic. Is there any way to simply
+>>> "disappear" path objects that are not valid at the moment, or mark them
+>>> as not valid?  
+>>
+>> You could use kobject_del(), but it is rather intended to be used for
+>> a two-stage removal of the kobject.
+>>
+>>>
+>>> Also, the simple act of registering/unregistering a kobject already
+>>> creates stress from its sysfs interactions... it seems you should try
+>>> to avoid that as well?
+>>>   
+>>
+>> We don't re-register kobjects over and over again. The kobjects are
+>> infact initialized and created only _once_. This is done either during
+>> device initialization (after dasd_eckd_read_conf() in
+>> dasd_eckd_check_characteristics()) or when a path is newly added
+>> (in the path event handler).
+>> The kobject will stay until the memory for the whole device is being
+>> freed. This is also the reason why the kobject can stay initialized and
+>> we track ourselves whether we did the initialization/creation already
+>> (which we check e.g. when a path is removed and added again).
+>> So, instead of the release function freeing the kobject data,
+>> it is done by our dasd_free_device() (same thing, different function IMHO).
+>>
+>> I think the concerns would be more worrisome if we'd remove/add
+>> the kobjects every time. And then I agree, we'd run into trouble.
+>>
+> 
+> The thing that tripped me is
+> 
+> +void dasd_path_remove_kobj(struct dasd_device *device, int chp)
+> +{
+> +	if (device->path[chp].in_sysfs) {
+> +		kobject_put(&device->path[chp].kobj);
+> +		device->path[chp].in_sysfs = false;
+> +	}
+> +}
+> 
+> As an exported function, it is not clear where this may be called from.
+> Given your explanation above (and some more code reading on my side),
+> the code looks ok in its current incarnation (but non-idiomatic).
+> 
+> Is there a way to check that indeed nobody re-adds a previously removed
+> path object due to a (future) programming error? And maybe add a
+> comment that you must never re-register a path? "The path is gone,
+> let's remove the object" looks quite tempting.
+> 
 
-But then I need to find the right one, plus I also need to find the
-right one for the procfs side. That gets messy, and I already have no
-idea how to really test this. Shared address_space is the same trick
-we're using in drm (where we have multiple things all pointing to the
-same underlying resources, through different files), and it gets the
-job done. So that's why I figured the shared address_space is the
-cleaner solution since then unmap_mapping_range takes care of
-iterating over all vma for us. I guess I could reimplement that logic
-with our own locking and everything in revoke_devmem, but feels a bit
-silly. But it would also solve the problem of having mutliple
-different mknod of /dev/kmem with different address_space behind them.
-Also because of how remap_pfn_range works, all these vma do use the
-same pgoff already anyway.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+A comment is the minimum I can think of at the moment and
+I'll prepare a fixup patch or a new version of this patch that adds
+a proper comment for this function.
+Other ways to protect the usage must be investigated. 
+I have to discuss with Stefan what the best approach would be as the patchset
+is supposed to be ready for upstream integration.
+
+I'd prefer a fixup patch that we could send with at least one more fixup patch
+that we have in the pipe already. Let's see. I hope that's fine with you
+(and Jens obviously) so far.
+
+regards,
+Jan
