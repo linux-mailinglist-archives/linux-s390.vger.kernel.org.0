@@ -2,498 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D404285F89
-	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 14:56:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A167285FE0
+	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 15:14:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbgJGM4e (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 7 Oct 2020 08:56:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgJGM4e (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 08:56:34 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5836CC061755;
-        Wed,  7 Oct 2020 05:56:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=06lStnTra81Uvk50wTXgA9X7NKbsG2HqnBWrpGU8780=; b=GScFnHw9V2Mn/6hAcvAutz6ZYt
-        k2Ve0xFtl/FaJk7Ad5AZe0LgPxno8d1rocUtm+VuRcXIcerGYEl1D/rkMjkNXxOMhFIJ0NhOdM51M
-        cf6vpW7P3PConalz5bvk6BlyCZu8v2Z18ScDaydR7RnlqQbGjmASN5+gVU1uWOwe3nIHdwaWbPpH0
-        P6TifmobLPe1kuUna6jANJGBTDjtu0z/UqQkQ8AcoWW0+Nmmhpo8QS/j3U7YH8RNlAkLo9NzUJcH7
-        dtEpegnagPvcMLydr/jlYKp+kScsiYFRK19irfLRFxQeayycTky+bg4KMHXmp1GiuNzNnX7geDoB4
-        uLfCQDzA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kQ8zc-00052M-9W; Wed, 07 Oct 2020 12:56:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 92E17300B22;
-        Wed,  7 Oct 2020 14:56:25 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4F17B2B9095BC; Wed,  7 Oct 2020 14:56:25 +0200 (CEST)
-Date:   Wed, 7 Oct 2020 14:56:25 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sven Schnelle <svens@linux.ibm.com>
-Cc:     hca@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, rafael.j.wysocki@intel.com
-Subject: Re: [PATCH] s390/idle: Fix suspicious RCU usage
-Message-ID: <20201007125625.GK2651@hirez.programming.kicks-ass.net>
-References: <20200908133031.GT1362448@hirez.programming.kicks-ass.net>
- <yt9dimbm79qi.fsf@linux.ibm.com>
- <20201007100551.GC2628@hirez.programming.kicks-ass.net>
+        id S1728385AbgJGNOU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 7 Oct 2020 09:14:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15948 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728383AbgJGNOU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 09:14:20 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 097D1jbD028406;
+        Wed, 7 Oct 2020 09:14:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=bIJsRgt802qNSW0wuX9rB/lxIrFdGqDGAfA4Mg2+CL0=;
+ b=osDCNXovfjxr24ji8vZHPqy8SoXjsn85tru7eHwpLbbG64yjjmeL+ZND8N2s9PQOUWVk
+ nMjySFZ3h0gBrsHZ/eUk5zxRz38X9pECLhv0PV8+cufcEhR3GfduET3u7cm2/EHR0Mcj
+ Qbfu+rsYwTSeNVv9S4SQFFPFg2oW0NWc01WGwili8fL2eItrCiDjb27v8YiTOgUE/EcW
+ iDQCQClG0scKTfXg2CL2ReTHyvjApKFVPLswMohGl9YcIwLj10Ra/4bRbCOmawCmuIrH
+ QNxaOLtDLxA2siOohfb4NFi2rUkj5tu2EZGzjRrbBwToDBwrfj7q9IThHg4AWyKOSmkd Bg== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 341d1c355t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Oct 2020 09:14:16 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 097DCxBi025087;
+        Wed, 7 Oct 2020 13:14:14 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 33xgjh4amq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Oct 2020 13:14:13 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 097DEBJo25952724
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 7 Oct 2020 13:14:11 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9C59FA405B;
+        Wed,  7 Oct 2020 13:14:11 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5AAC7A4054;
+        Wed,  7 Oct 2020 13:14:11 +0000 (GMT)
+Received: from linux.fritz.box (unknown [9.145.147.56])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  7 Oct 2020 13:14:11 +0000 (GMT)
+Subject: Re: [PATCH] partitions/ibm: fix non-DASD devices
+To:     Christoph Hellwig <hch@lst.de>, axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20201007124009.1438269-1-hch@lst.de>
+From:   Stefan Haberland <sth@linux.ibm.com>
+Autocrypt: addr=sth@linux.ibm.com; keydata=
+ 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
+ cH4TNHyhiR0KAbxE8qKx3Jc=
+Message-ID: <60f3e36f-5c78-186b-870b-0b919bc22073@linux.ibm.com>
+Date:   Wed, 7 Oct 2020 15:14:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201007100551.GC2628@hirez.programming.kicks-ass.net>
+In-Reply-To: <20201007124009.1438269-1-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-10-07_08:2020-10-06,2020-10-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=956
+ impostorscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015 bulkscore=0
+ spamscore=0 adultscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2010070086
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Oct 07, 2020 at 12:05:51PM +0200, Peter Zijlstra wrote:
-> On Wed, Oct 07, 2020 at 09:53:25AM +0200, Sven Schnelle wrote:
-> > Hi Peter,
-> > 
-> > peterz@infradead.org writes:
-> > 
-> > > After commit eb1f00237aca ("lockdep,trace: Expose tracepoints") the
-> > > lock tracepoints are visible to lockdep and RCU-lockdep is finding a
-> > > bunch more RCU violations that were previously hidden.
-> > >
-> > > Switch the idle->seqcount over to using raw_write_*() to avoid the
-> > > lockdep annotation and thus the lock tracepoints.
-> > >
-> > > Reported-by: Guenter Roeck <linux@roeck-us.net>
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > [..]
-> > 
-> > I'm still seeing the splat below on s390 when irq tracing is enabled:
-> 
-> Damn... :/
-> 
-> This one is tricky, trouble seems to be that arch_cpu_idle() is defined
-> to enable interrupts (no doubt because ot x86 :/), but we call it before
-> rcu_exit_idle().
-> 
-> What a mess... let me rummage around the various archs to see what makes
-> most sense here.
+thanks for the quick fix
 
-Maybe something like so, I've not yet tested it. I need to figure out
-how to force x86 into this path.
+Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
 
----
- arch/alpha/kernel/process.c      |  2 +-
- arch/arm/kernel/process.c        |  2 +-
- arch/arm64/kernel/process.c      |  2 +-
- arch/csky/kernel/process.c       |  2 +-
- arch/h8300/kernel/process.c      |  2 +-
- arch/hexagon/kernel/process.c    |  2 +-
- arch/ia64/kernel/process.c       |  2 +-
- arch/microblaze/kernel/process.c |  2 +-
- arch/mips/kernel/idle.c          | 12 ++++++------
- arch/nios2/kernel/process.c      |  2 +-
- arch/openrisc/kernel/process.c   |  2 +-
- arch/parisc/kernel/process.c     |  2 +-
- arch/powerpc/kernel/idle.c       |  4 ++--
- arch/riscv/kernel/process.c      |  2 +-
- arch/s390/kernel/idle.c          |  2 +-
- arch/sh/kernel/idle.c            |  2 +-
- arch/sparc/kernel/process_32.c   |  2 +-
- arch/sparc/kernel/process_64.c   |  4 ++--
- arch/um/kernel/process.c         |  2 +-
- arch/x86/include/asm/mwait.h     |  2 --
- arch/x86/kernel/process.c        |  8 +++++---
- kernel/sched/idle.c              | 28 +++++++++++++++++++++++++++-
- 22 files changed, 58 insertions(+), 32 deletions(-)
 
-diff --git a/arch/alpha/kernel/process.c b/arch/alpha/kernel/process.c
-index 7462a7911002..4c7b0414a3ff 100644
---- a/arch/alpha/kernel/process.c
-+++ b/arch/alpha/kernel/process.c
-@@ -57,7 +57,7 @@ EXPORT_SYMBOL(pm_power_off);
- void arch_cpu_idle(void)
- {
- 	wtint(0);
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- void arch_cpu_idle_dead(void)
-diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
-index 8e6ace03e960..9f199b1e8383 100644
---- a/arch/arm/kernel/process.c
-+++ b/arch/arm/kernel/process.c
-@@ -71,7 +71,7 @@ void arch_cpu_idle(void)
- 		arm_pm_idle();
- 	else
- 		cpu_do_idle();
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- void arch_cpu_idle_prepare(void)
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index f1804496b935..e8f44cf9d7bf 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -124,7 +124,7 @@ void arch_cpu_idle(void)
- 	 * tricks
- 	 */
- 	cpu_do_idle();
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- #ifdef CONFIG_HOTPLUG_CPU
-diff --git a/arch/csky/kernel/process.c b/arch/csky/kernel/process.c
-index f730869e21ee..69af6bc87e64 100644
---- a/arch/csky/kernel/process.c
-+++ b/arch/csky/kernel/process.c
-@@ -102,6 +102,6 @@ void arch_cpu_idle(void)
- #ifdef CONFIG_CPU_PM_STOP
- 	asm volatile("stop\n");
- #endif
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- #endif
-diff --git a/arch/h8300/kernel/process.c b/arch/h8300/kernel/process.c
-index 83ce3caf7313..a2961c7b2332 100644
---- a/arch/h8300/kernel/process.c
-+++ b/arch/h8300/kernel/process.c
-@@ -57,7 +57,7 @@ asmlinkage void ret_from_kernel_thread(void);
-  */
- void arch_cpu_idle(void)
- {
--	local_irq_enable();
-+	raw_local_irq_enable();
- 	__asm__("sleep");
- }
- 
-diff --git a/arch/hexagon/kernel/process.c b/arch/hexagon/kernel/process.c
-index dfd322c5ce83..20962601a1b4 100644
---- a/arch/hexagon/kernel/process.c
-+++ b/arch/hexagon/kernel/process.c
-@@ -44,7 +44,7 @@ void arch_cpu_idle(void)
- {
- 	__vmwait();
- 	/*  interrupts wake us up, but irqs are still disabled */
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- /*
-diff --git a/arch/ia64/kernel/process.c b/arch/ia64/kernel/process.c
-index f19cb97c0098..1b2769260688 100644
---- a/arch/ia64/kernel/process.c
-+++ b/arch/ia64/kernel/process.c
-@@ -252,7 +252,7 @@ void arch_cpu_idle(void)
- 	if (mark_idle)
- 		(*mark_idle)(1);
- 
--	safe_halt();
-+	raw_safe_halt();
- 
- 	if (mark_idle)
- 		(*mark_idle)(0);
-diff --git a/arch/microblaze/kernel/process.c b/arch/microblaze/kernel/process.c
-index a9e46e525cd0..f99860771ff4 100644
---- a/arch/microblaze/kernel/process.c
-+++ b/arch/microblaze/kernel/process.c
-@@ -149,5 +149,5 @@ int dump_fpu(struct pt_regs *regs, elf_fpregset_t *fpregs)
- 
- void arch_cpu_idle(void)
- {
--       local_irq_enable();
-+       raw_local_irq_enable();
- }
-diff --git a/arch/mips/kernel/idle.c b/arch/mips/kernel/idle.c
-index 5bc3b04693c7..18e69ebf5691 100644
---- a/arch/mips/kernel/idle.c
-+++ b/arch/mips/kernel/idle.c
-@@ -33,19 +33,19 @@ static void __cpuidle r3081_wait(void)
- {
- 	unsigned long cfg = read_c0_conf();
- 	write_c0_conf(cfg | R30XX_CONF_HALT);
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- static void __cpuidle r39xx_wait(void)
- {
- 	if (!need_resched())
- 		write_c0_conf(read_c0_conf() | TX39_CONF_HALT);
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- void __cpuidle r4k_wait(void)
- {
--	local_irq_enable();
-+	raw_local_irq_enable();
- 	__r4k_wait();
- }
- 
-@@ -64,7 +64,7 @@ void __cpuidle r4k_wait_irqoff(void)
- 		"	.set	arch=r4000	\n"
- 		"	wait			\n"
- 		"	.set	pop		\n");
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- /*
-@@ -84,7 +84,7 @@ static void __cpuidle rm7k_wait_irqoff(void)
- 		"	wait						\n"
- 		"	mtc0	$1, $12		# stalls until W stage	\n"
- 		"	.set	pop					\n");
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- /*
-@@ -257,7 +257,7 @@ void arch_cpu_idle(void)
- 	if (cpu_wait)
- 		cpu_wait();
- 	else
--		local_irq_enable();
-+		raw_local_irq_enable();
- }
- 
- #ifdef CONFIG_CPU_IDLE
-diff --git a/arch/nios2/kernel/process.c b/arch/nios2/kernel/process.c
-index 88a4ec03edab..f5cc55a88d31 100644
---- a/arch/nios2/kernel/process.c
-+++ b/arch/nios2/kernel/process.c
-@@ -33,7 +33,7 @@ EXPORT_SYMBOL(pm_power_off);
- 
- void arch_cpu_idle(void)
- {
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- /*
-diff --git a/arch/openrisc/kernel/process.c b/arch/openrisc/kernel/process.c
-index 0ff391f00334..3c98728cce24 100644
---- a/arch/openrisc/kernel/process.c
-+++ b/arch/openrisc/kernel/process.c
-@@ -79,7 +79,7 @@ void machine_power_off(void)
-  */
- void arch_cpu_idle(void)
- {
--	local_irq_enable();
-+	raw_local_irq_enable();
- 	if (mfspr(SPR_UPR) & SPR_UPR_PMP)
- 		mtspr(SPR_PMR, mfspr(SPR_PMR) | SPR_PMR_DME);
- }
-diff --git a/arch/parisc/kernel/process.c b/arch/parisc/kernel/process.c
-index f196d96e2f9f..a92a23d6acd9 100644
---- a/arch/parisc/kernel/process.c
-+++ b/arch/parisc/kernel/process.c
-@@ -169,7 +169,7 @@ void __cpuidle arch_cpu_idle_dead(void)
- 
- void __cpuidle arch_cpu_idle(void)
- {
--	local_irq_enable();
-+	raw_local_irq_enable();
- 
- 	/* nop on real hardware, qemu will idle sleep. */
- 	asm volatile("or %%r10,%%r10,%%r10\n":::);
-diff --git a/arch/powerpc/kernel/idle.c b/arch/powerpc/kernel/idle.c
-index 422e31d2f5a2..8df35f1329a4 100644
---- a/arch/powerpc/kernel/idle.c
-+++ b/arch/powerpc/kernel/idle.c
-@@ -60,9 +60,9 @@ void arch_cpu_idle(void)
- 		 * interrupts enabled, some don't.
- 		 */
- 		if (irqs_disabled())
--			local_irq_enable();
-+			raw_local_irq_enable();
- 	} else {
--		local_irq_enable();
-+		raw_local_irq_enable();
- 		/*
- 		 * Go into low thread priority and possibly
- 		 * low power mode.
-diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-index 2b97c493427c..308e1d95ecbf 100644
---- a/arch/riscv/kernel/process.c
-+++ b/arch/riscv/kernel/process.c
-@@ -36,7 +36,7 @@ extern asmlinkage void ret_from_kernel_thread(void);
- void arch_cpu_idle(void)
- {
- 	wait_for_interrupt();
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- void show_regs(struct pt_regs *regs)
-diff --git a/arch/s390/kernel/idle.c b/arch/s390/kernel/idle.c
-index f7f1e64e0d98..060eac5b2ac4 100644
---- a/arch/s390/kernel/idle.c
-+++ b/arch/s390/kernel/idle.c
-@@ -123,7 +123,7 @@ void arch_cpu_idle_enter(void)
- void arch_cpu_idle(void)
- {
- 	enabled_wait();
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- void arch_cpu_idle_exit(void)
-diff --git a/arch/sh/kernel/idle.c b/arch/sh/kernel/idle.c
-index 0dc0f52f9bb8..f59814983bd5 100644
---- a/arch/sh/kernel/idle.c
-+++ b/arch/sh/kernel/idle.c
-@@ -22,7 +22,7 @@ static void (*sh_idle)(void);
- void default_idle(void)
- {
- 	set_bl_bit();
--	local_irq_enable();
-+	raw_local_irq_enable();
- 	/* Isn't this racy ? */
- 	cpu_sleep();
- 	clear_bl_bit();
-diff --git a/arch/sparc/kernel/process_32.c b/arch/sparc/kernel/process_32.c
-index adfcaeab3ddc..a02363735915 100644
---- a/arch/sparc/kernel/process_32.c
-+++ b/arch/sparc/kernel/process_32.c
-@@ -74,7 +74,7 @@ void arch_cpu_idle(void)
- {
- 	if (sparc_idle)
- 		(*sparc_idle)();
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- /* XXX cli/sti -> local_irq_xxx here, check this works once SMP is fixed. */
-diff --git a/arch/sparc/kernel/process_64.c b/arch/sparc/kernel/process_64.c
-index a75093b993f9..6f8c7822fc06 100644
---- a/arch/sparc/kernel/process_64.c
-+++ b/arch/sparc/kernel/process_64.c
-@@ -62,11 +62,11 @@ void arch_cpu_idle(void)
- {
- 	if (tlb_type != hypervisor) {
- 		touch_nmi_watchdog();
--		local_irq_enable();
-+		raw_local_irq_enable();
- 	} else {
- 		unsigned long pstate;
- 
--		local_irq_enable();
-+		raw_local_irq_enable();
- 
-                 /* The sun4v sleeping code requires that we have PSTATE.IE cleared over
-                  * the cpu sleep hypervisor call.
-diff --git a/arch/um/kernel/process.c b/arch/um/kernel/process.c
-index 26b5e243d3fc..495f101792b3 100644
---- a/arch/um/kernel/process.c
-+++ b/arch/um/kernel/process.c
-@@ -217,7 +217,7 @@ void arch_cpu_idle(void)
- {
- 	cpu_tasks[current_thread_info()->cpu].pid = os_getpid();
- 	um_idle_sleep();
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- int __cant_sleep(void) {
-diff --git a/arch/x86/include/asm/mwait.h b/arch/x86/include/asm/mwait.h
-index e039a933aca3..29dd27b5a339 100644
---- a/arch/x86/include/asm/mwait.h
-+++ b/arch/x86/include/asm/mwait.h
-@@ -88,8 +88,6 @@ static inline void __mwaitx(unsigned long eax, unsigned long ebx,
- 
- static inline void __sti_mwait(unsigned long eax, unsigned long ecx)
- {
--	trace_hardirqs_on();
--
- 	mds_idle_clear_cpu_buffers();
- 	/* "mwait %eax, %ecx;" */
- 	asm volatile("sti; .byte 0x0f, 0x01, 0xc9;"
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index ba4593a913fa..4d756c570eff 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -685,7 +685,7 @@ void arch_cpu_idle(void)
-  */
- void __cpuidle default_idle(void)
- {
--	safe_halt();
-+	raw_safe_halt();
- }
- #if defined(CONFIG_APM_MODULE) || defined(CONFIG_HALTPOLL_CPUIDLE_MODULE)
- EXPORT_SYMBOL(default_idle);
-@@ -736,6 +736,8 @@ void stop_this_cpu(void *dummy)
- /*
-  * AMD Erratum 400 aware idle routine. We handle it the same way as C3 power
-  * states (local apic timer and TSC stop).
-+ *
-+ * XXX this function is completely buggered vs RCU and tracing.
-  */
- static void amd_e400_idle(void)
- {
-@@ -801,9 +803,9 @@ static __cpuidle void mwait_idle(void)
- 		if (!need_resched())
- 			__sti_mwait(0, 0);
- 		else
--			local_irq_enable();
-+			raw_local_irq_enable();
- 	} else {
--		local_irq_enable();
-+		raw_local_irq_enable();
- 	}
- 	__current_clr_polling();
- }
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index f324dc36fc43..dee807ffad11 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -78,7 +78,7 @@ void __weak arch_cpu_idle_dead(void) { }
- void __weak arch_cpu_idle(void)
- {
- 	cpu_idle_force_poll = 1;
--	local_irq_enable();
-+	raw_local_irq_enable();
- }
- 
- /**
-@@ -94,9 +94,35 @@ void __cpuidle default_idle_call(void)
- 
- 		trace_cpu_idle(1, smp_processor_id());
- 		stop_critical_timings();
-+
-+		/*
-+		 * arch_cpu_idle() is supposed to enable IRQs, however
-+		 * we can't do that because of RCU and tracing.
-+		 *
-+		 * Trace IRQs enable here, then switch off RCU, and have
-+		 * arch_cpu_idle() use raw_local_irq_enable(). Note that
-+		 * rcu_idle_enter() relies on lockdep IRQ state, so switch that
-+		 * last -- this is very similar to the entry code.
-+		 */
-+		trace_hardirqs_on_prepare();
-+		lockdep_hardirqs_on_prepare(_THIS_IP_);
- 		rcu_idle_enter();
-+		lockdep_hardirqs_on(_THIS_IP_);
-+
- 		arch_cpu_idle();
-+
-+		/*
-+		 * OK, so IRQs are enabled here, but RCU needs them disabled to
-+		 * turn itself back on.. funny thing is that disabling IRQs
-+		 * will cause tracing, which needs RCU. Jump through hoops to
-+		 * make it 'work'.
-+		 */
-+		raw_local_irq_disable();
-+		lockdep_hardirqs_off(_THIS_IP_);
- 		rcu_idle_exit();
-+		lockdep_hardirqs_on(_THIS_IP_);
-+		raw_local_irq_enable();
-+
- 		start_critical_timings();
- 		trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
- 	}
+Am 07.10.20 um 14:40 schrieb Christoph Hellwig:
+> Don't error out if the dasd_biodasdinfo symbol is not available.
+>
+> Fixes: 26d7e28e3820 ("s390/dasd: remove ioctl_by_bdev calls")
+> Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> ---
+>  block/partitions/ibm.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/block/partitions/ibm.c b/block/partitions/ibm.c
+> index d6e18df9c53c6d..4b044e620d3534 100644
+> --- a/block/partitions/ibm.c
+> +++ b/block/partitions/ibm.c
+> @@ -305,8 +305,6 @@ int ibm_partition(struct parsed_partitions *state)
+>  	if (!disk->fops->getgeo)
+>  		goto out_exit;
+>  	fn = symbol_get(dasd_biodasdinfo);
+> -	if (!fn)
+> -		goto out_exit;
+>  	blocksize = bdev_logical_block_size(bdev);
+>  	if (blocksize <= 0)
+>  		goto out_symbol;
+> @@ -326,7 +324,7 @@ int ibm_partition(struct parsed_partitions *state)
+>  	geo->start = get_start_sect(bdev);
+>  	if (disk->fops->getgeo(bdev, geo))
+>  		goto out_freeall;
+> -	if (fn(disk, info)) {
+> +	if (!fn || fn(disk, info)) {
+>  		kfree(info);
+>  		info = NULL;
+>  	}
+> @@ -370,7 +368,8 @@ int ibm_partition(struct parsed_partitions *state)
+>  out_nogeo:
+>  	kfree(info);
+>  out_symbol:
+> -	symbol_put(dasd_biodasdinfo);
+> +	if (fn)
+> +		symbol_put(dasd_biodasdinfo);
+>  out_exit:
+>  	return res;
+>  }
+
