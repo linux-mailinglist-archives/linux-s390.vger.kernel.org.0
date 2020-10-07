@@ -2,123 +2,85 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E16AA286956
-	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 22:46:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F2162869B8
+	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 22:58:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgJGUqH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 7 Oct 2020 16:46:07 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4378 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbgJGUqH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 16:46:07 -0400
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5f7e28d60001>; Wed, 07 Oct 2020 13:45:10 -0700
-Received: from [10.2.85.86] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 7 Oct
- 2020 20:46:04 +0000
-Subject: Re: [PATCH 04/13] misc/habana: Use FOLL_LONGTERM for userptr
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     <kvm@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        "Omer Shpigelman" <oshpigelman@habana.ai>,
-        Ofir Bitton <obitton@habana.ai>,
-        "Tomer Tayar" <ttayar@habana.ai>,
-        Moti Haimovski <mhaimovski@habana.ai>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Pawel Piskorski <ppiskorski@habana.ai>
-References: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
- <20201007164426.1812530-5-daniel.vetter@ffwll.ch>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <ce781e05-044f-b62b-6a39-952d73ed1597@nvidia.com>
-Date:   Wed, 7 Oct 2020 13:46:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <20201007164426.1812530-5-daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1602103510; bh=7gGgalGDQ5Ct6e6oxVX0GKF6fkHgYYKPLymOR6tYzGU=;
-        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-        b=hDjrDWj3freRp1ybK4xKGh41JWbS/a33PUUY+OIWq7wCWr+gCw+Y7YWb5GlTFEByE
-         06K89H4PC9BMZJaiw+BZP5M8S63s07IUAQmo5lhkpnjZjEHyuHCRX/mEyfrbv2RBi5
-         uJ6DJLDc5KN5KysnSSFAUMzyEIRMWCHps09MbLSPAmKyksOETypirPJ00zDDmc2NCZ
-         lJPmgPC8cvOAyzelVuiBvVdtaxIZHAi58+kUse68GpdmUNRj3f+Wze2ZUsmO23bUkK
-         9BmqvzTyBGOaJd5NV2EhoHkVJltdEz8lMfwvWRt1wL0j/5/KzKm43UEdXWpjm7rSjF
-         Pm1sw+83JPf1g==
+        id S1726152AbgJGU57 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 7 Oct 2020 16:57:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36736 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728017AbgJGU56 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 16:57:58 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 097KUoEg161459;
+        Wed, 7 Oct 2020 16:57:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=EfcyN5PvowzSKa1Mu7qMdhHNBki0r19JqlRsZsRveEA=;
+ b=ml2h4lqgS5zzyN3vnwn8a+p9v2XgD6xJMUVtUPzUyN1SqIUP3d6EF4gYKWFPUrCwtTk2
+ TEK8YTSvjDIZdaiZfNX7SwmmW4B0Xswbr06gOdbYwqaw16kkZdZPA3uUql5zcLr8SIY4
+ HuopB7KGjybHsBPfOJC3FSocMH2YDFw95IY/g8W73ZVNJkZGrTVoBDlFvs8lzh9MdDV8
+ +XXl8tRIwaN/HPvoEqgN+gAiGM8lr5H4noJTilcFP9Q9S/5rtOxbHZpx+zZ4VT2vdXk6
+ KD8s3+FkyUM+mzh5yz6iAmSktSOHDK4iEibu3ldq2o4rV6jwbxxcrZFP2EFOA12id++Y Lw== 
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 341jehvnny-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Oct 2020 16:57:56 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 097Kvs6F019351;
+        Wed, 7 Oct 2020 20:57:54 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma01fra.de.ibm.com with ESMTP id 33xgx7te1j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Oct 2020 20:57:54 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 097Kvpmw33096176
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 7 Oct 2020 20:57:51 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 699F0AE056;
+        Wed,  7 Oct 2020 20:57:51 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2455AAE053;
+        Wed,  7 Oct 2020 20:57:51 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  7 Oct 2020 20:57:51 +0000 (GMT)
+From:   Karsten Graul <kgraul@linux.ibm.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com
+Subject: [PATCH net-next 0/3] net/smc: updates 2020-10-07
+Date:   Wed,  7 Oct 2020 22:57:40 +0200
+Message-Id: <20201007205743.83535-1-kgraul@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-10-07_10:2020-10-07,2020-10-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ mlxlogscore=756 impostorscore=0 spamscore=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=1 adultscore=0 phishscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2010070127
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 10/7/20 9:44 AM, Daniel Vetter wrote:
-> These are persistent, not just for the duration of a dma operation.
->=20
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: linux-mm@kvack.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-samsung-soc@vger.kernel.org
-> Cc: linux-media@vger.kernel.org
-> Cc: Oded Gabbay <oded.gabbay@gmail.com>
-> Cc: Omer Shpigelman <oshpigelman@habana.ai>
-> Cc: Ofir Bitton <obitton@habana.ai>
-> Cc: Tomer Tayar <ttayar@habana.ai>
-> Cc: Moti Haimovski <mhaimovski@habana.ai>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Pawel Piskorski <ppiskorski@habana.ai>
-> ---
->   drivers/misc/habanalabs/common/memory.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/misc/habanalabs/common/memory.c b/drivers/misc/haban=
-alabs/common/memory.c
-> index ef89cfa2f95a..94bef8faa82a 100644
-> --- a/drivers/misc/habanalabs/common/memory.c
-> +++ b/drivers/misc/habanalabs/common/memory.c
-> @@ -1288,7 +1288,8 @@ static int get_user_memory(struct hl_device *hdev, =
-u64 addr, u64 size,
->   		return -ENOMEM;
->   	}
->  =20
-> -	rc =3D pin_user_pages_fast(start, npages, FOLL_FORCE | FOLL_WRITE,
-> +	rc =3D pin_user_pages_fast(start, npages,
-> +				 FOLL_FORCE | FOLL_WRITE | FOLL_LONGTERM,
->   				 userptr->pages);
->  =20
->   	if (rc !=3D npages) {
->=20
+Please apply the following patch series for smc to netdev's net-next tree.
 
-Again, from a pin_user_pages_fast() point of view, and not being at all fam=
-iliar
-with the habana driver (but their use of this really does seem clearly _LON=
-GTERM!):
+Patch 1 and 2 address warnings from static code checkers, and patch 3 handles
+a case when all proposed ISM V2 devices fail to init and no V1 devices are
+tried afterwards.
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Karsten Graul (3):
+  net/smc: consolidate unlocking in same function
+  net/smc: cleanup buffer usage in smc_listen_work()
+  net/smc: restore smcd_version when all ISM V2 devices failed to init
 
-thanks,
---=20
-John Hubbard
-NVIDIA
+ net/smc/af_smc.c | 92 +++++++++++++++++++++++++-----------------------
+ 1 file changed, 48 insertions(+), 44 deletions(-)
+
+-- 
+2.17.1
+
