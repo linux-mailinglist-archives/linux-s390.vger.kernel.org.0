@@ -2,120 +2,182 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C6D62869B9
-	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 22:58:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 264DD2869EE
+	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 23:14:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgJGU6D (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 7 Oct 2020 16:58:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58704 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728613AbgJGU6A (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 16:58:00 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 097KVuKf050022;
-        Wed, 7 Oct 2020 16:57:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=yhh+Y9v/JCR/uvPDCqNhT/8coyWYfD9DDsj4+WZykB0=;
- b=GXBFMRYv7bblCK3MycheTk97INcYucflRIFPgP1j/eEcr9piQqm3+aZyUw8mUs9qijsD
- G2UVqTQod+Yvn6WQuOGtscHFDriBKMgUA30lvKTA3jbTBTkiCFGjpvkiuABUj5sTSD6M
- 2+RlU9dfLu0If/7lhvW9XpJn3PJFs6RP+J5VExU0oM59kdVcFIh0NMUmpzbYKTAfq/9T
- +1+1xzqYom60NLBSU/7LDw+C0kixEO2+r60Z32z8zoRGGiEO9Zv0fuVhsXV5pHKPTSnh
- RSHOja1jhBgL3+h3GuujqGJWBviY9bu0seXoCohsxGVSOSyk6v6Cy9OzaJHCuunT0LId sA== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 341kvna4j0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Oct 2020 16:57:57 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 097KulWV032754;
-        Wed, 7 Oct 2020 20:57:55 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06fra.de.ibm.com with ESMTP id 33xgjhadmw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Oct 2020 20:57:55 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 097KvqGF24707502
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 7 Oct 2020 20:57:52 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F020AE045;
-        Wed,  7 Oct 2020 20:57:52 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 133C9AE04D;
-        Wed,  7 Oct 2020 20:57:52 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  7 Oct 2020 20:57:52 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: [PATCH net-next 3/3] net/smc: restore smcd_version when all ISM V2 devices failed to init
-Date:   Wed,  7 Oct 2020 22:57:43 +0200
-Message-Id: <20201007205743.83535-4-kgraul@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201007205743.83535-1-kgraul@linux.ibm.com>
-References: <20201007205743.83535-1-kgraul@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-10-07_10:2020-10-07,2020-10-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 clxscore=1015 priorityscore=1501 malwarescore=0
- impostorscore=0 suspectscore=1 bulkscore=0 phishscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2010070127
+        id S1728635AbgJGVNw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 7 Oct 2020 17:13:52 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16238 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727948AbgJGVNw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 17:13:52 -0400
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5f7e2f220008>; Wed, 07 Oct 2020 14:12:02 -0700
+Received: from [10.2.85.86] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 7 Oct
+ 2020 21:13:42 +0000
+Subject: Re: [PATCH 05/13] mm/frame-vector: Use FOLL_LONGTERM
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     <kvm@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-s390@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Kyungmin Park" <kyungmin.park@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
+ <20201007164426.1812530-6-daniel.vetter@ffwll.ch>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <fc0ac3fb-2758-bef1-76b4-8ac2449f5743@nvidia.com>
+Date:   Wed, 7 Oct 2020 14:13:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <20201007164426.1812530-6-daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1602105122; bh=sdL9dWr71OcitQ1QN+LtvleGwHLKlRCYjfX+GmsKdT8=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Language:
+         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
+        b=UczOXY9to1LCj5AA/vWDFIZSxYcptbOuWof8ytMtikifjWBiV7WFE1SZd1H0LH0fv
+         kOKJobR115WCn/yjDIJFRQ+hkcq+2dAKR1e6FJj4MkEmdDzg6N2N4gslr80UJRaZgX
+         Lkk41XeM43UGThQQOFlbMX+h/b39dMZd63P9UIGH6zBsVqei7Fx18bJACRBf9osCOy
+         57RN8QfMM60XFWH7HJJ2PGtXfTOLsVy5u8w4Kq70u1hUdIgK44rQsExvKhmLL+DdpK
+         oxBJseYzqWkzebOA0vrS2YNSZyf8rdAgfIOjGviz66fazstOfGqMqtR5VpaT1zywo3
+         jmYuc2NJXDq1A==
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Field ini->smcd_version is set to SMC_V2 before calling
-smc_listen_ism_init(). This clears the V1 bit that may be set. When all
-matching ISM V2 devices fail to initialize then the smcd_version field
-needs to get restored to allow any possible V1 devices to initialize.
-And be consistent, always go to the not_found label when no device was
-found.
+On 10/7/20 9:44 AM, Daniel Vetter wrote:
+> This is used by media/videbuf2 for persistent dma mappings, not just
+> for a single dma operation and then freed again, so needs
+> FOLL_LONGTERM.
+>=20
+> Unfortunately current pup_locked doesn't support FOLL_LONGTERM due to
+> locking issues. Rework the code to pull the pup path out from the
+> mmap_sem critical section as suggested by Jason.
+>=20
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Pawel Osciak <pawel@osciak.com>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> Cc: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Tomasz Figa <tfiga@chromium.org>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: linux-mm@kvack.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-samsung-soc@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
+> ---
+>   mm/frame_vector.c | 36 +++++++++++-------------------------
+>   1 file changed, 11 insertions(+), 25 deletions(-)
+>=20
+> diff --git a/mm/frame_vector.c b/mm/frame_vector.c
+> index 10f82d5643b6..39db520a51dc 100644
+> --- a/mm/frame_vector.c
+> +++ b/mm/frame_vector.c
+> @@ -38,7 +38,6 @@ int get_vaddr_frames(unsigned long start, unsigned int =
+nr_frames,
+>   	struct vm_area_struct *vma;
+>   	int ret =3D 0;
+>   	int err;
+> -	int locked;
+>  =20
+>   	if (nr_frames =3D=3D 0)
+>   		return 0;
+> @@ -48,35 +47,22 @@ int get_vaddr_frames(unsigned long start, unsigned in=
+t nr_frames,
+>  =20
+>   	start =3D untagged_addr(start);
+>  =20
+> +	ret =3D pin_user_pages_fast(start, nr_frames,
+> +				  FOLL_FORCE | FOLL_WRITE | FOLL_LONGTERM,
+> +				  (struct page **)(vec->ptrs));
+> +	if (ret > 0) {
+> +		vec->got_ref =3D true;
+> +		vec->is_pfns =3D false;
+> +		goto out_unlocked;
+> +	}
 
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
----
- net/smc/af_smc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+This part looks good, and changing to _fast is a potential performance impr=
+ovement,
+too.
 
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index f481f0ed2b78..82be0bd0f6e8 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -1481,11 +1481,12 @@ static void smc_find_ism_v2_device_serv(struct smc_sock *new_smc,
- 	struct smc_clc_v2_extension *smc_v2_ext;
- 	struct smc_clc_msg_smcd *pclc_smcd;
- 	unsigned int matches = 0;
-+	u8 smcd_version;
- 	u8 *eid = NULL;
- 	int i;
- 
- 	if (!(ini->smcd_version & SMC_V2) || !smcd_indicated(ini->smc_type_v2))
--		return;
-+		goto not_found;
- 
- 	pclc_smcd = smc_get_clc_msg_smcd(pclc);
- 	smc_v2_ext = smc_get_clc_v2_ext(pclc);
-@@ -1519,6 +1520,7 @@ static void smc_find_ism_v2_device_serv(struct smc_sock *new_smc,
- 	}
- 
- 	/* separate - outside the smcd_dev_list.lock */
-+	smcd_version = ini->smcd_version;
- 	for (i = 0; i < matches; i++) {
- 		ini->smcd_version = SMC_V2;
- 		ini->is_smcd = true;
-@@ -1528,6 +1530,8 @@ static void smc_find_ism_v2_device_serv(struct smc_sock *new_smc,
- 			continue;
- 		return; /* matching and usable V2 ISM device found */
- 	}
-+	/* no V2 ISM device could be initialized */
-+	ini->smcd_version = smcd_version;	/* restore original value */
- 
- not_found:
- 	ini->smcd_version &= ~SMC_V2;
--- 
-2.17.1
+> +
+>   	mmap_read_lock(mm);
+> -	locked =3D 1;
+>   	vma =3D find_vma_intersection(mm, start, start + 1);
+>   	if (!vma) {
+>   		ret =3D -EFAULT;
+>   		goto out;
+>   	}
+>  =20
+> -	/*
+> -	 * While get_vaddr_frames() could be used for transient (kernel
+> -	 * controlled lifetime) pinning of memory pages all current
+> -	 * users establish long term (userspace controlled lifetime)
+> -	 * page pinning. Treat get_vaddr_frames() like
+> -	 * get_user_pages_longterm() and disallow it for filesystem-dax
+> -	 * mappings.
+> -	 */
+> -	if (vma_is_fsdax(vma)) {
+> -		ret =3D -EOPNOTSUPP;
+> -		goto out;
+> -	}
 
+Are you sure we don't need to check vma_is_fsdax() anymore?
+
+> -
+> -	if (!(vma->vm_flags & (VM_IO | VM_PFNMAP))) {
+> -		vec->got_ref =3D true;
+> -		vec->is_pfns =3D false;
+> -		ret =3D pin_user_pages_locked(start, nr_frames,
+> -			gup_flags, (struct page **)(vec->ptrs), &locked);
+> -		goto out;
+> -	}
+> -
+>   	vec->got_ref =3D false;
+>   	vec->is_pfns =3D true;
+>   	do {
+> @@ -101,8 +87,8 @@ int get_vaddr_frames(unsigned long start, unsigned int=
+ nr_frames,
+>   		vma =3D find_vma_intersection(mm, start, start + 1);
+>   	} while (vma && vma->vm_flags & (VM_IO | VM_PFNMAP));
+>   out:
+> -	if (locked)
+> -		mmap_read_unlock(mm);
+> +	mmap_read_unlock(mm);
+> +out_unlocked:
+>   	if (!ret)
+>   		ret =3D -EFAULT;
+>   	if (ret > 0)
+>=20
+
+All of the error handling still looks accurate there.
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
