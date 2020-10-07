@@ -2,78 +2,161 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06C20286499
-	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 18:35:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE3DD2864AE
+	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 18:40:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgJGQfs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 7 Oct 2020 12:35:48 -0400
-Received: from sonic314-20.consmr.mail.ne1.yahoo.com ([66.163.189.146]:45972
-        "EHLO sonic314-20.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727933AbgJGQfs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 12:35:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602088547; bh=PxMwWzXvs+dqOoH0/FHvFmQpYH2JguaCUHYAVLLmaiw=; h=Date:From:Reply-To:Subject:References:From:Subject; b=lFX4fc8ORYJ55YifO1yTVbN4WJWT+gowfCFKIhaw4CXCuhIZcWwUxqJgKCMyP0DXtbp1UgTHZaEbZGxCf8E8c43EhGfAa9bV1vcwP5sYGzBnpBIaMK7ftl4+30SLLOFgK1SmbYDr9Y1/cV7UffJaLSouhI/2VGxuBv0b0epNNk+xk8E5UMQgCkn9aZ+uvc4R9ZkGc6xY29pUXycT5IJRvt5HgXpw27WryDWsMxNzYABwEbZh+EJ3en9zH6o/ZCO1rYSoDrhddBLM3w+zi9G/BEAoS/P8uqX+Z5RE2KBITbYgypxhXXGhWTMkpwaW3e59K5+m8HC8eC/F1OD8jTaBSw==
-X-YMail-OSG: 3hcS3j4VM1nqFMh3eEjgdoZy_2GZQdNYR8FcvuGr8OTRHLRbtAPu3fnl3_Udlvv
- Db4zWRTmaQTdbKhf6lgJNWbM4OkSB2CUwcMNqIrT988nDSaDcyWxXdtyY.IUxAV.G5t2imFldHzA
- pSYBWno7DosM_hWIBv2MAasygP30RXG_UIG2qBSutHJlBO_N9ZoThvdNzzhhfVrWRWD4C0Y7fbY5
- 0YEDQrlFAH3.oVQHTirlmASRH2RW3BHyAqSGFIpaCKsT7lw0xjqq_YEQF8to9Rq9ZAxUDlAjKykQ
- CVF7NsLXI18.F9mLjupwragmuUO6XP17bhe5y3QhLVFhBoTntHsXFBA0aJ7mLa7M4LOvjRgDpGlv
- fSfaqt4f5RGETeeepGK1cp2HJsfjNHFDHpfLj8RwbHktfLxTKCvnGH3lQSeewVETGYoXM.9HnEsb
- QT7EiWkQ2MZbei3mrVtH.YmPyoXfO_1vXGy8yCeK9hlAS2XT64kcFuvDYxgnQ.LL8il1o1Qq6Nvg
- f3rT3BN00OrhtowfJW5eb9kkxCbt.r34dsTl0Gl8FcCHkWO3ep7.Vyhke8npNXiRHyizq4k5UdSM
- eUcyN18JuzZ4aGyBB9aX3YaNlA0hMyhs3OaOpUC8jI11wW.meBHP9j1FPx3BaVj0vJsXb9eALa8_
- UVZlySKRNHt7G0cFSQ5bl2QBiBf6yscJdpILx53g7XiFIbogLZ4hh4ZQV5_YGleuQoNtuDKci68i
- 79NYP_KsuiqjT6e0FVxfG5jqZxYO3H7A4O3iE1_Kp3ESML2FJMlXS2eRwxE8TyocjcWwk9WpSmJ4
- gFT4XePv.9USy17Sbc9YKHt_tWU0vqE7TLdBOWtPg1bOieX9rGPJIVNKiezqQx33gJF9XIj8msVr
- Pr0kElY1_neyovVxIDkZFJDJNG4KojkjZ2AengolgLGt2ha1LFunpZ.yBc_yJm._EP1_hsnbBBYZ
- TTrsQJ_Y.CafBBlXloRpb.kg1Sg1exhBrcQvLe66M31WjMejCdwowRn.jZfNeylWaF.kBLh3ihQS
- pp79O5SWYXDPdeEDibzOubowYXEUUiv6jXNij6N8yuMXidp22F_HWktHi9O7q3Xxp19z2xl0y.bG
- 3iNfDeMJvUNCzgaQCgOalms8YDRVZh9D9rzq5TYU8nsdcBB5zTo26futhyyQOHl0e6Zb9GkPgoTt
- 26Ek560ADu.eXdQUuPvAio3MYJ9ddPAyRA4.BaiW.9nqbSKbd6ZGrVVtVYNgAyKUe8wVOpl_vxDI
- beODtILqvb4CbaHEBkWak1kET.0a17HjyRw3_.OI.F64vcXRgz3tJ73KbgcuY4WtucjXv5miemlj
- w15NGB5ovdi5oq69OYJDbgKwO1oL9wjUQ.LH.zKU5C20oNRJDliVr6zHaIdfcCTCfjHgZC4Sy9.N
- XMr0uUZPsIPGwfh621UmedP4ulpMZuBzonUxUaWbBAnDNrA--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Wed, 7 Oct 2020 16:35:47 +0000
-Date:   Wed, 7 Oct 2020 16:35:46 +0000 (UTC)
-From:   Marilyn Robert <fredodinga22@gmail.com>
-Reply-To: marilyobert@gmail.com
-Message-ID: <49666221.283644.1602088546856@mail.yahoo.com>
-Subject: =?UTF-8?B?0J3QsNGY0LzQuNC70LAg0LrQsNGYINCz0L7RgdC/0L7QtNCw0YDQvtGC?=
+        id S1726948AbgJGQkX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 7 Oct 2020 12:40:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:59626 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726138AbgJGQkX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 12:40:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1602088821;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=saelsKuZSmvrUQUxcs48BzcLX5DdEKkzBPmTO93LrRk=;
+        b=DNPF/J0ETLykrK6chPkNLCGuIgIF5g+FfUldL894f8GNHccCC3L3M8ughM0rIxUFLP1iTL
+        verYcEGMi2V3CIy7BVRrkTIF51HMHmS46FHRtK4SlxcCqsec3fY4psJXysLBz0GBUxEkDe
+        H3pj3hkVHh3I0U7iHFcuoDfYK3a4tuI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-344-bGYmd3_CMwSHOSoUYJnQbw-1; Wed, 07 Oct 2020 12:40:17 -0400
+X-MC-Unique: bGYmd3_CMwSHOSoUYJnQbw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07115101FFA5;
+        Wed,  7 Oct 2020 16:40:16 +0000 (UTC)
+Received: from gondolin (ovpn-112-246.ams2.redhat.com [10.36.112.246])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FA3F76648;
+        Wed,  7 Oct 2020 16:40:14 +0000 (UTC)
+Date:   Wed, 7 Oct 2020 18:40:11 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jan =?UTF-8?B?SMO2cHBuZXI=?= <hoeppner@linux.ibm.com>
+Cc:     Stefan Haberland <sth@linux.ibm.com>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com
+Subject: Re: [PATCH 08/10] s390/dasd: Display FC Endpoint Security
+ information via sysfs
+Message-ID: <20201007184011.6dece07f.cohuck@redhat.com>
+In-Reply-To: <243fe10e-ce80-57de-a92c-3a6457cde40a@linux.ibm.com>
+References: <20201002193940.24012-1-sth@linux.ibm.com>
+        <20201002193940.24012-9-sth@linux.ibm.com>
+        <20201006122632.098149ba.cohuck@redhat.com>
+        <d88b8230-993e-d63d-394a-efcaf60f813d@linux.ibm.com>
+        <20201007114928.6a088a7d.cohuck@redhat.com>
+        <243fe10e-ce80-57de-a92c-3a6457cde40a@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-References: <49666221.283644.1602088546856.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16795 YMailNodin Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-DQoNCtCd0LDRmNC80LjQu9CwINC60LDRmCDQs9C+0YHQv9C+0LTQsNGA0L7Rgg0KDQrQiNCw0YEg
-0YHRg9C8IDY4LdCz0L7QtNC40YjQvdCwINC20LXQvdCwLCDQutC+0ZjQsCDRgdGC0YDQsNC00LAg
-0L7QtCDQv9GA0L7QtNC+0LvQttC10L0g0LrQsNGA0YbQuNC90L7QvCDQvdCwINC00L7RmNC60LAs
-INC+0LQg0YHQuNGC0LUg0LzQtdC00LjRhtC40L3RgdC60Lgg0LjQvdC00LjQutCw0YbQuNC4LCDQ
-vNC+0ZjQsNGC0LAg0YHQvtGB0YLQvtGY0LHQsCDQvdCw0LLQuNGB0YLQuNC90LAg0YHQtSDQstC7
-0L7RiNC4INC4INC+0YfQuNCz0LvQtdC00L3QviDQtSDQtNC10LrQsCDQvNC+0LbQtdCx0Lgg0L3Q
-tdC80LAg0LTQsCDQttC40LLQtdCw0Lwg0L/QvtCy0LXRnNC1INC+0LQg0YjQtdGB0YIg0LzQtdGB
-0LXRhtC4INC60LDQutC+INGA0LXQt9GD0LvRgtCw0YIg0L3QsCDQsdGA0LfQuNC+0YIg0YDQsNGB
-0YIg0Lgg0LHQvtC70LrQsNGC0LAg0YjRgtC+INGB0LUg0ZjQsNCy0YPQstCwINC60LDRmCDQvdC1
-0LAuINCc0L7RmNC+0YIg0YHQvtC/0YDRg9CzINC/0L7Rh9C40L3QsCDQvdC10LrQvtC70LrRgyDQ
-s9C+0LTQuNC90Lgg0L3QsNC90LDQt9Cw0LQg0Lgg0L3QsNGI0LjRgtC1INC00L7Qu9Cz0Lgg0LPQ
-vtC00LjQvdC4INCx0YDQsNC6INC90LUg0LHQtdCwINCx0LvQsNCz0L7RgdC70L7QstC10L3QuCDR
-gdC+INC90LjRgtGDINC10LTQvdC+INC00LXRgtC1LCDQv9C+INC90LXQs9C+0LLQsNGC0LAg0YHQ
-vNGA0YIg0LPQviDQvdCw0YHQu9C10LTQuNCyINGG0LXQu9C+0YLQviDQvdC10LPQvtCy0L4g0LHQ
-vtCz0LDRgtGB0YLQstC+Lg0KDQrQlNC+0LDRk9Cw0Lwg0LrQsNGYINCy0LDRgSDQvtGC0LrQsNC6
-0L4g0YHQtSDQv9C+0LzQvtC70LjQsiDQt9CwINGC0L7QsCwg0L/QvtC00LPQvtGC0LLQtdC9INGB
-0YPQvCDQtNCwINC00L7QvdC40YDQsNC8INGB0YPQvNCwINC+0LQgMiwgMzAwLCAwMDAg0LXQstGA
-0LAg0LfQsCDQv9C+0LzQvtGIINC90LAg0YHQuNGA0L7QvNCw0YjQvdC40YLQtSwg0YHQuNGA0L7Q
-vNCw0YjQvdC40YLQtSDQuCDQv9C+0LzQsNC70LrRgyDQv9GA0LjQstC40LvQtdCz0LjRgNCw0L3Q
-uNGC0LUg0LzQtdGT0YMg0LLQsNGI0LjRgtC1INGB0L7QsdGA0LDQvdC40ZjQsCAvINC+0L/RiNGC
-0LXRgdGC0LLQvi4g0JfQsNCx0LXQu9C10LbQtdGC0LUg0LTQtdC60LAg0L7QstC+0Zgg0YTQvtC9
-0LQg0LUg0LTQtdC/0L7QvdC40YDQsNC9INCy0L4g0LHQsNC90LrQsCDQutCw0LTQtSDRiNGC0L4g
-0YDQsNCx0L7RgtC10YjQtSDQvNC+0ZjQvtGCINGB0L7Qv9GA0YPQsy4gQXBwcmVjaWF0ZdC1INGG
-0LXQvdCw0Lwg0LDQutC+INC+0LHRgNC90LXRgtC1INCy0L3QuNC80LDQvdC40LUg0L3QsCDQvNC+
-0LXRgtC+INCx0LDRgNCw0ZrQtSDQt9CwINC/0YDQvtC/0LDQs9C40YDQsNGa0LUg0L3QsCDQvNCw
-0YHQsNC20LDRgtCwINC90LAg0LrRgNCw0LvRgdGC0LLQvtGC0L4sINGc0LUg0LLQuCDQtNCw0LTQ
-sNC8INC/0L7QstC10ZzQtSDQtNC10YLQsNC70Lgg0LfQsCDRgtC+0LAg0LrQsNC60L4g0LTQsCDQ
-v9C+0YHRgtCw0L/QuNGC0LUuDQoNCtCR0LvQsNCz0L7QtNCw0YDQsNC8DQrQky3Rk9CwINCc0LXR
-gNC40LvQuNC9INCg0L7QsdC10YDRgg==
+On Wed, 7 Oct 2020 16:33:37 +0200
+Jan H=C3=B6ppner <hoeppner@linux.ibm.com> wrote:
+
+> >>>> +static inline void dasd_path_release(struct kobject *kobj)
+> >>>> +{
+> >>>> +/* Memory for the dasd_path kobject is freed when dasd_free_device(=
+) is called */
+> >>>> +}
+> >>>> +   =20
+> >>>
+> >>> As already said, I don't think that's a correct way to implement this.
+> >>>    =20
+> >>
+> >> As you correctly pointed out, our release function doesn't do anything.
+> >> This is because our path data is a (static) part of our device.
+> >> This data is critical to keep our devices operational.
+> >> We can't simply rely on allocated memory if systems are under stress. =
+ =20
+> >=20
+> > Yes, avoiding freeing and reallocating memory certainly makes sense.
+> >  =20
+> >>
+> >> Having this data dynamically allocated involves a lot of rework of our
+> >> path handling as well. There are a few things that are subject to impr=
+ovement
+> >> and evaluating whether our dasd_path structures can be dynamic is one =
+of
+> >> these things. However, even then, the above concern persists and I
+> >> highly doubt that dynamic dasd_paths objects are doable for us at this
+> >> moment.
+> >>
+> >> I do understand the concerns, however, we release the memory for dasd_=
+path
+> >> structures eventually when dasd_free_device() is called. Until that po=
+int,
+> >> the data has to be kept alive. The rest is taking care of by the kobje=
+ct
+> >> library. =20
+> >=20
+> > Yes, there doesn't seem to be any memory leakage.
+> >  =20
+> >> In our path handling we also make sure that we can always verify/valid=
+ate
+> >> paths information even if a system is under high memory pressure. Anot=
+her
+> >> reason why it would contradictory for dasd_path objects to be dynamic.
+> >>
+> >> I hope this explains the reasoning behind the release function. =20
+> >=20
+> > I understand where you're coming from.
+> >=20
+> > However, "static" kobjects (in the sense of "we may re-register the
+> > same kobject") are still problematic. Is there any way to simply
+> > "disappear" path objects that are not valid at the moment, or mark them
+> > as not valid? =20
+>=20
+> You could use kobject_del(), but it is rather intended to be used for
+> a two-stage removal of the kobject.
+>=20
+> >=20
+> > Also, the simple act of registering/unregistering a kobject already
+> > creates stress from its sysfs interactions... it seems you should try
+> > to avoid that as well?
+> >  =20
+>=20
+> We don't re-register kobjects over and over again. The kobjects are
+> infact initialized and created only _once_. This is done either during
+> device initialization (after dasd_eckd_read_conf() in
+> dasd_eckd_check_characteristics()) or when a path is newly added
+> (in the path event handler).
+> The kobject will stay until the memory for the whole device is being
+> freed. This is also the reason why the kobject can stay initialized and
+> we track ourselves whether we did the initialization/creation already
+> (which we check e.g. when a path is removed and added again).
+> So, instead of the release function freeing the kobject data,
+> it is done by our dasd_free_device() (same thing, different function IMHO=
+).
+>=20
+> I think the concerns would be more worrisome if we'd remove/add
+> the kobjects every time. And then I agree, we'd run into trouble.
+>=20
+
+The thing that tripped me is
+
++void dasd_path_remove_kobj(struct dasd_device *device, int chp)
++{
++	if (device->path[chp].in_sysfs) {
++		kobject_put(&device->path[chp].kobj);
++		device->path[chp].in_sysfs =3D false;
++	}
++}
+
+As an exported function, it is not clear where this may be called from.
+Given your explanation above (and some more code reading on my side),
+the code looks ok in its current incarnation (but non-idiomatic).
+
+Is there a way to check that indeed nobody re-adds a previously removed
+path object due to a (future) programming error? And maybe add a
+comment that you must never re-register a path? "The path is gone,
+let's remove the object" looks quite tempting.
+
