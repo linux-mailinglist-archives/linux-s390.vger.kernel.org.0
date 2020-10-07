@@ -2,219 +2,270 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F56728612A
-	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 16:24:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5962628614F
+	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 16:33:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbgJGOYO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 7 Oct 2020 10:24:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53806 "EHLO
+        id S1728592AbgJGOdq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 7 Oct 2020 10:33:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10316 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728615AbgJGOYO (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 10:24:14 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 097E3N7q056300;
-        Wed, 7 Oct 2020 10:24:13 -0400
+        by vger.kernel.org with ESMTP id S1728535AbgJGOdp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 10:33:45 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 097E7fXw091236;
+        Wed, 7 Oct 2020 10:33:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=mbd4bPQGRnsNhALUsn0I58V1A7Ckoc7E5+Sg74/VykM=;
- b=lhLrfUs2HKvQQWUuDWATlXQEGh9Qjh8Vq1mGuXr5ZVSenhtmP8WGuGQzWFKBpV0beMw4
- D2rEtvgMFEjOPufqPJvGhLekA0VKfgaVOQYBYeWlgiQxjbROivRi249yKemDIIWn66FX
- vfoiy2HxXBoF97JVt8jWbBXqujedVxR8PSQ5atssDHypHfNQwcZJIrmL7f2lducKfq7P
- jzANOhTAI5CanaSAbSy3iRaB3MLThzD3GL1PV7MSk9quAprlP7GhilWFcx0Uwdplzzww
- 65vX6VbrPJQOiTv9ppleU9x5wWG80+ORpTyRwABE1NtvhvnTY5SM2FGATKBSrvMoU/gm dQ== 
+ bh=vDTD/PVLSpMOzc27rVeGmqr8Buz9bIX61olcH7mjtUo=;
+ b=QMKclFhlobLj1MzghLysomc0k6zX9zm/R6e9XH7h9tkrHVu1NfgfwJZ/0SjKMMcYjl42
+ +fM+Eb5Y2P8mOtn52kvg0qUjHfOc8h27kD2iPtDHz2sN3FObAG83jp9w2+32XJCScfdG
+ MKOOw3MRHN8N4BjjHD/agUKZiB11Oz0lkcUVTvdsqf7VbfBkU/UUUzPlQwyS2rocNXbq
+ Q3BSetR/YEEW4R2HfEsNLW6djJpRP7bRpW/N4TJPVdR/9a7KOXhH1Zo0MjnKl7305+wp
+ 4mKBFmCZbnCeNfAty8ZiXPS8t2nbE/MkBwS1s+vXq6tiOHSYdsRxLbMc78whSe2EGMWN uQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 341efx26w8-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 341ewm9jhe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Oct 2020 10:24:13 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 097E3cuS057522;
-        Wed, 7 Oct 2020 10:24:12 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 341efx26v2-1
+        Wed, 07 Oct 2020 10:33:43 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 097E92i4099377;
+        Wed, 7 Oct 2020 10:33:43 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 341ewm9jft-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Oct 2020 10:24:12 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 097ED1Cc010999;
-        Wed, 7 Oct 2020 14:24:10 GMT
+        Wed, 07 Oct 2020 10:33:43 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 097EXf2i011763;
+        Wed, 7 Oct 2020 14:33:41 GMT
 Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma05fra.de.ibm.com with ESMTP id 33xgx829ks-1
+        by ppma06ams.nl.ibm.com with ESMTP id 33xgjh4cw8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Oct 2020 14:24:09 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 097EO6BE31785470
+        Wed, 07 Oct 2020 14:33:41 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 097EXcGM26804574
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 7 Oct 2020 14:24:07 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C1B28A4064;
-        Wed,  7 Oct 2020 14:24:06 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62450A406A;
-        Wed,  7 Oct 2020 14:24:06 +0000 (GMT)
-Received: from linux.fritz.box (unknown [9.145.147.56])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  7 Oct 2020 14:24:06 +0000 (GMT)
-Subject: Re: [PATCH 02/10] s390/cio: Provide Endpoint-Security Mode per CU
+        Wed, 7 Oct 2020 14:33:38 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 46E9311C052;
+        Wed,  7 Oct 2020 14:33:38 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE45111C04C;
+        Wed,  7 Oct 2020 14:33:37 +0000 (GMT)
+Received: from [9.145.183.254] (unknown [9.145.183.254])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  7 Oct 2020 14:33:37 +0000 (GMT)
+Subject: Re: [PATCH 08/10] s390/dasd: Display FC Endpoint Security information
+ via sysfs
 To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        hoeppner@linux.ibm.com, linux-s390@vger.kernel.org,
+Cc:     Stefan Haberland <sth@linux.ibm.com>, axboe@kernel.dk,
+        linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
         heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, vneethv@linux.ibm.com
+        borntraeger@de.ibm.com
 References: <20201002193940.24012-1-sth@linux.ibm.com>
- <20201002193940.24012-3-sth@linux.ibm.com>
- <20201006164646.5b586679.cohuck@redhat.com>
-From:   Stefan Haberland <sth@linux.ibm.com>
-Autocrypt: addr=sth@linux.ibm.com; keydata=
- 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
- cH4TNHyhiR0KAbxE8qKx3Jc=
-Message-ID: <3b721a6b-202e-d7e4-d4f2-2a3954f74609@linux.ibm.com>
-Date:   Wed, 7 Oct 2020 16:24:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ <20201002193940.24012-9-sth@linux.ibm.com>
+ <20201006122632.098149ba.cohuck@redhat.com>
+ <d88b8230-993e-d63d-394a-efcaf60f813d@linux.ibm.com>
+ <20201007114928.6a088a7d.cohuck@redhat.com>
+From:   =?UTF-8?Q?Jan_H=c3=b6ppner?= <hoeppner@linux.ibm.com>
+Message-ID: <243fe10e-ce80-57de-a92c-3a6457cde40a@linux.ibm.com>
+Date:   Wed, 7 Oct 2020 16:33:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-In-Reply-To: <20201006164646.5b586679.cohuck@redhat.com>
+In-Reply-To: <20201007114928.6a088a7d.cohuck@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-10-07_09:2020-10-06,2020-10-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 clxscore=1015
- mlxlogscore=999 malwarescore=0 phishscore=0 spamscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2010070089
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 priorityscore=1501 suspectscore=2 adultscore=0
+ impostorscore=0 bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ clxscore=1015 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2010070090
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Am 06.10.20 um 16:46 schrieb Cornelia Huck:
-> On Fri,  2 Oct 2020 21:39:32 +0200
-> Stefan Haberland <sth@linux.ibm.com> wrote:
->
->> From: Vineeth Vijayan <vneethv@linux.ibm.com>
+... snip ...
+>>>   
+>>>> +static struct kobj_type path_attr_type = {
+>>>> +	.release	= dasd_path_release,  
+>>>
+>>> This function does nothing; I think there's something wrong with your
+>>> kobject handling?  
 >>
->> Add an interface in the CIO layer to retrieve the information about the
->> Endpoint-Security Mode (ESM) of the specified CU. The ESM values are
->> defined as 0-None, 1-Authenticated or 2, 3-Encrypted.
+>> Explanation below.
 >>
->> Reference-ID: IO1812
->> Signed-off-by: Sebastian Ott <sebott@linux.ibm.com>
->> [vneethv@linux.ibm.com: cleaned-up and modified description]
->> Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
->> Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
->> Acked-by: Vasily Gorbik <gor@linux.ibm.com>
->> Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
->> ---
->>  arch/s390/include/asm/cio.h |  1 +
->>  drivers/s390/cio/chsc.c     | 83 +++++++++++++++++++++++++++++++++++++
->>  2 files changed, 84 insertions(+)
->  
-> (...)
->
->> +/**
->> + * chsc_scud() - Store control-unit description.
->> + * @cu:		number of the control-unit
->> + * @esm:	8 1-byte endpoint security mode values
->> + * @esm_valid:	validity mask for @esm
->> + *
->> + * Interface to retrieve information about the endpoint security
->> + * modes for up to 8 paths of a control unit.
->> + *
->> + * Returns 0 on success.
->> + */
->> +int chsc_scud(u16 cu, u64 *esm, u8 *esm_valid)
->> +{
->> +	struct chsc_scud *scud = chsc_page;
->> +	int ret;
->> +
-> I'm wondering if it would make sense to check in the chsc
-> characteristics whether that chsc is actually installed (if there's
-> actually a bit for it, although I'd expect so). Some existing chscs
-> check for bits in the characteristics, others don't. (Don't know
-> whether QEMU is the only platform that doesn't provide this chsc.)
+>>>   
+>>>> +	.default_attrs	= paths_info_attrs,
+>>>> +	.sysfs_ops	= &kobj_sysfs_ops,
+>>>> +};
+>>>> +
+>>>> +static void dasd_path_init_kobj(struct dasd_device *device, int chp)
+>>>> +{
+>>>> +	device->path[chp].kobj.kset = device->paths_info;
+>>>> +	kobject_init(&device->path[chp].kobj, &path_attr_type);  
+>>>
+>>> This inits a static kobject; as you never free it, doesn't the code  
+>>
+>> kobject_put() frees the kobject data.
+> 
+> Not quite; if the last ref is put, it invokes the provided ->release
+> callback and frees the allocated name. If the ->release callback does
+> not free the object embedding the kobject, only the name is freed
+> AFAICS.
+> 
 
-I don't see any benefit in checking upfront if the CHSC is supported -
-we'll get
-a corresponding CHSC response code and since no error message is logged
-for this
-case, the outcome would be the same as if we checked for the
-characteristics bit
-beforehand.
+True, the rest is freed when the device is being destroyed with
+dasd_free_device().
 
+>>
+>>> moan about state_initialized if you try to do that a second time?  
+>>
+>> No, because we check whether we have this kobject already present
+>> in sysfs before we try to initialize it (we have in_sysfs per path
+>> object for this).
+> 
+> I might be confused by the path revalidation logic; but don't you unset
+> in_sysfs when you remove the path object? What happens when you readd it?
 
->> +	spin_lock_irq(&chsc_page_lock);
->> +	memset(chsc_page, 0, PAGE_SIZE);
->> +	scud->request.length = SCUD_REQ_LEN;
->> +	scud->request.code = SCUD_REQ_CMD;
->> +	scud->fmt = 0;
->> +	scud->cssid = 0;
->> +	scud->first_cu = cu;
->> +	scud->last_cu = cu;
->> +
->> +	ret = chsc(scud);
->> +	if (!ret)
->> +		ret = chsc_error_from_response(scud->response.code);
->> +
->> +	if (!ret && (scud->response.length <= 8 || scud->fmt_resp != 0
->> +			|| !(scud->cudb[0].flags & 0x80)
->> +			|| scud->cudb[0].cu != cu)) {
->> +
->> +		CIO_MSG_EVENT(2, "chsc: scud failed rc=%04x, L2=%04x "
->> +			"FMT=%04x, cudb.flags=%02x, cudb.cu=%04x",
->> +			scud->response.code, scud->response.length,
->> +			scud->fmt_resp, scud->cudb[0].flags, scud->cudb[0].cu);
->> +		ret = -EINVAL;
->> +	}
->> +
->> +	if (ret)
->> +		goto out;
->> +
->> +	memcpy(esm, scud->cudb[0].esm, sizeof(*esm));
->> +	*esm_valid = scud->cudb[0].esm_valid;
->> +out:
->> +	spin_unlock_irq(&chsc_page_lock);
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(chsc_scud);
+We set it to true again (See dasd_path_create_kobj()). (More details below)
 
+> 
+>>
+>>>   
+>>>> +}
+>>>> +
+>>>> +void dasd_path_create_kobj(struct dasd_device *device, int chp)
+>>>> +{
+>>>> +	int rc;
+>>>> +
+>>>> +	if (test_bit(DASD_FLAG_OFFLINE, &device->flags))
+>>>> +		return;
+>>>> +	if (!device->paths_info) {
+>>>> +		dev_warn(&device->cdev->dev, "Unable to create paths objects\n");  
+>>>
+>>> I guess this warns every time you come along here, is warning more than
+>>> once useful?
+>>>   
+>>
+>> paths_info is a kset created during the device initialization. Do you mean,
+>> in case the kset creation fails, this check here should only warn once?
+>> I'm not sure about that, hm.
+> 
+> If the kset could not be set up during init, you'll hit this for every
+> path object you want to add afterwards -- one warning per device of
+> that should be enough, I guess :)
+
+I think this could be changed to one warning.
+
+> 
+>>
+>>>> +		return;
+>>>> +	}
+>>>> +	if (device->path[chp].in_sysfs)
+>>>> +		return;
+>>>> +	if (!device->path[chp].conf_data)  
+>>>
+>>> Out of interest: Have you tried this with vfio-ccw under QEMU, where
+>>> some information is simply not available?  
+>>
+>> I did not, sorry.
+>>
+>>>   
+>>>> +		return;
+>>>> +
+>>>> +	dasd_path_init_kobj(device, chp);
+>>>> +
+>>>> +	rc = kobject_add(&device->path[chp].kobj, NULL, "%x.%02x",
+>>>> +			 device->path[chp].cssid, device->path[chp].chpid);
+>>>> +	if (rc)
+>>>> +		kobject_put(&device->path[chp].kobj);  
+>>>
+>>> This will eventually lead to the nop release function, which doesn't
+>>> unset state_initialized (see above) -- but OTOH, it shouldn't muck
+>>> around with kobject internals anyway.  
+>>
+>> The release function is supposed to free memory of the structure where
+>> the kobject lies in (our release function is explained below).
+>> The rest is taking care of by the kobject library.
+> 
+> Yes, but the kobject code does not unset state_initialized.
+>>
+>>>
+>>> I think the kobjects really want to be dynamically allocated; instead
+>>> of going through a remove/add cycle, is there a way to make path
+>>> objects "invisible" instead? Or add an "available" attribute, and error
+>>> out reading any other attribute?
+> 
+>>> (...)
+>>>   
+>>>> +static inline void dasd_path_release(struct kobject *kobj)
+>>>> +{
+>>>> +/* Memory for the dasd_path kobject is freed when dasd_free_device() is called */
+>>>> +}
+>>>> +  
+>>>
+>>> As already said, I don't think that's a correct way to implement this.
+>>>   
+>>
+>> As you correctly pointed out, our release function doesn't do anything.
+>> This is because our path data is a (static) part of our device.
+>> This data is critical to keep our devices operational.
+>> We can't simply rely on allocated memory if systems are under stress. 
+> 
+> Yes, avoiding freeing and reallocating memory certainly makes sense.
+> 
+>>
+>> Having this data dynamically allocated involves a lot of rework of our
+>> path handling as well. There are a few things that are subject to improvement
+>> and evaluating whether our dasd_path structures can be dynamic is one of
+>> these things. However, even then, the above concern persists and I
+>> highly doubt that dynamic dasd_paths objects are doable for us at this
+>> moment.
+>>
+>> I do understand the concerns, however, we release the memory for dasd_path
+>> structures eventually when dasd_free_device() is called. Until that point,
+>> the data has to be kept alive. The rest is taking care of by the kobject
+>> library.
+> 
+> Yes, there doesn't seem to be any memory leakage.
+> 
+>> In our path handling we also make sure that we can always verify/validate
+>> paths information even if a system is under high memory pressure. Another
+>> reason why it would contradictory for dasd_path objects to be dynamic.
+>>
+>> I hope this explains the reasoning behind the release function.
+> 
+> I understand where you're coming from.
+> 
+> However, "static" kobjects (in the sense of "we may re-register the
+> same kobject") are still problematic. Is there any way to simply
+> "disappear" path objects that are not valid at the moment, or mark them
+> as not valid?
+
+You could use kobject_del(), but it is rather intended to be used for
+a two-stage removal of the kobject.
+
+> 
+> Also, the simple act of registering/unregistering a kobject already
+> creates stress from its sysfs interactions... it seems you should try
+> to avoid that as well?
+> 
+
+We don't re-register kobjects over and over again. The kobjects are
+infact initialized and created only _once_. This is done either during
+device initialization (after dasd_eckd_read_conf() in
+dasd_eckd_check_characteristics()) or when a path is newly added
+(in the path event handler).
+The kobject will stay until the memory for the whole device is being
+freed. This is also the reason why the kobject can stay initialized and
+we track ourselves whether we did the initialization/creation already
+(which we check e.g. when a path is removed and added again).
+So, instead of the release function freeing the kobject data,
+it is done by our dasd_free_device() (same thing, different function IMHO).
+
+I think the concerns would be more worrisome if we'd remove/add
+the kobjects every time. And then I agree, we'd run into trouble.
