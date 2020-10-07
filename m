@@ -2,157 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B6E2286356
-	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 18:14:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06C20286499
+	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 18:35:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgJGQOK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 7 Oct 2020 12:14:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45252 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726388AbgJGQOJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 12:14:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602087248;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tfkJfyc5VsN8uURZcR756j/GzbkrCjs03kIDnTtcdsE=;
-        b=OcwLqSphCUkPnBfMKbprmCvr4b8vyk8puQqL6B1fk35w108BBFCypLxYugn+zlUNuBA9M3
-        6I2WYgiBX6lZqS/caClpTrSd3S5y6aEO3+7LRQ9rcP8cBDAQBlm5ze5IxkzFecWY/y1EsZ
-        aVL+2m2O8FBL87ensk+CemVgb/tl9sk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-447-KQ_ypRxNNRSQ_XGJid0Mnw-1; Wed, 07 Oct 2020 12:14:04 -0400
-X-MC-Unique: KQ_ypRxNNRSQ_XGJid0Mnw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05B90196C900;
-        Wed,  7 Oct 2020 16:14:03 +0000 (UTC)
-Received: from gondolin (ovpn-112-246.ams2.redhat.com [10.36.112.246])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 747AB5D9DD;
-        Wed,  7 Oct 2020 16:14:00 +0000 (UTC)
-Date:   Wed, 7 Oct 2020 18:13:57 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        hoeppner@linux.ibm.com, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, vneethv@linux.ibm.com
-Subject: Re: [PATCH 02/10] s390/cio: Provide Endpoint-Security Mode per CU
-Message-ID: <20201007181357.7550dcb1.cohuck@redhat.com>
-In-Reply-To: <3b721a6b-202e-d7e4-d4f2-2a3954f74609@linux.ibm.com>
-References: <20201002193940.24012-1-sth@linux.ibm.com>
-        <20201002193940.24012-3-sth@linux.ibm.com>
-        <20201006164646.5b586679.cohuck@redhat.com>
-        <3b721a6b-202e-d7e4-d4f2-2a3954f74609@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1727937AbgJGQfs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 7 Oct 2020 12:35:48 -0400
+Received: from sonic314-20.consmr.mail.ne1.yahoo.com ([66.163.189.146]:45972
+        "EHLO sonic314-20.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727933AbgJGQfs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 12:35:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602088547; bh=PxMwWzXvs+dqOoH0/FHvFmQpYH2JguaCUHYAVLLmaiw=; h=Date:From:Reply-To:Subject:References:From:Subject; b=lFX4fc8ORYJ55YifO1yTVbN4WJWT+gowfCFKIhaw4CXCuhIZcWwUxqJgKCMyP0DXtbp1UgTHZaEbZGxCf8E8c43EhGfAa9bV1vcwP5sYGzBnpBIaMK7ftl4+30SLLOFgK1SmbYDr9Y1/cV7UffJaLSouhI/2VGxuBv0b0epNNk+xk8E5UMQgCkn9aZ+uvc4R9ZkGc6xY29pUXycT5IJRvt5HgXpw27WryDWsMxNzYABwEbZh+EJ3en9zH6o/ZCO1rYSoDrhddBLM3w+zi9G/BEAoS/P8uqX+Z5RE2KBITbYgypxhXXGhWTMkpwaW3e59K5+m8HC8eC/F1OD8jTaBSw==
+X-YMail-OSG: 3hcS3j4VM1nqFMh3eEjgdoZy_2GZQdNYR8FcvuGr8OTRHLRbtAPu3fnl3_Udlvv
+ Db4zWRTmaQTdbKhf6lgJNWbM4OkSB2CUwcMNqIrT988nDSaDcyWxXdtyY.IUxAV.G5t2imFldHzA
+ pSYBWno7DosM_hWIBv2MAasygP30RXG_UIG2qBSutHJlBO_N9ZoThvdNzzhhfVrWRWD4C0Y7fbY5
+ 0YEDQrlFAH3.oVQHTirlmASRH2RW3BHyAqSGFIpaCKsT7lw0xjqq_YEQF8to9Rq9ZAxUDlAjKykQ
+ CVF7NsLXI18.F9mLjupwragmuUO6XP17bhe5y3QhLVFhBoTntHsXFBA0aJ7mLa7M4LOvjRgDpGlv
+ fSfaqt4f5RGETeeepGK1cp2HJsfjNHFDHpfLj8RwbHktfLxTKCvnGH3lQSeewVETGYoXM.9HnEsb
+ QT7EiWkQ2MZbei3mrVtH.YmPyoXfO_1vXGy8yCeK9hlAS2XT64kcFuvDYxgnQ.LL8il1o1Qq6Nvg
+ f3rT3BN00OrhtowfJW5eb9kkxCbt.r34dsTl0Gl8FcCHkWO3ep7.Vyhke8npNXiRHyizq4k5UdSM
+ eUcyN18JuzZ4aGyBB9aX3YaNlA0hMyhs3OaOpUC8jI11wW.meBHP9j1FPx3BaVj0vJsXb9eALa8_
+ UVZlySKRNHt7G0cFSQ5bl2QBiBf6yscJdpILx53g7XiFIbogLZ4hh4ZQV5_YGleuQoNtuDKci68i
+ 79NYP_KsuiqjT6e0FVxfG5jqZxYO3H7A4O3iE1_Kp3ESML2FJMlXS2eRwxE8TyocjcWwk9WpSmJ4
+ gFT4XePv.9USy17Sbc9YKHt_tWU0vqE7TLdBOWtPg1bOieX9rGPJIVNKiezqQx33gJF9XIj8msVr
+ Pr0kElY1_neyovVxIDkZFJDJNG4KojkjZ2AengolgLGt2ha1LFunpZ.yBc_yJm._EP1_hsnbBBYZ
+ TTrsQJ_Y.CafBBlXloRpb.kg1Sg1exhBrcQvLe66M31WjMejCdwowRn.jZfNeylWaF.kBLh3ihQS
+ pp79O5SWYXDPdeEDibzOubowYXEUUiv6jXNij6N8yuMXidp22F_HWktHi9O7q3Xxp19z2xl0y.bG
+ 3iNfDeMJvUNCzgaQCgOalms8YDRVZh9D9rzq5TYU8nsdcBB5zTo26futhyyQOHl0e6Zb9GkPgoTt
+ 26Ek560ADu.eXdQUuPvAio3MYJ9ddPAyRA4.BaiW.9nqbSKbd6ZGrVVtVYNgAyKUe8wVOpl_vxDI
+ beODtILqvb4CbaHEBkWak1kET.0a17HjyRw3_.OI.F64vcXRgz3tJ73KbgcuY4WtucjXv5miemlj
+ w15NGB5ovdi5oq69OYJDbgKwO1oL9wjUQ.LH.zKU5C20oNRJDliVr6zHaIdfcCTCfjHgZC4Sy9.N
+ XMr0uUZPsIPGwfh621UmedP4ulpMZuBzonUxUaWbBAnDNrA--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Wed, 7 Oct 2020 16:35:47 +0000
+Date:   Wed, 7 Oct 2020 16:35:46 +0000 (UTC)
+From:   Marilyn Robert <fredodinga22@gmail.com>
+Reply-To: marilyobert@gmail.com
+Message-ID: <49666221.283644.1602088546856@mail.yahoo.com>
+Subject: =?UTF-8?B?0J3QsNGY0LzQuNC70LAg0LrQsNGYINCz0L7RgdC/0L7QtNCw0YDQvtGC?=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+References: <49666221.283644.1602088546856.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16795 YMailNodin Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 7 Oct 2020 16:24:06 +0200
-Stefan Haberland <sth@linux.ibm.com> wrote:
-
-> Am 06.10.20 um 16:46 schrieb Cornelia Huck:
-> > On Fri,  2 Oct 2020 21:39:32 +0200
-> > Stefan Haberland <sth@linux.ibm.com> wrote:
-> >  
-> >> From: Vineeth Vijayan <vneethv@linux.ibm.com>
-> >>
-> >> Add an interface in the CIO layer to retrieve the information about the
-> >> Endpoint-Security Mode (ESM) of the specified CU. The ESM values are
-> >> defined as 0-None, 1-Authenticated or 2, 3-Encrypted.
-> >>
-> >> Reference-ID: IO1812
-> >> Signed-off-by: Sebastian Ott <sebott@linux.ibm.com>
-> >> [vneethv@linux.ibm.com: cleaned-up and modified description]
-> >> Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
-> >> Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-> >> Acked-by: Vasily Gorbik <gor@linux.ibm.com>
-> >> Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-> >> ---
-> >>  arch/s390/include/asm/cio.h |  1 +
-> >>  drivers/s390/cio/chsc.c     | 83 +++++++++++++++++++++++++++++++++++++
-> >>  2 files changed, 84 insertions(+)  
-> >  
-> > (...)
-> >  
-> >> +/**
-> >> + * chsc_scud() - Store control-unit description.
-> >> + * @cu:		number of the control-unit
-> >> + * @esm:	8 1-byte endpoint security mode values
-> >> + * @esm_valid:	validity mask for @esm
-> >> + *
-> >> + * Interface to retrieve information about the endpoint security
-> >> + * modes for up to 8 paths of a control unit.
-> >> + *
-> >> + * Returns 0 on success.
-> >> + */
-> >> +int chsc_scud(u16 cu, u64 *esm, u8 *esm_valid)
-> >> +{
-> >> +	struct chsc_scud *scud = chsc_page;
-> >> +	int ret;
-> >> +  
-> > I'm wondering if it would make sense to check in the chsc
-> > characteristics whether that chsc is actually installed (if there's
-> > actually a bit for it, although I'd expect so). Some existing chscs
-> > check for bits in the characteristics, others don't. (Don't know
-> > whether QEMU is the only platform that doesn't provide this chsc.)  
-> 
-> I don't see any benefit in checking upfront if the CHSC is supported -
-> we'll get
-> a corresponding CHSC response code and since no error message is logged
-> for this
-> case, the outcome would be the same as if we checked for the
-> characteristics bit
-> beforehand.
-
-Yes, that's probably fine, then.
-
-> 
-> 
-> >> +	spin_lock_irq(&chsc_page_lock);
-> >> +	memset(chsc_page, 0, PAGE_SIZE);
-> >> +	scud->request.length = SCUD_REQ_LEN;
-> >> +	scud->request.code = SCUD_REQ_CMD;
-> >> +	scud->fmt = 0;
-> >> +	scud->cssid = 0;
-> >> +	scud->first_cu = cu;
-> >> +	scud->last_cu = cu;
-> >> +
-> >> +	ret = chsc(scud);
-> >> +	if (!ret)
-> >> +		ret = chsc_error_from_response(scud->response.code);
-> >> +
-> >> +	if (!ret && (scud->response.length <= 8 || scud->fmt_resp != 0
-> >> +			|| !(scud->cudb[0].flags & 0x80)
-> >> +			|| scud->cudb[0].cu != cu)) {
-> >> +
-> >> +		CIO_MSG_EVENT(2, "chsc: scud failed rc=%04x, L2=%04x "
-> >> +			"FMT=%04x, cudb.flags=%02x, cudb.cu=%04x",
-> >> +			scud->response.code, scud->response.length,
-> >> +			scud->fmt_resp, scud->cudb[0].flags, scud->cudb[0].cu);
-> >> +		ret = -EINVAL;
-> >> +	}
-> >> +
-> >> +	if (ret)
-> >> +		goto out;
-> >> +
-> >> +	memcpy(esm, scud->cudb[0].esm, sizeof(*esm));
-> >> +	*esm_valid = scud->cudb[0].esm_valid;
-> >> +out:
-> >> +	spin_unlock_irq(&chsc_page_lock);
-> >> +	return ret;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(chsc_scud);  
-> 
-
-FWIW,
-Acked-by: Cornelia Huck <cohuck@redhat.com>
-
+DQoNCtCd0LDRmNC80LjQu9CwINC60LDRmCDQs9C+0YHQv9C+0LTQsNGA0L7Rgg0KDQrQiNCw0YEg
+0YHRg9C8IDY4LdCz0L7QtNC40YjQvdCwINC20LXQvdCwLCDQutC+0ZjQsCDRgdGC0YDQsNC00LAg
+0L7QtCDQv9GA0L7QtNC+0LvQttC10L0g0LrQsNGA0YbQuNC90L7QvCDQvdCwINC00L7RmNC60LAs
+INC+0LQg0YHQuNGC0LUg0LzQtdC00LjRhtC40L3RgdC60Lgg0LjQvdC00LjQutCw0YbQuNC4LCDQ
+vNC+0ZjQsNGC0LAg0YHQvtGB0YLQvtGY0LHQsCDQvdCw0LLQuNGB0YLQuNC90LAg0YHQtSDQstC7
+0L7RiNC4INC4INC+0YfQuNCz0LvQtdC00L3QviDQtSDQtNC10LrQsCDQvNC+0LbQtdCx0Lgg0L3Q
+tdC80LAg0LTQsCDQttC40LLQtdCw0Lwg0L/QvtCy0LXRnNC1INC+0LQg0YjQtdGB0YIg0LzQtdGB
+0LXRhtC4INC60LDQutC+INGA0LXQt9GD0LvRgtCw0YIg0L3QsCDQsdGA0LfQuNC+0YIg0YDQsNGB
+0YIg0Lgg0LHQvtC70LrQsNGC0LAg0YjRgtC+INGB0LUg0ZjQsNCy0YPQstCwINC60LDRmCDQvdC1
+0LAuINCc0L7RmNC+0YIg0YHQvtC/0YDRg9CzINC/0L7Rh9C40L3QsCDQvdC10LrQvtC70LrRgyDQ
+s9C+0LTQuNC90Lgg0L3QsNC90LDQt9Cw0LQg0Lgg0L3QsNGI0LjRgtC1INC00L7Qu9Cz0Lgg0LPQ
+vtC00LjQvdC4INCx0YDQsNC6INC90LUg0LHQtdCwINCx0LvQsNCz0L7RgdC70L7QstC10L3QuCDR
+gdC+INC90LjRgtGDINC10LTQvdC+INC00LXRgtC1LCDQv9C+INC90LXQs9C+0LLQsNGC0LAg0YHQ
+vNGA0YIg0LPQviDQvdCw0YHQu9C10LTQuNCyINGG0LXQu9C+0YLQviDQvdC10LPQvtCy0L4g0LHQ
+vtCz0LDRgtGB0YLQstC+Lg0KDQrQlNC+0LDRk9Cw0Lwg0LrQsNGYINCy0LDRgSDQvtGC0LrQsNC6
+0L4g0YHQtSDQv9C+0LzQvtC70LjQsiDQt9CwINGC0L7QsCwg0L/QvtC00LPQvtGC0LLQtdC9INGB
+0YPQvCDQtNCwINC00L7QvdC40YDQsNC8INGB0YPQvNCwINC+0LQgMiwgMzAwLCAwMDAg0LXQstGA
+0LAg0LfQsCDQv9C+0LzQvtGIINC90LAg0YHQuNGA0L7QvNCw0YjQvdC40YLQtSwg0YHQuNGA0L7Q
+vNCw0YjQvdC40YLQtSDQuCDQv9C+0LzQsNC70LrRgyDQv9GA0LjQstC40LvQtdCz0LjRgNCw0L3Q
+uNGC0LUg0LzQtdGT0YMg0LLQsNGI0LjRgtC1INGB0L7QsdGA0LDQvdC40ZjQsCAvINC+0L/RiNGC
+0LXRgdGC0LLQvi4g0JfQsNCx0LXQu9C10LbQtdGC0LUg0LTQtdC60LAg0L7QstC+0Zgg0YTQvtC9
+0LQg0LUg0LTQtdC/0L7QvdC40YDQsNC9INCy0L4g0LHQsNC90LrQsCDQutCw0LTQtSDRiNGC0L4g
+0YDQsNCx0L7RgtC10YjQtSDQvNC+0ZjQvtGCINGB0L7Qv9GA0YPQsy4gQXBwcmVjaWF0ZdC1INGG
+0LXQvdCw0Lwg0LDQutC+INC+0LHRgNC90LXRgtC1INCy0L3QuNC80LDQvdC40LUg0L3QsCDQvNC+
+0LXRgtC+INCx0LDRgNCw0ZrQtSDQt9CwINC/0YDQvtC/0LDQs9C40YDQsNGa0LUg0L3QsCDQvNCw
+0YHQsNC20LDRgtCwINC90LAg0LrRgNCw0LvRgdGC0LLQvtGC0L4sINGc0LUg0LLQuCDQtNCw0LTQ
+sNC8INC/0L7QstC10ZzQtSDQtNC10YLQsNC70Lgg0LfQsCDRgtC+0LAg0LrQsNC60L4g0LTQsCDQ
+v9C+0YHRgtCw0L/QuNGC0LUuDQoNCtCR0LvQsNCz0L7QtNCw0YDQsNC8DQrQky3Rk9CwINCc0LXR
+gNC40LvQuNC9INCg0L7QsdC10YDRgg==
