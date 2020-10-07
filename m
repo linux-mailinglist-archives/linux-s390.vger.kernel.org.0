@@ -2,78 +2,51 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3DB0285C60
-	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 12:06:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 051AC285D0A
+	for <lists+linux-s390@lfdr.de>; Wed,  7 Oct 2020 12:39:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgJGKGA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 7 Oct 2020 06:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbgJGKGA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 06:06:00 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C51EC061755;
-        Wed,  7 Oct 2020 03:06:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=I5Etf9qEHTemyyx/AreDTAuwCMLmW2nSmju3sgma8Yk=; b=oDbrnmP6AupW3Ru7dXb9IEq/lg
-        XSj9zp5GcMzkL3uMSR87apqdlU/zYGzAmUNfF+ESRKast3WvX8AJycao/XC1B/QaWIHQAH/6lF2zn
-        yzHTIfQYnMUyht1oeOh3shHtiJaQeeLCqqXaRP0KaUiplQgP0R5hRYMeUGOmFCVkpnZ1+h+NApqCj
-        BSgHXWGfv1Uxgz2oufRl/Cfq/Q+2uuP6qM2GZ58nOTBLdCklwOz5LaND/RrZrS7kPRoHwAd9Au9/7
-        VyS5qWhiqA8XakUjQlUIfdBgLEX68lgqgI7gdDtOXVfLo73tZYCbiQ/Syj8JjA/fSquZzWw2mdUs6
-        RDYNdz9w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kQ6KY-00085z-Qk; Wed, 07 Oct 2020 10:05:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A77293006D0;
-        Wed,  7 Oct 2020 12:05:51 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6B50F2BA0366F; Wed,  7 Oct 2020 12:05:51 +0200 (CEST)
-Date:   Wed, 7 Oct 2020 12:05:51 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sven Schnelle <svens@linux.ibm.com>
-Cc:     hca@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, rafael.j.wysocki@intel.com
-Subject: Re: [PATCH] s390/idle: Fix suspicious RCU usage
-Message-ID: <20201007100551.GC2628@hirez.programming.kicks-ass.net>
-References: <20200908133031.GT1362448@hirez.programming.kicks-ass.net>
- <yt9dimbm79qi.fsf@linux.ibm.com>
+        id S1728096AbgJGKjk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 7 Oct 2020 06:39:40 -0400
+Received: from verein.lst.de ([213.95.11.211]:36915 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727767AbgJGKjj (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 7 Oct 2020 06:39:39 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id F1B656736F; Wed,  7 Oct 2020 12:39:36 +0200 (CEST)
+Date:   Wed, 7 Oct 2020 12:39:36 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Stefan Haberland <sth@linux.ibm.com>, hch@lst.de, axboe@kernel.dk,
+        hoeppner@linux.ibm.com, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] s390/dasd: remove ioctl_by_bdev calls
+Message-ID: <20201007103936.GA24327@lst.de>
+References: <20200519142259.102279-1-sth@linux.ibm.com> <20200519142259.102279-3-sth@linux.ibm.com> <5c815b8a-7d77-5c69-9191-d09cc433f5ff@de.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <yt9dimbm79qi.fsf@linux.ibm.com>
+In-Reply-To: <5c815b8a-7d77-5c69-9191-d09cc433f5ff@de.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Oct 07, 2020 at 09:53:25AM +0200, Sven Schnelle wrote:
-> Hi Peter,
+On Wed, Oct 07, 2020 at 11:34:17AM +0200, Christian Borntraeger wrote:
 > 
-> peterz@infradead.org writes:
+> On 19.05.20 16:22, Stefan Haberland wrote:
+> > The IBM partition parser requires device type specific information only
+> > available to the DASD driver to correctly register partitions. The
+> > current approach of using ioctl_by_bdev with a fake user space pointer
+> > is discouraged.
+> > 
+> > Fix this by replacing IOCTL calls with direct in-kernel function calls.
+> > 
+> > Suggested-by: Christoph Hellwig <hch@lst.de>
+> > Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+> > Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
+> > Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
 > 
-> > After commit eb1f00237aca ("lockdep,trace: Expose tracepoints") the
-> > lock tracepoints are visible to lockdep and RCU-lockdep is finding a
-> > bunch more RCU violations that were previously hidden.
-> >
-> > Switch the idle->seqcount over to using raw_write_*() to avoid the
-> > lockdep annotation and thus the lock tracepoints.
-> >
-> > Reported-by: Guenter Roeck <linux@roeck-us.net>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > [..]
-> 
-> I'm still seeing the splat below on s390 when irq tracing is enabled:
+> FWIW, this broken the ibm-partition code for virtio-blk, when CONFIG_DASD=m.
 
-Damn... :/
-
-This one is tricky, trouble seems to be that arch_cpu_idle() is defined
-to enable interrupts (no doubt because ot x86 :/), but we call it before
-rcu_exit_idle().
-
-What a mess... let me rummage around the various archs to see what makes
-most sense here.
+What are the symptoms?
