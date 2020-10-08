@@ -2,97 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAB5628746E
-	for <lists+linux-s390@lfdr.de>; Thu,  8 Oct 2020 14:41:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8554287513
+	for <lists+linux-s390@lfdr.de>; Thu,  8 Oct 2020 15:13:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730099AbgJHMlw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 8 Oct 2020 08:41:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730086AbgJHMlv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 8 Oct 2020 08:41:51 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97FEBC0613D5
-        for <linux-s390@vger.kernel.org>; Thu,  8 Oct 2020 05:41:51 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x22so3868275pfo.12
-        for <linux-s390@vger.kernel.org>; Thu, 08 Oct 2020 05:41:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=urluBRAZhemlAGNYR9JHz7//XtKVwD7KOsOnuK3XEvE=;
-        b=i93YgqfP2Qs8dlAx7dyQ+W0IRG7pAxhJwW9+eRHcvMVYP3djMki+CGM6zO0EVJGk6K
-         IbQzLSWJO3N1l0EX9JrKSfHEa7utNqIB47jME7UstUYw4VjXJ3eqfisu2Lv5k6vC2Rji
-         RXYD2ZA+lWznWQWoRqSMqejEaxBGkz94802iEmzJd0MCBP2cDlv790XzP6x1cW1hFd/9
-         VynwcCRsd9uDLYGf7l4gaVrI2jMIq7IhzjCPA4DTCHUEEBJWY9srCgIimdgBAYkzeSSZ
-         OrD77ImZWUgTRcr1HoKIi9uUAfbiDRf/QR54E/fTvbFXgKqiTQNN+jJNb/teyHBDz9PA
-         L6Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=urluBRAZhemlAGNYR9JHz7//XtKVwD7KOsOnuK3XEvE=;
-        b=ac5cOjVWB4hZA00oBr4yWS9JCcQ7NUfWLteaG/LCaZQiikf+1igbGR5mEfUKgVpKgG
-         zEAdxAQjWT1N/lu9FH74Z9JUAWmKpebfSE+9Gze6Qr/I8p3fXTjsOgbMKsB126ea5u3b
-         58qdC8/Vn874g35ZH/+bjPXDN4et8YPwGaMX0KAwfnXELPpjg6yoBloGhEBspYPlmN6e
-         EzFpnPa+Bw/tWEwR7cCi2oO1RlDausWzS9gy7l8iliLVoR4RDiIQv89tEOu7ISR+O3UA
-         56k9oomqyboWswNME9olEEiUQKDv+sDfjgRhaKAJ8SJjDK5jErjOrjkPEgFZgn54jMZO
-         uyAA==
-X-Gm-Message-State: AOAM532nAejC4GJ9dtLSL1Lbz2YGb/IVhMHlOEYwNJyXUGdd30nUHcKD
-        lFANBfMt54hjqC2HBHFsWuAJCQ==
-X-Google-Smtp-Source: ABdhPJxnQ64uysYsu/F9BjeJkE2gf+57wvTrXl8yFyGGP/X1izZlhvOyXG/ViriTgaaOJPI9vrc0XQ==
-X-Received: by 2002:a17:90a:6787:: with SMTP id o7mr8072496pjj.125.1602160910911;
-        Thu, 08 Oct 2020 05:41:50 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id k11sm7411830pjs.18.2020.10.08.05.41.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Oct 2020 05:41:49 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kQVEx-001U2l-UT; Thu, 08 Oct 2020 09:41:47 -0300
-Date:   Thu, 8 Oct 2020 09:41:47 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH 10/13] PCI: revoke mappings like devmem
-Message-ID: <20201008124147.GD5177@ziepe.ca>
-References: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
- <20201007164426.1812530-11-daniel.vetter@ffwll.ch>
- <CAPcyv4hBL68A7CZa+YnooufDH2tevoxrx32DTJMQ6OHRnec7QQ@mail.gmail.com>
- <20201007232448.GC5177@ziepe.ca>
- <CAPcyv4jA9fe40r_2SfrCtOaeE85V88TA3NNQZOmQMNj=MdsPyw@mail.gmail.com>
+        id S1729870AbgJHNNn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 8 Oct 2020 09:13:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31972 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729765AbgJHNNn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 8 Oct 2020 09:13:43 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 098D3L2K030955;
+        Thu, 8 Oct 2020 09:13:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=9K8Ji6kxZAJ/7H2MIaoejqwSW9wlzOJdIkad+gvZWH0=;
+ b=Mgy0rG8Q7YGOL3XfVUAK4jOUwzHqc+LFk8SfebCgB+gVdE/IPhgzF+MJ3OXHzNpRVMpk
+ dV/TbtImJ5+FPSDFaQuBrSuflwjK0w8GQPWRs4Q1F3yNrGT7ZEc0JhBr00PVUiDRn+EE
+ dO8iwqURhQ4LxWrMwLQlrogNnNpBIo/6U5UJE/X/MTnzOpkysD1H1/MXvplw5IB7febf
+ 8lZHfI2DgZQB1xWrdpU1F0SsIl8npZHnqwsFzOSsDq9JO5Q/J4opGrSkufYRX9+SL+si
+ ZpsyDth6wK1/8BxvzuZSY6+tYQUPA1llDAWQEPuoVRCtKoRkq6cFZHlnYnXGEzB/YpBa vw== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3421q0try8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 08 Oct 2020 09:13:41 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 098DDdeu017785;
+        Thu, 8 Oct 2020 13:13:39 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 33xgx85c2t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 08 Oct 2020 13:13:39 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 098DDage14942540
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 8 Oct 2020 13:13:36 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 731BE5204F;
+        Thu,  8 Oct 2020 13:13:36 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 6B0F952051;
+        Thu,  8 Oct 2020 13:13:36 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id 1E944E24C9; Thu,  8 Oct 2020 15:13:36 +0200 (CEST)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH v2 00/10] DASD FC endpoint security
+Date:   Thu,  8 Oct 2020 15:13:26 +0200
+Message-Id: <20201008131336.61100-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jA9fe40r_2SfrCtOaeE85V88TA3NNQZOmQMNj=MdsPyw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-10-08_08:2020-10-08,2020-10-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 mlxscore=0 clxscore=1015
+ priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2010080097
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Oct 08, 2020 at 12:49:54AM -0700, Dan Williams wrote:
+Hi Jens,
 
-> > This is what got me thinking maybe this needs to be a bit bigger
-> > generic infrastructure - eg enter this scheme from fops mmap and
-> > everything else is in mm/user_iomem.c
-> 
-> It still requires every file that can map physical memory to have its
-> ->open fop do
+please apply the following patches that add a new DASD feature to show
+fibre channel endpoint security.
 
-Common infrastructure would have to create a dummy struct file at mmap
-time with the global inode and attach that to the VMA.
+The patches apply on you for-next branch and are intended for 5.10.
 
-Jason
+The s390/cio patches should also go upstream through your tree this time
+since they are required for the DASD patches to build.
+
+Best regards,
+Stefan
+
+v1->v2:
+ - fix memleak in "s390/dasd: Fix operational path inconsistency"
+ - add comment suggested by Cornelia Huck
+
+Jan Höppner (7):
+  s390/dasd: Remove unused parameter from dasd_generic_probe()
+  s390/dasd: Move duplicate code to separate function
+  s390/dasd: Store path configuration data during path handling
+  s390/dasd: Fix operational path inconsistency
+  s390/dasd: Display FC Endpoint Security information via sysfs
+  s390/dasd: Prepare for additional path event handling
+  s390/dasd: Process FCES path event notification
+
+Sebastian Ott (1):
+  s390/cio: Export information about Endpoint-Security Capability
+
+Vineeth Vijayan (2):
+  s390/cio: Provide Endpoint-Security Mode per CU
+  s390/cio: Add support for FCES status notification
+
+ arch/s390/include/asm/ccwdev.h   |   2 +
+ arch/s390/include/asm/cio.h      |   1 +
+ drivers/s390/block/dasd.c        |  22 ++--
+ drivers/s390/block/dasd_devmap.c | 109 +++++++++++++++++++
+ drivers/s390/block/dasd_eckd.c   | 175 +++++++++++++++++++++----------
+ drivers/s390/block/dasd_fba.c    |   2 +-
+ drivers/s390/block/dasd_int.h    | 111 +++++++++++++++++++-
+ drivers/s390/cio/chp.c           |  15 +++
+ drivers/s390/cio/chp.h           |   1 +
+ drivers/s390/cio/chsc.c          | 145 +++++++++++++++++++++++--
+ drivers/s390/cio/chsc.h          |   3 +-
+ drivers/s390/cio/device.c        |  15 ++-
+ 12 files changed, 523 insertions(+), 78 deletions(-)
+
+-- 
+2.17.1
+
