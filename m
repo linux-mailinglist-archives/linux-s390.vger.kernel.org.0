@@ -2,153 +2,60 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A25F286C31
-	for <lists+linux-s390@lfdr.de>; Thu,  8 Oct 2020 02:45:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28DEE286C6C
+	for <lists+linux-s390@lfdr.de>; Thu,  8 Oct 2020 03:42:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgJHApF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 7 Oct 2020 20:45:05 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1211 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgJHAow (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 20:44:52 -0400
-Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
-        id <B5f7e60960000>; Wed, 07 Oct 2020 17:43:02 -0700
-Received: from [10.2.85.86] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 8 Oct
- 2020 00:44:46 +0000
-Subject: Re: [PATCH 07/13] mm: close race in generic_access_phys
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     <kvm@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Rik van Riel <riel@redhat.com>,
-        Benjamin Herrensmidt <benh@kernel.crashing.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Hugh Dickins <hugh@veritas.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>,
-        Daniel Vetter <daniel.vetter@intel.com>
-References: <20201007164426.1812530-1-daniel.vetter@ffwll.ch>
- <20201007164426.1812530-8-daniel.vetter@ffwll.ch>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <852a74ec-339b-4c7f-9e29-b9736111849a@nvidia.com>
-Date:   Wed, 7 Oct 2020 17:44:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1727968AbgJHBma (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 7 Oct 2020 21:42:30 -0400
+Received: from sonic305-37.consmr.mail.bf2.yahoo.com ([74.6.133.236]:37829
+        "EHLO sonic305-37.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727967AbgJHBma (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 7 Oct 2020 21:42:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602121349; bh=KhejUjG+aIFEdaJtUCWO7uMjCXcLLdLXH7PJ9JLxOyc=; h=Date:From:Reply-To:Subject:References:From:Subject; b=mxTCY5u8dojIAoEK7dRRm3e8tg6fQX6p/BSFuCqeFD97orLo/FdEqaUL+Vgv68beRODtWE6heUs3t3B+iCrdkPZy28wUTgEdThl6fQfvPy7Cmjj45R2nqHRz4orr0o5lzILlm7SxT8t/JnS3FFGcXXVml/PsbkAU/grwW0DsmgF/+JX4CKAX/MHjB1Z/Fc6+tETC7+C3bkApWT3CWMvzwZzcrEkjnmCXfDaKgyz2MmhjzZJcAmLTLRucb8uOv6LA5ilSkiI59v8EyKxo9ikH1ok/VFF+PwsHy5ZM/ZrKelzlpDNaHUHtAbnAx10XQk94QLBWkHx84PZc/UAfQz4kYg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602121349; bh=uqDj2VPrKPT25U9T/+fYHyMjjjh3wcJG6jaJ8gvI7Ws=; h=Date:From:Subject; b=JtBSkhoMJzEvWPM48YC1y17q1Cw6lQAEqD4glqgpMbIQ4lSWeupmtDnE9H7mo3uK2gA9VbTzpNk/F51uZ8j4QC0Y92g4a8xzM261RpFFZIsCRnIkWqNWR+HXXV5uHffTmbSDD1SczHuyG5LuHu8M4uCR6Ot+4k36nK/iQjFKKTdPzvpZNkRjSf9z1izmXmdO9UJbmGsv+vUMSiBjXR2R1k5IDm4pF0cC/f5dU45qJ21lJqE3nnbXftaPdT7xR2/CoMv4tD9mcvFpuHD6hIh6+ifDkEurvBudyLEn29nRThkIYO9Hzc+hEI/GB0EjNZb3WlZpNB3WwXWmoEbzOK7wyw==
+X-YMail-OSG: UTHzd1gVM1kUOprq2E7c7l7h8ZbDBFFCByblZ4goQS9jWtmdXfMcT6U_Ox7H4Ds
+ X52X6Hqp.i0BTg0dcEHbfnVwE7EPDJT0shydaqCdNkKCKLcop0J5BEe8W7R1hNrjO6IZBic.Ty0e
+ Vi2utWyLe8OW3rwC2BixdqwpybZ0pOGqkfpnO7feQDYlZ.MuzlxL0xKB92uI7d5sI1pcKFanYbJH
+ _v_tOo51CKqUQvJkYfdxsJNNSTWN6dfyBkWIVXKLQZN4rxhgVMtUeJMXl2LeWZ2a78uaXLmXL776
+ UPo72i7127qvJDkDo5hPtUPPJt_TbspsHmuHddiJwmEqpip1TMfAah2ZfFakY0_rgcW9AFFKrTMl
+ QHKytwHq632bmejes29GXqabaTUWEQ99V_K79z3zeBrWXnvGeV3u9KQevsBuL3Ci3g9AwLYvLz7s
+ jH1j59q8Y6y5CjsHo2.ylfnaQRqh4E2mJLH4A8EoDMHXlcB8.2RTUj3LnqeYkVGxkHftR2gcMIwk
+ mm51HDr4h9z6z8zqSTLK0FwuYhWVU1BVHsOeFTfVR9S.gIW8G..C49x35u6WgBNV6WMYzHKvZqzQ
+ 7Supxu4WVexoenT9Es5ae3wMuBwSZchSyWX9TxOlWaooazNNkWTiJnZ4pQGcXpl.ZSEDJ8AwejMv
+ g14ZUbqVkHdxAiGBOdFdC51JgqgzwfoodHwWF53UkoBTG_XxedDarMuTfx2b5r3vzlJIPxFx5iMQ
+ b7zwi6iRKgNOblRDKdttHGlpZAcayXXC.E55z8Wf0oplY_acn4IgN_oYaYkenNx_iD8e5BlO5FI_
+ FHn1KoSfR24.y1JswUl_X8KXzqMKBJ1nQ.HiTli75cqpRbNIbUtCNfTdvbJES4iwVPrLPAyupyFw
+ KJGPy00fIyKDyxj_ALsuei1cy7PhEkLOBwK2a5emJw7flzrRqV54WKWX3HaZOJzoerLjVPKLNVuV
+ CEwCe86d4FF.pgZI0jPMmOh6v0cK1fD8MoMNdiyDI7rs9W8DFl1yerEi9kDJpuEw1mqIZozZfWfp
+ 4BGAfmt29jYZ2bKSpc2gRiZjBQ_3DmvVDRRa1FvM8GKWv4uubkIZpPr9UFnkpJqi3vr0X2E5F7W5
+ EFgWkGbuuNNz2REdFabs3IDmlf9f7udTWB0PNgSls8sKxapX01i0HKI3C9vPZbmRT8lYrUToPm9T
+ Zzip2GLrebwroSMpXkLZJFtkISpZwgqKa1_nUuP2uxx0Pma_ZNYUnKCBIrxHPgajlakK_m71Cunt
+ 2X8xe4ORYjEzj0rJXU2YDyW2jay5hpCwpXGHMoVCR8bwzEcqtVIZ7tmqgnMJG9y1sHSClGF5G1AT
+ 8eE.ScH4cCKAKKiTxvJE2RQsGvAm9zpEZTrOOyHtKhni7mWP3AdgANxal6OvRvxL87wVgsstADZ0
+ Q6D3TndATmhtW.vJ7nRkjDtyTloWdIW2LGR68ORCtLbk0Ff_N6cWlqPswla8YWDgfP2X3YwfUzGq
+ y
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.bf2.yahoo.com with HTTP; Thu, 8 Oct 2020 01:42:29 +0000
+Date:   Thu, 8 Oct 2020 01:40:25 +0000 (UTC)
+From:   "Mrs. Maureen Hinckley" <mau9@fdco.in>
+Reply-To: maurhinck4@gmail.com
+Message-ID: <2103559524.308380.1602121225814@mail.yahoo.com>
+Subject: RE
 MIME-Version: 1.0
-In-Reply-To: <20201007164426.1812530-8-daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1602117782; bh=5uceI5LiOq5+y7CKrEdS7/p/1zSG6F9z/ywEQqsl+0Q=;
-        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
-         MIME-Version:In-Reply-To:Content-Type:Content-Language:
-         Content-Transfer-Encoding:X-Originating-IP:X-ClientProxiedBy;
-        b=bOv1zchIGPZ4VmVobYy9ouKvwkK5z2iFx0tCygQStaL5H7jfVh0290LObbayaaJdS
-         WHEwgcF93dN/WBuw358p5ASUvd7jq2UVbYaEsfmxxLYQKm9SIHpvw1Azpcdj8EvlkO
-         +h0jsBZCIPOWXbnWZglvtlNPQ9RozMAAGu9n2l/aM37dTFHaW2PBaPyNHrvz3GBICy
-         9TRkHD5naSV5XLswp6NmgWYjti6DfG9Id8SNalhueNWQcUu+7yGRlg+spys2z8hb56
-         zeyo4ufqohIWRiSETZ13zhAJ7qYzaQsz7j6WHTgK/Hmqk/WB97CYrfy3hYU2QFR/25
-         OfakNOpxWk5cA==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <2103559524.308380.1602121225814.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16795 YMailNodin Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 10/7/20 9:44 AM, Daniel Vetter wrote:
-> Way back it was a reasonable assumptions that iomem mappings never
-> change the pfn range they point at. But this has changed:
-> 
-> - gpu drivers dynamically manage their memory nowadays, invalidating
->    ptes with unmap_mapping_range when buffers get moved
-> 
-> - contiguous dma allocations have moved from dedicated carvetouts to
-
-s/carvetouts/carveouts/
-
->    cma regions. This means if we miss the unmap the pfn might contain
->    pagecache or anon memory (well anything allocated with GFP_MOVEABLE)
-> 
-> - even /dev/mem now invalidates mappings when the kernel requests that
->    iomem region when CONFIG_IO_STRICT_DEVMEM is set, see 3234ac664a87
->    ("/dev/mem: Revoke mappings when a driver claims the region")
-
-Thanks for putting these references into the log, it's very helpful.
-...
-> diff --git a/mm/memory.c b/mm/memory.c
-> index fcfc4ca36eba..8d467e23b44e 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -4873,28 +4873,68 @@ int follow_phys(struct vm_area_struct *vma,
->   	return ret;
->   }
->   
-> +/**
-> + * generic_access_phys - generic implementation for iomem mmap access
-> + * @vma: the vma to access
-> + * @addr: userspace addres, not relative offset within @vma
-> + * @buf: buffer to read/write
-> + * @len: length of transfer
-> + * @write: set to FOLL_WRITE when writing, otherwise reading
-> + *
-> + * This is a generic implementation for &vm_operations_struct.access for an
-> + * iomem mapping. This callback is used by access_process_vm() when the @vma is
-> + * not page based.
-> + */
->   int generic_access_phys(struct vm_area_struct *vma, unsigned long addr,
->   			void *buf, int len, int write)
->   {
->   	resource_size_t phys_addr;
->   	unsigned long prot = 0;
->   	void __iomem *maddr;
-> +	pte_t *ptep, pte;
-> +	spinlock_t *ptl;
->   	int offset = addr & (PAGE_SIZE-1);
-> +	int ret = -EINVAL;
-> +
-> +	if (!(vma->vm_flags & (VM_IO | VM_PFNMAP)))
-> +		return -EINVAL;
-> +
-> +retry:
-> +	if (follow_pte(vma->vm_mm, addr, &ptep, &ptl))
-> +		return -EINVAL;
-> +	pte = *ptep;
-> +	pte_unmap_unlock(ptep, ptl);
->   
-> -	if (follow_phys(vma, addr, write, &prot, &phys_addr))
-> +	prot = pgprot_val(pte_pgprot(pte));
-> +	phys_addr = (resource_size_t)pte_pfn(pte) << PAGE_SHIFT;
-> +
-> +	if ((write & FOLL_WRITE) && !pte_write(pte))
->   		return -EINVAL;
->   
->   	maddr = ioremap_prot(phys_addr, PAGE_ALIGN(len + offset), prot);
->   	if (!maddr)
->   		return -ENOMEM;
->   
-> +	if (follow_pte(vma->vm_mm, addr, &ptep, &ptl))
-> +		goto out_unmap;
-> +
-> +	if (pte_same(pte, *ptep)) {
 
 
-The ioremap area is something I'm sorta new to, so a newbie question:
-is it possible for the same pte to already be there, ever? If so, we
-be stuck in an infinite loop here.  I'm sure that's not the case, but
-it's not yet obvious to me why it's impossible. Resource reservations
-maybe?
+I am Maureen Hinckley and my foundation is donating (Five hundred and fifty=
+ thousand USD) to you. Contact us via my email at (maurhinck4@gmail.com) fo=
+r further details.
 
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+Best Regards,
+Mrs. Maureen Hinckley,
+Copyright =C2=A92020 The Maureen Hinckley Foundation All Rights Reserved.
