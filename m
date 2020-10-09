@@ -2,121 +2,199 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9290288930
-	for <lists+linux-s390@lfdr.de>; Fri,  9 Oct 2020 14:48:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30EAC288A96
+	for <lists+linux-s390@lfdr.de>; Fri,  9 Oct 2020 16:19:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732721AbgJIMsx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 9 Oct 2020 08:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37808 "EHLO
+        id S2388690AbgJIOTG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 9 Oct 2020 10:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731727AbgJIMsx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 9 Oct 2020 08:48:53 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E5EC0613D5
-        for <linux-s390@vger.kernel.org>; Fri,  9 Oct 2020 05:48:52 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id v123so10359962qkd.9
-        for <linux-s390@vger.kernel.org>; Fri, 09 Oct 2020 05:48:52 -0700 (PDT)
+        with ESMTP id S2388686AbgJIOTF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 9 Oct 2020 10:19:05 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2A4C0613D5
+        for <linux-s390@vger.kernel.org>; Fri,  9 Oct 2020 07:19:05 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id o8so9142010otl.4
+        for <linux-s390@vger.kernel.org>; Fri, 09 Oct 2020 07:19:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bKAda/rTW4nq6+j1jXEBgS/13SJBQ2WY2j5bHQ+ISAM=;
-        b=HLVf/9fs3er+0kSwyJTggMLNde7v6twDJX2OORdUgNP4K/LTsJAusSj3xZhnK/9iEP
-         2MiDVI/gcY40GDzZOHFy1D1gUeZmYvK+y8q3WrgO2wIZyqUCgxZmIrGytraz5FbwrvVk
-         FIWoQQ/EYzOwBXKaVfiWwe8sni4FQhNRH93rHGzY9G+WQBuX2toU0JYl3qUK8vxILogk
-         CO/+6WIVejt98w1VEtO30gtBiu4FzGnjZIpjkg9+CRC8VLCjso0cqZThY5uICmC4Leel
-         mG8PVTlyewS4MOqVzGOqsDKY0BxrcNvf/7YuapUiGj3wEjRkZ+Rv/IezCJ6KD+Oa9Tui
-         5i5Q==
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MM70QuqTQsUBVq7gYXvXBZty2HeYwYo1AwlGqBndKzc=;
+        b=TXHPzxH9Da/xVr/PCQoDGy8c0zPWy+ggD3CN9+uIIarhuboqtJeD+WQppuYxHsd6Lw
+         Y7BHU63LYKcn8Q19C0ojPAIbHvLgUU7idHjBxl/cqvgWdtq9sYwq7aJadM3ewUTikvYS
+         Or+ZtapYPyo5QGIWg5F96VAf0fQY9D81hLV+0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bKAda/rTW4nq6+j1jXEBgS/13SJBQ2WY2j5bHQ+ISAM=;
-        b=X+NaCg4tuY1kiN3Ma0azM2WenWEWChkvdazEQsPbLrLLQhI5Q+gXfcQ/z0jrPKpIfL
-         v+VxYh3RYpOonDWwg8YqQkH7gpEa5yjCLJ54NBAn1+lE//d4Nr8ZvXJJnSGKVfEXPFlz
-         daiV1RRPVhW7wkYFbqsToPUat5pySsUFPavl3qTrESiMi9J0ERh8sPq2IaVXmsPFdBwr
-         ZaTa0cK5dOlP5Gctbp+C8v06RaFIiOXtxzPWOyh2Q9aSjYgfJCm61dviU0EYI0wMRTLW
-         iFIjYnfUmxiIQlguokel9pUBXJP0wSDBJS/yO3YpM2vBGl043DZ35Co4+1anR+/4S9DE
-         /tyQ==
-X-Gm-Message-State: AOAM530CQ11Q2o6MEBpT3Itq2odfsWSXGFf+SwyFSFv8nQfbYNcuPQj/
-        cCWHm68Zeb/laKJP8ZkNxUVivw==
-X-Google-Smtp-Source: ABdhPJxKkkXOIA4i8TbRkwc7dtfamUS7+upXdOHf9JVMgQW+IXdzrhalpqUKvvNnrEeFMFZ6pHcyaQ==
-X-Received: by 2002:ae9:e702:: with SMTP id m2mr6280147qka.387.1602247731583;
-        Fri, 09 Oct 2020 05:48:51 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id m18sm4248636qkk.102.2020.10.09.05.48.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Oct 2020 05:48:50 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kQrpK-001y6e-9J; Fri, 09 Oct 2020 09:48:50 -0300
-Date:   Fri, 9 Oct 2020 09:48:50 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-s390@vger.kernel.org,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MM70QuqTQsUBVq7gYXvXBZty2HeYwYo1AwlGqBndKzc=;
+        b=GPxre/IAkYr5pGCQNJ2VxA2eHvsEeXGJ3gw/T7hteZ/DySPT+h7WN5mUEy0uaSVdzV
+         cgXisHRc2VFwC3WIGo5VzK2LbFspwwUJ3reqPzbF3DkxOtODP8XNuczP+84yGNHGj+Vw
+         6Fc2Ra9auGd/UjztJSpI4JwNqE7v9iBYtcj2/Rv7dUXblPebysiQtbo23tZ4az/+urNe
+         q5XCRePCCD+mQ68oIW3k04K7wlom2c1LguRR8r773ivTqoQoDNbCgRPWDq+468umt2D9
+         aO1xMBkQ3KjMP6zKpODbts1G1vED3hF6WUKIVo/piaA2/GzRDodGBKhWh+CEXoSTtTqS
+         cLpw==
+X-Gm-Message-State: AOAM5319sHJlQlTryLN7n2t9gkkQRiqZcY2dVTOMajtMtdFiXlP3JaX5
+        AJypwX8ycUj/85kaOSpTn/0JNHwlqcSwrxLcZkpcuQ==
+X-Google-Smtp-Source: ABdhPJzNidxPOYe2uXf9i2kyX3nO4EFb7XRxsxlaQUOxC+n0ejMSsQdbIKmUu2me6/FBsUnaPi9FuwTaAIvXBztd7mE=
+X-Received: by 2002:a05:6830:1c3c:: with SMTP id f28mr9534834ote.188.1602253144991;
+ Fri, 09 Oct 2020 07:19:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20201009075934.3509076-1-daniel.vetter@ffwll.ch>
+ <20201009075934.3509076-18-daniel.vetter@ffwll.ch> <20201009094750.GQ6112@intel.com>
+ <CAKMK7uH3o3hnRkTDqr93PR=wuRejpty+AbyMacoEFDDb6OgJeQ@mail.gmail.com> <20201009104154.GR6112@intel.com>
+In-Reply-To: <20201009104154.GR6112@intel.com>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Fri, 9 Oct 2020 16:18:53 +0200
+Message-ID: <CAKMK7uEp71+B3EVTezog8U3VY=DUYAbe1QeqZH9NEG8T37M_Cw@mail.gmail.com>
+Subject: Re: [PATCH v2 17/17] drm/i915: Properly request PCI BARs
+To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>,
+        KVM list <kvm@vger.kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Daniel Vetter <daniel.vetter@intel.com>,
-        Kees Cook <keescook@chromium.org>,
         Dan Williams <dan.j.williams@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 09/17] mm: Add unsafe_follow_pfn
-Message-ID: <20201009124850.GP5177@ziepe.ca>
-References: <20201009075934.3509076-1-daniel.vetter@ffwll.ch>
- <20201009075934.3509076-10-daniel.vetter@ffwll.ch>
- <20201009123421.67a80d72@coco.lan>
- <20201009122111.GN5177@ziepe.ca>
- <20201009143723.45609bfb@coco.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201009143723.45609bfb@coco.lan>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Oct 09, 2020 at 02:37:23PM +0200, Mauro Carvalho Chehab wrote:
+On Fri, Oct 9, 2020 at 12:42 PM Ville Syrj=C3=A4l=C3=A4
+<ville.syrjala@linux.intel.com> wrote:
+>
+> On Fri, Oct 09, 2020 at 12:01:39PM +0200, Daniel Vetter wrote:
+> > On Fri, Oct 9, 2020 at 11:47 AM Ville Syrj=C3=A4l=C3=A4
+> > <ville.syrjala@linux.intel.com> wrote:
+> > >
+> > > On Fri, Oct 09, 2020 at 09:59:34AM +0200, Daniel Vetter wrote:
+> > > > When trying to test my CONFIG_IO_STRICT_DEVMEM changes I realized t=
+hey
+> > > > do nothing for i915. Because i915 doesn't request any regions, like
+> > > > pretty much all drm pci drivers. I guess this is some very old
+> > > > remnants from the userspace modesetting days, when we wanted to
+> > > > co-exist with the fbdev driver. Which usually requested these
+> > > > resources.
+> > > >
+> > > > But makes me wonder why the pci subsystem doesn't just request
+> > > > resource automatically when we map a bar and a pci driver is bound?
+> > > >
+> > > > Knowledge about which pci bars we need kludged together from
+> > > > intel_uncore.c and intel_gtt.c from i915 and intel-gtt.c over in th=
+e
+> > > > fake agp driver.
+> > > >
+> > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > > > Cc: Kees Cook <keescook@chromium.org>
+> > > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > > Cc: John Hubbard <jhubbard@nvidia.com>
+> > > > Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> > > > Cc: Jan Kara <jack@suse.cz>
+> > > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > > Cc: linux-mm@kvack.org
+> > > > Cc: linux-arm-kernel@lists.infradead.org
+> > > > Cc: linux-samsung-soc@vger.kernel.org
+> > > > Cc: linux-media@vger.kernel.org
+> > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > Cc: linux-pci@vger.kernel.org
+> > > > ---
+> > > >  drivers/gpu/drm/i915/intel_uncore.c | 25 +++++++++++++++++++++++--
+> > > >  1 file changed, 23 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/i915/intel_uncore.c b/drivers/gpu/drm/=
+i915/intel_uncore.c
+> > > > index 54e201fdeba4..ce39049d8919 100644
+> > > > --- a/drivers/gpu/drm/i915/intel_uncore.c
+> > > > +++ b/drivers/gpu/drm/i915/intel_uncore.c
+> > > > @@ -1692,10 +1692,13 @@ static int uncore_mmio_setup(struct intel_u=
+ncore *uncore)
+> > > >       struct pci_dev *pdev =3D i915->drm.pdev;
+> > > >       int mmio_bar;
+> > > >       int mmio_size;
+> > > > +     int bar_selection;
+> > >
+> > > Signed bitmasks always make me uneasy. But looks like
+> > > that's what it is in the pci api. So meh.
+> >
+> > Yeah it's surprising.
+> >
+> > > > +     int ret;
+> > > >
+> > > >       mmio_bar =3D IS_GEN(i915, 2) ? 1 : 0;
+> > > > +     bar_selection =3D BIT (2) | BIT(mmio_bar);
+> > >                            ^
+> > > spurious space
+> > >
+> > > That's also not correct for gen2 I think.
+> > >
+> > > gen2:
+> > > 0 =3D GMADR
+> > > 1 =3D MMADR
+> > > 2 =3D IOBAR
+> > >
+> > > gen3:
+> > > 0 =3D MMADR
+> > > 1 =3D IOBAR
+> > > 2 =3D GMADR
+> > > 3 =3D GTTADR
+> > >
+> > > gen4+:
+> > > 0+1 =3D GTTMMADR
+> > > 2+3 =3D GMADR
+> > > 4 =3D IOBAR
+> > >
+> > > Maybe we should just have an explicit list of bars like that in a
+> > > comment?
+> > >
+> > > I'd also suggest sucking this bitmask calculation into a small helper
+> > > so you can reuse it for the release.
+> >
+> > tbh I just hacked this up for testing. Given how almost no other drm
+> > driver does this, I'm wondering whether we should or not.
+> >
+> > Also the only reason why I didn't just use the pci_request_regions
+> > helper is to avoid the vga ioport range, since that's managed by
+> > vgaarbiter.
+>
+> VGA io range isn't part of any bar. Or do you mean just the io decode
+> enable bit in the pci command register? That should be just a matter
+> or pci_enable_device() vs. pci_enable_device_mem() I think. So nothing
+> to do with which bars we've requested IIRC.
+>
+> >
+> > So I think if we go for this for real we should:
+> > - register the vga ioport range in the vgaarbiter
+> > - have a pci_request_iomem_regions helper that grabs all mem bars
+> > - roll that out to all drm pci drivers
+> >
+> > Or something like that. The other complication is when we resize the
+> > iobar. So not really sure what to do here.
+>
+> We resize it?
 
-> I'm not a mm/ expert, but, from what I understood from Daniel's patch
-> description is that this is unsafe *only if*  __GFP_MOVABLE is used.
+By default I thought firmware puts everything (well, squeezes) into
+the lower 32bit. Maybe they stopped doing that. So when we want the
+full bar (for discrete at least) we need to resize it and put it
+somewhere in the 64bit range above end of system memory.
 
-No, it is unconditionally unsafe. The CMA movable mappings are
-specific VMAs that will have bad issues here, but there are other
-types too.
-
-The only way to do something at a VMA level is to have a list of OK
-VMAs, eg because they were creatd via a special mmap helper from the
-media subsystem.
-
-> Well, no drivers inside the media subsystem uses such flag, although
-> they may rely on some infrastructure that could be using it behind
-> the bars.
-
-It doesn't matter, nothing prevents the user from calling media APIs
-on mmaps it gets from other subsystems.
-
-> If this is the case, the proper fix seems to have a GFP_NOT_MOVABLE
-> flag that it would be denying the core mm code to set __GFP_MOVABLE.
-
-We can't tell from the VMA these kinds of details..
-
-It has to go the other direction, evey mmap that might be used as a
-userptr here has to be found and the VMA specially created to allow
-its use. At least that is a kernel only change, but will need people
-with the HW to do this work.
-
-> Please let address the issue on this way, instead of broken an
-> userspace API that it is there since 1991.
-
-It has happened before :( It took 4 years for RDMA to undo the uAPI
-breakage caused by a security fix for something that was a 15 years
-old bug. 
-
-Jason
+So I guess correct phrasing is "we will resize it" :-)
+-Daniel
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
