@@ -2,128 +2,343 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DCE76288B4D
-	for <lists+linux-s390@lfdr.de>; Fri,  9 Oct 2020 16:32:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD5AF288F4C
+	for <lists+linux-s390@lfdr.de>; Fri,  9 Oct 2020 18:58:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389025AbgJIOce (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 9 Oct 2020 10:32:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53800 "EHLO
+        id S2389952AbgJIQ5y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 9 Oct 2020 12:57:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389018AbgJIOcL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 9 Oct 2020 10:32:11 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3C3C0613D5
-        for <linux-s390@vger.kernel.org>; Fri,  9 Oct 2020 07:32:11 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id s4so10733646qkf.7
-        for <linux-s390@vger.kernel.org>; Fri, 09 Oct 2020 07:32:11 -0700 (PDT)
+        with ESMTP id S2389858AbgJIQ5r (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 9 Oct 2020 12:57:47 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F009BC0613DA
+        for <linux-s390@vger.kernel.org>; Fri,  9 Oct 2020 09:57:45 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id e2so10519280wme.1
+        for <linux-s390@vger.kernel.org>; Fri, 09 Oct 2020 09:57:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=73DpVirPZ06c1n2mkJSkENlUc+TenafPYOh6N9YsRj8=;
-        b=j3fuCopb7iniyL2y53HSklILSjdWqx7XXY5J7anSdWIzVAS51yHUg1bH+xWsQqV3an
-         hVaIqQtPYG5XhAZxJubl7tnA+2dzIyrb1eABP/rsrrjt9Ddzi0d1WmSuwF0UQqwD1tgr
-         69SltM6wnxkhZu8y4olirPc3PCASUILXSC5ua6+ynVuzP7VwBBECaBlnoZLOtcJNGGyr
-         NOkdDPv6Ux3fvUs6FlZoAKLjSdk3YJbxq2oDe3QQYv1fkcF15D+45H8TBvKAbi8SeVAg
-         F1hEOalHcniDpc4tE9aqUhgdNW4MqmHYSXYkxAhz5TsGfdhszvZtn/5ZEIEGhUQjLvR4
-         psaA==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=0pLn82IbgQV35wH4ma+k0406StKvwf+W3mj4bGhZifE=;
+        b=PkNBVdrvO/SF2HUY/SBKzGH/JIbyGv1X7JVHwyRp2NMGmrRwPiJ8YO5KTnNxVs/DTR
+         h+yXL8eb2mq4/cn2Dwt59h04BZYPDMJfUrNOEQpyRhv358eWBm8iMQ4wuE8aH+K/XoWv
+         VQPgSPuQrV1mjqwCbrtPywjhk1nkKWI7znRiE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=73DpVirPZ06c1n2mkJSkENlUc+TenafPYOh6N9YsRj8=;
-        b=AFCD5IFvRa5omlPlaHLu2c5CYQQ189MovbOWh7w89jcT2Hd/f9LlhcuNRV5QWPchxz
-         3UvPbaxVsFq+U5vsW3A4OiO2f24RnOoysedgJYDHHq6b0Kya1QyxAg6E4Geah0rqywRu
-         Mb7Kt4U3Txc4cQOSbqcfEerc2adhHikdS7P/7PEemqK3O484UGx+lDXXbqZTNYAVA1Z5
-         DItIdQmrlpWkwd0r8jiVdO6w65UTsii5NW+dw/pPyZX+/e9vUxbiVYDJ1g+fnVKYRSgO
-         8229PQYbfIwXVoKUWfnbKz3excSMrVYR+pUIdPbFVx0IU/MxjZ3jXjyL3bJRYVqzG+MB
-         EY6A==
-X-Gm-Message-State: AOAM531bVvCDdjiQvyR85vroZ2jCz3pr0FFS801BbchPVa6vYEMI1HPF
-        BDEp7iBLEA4PP8DtRVKbYRsYhA==
-X-Google-Smtp-Source: ABdhPJzpwYy/97Cu1hz1/nj4gs64VmTlSZ35zli/9trR97tocuoZHHYGhTwRETY7JpaxNsFSCH9jrQ==
-X-Received: by 2002:a37:4d95:: with SMTP id a143mr13781409qkb.248.1602253930622;
-        Fri, 09 Oct 2020 07:32:10 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id r64sm6400897qkf.119.2020.10.09.07.32.09
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=0pLn82IbgQV35wH4ma+k0406StKvwf+W3mj4bGhZifE=;
+        b=JEnMl0N3W2A5+6X56BBM8NnFSyb2ApIAcHgNpEP+dKFK9bzv16fwoGkH5yHjWpHt4q
+         t6bSUaN6QLkAtkkV5bp3T38qnfNBXUc+UO5wmveyP09Pul2/mGXtZCxRmKPTYpIhblBi
+         KEsF3xo8fROCtgDsrk6gjoprHpzPDhcsTPvtlxeFj+kBckaZYbTZxQSg0px6Kp8QAnHh
+         h8ozJwudZSS33QfV4zjTGsDaXrkFt4KcAuPDyskRLRVu4K2UyJD6ebVWBkPc0jUMnkge
+         8z1SIfyAP0+pIlwXkf6IWmEUu+uk7zabiu2IPSizMX79G6+PFO5qKxvS4a3Ut5f1zPjH
+         4t/g==
+X-Gm-Message-State: AOAM533jPIapIp+jriUvOKIkMAoOB8alH2oI0vDO1a+hyEfgIrSpg1JC
+        23sy3VeLTyvwI0D9USQK0sxOpw==
+X-Google-Smtp-Source: ABdhPJzWm2EDClZGBoeRp2koRpZWB9TbXgl54u2KDWSi+G0UmCpXfa0O1HJTk/LTlflMGH/BrzAI9Q==
+X-Received: by 2002:a1c:9ad0:: with SMTP id c199mr15291080wme.54.1602262664449;
+        Fri, 09 Oct 2020 09:57:44 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id n10sm12381658wmk.7.2020.10.09.09.57.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Oct 2020 07:32:10 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kQtRJ-001zsY-G1; Fri, 09 Oct 2020 11:32:09 -0300
-Date:   Fri, 9 Oct 2020 11:32:09 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
+        Fri, 09 Oct 2020 09:57:43 -0700 (PDT)
+Date:   Fri, 9 Oct 2020 18:57:40 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-s390@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
         Daniel Vetter <daniel.vetter@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v2 14/17] resource: Move devmem revoke code to resource
- framework
-Message-ID: <20201009143209.GS5177@ziepe.ca>
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2 06/17] media: videobuf2: Move frame_vector into media
+ subsystem
+Message-ID: <20201009165740.GP438822@phenom.ffwll.local>
+Mail-Followup-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-s390@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>
 References: <20201009075934.3509076-1-daniel.vetter@ffwll.ch>
- <20201009075934.3509076-15-daniel.vetter@ffwll.ch>
- <20201009123109.GO5177@ziepe.ca>
- <CAKMK7uFpPP-Q0jC0vM7vYPEcg0m4NzTw+Ld=swdTF3BgMX5Qug@mail.gmail.com>
+ <20201009075934.3509076-7-daniel.vetter@ffwll.ch>
+ <20201009121417.115db7d9@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAKMK7uFpPP-Q0jC0vM7vYPEcg0m4NzTw+Ld=swdTF3BgMX5Qug@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201009121417.115db7d9@coco.lan>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Oct 09, 2020 at 04:24:45PM +0200, Daniel Vetter wrote:
-> On Fri, Oct 9, 2020 at 2:31 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Fri, Oct 09, 2020 at 09:59:31AM +0200, Daniel Vetter wrote:
-> >
-> > > +struct address_space *iomem_get_mapping(void)
-> > > +{
-> > > +     return iomem_inode->i_mapping;
-> >
-> > This should pair an acquire with the release below
-> >
-> > > +     /*
-> > > +      * Publish /dev/mem initialized.
-> > > +      * Pairs with smp_load_acquire() in revoke_iomem().
-> > > +      */
-> > > +     smp_store_release(&iomem_inode, inode);
-> >
-> > However, this seems abnormal, initcalls rarely do this kind of stuff
-> > with global data..
-> >
-> > The kernel crashes if this fs_initcall is raced with
-> > iomem_get_mapping() due to the unconditional dereference, so I think
-> > it can be safely switched to a simple assignment.
+On Fri, Oct 09, 2020 at 12:14:17PM +0200, Mauro Carvalho Chehab wrote:
+> Em Fri,  9 Oct 2020 09:59:23 +0200
+> Daniel Vetter <daniel.vetter@ffwll.ch> escreveu:
 > 
-> Ah yes I checked this all, but forgot to correctly annotate the
-> iomem_get_mapping access. For reference, see b34e7e298d7a ("/dev/mem:
-> Add missing memory barriers for devmem_inode").
+> > It's the only user. This also garbage collects the CONFIG_FRAME_VECTOR
+> > symbol from all over the tree (well just one place, somehow omap media
+> > driver still had this in its Kconfig, despite not using it).
+> > 
+> > Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > Cc: Pawel Osciak <pawel@osciak.com>
+> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Cc: Kyungmin Park <kyungmin.park@samsung.com>
+> > Cc: Tomasz Figa <tfiga@chromium.org>
+> > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: Jérôme Glisse <jglisse@redhat.com>
+> > Cc: Jan Kara <jack@suse.cz>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: linux-mm@kvack.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-samsung-soc@vger.kernel.org
+> > Cc: linux-media@vger.kernel.org
+> > Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > ---
+> >  drivers/media/common/videobuf2/Kconfig        |  1 -
+> >  drivers/media/common/videobuf2/Makefile       |  1 +
+> >  .../media/common/videobuf2}/frame_vector.c    |  2 +
+> >  drivers/media/platform/omap/Kconfig           |  1 -
+> >  include/linux/mm.h                            | 42 -------------------
+> >  include/media/videobuf2-core.h                | 42 +++++++++++++++++++
+> >  mm/Kconfig                                    |  3 --
+> >  mm/Makefile                                   |  1 -
+> >  8 files changed, 45 insertions(+), 48 deletions(-)
+> >  rename {mm => drivers/media/common/videobuf2}/frame_vector.c (99%)
+> > 
+> > diff --git a/drivers/media/common/videobuf2/Kconfig b/drivers/media/common/videobuf2/Kconfig
+> > index edbc99ebba87..d2223a12c95f 100644
+> > --- a/drivers/media/common/videobuf2/Kconfig
+> > +++ b/drivers/media/common/videobuf2/Kconfig
+> > @@ -9,7 +9,6 @@ config VIDEOBUF2_V4L2
+> >  
+> >  config VIDEOBUF2_MEMOPS
+> >  	tristate
+> > -	select FRAME_VECTOR
+> >  
+> >  config VIDEOBUF2_DMA_CONTIG
+> >  	tristate
+> > diff --git a/drivers/media/common/videobuf2/Makefile b/drivers/media/common/videobuf2/Makefile
+> > index 77bebe8b202f..54306f8d096c 100644
+> > --- a/drivers/media/common/videobuf2/Makefile
+> > +++ b/drivers/media/common/videobuf2/Makefile
+> > @@ -1,5 +1,6 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  videobuf2-common-objs := videobuf2-core.o
+> > +videobuf2-common-objs += frame_vector.o
+> >  
+> >  ifeq ($(CONFIG_TRACEPOINTS),y)
+> >    videobuf2-common-objs += vb2-trace.o
+> > diff --git a/mm/frame_vector.c b/drivers/media/common/videobuf2/frame_vector.c
+> > similarity index 99%
+> > rename from mm/frame_vector.c
+> > rename to drivers/media/common/videobuf2/frame_vector.c
+> > index d44779e56313..2b0b97761d15 100644
+> > --- a/mm/frame_vector.c
+> > +++ b/drivers/media/common/videobuf2/frame_vector.c
+> > @@ -8,6 +8,8 @@
+> >  #include <linux/pagemap.h>
+> >  #include <linux/sched.h>
+> >  
+> > +#include <media/videobuf2-core.h>
+> > +
+> 
+> See my comment below...
+> 
+> >  /**
+> >   * get_vaddr_frames() - map virtual addresses to pfns
+> >   * @start:	starting user address
+> > diff --git a/drivers/media/platform/omap/Kconfig b/drivers/media/platform/omap/Kconfig
+> > index f73b5893220d..de16de46c0f4 100644
+> > --- a/drivers/media/platform/omap/Kconfig
+> > +++ b/drivers/media/platform/omap/Kconfig
+> > @@ -12,6 +12,5 @@ config VIDEO_OMAP2_VOUT
+> >  	depends on VIDEO_V4L2
+> >  	select VIDEOBUF2_DMA_CONTIG
+> >  	select OMAP2_VRFB if ARCH_OMAP2 || ARCH_OMAP3
+> > -	select FRAME_VECTOR
+> >  	help
+> >  	  V4L2 Display driver support for OMAP2/3 based boards.
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 16b799a0522c..acd60fbf1a5a 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -1743,48 +1743,6 @@ int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc);
+> >  int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
+> >  			struct task_struct *task, bool bypass_rlim);
+> >  
+> > -/* Container for pinned pfns / pages */
+> > -struct frame_vector {
+> > -	unsigned int nr_allocated;	/* Number of frames we have space for */
+> > -	unsigned int nr_frames;	/* Number of frames stored in ptrs array */
+> > -	bool got_ref;		/* Did we pin pages by getting page ref? */
+> > -	bool is_pfns;		/* Does array contain pages or pfns? */
+> > -	void *ptrs[];		/* Array of pinned pfns / pages. Use
+> > -				 * pfns_vector_pages() or pfns_vector_pfns()
+> > -				 * for access */
+> > -};
+> > -
+> > -struct frame_vector *frame_vector_create(unsigned int nr_frames);
+> > -void frame_vector_destroy(struct frame_vector *vec);
+> > -int get_vaddr_frames(unsigned long start, unsigned int nr_pfns,
+> > -		     unsigned int gup_flags, struct frame_vector *vec);
+> > -void put_vaddr_frames(struct frame_vector *vec);
+> > -int frame_vector_to_pages(struct frame_vector *vec);
+> > -void frame_vector_to_pfns(struct frame_vector *vec);
+> > -
+> > -static inline unsigned int frame_vector_count(struct frame_vector *vec)
+> > -{
+> > -	return vec->nr_frames;
+> > -}
+> > -
+> > -static inline struct page **frame_vector_pages(struct frame_vector *vec)
+> > -{
+> > -	if (vec->is_pfns) {
+> > -		int err = frame_vector_to_pages(vec);
+> > -
+> > -		if (err)
+> > -			return ERR_PTR(err);
+> > -	}
+> > -	return (struct page **)(vec->ptrs);
+> > -}
+> > -
+> > -static inline unsigned long *frame_vector_pfns(struct frame_vector *vec)
+> > -{
+> > -	if (!vec->is_pfns)
+> > -		frame_vector_to_pfns(vec);
+> > -	return (unsigned long *)(vec->ptrs);
+> > -}
+> > -
+> >  struct kvec;
+> >  int get_kernel_pages(const struct kvec *iov, int nr_pages, int write,
+> >  			struct page **pages);
+> > diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
+> > index bbb3f26fbde9..a2e75ca0334f 100644
+> > --- a/include/media/videobuf2-core.h
+> > +++ b/include/media/videobuf2-core.h
+> > @@ -1254,4 +1254,46 @@ bool vb2_request_object_is_buffer(struct media_request_object *obj);
+> >   */
+> >  unsigned int vb2_request_buffer_cnt(struct media_request *req);
+> >  
+> > +/* Container for pinned pfns / pages in frame_vector.c */
+> > +struct frame_vector {
+> > +	unsigned int nr_allocated;	/* Number of frames we have space for */
+> > +	unsigned int nr_frames;	/* Number of frames stored in ptrs array */
+> > +	bool got_ref;		/* Did we pin pages by getting page ref? */
+> > +	bool is_pfns;		/* Does array contain pages or pfns? */
+> > +	void *ptrs[];		/* Array of pinned pfns / pages. Use
+> > +				 * pfns_vector_pages() or pfns_vector_pfns()
+> > +				 * for access */
+> > +};
+> > +
+> > +struct frame_vector *frame_vector_create(unsigned int nr_frames);
+> > +void frame_vector_destroy(struct frame_vector *vec);
+> > +int get_vaddr_frames(unsigned long start, unsigned int nr_pfns,
+> > +		     unsigned int gup_flags, struct frame_vector *vec);
+> > +void put_vaddr_frames(struct frame_vector *vec);
+> > +int frame_vector_to_pages(struct frame_vector *vec);
+> > +void frame_vector_to_pfns(struct frame_vector *vec);
+> > +
+> > +static inline unsigned int frame_vector_count(struct frame_vector *vec)
+> > +{
+> > +	return vec->nr_frames;
+> > +}
+> > +
+> > +static inline struct page **frame_vector_pages(struct frame_vector *vec)
+> > +{
+> > +	if (vec->is_pfns) {
+> > +		int err = frame_vector_to_pages(vec);
+> > +
+> > +		if (err)
+> > +			return ERR_PTR(err);
+> > +	}
+> > +	return (struct page **)(vec->ptrs);
+> > +}
+> > +
+> > +static inline unsigned long *frame_vector_pfns(struct frame_vector *vec)
+> > +{
+> > +	if (!vec->is_pfns)
+> > +		frame_vector_to_pfns(vec);
+> > +	return (unsigned long *)(vec->ptrs);
+> > +}
+> > +
+> >  #endif /* _MEDIA_VIDEOBUF2_CORE_H */
+> 
+> Please place those into a include/media/frame_vector.h file, instead of
+> merging it directly at vb2 core header.
+> 
+> Then include the new header at videobuf2-core.h and at frame_vector.c.
 
-Oh yikes, so revoke_iomem can run concurrently during early boot,
-tricky.
+Makes sense, I'll do that for v3.
 
-> The reasons for the annotations is that iomem requests can happen
-> fairly early, way before fs_initcalls happen. That means revoke_iomem
-> needs to check for that and bail out if we race - nothing bad can
-> happen since userspace isn't running at this point anyway. And
-> apparently it needs to be a full acquire fence since we don't just
-> write a value, but need a barrier for the struct stuff.
+> With such changes:
+> 
+> Acked-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Yes, if that is what is happening it release/acquire is needed.
+Thanks for taking a look.
+-Daniel
 
-Jason
+> 
+> > diff --git a/mm/Kconfig b/mm/Kconfig
+> > index 6c974888f86f..da6c943fe9f1 100644
+> > --- a/mm/Kconfig
+> > +++ b/mm/Kconfig
+> > @@ -815,9 +815,6 @@ config DEVICE_PRIVATE
+> >  	  memory; i.e., memory that is only accessible from the device (or
+> >  	  group of devices). You likely also want to select HMM_MIRROR.
+> >  
+> > -config FRAME_VECTOR
+> > -	bool
+> > -
+> >  config ARCH_USES_HIGH_VMA_FLAGS
+> >  	bool
+> >  config ARCH_HAS_PKEYS
+> > diff --git a/mm/Makefile b/mm/Makefile
+> > index d5649f1c12c0..a025fd6c6afd 100644
+> > --- a/mm/Makefile
+> > +++ b/mm/Makefile
+> > @@ -111,7 +111,6 @@ obj-$(CONFIG_PAGE_EXTENSION) += page_ext.o
+> >  obj-$(CONFIG_CMA_DEBUGFS) += cma_debug.o
+> >  obj-$(CONFIG_USERFAULTFD) += userfaultfd.o
+> >  obj-$(CONFIG_IDLE_PAGE_TRACKING) += page_idle.o
+> > -obj-$(CONFIG_FRAME_VECTOR) += frame_vector.o
+> >  obj-$(CONFIG_DEBUG_PAGE_REF) += debug_page_ref.o
+> >  obj-$(CONFIG_HARDENED_USERCOPY) += usercopy.o
+> >  obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
+> 
+> 
+> 
+> Thanks,
+> Mauro
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
