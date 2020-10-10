@@ -2,130 +2,53 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB2A22891B5
-	for <lists+linux-s390@lfdr.de>; Fri,  9 Oct 2020 21:31:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11880289D13
+	for <lists+linux-s390@lfdr.de>; Sat, 10 Oct 2020 03:31:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388679AbgJITbd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 9 Oct 2020 15:31:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388674AbgJITbd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 9 Oct 2020 15:31:33 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815B6C0613D5
-        for <linux-s390@vger.kernel.org>; Fri,  9 Oct 2020 12:31:33 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id 60so10028667otw.3
-        for <linux-s390@vger.kernel.org>; Fri, 09 Oct 2020 12:31:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ySYcyJJ3sOG5YMU4GVRG3lJgkS40H3Co9lykIQ/+sFM=;
-        b=hXg/sBmJSAZ0qahG3krkGP++08QEfAEMObPCQZW5DNP0jHoKuyBCogfErWstdU2/EU
-         4l6+qOuyilHrRv6mQOMt0oKIaOKSkC6+0fry3akULqNmxrd1f0WP5RaWhgCgr3v3riEu
-         U91Cvo/twFXWkhQ9v9MjLxy+AB8Sb+wfsvumA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ySYcyJJ3sOG5YMU4GVRG3lJgkS40H3Co9lykIQ/+sFM=;
-        b=bCGTAZ/Zfcd2v0jfc0Am4YxTm6qqu2oacIOHGW0crxwnznrS129xBajCmT6tx9oZV7
-         h5dCkGn1pyDvJX8gTqyn80VeuI35AkRNBJVpeuYUvbMKgRP0gOC7zXV3iusaHjHysCcN
-         JZ/UcQOtRmuWvxDHGzu2rOFs88PWVKdb1669z2NCHJmbfuCce5Ix5ZpXGl/2vU+0RJ7f
-         TeehLnM+TlZUAGRnzTIi3HvNcCsUWJlPectLqlrYybzJBa2MdrWHfjEVO6LMXod0okKI
-         icT2ZlYty88KSL4VRElAkYWr4F/LE4+HYW5X51G4OpNbzTLlhLPxSMfl7vafb/nelQJq
-         Dd/Q==
-X-Gm-Message-State: AOAM533kqjTZ3WkD76ywsDTDMxkDV/C3VVFfEpKUU/rtJGyonZCcCsae
-        QYOA5ZyYAtQF3wo/AbxNLYNpumhrD3vCFtmf3hLjiQ==
-X-Google-Smtp-Source: ABdhPJyt5F3KZ1qsKCAYucLfuox0J0LV3cC5oyQ21k96htMG1d9Z2x9WEkAwzZmqGd0OEOmrQ583B82fEkZeh8i2caA=
-X-Received: by 2002:a05:6830:1647:: with SMTP id h7mr10464001otr.281.1602271892694;
- Fri, 09 Oct 2020 12:31:32 -0700 (PDT)
+        id S1729135AbgJJBbO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 9 Oct 2020 21:31:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54582 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729629AbgJJBUR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 9 Oct 2020 21:20:17 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 524CF22245;
+        Sat, 10 Oct 2020 01:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602292794;
+        bh=YrMc3cW75J/LfvmPx9H/BurBa7AVKD7Pga4jnVVyAQk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=k9PBF/q46m65BeWZ4wAXezJ0rVf+2THdAg1TuJalobz/or/IOu0KisaGxo8m1F2hD
+         p/ZFlkb1wRLR0mqSSWT2e4lDI+inGY0/zjKrqbAB4fwkBC8ZmPMg5PfHvhelo5JXFl
+         VIohnO1qt12YL1ZsTFltGBzMJu3zItVQPKf1OjQQ=
+Date:   Fri, 9 Oct 2020 18:19:52 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Karsten Graul <kgraul@linux.ibm.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        raspl@linux.ibm.com, ubraun@linux.ibm.com
+Subject: Re: [PATCH net-next 0/3] net/smc: updates 2020-10-07
+Message-ID: <20201009181952.3e607c63@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20201007205743.83535-1-kgraul@linux.ibm.com>
+References: <20201007205743.83535-1-kgraul@linux.ibm.com>
 MIME-Version: 1.0
-References: <20201009075934.3509076-1-daniel.vetter@ffwll.ch>
- <20201009075934.3509076-10-daniel.vetter@ffwll.ch> <20201009123421.67a80d72@coco.lan>
- <20201009122111.GN5177@ziepe.ca> <20201009143723.45609bfb@coco.lan>
- <20201009124850.GP5177@ziepe.ca> <CAKMK7uF-hrSwzFQkp6qEP88hM1Qg8TMQOunuRHh=f2+D8MaMRg@mail.gmail.com>
- <20201009180145.GB5177@ziepe.ca>
-In-Reply-To: <20201009180145.GB5177@ziepe.ca>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Fri, 9 Oct 2020 21:31:21 +0200
-Message-ID: <CAKMK7uGnKX-n+4eoa+tStJxsBzuPq1HF5tDjo8ph4PXqFKQ0pg@mail.gmail.com>
-Subject: Re: [PATCH v2 09/17] mm: Add unsafe_follow_pfn
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Oct 9, 2020 at 8:01 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Fri, Oct 09, 2020 at 07:52:05PM +0200, Daniel Vetter wrote:
->
-> > > > If this is the case, the proper fix seems to have a GFP_NOT_MOVABLE
-> > > > flag that it would be denying the core mm code to set __GFP_MOVABLE.
-> > >
-> > > We can't tell from the VMA these kinds of details..
-> > >
-> > > It has to go the other direction, evey mmap that might be used as a
-> > > userptr here has to be found and the VMA specially created to allow
-> > > its use. At least that is a kernel only change, but will need people
-> > > with the HW to do this work.
-> >
-> > I think the only reasonable way to keep this working is:
-> > - add a struct dma_buf *vma_tryget_dma_buf(struct vm_area_struct *vma);
-> > - add dma-buf export support to fbdev and v4l
-> > - roll this out everywhere we still need it.
->
-> It seems to me there is a technical way forward to restore user
-> compat, so it is really no different than RDMA/DRM pain we both
-> suffered before.
->
-> Thus no justification to NAK it. If media wants things to keep working
-> they have to do the technical path like you outline above.
->
-> > Realistically this just isn't going to happen.
->
-> If your series goes ahead it will get solved. Someone will take on the
-> huge project to either add DMA buf to the drivers people still care
-> about, or do the work above to transparently handle in kernel.
->
-> If we allow things to keep working without consequence then nobody
-> will do it.
->
-> The only reason we did the 4 years of work in RDMA was because Linus
-> went in and broke the uABI for a security fix. It was hundreds of
-> patches to fix it, so I don't have much sympathy for "it is too hard"
-> here.
+On Wed,  7 Oct 2020 22:57:40 +0200 Karsten Graul wrote:
+> Please apply the following patch series for smc to netdev's net-next tree.
+> 
+> Patch 1 and 2 address warnings from static code checkers, and patch 3 handles
+> a case when all proposed ISM V2 devices fail to init and no V1 devices are
+> tried afterwards.
 
-Oh fully agreeing with you here, I just wanted to lay out that a)
-there is a solid plan to fix it and b) it's way too much work for me
-to just type it as a part of a "learn me some core mm semantics"
-project :-)
+Applied, thanks!
 
-I was hoping that we could get away with a special marker for
-problematic vma, and filter those out. But after all the digging I've
-noticed that on anything remotely modern, there's just nothing left.
-Device memory management has become massively more dynamic in the past
-10 years.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+I'm inducing the last patch is a fix for code only in net-next.
+It would still have been better to have a Fixes tag there to make
+it clear that there is no need to backport.
