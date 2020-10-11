@@ -2,158 +2,74 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC74F28A5FE
-	for <lists+linux-s390@lfdr.de>; Sun, 11 Oct 2020 08:36:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ED2228AA4B
+	for <lists+linux-s390@lfdr.de>; Sun, 11 Oct 2020 22:23:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbgJKGgv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 11 Oct 2020 02:36:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726342AbgJKGgv (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 11 Oct 2020 02:36:51 -0400
-Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85DE0207F7;
-        Sun, 11 Oct 2020 06:36:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602398210;
-        bh=MR/RMyKCclUPPVflq9R7vQAnP0HHAB+V0k+M/bUhRS4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jvBUfU4lcFH5iYVZHi3aofMRqu0bNvwHTxzGNNkxsyXYWj1btiksG20/jfbPQvvqv
-         dVJGVqnV9hei4ZzzcKLtrrL3N/xYb6tuVCokS0XC+GSZbVjKBxNL+vnz8aAokYiVaa
-         RWkpl0Kn6+L8/zgpVMrCrzOooLkal8LZO9av0isI=
-Date:   Sun, 11 Oct 2020 08:36:42 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>, Kees Cook <keescook@chromium.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v2 09/17] mm: Add unsafe_follow_pfn
-Message-ID: <20201011083642.06ea8062@coco.lan>
-In-Reply-To: <20201011082741.6bed4d71@coco.lan>
-References: <20201009075934.3509076-1-daniel.vetter@ffwll.ch>
-        <20201009075934.3509076-10-daniel.vetter@ffwll.ch>
-        <20201009123421.67a80d72@coco.lan>
-        <20201009122111.GN5177@ziepe.ca>
-        <20201009143723.45609bfb@coco.lan>
-        <20201009124850.GP5177@ziepe.ca>
-        <CAKMK7uF-hrSwzFQkp6qEP88hM1Qg8TMQOunuRHh=f2+D8MaMRg@mail.gmail.com>
-        <CAAFQd5CTT0re4ssj9NNTxhejFX_v_rCjy6=mX7C+dc=Lw9GOHw@mail.gmail.com>
-        <20201010213554.GD3939@pendragon.ideasonboard.com>
-        <CAKMK7uGhq+BiaJ5jD+bkO4VOaCPuUZ_empA3Ojr1AsvwNef6QQ@mail.gmail.com>
-        <20201011082741.6bed4d71@coco.lan>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1729349AbgJKUXY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 11 Oct 2020 16:23:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729240AbgJKUXX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 11 Oct 2020 16:23:23 -0400
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5DDC0613D7
+        for <linux-s390@vger.kernel.org>; Sun, 11 Oct 2020 13:23:17 -0700 (PDT)
+Received: by mail-ot1-x329.google.com with SMTP id q21so13951144ota.8
+        for <linux-s390@vger.kernel.org>; Sun, 11 Oct 2020 13:23:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=tRceXdKhB8YrGa5UF3V+9BiDoHJDhSAujZzJPaxD6i8=;
+        b=se4EGX91wXk2NZMva6HzFZt9bCZz8RMcBbrzoCXtUq3w7fZQ1NYTEx0+dle/di2F1+
+         UMlSTWzAs2o5+wpceMyNbEGN2hTYHQpNNfyByKl5nEcsn66SyilMSjwsZ4cGPfkmBdYF
+         yp6Nw97A01gYD5ub1/INhnhY970Z/HlYmbvK/LaNIIE3sBoaVVhmmclnwCCPgaULh6vY
+         IxIhvUHsa77LoIoogl9eveMNpldGFUGa3mjyOxtKDwI1N8AyBQEUvYbZyS6WJk8fkRN4
+         /evvAYdtKBs0YAniCPIKXpFnj29oVuIWyLaL/rGXSXn8Gch+kyM/AJyBMyFmUyuNfgxn
+         vslA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=tRceXdKhB8YrGa5UF3V+9BiDoHJDhSAujZzJPaxD6i8=;
+        b=ReImwAL864gdmZ8SViWlzUMFarvhVHtDixbIHPqpHk5LjEyl+HOYJTJt8L/mj8XHdf
+         UCBhkeU6sicMFXl7TNhVzDM16Rd/TF5Kxgt7TU3NwcH31Ew4qWC2uiVFw0qixCPVMwPt
+         BCs6dMpg/LDT2n5lF8YyX5qN+3rcUGp6YIwrhmijljV83/O4x72JmUskJeRoWgUJr/Ox
+         t2nm61EGLa0pi3TEjQdP+sdU2ncueMzV72f5BYiKB9NE3bOr7TV1V1vOy6n0ck+44Viz
+         v0Yqq21UJo3XsnzJzoPBPoQU9cVA+cgmA+PHW2vBl1i3znUuty+dqwp8mIzVTEewFV06
+         DV2Q==
+X-Gm-Message-State: AOAM532YvSwgmWclC/mf2Itb2EbQIewAXneAyQY2quwAKkTuElnr1pvr
+        JdeD+Z/AVagoE74rXmG26nLbig==
+X-Google-Smtp-Source: ABdhPJxJevS9phfHNPbujhgUz0c2zM32mOg8hpn2iOLSemBV/AGaC7PVIMJ1K7/V4AWK3zP1Bm9Msg==
+X-Received: by 2002:a05:6830:149:: with SMTP id j9mr15110595otp.187.1602447796574;
+        Sun, 11 Oct 2020 13:23:16 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id j34sm8210899otc.15.2020.10.11.13.23.14
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Sun, 11 Oct 2020 13:23:15 -0700 (PDT)
+Date:   Sun, 11 Oct 2020 13:23:12 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Qian Cai <cai@lca.pw>
+cc:     Matthew Wilcox <willy@infradead.org>, linux-xfs@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        borntraeger@de.ibm.com, darrick.wong@oracle.com,
+        kirill@shutemov.name, peterx@redhat.com,
+        yang.shi@linux.alibaba.com, hch@lst.de,
+        linux-kernel@vger.kernel.org, songliubraving@fb.com
+Subject: Re: VM_BUG_ON_PAGE(page_to_pgoff(page) != offset) on s390
+In-Reply-To: <20200617031906.GA5065@lca.pw>
+Message-ID: <alpine.LSU.2.11.2010111321430.15963@eggly.anvils>
+References: <20200616013309.GB815@lca.pw> <20200616014859.GY8681@bombadil.infradead.org> <20200617031906.GA5065@lca.pw>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Em Sun, 11 Oct 2020 08:27:41 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
-
-> Em Sat, 10 Oct 2020 23:50:27 +0200
-> Daniel Vetter <daniel.vetter@ffwll.ch> escreveu:
-> 
-> > On Sat, Oct 10, 2020 at 11:36 PM Laurent Pinchart
-> > <laurent.pinchart@ideasonboard.com> wrote:
-> > >
-> 
-> > > > We probably still have a few legacy drivers using videobuf (non-2),
-> > > > but IMHO those should be safe to put behind some disabled-by-default
-> > > > Kconfig symbol or even completely drop, as the legacy framework has
-> > > > been deprecated for many years already.  
-> > >
-> > > There's 8 drivers left, and they support a very large number of devices.
-> > > I expect unhappy users distros stop shipping them. On the other hand,
-> > > videobuf has been deprecated for a loooooooong time, so there has been
-> > > plenty of time to convert the remaining drivers to videobuf2. If nobody
-> > > can do it, then we'll have to drop support for these devices given the
-> > > security issues.  
-> > 
-> > Again, the issue here is _only_ with follow_pfn. For videobuf1 this
-> > means videbuf-dma-contig.c userptr support is broken. Unlike videobuf2
-> > it means it's broken for all usage (not just zero-copy userptr),
-> > because videbuf-dma-contig.c lacks the pin_user_pages path.
-> 
-> Well, follow_pfn() is used only by videbuf-dma-contig.c. If this is 
-> the only part of VB1 that will have userptr broken, then there's
-> just one driver that might be affected: davinci.
-> 
-> Yet, taking a deeper look:
-> 
-> 	$ git grep include drivers/media/platform/davinci/|grep -i videobuf
-> 	drivers/media/platform/davinci/vpif_capture.h:#include <media/videobuf2-dma-contig.h>
-> 	drivers/media/platform/davinci/vpif_display.h:#include <media/videobuf2-dma-contig.h>
-> 
-> It sounds to me that it was already converted to VB2, but some VB1
-> symbols were not converted at its Kconfig.
-> 
-> It sounds to me that there are other drivers with some VB1 left overs
-> at Kconfig, as those are the only ones using VB1 those days:
-> 
-> 	$ for i in $(git grep media/videobuf drivers |grep -v videobuf2 |grep -v v4l2-core|cut -d: -f1); do dirname $i; done|sort|uniq
-> 	drivers/media/pci/bt8xx
-> 	drivers/media/pci/cx18
-> 	drivers/media/platform
-> 	drivers/media/usb/tm6000
-> 	drivers/media/usb/zr364xx
-> 	drivers/staging/media/atomisp/pci
-
-This is incomplete. There are two drivers that include videobuf
-indirectly:
-
-	include/media/davinci/vpfe_capture.h
-	include/media/drv-intf/saa7146_vv.h
-
-I double-checked that DaVinci still uses VB1. There are 
-actually two clients for videbuf-dma-contig.c: davinci and fsl-viu.
-
-Those two will be affected, if we don't add pin_user_pages_fast()
-support to VB1 or convert them to VB2.
-
-> 
-> > But that
-> > would be easy to add if this poses a  problem I think - we just need
-> > to carry over the pin_user_pages_fast logic from videbuf2, no driver
-> > changes required. But of course I don't think we should do that before
-> > someone reports the regression, since videobuf1 userptr is doubly
-> > deprecated :-)
-> 
-> I think otherwise. Keeping a broken component at the Kernel is 
-> a bad idea. 
-> 
-> Yet, from my quick search above, it sounds to me that it is time for 
-> us to retire the VB1 DMA contig support as a hole, as there's no client 
-> for it anymore.
-> 
-> I'll work on some patches cleaning up the VB1 left overs at
-> Kconfig and removing videbuf-dma-contig.c for good, if there's
-> no hidden dependency on it.
-> 
-> 
-> Thanks,
-> Mauro
-
-
-
-Thanks,
-Mauro
+Adding a note to update this thread: the v5.9 tree now has
+033b5d775511 ("mm/khugepaged: fix filemap page_to_pgoff(page) != offset")
+which fixes this VM_BUG_ON_PAGE (or data corruption) when CONFIG_NUMA
+is not set: we are hoping that may have have been the problem here.
