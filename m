@@ -2,181 +2,132 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33A6128BB03
-	for <lists+linux-s390@lfdr.de>; Mon, 12 Oct 2020 16:41:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF38428C0DB
+	for <lists+linux-s390@lfdr.de>; Mon, 12 Oct 2020 21:08:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389082AbgJLOlk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 12 Oct 2020 10:41:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8442 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388957AbgJLOlj (ORCPT
+        id S2390855AbgJLTHM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 12 Oct 2020 15:07:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43728 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391168AbgJLTGr (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 12 Oct 2020 10:41:39 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09CEZDrw078166;
-        Mon, 12 Oct 2020 10:41:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=Mh49I7jw4VB6kT4/ay+AaLZilzKCmLBonLwWNkMHRRw=;
- b=MK1q9eNePHSQkxW58VHmw9c51ABMDsasKexGHGtGFzfduqPUsqiEoLP3H2BW8pLNOJDY
- HKqx86fR6w5oclhuufWpcOEwP0GRox8JaBTYNny6OCAn7MCC4NOBYADXeh4lyftwVqJE
- sr8kULHlSgEXQMxanjk40vuI1bFSD2BIM9y2lsiAzCbBQg6f5qdB0j+hbWLabzpIGN5U
- bdFaxg4nw+BtjTue5U9eA2In51WVMjfyNcPxdiO7vm1Otcrw/GYBNtZXjnZIUa1xkmQk
- QBmsEy0lKB9GG3gZTFV4t6AdsGpBK0O3fAnbdeXBZ0quZUqnXFhalJ1jhEuBXpdVz/cX +w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 344qucjbjf-1
+        Mon, 12 Oct 2020 15:06:47 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09CJ3g8F109474;
+        Mon, 12 Oct 2020 15:06:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=pp1;
+ bh=gqGNTRsi7oN6FIWvtwD5GKOM5T7beKDYWCtrptL5Xik=;
+ b=nbuE09t5A/aR+i8sRzObYspqyG1n0XuucAljDJsbozair6HXn3cYRXlltqTTI1p/tdH1
+ Ew0b47VM+FkDmLbU5IzrOCw6RnzBfzZLJoghbHvOfMXXMnta5wpqdOwj23Ux/Torss3O
+ naFYwY4/y1yuZT/FiGesj9Z88NhokYXdZdHrwtfKnAYur1l1gNukWZjpqZ5Es3qaZYYv
+ JAvuqTq7Z7mgr4i+3TJNcfKcisGNtBjX/RACkSwuXuMnkEKlJcJ6cckwH3GqdBIyZyws
+ AtbJqVB+ThL/Hw6IK3tmmwfAlnXvvHxUGCFotINN/Sn2Wzb2v28XOQbzBT66aML5Lrk1 TQ== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 344v7y94hr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 12 Oct 2020 10:41:29 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09CEZWTT079650;
-        Mon, 12 Oct 2020 10:41:28 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 344qucjawm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 12 Oct 2020 10:41:28 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09CEbR7V001812;
-        Mon, 12 Oct 2020 14:39:34 GMT
+        Mon, 12 Oct 2020 15:06:46 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09CJ34ZN003723;
+        Mon, 12 Oct 2020 19:06:44 GMT
 Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma01fra.de.ibm.com with ESMTP id 344558rf3p-1
+        by ppma06ams.nl.ibm.com with ESMTP id 34347gtatx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 12 Oct 2020 14:39:34 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09CEdVqO9437672
+        Mon, 12 Oct 2020 19:06:44 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09CJ6fI724248650
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 12 Oct 2020 14:39:32 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF0F8A405C;
-        Mon, 12 Oct 2020 14:39:31 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 052EAA405F;
-        Mon, 12 Oct 2020 14:39:31 +0000 (GMT)
-Received: from [9.145.9.103] (unknown [9.145.9.103])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 12 Oct 2020 14:39:30 +0000 (GMT)
-Subject: Re: [PATCH v2 08/17] s390/pci: Remove races against pte updates
-To:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>
-References: <20201009075934.3509076-1-daniel.vetter@ffwll.ch>
- <20201009075934.3509076-9-daniel.vetter@ffwll.ch>
- <6deb08dd-46f3-bf26-5362-fdc696f6fd74@linux.ibm.com>
- <20201012141906.GX438822@phenom.ffwll.local>
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-Message-ID: <3c28a96a-6bb5-f581-4671-5c87161238f7@linux.ibm.com>
-Date:   Mon, 12 Oct 2020 16:39:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Mon, 12 Oct 2020 19:06:41 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AF69852051;
+        Mon, 12 Oct 2020 19:06:41 +0000 (GMT)
+Received: from imap.linux.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 690665204F;
+        Mon, 12 Oct 2020 19:06:41 +0000 (GMT)
+Date:   Mon, 12 Oct 2020 21:06:37 +0200
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH v2 00/10] DASD FC endpoint security
+Message-ID: <20201012183550.GA12341@imap.linux.ibm.com>
+References: <20201008131336.61100-1-sth@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20201012141906.GX438822@phenom.ffwll.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20201008131336.61100-1-sth@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-10-12_12:2020-10-12,2020-10-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 impostorscore=0
- spamscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010120117
+ definitions=2020-10-12_15:2020-10-12,2020-10-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 phishscore=0 bulkscore=0 mlxlogscore=999
+ spamscore=0 adultscore=0 impostorscore=0 suspectscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010120141
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-... snip ...
->>> Cc: linux-media@vger.kernel.org
->>> Cc: Niklas Schnelle <schnelle@linux.ibm.com>
->>> Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
->>> Cc: linux-s390@vger.kernel.org
->>> --
->>> v2: Move VM_IO | VM_PFNMAP checks around so they keep returning EINVAL
->>> like before (Gerard)
->>
->> I think the above should go before the CC/Signed-off/Reviewev block.
-> 
-> This is a per-subsystem bikeshed :-) drivers/gpu definitely wants it
-> above, but most core subsystems want it below. I'll move it.
+Hi Jens,
 
-Today I learned, thanks! That said I think most of the time I've
-actually not seen version change information in the commit message itself
-only in the cover letters. I really don't care just looked odd to me.
+quick ping. Are you going to apply this for 5.10?
 
-> 
->>> ---
->>>  arch/s390/pci/pci_mmio.c | 98 +++++++++++++++++++++++-----------------
->>>  1 file changed, 57 insertions(+), 41 deletions(-)
->>>
->>> diff --git a/arch/s390/pci/pci_mmio.c b/arch/s390/pci/pci_mmio.c
->>> index 401cf670a243..1a6adbc68ee8 100644
->>> --- a/arch/s390/pci/pci_mmio.c
->>> +++ b/arch/s390/pci/pci_mmio.c
->>> @@ -119,33 +119,15 @@ static inline int __memcpy_toio_inuser(void __iomem *dst,
->>>  	return rc;
->>>  }
->>>  
->>> -static long get_pfn(unsigned long user_addr, unsigned long access,
->>> -		    unsigned long *pfn)
->>> -{
->>> -	struct vm_area_struct *vma;
->>> -	long ret;
->>> -
->>> -	mmap_read_lock(current->mm);
->>> -	ret = -EINVAL;
->>> -	vma = find_vma(current->mm, user_addr);
->>> -	if (!vma)
->>> -		goto out;
->>> -	ret = -EACCES;
->>> -	if (!(vma->vm_flags & access))
->>> -		goto out;
->>> -	ret = follow_pfn(vma, user_addr, pfn);
->>> -out:
->>> -	mmap_read_unlock(current->mm);
->>> -	return ret;
->>> -}
->>> -
->>>  SYSCALL_DEFINE3(s390_pci_mmio_write, unsigned long, mmio_addr,
->>>  		const void __user *, user_buffer, size_t, length)
->>>  {
->>>  	u8 local_buf[64];
->>>  	void __iomem *io_addr;
->>>  	void *buf;
->>> -	unsigned long pfn;
->>> +	struct vm_area_struct *vma;
->>> +	pte_t *ptep;
->>> +	spinlock_t *ptl;
->>
->> With checkpatch.pl --strict the above yields a complained
->> "CHECK: spinlock_t definition without comment" but I think
->> that's really okay since your commit description is very clear.
->> Same oin line 277.
-> 
-> I think this is a falls positive, checkpatch doesn't realize that
-> SYSCALL_DEFINE3 is a function, not a structure. And in a structure I'd
-> have added the kerneldoc or comment.
+Best regards,
+Stefan
 
-Interesting, your theory sounds convincing, I too thought this
-was a bit too pedantic.
-
-> 
-> I'll fix up all the nits you've found for the next round. Thanks for
-> taking a look.
-
-You're welcome hope I didn't sound pedantic. I think you've a lot
-more experience actually and this can indeed turn into bikeshedding
-but since I was answering anyway and most of this was checkpatch…
-
-> -Daniel
-> 
+Stefan Haberland <sth@linux.ibm.com> schrieb am Thu, 08. Oct 15:13:
+> Hi Jens,
+>=20
+> please apply the following patches that add a new DASD feature to show
+> fibre channel endpoint security.
+>=20
+> The patches apply on you for-next branch and are intended for 5.10.
+>=20
+> The s390/cio patches should also go upstream through your tree this time
+> since they are required for the DASD patches to build.
+>=20
+> Best regards,
+> Stefan
+>=20
+> v1->v2:
+>  - fix memleak in "s390/dasd: Fix operational path inconsistency"
+>  - add comment suggested by Cornelia Huck
+>=20
+> Jan H=F6ppner (7):
+>   s390/dasd: Remove unused parameter from dasd_generic_probe()
+>   s390/dasd: Move duplicate code to separate function
+>   s390/dasd: Store path configuration data during path handling
+>   s390/dasd: Fix operational path inconsistency
+>   s390/dasd: Display FC Endpoint Security information via sysfs
+>   s390/dasd: Prepare for additional path event handling
+>   s390/dasd: Process FCES path event notification
+>=20
+> Sebastian Ott (1):
+>   s390/cio: Export information about Endpoint-Security Capability
+>=20
+> Vineeth Vijayan (2):
+>   s390/cio: Provide Endpoint-Security Mode per CU
+>   s390/cio: Add support for FCES status notification
+>=20
+>  arch/s390/include/asm/ccwdev.h   |   2 +
+>  arch/s390/include/asm/cio.h      |   1 +
+>  drivers/s390/block/dasd.c        |  22 ++--
+>  drivers/s390/block/dasd_devmap.c | 109 +++++++++++++++++++
+>  drivers/s390/block/dasd_eckd.c   | 175 +++++++++++++++++++++----------
+>  drivers/s390/block/dasd_fba.c    |   2 +-
+>  drivers/s390/block/dasd_int.h    | 111 +++++++++++++++++++-
+>  drivers/s390/cio/chp.c           |  15 +++
+>  drivers/s390/cio/chp.h           |   1 +
+>  drivers/s390/cio/chsc.c          | 145 +++++++++++++++++++++++--
+>  drivers/s390/cio/chsc.h          |   3 +-
+>  drivers/s390/cio/device.c        |  15 ++-
+>  12 files changed, 523 insertions(+), 78 deletions(-)
+>=20
+> --=20
+> 2.17.1
+>=20
