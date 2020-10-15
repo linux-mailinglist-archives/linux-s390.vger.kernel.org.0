@@ -2,97 +2,136 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9609628E59D
-	for <lists+linux-s390@lfdr.de>; Wed, 14 Oct 2020 19:43:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0434E28EA13
+	for <lists+linux-s390@lfdr.de>; Thu, 15 Oct 2020 03:30:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgJNRny (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 14 Oct 2020 13:43:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14000 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726903AbgJNRny (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 14 Oct 2020 13:43:54 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09EHacm9044171;
-        Wed, 14 Oct 2020 13:43:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=jjyulqcpxlMPbqXd6zWSDFg6RCOZJO1mm6tP1lvXPdE=;
- b=ftOheAfOptlfJlia3WKyfYB4hVdTNpKl47E9CTnuaG0m1h9l0mjuj5BdIlragqptCQ9k
- RBWoqJLV/LcrbpOLOknpbUELfTkUzNrRC8SUftfE27XXGVgwZwzpcF3P4f8Vb6x3yDoV
- lNyIICdhOIgtvlTGsPrr71goAMhCSyGlxczPaBFGIH1Wkb2WFWrPwDYhMt+U0GZ+0IU4
- DGs554JSBF4cqyvBO9S5NT3hJlJRBlt18DRqBEYlfOAMGVnaT67k7WdoZ+dOzdnnEdir
- iGsJTL3TcmX4LzfD19y6kQOrAspWhQ5GJYb9RsVhn69GyijzUH0aMS+IwoNXOUrj8EEf rg== 
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3465nq0n00-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 14 Oct 2020 13:43:52 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09EHg16G013475;
-        Wed, 14 Oct 2020 17:43:50 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma01fra.de.ibm.com with ESMTP id 344558sn4c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 14 Oct 2020 17:43:50 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09EHhll033423830
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 14 Oct 2020 17:43:47 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 81C0652050;
-        Wed, 14 Oct 2020 17:43:47 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 394525204F;
-        Wed, 14 Oct 2020 17:43:47 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: [PATCH net 3/3] net/smc: fix invalid return code in smcd_new_buf_create()
-Date:   Wed, 14 Oct 2020 19:43:29 +0200
-Message-Id: <20201014174329.35791-4-kgraul@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201014174329.35791-1-kgraul@linux.ibm.com>
-References: <20201014174329.35791-1-kgraul@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-10-14_09:2020-10-14,2020-10-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 impostorscore=0 malwarescore=0 mlxscore=0 spamscore=0
- adultscore=0 suspectscore=1 bulkscore=0 clxscore=1015 mlxlogscore=999
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010140122
+        id S2388793AbgJOBaO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 14 Oct 2020 21:30:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732272AbgJOB3j (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 14 Oct 2020 21:29:39 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 140BBC002157
+        for <linux-s390@vger.kernel.org>; Wed, 14 Oct 2020 17:09:42 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id z6so1028581qkz.4
+        for <linux-s390@vger.kernel.org>; Wed, 14 Oct 2020 17:09:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=D7q4upZx4LUmHy2sbcBxGXxr7CK8polpuI+TBJh2iFg=;
+        b=VY1qyIeCcrX28JfPsmo/gMmvUMC4KhNWUx2AWTC7SFuNhKKNC7E5pi4i351EUrbB2J
+         iQEeEBv2iqbPt4yG9cu9z6JKaTTcI0uH0ifbEwEuYd7uQ+JCfqlrCKPwMTRONzTIq1+2
+         r10P6EtGAwdMqLqGZOKON3zvZUuPyniSm0E4b9X4QVYcKPq5x9sxgp/64dd/q9ifg4bh
+         6h21xPcqmh90YO0WNB5wNN8lxy2kzpTs2joeQm0QgPxqx6k5VPT8scnHtsXoGOHGppiW
+         EBkQ8XI+pghayLloQzkOY+ZWhXI0lRPbg5OXZafpWC/LHi0yuGDtirCrwS4LepbltR1w
+         8p9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D7q4upZx4LUmHy2sbcBxGXxr7CK8polpuI+TBJh2iFg=;
+        b=FLGnaA1d2vFNkO/UCyWS3ucYRTvNsYFq7CETaAOozDNaNpuS0NYNJQmrNP9aLWFvcX
+         SkIxTLg37BVLtyYbVYJptj40eua+aP2DqHOmF1i2aVC2U9Dbxr7N61q5Ezy1beoIH5uW
+         x+aDKlhnRYvEIbC6XsxqOSFXP13Si+Df4PFXNX92P97K2usPkfq+yPq3vcFOV7fn3wOM
+         6IBnJ0QbyWu1wJ1XihqWBWI/E8WKf2uNc33rbAlRhdf1JZZKjn3I49o+i/yte5sAnFto
+         dIofVxCjXfpHNEkgKY45AnoZ2q+Q/R7Vq6+GLsrW6EciqOLFVooAmF2MUyL2VJzTKqza
+         AYyA==
+X-Gm-Message-State: AOAM530B5SYqVYWSHhq/v4l1rTaUS4GcESGGucA7YWp2b3O8OpH7A2zm
+        bxBHqF1kpSctuZnv9MG9vTqi6Q==
+X-Google-Smtp-Source: ABdhPJz1YpfemWgv6ITHdO1cDHAUR6b7J4qWqW/ErSGbJ1yD3QFJwI22cUMtAvpN9oIOH7a/n3cIYg==
+X-Received: by 2002:a05:620a:2e3:: with SMTP id a3mr1513988qko.117.1602720581354;
+        Wed, 14 Oct 2020 17:09:41 -0700 (PDT)
+Received: from ziepe.ca ([142.177.128.188])
+        by smtp.gmail.com with ESMTPSA id y44sm525252qtb.50.2020.10.14.17.09.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 14 Oct 2020 17:09:40 -0700 (PDT)
+Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kSqpv-0002GP-8c; Wed, 14 Oct 2020 21:09:39 -0300
+Date:   Wed, 14 Oct 2020 21:09:39 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v2 14/17] resource: Move devmem revoke code to resource
+ framework
+Message-ID: <20201015000939.GD6763@ziepe.ca>
+References: <20201009075934.3509076-1-daniel.vetter@ffwll.ch>
+ <20201009075934.3509076-15-daniel.vetter@ffwll.ch>
+ <20201009123109.GO5177@ziepe.ca>
+ <CAKMK7uFpPP-Q0jC0vM7vYPEcg0m4NzTw+Ld=swdTF3BgMX5Qug@mail.gmail.com>
+ <20201009143209.GS5177@ziepe.ca>
+ <CAPcyv4j54O8ac6WB3LEeNud2r11V26gA0PRKK9bhyEMF67AXtQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4j54O8ac6WB3LEeNud2r11V26gA0PRKK9bhyEMF67AXtQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-smc_ism_register_dmb() returns error codes set by the ISM driver which
-are not guaranteed to be negative or in the errno range. Such values
-would not be handled by ERR_PTR() and finally the return code will be
-used as a memory address.
-Fix that by using a valid negative errno value with ERR_PTR().
+On Fri, Oct 09, 2020 at 11:28:54AM -0700, Dan Williams wrote:
+> On Fri, Oct 9, 2020 at 7:32 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Fri, Oct 09, 2020 at 04:24:45PM +0200, Daniel Vetter wrote:
+> > > On Fri, Oct 9, 2020 at 2:31 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > >
+> > > > On Fri, Oct 09, 2020 at 09:59:31AM +0200, Daniel Vetter wrote:
+> > > >
+> > > > > +struct address_space *iomem_get_mapping(void)
+> > > > > +{
+> > > > > +     return iomem_inode->i_mapping;
+> > > >
+> > > > This should pair an acquire with the release below
+> > > >
+> > > > > +     /*
+> > > > > +      * Publish /dev/mem initialized.
+> > > > > +      * Pairs with smp_load_acquire() in revoke_iomem().
+> > > > > +      */
+> > > > > +     smp_store_release(&iomem_inode, inode);
+> > > >
+> > > > However, this seems abnormal, initcalls rarely do this kind of stuff
+> > > > with global data..
+> > > >
+> > > > The kernel crashes if this fs_initcall is raced with
+> > > > iomem_get_mapping() due to the unconditional dereference, so I think
+> > > > it can be safely switched to a simple assignment.
+> > >
+> > > Ah yes I checked this all, but forgot to correctly annotate the
+> > > iomem_get_mapping access. For reference, see b34e7e298d7a ("/dev/mem:
+> > > Add missing memory barriers for devmem_inode").
+> >
+> > Oh yikes, so revoke_iomem can run concurrently during early boot,
+> > tricky.
+> 
+> It runs early because request_mem_region() can run before fs_initcall.
+> Rather than add an unnecessary lock just arrange for the revoke to be
+> skipped before the inode is initialized. The expectation is that any
+> early resource reservations will block future userspace mapping
+> attempts.
 
-Fixes: 72b7f6c48708 ("net/smc: unique reason code for exceeded max dmb count")
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
----
- net/smc/smc_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Actually, on this point a simple WRITE_ONCE/READ_ONCE pairing is OK,
+Paul once explained that the pointer chase on the READ_ONCE side is
+required to be like an acquire - this is why rcu_dereference is just
+READ_ONCE
 
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index 5de637472a11..d790c43c473f 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -1615,7 +1615,8 @@ static struct smc_buf_desc *smcd_new_buf_create(struct smc_link_group *lgr,
- 		rc = smc_ism_register_dmb(lgr, bufsize, buf_desc);
- 		if (rc) {
- 			kfree(buf_desc);
--			return (rc == -ENOMEM) ? ERR_PTR(-EAGAIN) : ERR_PTR(rc);
-+			return (rc == -ENOMEM) ? ERR_PTR(-EAGAIN) :
-+						 ERR_PTR(-EIO);
- 		}
- 		buf_desc->pages = virt_to_page(buf_desc->cpu_addr);
- 		/* CDC header stored in buf. So, pretend it was smaller */
--- 
-2.17.1
-
+Jason
