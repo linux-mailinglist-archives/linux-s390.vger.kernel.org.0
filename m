@@ -2,254 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE6C6291DBD
-	for <lists+linux-s390@lfdr.de>; Sun, 18 Oct 2020 21:48:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFF47292051
+	for <lists+linux-s390@lfdr.de>; Sun, 18 Oct 2020 23:50:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbgJRTrv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 18 Oct 2020 15:47:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34874 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729752AbgJRTWO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 18 Oct 2020 15:22:14 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DF52222EC;
-        Sun, 18 Oct 2020 19:22:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603048933;
-        bh=uo+kpWGKCOfRIN0ZGL+7FlKkg2byGTi4mnFsOVAr3MM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s2N00pVU34hxJJFY3E3DxAm1Ed89IxZxWMCk7pwCmycN2+kxCdC2a0iHmMt0tFU0g
-         O2ih/JXrpQCp4LzJCoWMdTKQbCKEGuwTdztL9mjCF4hgpeyEud+Ks/vvuCu6G4Ly15
-         UyyYviWynxqteVmY+L403mvT2XuMlBYaahpIQdD8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 088/101] s390/qeth: strictly order bridge address events
-Date:   Sun, 18 Oct 2020 15:20:13 -0400
-Message-Id: <20201018192026.4053674-88-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201018192026.4053674-1-sashal@kernel.org>
-References: <20201018192026.4053674-1-sashal@kernel.org>
+        id S1728620AbgJRVuP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 18 Oct 2020 17:50:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbgJRVuO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 18 Oct 2020 17:50:14 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 797D3C061755;
+        Sun, 18 Oct 2020 14:50:14 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id m65so4983425qte.11;
+        Sun, 18 Oct 2020 14:50:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LW7NtPMGJ2R8VOhKgzw6sjc10vh2YbY8kQEEkfju8fA=;
+        b=BT6sX70H+s8KhgIkqlKxOTyt7nLW9Zkkp/pWMqwoIwpRPwASphI99ISJJY/DrRq4YB
+         tuxxuQta89p2LltScao7kwUamcV10d6qq0/0GsMri9Y5uCbzF0DQIPVBZym6oh2w8IRp
+         jGv4FzahYM8UB3UvXODpIfq1ilK2uqq9Xd/9k1Vp0D25EYeZvsrsLMiSOVKbh0jHo8ly
+         ZwpyiDfjYzQI7omWM6lYTXWC4WxC4zXCwovEKbG2sVh0lXA3kgHlfvQ9kncK/jS7lzXB
+         WtZ4PQbPMGBo2Fvzsm14b4aTThFD0/Vsyl0CynTIq6qQwMl+W5yJA342KaaYBMt5xICG
+         NkkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LW7NtPMGJ2R8VOhKgzw6sjc10vh2YbY8kQEEkfju8fA=;
+        b=A54fIiuMEzcWU81kWizVMjWexILYSifLNSzkHPsvY2YrLg8OawjexicsjeQJnFnBDX
+         lFgMcBFXA82PdWXGIIPhsA9feRYqx1SsNLbcJ/ziaN4LYnD1cKUMCksOLHy3lFXz5KLL
+         mu9EmHYogFvkDCXUl8CHzXsYLO+k6XJR5vHxIizc57xHGVrJllBoAsjDznA1f3vEv4gq
+         7r/cDjJ56/USRGuhaG/HGaCbsUTFN5E6xSa5feLVxVzOgJvtHqkKZCTYXCcsqR5D9EDP
+         B2OZD0jdfFS8VVd8PckfIcCDEueSt7zf1C/eHHzfQ2kzEXzjmS452U49hb5WZ726v4sf
+         2NGA==
+X-Gm-Message-State: AOAM533U1Tx5J8OhD7nMqzqK4J++qB+CTP2+s6UHp1PSbvAYT+XXA4Gn
+        4VQzZkhSxbqT6YowujhmHWmAgdDYog4L64/VD5A=
+X-Google-Smtp-Source: ABdhPJw59Z9ZSI7YkUnrDX/NzYUwLZIQMERPV41io/elXdvNyA/Ph+eIMdFGNAEYy/TP8jUOuq9oIUb3paHWMlURueE=
+X-Received: by 2002:aed:2983:: with SMTP id o3mr12423656qtd.285.1603057812125;
+ Sun, 18 Oct 2020 14:50:12 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200817091617.28119-1-allen.cryptic@gmail.com>
+In-Reply-To: <20200817091617.28119-1-allen.cryptic@gmail.com>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Sun, 18 Oct 2020 23:50:00 +0200
+Message-ID: <CAFLxGvxsHD6zvTJSHeo2gaoRQfjUPZ6M=5BirOObHFjGqnzfew@mail.gmail.com>
+Subject: Re: [PATCH] arch: um: convert tasklets to use new tasklet_setup() API
+To:     Allen Pais <allen.cryptic@gmail.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        3chas3@gmail.com, Jens Axboe <axboe@kernel.dk>,
+        stefanr@s5r6.in-berlin.de, Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sebastian Reichel <sre@kernel.org>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Helge Deller <deller@gmx.de>, dmitry.torokhov@gmail.com,
+        jassisinghbrar@gmail.com, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        mporter@kernel.crashing.org, alex.bou9@gmail.com,
+        Mark Brown <broonie@kernel.org>, martyn@welchs.me.uk,
+        manohar.vanga@gmail.com, mitch@sfgoth.com,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux1394-devel@lists.sourceforge.net,
+        intel-gfx@lists.freedesktop.org,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
+        devel@driverdev.osuosl.org, Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+On Mon, Aug 17, 2020 at 11:17 AM Allen Pais <allen.cryptic@gmail.com> wrote:
+>
+> From: Allen Pais <allen.lkml@gmail.com>
+>
+> In preparation for unconditionally passing the
+> struct tasklet_struct pointer to all tasklet
+> callbacks, switch to using the new tasklet_setup()
+> and from_tasklet() to pass the tasklet pointer explicitly.
+>
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+> ---
+>  arch/um/drivers/vector_kern.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-[ Upstream commit 9d6a569a4cbab5a8b4c959d4e312daeecb7c9f09 ]
+Anton, can you please review this patch?
 
-The current code for bridge address events has two shortcomings in its
-control sequence:
-
-1. after disabling address events via PNSO, we don't flush the remaining
-   events from the event_wq. So if the feature is re-enabled fast
-   enough, stale events could leak over.
-2. PNSO and the events' arrival via the READ ccw device are unordered.
-   So even if we flushed the workqueue, it's difficult to say whether
-   the READ device might produce more events onto the workqueue
-   afterwards.
-
-Fix this by
-1. explicitly fencing off the events when we no longer care, in the
-   READ device's event handler. This ensures that once we flush the
-   workqueue, it doesn't get additional address events.
-2. Flush the workqueue after disabling the events & fencing them off.
-   As the code that triggers the flush will typically hold the sbp_lock,
-   we need to rework the worker code to avoid a deadlock here in case
-   of a 'notifications-stopped' event. In case of lock contention,
-   requeue such an event with a delay. We'll eventually aquire the lock,
-   or spot that the feature has been disabled and the event can thus be
-   discarded.
-
-This leaves the theoretical race that a stale event could arrive
-_after_ we re-enabled ourselves to receive events again. Such an event
-would be impossible to distinguish from a 'good' event, nothing we can
-do about it.
-
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/net/qeth_core.h    |  6 ++++
- drivers/s390/net/qeth_l2_main.c | 53 ++++++++++++++++++++++++++++-----
- drivers/s390/net/qeth_l2_sys.c  |  1 +
- 3 files changed, 52 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index 51ea56b73a97d..4e30047d76c46 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -680,6 +680,11 @@ struct qeth_card_blkt {
- 	int inter_packet_jumbo;
- };
- 
-+enum qeth_pnso_mode {
-+	QETH_PNSO_NONE,
-+	QETH_PNSO_BRIDGEPORT,
-+};
-+
- #define QETH_BROADCAST_WITH_ECHO    0x01
- #define QETH_BROADCAST_WITHOUT_ECHO 0x02
- struct qeth_card_info {
-@@ -696,6 +701,7 @@ struct qeth_card_info {
- 	/* no bitfield, we take a pointer on these two: */
- 	u8 has_lp2lp_cso_v6;
- 	u8 has_lp2lp_cso_v4;
-+	enum qeth_pnso_mode pnso_mode;
- 	enum qeth_card_types type;
- 	enum qeth_link_types link_type;
- 	int broadcast_capable;
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index b4e06aeb6dc1c..0384b45a72658 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -273,6 +273,17 @@ static int qeth_l2_vlan_rx_kill_vid(struct net_device *dev,
- 	return qeth_l2_send_setdelvlan(card, vid, IPA_CMD_DELVLAN);
- }
- 
-+static void qeth_l2_set_pnso_mode(struct qeth_card *card,
-+				  enum qeth_pnso_mode mode)
-+{
-+	spin_lock_irq(get_ccwdev_lock(CARD_RDEV(card)));
-+	WRITE_ONCE(card->info.pnso_mode, mode);
-+	spin_unlock_irq(get_ccwdev_lock(CARD_RDEV(card)));
-+
-+	if (mode == QETH_PNSO_NONE)
-+		drain_workqueue(card->event_wq);
-+}
-+
- static void qeth_l2_stop_card(struct qeth_card *card)
- {
- 	QETH_CARD_TEXT(card, 2, "stopcard");
-@@ -291,7 +302,7 @@ static void qeth_l2_stop_card(struct qeth_card *card)
- 
- 	qeth_qdio_clear_card(card, 0);
- 	qeth_clear_working_pool_list(card);
--	flush_workqueue(card->event_wq);
-+	qeth_l2_set_pnso_mode(card, QETH_PNSO_NONE);
- 	qeth_flush_local_addrs(card);
- 	card->info.promisc_mode = 0;
- }
-@@ -1165,19 +1176,34 @@ static void qeth_bridge_state_change(struct qeth_card *card,
- }
- 
- struct qeth_addr_change_data {
--	struct work_struct worker;
-+	struct delayed_work dwork;
- 	struct qeth_card *card;
- 	struct qeth_ipacmd_addr_change ac_event;
- };
- 
- static void qeth_addr_change_event_worker(struct work_struct *work)
- {
--	struct qeth_addr_change_data *data =
--		container_of(work, struct qeth_addr_change_data, worker);
-+	struct delayed_work *dwork = to_delayed_work(work);
-+	struct qeth_addr_change_data *data;
-+	struct qeth_card *card;
- 	int i;
- 
-+	data = container_of(dwork, struct qeth_addr_change_data, dwork);
-+	card = data->card;
-+
- 	QETH_CARD_TEXT(data->card, 4, "adrchgew");
-+
-+	if (READ_ONCE(card->info.pnso_mode) == QETH_PNSO_NONE)
-+		goto free;
-+
- 	if (data->ac_event.lost_event_mask) {
-+		/* Potential re-config in progress, try again later: */
-+		if (!mutex_trylock(&card->sbp_lock)) {
-+			queue_delayed_work(card->event_wq, dwork,
-+					   msecs_to_jiffies(100));
-+			return;
-+		}
-+
- 		dev_info(&data->card->gdev->dev,
- 			 "Address change notification stopped on %s (%s)\n",
- 			 data->card->dev->name,
-@@ -1186,8 +1212,9 @@ static void qeth_addr_change_event_worker(struct work_struct *work)
- 			: (data->ac_event.lost_event_mask == 0x02)
- 			? "Bridge port state change"
- 			: "Unknown reason");
--		mutex_lock(&data->card->sbp_lock);
-+
- 		data->card->options.sbp.hostnotification = 0;
-+		card->info.pnso_mode = QETH_PNSO_NONE;
- 		mutex_unlock(&data->card->sbp_lock);
- 		qeth_bridge_emit_host_event(data->card, anev_abort,
- 					    0, NULL, NULL);
-@@ -1201,6 +1228,8 @@ static void qeth_addr_change_event_worker(struct work_struct *work)
- 						    &entry->token,
- 						    &entry->addr_lnid);
- 		}
-+
-+free:
- 	kfree(data);
- }
- 
-@@ -1212,6 +1241,9 @@ static void qeth_addr_change_event(struct qeth_card *card,
- 	struct qeth_addr_change_data *data;
- 	int extrasize;
- 
-+	if (card->info.pnso_mode == QETH_PNSO_NONE)
-+		return;
-+
- 	QETH_CARD_TEXT(card, 4, "adrchgev");
- 	if (cmd->hdr.return_code != 0x0000) {
- 		if (cmd->hdr.return_code == 0x0010) {
-@@ -1231,11 +1263,11 @@ static void qeth_addr_change_event(struct qeth_card *card,
- 		QETH_CARD_TEXT(card, 2, "ACNalloc");
- 		return;
- 	}
--	INIT_WORK(&data->worker, qeth_addr_change_event_worker);
-+	INIT_DELAYED_WORK(&data->dwork, qeth_addr_change_event_worker);
- 	data->card = card;
- 	memcpy(&data->ac_event, hostevs,
- 			sizeof(struct qeth_ipacmd_addr_change) + extrasize);
--	queue_work(card->event_wq, &data->worker);
-+	queue_delayed_work(card->event_wq, &data->dwork, 0);
- }
- 
- /* SETBRIDGEPORT support; sending commands */
-@@ -1556,9 +1588,14 @@ int qeth_bridgeport_an_set(struct qeth_card *card, int enable)
- 
- 	if (enable) {
- 		qeth_bridge_emit_host_event(card, anev_reset, 0, NULL, NULL);
-+		qeth_l2_set_pnso_mode(card, QETH_PNSO_BRIDGEPORT);
- 		rc = qeth_l2_pnso(card, 1, qeth_bridgeport_an_set_cb, card);
--	} else
-+		if (rc)
-+			qeth_l2_set_pnso_mode(card, QETH_PNSO_NONE);
-+	} else {
- 		rc = qeth_l2_pnso(card, 0, NULL, NULL);
-+		qeth_l2_set_pnso_mode(card, QETH_PNSO_NONE);
-+	}
- 	return rc;
- }
- 
-diff --git a/drivers/s390/net/qeth_l2_sys.c b/drivers/s390/net/qeth_l2_sys.c
-index 86bcae992f725..4695d25e54f24 100644
---- a/drivers/s390/net/qeth_l2_sys.c
-+++ b/drivers/s390/net/qeth_l2_sys.c
-@@ -157,6 +157,7 @@ static ssize_t qeth_bridgeport_hostnotification_store(struct device *dev,
- 		rc = -EBUSY;
- 	else if (qeth_card_hw_is_reachable(card)) {
- 		rc = qeth_bridgeport_an_set(card, enable);
-+		/* sbp_lock ensures ordering vs notifications-stopped events */
- 		if (!rc)
- 			card->options.sbp.hostnotification = enable;
- 	} else
 -- 
-2.25.1
-
+Thanks,
+//richard
