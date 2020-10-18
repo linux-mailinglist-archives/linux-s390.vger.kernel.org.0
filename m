@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E8A2291EC0
-	for <lists+linux-s390@lfdr.de>; Sun, 18 Oct 2020 21:55:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE6C6291DBD
+	for <lists+linux-s390@lfdr.de>; Sun, 18 Oct 2020 21:48:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbgJRTUD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 18 Oct 2020 15:20:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59234 "EHLO mail.kernel.org"
+        id S1729784AbgJRTrv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 18 Oct 2020 15:47:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728618AbgJRTUC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 18 Oct 2020 15:20:02 -0400
+        id S1729752AbgJRTWO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 18 Oct 2020 15:22:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99444222E7;
-        Sun, 18 Oct 2020 19:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DF52222EC;
+        Sun, 18 Oct 2020 19:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603048801;
-        bh=i65f6KhJa6DIrbA9TgWtsr7ZoI6Nwy84jjKs4ka1+Sw=;
+        s=default; t=1603048933;
+        bh=uo+kpWGKCOfRIN0ZGL+7FlKkg2byGTi4mnFsOVAr3MM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K85dAvlRsUeBwYxh3ac8HmNflnGAIbvMGhvzlWQdaf6fiDq9fXqmsdv5SvRCPF6ZA
-         XbXENyFrYSTJ1fCUZEfpl1NmfNLUjVx+ZvQFeIQYPKBzuJintACLA46IZHlB1HSEyA
-         RE23Hir3/4UHnYXmH3nhSjODfrh8h8GajsZYkSEM=
+        b=s2N00pVU34hxJJFY3E3DxAm1Ed89IxZxWMCk7pwCmycN2+kxCdC2a0iHmMt0tFU0g
+         O2ih/JXrpQCp4LzJCoWMdTKQbCKEGuwTdztL9mjCF4hgpeyEud+Ks/vvuCu6G4Ly15
+         UyyYviWynxqteVmY+L403mvT2XuMlBYaahpIQdD8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         Alexandra Winter <wintera@linux.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 094/111] s390/qeth: strictly order bridge address events
-Date:   Sun, 18 Oct 2020 15:17:50 -0400
-Message-Id: <20201018191807.4052726-94-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 088/101] s390/qeth: strictly order bridge address events
+Date:   Sun, 18 Oct 2020 15:20:13 -0400
+Message-Id: <20201018192026.4053674-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201018191807.4052726-1-sashal@kernel.org>
-References: <20201018191807.4052726-1-sashal@kernel.org>
+In-Reply-To: <20201018192026.4053674-1-sashal@kernel.org>
+References: <20201018192026.4053674-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -86,7 +86,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  3 files changed, 52 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index ecfd6d152e862..6b5cf9ba03e5b 100644
+index 51ea56b73a97d..4e30047d76c46 100644
 --- a/drivers/s390/net/qeth_core.h
 +++ b/drivers/s390/net/qeth_core.h
 @@ -680,6 +680,11 @@ struct qeth_card_blkt {
@@ -110,7 +110,7 @@ index ecfd6d152e862..6b5cf9ba03e5b 100644
  	enum qeth_link_types link_type;
  	int broadcast_capable;
 diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 6384f7adba660..9866d01b40fe7 100644
+index b4e06aeb6dc1c..0384b45a72658 100644
 --- a/drivers/s390/net/qeth_l2_main.c
 +++ b/drivers/s390/net/qeth_l2_main.c
 @@ -273,6 +273,17 @@ static int qeth_l2_vlan_rx_kill_vid(struct net_device *dev,
@@ -131,16 +131,16 @@ index 6384f7adba660..9866d01b40fe7 100644
  static void qeth_l2_stop_card(struct qeth_card *card)
  {
  	QETH_CARD_TEXT(card, 2, "stopcard");
-@@ -290,7 +301,7 @@ static void qeth_l2_stop_card(struct qeth_card *card)
+@@ -291,7 +302,7 @@ static void qeth_l2_stop_card(struct qeth_card *card)
+ 
  	qeth_qdio_clear_card(card, 0);
- 	qeth_drain_output_queues(card);
  	qeth_clear_working_pool_list(card);
 -	flush_workqueue(card->event_wq);
 +	qeth_l2_set_pnso_mode(card, QETH_PNSO_NONE);
  	qeth_flush_local_addrs(card);
  	card->info.promisc_mode = 0;
  }
-@@ -1163,19 +1174,34 @@ static void qeth_bridge_state_change(struct qeth_card *card,
+@@ -1165,19 +1176,34 @@ static void qeth_bridge_state_change(struct qeth_card *card,
  }
  
  struct qeth_addr_change_data {
@@ -178,7 +178,7 @@ index 6384f7adba660..9866d01b40fe7 100644
  		dev_info(&data->card->gdev->dev,
  			 "Address change notification stopped on %s (%s)\n",
  			 data->card->dev->name,
-@@ -1184,8 +1210,9 @@ static void qeth_addr_change_event_worker(struct work_struct *work)
+@@ -1186,8 +1212,9 @@ static void qeth_addr_change_event_worker(struct work_struct *work)
  			: (data->ac_event.lost_event_mask == 0x02)
  			? "Bridge port state change"
  			: "Unknown reason");
@@ -189,7 +189,7 @@ index 6384f7adba660..9866d01b40fe7 100644
  		mutex_unlock(&data->card->sbp_lock);
  		qeth_bridge_emit_host_event(data->card, anev_abort,
  					    0, NULL, NULL);
-@@ -1199,6 +1226,8 @@ static void qeth_addr_change_event_worker(struct work_struct *work)
+@@ -1201,6 +1228,8 @@ static void qeth_addr_change_event_worker(struct work_struct *work)
  						    &entry->token,
  						    &entry->addr_lnid);
  		}
@@ -198,7 +198,7 @@ index 6384f7adba660..9866d01b40fe7 100644
  	kfree(data);
  }
  
-@@ -1210,6 +1239,9 @@ static void qeth_addr_change_event(struct qeth_card *card,
+@@ -1212,6 +1241,9 @@ static void qeth_addr_change_event(struct qeth_card *card,
  	struct qeth_addr_change_data *data;
  	int extrasize;
  
@@ -208,7 +208,7 @@ index 6384f7adba660..9866d01b40fe7 100644
  	QETH_CARD_TEXT(card, 4, "adrchgev");
  	if (cmd->hdr.return_code != 0x0000) {
  		if (cmd->hdr.return_code == 0x0010) {
-@@ -1229,11 +1261,11 @@ static void qeth_addr_change_event(struct qeth_card *card,
+@@ -1231,11 +1263,11 @@ static void qeth_addr_change_event(struct qeth_card *card,
  		QETH_CARD_TEXT(card, 2, "ACNalloc");
  		return;
  	}
@@ -222,7 +222,7 @@ index 6384f7adba660..9866d01b40fe7 100644
  }
  
  /* SETBRIDGEPORT support; sending commands */
-@@ -1554,9 +1586,14 @@ int qeth_bridgeport_an_set(struct qeth_card *card, int enable)
+@@ -1556,9 +1588,14 @@ int qeth_bridgeport_an_set(struct qeth_card *card, int enable)
  
  	if (enable) {
  		qeth_bridge_emit_host_event(card, anev_reset, 0, NULL, NULL);
