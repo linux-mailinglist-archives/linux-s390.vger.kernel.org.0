@@ -2,169 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D737429261B
-	for <lists+linux-s390@lfdr.de>; Mon, 19 Oct 2020 12:55:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9975C2926A3
+	for <lists+linux-s390@lfdr.de>; Mon, 19 Oct 2020 13:45:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbgJSKzS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 19 Oct 2020 06:55:18 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15992 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725776AbgJSKzS (ORCPT
+        id S1726350AbgJSLpJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 19 Oct 2020 07:45:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42235 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726216AbgJSLpJ (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 19 Oct 2020 06:55:18 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09JAWns3166586;
-        Mon, 19 Oct 2020 06:55:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=lKifGUETJ0VWGsDAxE4A9KEXvF0LXF59Ddf6lIFZTj8=;
- b=OOOK2VSGqKM7qx6G7OsQ+N9uCqsiiJkoafi2/YOrllpd2/XxGXW+I15YmJ5gGPP1UH3d
- VIABUtTPXbVM9WG1Ec4TCmrMozGM2s/eJJ8g8YTrAYFo1Ih5gbxyc4kgzeWP99rDGfzx
- vBigaIDBzxQ6ilKuqZhdMQnc4SQ5j2lKPUNDKnbbPrJx8cEFp1dNbEfxwluE66dDpM0d
- hbbHNt49S8upKQQQKQbo8JfL1b1VLzLw2oCySieILYR4dUdpsh65gP1kEDlv2QwWiB+Q
- juMf8Huf7SfkBio8ycURxuz86YMbY7Vsh8ktyrE9XGdA/bdK7/763d/K9u7himr//2f9 Qg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 349947rkw5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Oct 2020 06:55:03 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09JAZWHB182496;
-        Mon, 19 Oct 2020 06:55:02 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 349947rkug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Oct 2020 06:55:02 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09JAlk9n019660;
-        Mon, 19 Oct 2020 10:55:00 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 347qvha0n2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Oct 2020 10:55:00 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09JAsvvF19005902
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 19 Oct 2020 10:54:57 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A159A4060;
-        Mon, 19 Oct 2020 10:54:57 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA3C3A405F;
-        Mon, 19 Oct 2020 10:54:56 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.17.191])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 19 Oct 2020 10:54:56 +0000 (GMT)
-Subject: Re: s390 - buildroot + qemu
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     egorenar@linux.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
+        Mon, 19 Oct 2020 07:45:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603107908;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9MhPh8Vfa3e/5KEXVGAJdVdkMkQHofFaBZvRbNELhvM=;
+        b=PEuOGKUzCLBgyU6tJTQKGrJf3V/zQOJPkRMYTB1R9wwxKKxaOCGBiccF6tJ5dR9E1OqBxo
+        jNjxa+75D3K8B0M4+XsnxUyWs09gKLvTLVqetvRNGiW7ReOBPNKAazS3NgSMrY8Tm87A2F
+        Hd+6YcaYWfToLMHLX8/TaQI8t8rqOyI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-359-55wiP8rZPaai-BJMuRA9bw-1; Mon, 19 Oct 2020 07:45:03 -0400
+X-MC-Unique: 55wiP8rZPaai-BJMuRA9bw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 655EA1074646;
+        Mon, 19 Oct 2020 11:45:01 +0000 (UTC)
+Received: from gondolin (ovpn-115-105.ams2.redhat.com [10.36.115.105])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3B1F81002382;
+        Mon, 19 Oct 2020 11:44:59 +0000 (UTC)
+Date:   Mon, 19 Oct 2020 13:44:56 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>, egorenar@linux.ibm.com,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Joel Stanley <joel@jms.id.au>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
         clang-built-linux <clang-built-linux@googlegroups.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         linux-s390 <linux-s390@vger.kernel.org>
-References: <CAKwvOd=0nOhK4KoLb1_Jni5u3ENDx10QeAxfYcSbtFQs77FxAw@mail.gmail.com>
- <30b7bea6-1135-609b-f1e5-a4f243e1dcc1@roeck-us.net>
- <CAKwvOdmnr0qqJTg+cU5KJ2-nJQgTY-8AraZQHXZUw0KNZKE4fg@mail.gmail.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Message-ID: <c461496a-1ea4-4d44-4913-950cabcd3e31@de.ibm.com>
-Date:   Mon, 19 Oct 2020 12:54:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+Subject: Re: s390 - buildroot + qemu
+Message-ID: <20201019134456.21a7bda9.cohuck@redhat.com>
 In-Reply-To: <CAKwvOdmnr0qqJTg+cU5KJ2-nJQgTY-8AraZQHXZUw0KNZKE4fg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+References: <CAKwvOd=0nOhK4KoLb1_Jni5u3ENDx10QeAxfYcSbtFQs77FxAw@mail.gmail.com>
+        <30b7bea6-1135-609b-f1e5-a4f243e1dcc1@roeck-us.net>
+        <CAKwvOdmnr0qqJTg+cU5KJ2-nJQgTY-8AraZQHXZUw0KNZKE4fg@mail.gmail.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-10-19_02:2020-10-16,2020-10-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 mlxlogscore=924 clxscore=1011
- suspectscore=0 adultscore=0 bulkscore=0 impostorscore=0 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010190074
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Fri, 16 Oct 2020 16:40:43 -0700
+Nick Desaulniers <ndesaulniers@google.com> wrote:
 
-
-On 17.10.20 01:40, Nick Desaulniers wrote:
 > On Fri, Oct 16, 2020 at 4:18 PM Guenter Roeck <linux@roeck-us.net> wrote:
->>
->> On 10/16/20 4:11 PM, Nick Desaulniers wrote:
->>> Hello all,
->>> I'm working on integrating the latest release of buildroot (2020.08.1)
->>> into our CI for ClangBuiltLinux.
->>>
->>> https://github.com/ClangBuiltLinux/boot-utils/pull/25
->>> https://github.com/ClangBuiltLinux/boot-utils/pull/26
->>> https://github.com/ClangBuiltLinux/continuous-integration/pull/327
->>>
->>> I'm seeing the following error from QEMU:
->>> KASLR disabled: CPU has no PRNG
->>> Linux version 5.9.0-00732-g04ed4527465f (ndesaulniers@<myhost>) #30
->>> SMP Fri Oct 16 15:49:05 PDT 2020Kernel fault: interruption code 0005
->>> ilc:2
->>> PSW : 0000200180000000 000000000001779e
->>>       R:0 T:0 IO:0 EX:0 Key:0 M:0 W:0 P:0 AS:0 CC:2 PM:0 RI:0 EA:3
->>> GPRS: 0000000000000001 0000000c00000000 00000003fffffff4 00000000fffffff0
->>>       0000000000000000 00000000fffffff4 000000000000000c 00000000fffffff0
->>>       00000000fffffffc 0000000000000000 00000000fffffff8 00000000008a75a8
->>>       0000000000000009 0000000000000002 0000000000000008 000000000000bce0
 
-Do you have more information? If not, any chance to run objdump on the kernel
-and check what instructions do you have aroung address 0x1779e
-[...]
+> > Maybe that helps ? From my builders:
+> >
+> >     # qemu only supports MARCH_Z900. Older kernels select it as default,
+> >     # but newer kernels may select MARCH_Z196.
+> >     sed -i -e '/CONFIG_MARCH_Z/d' ${defconfig}
+> >     sed -i -e '/HAVE_MARCH_Z/d' ${defconfig}
+> >     echo "CONFIG_MARCH_Z900=y" >> ${defconfig}
+> >     echo "CONFIG_PCI=y" >> ${defconfig}  
+> 
+> $ clang -march=z900 --target=s390x-linux-gnu -c -x c /dev/null -o -
+> error: unknown target CPU 'z900'
+> note: valid target CPU values are: arch8, z10, arch9, z196, arch10,
+> zEC12, arch11, z13, arch12, z14, arch13, z15
+> 
+> Hopefully qemu supports something newer than Z900? 
 
-> Hopefully qemu supports something newer than Z900?  Or can we change
+Current QEMU/TCG with the 'qemu' cpu model with give you a
+stripped-down z13 that should run fine if you compile to z13. (There's
+work ongoing to bump this even to a stripped-down z14, but that needs
+some more time.) Anything prior to z13 should be fine as well.
+
+> Or can we change
 > arch/s390/Kconfig:255 to use a different arch? Is arch9 == z900???:
 
-Newer QEMUs do support up to z13, so I think this is not an issue as long
-as you have an uptodate qemu.
+My understanding is arch8 == z10 and so on.
+
+> 
+> 252 config MARCH_Z900
+> 253   bool "IBM zSeries model z800 and z900"
+> 254   select HAVE_MARCH_Z900_FEATURES
+> 255   depends on $(cc-option,-march=z900)
+> 256   help
+> 257     Select this to enable optimizations for model z800/z900 (2064
+> and
+> 258     2066 series). This will enable some optimizations that are not
+> 259     available on older ESA/390 (31 Bit) only CPUs.
+
