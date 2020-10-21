@@ -2,109 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2A27294FA8
-	for <lists+linux-s390@lfdr.de>; Wed, 21 Oct 2020 17:14:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E22FF295022
+	for <lists+linux-s390@lfdr.de>; Wed, 21 Oct 2020 17:46:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2444118AbgJUPN4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 21 Oct 2020 11:13:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2444115AbgJUPNz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 21 Oct 2020 11:13:55 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 575F7C0613D2
-        for <linux-s390@vger.kernel.org>; Wed, 21 Oct 2020 08:13:55 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id r8so2315895qtp.13
-        for <linux-s390@vger.kernel.org>; Wed, 21 Oct 2020 08:13:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9cFTuFdatbaYuigk9l9CABG/jzUgOpY0t/i9Osy6B3k=;
-        b=Dq8HyCXnjlFLiivieMejfqNvFko0IRtuvvtRMPLqBJU503Zw8AdmXj9PAYUvq+vrGw
-         tLWr/P2KX0xliFL4v7zLPYR93TGo1limVOCOZFomvItA47uQ8nJhdHWU27ngiu6ooAYG
-         WjN4a1HHzcaoYLAcnuo5e5/2eLC1r22+kDR6gTWfx0ZcGZTpX8rwEwqmUSs71ZqiLJX+
-         OUQrP6EnxmCsgNh+3+fwOT/kOJSDKYJueSTL+OCpFozN4nNmHro2xix1p70w/08ytcHi
-         qOQrid57zrk+FvzkIWYUgPoh4k6ET94WA33BXpQ3Dtpr1Jlt52u7OEBqAEPaddsrqv0i
-         gSbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9cFTuFdatbaYuigk9l9CABG/jzUgOpY0t/i9Osy6B3k=;
-        b=VSzVTlARgbW2/E56Z4aRpAYaXpyIbTCA7sOPaMTTI+nvtPUXP1qsu2ENRbYyc05ZVV
-         gQfsieEn4tSxtriaDcOAZjfGZpI0Pz1vp+5+KXpRW4u7ciEMnIJExCOAp5CzL079Sf0X
-         iMMfFYv2ADZBI6vzr3PT4odVafMCAyI8nBy8vBTKpgmANSqSTa4OEO0mcLrGg874rMeS
-         70rCdQle2CjJKcx/9T35f24TuQjrRy41zvv5NMlnXdle+H5gT82R9fJufvbbm6wdvgTW
-         xO8nRsJ2+/v6o5X81SgL1kbq58X7FEhVZADYL7WnhP5PVFKF/AmELwqytRY4g8DwimlE
-         qN7Q==
-X-Gm-Message-State: AOAM531xc9+ICzShBwPA5PzOrr8bhTG6FASHrn6Fi5UWFJOIRZLSk2l5
-        AahXb4Lsndo8WaAE0foyG++l1A==
-X-Google-Smtp-Source: ABdhPJxKUYsuh5jtMPkvFgL62ClnoaVVE83XzZ8FQCHOArCd8sBp94Ul/GCOzlaoYcDR7rbZz0mkwQ==
-X-Received: by 2002:ac8:8c7:: with SMTP id y7mr3515722qth.278.1603293234456;
-        Wed, 21 Oct 2020 08:13:54 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id b14sm1405612qkn.123.2020.10.21.08.13.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Oct 2020 08:13:53 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kVFoG-003XHy-SZ; Wed, 21 Oct 2020 12:13:52 -0300
-Date:   Wed, 21 Oct 2020 12:13:52 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.com>
-Subject: Re: [PATCH v3 12/16] PCI: Obey iomem restrictions for procfs mmap
-Message-ID: <20201021151352.GL36674@ziepe.ca>
-References: <20201021085655.1192025-1-daniel.vetter@ffwll.ch>
- <20201021085655.1192025-13-daniel.vetter@ffwll.ch>
- <20201021125030.GK36674@ziepe.ca>
- <CAKMK7uEWe8CaT7zjcZ6dJAKHxtxtqzjVB35fCFviwhcnqksDfw@mail.gmail.com>
+        id S2408628AbgJUPq6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 21 Oct 2020 11:46:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56706 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731418AbgJUPq5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 21 Oct 2020 11:46:57 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09LFZYYf156719;
+        Wed, 21 Oct 2020 11:46:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=eSg8TA/oMOmSlb52iatw5KngnYQc5Vgzaw+Vw2aADeI=;
+ b=CUZzVTFoft7gpvSW9lNDiZR09SgQf0JXwpEWb5K9MpfWKLY7M2Md/BtB8dzc79ABqftr
+ 2q3gFmriJcSQrhGU1Xdf+6sFfwaBuKGQuxOQXxikWVPbyIrwwQbLui5togRtCYCAZpDK
+ 9VsYGGaTTkgyqvyL78VbyojX3jlyjKjqKvS8L2c5dKUjJe+kWsavlHN9s6EEvyztLkTi
+ ukPKkZUfqcfell1HGPwg7f1EuVw77XUC8RmuSmlHj1mnSFOGR2VzVHscnilJAHIhk5d9
+ US0x8RPTgobEuPjKlxKwu8AHgzJWRWIdxM2JXFhdznOFyQkC+GVunLzhPFUlUrBUOKJv xQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34aqft8tsu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Oct 2020 11:46:52 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09LFahPu161103;
+        Wed, 21 Oct 2020 11:46:52 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34aqft8tsg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Oct 2020 11:46:52 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09LFW7VT030031;
+        Wed, 21 Oct 2020 15:46:51 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 347r89hc99-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Oct 2020 15:46:51 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09LFko9B49086876
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Oct 2020 15:46:50 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ADACF124058;
+        Wed, 21 Oct 2020 15:46:50 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2DFD6124053;
+        Wed, 21 Oct 2020 15:46:50 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.170.177])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 21 Oct 2020 15:46:50 +0000 (GMT)
+Subject: Re: [PATCH] s390/vfio-ap: fix unregister GISC when KVM is already
+ gone results in OOPS
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, cohuck@redhat.com,
+        kwankhede@nvidia.com, borntraeger@de.ibm.com
+References: <20200918170234.5807-1-akrowiak@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <f3d21bbf-4d25-eac8-cc88-c654b8406316@linux.ibm.com>
+Date:   Wed, 21 Oct 2020 11:46:49 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uEWe8CaT7zjcZ6dJAKHxtxtqzjVB35fCFviwhcnqksDfw@mail.gmail.com>
+In-Reply-To: <20200918170234.5807-1-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.737
+ definitions=2020-10-21_06:2020-10-20,2020-10-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 clxscore=1015
+ adultscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010210113
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Oct 21, 2020 at 04:42:11PM +0200, Daniel Vetter wrote:
+In trying to recreate this problem in order to get a stack trace, I 
+discovered that
+it only occurs within a local repository that has several new patches 
+applied,
+so the problem is not part of the base code and will be fixed via this 
+new set
+of patches forthcoming.
 
-> Uh yes. In drivers/gpu this isn't a problem because we only install
-> ptes from the vm_ops->fault handler. So no races. And I don't think
-> you can fix this otherwise through holding locks: mmap_sem we can't
-> hold because before vma_link we don't even know which mm_struct is
-> involved, so can't solve the race. Plus this would be worse that
-> mm_take_all_locks used by mmu notifier. And the address_space
-> i_mmap_lock is also no good since it's not held during the ->mmap
-> callback, when we write the ptes. And the resource locks is even less
-> useful, since we're not going to hold that at vma_link() time for
-> sure.
-> 
-> Hence delaying the pte writes after the vma_link, which means ->fault
-> time, looks like the only way to close this gap.
+On 9/18/20 1:02 PM, Tony Krowiak wrote:
+> Attempting to unregister Guest Interruption Subclass (GISC) when the
+> link between the matrix mdev and KVM has been removed results in the
+> following:
+>
+>     "Kernel panic -not syncing: Fatal exception: panic_on_oops"
+>
+> This patch fixes this bug by verifying the matrix mdev and KVM are still
+> linked prior to unregistering the GISC.
+>
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>   drivers/s390/crypto/vfio_ap_ops.c | 14 +++++++++-----
+>   1 file changed, 9 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index e0bde8518745..847a88642644 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -119,11 +119,15 @@ static void vfio_ap_wait_for_irqclear(int apqn)
+>    */
+>   static void vfio_ap_free_aqic_resources(struct vfio_ap_queue *q)
+>   {
+> -	if (q->saved_isc != VFIO_AP_ISC_INVALID && q->matrix_mdev)
+> -		kvm_s390_gisc_unregister(q->matrix_mdev->kvm, q->saved_isc);
+> -	if (q->saved_pfn && q->matrix_mdev)
+> -		vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
+> -				 &q->saved_pfn, 1);
+> +	if (q->matrix_mdev) {
+> +		if (q->saved_isc != VFIO_AP_ISC_INVALID && q->matrix_mdev->kvm)
+> +			kvm_s390_gisc_unregister(q->matrix_mdev->kvm,
+> +						 q->saved_isc);
+> +		if (q->saved_pfn)
+> +			vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
+> +					 &q->saved_pfn, 1);
+> +	}
+> +
+>   	q->saved_pfn = 0;
+>   	q->saved_isc = VFIO_AP_ISC_INVALID;
+>   }
 
-> Trouble is I have no idea how to do this cleanly ...
-
-How about add a vm_ops callback 'install_pages'/'prefault_pages' ?
-
-Call it after vm_link() - basically just move the remap_pfn, under
-some other lock, into there.
-
-Jason
