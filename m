@@ -2,123 +2,118 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2D0E295CF5
-	for <lists+linux-s390@lfdr.de>; Thu, 22 Oct 2020 12:51:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E419295DA0
+	for <lists+linux-s390@lfdr.de>; Thu, 22 Oct 2020 13:43:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2896692AbgJVKrj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 22 Oct 2020 06:47:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2896574AbgJVKr3 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 22 Oct 2020 06:47:29 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BA392177B;
-        Thu, 22 Oct 2020 10:47:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603363648;
-        bh=xBsbKD5SBQCcLeBR2tpUTrjFtW93i8KwvEiKlew6y/M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=feiTNY176OhJVWL6CnkF4kiU6NigFm/VD3Ui4E+wpATVknPWx7I4BQqdiJv/sMgNJ
-         H4Eb2Bc9W6InfW+morvNSQUtX8ZVPuBvKSpQrb3i+BcForuB10ZbuKl1VEpEEP0vUn
-         prey8EZuMSul8lL3YVDZeBuHUKxl2I6g/LFzXfXQ=
-Date:   Thu, 22 Oct 2020 12:48:05 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "kernel-team@android.com" <kernel-team@android.com>,
+        id S2897500AbgJVLns (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 22 Oct 2020 07:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2897495AbgJVLnr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 22 Oct 2020 07:43:47 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80A1DC0613CF
+        for <linux-s390@vger.kernel.org>; Thu, 22 Oct 2020 04:43:47 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id ev17so657811qvb.3
+        for <linux-s390@vger.kernel.org>; Thu, 22 Oct 2020 04:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Tn5VStmyr19eg0AHWkg65WyZIMHvKO6plAVuAqOgPDQ=;
+        b=W2W63+Km46WNPYtkSR3igfnV7TEUq5madmsiNOsLljJ4hXhwY+tNpYNU0U98RMc/Ra
+         N/OqT1bclh4ytLL1rVRfHDNQXuCClycUHEstVDTB13O2SeX7rcenP16ZDtQZwB1W1jcc
+         qY+V9dfylqzLN5PiDQabSjcYMeIPMV8H3MvDBIvqP9uVDzx0l3+DGSbt51z70fKAGBps
+         MOgHN8p+THySDXKSzKDRAxFER+JAglmr7hGRyvf9N5t7jpnIarxCymOKiSFfwhwoQKR+
+         3E88SiMtx1h9HdY+LUkd3T5LmcI1LTVNdrFdFYFYlKXO0Wntp7OMh6vxttQFR1tsYI0Q
+         kJBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Tn5VStmyr19eg0AHWkg65WyZIMHvKO6plAVuAqOgPDQ=;
+        b=JhGhx75uEGIy2KuI9dmYuU7h3AugSZH6YP1Ygjo8YmvogC/n+iqzboY49pVyflEcJn
+         hr42ogWWZdfdlIu9lFxE06VEhFz7liUb+OkvQ6EvVn+us1MxR4F5kdxII+volWGrBuzQ
+         Yp9s3GuPlWkGTt5mepRiFRHu+vWnAhhdW9Fw/ok+SPhu6KmqW4tITy+ywYJYWx6LfKDx
+         PZRgGlI4LCZKqTZzExWpM7otkXcb6806oaYvwM+I6lSGVdqPYE+Cvp25Xk2grhP/c5LK
+         ZVBz2nko5AO5pR1dbAh3dh9TU1b/b9s1gHlv7d6bj+OQvpEyWwDRmk8Ly/w0WVJTXvE2
+         eUQg==
+X-Gm-Message-State: AOAM532Yw6JH/XnAFGO9EQuonMtIWOX3xXWMMZETg7TGDuHolYeH3Uc1
+        AYKezS8B3UhmiMhtf4aH42d1pA==
+X-Google-Smtp-Source: ABdhPJw6OYYGIWsKIpwZGlvXqWx4K8ij3H0LBJb/eEFtxBXIO8uo2emBiN1PSKDxC0xVD0g026FmxA==
+X-Received: by 2002:ad4:45a5:: with SMTP id y5mr1935405qvu.40.1603367026713;
+        Thu, 22 Oct 2020 04:43:46 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id l25sm820821qtf.18.2020.10.22.04.43.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Oct 2020 04:43:45 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kVZ0T-0040bW-1W; Thu, 22 Oct 2020 08:43:45 -0300
+Date:   Thu, 22 Oct 2020 08:43:45 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dan Williams <dan.j.williams@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>
-Subject: Re: Buggy commit tracked to: "Re: [PATCH 2/9] iov_iter: move
- rw_copy_check_uvector() into lib/iov_iter.c"
-Message-ID: <20201022104805.GA1503673@kroah.com>
-References: <20201021233914.GR3576660@ZenIV.linux.org.uk>
- <20201022082654.GA1477657@kroah.com>
- <80a2e5fa-718a-8433-1ab0-dd5b3e3b5416@redhat.com>
- <5d2ecb24db1e415b8ff88261435386ec@AcuMS.aculab.com>
- <df2e0758-b8ed-5aec-6adc-a18f499c0179@redhat.com>
- <20201022090155.GA1483166@kroah.com>
- <e04d0c5d-e834-a15b-7844-44dcc82785cc@redhat.com>
- <a1533569-948a-1d5b-e231-5531aa988047@redhat.com>
- <bc0a091865f34700b9df332c6e9dcdfd@AcuMS.aculab.com>
- <5fd6003b-55a6-2c3c-9a28-8fd3a575ca78@redhat.com>
+        John Hubbard <jhubbard@nvidia.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.com>
+Subject: Re: [PATCH v3 12/16] PCI: Obey iomem restrictions for procfs mmap
+Message-ID: <20201022114345.GO36674@ziepe.ca>
+References: <20201021085655.1192025-1-daniel.vetter@ffwll.ch>
+ <20201021085655.1192025-13-daniel.vetter@ffwll.ch>
+ <20201021125030.GK36674@ziepe.ca>
+ <CAKMK7uEWe8CaT7zjcZ6dJAKHxtxtqzjVB35fCFviwhcnqksDfw@mail.gmail.com>
+ <20201021151352.GL36674@ziepe.ca>
+ <CAKMK7uGq0=ks7Zj1Et44k7x9FwE9u_ua4zANSqrLRri0v01V+Q@mail.gmail.com>
+ <20201021163702.GM36674@ziepe.ca>
+ <CAKMK7uEjE5sHUq0hV_bnYjPKRxYyBnty0sLre+owANGZjLJg9Q@mail.gmail.com>
+ <20201021232022.GN36674@ziepe.ca>
+ <CAKMK7uEkAK42+19KRo06XzJFuMCVriEEg0jxqXq8oAdt2ExLsQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5fd6003b-55a6-2c3c-9a28-8fd3a575ca78@redhat.com>
+In-Reply-To: <CAKMK7uEkAK42+19KRo06XzJFuMCVriEEg0jxqXq8oAdt2ExLsQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Oct 22, 2020 at 11:36:40AM +0200, David Hildenbrand wrote:
-> On 22.10.20 11:32, David Laight wrote:
-> > From: David Hildenbrand
-> >> Sent: 22 October 2020 10:25
-> > ...
-> >> ... especially because I recall that clang and gcc behave slightly
-> >> differently:
-> >>
-> >> https://github.com/hjl-tools/x86-psABI/issues/2
-> >>
-> >> "Function args are different: narrow types are sign or zero extended to
-> >> 32 bits, depending on their type. clang depends on this for incoming
-> >> args, but gcc doesn't make that assumption. But both compilers do it
-> >> when calling, so gcc code can call clang code.
-> > 
-> > It really is best to use 'int' (or even 'long') for all numeric
-> > arguments (and results) regardless of the domain of the value.
-> > 
-> > Related, I've always worried about 'bool'....
-> > 
-> >> The upper 32 bits of registers are always undefined garbage for types
-> >> smaller than 64 bits."
-> > 
-> > On x86-64 the high bits are zeroed by all 32bit loads.
+On Thu, Oct 22, 2020 at 09:00:44AM +0200, Daniel Vetter wrote:
+> On Thu, Oct 22, 2020 at 1:20 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Wed, Oct 21, 2020 at 09:24:08PM +0200, Daniel Vetter wrote:
+> > > On Wed, Oct 21, 2020 at 6:37 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > >
+> > > > On Wed, Oct 21, 2020 at 05:54:54PM +0200, Daniel Vetter wrote:
+> > > >
+> > > > > The trouble is that io_remap_pfn adjust vma->pgoff, so we'd need to
+> > > > > split that. So ideally ->mmap would never set up any ptes.
+> > > >
+> > > > /dev/mem makes pgoff == pfn so it doesn't get changed by remap.
+> > > >
+> > > > pgoff doesn't get touched for MAP_SHARED either, so there are other
+> > > > users that could work like this - eg anyone mmaping IO memory is
+> > > > probably OK.
+> > >
+> > > I was more generally thinking for io_remap_pfn_users because of the
+> > > mkwrite use-case we might have in fbdev emulation in drm.
+> >
+> > You have a use case for MAP_PRIVATE and io_remap_pfn_range()??
 > 
-> Yeah, but does not help here.
-> 
-> 
-> My thinking: if the compiler that calls import_iovec() has garbage in
-> the upper 32 bit
-> 
-> a) gcc will zero it out and not rely on it being zero.
-> b) clang will not zero it out, assuming it is zero.
-> 
-> But
-> 
-> a) will zero it out when calling the !inlined variant
-> b) clang will zero it out when calling the !inlined variant
-> 
-> When inlining, b) strikes. We access garbage. That would mean that we
-> have calling code that's not generated by clang/gcc IIUC.
-> 
-> We can test easily by changing the parameters instead of adding an "inline".
+> Uh no :-)
 
-Let me try that as well, as I seem to have a good reproducer, but it
-takes a while to run...
+So it is fine, the pgoff mangling only happens for MAP_PRIVATE
 
-greg k-h
+Jason
