@@ -2,100 +2,141 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFA70297744
-	for <lists+linux-s390@lfdr.de>; Fri, 23 Oct 2020 20:48:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC66C2978E1
+	for <lists+linux-s390@lfdr.de>; Fri, 23 Oct 2020 23:29:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1755062AbgJWSsr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 23 Oct 2020 14:48:47 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38468 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1755068AbgJWSso (ORCPT
+        id S1756703AbgJWV3F convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Fri, 23 Oct 2020 17:29:05 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:20327 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1756692AbgJWV3E (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 23 Oct 2020 14:48:44 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09NIW78D006557;
-        Fri, 23 Oct 2020 14:48:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=EtOBXeHsVTWgjF3xlaS9V7J/jIGqh/Ulu/ZINruufCs=;
- b=n7Yt1+pRXJUNIgg9KBEiRVyrRZjK73h69OSIcfTiVvTlzhGeM9jgNZ79+wty3RXrF4om
- T95CtBP6jnzSv7msEjkN/y4Y5NiJcXXeIP0/JIfs7G7K5gw44gX/lbN55cYLGAlEMoox
- voYLedVQJkl5N9w91jCLBfJ/XVk01wknUKpQQBghKHN45L+dxZ/cjJHIcF8p/96Pn8Pm
- aonONFbzwsVtkoIpJGSng8IWpAsrBL6oMHfDl10zi3heCKUytGapbxKcTeiaEVED5bdl
- gscvojLC1HYXK8050stQtTp/gRY6oC8e1ILNb8623+NX75miJRpVKufSpuOoBaQQ91F7 GQ== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34bx0s5ap9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 23 Oct 2020 14:48:43 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09NIc38b023463;
-        Fri, 23 Oct 2020 18:48:41 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 347r88ewru-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 23 Oct 2020 18:48:40 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09NImcqK31916322
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 23 Oct 2020 18:48:38 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27F1342042;
-        Fri, 23 Oct 2020 18:48:38 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D3ADE42041;
-        Fri, 23 Oct 2020 18:48:37 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 23 Oct 2020 18:48:37 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: [PATCH net 3/3] s390/ism: fix incorrect system EID
-Date:   Fri, 23 Oct 2020 20:48:30 +0200
-Message-Id: <20201023184830.59548-4-kgraul@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201023184830.59548-1-kgraul@linux.ibm.com>
-References: <20201023184830.59548-1-kgraul@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.737
- definitions=2020-10-23_12:2020-10-23,2020-10-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxscore=0 lowpriorityscore=0 suspectscore=1 impostorscore=0 clxscore=1015
- spamscore=0 phishscore=0 mlxlogscore=884 priorityscore=1501 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010230111
+        Fri, 23 Oct 2020 17:29:04 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-101-a0KTql5iP42OxX-i9IRDjQ-1; Fri, 23 Oct 2020 22:29:00 +0100
+X-MC-Unique: a0KTql5iP42OxX-i9IRDjQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 23 Oct 2020 22:28:59 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 23 Oct 2020 22:28:59 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Segher Boessenkool' <segher@kernel.crashing.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+CC:     David Hildenbrand <david@redhat.com>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        'Greg KH' <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: RE: Buggy commit tracked to: "Re: [PATCH 2/9] iov_iter: move
+ rw_copy_check_uvector() into lib/iov_iter.c"
+Thread-Topic: Buggy commit tracked to: "Re: [PATCH 2/9] iov_iter: move
+ rw_copy_check_uvector() into lib/iov_iter.c"
+Thread-Index: AQHWqE5GNDfnH4y9nkGWtfqJueR1KKmjTCJQgAAN4UiAAAD2IIAASOeCgAF+12CAAGD4RoAAL/Bg
+Date:   Fri, 23 Oct 2020 21:28:59 +0000
+Message-ID: <e9a3136ead214186877804aabde74b38@AcuMS.aculab.com>
+References: <bc0a091865f34700b9df332c6e9dcdfd@AcuMS.aculab.com>
+ <5fd6003b-55a6-2c3c-9a28-8fd3a575ca78@redhat.com>
+ <20201022104805.GA1503673@kroah.com> <20201022121849.GA1664412@kroah.com>
+ <98d9df88-b7ef-fdfb-7d90-2fa7a9d7bab5@redhat.com>
+ <20201022125759.GA1685526@kroah.com> <20201022135036.GA1787470@kroah.com>
+ <134f162d711d466ebbd88906fae35b33@AcuMS.aculab.com>
+ <935f7168-c2f5-dd14-7124-412b284693a2@redhat.com>
+ <20201023175857.GA3576660@ZenIV.linux.org.uk>
+ <20201023182713.GG2672@gate.crashing.org>
+In-Reply-To: <20201023182713.GG2672@gate.crashing.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The system EID that is defined by the ISM driver is not correct. Using
-an incorrect system EID allows to communicate with remote Linux systems
-that use the same incorrect system EID, but when it comes to
-interoperability with other operating systems then the system EIDs do
-never match which prevents SMC-Dv2 communication.
-Using the correct system EID fixes this problem.
+From: Segher Boessenkool
+> Sent: 23 October 2020 19:27
+> 
+> On Fri, Oct 23, 2020 at 06:58:57PM +0100, Al Viro wrote:
+> > On Fri, Oct 23, 2020 at 03:09:30PM +0200, David Hildenbrand wrote:
+> >
+> > > Now, I am not a compiler expert, but as I already cited, at least on
+> > > x86-64 clang expects that the high bits were cleared by the caller - in
+> > > contrast to gcc. I suspect it's the same on arm64, but again, I am no
+> > > compiler expert.
+> > >
+> > > If what I said and cites for x86-64 is correct, if the function expects
+> > > an "unsigned int", it will happily use 64bit operations without further
+> > > checks where valid when assuming high bits are zero. That's why even
+> > > converting everything to "unsigned int" as proposed by me won't work on
+> > > clang - it assumes high bits are zero (as indicated by Nick).
+> > >
+> > > As I am neither a compiler experts (did I mention that already? ;) ) nor
+> > > an arm64 experts, I can't tell if this is a compiler BUG or not.
+> >
+> > On arm64 when callee expects a 32bit argument, the caller is *not* responsible
+> > for clearing the upper half of 64bit register used to pass the value - it only
+> > needs to store the actual value into the lower half.  The callee must consider
+> > the contents of the upper half of that register as undefined.  See AAPCS64 (e.g.
+> > https://github.com/ARM-software/abi-aa/blob/master/aapcs64/aapcs64.rst#parameter-passing-rules
+> > ); AFAICS, the relevant bit is
+> > 	"Unlike in the 32-bit AAPCS, named integral values must be narrowed by
+> > the callee rather than the caller."
+> 
+> Or the formal rule:
+> 
+> C.9 	If the argument is an Integral or Pointer Type, the size of the
+> 	argument is less than or equal to 8 bytes and the NGRN is less
+> 	than 8, the argument is copied to the least significant bits in
+> 	x[NGRN]. The NGRN is incremented by one. The argument has now
+> 	been allocated.
 
-Fixes: 201091ebb2a1 ("net/smc: introduce System Enterprise ID (SEID)")
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
----
- drivers/s390/net/ism_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So, in essence, if the value is in a 64bit register the calling
+code is independent of the actual type of the formal parameter.
+Clearly a value might need explicit widening.
 
-diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
-index fe96ca3c88a5..26cc943d2034 100644
---- a/drivers/s390/net/ism_drv.c
-+++ b/drivers/s390/net/ism_drv.c
-@@ -390,7 +390,7 @@ static int ism_move(struct smcd_dev *smcd, u64 dmb_tok, unsigned int idx,
- }
- 
- static struct ism_systemeid SYSTEM_EID = {
--	.seid_string = "IBM-SYSZ-IBMSEID00000000",
-+	.seid_string = "IBM-SYSZ-ISMSEID00000000",
- 	.serial_number = "0000",
- 	.type = "0000",
- };
--- 
-2.17.1
+I've found a copy of the 64 bit arm instruction set.
+Unfortunately it is alpha sorted and repetitive so shows none
+of the symmetry and makes things difficult to find.
+But, contrary to what someone suggested most register writes
+(eg from arithmetic) seem to zero/extend the high bits.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
