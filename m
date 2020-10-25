@@ -2,152 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6350297EA9
-	for <lists+linux-s390@lfdr.de>; Sat, 24 Oct 2020 23:12:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3945229812B
+	for <lists+linux-s390@lfdr.de>; Sun, 25 Oct 2020 11:16:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1764578AbgJXVMS convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Sat, 24 Oct 2020 17:12:18 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:30134 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1764569AbgJXVMR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 24 Oct 2020 17:12:17 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mtapsc-3-gvyTKESiOkaAGmzuPOOVdg-1; Sat, 24 Oct 2020 22:12:12 +0100
-X-MC-Unique: gvyTKESiOkaAGmzuPOOVdg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Sat, 24 Oct 2020 22:12:11 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Sat, 24 Oct 2020 22:12:11 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Segher Boessenkool' <segher@kernel.crashing.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        id S1415106AbgJYKQa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 25 Oct 2020 06:16:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1415103AbgJYKQ3 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 25 Oct 2020 06:16:29 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9367620936;
+        Sun, 25 Oct 2020 10:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603620988;
+        bh=SiuR1TkXLt8pVCx+Td9BUZs9Xu69YJfgMkNHmXRMvWo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qa2weGH62Ey6qX84hU+Ot5aVXwwRoLNgnKOUHgs9ghvAxbHhRVvWd3MhX0yDFh3x6
+         QiQ64zFb4EmfrfNqAzwVN+SiucLwhUg0/C0RBfCRoQDqCeB+ld7C/ACnsjLZh7HL6P
+         74srivpWsrDM7poNfUQfhh7/rLueLspAeQWJ5mYY=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Lameter <cl@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         David Hildenbrand <david@redhat.com>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        'Greg KH' <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: Buggy commit tracked to: "Re: [PATCH 2/9] iov_iter: move
- rw_copy_check_uvector() into lib/iov_iter.c"
-Thread-Topic: Buggy commit tracked to: "Re: [PATCH 2/9] iov_iter: move
- rw_copy_check_uvector() into lib/iov_iter.c"
-Thread-Index: AQHWqE5GNDfnH4y9nkGWtfqJueR1KKmjTCJQgAAN4UiAAAD2IIAASOeCgAF+12CAAGD4RoAAL/BggAFBVoCAAE2bsA==
-Date:   Sat, 24 Oct 2020 21:12:11 +0000
-Message-ID: <7c642593ca08469f8c00c0de10a09540@AcuMS.aculab.com>
-References: <20201022104805.GA1503673@kroah.com>
- <20201022121849.GA1664412@kroah.com>
- <98d9df88-b7ef-fdfb-7d90-2fa7a9d7bab5@redhat.com>
- <20201022125759.GA1685526@kroah.com> <20201022135036.GA1787470@kroah.com>
- <134f162d711d466ebbd88906fae35b33@AcuMS.aculab.com>
- <935f7168-c2f5-dd14-7124-412b284693a2@redhat.com>
- <20201023175857.GA3576660@ZenIV.linux.org.uk>
- <20201023182713.GG2672@gate.crashing.org>
- <e9a3136ead214186877804aabde74b38@AcuMS.aculab.com>
- <20201024172903.GK2672@gate.crashing.org>
-In-Reply-To: <20201024172903.GK2672@gate.crashing.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        David Rientjes <rientjes@google.com>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Len Brown <len.brown@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-pm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        x86@kernel.org
+Subject: [PATCH 0/4] arch, mm: improve robustness of direct map manipulation
+Date:   Sun, 25 Oct 2020 12:15:51 +0200
+Message-Id: <20201025101555.3057-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Segher Boessenkool
-> Sent: 24 October 2020 18:29
-> 
-> On Fri, Oct 23, 2020 at 09:28:59PM +0000, David Laight wrote:
-> > From: Segher Boessenkool
-> > > Sent: 23 October 2020 19:27
-> > > On Fri, Oct 23, 2020 at 06:58:57PM +0100, Al Viro wrote:
-> > > > On Fri, Oct 23, 2020 at 03:09:30PM +0200, David Hildenbrand wrote:
-> > > > On arm64 when callee expects a 32bit argument, the caller is *not* responsible
-> > > > for clearing the upper half of 64bit register used to pass the value - it only
-> > > > needs to store the actual value into the lower half.  The callee must consider
-> > > > the contents of the upper half of that register as undefined.  See AAPCS64 (e.g.
-> > > > https://github.com/ARM-software/abi-aa/blob/master/aapcs64/aapcs64.rst#parameter-passing-rules
-> > > > ); AFAICS, the relevant bit is
-> > > > 	"Unlike in the 32-bit AAPCS, named integral values must be narrowed by
-> > > > the callee rather than the caller."
-> > >
-> > > Or the formal rule:
-> > >
-> > > C.9 	If the argument is an Integral or Pointer Type, the size of the
-> > > 	argument is less than or equal to 8 bytes and the NGRN is less
-> > > 	than 8, the argument is copied to the least significant bits in
-> > > 	x[NGRN]. The NGRN is incremented by one. The argument has now
-> > > 	been allocated.
-> >
-> > So, in essence, if the value is in a 64bit register the calling
-> > code is independent of the actual type of the formal parameter.
-> > Clearly a value might need explicit widening.
-> 
-> No, this says that if you pass a 32-bit integer in a 64-bit register,
-> then the top 32 bits of that register hold an undefined value.
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-That's sort of what I meant.
-The 'normal' junk in the hight bits will there because the variable
-in the calling code is wider.
+Hi,
 
-> > I've found a copy of the 64 bit arm instruction set.
-> > Unfortunately it is alpha sorted and repetitive so shows none
-> > of the symmetry and makes things difficult to find.
-> 
-> All of this is ABI, not ISA.  Look at the AAPCS64 pointed to above.
-> 
-> > But, contrary to what someone suggested most register writes
-> > (eg from arithmetic) seem to zero/extend the high bits.
-> 
-> Everything that writes a "w" does, yes.  But that has nothing to do with
-> the parameter passing rules, that is ABI.  It just means that very often
-> a 32-bit integer will be passed zero-extended in a 64-bit register, but
-> that is just luck (or not, it makes finding bugs harder ;-) )
+During recent discussion about KVM protected memory, David raised a concern
+about usage of __kernel_map_pages() outside of DEBUG_PAGEALLOC scope [1].
 
-Working out why the code is wrong is more of an ISA issue than an ABI one.
-It may be an ABI one, but the analysis is ISA.
+Indeed, for architectures that define CONFIG_ARCH_HAS_SET_DIRECT_MAP it is
+possible that __kernel_map_pages() would fail, but since this function is
+void, the failure will go unnoticed.
 
-I've written a lot of asm over the years - decoding compiler generated
-asm isn't that hard.
-At least ARM doesn't have annulled delay slots.
+Moreover, there's lack of consistency of __kernel_map_pages() semantics
+across architectures as some guard this function with
+#ifdef DEBUG_PAGEALLOC, some refuse to update the direct map if page
+allocation debugging is disabled at run time and some allow modifying the
+direct map regardless of DEBUG_PAGEALLOC settings.
 
-	David
+This set straightens this out by restoring dependency of
+__kernel_map_pages() on DEBUG_PAGEALLOC and updating the call sites
+accordingly. 
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+[1] https://lore.kernel.org/lkml/2759b4bf-e1e3-d006-7d86-78a40348269d@redhat.com
+
+Mike Rapoport (4):
+  mm: introduce debug_pagealloc_map_pages() helper
+  PM: hibernate: improve robustness of mapping pages in the direct map
+  arch, mm: restore dependency of __kernel_map_pages() of DEBUG_PAGEALLOC
+  arch, mm: make kernel_page_present() always available
+
+ arch/Kconfig                        |  3 +++
+ arch/arm64/Kconfig                  |  4 +---
+ arch/arm64/include/asm/cacheflush.h |  1 +
+ arch/arm64/mm/pageattr.c            |  6 +++--
+ arch/powerpc/Kconfig                |  5 +----
+ arch/riscv/Kconfig                  |  4 +---
+ arch/riscv/include/asm/pgtable.h    |  2 --
+ arch/riscv/include/asm/set_memory.h |  1 +
+ arch/riscv/mm/pageattr.c            | 31 +++++++++++++++++++++++++
+ arch/s390/Kconfig                   |  4 +---
+ arch/sparc/Kconfig                  |  4 +---
+ arch/x86/Kconfig                    |  4 +---
+ arch/x86/include/asm/set_memory.h   |  1 +
+ arch/x86/mm/pat/set_memory.c        |  4 ++--
+ include/linux/mm.h                  | 35 +++++++++++++----------------
+ include/linux/set_memory.h          |  5 +++++
+ kernel/power/snapshot.c             | 24 ++++++++++++++++++--
+ mm/memory_hotplug.c                 |  3 +--
+ mm/page_alloc.c                     |  6 ++---
+ mm/slab.c                           |  8 +++----
+ 20 files changed, 97 insertions(+), 58 deletions(-)
+
+-- 
+2.28.0
 
