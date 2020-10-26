@@ -2,45 +2,45 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00FA0298B34
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Oct 2020 12:01:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 595D1298B29
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Oct 2020 12:01:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1772931AbgJZLAW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 26 Oct 2020 07:00:22 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52083 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1772584AbgJZK6f (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 26 Oct 2020 06:58:35 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v5so11153723wmh.1
-        for <linux-s390@vger.kernel.org>; Mon, 26 Oct 2020 03:58:33 -0700 (PDT)
+        id S1772826AbgJZK7p (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 26 Oct 2020 06:59:45 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33139 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1772765AbgJZK6j (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 26 Oct 2020 06:58:39 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b8so11925203wrn.0
+        for <linux-s390@vger.kernel.org>; Mon, 26 Oct 2020 03:58:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cXs1UvblKDwz1YQCIe37x2wwQ5T1EiKP8bli0y6YQUo=;
-        b=E/O7+voKlzMLNr1tMV7GRLom+PNYHCgDQ3OQYV/aWqFBixt9URXmul00B6LbSiurKm
-         FWBH3nEs3LtTvDZrOsKqWR6sU78g5LH1U1/DYzkNraEMVQf7DvkjdRanjf1DSeK2bJTj
-         IABPWNTOBt65UzvJe20ya2kIjM8TNoEQ70DME=
+        bh=hPo/Bw6tNC6m8oopvfckb4iPuUPePa6aSZ/PC8jTJPc=;
+        b=Dj3JiGZjov+rk5affXGvGP9402wtp2GUCI8icP85Tk14pyc7sO08mAvUqY9YP9TGeP
+         A3lLoHuo5jVARaEvOzFub0c3j9eUvziHGf75XEJy+mxqS9G+F35hsNps/M+jOSCEbRrn
+         iMP7/8q7yuqHTOslFET3CcuoYiLv8HRbrH3ec=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cXs1UvblKDwz1YQCIe37x2wwQ5T1EiKP8bli0y6YQUo=;
-        b=H3xYkmja31J9K8PP+TVv0uZyiHOd9ybpDFPs7vNaC184fzypMrHDDdXWLvauepjeH6
-         Ch7kZUt1U9P4dyQTQV1skhpvOy+vIdVlvA4opCGYf3pHkl2Vygq4rFuvhQorZqh+kqOT
-         OGN3653RjEMIMu3hpyx3OYGfJGooi0CF0mpuNUhSHEf8h1tUo/WOCOnnx1Mm7f0cKlh4
-         J5LaV3nNJELXUPt2s3aR/VoWt8otMiPo5ROrk+JBhGnHXSsUXfVkgAWhMunq4Jbm9zCv
-         83ceO1Wwho510UvdRWNjlneY4B1ogSs9pjp6gK9rKBdahdSzLlvv3Xk/dHVX+em34N+u
-         Z5JQ==
-X-Gm-Message-State: AOAM533bxCeJBVK9QFD9vwHHF20LL686bn/NxbCljPeSTUpomGdI84EE
-        RGT7Eei9kIO89jSDqNXzua8h8g==
-X-Google-Smtp-Source: ABdhPJxmBoKR8n4PO1pSYo1/0YhdisFijwUoQU4+g9izXaJK8ALrEJgk5lU4qb520qBwIoYy7NeuKA==
-X-Received: by 2002:a1c:2cc2:: with SMTP id s185mr15884686wms.77.1603709912789;
-        Mon, 26 Oct 2020 03:58:32 -0700 (PDT)
+        bh=hPo/Bw6tNC6m8oopvfckb4iPuUPePa6aSZ/PC8jTJPc=;
+        b=Q10W2M/1Sy4ZjJVTIaWg6RrM78yajwc8a32lQTL44KlmRHB9fYiHVRC19xQJdCud7e
+         /4S08KyrHUqemJdrPjFMhG7A2VxUNCkLJN292mWl4qEmdru6aamLXvNh1kZN4qoDTw8z
+         h+vdBWz7IBxfQMvZvm6KVFEtAkT3pqFXCvlhdPzm5R686+42aRevXS6RbcnscXLE87pr
+         GN3/0MJFImtdqFF7ZaRlx+2Z14KqeH4o8JGr64ZZDxfO6jn1gmqQ7gMggSTbfwhVQXfD
+         v8pR0plLOGuNgtuAda40Xjxr2MRj2/7i/yApMU7flew1WrvMui9zs51UNU1IcYGD7O4U
+         DDYg==
+X-Gm-Message-State: AOAM532W2gn1pE9jUXRLFJZwCm9y0OU4a1rv6fP7+jySpZlIzS2LbsUh
+        6f0UPEH5JaB72YFIrifzHnkYUA==
+X-Google-Smtp-Source: ABdhPJzNhlXxW3KYH0jGVof/+LSlV2+9EbEWYrtjvdi1lIJzYS2SPhGh/0KYLFV4Ur5EShPJwSKVLw==
+X-Received: by 2002:adf:a354:: with SMTP id d20mr18311675wrb.29.1603709915546;
+        Mon, 26 Oct 2020 03:58:35 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id w83sm21165156wmg.48.2020.10.26.03.58.31
+        by smtp.gmail.com with ESMTPSA id w83sm21165156wmg.48.2020.10.26.03.58.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2020 03:58:32 -0700 (PDT)
+        Mon, 26 Oct 2020 03:58:34 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     DRI Development <dri-devel@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>
@@ -50,19 +50,18 @@ Cc:     kvm@vger.kernel.org, linux-mm@kvack.org,
         linux-s390@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
         Daniel Vetter <daniel.vetter@intel.com>,
         Jason Gunthorpe <jgg@ziepe.ca>,
-        Pawel Osciak <pawel@osciak.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Benjamin Herrensmidt <benh@kernel.crashing.org>,
+        Dave Airlie <airlied@linux.ie>,
         Andrew Morton <akpm@linux-foundation.org>,
         John Hubbard <jhubbard@nvidia.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v4 05/15] mm/frame-vector: Use FOLL_LONGTERM
-Date:   Mon, 26 Oct 2020 11:58:08 +0100
-Message-Id: <20201026105818.2585306-6-daniel.vetter@ffwll.ch>
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: [PATCH v4 07/15] mm: Close race in generic_access_phys
+Date:   Mon, 26 Oct 2020 11:58:10 +0100
+Message-Id: <20201026105818.2585306-8-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
 References: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
@@ -73,24 +72,38 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is used by media/videbuf2 for persistent dma mappings, not just
-for a single dma operation and then freed again, so needs
-FOLL_LONGTERM.
+Way back it was a reasonable assumptions that iomem mappings never
+change the pfn range they point at. But this has changed:
 
-Unfortunately current pup_locked doesn't support FOLL_LONGTERM due to
-locking issues. Rework the code to pull the pup path out from the
-mmap_sem critical section as suggested by Jason.
+- gpu drivers dynamically manage their memory nowadays, invalidating
+  ptes with unmap_mapping_range when buffers get moved
 
-By relying entirely on the vma checks in pin_user_pages and follow_pfn
-(for vm_flags and vma_is_fsdax) we can also streamline the code a lot.
+- contiguous dma allocations have moved from dedicated carvetouts to
+  cma regions. This means if we miss the unmap the pfn might contain
+  pagecache or anon memory (well anything allocated with GFP_MOVEABLE)
 
+- even /dev/mem now invalidates mappings when the kernel requests that
+  iomem region when CONFIG_IO_STRICT_DEVMEM is set, see 3234ac664a87
+  ("/dev/mem: Revoke mappings when a driver claims the region")
+
+Accessing pfns obtained from ptes without holding all the locks is
+therefore no longer a good idea. Fix this.
+
+Since ioremap might need to manipulate pagetables too we need to drop
+the pt lock and have a retry loop if we raced.
+
+While at it, also add kerneldoc and improve the comment for the
+vma_ops->access function. It's for accessing, not for moving the
+memory from iomem to system memory, as the old comment seemed to
+suggest.
+
+References: 28b2ee20c7cb ("access_process_vm device memory infrastructure")
 Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Pawel Osciak <pawel@osciak.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Tomasz Figa <tfiga@chromium.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Benjamin Herrensmidt <benh@kernel.crashing.org>
+Cc: Dave Airlie <airlied@linux.ie>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: John Hubbard <jhubbard@nvidia.com>
 Cc: Jérôme Glisse <jglisse@redhat.com>
@@ -100,99 +113,107 @@ Cc: linux-mm@kvack.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-samsung-soc@vger.kernel.org
 Cc: linux-media@vger.kernel.org
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
 Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 --
-v2: Streamline the code and further simplify the loop checks (Jason)
----
- mm/frame_vector.c | 50 ++++++++++++++---------------------------------
- 1 file changed, 15 insertions(+), 35 deletions(-)
+v2: Fix inversion in the retry check (John).
 
-diff --git a/mm/frame_vector.c b/mm/frame_vector.c
-index 10f82d5643b6..d44779e56313 100644
---- a/mm/frame_vector.c
-+++ b/mm/frame_vector.c
-@@ -38,7 +38,6 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
- 	struct vm_area_struct *vma;
- 	int ret = 0;
- 	int err;
--	int locked;
+v4: While at it, use offset_in_page (Chris Wilson)
+---
+ include/linux/mm.h |  3 ++-
+ mm/memory.c        | 46 +++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 45 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index acd60fbf1a5a..2a16631c1fda 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -566,7 +566,8 @@ struct vm_operations_struct {
+ 	vm_fault_t (*pfn_mkwrite)(struct vm_fault *vmf);
  
- 	if (nr_frames == 0)
- 		return 0;
-@@ -48,40 +47,25 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
+ 	/* called by access_process_vm when get_user_pages() fails, typically
+-	 * for use by special VMAs that can switch between memory and hardware
++	 * for use by special VMAs. See also generic_access_phys() for a generic
++	 * implementation useful for any iomem mapping.
+ 	 */
+ 	int (*access)(struct vm_area_struct *vma, unsigned long addr,
+ 		      void *buf, int len, int write);
+diff --git a/mm/memory.c b/mm/memory.c
+index eeae590e526a..1b46eae3b703 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4840,28 +4840,68 @@ int follow_phys(struct vm_area_struct *vma,
+ 	return ret;
+ }
  
- 	start = untagged_addr(start);
- 
--	mmap_read_lock(mm);
--	locked = 1;
--	vma = find_vma_intersection(mm, start, start + 1);
--	if (!vma) {
--		ret = -EFAULT;
--		goto out;
--	}
--
--	/*
--	 * While get_vaddr_frames() could be used for transient (kernel
--	 * controlled lifetime) pinning of memory pages all current
--	 * users establish long term (userspace controlled lifetime)
--	 * page pinning. Treat get_vaddr_frames() like
--	 * get_user_pages_longterm() and disallow it for filesystem-dax
--	 * mappings.
--	 */
--	if (vma_is_fsdax(vma)) {
--		ret = -EOPNOTSUPP;
--		goto out;
--	}
--
--	if (!(vma->vm_flags & (VM_IO | VM_PFNMAP))) {
-+	ret = pin_user_pages_fast(start, nr_frames,
-+				  FOLL_FORCE | FOLL_WRITE | FOLL_LONGTERM,
-+				  (struct page **)(vec->ptrs));
-+	if (ret > 0) {
- 		vec->got_ref = true;
- 		vec->is_pfns = false;
--		ret = pin_user_pages_locked(start, nr_frames,
--			gup_flags, (struct page **)(vec->ptrs), &locked);
--		goto out;
-+		goto out_unlocked;
- 	}
- 
-+	mmap_read_lock(mm);
- 	vec->got_ref = false;
- 	vec->is_pfns = true;
- 	do {
- 		unsigned long *nums = frame_vector_pfns(vec);
- 
-+		vma = find_vma_intersection(mm, start, start + 1);
-+		if (!vma)
-+			break;
++/**
++ * generic_access_phys - generic implementation for iomem mmap access
++ * @vma: the vma to access
++ * @addr: userspace addres, not relative offset within @vma
++ * @buf: buffer to read/write
++ * @len: length of transfer
++ * @write: set to FOLL_WRITE when writing, otherwise reading
++ *
++ * This is a generic implementation for &vm_operations_struct.access for an
++ * iomem mapping. This callback is used by access_process_vm() when the @vma is
++ * not page based.
++ */
+ int generic_access_phys(struct vm_area_struct *vma, unsigned long addr,
+ 			void *buf, int len, int write)
+ {
+ 	resource_size_t phys_addr;
+ 	unsigned long prot = 0;
+ 	void __iomem *maddr;
+-	int offset = addr & (PAGE_SIZE-1);
++	pte_t *ptep, pte;
++	spinlock_t *ptl;
++	int offset = offset_in_page(addr);
++	int ret = -EINVAL;
 +
- 		while (ret < nr_frames && start + PAGE_SIZE <= vma->vm_end) {
- 			err = follow_pfn(vma, start, &nums[ret]);
- 			if (err) {
-@@ -92,17 +76,13 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
- 			start += PAGE_SIZE;
- 			ret++;
- 		}
--		/*
--		 * We stop if we have enough pages or if VMA doesn't completely
--		 * cover the tail page.
--		 */
--		if (ret >= nr_frames || start < vma->vm_end)
-+		/* Bail out if VMA doesn't completely cover the tail page. */
-+		if (start < vma->vm_end)
- 			break;
--		vma = find_vma_intersection(mm, start, start + 1);
--	} while (vma && vma->vm_flags & (VM_IO | VM_PFNMAP));
-+	} while (ret < nr_frames);
- out:
--	if (locked)
--		mmap_read_unlock(mm);
-+	mmap_read_unlock(mm);
-+out_unlocked:
- 	if (!ret)
- 		ret = -EFAULT;
- 	if (ret > 0)
++	if (!(vma->vm_flags & (VM_IO | VM_PFNMAP)))
++		return -EINVAL;
++
++retry:
++	if (follow_pte(vma->vm_mm, addr, &ptep, &ptl))
++		return -EINVAL;
++	pte = *ptep;
++	pte_unmap_unlock(ptep, ptl);
+ 
+-	if (follow_phys(vma, addr, write, &prot, &phys_addr))
++	prot = pgprot_val(pte_pgprot(pte));
++	phys_addr = (resource_size_t)pte_pfn(pte) << PAGE_SHIFT;
++
++	if ((write & FOLL_WRITE) && !pte_write(pte))
+ 		return -EINVAL;
+ 
+ 	maddr = ioremap_prot(phys_addr, PAGE_ALIGN(len + offset), prot);
+ 	if (!maddr)
+ 		return -ENOMEM;
+ 
++	if (follow_pte(vma->vm_mm, addr, &ptep, &ptl))
++		goto out_unmap;
++
++	if (!pte_same(pte, *ptep)) {
++		pte_unmap_unlock(ptep, ptl);
++		iounmap(maddr);
++
++		goto retry;
++	}
++
+ 	if (write)
+ 		memcpy_toio(maddr + offset, buf, len);
+ 	else
+ 		memcpy_fromio(buf, maddr + offset, len);
++	ret = len;
++	pte_unmap_unlock(ptep, ptl);
++out_unmap:
+ 	iounmap(maddr);
+ 
+-	return len;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(generic_access_phys);
+ #endif
 -- 
 2.28.0
 
