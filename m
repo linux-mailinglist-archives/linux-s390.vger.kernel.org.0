@@ -2,183 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A1A2298C7A
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Oct 2020 12:56:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE3BB298D15
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Oct 2020 13:49:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1774552AbgJZLz6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 26 Oct 2020 07:55:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:48069 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1774549AbgJZLz5 (ORCPT
+        id S1769096AbgJZMtQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 26 Oct 2020 08:49:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31864 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1768773AbgJZMtQ (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 26 Oct 2020 07:55:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603713356;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=G8HQyHiJi8lNhKdgT87H/9jAZEMb+E8WQwouLjsaWes=;
-        b=FZLvvsPD66VmMlqBZWI97suQelOG/5gdYXgvTBTpsRqUnGYhg2a+yln1R806bOAVcPEsI7
-        6dUIcrJZ4yxUa1hfZlg/BJEpLwRlYJdTsJVKvJygohpjCLZPIY7GjNuqfFveVt6C4jP7n0
-        2phFFuERHeKMvGGKgKpGzACok85CjnM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-fdjIXLUsORWYQaL3CV17Hw-1; Mon, 26 Oct 2020 07:55:52 -0400
-X-MC-Unique: fdjIXLUsORWYQaL3CV17Hw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B28548049D9;
-        Mon, 26 Oct 2020 11:55:46 +0000 (UTC)
-Received: from [10.36.113.62] (ovpn-113-62.ams2.redhat.com [10.36.113.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 451C56EF58;
-        Mon, 26 Oct 2020 11:55:38 +0000 (UTC)
-Subject: Re: [PATCH 1/4] mm: introduce debug_pagealloc_map_pages() helper
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Lameter <cl@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Len Brown <len.brown@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-pm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        x86@kernel.org
-References: <20201025101555.3057-1-rppt@kernel.org>
- <20201025101555.3057-2-rppt@kernel.org>
- <8720c067-7dc5-2b02-918b-e54dd642bfd6@redhat.com>
- <20201026115443.GF1154158@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <67e342cd-5ac4-4ba5-77f7-946c9415534e@redhat.com>
-Date:   Mon, 26 Oct 2020 12:55:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        Mon, 26 Oct 2020 08:49:16 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09QCVXgJ064124;
+        Mon, 26 Oct 2020 08:49:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=bqwTbaY0zoK0LnzolQoSvx8nZf5VrMi+TXH1mZIm1BY=;
+ b=EAdhfrPjN/L1fnbf7kipSJTrwOILJKkY6Gi7QbIUCIVRWLdCWc76SX/0aHxMvKIt4x1Z
+ YnT5MywVU2agvsQHKlx1KY/9pfXMzRpzHkjZX8OS55+T9GUMsHCixPhEXivImOZRgEVR
+ dLCKHnz7DYMPYBaaLbXRMgjwHU+74LF++lLeXaHAh88p++fsjxLQ3HqAtgXPaMmIa5N/
+ crpWlqOoiV00NHaR/HrzDqaxoig2M+4B9x3zRxnOhmFYaR0dinF2leAXgkQzdlKTU9+/
+ pZoEwZIeRuW8T8TVkS4aiZhZw+l98IJf2cguHNlYbQTs865Aar35rVRhmWKUcO1Umz8O Zg== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34dw512xj2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 26 Oct 2020 08:49:11 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09QCkdUB020076;
+        Mon, 26 Oct 2020 12:49:09 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 34cbw7t7gv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 26 Oct 2020 12:49:09 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09QCn7GY23396770
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 26 Oct 2020 12:49:07 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 476864C044;
+        Mon, 26 Oct 2020 12:49:07 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D1FAA4C046;
+        Mon, 26 Oct 2020 12:49:06 +0000 (GMT)
+Received: from localhost (unknown [9.145.93.124])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 26 Oct 2020 12:49:06 +0000 (GMT)
+Date:   Mon, 26 Oct 2020 13:49:05 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Michal Kubecek <mkubecek@suse.cz>
+Cc:     linux-s390@vger.kernel.org, Joe Perches <joe@perches.com>,
+        linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
+Subject: Re: [Regression] s390x build broken with 5.10-rc1 (bisected)
+Message-ID: <cover.thread-96dc81.your-ad-here.call-01603716370-ext-5478@work.hours>
+References: <20201026104811.22ta4pby2chmz4pv@lion.mk-sys.cz>
 MIME-Version: 1.0
-In-Reply-To: <20201026115443.GF1154158@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Disposition: inline
+In-Reply-To: <20201026104811.22ta4pby2chmz4pv@lion.mk-sys.cz>
+X-Patchwork-Bot: notify
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.737
+ definitions=2020-10-26_06:2020-10-26,2020-10-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=2
+ phishscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=687 malwarescore=0
+ adultscore=0 bulkscore=0 clxscore=1011 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010260088
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 26.10.20 12:54, Mike Rapoport wrote:
-> On Mon, Oct 26, 2020 at 12:05:13PM +0100, David Hildenbrand wrote:
->> On 25.10.20 11:15, Mike Rapoport wrote:
->>> From: Mike Rapoport <rppt@linux.ibm.com>
->>>
->>> When CONFIG_DEBUG_PAGEALLOC is enabled, it unmaps pages from the
->>> kernel direct mapping after free_pages(). The pages than need to be
->>> mapped back before they could be used. Theese mapping operations use 
->>> __kernel_map_pages() guarded with with debug_pagealloc_enabled().
->>>
->>> The only place that calls __kernel_map_pages() without checking
->>> whether DEBUG_PAGEALLOC is enabled is the hibernation code that
->>> presumes availability of this function when ARCH_HAS_SET_DIRECT_MAP
->>> is set. Still, on arm64, __kernel_map_pages() will bail out when
->>> DEBUG_PAGEALLOC is not enabled but set_direct_map_invalid_noflush()
->>> may render some pages not present in the direct map and hibernation
->>> code won't be able to save such pages.
->>>
->>> To make page allocation debugging and hibernation interaction more
->>> robust, the dependency on DEBUG_PAGEALLOC or ARCH_HAS_SET_DIRECT_MAP
->>> has to be made more explicit.
->>>
->>> Start with combining the guard condition and the call to 
->>> __kernel_map_pages() into a single debug_pagealloc_map_pages()
->>> function to emphasize that __kernel_map_pages() should not be called
->>> without DEBUG_PAGEALLOC and use this new function to map/unmap pages
->>> when page allocation debug is enabled.
->>>
->>> As the only remaining user of kernel_map_pages() is the hibernation
->>> code, mode that function into kernel/power/snapshot.c closer to a
->>> caller.
->>
->> s/mode/move/
->>
->>>
->>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com> --- 
->>> include/linux/mm.h      | 16 +++++++--------- kernel/power/snapshot.c
->>> | 11 +++++++++++ mm/memory_hotplug.c     |  3 +-- mm/page_alloc.c
->>> |  6 ++---- mm/slab.c               |  8 +++----- 5 files changed, 24
->>> insertions(+), 20 deletions(-)
->>>
->>> diff --git a/include/linux/mm.h b/include/linux/mm.h index
->>> ef360fe70aaf..14e397f3752c 100644 --- a/include/linux/mm.h +++
->>> b/include/linux/mm.h @@ -2927,21 +2927,19 @@ static inline bool
->>> debug_pagealloc_enabled_static(void) #if
->>> defined(CONFIG_DEBUG_PAGEALLOC) ||
->>> defined(CONFIG_ARCH_HAS_SET_DIRECT_MAP) extern void
->>> __kernel_map_pages(struct page *page, int numpages, int enable);
->>>
->>> -/* - * When called in DEBUG_PAGEALLOC context, the call should most
->>> likely be - * guarded by debug_pagealloc_enabled() or
->>> debug_pagealloc_enabled_static() - */ -static inline void 
->>> -kernel_map_pages(struct page *page, int numpages, int enable) 
->>> +static inline void debug_pagealloc_map_pages(struct page *page, +
->>> int numpages, int enable) { -	__kernel_map_pages(page, numpages,
->>> enable); +	if (debug_pagealloc_enabled_static()) +
->>> __kernel_map_pages(page, numpages, enable); } + #ifdef
->>> CONFIG_HIBERNATION extern bool kernel_page_present(struct page
->>> *page); #endif	/* CONFIG_HIBERNATION */ #else	/*
->>> CONFIG_DEBUG_PAGEALLOC || CONFIG_ARCH_HAS_SET_DIRECT_MAP */ -static
->>> inline void -kernel_map_pages(struct page *page, int numpages, int
->>> enable) {} +static inline void debug_pagealloc_map_pages(struct page
->>> *page, +					     int numpages, int enable) {} #ifdef
->>> CONFIG_HIBERNATION static inline bool kernel_page_present(struct page
->>> *page) { return true; } #endif	/* CONFIG_HIBERNATION */ diff --git
->>> a/kernel/power/snapshot.c b/kernel/power/snapshot.c index
->>> 46b1804c1ddf..fa499466f645 100644 --- a/kernel/power/snapshot.c +++
->>> b/kernel/power/snapshot.c @@ -76,6 +76,17 @@ static inline void
->>> hibernate_restore_protect_page(void *page_address) {} static inline
->>> void hibernate_restore_unprotect_page(void *page_address) {} #endif
->>> /* CONFIG_STRICT_KERNEL_RWX  && CONFIG_ARCH_HAS_SET_MEMORY */
->>>
->>> +#if defined(CONFIG_DEBUG_PAGEALLOC) ||
->>> defined(CONFIG_ARCH_HAS_SET_DIRECT_MAP) +static inline void 
->>> +kernel_map_pages(struct page *page, int numpages, int enable) +{ +
->>> __kernel_map_pages(page, numpages, enable); +} +#else +static inline
->>> void +kernel_map_pages(struct page *page, int numpages, int enable)
->>> {} +#endif +
->>
->> That change should go into a separate patch.
->  
-> Hmm, I beleive you refer to moving kernel_map_pages() to snapshot.c,
-> right?
+On Mon, Oct 26, 2020 at 11:48:11AM +0100, Michal Kubecek wrote:
+> Hello,
+> 
+> 5.10-rc1 builds on s390x fail with
+> 
+>   make -f ./scripts/Makefile.build obj=arch/s390/boot arch/s390/boot/bzImage
+>   make -f ./scripts/Makefile.modpost
+>   make -f ./scripts/Makefile.modfinal
+>   make -f ./scripts/Makefile.build obj=arch/s390/boot/compressed arch/s390/boot/compressed/vmlinux
+>           s1=`s390x-suse-linux-objdump -t -j ".boot.data" "vmlinux" | sort | sed -n "/0000000000000000/! s/.*\s.boot.data\s\+//p" | sha256sum`; s2=`s390x-suse-linux-objdump -t -j ".boot.data" "arch/s390/boot/compressed/vmlinux" | sort | sed -n "/0000000000000000/! s/.*\s.boot.data\s\+//p" | sha256sum`; if [ "$s1" != "$s2" ]; then echo "error: section .boot.data differs between vmlinux and arch/s390/boot/compressed/vmlinux" >&2; exit 1; fi; touch arch/s390/boot/section_cmp.boot.data
+>           s1=`s390x-suse-linux-objdump -t -j ".boot.preserved.data" "vmlinux" | sort | sed -n "/0000000000000000/! s/.*\s.boot.preserved.data\s\+//p" | sha256sum`; s2=`s390x-suse-linux-objdump -t -j ".boot.preserved.data" "arch/s390/boot/compressed/vmlinux" | sort | sed -n "/0000000000000000/! s/.*\s.boot.preserved.data\s\+//p" | sha256sum`; if [ "$s1" != "$s2" ]; then echo "error: section .boot.preserved.data differs between vmlinux and arch/s390/boot/compressed/vmlinux" >&2; exit 1; fi; touch arch/s390/boot/section_cmp.boot.preserved.data
+>   error: section .boot.data differs between vmlinux and arch/s390/boot/compressed/vmlinux
+>   make[1]: *** [arch/s390/boot/Makefile:65: arch/s390/boot/section_cmp.boot.data] Error 1
+>   make[1]: *** Waiting for unfinished jobs....
+>   error: section .boot.preserved.data differs between vmlinux and arch/s390/boot/compressed/vmlinux
+>   make[1]: *** [arch/s390/boot/Makefile:65: arch/s390/boot/section_cmp.boot.preserved.data] Error 1
+>   make: *** [arch/s390/Makefile:153: bzImage] Error 2
+>   make: *** Waiting for unfinished jobs....
+> 
+> Bisect identified commit 33def8498fdd ("treewide: Convert macro and uses
+> of __section(foo) to __section("foo")"), i.e. the very last commit
+> before tagging v5.10-rc1.
+> 
+> I can reproduce this with e.g. defconfig and both native s390x build and
+> build on x86_64 using cross compiler. I used gcc 10.2.1 and binutils 2.34.
+> 
+> Michal
 
-Sorry, yes!
+Hello Michal,
 
+I've already fixed that. The fix will appear shortly on s390/fixes
+Thank you for reporting!
+
+Vasily Gorbik (1):
+  s390: correct __bootdata / __bootdata_preserved macros
+
+ arch/s390/include/asm/sections.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 -- 
-Thanks,
-
-David / dhildenb
-
+2.25.4
