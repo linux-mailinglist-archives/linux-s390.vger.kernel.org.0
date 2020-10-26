@@ -2,178 +2,179 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ADC43298B10
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Oct 2020 12:00:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8AFC298B51
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Oct 2020 12:05:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1772853AbgJZK6u (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 26 Oct 2020 06:58:50 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33169 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1772858AbgJZK6u (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 26 Oct 2020 06:58:50 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b8so11925923wrn.0
-        for <linux-s390@vger.kernel.org>; Mon, 26 Oct 2020 03:58:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rl2aV6v4BUOFD3sWM4dGPxjWFUFBHT1H6eKln2146qM=;
-        b=RdtN9nvqXygrqpRjlwyadHI2Akx5GphSp7V8MoSkao2AUFwNDdcs0pb2/4JjL395li
-         67V6FN5HHlmjn9vWJcOKZYD+h4GMXwH3UsicvAL/IRAbuzUTcqbK0mc+9nQX8VqJ0N1G
-         QvYjui1JxD/SV+BAqoPjDtW6UkWb8unscHOVc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rl2aV6v4BUOFD3sWM4dGPxjWFUFBHT1H6eKln2146qM=;
-        b=Jl1AtGOrLfDTySdmNVzs8nAqeVvQKOcDpcf/hBocDGt5EBp4xfDQFdb+NFkFQcjQay
-         4LZ1ljv1m6i6yT6bZnUhW1W21w559dnaoBg7GEi+/lnd3go13Dd3bins2XRzpDU1gMKY
-         AKNA+yIWvKFgdsItMextlSANy/9zBlDUXIs72QUgPzbGrP/M8y+nOdhUc6rs4BHnDoDD
-         YdOX/tRrr8NBJ7XOdQPhvWvsi90kfGcGn8dKdudxzZ4+ECf09dk+D392W2q/DO0tIXCr
-         Gr8OqCft6zBXyL4CHR2yeJpo1IuVSi8zw+JzIqqD/C2xqTJybegQwOTa68rrhgHJ2DPZ
-         Hm0Q==
-X-Gm-Message-State: AOAM5336+MLwwLZ4TtUt1C0ib50Grh4LMduWoutIx15RTF5liK0ZSZYV
-        yCFBieJItyOhpnCDnyf3TxBbSOWqRE4wMZcb
-X-Google-Smtp-Source: ABdhPJyJEgobhpYPgpR3deeCaVtbSbKMyoksav28TvwMmYamt9hp5XzgBWl2um1YOhVBMyiCN8BNmg==
-X-Received: by 2002:a5d:498a:: with SMTP id r10mr17440576wrq.106.1603709927066;
-        Mon, 26 Oct 2020 03:58:47 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id w83sm21165156wmg.48.2020.10.26.03.58.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2020 03:58:46 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-s390@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH v4 15/15] PCI: Revoke mappings like devmem
-Date:   Mon, 26 Oct 2020 11:58:18 +0100
-Message-Id: <20201026105818.2585306-16-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
-References: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
+        id S1769071AbgJZLFh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 26 Oct 2020 07:05:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25424 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1773082AbgJZLFh (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 26 Oct 2020 07:05:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603710335;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uR3SoUQ38JQhR3FzkH7b6r+ChPHdaTScYhjRwjs5L+4=;
+        b=HlpA2vaWkks1DzlbhXHM5sNLLcmX9dG1Pwhi+ravy6rRl5hUvqozaIbZhnQB766Hlsda18
+        KxXPS3lad0m25HgEyRgcMMAv9IJjDkzL4ga6WxPH77/fU7SRcCMA16ep7sUqygbS1n3nJk
+        7md1Mprb4TBOVDrePmogd+bEQvJsu7w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-301-pGgOFeOzOUSKAoeWEvAb1w-1; Mon, 26 Oct 2020 07:05:30 -0400
+X-MC-Unique: pGgOFeOzOUSKAoeWEvAb1w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 87FB0101F7B0;
+        Mon, 26 Oct 2020 11:05:25 +0000 (UTC)
+Received: from [10.36.113.62] (ovpn-113-62.ams2.redhat.com [10.36.113.62])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 00EE61043269;
+        Mon, 26 Oct 2020 11:05:14 +0000 (UTC)
+Subject: Re: [PATCH 1/4] mm: introduce debug_pagealloc_map_pages() helper
+To:     Mike Rapoport <rppt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Lameter <cl@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Len Brown <len.brown@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-pm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        x86@kernel.org
+References: <20201025101555.3057-1-rppt@kernel.org>
+ <20201025101555.3057-2-rppt@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <8720c067-7dc5-2b02-918b-e54dd642bfd6@redhat.com>
+Date:   Mon, 26 Oct 2020 12:05:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20201025101555.3057-2-rppt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Since 3234ac664a87 ("/dev/mem: Revoke mappings when a driver claims
-the region") /dev/kmem zaps ptes when the kernel requests exclusive
-acccess to an iomem region. And with CONFIG_IO_STRICT_DEVMEM, this is
-the default for all driver uses.
+On 25.10.20 11:15, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> When CONFIG_DEBUG_PAGEALLOC is enabled, it unmaps pages from the
+> kernel direct mapping after free_pages(). The pages than need to be
+> mapped back before they could be used. Theese mapping operations use 
+> __kernel_map_pages() guarded with with debug_pagealloc_enabled().
+> 
+> The only place that calls __kernel_map_pages() without checking
+> whether DEBUG_PAGEALLOC is enabled is the hibernation code that
+> presumes availability of this function when ARCH_HAS_SET_DIRECT_MAP
+> is set. Still, on arm64, __kernel_map_pages() will bail out when
+> DEBUG_PAGEALLOC is not enabled but set_direct_map_invalid_noflush()
+> may render some pages not present in the direct map and hibernation
+> code won't be able to save such pages.
+> 
+> To make page allocation debugging and hibernation interaction more
+> robust, the dependency on DEBUG_PAGEALLOC or ARCH_HAS_SET_DIRECT_MAP
+> has to be made more explicit.
+> 
+> Start with combining the guard condition and the call to 
+> __kernel_map_pages() into a single debug_pagealloc_map_pages()
+> function to emphasize that __kernel_map_pages() should not be called
+> without DEBUG_PAGEALLOC and use this new function to map/unmap pages
+> when page allocation debug is enabled.
+> 
+> As the only remaining user of kernel_map_pages() is the hibernation
+> code, mode that function into kernel/power/snapshot.c closer to a
+> caller.
 
-Except there's two more ways to access PCI BARs: sysfs and proc mmap
-support. Let's plug that hole.
+s/mode/move/
 
-For revoke_devmem() to work we need to link our vma into the same
-address_space, with consistent vma->vm_pgoff. ->pgoff is already
-adjusted, because that's how (io_)remap_pfn_range works, but for the
-mapping we need to adjust vma->vm_file->f_mapping. The cleanest way is
-to adjust this at at ->open time:
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com> --- 
+> include/linux/mm.h      | 16 +++++++--------- kernel/power/snapshot.c
+> | 11 +++++++++++ mm/memory_hotplug.c     |  3 +-- mm/page_alloc.c
+> |  6 ++---- mm/slab.c               |  8 +++----- 5 files changed, 24
+> insertions(+), 20 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h index
+> ef360fe70aaf..14e397f3752c 100644 --- a/include/linux/mm.h +++
+> b/include/linux/mm.h @@ -2927,21 +2927,19 @@ static inline bool
+> debug_pagealloc_enabled_static(void) #if
+> defined(CONFIG_DEBUG_PAGEALLOC) ||
+> defined(CONFIG_ARCH_HAS_SET_DIRECT_MAP) extern void
+> __kernel_map_pages(struct page *page, int numpages, int enable);
+> 
+> -/* - * When called in DEBUG_PAGEALLOC context, the call should most
+> likely be - * guarded by debug_pagealloc_enabled() or
+> debug_pagealloc_enabled_static() - */ -static inline void 
+> -kernel_map_pages(struct page *page, int numpages, int enable) 
+> +static inline void debug_pagealloc_map_pages(struct page *page, +
+> int numpages, int enable) { -	__kernel_map_pages(page, numpages,
+> enable); +	if (debug_pagealloc_enabled_static()) +
+> __kernel_map_pages(page, numpages, enable); } + #ifdef
+> CONFIG_HIBERNATION extern bool kernel_page_present(struct page
+> *page); #endif	/* CONFIG_HIBERNATION */ #else	/*
+> CONFIG_DEBUG_PAGEALLOC || CONFIG_ARCH_HAS_SET_DIRECT_MAP */ -static
+> inline void -kernel_map_pages(struct page *page, int numpages, int
+> enable) {} +static inline void debug_pagealloc_map_pages(struct page
+> *page, +					     int numpages, int enable) {} #ifdef
+> CONFIG_HIBERNATION static inline bool kernel_page_present(struct page
+> *page) { return true; } #endif	/* CONFIG_HIBERNATION */ diff --git
+> a/kernel/power/snapshot.c b/kernel/power/snapshot.c index
+> 46b1804c1ddf..fa499466f645 100644 --- a/kernel/power/snapshot.c +++
+> b/kernel/power/snapshot.c @@ -76,6 +76,17 @@ static inline void
+> hibernate_restore_protect_page(void *page_address) {} static inline
+> void hibernate_restore_unprotect_page(void *page_address) {} #endif
+> /* CONFIG_STRICT_KERNEL_RWX  && CONFIG_ARCH_HAS_SET_MEMORY */
+> 
+> +#if defined(CONFIG_DEBUG_PAGEALLOC) ||
+> defined(CONFIG_ARCH_HAS_SET_DIRECT_MAP) +static inline void 
+> +kernel_map_pages(struct page *page, int numpages, int enable) +{ +
+> __kernel_map_pages(page, numpages, enable); +} +#else +static inline
+> void +kernel_map_pages(struct page *page, int numpages, int enable)
+> {} +#endif +
 
-- for sysfs this is easy, now that binary attributes support this. We
-  just set bin_attr->mapping when mmap is supported
-- for procfs it's a bit more tricky, since procfs pci access has only
-  one file per device, and access to a specific resources first needs
-  to be set up with some ioctl calls. But mmap is only supported for
-  the same resources as sysfs exposes with mmap support, and otherwise
-  rejected, so we can set the mapping unconditionally at open time
-  without harm.
+That change should go into a separate patch.
 
-A special consideration is for arch_can_pci_mmap_io() - we need to
-make sure that the ->f_mapping doesn't alias between ioport and iomem
-space. There's only 2 ways in-tree to support mmap of ioports: generic
-pci mmap (ARCH_GENERIC_PCI_MMAP_RESOURCE), and sparc as the single
-architecture hand-rolling. Both approach support ioport mmap through a
-special pfn range and not through magic pte attributes. Aliasing is
-therefore not a problem.
 
-The only difference in access checks left is that sysfs PCI mmap does
-not check for CAP_RAWIO. I'm not really sure whether that should be
-added or not.
+For the debug_pagealloc_map_pages() parts
 
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-media@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
---
-v2:
-- Totally new approach: Adjust filp->f_mapping at open time. Note that
-  this now works on all architectures, not just those support
-  ARCH_GENERIC_PCI_MMAP_RESOURCE
----
- drivers/pci/pci-sysfs.c | 4 ++++
- drivers/pci/proc.c      | 1 +
- 2 files changed, 5 insertions(+)
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 6d78df981d41..cee38fcb4a86 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -928,6 +928,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	b->legacy_io->read = pci_read_legacy_io;
- 	b->legacy_io->write = pci_write_legacy_io;
- 	b->legacy_io->mmap = pci_mmap_legacy_io;
-+	b->legacy_io->mapping = iomem_get_mapping();
- 	pci_adjust_legacy_attr(b, pci_mmap_io);
- 	error = device_create_bin_file(&b->dev, b->legacy_io);
- 	if (error)
-@@ -940,6 +941,7 @@ void pci_create_legacy_files(struct pci_bus *b)
- 	b->legacy_mem->size = 1024*1024;
- 	b->legacy_mem->attr.mode = 0600;
- 	b->legacy_mem->mmap = pci_mmap_legacy_mem;
-+	b->legacy_io->mapping = iomem_get_mapping();
- 	pci_adjust_legacy_attr(b, pci_mmap_mem);
- 	error = device_create_bin_file(&b->dev, b->legacy_mem);
- 	if (error)
-@@ -1155,6 +1157,8 @@ static int pci_create_attr(struct pci_dev *pdev, int num, int write_combine)
- 			res_attr->mmap = pci_mmap_resource_uc;
- 		}
- 	}
-+	if (res_attr->mmap)
-+		res_attr->mapping = iomem_get_mapping();
- 	res_attr->attr.name = res_attr_name;
- 	res_attr->attr.mode = 0600;
- 	res_attr->size = pci_resource_len(pdev, num);
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index 3a2f90beb4cb..9bab07302bbf 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -298,6 +298,7 @@ static int proc_bus_pci_open(struct inode *inode, struct file *file)
- 	fpriv->write_combine = 0;
- 
- 	file->private_data = fpriv;
-+	file->f_mapping = iomem_get_mapping();
- 
- 	return 0;
- }
+
 -- 
-2.28.0
+Thanks,
+
+David / dhildenb
 
