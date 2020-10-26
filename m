@@ -2,127 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEB5A299C54
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Oct 2020 00:57:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9A97299CEA
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Oct 2020 01:02:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436678AbgJZX5E (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 26 Oct 2020 19:57:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47890 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436664AbgJZX5D (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 26 Oct 2020 19:57:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 306D1AC43;
-        Mon, 26 Oct 2020 23:57:01 +0000 (UTC)
-Received: by lion.mk-sys.cz (Postfix, from userid 1000)
-        id C881E60736; Tue, 27 Oct 2020 00:57:00 +0100 (CET)
-Date:   Tue, 27 Oct 2020 00:57:00 +0100
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, Joe Perches <joe@perches.com>,
-        linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>
-Subject: Re: [PATCH 1/1] s390: correct __bootdata / __bootdata_preserved
- macros
-Message-ID: <20201026235700.3dga6r5obn7z5cxv@lion.mk-sys.cz>
-References: <20201026104811.22ta4pby2chmz4pv@lion.mk-sys.cz>
- <cover.thread-96dc81.your-ad-here.call-01603716370-ext-5478@work.hours>
- <patch-1.thread-96dc81.git-96dc8112cea9.your-ad-here.call-01603716370-ext-5478@work.hours>
+        id S1731794AbgJ0ACo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 26 Oct 2020 20:02:44 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44795 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2411072AbgJZX4P (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 26 Oct 2020 19:56:15 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o3so6963383pgr.11
+        for <linux-s390@vger.kernel.org>; Mon, 26 Oct 2020 16:56:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wqqvkA3oKUwkO5eXRPOBy8lXyQg0CiUtokie2wwagwI=;
+        b=ZWDgA8+yUlKx2dZgiyZDe66Bv6aQYo4o4sBrgULvsJ7L1mqryuSoN/tRsTLtRNf5gl
+         QA5GzgrsJ4IIXk6KefYiWNloPp5dTgRya5PAi5H2X1Ck5liCNMZ9plZFbXAFJkRhGENX
+         zRADl3Fzwzqt5UTeMExAEl9+J6C00UJYGVeM9r+kQpMj10I4tNzbDp+KUhpG26z8ohQ5
+         u9LGW1VxEtuEY5uYo6W0qmYrYYX9WPLdyfh3K/l7hHXtbXds+UPAtJe/6QdzpKUrKNEa
+         IHnev7OPcOoKpcEMuZBXfSj3e5H/bPp0SHxbMGuGbkkGN2ORlWbNlGQCKJOUg6Ub1kcx
+         WOrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wqqvkA3oKUwkO5eXRPOBy8lXyQg0CiUtokie2wwagwI=;
+        b=a4Zj9uaaT8LiF253KvWJ7EGFrx+tOu7ZWEqI47lcpPM67+fo6HPJBfk0Rdrctch5g5
+         HkoLCKuURukzb2qtVuXB56PFNqggZAtQiFFw4kjLJZ1HoyUF8yI7APQmLT6nFtwuoZwk
+         cYT4ej0C74Pb2Lfy49XtaSS/pzmkgqqfTHVbU2oDOy/+vX7Pc21enDeSBtcDW3Txcu82
+         h85L6D+P9CRmXqVQIefG5l26kvjnuIPq+H0ZHH9HqoTKuLPb1iZW9TOwDr7YEhySmpB4
+         ppEKVhYghMcV8+RFomoHSCQApyOf0EJuddXaFwE/0aZTFHGYqVcEQmw2mB+dF07njDZi
+         iaGQ==
+X-Gm-Message-State: AOAM533HgC+YeEje43JD/fWIHpoMEwtjl161SXlmcOS5bYA94X3PsuBw
+        swRrbI7TzfFNgzRkfc6epFK4qg==
+X-Google-Smtp-Source: ABdhPJzXWytxnG400Dp//klgHvFRu6jftuSrTTs7sW7oWyETnW8LM2mlLlQ2a53Jfzf5mLG9B/rX/w==
+X-Received: by 2002:a63:5f42:: with SMTP id t63mr569296pgb.0.1603756574857;
+        Mon, 26 Oct 2020 16:56:14 -0700 (PDT)
+Received: from [192.168.1.134] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id s38sm3637009pgm.62.2020.10.26.16.56.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Oct 2020 16:56:14 -0700 (PDT)
+Subject: Re: [REGRESSION] mm: process_vm_readv testcase no longer works after
+ compat_prcoess_vm_readv removed
+To:     Kyle Huey <me@kylehuey.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Robert O'Callahan <robert@ocallahan.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-scsi@vger.kernel.org,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>, linux-aio@kvack.org,
+        io-uring@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, netdev@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <CAP045Aqrsb=CXHDHx4nS-pgg+MUDj14r-kN8_Jcbn-NAUziVag@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <70d5569e-4ad6-988a-e047-5d12d298684c@kernel.dk>
+Date:   Mon, 26 Oct 2020 17:56:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qcfgs5eg7rfckcnu"
-Content-Disposition: inline
-In-Reply-To: <patch-1.thread-96dc81.git-96dc8112cea9.your-ad-here.call-01603716370-ext-5478@work.hours>
+In-Reply-To: <CAP045Aqrsb=CXHDHx4nS-pgg+MUDj14r-kN8_Jcbn-NAUziVag@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 10/26/20 4:55 PM, Kyle Huey wrote:
+> A test program from the rr[0] test suite, vm_readv_writev[1], no
+> longer works on 5.10-rc1 when compiled as a 32 bit binary and executed
+> on a 64 bit kernel. The first process_vm_readv call (on line 35) now
+> fails with EFAULT. I have bisected this to
+> c3973b401ef2b0b8005f8074a10e96e3ea093823.
+> 
+> It should be fairly straightforward to extract the test case from our
+> repository into a standalone program.
 
---qcfgs5eg7rfckcnu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Can you check with this applied?
 
-On Mon, Oct 26, 2020 at 01:49:08PM +0100, Vasily Gorbik wrote:
-> Currently s390 build is broken.
->=20
->   SECTCMP .boot.data
-> error: section .boot.data differs between vmlinux and arch/s390/boot/comp=
-ressed/vmlinux
-> make[2]: *** [arch/s390/boot/section_cmp.boot.data] Error 1
->   SECTCMP .boot.preserved.data
-> error: section .boot.preserved.data differs between vmlinux and arch/s390=
-/boot/compressed/vmlinux
-> make[2]: *** [arch/s390/boot/section_cmp.boot.preserved.data] Error 1
-> make[1]: *** [bzImage] Error 2
->=20
-> Commit 33def8498fdd ("treewide: Convert macro and uses of __section(foo)
-> to __section("foo")") converted all __section(foo) to __section("foo").
-> This is wrong for __bootdata / __bootdata_preserved macros which want
-> variable names to be a part of intermediate section names .boot.data.<var
-> name> and .boot.preserved.data.<var name>. Those sections are later
-> sorted by alignment + name and merged together into final .boot.data
-> / .boot.preserved.data sections. Those sections must be identical in
-> the decompressor and the decompressed kernel (that is checked during
-> the build).
->=20
-> Fixes: 33def8498fdd ("treewide: Convert macro and uses of __section(foo) =
-to __section("foo")")
-> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
+index fd12da80b6f2..05676722d9cd 100644
+--- a/mm/process_vm_access.c
++++ b/mm/process_vm_access.c
+@@ -273,7 +273,8 @@ static ssize_t process_vm_rw(pid_t pid,
+ 		return rc;
+ 	if (!iov_iter_count(&iter))
+ 		goto free_iov_l;
+-	iov_r = iovec_from_user(rvec, riovcnt, UIO_FASTIOV, iovstack_r, false);
++	iov_r = iovec_from_user(rvec, riovcnt, UIO_FASTIOV, iovstack_r,
++				in_compat_syscall());
+ 	if (IS_ERR(iov_r)) {
+ 		rc = PTR_ERR(iov_r);
+ 		goto free_iov_l;
 
-Tested-by: Michal Kubecek <mkubecek@suse.cz>
+-- 
+Jens Axboe
 
-Thank you,
-Michal
-
-> ---
->  arch/s390/include/asm/sections.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/s390/include/asm/sections.h b/arch/s390/include/asm/sec=
-tions.h
-> index a996d3990a02..0c2151451ba5 100644
-> --- a/arch/s390/include/asm/sections.h
-> +++ b/arch/s390/include/asm/sections.h
-> @@ -26,14 +26,14 @@ static inline int arch_is_kernel_initmem_freed(unsign=
-ed long addr)
->   * final .boot.data section, which should be identical in the decompress=
-or and
->   * the decompressed kernel (that is checked during the build).
->   */
-> -#define __bootdata(var) __section(".boot.data.var") var
-> +#define __bootdata(var) __section(".boot.data." #var) var
-> =20
->  /*
->   * .boot.preserved.data is similar to .boot.data, but it is not part of =
-the
->   * .init section and thus will be preserved for later use in the decompr=
-essed
->   * kernel.
->   */
-> -#define __bootdata_preserved(var) __section(".boot.preserved.data.var") =
-var
-> +#define __bootdata_preserved(var) __section(".boot.preserved.data." #var=
-) var
-> =20
->  extern unsigned long __sdma, __edma;
->  extern unsigned long __stext_dma, __etext_dma;
-> --=20
-> 2.25.4
-
---qcfgs5eg7rfckcnu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEWN3j3bieVmp26mKO538sG/LRdpUFAl+XYkcACgkQ538sG/LR
-dpWkIQf/ewe8ufeiPuicJmlgaV6TdHL3FAT8qcv6mHaTsLLX7wyxKw5IAjV7MQ5v
-qjREkYseptZ88CaoU6Rhzc1iGY2ugIpdQpPRrr/CbvgH5Kaw7AH0Ii9C/60W1CY8
-zJl9UPKuOV/s5RiMA1gP0AKTDNVGLk35/GYKh4GnvIIoY1jjxkoaoGqew+jBkCc8
-H6bJfChAHqb0YEhiOrB6quwEDbFBmongolgMmpHJ/kenhW/IeOyT1TRDt00jFr6i
-rpHMS48r4uhi5M0srNOW71mptisTBR1rjMzz/2maaNv8yntJsEFN3J2RbQ3Z/x1c
-TZ7UujMj5rSBT/RjXFwZcjPCp8KxOQ==
-=9yg/
------END PGP SIGNATURE-----
-
---qcfgs5eg7rfckcnu--
