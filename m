@@ -2,77 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DCEEF298E2F
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Oct 2020 14:38:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8005298F47
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Oct 2020 15:30:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1773232AbgJZNh7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 26 Oct 2020 09:37:59 -0400
-Received: from smtprelay0025.hostedemail.com ([216.40.44.25]:57556 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1772881AbgJZNh7 (ORCPT
+        id S1781231AbgJZOaH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 26 Oct 2020 10:30:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57050 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1781103AbgJZOaG (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 26 Oct 2020 09:37:59 -0400
-X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Mon, 26 Oct 2020 09:37:59 EDT
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave01.hostedemail.com (Postfix) with ESMTP id 2E5111801FA59
-        for <linux-s390@vger.kernel.org>; Mon, 26 Oct 2020 13:31:21 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 07C8612C7;
-        Mon, 26 Oct 2020 13:31:20 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:800:960:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2559:2562:2828:3138:3139:3140:3141:3142:3352:3622:3865:3866:3867:3868:3870:3871:3873:3874:4321:5007:7903:10004:10400:10848:11232:11658:11783:11914:12043:12297:12438:12663:12740:12895:13069:13311:13357:13439:13894:14096:14097:14181:14659:14721:21080:21433:21451:21627:30029:30030:30054:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:2,LUA_SUMMARY:none
-X-HE-Tag: son43_0c10b2927273
-X-Filterd-Recvd-Size: 2426
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 26 Oct 2020 13:31:18 +0000 (UTC)
-Message-ID: <7c592b6b4cc3bc4e629e35445fa76cf07b5482a6.camel@perches.com>
-Subject: Re: [PATCH 1/1] s390: correct __bootdata / __bootdata_preserved
- macros
-From:   Joe Perches <joe@perches.com>
-To:     Vasily Gorbik <gor@linux.ibm.com>,
-        Michal Kubecek <mkubecek@suse.cz>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>
-Date:   Mon, 26 Oct 2020 06:31:17 -0700
-In-Reply-To: <patch-1.thread-96dc81.git-96dc8112cea9.your-ad-here.call-01603716370-ext-5478@work.hours>
-References: <20201026104811.22ta4pby2chmz4pv@lion.mk-sys.cz>
-         <cover.thread-96dc81.your-ad-here.call-01603716370-ext-5478@work.hours>
-         <patch-1.thread-96dc81.git-96dc8112cea9.your-ad-here.call-01603716370-ext-5478@work.hours>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+        Mon, 26 Oct 2020 10:30:06 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09QEBcTq079427;
+        Mon, 26 Oct 2020 10:30:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : mime-version : content-type; s=pp1;
+ bh=2ml38pNjrKoInsF4gZ7lFKR7yyrY8IylOvmBAmZmUQw=;
+ b=A6e9pyfp8LVfFpPyp/wlkzcun/hYuBWiB/EVyO3bA/biljasGqSMftGFqHCmlmoKE04q
+ RogtPUgqyNhgFTk+Rc97LrBzMbKOms8/0AMx1582vNH3eX8W/iOAPqT585lQUPzeYQuF
+ IjaPeKdlh3/RDwdroF6dt2PGiHXI4GDjxru90m8VnxPMDUGeShbCEe0FlRhRxZ4HeUcK
+ Onag/di2lUAcGf/18RNqWMs/Zro0kKDZvqMQQtrjyijtPGejn5idBXd6SbAs306GRymL
+ hbn6g9pty8ySPkL7hRlmGI94HNSAPzicPfS4LgXkjLYQVEW/ed1XWi8RuKeajcRx9taG cQ== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34dp1qrh9h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 26 Oct 2020 10:30:03 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09QERmbb017933;
+        Mon, 26 Oct 2020 14:30:01 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 34cbw7t9yn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 26 Oct 2020 14:30:01 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09QETw6J34996646
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 26 Oct 2020 14:29:58 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2F78311C052;
+        Mon, 26 Oct 2020 14:29:58 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DDD1311C04C;
+        Mon, 26 Oct 2020 14:29:57 +0000 (GMT)
+Received: from osiris (unknown [9.171.92.46])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 26 Oct 2020 14:29:57 +0000 (GMT)
+Date:   Mon, 26 Oct 2020 15:29:56 +0100
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Joe Perches <joe@perches.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] s390 compile fix for 5.10-rc2
+Message-ID: <20201026142956.GA9584@osiris>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.737
+ definitions=2020-10-26_06:2020-10-26,2020-10-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ adultscore=0 impostorscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
+ priorityscore=1501 malwarescore=0 clxscore=1011 phishscore=0
+ suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010260097
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 2020-10-26 at 13:49 +0100, Vasily Gorbik wrote:
-> Currently s390 build is broken.
-> 
->   SECTCMP .boot.data
-> error: section .boot.data differs between vmlinux and arch/s390/boot/compressed/vmlinux
-> make[2]: *** [arch/s390/boot/section_cmp.boot.data] Error 1
->   SECTCMP .boot.preserved.data
-> error: section .boot.preserved.data differs between vmlinux and arch/s390/boot/compressed/vmlinux
-> make[2]: *** [arch/s390/boot/section_cmp.boot.preserved.data] Error 1
-> make[1]: *** [bzImage] Error 2
-> 
-> Commit 33def8498fdd ("treewide: Convert macro and uses of __section(foo)
-> to __section("foo")") converted all __section(foo) to __section("foo").
-> This is wrong for __bootdata / __bootdata_preserved macros which want
-> variable names to be a part of intermediate section names .boot.data.<var
-> name> and .boot.preserved.data.<var name>. Those sections are later
-> sorted by alignment + name and merged together into final .boot.data
-> / .boot.preserved.data sections. Those sections must be identical in
-> the decompressor and the decompressed kernel (that is checked during
-> the build).
-> 
-> Fixes: 33def8498fdd ("treewide: Convert macro and uses of __section(foo) to __section("foo")")
-> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Hi Linus,
 
-Apologies and thank you.
-I believed the robot had done these compilation tests.
+please pull a simple fix, so that s390 compiles again after Joe Perches' commit
+33def8498fdd ("treewide: Convert macro and uses of __section(foo) to __section("foo")")
+which went in just before 5.10-rc1.
 
+Thanks,
+Heiko
 
+The following changes since commit 3650b228f83adda7e5ee532e2b90429c03f7b9ec:
+
+  Linux 5.10-rc1 (2020-10-25 15:14:11 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.10-2
+
+for you to fetch changes up to 8e90b4b1305a80b1d7712370a163eff269ac1ba2:
+
+  s390: correct __bootdata / __bootdata_preserved macros (2020-10-26 14:18:01 +0100)
+
+----------------------------------------------------------------
+- Fix s390 compile breakage caused by commit 33def8498fdd
+  ("treewide: Convert macro and uses of __section(foo) to __section("foo")")
+
+----------------------------------------------------------------
+Vasily Gorbik (1):
+      s390: correct __bootdata / __bootdata_preserved macros
+
+ arch/s390/include/asm/sections.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/s390/include/asm/sections.h b/arch/s390/include/asm/sections.h
+index a996d3990a02..0c2151451ba5 100644
+--- a/arch/s390/include/asm/sections.h
++++ b/arch/s390/include/asm/sections.h
+@@ -26,14 +26,14 @@ static inline int arch_is_kernel_initmem_freed(unsigned long addr)
+  * final .boot.data section, which should be identical in the decompressor and
+  * the decompressed kernel (that is checked during the build).
+  */
+-#define __bootdata(var) __section(".boot.data.var") var
++#define __bootdata(var) __section(".boot.data." #var) var
+ 
+ /*
+  * .boot.preserved.data is similar to .boot.data, but it is not part of the
+  * .init section and thus will be preserved for later use in the decompressed
+  * kernel.
+  */
+-#define __bootdata_preserved(var) __section(".boot.preserved.data.var") var
++#define __bootdata_preserved(var) __section(".boot.preserved.data." #var) var
+ 
+ extern unsigned long __sdma, __edma;
+ extern unsigned long __stext_dma, __etext_dma;
