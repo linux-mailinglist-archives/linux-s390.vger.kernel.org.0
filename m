@@ -2,67 +2,56 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E51BB298B0A
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Oct 2020 12:00:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7D6A298B45
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Oct 2020 12:01:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1772802AbgJZK6p (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 26 Oct 2020 06:58:45 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43045 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1772827AbgJZK6o (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 26 Oct 2020 06:58:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g12so11870963wrp.10
-        for <linux-s390@vger.kernel.org>; Mon, 26 Oct 2020 03:58:41 -0700 (PDT)
+        id S1772315AbgJZLBH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 26 Oct 2020 07:01:07 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39903 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1772254AbgJZK61 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 26 Oct 2020 06:58:27 -0400
+Received: by mail-wm1-f68.google.com with SMTP id d3so11969883wma.4
+        for <linux-s390@vger.kernel.org>; Mon, 26 Oct 2020 03:58:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5W4UqFTJMoDRzu7XpmV7m/mIx7tbXZK4TFNNVek8jNg=;
-        b=KLr497mrTXuUWmZaofaXk1hyxgArLSK5Z8LFA7VwpBwSz2E3+nE1glgvLx0JiQdQzn
-         dm5kaVp9H5reVf+JjmNdCZ0s9dozztPh2nQ4nrraI1YOy9mqE/zZOpL+5xkTYVff+uRk
-         JdfMqSudDhC/KCWc2IX1OVFNm25KGK/VrwkWA=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FLkPK/wakWgPcP2XtBGkyHk3/K5f5jOPCyDZpBtuyVA=;
+        b=UWVGBGjyj6MIRYbUDiITJq5L6QqEg6/q2/NHckpyd8RPSBh26b0bPaluvTWItOuYKc
+         uaoPMBpxALWoXXsF90NCYVWJoITCFikSp8O7FpqdOPDdJXFgIlHFG/TgfvpItfUwxafp
+         6wW5he4gsgXTW7dkqWJgYLc8PHDC8/A2/zOmc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5W4UqFTJMoDRzu7XpmV7m/mIx7tbXZK4TFNNVek8jNg=;
-        b=Su63L4Cl9U5LfLwadJjEzL7096mrzQ5hIrP6DSkDYofigVUdn8r9Hvhmoyxcc+/VLd
-         0/1LEX9Pcy6LKmOrXSJwQnOIrariO+vkK62vV/or6YZeJo+8S+SJKPgiGQbiA3tGnR3I
-         Sm1oeayGBQPIVygB+EQQJEjhnYwl5gOPXFNUokazRR7EE+8OHqb6pAUxShvZ3qul8GMO
-         jgnygFgdAHi7RBBkzZaEM36/UX2NNGUpFVpkE/E8zopYkERu9x4jtnlIl8PLb1cZoe3p
-         TMJkV3crfcveOdO//JbvAuRcIghgdLy1BI622YsMtVwrPTHB2XsaIeXmfV4AMzdaHQwo
-         xZhg==
-X-Gm-Message-State: AOAM532oHm+YUllJMexX0DMulhmYVzg0vCQAVKy4X2tTiq45YKu7CmV+
-        aYwB6uo/06oyLn4mogBPam9rDw==
-X-Google-Smtp-Source: ABdhPJz2su0SrOVqm3DeypSb7RJN8qc1fEsNaBh1v2aKMDuErJYYfZ5yJi5C/1uI817lBc+Ai9qYTQ==
-X-Received: by 2002:adf:f3cb:: with SMTP id g11mr18177850wrp.210.1603709921142;
-        Mon, 26 Oct 2020 03:58:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FLkPK/wakWgPcP2XtBGkyHk3/K5f5jOPCyDZpBtuyVA=;
+        b=SQPPJY5t+NzYdDTiiFeNY6U3WU6Wf3NTLqkNG/DfOl1k3GIKjvjCFSEBscE2trA0cM
+         fRdMKtLci9gOxQ+inyuC0PmfTfwoqa41s/wPYmqHoLUaIPImCKBLbaK1yDeZsDsftJsC
+         hZMXdRMDZKu4a6uVghpfMgA+7hz2hNC5JmqkrnHSm2+z7Z10ChBLpLZLZzX+J96eQK2F
+         j8NU21k2ypGOmFM9S5vUm0rSEUbfp/X9RWlZ58VHhadfJTfTjYJ+o4vAT3HTxBaAUFs5
+         efarUGleebA25OMjIvihHbrFxLg2g9GwMrjQMT8Vs8GwSstL2NDSvtzk3nuvQ4Nmhi1s
+         qKWQ==
+X-Gm-Message-State: AOAM531jPgizSRNHsuj+T35CXFw3XtWM9zWPJb1Sr4xYlZoBczAurOYw
+        xZT8YYgkbJWU4meruNnEuL3jyA==
+X-Google-Smtp-Source: ABdhPJxesVax0WQRMCyO4OuQvYno6G/x4zHb3UoXArN6uKT0KIo/6VWoGjLr6p0ejXLAy+E8fDIECg==
+X-Received: by 2002:a1c:3243:: with SMTP id y64mr15267147wmy.175.1603709905111;
+        Mon, 26 Oct 2020 03:58:25 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id w83sm21165156wmg.48.2020.10.26.03.58.39
+        by smtp.gmail.com with ESMTPSA id w83sm21165156wmg.48.2020.10.26.03.58.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Oct 2020 03:58:40 -0700 (PDT)
+        Mon, 26 Oct 2020 03:58:24 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     DRI Development <dri-devel@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>
 Cc:     kvm@vger.kernel.org, linux-mm@kvack.org,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-s390@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v4 11/15] PCI: Obey iomem restrictions for procfs mmap
-Date:   Mon, 26 Oct 2020 11:58:14 +0100
-Message-Id: <20201026105818.2585306-12-daniel.vetter@ffwll.ch>
+        linux-s390@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH v4 00/15] follow_pfn and other iomap races
+Date:   Mon, 26 Oct 2020 11:58:03 +0100
+Message-Id: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
-References: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -70,54 +59,92 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-There's three ways to access PCI BARs from userspace: /dev/mem, sysfs
-files, and the old proc interface. Two check against
-iomem_is_exclusive, proc never did. And with CONFIG_IO_STRICT_DEVMEM,
-this starts to matter, since we don't want random userspace having
-access to PCI BARs while a driver is loaded and using it.
+Hi all
 
-Fix this by adding the same iomem_is_exclusive() check we already have
-on the sysfs side in pci_mmap_resource().
+Round 3 of my patch series to clamp down a bunch of races and gaps
+around follow_pfn and other access to iomem mmaps. Previous version:
 
-References: 90a545e98126 ("restrict /dev/mem to idle io memory ranges")
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-mm@kvack.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-media@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
---
-v2: Improve commit message (Bjorn)
----
- drivers/pci/proc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+v1: https://lore.kernel.org/dri-devel/20201007164426.1812530-1-daniel.vetter@ffwll.ch/
+v2: https://lore.kernel.org/dri-devel/20201009075934.3509076-1-daniel.vetter@ffwll.ch
+v3: https://lore.kernel.org/dri-devel/20201021085655.1192025-1-daniel.vetter@ffwll.ch/
 
-diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index d35186b01d98..3a2f90beb4cb 100644
---- a/drivers/pci/proc.c
-+++ b/drivers/pci/proc.c
-@@ -274,6 +274,11 @@ static int proc_bus_pci_mmap(struct file *file, struct vm_area_struct *vma)
- 		else
- 			return -EINVAL;
- 	}
-+
-+	if (dev->resource[i].flags & IORESOURCE_MEM &&
-+	    iomem_is_exclusive(dev->resource[i].start))
-+		return -EINVAL;
-+
- 	ret = pci_mmap_page_range(dev, i, vma,
- 				  fpriv->mmap_state, write_combine);
- 	if (ret < 0)
+And the discussion that sparked this journey:
+
+https://lore.kernel.org/dri-devel/20201007164426.1812530-1-daniel.vetter@ffwll.ch/
+
+Changes in v4:
+- Drop the s390 patch, that was very stand-alone and now queued up to land
+  through s390 trees.
+- Comment polish per Dan's review.
+
+Changes in v3:
+- Bunch of polish all over, no functional changes aside from one barrier
+  in the resource code, for consistency.
+- A few more r-b tags.
+
+Changes in v2:
+- tons of small polish&fixes all over, thanks to all the reviewers who
+  spotted issues
+- I managed to test at least the generic_access_phys and pci mmap revoke
+  stuff with a few gdb sessions using our i915 debug tools (hence now also
+  the drm/i915 patch to properly request all the pci bar regions)
+- reworked approach for the pci mmap revoke: Infrastructure moved into
+  kernel/resource.c, address_space mapping is now set up at open time for
+  everyone (which required some sysfs changes). Does indeed look a lot
+  cleaner and a lot less invasive than I feared at first.
+
+I feel like this is ready for some wider soaking. Since the remaining bits
+are all kinda connnected probably simplest if it all goes through -mm.
+
+Cheers, Daniel
+
+Daniel Vetter (15):
+  drm/exynos: Stop using frame_vector helpers
+  drm/exynos: Use FOLL_LONGTERM for g2d cmdlists
+  misc/habana: Stop using frame_vector helpers
+  misc/habana: Use FOLL_LONGTERM for userptr
+  mm/frame-vector: Use FOLL_LONGTERM
+  media: videobuf2: Move frame_vector into media subsystem
+  mm: Close race in generic_access_phys
+  mm: Add unsafe_follow_pfn
+  media/videbuf1|2: Mark follow_pfn usage as unsafe
+  vfio/type1: Mark follow_pfn as unsafe
+  PCI: Obey iomem restrictions for procfs mmap
+  /dev/mem: Only set filp->f_mapping
+  resource: Move devmem revoke code to resource framework
+  sysfs: Support zapping of binary attr mmaps
+  PCI: Revoke mappings like devmem
+
+ drivers/char/mem.c                            |  86 +--------------
+ drivers/gpu/drm/exynos/Kconfig                |   1 -
+ drivers/gpu/drm/exynos/exynos_drm_g2d.c       |  48 ++++-----
+ drivers/media/common/videobuf2/Kconfig        |   1 -
+ drivers/media/common/videobuf2/Makefile       |   1 +
+ .../media/common/videobuf2}/frame_vector.c    |  54 ++++------
+ drivers/media/platform/omap/Kconfig           |   1 -
+ drivers/media/v4l2-core/videobuf-dma-contig.c |   2 +-
+ drivers/misc/habanalabs/Kconfig               |   1 -
+ drivers/misc/habanalabs/common/habanalabs.h   |   6 +-
+ drivers/misc/habanalabs/common/memory.c       |  50 ++++-----
+ drivers/pci/pci-sysfs.c                       |   4 +
+ drivers/pci/proc.c                            |   6 ++
+ drivers/vfio/vfio_iommu_type1.c               |   4 +-
+ fs/sysfs/file.c                               |  11 ++
+ include/linux/ioport.h                        |   6 +-
+ include/linux/mm.h                            |  47 +-------
+ include/linux/sysfs.h                         |   2 +
+ include/media/frame_vector.h                  |  47 ++++++++
+ include/media/videobuf2-core.h                |   1 +
+ kernel/resource.c                             | 101 +++++++++++++++++-
+ mm/Kconfig                                    |   3 -
+ mm/Makefile                                   |   1 -
+ mm/memory.c                                   |  78 +++++++++++++-
+ mm/nommu.c                                    |  17 +++
+ security/Kconfig                              |  13 +++
+ 26 files changed, 347 insertions(+), 245 deletions(-)
+ rename {mm => drivers/media/common/videobuf2}/frame_vector.c (85%)
+ create mode 100644 include/media/frame_vector.h
+
 -- 
 2.28.0
 
