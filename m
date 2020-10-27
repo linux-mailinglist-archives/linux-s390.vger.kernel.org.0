@@ -2,481 +2,219 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A02129A7F0
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Oct 2020 10:34:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F241B29A829
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Oct 2020 10:47:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895633AbgJ0Jdy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 27 Oct 2020 05:33:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33242 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2409223AbgJ0Jdy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 27 Oct 2020 05:33:54 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09R9WPKU163796;
-        Tue, 27 Oct 2020 05:33:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=UE9t9Hj6fBVK3jf54L4o+YnyCIcBxjtyc5Vgo7nppRI=;
- b=N4iYzldxLEL7N307wntdXzs5A12Jc/IwhWcB4OjK8T+Q5wXUF7yGTQ+EUGlEoiiTw/Kb
- d/DCd10nC1W6kSyEeYXWf0+kr7lFvJ1DGcomaW3WHDyDTKvGJqq7r5+XBur35gtKWtOh
- v0O4vhQx6FQ/Q3pPhiY/pBt0kZtzZ/ltGAOt269z1Rvnq2mLjDpHAr7DrBEO+lme7Was
- dtdJwbOOJu8dxRveVDNFlHopOpa4WyqsH/KmGU1eWRvAsxChpKyWF7BmkDkGvbau6Vdo
- kUqfMkdEBzZg4pCGPHjVj1oIxZwe8QKUOV3OA3vYhOgBTsVm330GvMhTRoqWHs0VRepv EA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34d97gdnmk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Oct 2020 05:33:46 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09R9WOGi163741;
-        Tue, 27 Oct 2020 05:33:44 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34d97gdngx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Oct 2020 05:33:41 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09R9X2aa024206;
-        Tue, 27 Oct 2020 09:33:34 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 34cbhh35xu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Oct 2020 09:33:34 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09R9XVeS32440712
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Oct 2020 09:33:31 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A58CA4054;
-        Tue, 27 Oct 2020 09:33:31 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8EFEEA405F;
-        Tue, 27 Oct 2020 09:33:30 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.77.212])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 27 Oct 2020 09:33:30 +0000 (GMT)
-Date:   Tue, 27 Oct 2020 10:33:28 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        cohuck@redhat.com, mjrosato@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v11 03/14] s390/vfio-ap: manage link between queue
- struct and matrix mdev
-Message-ID: <20201027103328.6411353b.pasic@linux.ibm.com>
-In-Reply-To: <20201022171209.19494-4-akrowiak@linux.ibm.com>
-References: <20201022171209.19494-1-akrowiak@linux.ibm.com>
-        <20201022171209.19494-4-akrowiak@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S2895926AbgJ0Jra (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 27 Oct 2020 05:47:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895736AbgJ0Jr3 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 27 Oct 2020 05:47:29 -0400
+Received: from kernel.org (unknown [87.70.96.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B04362225C;
+        Tue, 27 Oct 2020 09:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603792049;
+        bh=Pl1YIiyGGfjvgMAFTtztDDJbHFrjgbxhmYzhd2ePY80=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WDNJQHhLCatOfVLGrCrLXIjLiKWdqmmYKffrnwGW7M02wygaJ1BRI2eKsyTxCGKYu
+         HnOKFOuAHwe5+DtrbJi1yDI/0QFWqnQt1wDMe7w/rKrKstLjbMgz0k514MLDmiod/X
+         F6BoevFoxl1th9O2+p4RQpIj9hdeBiHrxbv10S9s=
+Date:   Tue, 27 Oct 2020 11:47:14 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "cl@linux.com" <cl@linux.com>,
+        "gor@linux.ibm.com" <gor@linux.ibm.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
+        "penberg@kernel.org" <penberg@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "iamjoonsoo.kim@lge.com" <iamjoonsoo.kim@lge.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "kirill@shutemov.name" <kirill@shutemov.name>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "hca@linux.ibm.com" <hca@linux.ibm.com>,
+        "bp@alien8.de" <bp@alien8.de>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Brown, Len" <len.brown@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 0/4] arch, mm: improve robustness of direct map
+ manipulation
+Message-ID: <20201027094714.GI1154158@kernel.org>
+References: <20201025101555.3057-1-rppt@kernel.org>
+ <ae82f905a0092adb7e0f0ac206335c1883b3170f.camel@intel.com>
+ <20201026090526.GA1154158@kernel.org>
+ <a0212b073b3b2f62c3dbf1bf398f03fa402997be.camel@intel.com>
+ <20201027083816.GG1154158@kernel.org>
+ <e5fc62b6-f644-4ed5-de5b-ffd8337861e4@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.737
- definitions=2020-10-27_03:2020-10-26,2020-10-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- suspectscore=2 lowpriorityscore=0 clxscore=1015 bulkscore=0
- priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=999
- adultscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2009150000 definitions=main-2010270061
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5fc62b6-f644-4ed5-de5b-ffd8337861e4@redhat.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 22 Oct 2020 13:11:58 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> Let's create links between each queue device bound to the vfio_ap device
-> driver and the matrix mdev to which the queue is assigned. The idea is to
-> facilitate efficient retrieval of the objects representing the queue
-> devices and matrix mdevs as well as to verify that a queue assigned to
-> a matrix mdev is bound to the driver.
+On Tue, Oct 27, 2020 at 09:46:35AM +0100, David Hildenbrand wrote:
+> On 27.10.20 09:38, Mike Rapoport wrote:
+> > On Mon, Oct 26, 2020 at 06:05:30PM +0000, Edgecombe, Rick P wrote:
+> > > On Mon, 2020-10-26 at 11:05 +0200, Mike Rapoport wrote:
+> > > > On Mon, Oct 26, 2020 at 01:13:52AM +0000, Edgecombe, Rick P wrote:
+> > > > > On Sun, 2020-10-25 at 12:15 +0200, Mike Rapoport wrote:
+> > > > > > Indeed, for architectures that define
+> > > > > > CONFIG_ARCH_HAS_SET_DIRECT_MAP
+> > > > > > it is
+> > > > > > possible that __kernel_map_pages() would fail, but since this
+> > > > > > function is
+> > > > > > void, the failure will go unnoticed.
+> > > > > 
+> > > > > Could you elaborate on how this could happen? Do you mean during
+> > > > > runtime today or if something new was introduced?
+> > > > 
+> > > > A failure in__kernel_map_pages() may happen today. For instance, on
+> > > > x86
+> > > > if the kernel is built with DEBUG_PAGEALLOC.
+> > > > 
+> > > >          __kernel_map_pages(page, 1, 0);
+> > > > 
+> > > > will need to split, say, 2M page and during the split an allocation
+> > > > of
+> > > > page table could fail.
+> > > 
+> > > On x86 at least, DEBUG_PAGEALLOC expects to never have to break a page
+> > > on the direct map and even disables locking in cpa because it assumes
+> > > this. If this is happening somehow anyway then we should probably fix
+> > > that. Even if it's a debug feature, it will not be as useful if it is
+> > > causing its own crashes.
+> > > 
+> > > I'm still wondering if there is something I'm missing here. It seems
+> > > like you are saying there is a bug in some arch's, so let's add a WARN
+> > > in cross-arch code to log it as it crashes. A warn and making things
+> > > clearer seem like good ideas, but if there is a bug we should fix it.
+> > > The code around the callers still functionally assume re-mapping can't
+> > > fail.
+> > 
+> > Oh, I've meant x86 kernel *without* DEBUG_PAGEALLOC, and indeed the call
+> > that unmaps pages back in safe_copy_page will just reset a 4K page to
+> > NP because whatever made it NP at the first place already did the split.
+> > 
+> > Still, on arm64 with DEBUG_PAGEALLOC=n there is a possibility of a race
+> > between map/unmap dance in __vunmap() and safe_copy_page() that may
+> > cause access to unmapped memory:
+> > 
+> > __vunmap()
+> >      vm_remove_mappings()
+> >          set_direct_map_invalid()
+> > 					safe_copy_page()	
+> > 					    __kernel_map_pages()
+> > 					    	return
+> > 					    do_copy_page() -> fault
+> > 					   	
+> > This is a theoretical bug, but it is still not nice :) 							
+> > 
+> > > > Currently, the only user of __kernel_map_pages() outside
+> > > > DEBUG_PAGEALLOC
+> > > > is hibernation, but I think it would be safer to entirely prevent
+> > > > usage
+> > > > of __kernel_map_pages() when DEBUG_PAGEALLOC=n.
+> > > 
+> > > I totally agree it's error prone FWIW. On x86, my mental model of how
+> > > it is supposed to work is: If a page is 4k and NP it cannot fail to be
+> > > remapped. set_direct_map_invalid_noflush() should result in 4k NP
+> > > pages, and DEBUG_PAGEALLOC should result in all 4k pages on the direct
+> > > map. Are you seeing this violated or do I have wrong assumptions?
+> > 
+> > You are right, there is a set of assumptions about the remapping of the
+> > direct map pages that make it all work, at least on x86.
+> > But this is very subtle and it's not easy to wrap one's head around
+> > this.
+> > 
+> > That's why putting __kernel_map_pages() out of "common" use and
+> > keep it only for DEBUG_PAGEALLOC would make things clearer.
+> > 
+> > > Beyond whatever you are seeing, for the latter case of new things
+> > > getting introduced to an interface with hidden dependencies... Another
+> > > edge case could be a new caller to set_memory_np() could result in
+> > > large NP pages. None of the callers today should cause this AFAICT, but
+> > > it's not great to rely on the callers to know these details.
+> > A caller of set_memory_*() or set_direct_map_*() should expect a failure
+> > and be ready for that. So adding a WARN to safe_copy_page() is the first
+> > step in that direction :)
+> > 
 > 
-> The links will be created as follows:
+> I am probably missing something important, but why are we saving/restoring
+> the content of pages that were explicitly removed from the identity mapping
+> such that nobody will access them?
 > 
->    * When the queue device is probed, if its APQN is assigned to a matrix
->      mdev, the structures representing the queue device and the matrix mdev
->      will be linked.
+> Pages that are not allocated should contain garbage or be zero
+> (init_on_free). That should be easy to handle without ever reading the page
+> content.
+
+I'm not familiar with hibernation to say anything smart here, but the
+help text of DEBUG_PAGEALLOC in Kconfig says:
+
+	... this option cannot be enabled in combination with
+	hibernation as that would result in incorrect warnings of memory
+	corruption after a resume because free pages are not saved to
+	the suspend image.
+
+Probably you are right and free pages need to be handled differently,
+but it does not seem the case now.
+
+> The other user seems to be vm_remove_mappings(), where we only *temporarily*
+> remove the mapping - while hibernating, that code shouldn't be active
+> anymore I guess - or we could protect it from happening.
+
+Hmm, I _think_ vm_remove_mappings() shouldn't be active while
+hibernating, but I'm not 100% sure.
+
+> As I expressed in another mail, secretmem pages should rather not be saved
+> when hibernating - hibernation should be rather be disabled.
+
+Agree.
+
+> What am I missing?
+
+I think I miscommunicated the purpose of this set, which was to hide
+__kernel_map_pages() under DEBUG_PAGEALLOC and make hibernation use
+set_direct_map_*() explictly without major rework of free pages handling
+during hibernation.
+
+Does it help?
+
+> -- 
+> Thanks,
 > 
->    * When an adapter or domain is assigned to a matrix mdev, for each new
->      APQN assigned that references a queue device bound to the vfio_ap
->      device driver, the structures representing the queue device and the
->      matrix mdev will be linked.
-> 
-> The links will be removed as follows:
-> 
->    * When the queue device is removed, if its APQN is assigned to a matrix
->      mdev, the structures representing the queue device and the matrix mdev
->      will be unlinked.
-> 
->    * When an adapter or domain is unassigned from a matrix mdev, for each
->      APQN unassigned that references a queue device bound to the vfio_ap
->      device driver, the structures representing the queue device and the
->      matrix mdev will be unlinked.
+> David / dhildenb
 > 
 
-I would prefer if the changes to the q->matrix_mdev link were restricted
-to this patch. Patches 1 and 2 do some of that stuff as well. See my
-comments at the code. 
-
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_ops.c     | 146 +++++++++++++++++++++++---
->  drivers/s390/crypto/vfio_ap_private.h |   3 +
->  2 files changed, 135 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index 049b97d7444c..1357f8f8b7e4 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -28,7 +28,6 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
->  
->  /**
->   * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
-> - * @matrix_mdev: the associated mediated matrix
->   * @apqn: The queue APQN
->   *
->   * Retrieve a queue with a specific APQN from the AP queue devices attached to
-> @@ -36,18 +35,11 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
->   *
->   * Returns the pointer to the vfio_ap_queue with the specified APQN, or NULL.
->   */
-> -static struct vfio_ap_queue *vfio_ap_get_queue(
-> -					struct ap_matrix_mdev *matrix_mdev,
-> -					unsigned long apqn)
-> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
->  {
->  	struct ap_queue *queue;
->  	struct vfio_ap_queue *q = NULL;
->  
-> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
-> -		return NULL;
-> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
-> -		return NULL;
-> -
->  	queue = ap_get_qdev(apqn);
->  	if (!queue)
->  		return NULL;
-
-Patch 2 removed
-	q->matrix_mdev = matrix_mdev;
-because patch 1 make it redundant. But patch 1 should not have made it
-redundant in the first place.
-
-It should be removed in this patch.
-
-> @@ -60,6 +52,19 @@ static struct vfio_ap_queue *vfio_ap_get_queue(
->  	return q;
->  }
->  
-> +static struct vfio_ap_queue *
-> +vfio_ap_mdev_get_queue(struct ap_matrix_mdev *matrix_mdev, unsigned long apqn)
-> +{
-> +	struct vfio_ap_queue *q;
-> +
-> +	hash_for_each_possible(matrix_mdev->qtable, q, mdev_qnode, apqn) {
-> +		if (q && (q->apqn == apqn))
-> +			return q;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
->  /**
->   * vfio_ap_wait_for_irqclear
->   * @apqn: The AP Queue number
-> @@ -171,7 +176,6 @@ static struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
->  		  status.response_code);
->  end_free:
->  	vfio_ap_free_aqic_resources(q);
-> -	q->matrix_mdev = NULL;
->  	return status;
->  }
->  
-> @@ -284,14 +288,14 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
->  
->  	if (!vcpu->kvm->arch.crypto.pqap_hook)
->  		goto out_unlock;
-> +
->  	matrix_mdev = container_of(vcpu->kvm->arch.crypto.pqap_hook,
->  				   struct ap_matrix_mdev, pqap_hook);
->  
-> -	q = vfio_ap_get_queue(matrix_mdev, apqn);
-> +	q = vfio_ap_mdev_get_queue(matrix_mdev, apqn);
->  	if (!q)
->  		goto out_unlock;
->  
-> -	q->matrix_mdev = matrix_mdev;
-
-This was unnecessarily added in patch 1, now it's removed.
-
->  	status = vcpu->run->s.regs.gprs[1];
->  
->  	/* If IR bit(16) is set we enable the interrupt */
-> @@ -331,6 +335,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
->  
->  	matrix_mdev->mdev = mdev;
->  	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->matrix);
-> +	hash_init(matrix_mdev->qtable);
->  	mdev_set_drvdata(mdev, matrix_mdev);
->  	matrix_mdev->pqap_hook.hook = handle_pqap;
->  	matrix_mdev->pqap_hook.owner = THIS_MODULE;
-> @@ -559,6 +564,87 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
->  	return 0;
->  }
->  
-> +enum qlink_type {
-> +	LINK_APID,
-> +	LINK_APQI,
-> +	UNLINK_APID,
-> +	UNLINK_APQI,
-> +};
-> +
-> +static void vfio_ap_mdev_link_queue(struct ap_matrix_mdev *matrix_mdev,
-> +				    unsigned long apid, unsigned long apqi)
-> +{
-> +	struct vfio_ap_queue *q;
-> +
-> +	q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
-> +	if (q) {
-> +		q->matrix_mdev = matrix_mdev;
-> +		hash_add(matrix_mdev->qtable,
-> +			 &q->mdev_qnode, q->apqn);
-> +	}
-> +}
-> +
-> +static void vfio_ap_mdev_unlink_queue(unsigned long apid, unsigned long apqi)
-> +{
-> +	struct vfio_ap_queue *q;
-> +
-> +	q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
-> +	if (q) {
-> +		q->matrix_mdev = NULL;
-> +		hash_del(&q->mdev_qnode);
-> +	}
-> +}
-> +
-> +/**
-> + * vfio_ap_mdev_link_queues
-> + *
-> + * @matrix_mdev: The matrix mdev to link.
-> + * @type:	 The type of @qlink_id.
-> + * @qlink_id:	 The APID or APQI of the queues to link.
-> + *
-> + * Sets or clears the links between the queues with the specified @qlink_id
-> + * and the @matrix_mdev:
-> + *     @type == LINK_APID: Set the links between the @matrix_mdev and the
-> + *                         queues with the specified @qlink_id (APID)
-> + *     @type == LINK_APQI: Set the links between the @matrix_mdev and the
-> + *                         queues with the specified @qlink_id (APQI)
-> + *     @type == UNLINK_APID: Clear the links between the @matrix_mdev and the
-> + *                           queues with the specified @qlink_id (APID)
-> + *     @type == UNLINK_APQI: Clear the links between the @matrix_mdev and the
-> + *                           queues with the specified @qlink_id (APQI)
-> + */
-> +static void vfio_ap_mdev_link_queues(struct ap_matrix_mdev *matrix_mdev,
-> +				     enum qlink_type type,
-> +				     unsigned long qlink_id)
-
-I believe Connie wanted this changed, and IMHO she is right, this does
-not specify the type of link, the type of the link is always the same,
-but determines what action needs to be taken. The enum name qlink_type
-reads like it's the type of the qlink, but as your doc says it just tells
-you what qlink_id is. 
-
-If apids and apqis had their own type-checked distinct type, the type of qlink_id
-would be the union of those two...
-
-> +{
-> +	unsigned long id;
-> +
-> +	switch (type) {
-
-Since each of these cases is used at exactly one place, maybe it would
-be simpler to just inline them where they are needed. Or are these going
-to be used in other situations as well?
-
-> +	case LINK_APID:
-
-assign_adapter
-
-> +		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
-> +				     matrix_mdev->matrix.aqm_max + 1)
-> +			vfio_ap_mdev_link_queue(matrix_mdev, qlink_id, id);
-> +		break;
-> +	case UNLINK_APID:
-
-unassign_adapter
-
-> +		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
-> +				     matrix_mdev->matrix.aqm_max + 1)
-> +			vfio_ap_mdev_unlink_queue(qlink_id, id);
-> +		break;
-> +	case LINK_APQI:
-
-assign_domain
-
-> +		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
-> +				     matrix_mdev->matrix.apm_max + 1)
-> +			vfio_ap_mdev_link_queue(matrix_mdev, id, qlink_id);
-> +		break;
-> +	case UNLINK_APQI:
-
-unassign_domain
-
-> +		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
-> +				     matrix_mdev->matrix.apm_max + 1)
-> +			vfio_ap_mdev_link_queue(matrix_mdev, id, qlink_id);
-> +		break;
-> +	default:
-> +		WARN_ON_ONCE(1);
-> +	}
-> +}
-> +
->  /**
->   * assign_adapter_store
->   *
-> @@ -628,6 +714,7 @@ static ssize_t assign_adapter_store(struct device *dev,
->  	if (ret)
->  		goto share_err;
->  
-> +	vfio_ap_mdev_link_queues(matrix_mdev, LINK_APID, apid);
->  	ret = count;
->  	goto done;
->  
-> @@ -679,6 +766,7 @@ static ssize_t unassign_adapter_store(struct device *dev,
->  
->  	mutex_lock(&matrix_dev->lock);
->  	clear_bit_inv((unsigned long)apid, matrix_mdev->matrix.apm);
-> +	vfio_ap_mdev_link_queues(matrix_mdev, UNLINK_APID, apid);
->  	mutex_unlock(&matrix_dev->lock);
->  
->  	return count;
-> @@ -769,6 +857,7 @@ static ssize_t assign_domain_store(struct device *dev,
->  	if (ret)
->  		goto share_err;
->  
-> +	vfio_ap_mdev_link_queues(matrix_mdev, LINK_APQI, apqi);
->  	ret = count;
->  	goto done;
->  
-> @@ -821,6 +910,7 @@ static ssize_t unassign_domain_store(struct device *dev,
->  
->  	mutex_lock(&matrix_dev->lock);
->  	clear_bit_inv((unsigned long)apqi, matrix_mdev->matrix.aqm);
-> +	vfio_ap_mdev_link_queues(matrix_mdev, UNLINK_APQI, apqi);
->  	mutex_unlock(&matrix_dev->lock);
->  
->  	return count;
-> @@ -1159,8 +1249,8 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
->  			 */
->  			if (ret)
->  				rc = ret;
-> -			q = vfio_ap_get_queue(matrix_mdev,
-> -					      AP_MKQID(apid, apqi));
-> +			q = vfio_ap_mdev_get_queue(matrix_mdev,
-> +						   AP_MKQID(apid, apqi));
->  			if (q)
->  				vfio_ap_free_aqic_resources(q);
->  		}
-> @@ -1288,6 +1378,29 @@ void vfio_ap_mdev_unregister(void)
->  	mdev_unregister_device(&matrix_dev->device);
->  }
->  
-> +/**
-> + * vfio_ap_queue_link_mdev
-> + *
-> + * @q: The queue to link with the matrix mdev.
-> + *
-> + * Links @q with the matrix mdev to which the queue's APQN is assigned.
-> + */
-> +static void vfio_ap_queue_link_mdev(struct vfio_ap_queue *q)
-> +{
-> +	unsigned long apid = AP_QID_CARD(q->apqn);
-> +	unsigned long apqi = AP_QID_QUEUE(q->apqn);
-> +	struct ap_matrix_mdev *matrix_mdev;
-> +
-> +	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
-> +		if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
-> +		    test_bit_inv(apqi, matrix_mdev->matrix.aqm)) {
-> +			q->matrix_mdev = matrix_mdev;
-> +			hash_add(matrix_mdev->qtable, &q->mdev_qnode, q->apqn);
-> +			break;
-> +		}
-> +	}
-> +}
-> +
->  int vfio_ap_mdev_probe_queue(struct ap_device *apdev)
->  {
->  	struct vfio_ap_queue *q;
-> @@ -1299,9 +1412,12 @@ int vfio_ap_mdev_probe_queue(struct ap_device *apdev)
->  	if (!q)
->  		return -ENOMEM;
->  
-> +	mutex_lock(&matrix_dev->lock);
->  	dev_set_drvdata(&queue->ap_dev.device, q);
->  	q->apqn = queue->qid;
->  	q->saved_isc = VFIO_AP_ISC_INVALID;
-> +	vfio_ap_queue_link_mdev(q);
-> +	mutex_unlock(&matrix_dev->lock);
->  
->  	return 0;
->  }
-> @@ -1321,6 +1437,8 @@ void vfio_ap_mdev_remove_queue(struct ap_device *apdev)
->  	apqi = AP_QID_QUEUE(q->apqn);
->  	vfio_ap_mdev_reset_queue(apid, apqi, 1);
->  	vfio_ap_free_aqic_resources(q);
-> +	if (q->matrix_mdev)
-> +		hash_del(&q->mdev_qnode);
->  	kfree(q);
->  	mutex_unlock(&matrix_dev->lock);
->  }
-> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-> index d9003de4fbad..4e5cc72fc0db 100644
-> --- a/drivers/s390/crypto/vfio_ap_private.h
-> +++ b/drivers/s390/crypto/vfio_ap_private.h
-> @@ -18,6 +18,7 @@
->  #include <linux/delay.h>
->  #include <linux/mutex.h>
->  #include <linux/kvm_host.h>
-> +#include <linux/hashtable.h>
->  
->  #include "ap_bus.h"
->  
-> @@ -86,6 +87,7 @@ struct ap_matrix_mdev {
->  	struct kvm *kvm;
->  	struct kvm_s390_module_hook pqap_hook;
->  	struct mdev_device *mdev;
-> +	DECLARE_HASHTABLE(qtable, 8);
-
-I'm not sure about the benefit of this hashtable if the bus is supposed
-to give us O(1) queue lookup based on APQN. I guess it's also easier to
-right-size the hashtable in the bus than for each mdev.
-
-Don't get me wrong, I'm willing to accept these hashtables.
-
-Another thing I'm thinking about is how do we want to deal later with
-resources filtered because one of the required queues is missing. Does
-it make sense to maintain the link for those? I will have to study the
-following patches and return to this one later.
-
-Regards,
-Halil
-
-
->  };
->  
->  extern int vfio_ap_mdev_register(void);
-> @@ -97,6 +99,7 @@ struct vfio_ap_queue {
->  	int	apqn;
->  #define VFIO_AP_ISC_INVALID 0xff
->  	unsigned char saved_isc;
-> +	struct hlist_node mdev_qnode;
->  };
->  
->  int vfio_ap_mdev_probe_queue(struct ap_device *queue);
-
+-- 
+Sincerely yours,
+Mike.
