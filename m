@@ -2,175 +2,236 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA79B29A521
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Oct 2020 08:02:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAE8A29A62C
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Oct 2020 09:07:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2507061AbgJ0HCz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 27 Oct 2020 03:02:55 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55810 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2409081AbgJ0HCz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 27 Oct 2020 03:02:55 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09R72BCI072408;
-        Tue, 27 Oct 2020 03:02:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=jiYXiRnfYmQeSErl7SLv/32EUQoerdoMJWU7dTGNKX4=;
- b=JprEVhk00acUFavytnTbpwN0T2e9VQkCs/Zw4ffxlNQLuzymvxY4/SdzrOFe1T6lU232
- QWL9EEuP9amV94LjPKDkw2Bdu3qbKRHlASHA9pL0nFZJiktbp2EvGDH3mrGCw0aTbwkO
- nQqgcrH2zfVH0cRuhKuyVHQLS0FI94fbhqk53aqu24UvI1yudWuHEncI2twdIujA60uh
- lWnysaHy3+jsxAnxQcIpyxPRiVA2YVMlFZzto1xDD2art13NIcQW1Eg20Q00jaxDevq8
- duI7yp7KWTK/yYLESF3YxhHwOmwXfcymIG/lwq+razQTVNT2kDeJ1EaklaTvP1ABkk6I Xw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34e4jvxm4d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Oct 2020 03:02:54 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09R72rGa076285;
-        Tue, 27 Oct 2020 03:02:53 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34e4jvxm2q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Oct 2020 03:02:53 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09R6uv43023600;
-        Tue, 27 Oct 2020 07:02:51 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma06ams.nl.ibm.com with ESMTP id 34cbhh31rq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 27 Oct 2020 07:02:50 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09R72mpk32178478
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Oct 2020 07:02:48 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C3A0AE04D;
-        Tue, 27 Oct 2020 07:02:48 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60D5BAE053;
-        Tue, 27 Oct 2020 07:02:47 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.77.212])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 27 Oct 2020 07:02:47 +0000 (GMT)
-Date:   Tue, 27 Oct 2020 08:01:58 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        cohuck@redhat.com, mjrosato@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v11 02/14] 390/vfio-ap: use new AP bus interface to
- search for queue devices
-Message-ID: <20201027080158.0a4fa6b2.pasic@linux.ibm.com>
-In-Reply-To: <20201022171209.19494-3-akrowiak@linux.ibm.com>
-References: <20201022171209.19494-1-akrowiak@linux.ibm.com>
-        <20201022171209.19494-3-akrowiak@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S2508758AbgJ0IHH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 27 Oct 2020 04:07:07 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:42950 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2894387AbgJ0IFP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 27 Oct 2020 04:05:15 -0400
+Received: by mail-oo1-f65.google.com with SMTP id l26so114742oop.9
+        for <linux-s390@vger.kernel.org>; Tue, 27 Oct 2020 01:05:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=iRVTkxIJnHwaBLHokGGgZRE0TJVDnrQ64zJBBqMFGs0=;
+        b=Xy9/3e579FMjjTLWAuxWgipn5uXab1XIWYf2dD59Ue8ydsa3nziuf3dnpX6I3eKQXi
+         LX0Fhct8zwQ9LPuwvLWtj2sHUJJ3/cbghGd13edFhR4n655CEK2nlwMk9XgeGlojhrCH
+         MtcfG6S4mtBZzrOUEzua2bUtpL2rn4D1Bjj1E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iRVTkxIJnHwaBLHokGGgZRE0TJVDnrQ64zJBBqMFGs0=;
+        b=FfLg+ETU9aWg5aRd5YSBFyfFzb654hxYvMwDqIQwy9Am4tzmojoh/wktf/jJuXH8+A
+         JbGbEJOVoUZ7CpqIEYpmDB2Haw+ROqilfqmuY9pg8DsIHaS9VP/WjIrxkWmfjYLrdZNX
+         kTIAYOYff4xoctVujlLVkimxwXKq6COtOqJVdIKQr0bPaKhjCIs14STSOvpqydS82ir9
+         e7h1UAJ+KAcjCQlFAw0V/e6OKwLg4x0CJ8y+cxPZW0kcSp+GMPApR39yZgqwcW/dXLBD
+         1DDgTZlBu/0RW3IvQ9VX9csJ08nwgQ4uNOXEw+i5WXYx/zTURwyss+S1/ixLHEqIgDXY
+         bO1Q==
+X-Gm-Message-State: AOAM5326aO1OL7ICx5Yjx1VD7VnJ6HtYgQy4G5VeKWzXUYNTt4wCF01/
+        VE7a092NVURGU4fSh9i7sle/BMjhwoA5cwrMWATZGg==
+X-Google-Smtp-Source: ABdhPJwUquARZelitGIpZLDuhwl8Qo3TUgFyzzaUCWDMIxNpoISTQyK7JTuU9JW1uR1xbLdlZOvSwHCimNolpOBBW1c=
+X-Received: by 2002:a4a:b503:: with SMTP id r3mr809275ooo.28.1603785913727;
+ Tue, 27 Oct 2020 01:05:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.737
- definitions=2020-10-27_03:2020-10-26,2020-10-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
- priorityscore=1501 adultscore=0 bulkscore=0 phishscore=0 malwarescore=0
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010270043
+References: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
+ <20201026105818.2585306-6-daniel.vetter@ffwll.ch> <20201026221520.GC2802004@chromium.org>
+In-Reply-To: <20201026221520.GC2802004@chromium.org>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Tue, 27 Oct 2020 09:05:01 +0100
+Message-ID: <CAKMK7uG4f_7=9VgdQ9AE876gzLTNsszicMD9pKqeqvQybDSDpQ@mail.gmail.com>
+Subject: Re: [PATCH v4 05/15] mm/frame-vector: Use FOLL_LONGTERM
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 22 Oct 2020 13:11:57 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On Mon, Oct 26, 2020 at 11:15 PM Tomasz Figa <tfiga@chromium.org> wrote:
+>
+> Hi Daniel,
+>
+> On Mon, Oct 26, 2020 at 11:58:08AM +0100, Daniel Vetter wrote:
+> > This is used by media/videbuf2 for persistent dma mappings, not just
+> > for a single dma operation and then freed again, so needs
+> > FOLL_LONGTERM.
+> >
+> > Unfortunately current pup_locked doesn't support FOLL_LONGTERM due to
+> > locking issues. Rework the code to pull the pup path out from the
+> > mmap_sem critical section as suggested by Jason.
+> >
+> > By relying entirely on the vma checks in pin_user_pages and follow_pfn
+> > (for vm_flags and vma_is_fsdax) we can also streamline the code a lot.
+> >
+> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > Cc: Pawel Osciak <pawel@osciak.com>
+> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Cc: Kyungmin Park <kyungmin.park@samsung.com>
+> > Cc: Tomasz Figa <tfiga@chromium.org>
+> > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+> > Cc: Jan Kara <jack@suse.cz>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: linux-mm@kvack.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-samsung-soc@vger.kernel.org
+> > Cc: linux-media@vger.kernel.org
+> > Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > --
+> > v2: Streamline the code and further simplify the loop checks (Jason)
+> > ---
+> >  mm/frame_vector.c | 50 ++++++++++++++---------------------------------
+> >  1 file changed, 15 insertions(+), 35 deletions(-)
+> >
+>
+> Thank you for the patch. Please see my comments inline.
+>
+> > diff --git a/mm/frame_vector.c b/mm/frame_vector.c
+> > index 10f82d5643b6..d44779e56313 100644
+> > --- a/mm/frame_vector.c
+> > +++ b/mm/frame_vector.c
+> > @@ -38,7 +38,6 @@ int get_vaddr_frames(unsigned long start, unsigned in=
+t nr_frames,
+> >       struct vm_area_struct *vma;
+> >       int ret =3D 0;
+> >       int err;
+> > -     int locked;
+> >
+> >       if (nr_frames =3D=3D 0)
+> >               return 0;
+> > @@ -48,40 +47,25 @@ int get_vaddr_frames(unsigned long start, unsigned =
+int nr_frames,
+> >
+> >       start =3D untagged_addr(start);
+> >
+> > -     mmap_read_lock(mm);
+> > -     locked =3D 1;
+> > -     vma =3D find_vma_intersection(mm, start, start + 1);
+> > -     if (!vma) {
+> > -             ret =3D -EFAULT;
+> > -             goto out;
+> > -     }
+> > -
+> > -     /*
+> > -      * While get_vaddr_frames() could be used for transient (kernel
+> > -      * controlled lifetime) pinning of memory pages all current
+> > -      * users establish long term (userspace controlled lifetime)
+> > -      * page pinning. Treat get_vaddr_frames() like
+> > -      * get_user_pages_longterm() and disallow it for filesystem-dax
+> > -      * mappings.
+> > -      */
+> > -     if (vma_is_fsdax(vma)) {
+> > -             ret =3D -EOPNOTSUPP;
+> > -             goto out;
+> > -     }
+> > -
+> > -     if (!(vma->vm_flags & (VM_IO | VM_PFNMAP))) {
+> > +     ret =3D pin_user_pages_fast(start, nr_frames,
+> > +                               FOLL_FORCE | FOLL_WRITE | FOLL_LONGTERM=
+,
+> > +                               (struct page **)(vec->ptrs));
+> > +     if (ret > 0) {
+> >               vec->got_ref =3D true;
+> >               vec->is_pfns =3D false;
+> > -             ret =3D pin_user_pages_locked(start, nr_frames,
+> > -                     gup_flags, (struct page **)(vec->ptrs), &locked);
+>
+> Should we drop the gup_flags argument, since it's ignored now?
 
-> This patch refactors the vfio_ap device driver to use the AP bus's
-> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
-> information about a queue that is bound to the vfio_ap device driver.
-> The bus's ap_get_qdev() function retrieves the queue device from a
-> hashtable keyed by APQN. This is much more efficient than looping over
-> the list of devices attached to the AP bus by several orders of
-> magnitude.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+Hm right I think an earlier version even had that, but then I moved to
+inlining the functionality in all the places it's used.
 
-Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+I'll drop the gup flag.
 
-> ---
->  drivers/s390/crypto/vfio_ap_ops.c | 35 +++++++++++++------------------
->  1 file changed, 14 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index c471832f0a30..049b97d7444c 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -26,43 +26,36 @@
->  
->  static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
->  
-> -static int match_apqn(struct device *dev, const void *data)
-> -{
-> -	struct vfio_ap_queue *q = dev_get_drvdata(dev);
-> -
-> -	return (q->apqn == *(int *)(data)) ? 1 : 0;
-> -}
-> -
->  /**
-> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
-> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
->   * @matrix_mdev: the associated mediated matrix
->   * @apqn: The queue APQN
->   *
-> - * Retrieve a queue with a specific APQN from the list of the
-> - * devices of the vfio_ap_drv.
-> - * Verify that the APID and the APQI are set in the matrix.
-> + * Retrieve a queue with a specific APQN from the AP queue devices attached to
-> + * the AP bus.
->   *
-> - * Returns the pointer to the associated vfio_ap_queue
-> + * Returns the pointer to the vfio_ap_queue with the specified APQN, or NULL.
->   */
->  static struct vfio_ap_queue *vfio_ap_get_queue(
->  					struct ap_matrix_mdev *matrix_mdev,
-> -					int apqn)
-> +					unsigned long apqn)
->  {
-> -	struct vfio_ap_queue *q;
-> -	struct device *dev;
-> +	struct ap_queue *queue;
-> +	struct vfio_ap_queue *q = NULL;
->  
->  	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
->  		return NULL;
->  	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
->  		return NULL;
->  
-> -	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
-> -				 &apqn, match_apqn);
-> -	if (!dev)
-> +	queue = ap_get_qdev(apqn);
-> +	if (!queue)
->  		return NULL;
-> -	q = dev_get_drvdata(dev);
-> -	q->matrix_mdev = matrix_mdev;
-> -	put_device(dev);
-> +
-> +	if (queue->ap_dev.device.driver == &matrix_dev->vfio_ap_drv->driver)
-> +		q = dev_get_drvdata(&queue->ap_dev.device);
-> +
+> > -             goto out;
+> > +             goto out_unlocked;
+> >       }
+> >
+>
+> Should we initialize ret with 0 here, since pin_user_pages_fast() can
+> return a negative error code, but below we use it as a counter for the
+> looked up frames?
 
-Needs to be called with the vfio_ap lock held, right? Otherwise the queue could
-get unbound while we are working with it as a vfio_ap_queue... Noting
-new, but might we worth documenting.
+Indeed, that's a bug. Will fix for v5.
+-Daniel
 
-> +	put_device(&queue->ap_dev.device);
->  
->  	return q;
->  }
+> Best regards,
+> Tomasz
+>
+> > +     mmap_read_lock(mm);
+> >       vec->got_ref =3D false;
+> >       vec->is_pfns =3D true;
+> >       do {
+> >               unsigned long *nums =3D frame_vector_pfns(vec);
+> >
+> > +             vma =3D find_vma_intersection(mm, start, start + 1);
+> > +             if (!vma)
+> > +                     break;
+> > +
+> >               while (ret < nr_frames && start + PAGE_SIZE <=3D vma->vm_=
+end) {
+> >                       err =3D follow_pfn(vma, start, &nums[ret]);
+> >                       if (err) {
+> > @@ -92,17 +76,13 @@ int get_vaddr_frames(unsigned long start, unsigned =
+int nr_frames,
+> >                       start +=3D PAGE_SIZE;
+> >                       ret++;
+> >               }
+> > -             /*
+> > -              * We stop if we have enough pages or if VMA doesn't comp=
+letely
+> > -              * cover the tail page.
+> > -              */
+> > -             if (ret >=3D nr_frames || start < vma->vm_end)
+> > +             /* Bail out if VMA doesn't completely cover the tail page=
+. */
+> > +             if (start < vma->vm_end)
+> >                       break;
+> > -             vma =3D find_vma_intersection(mm, start, start + 1);
+> > -     } while (vma && vma->vm_flags & (VM_IO | VM_PFNMAP));
+> > +     } while (ret < nr_frames);
+> >  out:
+> > -     if (locked)
+> > -             mmap_read_unlock(mm);
+> > +     mmap_read_unlock(mm);
+> > +out_unlocked:
+> >       if (!ret)
+> >               ret =3D -EFAULT;
+> >       if (ret > 0)
+> > --
+> > 2.28.0
+> >
 
+
+
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
