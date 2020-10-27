@@ -2,238 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4854029A9C1
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Oct 2020 11:36:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9929D29ACA3
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Oct 2020 14:02:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436833AbgJ0Kft (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 27 Oct 2020 06:35:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:28498 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436816AbgJ0KfJ (ORCPT
+        id S2440838AbgJ0NCK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 27 Oct 2020 09:02:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43151 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2440804AbgJ0NCJ (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 27 Oct 2020 06:35:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603794906;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mItxCBan+TvaBtPLdVv1EhvNXUYWm/o0gLWrN7AxXiw=;
-        b=N8ad78mTyeI++QVuNFpwQgJRRpVFD8rmmYajzA0JFCmjfTwAI3Alt/qD45Rxx0soTq7eaB
-        Tj3LWIdZf02OieVAmSw17gQSytu519AaNBZsjPQ2Xpim5HVYUducpLdHsRk+aiOZ4Lli/Q
-        vF7bNhmJa1iC75JQZEWPRL3jfH9tqQo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-374-_KBJoZ_2O0m-D6GuxbEDNA-1; Tue, 27 Oct 2020 06:35:04 -0400
-X-MC-Unique: _KBJoZ_2O0m-D6GuxbEDNA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C24CF64093;
-        Tue, 27 Oct 2020 10:34:58 +0000 (UTC)
-Received: from [10.36.113.185] (ovpn-113-185.ams2.redhat.com [10.36.113.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BBB1A5C1BD;
-        Tue, 27 Oct 2020 10:34:50 +0000 (UTC)
-Subject: Re: [PATCH 0/4] arch, mm: improve robustness of direct map
- manipulation
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "cl@linux.com" <cl@linux.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "penberg@kernel.org" <penberg@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "iamjoonsoo.kim@lge.com" <iamjoonsoo.kim@lge.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "kirill@shutemov.name" <kirill@shutemov.name>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "hca@linux.ibm.com" <hca@linux.ibm.com>,
-        "bp@alien8.de" <bp@alien8.de>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Brown, Len" <len.brown@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-References: <20201025101555.3057-1-rppt@kernel.org>
- <ae82f905a0092adb7e0f0ac206335c1883b3170f.camel@intel.com>
- <20201026090526.GA1154158@kernel.org>
- <a0212b073b3b2f62c3dbf1bf398f03fa402997be.camel@intel.com>
- <20201027083816.GG1154158@kernel.org>
- <e5fc62b6-f644-4ed5-de5b-ffd8337861e4@redhat.com>
- <20201027094714.GI1154158@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <14aee5c8-09d5-7dc2-7d61-d2d44521c5e3@redhat.com>
-Date:   Tue, 27 Oct 2020 11:34:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 27 Oct 2020 09:02:09 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09RCWY9m031569;
+        Tue, 27 Oct 2020 09:02:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=I7hN7Mkba9hz/hGA8vrbyFka7uQHZS+0zCPEM2EfoLI=;
+ b=s7Ab4SnCzJFYn2h1vSKU+gcynCWGc8s8QiG5/CN9rjR/YZQGXbfOlOSC5tAwVoeHZfdA
+ DCZS1VsrbF5/y1dI18Lnr114jnAhBz1sZAZ5esBY/isax3Hk1/XBasz9gCYickbN1Ytw
+ 57Sn5EXg+wBKOC1rCvETRQmtrlMoUoxq5Xh2mN7oJbAiif7IvGEJ2qG+TA6qy169e6QN
+ KQH9gCeWZb23zVFyNwSRX1LXBIu7wkAkiPM4PJwPgb6OWMVWjjtA4e7hR93q/eC/Unzi
+ iL2ltDqrC3CT5/z9moDPh9Hn68Ja33a2NQIeoXxBvUmHlREIC50Bj5BW8cw6vt0lNiIx +A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34ejb6bejv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Oct 2020 09:02:06 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09RCWcHo031954;
+        Tue, 27 Oct 2020 09:02:06 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34ejb6bega-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Oct 2020 09:02:06 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09RCmIg5030384;
+        Tue, 27 Oct 2020 13:02:03 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 34e56qrruy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Oct 2020 13:02:03 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09RD20la33817030
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Oct 2020 13:02:00 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9205052051;
+        Tue, 27 Oct 2020 13:02:00 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.77.212])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id D039652054;
+        Tue, 27 Oct 2020 13:01:59 +0000 (GMT)
+Date:   Tue, 27 Oct 2020 14:01:57 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, mjrosato@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v11 04/14] s390/zcrypt: driver callback to indicate
+ resource in use
+Message-ID: <20201027140157.0b510450.pasic@linux.ibm.com>
+In-Reply-To: <20201022171209.19494-5-akrowiak@linux.ibm.com>
+References: <20201022171209.19494-1-akrowiak@linux.ibm.com>
+        <20201022171209.19494-5-akrowiak@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20201027094714.GI1154158@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-10-27_05:2020-10-26,2020-10-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ mlxscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0 impostorscore=0
+ spamscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010270080
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 27.10.20 10:47, Mike Rapoport wrote:
-> On Tue, Oct 27, 2020 at 09:46:35AM +0100, David Hildenbrand wrote:
->> On 27.10.20 09:38, Mike Rapoport wrote:
->>> On Mon, Oct 26, 2020 at 06:05:30PM +0000, Edgecombe, Rick P wrote:
->>>> On Mon, 2020-10-26 at 11:05 +0200, Mike Rapoport wrote:
->>>>> On Mon, Oct 26, 2020 at 01:13:52AM +0000, Edgecombe, Rick P wrote:
->>>>>> On Sun, 2020-10-25 at 12:15 +0200, Mike Rapoport wrote:
->>>>>>> Indeed, for architectures that define
->>>>>>> CONFIG_ARCH_HAS_SET_DIRECT_MAP
->>>>>>> it is
->>>>>>> possible that __kernel_map_pages() would fail, but since this
->>>>>>> function is
->>>>>>> void, the failure will go unnoticed.
->>>>>>
->>>>>> Could you elaborate on how this could happen? Do you mean during
->>>>>> runtime today or if something new was introduced?
->>>>>
->>>>> A failure in__kernel_map_pages() may happen today. For instance, on
->>>>> x86
->>>>> if the kernel is built with DEBUG_PAGEALLOC.
->>>>>
->>>>>           __kernel_map_pages(page, 1, 0);
->>>>>
->>>>> will need to split, say, 2M page and during the split an allocation
->>>>> of
->>>>> page table could fail.
->>>>
->>>> On x86 at least, DEBUG_PAGEALLOC expects to never have to break a page
->>>> on the direct map and even disables locking in cpa because it assumes
->>>> this. If this is happening somehow anyway then we should probably fix
->>>> that. Even if it's a debug feature, it will not be as useful if it is
->>>> causing its own crashes.
->>>>
->>>> I'm still wondering if there is something I'm missing here. It seems
->>>> like you are saying there is a bug in some arch's, so let's add a WARN
->>>> in cross-arch code to log it as it crashes. A warn and making things
->>>> clearer seem like good ideas, but if there is a bug we should fix it.
->>>> The code around the callers still functionally assume re-mapping can't
->>>> fail.
->>>
->>> Oh, I've meant x86 kernel *without* DEBUG_PAGEALLOC, and indeed the call
->>> that unmaps pages back in safe_copy_page will just reset a 4K page to
->>> NP because whatever made it NP at the first place already did the split.
->>>
->>> Still, on arm64 with DEBUG_PAGEALLOC=n there is a possibility of a race
->>> between map/unmap dance in __vunmap() and safe_copy_page() that may
->>> cause access to unmapped memory:
->>>
->>> __vunmap()
->>>       vm_remove_mappings()
->>>           set_direct_map_invalid()
->>> 					safe_copy_page()	
->>> 					    __kernel_map_pages()
->>> 					    	return
->>> 					    do_copy_page() -> fault
->>> 					   	
->>> This is a theoretical bug, but it is still not nice :) 							
->>>
->>>>> Currently, the only user of __kernel_map_pages() outside
->>>>> DEBUG_PAGEALLOC
->>>>> is hibernation, but I think it would be safer to entirely prevent
->>>>> usage
->>>>> of __kernel_map_pages() when DEBUG_PAGEALLOC=n.
->>>>
->>>> I totally agree it's error prone FWIW. On x86, my mental model of how
->>>> it is supposed to work is: If a page is 4k and NP it cannot fail to be
->>>> remapped. set_direct_map_invalid_noflush() should result in 4k NP
->>>> pages, and DEBUG_PAGEALLOC should result in all 4k pages on the direct
->>>> map. Are you seeing this violated or do I have wrong assumptions?
->>>
->>> You are right, there is a set of assumptions about the remapping of the
->>> direct map pages that make it all work, at least on x86.
->>> But this is very subtle and it's not easy to wrap one's head around
->>> this.
->>>
->>> That's why putting __kernel_map_pages() out of "common" use and
->>> keep it only for DEBUG_PAGEALLOC would make things clearer.
->>>
->>>> Beyond whatever you are seeing, for the latter case of new things
->>>> getting introduced to an interface with hidden dependencies... Another
->>>> edge case could be a new caller to set_memory_np() could result in
->>>> large NP pages. None of the callers today should cause this AFAICT, but
->>>> it's not great to rely on the callers to know these details.
->>> A caller of set_memory_*() or set_direct_map_*() should expect a failure
->>> and be ready for that. So adding a WARN to safe_copy_page() is the first
->>> step in that direction :)
->>>
->>
->> I am probably missing something important, but why are we saving/restoring
->> the content of pages that were explicitly removed from the identity mapping
->> such that nobody will access them?
->>
->> Pages that are not allocated should contain garbage or be zero
->> (init_on_free). That should be easy to handle without ever reading the page
->> content.
-> 
-> I'm not familiar with hibernation to say anything smart here, but the
-> help text of DEBUG_PAGEALLOC in Kconfig says:
-> 
-> 	... this option cannot be enabled in combination with
-> 	hibernation as that would result in incorrect warnings of memory
-> 	corruption after a resume because free pages are not saved to
-> 	the suspend image.
-> 
-> Probably you are right and free pages need to be handled differently,
-> but it does not seem the case now.
-> 
->> The other user seems to be vm_remove_mappings(), where we only *temporarily*
->> remove the mapping - while hibernating, that code shouldn't be active
->> anymore I guess - or we could protect it from happening.
-> 
-> Hmm, I _think_ vm_remove_mappings() shouldn't be active while
-> hibernating, but I'm not 100% sure.
-> 
->> As I expressed in another mail, secretmem pages should rather not be saved
->> when hibernating - hibernation should be rather be disabled.
-> 
-> Agree.
-> 
->> What am I missing?
-> 
-> I think I miscommunicated the purpose of this set, which was to hide
-> __kernel_map_pages() under DEBUG_PAGEALLOC and make hibernation use
-> set_direct_map_*() explictly without major rework of free pages handling
-> during hibernation.
-> 
-> Does it help?
-> 
+On Thu, 22 Oct 2020 13:11:59 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-Heh, as always, once you touch questionable code, people will beg for 
-proper cleanups instead :)
+> Introduces a new driver callback to prevent a root user from unbinding
+> an AP queue from its device driver if the queue is in use. The callback
+> will be invoked whenever a change to the AP bus's sysfs apmask or aqmask
+> attributes would result in one or more AP queues being removed from its
+> driver. If the callback responds in the affirmative for any driver
+> queried, the change to the apmask or aqmask will be rejected with a device
+> in use error.
 
+Like discussed last time, there seems to be nothing, that would prevent
+a resource becoming in use between the in_use() callback returned false
+and the resource being removed as a result of ap_bus_revise_bindings().
 
--- 
-Thanks,
+Another thing that may be of interest, is that now we hold the
+ap_perms_mutex for the in_use() checks. The ap_perms_mutex is used
+in ap_device_probe() and I don't quite understand some
+usages of in zcrypt_api.c My feeling is that the extra pressure on that
+lock should not be a problem, except if in_use() were to not return
+because of some deadlock.
 
-David / dhildenb
+With all that said if Harald is fine with it, so am I.
 
+Acked-by: Halil Pasic <pasic@linux.ibm.com>
+
+> 
+> For this patch, only non-default drivers will be queried. Currently,
+> there is only one non-default driver, the vfio_ap device driver. The
+> vfio_ap device driver facilitates pass-through of an AP queue to a
+> guest. The idea here is that a guest may be administered by a different
+> sysadmin than the host and we don't want AP resources to unexpectedly
+> disappear from a guest's AP configuration (i.e., adapters and domains
+> assigned to the matrix mdev). This will enforce the proper procedure for
+> removing AP resources intended for guest usage which is to
+> first unassign them from the matrix mdev, then unbind them from the
+> vfio_ap device driver.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>
