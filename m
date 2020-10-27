@@ -2,236 +2,169 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAE8A29A62C
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Oct 2020 09:07:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60C3929A6B9
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Oct 2020 09:38:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2508758AbgJ0IHH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 27 Oct 2020 04:07:07 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:42950 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2894387AbgJ0IFP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 27 Oct 2020 04:05:15 -0400
-Received: by mail-oo1-f65.google.com with SMTP id l26so114742oop.9
-        for <linux-s390@vger.kernel.org>; Tue, 27 Oct 2020 01:05:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=iRVTkxIJnHwaBLHokGGgZRE0TJVDnrQ64zJBBqMFGs0=;
-        b=Xy9/3e579FMjjTLWAuxWgipn5uXab1XIWYf2dD59Ue8ydsa3nziuf3dnpX6I3eKQXi
-         LX0Fhct8zwQ9LPuwvLWtj2sHUJJ3/cbghGd13edFhR4n655CEK2nlwMk9XgeGlojhrCH
-         MtcfG6S4mtBZzrOUEzua2bUtpL2rn4D1Bjj1E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=iRVTkxIJnHwaBLHokGGgZRE0TJVDnrQ64zJBBqMFGs0=;
-        b=FfLg+ETU9aWg5aRd5YSBFyfFzb654hxYvMwDqIQwy9Am4tzmojoh/wktf/jJuXH8+A
-         JbGbEJOVoUZ7CpqIEYpmDB2Haw+ROqilfqmuY9pg8DsIHaS9VP/WjIrxkWmfjYLrdZNX
-         kTIAYOYff4xoctVujlLVkimxwXKq6COtOqJVdIKQr0bPaKhjCIs14STSOvpqydS82ir9
-         e7h1UAJ+KAcjCQlFAw0V/e6OKwLg4x0CJ8y+cxPZW0kcSp+GMPApR39yZgqwcW/dXLBD
-         1DDgTZlBu/0RW3IvQ9VX9csJ08nwgQ4uNOXEw+i5WXYx/zTURwyss+S1/ixLHEqIgDXY
-         bO1Q==
-X-Gm-Message-State: AOAM5326aO1OL7ICx5Yjx1VD7VnJ6HtYgQy4G5VeKWzXUYNTt4wCF01/
-        VE7a092NVURGU4fSh9i7sle/BMjhwoA5cwrMWATZGg==
-X-Google-Smtp-Source: ABdhPJwUquARZelitGIpZLDuhwl8Qo3TUgFyzzaUCWDMIxNpoISTQyK7JTuU9JW1uR1xbLdlZOvSwHCimNolpOBBW1c=
-X-Received: by 2002:a4a:b503:: with SMTP id r3mr809275ooo.28.1603785913727;
- Tue, 27 Oct 2020 01:05:13 -0700 (PDT)
+        id S2895037AbgJ0Iid (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 27 Oct 2020 04:38:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45784 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2895032AbgJ0Iid (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 27 Oct 2020 04:38:33 -0400
+Received: from kernel.org (unknown [87.70.96.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C11822202;
+        Tue, 27 Oct 2020 08:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603787912;
+        bh=+dg6y245gJ/L/iVvDw0zsMRT1YcHeax7uEbyu/BJ1vU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vvKAPuYKxTdVNDwya4r3iDVjxe8A/dfT1KkHWZ2jber7PIqFofblUr/spVu5jBkBm
+         MQdFvQl0xxFyWw19nhjLmQKrxETaTmSPzdpKryLQfRCY42kv1ouILXBiwwp7JDzj+f
+         1m13PYW49F1mKn6btDBt0MyRnWGW82tINBD33+oE=
+Date:   Tue, 27 Oct 2020 10:38:16 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "david@redhat.com" <david@redhat.com>,
+        "cl@linux.com" <cl@linux.com>,
+        "gor@linux.ibm.com" <gor@linux.ibm.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
+        "penberg@kernel.org" <penberg@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "iamjoonsoo.kim@lge.com" <iamjoonsoo.kim@lge.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "kirill@shutemov.name" <kirill@shutemov.name>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "hca@linux.ibm.com" <hca@linux.ibm.com>,
+        "bp@alien8.de" <bp@alien8.de>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Brown, Len" <len.brown@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 0/4] arch, mm: improve robustness of direct map
+ manipulation
+Message-ID: <20201027083816.GG1154158@kernel.org>
+References: <20201025101555.3057-1-rppt@kernel.org>
+ <ae82f905a0092adb7e0f0ac206335c1883b3170f.camel@intel.com>
+ <20201026090526.GA1154158@kernel.org>
+ <a0212b073b3b2f62c3dbf1bf398f03fa402997be.camel@intel.com>
 MIME-Version: 1.0
-References: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
- <20201026105818.2585306-6-daniel.vetter@ffwll.ch> <20201026221520.GC2802004@chromium.org>
-In-Reply-To: <20201026221520.GC2802004@chromium.org>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Tue, 27 Oct 2020 09:05:01 +0100
-Message-ID: <CAKMK7uG4f_7=9VgdQ9AE876gzLTNsszicMD9pKqeqvQybDSDpQ@mail.gmail.com>
-Subject: Re: [PATCH v4 05/15] mm/frame-vector: Use FOLL_LONGTERM
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Pawel Osciak <pawel@osciak.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a0212b073b3b2f62c3dbf1bf398f03fa402997be.camel@intel.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 11:15 PM Tomasz Figa <tfiga@chromium.org> wrote:
->
-> Hi Daniel,
->
-> On Mon, Oct 26, 2020 at 11:58:08AM +0100, Daniel Vetter wrote:
-> > This is used by media/videbuf2 for persistent dma mappings, not just
-> > for a single dma operation and then freed again, so needs
-> > FOLL_LONGTERM.
-> >
-> > Unfortunately current pup_locked doesn't support FOLL_LONGTERM due to
-> > locking issues. Rework the code to pull the pup path out from the
-> > mmap_sem critical section as suggested by Jason.
-> >
-> > By relying entirely on the vma checks in pin_user_pages and follow_pfn
-> > (for vm_flags and vma_is_fsdax) we can also streamline the code a lot.
-> >
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > Cc: Pawel Osciak <pawel@osciak.com>
-> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Cc: Kyungmin Park <kyungmin.park@samsung.com>
-> > Cc: Tomasz Figa <tfiga@chromium.org>
-> > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> > Cc: Jan Kara <jack@suse.cz>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: linux-mm@kvack.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-samsung-soc@vger.kernel.org
-> > Cc: linux-media@vger.kernel.org
-> > Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > --
-> > v2: Streamline the code and further simplify the loop checks (Jason)
-> > ---
-> >  mm/frame_vector.c | 50 ++++++++++++++---------------------------------
-> >  1 file changed, 15 insertions(+), 35 deletions(-)
-> >
->
-> Thank you for the patch. Please see my comments inline.
->
-> > diff --git a/mm/frame_vector.c b/mm/frame_vector.c
-> > index 10f82d5643b6..d44779e56313 100644
-> > --- a/mm/frame_vector.c
-> > +++ b/mm/frame_vector.c
-> > @@ -38,7 +38,6 @@ int get_vaddr_frames(unsigned long start, unsigned in=
-t nr_frames,
-> >       struct vm_area_struct *vma;
-> >       int ret =3D 0;
-> >       int err;
-> > -     int locked;
-> >
-> >       if (nr_frames =3D=3D 0)
-> >               return 0;
-> > @@ -48,40 +47,25 @@ int get_vaddr_frames(unsigned long start, unsigned =
-int nr_frames,
-> >
-> >       start =3D untagged_addr(start);
-> >
-> > -     mmap_read_lock(mm);
-> > -     locked =3D 1;
-> > -     vma =3D find_vma_intersection(mm, start, start + 1);
-> > -     if (!vma) {
-> > -             ret =3D -EFAULT;
-> > -             goto out;
-> > -     }
-> > -
-> > -     /*
-> > -      * While get_vaddr_frames() could be used for transient (kernel
-> > -      * controlled lifetime) pinning of memory pages all current
-> > -      * users establish long term (userspace controlled lifetime)
-> > -      * page pinning. Treat get_vaddr_frames() like
-> > -      * get_user_pages_longterm() and disallow it for filesystem-dax
-> > -      * mappings.
-> > -      */
-> > -     if (vma_is_fsdax(vma)) {
-> > -             ret =3D -EOPNOTSUPP;
-> > -             goto out;
-> > -     }
-> > -
-> > -     if (!(vma->vm_flags & (VM_IO | VM_PFNMAP))) {
-> > +     ret =3D pin_user_pages_fast(start, nr_frames,
-> > +                               FOLL_FORCE | FOLL_WRITE | FOLL_LONGTERM=
-,
-> > +                               (struct page **)(vec->ptrs));
-> > +     if (ret > 0) {
-> >               vec->got_ref =3D true;
-> >               vec->is_pfns =3D false;
-> > -             ret =3D pin_user_pages_locked(start, nr_frames,
-> > -                     gup_flags, (struct page **)(vec->ptrs), &locked);
->
-> Should we drop the gup_flags argument, since it's ignored now?
+On Mon, Oct 26, 2020 at 06:05:30PM +0000, Edgecombe, Rick P wrote:
+> On Mon, 2020-10-26 at 11:05 +0200, Mike Rapoport wrote:
+> > On Mon, Oct 26, 2020 at 01:13:52AM +0000, Edgecombe, Rick P wrote:
+> > > On Sun, 2020-10-25 at 12:15 +0200, Mike Rapoport wrote:
+> > > > Indeed, for architectures that define
+> > > > CONFIG_ARCH_HAS_SET_DIRECT_MAP
+> > > > it is
+> > > > possible that __kernel_map_pages() would fail, but since this
+> > > > function is
+> > > > void, the failure will go unnoticed.
+> > > 
+> > > Could you elaborate on how this could happen? Do you mean during
+> > > runtime today or if something new was introduced?
+> > 
+> > A failure in__kernel_map_pages() may happen today. For instance, on
+> > x86
+> > if the kernel is built with DEBUG_PAGEALLOC.
+> > 
+> >         __kernel_map_pages(page, 1, 0);
+> > 
+> > will need to split, say, 2M page and during the split an allocation
+> > of
+> > page table could fail.
+> 
+> On x86 at least, DEBUG_PAGEALLOC expects to never have to break a page
+> on the direct map and even disables locking in cpa because it assumes
+> this. If this is happening somehow anyway then we should probably fix
+> that. Even if it's a debug feature, it will not be as useful if it is
+> causing its own crashes.
+> 
+> I'm still wondering if there is something I'm missing here. It seems
+> like you are saying there is a bug in some arch's, so let's add a WARN
+> in cross-arch code to log it as it crashes. A warn and making things
+> clearer seem like good ideas, but if there is a bug we should fix it.
+> The code around the callers still functionally assume re-mapping can't
+> fail.
 
-Hm right I think an earlier version even had that, but then I moved to
-inlining the functionality in all the places it's used.
+Oh, I've meant x86 kernel *without* DEBUG_PAGEALLOC, and indeed the call
+that unmaps pages back in safe_copy_page will just reset a 4K page to
+NP because whatever made it NP at the first place already did the split.
 
-I'll drop the gup flag.
+Still, on arm64 with DEBUG_PAGEALLOC=n there is a possibility of a race
+between map/unmap dance in __vunmap() and safe_copy_page() that may
+cause access to unmapped memory:
 
-> > -             goto out;
-> > +             goto out_unlocked;
-> >       }
-> >
->
-> Should we initialize ret with 0 here, since pin_user_pages_fast() can
-> return a negative error code, but below we use it as a counter for the
-> looked up frames?
+__vunmap()
+    vm_remove_mappings()
+        set_direct_map_invalid()
+					safe_copy_page()	
+					    __kernel_map_pages()
+					    	return
+					    do_copy_page() -> fault
+					   	
+This is a theoretical bug, but it is still not nice :) 							
 
-Indeed, that's a bug. Will fix for v5.
--Daniel
+> > Currently, the only user of __kernel_map_pages() outside
+> > DEBUG_PAGEALLOC
+> > is hibernation, but I think it would be safer to entirely prevent
+> > usage
+> > of __kernel_map_pages() when DEBUG_PAGEALLOC=n.
+> 
+> I totally agree it's error prone FWIW. On x86, my mental model of how
+> it is supposed to work is: If a page is 4k and NP it cannot fail to be
+> remapped. set_direct_map_invalid_noflush() should result in 4k NP
+> pages, and DEBUG_PAGEALLOC should result in all 4k pages on the direct
+> map. Are you seeing this violated or do I have wrong assumptions?
 
-> Best regards,
-> Tomasz
->
-> > +     mmap_read_lock(mm);
-> >       vec->got_ref =3D false;
-> >       vec->is_pfns =3D true;
-> >       do {
-> >               unsigned long *nums =3D frame_vector_pfns(vec);
-> >
-> > +             vma =3D find_vma_intersection(mm, start, start + 1);
-> > +             if (!vma)
-> > +                     break;
-> > +
-> >               while (ret < nr_frames && start + PAGE_SIZE <=3D vma->vm_=
-end) {
-> >                       err =3D follow_pfn(vma, start, &nums[ret]);
-> >                       if (err) {
-> > @@ -92,17 +76,13 @@ int get_vaddr_frames(unsigned long start, unsigned =
-int nr_frames,
-> >                       start +=3D PAGE_SIZE;
-> >                       ret++;
-> >               }
-> > -             /*
-> > -              * We stop if we have enough pages or if VMA doesn't comp=
-letely
-> > -              * cover the tail page.
-> > -              */
-> > -             if (ret >=3D nr_frames || start < vma->vm_end)
-> > +             /* Bail out if VMA doesn't completely cover the tail page=
-. */
-> > +             if (start < vma->vm_end)
-> >                       break;
-> > -             vma =3D find_vma_intersection(mm, start, start + 1);
-> > -     } while (vma && vma->vm_flags & (VM_IO | VM_PFNMAP));
-> > +     } while (ret < nr_frames);
-> >  out:
-> > -     if (locked)
-> > -             mmap_read_unlock(mm);
-> > +     mmap_read_unlock(mm);
-> > +out_unlocked:
-> >       if (!ret)
-> >               ret =3D -EFAULT;
-> >       if (ret > 0)
-> > --
-> > 2.28.0
-> >
+You are right, there is a set of assumptions about the remapping of the
+direct map pages that make it all work, at least on x86.
+But this is very subtle and it's not easy to wrap one's head around
+this.
 
+That's why putting __kernel_map_pages() out of "common" use and
+keep it only for DEBUG_PAGEALLOC would make things clearer.
 
+> Beyond whatever you are seeing, for the latter case of new things
+> getting introduced to an interface with hidden dependencies... Another
+> edge case could be a new caller to set_memory_np() could result in
+> large NP pages. None of the callers today should cause this AFAICT, but
+> it's not great to rely on the callers to know these details.
+ 
+A caller of set_memory_*() or set_direct_map_*() should expect a failure
+and be ready for that. So adding a WARN to safe_copy_page() is the first
+step in that direction :)
 
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+-- 
+Sincerely yours,
+Mike.
