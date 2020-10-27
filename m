@@ -2,164 +2,391 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00E6E29A20C
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Oct 2020 02:12:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC0CB29A4DF
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Oct 2020 07:50:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411311AbgJ0BKQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 26 Oct 2020 21:10:16 -0400
-Received: from mga07.intel.com ([134.134.136.100]:36613 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730316AbgJ0BKQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 26 Oct 2020 21:10:16 -0400
-IronPort-SDR: 4NvYQTOHHQVrtwTVHUFnBnxuv0AKumlyELkrTahpN9j/D4rEqXLPS1E0fh2Mr2glqDIiwnbV4q
- 44CweOZtv3/g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9786"; a="232198887"
-X-IronPort-AV: E=Sophos;i="5.77,421,1596524400"; 
-   d="scan'208";a="232198887"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2020 18:10:14 -0700
-IronPort-SDR: WRLGEyye8GXNMU4+58poBfahyGzPWLiQ7DALjAphRQGpgrRz5GdM0ORU/MXMkfx1mOtY4qOlmM
- hmGS0Znt8rcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,421,1596524400"; 
-   d="scan'208";a="535583959"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orsmga005.jf.intel.com with ESMTP; 26 Oct 2020 18:10:13 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 26 Oct 2020 18:10:13 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 26 Oct 2020 18:10:13 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Mon, 26 Oct 2020 18:10:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DrcVbDpz2WXFitAC8lvG5fHiYTHgqrPOA+rtVboDu0jw/N16ZN7jRjR8CZYvGAvBVLXoaTYP/LSoQCY8TPnqEHqNiw0NZbrWtyF27BoB+04hbxESvsC6Md6LEFgUQk2o1RVVB/4C5E/1IN6gG2sdIHWArF6UvOdv37KbicsNwMLCoFIxXbRBvNmWNI4/Zan8BK+l02J9FWDnTVhixuiDE8t5iEmzS8ukIFryQP8PR8rxUBAHOJvxwviFAesoPTGye3akoEGFNp5cPvAlJ5Ah/HLdL1hwF/oyqj1c2quAdxo8LvIdHbcxXcUJb5G9ToPiR6e7Hp5vaXNK6jx5k/X0/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ih1tvWmhfrkBZo7MJW7d95569Y2IjWWrKu98dvfFJoc=;
- b=Lcxh/4PgqYtODBWmcJBYJRrMSpNrz68zjiruAotwuKchZLpr+smK9EqzWn48vcizanImmNPCxa0P0syH5A5nQsw9Fxo/6YBnMD8cBMNnLt981KOWCQC3g9oGEw1GHrgsQbPlhuGeaH4oKr0AArGftWV9bsY8CVpw/XNddLZG0CREwOfcl/6IfEKUHj7e0PepyPK/JKR+BayPx44GhPKd9vNcAZrTwkMXa81nlB+ozuTnCTKDOLRtKUluTtc98j+A1m//gQ2YTv73Fm6qGzZKRgQKhsIxT6WFhCGb+uV/2+e48b1cjugBqganez00Z3rd8QrPn+eX912fA0MZJMbALA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ih1tvWmhfrkBZo7MJW7d95569Y2IjWWrKu98dvfFJoc=;
- b=nnrcytRsAPLZ9AAk4XQ90i7NnR0JKNS4DRJloWbUfVKqvVIBS8GPxNGRIbwBl1R/cdSOIMZKebLUBQvr8dqrTWkZcc83G81pJu4K/+QWZNfhaHi0JkOiE70EhbjbjI/vKGMc2JS0W3pC6mKOb5C2Q1ga7XbDhDqXTkShtNRgbSc=
-Received: from SN6PR11MB3184.namprd11.prod.outlook.com (2603:10b6:805:bd::17)
- by SA0PR11MB4768.namprd11.prod.outlook.com (2603:10b6:806:71::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.22; Tue, 27 Oct
- 2020 01:10:12 +0000
-Received: from SN6PR11MB3184.namprd11.prod.outlook.com
- ([fe80::b901:8e07:4340:6704]) by SN6PR11MB3184.namprd11.prod.outlook.com
- ([fe80::b901:8e07:4340:6704%7]) with mapi id 15.20.3477.028; Tue, 27 Oct 2020
- 01:10:12 +0000
-From:   "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To:     "rppt@kernel.org" <rppt@kernel.org>
-CC:     "david@redhat.com" <david@redhat.com>,
-        "cl@linux.com" <cl@linux.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "penberg@kernel.org" <penberg@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "iamjoonsoo.kim@lge.com" <iamjoonsoo.kim@lge.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "kirill@shutemov.name" <kirill@shutemov.name>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "hca@linux.ibm.com" <hca@linux.ibm.com>,
-        "bp@alien8.de" <bp@alien8.de>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Brown, Len" <len.brown@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 2/4] PM: hibernate: improve robustness of mapping pages in
- the direct map
-Thread-Topic: [PATCH 2/4] PM: hibernate: improve robustness of mapping pages
- in the direct map
-Thread-Index: AQHWqrf6LRJhAvsqzE2DP+hB1ynbOKmpCzYAgACQkACAAQqeAA==
-Date:   Tue, 27 Oct 2020 01:10:11 +0000
-Message-ID: <3568e23fb551ae4b8d583c3e6bfdbed505e460e9.camel@intel.com>
-References: <20201025101555.3057-1-rppt@kernel.org>
-         <20201025101555.3057-3-rppt@kernel.org>
-         <f20900a403bea9eb3f0814128e5ea46f6580f5a5.camel@intel.com>
-         <20201026091554.GB1154158@kernel.org>
-In-Reply-To: <20201026091554.GB1154158@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.1 (3.30.1-1.fc29) 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [134.134.137.79]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2d78955d-bfd4-4206-891c-08d87a150e12
-x-ms-traffictypediagnostic: SA0PR11MB4768:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SA0PR11MB476872441823E8BD7F7754C4C9160@SA0PR11MB4768.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: etpjFjmNlhD5NPu8Lr9UaB2xe1ARUSY2KosIpK2nRC29xn9qw7OigPgNq4YGFm3pHAFAjBnZW4fHzPmmFG+PNhVNc4yftnZy3A8I1kq5+TPpJgzPXdlj4UDNFWHtrg5EJv9UOsSkgU7d3+h220YWHFohxYjxEqFG58kuyrRUCGGOV3S1cLjih1DkLsdXySQ/coNPfUlHe2gScJqawc79ORZq8Xwlxa8mrC9e+cF7XRMberTq1bpo8ceiiSbsr3LqwFnHuGrBYfInR82DPgu/xEMvsmZBRmq1xF0R/FqG72UsbX1sGAujBxH6Vbp+Fo5m
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3184.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(366004)(136003)(39860400002)(396003)(91956017)(8936002)(4744005)(54906003)(6916009)(2616005)(6506007)(2906002)(4001150100001)(26005)(86362001)(71200400001)(83380400001)(7406005)(186003)(6486002)(64756008)(66446008)(8676002)(66556008)(66476007)(36756003)(76116006)(66946007)(6512007)(5660300002)(4326008)(478600001)(316002)(7416002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: wEIFVyWFEQt2Phq1p3KXHe0P5Ion8FTuCwyO4PlkuXkF9faRg4VwqvJZlaS7EZrBdiYurTwEppG8KXSVeNrgt8OkBYrysaaAEc+jpuoIvikkP/K6AANHbQUR4BakrCNpccIORD/3imjZlunW3qreLUUIwTgnVuR2zMTWQprAGwD+2YCIv7exgMsRKzXDOmziopRaHnKP/1aQFL/KtQI1daxULS3x/xDAQFLCbsBBF52cw45ge1KRSFdgi70IisLvxtn0oIa0nNGRFcJLG28+M94U5Fqxq0xKzS8hn1G8ipk5ZyG2XkHLJcpbIhzvuvAV/bBFKuw8uuCtJDPbuqrx4BPR9TnsHoB/6XjaEr/kFvdT/yaxj8Q81n2DNCSov61CLzFIwWAcMCSIxJA+d0aZMfMIkYVlW4UnvVFVcMR20XTdLnr4BX6cUUQKmV07KHldzGtiyQ2rECddAX5iExbJKTncImp6QiqO+DE2cJEtZ+ScwVgdwASHhFl353OMhlyPhj8TyoMdLXkdMLqlqjMu5ghO5aQBg5RvuNfx+ydqmcuKNZutOkSFCK4iDCZX3asoSL4aCrStoPEBsgWmwc1WYQWA5HCd4E1Nb/eZAVleqeZe0RVqavNbdpNgUUARHfch5YZ7tf6RX4l+qBvGZtQzAg==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E3779E710F79FF429E5DF57F8CC012D2@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1731798AbgJ0GtL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 27 Oct 2020 02:49:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64696 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729266AbgJ0GtK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 27 Oct 2020 02:49:10 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09R6XW72018967;
+        Tue, 27 Oct 2020 02:49:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=pdQzz4sR2w6POddytidGqkZM0aAsPfylQnOQkzgba4c=;
+ b=QtEnD40bxnO/KGNWp0sJoZ2cG9xxtS/DUCO4Bh1Id2+QVn56tUQGUTr7hlKC6yYXvy7s
+ M9raI/DTbsXJkFYBCpxmE3U942en/nkXHcvDuAoZQTxmEjV7WIM4jwq+SblYZFK/RZR0
+ ttega+OgLCZt7kVZwv3nHTrihkbR3P9JAvKUZS/3tQuS2KlkBr//nz9P9MNR947Ojcwk
+ 2sGNN4/kbNYf8CCejqRUMvsgoHia1Veiun8LuXpdhZ6E5ECrx9r4eirkMW4aG4MlYXiG
+ mM9UaqdJpxr4muhSLvheGknxgaiO6QMEA02vkeSzOjL+4rh9ToKDS78pB03riN+Ckjo9 lA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34dw51wewa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Oct 2020 02:49:04 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09R6n3P0058335;
+        Tue, 27 Oct 2020 02:49:04 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34dw51wevh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Oct 2020 02:49:03 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09R6XZpa009435;
+        Tue, 27 Oct 2020 06:49:02 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 34cbw7u1e1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 27 Oct 2020 06:49:02 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09R6mxgD29294852
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 27 Oct 2020 06:48:59 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B32411C05B;
+        Tue, 27 Oct 2020 06:48:59 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6EF8511C04A;
+        Tue, 27 Oct 2020 06:48:58 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.77.212])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 27 Oct 2020 06:48:58 +0000 (GMT)
+Date:   Tue, 27 Oct 2020 07:48:46 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, mjrosato@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v11 01/14] s390/vfio-ap: No need to disable IRQ after
+ queue reset
+Message-ID: <20201027074846.30ee0ddc.pasic@linux.ibm.com>
+In-Reply-To: <20201022171209.19494-2-akrowiak@linux.ibm.com>
+References: <20201022171209.19494-1-akrowiak@linux.ibm.com>
+        <20201022171209.19494-2-akrowiak@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3184.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d78955d-bfd4-4206-891c-08d87a150e12
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Oct 2020 01:10:12.0243
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: otiJMahpdVYKdYd3f33b3xjCQYQ9IMUcS5XNV7Nbj+AjWdhXoHGKDTd/aYVIW8hfej1+KONuubl9stQp4W0yRnYpCjdEY3/lMeK1D0w4x6A=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4768
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.737
+ definitions=2020-10-27_01:2020-10-26,2020-10-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=2
+ phishscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 bulkscore=0 clxscore=1011 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010270043
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTEwLTI2IGF0IDExOjE1ICswMjAwLCBNaWtlIFJhcG9wb3J0IHdyb3RlOg0K
-PiBUaGUgaW50ZW50aW9uIG9mIHRoaXMgc2VyaWVzIGlzIHRvIGRpc2FsbG93IHVzYWdlIG9mDQo+
-IF9fa2VybmVsX21hcF9wYWdlcygpIHdoZW4gREVCVUdfUEFHRUFMTE9DPW4uIEknbGwgdXBkYXRl
-IHRoaXMgcGF0Y2gNCj4gdG8NCj4gYmV0dGVyIGhhbmRsZSBwb3NzaWJsZSBlcnJvcnMsIGJ1dCBJ
-IHN0aWxsIHdhbnQgdG8ga2VlcCBXQVJOIGluIHRoZQ0KPiBjYWxsZXIuDQoNClNvcnJ5LCBJIG1p
-c3NlZCB0aGlzIHNuaXBwZXQgYXQgdGhlIGJvdHRvbSwgdGhhdCB5b3VyIGludGVudGlvbiB3YXMg
-dG8NCmFjdHVhbGx5IGhhbmRsZSBlcnJvcnMgc29tZWhvdyBpbiB0aGUgaGliZXJuYXRlIGNvZGUu
-IFBsZWFzZSBpZ25vcmUgbXkNCm90aGVyIGNvbW1lbnQgdGhhdCBhc3N1bWVkIHlvdSB3YW50ZWQg
-dG8ganVzdCBhZGQgYSB3YXJuLg0K
+On Thu, 22 Oct 2020 13:11:56 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+
+> The queues assigned to a matrix mediated device are currently reset when:
+> 
+> * The VFIO_DEVICE_RESET ioctl is invoked
+> * The mdev fd is closed by userspace (QEMU)
+> * The mdev is removed from sysfs.
+
+What about the situation when vfio_ap_mdev_group_notifier() is called to
+tell us that our pointer to KVM is about to become invalid? Do we need to
+clean up the IRQ stuff there?
+
+> 
+> Immediately after the reset of a queue, a call is made to disable
+> interrupts for the queue. This is entirely unnecessary because the reset of
+> a queue disables interrupts, so this will be removed.
+
+Makes sense.
+
+> 
+> Since interrupt processing may have been enabled by the guest, it may also
+> be necessary to clean up the resources used for interrupt processing. Part
+> of the cleanup operation requires a reference to KVM, so a check is also
+> being added to ensure the reference to KVM exists. The reason is because
+> the release callback - invoked when userspace closes the mdev fd - removes
+> the reference to KVM. When the remove callback - called when the mdev is
+> removed from sysfs - is subsequently invoked, there will be no reference to
+> KVM when the cleanup is performed.
+
+Please see below in the code.
+
+> 
+> This patch will also do a bit of refactoring due to the fact that the
+> remove callback, implemented in vfio_ap_drv.c, disables the queue after
+> resetting it. Instead of the remove callback making a call into the
+> vfio_ap_ops.c to clean up the resources used for interrupt processing,
+> let's move the probe and remove callbacks into the vfio_ap_ops.c
+> file keep all code related to managing queues in a single file.
+>
+
+It would have been helpful to split out the refactoring as a separate
+patch. This way it is harder to review the code that got moved, because
+it is intermingled with the changes that intend to change behavior.
+ 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_drv.c     | 45 +------------------
+>  drivers/s390/crypto/vfio_ap_ops.c     | 63 +++++++++++++++++++--------
+>  drivers/s390/crypto/vfio_ap_private.h |  7 +--
+>  3 files changed, 52 insertions(+), 63 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> index be2520cc010b..73bd073fd5d3 100644
+> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> @@ -43,47 +43,6 @@ static struct ap_device_id ap_queue_ids[] = {
+>  
+>  MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
+>  
+> -/**
+> - * vfio_ap_queue_dev_probe:
+> - *
+> - * Allocate a vfio_ap_queue structure and associate it
+> - * with the device as driver_data.
+> - */
+> -static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
+> -{
+> -	struct vfio_ap_queue *q;
+> -
+> -	q = kzalloc(sizeof(*q), GFP_KERNEL);
+> -	if (!q)
+> -		return -ENOMEM;
+> -	dev_set_drvdata(&apdev->device, q);
+> -	q->apqn = to_ap_queue(&apdev->device)->qid;
+> -	q->saved_isc = VFIO_AP_ISC_INVALID;
+> -	return 0;
+> -}
+> -
+> -/**
+> - * vfio_ap_queue_dev_remove:
+> - *
+> - * Takes the matrix lock to avoid actions on this device while removing
+> - * Free the associated vfio_ap_queue structure
+> - */
+> -static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
+> -{
+> -	struct vfio_ap_queue *q;
+> -	int apid, apqi;
+> -
+> -	mutex_lock(&matrix_dev->lock);
+> -	q = dev_get_drvdata(&apdev->device);
+> -	dev_set_drvdata(&apdev->device, NULL);
+> -	apid = AP_QID_CARD(q->apqn);
+> -	apqi = AP_QID_QUEUE(q->apqn);
+> -	vfio_ap_mdev_reset_queue(apid, apqi, 1);
+> -	vfio_ap_irq_disable(q);
+> -	kfree(q);
+> -	mutex_unlock(&matrix_dev->lock);
+> -}
+> -
+>  static void vfio_ap_matrix_dev_release(struct device *dev)
+>  {
+>  	struct ap_matrix_dev *matrix_dev = dev_get_drvdata(dev);
+> @@ -186,8 +145,8 @@ static int __init vfio_ap_init(void)
+>  		return ret;
+>  
+>  	memset(&vfio_ap_drv, 0, sizeof(vfio_ap_drv));
+> -	vfio_ap_drv.probe = vfio_ap_queue_dev_probe;
+> -	vfio_ap_drv.remove = vfio_ap_queue_dev_remove;
+> +	vfio_ap_drv.probe = vfio_ap_mdev_probe_queue;
+> +	vfio_ap_drv.remove = vfio_ap_mdev_remove_queue;
+>  	vfio_ap_drv.ids = ap_queue_ids;
+>  
+>  	ret = ap_driver_register(&vfio_ap_drv, THIS_MODULE, VFIO_AP_DRV_NAME);
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index e0bde8518745..c471832f0a30 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -119,7 +119,8 @@ static void vfio_ap_wait_for_irqclear(int apqn)
+>   */
+>  static void vfio_ap_free_aqic_resources(struct vfio_ap_queue *q)
+>  {
+> -	if (q->saved_isc != VFIO_AP_ISC_INVALID && q->matrix_mdev)
+> +	if (q->saved_isc != VFIO_AP_ISC_INVALID && q->matrix_mdev &&
+> +	    q->matrix_mdev->kvm)
+
+Here is the check that the kvm reference exists, you mentioned in the
+cover letter. You make only the gisc_unregister depend on it, because
+that's what is going to explode.
+
+But I'm actually wondering if "KVM is gone but we still haven't cleaned
+up our aqic resources" is valid. I argue that it is not. The two
+resources we manage are the gisc registration and the pinned page. I
+argue that it makes on sense to keep what was the guests page pinned,
+if here is no guest associated (we don't have KVM).
+
+I assume the cleanup is supposed to be atomic from the perspective of
+other threads/contexts, so I expect the cleanup either to be fully done
+or not not entered the critical section.
+
+So !kvm && (q->saved_isc != VFIO_AP_ISC_INVALID || q->saved_pfn) is a
+bug. Isn't it?
+
+In that sense this change would only hide the actual problem.
+
+Is the scenario we are talking about something that can happen, or is
+this just about programming defensively?
+
+In any case, I don't think this is a good idea. We can be defensive
+about it, but we have to do it differently.
+
+
+>  		kvm_s390_gisc_unregister(q->matrix_mdev->kvm, q->saved_isc);
+>  	if (q->saved_pfn && q->matrix_mdev)
+>  		vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
+> @@ -144,7 +145,7 @@ static void vfio_ap_free_aqic_resources(struct vfio_ap_queue *q)
+>   * Returns if ap_aqic function failed with invalid, deconfigured or
+>   * checkstopped AP.
+>   */
+> -struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+> +static struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+>  {
+>  	struct ap_qirq_ctrl aqic_gisa = {};
+>  	struct ap_queue_status status;
+> @@ -297,6 +298,7 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
+>  	if (!q)
+>  		goto out_unlock;
+>  
+> +	q->matrix_mdev = matrix_mdev;
+
+What is the purpose of this? Doesn't the preceding vfio_ap_get_queue()
+already set q->matrix_mdev?
+
+>  	status = vcpu->run->s.regs.gprs[1];
+>  
+>  	/* If IR bit(16) is set we enable the interrupt */
+> @@ -1114,20 +1116,6 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>  	return NOTIFY_OK;
+>  }
+>  
+> -static void vfio_ap_irq_disable_apqn(int apqn)
+> -{
+> -	struct device *dev;
+> -	struct vfio_ap_queue *q;
+> -
+> -	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+> -				 &apqn, match_apqn);
+> -	if (dev) {
+> -		q = dev_get_drvdata(dev);
+> -		vfio_ap_irq_disable(q);
+> -		put_device(dev);
+> -	}
+> -}
+> -
+>  int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+>  			     unsigned int retry)
+>  {
+> @@ -1162,6 +1150,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>  {
+>  	int ret;
+>  	int rc = 0;
+> +	struct vfio_ap_queue *q;
+>  	unsigned long apid, apqi;
+>  	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>  
+> @@ -1177,7 +1166,10 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>  			 */
+>  			if (ret)
+>  				rc = ret;
+> -			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
+> +			q = vfio_ap_get_queue(matrix_mdev,
+> +					      AP_MKQID(apid, apqi));
+> +			if (q)
+> +				vfio_ap_free_aqic_resources(q);
+
+Is it safe to do vfio_ap_free_aqic_resources() at this point? I don't
+think so. I mean does the current code (and vfio_ap_mdev_reset_queue()
+in particular guarantee that the reset is actually done when we arrive
+here)? BTW, I think we have a similar problem with the current code as
+well.
+
+Under what circumstances do we expect !q? If we don't, then we need to
+complain one way or another.
+
+I believe that each time we call vfio_ap_mdev_reset_queue(), we will
+also want to call vfio_ap_free_aqic_resources(q) to clean up our aqic
+resources associated with the queue -- if any. So I would really prefer
+having a function that does both.
+
+>  		}
+>  	}
+>  
+> @@ -1302,3 +1294,40 @@ void vfio_ap_mdev_unregister(void)
+>  {
+>  	mdev_unregister_device(&matrix_dev->device);
+>  }
+> +
+> +int vfio_ap_mdev_probe_queue(struct ap_device *apdev)
+> +{
+> +	struct vfio_ap_queue *q;
+> +	struct ap_queue *queue;
+> +
+> +	queue = to_ap_queue(&apdev->device);
+> +
+> +	q = kzalloc(sizeof(*q), GFP_KERNEL);
+> +	if (!q)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(&queue->ap_dev.device, q);
+> +	q->apqn = queue->qid;
+> +	q->saved_isc = VFIO_AP_ISC_INVALID;
+> +
+> +	return 0;
+> +}
+> +
+> +void vfio_ap_mdev_remove_queue(struct ap_device *apdev)
+> +{
+> +	struct vfio_ap_queue *q;
+> +	struct ap_queue *queue;
+> +	int apid, apqi;
+> +
+> +	queue = to_ap_queue(&apdev->device);
+
+What is the benefit of rewriting this? You introduced
+queue just to do queue->ap_dev to get to the apdev you
+have in hand in the first place.
+
+> +
+> +	mutex_lock(&matrix_dev->lock);
+> +	q = dev_get_drvdata(&queue->ap_dev.device);
+> +	dev_set_drvdata(&queue->ap_dev.device, NULL);
+> +	apid = AP_QID_CARD(q->apqn);
+> +	apqi = AP_QID_QUEUE(q->apqn);
+> +	vfio_ap_mdev_reset_queue(apid, apqi, 1);
+> +	vfio_ap_free_aqic_resources(q);
+> +	kfree(q);
+> +	mutex_unlock(&matrix_dev->lock);
+> +}
+> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+> index f46dde56b464..d9003de4fbad 100644
+> --- a/drivers/s390/crypto/vfio_ap_private.h
+> +++ b/drivers/s390/crypto/vfio_ap_private.h
+> @@ -90,8 +90,6 @@ struct ap_matrix_mdev {
+>  
+>  extern int vfio_ap_mdev_register(void);
+>  extern void vfio_ap_mdev_unregister(void);
+> -int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+> -			     unsigned int retry);
+>  
+>  struct vfio_ap_queue {
+>  	struct ap_matrix_mdev *matrix_mdev;
+> @@ -100,5 +98,8 @@ struct vfio_ap_queue {
+>  #define VFIO_AP_ISC_INVALID 0xff
+>  	unsigned char saved_isc;
+>  };
+> -struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q);
+> +
+> +int vfio_ap_mdev_probe_queue(struct ap_device *queue);
+> +void vfio_ap_mdev_remove_queue(struct ap_device *queue);
+> +
+>  #endif /* _VFIO_AP_PRIVATE_H_ */
+
