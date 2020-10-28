@@ -2,31 +2,42 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96B8229DEB6
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 01:56:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA56C29DD18
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 01:35:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbgJ2A4E (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Oct 2020 20:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60532 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731637AbgJ1WRh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:17:37 -0400
-Received: from kernel.org (unknown [87.70.96.83])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729331AbgJ2AfG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Oct 2020 20:35:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:24798 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731947AbgJ1WTa (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 28 Oct 2020 18:19:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603923568;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3/QY+frjp1dnSTegbpUI0625UXdGYc+dVdsYJMjhKKw=;
+        b=hPo+tdiO30k2vbOy7ImTffeWp/Af7uzgQIyNld+pQACHUm/CTN+VGwWGb+rWE5N9Ds3p9v
+        6c5gNtFUbLVWaaL3G7lsZEHzacTxrJYe1TbwhFBgAPcjC00puibdcxhfoJWxTTyLQUbcYs
+        rUR4fUnw7t4HTOPxmhaG32GzkiYeLjY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-195-5Kg-MYA4O2aB4WCrNYOgXA-1; Wed, 28 Oct 2020 07:17:50 -0400
+X-MC-Unique: 5Kg-MYA4O2aB4WCrNYOgXA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51BD32469B;
-        Wed, 28 Oct 2020 09:42:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603878129;
-        bh=TeNt5NA/mgWkbLu1J6Mmn4AZrBqZNOgXaAyr5KmIXdc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BAxhPNm00YmUvqZ3itxYhYio6fYAnJQ499wadwVQA1K0WvG4XS19jLvpQ8+eKhIIU
-         s5CNhtP486uh5zhqaz0QS5SyAvIRcDNWo3SzSu4cxxTrXJkuMWq5HghyPFcy1dXFKg
-         Hhf6FJq+WSim8L2T+mmNr/hWPUmxbWsHsyI76+WI=
-Date:   Wed, 28 Oct 2020 11:41:56 +0200
-From:   Mike Rapoport <rppt@kernel.org>
-To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc:     "david@redhat.com" <david@redhat.com>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 90BEC809DE4;
+        Wed, 28 Oct 2020 11:17:44 +0000 (UTC)
+Received: from [10.36.114.138] (ovpn-114-138.ams2.redhat.com [10.36.114.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 033EC6EF5E;
+        Wed, 28 Oct 2020 11:17:35 +0000 (UTC)
+Subject: Re: [PATCH 0/4] arch, mm: improve robustness of direct map
+ manipulation
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
         "cl@linux.com" <cl@linux.com>,
         "gor@linux.ibm.com" <gor@linux.ibm.com>,
         "hpa@zytor.com" <hpa@zytor.com>,
@@ -52,9 +63,9 @@ Cc:     "david@redhat.com" <david@redhat.com>,
         "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
         "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
         "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
         "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
         "x86@kernel.org" <x86@kernel.org>,
         "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
@@ -65,125 +76,73 @@ Cc:     "david@redhat.com" <david@redhat.com>,
         "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 2/4] PM: hibernate: improve robustness of mapping pages
- in the direct map
-Message-ID: <20201028094156.GD1428094@kernel.org>
 References: <20201025101555.3057-1-rppt@kernel.org>
- <20201025101555.3057-3-rppt@kernel.org>
- <f20900a403bea9eb3f0814128e5ea46f6580f5a5.camel@intel.com>
- <20201026091554.GB1154158@kernel.org>
- <a28d8248057e7dc01716764da9edfd666722ff62.camel@intel.com>
- <20201027084902.GH1154158@kernel.org>
- <ce66dcf2bbc17d40bcbe752868edb13976b3f1bb.camel@intel.com>
+ <ae82f905a0092adb7e0f0ac206335c1883b3170f.camel@intel.com>
+ <20201026090526.GA1154158@kernel.org>
+ <a0212b073b3b2f62c3dbf1bf398f03fa402997be.camel@intel.com>
+ <20201027083816.GG1154158@kernel.org>
+ <e5fc62b6-f644-4ed5-de5b-ffd8337861e4@redhat.com>
+ <20201028110945.GE1428094@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <5805fdd9-14e5-141c-773b-c46d2da57258@redhat.com>
+Date:   Wed, 28 Oct 2020 12:17:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce66dcf2bbc17d40bcbe752868edb13976b3f1bb.camel@intel.com>
+In-Reply-To: <20201028110945.GE1428094@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Oct 27, 2020 at 10:44:21PM +0000, Edgecombe, Rick P wrote:
-> On Tue, 2020-10-27 at 10:49 +0200, Mike Rapoport wrote:
-> > On Mon, Oct 26, 2020 at 06:57:32PM +0000, Edgecombe, Rick P wrote:
-> > > On Mon, 2020-10-26 at 11:15 +0200, Mike Rapoport wrote:
-> > > > On Mon, Oct 26, 2020 at 12:38:32AM +0000, Edgecombe, Rick P
-> > > > wrote:
-> > > > > On Sun, 2020-10-25 at 12:15 +0200, Mike Rapoport wrote:
-> > > > > > From: Mike Rapoport <rppt@linux.ibm.com>
-> > > > > > 
-> > > > > > When DEBUG_PAGEALLOC or ARCH_HAS_SET_DIRECT_MAP is enabled a
-> > > > > > page
-> > > > > > may
-> > > > > > be
-> > > > > > not present in the direct map and has to be explicitly mapped
-> > > > > > before
-> > > > > > it
-> > > > > > could be copied.
-> > > > > > 
-> > > > > > On arm64 it is possible that a page would be removed from the
-> > > > > > direct
-> > > > > > map
-> > > > > > using set_direct_map_invalid_noflush() but
-> > > > > > __kernel_map_pages()
-> > > > > > will
-> > > > > > refuse
-> > > > > > to map this page back if DEBUG_PAGEALLOC is disabled.
-> > > > > 
-> > > > > It looks to me that arm64 __kernel_map_pages() will still
-> > > > > attempt
-> > > > > to
-> > > > > map it if rodata_full is true, how does this happen?
-> > > > 
-> > > > Unless I misread the code, arm64 requires both rodata_full and
-> > > > debug_pagealloc_enabled() to be true for __kernel_map_pages() to
-> > > > do
-> > > > anything.
-> > > > But rodata_full condition applies to set_direct_map_*_noflush()
-> > > > as
-> > > > well,
-> > > > so with !rodata_full the linear map won't be ever changed.
-> > > 
-> > > Hmm, looks to me that __kernel_map_pages() will only skip it if
-> > > both
-> > > debug pagealloc and rodata_full are false.
-> > > 
-> > > But now I'm wondering if maybe we could simplify things by just
-> > > moving
-> > > the hibernate unmapped page logic off of the direct map. On x86,
-> > > text_poke() used to use this reserved fixmap pte thing that it
-> > > could
-> > > rely on to remap memory with. If hibernate had some separate pte
-> > > for
-> > > remapping like that, then we could not have any direct map
-> > > restrictions
-> > > caused by it/kernel_map_pages(), and it wouldn't have to worry
-> > > about
-> > > relying on anything else.
-> > 
-> > Well, there is map_kernel_range() that can be used by hibernation as
-> > there is no requirement for particular virtual address, but that
-> > would
-> > be quite costly if done for every page.
-> > 
-> > Maybe we can do somthing like
-> > 
-> > 	if (kernel_page_present(s_page)) {
-> > 		do_copy_page(dst, page_address(s_page));
-> > 	} else {
-> > 		map_kernel_range_noflush(page_address(page), PAGE_SIZE,
-> > 					 PROT_READ, &page);
-> > 		do_copy_page(dst, page_address(s_page));
-> > 		unmap_kernel_range_noflush(page_address(page),
-> > PAGE_SIZE);
-> > 	}
-> > 
-> > But it seems that a prerequisite for changing the way a page is
-> > mapped
-> > in safe_copy_page() would be to teach hibernation that a mapping here
-> > may fail.
-> > 
-> Yea that is what I meant, the direct map could still be used for mapped
-> pages.
+On 28.10.20 12:09, Mike Rapoport wrote:
+> On Tue, Oct 27, 2020 at 09:46:35AM +0100, David Hildenbrand wrote:
+>> On 27.10.20 09:38, Mike Rapoport wrote:
+>>> On Mon, Oct 26, 2020 at 06:05:30PM +0000, Edgecombe, Rick P wrote:
+>>>
+>>>> Beyond whatever you are seeing, for the latter case of new things
+>>>> getting introduced to an interface with hidden dependencies... Another
+>>>> edge case could be a new caller to set_memory_np() could result in
+>>>> large NP pages. None of the callers today should cause this AFAICT, but
+>>>> it's not great to rely on the callers to know these details.
 > 
-> But for the unmapped case it could have a pre-setup 4k pte for some non
-> direct map address. Then just change the pte to point to any unmapped
-> direct map page that was encountered. The point would be to give
-> hibernate some 4k pte of its own to manipulate so that it can't fail.
+>>> A caller of set_memory_*() or set_direct_map_*() should expect a failure
+>>> and be ready for that. So adding a WARN to safe_copy_page() is the first
+>>> step in that direction :)
+>>>
+>>
+>> I am probably missing something important, but why are we saving/restoring
+>> the content of pages that were explicitly removed from the identity mapping
+>> such that nobody will access them?
 > 
-> Yet another option would be have hibernate_map_page() just map large
-> pages if it finds them.
+> Actually, we should not be saving/restoring free pages during
+> hibernation as there are several calls to mark_free_pages() that should
+> exclude the free pages from the snapshot. I've tried to find why the fix
+> that maps/unmaps a page to save it was required at the first place, but
+> I could not find bug reports.
 > 
-> So we could teach hibernate to handle mapping failures, OR we could
-> change it so it doesn't rely on direct map page sizes in order to
-> succeed. The latter seems better to me since there isn't a reason why
-> it should have to fail and the resulting logic might be simpler. Both
-> seem like improvements in robustness though.
+> The closest I've got is an email from Rafael that asked to update
+> "hibernate: handle DEBUG_PAGEALLOC" patch:
+> 
+> https://lore.kernel.org/linux-pm/200802200133.44098.rjw@sisk.pl/
+> 
+> Could it be that safe_copy_page() tries to workaround a non-existent
+> problem?
+> 
 
-That's correct, but as the purpose of this series is to prevent usage of
-__kernel_map_pages() outside DEBUG_PAGALLOC, for now I'm going to update this
-patch changelog and add a comment to hibernate_map_page().
+Clould be! Also see
+
+https://lkml.kernel.org/r/38de5bb0-5559-d069-0ce0-daec66ef2746@suse.cz
+
+which restores free page content based on more kernel parameters, not 
+based on the original content.
 
 -- 
-Sincerely yours,
-Mike.
+Thanks,
+
+David / dhildenb
+
