@@ -2,271 +2,111 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 838B229D6E7
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Oct 2020 23:19:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A83E529D80D
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Oct 2020 23:29:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731994AbgJ1WTI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Oct 2020 18:19:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60502 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731732AbgJ1WRo (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:17:44 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387529AbgJ1W3P (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Oct 2020 18:29:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40118 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387544AbgJ1W3P (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 28 Oct 2020 18:29:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603924153;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=M8JTjwx1xPoMOxFeqZV3xf69WjT+/RkxcH88TSNnb+w=;
+        b=f6qzu5MFv7R4bxvNLcQwz3WLg7o0hpPyyD7C56RzugvLcehKKCeNNqcNeoIG+xZLP8GbNE
+        RAKbELrvii3DgGng0x9mJdELr/nM0Mku77SZDdsMZn3/WemF66SeFa7GlVSCoNaIk07cK8
+        6LOp2lZD60eR8QEdtuf27l8k2gxa+OY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-498-_bHN6KzcPlGx5EyRSV5QAA-1; Wed, 28 Oct 2020 14:28:01 -0400
+X-MC-Unique: _bHN6KzcPlGx5EyRSV5QAA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A727C246DE;
-        Wed, 28 Oct 2020 11:56:14 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.94)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1kXk3p-005ZIX-8X; Wed, 28 Oct 2020 07:56:13 -0400
-Message-ID: <20201028115613.140212174@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Wed, 28 Oct 2020 07:52:49 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guo Ren <guoren@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6704A879526;
+        Wed, 28 Oct 2020 18:28:00 +0000 (UTC)
+Received: from localhost.localdomain.com (ovpn-66-92.rdu2.redhat.com [10.10.66.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ABA9560C04;
+        Wed, 28 Oct 2020 18:27:55 +0000 (UTC)
+From:   Qian Cai <cai@redhat.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-csky@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-Subject: [PATCH 5/9] kprobes/ftrace: Add recursion protection to the ftrace callback
-References: <20201028115244.995788961@goodmis.org>
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@redhat.com>
+Subject: [PATCH] s390/smp: Move rcu_cpu_starting() earlier
+Date:   Wed, 28 Oct 2020 14:27:42 -0400
+Message-Id: <20201028182742.13773-1-cai@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+The call to rcu_cpu_starting() in smp_init_secondary() is not early
+enough in the CPU-hotplug onlining process, which results in lockdep
+splats as follows:
 
-If a ftrace callback does not supply its own recursion protection and
-does not set the RECURSION_SAFE flag in its ftrace_ops, then ftrace will
-make a helper trampoline to do so before calling the callback instead of
-just calling the callback directly.
+ WARNING: suspicious RCU usage
+ -----------------------------
+ kernel/locking/lockdep.c:3497 RCU-list traversed in non-reader section!!
 
-The default for ftrace_ops is going to assume recursion protection unless
-otherwise specified.
+ other info that might help us debug this:
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Guo Ren <guoren@kernel.org>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: Helge Deller <deller@gmx.de>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linux-csky@vger.kernel.org
-Cc: linux-parisc@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-s390@vger.kernel.org
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+ RCU used illegally from offline CPU!
+ rcu_scheduler_active = 1, debug_locks = 1
+ no locks held by swapper/1/0.
+
+ Call Trace:
+ show_stack+0x158/0x1f0
+ dump_stack+0x1f2/0x238
+ __lock_acquire+0x2640/0x4dd0
+ lock_acquire+0x3a8/0xd08
+ _raw_spin_lock_irqsave+0xc0/0xf0
+ clockevents_register_device+0xa8/0x528
+ init_cpu_timer+0x33e/0x468
+ smp_init_secondary+0x11a/0x328
+ smp_start_secondary+0x82/0x88
+
+This is avoided by moving the call to rcu_cpu_starting up near the
+beginning of the smp_init_secondary() function. Note that the
+raw_smp_processor_id() is required in order to avoid calling into
+lockdep before RCU has declared the CPU to be watched for readers.
+
+Link: https://lore.kernel.org/lkml/160223032121.7002.1269740091547117869.tip-bot2@tip-bot2/
+Signed-off-by: Qian Cai <cai@redhat.com>
 ---
- arch/csky/kernel/probes/ftrace.c     | 12 ++++++++++--
- arch/parisc/kernel/ftrace.c          | 13 +++++++++++--
- arch/powerpc/kernel/kprobes-ftrace.c | 11 ++++++++++-
- arch/s390/kernel/ftrace.c            | 13 +++++++++++--
- arch/x86/kernel/kprobes/ftrace.c     | 12 ++++++++++--
- 5 files changed, 52 insertions(+), 9 deletions(-)
+ arch/s390/kernel/smp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/csky/kernel/probes/ftrace.c b/arch/csky/kernel/probes/ftrace.c
-index 5264763d05be..5eb2604fdf71 100644
---- a/arch/csky/kernel/probes/ftrace.c
-+++ b/arch/csky/kernel/probes/ftrace.c
-@@ -13,16 +13,21 @@ int arch_check_ftrace_location(struct kprobe *p)
- void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- 			   struct ftrace_ops *ops, struct pt_regs *regs)
+diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
+index ebfe86d097f0..390d97daa2b3 100644
+--- a/arch/s390/kernel/smp.c
++++ b/arch/s390/kernel/smp.c
+@@ -855,13 +855,14 @@ void __init smp_detect_cpus(void)
+ 
+ static void smp_init_secondary(void)
  {
-+	int bit;
- 	bool lr_saver = false;
- 	struct kprobe *p;
- 	struct kprobe_ctlblk *kcb;
+-	int cpu = smp_processor_id();
++	int cpu = raw_smp_processor_id();
  
--	/* Preempt is disabled by ftrace */
-+	bit = ftrace_test_recursion_trylock();
-+	if (bit < 0)
-+		return;
-+
-+	preempt_disable_notrace();
- 	p = get_kprobe((kprobe_opcode_t *)ip);
- 	if (!p) {
- 		p = get_kprobe((kprobe_opcode_t *)(ip - MCOUNT_INSN_SIZE));
- 		if (unlikely(!p) || kprobe_disabled(p))
--			return;
-+			goto out;
- 		lr_saver = true;
- 	}
- 
-@@ -56,6 +61,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- 		 */
- 		__this_cpu_write(current_kprobe, NULL);
- 	}
-+out:
-+	preempt_enable_notrace();
-+	ftrace_test_recursion_unlock(bit);
- }
- NOKPROBE_SYMBOL(kprobe_ftrace_handler);
- 
-diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-index 4bab21c71055..5f7742b225a5 100644
---- a/arch/parisc/kernel/ftrace.c
-+++ b/arch/parisc/kernel/ftrace.c
-@@ -208,13 +208,19 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- {
- 	struct kprobe_ctlblk *kcb;
- 	struct kprobe *p = get_kprobe((kprobe_opcode_t *)ip);
-+	int bit;
- 
--	if (unlikely(!p) || kprobe_disabled(p))
-+	bit = ftrace_test_recursion_trylock();
-+	if (bit < 0)
- 		return;
- 
-+	preempt_disable_notrace();
-+	if (unlikely(!p) || kprobe_disabled(p))
-+		goto out;
-+
- 	if (kprobe_running()) {
- 		kprobes_inc_nmissed_count(p);
--		return;
-+		goto out;
- 	}
- 
- 	__this_cpu_write(current_kprobe, p);
-@@ -235,6 +241,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- 		}
- 	}
- 	__this_cpu_write(current_kprobe, NULL);
-+out:
-+	preempt_enable_notrace();
-+	ftrace_test_recursion_unlock(bit);
- }
- NOKPROBE_SYMBOL(kprobe_ftrace_handler);
- 
-diff --git a/arch/powerpc/kernel/kprobes-ftrace.c b/arch/powerpc/kernel/kprobes-ftrace.c
-index 972cb28174b2..5df8d50c65ae 100644
---- a/arch/powerpc/kernel/kprobes-ftrace.c
-+++ b/arch/powerpc/kernel/kprobes-ftrace.c
-@@ -18,10 +18,16 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
- {
- 	struct kprobe *p;
- 	struct kprobe_ctlblk *kcb;
-+	int bit;
- 
-+	bit = ftrace_test_recursion_trylock();
-+	if (bit < 0)
-+		return;
-+
-+	preempt_disable_notrace();
- 	p = get_kprobe((kprobe_opcode_t *)nip);
- 	if (unlikely(!p) || kprobe_disabled(p))
--		return;
-+		goto out;
- 
- 	kcb = get_kprobe_ctlblk();
- 	if (kprobe_running()) {
-@@ -52,6 +58,9 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
- 		 */
- 		__this_cpu_write(current_kprobe, NULL);
- 	}
-+out:
-+	preempt_enable_notrace();
-+	ftrace_test_recursion_unlock(bit);
- }
- NOKPROBE_SYMBOL(kprobe_ftrace_handler);
- 
-diff --git a/arch/s390/kernel/ftrace.c b/arch/s390/kernel/ftrace.c
-index b388e87a08bf..88466d7fb6b2 100644
---- a/arch/s390/kernel/ftrace.c
-+++ b/arch/s390/kernel/ftrace.c
-@@ -202,13 +202,19 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- {
- 	struct kprobe_ctlblk *kcb;
- 	struct kprobe *p = get_kprobe((kprobe_opcode_t *)ip);
-+	int bit;
- 
--	if (unlikely(!p) || kprobe_disabled(p))
-+	bit = ftrace_test_recursion_trylock();
-+	if (bit < 0)
- 		return;
- 
-+	preempt_disable_notrace();
-+	if (unlikely(!p) || kprobe_disabled(p))
-+		goto out;
-+
- 	if (kprobe_running()) {
- 		kprobes_inc_nmissed_count(p);
--		return;
-+		goto out;
- 	}
- 
- 	__this_cpu_write(current_kprobe, p);
-@@ -228,6 +234,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- 		}
- 	}
- 	__this_cpu_write(current_kprobe, NULL);
-+out:
-+	preempt_enable_notrace();
-+	ftrace_test_recursion_unlock(bit);
- }
- NOKPROBE_SYMBOL(kprobe_ftrace_handler);
- 
-diff --git a/arch/x86/kernel/kprobes/ftrace.c b/arch/x86/kernel/kprobes/ftrace.c
-index 681a4b36e9bb..a40a6cdfcca3 100644
---- a/arch/x86/kernel/kprobes/ftrace.c
-+++ b/arch/x86/kernel/kprobes/ftrace.c
-@@ -18,11 +18,16 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- {
- 	struct kprobe *p;
- 	struct kprobe_ctlblk *kcb;
-+	int bit;
- 
--	/* Preempt is disabled by ftrace */
-+	bit = ftrace_test_recursion_trylock();
-+	if (bit < 0)
-+		return;
-+
-+	preempt_disable_notrace();
- 	p = get_kprobe((kprobe_opcode_t *)ip);
- 	if (unlikely(!p) || kprobe_disabled(p))
--		return;
-+		goto out;
- 
- 	kcb = get_kprobe_ctlblk();
- 	if (kprobe_running()) {
-@@ -52,6 +57,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
- 		 */
- 		__this_cpu_write(current_kprobe, NULL);
- 	}
-+out:
-+	preempt_enable_notrace();
-+	ftrace_test_recursion_unlock(bit);
- }
- NOKPROBE_SYMBOL(kprobe_ftrace_handler);
- 
+ 	S390_lowcore.last_update_clock = get_tod_clock();
+ 	restore_access_regs(S390_lowcore.access_regs_save_area);
+ 	set_cpu_flag(CIF_ASCE_PRIMARY);
+ 	set_cpu_flag(CIF_ASCE_SECONDARY);
+ 	cpu_init();
++	rcu_cpu_starting(cpu);
+ 	preempt_disable();
+ 	init_cpu_timer();
+ 	vtime_init();
 -- 
 2.28.0
-
 
