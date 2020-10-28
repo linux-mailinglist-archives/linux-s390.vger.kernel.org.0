@@ -2,111 +2,188 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A83E529D80D
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Oct 2020 23:29:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96B8229DEB6
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 01:56:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387529AbgJ1W3P (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Oct 2020 18:29:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40118 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387544AbgJ1W3P (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:29:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603924153;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=M8JTjwx1xPoMOxFeqZV3xf69WjT+/RkxcH88TSNnb+w=;
-        b=f6qzu5MFv7R4bxvNLcQwz3WLg7o0hpPyyD7C56RzugvLcehKKCeNNqcNeoIG+xZLP8GbNE
-        RAKbELrvii3DgGng0x9mJdELr/nM0Mku77SZDdsMZn3/WemF66SeFa7GlVSCoNaIk07cK8
-        6LOp2lZD60eR8QEdtuf27l8k2gxa+OY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-498-_bHN6KzcPlGx5EyRSV5QAA-1; Wed, 28 Oct 2020 14:28:01 -0400
-X-MC-Unique: _bHN6KzcPlGx5EyRSV5QAA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727621AbgJ2A4E (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Oct 2020 20:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731637AbgJ1WRh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 28 Oct 2020 18:17:37 -0400
+Received: from kernel.org (unknown [87.70.96.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6704A879526;
-        Wed, 28 Oct 2020 18:28:00 +0000 (UTC)
-Received: from localhost.localdomain.com (ovpn-66-92.rdu2.redhat.com [10.10.66.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ABA9560C04;
-        Wed, 28 Oct 2020 18:27:55 +0000 (UTC)
-From:   Qian Cai <cai@redhat.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@redhat.com>
-Subject: [PATCH] s390/smp: Move rcu_cpu_starting() earlier
-Date:   Wed, 28 Oct 2020 14:27:42 -0400
-Message-Id: <20201028182742.13773-1-cai@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 51BD32469B;
+        Wed, 28 Oct 2020 09:42:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603878129;
+        bh=TeNt5NA/mgWkbLu1J6Mmn4AZrBqZNOgXaAyr5KmIXdc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BAxhPNm00YmUvqZ3itxYhYio6fYAnJQ499wadwVQA1K0WvG4XS19jLvpQ8+eKhIIU
+         s5CNhtP486uh5zhqaz0QS5SyAvIRcDNWo3SzSu4cxxTrXJkuMWq5HghyPFcy1dXFKg
+         Hhf6FJq+WSim8L2T+mmNr/hWPUmxbWsHsyI76+WI=
+Date:   Wed, 28 Oct 2020 11:41:56 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "david@redhat.com" <david@redhat.com>,
+        "cl@linux.com" <cl@linux.com>,
+        "gor@linux.ibm.com" <gor@linux.ibm.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
+        "penberg@kernel.org" <penberg@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "iamjoonsoo.kim@lge.com" <iamjoonsoo.kim@lge.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "kirill@shutemov.name" <kirill@shutemov.name>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "hca@linux.ibm.com" <hca@linux.ibm.com>,
+        "bp@alien8.de" <bp@alien8.de>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Brown, Len" <len.brown@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 2/4] PM: hibernate: improve robustness of mapping pages
+ in the direct map
+Message-ID: <20201028094156.GD1428094@kernel.org>
+References: <20201025101555.3057-1-rppt@kernel.org>
+ <20201025101555.3057-3-rppt@kernel.org>
+ <f20900a403bea9eb3f0814128e5ea46f6580f5a5.camel@intel.com>
+ <20201026091554.GB1154158@kernel.org>
+ <a28d8248057e7dc01716764da9edfd666722ff62.camel@intel.com>
+ <20201027084902.GH1154158@kernel.org>
+ <ce66dcf2bbc17d40bcbe752868edb13976b3f1bb.camel@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ce66dcf2bbc17d40bcbe752868edb13976b3f1bb.camel@intel.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The call to rcu_cpu_starting() in smp_init_secondary() is not early
-enough in the CPU-hotplug onlining process, which results in lockdep
-splats as follows:
+On Tue, Oct 27, 2020 at 10:44:21PM +0000, Edgecombe, Rick P wrote:
+> On Tue, 2020-10-27 at 10:49 +0200, Mike Rapoport wrote:
+> > On Mon, Oct 26, 2020 at 06:57:32PM +0000, Edgecombe, Rick P wrote:
+> > > On Mon, 2020-10-26 at 11:15 +0200, Mike Rapoport wrote:
+> > > > On Mon, Oct 26, 2020 at 12:38:32AM +0000, Edgecombe, Rick P
+> > > > wrote:
+> > > > > On Sun, 2020-10-25 at 12:15 +0200, Mike Rapoport wrote:
+> > > > > > From: Mike Rapoport <rppt@linux.ibm.com>
+> > > > > > 
+> > > > > > When DEBUG_PAGEALLOC or ARCH_HAS_SET_DIRECT_MAP is enabled a
+> > > > > > page
+> > > > > > may
+> > > > > > be
+> > > > > > not present in the direct map and has to be explicitly mapped
+> > > > > > before
+> > > > > > it
+> > > > > > could be copied.
+> > > > > > 
+> > > > > > On arm64 it is possible that a page would be removed from the
+> > > > > > direct
+> > > > > > map
+> > > > > > using set_direct_map_invalid_noflush() but
+> > > > > > __kernel_map_pages()
+> > > > > > will
+> > > > > > refuse
+> > > > > > to map this page back if DEBUG_PAGEALLOC is disabled.
+> > > > > 
+> > > > > It looks to me that arm64 __kernel_map_pages() will still
+> > > > > attempt
+> > > > > to
+> > > > > map it if rodata_full is true, how does this happen?
+> > > > 
+> > > > Unless I misread the code, arm64 requires both rodata_full and
+> > > > debug_pagealloc_enabled() to be true for __kernel_map_pages() to
+> > > > do
+> > > > anything.
+> > > > But rodata_full condition applies to set_direct_map_*_noflush()
+> > > > as
+> > > > well,
+> > > > so with !rodata_full the linear map won't be ever changed.
+> > > 
+> > > Hmm, looks to me that __kernel_map_pages() will only skip it if
+> > > both
+> > > debug pagealloc and rodata_full are false.
+> > > 
+> > > But now I'm wondering if maybe we could simplify things by just
+> > > moving
+> > > the hibernate unmapped page logic off of the direct map. On x86,
+> > > text_poke() used to use this reserved fixmap pte thing that it
+> > > could
+> > > rely on to remap memory with. If hibernate had some separate pte
+> > > for
+> > > remapping like that, then we could not have any direct map
+> > > restrictions
+> > > caused by it/kernel_map_pages(), and it wouldn't have to worry
+> > > about
+> > > relying on anything else.
+> > 
+> > Well, there is map_kernel_range() that can be used by hibernation as
+> > there is no requirement for particular virtual address, but that
+> > would
+> > be quite costly if done for every page.
+> > 
+> > Maybe we can do somthing like
+> > 
+> > 	if (kernel_page_present(s_page)) {
+> > 		do_copy_page(dst, page_address(s_page));
+> > 	} else {
+> > 		map_kernel_range_noflush(page_address(page), PAGE_SIZE,
+> > 					 PROT_READ, &page);
+> > 		do_copy_page(dst, page_address(s_page));
+> > 		unmap_kernel_range_noflush(page_address(page),
+> > PAGE_SIZE);
+> > 	}
+> > 
+> > But it seems that a prerequisite for changing the way a page is
+> > mapped
+> > in safe_copy_page() would be to teach hibernation that a mapping here
+> > may fail.
+> > 
+> Yea that is what I meant, the direct map could still be used for mapped
+> pages.
+> 
+> But for the unmapped case it could have a pre-setup 4k pte for some non
+> direct map address. Then just change the pte to point to any unmapped
+> direct map page that was encountered. The point would be to give
+> hibernate some 4k pte of its own to manipulate so that it can't fail.
+> 
+> Yet another option would be have hibernate_map_page() just map large
+> pages if it finds them.
+> 
+> So we could teach hibernate to handle mapping failures, OR we could
+> change it so it doesn't rely on direct map page sizes in order to
+> succeed. The latter seems better to me since there isn't a reason why
+> it should have to fail and the resulting logic might be simpler. Both
+> seem like improvements in robustness though.
 
- WARNING: suspicious RCU usage
- -----------------------------
- kernel/locking/lockdep.c:3497 RCU-list traversed in non-reader section!!
+That's correct, but as the purpose of this series is to prevent usage of
+__kernel_map_pages() outside DEBUG_PAGALLOC, for now I'm going to update this
+patch changelog and add a comment to hibernate_map_page().
 
- other info that might help us debug this:
-
- RCU used illegally from offline CPU!
- rcu_scheduler_active = 1, debug_locks = 1
- no locks held by swapper/1/0.
-
- Call Trace:
- show_stack+0x158/0x1f0
- dump_stack+0x1f2/0x238
- __lock_acquire+0x2640/0x4dd0
- lock_acquire+0x3a8/0xd08
- _raw_spin_lock_irqsave+0xc0/0xf0
- clockevents_register_device+0xa8/0x528
- init_cpu_timer+0x33e/0x468
- smp_init_secondary+0x11a/0x328
- smp_start_secondary+0x82/0x88
-
-This is avoided by moving the call to rcu_cpu_starting up near the
-beginning of the smp_init_secondary() function. Note that the
-raw_smp_processor_id() is required in order to avoid calling into
-lockdep before RCU has declared the CPU to be watched for readers.
-
-Link: https://lore.kernel.org/lkml/160223032121.7002.1269740091547117869.tip-bot2@tip-bot2/
-Signed-off-by: Qian Cai <cai@redhat.com>
----
- arch/s390/kernel/smp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index ebfe86d097f0..390d97daa2b3 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -855,13 +855,14 @@ void __init smp_detect_cpus(void)
- 
- static void smp_init_secondary(void)
- {
--	int cpu = smp_processor_id();
-+	int cpu = raw_smp_processor_id();
- 
- 	S390_lowcore.last_update_clock = get_tod_clock();
- 	restore_access_regs(S390_lowcore.access_regs_save_area);
- 	set_cpu_flag(CIF_ASCE_PRIMARY);
- 	set_cpu_flag(CIF_ASCE_SECONDARY);
- 	cpu_init();
-+	rcu_cpu_starting(cpu);
- 	preempt_disable();
- 	init_cpu_timer();
- 	vtime_init();
 -- 
-2.28.0
-
+Sincerely yours,
+Mike.
