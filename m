@@ -2,282 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25EA129E26A
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 03:14:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB5B129E233
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 03:11:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbgJ2COV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Oct 2020 22:14:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28972 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726778AbgJ1Vfv (ORCPT
+        id S1726855AbgJ2CLm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Oct 2020 22:11:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29846 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726837AbgJ1Vgt (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 28 Oct 2020 17:35:51 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09SAWIL6112439;
-        Wed, 28 Oct 2020 07:00:56 -0400
+        Wed, 28 Oct 2020 17:36:49 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09SI1qTW083972;
+        Wed, 28 Oct 2020 14:31:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id; s=pp1;
- bh=O9NVZXcWHFl5NEq2e8YwO8pfMDn/rjKTPA/GCr87lbU=;
- b=ZocmigXojXKcz4DO9pXfsGS+3G8CBx/2+mDhNwuHbMmaZ+GtfA+caganE+fE+NgTfm8b
- yXKZnKkLqqKmbh/37uvMyGD81GKYGZHVXrsqp40NrAYxFiXwSgCQox+oCbiM6aZF+Pkc
- Uv5vVnfqFirNlAB741CLm80LsVZp3xU4ueeOpFN01EZSCi+e2I5wXCtWXF0L8p4vJKQ7
- EzZBvRgGBN7tFI9M7WuENFSGMbHuH4J2DcPgkmRBQxwIisyL+khvxIIIpDr5UdFv3W58
- 65MjNpDOUTSFt09+LZ8RGRkAwQQCO3w3qLNw+QJJ6OssVMIR/vL07Ir+Ks+5zKR4vlxO /w== 
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34esjkpfgf-1
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : sender; s=pp1;
+ bh=jhecTrmBW5iHnrqL0zl9efrXazNDBnk4jtaYZtXWTAU=;
+ b=gG4xvIUzIcby/zIvb8dMDHECOADou3Icex7bWZBHfQRCOVjYkgPNWl/Kal1aiskH9q+/
+ RcyXbl+82TYNZRS79v9RgOhu4AV59eA6tois3/8bseYUlwAdScYiiCwMDGgSoqWxD05b
+ ipSl6R4CMV8HDAhbXySMfiGsA8K1iPjlYBy778iy8gBzse8+ZbHSLWFyKP+PPqXPdnM2
+ 5mIuHq+N5RkSVZ3mHknNELNF32mySY2wta6JQFjHV5mPvFzgS2MiJCCj67L5nx2xCj0I
+ QR4peN8Qfcn+2HAXroThPs64x2LKsEf0oTQHW33dO1qgCVcW36FXM2dyfQBkV6GxLwoV KA== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34f96uc1e7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Oct 2020 07:00:55 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09SAuu3E019071;
-        Wed, 28 Oct 2020 11:00:52 GMT
+        Wed, 28 Oct 2020 14:31:01 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09SITFSb031946;
+        Wed, 28 Oct 2020 18:30:57 GMT
 Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma01fra.de.ibm.com with ESMTP id 34dwh0h63k-1
+        by ppma04ams.nl.ibm.com with ESMTP id 34f8cr89s4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Oct 2020 11:00:52 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09SB0nNw26214742
+        Wed, 28 Oct 2020 18:30:57 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09SIUsHk29557092
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Oct 2020 11:00:49 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B09DBAE061;
-        Wed, 28 Oct 2020 11:00:49 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 74751AE056;
-        Wed, 28 Oct 2020 11:00:49 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 28 Oct 2020 11:00:49 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: [PATCH net-next] net/smc: improve return codes for SMC-Dv2
-Date:   Wed, 28 Oct 2020 12:00:39 +0100
-Message-Id: <20201028110039.33645-1-kgraul@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 28 Oct 2020 18:30:54 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2E0EB11C070;
+        Wed, 28 Oct 2020 18:30:54 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 245C011C04C;
+        Wed, 28 Oct 2020 18:30:54 +0000 (GMT)
+Received: from t480-pf1aa2c2 (unknown [9.145.72.181])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 28 Oct 2020 18:30:54 +0000 (GMT)
+Received: from bblock by t480-pf1aa2c2 with local (Exim 4.94)
+        (envelope-from <bblock@linux.ibm.com>)
+        id 1kXqDl-002ps0-4l; Wed, 28 Oct 2020 19:30:53 +0100
+From:   Benjamin Block <bblock@linux.ibm.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        Fedor Loshakov <loshakov@linux.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH 3/5] zfcp: clarify & assert the stat_lock locking in zfcp_qdio_send()
+Date:   Wed, 28 Oct 2020 19:30:50 +0100
+Message-Id: <b023b1472630f4bf9fce580577d7bb49de89ccbf.1603908167.git.bblock@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1603908167.git.bblock@linux.ibm.com>
+References: <cover.1603908167.git.bblock@linux.ibm.com>
+MIME-Version: 1.0
+Organization: IBM Deutschland Research & Development GmbH, Vorsitz. AufsR. Gregor Pillen, Geschaeftsfuehrung Dirk Wittkopp, Sitz der Gesellschaft Boeblingen, Registergericht AmtsG Stuttgart, HRB 243294
+Content-Transfer-Encoding: 8bit
+Sender: Benjamin Block <bblock@linux.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-10-28_04:2020-10-26,2020-10-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- adultscore=0 mlxscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0
- malwarescore=0 clxscore=1015 priorityscore=1501 suspectscore=1
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010280067
+ definitions=2020-10-28_08:2020-10-28,2020-10-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 impostorscore=0 adultscore=0 mlxlogscore=999
+ bulkscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010280116
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-To allow better problem diagnosis the return codes for SMC-Dv2 are
-improved by this patch. A few more CLC DECLINE codes are defined and
-sent to the peer when an SMC connection cannot be established.
-There are now multiple SMC variations that are offered by the client and
-the server may encounter problems to initialize all of them.
-Because only one diagnosis code can be sent to the client the decision
-was made to send the first code that was encountered. Because the server
-tries the variations in the order of importance (SMC-Dv2, SMC-D, SMC-R)
-this makes sure that the diagnosis code of the most important variation
-is sent.
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+Explain why the plain spin_lock() suffices in current code, even when
+the stat_lock is also used by zfcp_qdio_int_req() in tasklet context.
+
+We could also promote the spin_lock() to a spin_lock_irqsave(), but that
+would just obfuscate the locking even further.
+
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
 ---
- net/smc/af_smc.c   | 61 +++++++++++++++++++++++++++++++---------------
- net/smc/smc_clc.h  |  5 ++++
- net/smc/smc_core.h |  1 +
- 3 files changed, 47 insertions(+), 20 deletions(-)
+ drivers/s390/scsi/zfcp_qdio.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index 82be0bd0f6e8..5414704f4cac 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -1346,6 +1346,7 @@ static int smc_listen_v2_check(struct smc_sock *new_smc,
- {
- 	struct smc_clc_smcd_v2_extension *pclc_smcd_v2_ext;
- 	struct smc_clc_v2_extension *pclc_v2_ext;
-+	int rc;
+diff --git a/drivers/s390/scsi/zfcp_qdio.c b/drivers/s390/scsi/zfcp_qdio.c
+index 9fc045ddf66d..23ab16d65f2a 100644
+--- a/drivers/s390/scsi/zfcp_qdio.c
++++ b/drivers/s390/scsi/zfcp_qdio.c
+@@ -10,6 +10,7 @@
+ #define KMSG_COMPONENT "zfcp"
+ #define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
  
- 	ini->smc_type_v1 = pclc->hdr.typev1;
- 	ini->smc_type_v2 = pclc->hdr.typev2;
-@@ -1353,29 +1354,30 @@ static int smc_listen_v2_check(struct smc_sock *new_smc,
- 	if (pclc->hdr.version > SMC_V1)
- 		ini->smcd_version |=
- 				ini->smc_type_v2 != SMC_TYPE_N ? SMC_V2 : 0;
-+	if (!(ini->smcd_version & SMC_V2)) {
-+		rc = SMC_CLC_DECL_PEERNOSMC;
-+		goto out;
-+	}
- 	if (!smc_ism_v2_capable) {
- 		ini->smcd_version &= ~SMC_V2;
-+		rc = SMC_CLC_DECL_NOISM2SUPP;
- 		goto out;
- 	}
- 	pclc_v2_ext = smc_get_clc_v2_ext(pclc);
- 	if (!pclc_v2_ext) {
- 		ini->smcd_version &= ~SMC_V2;
-+		rc = SMC_CLC_DECL_NOV2EXT;
- 		goto out;
- 	}
- 	pclc_smcd_v2_ext = smc_get_clc_smcd_v2_ext(pclc_v2_ext);
--	if (!pclc_smcd_v2_ext)
-+	if (!pclc_smcd_v2_ext) {
- 		ini->smcd_version &= ~SMC_V2;
-+		rc = SMC_CLC_DECL_NOV2DEXT;
-+	}
++#include <linux/lockdep.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include "zfcp_ext.h"
+@@ -283,6 +284,13 @@ int zfcp_qdio_send(struct zfcp_qdio *qdio, struct zfcp_qdio_req *q_req)
+ 	int retval;
+ 	u8 sbal_number = q_req->sbal_number;
  
- out:
--	if (!ini->smcd_version) {
--		if (pclc->hdr.typev1 == SMC_TYPE_B ||
--		    pclc->hdr.typev2 == SMC_TYPE_B)
--			return SMC_CLC_DECL_NOSMCDEV;
--		if (pclc->hdr.typev1 == SMC_TYPE_D ||
--		    pclc->hdr.typev2 == SMC_TYPE_D)
--			return SMC_CLC_DECL_NOSMCDDEV;
--		return SMC_CLC_DECL_NOSMCRDEV;
--	}
-+	if (!ini->smcd_version)
-+		return rc;
- 
- 	return 0;
- }
-@@ -1473,6 +1475,12 @@ static void smc_check_ism_v2_match(struct smc_init_info *ini,
- 	}
- }
- 
-+static void smc_find_ism_store_rc(u32 rc, struct smc_init_info *ini)
-+{
-+	if (!ini->rc)
-+		ini->rc = rc;
-+}
-+
- static void smc_find_ism_v2_device_serv(struct smc_sock *new_smc,
- 					struct smc_clc_msg_proposal *pclc,
- 					struct smc_init_info *ini)
-@@ -1483,7 +1491,7 @@ static void smc_find_ism_v2_device_serv(struct smc_sock *new_smc,
- 	unsigned int matches = 0;
- 	u8 smcd_version;
- 	u8 *eid = NULL;
--	int i;
-+	int i, rc;
- 
- 	if (!(ini->smcd_version & SMC_V2) || !smcd_indicated(ini->smc_type_v2))
- 		goto not_found;
-@@ -1492,8 +1500,10 @@ static void smc_find_ism_v2_device_serv(struct smc_sock *new_smc,
- 	smc_v2_ext = smc_get_clc_v2_ext(pclc);
- 	smcd_v2_ext = smc_get_clc_smcd_v2_ext(smc_v2_ext);
- 	if (!smcd_v2_ext ||
--	    !smc_v2_ext->hdr.flag.seid) /* no system EID support for SMCD */
-+	    !smc_v2_ext->hdr.flag.seid) { /* no system EID support for SMCD */
-+		smc_find_ism_store_rc(SMC_CLC_DECL_NOSEID, ini);
- 		goto not_found;
-+	}
- 
- 	mutex_lock(&smcd_dev_list.mutex);
- 	if (pclc_smcd->ism.chid)
-@@ -1525,9 +1535,12 @@ static void smc_find_ism_v2_device_serv(struct smc_sock *new_smc,
- 		ini->smcd_version = SMC_V2;
- 		ini->is_smcd = true;
- 		ini->ism_selected = i;
--		if (smc_listen_ism_init(new_smc, ini))
-+		rc = smc_listen_ism_init(new_smc, ini);
-+		if (rc) {
-+			smc_find_ism_store_rc(rc, ini);
- 			/* try next active ISM device */
- 			continue;
-+		}
- 		return; /* matching and usable V2 ISM device found */
- 	}
- 	/* no V2 ISM device could be initialized */
-@@ -1544,19 +1557,23 @@ static void smc_find_ism_v1_device_serv(struct smc_sock *new_smc,
- 					struct smc_init_info *ini)
- {
- 	struct smc_clc_msg_smcd *pclc_smcd = smc_get_clc_msg_smcd(pclc);
-+	int rc = 0;
- 
- 	/* check if ISM V1 is available */
- 	if (!(ini->smcd_version & SMC_V1) || !smcd_indicated(ini->smc_type_v1))
- 		goto not_found;
- 	ini->is_smcd = true; /* prepare ISM check */
- 	ini->ism_peer_gid[0] = ntohll(pclc_smcd->ism.gid);
--	if (smc_find_ism_device(new_smc, ini))
-+	rc = smc_find_ism_device(new_smc, ini);
-+	if (rc)
- 		goto not_found;
- 	ini->ism_selected = 0;
--	if (!smc_listen_ism_init(new_smc, ini))
-+	rc = smc_listen_ism_init(new_smc, ini);
-+	if (!rc)
- 		return;		/* V1 ISM device found */
- 
- not_found:
-+	smc_find_ism_store_rc(rc, ini);
- 	ini->ism_dev[0] = NULL;
- 	ini->is_smcd = false;
- }
-@@ -1613,16 +1630,16 @@ static int smc_listen_find_device(struct smc_sock *new_smc,
- 		return 0;
- 
- 	if (!(ini->smcd_version & SMC_V1))
--		return SMC_CLC_DECL_NOSMCDEV;
-+		return ini->rc ?: SMC_CLC_DECL_NOSMCD2DEV;
- 
- 	/* check for matching IP prefix and subnet length */
- 	rc = smc_listen_prfx_check(new_smc, pclc);
- 	if (rc)
--		return rc;
-+		return ini->rc ?: rc;
- 
- 	/* get vlan id from IP device */
- 	if (smc_vlan_by_tcpsk(new_smc->clcsock, ini))
--		return SMC_CLC_DECL_GETVLANERR;
-+		return ini->rc ?: SMC_CLC_DECL_GETVLANERR;
- 
- 	/* check for ISM device matching V1 proposed device */
- 	smc_find_ism_v1_device_serv(new_smc, pclc, ini);
-@@ -1630,10 +1647,14 @@ static int smc_listen_find_device(struct smc_sock *new_smc,
- 		return 0;
- 
- 	if (pclc->hdr.typev1 == SMC_TYPE_D)
--		return SMC_CLC_DECL_NOSMCDDEV; /* skip RDMA and decline */
-+		/* skip RDMA and decline */
-+		return ini->rc ?: SMC_CLC_DECL_NOSMCDDEV;
- 
- 	/* check if RDMA is available */
--	return smc_find_rdma_v1_device_serv(new_smc, pclc, ini);
-+	rc = smc_find_rdma_v1_device_serv(new_smc, pclc, ini);
-+	smc_find_ism_store_rc(rc, ini);
-+
-+	return (!rc) ? 0 : ini->rc;
- }
- 
- /* listen worker: finish RDMA setup */
-diff --git a/net/smc/smc_clc.h b/net/smc/smc_clc.h
-index b3f46ab79e47..e7ab05683bc9 100644
---- a/net/smc/smc_clc.h
-+++ b/net/smc/smc_clc.h
-@@ -37,6 +37,11 @@
- #define SMC_CLC_DECL_NOSMCDEV	0x03030000  /* no SMC device found (R or D)   */
- #define SMC_CLC_DECL_NOSMCDDEV	0x03030001  /* no SMC-D device found	      */
- #define SMC_CLC_DECL_NOSMCRDEV	0x03030002  /* no SMC-R device found	      */
-+#define SMC_CLC_DECL_NOISM2SUPP	0x03030003  /* hardware has no ISMv2 support  */
-+#define SMC_CLC_DECL_NOV2EXT	0x03030004  /* peer sent no clc v2 extension  */
-+#define SMC_CLC_DECL_NOV2DEXT	0x03030005  /* peer sent no clc SMC-Dv2 ext.  */
-+#define SMC_CLC_DECL_NOSEID	0x03030006  /* peer sent no SEID	      */
-+#define SMC_CLC_DECL_NOSMCD2DEV	0x03030007  /* no SMC-Dv2 device found	      */
- #define SMC_CLC_DECL_MODEUNSUPP	0x03040000  /* smc modes do not match (R or D)*/
- #define SMC_CLC_DECL_RMBE_EC	0x03050000  /* peer has eyecatcher in RMBE    */
- #define SMC_CLC_DECL_OPTUNSUPP	0x03060000  /* fastopen sockopt not supported */
-diff --git a/net/smc/smc_core.h b/net/smc/smc_core.h
-index f1e867ce2e63..9aee54a6bcba 100644
---- a/net/smc/smc_core.h
-+++ b/net/smc/smc_core.h
-@@ -301,6 +301,7 @@ struct smc_init_info {
- 	u8			first_contact_peer;
- 	u8			first_contact_local;
- 	unsigned short		vlan_id;
-+	u32			rc;
- 	/* SMC-R */
- 	struct smc_clc_msg_local *ib_lcl;
- 	struct smc_ib_device	*ib_dev;
++	/*
++	 * This should actually be a spin_lock_bh(stat_lock), to protect against
++	 * zfcp_qdio_int_req() in tasklet context.
++	 * But we can't do so (and are safe), as we always get called with IRQs
++	 * disabled by spin_lock_irq[save](req_q_lock).
++	 */
++	lockdep_assert_irqs_disabled();
+ 	spin_lock(&qdio->stat_lock);
+ 	zfcp_qdio_account(qdio);
+ 	spin_unlock(&qdio->stat_lock);
 -- 
-2.17.1
+2.26.2
 
