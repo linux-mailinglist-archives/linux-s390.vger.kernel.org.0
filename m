@@ -2,183 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D441629D27F
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Oct 2020 22:33:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C163829D2E2
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Oct 2020 22:37:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725300AbgJ1VdB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Oct 2020 17:33:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2902 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725828AbgJ1Vc4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 28 Oct 2020 17:32:56 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09SI25qA123705;
-        Wed, 28 Oct 2020 14:31:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : sender; s=pp1;
- bh=TQtuFv4i4lEPirDbebLwB2JvxgOWERtBtKQF8MOx+2M=;
- b=sVzeVD510ul6oUUaSTdXXy1l1KKC0D8Wb8P7Wpx09ALIHHbLzxR2CEpRGl76wxUnQkKQ
- ttXkVM9SHb8RiYEi3h26pO+fz4R+JsC64HkYK7yBXCD5Cah4Nve53aU9Zpu4KzkGWbXf
- jfTlqhihG90eIQhrDyDo3oUV5ro8MXJZ8oUC8rLeGzpoiNoSlEJD9BDWFNaBgcGXFaMo
- +K9pMsnJsZpim1YZ9wHsaAYG05Kg4JPBGdnSy3CZ6o28Se4sk4ZGksbL9Q+0389nC26E
- SSDM9qHHHXqScHynf/TtukVuUCYNk5I5c3wMzlJ46L9La7e4dm11prLqy7pkgDwtlgKu 9Q== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34esjm5x41-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Oct 2020 14:30:59 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09SITIYG020422;
-        Wed, 28 Oct 2020 18:30:57 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06fra.de.ibm.com with ESMTP id 34ejqe8rw8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Oct 2020 18:30:57 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09SIUsm931981874
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Oct 2020 18:30:54 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB4CC4C05C;
-        Wed, 28 Oct 2020 18:30:54 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD9C74C05E;
-        Wed, 28 Oct 2020 18:30:54 +0000 (GMT)
-Received: from t480-pf1aa2c2 (unknown [9.145.72.181])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 28 Oct 2020 18:30:54 +0000 (GMT)
-Received: from bblock by t480-pf1aa2c2 with local (Exim 4.94)
-        (envelope-from <bblock@linux.ibm.com>)
-        id 1kXqDl-002ps6-Mk; Wed, 28 Oct 2020 19:30:53 +0100
-From:   Benjamin Block <bblock@linux.ibm.com>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
+        id S1726962AbgJ1Vh0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Oct 2020 17:37:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726952AbgJ1VhZ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 28 Oct 2020 17:37:25 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-104-11.bvtn.or.frontiernet.net [50.39.104.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89E2324724;
+        Wed, 28 Oct 2020 21:01:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603918867;
+        bh=cQJGuWfvLs1OyxCH5Hveq93nka68GE77I3EkBKGcDVw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=nztoUpclkAs/vX/8RPAPt/UxcB8PP7Z2qKHsBlFmgVbhuaYpGSwRaeBIB5B0rYuXw
+         7PuhsqozVQB7s5CUrz7qoOSNnCr5jZ/LkkoYmyD0XQP3aLWVXb1Nxzo6d+KgYzA0HI
+         bzFS0F55hqurCUFlacConpqlCkv6QAixyO3CqF/c=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 2F8D735229CE; Wed, 28 Oct 2020 14:01:07 -0700 (PDT)
+Date:   Wed, 28 Oct 2020 14:01:07 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Fedor Loshakov <loshakov@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH 5/5] zfcp: handle event-lost notification for Version Change events
-Date:   Wed, 28 Oct 2020 19:30:52 +0100
-Message-Id: <297c7be2944c3714863fcd22d531d910312d29f0.1603908167.git.bblock@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1603908167.git.bblock@linux.ibm.com>
-References: <cover.1603908167.git.bblock@linux.ibm.com>
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/smp: Move rcu_cpu_starting() earlier
+Message-ID: <20201028210107.GH3249@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20201028182742.13773-1-cai@redhat.com>
 MIME-Version: 1.0
-Organization: IBM Deutschland Research & Development GmbH, Vorsitz. AufsR. Gregor Pillen, Geschaeftsfuehrung Dirk Wittkopp, Sitz der Gesellschaft Boeblingen, Registergericht AmtsG Stuttgart, HRB 243294
-Content-Transfer-Encoding: 8bit
-Sender: Benjamin Block <bblock@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-10-28_08:2020-10-28,2020-10-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- adultscore=0 mlxscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0
- malwarescore=0 clxscore=1015 priorityscore=1501 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010280116
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201028182742.13773-1-cai@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+On Wed, Oct 28, 2020 at 02:27:42PM -0400, Qian Cai wrote:
+> The call to rcu_cpu_starting() in smp_init_secondary() is not early
+> enough in the CPU-hotplug onlining process, which results in lockdep
+> splats as follows:
+> 
+>  WARNING: suspicious RCU usage
+>  -----------------------------
+>  kernel/locking/lockdep.c:3497 RCU-list traversed in non-reader section!!
+> 
+>  other info that might help us debug this:
+> 
+>  RCU used illegally from offline CPU!
+>  rcu_scheduler_active = 1, debug_locks = 1
+>  no locks held by swapper/1/0.
+> 
+>  Call Trace:
+>  show_stack+0x158/0x1f0
+>  dump_stack+0x1f2/0x238
+>  __lock_acquire+0x2640/0x4dd0
+>  lock_acquire+0x3a8/0xd08
+>  _raw_spin_lock_irqsave+0xc0/0xf0
+>  clockevents_register_device+0xa8/0x528
+>  init_cpu_timer+0x33e/0x468
+>  smp_init_secondary+0x11a/0x328
+>  smp_start_secondary+0x82/0x88
+> 
+> This is avoided by moving the call to rcu_cpu_starting up near the
+> beginning of the smp_init_secondary() function. Note that the
+> raw_smp_processor_id() is required in order to avoid calling into
+> lockdep before RCU has declared the CPU to be watched for readers.
+> 
+> Link: https://lore.kernel.org/lkml/160223032121.7002.1269740091547117869.tip-bot2@tip-bot2/
+> Signed-off-by: Qian Cai <cai@redhat.com>
 
-As recovery for a lost Version Change event, trigger an
-Exchange Config Data cmd to retrieve the current FW version.
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-Doing so requires process context (as eg. zfcp_qdio_sbal_get()
-might need to sleep), so defer from tasklet context into a work
-item.
-
-Suggested-by: Steffen Maier <maier@linux.ibm.com>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
----
- drivers/s390/scsi/zfcp_aux.c | 11 +++++++++++
- drivers/s390/scsi/zfcp_def.h |  1 +
- drivers/s390/scsi/zfcp_fsf.c |  3 +++
- drivers/s390/scsi/zfcp_fsf.h |  1 +
- 4 files changed, 16 insertions(+)
-
-diff --git a/drivers/s390/scsi/zfcp_aux.c b/drivers/s390/scsi/zfcp_aux.c
-index 18b713a616de..768873dd55b8 100644
---- a/drivers/s390/scsi/zfcp_aux.c
-+++ b/drivers/s390/scsi/zfcp_aux.c
-@@ -292,6 +292,14 @@ static void _zfcp_status_read_scheduler(struct work_struct *work)
- 					     stat_work));
- }
- 
-+static void zfcp_version_change_lost_work(struct work_struct *work)
-+{
-+	struct zfcp_adapter *adapter = container_of(work, struct zfcp_adapter,
-+						    version_change_lost_work);
-+
-+	zfcp_fsf_exchange_config_data_sync(adapter->qdio, NULL);
-+}
-+
- static void zfcp_print_sl(struct seq_file *m, struct service_level *sl)
- {
- 	struct zfcp_adapter *adapter =
-@@ -353,6 +361,8 @@ struct zfcp_adapter *zfcp_adapter_enqueue(struct ccw_device *ccw_device)
- 	INIT_WORK(&adapter->stat_work, _zfcp_status_read_scheduler);
- 	INIT_DELAYED_WORK(&adapter->scan_work, zfcp_fc_scan_ports);
- 	INIT_WORK(&adapter->ns_up_work, zfcp_fc_sym_name_update);
-+	INIT_WORK(&adapter->version_change_lost_work,
-+		  zfcp_version_change_lost_work);
- 
- 	adapter->next_port_scan = jiffies;
- 
-@@ -429,6 +439,7 @@ void zfcp_adapter_unregister(struct zfcp_adapter *adapter)
- 	cancel_delayed_work_sync(&adapter->scan_work);
- 	cancel_work_sync(&adapter->stat_work);
- 	cancel_work_sync(&adapter->ns_up_work);
-+	cancel_work_sync(&adapter->version_change_lost_work);
- 	zfcp_destroy_adapter_work_queue(adapter);
- 
- 	zfcp_fc_wka_ports_force_offline(adapter->gs);
-diff --git a/drivers/s390/scsi/zfcp_def.h b/drivers/s390/scsi/zfcp_def.h
-index da8a5ceb615c..f656d74a5f94 100644
---- a/drivers/s390/scsi/zfcp_def.h
-+++ b/drivers/s390/scsi/zfcp_def.h
-@@ -201,6 +201,7 @@ struct zfcp_adapter {
- 	struct zfcp_fc_events events;
- 	unsigned long		next_port_scan;
- 	struct zfcp_diag_adapter	*diagnostics;
-+	struct work_struct	version_change_lost_work;
- };
- 
- struct zfcp_port {
-diff --git a/drivers/s390/scsi/zfcp_fsf.c b/drivers/s390/scsi/zfcp_fsf.c
-index afa95e04eceb..7593a9667b3e 100644
---- a/drivers/s390/scsi/zfcp_fsf.c
-+++ b/drivers/s390/scsi/zfcp_fsf.c
-@@ -309,6 +309,9 @@ static void zfcp_fsf_status_read_handler(struct zfcp_fsf_req *req)
- 	case FSF_STATUS_READ_NOTIFICATION_LOST:
- 		if (sr_buf->status_subtype & FSF_STATUS_READ_SUB_INCOMING_ELS)
- 			zfcp_fc_conditional_port_scan(adapter);
-+		if (sr_buf->status_subtype & FSF_STATUS_READ_SUB_VERSION_CHANGE)
-+			queue_work(adapter->work_queue,
-+				   &adapter->version_change_lost_work);
- 		break;
- 	case FSF_STATUS_READ_FEATURE_UPDATE_ALERT:
- 		adapter->adapter_features = sr_buf->payload.word[0];
-diff --git a/drivers/s390/scsi/zfcp_fsf.h b/drivers/s390/scsi/zfcp_fsf.h
-index 26ad7a0c5ce3..5e6b601af980 100644
---- a/drivers/s390/scsi/zfcp_fsf.h
-+++ b/drivers/s390/scsi/zfcp_fsf.h
-@@ -143,6 +143,7 @@
- 
- /* status subtypes for unsolicited status notification lost */
- #define FSF_STATUS_READ_SUB_INCOMING_ELS	0x00000001
-+#define FSF_STATUS_READ_SUB_VERSION_CHANGE	0x00000100
- 
- /* status subtypes for version change */
- #define FSF_STATUS_READ_SUB_LIC_CHANGE		0x00000001
--- 
-2.26.2
-
+> ---
+>  arch/s390/kernel/smp.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
+> index ebfe86d097f0..390d97daa2b3 100644
+> --- a/arch/s390/kernel/smp.c
+> +++ b/arch/s390/kernel/smp.c
+> @@ -855,13 +855,14 @@ void __init smp_detect_cpus(void)
+>  
+>  static void smp_init_secondary(void)
+>  {
+> -	int cpu = smp_processor_id();
+> +	int cpu = raw_smp_processor_id();
+>  
+>  	S390_lowcore.last_update_clock = get_tod_clock();
+>  	restore_access_regs(S390_lowcore.access_regs_save_area);
+>  	set_cpu_flag(CIF_ASCE_PRIMARY);
+>  	set_cpu_flag(CIF_ASCE_SECONDARY);
+>  	cpu_init();
+> +	rcu_cpu_starting(cpu);
+>  	preempt_disable();
+>  	init_cpu_timer();
+>  	vtime_init();
+> -- 
+> 2.28.0
+> 
