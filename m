@@ -2,202 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C43329D290
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Oct 2020 22:33:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C261329D287
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Oct 2020 22:33:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726051AbgJ1VdV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Oct 2020 17:33:21 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:43772 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbgJ1VdU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 28 Oct 2020 17:33:20 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09SBP4xk059973;
-        Wed, 28 Oct 2020 11:28:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=0EJGMrLzPnA8igX+X9zVVa7mfgh8JcHWtJikU5BwPXo=;
- b=pGSX1pUxr4D0d/fqYn1ZG1rZrb6qBNCAbuWhiw1P6wGIINFitKOvJ9wiqt0XCyeazxUi
- bW+UKtSk3W+N/SRXd3Ru8A6UKWGeOsU3GVMZJ4Itg0ghGvkbIxQaLkWcCCwniIB8dIG2
- O7ondec4m+ISTJgWa2CUWaYosaizg4M3rFTS6m3jwpmih0J4diN7cK7efSf5YeCMmdjd
- iDqrA5jaXtG7cDp1d3Ie8yMBn2UqCaT8CAJ/QzXjqoitJ9Icntzc40mpF4S0EDQE/q80
- 6YfvB5iZFfAx9pu9sXORUkH/2PRw2qb31Ij1HiNhu9pO18rEjCSRJilIBpKEl25q/lQf Eg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 34cc7kxw5c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 28 Oct 2020 11:28:06 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09SBQ5vB065154;
-        Wed, 28 Oct 2020 11:26:05 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 34cx5y7fft-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Oct 2020 11:26:05 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09SBQ5hH021435;
-        Wed, 28 Oct 2020 11:26:05 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 28 Oct 2020 04:26:04 -0700
-Date:   Wed, 28 Oct 2020 14:25:59 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     ubraun@linux.ibm.com
-Cc:     linux-s390@vger.kernel.org
-Subject: [bug report] net/smc: CLC accept / confirm V2
-Message-ID: <20201028112539.GA1155565@mwanda>
+        id S1725875AbgJ1VdL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Oct 2020 17:33:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9768 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725898AbgJ1VdK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 28 Oct 2020 17:33:10 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09SI22Xs067483;
+        Wed, 28 Oct 2020 14:30:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding : sender;
+ s=pp1; bh=qroMZAEeiJASjmAsz/C4AnrRLZKN1U7Iue4g2NJm6AY=;
+ b=ZjDZYPSxriOFpuB0cREOrRJzj9/6u8np8q1fqFvNlo4ti9BnX8oAFtJYEEaL/Az5SpuV
+ Aw0Vl/fxwRSzUqmf3xH3FKfcPjr+NIYvXEykUe6PiwUyzXHtNfDPXgzLqcoAcIJn65go
+ wF5Em/aX8vJTrRIR3xHBZ6vVjNimS+ydD1SYZTlx0kPjjuLEfz/BaDRZCW2aHWDQPy7D
+ xpPI+gJkl8NhRkCmov1+BzgPVQpTi3GIM3I42pxapCe/MPWoCjIvVsBFsV9xBcxZQsok
+ 2i0t75ukAodvEkWTxtXy0JUQKcglFQjBIAucOHZsAuLyUiUBbVuWvbWhe5PL2csp5rTN 8A== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34d97hwtbm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Oct 2020 14:30:58 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09SIS27j030355;
+        Wed, 28 Oct 2020 18:30:56 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 34f8cr89s3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Oct 2020 18:30:56 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09SIUrMK22806948
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 28 Oct 2020 18:30:53 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4E4ED52075;
+        Wed, 28 Oct 2020 18:30:53 +0000 (GMT)
+Received: from t480-pf1aa2c2 (unknown [9.145.72.181])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 43C9152073;
+        Wed, 28 Oct 2020 18:30:53 +0000 (GMT)
+Received: from bblock by t480-pf1aa2c2 with local (Exim 4.94)
+        (envelope-from <bblock@linux.ibm.com>)
+        id 1kXqDk-002prt-9n; Wed, 28 Oct 2020 19:30:52 +0100
+From:   Benjamin Block <bblock@linux.ibm.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Benjamin Block <bblock@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        Fedor Loshakov <loshakov@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH 0/5] zfcp: cleanups, refactorings and features for 5.11
+Date:   Wed, 28 Oct 2020 19:30:47 +0100
+Message-Id: <cover.1603908167.git.bblock@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 mlxlogscore=912
- suspectscore=10 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010280078
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 adultscore=0
- malwarescore=0 spamscore=0 clxscore=1011 mlxscore=0 suspectscore=10
- priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
- mlxlogscore=928 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010280078
+Organization: IBM Deutschland Research & Development GmbH, Vorsitz. AufsR. Gregor Pillen, Geschaeftsfuehrung Dirk Wittkopp, Sitz der Gesellschaft Boeblingen, Registergericht AmtsG Stuttgart, HRB 243294
+Content-Transfer-Encoding: 8bit
+Sender: Benjamin Block <bblock@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-10-28_08:2020-10-28,2020-10-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ suspectscore=0 lowpriorityscore=0 clxscore=1011 bulkscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=913
+ adultscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2009150000 definitions=main-2010280116
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Ursula Braun,
+Hello James, Martin,
 
-The patch a7c9c5f4af7f: "net/smc: CLC accept / confirm V2" from Sep
-26, 2020, leads to the following static checker warning:
+here is a series of changes for our zfcp driver for 5.11.
 
-	net/smc/af_smc.c:1771 smc_listen_work()
-	error: we previously assumed 'ini' could be null (see line 1715)
+Other than 2 smaller cleanups and clarifications for maintainability we
+have a refactoring of how zfcp uses s390's qdio layer, and we have a
+small feature improving our handling of out-of-band version changes to our
+adapters (or firmware).
 
-net/smc/af_smc.c
-  1665  static void smc_listen_work(struct work_struct *work)
-  1666  {
-  1667          struct smc_sock *new_smc = container_of(work, struct smc_sock,
-  1668                                                  smc_listen_work);
-  1669          u8 version = smc_ism_v2_capable ? SMC_V2 : SMC_V1;
-  1670          struct socket *newclcsock = new_smc->clcsock;
-  1671          struct smc_clc_msg_accept_confirm *cclc;
-  1672          struct smc_clc_msg_proposal_area *buf;
-  1673          struct smc_clc_msg_proposal *pclc;
-  1674          struct smc_init_info *ini = NULL;
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Especially the refactoring ("zfcp: lift Input Queue tasklet from qdio")
+would be nice to have, because we have other patches queued internally
+that depend on this, and because qdio patches go via the s390 tree, this
+creates a dependency for Heiko and Vasily.
 
-  1675          int rc = 0;
-  1676  
-  1677          if (new_smc->listen_smc->sk.sk_state != SMC_LISTEN)
-  1678                  return smc_listen_out_err(new_smc);
-  1679  
-  1680          if (new_smc->use_fallback) {
-  1681                  smc_listen_out_connected(new_smc);
-  1682                  return;
-  1683          }
-  1684  
-  1685          /* check if peer is smc capable */
-  1686          if (!tcp_sk(newclcsock->sk)->syn_smc) {
-  1687                  smc_switch_to_fallback(new_smc);
-  1688                  new_smc->fallback_rsn = SMC_CLC_DECL_PEERNOSMC;
-  1689                  smc_listen_out_connected(new_smc);
-  1690                  return;
-  1691          }
-  1692  
-  1693          /* do inband token exchange -
-  1694           * wait for and receive SMC Proposal CLC message
-  1695           */
-  1696          buf = kzalloc(sizeof(*buf), GFP_KERNEL);
-  1697          if (!buf) {
-  1698                  rc = SMC_CLC_DECL_MEM;
-  1699                  goto out_decl;
-                        ^^^^^^^^^^^^^^
-There are several paths where "ini" is NULL leading to an Oops in the
-error handling.
+As always, feedback and reviews are appreciated :-)
 
-  1700          }
-  1701          pclc = (struct smc_clc_msg_proposal *)buf;
-  1702          rc = smc_clc_wait_msg(new_smc, pclc, sizeof(*buf),
-  1703                                SMC_CLC_PROPOSAL, CLC_WAIT_TIME);
-  1704          if (rc)
-  1705                  goto out_decl;
-                        ^^^^^^^^^^^^^
+Julian Wiedmann (4):
+  zfcp: lift Input Queue tasklet from qdio
+  zfcp: clarify & assert the stat_lock locking in zfcp_qdio_send()
+  zfcp: process Version Change events
+  zfcp: handle event-lost notification for Version Change events
 
-  1706          version = pclc->hdr.version == SMC_V1 ? SMC_V1 : version;
-  1707  
-  1708          /* IPSec connections opt out of SMC optimizations */
-  1709          if (using_ipsec(new_smc)) {
-  1710                  rc = SMC_CLC_DECL_IPSEC;
-  1711                  goto out_decl;
-                        ^^^^^^^^^^^^^
+Vasily Gorbik (1):
+  zfcp: remove orphaned function declarations
 
-  1712          }
-  1713  
-  1714          ini = kzalloc(sizeof(*ini), GFP_KERNEL);
-  1715          if (!ini) {
-  1716                  rc = SMC_CLC_DECL_MEM;
-  1717                  goto out_decl;
-                        ^^^^^^^^^^^^^
+ drivers/s390/scsi/zfcp_aux.c  | 11 ++++++++
+ drivers/s390/scsi/zfcp_def.h  |  1 +
+ drivers/s390/scsi/zfcp_ext.h  |  2 --
+ drivers/s390/scsi/zfcp_fsf.c  | 19 ++++++++++++++
+ drivers/s390/scsi/zfcp_fsf.h  | 11 ++++++++
+ drivers/s390/scsi/zfcp_qdio.c | 47 +++++++++++++++++++++++++++++++++++
+ drivers/s390/scsi/zfcp_qdio.h |  2 ++
+ 7 files changed, 91 insertions(+), 2 deletions(-)
 
-  1718          }
-  1719  
-  1720          /* initial version checking */
-  1721          rc = smc_listen_v2_check(new_smc, pclc, ini);
-  1722          if (rc)
-  1723                  goto out_decl;
-  1724  
-  1725          mutex_lock(&smc_server_lgr_pending);
-  1726          smc_close_init(new_smc);
-  1727          smc_rx_init(new_smc);
-  1728          smc_tx_init(new_smc);
-  1729  
-  1730          /* determine ISM or RoCE device used for connection */
-  1731          rc = smc_listen_find_device(new_smc, pclc, ini);
-  1732          if (rc)
-  1733                  goto out_unlock;
-  1734  
-  1735          /* send SMC Accept CLC message */
-  1736          rc = smc_clc_send_accept(new_smc, ini->first_contact_local,
-  1737                                   ini->smcd_version == SMC_V2 ? SMC_V2 : SMC_V1);
-  1738          if (rc)
-  1739                  goto out_unlock;
-  1740  
-  1741          /* SMC-D does not need this lock any more */
-  1742          if (ini->is_smcd)
-  1743                  mutex_unlock(&smc_server_lgr_pending);
-  1744  
-  1745          /* receive SMC Confirm CLC message */
-  1746          memset(buf, 0, sizeof(*buf));
-  1747          cclc = (struct smc_clc_msg_accept_confirm *)buf;
-  1748          rc = smc_clc_wait_msg(new_smc, cclc, sizeof(*buf),
-  1749                                SMC_CLC_CONFIRM, CLC_WAIT_TIME);
-  1750          if (rc) {
-  1751                  if (!ini->is_smcd)
-  1752                          goto out_unlock;
-  1753                  goto out_decl;
-  1754          }
-  1755  
-  1756          /* finish worker */
-  1757          if (!ini->is_smcd) {
-  1758                  rc = smc_listen_rdma_finish(new_smc, cclc,
-  1759                                              ini->first_contact_local);
-  1760                  if (rc)
-  1761                          goto out_unlock;
-  1762                  mutex_unlock(&smc_server_lgr_pending);
-  1763          }
-  1764          smc_conn_save_peer_info(new_smc, cclc);
-  1765          smc_listen_out_connected(new_smc);
-  1766          goto out_free;
-  1767  
-  1768  out_unlock:
-  1769          mutex_unlock(&smc_server_lgr_pending);
-  1770  out_decl:
-  1771          smc_listen_decline(new_smc, rc, ini, version);
-                                                ^^^
-If "ini" is NULL then this will Oops.
+-- 
+2.26.2
 
-  1772  out_free:
-  1773          kfree(ini);
-  1774          kfree(buf);
-  1775  }
-
-regards,
-dan carpenter
