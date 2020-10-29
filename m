@@ -2,228 +2,142 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E963F29F137
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 17:20:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18ED629F17B
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 17:31:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbgJ2QUP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 29 Oct 2020 12:20:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725764AbgJ2QUO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 29 Oct 2020 12:20:14 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68E20214DB;
-        Thu, 29 Oct 2020 16:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603988412;
-        bh=Vg0yD9BtaVpEElcVKbOe2Bvglikqvddyf8H8xD1VMBA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X4hvKt8QAkQABI0XAx0mpjzWm82u6JR9o7yyFv1WWXyz7Ou/WOjRxq9xYLO1Zzggw
-         4hOYKvUVWDl1QLLAuw6aHCM7jGzE5qdL6Kygzzm3oIw2JLUCXToATDPCt9QQTIo7nB
-         DlBE1o3qBycyjp/MHMZlhPMj/C+Wo5gZSVn1UdL8=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Lameter <cl@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Len Brown <len.brown@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-pm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        x86@kernel.org
-Subject: [PATCH v2 4/4] arch, mm: make kernel_page_present() always available
-Date:   Thu, 29 Oct 2020 18:19:02 +0200
-Message-Id: <20201029161902.19272-5-rppt@kernel.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201029161902.19272-1-rppt@kernel.org>
-References: <20201029161902.19272-1-rppt@kernel.org>
+        id S1726035AbgJ2Qbq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 29 Oct 2020 12:31:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726873AbgJ2Qa7 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 29 Oct 2020 12:30:59 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D17C0613CF
+        for <linux-s390@vger.kernel.org>; Thu, 29 Oct 2020 09:21:13 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id k6so3650084ilq.2
+        for <linux-s390@vger.kernel.org>; Thu, 29 Oct 2020 09:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=mLHywIJ3QNJ995xTh2HxVL8jMUzrwmgGMZX0Gu1ngAE=;
+        b=N7pUEasBg0d6BdkdsF2aa98HUWNIAUPYUlFivVebWKr3h3D2RWLzjTDEmTTub6Bydp
+         P2NF7dTtEUKeJprlfBHjiP1UzKrFc5r3JW8jk2CvjNlzmZRRV57nWFk42CWDZO2DMmaV
+         +ZyAsNVKFXLN+Fbr3StbuW5ibigrx76fSfpvQGYDaqtMEY0WwPakuXSJX3Xn62r0WSs3
+         v7CBBIclX+qNHysMT5f43BEDc5JYaK9/1nST6YtIewLS9rI5wDR8BKTTvXkqscuReaj+
+         J4DZeIE8l69u53JLFyzjvPHoKq+T7e135SaCUIwAZQShPgARehv0ds+SYX+sRCVk4/e2
+         Fd0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=mLHywIJ3QNJ995xTh2HxVL8jMUzrwmgGMZX0Gu1ngAE=;
+        b=HxbUSs/5MLrmeSzfc8XzBjUNP3AfbRdhHEOjZbSYiGJmDFl/LTg/axsrL4zXLszE8W
+         hbjujwazrtwtOxAFhcHgaJyiVk5NTFk84UJTBrRHpB4AovJ8ebUlB5+lWuWdAzBBbASR
+         NNq7HfiTwP99omhUBILhkpMGoQvsP3ym/QGwoo1p4LJoGpHBD91YxU2Z79eEccHBhBaK
+         70uOFiiI19L+H4+neIUdFnFgfyvap7IQ1S84koPQkTlATukTdG+ow6AGiBmPeuVDBtze
+         tvSjkncdXI9j48ex/pToI3bbLGTooljfYuFXCCgCdKOZs84/fFNdjdXZkJd6+luo72xg
+         PO1A==
+X-Gm-Message-State: AOAM532CuF95ZgWRfORyFU3oG7/MqXGLSJXlqnX5fR743uQZMmG+Idx4
+        hutnZq30LByuG3QM5zCDnCAPsD197utUgw==
+X-Google-Smtp-Source: ABdhPJxTuMZ3jf+lIx676l/T/hGvW98bx/VPGQQhhfOGBCJQ8AFRYmvEG3mfBYjI/AhRCo5a5bTNXg==
+X-Received: by 2002:a92:c7c6:: with SMTP id g6mr4067176ilk.230.1603988472184;
+        Thu, 29 Oct 2020 09:21:12 -0700 (PDT)
+Received: from [192.168.1.30] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id f203sm2658603ioa.23.2020.10.29.09.21.11
+        for <linux-s390@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Oct 2020 09:21:11 -0700 (PDT)
+To:     linux-s390@vger.kernel.org
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH] s390: add support for TIF_NOTIFY_SIGNAL
+Message-ID: <251a204d-9362-82b7-e5d9-14c55feb2df2@kernel.dk>
+Date:   Thu, 29 Oct 2020 10:21:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+Wire up TIF_NOTIFY_SIGNAL handling for s390.
 
-For architectures that enable ARCH_HAS_SET_MEMORY having the ability to
-verify that a page is mapped in the kernel direct map can be useful
-regardless of hibernation.
-
-Add RISC-V implementation of kernel_page_present(), update its forward
-declarations and stubs to be a part of set_memory API and remove ugly
-ifdefery in inlcude/linux/mm.h around current declarations of
-kernel_page_present().
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- arch/arm64/include/asm/cacheflush.h |  1 +
- arch/riscv/include/asm/set_memory.h |  1 +
- arch/riscv/mm/pageattr.c            | 29 +++++++++++++++++++++++++++++
- arch/x86/include/asm/set_memory.h   |  1 +
- arch/x86/mm/pat/set_memory.c        |  2 --
- include/linux/mm.h                  |  7 -------
- include/linux/set_memory.h          |  5 +++++
- 7 files changed, 37 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
-index 9384fd8fc13c..45217f21f1fe 100644
---- a/arch/arm64/include/asm/cacheflush.h
-+++ b/arch/arm64/include/asm/cacheflush.h
-@@ -140,6 +140,7 @@ int set_memory_valid(unsigned long addr, int numpages, int enable);
+5.11 has support queued up for TIF_NOTIFY_SIGNAL, see this posting
+for details:
+
+https://lore.kernel.org/io-uring/20201026203230.386348-1-axboe@kernel.dk/
+
+As part of that work, I'm adding TIF_NOTIFY_SIGNAL support to all archs,
+as that will enable a set of cleanups once all of them support it. I'm
+happy carrying this patch if need be, or it can be funelled through the
+arch tree. Let me know.
+
+ arch/s390/include/asm/thread_info.h | 2 ++
+ arch/s390/kernel/entry.S            | 7 ++++++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/arch/s390/include/asm/thread_info.h b/arch/s390/include/asm/thread_info.h
+index 13a04fcf7762..0045341ade48 100644
+--- a/arch/s390/include/asm/thread_info.h
++++ b/arch/s390/include/asm/thread_info.h
+@@ -65,6 +65,7 @@ void arch_setup_new_exec(void);
+ #define TIF_GUARDED_STORAGE	4	/* load guarded storage control block */
+ #define TIF_PATCH_PENDING	5	/* pending live patching update */
+ #define TIF_PGSTE		6	/* New mm's will use 4K page tables */
++#define TIF_NOTIFY_SIGNAL	7	/* signal notifications exist */
+ #define TIF_ISOLATE_BP		8	/* Run process with isolated BP */
+ #define TIF_ISOLATE_BP_GUEST	9	/* Run KVM guests with isolated BP */
  
- int set_direct_map_invalid_noflush(struct page *page);
- int set_direct_map_default_noflush(struct page *page);
-+bool kernel_page_present(struct page *page);
+@@ -82,6 +83,7 @@ void arch_setup_new_exec(void);
+ #define TIF_SYSCALL_TRACEPOINT	27	/* syscall tracepoint instrumentation */
  
- #include <asm-generic/cacheflush.h>
+ #define _TIF_NOTIFY_RESUME	BIT(TIF_NOTIFY_RESUME)
++#define _TIF_NOTIFY_SIGNAL	BIT(TIF_NOTIFY_SIGNAL)
+ #define _TIF_SIGPENDING		BIT(TIF_SIGPENDING)
+ #define _TIF_NEED_RESCHED	BIT(TIF_NEED_RESCHED)
+ #define _TIF_UPROBE		BIT(TIF_UPROBE)
+diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
+index 86235919c2d1..a30d891e8045 100644
+--- a/arch/s390/kernel/entry.S
++++ b/arch/s390/kernel/entry.S
+@@ -52,7 +52,8 @@ STACK_SIZE  = 1 << STACK_SHIFT
+ STACK_INIT = STACK_SIZE - STACK_FRAME_OVERHEAD - __PT_SIZE
  
-diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
-index 4c5bae7ca01c..d690b08dff2a 100644
---- a/arch/riscv/include/asm/set_memory.h
-+++ b/arch/riscv/include/asm/set_memory.h
-@@ -24,6 +24,7 @@ static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
- 
- int set_direct_map_invalid_noflush(struct page *page);
- int set_direct_map_default_noflush(struct page *page);
-+bool kernel_page_present(struct page *page);
- 
- #endif /* __ASSEMBLY__ */
- 
-diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-index 321b09d2e2ea..87ba5a68bbb8 100644
---- a/arch/riscv/mm/pageattr.c
-+++ b/arch/riscv/mm/pageattr.c
-@@ -198,3 +198,32 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
- 			     __pgprot(0), __pgprot(_PAGE_PRESENT));
- }
+ _TIF_WORK	= (_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_NEED_RESCHED | \
+-		   _TIF_UPROBE | _TIF_GUARDED_STORAGE | _TIF_PATCH_PENDING)
++		   _TIF_UPROBE | _TIF_GUARDED_STORAGE | _TIF_PATCH_PENDING | \
++		   _TIF_NOTIFY_SIGNAL)
+ _TIF_TRACE	= (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | _TIF_SECCOMP | \
+ 		   _TIF_SYSCALL_TRACEPOINT)
+ _CIF_WORK	= (_CIF_ASCE_PRIMARY | _CIF_ASCE_SECONDARY | _CIF_FPU)
+@@ -463,6 +464,8 @@ ENTRY(system_call)
  #endif
-+
-+bool kernel_page_present(struct page *page)
-+{
-+	unsigned long addr = (unsigned long)page_address(page);
-+	pgd_t *pgd;
-+	pud_t *pud;
-+	p4d_t *p4d;
-+	pmd_t *pmd;
-+	pte_t *pte;
-+
-+	pgd = pgd_offset_k(addr);
-+	if (!pgd_present(*pgd))
-+		return false;
-+
-+	p4d = p4d_offset(pgd, addr);
-+	if (!p4d_present(*p4d))
-+		return false;
-+
-+	pud = pud_offset(p4d, addr);
-+	if (!pud_present(*pud))
-+		return false;
-+
-+	pmd = pmd_offset(pud, addr);
-+	if (!pmd_present(*pmd))
-+		return false;
-+
-+	pte = pte_offset_kernel(pmd, addr);
-+	return pte_present(*pte);
-+}
-diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-index 5948218f35c5..4352f08bfbb5 100644
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -82,6 +82,7 @@ int set_pages_rw(struct page *page, int numpages);
- 
- int set_direct_map_invalid_noflush(struct page *page);
- int set_direct_map_default_noflush(struct page *page);
-+bool kernel_page_present(struct page *page);
- 
- extern int kernel_set_to_readonly;
- 
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 7f248fc45317..16f878c26667 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2228,7 +2228,6 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
- }
- #endif /* CONFIG_DEBUG_PAGEALLOC */
- 
--#ifdef CONFIG_HIBERNATION
- bool kernel_page_present(struct page *page)
- {
- 	unsigned int level;
-@@ -2240,7 +2239,6 @@ bool kernel_page_present(struct page *page)
- 	pte = lookup_address((unsigned long)page_address(page), &level);
- 	return (pte_val(*pte) & _PAGE_PRESENT);
- }
--#endif /* CONFIG_HIBERNATION */
- 
- int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
- 				   unsigned numpages, unsigned long page_flags)
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index ab0ef6bd351d..44b82f22e76a 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2937,16 +2937,9 @@ static inline void debug_pagealloc_map_pages(struct page *page,
- 	if (debug_pagealloc_enabled_static())
- 		__kernel_map_pages(page, numpages, enable);
- }
--
--#ifdef CONFIG_HIBERNATION
--extern bool kernel_page_present(struct page *page);
--#endif	/* CONFIG_HIBERNATION */
- #else	/* CONFIG_DEBUG_PAGEALLOC */
- static inline void debug_pagealloc_map_pages(struct page *page,
- 					     int numpages, int enable) {}
--#ifdef CONFIG_HIBERNATION
--static inline bool kernel_page_present(struct page *page) { return true; }
--#endif	/* CONFIG_HIBERNATION */
- #endif	/* CONFIG_DEBUG_PAGEALLOC */
- 
- #ifdef __HAVE_ARCH_GATE_AREA
-diff --git a/include/linux/set_memory.h b/include/linux/set_memory.h
-index 860e0f843c12..fe1aa4e54680 100644
---- a/include/linux/set_memory.h
-+++ b/include/linux/set_memory.h
-@@ -23,6 +23,11 @@ static inline int set_direct_map_default_noflush(struct page *page)
- {
- 	return 0;
- }
-+
-+static inline bool kernel_page_present(struct page *page)
-+{
-+	return true;
-+}
+ 	TSTMSK	__PT_FLAGS(%r11),_PIF_SYSCALL_RESTART
+ 	jo	.Lsysc_syscall_restart
++	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_SIGNAL
++	jo	.Lsysc_sigpending
+ 	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
+ 	jo	.Lsysc_sigpending
+ 	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_RESUME
+@@ -857,6 +860,8 @@ ENTRY(io_int_handler)
  #endif
- 
- #ifndef set_mce_nospec
+ 	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
+ 	jo	.Lio_sigpending
++	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_SIGNAL
++	jo	.Lio_sigpending
+ 	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_RESUME
+ 	jo	.Lio_notify_resume
+ 	TSTMSK	__TI_flags(%r12),_TIF_GUARDED_STORAGE
 -- 
-2.28.0
+2.29.0
+
+-- 
+Jens Axboe
 
