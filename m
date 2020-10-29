@@ -2,162 +2,128 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDFCD29E2F2
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 03:45:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DECB729E548
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 08:56:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgJ1Vdo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Oct 2020 17:33:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9868 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726220AbgJ1Vdn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 28 Oct 2020 17:33:43 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09SF1hXV121541;
-        Wed, 28 Oct 2020 11:03:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=qCy8VkwqyRNJffBI5KoK7JXyLGP0Hef+xRP8C6iyofQ=;
- b=elCbb15cO4x7L0JtC7602ZuV0IOh/v27yQwD9GtwiiPUgpkYG3yp0WoVFDO5DjIlOGj+
- 6cS5biyXQttT1u8CStsUezD7mO1nBfJ3D04p4/PxUvK8PrMrhnh2BdxoSLBtpXFWibcM
- ROcHoD8fQGWmWgkvLAefzyo7snAKaIvliu54vMOVYacbk4GunlBOliTfemj+rICOCNsp
- fVeS5CJIofaNvv440zGQyqmXmnfyBRMkrssuS/SvCS8cyd2+f5sG6jHFb62rufJglv+K
- nwWItBjvPXWC8pSiILI1JGJ6o98+pSLTLOnWKcGyQuwEq8yxgskz6xSl5hitfYtx6qWA tA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34ey1xdwqu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Oct 2020 11:03:39 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09SF2Dhu125140;
-        Wed, 28 Oct 2020 11:03:38 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34ey1xdwpd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Oct 2020 11:03:38 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09SEqgGa026590;
-        Wed, 28 Oct 2020 15:03:36 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma05fra.de.ibm.com with ESMTP id 34cbw8acae-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Oct 2020 15:03:35 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09SF3Xks20251132
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Oct 2020 15:03:33 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D56AC52052;
-        Wed, 28 Oct 2020 15:03:32 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.18.81])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 260995204F;
-        Wed, 28 Oct 2020 15:03:32 +0000 (GMT)
-Date:   Wed, 28 Oct 2020 16:03:30 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        cohuck@redhat.com, mjrosato@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v11 09/14] s390/vfio-ap: allow assignment of unavailable
- AP queues to mdev device
-Message-ID: <20201028160330.55df0068.pasic@linux.ibm.com>
-In-Reply-To: <20201022171209.19494-10-akrowiak@linux.ibm.com>
-References: <20201022171209.19494-1-akrowiak@linux.ibm.com>
-        <20201022171209.19494-10-akrowiak@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1732250AbgJ2Hz4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 29 Oct 2020 03:55:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731531AbgJ2Hyb (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 29 Oct 2020 03:54:31 -0400
+Received: from kernel.org (unknown [87.70.96.83])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3F1620EDD;
+        Thu, 29 Oct 2020 07:54:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603958070;
+        bh=5V9raRTAO8xn/TWxASurP3gs711BOhAaxxP12fBIpug=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=smkJOo6ejvJldTmaaqqEFjGX6LWRb76WicHCvCBcrN9qOMMNByoTCZCyPYd8JouA6
+         FsHRDDeFim9xIzvbeq0FyT0w7eXPAkBTo6qZkKSqULTgH8mtDPy6sKAI1NlM6RXbk0
+         gkAxCVUoVSgKd/P/vRphpHr37cKvq2I6Usohfbtc=
+Date:   Thu, 29 Oct 2020 09:54:16 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "david@redhat.com" <david@redhat.com>,
+        "cl@linux.com" <cl@linux.com>,
+        "gor@linux.ibm.com" <gor@linux.ibm.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
+        "penberg@kernel.org" <penberg@kernel.org>,
+        "iamjoonsoo.kim@lge.com" <iamjoonsoo.kim@lge.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "kirill@shutemov.name" <kirill@shutemov.name>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "hca@linux.ibm.com" <hca@linux.ibm.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>, "bp@alien8.de" <bp@alien8.de>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Brown, Len" <len.brown@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 2/4] PM: hibernate: improve robustness of mapping pages
+ in the direct map
+Message-ID: <20201029075416.GJ1428094@kernel.org>
+References: <20201025101555.3057-1-rppt@kernel.org>
+ <20201025101555.3057-3-rppt@kernel.org>
+ <3b4b2b3559bd3dc68adcddf99415bae57152cb6b.camel@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-10-28_06:2020-10-28,2020-10-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 spamscore=0 lowpriorityscore=0 clxscore=1015 bulkscore=0
- priorityscore=1501 adultscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010280100
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3b4b2b3559bd3dc68adcddf99415bae57152cb6b.camel@intel.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 22 Oct 2020 13:12:04 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> +static int vfio_ap_mdev_validate_masks(struct ap_matrix_mdev *matrix_mdev,
-> +				       unsigned long *mdev_apm,
-> +				       unsigned long *mdev_aqm)
-> +{
-> +	if (ap_apqn_in_matrix_owned_by_def_drv(mdev_apm, mdev_aqm))
-> +		return -EADDRNOTAVAIL;
-> +
-> +	return vfio_ap_mdev_verify_no_sharing(matrix_mdev, mdev_apm, mdev_aqm);
-> +}
-> +
->  static bool vfio_ap_mdev_matrixes_equal(struct ap_matrix *matrix1,
->  					struct ap_matrix *matrix2)
->  {
-> @@ -840,33 +734,21 @@ static ssize_t assign_adapter_store(struct device *dev,
->  	if (apid > matrix_mdev->matrix.apm_max)
->  		return -ENODEV;
->  
-> -	/*
-> -	 * Set the bit in the AP mask (APM) corresponding to the AP adapter
-> -	 * number (APID). The bits in the mask, from most significant to least
-> -	 * significant bit, correspond to APIDs 0-255.
-> -	 */
-> -	mutex_lock(&matrix_dev->lock);
-> -
-> -	ret = vfio_ap_mdev_verify_queues_reserved_for_apid(matrix_mdev, apid);
-> -	if (ret)
-> -		goto done;
-> -
->  	memset(apm, 0, sizeof(apm));
->  	set_bit_inv(apid, apm);
->  
-> -	ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev, apm,
-> -					     matrix_mdev->matrix.aqm);
-> -	if (ret)
-> -		goto done;
-> -
-> +	mutex_lock(&matrix_dev->lock);
-> +	ret = vfio_ap_mdev_validate_masks(matrix_mdev, apm,
-> +					  matrix_mdev->matrix.aqm);
-
-Is this a potential deadlock?
-
-Consider following scenario 
-1) apmask_store() takes ap_perms_mutex
-2) assign_adapter_store() takes matrix_dev->lock
-3) apmask_store() calls vfio_ap_mdev_resource_in_use() which tries
-   to take matrix_dev->lock
-4) assign_adapter_store() calls ap_apqn_in_matrix_owned_by_def_drv
-   which tries to take ap_perms_mutex
-
-BANG!
-
-I think using mutex_trylock(&matrix_dev->lock) and bailing out with busy
-if we don't manage to acquire the lock would be a good idea anyway, to
-prevent a bunch of mdev management operations piling up on the mutex
-and starving in_use().
-
-Regards,
-Halil
-
+On Wed, Oct 28, 2020 at 09:15:38PM +0000, Edgecombe, Rick P wrote:
+> On Sun, 2020-10-25 at 12:15 +0200, Mike Rapoport wrote:
+> > +       if (IS_ENABLED(CONFIG_ARCH_HAS_SET_DIRECT_MAP)) {
+> > +               unsigned long addr = (unsigned
+> > long)page_address(page);
+> > +               int ret;
+> > +
+> > +               if (enable)
+> > +                       ret = set_direct_map_default_noflush(page);
+> > +               else
+> > +                       ret = set_direct_map_invalid_noflush(page);
+> > +
+> > +               if (WARN_ON(ret))
+> > +                       return;
+> > +
+> > +               flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+> > +       } else {
+> > +               debug_pagealloc_map_pages(page, 1, enable);
+> > +       }
+> 
+> Looking at the arm side again, I think this might actually introduce a
+> regression for the arm/hibernate/DEBUG_PAGEALLOC combo.
+> 
+> Unlike __kernel_map_pages(), it looks like arm's cpa will always bail
+> in the set_direct_map_() functions if rodata_full is false.
+>
+> So if rodata_full was disabled but debug page alloc is on, then this
+> would now skip remapping the pages. I guess the significance depends
+> on whether hibernate could actually try to save any DEBUG_PAGEALLOC
+> unmapped pages. Looks like it to me though.
  
-> +	if (ret) {
-> +		mutex_unlock(&matrix_dev->lock);
-> +		return ret;
-> +	}
->  	set_bit_inv(apid, matrix_mdev->matrix.apm);
->  	vfio_ap_mdev_link_queues(matrix_mdev, LINK_APID, apid);
-> -	ret = count;
-> -
-> -done:
->  	mutex_unlock(&matrix_dev->lock);
->  
-> -	return ret;
-> +	return count;
+__kernel_map_pages() on arm64 will also bail out if rodata_full is
+false:
+
+void __kernel_map_pages(struct page *page, int numpages, int enable)
+{
+	if (!debug_pagealloc_enabled() && !rodata_full)
+		return;
+
+	set_memory_valid((unsigned long)page_address(page), numpages, enable);
+}
+
+So using set_direct_map() to map back pages removed from the direct map
+with __kernel_map_pages() seems safe to me.
+
+-- 
+Sincerely yours,
+Mike.
