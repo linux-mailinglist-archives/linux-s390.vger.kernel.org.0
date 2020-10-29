@@ -2,52 +2,51 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C760C29E72A
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 10:23:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B4A529E735
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 10:25:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbgJ2JX1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 29 Oct 2020 05:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45690 "EHLO
+        id S1726397AbgJ2JZf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 29 Oct 2020 05:25:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgJ2JXW (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 29 Oct 2020 05:23:22 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9533DC0613D5
-        for <linux-s390@vger.kernel.org>; Thu, 29 Oct 2020 02:23:20 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id c72so2509380oig.9
-        for <linux-s390@vger.kernel.org>; Thu, 29 Oct 2020 02:23:20 -0700 (PDT)
+        with ESMTP id S1726460AbgJ2JZ2 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 29 Oct 2020 05:25:28 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A9DEC0613D4
+        for <linux-s390@vger.kernel.org>; Thu, 29 Oct 2020 02:25:28 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id n15so1664167otl.8
+        for <linux-s390@vger.kernel.org>; Thu, 29 Oct 2020 02:25:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HErX54nBW85Mz/DisB4HfNyGdAeDZ0yXv+UudeIIMTI=;
-        b=CBZ8FpLcj2jbgAT+Vmv1XK/GbFU0hZrgfjfdtoEzh/dEuH+e0mn43Y+dqqjduTTKhF
-         J7T958sHQ5/KYkABUDOFL7LBDzCndG/FofSZCVsgEfa1haI/dp0rDYf3SCs2rGay/PWL
-         uDxd+MKtvtWQZGFZGQv1Mt5IJ+VVaOuC4yqDA=
+        bh=RXd5L3340dzHPl4D7TSnIVGFAYIoQ/W+pLHz6LYz95I=;
+        b=RAZGAbKdB4XcnSD0wp1Kz5dBTHMEAkPA/y5Q5zBFcm5ek6TOqOD+2MjSuNA7CsSuFv
+         QdasXZzvzm82On3eSCMCjzvEPeFEdeSGCKm4fjXr/Z2Mh9xwUtFmVb6ioAaMFNhmVvnm
+         LvNYGo6oa8r1Gs3CbA9euLgw6UBFM7BcU9IdE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HErX54nBW85Mz/DisB4HfNyGdAeDZ0yXv+UudeIIMTI=;
-        b=UL4+i78aVcBJLnhXBGoAjroDGwd2esH+WKVq/bqRnuGMnrINj+syKclt2mOjENGBZg
-         xzbakSDzSoiE2RwajK2XVTf7nUc8HnpAr8+0uhuXg1p1B6gCrhUVkmVxA2qxeKUAHVjn
-         3hOqXpQOweZXT6pvBibslr9c6VbjtmHVjrclJGU/SJr/LnuhaXS3xcouaeAWmwZ3oohk
-         mGkSPCiG2SSSuN26fgMJ9vAMiwDmhrMxx7/IU5lNEdv5TLSexgHs3sfXMX20A6PrPqS9
-         i2ZAYZv/qxxWzBfOSUho6s1tvyk/jp3GGnTK5ObeNcWaKmIPdrj6SGUvMGPfAfpplH8i
-         IKcg==
-X-Gm-Message-State: AOAM531SBF7AC2fLmMicbSYOtvAcnTlkQkL43GO3j2TCzmYbt1AyBz44
-        iP6wfEcdU6zVrpANOFHjSQQsVreXZ8oUtDNcxhKtsQ==
-X-Google-Smtp-Source: ABdhPJwaJb96lRFRXk+hd1pHWMNo5GqlP779ZIojTGckKr1ysWVQINo4W6Rzy8Z9dUSTdKF2aKSvZQbQvjmujgECT7Y=
-X-Received: by 2002:aca:cc01:: with SMTP id c1mr2268480oig.128.1603963399942;
- Thu, 29 Oct 2020 02:23:19 -0700 (PDT)
+        bh=RXd5L3340dzHPl4D7TSnIVGFAYIoQ/W+pLHz6LYz95I=;
+        b=m6fS1R47OKEvhWdgKrB7Jm/wyv+Jt0vDY4llT23OlEs3zZVBVqwjSRjNmQwmnLnuxX
+         pF+f6APnaUelKK16i6/AgV4I/6IK4QLb+YrVW4XbOyGq6/rY+BeL3LByz741Z3c87ziE
+         D9AzS9YSGWYDzZtK5Ja0QpFARmRAgzygm1VMmkM7YjLcpkCwhd1L+qGAF1QzRDi0S+63
+         sUHhQhegyRb3cjZAwECRwnEQzugO1W4k7+y/zUGIOHZGp0usvctzT7jXJ66zfyOLItkE
+         EJllpJwYpwIvcv1h5QVfUFCYa2YJB/MCVU1JvsUSTS+yHqnVcFY+fO3tvkhBN5v49V8u
+         MUKg==
+X-Gm-Message-State: AOAM530DUnfdGAkbG+pakxOQJBBQ53Ig9JC4dP8e8KQ5BP2fyye+XkbS
+        QLws4fpmJokCPCD+h39g0NQSEx2WOWqLOdrYdmhAQxvszTIICQ==
+X-Google-Smtp-Source: ABdhPJz3d3GbocYLOWK17PC84OSTKCpC1P9Cp1Gqiuhg8zJB6kTRUJIIoeLruWIEtxgmiFM3IrJbR1M7sDMXTefUSTI=
+X-Received: by 2002:a05:6830:1c3c:: with SMTP id f28mr2685703ote.188.1603963527533;
+ Thu, 29 Oct 2020 02:25:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
- <20201026105818.2585306-9-daniel.vetter@ffwll.ch> <20201029085644.GA25658@infradead.org>
-In-Reply-To: <20201029085644.GA25658@infradead.org>
+References: <20201026105818.2585306-1-daniel.vetter@ffwll.ch> <20201029085749.GB25658@infradead.org>
+In-Reply-To: <20201029085749.GB25658@infradead.org>
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Thu, 29 Oct 2020 10:23:09 +0100
-Message-ID: <CAKMK7uGVUf9RfTHKa8fpTUgGQ5iy+5toK+tQYp0TokKU=iM8pQ@mail.gmail.com>
-Subject: Re: [PATCH v4 08/15] mm: Add unsafe_follow_pfn
+Date:   Thu, 29 Oct 2020 10:25:16 +0100
+Message-ID: <CAKMK7uEV7sQ48w1Dd=WCY1r6LrY+aEq3ASnouOebQoo=Zr=CTQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/15] follow_pfn and other iomap races
 To:     Christoph Hellwig <hch@infradead.org>
 Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -56,71 +55,20 @@ Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
         linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
         "open list:DMA BUFFER SHARING FRAMEWORK" 
         <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kees Cook <keescook@chromium.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "J??r??me Glisse" <jglisse@redhat.com>, Jan Kara <jack@suse.cz>
+        linux-s390 <linux-s390@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Oct 29, 2020 at 9:56 AM Christoph Hellwig <hch@infradead.org> wrote:
+On Thu, Oct 29, 2020 at 9:57 AM Christoph Hellwig <hch@infradead.org> wrote:
 >
-> > +int unsafe_follow_pfn(struct vm_area_struct *vma, unsigned long address,
-> > +     unsigned long *pfn)
->
-> The one tab indent here looks weird, normally tis would be two tabs
-> or aligned aftetthe opening brace.
->
-> > +{
-> > +#ifdef CONFIG_STRICT_FOLLOW_PFN
-> > +     pr_info("unsafe follow_pfn usage rejected, see CONFIG_STRICT_FOLLOW_PFN\n");
-> > +     return -EINVAL;
-> > +#else
-> > +     WARN_ONCE(1, "unsafe follow_pfn usage\n");
-> > +     add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-> > +
-> > +     return follow_pfn(vma, address, pfn);
-> > +#endif
->
-> Woudn't this be a pretty good use case of "if (IS_ENABLED(...)))"?
->
-> Also I'd expect the inverse polarity of the config option, that is
-> a USAFE_FOLLOW_PFN option to enable to unsafe behavior.
+> Maybe I'm missing something, but shouldn't follow_pfn be unexported
+> at the end of the series?
 
-Was just about to send out v5, will apply your suggestions for that
-using IS_ENABLED.
-
-Wrt negative or positive Kconfig, I was following STRICT_DEVMEM symbol
-as precedence. But easy to invert if there's strong feeling the other
-way round, I'm not attached to either.
-
-> > +/**
-> > + * unsafe_follow_pfn - look up PFN at a user virtual address
-> > + * @vma: memory mapping
-> > + * @address: user virtual address
-> > + * @pfn: location to store found PFN
-> > + *
-> > + * Only IO mappings and raw PFN mappings are allowed.
-> > + *
-> > + * Returns zero and the pfn at @pfn on success, -ve otherwise.
-> > + */
-> > +int unsafe_follow_pfn(struct vm_area_struct *vma, unsigned long address,
-> > +     unsigned long *pfn)
-> > +{
-> > +     return follow_pfn(vma, address, pfn);
-> > +}
-> > +EXPORT_SYMBOL(unsafe_follow_pfn);
->
-> Any reason this doesn't use the warn and disable logic?
-
-I figured without an mmu there's not much guarantees anyway. But I
-guess I can put it in here too for consistency.
+kvm is a legit user and modular afaict. But since you can't use this
+without an mmu_notifier anyway (or digging around in pagetable
+locking), maybe it should be EXPORT_SYMBOL_GPL now at least?
 -Daniel
 -- 
 Daniel Vetter
