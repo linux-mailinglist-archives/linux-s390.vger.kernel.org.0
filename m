@@ -2,123 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5383B29E623
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 09:16:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1332229E6BB
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 10:00:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgJ2IQN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 29 Oct 2020 04:16:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32531 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728563AbgJ2IQJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 29 Oct 2020 04:16:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603959368;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2gRwEwp+09CxPY3cDDGs5AqZnz2L4R+qK1xrKBZP/ZQ=;
-        b=FzwQIOYuQiYs8AOF0jSWfKko4kM786oPEch3YBrlcCg33I3RWV/PZlhcWMBvasAKZSkQo1
-        UuhP3NJLwgXzCgQEtlOh5mPQq4rCYOYgBbezoY3+SbQWYchutULQci4oL/QzuQ14pQ8ItF
-        9+GZvbOb12lYwWmjY/pkzovIBd1ffUE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-521-GwWoSv2-OMqDqihE-45P3g-1; Thu, 29 Oct 2020 04:16:02 -0400
-X-MC-Unique: GwWoSv2-OMqDqihE-45P3g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5ED20809DC9;
-        Thu, 29 Oct 2020 08:15:57 +0000 (UTC)
-Received: from [10.36.112.181] (ovpn-112-181.ams2.redhat.com [10.36.112.181])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3EBE05D9CC;
-        Thu, 29 Oct 2020 08:15:48 +0000 (UTC)
-Subject: Re: [PATCH 0/4] arch, mm: improve robustness of direct map
- manipulation
-To:     Mike Rapoport <rppt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Lameter <cl@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Len Brown <len.brown@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-pm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        x86@kernel.org
-References: <20201025101555.3057-1-rppt@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <30075bb8-caed-c4de-c09e-e0f6fb964a8d@redhat.com>
-Date:   Thu, 29 Oct 2020 09:15:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1725550AbgJ2I6l (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 29 Oct 2020 04:58:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbgJ2I4w (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 29 Oct 2020 04:56:52 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EDB0C0613D2;
+        Thu, 29 Oct 2020 01:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zoaWQCaukT2MSre+YOCy8lPWvGILO48toajhUZfqRO8=; b=qhQ4YkyVtUdCF+9/SxF+KkMnE/
+        D3OoH/RsujOjBjImJs3j7wsc+18+EhiCdslrW+7UAfcF/3Lpk99bGShz5x8vvO7NhRDvD/3/jIF/U
+        sxjKHuC9kaCmjIQSe39nGdSprah7mG+Z3Qat31XoyHOzlVqjf1/QS7I84ZB/yiztmTbIZ9tig9v0X
+        f2yLG+zhB53m3eNdAToBlpu4RWg/tOhEL5fYpqSM8QjSZe/Ra+mMDoJYV20tgz1OUmmI9HvfC/hqJ
+        Iucc/rIbeuYDkc44YiTbpdM2F7LW26KSdHCYp3Ov/mUwi9UI3WMsbmPjsLva53P4rrTMzDSlxoDzk
+        s6zrIsQQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kY3jh-0006wc-3k; Thu, 29 Oct 2020 08:56:45 +0000
+Date:   Thu, 29 Oct 2020 08:56:44 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        J??r??me Glisse <jglisse@redhat.com>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v4 08/15] mm: Add unsafe_follow_pfn
+Message-ID: <20201029085644.GA25658@infradead.org>
+References: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
+ <20201026105818.2585306-9-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-In-Reply-To: <20201025101555.3057-1-rppt@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201026105818.2585306-9-daniel.vetter@ffwll.ch>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 25.10.20 11:15, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> Hi,
-> 
-> During recent discussion about KVM protected memory, David raised a concern
-> about usage of __kernel_map_pages() outside of DEBUG_PAGEALLOC scope [1].
-> 
-> Indeed, for architectures that define CONFIG_ARCH_HAS_SET_DIRECT_MAP it is
-> possible that __kernel_map_pages() would fail, but since this function is
-> void, the failure will go unnoticed.
-> 
-> Moreover, there's lack of consistency of __kernel_map_pages() semantics
-> across architectures as some guard this function with
-> #ifdef DEBUG_PAGEALLOC, some refuse to update the direct map if page
-> allocation debugging is disabled at run time and some allow modifying the
-> direct map regardless of DEBUG_PAGEALLOC settings.
-> 
-> This set straightens this out by restoring dependency of
-> __kernel_map_pages() on DEBUG_PAGEALLOC and updating the call sites
-> accordingly.
-> 
+> +int unsafe_follow_pfn(struct vm_area_struct *vma, unsigned long address,
+> +	unsigned long *pfn)
 
-So, I was primarily wondering if we really have to touch direct mappings 
-in hibernation code, or if we can avoid doing that. I was wondering if 
-we cannot simply do something like kmap() when trying to access a 
-!mapped page. Similar to reading old-os memory after kexec when in 
-kdump. Just a thought.
+The one tab indent here looks weird, normally tis would be two tabs
+or aligned aftetthe opening brace.
 
--- 
-Thanks,
+> +{
+> +#ifdef CONFIG_STRICT_FOLLOW_PFN
+> +	pr_info("unsafe follow_pfn usage rejected, see CONFIG_STRICT_FOLLOW_PFN\n");
+> +	return -EINVAL;
+> +#else
+> +	WARN_ONCE(1, "unsafe follow_pfn usage\n");
+> +	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
+> +
+> +	return follow_pfn(vma, address, pfn);
+> +#endif
 
-David / dhildenb
+Woudn't this be a pretty good use case of "if (IS_ENABLED(...)))"?
 
+Also I'd expect the inverse polarity of the config option, that is
+a USAFE_FOLLOW_PFN option to enable to unsafe behavior.
+
+> +/**
+> + * unsafe_follow_pfn - look up PFN at a user virtual address
+> + * @vma: memory mapping
+> + * @address: user virtual address
+> + * @pfn: location to store found PFN
+> + *
+> + * Only IO mappings and raw PFN mappings are allowed.
+> + *
+> + * Returns zero and the pfn at @pfn on success, -ve otherwise.
+> + */
+> +int unsafe_follow_pfn(struct vm_area_struct *vma, unsigned long address,
+> +	unsigned long *pfn)
+> +{
+> +	return follow_pfn(vma, address, pfn);
+> +}
+> +EXPORT_SYMBOL(unsafe_follow_pfn);
+
+Any reason this doesn't use the warn and disable logic?
