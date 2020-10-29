@@ -2,69 +2,156 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D1F429E826
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 11:04:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C5D329ED14
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Oct 2020 14:40:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725562AbgJ2KCC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 29 Oct 2020 06:02:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgJ2KCC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 29 Oct 2020 06:02:02 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4CCC0613CF;
-        Thu, 29 Oct 2020 03:02:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=bJJQrkz2DmvsLC/KQQtP+/G8oJcKg1SqkvfvGBG1Kis=; b=UIAwvXhE7HjAKmjqXHhRLl9xIu
-        KdZK7e/fqvMm7rw2C3LqAZWCEoNoruvvPKUgUOyoKN58s/OwdGeINy+HwrgeVqArnWnrWryUY+jb2
-        royGa8LcqCMYxcXyw6E3NTJ5qcor1MUKOfrLFe6lmKdBULXWQ/gsxFST+ILBM5vpMTfivLaMPZ0n+
-        lwNr6d0yKwrW/JY6j7owx/oU7GPyKNkMlHL34diDPWpyASCTiVyUcN8P0tll8Al92jhTzzyoPZ7TQ
-        SPduM45A4CaJpZqoSz2G8kug/654kfdn1ADp01H/bNB0YIohiOR0lAbAAi2em9I40rFtMfTVnxd9Z
-        XBUKi7SQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kY4kn-0002hM-SZ; Thu, 29 Oct 2020 10:01:57 +0000
-Date:   Thu, 29 Oct 2020 10:01:57 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: [PATCH v4 00/15] follow_pfn and other iomap races
-Message-ID: <20201029100157.GA10041@infradead.org>
-References: <20201026105818.2585306-1-daniel.vetter@ffwll.ch>
- <20201029085749.GB25658@infradead.org>
- <CAKMK7uEV7sQ48w1Dd=WCY1r6LrY+aEq3ASnouOebQoo=Zr=CTQ@mail.gmail.com>
- <20201029092800.GA494@infradead.org>
- <CAKMK7uG=R2372bVTK1Zh+P7uRd2QJSw5EgcJ6JJwVtNyJ7SJtQ@mail.gmail.com>
+        id S1725826AbgJ2NkJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 29 Oct 2020 09:40:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbgJ2NkI (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 29 Oct 2020 09:40:08 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5577420796;
+        Thu, 29 Oct 2020 13:40:04 +0000 (UTC)
+Date:   Thu, 29 Oct 2020 09:40:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guo Ren <guoren@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-csky@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 5/9] kprobes/ftrace: Add recursion protection to the
+ ftrace callback
+Message-ID: <20201029094001.0cfab7aa@gandalf.local.home>
+In-Reply-To: <20201029165803.5f6b401e5bccca4e57c70181@kernel.org>
+References: <20201028115244.995788961@goodmis.org>
+        <20201028115613.140212174@goodmis.org>
+        <20201029165803.5f6b401e5bccca4e57c70181@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uG=R2372bVTK1Zh+P7uRd2QJSw5EgcJ6JJwVtNyJ7SJtQ@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Oct 29, 2020 at 10:38:16AM +0100, Daniel Vetter wrote:
-> Hm so Jason and me discussed this, but e.g. the s390 is safe with with
-> just the pagetable locks. So we'd need two versions.
-> 
-> The more practical problem is that I haven't found a reasonable way to
-> check that a passed in mmu_notifier is registered against the mm we're
-> working on, and without that check it feels a bit silly. But if you
-> see how to do that I think we can do an EXPORT_SYMBOL_GPL follow_pfn
-> which takes the notifier, and an __follow_pfn for s390 and similar
-> internal code which isn't exported.
+On Thu, 29 Oct 2020 16:58:03 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-True, this is a bit of a mess.  So maybe just rename it to __follow_pfn,
-proper documentation of the requirements and a switch to
-EXPORT_SYMBOL_GPL.
+> Hi Steve,
+> 
+> On Wed, 28 Oct 2020 07:52:49 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> > 
+> > If a ftrace callback does not supply its own recursion protection and
+> > does not set the RECURSION_SAFE flag in its ftrace_ops, then ftrace will
+> > make a helper trampoline to do so before calling the callback instead of
+> > just calling the callback directly.  
+> 
+> So in that case the handlers will be called without preempt disabled?
+> 
+> 
+> > The default for ftrace_ops is going to assume recursion protection unless
+> > otherwise specified.  
+> 
+> This seems to skip entier handler if ftrace finds recursion.
+> I would like to increment the missed counter even in that case.
+
+Note, this code does not change the functionality at this point, because
+without having the FL_RECURSION flag set (which kprobes does not even in
+this patch), it always gets called from the helper function that does this:
+
+	bit = trace_test_and_set_recursion(TRACE_LIST_START, TRACE_LIST_MAX);
+	if (bit < 0)
+		return;
+
+	preempt_disable_notrace();
+
+	op->func(ip, parent_ip, op, regs);
+
+	preempt_enable_notrace();
+	trace_clear_recursion(bit);
+
+Where this function gets called by op->func().
+
+In other words, you don't get that count anyway, and I don't think you want
+it. Because it means you traced something that your callback calls.
+
+That bit check is basically a nop, because the last patch in this series
+will make the default that everything has recursion protection, but at this
+patch the test does this:
+
+	/* A previous recursion check was made */
+	if ((val & TRACE_CONTEXT_MASK) > max)
+		return 0;
+
+Which would always return true, because this function is called via the
+helper that already did the trace_test_and_set_recursion() which, if it
+made it this far, the val would always be greater than max.
+
+> 
+> [...]
+> e.g.
+> 
+> > diff --git a/arch/csky/kernel/probes/ftrace.c b/arch/csky/kernel/probes/ftrace.c
+> > index 5264763d05be..5eb2604fdf71 100644
+> > --- a/arch/csky/kernel/probes/ftrace.c
+> > +++ b/arch/csky/kernel/probes/ftrace.c
+> > @@ -13,16 +13,21 @@ int arch_check_ftrace_location(struct kprobe *p)
+> >  void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
+> >  			   struct ftrace_ops *ops, struct pt_regs *regs)
+> >  {
+> > +	int bit;
+> >  	bool lr_saver = false;
+> >  	struct kprobe *p;
+> >  	struct kprobe_ctlblk *kcb;
+> >  
+> > -	/* Preempt is disabled by ftrace */
+> > +	bit = ftrace_test_recursion_trylock();  
+> 
+> > +
+> > +	preempt_disable_notrace();
+> >  	p = get_kprobe((kprobe_opcode_t *)ip);
+> >  	if (!p) {
+> >  		p = get_kprobe((kprobe_opcode_t *)(ip - MCOUNT_INSN_SIZE));
+> >  		if (unlikely(!p) || kprobe_disabled(p))
+> > -			return;
+> > +			goto out;
+> >  		lr_saver = true;
+> >  	}  
+> 
+> 	if (bit < 0) {
+> 		kprobes_inc_nmissed_count(p);
+> 		goto out;
+> 	}
+
+If anything called in get_kprobe() or kprobes_inc_nmissed_count() gets
+traced here, you have zero recursion protection, and this will crash the
+machine with a likely reboot (triple fault).
+
+Note, the recursion handles interrupts and wont stop them. bit < 0 only
+happens if you recurse because this function called something that ends up
+calling itself. Really, why would you care about missing a kprobe on the
+same kprobe?
+
+-- Steve
