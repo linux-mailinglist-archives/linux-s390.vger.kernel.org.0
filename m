@@ -2,117 +2,186 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E3662A0CE7
-	for <lists+linux-s390@lfdr.de>; Fri, 30 Oct 2020 18:56:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7344C2A0F98
+	for <lists+linux-s390@lfdr.de>; Fri, 30 Oct 2020 21:37:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726095AbgJ3R4q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 30 Oct 2020 13:56:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21952 "EHLO
+        id S1727327AbgJ3UhL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 30 Oct 2020 16:37:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35096 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725808AbgJ3R4q (ORCPT
+        by vger.kernel.org with ESMTP id S1726917AbgJ3UhL (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 30 Oct 2020 13:56:46 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09UHWtKF078426;
-        Fri, 30 Oct 2020 13:56:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
+        Fri, 30 Oct 2020 16:37:11 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09UKWIjh181410;
+        Fri, 30 Oct 2020 16:37:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=ZYNnNaSApJHx4sx5l+K+HK6ka0FoPn3LtDoSJjmz/BE=;
- b=VTLOjI/M3yCFPCvQFIc7qvrUz8RIoQqk7bWs8yrqBVdrr2cdZFaZavAVY0ty6pFK2hik
- 5Fa6sgs1cpu+8KvPQ3oti1hTjel5gH4mmhqEJjA08xtgueO4TNUK4Hu6EyzBCB0CzYse
- RlRMSRN3zB5AAl/+y1ujUZStalS+KSWtPY3Tx1A4wXkB168LQWVYOR6Hvn89XmyYyrtU
- wlNUeBw5PmSC1Lyeud6wRDVaXkxti7LCXg6Ato8ldMTPhyW0rnEJdd7jp5bzZjv2xRih
- c/jlOCXr56z2pelKXnw50C1WgLYlnNIOqHewGNH3a+lxF1JrBwRg/JJwFZHwj5jvWTF8 1A== 
+ bh=f70IDi3im0uFHhB0FE1ptDsP3gTes1jmkgkTotqey20=;
+ b=RQutl5R53xbaO9CwRSErOhmPN+pEHSxKFEuf1O3F6k1l5Mx0IbHy/nG9AO0Tmeq7yfPo
+ uh82S6hPJKeU1zs3Zvq6O6xD2t43UkNOwaB401uvPxVMQuzqvlgrEDe0mCU7qPqHCHqr
+ D5PIRVAyKpCvA+eiqNAQRbZRQ6szUT8dOawnym2OnpU7S1DisRJYAxYUODsIUhJLg+Tk
+ Cyi0jzYxiFfUMh2fJuKm8PxC1dkntUayMU/mzNwXZ6ClLyqdM2fcm7iI/WlZhGfuD0uS
+ nKmFCuRmZ6tSw51AJ332wD7JG4iCIuD8mEzFj0rbv9wmA5kLJgHlLTLj3cdFxgWo3l4F Uw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 34gp9hjrm7-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34gfp4ucfx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Oct 2020 13:56:44 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09UHXEtv082150;
-        Fri, 30 Oct 2020 13:56:44 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 34gp9hjrkh-1
+        Fri, 30 Oct 2020 16:37:08 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09UKXi9R188225;
+        Fri, 30 Oct 2020 16:37:08 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34gfp4ucfj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Oct 2020 13:56:44 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09UHqodA027038;
-        Fri, 30 Oct 2020 17:56:42 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma05fra.de.ibm.com with ESMTP id 34fv15rr2p-1
+        Fri, 30 Oct 2020 16:37:08 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09UKZMkb016362;
+        Fri, 30 Oct 2020 20:37:07 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma02wdc.us.ibm.com with ESMTP id 34dy04w0v1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Oct 2020 17:56:42 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09UHudx225887078
+        Fri, 30 Oct 2020 20:37:07 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09UKb5Ie54133058
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Oct 2020 17:56:39 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 10DC7AE045;
-        Fri, 30 Oct 2020 17:56:39 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 57A8EAE055;
-        Fri, 30 Oct 2020 17:56:38 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.172.93])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 30 Oct 2020 17:56:38 +0000 (GMT)
-Date:   Fri, 30 Oct 2020 18:56:36 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
+        Fri, 30 Oct 2020 20:37:05 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BA2A8112066;
+        Fri, 30 Oct 2020 20:37:05 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 01691112061;
+        Fri, 30 Oct 2020 20:37:04 +0000 (GMT)
+Received: from cpe-66-24-58-13.stny.res.rr.com (unknown [9.85.162.174])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 30 Oct 2020 20:37:04 +0000 (GMT)
+Subject: Re: [PATCH v11 01/14] s390/vfio-ap: No need to disable IRQ after
+ queue reset
+To:     Halil Pasic <pasic@linux.ibm.com>
 Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
         cohuck@redhat.com, mjrosato@linux.ibm.com,
         alex.williamson@redhat.com, kwankhede@nvidia.com,
         fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
         hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v11 01/14] s390/vfio-ap: No need to disable IRQ after
- queue reset
-Message-ID: <20201030185636.60fcca52.pasic@linux.ibm.com>
-In-Reply-To: <7a2c5930-9c37-8763-7e5d-c08a3638e6a1@linux.ibm.com>
 References: <20201022171209.19494-1-akrowiak@linux.ibm.com>
-        <20201022171209.19494-2-akrowiak@linux.ibm.com>
-        <20201027074846.30ee0ddc.pasic@linux.ibm.com>
-        <7a2c5930-9c37-8763-7e5d-c08a3638e6a1@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+ <20201022171209.19494-2-akrowiak@linux.ibm.com>
+ <20201027074846.30ee0ddc.pasic@linux.ibm.com>
+ <7a2c5930-9c37-8763-7e5d-c08a3638e6a1@linux.ibm.com>
+ <20201030184242.3bceee09.pasic@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <cb40a506-4a17-3562-728c-cbb57cd99817@linux.ibm.com>
+Date:   Fri, 30 Oct 2020 16:37:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20201030184242.3bceee09.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-10-30_08:2020-10-30,2020-10-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- priorityscore=1501 phishscore=0 impostorscore=0 mlxlogscore=999
- adultscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010300127
+ definitions=2020-10-30_10:2020-10-30,2020-10-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ mlxscore=0 priorityscore=1501 lowpriorityscore=0 suspectscore=11
+ phishscore=0 impostorscore=0 clxscore=1015 adultscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010300147
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 29 Oct 2020 19:29:35 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> >> +void vfio_ap_mdev_remove_queue(struct ap_device *apdev)
-> >> +{
-> >> +	struct vfio_ap_queue *q;
-> >> +	struct ap_queue *queue;
-> >> +	int apid, apqi;
-> >> +
-> >> +	queue = to_ap_queue(&apdev->device);  
-> > What is the benefit of rewriting this? You introduced
-> > queue just to do queue->ap_dev to get to the apdev you
-> > have in hand in the first place.  
-> 
-> I'm not quite sure what you're asking. This function is
-> the callback function specified via the function pointer
-> specified via the remove field of the struct ap_driver
-> when the vfio_ap device driver is registered with the
-> AP bus. That callback function takes a struct ap_device
-> as a parameter. What am I missing here?
 
-Please compare the removed function vfio_ap_queue_dev_remove() with the
-added function vfio_ap_mdev_remove_queue() line by line. It should
-become clear.
+On 10/30/20 1:42 PM, Halil Pasic wrote:
+> On Thu, 29 Oct 2020 19:29:35 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>>>> @@ -1177,7 +1166,10 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>>>>    			 */
+>>>>    			if (ret)
+>>>>    				rc = ret;
+>>>> -			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
+>>>> +			q = vfio_ap_get_queue(matrix_mdev,
+>>>> +					      AP_MKQID(apid, apqi));
+>>>> +			if (q)
+>>>> +				vfio_ap_free_aqic_resources(q);
+>>> Is it safe to do vfio_ap_free_aqic_resources() at this point? I don't
+>>> think so. I mean does the current code (and vfio_ap_mdev_reset_queue()
+>>> in particular guarantee that the reset is actually done when we arrive
+>>> here)? BTW, I think we have a similar problem with the current code as
+>>> well.
+>> If the return code from the vfio_ap_mdev_reset_queue() function
+>> is zero, then yes, we are guaranteed the reset was done and the
+>> queue is empty.
+> I've read up on this and I disagree. We should discuss this offline.
 
-Regards,
-Halil
+Maybe you are confusing things here; my statement is specific to the return
+code from the vfio_ap_mdev_reset_queue() function, not the response code
+from the PQAP(ZAPQ) instruction. The vfio_ap_mdev_reset_queue()
+function issues the PQAP(ZAPQ) instruction and if the status response code
+is 0 indicating the reset was successfully initiated, it waits for the
+queue to empty. When the queue is empty, it returns 0 to indicate
+the queue is reset. If the queue does not become empty after a period of 
+time,
+it will issue a warning (WARN_ON_ONCE) and return 0. In that case, I suppose
+there is no guarantee the reset was done, so maybe a change needs to be
+made there such as a non-zero return code.
+
+>
+>>    The function returns a non-zero return code if
+>> the reset fails or the queue the reset did not complete within a given
+>> amount of time, so maybe we shouldn't free AQIC resources when
+>> we get a non-zero return code from the reset function?
+>>
+> If the queue is gone, or broken, it won't produce interrupts or poke the
+> notifier bit, and we should clean up the AQIC resources.
+
+True, which is what the code provided by this patch does; however,
+the AQIC resources should be cleaned up only if the KVM pointer is
+not NULL for reasons discussed elsewhere.
+
+>
+>
+>> There are three occasions when the vfio_ap_mdev_reset_queues()
+>> is called:
+>> 1. When the VFIO_DEVICE_RESET ioctl is invoked from userspace
+>>       (i.e., when the guest is started)
+>> 2. When the mdev fd is closed (vfio_ap_mdev_release())
+>> 3. When the mdev is removed (vfio_ap_mdev_remove())
+>>
+>> The IRQ resources are initialized when the PQAP(AQIC)
+>> is intercepted to enable interrupts. This would occur after
+>> the guest boots and the AP bus initializes. So, 1 would
+>> presumably occur before that happens. I couldn't find
+>> anywhere in the AP bus or zcrypt code where a PQAP(AQIC)
+>> is executed to disable interrupts, so my assumption is
+>> that IRQ disablement is accomplished by a reset on
+>> the guest. I'll have to ask Harald about that. So, 2 would
+>> occur when the guest is about to terminate and 3
+>> would occur only after the guest is terminated. In any
+>> case, it seems that IRQ resources should be cleaned up.
+>> Maybe it would be more appropriate to do that in the
+>> vfio_ap_mdev_release() and vfio_ap_mdev_remove()
+>> functions themselves?
+> I'm a bit confused. But I think you are wrong. What happens when the
+> guest reIPLs? I guess the subsystem reset should also do the
+> VFIO_DEVICE_RESET ioctl, and that has to reset the queues and disable
+> the interrupts. Or?
+
+What did I say that is wrong? I think you are referring
+to my statement about the VFIO_DEVICE_RESET ioctl.
+I am not knowledgeable about all of the circumstances
+under which the VFIO_DEVICE_RESET ioctl is invoked,
+but I know for a fact that it is invoked when the guest is
+started as I've verified that via tracing. On the other hand,
+I suspect you are correct in assuming it is also invoked on
+a subsystem reset from the guest, so that also argues for
+cleaning up the IRQ resources after a reset as long as
+the KVM pointer is valid.
+
+>
+> Regards,
+> Halil
+>
+
