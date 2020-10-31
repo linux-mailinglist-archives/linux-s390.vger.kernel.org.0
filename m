@@ -2,79 +2,64 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1C072A1ABA
-	for <lists+linux-s390@lfdr.de>; Sat, 31 Oct 2020 22:33:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ED592A1B15
+	for <lists+linux-s390@lfdr.de>; Sat, 31 Oct 2020 23:50:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgJaVdI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 31 Oct 2020 17:33:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728553AbgJaVdI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 31 Oct 2020 17:33:08 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D22C0617A6;
-        Sat, 31 Oct 2020 14:33:07 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id r8so6720114qtp.13;
-        Sat, 31 Oct 2020 14:33:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xHvOHUVvu4ckbchx1rcuGr08kZCMPwt4rJyailG9bbE=;
-        b=PXt1Lod62vg8gGET6LJhJCXNcAPFlFMqhaLW/oHUss2OGkbyS0YCJBKTjLTU9jBnJP
-         Xdkns0Q7fETaxj+olj5iMsdqrAkBUMBMh7IVyQosyXpFAMhodyWnYtGV9BHCihrGZN/B
-         dfd+D0Fc+FllJtZcwZTALVV7HrOQnFS8ownbwN+B+bRbMW7Bt1jOhcZGMn9EITUZ5ztH
-         JAgGTVa9Y+2y9DFCnki15TVU6X86FLg/UgI+M9QnWnKMVgQD6vZCAcpYeYKRixVxNZxT
-         oF2TZ3X/wjk3l44NHMlIGXDU4FtiZJ8X6kqba7Q+o+XP9/kvuSRSQuuohjNPfTLH6yRY
-         Dlmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xHvOHUVvu4ckbchx1rcuGr08kZCMPwt4rJyailG9bbE=;
-        b=Z4zKubUKPH3vR64hajDHk6bAOJ1dMUejEFFJzDQBYzBJROL0iBZU6cIDYNfTERZVXQ
-         lp+/WCfLPfiO9bXA8uCUEZ1kwkSap3r71h6t4ye679qsa+8SByoNtEOwWRKQ6YxeCQzU
-         N0GApT8eUQVFGU1QeEVhdAwJmAnC4YH5sSJvR3xPODdLu5iFYvzSGOlsBFRCRtypvbIO
-         fTrFoeNL7pXlD8UjXsnITc9mkfEa5PH152sJaF67pPjPIWE69136s1WzvgVYYJ1NtzO8
-         wdV6pTasJUKTjaZPsZ/fjsOPgUoT0NqKrSzrymYBgC/NwV0yGJEhnu1w3yr/MZVToOxH
-         XKJQ==
-X-Gm-Message-State: AOAM533VA5QmgBFMgmnunuDyci06JlNyYf8P11bEppKBu/hySopE3Hyz
-        L7GfyXDovE0FEzrL6uYuC0nSTJIRrJnxkas910JsyCY7VcU=
-X-Google-Smtp-Source: ABdhPJyH4x3XJbLMJ7sY9fe6Z2kSL4S37owrGlWRCqTmjoD87RzDjMLEM/6vqyHGxMoGH58ahNEztGNUEB1zdGP7kcs=
-X-Received: by 2002:aed:384a:: with SMTP id j68mr8263047qte.170.1604179987263;
- Sat, 31 Oct 2020 14:33:07 -0700 (PDT)
+        id S1725850AbgJaWuF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 31 Oct 2020 18:50:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbgJaWuF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 31 Oct 2020 18:50:05 -0400
+Content-Type: text/plain; charset="utf-8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604184604;
+        bh=ybUcSgC0FCeqUvBfkroFmJy3pBnAI0REyzrWPMlB5cw=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=wA1aBw86ls/9y6tzrLL8pA2Dk02ToirV9rxgeCSnM8yMruKLREvdW3ZyQFhKRnv3g
+         SPaacCEwnVDY+7icUw41ESXeg6jfTLNd3WnImCvvFLcKoOwQB/iLQf+YELRvUtpTBe
+         fpzYwwjsWbVluWQOVMh/7pGpcBcPr/cE9vDbTg+A=
 MIME-Version: 1.0
-References: <20201031085810.450489-1-hch@lst.de> <20201031085810.450489-2-hch@lst.de>
-In-Reply-To: <20201031085810.450489-2-hch@lst.de>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Sat, 31 Oct 2020 22:32:56 +0100
-Message-ID: <CAFLxGvzXaM8gKF5ffG6dgNaCuTV_g7uozoMiPPHtkmte2CY_bQ@mail.gmail.com>
-Subject: Re: [PATCH 01/11] mtd_blkdevs: don't override BLKFLSBUF
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-raid@vger.kernel.org,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-s390@vger.kernel.org, Richard Weinberger <richard@nod.at>,
-        linux-block@vger.kernel.org, Song Liu <song@kernel.org>,
-        linux-bcache@vger.kernel.org, linux-mtd@lists.infradead.org,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2] net/smc: improve return codes for SMC-Dv2
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <160418460471.3842.2355856936084967249.git-patchwork-notify@kernel.org>
+Date:   Sat, 31 Oct 2020 22:50:04 +0000
+References: <20201031181938.69903-1-kgraul@linux.ibm.com>
+In-Reply-To: <20201031181938.69903-1-kgraul@linux.ibm.com>
+To:     Karsten Graul <kgraul@linux.ibm.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, hca@linux.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, Oct 31, 2020 at 10:08 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> BLKFLSBUF does not actually send a flush command to the device, but
-> teard down buffer cache structures.  Remove the mtd_blkdevs
-> implementation and just use the default semantics instead.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Hello:
 
-Acked-by: Richard Weinberger <richard@nod.at>
+This patch was applied to netdev/net-next.git (refs/heads/master):
 
--- 
-Thanks,
-//richard
+On Sat, 31 Oct 2020 19:19:38 +0100 you wrote:
+> To allow better problem diagnosis the return codes for SMC-Dv2 are
+> improved by this patch. A few more CLC DECLINE codes are defined and
+> sent to the peer when an SMC connection cannot be established.
+> There are now multiple SMC variations that are offered by the client and
+> the server may encounter problems to initialize all of them.
+> Because only one diagnosis code can be sent to the client the decision
+> was made to send the first code that was encountered. Because the server
+> tries the variations in the order of importance (SMC-Dv2, SMC-D, SMC-R)
+> this makes sure that the diagnosis code of the most important variation
+> is sent.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v2] net/smc: improve return codes for SMC-Dv2
+    https://git.kernel.org/netdev/net-next/c/3752404a68e8
+
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
