@@ -2,120 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 679852A19AB
-	for <lists+linux-s390@lfdr.de>; Sat, 31 Oct 2020 19:37:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1C072A1ABA
+	for <lists+linux-s390@lfdr.de>; Sat, 31 Oct 2020 22:33:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgJaShj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 31 Oct 2020 14:37:39 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12032 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727967AbgJaShj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 31 Oct 2020 14:37:39 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09VIW3W3085396;
-        Sat, 31 Oct 2020 14:37:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=AB//ymYESAXZkjglSKJ/7mxvND607bOfUNBtbtyweEY=;
- b=YBMIv/y+c67JLyWiPZuuIKr8YPXTAUtJ5OiiAULJbTX8FGAEAmssV9Ix06rjIQEJC6q1
- I6dAMSdYqV4fzXej2k3SFKUGGuZ7FRJl+IssaDUwJMxVL6TrvCwGhf11EEOCaAU/Skpj
- 3jx4hSArFn9L9NjbpPc7IJoacUFYwZdOLysgBLo6boVe2E/sGztifhiA/5AeVKo+8aWj
- 1ZAzGyoz5mLy3hxrrOHz2lm1aN+6Gb7GqURqHs4LU7tAi4vIF7ZKb/IGcnHzgX05psxu
- 4qv86yWsDpgoqXHSwg7dD+wWxWs7Xy13kd++e2Zk8v1NrSCOHztw8+0x0PxQZG9+Q8Da ZA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34h0tb62xp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 31 Oct 2020 14:37:33 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09VIaEH3099524;
-        Sat, 31 Oct 2020 14:37:32 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34h0tb62w9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 31 Oct 2020 14:37:32 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09VIRXqC023141;
-        Sat, 31 Oct 2020 18:37:30 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma05fra.de.ibm.com with ESMTP id 34h01qr8m0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 31 Oct 2020 18:37:29 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09VIbQmV3998422
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 31 Oct 2020 18:37:27 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D6A3452057;
-        Sat, 31 Oct 2020 18:37:26 +0000 (GMT)
-Received: from osiris (unknown [9.171.9.119])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 88BB452050;
-        Sat, 31 Oct 2020 18:37:26 +0000 (GMT)
-Date:   Sat, 31 Oct 2020 19:37:25 +0100
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Qian Cai <cai@redhat.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/smp: Move rcu_cpu_starting() earlier
-Message-ID: <20201031183725.GA9529@osiris>
-References: <20201028182742.13773-1-cai@redhat.com>
+        id S1728563AbgJaVdI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 31 Oct 2020 17:33:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728553AbgJaVdI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 31 Oct 2020 17:33:08 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D22C0617A6;
+        Sat, 31 Oct 2020 14:33:07 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id r8so6720114qtp.13;
+        Sat, 31 Oct 2020 14:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xHvOHUVvu4ckbchx1rcuGr08kZCMPwt4rJyailG9bbE=;
+        b=PXt1Lod62vg8gGET6LJhJCXNcAPFlFMqhaLW/oHUss2OGkbyS0YCJBKTjLTU9jBnJP
+         Xdkns0Q7fETaxj+olj5iMsdqrAkBUMBMh7IVyQosyXpFAMhodyWnYtGV9BHCihrGZN/B
+         dfd+D0Fc+FllJtZcwZTALVV7HrOQnFS8ownbwN+B+bRbMW7Bt1jOhcZGMn9EITUZ5ztH
+         JAgGTVa9Y+2y9DFCnki15TVU6X86FLg/UgI+M9QnWnKMVgQD6vZCAcpYeYKRixVxNZxT
+         oF2TZ3X/wjk3l44NHMlIGXDU4FtiZJ8X6kqba7Q+o+XP9/kvuSRSQuuohjNPfTLH6yRY
+         Dlmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xHvOHUVvu4ckbchx1rcuGr08kZCMPwt4rJyailG9bbE=;
+        b=Z4zKubUKPH3vR64hajDHk6bAOJ1dMUejEFFJzDQBYzBJROL0iBZU6cIDYNfTERZVXQ
+         lp+/WCfLPfiO9bXA8uCUEZ1kwkSap3r71h6t4ye679qsa+8SByoNtEOwWRKQ6YxeCQzU
+         N0GApT8eUQVFGU1QeEVhdAwJmAnC4YH5sSJvR3xPODdLu5iFYvzSGOlsBFRCRtypvbIO
+         fTrFoeNL7pXlD8UjXsnITc9mkfEa5PH152sJaF67pPjPIWE69136s1WzvgVYYJ1NtzO8
+         wdV6pTasJUKTjaZPsZ/fjsOPgUoT0NqKrSzrymYBgC/NwV0yGJEhnu1w3yr/MZVToOxH
+         XKJQ==
+X-Gm-Message-State: AOAM533VA5QmgBFMgmnunuDyci06JlNyYf8P11bEppKBu/hySopE3Hyz
+        L7GfyXDovE0FEzrL6uYuC0nSTJIRrJnxkas910JsyCY7VcU=
+X-Google-Smtp-Source: ABdhPJyH4x3XJbLMJ7sY9fe6Z2kSL4S37owrGlWRCqTmjoD87RzDjMLEM/6vqyHGxMoGH58ahNEztGNUEB1zdGP7kcs=
+X-Received: by 2002:aed:384a:: with SMTP id j68mr8263047qte.170.1604179987263;
+ Sat, 31 Oct 2020 14:33:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201028182742.13773-1-cai@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-10-31_06:2020-10-30,2020-10-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- adultscore=0 clxscore=1011 lowpriorityscore=0 bulkscore=0 phishscore=0
- impostorscore=0 mlxscore=0 priorityscore=1501 malwarescore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010310152
+References: <20201031085810.450489-1-hch@lst.de> <20201031085810.450489-2-hch@lst.de>
+In-Reply-To: <20201031085810.450489-2-hch@lst.de>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Sat, 31 Oct 2020 22:32:56 +0100
+Message-ID: <CAFLxGvzXaM8gKF5ffG6dgNaCuTV_g7uozoMiPPHtkmte2CY_bQ@mail.gmail.com>
+Subject: Re: [PATCH 01/11] mtd_blkdevs: don't override BLKFLSBUF
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-raid@vger.kernel.org,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-s390@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        linux-block@vger.kernel.org, Song Liu <song@kernel.org>,
+        linux-bcache@vger.kernel.org, linux-mtd@lists.infradead.org,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 02:27:42PM -0400, Qian Cai wrote:
-> The call to rcu_cpu_starting() in smp_init_secondary() is not early
-> enough in the CPU-hotplug onlining process, which results in lockdep
-> splats as follows:
-> 
->  WARNING: suspicious RCU usage
->  -----------------------------
->  kernel/locking/lockdep.c:3497 RCU-list traversed in non-reader section!!
-> 
->  other info that might help us debug this:
-> 
->  RCU used illegally from offline CPU!
->  rcu_scheduler_active = 1, debug_locks = 1
->  no locks held by swapper/1/0.
-> 
->  Call Trace:
->  show_stack+0x158/0x1f0
->  dump_stack+0x1f2/0x238
->  __lock_acquire+0x2640/0x4dd0
->  lock_acquire+0x3a8/0xd08
->  _raw_spin_lock_irqsave+0xc0/0xf0
->  clockevents_register_device+0xa8/0x528
->  init_cpu_timer+0x33e/0x468
->  smp_init_secondary+0x11a/0x328
->  smp_start_secondary+0x82/0x88
-> 
-> This is avoided by moving the call to rcu_cpu_starting up near the
-> beginning of the smp_init_secondary() function. Note that the
-> raw_smp_processor_id() is required in order to avoid calling into
-> lockdep before RCU has declared the CPU to be watched for readers.
-> 
-> Link: https://lore.kernel.org/lkml/160223032121.7002.1269740091547117869.tip-bot2@tip-bot2/
-> Signed-off-by: Qian Cai <cai@redhat.com>
-> ---
->  arch/s390/kernel/smp.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+On Sat, Oct 31, 2020 at 10:08 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> BLKFLSBUF does not actually send a flush command to the device, but
+> teard down buffer cache structures.  Remove the mtd_blkdevs
+> implementation and just use the default semantics instead.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Could you provide the config you used? I'm wondering why I can't
-reproduce this even though I have lot's of debug options enabled.
+Acked-by: Richard Weinberger <richard@nod.at>
 
-I will apply it anyway after rc2 has been released, just curious.
+-- 
+Thanks,
+//richard
