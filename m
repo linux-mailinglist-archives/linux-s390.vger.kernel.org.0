@@ -2,145 +2,154 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F0402A134F
-	for <lists+linux-s390@lfdr.de>; Sat, 31 Oct 2020 04:18:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 970D92A1362
+	for <lists+linux-s390@lfdr.de>; Sat, 31 Oct 2020 05:09:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725890AbgJaDSs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 30 Oct 2020 23:18:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbgJaDSs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 30 Oct 2020 23:18:48 -0400
-Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9F59206F9;
-        Sat, 31 Oct 2020 03:18:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604114327;
-        bh=wpuQWSfJhXhol5SUGt01Gk+7zqrqbeH2wDm9rYbeH1c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=2tZF0Iv50D1hJV9V5OqMc/fn8ElObmDf9ICKmlirhmtcfJg3z8N/k8Gtx3AzfIsUW
-         ZXd7CKTxc3CUp6MkhLMr4NU1s5n7H221J1ENIW0IiDHJf6GYtEQc4f6Zfxiv3jPfNa
-         r9oQhQy3sLXrS/DGheOykKazDsUG+0eKPRtp+02k=
-Date:   Fri, 30 Oct 2020 20:18:45 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Karsten Graul <kgraul@linux.ibm.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        raspl@linux.ibm.com, ubraun@linux.ibm.com
-Subject: Re: [PATCH net-next] net/smc: improve return codes for SMC-Dv2
-Message-ID: <20201030201845.6be9722e@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <20201028110039.33645-1-kgraul@linux.ibm.com>
-References: <20201028110039.33645-1-kgraul@linux.ibm.com>
+        id S1726049AbgJaEI7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 31 Oct 2020 00:08:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15682 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725536AbgJaEI7 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 31 Oct 2020 00:08:59 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09V42Jkr014246;
+        Sat, 31 Oct 2020 00:08:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=BZIc8kJ0AecLKZdXA3Z8SLdD4CpID6za1Fp/oxLvaOg=;
+ b=MgzMrochXg4uhOPvghZzbGEsHOPvKGw4EDAJcK/ThV2UsGKI3O9UFXUgubCTmO/Q/NeW
+ HPBLSUDjTP7/wDA/ZAnLVkQ6qkD91R2B3ZVzj7GK98k6+EijQa7SEkEFuezQEURJj7a1
+ 4v2FUcmfY9M9QwQJhx9ur5htsxM7fNEyGc0/M3Gk51QYZ03qOnzmYmqXfxyGSjUBnGYv
+ vhhlmiB8Cbp2kGubTq7tC3MjuB3L/83j4GcTcua2jum790MJpTetd0a6dusi2UIvlvhl
+ K3jrDk8ejQJyA3JIO12zROlm536v3tYkI/UGlyvT0MIuKk8qcJ/Ttv4pWy3EPnAzu9SK RA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34h0am8d4s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 31 Oct 2020 00:08:54 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09V42Lfx014993;
+        Sat, 31 Oct 2020 00:08:54 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34h0am8d2g-6
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 31 Oct 2020 00:08:54 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09V3hLSL029632;
+        Sat, 31 Oct 2020 03:43:35 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 34gy6h01de-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 31 Oct 2020 03:43:35 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09V3hW5T36831528
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 31 Oct 2020 03:43:32 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D09B11C058;
+        Sat, 31 Oct 2020 03:43:32 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6C7711C052;
+        Sat, 31 Oct 2020 03:43:31 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.172.93])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat, 31 Oct 2020 03:43:31 +0000 (GMT)
+Date:   Sat, 31 Oct 2020 04:43:29 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, mjrosato@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v11 01/14] s390/vfio-ap: No need to disable IRQ after
+ queue reset
+Message-ID: <20201031044329.77b5a249.pasic@linux.ibm.com>
+In-Reply-To: <cb40a506-4a17-3562-728c-cbb57cd99817@linux.ibm.com>
+References: <20201022171209.19494-1-akrowiak@linux.ibm.com>
+        <20201022171209.19494-2-akrowiak@linux.ibm.com>
+        <20201027074846.30ee0ddc.pasic@linux.ibm.com>
+        <7a2c5930-9c37-8763-7e5d-c08a3638e6a1@linux.ibm.com>
+        <20201030184242.3bceee09.pasic@linux.ibm.com>
+        <cb40a506-4a17-3562-728c-cbb57cd99817@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-10-31_01:2020-10-30,2020-10-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=952
+ spamscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 bulkscore=0 suspectscore=2
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010310028
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 28 Oct 2020 12:00:39 +0100 Karsten Graul wrote:
-> To allow better problem diagnosis the return codes for SMC-Dv2 are
-> improved by this patch. A few more CLC DECLINE codes are defined and
-> sent to the peer when an SMC connection cannot be established.
-> There are now multiple SMC variations that are offered by the client and
-> the server may encounter problems to initialize all of them.
-> Because only one diagnosis code can be sent to the client the decision
-> was made to send the first code that was encountered. Because the server
-> tries the variations in the order of importance (SMC-Dv2, SMC-D, SMC-R)
-> this makes sure that the diagnosis code of the most important variation
-> is sent.
+On Fri, 30 Oct 2020 16:37:04 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+
+> On 10/30/20 1:42 PM, Halil Pasic wrote:
+> > On Thu, 29 Oct 2020 19:29:35 -0400
+> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> >  
+> >>>> @@ -1177,7 +1166,10 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+> >>>>    			 */
+> >>>>    			if (ret)
+> >>>>    				rc = ret;
+> >>>> -			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
+> >>>> +			q = vfio_ap_get_queue(matrix_mdev,
+> >>>> +					      AP_MKQID(apid, apqi));
+> >>>> +			if (q)
+> >>>> +				vfio_ap_free_aqic_resources(q);  
+> >>> Is it safe to do vfio_ap_free_aqic_resources() at this point? I don't
+> >>> think so. I mean does the current code (and vfio_ap_mdev_reset_queue()
+> >>> in particular guarantee that the reset is actually done when we arrive
+> >>> here)? BTW, I think we have a similar problem with the current code as
+> >>> well.  
+> >> If the return code from the vfio_ap_mdev_reset_queue() function
+> >> is zero, then yes, we are guaranteed the reset was done and the
+> >> queue is empty.  
+> > I've read up on this and I disagree. We should discuss this offline.  
 > 
-> Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-> ---
->  net/smc/af_smc.c   | 61 +++++++++++++++++++++++++++++++---------------
->  net/smc/smc_clc.h  |  5 ++++
->  net/smc/smc_core.h |  1 +
->  3 files changed, 47 insertions(+), 20 deletions(-)
+> Maybe you are confusing things here; my statement is specific to the return
+> code from the vfio_ap_mdev_reset_queue() function, not the response code
+> from the PQAP(ZAPQ) instruction. The vfio_ap_mdev_reset_queue()
+> function issues the PQAP(ZAPQ) instruction and if the status response code
+> is 0 indicating the reset was successfully initiated, it waits for the
+> queue to empty. When the queue is empty, it returns 0 to indicate
+> the queue is reset. 
+> If the queue does not become empty after a period of 
+> time,
+> it will issue a warning (WARN_ON_ONCE) and return 0. In that case, I suppose
+> there is no guarantee the reset was done, so maybe a change needs to be
+> made there such as a non-zero return code.
+>
+
+I've overlooked the wait for empty. Maybe that return 0 had a part in
+it. I now remember me insisting on having the wait code added when the
+interrupt support was in the make. Sorry!
+
+If we have given up on out of retries retries, we are in trouble anyway.
+ 
+> >  
+> >>    The function returns a non-zero return code if
+> >> the reset fails or the queue the reset did not complete within a given
+> >> amount of time, so maybe we shouldn't free AQIC resources when
+> >> we get a non-zero return code from the reset function?
+> >>  
+> > If the queue is gone, or broken, it won't produce interrupts or poke the
+> > notifier bit, and we should clean up the AQIC resources.  
 > 
-> diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-> index 82be0bd0f6e8..5414704f4cac 100644
-> --- a/net/smc/af_smc.c
-> +++ b/net/smc/af_smc.c
-> @@ -1346,6 +1346,7 @@ static int smc_listen_v2_check(struct smc_sock *new_smc,
->  {
->  	struct smc_clc_smcd_v2_extension *pclc_smcd_v2_ext;
->  	struct smc_clc_v2_extension *pclc_v2_ext;
-> +	int rc;
->  
->  	ini->smc_type_v1 = pclc->hdr.typev1;
->  	ini->smc_type_v2 = pclc->hdr.typev2;
-> @@ -1353,29 +1354,30 @@ static int smc_listen_v2_check(struct smc_sock *new_smc,
->  	if (pclc->hdr.version > SMC_V1)
->  		ini->smcd_version |=
->  				ini->smc_type_v2 != SMC_TYPE_N ? SMC_V2 : 0;
-> +	if (!(ini->smcd_version & SMC_V2)) {
-> +		rc = SMC_CLC_DECL_PEERNOSMC;
-> +		goto out;
-> +	}
->  	if (!smc_ism_v2_capable) {
->  		ini->smcd_version &= ~SMC_V2;
-> +		rc = SMC_CLC_DECL_NOISM2SUPP;
->  		goto out;
->  	}
->  	pclc_v2_ext = smc_get_clc_v2_ext(pclc);
->  	if (!pclc_v2_ext) {
->  		ini->smcd_version &= ~SMC_V2;
-> +		rc = SMC_CLC_DECL_NOV2EXT;
->  		goto out;
->  	}
->  	pclc_smcd_v2_ext = smc_get_clc_smcd_v2_ext(pclc_v2_ext);
-> -	if (!pclc_smcd_v2_ext)
-> +	if (!pclc_smcd_v2_ext) {
->  		ini->smcd_version &= ~SMC_V2;
-> +		rc = SMC_CLC_DECL_NOV2DEXT;
-> +	}
->  
->  out:
-> -	if (!ini->smcd_version) {
-> -		if (pclc->hdr.typev1 == SMC_TYPE_B ||
-> -		    pclc->hdr.typev2 == SMC_TYPE_B)
-> -			return SMC_CLC_DECL_NOSMCDEV;
-> -		if (pclc->hdr.typev1 == SMC_TYPE_D ||
-> -		    pclc->hdr.typev2 == SMC_TYPE_D)
-> -			return SMC_CLC_DECL_NOSMCDDEV;
-> -		return SMC_CLC_DECL_NOSMCRDEV;
-> -	}
-> +	if (!ini->smcd_version)
-> +		return rc;
+> True, which is what the code provided by this patch does; however,
+> the AQIC resources should be cleaned up only if the KVM pointer is
+> not NULL for reasons discussed elsewhere.
 
-Is rc guaranteed to be initialized? Looks like ini->smcd_version could
-possibly start out as 0, no?
-
->  
->  	return 0;
->  }
-> @@ -1473,6 +1475,12 @@ static void smc_check_ism_v2_match(struct smc_init_info *ini,
->  	}
->  }
-
-> @@ -1630,10 +1647,14 @@ static int smc_listen_find_device(struct smc_sock *new_smc,
->  		return 0;
->  
->  	if (pclc->hdr.typev1 == SMC_TYPE_D)
-> -		return SMC_CLC_DECL_NOSMCDDEV; /* skip RDMA and decline */
-> +		/* skip RDMA and decline */
-> +		return ini->rc ?: SMC_CLC_DECL_NOSMCDDEV;
->  
->  	/* check if RDMA is available */
-> -	return smc_find_rdma_v1_device_serv(new_smc, pclc, ini);
-> +	rc = smc_find_rdma_v1_device_serv(new_smc, pclc, ini);
-> +	smc_find_ism_store_rc(rc, ini);
-> +
-> +	return (!rc) ? 0 : ini->rc;
-
-Since I'm asking questions anyway - isn't this equivalent to 
-
-	return ini->rc; 
-
-since there's call to
-
-	smc_find_ism_store_rc(rc, ini);
-
-right above?
+Yes, but these should be cleaned up before the KVM pointer becomes
+null. We don't want to keep the page with the notifier byte pinned
+forever, or?
