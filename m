@@ -2,105 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 387382A1F9F
-	for <lists+linux-s390@lfdr.de>; Sun,  1 Nov 2020 17:46:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E40192A1FC9
+	for <lists+linux-s390@lfdr.de>; Sun,  1 Nov 2020 18:02:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgKAQqZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 1 Nov 2020 11:46:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbgKAQqY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 1 Nov 2020 11:46:24 -0500
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EFFBC0617A6
-        for <linux-s390@vger.kernel.org>; Sun,  1 Nov 2020 08:46:24 -0800 (PST)
-Received: by mail-pf1-x434.google.com with SMTP id e7so8922955pfn.12
-        for <linux-s390@vger.kernel.org>; Sun, 01 Nov 2020 08:46:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZnX97cZi6Tq1d5eR74IXiOWMCb5Il9NZ1Se/Vo5HW5E=;
-        b=1fh8hw1b4PtM43PjPjUPsgwnC03eOzq1D/OIFg9Z2RLVbDo9D2nclogiTHPlZ9q9gq
-         rrmC+XRj9jIExjEAIOBmizVgp08ZK+1BOrKNPSsqt6PXuv87piwipBy0tmkGDLci20YZ
-         JR2v8tDBzCXLzUsRIF3SNeDwpgOyDiUoBmGT/dKyCVInbDNsH3XW6LdeawRrzdGSBvi3
-         mi2Zd1b281L8/5BerY1o0iDfhGaz4v1tgb6OR3HUy1joR3/yNIFriK7SN7QateperW5W
-         2nQPknP0sHnoa1Z7dhknzTXPvkZP1QGclC+Qpgjo7CRH5NKu46KBXTrYpjYhzZx1X2si
-         M+Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZnX97cZi6Tq1d5eR74IXiOWMCb5Il9NZ1Se/Vo5HW5E=;
-        b=d+Fv+8PVfJGXKoqymO0j5664QB4ViYN48zWx2PCUtrjKQ9ycxBFQb+8RNov6C9kgl5
-         jp6mEzg47p7hOc3xPA0MyDyPQDXk9Jyk5dSa+UWxJuqD3al61aO3vNTrzOrhECQPEkZh
-         z7C8Oo7c8tbIObRT7j8mWPJiBDA4/jSC6WDmUj0yt6DFoQ3FVWQbgpS4eO/UuTU9Oa5b
-         fP0nbtswPWY4opH3IzXKc2448OjxVmGttwbx/q4edwXMPQFD37tjJX8+GUGrgsXeVit5
-         lZFiYVQM7BeOZQjAmWc/klx1xngvM0vMEQru3EdBBokR/KfnxN/tWs3VvbjR5J6ufnCF
-         boxA==
-X-Gm-Message-State: AOAM532qs0npJr0oAEh5AkHt9+jjbu+CTHXPRyzY6cS3Q1Vp7suYS6zx
-        CilMPy5r2ZZ1zb3xxceFiWNNRlLFmx+ypA==
-X-Google-Smtp-Source: ABdhPJxTQE4+lDH2ha7od50bGb6ipTN3YldzqLbuO9m9iCrZbUFUOoR3Y6ocz+rikoLtjR5mdUiVNw==
-X-Received: by 2002:a63:d74b:: with SMTP id w11mr10225608pgi.147.1604249183766;
-        Sun, 01 Nov 2020 08:46:23 -0800 (PST)
-Received: from [192.168.1.134] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id t74sm1926656pfc.47.2020.11.01.08.46.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Nov 2020 08:46:23 -0800 (PST)
-Subject: Re: block ioctl cleanups
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Ilya Dryomov <idryomov@gmail.com>, Song Liu <song@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-s390@vger.kernel.org
-References: <20201031085810.450489-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <877901e6-6cdb-42e9-3b32-cb8b93bfff4e@kernel.dk>
-Date:   Sun, 1 Nov 2020 09:46:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726791AbgKARCc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 1 Nov 2020 12:02:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726790AbgKARCb (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 1 Nov 2020 12:02:31 -0500
+Received: from kernel.org (unknown [87.71.17.26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 420992074F;
+        Sun,  1 Nov 2020 17:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604250150;
+        bh=HP+ZQ6Ps8oAsoYLOvWAk4ExSXyhayG0jX2yWoBMUttE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bxsex5hsLdBiTg92b0MNJxCbBPD+lO6NtdRjasPNMfUBXD6k5B0KcdxvFVYiQIEmX
+         Bjfz+dfRQJnD6lyaCaBO97eSNhn6o7BX84zyBBhpcPltXScqdjcB1tCqstPvndRKPK
+         MacevoYxMeN6oYR+VtqyVfF6MF53cPKygLmGPOBs=
+Date:   Sun, 1 Nov 2020 19:02:17 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "david@redhat.com" <david@redhat.com>,
+        "cl@linux.com" <cl@linux.com>,
+        "gor@linux.ibm.com" <gor@linux.ibm.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
+        "penberg@kernel.org" <penberg@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "iamjoonsoo.kim@lge.com" <iamjoonsoo.kim@lge.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "kirill@shutemov.name" <kirill@shutemov.name>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "hca@linux.ibm.com" <hca@linux.ibm.com>,
+        "bp@alien8.de" <bp@alien8.de>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Brown, Len" <len.brown@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 2/4] PM: hibernate: improve robustness of mapping pages
+ in the direct map
+Message-ID: <20201101170217.GD14628@kernel.org>
+References: <20201025101555.3057-1-rppt@kernel.org>
+ <20201025101555.3057-3-rppt@kernel.org>
+ <3b4b2b3559bd3dc68adcddf99415bae57152cb6b.camel@intel.com>
+ <20201029075416.GJ1428094@kernel.org>
+ <604554805defb03d158c09aba4b5cced3416a7fb.camel@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20201031085810.450489-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <604554805defb03d158c09aba4b5cced3416a7fb.camel@intel.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 10/31/20 2:57 AM, Christoph Hellwig wrote:
-> Hi Jens,
+On Thu, Oct 29, 2020 at 11:19:18PM +0000, Edgecombe, Rick P wrote:
+> On Thu, 2020-10-29 at 09:54 +0200, Mike Rapoport wrote:
+> > __kernel_map_pages() on arm64 will also bail out if rodata_full is
+> > false:
+> > void __kernel_map_pages(struct page *page, int numpages, int enable)
+> > {
+> >         if (!debug_pagealloc_enabled() && !rodata_full)
+> >                 return;
+> > 
+> >         set_memory_valid((unsigned long)page_address(page), numpages,
+> > enable);
+> > }
+> > 
+> > So using set_direct_map() to map back pages removed from the direct
+> > map
+> > with __kernel_map_pages() seems safe to me.
 > 
-> this series has a bunch of cleanups for the block layer ioctl code.
-> 
-> Diffstat:
->  block/genhd.c                     |    7 ----
->  block/ioctl.c                     |   62 ++++++--------------------------------
->  drivers/block/loop.c              |    2 -
->  drivers/block/mtip32xx/mtip32xx.c |   11 +-----
->  drivers/block/pktcdvd.c           |    6 ++-
->  drivers/block/rbd.c               |   41 ++-----------------------
->  drivers/md/bcache/request.c       |    5 +--
->  drivers/md/dm.c                   |    5 ++-
->  drivers/md/md.c                   |   62 +++++++++++++++++++-------------------
->  drivers/mtd/mtd_blkdevs.c         |   28 -----------------
->  drivers/s390/block/dasd.c         |    1 
->  drivers/s390/block/dasd_int.h     |    3 +
->  drivers/s390/block/dasd_ioctl.c   |   27 +++++-----------
->  include/linux/blkdev.h            |    3 -
->  include/linux/genhd.h             |    1 
->  15 files changed, 73 insertions(+), 191 deletions(-)
+> Heh, one of us must have some simple boolean error in our head. I hope
+> its not me! :) I'll try on more time.
 
-Series looks good to me, apart from the mentioned mtip32xx change. If you
-repost this, can you look through commit messages and titles for typos,
-I spotted quite a few. If not I'll do it when applying.
+Well, then it's me :)
+You are right, I misread this and I could not understand why
+!rodata_full bothers you.
+
+> __kernel_map_pages() will bail out if rodata_full is false **AND**
+> debug page alloc is off. So it will only bail under conditions where
+> there could be nothing unmapped on the direct map.
+> 
+> Equivalent logic would be:
+> 	if (!(debug_pagealloc_enabled() || rodata_full))
+> 		return;
+> 
+> Or:
+> 	if (debug_pagealloc_enabled() || rodata_full)
+> 		set_memory_valid(blah)
+> 
+> So if either is on, the existing code will try to re-map. But the
+> set_direct_map_()'s will only work if rodata_full is on. So switching
+> hibernate to set_direct_map() will cause the remap to be missed for the
+> debug page alloc case, with !rodata_full.
+> 
+> It also breaks normal debug page alloc usage with !rodata_full for
+> similar reasons after patch 3. The pages would never get unmapped.
+
+I've updated the patches, there should be no regression now.
 
 -- 
-Jens Axboe
-
+Sincerely yours,
+Mike.
