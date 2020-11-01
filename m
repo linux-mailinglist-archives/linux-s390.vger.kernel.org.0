@@ -2,101 +2,99 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 757392A1F69
-	for <lists+linux-s390@lfdr.de>; Sun,  1 Nov 2020 17:06:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1CED2A1F9C
+	for <lists+linux-s390@lfdr.de>; Sun,  1 Nov 2020 17:45:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgKAQGM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 1 Nov 2020 11:06:12 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40710 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726730AbgKAQGM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 1 Nov 2020 11:06:12 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A1G2rsS177322;
-        Sun, 1 Nov 2020 11:06:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=/0YF/qY9dCDnt+uKhwz6GW3xvIKJ3yi/oQCwjRDJUO8=;
- b=UKRqaVuYwXCjh6umIteeZU9uYiyBzOLNCaegKlGQky97klh6RgBhhcI8CmrXmnLv1xQl
- FncyMGuVKQVSsp7ZHV0Oq34m1rxPENaAppc5cZPC6Ha1Y6B6AANqtl7Ja1IO5dy/K+Pw
- VidB+/ZgPcbmmz/w1Vz/gBcZ3pHonVIZqpyJsicnk5I8k9rxORrbo3nlNL78c43OjiZV
- Ip/6Z98w1tnZBbKZ4SBspRYgMBNrX3IaIhSFThCtgguq2B302XsaVfZfemZ2ZXwZoKbJ
- YdjGC+3/zfvqddwzcNJHVA2tJS7s7H3S1eaC8DZrvoAx8osEzuzzn3CuNM3LKyEi4muQ AA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34h3jry0a7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 01 Nov 2020 11:06:04 -0500
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0A1G2wQn177670;
-        Sun, 1 Nov 2020 11:06:04 -0500
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34h3jry09a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 01 Nov 2020 11:06:03 -0500
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0A1G1OFo017802;
-        Sun, 1 Nov 2020 16:05:59 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06fra.de.ibm.com with ESMTP id 34h01kgmhc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 01 Nov 2020 16:05:59 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0A1G5uM48585818
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 1 Nov 2020 16:05:56 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8C33C52051;
-        Sun,  1 Nov 2020 16:05:56 +0000 (GMT)
-Received: from osiris (unknown [9.171.90.71])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 3C1445204E;
-        Sun,  1 Nov 2020 16:05:56 +0000 (GMT)
-Date:   Sun, 1 Nov 2020 17:05:54 +0100
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Qian Cai <cai@redhat.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/smp: Move rcu_cpu_starting() earlier
-Message-ID: <20201101160554.GA9375@osiris>
-References: <20201028182742.13773-1-cai@redhat.com>
- <20201031183725.GA9529@osiris>
- <1f0ef4b832c67dcec1bcc793407e62c58a97904e.camel@redhat.com>
+        id S1726938AbgKAQp1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 1 Nov 2020 11:45:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726902AbgKAQp0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 1 Nov 2020 11:45:26 -0500
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F2AC061A49
+        for <linux-s390@vger.kernel.org>; Sun,  1 Nov 2020 08:45:25 -0800 (PST)
+Received: by mail-pf1-x444.google.com with SMTP id 72so2253251pfv.7
+        for <linux-s390@vger.kernel.org>; Sun, 01 Nov 2020 08:45:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JA2Mrg1CETiakxbFSgknGwTSjNWYLI4LI30te6RUQlo=;
+        b=C6/CfdYPKDaybjemy7ROjgbyGvqWB8u46p2B5eG/nr68U2TGp2xvaVgp2iM+RQBZ+e
+         vV4TDjQS6iV2HmZeWPg2tXHrVpg8bNCvWcTGkRCyfQM4VmTSm7ZkoYxM8E9U4qNpDugu
+         Qax0PNfE8SJPPsu0S6mBjDQwFfvGp10HHDOlsLWe/na8mnnzwk9wfgZdtm/9swmogTuN
+         MzUs4wDSAKQ84FXYmaRgT4XRnKdOog9fc8vkJy7193hpA168Vg4RCSDycjU8LT4CkDLf
+         psgPKi8H66LLmuMPHcpmP2gIuP2Gy0GJ+RoHYRYrDqDnw+YBKkZKLYUYa5o/LThczwuA
+         1PPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JA2Mrg1CETiakxbFSgknGwTSjNWYLI4LI30te6RUQlo=;
+        b=JJJtigsS3jcf1RL18yudP+ERtNIx9EmNa96SSi2NjQHvsbyKzYvIQQSqYlvTfeqaJk
+         ja+lkYB46z7//AtbvoVvBd9xs/yiKJ6xCX1+3Ytpsahj1xDbwNe8jzy0r4gq8oKrFypw
+         r+Wbn8RfC4vU9gFVKh/swTTePlRT4NW4tQVMSZ8rompGdt3bCsoDYqwngwnw+iMJSuVu
+         Sn22G7Q7O4nDDOGNwCgZ8Kcm0Gv2AviBh/JBLC5AtoXZhJoHYxn/L5TTu+pB5y16gUz6
+         cOs0+U1j4P2Fj/x62SIvaErXBCIK5urpHMrdrRzJskGH/fAP76g73SSzHC1DMTyGg6LP
+         FWfw==
+X-Gm-Message-State: AOAM5328qzUhftUUrzhFKlnKImoHSwxeCNbuOlae8DADpUqP7ESLxgJh
+        PQnaztMcVwhT27e2RRlQ5Ttj9NvyAD57Xw==
+X-Google-Smtp-Source: ABdhPJxoCG9gkDR5+SPv2EwBLd3ow0z0XlOgH7pokFA9cV+UVH6OXY3zdVqqdFKxBkTD88zb7corAQ==
+X-Received: by 2002:a63:5046:: with SMTP id q6mr10223402pgl.373.1604249124121;
+        Sun, 01 Nov 2020 08:45:24 -0800 (PST)
+Received: from [192.168.1.134] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id gf17sm3763037pjb.15.2020.11.01.08.45.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 01 Nov 2020 08:45:23 -0800 (PST)
+Subject: Re: [PATCH 02/11] mtip32xx: return -ENOTTY for all unhanled ioctls
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Ilya Dryomov <idryomov@gmail.com>, Song Liu <song@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-s390@vger.kernel.org
+References: <20201031085810.450489-1-hch@lst.de>
+ <20201031085810.450489-3-hch@lst.de>
+ <f128e8bb-7ce4-b8f4-80cb-1afab503887c@kernel.dk>
+ <20201101102735.GA26447@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <842f4d23-b8c2-8ade-caf3-50b7cb9542cb@kernel.dk>
+Date:   Sun, 1 Nov 2020 09:45:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1f0ef4b832c67dcec1bcc793407e62c58a97904e.camel@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-01_05:2020-10-30,2020-11-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=984 phishscore=0
- spamscore=0 mlxscore=0 clxscore=1015 suspectscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011010130
+In-Reply-To: <20201101102735.GA26447@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, Oct 31, 2020 at 07:38:52PM -0400, Qian Cai wrote:
-> > > This is avoided by moving the call to rcu_cpu_starting up near the
-> > > beginning of the smp_init_secondary() function. Note that the
-> > > raw_smp_processor_id() is required in order to avoid calling into
-> > > lockdep before RCU has declared the CPU to be watched for readers.
-> > > 
-> > > Link: https://lore.kernel.org/lkml/160223032121.7002.1269740091547117869.tip-bot2@tip-bot2/
-> > > Signed-off-by: Qian Cai <cai@redhat.com>
-> > > ---
-> > >  arch/s390/kernel/smp.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > Could you provide the config you used? I'm wondering why I can't
-> > reproduce this even though I have lot's of debug options enabled.
-> https://cailca.coding.net/public/linux/mm/git/files/master/s390.config
+On 11/1/20 3:27 AM, Christoph Hellwig wrote:
+> On Sat, Oct 31, 2020 at 08:58:52AM -0600, Jens Axboe wrote:
+>> On 10/31/20 2:58 AM, Christoph Hellwig wrote:
+>>> -ENOTTY is the convention for "driver does not support this ioctl".
+>>> Use it properly in mtip32xx instead of the bogys -EINVAL.
+>>
+>> While that's certainly true, there is a risk in making a change like this
+>> years after the fact. Not that I expect there are any mtip32xx users
+>> left at this point, but...
 > 
-> Essentially, I believe it requires CONFIG_PROVE_RCU_LIST=y. Also, it occurs to
-> me that this only starts to happen after the commit mentioned in the above link.
+> -ENOTTY is what most drivers return.  That being said we can keep the
+> old behavior, so if you prepfer that I can respin to do that.
 
-Yes, with that enabled I can reprocuce it. Thanks! It depends on
-CONFIG_RCU_EXPERT. I can't image why I didn't had that enabled.. :)
+Yeah I know that -ENOTTY is what they all should use (and most of course
+does), just saying that this change carries some risk. Given that
+mtip32xx can probably be retired in the not-too-distant future, I say we
+just keep the -EINVAL here.
+
+-- 
+Jens Axboe
+
