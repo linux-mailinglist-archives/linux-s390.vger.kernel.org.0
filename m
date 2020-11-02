@@ -2,272 +2,292 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E4E02A2DF1
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Nov 2020 16:18:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E45AF2A301B
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Nov 2020 17:42:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbgKBPSp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Nov 2020 10:18:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60002 "EHLO mail.kernel.org"
+        id S1727225AbgKBQlx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Nov 2020 11:41:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59286 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbgKBPSp (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 2 Nov 2020 10:18:45 -0500
-Received: from kernel.org (unknown [87.71.17.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C549122226;
-        Mon,  2 Nov 2020 15:18:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604330323;
-        bh=BP7NXK/PeknKLWeyovBUOGGTlkdf+pO59OcJEpEzF3Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NTxOlDIiQILczXFe3vUeE1LWhh4tMDAJPfsMsis8q/6V+hKCXiAy5IWy87AtMzQgK
-         Dv0zj38DAeoAdeT+vHPVnvuz7AP8hm6ElliB8xy73LgDuiMFeuopOYCfTJ/r4Q8oKb
-         Q/oat80trPnnSe/229/7PlCKbYG4VCtKZqTfN03E=
-Date:   Mon, 2 Nov 2020 17:18:29 +0200
-From:   Mike Rapoport <rppt@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Lameter <cl@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Len Brown <len.brown@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
+        id S1727139AbgKBQlw (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 2 Nov 2020 11:41:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1604335310;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZZ1+8t7uf1F7l3ZBHb45iCoO7eWd2o1ycVfihIUusH8=;
+        b=Ujz9LMjaN8SJhVxn50rnawrrA86tblFVcms0tvPZ6z30qdXkdWdaV8CVc/AUzHzdbFv1V2
+        IhoFIoAHPiRb7IWyVB1j/sUcCmK6cyUWjPXJIQKp023Mx82tNgLktFrqUxCnDxWjn5Juhp
+        fYdZ2HuY/J5qgBTErdjQxOEKWWeOSL4=
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 13AC8AC65;
+        Mon,  2 Nov 2020 16:41:50 +0000 (UTC)
+Date:   Mon, 2 Nov 2020 17:41:47 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Jonathan Corbet <corbet@lwn.net>, Guo Ren <guoren@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-pm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v3 4/4] arch, mm: make kernel_page_present() always
- available
-Message-ID: <20201102151829.GC4879@kernel.org>
-References: <20201101170815.9795-1-rppt@kernel.org>
- <20201101170815.9795-5-rppt@kernel.org>
- <08db307a-b093-d7aa-7364-045f328ab147@redhat.com>
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-doc@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [PATCH 11/11 v2] ftrace: Add recording of functions that caused
+ recursion
+Message-ID: <20201102164147.GJ20201@alley>
+References: <20201030213142.096102821@goodmis.org>
+ <20201030214014.801706340@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <08db307a-b093-d7aa-7364-045f328ab147@redhat.com>
+In-Reply-To: <20201030214014.801706340@goodmis.org>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Nov 02, 2020 at 10:28:14AM +0100, David Hildenbrand wrote:
-> On 01.11.20 18:08, Mike Rapoport wrote:
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > For architectures that enable ARCH_HAS_SET_MEMORY having the ability to
-> > verify that a page is mapped in the kernel direct map can be useful
-> > regardless of hibernation.
-> > 
-> > Add RISC-V implementation of kernel_page_present(), update its forward
-> > declarations and stubs to be a part of set_memory API and remove ugly
-> > ifdefery in inlcude/linux/mm.h around current declarations of
-> > kernel_page_present().
-> > 
-> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > ---
-> >   arch/arm64/include/asm/cacheflush.h |  1 +
-> >   arch/arm64/mm/pageattr.c            |  4 +---
-> >   arch/riscv/include/asm/set_memory.h |  1 +
-> >   arch/riscv/mm/pageattr.c            | 29 +++++++++++++++++++++++++++++
-> >   arch/x86/include/asm/set_memory.h   |  1 +
-> >   arch/x86/mm/pat/set_memory.c        |  4 +---
-> >   include/linux/mm.h                  |  7 -------
-> >   include/linux/set_memory.h          |  5 +++++
-> >   8 files changed, 39 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
-> > index 9384fd8fc13c..45217f21f1fe 100644
-> > --- a/arch/arm64/include/asm/cacheflush.h
-> > +++ b/arch/arm64/include/asm/cacheflush.h
-> > @@ -140,6 +140,7 @@ int set_memory_valid(unsigned long addr, int numpages, int enable);
-> >   int set_direct_map_invalid_noflush(struct page *page);
-> >   int set_direct_map_default_noflush(struct page *page);
-> > +bool kernel_page_present(struct page *page);
-> >   #include <asm-generic/cacheflush.h>
-> > diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-> > index 439325532be1..92eccaf595c8 100644
-> > --- a/arch/arm64/mm/pageattr.c
-> > +++ b/arch/arm64/mm/pageattr.c
-> > @@ -186,8 +186,8 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
-> >   	set_memory_valid((unsigned long)page_address(page), numpages, enable);
-> >   }
-> > +#endif /* CONFIG_DEBUG_PAGEALLOC */
-> > -#ifdef CONFIG_HIBERNATION
-> >   /*
-> >    * This function is used to determine if a linear map page has been marked as
-> >    * not-valid. Walk the page table and check the PTE_VALID bit. This is based
-> > @@ -234,5 +234,3 @@ bool kernel_page_present(struct page *page)
-> >   	ptep = pte_offset_kernel(pmdp, addr);
-> >   	return pte_valid(READ_ONCE(*ptep));
-> >   }
-> > -#endif /* CONFIG_HIBERNATION */
-> > -#endif /* CONFIG_DEBUG_PAGEALLOC */
-> > diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
-> > index 4c5bae7ca01c..d690b08dff2a 100644
-> > --- a/arch/riscv/include/asm/set_memory.h
-> > +++ b/arch/riscv/include/asm/set_memory.h
-> > @@ -24,6 +24,7 @@ static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
-> >   int set_direct_map_invalid_noflush(struct page *page);
-> >   int set_direct_map_default_noflush(struct page *page);
-> > +bool kernel_page_present(struct page *page);
-> >   #endif /* __ASSEMBLY__ */
-> > diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-> > index 321b09d2e2ea..87ba5a68bbb8 100644
-> > --- a/arch/riscv/mm/pageattr.c
-> > +++ b/arch/riscv/mm/pageattr.c
-> > @@ -198,3 +198,32 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
-> >   			     __pgprot(0), __pgprot(_PAGE_PRESENT));
-> >   }
-> >   #endif
-> > +
-> > +bool kernel_page_present(struct page *page)
-> > +{
-> > +	unsigned long addr = (unsigned long)page_address(page);
-> > +	pgd_t *pgd;
-> > +	pud_t *pud;
-> > +	p4d_t *p4d;
-> > +	pmd_t *pmd;
-> > +	pte_t *pte;
-> > +
-> > +	pgd = pgd_offset_k(addr);
-> > +	if (!pgd_present(*pgd))
-> > +		return false;
-> > +
-> > +	p4d = p4d_offset(pgd, addr);
-> > +	if (!p4d_present(*p4d))
-> > +		return false;
-> > +
-> > +	pud = pud_offset(p4d, addr);
-> > +	if (!pud_present(*pud))
-> > +		return false;
-> > +
-> > +	pmd = pmd_offset(pud, addr);
-> > +	if (!pmd_present(*pmd))
-> > +		return false;
-> > +
-> > +	pte = pte_offset_kernel(pmd, addr);
-> > +	return pte_present(*pte);
-> > +}
-> > diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-> > index 5948218f35c5..4352f08bfbb5 100644
-> > --- a/arch/x86/include/asm/set_memory.h
-> > +++ b/arch/x86/include/asm/set_memory.h
-> > @@ -82,6 +82,7 @@ int set_pages_rw(struct page *page, int numpages);
-> >   int set_direct_map_invalid_noflush(struct page *page);
-> >   int set_direct_map_default_noflush(struct page *page);
-> > +bool kernel_page_present(struct page *page);
-> >   extern int kernel_set_to_readonly;
-> > diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> > index bc9be96b777f..16f878c26667 100644
-> > --- a/arch/x86/mm/pat/set_memory.c
-> > +++ b/arch/x86/mm/pat/set_memory.c
-> > @@ -2226,8 +2226,8 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
-> >   	arch_flush_lazy_mmu_mode();
-> >   }
-> > +#endif /* CONFIG_DEBUG_PAGEALLOC */
-> > -#ifdef CONFIG_HIBERNATION
-> >   bool kernel_page_present(struct page *page)
-> >   {
-> >   	unsigned int level;
-> > @@ -2239,8 +2239,6 @@ bool kernel_page_present(struct page *page)
-> >   	pte = lookup_address((unsigned long)page_address(page), &level);
-> >   	return (pte_val(*pte) & _PAGE_PRESENT);
-> >   }
-> > -#endif /* CONFIG_HIBERNATION */
-> > -#endif /* CONFIG_DEBUG_PAGEALLOC */
-> >   int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
-> >   				   unsigned numpages, unsigned long page_flags)
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index ab0ef6bd351d..44b82f22e76a 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -2937,16 +2937,9 @@ static inline void debug_pagealloc_map_pages(struct page *page,
-> >   	if (debug_pagealloc_enabled_static())
-> >   		__kernel_map_pages(page, numpages, enable);
-> >   }
-> > -
-> > -#ifdef CONFIG_HIBERNATION
-> > -extern bool kernel_page_present(struct page *page);
-> > -#endif	/* CONFIG_HIBERNATION */
-> >   #else	/* CONFIG_DEBUG_PAGEALLOC */
-> >   static inline void debug_pagealloc_map_pages(struct page *page,
-> >   					     int numpages, int enable) {}
-> > -#ifdef CONFIG_HIBERNATION
-> > -static inline bool kernel_page_present(struct page *page) { return true; }
-> > -#endif	/* CONFIG_HIBERNATION */
-> >   #endif	/* CONFIG_DEBUG_PAGEALLOC */
-> >   #ifdef __HAVE_ARCH_GATE_AREA
-> > diff --git a/include/linux/set_memory.h b/include/linux/set_memory.h
-> > index 860e0f843c12..fe1aa4e54680 100644
-> > --- a/include/linux/set_memory.h
-> > +++ b/include/linux/set_memory.h
-> > @@ -23,6 +23,11 @@ static inline int set_direct_map_default_noflush(struct page *page)
-> >   {
-> >   	return 0;
-> >   }
-> > +
-> > +static inline bool kernel_page_present(struct page *page)
-> > +{
-> > +	return true;
-> > +}
-> >   #endif
-> >   #ifndef set_mce_nospec
-> > 
+On Fri 2020-10-30 17:31:53, Steven Rostedt wrote:
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 > 
-> It's somewhat weird to move this to set_memory.h - it's only one possible
-> user. I think include/linux/mm.h is a better fit. Ack to making it
-> independent of CONFIG_HIBERNATION.
-
-Semantically this is a part of direct map manipulation, that's primarily
-why I put it into set_memory.h
-
-> in include/linux/mm.h , I'd prefer:
-> 
-> #if defined(CONFIG_DEBUG_PAGEALLOC) || \
->     defined(CONFIG_ARCH_HAS_SET_DIRECT_MAP)
-
-The second reason was to avoid this ^
-and the third is -7 lines to include/linux/mm.h :)
-
-> bool kernel_page_present(struct page *page);
-> #else
-> static inline bool kernel_page_present(struct page *page)
-> {
-> 	return true;
-> }
-> #endif
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
-> 
+> This adds CONFIG_FTRACE_RECORD_RECURSION that will record to a file
+> "recursed_functions" all the functions that caused recursion while a
+> callback to the function tracer was running.
 > 
 
--- 
-Sincerely yours,
-Mike.
+> --- /dev/null
+> +++ b/kernel/trace/trace_recursion_record.c
+> @@ -0,0 +1,220 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/seq_file.h>
+> +#include <linux/kallsyms.h>
+> +#include <linux/module.h>
+> +#include <linux/ftrace.h>
+> +#include <linux/fs.h>
+> +
+> +#include "trace_output.h"
+> +
+> +struct recursed_functions {
+> +	unsigned long		ip;
+> +	unsigned long		parent_ip;
+> +};
+> +
+> +static struct recursed_functions recursed_functions[CONFIG_FTRACE_RECORD_RECURSION_SIZE];
+
+The code tries to be lockless safe as much as possible. It would make
+sense to allign the array.
+
+
+> +static atomic_t nr_records;
+> +
+> +/*
+> + * Cache the last found function. Yes, updates to this is racey, but
+> + * so is memory cache ;-)
+> + */
+> +static unsigned long cached_function;
+> +
+> +void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip)
+> +{
+> +	int index;
+> +	int i = 0;
+> +	unsigned long old;
+> +
+> + again:
+> +	/* First check the last one recorded */
+> +	if (ip == cached_function)
+> +		return;
+> +
+> +	index = atomic_read(&nr_records);
+> +	/* nr_records is -1 when clearing records */
+> +	smp_mb__after_atomic();
+> +	if (index < 0)
+> +		return;
+> +
+> +	/* See below */
+> +	if (i > index)
+> +		index = i;
+
+This looks like a complicated way to do index++ via "i" variable.
+I guess that it was needed only in some older variant of the code.
+See below.
+
+> +	if (index >= CONFIG_FTRACE_RECORD_RECURSION_SIZE)
+> +		return;
+> +
+> +	for (i = index - 1; i >= 0; i--) {
+> +		if (recursed_functions[i].ip == ip) {
+> +			cached_function = ip;
+> +			return;
+> +		}
+> +	}
+> +
+> +	cached_function = ip;
+> +
+> +	/*
+> +	 * We only want to add a function if it hasn't been added before.
+> +	 * Add to the current location before incrementing the count.
+> +	 * If it fails to add, then increment the index (save in i)
+> +	 * and try again.
+> +	 */
+> +	old = cmpxchg(&recursed_functions[index].ip, 0, ip);
+> +	if (old != 0) {
+> +		/* Did something else already added this for us? */
+> +		if (old == ip)
+> +			return;
+> +		/* Try the next location (use i for the next index) */
+> +		i = index + 1;
+
+What about
+
+		index++;
+
+We basically want to run the code again with index + 1 limit.
+
+Maybe, it even does not make sense to check the array again
+and we should just try to store the value into the next slot.
+
+> +		goto again;
+> +	}
+> +
+> +	recursed_functions[index].parent_ip = parent_ip;
+
+WRITE_ONCE() ?
+
+> +
+> +	/*
+> +	 * It's still possible that we could race with the clearing
+> +	 *    CPU0                                    CPU1
+> +	 *    ----                                    ----
+> +	 *                                       ip = func
+> +	 *  nr_records = -1;
+> +	 *  recursed_functions[0] = 0;
+> +	 *                                       i = -1
+> +	 *                                       if (i < 0)
+> +	 *  nr_records = 0;
+> +	 *  (new recursion detected)
+> +	 *      recursed_functions[0] = func
+> +	 *                                            cmpxchg(recursed_functions[0],
+> +	 *                                                    func, 0)
+> +	 *
+> +	 * But the worse that could happen is that we get a zero in
+> +	 * the recursed_functions array, and it's likely that "func" will
+> +	 * be recorded again.
+> +	 */
+> +	i = atomic_read(&nr_records);
+> +	smp_mb__after_atomic();
+> +	if (i < 0)
+> +		cmpxchg(&recursed_functions[index].ip, ip, 0);
+> +	else if (i <= index)
+> +		atomic_cmpxchg(&nr_records, i, index + 1);
+
+This looks weird. It would shift nr_records past the record added
+in this call. It might skip many slots that were zeroed when clearing.
+Also we do not know if our entry was not zeroed as well.
+
+I would suggest to do it some other way (not even compile tested):
+
+void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip)
+{
+	int index, old_index;
+	int i = 0;
+	unsigned long old_ip;
+
+ again:
+	/* First check the last one recorded. */
+	if (ip == READ_ONCE(cached_function))
+		return;
+
+	index = atomic_read(&nr_records);
+	/* nr_records is -1 when clearing records. */
+	smp_mb__after_atomic();
+	if (index < 0)
+		return;
+
+	/* Already cached? */
+	for (i = index - 1; i >= 0; i--) {
+		if (recursed_functions[i].ip == ip) {
+			WRITE_ONCE(cached_function, ip);
+			return;
+		}
+	}
+
+	if (index >= CONFIG_FTRACE_RECORD_RECURSION_SIZE)
+		return;
+
+	/*
+	 * Try to reserve the slot. It might be already taken
+	 * or the entire cache cleared.
+	 */
+	old_index = atomic_cmpxchg(&nr_records, index, index + 1);
+	if (old_index != index)
+		goto again;
+
+	/*
+	 * Be careful. The entire cache might have been cleared and reused in
+	 * the meantime. Replace only empty slot.
+	 */
+	old_ip = cmpxchg(&recursed_functions[index].ip, 0, ip);
+	if (old_ip != 0)
+		goto again;
+
+	old_ip = cmpxchg(&recursed_functions[index].parent_ip, 0, parrent_ip);
+	if (old_ip != 0)
+		goto again;
+
+	/*
+	 * No ip is better than non-consistent one. The race with
+	 * clearing should be rare and not worth a perfect solution.
+	 */
+	if (READ_ONCE(recursed_functions[index].ip) != ip) {
+		cmpxchg(&recursed_functions[index].ip, ip, 0UL)
+		goto again;
+	}
+}
+
+The last check probably is not needed. Inconsistent entries
+should be prevented by the way how this func is called:
+
+		static atomic_t paranoid_test;				\
+		if (!atomic_read(&paranoid_test)) {			\
+			atomic_inc(&paranoid_test);			\
+			ftrace_record_recursion(ip, pip);		\
+			atomic_dec(&paranoid_test);			\
+		}							\
+
+
+
+
+The rest of the patchset looks fine. I do not feel comfortable to give
+it Reviewed-by because I did not review it in depth.
+
+I spent more time with the above lockless code. I took it is a
+training. I need to improve this skill to feel more comfortable with
+the lockless printk ring buffer ;-)
+
+Best Regards,
+Petr
