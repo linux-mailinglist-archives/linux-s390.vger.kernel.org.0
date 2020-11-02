@@ -2,135 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A1C1B2A32D7
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Nov 2020 19:23:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 543122A3372
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Nov 2020 19:58:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbgKBSXS convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Mon, 2 Nov 2020 13:23:18 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:34596 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726342AbgKBSXQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Nov 2020 13:23:16 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-221-3eybHYmXNVuuSrMONPCpiQ-1; Mon, 02 Nov 2020 18:23:12 +0000
-X-MC-Unique: 3eybHYmXNVuuSrMONPCpiQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 2 Nov 2020 18:23:11 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 2 Nov 2020 18:23:11 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Greg KH' <gregkh@linuxfoundation.org>
-CC:     'David Hildenbrand' <david@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>
-Subject: RE: Buggy commit tracked to: "Re: [PATCH 2/9] iov_iter: move
- rw_copy_check_uvector() into lib/iov_iter.c"
-Thread-Topic: Buggy commit tracked to: "Re: [PATCH 2/9] iov_iter: move
- rw_copy_check_uvector() into lib/iov_iter.c"
-Thread-Index: AQHWqE5GNDfnH4y9nkGWtfqJueR1KKmjTCJQgAAN4UiAAAD2IIAASOeCgAF+12CAAB+UKYAAAQNg///yIQCAD2i/YIAAT+MAgABLYlA=
-Date:   Mon, 2 Nov 2020 18:23:11 +0000
-Message-ID: <c751d3a7796e45a8a2640e2ded59d708@AcuMS.aculab.com>
-References: <20201022121849.GA1664412@kroah.com>
- <98d9df88-b7ef-fdfb-7d90-2fa7a9d7bab5@redhat.com>
- <20201022125759.GA1685526@kroah.com> <20201022135036.GA1787470@kroah.com>
- <134f162d711d466ebbd88906fae35b33@AcuMS.aculab.com>
- <935f7168-c2f5-dd14-7124-412b284693a2@redhat.com>
- <999e2926-9a75-72fd-007a-1de0af341292@redhat.com>
- <35d0ec90ef4f4a35a75b9df7d791f719@AcuMS.aculab.com>
- <20201023144718.GA2525489@kroah.com>
- <0ab5ac71f28d459db2f350c2e07b88ca@AcuMS.aculab.com>
- <20201102135202.GA1016272@kroah.com>
-In-Reply-To: <20201102135202.GA1016272@kroah.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        id S1726430AbgKBS6L (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Nov 2020 13:58:11 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30791 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726360AbgKBS6K (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Nov 2020 13:58:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1604343489;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KiFFtp2v2OzZxtB5aSwfZtbGyO8aZuVS/CYOJRroQx8=;
+        b=jQSQDI6cvueQU79Df0zL+hguqUy+1JsNBWPJTdJ2TqbgL8THB/XNmvryAAHPWW8EO0lxYz
+        zS23eLrJRd7oOABvTxZqclkGaYvgUOKxGPOMZplNkwX6MGYT2gJa7pQCfKjmmrcIvABgoB
+        dVRT6yqqQxvmT46ckeAH9dHNa9VWQVY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-380-oDfcHmi6OeOM-azEQBhOOA-1; Mon, 02 Nov 2020 13:58:07 -0500
+X-MC-Unique: oDfcHmi6OeOM-azEQBhOOA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 048BE108E1A1;
+        Mon,  2 Nov 2020 18:58:06 +0000 (UTC)
+Received: from ovpn-112-12.rdu2.redhat.com (ovpn-112-12.rdu2.redhat.com [10.10.112.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 690191002C1A;
+        Mon,  2 Nov 2020 18:58:01 +0000 (UTC)
+Message-ID: <d60d24de6b7c9b948333e4e288452fe0a39d2380.camel@redhat.com>
+Subject: Re: [PATCH] s390: add support for TIF_NOTIFY_SIGNAL
+From:   Qian Cai <cai@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        oleg@redhat.com, tglx@linutronix.de,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Date:   Mon, 02 Nov 2020 13:58:00 -0500
+In-Reply-To: <54c02fa6-8c8a-667f-af99-e83a1f150586@kernel.dk>
+References: <20201101173153.GC9375 () osiris>
+         <362e3645e2c0891309c07e244a147f0c32f106da.camel@redhat.com>
+         <54c02fa6-8c8a-667f-af99-e83a1f150586@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: 'Greg KH'
-> Sent: 02 November 2020 13:52
+On Mon, 2020-11-02 at 10:07 -0700, Jens Axboe wrote:
+> On 11/2/20 9:59 AM, Qian Cai wrote:
+> > On Sun, 2020-11-01 at 17:31 +0000, Heiko Carstens wrote:
+> > > On Thu, Oct 29, 2020 at 10:21:11AM -0600, Jens Axboe wrote:
+> > > > Wire up TIF_NOTIFY_SIGNAL handling for s390.
+> > > > 
+> > > > Cc: linux-s390@vger.kernel.org
+> > > > Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> > 
+> > Even though I did confirm that today's linux-next contains this additional
+> > patch
+> > from Heiko below, a z10 guest is still unable to boot. Reverting the whole
+> > series (reverting only "s390: add support for TIF_NOTIFY_SIGNAL" introduced
+> > compiling errors) fixed the problem, i.e., git revert --no-edit
+> > af0dd809f3d3..7b074c15374c [1]
 > 
-> On Mon, Nov 02, 2020 at 09:06:38AM +0000, David Laight wrote:
-> > From: 'Greg KH'
-> > > Sent: 23 October 2020 15:47
-> > >
-> > > On Fri, Oct 23, 2020 at 02:39:24PM +0000, David Laight wrote:
-> > > > From: David Hildenbrand
-> > > > > Sent: 23 October 2020 15:33
-> > > > ...
-> > > > > I just checked against upstream code generated by clang 10 and it
-> > > > > properly discards the upper 32bit via a mov w23 w2.
-> > > > >
-> > > > > So at least clang 10 indeed properly assumes we could have garbage and
-> > > > > masks it off.
-> > > > >
-> > > > > Maybe the issue is somewhere else, unrelated to nr_pages ... or clang 11
-> > > > > behaves differently.
-> > > >
-> > > > We'll need the disassembly from a failing kernel image.
-> > > > It isn't that big to hand annotate.
-> > >
-> > > I've worked around the merge at the moment in the android tree, but it
-> > > is still quite reproducable, and will try to get a .o file to
-> > > disassemble on Monday or so...
-> >
-> > Did this get properly resolved?
+> That's odd, it should build fine without that patch. How did it fail for you?
+
+In file included from ./arch/s390/include/asm/bug.h:5,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/mmdebug.h:5,
+                 from ./include/linux/percpu.h:5,
+                 from ./include/linux/context_tracking_state.h:5,
+                 from ./include/linux/hardirq.h:5,
+                 from ./include/linux/kvm_host.h:7,
+                 from arch/s390/kernel/asm-offsets.c:11:
+./include/linux/sched/signal.h: In function ‘signal_pending’:
+./include/linux/sched/signal.h:368:39: error: ‘TIF_NOTIFY_SIGNAL’ undeclared
+(first use in this function); did you mean ‘TIF_NOTIFY_RESUME’?
+  if (unlikely(test_tsk_thread_flag(p, TIF_NOTIFY_SIGNAL)))
+                                       ^~~~~~~~~~~~~~~~~
+./include/linux/compiler.h:78:42: note: in definition of macro ‘unlikely’
+ # define unlikely(x) __builtin_expect(!!(x), 0)
+                                          ^
+./include/linux/sched/signal.h:368:39: note: each undeclared identifier is
+reported only once for each function it appears in
+  if (unlikely(test_tsk_thread_flag(p, TIF_NOTIFY_SIGNAL)))
+                                       ^~~~~~~~~~~~~~~~~
+./include/linux/compiler.h:78:42: note: in definition of macro ‘unlikely’
+ # define unlikely(x) __builtin_expect(!!(x), 0)
+                                          ^
+make[1]: *** [scripts/Makefile.build:117: arch/s390/kernel/asm-offsets.s] Error
+1
+make: *** [Makefile:1198: prepare0] Error 2
+
 > 
-> For some reason, 5.10-rc2 fixed all of this up.  I backed out all of the
-> patches I had to revert to get 5.10-rc1 to work properly, and then did
-> the merge and all is well.
+> Can you try and add this on top? Looks like I forgot the signal change for
+> s390, though that shouldn't really cause any issues.
+
+It does not help with the boot issue at all.
+
 > 
-> It must have been something to do with the compat changes in this same
-> area that went in after 5.10-rc1, and something got reorganized in the
-> files somehow.  I really do not know, and at the moment, don't have the
-> time to track it down anymore.  So for now, I'd say it's all good, sorry
-> for the noise.
-
-Hopefully it won't appear again.
-
-Saved me spending a day off reading arm64 assembler.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+> 
+> diff --git a/arch/s390/kernel/signal.c b/arch/s390/kernel/signal.c
+> index 9e900a8977bd..a68c3796a1bf 100644
+> --- a/arch/s390/kernel/signal.c
+> +++ b/arch/s390/kernel/signal.c
+> @@ -472,7 +472,7 @@ void do_signal(struct pt_regs *regs)
+>  	current->thread.system_call =
+>  		test_pt_regs_flag(regs, PIF_SYSCALL) ? regs->int_code : 0;
+>  
+> -	if (get_signal(&ksig)) {
+> +	if (test_thread_flag(TIF_NOTIFY_SIGNAL) && get_signal(&ksig)) {
+>  		/* Whee!  Actually deliver the signal.  */
+>  		if (current->thread.system_call) {
+>  			regs->int_code = current->thread.system_call;
+> 
 
