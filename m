@@ -2,289 +2,161 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BBFC2A26FB
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Nov 2020 10:29:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2B8D2A2987
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Nov 2020 12:30:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbgKBJ2e (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Nov 2020 04:28:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38377 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728322AbgKBJ2e (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Nov 2020 04:28:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604309311;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=R6jpfVvnbZweO6L9WbYNkIEDq4eIj3Ssxl4RmqN6ucY=;
-        b=Ek1/NHX7sgoaenmjo+2XH+8IhDEDOwBDJ6gWqZTVFQRWZsaxPMX+K6zAFQsPgguGUGuIi0
-        lUgPDNiTUT0JDisdCoDgAEApGEgObykP1ACv2b+aa8/EIu0JMR5O4z01bP6+FgYeUz8QLc
-        il3+NBT8VaJrBoztHC3S1ldq3EmNIqo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-jyeDbgmvO1-7_tiQHjRZ_Q-1; Mon, 02 Nov 2020 04:28:29 -0500
-X-MC-Unique: jyeDbgmvO1-7_tiQHjRZ_Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0526D8049F7;
-        Mon,  2 Nov 2020 09:28:24 +0000 (UTC)
-Received: from [10.36.113.163] (ovpn-113-163.ams2.redhat.com [10.36.113.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 206F75B4AF;
-        Mon,  2 Nov 2020 09:28:14 +0000 (UTC)
-Subject: Re: [PATCH v3 4/4] arch, mm: make kernel_page_present() always
- available
-To:     Mike Rapoport <rppt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Lameter <cl@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Len Brown <len.brown@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-pm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        x86@kernel.org
-References: <20201101170815.9795-1-rppt@kernel.org>
- <20201101170815.9795-5-rppt@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <08db307a-b093-d7aa-7364-045f328ab147@redhat.com>
-Date:   Mon, 2 Nov 2020 10:28:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1728612AbgKBLaK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Nov 2020 06:30:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbgKBLaK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Nov 2020 06:30:10 -0500
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED15C0617A6;
+        Mon,  2 Nov 2020 03:30:05 -0800 (PST)
+Received: by mail-il1-x144.google.com with SMTP id t13so4671030ilp.2;
+        Mon, 02 Nov 2020 03:30:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8sUFnRhpnLvg7Edccau1zP+dWkQRjNO5vrDkvqn3/Yo=;
+        b=jLuIKgWriDRxMgI2AiuOdNFIgDsPVBJsLKxgfRIXXGVbdL6r8kSn+BSLm1lQXISCG6
+         O0LNHKmTmYC4zDJpDa7M0SFjOEdxTEN8Ax9ezfwA3XBzKd1zzem9OtH+dftOfFllmBXZ
+         QwpP7IMjL36MyfBKKfh22hQngXmxc8QrsFWOV6t8YrOKk0sqncnBsZiT7KfibIb9G+OU
+         fldtoNWCAlh70Nm5A5VE/gR3iE7lmDy7OBbtAvBBLXmhFhwveqbLvH7ugaEHEaqsKE2U
+         D7sIK9/xTPLckHko6qUcyq4805xHKFZfIYVyFl/yg+WcDgCxOQkzsYQdtRIMwmvPNZkB
+         H7XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8sUFnRhpnLvg7Edccau1zP+dWkQRjNO5vrDkvqn3/Yo=;
+        b=mVfV1c6Bu1+s5F5dnuf7GP6DgIt89/kZkNWbJtQi1kcUN+wieGcmHurBAsGPDRJUbo
+         o1Y8plVV/YJgRoiJfQAm+2k4wFQh/F+6F9dapG6Qwf9tEQhfY0kbyzjLt6zbo0AMLWj2
+         wGjA/j4vuVCTxXCgNSj5b72q3ntT37e3bk7UGEzdN0Q6rvle8Wwbr0vtaS9rqsz/gaT7
+         vNiHPpZlpNGborkfpj/TqLj7nQc8fk8GDTnuUu0etPSFC8WSdVlN1Lz0Mu3+t+/NX24r
+         tB9jsapbswaLHVwMmJY1IAZ75A5p96LNB9Vl2mmTXgJNM2Njw8BoH3KdDx8ZDYZ42Wa1
+         vAig==
+X-Gm-Message-State: AOAM533oAYWoYwEaNo1Wf5tleEPD4CQNEZbCNNcFnoybtcwTl+PFlotH
+        oPTXW9bijnXPvTqnAWqDE4CfzBR1FR//K9PhNek=
+X-Google-Smtp-Source: ABdhPJzpyGmJV5pG8ZiDqRv2txjmaZQGWb7h3zlA7GiMfetk64KQGYmh/FJhJNPZ6zDF33Q1fRfyCjNzxRjhwa73XGA=
+X-Received: by 2002:a92:1f43:: with SMTP id i64mr9932879ile.281.1604316605261;
+ Mon, 02 Nov 2020 03:30:05 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20201101170815.9795-5-rppt@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20201031085810.450489-1-hch@lst.de> <20201031085810.450489-6-hch@lst.de>
+In-Reply-To: <20201031085810.450489-6-hch@lst.de>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Mon, 2 Nov 2020 12:30:05 +0100
+Message-ID: <CAOi1vP_-GydZpwuR2DWpNmz2N2Wf7MHDbXudLB=t5xuEEq3Y=w@mail.gmail.com>
+Subject: Re: [PATCH 05/11] rbd: implement ->set_read_only to hook into
+ BLKROSET processing
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 01.11.20 18:08, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> For architectures that enable ARCH_HAS_SET_MEMORY having the ability to
-> verify that a page is mapped in the kernel direct map can be useful
-> regardless of hibernation.
-> 
-> Add RISC-V implementation of kernel_page_present(), update its forward
-> declarations and stubs to be a part of set_memory API and remove ugly
-> ifdefery in inlcude/linux/mm.h around current declarations of
-> kernel_page_present().
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+On Sat, Oct 31, 2020 at 10:11 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Implement the ->set_read_only method instead of parsing the actual
+> ioctl command.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->   arch/arm64/include/asm/cacheflush.h |  1 +
->   arch/arm64/mm/pageattr.c            |  4 +---
->   arch/riscv/include/asm/set_memory.h |  1 +
->   arch/riscv/mm/pageattr.c            | 29 +++++++++++++++++++++++++++++
->   arch/x86/include/asm/set_memory.h   |  1 +
->   arch/x86/mm/pat/set_memory.c        |  4 +---
->   include/linux/mm.h                  |  7 -------
->   include/linux/set_memory.h          |  5 +++++
->   8 files changed, 39 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
-> index 9384fd8fc13c..45217f21f1fe 100644
-> --- a/arch/arm64/include/asm/cacheflush.h
-> +++ b/arch/arm64/include/asm/cacheflush.h
-> @@ -140,6 +140,7 @@ int set_memory_valid(unsigned long addr, int numpages, int enable);
->   
->   int set_direct_map_invalid_noflush(struct page *page);
->   int set_direct_map_default_noflush(struct page *page);
-> +bool kernel_page_present(struct page *page);
->   
->   #include <asm-generic/cacheflush.h>
->   
-> diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-> index 439325532be1..92eccaf595c8 100644
-> --- a/arch/arm64/mm/pageattr.c
-> +++ b/arch/arm64/mm/pageattr.c
-> @@ -186,8 +186,8 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
->   
->   	set_memory_valid((unsigned long)page_address(page), numpages, enable);
->   }
-> +#endif /* CONFIG_DEBUG_PAGEALLOC */
->   
-> -#ifdef CONFIG_HIBERNATION
->   /*
->    * This function is used to determine if a linear map page has been marked as
->    * not-valid. Walk the page table and check the PTE_VALID bit. This is based
-> @@ -234,5 +234,3 @@ bool kernel_page_present(struct page *page)
->   	ptep = pte_offset_kernel(pmdp, addr);
->   	return pte_valid(READ_ONCE(*ptep));
->   }
-> -#endif /* CONFIG_HIBERNATION */
-> -#endif /* CONFIG_DEBUG_PAGEALLOC */
-> diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
-> index 4c5bae7ca01c..d690b08dff2a 100644
-> --- a/arch/riscv/include/asm/set_memory.h
-> +++ b/arch/riscv/include/asm/set_memory.h
-> @@ -24,6 +24,7 @@ static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
->   
->   int set_direct_map_invalid_noflush(struct page *page);
->   int set_direct_map_default_noflush(struct page *page);
-> +bool kernel_page_present(struct page *page);
->   
->   #endif /* __ASSEMBLY__ */
->   
-> diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-> index 321b09d2e2ea..87ba5a68bbb8 100644
-> --- a/arch/riscv/mm/pageattr.c
-> +++ b/arch/riscv/mm/pageattr.c
-> @@ -198,3 +198,32 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
->   			     __pgprot(0), __pgprot(_PAGE_PRESENT));
->   }
->   #endif
-> +
-> +bool kernel_page_present(struct page *page)
-> +{
-> +	unsigned long addr = (unsigned long)page_address(page);
-> +	pgd_t *pgd;
-> +	pud_t *pud;
-> +	p4d_t *p4d;
-> +	pmd_t *pmd;
-> +	pte_t *pte;
-> +
-> +	pgd = pgd_offset_k(addr);
-> +	if (!pgd_present(*pgd))
-> +		return false;
-> +
-> +	p4d = p4d_offset(pgd, addr);
-> +	if (!p4d_present(*p4d))
-> +		return false;
-> +
-> +	pud = pud_offset(p4d, addr);
-> +	if (!pud_present(*pud))
-> +		return false;
-> +
-> +	pmd = pmd_offset(pud, addr);
-> +	if (!pmd_present(*pmd))
-> +		return false;
-> +
-> +	pte = pte_offset_kernel(pmd, addr);
-> +	return pte_present(*pte);
-> +}
-> diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-> index 5948218f35c5..4352f08bfbb5 100644
-> --- a/arch/x86/include/asm/set_memory.h
-> +++ b/arch/x86/include/asm/set_memory.h
-> @@ -82,6 +82,7 @@ int set_pages_rw(struct page *page, int numpages);
->   
->   int set_direct_map_invalid_noflush(struct page *page);
->   int set_direct_map_default_noflush(struct page *page);
-> +bool kernel_page_present(struct page *page);
->   
->   extern int kernel_set_to_readonly;
->   
-> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> index bc9be96b777f..16f878c26667 100644
-> --- a/arch/x86/mm/pat/set_memory.c
-> +++ b/arch/x86/mm/pat/set_memory.c
-> @@ -2226,8 +2226,8 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
->   
->   	arch_flush_lazy_mmu_mode();
->   }
-> +#endif /* CONFIG_DEBUG_PAGEALLOC */
->   
-> -#ifdef CONFIG_HIBERNATION
->   bool kernel_page_present(struct page *page)
->   {
->   	unsigned int level;
-> @@ -2239,8 +2239,6 @@ bool kernel_page_present(struct page *page)
->   	pte = lookup_address((unsigned long)page_address(page), &level);
->   	return (pte_val(*pte) & _PAGE_PRESENT);
->   }
-> -#endif /* CONFIG_HIBERNATION */
-> -#endif /* CONFIG_DEBUG_PAGEALLOC */
->   
->   int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
->   				   unsigned numpages, unsigned long page_flags)
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index ab0ef6bd351d..44b82f22e76a 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2937,16 +2937,9 @@ static inline void debug_pagealloc_map_pages(struct page *page,
->   	if (debug_pagealloc_enabled_static())
->   		__kernel_map_pages(page, numpages, enable);
->   }
+>  drivers/block/rbd.c | 41 ++++-------------------------------------
+>  1 file changed, 4 insertions(+), 37 deletions(-)
+>
+> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
+> index f84128abade319..37f8fc28004acb 100644
+> --- a/drivers/block/rbd.c
+> +++ b/drivers/block/rbd.c
+> @@ -692,12 +692,9 @@ static void rbd_release(struct gendisk *disk, fmode_t mode)
+>         put_device(&rbd_dev->dev);
+>  }
+>
+> -static int rbd_ioctl_set_ro(struct rbd_device *rbd_dev, unsigned long arg)
+> +static int rbd_set_read_only(struct block_device *bdev, bool ro)
+>  {
+> -       int ro;
 > -
-> -#ifdef CONFIG_HIBERNATION
-> -extern bool kernel_page_present(struct page *page);
-> -#endif	/* CONFIG_HIBERNATION */
->   #else	/* CONFIG_DEBUG_PAGEALLOC */
->   static inline void debug_pagealloc_map_pages(struct page *page,
->   					     int numpages, int enable) {}
-> -#ifdef CONFIG_HIBERNATION
-> -static inline bool kernel_page_present(struct page *page) { return true; }
-> -#endif	/* CONFIG_HIBERNATION */
->   #endif	/* CONFIG_DEBUG_PAGEALLOC */
->   
->   #ifdef __HAVE_ARCH_GATE_AREA
-> diff --git a/include/linux/set_memory.h b/include/linux/set_memory.h
-> index 860e0f843c12..fe1aa4e54680 100644
-> --- a/include/linux/set_memory.h
-> +++ b/include/linux/set_memory.h
-> @@ -23,6 +23,11 @@ static inline int set_direct_map_default_noflush(struct page *page)
->   {
->   	return 0;
->   }
-> +
-> +static inline bool kernel_page_present(struct page *page)
-> +{
-> +	return true;
-> +}
->   #endif
->   
->   #ifndef set_mce_nospec
-> 
+> -       if (get_user(ro, (int __user *)arg))
+> -               return -EFAULT;
+> +       struct rbd_device *rbd_dev = bdev->bd_disk->private_data;
+>
+>         /*
+>          * Both images mapped read-only and snapshots can't be marked
+> @@ -706,47 +703,17 @@ static int rbd_ioctl_set_ro(struct rbd_device *rbd_dev, unsigned long arg)
+>         if (!ro) {
+>                 if (rbd_is_ro(rbd_dev))
+>                         return -EROFS;
+> -
+>                 rbd_assert(!rbd_is_snap(rbd_dev));
 
-It's somewhat weird to move this to set_memory.h - it's only one 
-possible user. I think include/linux/mm.h is a better fit. Ack to making 
-it independent of CONFIG_HIBERNATION.
+If you repost, please leave this empty line.
 
-in include/linux/mm.h , I'd prefer:
+>         }
+>
+> -       /* Let blkdev_roset() handle it */
+> -       return -ENOTTY;
+> -}
+> -
+> -static int rbd_ioctl(struct block_device *bdev, fmode_t mode,
+> -                       unsigned int cmd, unsigned long arg)
+> -{
+> -       struct rbd_device *rbd_dev = bdev->bd_disk->private_data;
+> -       int ret;
+> -
+> -       switch (cmd) {
+> -       case BLKROSET:
+> -               ret = rbd_ioctl_set_ro(rbd_dev, arg);
+> -               break;
+> -       default:
+> -               ret = -ENOTTY;
+> -       }
+> -
+> -       return ret;
+> -}
+> -
+> -#ifdef CONFIG_COMPAT
+> -static int rbd_compat_ioctl(struct block_device *bdev, fmode_t mode,
+> -                               unsigned int cmd, unsigned long arg)
+> -{
+> -       return rbd_ioctl(bdev, mode, cmd, arg);
+> +       return 0;
+>  }
+> -#endif /* CONFIG_COMPAT */
+>
+>  static const struct block_device_operations rbd_bd_ops = {
+>         .owner                  = THIS_MODULE,
+>         .open                   = rbd_open,
+>         .release                = rbd_release,
+> -       .ioctl                  = rbd_ioctl,
+> -#ifdef CONFIG_COMPAT
+> -       .compat_ioctl           = rbd_compat_ioctl,
+> -#endif
+> +       .set_read_only          = rbd_set_read_only,
+>  };
+>
+>  /*
+> --
+> 2.28.0
+>
 
-#if defined(CONFIG_DEBUG_PAGEALLOC) || \
-     defined(CONFIG_ARCH_HAS_SET_DIRECT_MAP)
-bool kernel_page_present(struct page *page);
-#else
-static inline bool kernel_page_present(struct page *page)
-{
-	return true;
-}
-#endif
+With that nit,
 
--- 
+Acked-by: Ilya Dryomov <idryomov@gmail.com>
+
 Thanks,
 
-David / dhildenb
-
+                Ilya
