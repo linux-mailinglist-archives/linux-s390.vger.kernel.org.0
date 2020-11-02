@@ -2,177 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9B7C2A31E8
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Nov 2020 18:46:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A1C1B2A32D7
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Nov 2020 19:23:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725967AbgKBRqR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Nov 2020 12:46:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbgKBRqN (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 2 Nov 2020 12:46:13 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11A0822226;
-        Mon,  2 Nov 2020 17:46:07 +0000 (UTC)
-Date:   Mon, 2 Nov 2020 12:46:06 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        id S1725959AbgKBSXS convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Mon, 2 Nov 2020 13:23:18 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:34596 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726342AbgKBSXQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Nov 2020 13:23:16 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-221-3eybHYmXNVuuSrMONPCpiQ-1; Mon, 02 Nov 2020 18:23:12 +0000
+X-MC-Unique: 3eybHYmXNVuuSrMONPCpiQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 2 Nov 2020 18:23:11 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 2 Nov 2020 18:23:11 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Greg KH' <gregkh@linuxfoundation.org>
+CC:     'David Hildenbrand' <david@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "kernel-team@android.com" <kernel-team@android.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>, Guo Ren <guoren@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-doc@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH 11/11 v2] ftrace: Add recording of functions that caused
- recursion
-Message-ID: <20201102124606.72bd89c5@gandalf.local.home>
-In-Reply-To: <20201102123721.4fcce2cb@gandalf.local.home>
-References: <20201030213142.096102821@goodmis.org>
-        <20201030214014.801706340@goodmis.org>
-        <20201102164147.GJ20201@alley>
-        <20201102123721.4fcce2cb@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+Subject: RE: Buggy commit tracked to: "Re: [PATCH 2/9] iov_iter: move
+ rw_copy_check_uvector() into lib/iov_iter.c"
+Thread-Topic: Buggy commit tracked to: "Re: [PATCH 2/9] iov_iter: move
+ rw_copy_check_uvector() into lib/iov_iter.c"
+Thread-Index: AQHWqE5GNDfnH4y9nkGWtfqJueR1KKmjTCJQgAAN4UiAAAD2IIAASOeCgAF+12CAAB+UKYAAAQNg///yIQCAD2i/YIAAT+MAgABLYlA=
+Date:   Mon, 2 Nov 2020 18:23:11 +0000
+Message-ID: <c751d3a7796e45a8a2640e2ded59d708@AcuMS.aculab.com>
+References: <20201022121849.GA1664412@kroah.com>
+ <98d9df88-b7ef-fdfb-7d90-2fa7a9d7bab5@redhat.com>
+ <20201022125759.GA1685526@kroah.com> <20201022135036.GA1787470@kroah.com>
+ <134f162d711d466ebbd88906fae35b33@AcuMS.aculab.com>
+ <935f7168-c2f5-dd14-7124-412b284693a2@redhat.com>
+ <999e2926-9a75-72fd-007a-1de0af341292@redhat.com>
+ <35d0ec90ef4f4a35a75b9df7d791f719@AcuMS.aculab.com>
+ <20201023144718.GA2525489@kroah.com>
+ <0ab5ac71f28d459db2f350c2e07b88ca@AcuMS.aculab.com>
+ <20201102135202.GA1016272@kroah.com>
+In-Reply-To: <20201102135202.GA1016272@kroah.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 2 Nov 2020 12:37:21 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-
-> The only race that I see that can happen, is the one in the comment I
-> showed. And that is after enabling the recursed functions again after
-> clearing, one CPU could add a function while another CPU that just added
-> that same function could be just exiting this routine, notice that a
-> clearing of the array happened, and remove its function (which was the same
-> as the one just happened). So we get a "zero" in the array. If this
-> happens, it is likely that that function will recurse again and will be
-> added later.
+From: 'Greg KH'
+> Sent: 02 November 2020 13:52
 > 
+> On Mon, Nov 02, 2020 at 09:06:38AM +0000, David Laight wrote:
+> > From: 'Greg KH'
+> > > Sent: 23 October 2020 15:47
+> > >
+> > > On Fri, Oct 23, 2020 at 02:39:24PM +0000, David Laight wrote:
+> > > > From: David Hildenbrand
+> > > > > Sent: 23 October 2020 15:33
+> > > > ...
+> > > > > I just checked against upstream code generated by clang 10 and it
+> > > > > properly discards the upper 32bit via a mov w23 w2.
+> > > > >
+> > > > > So at least clang 10 indeed properly assumes we could have garbage and
+> > > > > masks it off.
+> > > > >
+> > > > > Maybe the issue is somewhere else, unrelated to nr_pages ... or clang 11
+> > > > > behaves differently.
+> > > >
+> > > > We'll need the disassembly from a failing kernel image.
+> > > > It isn't that big to hand annotate.
+> > >
+> > > I've worked around the merge at the moment in the android tree, but it
+> > > is still quite reproducable, and will try to get a .o file to
+> > > disassemble on Monday or so...
+> >
+> > Did this get properly resolved?
+> 
+> For some reason, 5.10-rc2 fixed all of this up.  I backed out all of the
+> patches I had to revert to get 5.10-rc1 to work properly, and then did
+> the merge and all is well.
+> 
+> It must have been something to do with the compat changes in this same
+> area that went in after 5.10-rc1, and something got reorganized in the
+> files somehow.  I really do not know, and at the moment, don't have the
+> time to track it down anymore.  So for now, I'd say it's all good, sorry
+> for the noise.
 
-Updated version of this function:
+Hopefully it won't appear again.
 
--- Steve
+Saved me spending a day off reading arm64 assembler.
 
+	David
 
-void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip)
-{
-	int index = 0;
-	int i;
-	unsigned long old;
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
- again:
-	/* First check the last one recorded */
-	if (ip == cached_function)
-		return;
-
-	i = atomic_read(&nr_records);
-	/* nr_records is -1 when clearing records */
-	smp_mb__after_atomic();
-	if (i < 0)
-		return;
-
-	/*
-	 * If there's two writers and this writer comes in second,
-	 * the cmpxchg() below to update the ip will fail. Then this
-	 * writer will try again. It is possible that index will now
-	 * be greater than nr_records. This is because the writer
-	 * that succeeded has not updated the nr_records yet.
-	 * This writer could keep trying again until the other writer
-	 * updates nr_records. But if the other writer takes an
-	 * interrupt, and that interrupt locks up that CPU, we do
-	 * not want this CPU to lock up due to the recursion protection,
-	 * and have a bug report showing this CPU as the cause of
-	 * locking up the computer. To not lose this record, this
-	 * writer will simply use the next position to update the
-	 * recursed_functions, and it will update the nr_records
-	 * accordingly.
-	 */
-	if (index < i)
-		index = i;
-	if (index >= CONFIG_FTRACE_RECORD_RECURSION_SIZE)
-		return;
-
-	for (i = index - 1; i >= 0; i--) {
-		if (recursed_functions[i].ip == ip) {
-			cached_function = ip;
-			return;
-		}
-	}
-
-	cached_function = ip;
-
-	/*
-	 * We only want to add a function if it hasn't been added before.
-	 * Add to the current location before incrementing the count.
-	 * If it fails to add, then increment the index (save in i)
-	 * and try again.
-	 */
-	old = cmpxchg(&recursed_functions[index].ip, 0, ip);
-	if (old != 0) {
-		/* Did something else already added this for us? */
-		if (old == ip)
-			return;
-		/* Try the next location (use i for the next index) */
-		index++;
-		goto again;
-	}
-
-	recursed_functions[index].parent_ip = parent_ip;
-
-	/*
-	 * It's still possible that we could race with the clearing
-	 *    CPU0                                    CPU1
-	 *    ----                                    ----
-	 *                                       ip = func
-	 *  nr_records = -1;
-	 *  recursed_functions[0] = 0;
-	 *                                       i = -1
-	 *                                       if (i < 0)
-	 *  nr_records = 0;
-	 *  (new recursion detected)
-	 *      recursed_functions[0] = func
-	 *                                            cmpxchg(recursed_functions[0],
-	 *                                                    func, 0)
-	 *
-	 * But the worse that could happen is that we get a zero in
-	 * the recursed_functions array, and it's likely that "func" will
-	 * be recorded again.
-	 */
-	i = atomic_read(&nr_records);
-	smp_mb__after_atomic();
-	if (i < 0)
-		cmpxchg(&recursed_functions[index].ip, ip, 0);
-	else if (i <= index)
-		atomic_cmpxchg(&nr_records, i, index + 1);
-}
