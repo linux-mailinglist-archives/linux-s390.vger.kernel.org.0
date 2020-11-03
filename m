@@ -2,272 +2,263 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1537E2A47AB
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Nov 2020 15:14:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15F3E2A475D
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Nov 2020 15:10:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgKCNqv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Nov 2020 08:46:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40308 "EHLO
+        id S1728180AbgKCOKa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Nov 2020 09:10:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729243AbgKCNpX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Nov 2020 08:45:23 -0500
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6560AC0613D1;
-        Tue,  3 Nov 2020 05:45:21 -0800 (PST)
-Received: by mail-qk1-x741.google.com with SMTP id a64so11234852qkc.5;
-        Tue, 03 Nov 2020 05:45:21 -0800 (PST)
+        with ESMTP id S1729500AbgKCOJJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Nov 2020 09:09:09 -0500
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60314C0617A6
+        for <linux-s390@vger.kernel.org>; Tue,  3 Nov 2020 06:09:08 -0800 (PST)
+Received: by mail-io1-xd43.google.com with SMTP id s24so11747506ioj.13
+        for <linux-s390@vger.kernel.org>; Tue, 03 Nov 2020 06:09:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=es+7eu/1JIS0u6NUqnkeBJLaNZv/3XzsgPMcIjCfPvw=;
-        b=G1JRzHPGQrx/xpiw57sn8HU7v/308dFEf/ILepEmaZjyWnlEsJ7Jt8m85wS0ZL7hAX
-         XJeTMJwilfEZakFun1JP0oOz/kjVO7ntj0lbqnvdowtp9Sjnb4O57j6xGZ2A2TDRxJ5E
-         4hyVqojJ8zyBb4O4e8FxEZk0ckMCMU3mtuanjys2GXmepYyg59GuQpOTy/c3oAXZmE4r
-         zn17hosEuRctElxq5KH0mRPs2x9n7TVfGejNrQeTj7gxbeRUVtnODP8Albhmr3L5TIw9
-         um6WfN/bCe4QtVClrP0rodIxZuduSktya09MfYs5Ip8/wx86oaN0d6GJOt+Tk6mRBi/J
-         YDVg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=l4FOhOeqEnVDoJ5bRT/ISdT4bxQ89fRTQwVSHjkBPV4=;
+        b=wCYdVovMWgk50XhjaI6MZEIe+2qazFELy2KweoNTlevdXGalqq+TNcRGcqrJ3jlbCR
+         9FlLQTcVyeigRJKthVgaTYg61ILCpXVmFsmb9Bd87N4wUhED2MRCzh9TlIt5v3MWSLtg
+         19Uxm6paNYF3LL38Ltlc/pL387aIUtRGJPt320OkS7aiqLjDPB02HaGZMiu9HHW07d1N
+         HbroL7AjMb3V9olgRYf+B4Op9ZZPWQH7s6TsgsDJ9D9Lu9yrOct6EFEamd/SoOV9jlNH
+         YokGScBs6FeqPbhPRQDnPYByaKjczh/aS5zRU142Jkh+1gS7i+ageCLLotjPAv091Fvi
+         SQtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=es+7eu/1JIS0u6NUqnkeBJLaNZv/3XzsgPMcIjCfPvw=;
-        b=m/A9QztpOsVmCpkUWlhd8rZ9sTTXE+XIpboOAhfz/PFPrsPlo8p6Uh+HHkq2LBcB3o
-         wzS4LoRrovuKvvaPRQQ/92xirf2v0k9aGYxIHdQ2/t7Beca8NJD+G68/JYwss31lyD3K
-         qw+zhAf6+cgHUNffBwj4b3UgdzgyMkE7tStwUSnT0iB6jFkn0Yopwpp2sgTZ4dfctt9e
-         YuPeaOoe7VvNvCqrM/QITfyeePzVaxDOV0v2ZGYtzzdS+jkd0FbTUY9yePn0m58YOxcm
-         CE+4YXapk+6d9E9xacPPpK4lqGMBoxyeI57rIb4tm3wkVmhIHPR87bbipUiAKo8dxrPd
-         JMSw==
-X-Gm-Message-State: AOAM531TTI2TICX6I1S+tamAKlUJav5zBZ2CeBUmE1ymv9VuKgXW787W
-        t42+v80yFFRJNJ4Rdqi8cGc=
-X-Google-Smtp-Source: ABdhPJzUUsDjnuEHVk6XCSkkESwGkcTgkeydQBunRI0YUoWla6WErrBjgwkAC8sVvIMrobSGWNFG7g==
-X-Received: by 2002:a37:7e82:: with SMTP id z124mr19653601qkc.107.1604411120584;
-        Tue, 03 Nov 2020 05:45:20 -0800 (PST)
-Received: from zhuyifei1999-ThinkPad-T480.gw.illinois.edu ([2620:0:e00:400f::31])
-        by smtp.gmail.com with ESMTPSA id a206sm7356568qkb.64.2020.11.03.05.45.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2020 05:45:19 -0800 (PST)
-From:   YiFei Zhu <zhuyifei1999@gmail.com>
-To:     containers@lists.linux-foundation.org
-Cc:     YiFei Zhu <yifeifz2@illinois.edu>, linux-csky@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Laight <David.Laight@aculab.com>,
-        Dimitrios Skarlatos <dskarlat@cs.cmu.edu>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Hubertus Franke <frankeh@us.ibm.com>,
-        Jack Chen <jianyan2@illinois.edu>,
-        Jann Horn <jannh@google.com>,
-        Josep Torrellas <torrella@illinois.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Tianyin Xu <tyxu@illinois.edu>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Tycho Andersen <tycho@tycho.pizza>,
-        Valentin Rothberg <vrothber@redhat.com>,
-        Will Drewry <wad@chromium.org>
-Subject: [PATCH seccomp 8/8] seccomp/cache: Report cache data through /proc/pid/seccomp_cache
-Date:   Tue,  3 Nov 2020 07:43:04 -0600
-Message-Id: <6bf174724c135a880fb8cbe602b665f613bab58e.1604410035.git.yifeifz2@illinois.edu>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <cover.1604410035.git.yifeifz2@illinois.edu>
-References: <cover.1604410035.git.yifeifz2@illinois.edu>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=l4FOhOeqEnVDoJ5bRT/ISdT4bxQ89fRTQwVSHjkBPV4=;
+        b=Tf5rAwBYPvUQ2aegyYj4ymNs84EBKL/JGBQSlMjHOQnIxtBFhwDKyQv8f+JNgKLZJF
+         QagglNda0NtucIRKWEy3pREEIyP4OPhr8H7NOGuX7iyTKLwWCteN3x5uE3UoV9P0Qi92
+         Zeb0nvk5sE/e0e4rsGysv4Ot93IszBLtX/v5AYCiypFm5acPLve0DdW0MmxPLGff5q9o
+         2bUWIAViCid3QoHyD+4Mm45GEmZ88NxoBLkkcEFM9qqMDrcyLsvUvsrIaT5XH7y6Aszp
+         rQeyUfGfuPFgygR3d0rsdHfj5zpnxe8I7vQeGgzcYtE9ORmH5J5bDdpA7kKVjhqv/66m
+         f9xg==
+X-Gm-Message-State: AOAM532MbpBPCUx2UL0xfwHEVYUpPjA9Yx1Ff6jXHLzCfDvt+sZOc4Xj
+        oRg8jl/rR/ejGs8Rgc02wqReFkh/38gVlg==
+X-Google-Smtp-Source: ABdhPJy+Ec2OoR+gvf+GTh9vliPMPS2o/zLXQZlL9vFyi0qFZvf0Iv9DJF3eWtdyWzPQ/PpQXmpmCA==
+X-Received: by 2002:a6b:bbc6:: with SMTP id l189mr14375899iof.145.1604412547589;
+        Tue, 03 Nov 2020 06:09:07 -0800 (PST)
+Received: from [192.168.1.30] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id t2sm11484264iob.5.2020.11.03.06.09.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Nov 2020 06:09:07 -0800 (PST)
+Subject: Re: [PATCH] s390: add support for TIF_NOTIFY_SIGNAL
+To:     Sven Schnelle <svens@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        oleg@redhat.com, tglx@linutronix.de,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+References: <yt9do8ke4seh.fsf@linux.ibm.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <75a238c7-fc37-21dd-bd89-d4c87a206eaa@kernel.dk>
+Date:   Tue, 3 Nov 2020 07:09:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <yt9do8ke4seh.fsf@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: YiFei Zhu <yifeifz2@illinois.edu>
+On 11/3/20 4:00 AM, Sven Schnelle wrote:
+> Hi Jens,
+> 
+> Heiko Carstens <hca () linux ! ibm ! com> writes:
+> 
+>> On Thu, Oct 29, 2020 at 10:21:11AM -0600, Jens Axboe wrote:
+>>> Wire up TIF_NOTIFY_SIGNAL handling for s390.
+>>>
+>>> Cc: linux-s390@vger.kernel.org
+>>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>>> ---
+>>>
+>>> 5.11 has support queued up for TIF_NOTIFY_SIGNAL, see this posting
+>>> for details:
+>>>
+>>> https://lore.kernel.org/io-uring/20201026203230.386348-1-axboe@kernel.dk/
+>>>
+>>> As part of that work, I'm adding TIF_NOTIFY_SIGNAL support to all archs,
+>>> as that will enable a set of cleanups once all of them support it. I'm
+>>> happy carrying this patch if need be, or it can be funelled through the
+>>> arch tree. Let me know.
+>>>
+>>>  arch/s390/include/asm/thread_info.h | 2 ++
+>>>  arch/s390/kernel/entry.S            | 7 ++++++-
+>>>  2 files changed, 8 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/s390/include/asm/thread_info.h b/arch/s390/include/asm/thread_info.h
+>>> index 13a04fcf7762..0045341ade48 100644
+>>> --- a/arch/s390/include/asm/thread_info.h
+>>> +++ b/arch/s390/include/asm/thread_info.h
+>>> @@ -65,6 +65,7 @@ void arch_setup_new_exec(void);
+>>>  #define TIF_GUARDED_STORAGE	4	/* load guarded storage control block */
+>>>  #define TIF_PATCH_PENDING	5	/* pending live patching update */
+>>>  #define TIF_PGSTE		6	/* New mm's will use 4K page tables */
+>>> +#define TIF_NOTIFY_SIGNAL	7	/* signal notifications exist */
+>>>  #define TIF_ISOLATE_BP		8	/* Run process with isolated BP */
+>>>  #define TIF_ISOLATE_BP_GUEST	9	/* Run KVM guests with isolated BP */
+>>>  
+>>> @@ -82,6 +83,7 @@ void arch_setup_new_exec(void);
+>>>  #define TIF_SYSCALL_TRACEPOINT	27	/* syscall tracepoint instrumentation */
+>>>  
+>>>  #define _TIF_NOTIFY_RESUME	BIT(TIF_NOTIFY_RESUME)
+>>> +#define _TIF_NOTIFY_SIGNAL	BIT(TIF_NOTIFY_SIGNAL)
+>>>  #define _TIF_SIGPENDING		BIT(TIF_SIGPENDING)
+>>>  #define _TIF_NEED_RESCHED	BIT(TIF_NEED_RESCHED)
+>>>  #define _TIF_UPROBE		BIT(TIF_UPROBE)
+>>> diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
+>>> index 86235919c2d1..a30d891e8045 100644
+>>> --- a/arch/s390/kernel/entry.S
+>>> +++ b/arch/s390/kernel/entry.S
+>>> @@ -52,7 +52,8 @@ STACK_SIZE  = 1 << STACK_SHIFT
+>>>  STACK_INIT = STACK_SIZE - STACK_FRAME_OVERHEAD - __PT_SIZE
+>>>  
+>>>  _TIF_WORK	= (_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_NEED_RESCHED | \
+>>> -		   _TIF_UPROBE | _TIF_GUARDED_STORAGE | _TIF_PATCH_PENDING)
+>>> +		   _TIF_UPROBE | _TIF_GUARDED_STORAGE | _TIF_PATCH_PENDING | \
+>>> +		   _TIF_NOTIFY_SIGNAL)
+>>>  _TIF_TRACE	= (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | _TIF_SECCOMP | \
+>>>  		   _TIF_SYSCALL_TRACEPOINT)
+>>>  _CIF_WORK	= (_CIF_ASCE_PRIMARY | _CIF_ASCE_SECONDARY | _CIF_FPU)
+>>> @@ -463,6 +464,8 @@ ENTRY(system_call)
+>>>  #endif
+>>>  	TSTMSK	__PT_FLAGS(%r11),_PIF_SYSCALL_RESTART
+>>>  	jo	.Lsysc_syscall_restart
+>>> +	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_SIGNAL
+>>> +	jo	.Lsysc_sigpending
+>>>  	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
+>>>  	jo	.Lsysc_sigpending
+>>>  	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_RESUME
+>>> @@ -857,6 +860,8 @@ ENTRY(io_int_handler)
+>>>  #endif
+>>>  	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
+>>>  	jo	.Lio_sigpending
+>>> +	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_SIGNAL
+>>> +	jo	.Lio_sigpending
+>>>  	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_RESUME
+>>>  	jo	.Lio_notify_resume
+>>>  	TSTMSK	__TI_flags(%r12),_TIF_GUARDED_STORAGE
+>>
+>> (full quote so you can make sense of the patch below).
+>>
+>> Please merge the patch below into this one. With that:
+>>
+>> Acked-by: Heiko Carstens <hca@linux.ibm.com>
+>>
+>> diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
+>> index a30d891e8045..31f16d903ef3 100644
+>> --- a/arch/s390/kernel/entry.S
+>> +++ b/arch/s390/kernel/entry.S
+>> @@ -464,9 +464,7 @@ ENTRY(system_call)
+>>  #endif
+>>  	TSTMSK	__PT_FLAGS(%r11),_PIF_SYSCALL_RESTART
+>>  	jo	.Lsysc_syscall_restart
+>> -	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_SIGNAL
+>> -	jo	.Lsysc_sigpending
+>> -	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
+>> +	TSTMSK	__TI_flags(%r12),(_TIF_SIGPENDING|_TIF_NOTIFY_SIGNAL)
+>>  	jo	.Lsysc_sigpending
+> 
+> We need to also change the jo to jnz - in combination with tm, jo means
+> 'jump if all tested bits are set' while jnz means 'jump if at least one
+> bit is set'
 
-Currently the kernel does not provide an infrastructure to translate
-architecture numbers to a human-readable name. Translating syscall
-numbers to syscall names is possible through FTRACE_SYSCALL
-infrastructure but it does not provide support for compat syscalls.
+Ah thanks, good catch. And you also caught the braino in signal.c, here's
+the end result:
 
-This will create a file for each PID as /proc/pid/seccomp_cache.
-The file will be empty when no seccomp filters are loaded, or be
-in the format of:
-<arch name> <decimal syscall number> <ALLOW | FILTER>
-where ALLOW means the cache is guaranteed to allow the syscall,
-and filter means the cache will pass the syscall to the BPF filter.
 
-For the docker default profile on x86_64 it looks like:
-x86_64 0 ALLOW
-x86_64 1 ALLOW
-x86_64 2 ALLOW
-x86_64 3 ALLOW
-[...]
-x86_64 132 ALLOW
-x86_64 133 ALLOW
-x86_64 134 FILTER
-x86_64 135 FILTER
-x86_64 136 FILTER
-x86_64 137 ALLOW
-x86_64 138 ALLOW
-x86_64 139 FILTER
-x86_64 140 ALLOW
-x86_64 141 ALLOW
-[...]
+commit 0eb7d372d5319970bd15f2dbc18264ea576214d4
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Fri Oct 9 15:34:12 2020 -0600
 
-This file is guarded by CONFIG_SECCOMP_CACHE_DEBUG with a default
-of N because I think certain users of seccomp might not want the
-application to know which syscalls are definitely usable. For
-the same reason, it is also guarded by CAP_SYS_ADMIN.
+    s390: add support for TIF_NOTIFY_SIGNAL
+    
+    Wire up TIF_NOTIFY_SIGNAL handling for s390.
+    
+    Cc: linux-s390@vger.kernel.org
+    Acked-by: Heiko Carstens <hca@linux.ibm.com>
+    Signed-off-by: Jens Axboe <axboe@kernel.dk>
 
-Suggested-by: Jann Horn <jannh@google.com>
-Link: https://lore.kernel.org/lkml/CAG48ez3Ofqp4crXGksLmZY6=fGrF_tWyUCg7PBkAetvbbOPeOA@mail.gmail.com/
-Signed-off-by: YiFei Zhu <yifeifz2@illinois.edu>
----
- arch/Kconfig            | 15 +++++++++++
- fs/proc/base.c          |  6 +++++
- include/linux/seccomp.h |  7 +++++
- kernel/seccomp.c        | 59 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 87 insertions(+)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 56b6ccc0e32d..6e2eb7171da0 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -514,6 +514,21 @@ config SECCOMP_FILTER
+diff --git a/arch/s390/include/asm/thread_info.h b/arch/s390/include/asm/thread_info.h
+index 13a04fcf7762..0045341ade48 100644
+--- a/arch/s390/include/asm/thread_info.h
++++ b/arch/s390/include/asm/thread_info.h
+@@ -65,6 +65,7 @@ void arch_setup_new_exec(void);
+ #define TIF_GUARDED_STORAGE	4	/* load guarded storage control block */
+ #define TIF_PATCH_PENDING	5	/* pending live patching update */
+ #define TIF_PGSTE		6	/* New mm's will use 4K page tables */
++#define TIF_NOTIFY_SIGNAL	7	/* signal notifications exist */
+ #define TIF_ISOLATE_BP		8	/* Run process with isolated BP */
+ #define TIF_ISOLATE_BP_GUEST	9	/* Run KVM guests with isolated BP */
  
- 	  See Documentation/userspace-api/seccomp_filter.rst for details.
+@@ -82,6 +83,7 @@ void arch_setup_new_exec(void);
+ #define TIF_SYSCALL_TRACEPOINT	27	/* syscall tracepoint instrumentation */
  
-+config SECCOMP_CACHE_DEBUG
-+	bool "Show seccomp filter cache status in /proc/pid/seccomp_cache"
-+	depends on SECCOMP
-+	depends on SECCOMP_FILTER && !HAVE_SPARSE_SYSCALL_NR
-+	depends on PROC_FS
-+	help
-+	  This enables the /proc/pid/seccomp_cache interface to monitor
-+	  seccomp cache data. The file format is subject to change. Reading
-+	  the file requires CAP_SYS_ADMIN.
-+
-+	  This option is for debugging only. Enabling presents the risk that
-+	  an adversary may be able to infer the seccomp filter logic.
-+
-+	  If unsure, say N.
-+
- config HAVE_ARCH_STACKLEAK
- 	bool
- 	help
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 0f707003dda5..d652f9dbaecc 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -3261,6 +3261,9 @@ static const struct pid_entry tgid_base_stuff[] = {
- #ifdef CONFIG_PROC_PID_ARCH_STATUS
- 	ONE("arch_status", S_IRUGO, proc_pid_arch_status),
+ #define _TIF_NOTIFY_RESUME	BIT(TIF_NOTIFY_RESUME)
++#define _TIF_NOTIFY_SIGNAL	BIT(TIF_NOTIFY_SIGNAL)
+ #define _TIF_SIGPENDING		BIT(TIF_SIGPENDING)
+ #define _TIF_NEED_RESCHED	BIT(TIF_NEED_RESCHED)
+ #define _TIF_UPROBE		BIT(TIF_UPROBE)
+diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
+index 86235919c2d1..19a89f292290 100644
+--- a/arch/s390/kernel/entry.S
++++ b/arch/s390/kernel/entry.S
+@@ -52,7 +52,8 @@ STACK_SIZE  = 1 << STACK_SHIFT
+ STACK_INIT = STACK_SIZE - STACK_FRAME_OVERHEAD - __PT_SIZE
+ 
+ _TIF_WORK	= (_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_NEED_RESCHED | \
+-		   _TIF_UPROBE | _TIF_GUARDED_STORAGE | _TIF_PATCH_PENDING)
++		   _TIF_UPROBE | _TIF_GUARDED_STORAGE | _TIF_PATCH_PENDING | \
++		   _TIF_NOTIFY_SIGNAL)
+ _TIF_TRACE	= (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | _TIF_SECCOMP | \
+ 		   _TIF_SYSCALL_TRACEPOINT)
+ _CIF_WORK	= (_CIF_ASCE_PRIMARY | _CIF_ASCE_SECONDARY | _CIF_FPU)
+@@ -463,8 +464,8 @@ ENTRY(system_call)
  #endif
-+#ifdef CONFIG_SECCOMP_CACHE_DEBUG
-+	ONE("seccomp_cache", S_IRUSR, proc_pid_seccomp_cache),
-+#endif
- };
- 
- static int proc_tgid_base_readdir(struct file *file, struct dir_context *ctx)
-@@ -3590,6 +3593,9 @@ static const struct pid_entry tid_base_stuff[] = {
- #ifdef CONFIG_PROC_PID_ARCH_STATUS
- 	ONE("arch_status", S_IRUGO, proc_pid_arch_status),
+ 	TSTMSK	__PT_FLAGS(%r11),_PIF_SYSCALL_RESTART
+ 	jo	.Lsysc_syscall_restart
+-	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
+-	jo	.Lsysc_sigpending
++	TSTMSK	__TI_flags(%r12),(_TIF_SIGPENDING|_TIF_NOTIFY_SIGNAL)
++	jnz	.Lsysc_sigpending
+ 	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_RESUME
+ 	jo	.Lsysc_notify_resume
+ 	TSTMSK	__LC_CPU_FLAGS,(_CIF_ASCE_PRIMARY|_CIF_ASCE_SECONDARY)
+@@ -855,8 +856,8 @@ ENTRY(io_int_handler)
+ 	TSTMSK	__TI_flags(%r12),_TIF_PATCH_PENDING
+ 	jo	.Lio_patch_pending
  #endif
-+#ifdef CONFIG_SECCOMP_CACHE_DEBUG
-+	ONE("seccomp_cache", S_IRUSR, proc_pid_seccomp_cache),
-+#endif
- };
+-	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
+-	jo	.Lio_sigpending
++	TSTMSK	__TI_flags(%r12),(_TIF_SIGPENDING|_TIF_NOTIFY_SIGNAL)
++	jnz	.Lio_sigpending
+ 	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_RESUME
+ 	jo	.Lio_notify_resume
+ 	TSTMSK	__TI_flags(%r12),_TIF_GUARDED_STORAGE
+diff --git a/arch/s390/kernel/signal.c b/arch/s390/kernel/signal.c
+index 9e900a8977bd..b27b6c1f058d 100644
+--- a/arch/s390/kernel/signal.c
++++ b/arch/s390/kernel/signal.c
+@@ -472,7 +472,7 @@ void do_signal(struct pt_regs *regs)
+ 	current->thread.system_call =
+ 		test_pt_regs_flag(regs, PIF_SYSCALL) ? regs->int_code : 0;
  
- static int proc_tid_base_readdir(struct file *file, struct dir_context *ctx)
-diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
-index 02aef2844c38..76963ec4641a 100644
---- a/include/linux/seccomp.h
-+++ b/include/linux/seccomp.h
-@@ -121,4 +121,11 @@ static inline long seccomp_get_metadata(struct task_struct *task,
- 	return -EINVAL;
- }
- #endif /* CONFIG_SECCOMP_FILTER && CONFIG_CHECKPOINT_RESTORE */
-+
-+#ifdef CONFIG_SECCOMP_CACHE_DEBUG
-+struct seq_file;
-+
-+int proc_pid_seccomp_cache(struct seq_file *m, struct pid_namespace *ns,
-+			   struct pid *pid, struct task_struct *task);
-+#endif
- #endif /* _LINUX_SECCOMP_H */
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index d8cf468dbe1e..76f524e320b1 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -553,6 +553,9 @@ void seccomp_filter_release(struct task_struct *tsk)
- {
- 	struct seccomp_filter *orig = tsk->seccomp.filter;
- 
-+	/* We are effectively holding the siglock by not having any sighand. */
-+	WARN_ON(tsk->sighand != NULL);
-+
- 	/* Detach task from its filter tree. */
- 	tsk->seccomp.filter = NULL;
- 	__seccomp_filter_release(orig);
-@@ -2335,3 +2338,59 @@ static int __init seccomp_sysctl_init(void)
- device_initcall(seccomp_sysctl_init)
- 
- #endif /* CONFIG_SYSCTL */
-+
-+#ifdef CONFIG_SECCOMP_CACHE_DEBUG
-+/* Currently CONFIG_SECCOMP_CACHE_DEBUG implies SECCOMP_ARCH_NATIVE */
-+static void proc_pid_seccomp_cache_arch(struct seq_file *m, const char *name,
-+					const void *bitmap, size_t bitmap_size)
-+{
-+	int nr;
-+
-+	for (nr = 0; nr < bitmap_size; nr++) {
-+		bool cached = test_bit(nr, bitmap);
-+		char *status = cached ? "ALLOW" : "FILTER";
-+
-+		seq_printf(m, "%s %d %s\n", name, nr, status);
-+	}
-+}
-+
-+int proc_pid_seccomp_cache(struct seq_file *m, struct pid_namespace *ns,
-+			   struct pid *pid, struct task_struct *task)
-+{
-+	struct seccomp_filter *f;
-+	unsigned long flags;
-+
-+	/*
-+	 * We don't want some sandboxed process to know what their seccomp
-+	 * filters consist of.
-+	 */
-+	if (!file_ns_capable(m->file, &init_user_ns, CAP_SYS_ADMIN))
-+		return -EACCES;
-+
-+	if (!lock_task_sighand(task, &flags))
-+		return -ESRCH;
-+
-+	f = READ_ONCE(task->seccomp.filter);
-+	if (!f) {
-+		unlock_task_sighand(task, &flags);
-+		return 0;
-+	}
-+
-+	/* prevent filter from being freed while we are printing it */
-+	__get_seccomp_filter(f);
-+	unlock_task_sighand(task, &flags);
-+
-+	proc_pid_seccomp_cache_arch(m, SECCOMP_ARCH_NATIVE_NAME,
-+				    f->cache.allow_native,
-+				    SECCOMP_ARCH_NATIVE_NR);
-+
-+#ifdef SECCOMP_ARCH_COMPAT
-+	proc_pid_seccomp_cache_arch(m, SECCOMP_ARCH_COMPAT_NAME,
-+				    f->cache.allow_compat,
-+				    SECCOMP_ARCH_COMPAT_NR);
-+#endif /* SECCOMP_ARCH_COMPAT */
-+
-+	__put_seccomp_filter(f);
-+	return 0;
-+}
-+#endif /* CONFIG_SECCOMP_CACHE_DEBUG */
+-	if (get_signal(&ksig)) {
++	if (test_thread_flag(TIF_SIGPENDING) && get_signal(&ksig)) {
+ 		/* Whee!  Actually deliver the signal.  */
+ 		if (current->thread.system_call) {
+ 			regs->int_code = current->thread.system_call;
+
 -- 
-2.29.2
+Jens Axboe
 
