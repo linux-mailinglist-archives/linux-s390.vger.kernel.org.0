@@ -2,141 +2,136 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 323412A4865
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Nov 2020 15:39:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D39C52A48EB
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Nov 2020 16:07:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgKCOje (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Nov 2020 09:39:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48782 "EHLO
+        id S1729641AbgKCOUs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Nov 2020 09:20:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbgKCOjS (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Nov 2020 09:39:18 -0500
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CF1C061A47
-        for <linux-s390@vger.kernel.org>; Tue,  3 Nov 2020 06:39:17 -0800 (PST)
-Received: by mail-lj1-x241.google.com with SMTP id p15so19328520ljj.8
-        for <linux-s390@vger.kernel.org>; Tue, 03 Nov 2020 06:39:17 -0800 (PST)
+        with ESMTP id S1729227AbgKCNpL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Nov 2020 08:45:11 -0500
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AFF0C0613D1;
+        Tue,  3 Nov 2020 05:45:11 -0800 (PST)
+Received: by mail-qk1-x743.google.com with SMTP id b18so14594948qkc.9;
+        Tue, 03 Nov 2020 05:45:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=M/CcLnAggfPJTPHCvJqAFAyQXrrFbGX8RqEWGTOIlRk=;
-        b=tYRtCsCJ97u7yAlrOFN203Mpt9jz/EvbuW4V+3hipSUNsR5M8ZDqWsq7efoMiN9R5c
-         nhVCnARjFr5alomHWUrG2S/QRxbOVwaEaiSQTgeF0uEgCJ7a2rbupEC/g2AUeshC9i6C
-         wIKR126viYncqhHiZROMnSmO9imaid0rNJepyxM6rr8Apn+RPbJ3qWs7P+ZnHrSgvOWA
-         QcXHZrEHzXM4SVCDzBK7zqXcUTu3T+G1dUvHRbLGUKs/I2DIfrL0bitkL+B4SCLYpFfX
-         lHpCGqsodauH4LxSQSOtDBLKGW1a7DHfcCp5nbfeol5ZCBBoivuqpYvLjRQisIJ68BoF
-         UMSA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LIHaRbcW33holGtLxAdu7MnC0XA7v48flZenL4Xa8vU=;
+        b=iuwgpDk+ywyZuJVS5CkkW+UWoj8ZeMu3W2DRLryyvnrW+Yalap3GJHVoD8C4+cBD+7
+         i0mlc7ylUKWR3VTM8HUiGkrSd6GfEzWHDrKM2Yi/EUh4SUeQJGC5iWhdIlHg1FwsfmU7
+         5j2mbRcAQ+Kabs4nK6b2QlwboR4cF7QiMu8M72ms85+IdB3oy7S+KkgeNASKDc+esvNS
+         rxHPsuHmxZd6k2hEmZ4gnCaD4zMtAJepsCqvCTOJcS3RDl0yqGmQrE1llfApvK0RDGby
+         kEpnD+/cchNFssyPLLdYRHqwyzAWUPNEyXHCd8X+DCF/NW6Ni9L1BESHJg76npfZXeog
+         1pWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=M/CcLnAggfPJTPHCvJqAFAyQXrrFbGX8RqEWGTOIlRk=;
-        b=DjAPZ2jZHlvyd+xMzgiogrM8bGufV9M7hp7i5rZ6d6vpLb6IxAjwC5RBKR2J/HIzKW
-         AZXtuo9DtrObbzesXfJKHdmQNmzqD7s5NtRTEY+0RKO4MgtuoHIiDH741Rh6yN1HDF9V
-         kEXbnmqCMJaDrvevgYH0VAqBXw0XZ0D+WGsBwVo6fapQcpmZ1lZFkXGFfagaERh6iSDR
-         +DZ8kDcn4i6mtrMMNp2u5nSVV2klFxtI7t7ER4KNFFnqQ2pnmkSvYZ85wAiQvrfR+QMu
-         Vhp7eGmKX4DzmE2ZMrENIcLZtx4E+GdfqsZSjarnNdC4p6epM7lkb1t2aubATDgq+57W
-         DXMQ==
-X-Gm-Message-State: AOAM532ZQCcSfB+iulG0fTbeF23GXZgxinku89xsvzTVQhLBrmciZQ4V
-        1BffDu2UebngBa3cNVuSU4h5Gg==
-X-Google-Smtp-Source: ABdhPJz+L8qrHCJkzOuQS8/wvO1dQM/ksNE/UzgTA6Cx0Ac2GRFSZ5fX6eoakfcdH0CZnI4/h7s3ng==
-X-Received: by 2002:a2e:879a:: with SMTP id n26mr9115208lji.347.1604414356208;
-        Tue, 03 Nov 2020 06:39:16 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id g27sm4334360ljl.91.2020.11.03.06.39.15
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LIHaRbcW33holGtLxAdu7MnC0XA7v48flZenL4Xa8vU=;
+        b=TjACBfXyqbMBA+WDjpyChGv5Q0J4SUF7Blzb2qPJsfTQwbcJAJA5SwdlrVCTYoUvNJ
+         q80s3stDivHdrS0Nc4f49bxPwu83/uOokSCiG53KBsNPP5Da8G6baiPaTX3cR2kZVKSy
+         AKws8IQnicd7Zl+Ugk8g/YINQjnc/AKXIrbDRZVYdEG3Ay505Yo6QNEc0zoMjhERGj5n
+         h/oRotU320n9pJAQAZdKKmqmYrlPDqm2AM2Z3kxpfDlfcl2mJDgezoh3PII0ChNoALLM
+         QNeWI3CsziIT/p6KOkODDJKdrnsuswIy6CUOVvQvDw1SHm8+XXI2Mra/twB3UtoDQCfe
+         C9dA==
+X-Gm-Message-State: AOAM5323TdBD8CF5bNjWh52g+EpP3Hpuw22AtuCBPpnjw3mnk0iFxUvQ
+        EplzHNASGxBIPQ67uqPHdhM=
+X-Google-Smtp-Source: ABdhPJza/Al4BmaaKLSE3M46BZOoXGqpH/lMostTkMqGorYeqXkDTUPky+7rUNYdGBfTqt+ibTx7dg==
+X-Received: by 2002:a05:620a:492:: with SMTP id 18mr20260926qkr.149.1604411110339;
+        Tue, 03 Nov 2020 05:45:10 -0800 (PST)
+Received: from zhuyifei1999-ThinkPad-T480.gw.illinois.edu ([2620:0:e00:400f::31])
+        by smtp.gmail.com with ESMTPSA id a206sm7356568qkb.64.2020.11.03.05.45.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2020 06:39:15 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 65F1510231C; Tue,  3 Nov 2020 17:39:16 +0300 (+03)
-Date:   Tue, 3 Nov 2020 17:39:16 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Lameter <cl@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Len Brown <len.brown@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-pm@vger.kernel.org,
+        Tue, 03 Nov 2020 05:45:08 -0800 (PST)
+From:   YiFei Zhu <zhuyifei1999@gmail.com>
+To:     containers@lists.linux-foundation.org
+Cc:     YiFei Zhu <yifeifz2@illinois.edu>, linux-csky@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v3 2/4] PM: hibernate: make direct map manipulations more
- explicit
-Message-ID: <20201103143916.otz2o4h2dlmewn3h@box>
-References: <20201101170815.9795-1-rppt@kernel.org>
- <20201101170815.9795-3-rppt@kernel.org>
- <20201103110816.t6a3ebtgcm7mfogy@box>
- <20201103121350.GI4879@kernel.org>
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Laight <David.Laight@aculab.com>,
+        Dimitrios Skarlatos <dskarlat@cs.cmu.edu>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Hubertus Franke <frankeh@us.ibm.com>,
+        Jack Chen <jianyan2@illinois.edu>,
+        Jann Horn <jannh@google.com>,
+        Josep Torrellas <torrella@illinois.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Tianyin Xu <tyxu@illinois.edu>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Tycho Andersen <tycho@tycho.pizza>,
+        Valentin Rothberg <vrothber@redhat.com>,
+        Will Drewry <wad@chromium.org>
+Subject: [PATCH seccomp 2/8] parisc: Enable seccomp architecture tracking
+Date:   Tue,  3 Nov 2020 07:42:58 -0600
+Message-Id: <9bb86c546eda753adf5270425e7353202dbce87c.1604410035.git.yifeifz2@illinois.edu>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <cover.1604410035.git.yifeifz2@illinois.edu>
+References: <cover.1604410035.git.yifeifz2@illinois.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201103121350.GI4879@kernel.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Nov 03, 2020 at 02:13:50PM +0200, Mike Rapoport wrote:
-> On Tue, Nov 03, 2020 at 02:08:16PM +0300, Kirill A. Shutemov wrote:
-> > On Sun, Nov 01, 2020 at 07:08:13PM +0200, Mike Rapoport wrote:
-> > > diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-> > > index 46b1804c1ddf..054c8cce4236 100644
-> > > --- a/kernel/power/snapshot.c
-> > > +++ b/kernel/power/snapshot.c
-> > > @@ -76,6 +76,32 @@ static inline void hibernate_restore_protect_page(void *page_address) {}
-> > >  static inline void hibernate_restore_unprotect_page(void *page_address) {}
-> > >  #endif /* CONFIG_STRICT_KERNEL_RWX  && CONFIG_ARCH_HAS_SET_MEMORY */
-> > >  
-> > > +static inline void hibernate_map_page(struct page *page, int enable)
-> > > +{
-> > > +	if (IS_ENABLED(CONFIG_ARCH_HAS_SET_DIRECT_MAP)) {
-> > > +		unsigned long addr = (unsigned long)page_address(page);
-> > > +		int ret;
-> > > +
-> > > +		/*
-> > > +		 * This should not fail because remapping a page here means
-> > > +		 * that we only update protection bits in an existing PTE.
-> > > +		 * It is still worth to have WARN_ON() here if something
-> > > +		 * changes and this will no longer be the case.
-> > > +		 */
-> > > +		if (enable)
-> > > +			ret = set_direct_map_default_noflush(page);
-> > > +		else
-> > > +			ret = set_direct_map_invalid_noflush(page);
-> > > +
-> > > +		if (WARN_ON(ret))
-> > 
-> > _ONCE?
-> 
-> I've changed it to pr_warn() after David said people enable panic on
-> warn in production kernels.
+From: YiFei Zhu <yifeifz2@illinois.edu>
 
-pr_warn_once()? :P
+To enable seccomp constant action bitmaps, we need to have a static
+mapping to the audit architecture and system call table size. Add these
+for parisc.
 
+Signed-off-by: YiFei Zhu <yifeifz2@illinois.edu>
+---
+ arch/parisc/include/asm/Kbuild    |  1 -
+ arch/parisc/include/asm/seccomp.h | 22 ++++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
+ create mode 100644 arch/parisc/include/asm/seccomp.h
+
+diff --git a/arch/parisc/include/asm/Kbuild b/arch/parisc/include/asm/Kbuild
+index e3ee5c0bfe80..f16c4db80116 100644
+--- a/arch/parisc/include/asm/Kbuild
++++ b/arch/parisc/include/asm/Kbuild
+@@ -5,5 +5,4 @@ generated-y += syscall_table_c32.h
+ generic-y += kvm_para.h
+ generic-y += local64.h
+ generic-y += mcs_spinlock.h
+-generic-y += seccomp.h
+ generic-y += user.h
+diff --git a/arch/parisc/include/asm/seccomp.h b/arch/parisc/include/asm/seccomp.h
+new file mode 100644
+index 000000000000..b058b2220322
+--- /dev/null
++++ b/arch/parisc/include/asm/seccomp.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _ASM_SECCOMP_H
++#define _ASM_SECCOMP_H
++
++#include <asm-generic/seccomp.h>
++
++#ifdef CONFIG_64BIT
++# define SECCOMP_ARCH_NATIVE		AUDIT_ARCH_PARISC64
++# define SECCOMP_ARCH_NATIVE_NR		NR_syscalls
++# define SECCOMP_ARCH_NATIVE_NAME	"parisc64"
++# ifdef CONFIG_COMPAT
++#  define SECCOMP_ARCH_COMPAT		AUDIT_ARCH_PARISC
++#  define SECCOMP_ARCH_COMPAT_NR	NR_syscalls
++#  define SECCOMP_ARCH_COMPAT_NAME	"parisc"
++# endif
++#else /* !CONFIG_64BIT */
++# define SECCOMP_ARCH_NATIVE		AUDIT_ARCH_PARISC
++# define SECCOMP_ARCH_NATIVE_NR		NR_syscalls
++# define SECCOMP_ARCH_NATIVE_NAME	"parisc"
++#endif
++
++#endif /* _ASM_SECCOMP_H */
 -- 
- Kirill A. Shutemov
+2.29.2
+
