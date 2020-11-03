@@ -2,274 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D7742A4918
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Nov 2020 16:13:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2D752A4A73
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Nov 2020 16:56:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgKCPNG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Nov 2020 10:13:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728350AbgKCPMV (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Nov 2020 10:12:21 -0500
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521F7C0613D1
-        for <linux-s390@vger.kernel.org>; Tue,  3 Nov 2020 07:12:21 -0800 (PST)
-Received: by mail-io1-xd43.google.com with SMTP id s10so4499083ioe.1
-        for <linux-s390@vger.kernel.org>; Tue, 03 Nov 2020 07:12:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ug8fK7m5eh7whF/+i7AafuVKrr4WoRMnY59aR9Lk550=;
-        b=zKu2Sb0EIuI8/KAXy7LU4ZPBYdboOJBPJ3nxa5R+1jyFmkP9Vm14qWCTOAKYFvn9Do
-         wQM1nyGtcGAF1kWnfMVQ6j5YKNxdBocWSRAc3x2g+njMzUSzYAXxXV/EVojjG0dqgBEH
-         wdMSgeIhMI4ERr0dItVLUFr5jlCCeNoVIA7fGLFpUL/3A32k8Okbbxyp01nMwUBLYqM5
-         m9g15ZYVtMXYLGpjnryY3oEShjHzbhLghdAvbU/Uk8SR4NifFyszHcza7nDuZquytQDm
-         b5WYSkIhNxlhE2J6535hHggtKbcWyii/uBswu3awBOJ876w+7+RI1GYD7JuZY8XelGqi
-         tSNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ug8fK7m5eh7whF/+i7AafuVKrr4WoRMnY59aR9Lk550=;
-        b=d81eeXSDwXcPeVq+ToLWhC9sdcPovFu+9E3kjJ7ObGfe7PKVVY+mYOxo6U1+kHSkmj
-         j7pZNtj7dfcWhpwIQWPJvVz3i/7/+w5sTepx4QqfVwH3hW5sY5EdezS9y45jzgZUfqge
-         h611UFxjRXPodO2gnPWfxHRHqbipFurJVc7Wmk0sMxuO7vqh7cFx7iDDf5+X5Q+1nwG4
-         qILzcOHicE3NiPWufv+Q0sNa3J/NlaUMaSvk8/4yDZchObauGdQvhsK/0TZnGgF8K/JT
-         mzAgJi8EjO87llCCovDrRk9Hx0LHAgqm79Za6owh8DgLO0wtkfEZk9M18liaS37D3cHF
-         tk0g==
-X-Gm-Message-State: AOAM5337DSnBuZDp0tAXZaQY15kM97FfkhL89/MF6CR8RIg9EFdg6+uS
-        u2VGmqxzg6V0HnU+N59eEZGPwdgRxh5N1w==
-X-Google-Smtp-Source: ABdhPJzJqAJmYJVz7glef0OE/8EguiYNI7ZepjftULUIsvwkDD4FnLHDg9/4ZjevukvLjk6JskrNfQ==
-X-Received: by 2002:a6b:4014:: with SMTP id k20mr14377748ioa.177.1604416340638;
-        Tue, 03 Nov 2020 07:12:20 -0800 (PST)
-Received: from [192.168.1.30] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id d142sm7386448iof.43.2020.11.03.07.12.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Nov 2020 07:12:20 -0800 (PST)
-Subject: Re: [PATCH] s390: add support for TIF_NOTIFY_SIGNAL
-To:     Sven Schnelle <svens@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        oleg@redhat.com, tglx@linutronix.de,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-References: <yt9do8ke4seh.fsf@linux.ibm.com>
- <75a238c7-fc37-21dd-bd89-d4c87a206eaa@kernel.dk>
- <yt9dk0v21o0i.fsf@linux.ibm.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <f3ef071a-bbbc-1133-ed7b-6307919c4c3c@kernel.dk>
-Date:   Tue, 3 Nov 2020 08:12:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728138AbgKCP4v (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Nov 2020 10:56:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726312AbgKCP4v (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 3 Nov 2020 10:56:51 -0500
+Received: from kernel.org (unknown [87.71.17.26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B47820870;
+        Tue,  3 Nov 2020 15:56:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604419010;
+        bh=PdZbTZgg1JmpGp2bwjsENk8fgDYDWqJbhtmXs83/fs4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U5lRRB1N1MmXeOH2myvsU+QScNFs2bqbrupv/pQ4irlpmZwooHX8QWAG7Auq1KyAR
+         BKUUy9aydAOF9vLJs/4y281FnWsGIjtK6pWCGXyL7y2ETSAe5RqnViQPWzk/w9t3W5
+         2kvBIUagkYLvCz/jLs5zwUcf94hBrrkoIybAauvg=
+Date:   Tue, 3 Nov 2020 17:56:36 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Lameter <cl@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Len Brown <len.brown@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-pm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v3 2/4] PM: hibernate: make direct map manipulations more
+ explicit
+Message-ID: <20201103155636.GJ4879@kernel.org>
+References: <20201101170815.9795-1-rppt@kernel.org>
+ <20201101170815.9795-3-rppt@kernel.org>
+ <20201103110816.t6a3ebtgcm7mfogy@box>
+ <20201103121350.GI4879@kernel.org>
+ <20201103143916.otz2o4h2dlmewn3h@box>
 MIME-Version: 1.0
-In-Reply-To: <yt9dk0v21o0i.fsf@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201103143916.otz2o4h2dlmewn3h@box>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 11/3/20 8:03 AM, Sven Schnelle wrote:
-> Hi Jens,
+On Tue, Nov 03, 2020 at 05:39:16PM +0300, Kirill A. Shutemov wrote:
+> On Tue, Nov 03, 2020 at 02:13:50PM +0200, Mike Rapoport wrote:
+> > > > +
+> > > > +		if (WARN_ON(ret))
+> > > 
+> > > _ONCE?
+> > 
+> > I've changed it to pr_warn() after David said people enable panic on
+> > warn in production kernels.
 > 
-> Jens Axboe <axboe@kernel.dk> writes:
-> 
->> On 11/3/20 4:00 AM, Sven Schnelle wrote:
->>> Hi Jens,
->>>
->>> Heiko Carstens <hca () linux ! ibm ! com> writes:
->>>
->>>> On Thu, Oct 29, 2020 at 10:21:11AM -0600, Jens Axboe wrote:
->>>>> Wire up TIF_NOTIFY_SIGNAL handling for s390.
->>>>>
->>>>> Cc: linux-s390@vger.kernel.org
->>>>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
->>>>> ---
->>>>>
->>>>> 5.11 has support queued up for TIF_NOTIFY_SIGNAL, see this posting
->>>>> for details:
->>>>>
->>>>> https://lore.kernel.org/io-uring/20201026203230.386348-1-axboe@kernel.dk/
->>>>>
->>>>> As part of that work, I'm adding TIF_NOTIFY_SIGNAL support to all archs,
->>>>> as that will enable a set of cleanups once all of them support it. I'm
->>>>> happy carrying this patch if need be, or it can be funelled through the
->>>>> arch tree. Let me know.
->>>>>
->>>>>  arch/s390/include/asm/thread_info.h | 2 ++
->>>>>  arch/s390/kernel/entry.S            | 7 ++++++-
->>>>>  2 files changed, 8 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/arch/s390/include/asm/thread_info.h b/arch/s390/include/asm/thread_info.h
->>>>> index 13a04fcf7762..0045341ade48 100644
->>>>> --- a/arch/s390/include/asm/thread_info.h
->>>>> +++ b/arch/s390/include/asm/thread_info.h
->>>>> @@ -65,6 +65,7 @@ void arch_setup_new_exec(void);
->>>>>  #define TIF_GUARDED_STORAGE	4	/* load guarded storage control block */
->>>>>  #define TIF_PATCH_PENDING	5	/* pending live patching update */
->>>>>  #define TIF_PGSTE		6	/* New mm's will use 4K page tables */
->>>>> +#define TIF_NOTIFY_SIGNAL	7	/* signal notifications exist */
->>>>>  #define TIF_ISOLATE_BP		8	/* Run process with isolated BP */
->>>>>  #define TIF_ISOLATE_BP_GUEST	9	/* Run KVM guests with isolated BP */
->>>>>  
->>>>> @@ -82,6 +83,7 @@ void arch_setup_new_exec(void);
->>>>>  #define TIF_SYSCALL_TRACEPOINT	27	/* syscall tracepoint instrumentation */
->>>>>  
->>>>>  #define _TIF_NOTIFY_RESUME	BIT(TIF_NOTIFY_RESUME)
->>>>> +#define _TIF_NOTIFY_SIGNAL	BIT(TIF_NOTIFY_SIGNAL)
->>>>>  #define _TIF_SIGPENDING		BIT(TIF_SIGPENDING)
->>>>>  #define _TIF_NEED_RESCHED	BIT(TIF_NEED_RESCHED)
->>>>>  #define _TIF_UPROBE		BIT(TIF_UPROBE)
->>>>> diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
->>>>> index 86235919c2d1..a30d891e8045 100644
->>>>> --- a/arch/s390/kernel/entry.S
->>>>> +++ b/arch/s390/kernel/entry.S
->>>>> @@ -52,7 +52,8 @@ STACK_SIZE  = 1 << STACK_SHIFT
->>>>>  STACK_INIT = STACK_SIZE - STACK_FRAME_OVERHEAD - __PT_SIZE
->>>>>  
->>>>>  _TIF_WORK	= (_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_NEED_RESCHED | \
->>>>> -		   _TIF_UPROBE | _TIF_GUARDED_STORAGE | _TIF_PATCH_PENDING)
->>>>> +		   _TIF_UPROBE | _TIF_GUARDED_STORAGE | _TIF_PATCH_PENDING | \
->>>>> +		   _TIF_NOTIFY_SIGNAL)
->>>>>  _TIF_TRACE	= (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | _TIF_SECCOMP | \
->>>>>  		   _TIF_SYSCALL_TRACEPOINT)
->>>>>  _CIF_WORK	= (_CIF_ASCE_PRIMARY | _CIF_ASCE_SECONDARY | _CIF_FPU)
->>>>> @@ -463,6 +464,8 @@ ENTRY(system_call)
->>>>>  #endif
->>>>>  	TSTMSK	__PT_FLAGS(%r11),_PIF_SYSCALL_RESTART
->>>>>  	jo	.Lsysc_syscall_restart
->>>>> +	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_SIGNAL
->>>>> +	jo	.Lsysc_sigpending
->>>>>  	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
->>>>>  	jo	.Lsysc_sigpending
->>>>>  	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_RESUME
->>>>> @@ -857,6 +860,8 @@ ENTRY(io_int_handler)
->>>>>  #endif
->>>>>  	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
->>>>>  	jo	.Lio_sigpending
->>>>> +	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_SIGNAL
->>>>> +	jo	.Lio_sigpending
->>>>>  	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_RESUME
->>>>>  	jo	.Lio_notify_resume
->>>>>  	TSTMSK	__TI_flags(%r12),_TIF_GUARDED_STORAGE
->>>>
->>>> (full quote so you can make sense of the patch below).
->>>>
->>>> Please merge the patch below into this one. With that:
->>>>
->>>> Acked-by: Heiko Carstens <hca@linux.ibm.com>
->>>>
->>>> diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
->>>> index a30d891e8045..31f16d903ef3 100644
->>>> --- a/arch/s390/kernel/entry.S
->>>> +++ b/arch/s390/kernel/entry.S
->>>> @@ -464,9 +464,7 @@ ENTRY(system_call)
->>>>  #endif
->>>>  	TSTMSK	__PT_FLAGS(%r11),_PIF_SYSCALL_RESTART
->>>>  	jo	.Lsysc_syscall_restart
->>>> -	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_SIGNAL
->>>> -	jo	.Lsysc_sigpending
->>>> -	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
->>>> +	TSTMSK	__TI_flags(%r12),(_TIF_SIGPENDING|_TIF_NOTIFY_SIGNAL)
->>>>  	jo	.Lsysc_sigpending
->>>
->>> We need to also change the jo to jnz - in combination with tm, jo means
->>> 'jump if all tested bits are set' while jnz means 'jump if at least one
->>> bit is set'
->>
->> Ah thanks, good catch. And you also caught the braino in signal.c, here's
->> the end result:
->>
->>
->> commit 0eb7d372d5319970bd15f2dbc18264ea576214d4
->> Author: Jens Axboe <axboe@kernel.dk>
->> Date:   Fri Oct 9 15:34:12 2020 -0600
->>
->>     s390: add support for TIF_NOTIFY_SIGNAL
->>     
->>     Wire up TIF_NOTIFY_SIGNAL handling for s390.
->>     
->>     Cc: linux-s390@vger.kernel.org
->>     Acked-by: Heiko Carstens <hca@linux.ibm.com>
->>     Signed-off-by: Jens Axboe <axboe@kernel.dk>
->>
->> diff --git a/arch/s390/include/asm/thread_info.h b/arch/s390/include/asm/thread_info.h
->> index 13a04fcf7762..0045341ade48 100644
->> --- a/arch/s390/include/asm/thread_info.h
->> +++ b/arch/s390/include/asm/thread_info.h
->> @@ -65,6 +65,7 @@ void arch_setup_new_exec(void);
->>  #define TIF_GUARDED_STORAGE	4	/* load guarded storage control block */
->>  #define TIF_PATCH_PENDING	5	/* pending live patching update */
->>  #define TIF_PGSTE		6	/* New mm's will use 4K page tables */
->> +#define TIF_NOTIFY_SIGNAL	7	/* signal notifications exist */
->>  #define TIF_ISOLATE_BP		8	/* Run process with isolated BP */
->>  #define TIF_ISOLATE_BP_GUEST	9	/* Run KVM guests with isolated BP */
->>  
->> @@ -82,6 +83,7 @@ void arch_setup_new_exec(void);
->>  #define TIF_SYSCALL_TRACEPOINT	27	/* syscall tracepoint instrumentation */
->>  
->>  #define _TIF_NOTIFY_RESUME	BIT(TIF_NOTIFY_RESUME)
->> +#define _TIF_NOTIFY_SIGNAL	BIT(TIF_NOTIFY_SIGNAL)
->>  #define _TIF_SIGPENDING		BIT(TIF_SIGPENDING)
->>  #define _TIF_NEED_RESCHED	BIT(TIF_NEED_RESCHED)
->>  #define _TIF_UPROBE		BIT(TIF_UPROBE)
->> diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
->> index 86235919c2d1..19a89f292290 100644
->> --- a/arch/s390/kernel/entry.S
->> +++ b/arch/s390/kernel/entry.S
->> @@ -52,7 +52,8 @@ STACK_SIZE  = 1 << STACK_SHIFT
->>  STACK_INIT = STACK_SIZE - STACK_FRAME_OVERHEAD - __PT_SIZE
->>  
->>  _TIF_WORK	= (_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_NEED_RESCHED | \
->> -		   _TIF_UPROBE | _TIF_GUARDED_STORAGE | _TIF_PATCH_PENDING)
->> +		   _TIF_UPROBE | _TIF_GUARDED_STORAGE | _TIF_PATCH_PENDING | \
->> +		   _TIF_NOTIFY_SIGNAL)
->>  _TIF_TRACE	= (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | _TIF_SECCOMP | \
->>  		   _TIF_SYSCALL_TRACEPOINT)
->>  _CIF_WORK	= (_CIF_ASCE_PRIMARY | _CIF_ASCE_SECONDARY | _CIF_FPU)
->> @@ -463,8 +464,8 @@ ENTRY(system_call)
->>  #endif
->>  	TSTMSK	__PT_FLAGS(%r11),_PIF_SYSCALL_RESTART
->>  	jo	.Lsysc_syscall_restart
->> -	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
->> -	jo	.Lsysc_sigpending
->> +	TSTMSK	__TI_flags(%r12),(_TIF_SIGPENDING|_TIF_NOTIFY_SIGNAL)
->> +	jnz	.Lsysc_sigpending
->>  	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_RESUME
->>  	jo	.Lsysc_notify_resume
->>  	TSTMSK	__LC_CPU_FLAGS,(_CIF_ASCE_PRIMARY|_CIF_ASCE_SECONDARY)
->> @@ -855,8 +856,8 @@ ENTRY(io_int_handler)
->>  	TSTMSK	__TI_flags(%r12),_TIF_PATCH_PENDING
->>  	jo	.Lio_patch_pending
->>  #endif
->> -	TSTMSK	__TI_flags(%r12),_TIF_SIGPENDING
->> -	jo	.Lio_sigpending
->> +	TSTMSK	__TI_flags(%r12),(_TIF_SIGPENDING|_TIF_NOTIFY_SIGNAL)
->> +	jnz	.Lio_sigpending
->>  	TSTMSK	__TI_flags(%r12),_TIF_NOTIFY_RESUME
->>  	jo	.Lio_notify_resume
->>  	TSTMSK	__TI_flags(%r12),_TIF_GUARDED_STORAGE
->> diff --git a/arch/s390/kernel/signal.c b/arch/s390/kernel/signal.c
->> index 9e900a8977bd..b27b6c1f058d 100644
->> --- a/arch/s390/kernel/signal.c
->> +++ b/arch/s390/kernel/signal.c
->> @@ -472,7 +472,7 @@ void do_signal(struct pt_regs *regs)
->>  	current->thread.system_call =
->>  		test_pt_regs_flag(regs, PIF_SYSCALL) ? regs->int_code : 0;
->>  
->> -	if (get_signal(&ksig)) {
->> +	if (test_thread_flag(TIF_SIGPENDING) && get_signal(&ksig)) {
->>  		/* Whee!  Actually deliver the signal.  */
->>  		if (current->thread.system_call) {
->>  			regs->int_code = current->thread.system_call;
-> 
-> Looks good, feel free to add my Acked-by.
+> pr_warn_once()? :P
 
-Thanks for your help! Added.
+Sure :)
 
 -- 
-Jens Axboe
-
+Sincerely yours,
+Mike.
