@@ -2,300 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3CD52A4775
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Nov 2020 15:11:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1622B2A48B9
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Nov 2020 15:56:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbgKCOKs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Nov 2020 09:10:48 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53118 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729420AbgKCOKr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 3 Nov 2020 09:10:47 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1604412645;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ba9qeE3P97TbQ2yvwB2ubaFiLUcB36w6IpkZF8tbKnk=;
-        b=IN3VErPdp1WBPWe8s7Z/Hom6zeEPN00JGakf0pmbE0tHXmmxXEWD5++Vr61N/M6YEB54w7
-        TkpVK9DRs5pQGU2sXeGrOyjWu6VljkU4rvLr/rLgtbNpT6gEfg2GSAQckNPRAvbykm4vni
-        bo/mIe9ANXQW2mhX2JkXe/I7Xbftp1o=
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C3BEFABF4;
-        Tue,  3 Nov 2020 14:10:44 +0000 (UTC)
-Date:   Tue, 3 Nov 2020 15:10:43 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>, Guo Ren <guoren@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-doc@vger.kernel.org, linux-csky@vger.kernel.org,
+        id S1729659AbgKCOUt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Nov 2020 09:20:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgKCNpI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Nov 2020 08:45:08 -0500
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB9D9C0613D1;
+        Tue,  3 Nov 2020 05:45:08 -0800 (PST)
+Received: by mail-qk1-x741.google.com with SMTP id 140so14628191qko.2;
+        Tue, 03 Nov 2020 05:45:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/wWgXpwOKfWu89zfH4z55YdVS4FoKgsyU3KjhUPw2Xk=;
+        b=HUmeo8PKFkCINZljvfRc+P6j2X0+0GOhvVUFZGwDVi5RBcL6yCRRP7JuB0zv9c9+Po
+         E3+9kj9NX57UzwwDZNGdD8iaYBGU9wXX967tHeoCgvkJm1CovDmhTO1emhffrLi5usDF
+         0oEzRtLhoIuA39ggcO6eQcTv/OGvRmPgCQX4sTZrzio50ODOqs0YICXq0MgBjQAfHPdz
+         xl7tXTacq4qNhz9LC51MS1M++unu3TcfcbkGRzSQxWGdRezIwQbhQELfkQD+RH+S21A/
+         sax7yhctLMgZTMGgygja3clLmsRRE7W8PkbbGI7EUIeZ8EaqV18ap7HIw7j/Z7WF3HJx
+         8pfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/wWgXpwOKfWu89zfH4z55YdVS4FoKgsyU3KjhUPw2Xk=;
+        b=L0THD44tUiobW8XHwy4mwOF08UXf/8Z/E7FezRNEKdPPigyZrw5AOfr+T56qEuZiBV
+         ZYhQeSevN+7xVzRVmi3C7WZpPa2Rc6rROTXe85qARb3s8rXKqbngzJA/CDYJZXy9/JRz
+         CayUhwy96wmaoiDAkjoIvPwo5wgHgU3UEsBYvD86ZMw3GozNBV1QRpEixmAyir3ksbRm
+         khhIWBNpBXd04GyBYYT4jHTVzE2fwoLuC2wpNb5T4At1pwkOUqLezuSoJSgRneayGTua
+         RjfnjDi3wfPkYH3DJm3btIQ3LezYW7wO+oy1QxQ5KjEWWTx5ztxbWx6V2eTgmw532B8c
+         XrYQ==
+X-Gm-Message-State: AOAM531xUy51m/4w23nI6W2NheIaKK9B1OLwMK3p7yLWnBgJpumd7VNM
+        LDCVod/dMGDJbWJyJpWaKQc=
+X-Google-Smtp-Source: ABdhPJyHAHCGbEEm09WION+/UIzzZ/lrqbH487CGEGOVROPc59579zIEupD9GaMmhFNRyF9+2N11RQ==
+X-Received: by 2002:ae9:dec5:: with SMTP id s188mr20227157qkf.250.1604411107951;
+        Tue, 03 Nov 2020 05:45:07 -0800 (PST)
+Received: from zhuyifei1999-ThinkPad-T480.gw.illinois.edu ([2620:0:e00:400f::31])
+        by smtp.gmail.com with ESMTPSA id a206sm7356568qkb.64.2020.11.03.05.45.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Nov 2020 05:45:07 -0800 (PST)
+From:   YiFei Zhu <zhuyifei1999@gmail.com>
+To:     containers@lists.linux-foundation.org
+Cc:     YiFei Zhu <yifeifz2@illinois.edu>, linux-csky@vger.kernel.org,
         linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH 11/11 v2.2] ftrace: Add recording of functions that
- caused recursion
-Message-ID: <20201103141043.GO20201@alley>
-References: <20201030213142.096102821@goodmis.org>
- <20201030214014.801706340@goodmis.org>
- <20201102164147.GJ20201@alley>
- <20201102123721.4fcce2cb@gandalf.local.home>
- <20201102124606.72bd89c5@gandalf.local.home>
- <20201102142254.7e148f8a@gandalf.local.home>
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Laight <David.Laight@aculab.com>,
+        Dimitrios Skarlatos <dskarlat@cs.cmu.edu>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Hubertus Franke <frankeh@us.ibm.com>,
+        Jack Chen <jianyan2@illinois.edu>,
+        Jann Horn <jannh@google.com>,
+        Josep Torrellas <torrella@illinois.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Tianyin Xu <tyxu@illinois.edu>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Tycho Andersen <tycho@tycho.pizza>,
+        Valentin Rothberg <vrothber@redhat.com>,
+        Will Drewry <wad@chromium.org>
+Subject: [PATCH seccomp 1/8] csky: Enable seccomp architecture tracking
+Date:   Tue,  3 Nov 2020 07:42:57 -0600
+Message-Id: <f9219026d4803b22f3e57e3768b4e42e004ef236.1604410035.git.yifeifz2@illinois.edu>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <cover.1604410035.git.yifeifz2@illinois.edu>
+References: <cover.1604410035.git.yifeifz2@illinois.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201102142254.7e148f8a@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon 2020-11-02 14:23:14, Steven Rostedt wrote:
-> From c532ff6b048dd4a12943b05c7b8ce30666c587c8 Mon Sep 17 00:00:00 2001
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> Date: Thu, 29 Oct 2020 15:27:06 -0400
-> Subject: [PATCH] ftrace: Add recording of functions that caused recursion
-> 
-> This adds CONFIG_FTRACE_RECORD_RECURSION that will record to a file
-> "recursed_functions" all the functions that caused recursion while a
-> callback to the function tracer was running.
-> 
-> diff --git a/include/linux/trace_recursion.h b/include/linux/trace_recursion.h
-> index ac3d73484cb2..1cba5fe8777a 100644
-> --- a/include/linux/trace_recursion.h
-> +++ b/include/linux/trace_recursion.h
-> @@ -142,7 +142,28 @@ static __always_inline int trace_get_context_bit(void)
->  			pc & HARDIRQ_MASK ? TRACE_CTX_IRQ : TRACE_CTX_SOFTIRQ;
->  }
->  
-> -static __always_inline int trace_test_and_set_recursion(int start, int max)
-> +#ifdef CONFIG_FTRACE_RECORD_RECURSION
-> +extern void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip);
-> +/*
-> +* The paranoid_test check can cause dropped reports (unlikely), but
-> +* if the recursion is common, it will likely still be recorded later.
-> +* But the paranoid_test is needed to make sure we don't crash.
-> +*/
-> +# define do_ftrace_record_recursion(ip, pip)				\
-> +	do {								\
-> +		static atomic_t paranoid_test;				\
-> +		if (!atomic_read(&paranoid_test)) {			\
-> +			atomic_inc(&paranoid_test);			\
-> +			ftrace_record_recursion(ip, pip);		\
-> +			atomic_dec(&paranoid_test);			\
+From: YiFei Zhu <yifeifz2@illinois.edu>
 
-BTW: What is actually the purpose of paranoid_test, please?
+To enable seccomp constant action bitmaps, we need to have a static
+mapping to the audit architecture and system call table size. Add these
+for csky.
 
-It prevents nested ftrace_record_recursion() calls on the same CPU
-(recursion, nesting from IRQ, NMI context).
+Signed-off-by: YiFei Zhu <yifeifz2@illinois.edu>
+---
+ arch/csky/include/asm/Kbuild    |  1 -
+ arch/csky/include/asm/seccomp.h | 11 +++++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+ create mode 100644 arch/csky/include/asm/seccomp.h
 
-Parallel calls from different CPUs are still possible:
+diff --git a/arch/csky/include/asm/Kbuild b/arch/csky/include/asm/Kbuild
+index 64876e59e2ef..93372255984d 100644
+--- a/arch/csky/include/asm/Kbuild
++++ b/arch/csky/include/asm/Kbuild
+@@ -4,6 +4,5 @@ generic-y += gpio.h
+ generic-y += kvm_para.h
+ generic-y += local64.h
+ generic-y += qrwlock.h
+-generic-y += seccomp.h
+ generic-y += user.h
+ generic-y += vmlinux.lds.h
+diff --git a/arch/csky/include/asm/seccomp.h b/arch/csky/include/asm/seccomp.h
+new file mode 100644
+index 000000000000..d33e758126fb
+--- /dev/null
++++ b/arch/csky/include/asm/seccomp.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef _ASM_SECCOMP_H
++#define _ASM_SECCOMP_H
++
++#include <asm-generic/seccomp.h>
++
++#define SECCOMP_ARCH_NATIVE		AUDIT_ARCH_CSKY
++#define SECCOMP_ARCH_NATIVE_NR		NR_syscalls
++#define SECCOMP_ARCH_NATIVE_NAME	"csky"
++
++#endif /* _ASM_SECCOMP_H */
+-- 
+2.29.2
 
-CPU0					CPU1
-if (!atomic_read(&paranoid_test))	if (!atomic_read(&paranoid_test))
-   // passes				  // passes
-   atomic_inc(&paranoid_test);            atomic_inc(&paranoid_test);
-
-
-I do not see how a nested call could cause crash while a parallel
-one would be OK.
-
-
-> --- /dev/null
-> +++ b/kernel/trace/trace_recursion_record.c
-> @@ -0,0 +1,236 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/seq_file.h>
-> +#include <linux/kallsyms.h>
-> +#include <linux/module.h>
-> +#include <linux/ftrace.h>
-> +#include <linux/fs.h>
-> +
-> +#include "trace_output.h"
-> +
-> +struct recursed_functions {
-> +	unsigned long		ip;
-> +	unsigned long		parent_ip;
-> +};
-> +
-> +static struct recursed_functions recursed_functions[CONFIG_FTRACE_RECORD_RECURSION_SIZE];
-> +static atomic_t nr_records;
-> +
-> +/*
-> + * Cache the last found function. Yes, updates to this is racey, but
-> + * so is memory cache ;-)
-> + */
-> +static unsigned long cached_function;
-> +
-> +void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip)
-> +{
-> +	int index = 0;
-> +	int i;
-> +	unsigned long old;
-> +
-> + again:
-> +	/* First check the last one recorded */
-> +	if (ip == cached_function)
-> +		return;
-> +
-> +	i = atomic_read(&nr_records);
-> +	/* nr_records is -1 when clearing records */
-> +	smp_mb__after_atomic();
-> +	if (i < 0)
-> +		return;
-> +
-> +	/*
-> +	 * If there's two writers and this writer comes in second,
-> +	 * the cmpxchg() below to update the ip will fail. Then this
-> +	 * writer will try again. It is possible that index will now
-> +	 * be greater than nr_records. This is because the writer
-> +	 * that succeeded has not updated the nr_records yet.
-> +	 * This writer could keep trying again until the other writer
-> +	 * updates nr_records. But if the other writer takes an
-> +	 * interrupt, and that interrupt locks up that CPU, we do
-> +	 * not want this CPU to lock up due to the recursion protection,
-> +	 * and have a bug report showing this CPU as the cause of
-> +	 * locking up the computer. To not lose this record, this
-> +	 * writer will simply use the next position to update the
-> +	 * recursed_functions, and it will update the nr_records
-> +	 * accordingly.
-> +	 */
-> +	if (index < i)
-> +		index = i;
-> +	if (index >= CONFIG_FTRACE_RECORD_RECURSION_SIZE)
-> +		return;
-> +
-> +	for (i = index - 1; i >= 0; i--) {
-> +		if (recursed_functions[i].ip == ip) {
-> +			cached_function = ip;
-> +			return;
-> +		}
-> +	}
-> +
-> +	cached_function = ip;
-> +
-> +	/*
-> +	 * We only want to add a function if it hasn't been added before.
-> +	 * Add to the current location before incrementing the count.
-> +	 * If it fails to add, then increment the index (save in i)
-> +	 * and try again.
-> +	 */
-> +	old = cmpxchg(&recursed_functions[index].ip, 0, ip);
-> +	if (old != 0) {
-> +		/* Did something else already added this for us? */
-> +		if (old == ip)
-> +			return;
-> +		/* Try the next location (use i for the next index) */
-> +		index++;
-> +		goto again;
-> +	}
-> +
-> +	recursed_functions[index].parent_ip = parent_ip;
-> +
-> +	/*
-> +	 * It's still possible that we could race with the clearing
-> +	 *    CPU0                                    CPU1
-> +	 *    ----                                    ----
-> +	 *                                       ip = func
-> +	 *  nr_records = -1;
-> +	 *  recursed_functions[0] = 0;
-> +	 *                                       i = -1
-> +	 *                                       if (i < 0)
-> +	 *  nr_records = 0;
-> +	 *  (new recursion detected)
-> +	 *      recursed_functions[0] = func
-> +	 *                                            cmpxchg(recursed_functions[0],
-> +	 *                                                    func, 0)
-> +	 *
-> +	 * But the worse that could happen is that we get a zero in
-> +	 * the recursed_functions array, and it's likely that "func" will
-> +	 * be recorded again.
-> +	 */
-> +	i = atomic_read(&nr_records);
-> +	smp_mb__after_atomic();
-> +	if (i < 0)
-> +		cmpxchg(&recursed_functions[index].ip, ip, 0);
-> +	else if (i <= index)
-> +		atomic_cmpxchg(&nr_records, i, index + 1);
-
-Are you aware of the following race, please?
-
-CPU0					CPU1
-
-ftrace_record_recursion()
-
-   i = atomic_read(&nr_records);
-   // i = 20   (for example)
-   if (i < index)
-     index = i;
-     // index = 20;
-
-					recursed_function_open()
-					atomic_set(&nr_records, -1);
-					memset(recursed_functions, 0, );
-					atomic_set(&nr_records, 0);
-
-   // successfully store ip at index == 20
-   cmpxchg(&recursed_functions[index].ip, 0, ip);
-   recursed_functions[index].parent_ip = parent_ip;
-
-   // check race with clearing
-   i = atomic_read(&nr_records);
-   // i == 0
-   if (i < 0)
-      // no
-   else
-	atomic_cmpxchg(&nr_records, i, index + 1);
-
-RESULT:
-
-   + nr_records == 21
-   + and slots 0..19 are zeroed
-
-
-I played with the code and ended with head entangled by chicken & egg
-like problems.
-
-I believe that a solution might be a combined atomic variable from
-nr_records + cleanup_count.
-
-ftrace_record_recursion() would be allowed to increase nr_records
-only when cleanup_count is still the same. cleanup_count would
-be incremented together with clearing nr_records.
-
-
-Well, I am not sure if it is worth the effort. The race is rather
-theoretical. In the worst case, the cache might contain many
-zero values.
-
-Anyway, it is yet another experience for me that lockless algorithms
-are more tricky that one would expect.
-
-Best Regards,
-Petr
