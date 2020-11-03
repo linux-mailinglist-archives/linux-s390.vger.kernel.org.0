@@ -2,254 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13EB82A4B1C
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Nov 2020 17:21:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5AF12A4C5F
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Nov 2020 18:11:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgKCQVz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Nov 2020 11:21:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727742AbgKCQVz (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 3 Nov 2020 11:21:55 -0500
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F80620773;
-        Tue,  3 Nov 2020 16:21:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604420514;
-        bh=P4TBJDMMKdwpxN9woYaXAimVI1SZncgu4Y8WTKRSfFw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iwxVWj+wXnsTRLH+K6L4omHY8hIHf3kX13IaXBilDiRmxfVQ/YhdnumOtO2O3UnFn
-         aFBnqsHwhYo6wGaEEmbeL5E09/jp6hlPyZ7omaQZGOVIBvay/zjduZ5yQKFKV6lHci
-         MjWBrVyMINzM0vTCVQlQ1pYuWZIpXNpmQ6e7SY3M=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Albert Ou <aou@eecs.berkeley.edu>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Lameter <cl@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Len Brown <len.brown@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-pm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        x86@kernel.org
-Subject: [PATCH v4 4/4] arch, mm: make kernel_page_present() always available
-Date:   Tue,  3 Nov 2020 18:20:57 +0200
-Message-Id: <20201103162057.22916-5-rppt@kernel.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201103162057.22916-1-rppt@kernel.org>
-References: <20201103162057.22916-1-rppt@kernel.org>
+        id S1727688AbgKCRLW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Nov 2020 12:11:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728379AbgKCRLW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Nov 2020 12:11:22 -0500
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B75C0617A6
+        for <linux-s390@vger.kernel.org>; Tue,  3 Nov 2020 09:11:21 -0800 (PST)
+Received: by mail-ej1-x644.google.com with SMTP id o9so23204872ejg.1
+        for <linux-s390@vger.kernel.org>; Tue, 03 Nov 2020 09:11:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9yln6e9DFCtRBB1nDEWcn7mUWxZv67NRC0F96HEo+Zw=;
+        b=DwXqc1QpXw2rUq7o6JvtvkMFIrS4uQZ7x6fKJ9xgSWfwLbf+6atqGKZUX2veV5kTBw
+         pLlaILsCc42btrTJPRGYAf1eBi81bNG2Db1zpdHAcT7FQXJhM7dcxrgN817WqrvQuvDy
+         3m0ZSOB6xOa6veC4CmttFDqxAYfsT33eFfn6tSJhkQVcQL5zxG6XXZ8MYDLwBH2UhCEr
+         4DNIZYl4IcuzHP/gh0RpJZQrwm3pRI5tWiqYwkfjXcEots+4lgJsSWKrZ1z1PFWViZ7p
+         s2J+hi7+ovz9Hf9K+lJ2Xrd8U8ijmB7HVlSZve49sMBJjLTTFHI1xXAtYAcBcmo16/Dc
+         EEHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9yln6e9DFCtRBB1nDEWcn7mUWxZv67NRC0F96HEo+Zw=;
+        b=OR4OBUxJezsgzy++rn3mutQwipcMs67yUL/2DokXweHOzz2apLRvxlz+J19X6BU5Fg
+         s/wxoB1FEwIcYzK8zinw4GqVe6rda9TpeniICuVLpbpWzUhK3cR3Q5/tzMdsfQsLDeI8
+         YAtrXE+BPkkvjSHbMFOUsAx4isggPBMR+X63rBlrYMpTAU4xfyyy9jgUDgziuPsW2Osr
+         lpHRyYZo9S8AQyPC0WPTsS1b9PfOsDWaoImgOKfIIeZQej3SowvSruxhb2P/2XJ5R2ex
+         zgBUamPRCKy/x9jgoEQc/UIRwu71iC04KA1DWKG8ZBW+HKAkDovYIG0/85yfiB4G6PxD
+         WKcg==
+X-Gm-Message-State: AOAM532nB0kydses0UXLd1jxLOUfYIckaBUtfe0ieNuo+Ab05Yk2I19d
+        4lhdibrlSz6qz139Far/vC8In2QDXfMlX9wHNpgI
+X-Google-Smtp-Source: ABdhPJwEbU22jukM38VVa2SZOwS/mkl4pv+xf1F4osP6iZpkNzvWk5OhnwJ0cY+eRV4I015HHYgLZdyAye25HDa9NRo=
+X-Received: by 2002:a17:906:1159:: with SMTP id i25mr1270779eja.398.1604423480232;
+ Tue, 03 Nov 2020 09:11:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAHC9VhQTp3Rc_7zM661Rzur0XSuWRWKJJg=CwLPAQo5ABRpS-w@mail.gmail.com>
+ <20201009013630.6777-1-rentianyue@tj.kylinos.cn> <20201009013630.6777-2-rentianyue@tj.kylinos.cn>
+ <CAHC9VhR2KPKN8ot9WrkjZQ08X-VPDGkXro18C5jhDEwcFH6wog@mail.gmail.com> <yt9dh7q64m8a.fsf@linux.ibm.com>
+In-Reply-To: <yt9dh7q64m8a.fsf@linux.ibm.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 3 Nov 2020 12:11:08 -0500
+Message-ID: <CAHC9VhT-dgT8pP7ZfPu+Ssw4RAYUpcwhTWfXXeciVPz0mRcP3A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] selinux: fix error initialization in inode_doinit_with_dentry()
+To:     Sven Schnelle <svens@linux.ibm.com>
+Cc:     rentianyue@tj.kylinos.cn,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>, yangzhao@kylinos.cn,
+        selinux@vger.kernel.org, Tianyue Ren <rentianyue@kylinos.cn>,
+        linux-s390@vger.kernel.org, hca@linux.ibm.com,
+        borntraeger@de.ibm.com
+Content-Type: multipart/mixed; boundary="0000000000009c59a805b336f33d"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+--0000000000009c59a805b336f33d
+Content-Type: text/plain; charset="UTF-8"
 
-For architectures that enable ARCH_HAS_SET_MEMORY having the ability to
-verify that a page is mapped in the kernel direct map can be useful
-regardless of hibernation.
+On Tue, Nov 3, 2020 at 8:14 AM Sven Schnelle <svens@linux.ibm.com> wrote:
+> Paul Moore <paul@paul-moore.com> writes:
+>
+> > On Thu, Oct 8, 2020 at 9:37 PM <rentianyue@tj.kylinos.cn> wrote:
+> >> From: Tianyue Ren <rentianyue@kylinos.cn>
+> >>
+> >> Mark the inode security label as invalid if we cannot find
+> >> a dentry so that we will retry later rather than marking it
+> >> initialized with the unlabeled SID.
+> >>
+> >> Fixes: 9287aed2ad1f ("selinux: Convert isec->lock into a spinlock")
+> >> Signed-off-by: Tianyue Ren <rentianyue@kylinos.cn>
+> >> ---
+> >>  security/selinux/hooks.c | 19 ++++++++++++++++---
+> >>  1 file changed, 16 insertions(+), 3 deletions(-)
+> >
+> > Merged into selinux/next with some minor tweaks to the comments.
+> > Thanks for your help!
+>
+> This seems to break booting on s390:
+>
+> Welcome to Fedora 32 (Thirty Two)!
+>
+> [    1.434571] systemd[1]: Set hostname to <xxx.xxx>
+> [    1.436839] audit: type=1400 audit(1604408868.681:4): avc:  denied  { write } for  pid=1 comm="systemd" dev="cgroup2" ino=2 scontext=system_u:sys
+> tem_r:init_t:s0 tcontext=system_u:object_r:unlabeled_t:s0 tclass=file permissive=0
+> [    1.436840] systemd[1]: Failed to create /init.scope control group: Permission denied
+> [    1.438039] systemd[1]: Failed to allocate manager object: Permission denied
+> [ [0;1;31m!!!!!! [0m] Failed to allocate manager object.
+> [    1.438281] systemd[1]: Freezing execution.
+>
+> Any ideas? If i revert 83370b31a915493231e5b9addc72e4bef69f8d31 from
+> linux-next-20201103 it works fine...
 
-Add RISC-V implementation of kernel_page_present(), update its forward
-declarations and stubs to be a part of set_memory API and remove ugly
-ifdefery in inlcude/linux/mm.h around current declarations of
-kernel_page_present().
+Thanks for the report.
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/arm64/include/asm/cacheflush.h |  1 +
- arch/arm64/mm/pageattr.c            |  4 +---
- arch/riscv/include/asm/set_memory.h |  1 +
- arch/riscv/mm/pageattr.c            | 29 +++++++++++++++++++++++++++++
- arch/x86/include/asm/set_memory.h   |  1 +
- arch/x86/mm/pat/set_memory.c        |  4 +---
- include/linux/mm.h                  |  7 -------
- include/linux/set_memory.h          |  5 +++++
- 8 files changed, 39 insertions(+), 13 deletions(-)
+Looking at this again, I'm thinking that setting the isec->initialized
+field outside of the spinlock is probably a bad idea.  My guess is
+that your system is racing on inode_doinit_with_dentry() and the
+initialized field is getting messed up.
 
-diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
-index 9384fd8fc13c..45217f21f1fe 100644
---- a/arch/arm64/include/asm/cacheflush.h
-+++ b/arch/arm64/include/asm/cacheflush.h
-@@ -140,6 +140,7 @@ int set_memory_valid(unsigned long addr, int numpages, int enable);
- 
- int set_direct_map_invalid_noflush(struct page *page);
- int set_direct_map_default_noflush(struct page *page);
-+bool kernel_page_present(struct page *page);
- 
- #include <asm-generic/cacheflush.h>
- 
-diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-index 439325532be1..92eccaf595c8 100644
---- a/arch/arm64/mm/pageattr.c
-+++ b/arch/arm64/mm/pageattr.c
-@@ -186,8 +186,8 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
- 
- 	set_memory_valid((unsigned long)page_address(page), numpages, enable);
- }
-+#endif /* CONFIG_DEBUG_PAGEALLOC */
- 
--#ifdef CONFIG_HIBERNATION
- /*
-  * This function is used to determine if a linear map page has been marked as
-  * not-valid. Walk the page table and check the PTE_VALID bit. This is based
-@@ -234,5 +234,3 @@ bool kernel_page_present(struct page *page)
- 	ptep = pte_offset_kernel(pmdp, addr);
- 	return pte_valid(READ_ONCE(*ptep));
- }
--#endif /* CONFIG_HIBERNATION */
--#endif /* CONFIG_DEBUG_PAGEALLOC */
-diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
-index 4c5bae7ca01c..d690b08dff2a 100644
---- a/arch/riscv/include/asm/set_memory.h
-+++ b/arch/riscv/include/asm/set_memory.h
-@@ -24,6 +24,7 @@ static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
- 
- int set_direct_map_invalid_noflush(struct page *page);
- int set_direct_map_default_noflush(struct page *page);
-+bool kernel_page_present(struct page *page);
- 
- #endif /* __ASSEMBLY__ */
- 
-diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-index 321b09d2e2ea..87ba5a68bbb8 100644
---- a/arch/riscv/mm/pageattr.c
-+++ b/arch/riscv/mm/pageattr.c
-@@ -198,3 +198,32 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
- 			     __pgprot(0), __pgprot(_PAGE_PRESENT));
- }
- #endif
-+
-+bool kernel_page_present(struct page *page)
-+{
-+	unsigned long addr = (unsigned long)page_address(page);
-+	pgd_t *pgd;
-+	pud_t *pud;
-+	p4d_t *p4d;
-+	pmd_t *pmd;
-+	pte_t *pte;
-+
-+	pgd = pgd_offset_k(addr);
-+	if (!pgd_present(*pgd))
-+		return false;
-+
-+	p4d = p4d_offset(pgd, addr);
-+	if (!p4d_present(*p4d))
-+		return false;
-+
-+	pud = pud_offset(p4d, addr);
-+	if (!pud_present(*pud))
-+		return false;
-+
-+	pmd = pmd_offset(pud, addr);
-+	if (!pmd_present(*pmd))
-+		return false;
-+
-+	pte = pte_offset_kernel(pmd, addr);
-+	return pte_present(*pte);
-+}
-diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
-index 5948218f35c5..4352f08bfbb5 100644
---- a/arch/x86/include/asm/set_memory.h
-+++ b/arch/x86/include/asm/set_memory.h
-@@ -82,6 +82,7 @@ int set_pages_rw(struct page *page, int numpages);
- 
- int set_direct_map_invalid_noflush(struct page *page);
- int set_direct_map_default_noflush(struct page *page);
-+bool kernel_page_present(struct page *page);
- 
- extern int kernel_set_to_readonly;
- 
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index bc9be96b777f..16f878c26667 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -2226,8 +2226,8 @@ void __kernel_map_pages(struct page *page, int numpages, int enable)
- 
- 	arch_flush_lazy_mmu_mode();
- }
-+#endif /* CONFIG_DEBUG_PAGEALLOC */
- 
--#ifdef CONFIG_HIBERNATION
- bool kernel_page_present(struct page *page)
- {
- 	unsigned int level;
-@@ -2239,8 +2239,6 @@ bool kernel_page_present(struct page *page)
- 	pte = lookup_address((unsigned long)page_address(page), &level);
- 	return (pte_val(*pte) & _PAGE_PRESENT);
- }
--#endif /* CONFIG_HIBERNATION */
--#endif /* CONFIG_DEBUG_PAGEALLOC */
- 
- int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
- 				   unsigned numpages, unsigned long page_flags)
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index ab0ef6bd351d..44b82f22e76a 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2937,16 +2937,9 @@ static inline void debug_pagealloc_map_pages(struct page *page,
- 	if (debug_pagealloc_enabled_static())
- 		__kernel_map_pages(page, numpages, enable);
- }
--
--#ifdef CONFIG_HIBERNATION
--extern bool kernel_page_present(struct page *page);
--#endif	/* CONFIG_HIBERNATION */
- #else	/* CONFIG_DEBUG_PAGEALLOC */
- static inline void debug_pagealloc_map_pages(struct page *page,
- 					     int numpages, int enable) {}
--#ifdef CONFIG_HIBERNATION
--static inline bool kernel_page_present(struct page *page) { return true; }
--#endif	/* CONFIG_HIBERNATION */
- #endif	/* CONFIG_DEBUG_PAGEALLOC */
- 
- #ifdef __HAVE_ARCH_GATE_AREA
-diff --git a/include/linux/set_memory.h b/include/linux/set_memory.h
-index 860e0f843c12..fe1aa4e54680 100644
---- a/include/linux/set_memory.h
-+++ b/include/linux/set_memory.h
-@@ -23,6 +23,11 @@ static inline int set_direct_map_default_noflush(struct page *page)
- {
- 	return 0;
- }
-+
-+static inline bool kernel_page_present(struct page *page)
-+{
-+	return true;
-+}
- #endif
- 
- #ifndef set_mce_nospec
+Any chance you could try the attached (completely untested) patch?
+
 -- 
-2.28.0
+paul moore
+www.paul-moore.com
 
+--0000000000009c59a805b336f33d
+Content-Type: text/x-patch; charset="US-ASCII"; name="01-selinux-inode_dentry_init_fix.patch"
+Content-Disposition: attachment; 
+	filename="01-selinux-inode_dentry_init_fix.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_kh2864py0>
+X-Attachment-Id: f_kh2864py0
+
+c2VsaW51eDogZml4IGlub2RlX2RvaW5pdF93aXRoX2RlbnRyeSgpIGVycm9yIGNhc2UgbG9ja2lu
+ZwoKRnJvbTogUGF1bCBNb29yZSA8cGF1bEBwYXVsLW1vb3JlLmNvbT4KClhYWCAtIHRlc3Rpbmcg
+b25seSBwYXRjaCwgd29yayBpbiBwcm9ncmVzcwoKRml4ZXM6IDgzMzcwYjMxYTkxNSAoInNlbGlu
+dXg6IGZpeCBlcnJvciBpbml0aWFsaXphdGlvbiBpbiBpbm9kZV9kb2luaXRfd2l0aF9kZW50cnko
+KSIpClJlcG9ydGVkLWJ5OiBTdmVuIFNjaG5lbGxlIDxzdmVuc0BsaW51eC5pYm0uY29tPgpTaWdu
+ZWQtb2ZmLWJ5OiBQYXVsIE1vb3JlIDxwYXVsQHBhdWwtbW9vcmUuY29tPgotLS0KIHNlY3VyaXR5
+L3NlbGludXgvaG9va3MuYyB8ICAgMjkgKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0KIDEg
+ZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCAxOCBkZWxldGlvbnMoLSkKCmRpZmYgLS1n
+aXQgYS9zZWN1cml0eS9zZWxpbnV4L2hvb2tzLmMgYi9zZWN1cml0eS9zZWxpbnV4L2hvb2tzLmMK
+aW5kZXggMTU4ZmM0N2Q4NjIwLi4wMjk0ZGEyYWFhY2QgMTAwNjQ0Ci0tLSBhL3NlY3VyaXR5L3Nl
+bGludXgvaG9va3MuYworKysgYi9zZWN1cml0eS9zZWxpbnV4L2hvb2tzLmMKQEAgLTE0NTEsMTMg
+KzE0NTEsNyBAQCBzdGF0aWMgaW50IGlub2RlX2RvaW5pdF93aXRoX2RlbnRyeShzdHJ1Y3QgaW5v
+ZGUgKmlub2RlLCBzdHJ1Y3QgZGVudHJ5ICpvcHRfZGVudAogCQkJICogaW5vZGVfZG9pbml0IHdp
+dGggYSBkZW50cnksIGJlZm9yZSB0aGVzZSBpbm9kZXMgY291bGQKIAkJCSAqIGJlIHVzZWQgYWdh
+aW4gYnkgdXNlcnNwYWNlLgogCQkJICovCi0JCQlpc2VjLT5pbml0aWFsaXplZCA9IExBQkVMX0lO
+VkFMSUQ7Ci0JCQkvKgotCQkJICogVGhlcmUgaXMgbm90aGluZyB1c2VmdWwgdG8ganVtcCB0byB0
+aGUgIm91dCIKLQkJCSAqIGxhYmVsLCBleGNlcHQgYSBuZWVkbGVzcyBzcGluIGxvY2svdW5sb2Nr
+Ci0JCQkgKiBjeWNsZS4KLQkJCSAqLwotCQkJcmV0dXJuIDA7CisJCQlnb3RvIG91dF9pbnZhbGlk
+OwogCQl9CiAKIAkJcmMgPSBpbm9kZV9kb2luaXRfdXNlX3hhdHRyKGlub2RlLCBkZW50cnksIHNi
+c2VjLT5kZWZfc2lkLApAQCAtMTUxMywxNSArMTUwNyw4IEBAIHN0YXRpYyBpbnQgaW5vZGVfZG9p
+bml0X3dpdGhfZGVudHJ5KHN0cnVjdCBpbm9kZSAqaW5vZGUsIHN0cnVjdCBkZW50cnkgKm9wdF9k
+ZW50CiAJCQkgKiBpbm9kZV9kb2luaXQoKSB3aXRoIGEgZGVudHJ5LCBiZWZvcmUgdGhlc2UgaW5v
+ZGVzCiAJCQkgKiBjb3VsZCBiZSB1c2VkIGFnYWluIGJ5IHVzZXJzcGFjZS4KIAkJCSAqLwotCQkJ
+aWYgKCFkZW50cnkpIHsKLQkJCQlpc2VjLT5pbml0aWFsaXplZCA9IExBQkVMX0lOVkFMSUQ7Ci0J
+CQkJLyoKLQkJCQkgKiBUaGVyZSBpcyBub3RoaW5nIHVzZWZ1bCB0byBqdW1wIHRvIHRoZSAib3V0
+IgotCQkJCSAqIGxhYmVsLCBleGNlcHQgYSBuZWVkbGVzcyBzcGluIGxvY2svdW5sb2NrCi0JCQkJ
+ICogY3ljbGUuCi0JCQkJICovCi0JCQkJcmV0dXJuIDA7Ci0JCQl9CisJCQlpZiAoIWRlbnRyeSkK
+KwkJCQlnb3RvIG91dF9pbnZhbGlkOwogCQkJcmMgPSBzZWxpbnV4X2dlbmZzX2dldF9zaWQoZGVu
+dHJ5LCBzY2xhc3MsCiAJCQkJCQkgICBzYnNlYy0+ZmxhZ3MsICZzaWQpOwogCQkJaWYgKHJjKSB7
+CkBAIC0xNTQ2LDExICsxNTMzLDEwIEBAIHN0YXRpYyBpbnQgaW5vZGVfZG9pbml0X3dpdGhfZGVu
+dHJ5KHN0cnVjdCBpbm9kZSAqaW5vZGUsIHN0cnVjdCBkZW50cnkgKm9wdF9kZW50CiBvdXQ6CiAJ
+c3Bpbl9sb2NrKCZpc2VjLT5sb2NrKTsKIAlpZiAoaXNlYy0+aW5pdGlhbGl6ZWQgPT0gTEFCRUxf
+UEVORElORykgewotCQlpZiAoIXNpZCB8fCByYykgeworCQlpZiAocmMpIHsKIAkJCWlzZWMtPmlu
+aXRpYWxpemVkID0gTEFCRUxfSU5WQUxJRDsKIAkJCWdvdG8gb3V0X3VubG9jazsKIAkJfQotCiAJ
+CWlzZWMtPmluaXRpYWxpemVkID0gTEFCRUxfSU5JVElBTElaRUQ7CiAJCWlzZWMtPnNpZCA9IHNp
+ZDsKIAl9CkBAIC0xNTU4LDYgKzE1NDQsMTMgQEAgc3RhdGljIGludCBpbm9kZV9kb2luaXRfd2l0
+aF9kZW50cnkoc3RydWN0IGlub2RlICppbm9kZSwgc3RydWN0IGRlbnRyeSAqb3B0X2RlbnQKIG91
+dF91bmxvY2s6CiAJc3Bpbl91bmxvY2soJmlzZWMtPmxvY2spOwogCXJldHVybiByYzsKKworb3V0
+X2ludmFsaWQ6CisJc3Bpbl9sb2NrKCZpc2VjLT5sb2NrKTsKKwlpZiAoaXNlYy0+aW5pdGlhbGl6
+ZWQgPT0gTEFCRUxfUEVORElORykKKwkJaXNlYy0+aW5pdGlhbGl6ZWQgPSBMQUJFTF9JTlZBTElE
+OworCXNwaW5fdW5sb2NrKCZpc2VjLT5sb2NrKTsKKwlyZXR1cm4gMDsKIH0KIAogLyogQ29udmVy
+dCBhIExpbnV4IHNpZ25hbCB0byBhbiBhY2Nlc3MgdmVjdG9yLiAqLwo=
+--0000000000009c59a805b336f33d--
