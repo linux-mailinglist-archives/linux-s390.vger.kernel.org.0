@@ -2,156 +2,118 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67E5F2A5AEC
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Nov 2020 01:16:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4815B2A5B35
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Nov 2020 01:52:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbgKDAN0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Nov 2020 19:13:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729866AbgKDALo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Nov 2020 19:11:44 -0500
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C09A6C061A04
-        for <linux-s390@vger.kernel.org>; Tue,  3 Nov 2020 16:11:42 -0800 (PST)
-Received: by mail-pg1-x544.google.com with SMTP id i26so15013075pgl.5
-        for <linux-s390@vger.kernel.org>; Tue, 03 Nov 2020 16:11:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NFjsAF4kgpQCHVIlKmgYN6bEVL36r1XibqsUv152D08=;
-        b=mPTbV2UhVfnJP2OoJL4D5QLosesGivMu0Yj5j7pkCrVtHA6dueaCzR1JSWWklnSxS2
-         Wgzos2joCi+Wlp8KUeVXQhCOJbK/Z4g4eTF82BJYkvr8uaU2CIt3++/EZgLF7nCLiPmR
-         RFfDgHAz/9hjV1ZrPMZTrZyKkXhcZM/AoX3+w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NFjsAF4kgpQCHVIlKmgYN6bEVL36r1XibqsUv152D08=;
-        b=EDao8dYy+r5Lk8rhMuR0gd70+sZqrcmGHzP3fd3iNP+QjCSwx/GmhiKFKgjZemFU7P
-         9Hwm8CZr0FNBebnbUXQq5sirX1SrHlSQEFNojpMwQmuYHDDS+5VlEPPrLiH+dssPbDKn
-         OssdPocurQC3vnWiH5BQKO4YQMbx9pE+OMrhHo2WgVgf4JcCmy/RlZb7yoPJhz2erOcj
-         xuu4sjZ/t6sXHun35r14lY6pYjysm+nw3+2RLJ2bHs9m7LkbLu9/SfhRx+TtcyBIyMt5
-         Wa0sliWSzT/rBv+oOlVlY4Mfqlcz6nqeZOgHlnJzwpGeUwyqXxh2/njXFjY/sm4YLU4b
-         h+zQ==
-X-Gm-Message-State: AOAM5301KBfkw9bB4JWg2khX6A2kMSPzNR4ETbwISnuzbtXbqLFyoSeC
-        q/Ts+0Afa4W//L4+6GouyO/KJw==
-X-Google-Smtp-Source: ABdhPJybME+aS3qtjx8JuwpcYMqCGEp0y1Q8idII2QCmSunt2ifzlNcehSCk1E6c+iZLzWwdlgTh0g==
-X-Received: by 2002:a17:90a:5285:: with SMTP id w5mr1762165pjh.50.1604448702345;
-        Tue, 03 Nov 2020 16:11:42 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j20sm118311pgl.40.2020.11.03.16.11.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2020 16:11:41 -0800 (PST)
-Date:   Tue, 3 Nov 2020 16:11:40 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     YiFei Zhu <zhuyifei1999@gmail.com>
-Cc:     containers@lists.linux-foundation.org,
-        YiFei Zhu <yifeifz2@illinois.edu>, linux-csky@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Laight <David.Laight@aculab.com>,
-        Dimitrios Skarlatos <dskarlat@cs.cmu.edu>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        Hubertus Franke <frankeh@us.ibm.com>,
-        Jack Chen <jianyan2@illinois.edu>,
-        Jann Horn <jannh@google.com>,
-        Josep Torrellas <torrella@illinois.edu>,
-        Tianyin Xu <tyxu@illinois.edu>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Tycho Andersen <tycho@tycho.pizza>,
-        Valentin Rothberg <vrothber@redhat.com>,
-        Will Drewry <wad@chromium.org>
-Subject: Re: [PATCH seccomp 0/8] seccomp: add bitmap cache support on
- remaining arches and report cache in procfs
-Message-ID: <202011031606.423EC9E@keescook>
-References: <cover.1604410035.git.yifeifz2@illinois.edu>
+        id S1728162AbgKDAwS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Nov 2020 19:52:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727754AbgKDAwR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 3 Nov 2020 19:52:17 -0500
+Received: from sx1.lan (c-24-6-56-119.hsd1.ca.comcast.net [24.6.56.119])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11F76223C7;
+        Wed,  4 Nov 2020 00:52:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604451137;
+        bh=6zAov1EfuE4zOg6yRhjhy3VcbO2dr/0vmkSQumXy2wQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Ekyxu07XEgtGJYXnnBrlpWtChl5OgtxSVoJ/YZSojhaoIV0Qp1d47DK84w61vK7xr
+         UHCBAaMKDY8dURxBQbpbSPbDQ955eu4lbAexFWISNlecW/h6A7Dxw7ZEyo6p8BHbS2
+         4BhBpxgOjTuH0cpquFG5gV5eUiOKFGgj21M1HTkU=
+Message-ID: <14fd3b8357d650c76f00c399bcf08d654524e632.camel@kernel.org>
+Subject: Re: [PATCH net-next v2 04/15] net/smc: Add link counters for IB
+ device ports
+From:   Saeed Mahameed <saeed@kernel.org>
+To:     Karsten Graul <kgraul@linux.ibm.com>, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        hca@linux.ibm.com, raspl@linux.ibm.com
+Date:   Tue, 03 Nov 2020 16:52:16 -0800
+In-Reply-To: <20201103102531.91710-5-kgraul@linux.ibm.com>
+References: <20201103102531.91710-1-kgraul@linux.ibm.com>
+         <20201103102531.91710-5-kgraul@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1604410035.git.yifeifz2@illinois.edu>
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Nov 03, 2020 at 07:42:56AM -0600, YiFei Zhu wrote:
-> From: YiFei Zhu <yifeifz2@illinois.edu>
+On Tue, 2020-11-03 at 11:25 +0100, Karsten Graul wrote:
+> From: Guvenc Gulce <guvenc@linux.ibm.com>
 > 
-> This patch series enables bitmap cache for the remaining arches with
-> SECCOMP_FILTER, other than MIPS.
+> Add link counters to the structure of the smc ib device, one counter
+> per
+> ib port. Increase/decrease the counters as needed in the
+> corresponding
+> routines.
 > 
-> I was unable to find any of the arches having subarch-specific NR_syscalls
-> macros, so generic NR_syscalls is used. SH's syscall_get_arch seems to
-> only have the 32-bit subarch implementation. I'm not sure if this is
-> expected.
+> Signed-off-by: Guvenc Gulce <guvenc@linux.ibm.com>
+> Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+> ---
+>  net/smc/smc_core.c | 3 +++
+>  net/smc/smc_ib.h   | 1 +
+>  2 files changed, 4 insertions(+)
 > 
-> This series has not been tested; I have not built all the cross compilers
-> necessary to build test, let alone run the kernel or benchmark the
-> performance, so help on making sure the bitmap cache works as expected
-> would be appreciated. The series applies on top of Kees's for-next/seccomp
-> branch.
+> diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+> index 6e2077161267..da94725deb09 100644
+> --- a/net/smc/smc_core.c
+> +++ b/net/smc/smc_core.c
+> @@ -316,6 +316,7 @@ int smcr_link_init(struct smc_link_group *lgr,
+> struct smc_link *lnk,
+>  	lnk->link_idx = link_idx;
+>  	lnk->smcibdev = ini->ib_dev;
+>  	lnk->ibport = ini->ib_port;
+> +	atomic_inc(&ini->ib_dev->lnk_cnt_by_port[ini->ib_port - 1]);
+>  	lnk->path_mtu = ini->ib_dev->pattr[ini->ib_port -
+> 1].active_mtu;
+>  	atomic_set(&lnk->conn_cnt, 0);
+>  	smc_llc_link_set_uid(lnk);
+> @@ -360,6 +361,7 @@ int smcr_link_init(struct smc_link_group *lgr,
+> struct smc_link *lnk,
+>  	smc_llc_link_clear(lnk, false);
+>  out:
+>  	put_device(&ini->ib_dev->ibdev->dev);
+> +	atomic_dec(&ini->ib_dev->lnk_cnt_by_port[ini->ib_port - 1]);
+>  	memset(lnk, 0, sizeof(struct smc_link));
+>  	lnk->state = SMC_LNK_UNUSED;
+>  	if (!atomic_dec_return(&ini->ib_dev->lnk_cnt))
+> @@ -750,6 +752,7 @@ void smcr_link_clear(struct smc_link *lnk, bool
+> log)
+>  	smc_ib_dealloc_protection_domain(lnk);
+>  	smc_wr_free_link_mem(lnk);
+>  	put_device(&lnk->smcibdev->ibdev->dev);
+> +	atomic_dec(&lnk->smcibdev->lnk_cnt_by_port[lnk->ibport - 1]);
 
-Thank you! This looks good. I wonder if the different handling of little
-endian is worth solving -- I'm suspicious about powerpc's use of
-__LITTLE_ENDIAN__ vs a CONFIG, but I guess the compiler would match the
-target endian-ness. Regardless, it captures what the architectures are
-doing, and gets things standardized.
+this repeats 3 times at least in this patch and hard to read, can you
+make a macro or static function to hide the details
+
+Maybe: 
+SMC_IBDEV_CNT_{INC/DEC}(lnk->smcibdev);
+
+>  	smcibdev = lnk->smcibdev;
+>  	memset(lnk, 0, sizeof(struct smc_link));
+>  	lnk->state = SMC_LNK_UNUSED;
+> diff --git a/net/smc/smc_ib.h b/net/smc/smc_ib.h
+> index 2ce481187dd0..3e6bfeddd53b 100644
+> --- a/net/smc/smc_ib.h
+> +++ b/net/smc/smc_ib.h
+> @@ -53,6 +53,7 @@ struct smc_ib_device {				
+> /* ib-device infos for smc */
+>  	atomic_t		lnk_cnt;	/* number of links on ibdev
+> */
+>  	wait_queue_head_t	lnks_deleted;	/* wait 4 removal of all
+> links*/
+>  	struct mutex		mutex;		/* protect dev
+> setup+cleanup */
+> +	atomic_t		lnk_cnt_by_port[SMC_MAX_PORTS];/*#lnk per
+> port*/
+
+missing spaces around comment text.
+
 
 > 
-> YiFei Zhu (8):
->   csky: Enable seccomp architecture tracking
->   parisc: Enable seccomp architecture tracking
 
-I don't have compilers for these.
-
->   powerpc: Enable seccomp architecture tracking
->   riscv: Enable seccomp architecture tracking
->   s390: Enable seccomp architecture tracking
-
-These I can build-test immediately.
-
->   sh: Enable seccomp architecture tracking
->   xtensa: Enable seccomp architecture tracking
-
-These two are available in Ubuntu's cross compiler set, so I'll get them
-added to my cross-builders.
-
->   seccomp/cache: Report cache data through /proc/pid/seccomp_cache
-
-In the meantime, I'll wait a bit to see if we can get some Acks/Reviews
-from arch maintainers. :)
-
--Kees
-
-> 
->  arch/Kconfig                       | 15 ++++++++
->  arch/csky/include/asm/Kbuild       |  1 -
->  arch/csky/include/asm/seccomp.h    | 11 ++++++
->  arch/parisc/include/asm/Kbuild     |  1 -
->  arch/parisc/include/asm/seccomp.h  | 22 +++++++++++
->  arch/powerpc/include/asm/seccomp.h | 21 +++++++++++
->  arch/riscv/include/asm/seccomp.h   | 10 +++++
->  arch/s390/include/asm/seccomp.h    |  9 +++++
->  arch/sh/include/asm/seccomp.h      | 10 +++++
->  arch/xtensa/include/asm/Kbuild     |  1 -
->  arch/xtensa/include/asm/seccomp.h  | 11 ++++++
->  fs/proc/base.c                     |  6 +++
->  include/linux/seccomp.h            |  7 ++++
->  kernel/seccomp.c                   | 59 ++++++++++++++++++++++++++++++
->  14 files changed, 181 insertions(+), 3 deletions(-)
->  create mode 100644 arch/csky/include/asm/seccomp.h
->  create mode 100644 arch/parisc/include/asm/seccomp.h
->  create mode 100644 arch/xtensa/include/asm/seccomp.h
-> 
-> 
-> base-commit: 38c37e8fd3d2590c4234d8cfbc22158362f0eb04
-> --
-> 2.29.2
-
--- 
-Kees Cook
