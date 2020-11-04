@@ -2,115 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02FEA2A5E7D
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Nov 2020 08:02:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 589D72A6198
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Nov 2020 11:30:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgKDHCK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Nov 2020 02:02:10 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33876 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725926AbgKDHCK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Nov 2020 02:02:10 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A46WCtX130877;
-        Wed, 4 Nov 2020 02:01:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : references : date : in-reply-to : message-id : mime-version :
- content-type; s=pp1; bh=YzP75st8LTQCFMRonrMqa7EYecxPL4AjHvqtXuuDhZQ=;
- b=ANJPjk0Oin0smoDwtN2LOk83JWLaXIQp7NU40Ky4fTPgqcPZMTh12A7P1JVPleYFC19u
- b7X398QFQ9NWe+ZFbVI75bTqo4J9kV+2dpP1HuZUwDm/7lJS8SUya9V31fEu53ZkmLLz
- 5NH8UfiyBbsjJ238RMdsIie6w67bxOuCkqnCf850AjeHEjXrvyAMourOgWkXy7jyIn5b
- NhBCXTr0OcKvOuEDdytmqBfN6K1J3k7B7LNamaETCr6ncYSIGE30mNawJeERnNvxVKTX
- 4umdT3GEkw0jpyN6j1k1x70wQF3iGlVWR2oVxSyGZ+HeIPR1hMGK9FAq6iJ0rkJQiMUb mw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34kdmr7knr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Nov 2020 02:01:55 -0500
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0A46hF11171819;
-        Wed, 4 Nov 2020 02:01:53 -0500
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34kdmr7kmd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Nov 2020 02:01:53 -0500
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0A46q0Tb000737;
-        Wed, 4 Nov 2020 07:01:50 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 34hm6hb90f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Nov 2020 07:01:50 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0A471lAC65733054
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Nov 2020 07:01:47 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 665B24C040;
-        Wed,  4 Nov 2020 07:01:47 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C1B74C058;
-        Wed,  4 Nov 2020 07:01:47 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  4 Nov 2020 07:01:46 +0000 (GMT)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     rentianyue@tj.kylinos.cn,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>, yangzhao@kylinos.cn,
-        selinux@vger.kernel.org, Tianyue Ren <rentianyue@kylinos.cn>,
-        linux-s390@vger.kernel.org, hca@linux.ibm.com,
-        borntraeger@de.ibm.com
-Subject: Re: [PATCH v3 1/1] selinux: fix error initialization in
- inode_doinit_with_dentry()
-References: <CAHC9VhQTp3Rc_7zM661Rzur0XSuWRWKJJg=CwLPAQo5ABRpS-w@mail.gmail.com>
-        <20201009013630.6777-1-rentianyue@tj.kylinos.cn>
-        <20201009013630.6777-2-rentianyue@tj.kylinos.cn>
-        <CAHC9VhR2KPKN8ot9WrkjZQ08X-VPDGkXro18C5jhDEwcFH6wog@mail.gmail.com>
-        <yt9dh7q64m8a.fsf@linux.ibm.com>
-        <CAHC9VhT-dgT8pP7ZfPu+Ssw4RAYUpcwhTWfXXeciVPz0mRcP3A@mail.gmail.com>
-        <yt9dpn4u9scs.fsf@linux.ibm.com>
-        <CAHC9VhRxm=YR1yBy8fnWPXRZ48pq4MA4b26YAtqAJORJZD61wg@mail.gmail.com>
-Date:   Wed, 04 Nov 2020 08:01:46 +0100
-In-Reply-To: <CAHC9VhRxm=YR1yBy8fnWPXRZ48pq4MA4b26YAtqAJORJZD61wg@mail.gmail.com>
-        (Paul Moore's message of "Tue, 3 Nov 2020 21:42:35 -0500")
-Message-ID: <yt9dpn4twqp1.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        id S1729213AbgKDKWi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 4 Nov 2020 05:22:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728508AbgKDKWi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Nov 2020 05:22:38 -0500
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2EACC0613D3;
+        Wed,  4 Nov 2020 02:22:37 -0800 (PST)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4CR2lS6ZW8z9sTL;
+        Wed,  4 Nov 2020 21:22:28 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1604485355;
+        bh=L70AG7tzTd7Z55u+Fj8DTKuCWP9ecgUCCOxcamNMHIs=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=oDkd83UtH0Srm5gou9o8FbK7V4IaynA9LCA2YJKhl+5lUnI+xkZjuVD5VI7pJ+a2M
+         HfsMI0MoloEkD3kwT+0vUtyCVb5PM2a9WPF6rkPmZB+9idXkIb7EMvyH3VOFzyp/Ps
+         68txSVLNJRowCRuykY+i+5Ewg7c/SwxbVOrNc5RWW00H/82L7EDvL4Qy2KV2oBLDUb
+         2yVheHA/7sjVh0E3O3cAIx/q6Zcp5FGUuuzsq1Mfee0O7JtPXB0z7fnfD69DrTlxhD
+         Ug36BFsOA8q9k55mb81BwQUF1fU4SM3xLLRlc5FTkEqiwDPXMtmP7ZL6xkIZIdCtj0
+         qdybn2J+0q8JQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     YiFei Zhu <zhuyifei1999@gmail.com>,
+        containers@lists.linux-foundation.org
+Cc:     linux-sh@vger.kernel.org, Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Hubertus Franke <frankeh@us.ibm.com>,
+        Jack Chen <jianyan2@illinois.edu>,
+        linux-riscv@lists.infradead.org,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-s390@vger.kernel.org, YiFei Zhu <yifeifz2@illinois.edu>,
+        linux-csky@vger.kernel.org, Tianyin Xu <tyxu@illinois.edu>,
+        linux-xtensa@linux-xtensa.org, Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Valentin Rothberg <vrothber@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Josep Torrellas <torrella@illinois.edu>,
+        Will Drewry <wad@chromium.org>, linux-parisc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dimitrios Skarlatos <dskarlat@cs.cmu.edu>,
+        David Laight <David.Laight@aculab.com>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, Tycho Andersen <tycho@tycho.pizza>
+Subject: Re: [PATCH seccomp 3/8] powerpc: Enable seccomp architecture tracking
+In-Reply-To: <4ec2970fcc819eb4d5dac2bd35233ccdadfda845.1604410035.git.yifeifz2@illinois.edu>
+References: <cover.1604410035.git.yifeifz2@illinois.edu> <4ec2970fcc819eb4d5dac2bd35233ccdadfda845.1604410035.git.yifeifz2@illinois.edu>
+Date:   Wed, 04 Nov 2020 21:22:28 +1100
+Message-ID: <87wnz1to9n.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-04_03:2020-11-04,2020-11-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 priorityscore=1501 adultscore=0 mlxlogscore=829 mlxscore=0
- bulkscore=0 suspectscore=8 phishscore=0 clxscore=1015 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011040044
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Paul,
-
-Paul Moore <paul@paul-moore.com> writes:
-
-> On Tue, Nov 3, 2020 at 2:02 PM Sven Schnelle <svens@linux.ibm.com> wrote:
->> Thanks for the patch. Unfortunately it doesn't seem to change anything
->> for me. I can take a look into this tomorrow, but i don't know much
->> about the internals of selinux, so i'm not sure whether i'm of much help.
+YiFei Zhu <zhuyifei1999@gmail.com> writes:
+> From: YiFei Zhu <yifeifz2@illinois.edu>
 >
-> I'm sorry that patch didn't work out.  I just spent some more time
-> looking at the code+patch and the only other thing that I can see is
-> that if we mark the isec invalid, we don't bother setting the
-> isec->sid value to whatever default we may have already found.  In a
-> perfect world this shouldn't matter, but if for whatever reason the
-> kernel can't revalidate the inode's label when it tries later it will
-> fallback to that default isec->sid.
+> To enable seccomp constant action bitmaps, we need to have a static
+> mapping to the audit architecture and system call table size. Add these
+> for powerpc.
 >
-> I'm sorry to ask this again, but would you be able to test the attached patch?
+> Signed-off-by: YiFei Zhu <yifeifz2@illinois.edu>
+> ---
+>  arch/powerpc/include/asm/seccomp.h | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>
+> diff --git a/arch/powerpc/include/asm/seccomp.h b/arch/powerpc/include/asm/seccomp.h
+> index 51209f6071c5..3efcc83e9cc6 100644
+> --- a/arch/powerpc/include/asm/seccomp.h
+> +++ b/arch/powerpc/include/asm/seccomp.h
+> @@ -8,4 +8,25 @@
+>  
+>  #include <asm-generic/seccomp.h>
+>  
+> +#ifdef __LITTLE_ENDIAN__
 
-This patch fixes the issue. So it looks like your assumption is right.
+As Kees mentioned this should (must?!) match the configured endian.
 
-Thanks
-Sven
+But I think it would still be better to use the CONFIG symbol, which is
+CONFIG_CPU_LITTLE_ENDIAN.
+
+> +#define __SECCOMP_ARCH_LE_BIT		__AUDIT_ARCH_LE
+> +#else
+> +#define __SECCOMP_ARCH_LE_BIT		0
+> +#endif
+> +
+> +#ifdef CONFIG_PPC64
+> +# define SECCOMP_ARCH_NATIVE		(AUDIT_ARCH_PPC64 | __SECCOMP_ARCH_LE)
+
+You use __SECCOMP_ARCH_LE there, but previously you only defined
+__SECCOMP_ARCH_LE_BIT.
+
+Is there some magic somewhere that defines __SECCOMP_ARCH_LE based on
+__SECCOMP_ARCH_LE_BIT ?
+
+> +# define SECCOMP_ARCH_NATIVE_NR		NR_syscalls
+> +# define SECCOMP_ARCH_NATIVE_NAME	"ppc64"
+
+What's the name used for?
+
+Usually we use "ppc64" for 64-bit big endian and "ppc64le" for 64-bit
+little endian.
+
+> +# ifdef CONFIG_COMPAT
+> +#  define SECCOMP_ARCH_COMPAT		(AUDIT_ARCH_PPC | __SECCOMP_ARCH_LE)
+> +#  define SECCOMP_ARCH_COMPAT_NR	NR_syscalls
+> +#  define SECCOMP_ARCH_COMPAT_NAME	"powerpc"
+
+And usually we use "ppc" for 32-bit.
+
+> +# endif
+> +#else /* !CONFIG_PPC64 */
+> +# define SECCOMP_ARCH_NATIVE		(AUDIT_ARCH_PPC | __SECCOMP_ARCH_LE)
+> +# define SECCOMP_ARCH_NATIVE_NR		NR_syscalls
+> +# define SECCOMP_ARCH_NATIVE_NAME	"powerpc"
+> +#endif
+> +
+>  #endif	/* _ASM_POWERPC_SECCOMP_H */
+> -- 
+> 2.29.2
+
+
+cheers
