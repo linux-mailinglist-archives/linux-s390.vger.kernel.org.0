@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF49A2A5B7B
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Nov 2020 02:06:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F0822A5BDB
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Nov 2020 02:26:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbgKDBGl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Nov 2020 20:06:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43840 "EHLO mail.kernel.org"
+        id S1729944AbgKDB0K (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Nov 2020 20:26:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730119AbgKDBGl (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 3 Nov 2020 20:06:41 -0500
+        id S1729246AbgKDB0J (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 3 Nov 2020 20:26:09 -0500
 Received: from sx1.lan (c-24-6-56-119.hsd1.ca.comcast.net [24.6.56.119])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4199F2065E;
-        Wed,  4 Nov 2020 01:06:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1F212242F;
+        Wed,  4 Nov 2020 01:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604452000;
-        bh=FDDkkgdnhBjRszaoMpH9rsaeXy2VQAL+pnhjxBHCZhk=;
+        s=default; t=1604453169;
+        bh=6a1hctPe2KygmZp7wOUYcvwOdBY2Yv0EfW16l+TmqWs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=w70rvpRIgNal+YBm7mPMMgO1iCKoy3IazgBv/lO6loSqq2d9Q6nXQeoFZIT1GN4qG
-         UT6945Wv3crrS2F1X5mVuUGWS+PmHS16A5vKd7rQE6Wsh8ApO8+3dwlPnB99ngU1wx
-         JVWNVE7s3JxOAQkpUzDkBhsbzdAAankZeUZaQuXs=
-Message-ID: <f734400e8fbf53d3c8a4db97887bd55f6f80f10b.camel@kernel.org>
-Subject: Re: [PATCH net-next v2 06/15] net/smc: Add diagnostic information
- to link structure
+        b=tIDWgXqRZkUctZ/KK3glz2w5aZkIN2MyW8k4y/2eKKg/QD010gzKkI5rpRO35r4G8
+         VTELI5HnhTUj4jYpy+33iJW9gu6EzQzEqfBc11cKh9b4slB7F4aO0Z39xhnuCKEala
+         P21FuOg+K3FLah/Xs+Xcw/5NA9hj3UB/kBl4lamA=
+Message-ID: <1c831e09cd2c42d69f5702733e7b083581517e79.camel@kernel.org>
+Subject: Re: [PATCH net-next v2 11/15] net/smc: Add SMC-D Linkgroup
+ diagnostic support
 From:   Saeed Mahameed <saeed@kernel.org>
 To:     Karsten Graul <kgraul@linux.ibm.com>, davem@davemloft.net
 Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
         hca@linux.ibm.com, raspl@linux.ibm.com
-Date:   Tue, 03 Nov 2020 17:06:39 -0800
-In-Reply-To: <20201103102531.91710-7-kgraul@linux.ibm.com>
+Date:   Tue, 03 Nov 2020 17:26:07 -0800
+In-Reply-To: <20201103102531.91710-12-kgraul@linux.ibm.com>
 References: <20201103102531.91710-1-kgraul@linux.ibm.com>
-         <20201103102531.91710-7-kgraul@linux.ibm.com>
+         <20201103102531.91710-12-kgraul@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
@@ -45,78 +45,102 @@ X-Mailing-List: linux-s390@vger.kernel.org
 On Tue, 2020-11-03 at 11:25 +0100, Karsten Graul wrote:
 > From: Guvenc Gulce <guvenc@linux.ibm.com>
 > 
-> During link creation add network and ib-device name to
-> link structure. This is needed for diagnostic purposes.
-> 
-> When diagnostic information is gathered, we need to traverse
-> device, linkgroup and link structures, to be able to do that
-> we need to hold a spinlock for the linkgroup list, without this
-> diagnostic information in link structure, another device list
-> mutex holding would be necessary to dereference the device
-> pointer in the link structure which would be impossible when
-> holding a spinlock already.
+> Deliver SMCD Linkgroup information via netlink based
+> diagnostic interface.
 > 
 > Signed-off-by: Guvenc Gulce <guvenc@linux.ibm.com>
 > Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
 > ---
->  net/smc/smc_core.c | 10 ++++++++++
->  net/smc/smc_core.h |  3 +++
->  2 files changed, 13 insertions(+)
+>  include/uapi/linux/smc_diag.h |   7 +++
+>  net/smc/smc_diag.c            | 108
+> ++++++++++++++++++++++++++++++++++
+>  net/smc/smc_ism.c             |   2 +
+>  3 files changed, 117 insertions(+)
 > 
-> diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-> index da94725deb09..28fc583d9033 100644
-> --- a/net/smc/smc_core.c
-> +++ b/net/smc/smc_core.c
-> @@ -303,6 +303,15 @@ static u8 smcr_next_link_id(struct
-> smc_link_group *lgr)
->  	return link_id;
->  }
+> diff --git a/include/uapi/linux/smc_diag.h
+> b/include/uapi/linux/smc_diag.h
+> index a57df0296aa4..5a80172df757 100644
+> --- a/include/uapi/linux/smc_diag.h
+> +++ b/include/uapi/linux/smc_diag.h
+> @@ -81,6 +81,7 @@ enum {
+>  enum {
+>  	SMC_DIAG_LGR_INFO_SMCR = 1,
+>  	SMC_DIAG_LGR_INFO_SMCR_LINK,
+> +	SMC_DIAG_LGR_INFO_SMCD,
+>  };
 >  
-> +static inline void smcr_copy_dev_info_to_link(struct smc_link *link)
-> +{
-> +	struct smc_ib_device *smcibdev = link->smcibdev;
+> 
 > +
-> +	memcpy(link->ibname, smcibdev->ibdev->name, sizeof(link-
-> >ibname));
-> +	memcpy(link->ndevname, smcibdev->netdev[link->ibport - 1],
-> +	       sizeof(link->ndevname));
+> +static int smc_diag_fill_smcd_dev(struct smcd_dev_list *dev_list,
+> +				  struct sk_buff *skb,
+> +				  struct netlink_callback *cb,
+> +				  struct smc_diag_req_v2 *req)
+> +{
+> +	struct smc_diag_dump_ctx *cb_ctx = smc_dump_context(cb);
+> +	struct smcd_dev *smcd_dev;
+> +	int snum = cb_ctx->pos[0];
+> +	int rc = 0, num = 0;
+> +
+> +	mutex_lock(&dev_list->mutex);
+> +	list_for_each_entry(smcd_dev, &dev_list->list, list) {
+> +		if (!list_empty(&smcd_dev->lgr_list)) {
 
-snprintf() 
+You could use early continue every where in this patch to avoid
+indentation. 
 
+> +			if (num < snum)
+> +				goto next;
+> +			rc = smc_diag_handle_smcd_lgr(smcd_dev, skb,
+> +						      cb, req);
+> +			if (rc < 0)
+> +				goto errout;
+> +next:
+> +			num++;
+> +		}
+> +	}
+> +errout:
+> +	mutex_unlock(&dev_list->mutex);
+> +	cb_ctx->pos[0] = num;
+> +	return rc;
 > +}
 > +
->  int smcr_link_init(struct smc_link_group *lgr, struct smc_link *lnk,
->  		   u8 link_idx, struct smc_init_info *ini)
+>  static int __smc_diag_dump(struct sock *sk, struct sk_buff *skb,
+>  			   struct netlink_callback *cb,
+>  			   const struct smc_diag_req *req)
+> @@ -441,6 +546,9 @@ static int smc_diag_dump_ext(struct sk_buff *skb,
+> struct netlink_callback *cb)
+>  		if ((req->cmd_ext & (1 << (SMC_DIAG_LGR_INFO_SMCR -
+> 1))))
+>  			smc_diag_fill_lgr_list(&smc_lgr_list, skb, cb,
+>  					       req);
+> +		if ((req->cmd_ext & (1 << (SMC_DIAG_LGR_INFO_SMCD -
+> 1))))
+> +			smc_diag_fill_smcd_dev(&smcd_dev_list, skb, cb,
+> +					       req);
+>  	}
+>  
+>  	return skb->len;
+> diff --git a/net/smc/smc_ism.c b/net/smc/smc_ism.c
+> index 6abbdd09a580..5bb2c7fb4ea8 100644
+> --- a/net/smc/smc_ism.c
+> +++ b/net/smc/smc_ism.c
+> @@ -20,6 +20,7 @@ struct smcd_dev_list smcd_dev_list = {
+>  	.list = LIST_HEAD_INIT(smcd_dev_list.list),
+>  	.mutex = __MUTEX_INITIALIZER(smcd_dev_list.mutex)
+>  };
+> +EXPORT_SYMBOL_GPL(smcd_dev_list);
+>  
+>  bool smc_ism_v2_capable;
+>  
+> @@ -50,6 +51,7 @@ u16 smc_ism_get_chid(struct smcd_dev *smcd)
 >  {
-> @@ -317,6 +326,7 @@ int smcr_link_init(struct smc_link_group *lgr,
-> struct smc_link *lnk,
->  	lnk->smcibdev = ini->ib_dev;
->  	lnk->ibport = ini->ib_port;
->  	atomic_inc(&ini->ib_dev->lnk_cnt_by_port[ini->ib_port - 1]);
-> +	smcr_copy_dev_info_to_link(lnk);
->  	lnk->path_mtu = ini->ib_dev->pattr[ini->ib_port -
-> 1].active_mtu;
->  	atomic_set(&lnk->conn_cnt, 0);
->  	smc_llc_link_set_uid(lnk);
-> diff --git a/net/smc/smc_core.h b/net/smc/smc_core.h
-> index 83a88a4635db..bd16d63c5222 100644
-> --- a/net/smc/smc_core.h
-> +++ b/net/smc/smc_core.h
-> @@ -124,6 +124,9 @@ struct smc_link {
->  	u8			link_is_asym;	/* is link
-> asymmetric? */
->  	struct smc_link_group	*lgr;		/* parent link group
-> */
->  	struct work_struct	link_down_wrk;	/* wrk to bring link
-> down */
-> +	/* Diagnostic relevant link information */
-> +	u8			ibname[IB_DEVICE_NAME_MAX];/* ib
-> device name */
-> +	u8			ndevname[IFNAMSIZ];/* network device
-> name */
-> 
+>  	return smcd->ops->get_chid(smcd);
+>  }
+> +EXPORT_SYMBOL_GPL(smc_ism_get_chid);
+>  
 
-IMHO, Comments are redundant.  and you could define name buffers as
-char array for more natural string manipulation down the road.
+This is the 3rd EXPORT SYMBOL until now in this series,
+IMHO it is unhealthy to contaminate the kernel symbol table just for
+device specific diag purposes.
 
 
