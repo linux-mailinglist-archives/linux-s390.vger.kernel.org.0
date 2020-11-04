@@ -2,119 +2,206 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35F512A650A
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Nov 2020 14:24:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B9D52A6BD0
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Nov 2020 18:36:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbgKDNYI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Nov 2020 08:24:08 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55810 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729198AbgKDNYH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Nov 2020 08:24:07 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A4D4gjI057290;
-        Wed, 4 Nov 2020 08:24:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=kMS8dnRa/Hdk8pNtTJ+ALouPnU+4X+kgytqVwoqvmaI=;
- b=EGKJQBJECi6OCe2KkNFP+efDKxPBvbgAWI3TarLN502BLh2RSxoDzJzY7PSrc6aLh09Q
- GMqAQQk8UvmClbnm2aXcD+OtbSjha6BSXjE4nUHVS5shhDJW7njbormwp6tIgYkjgr65
- 4mpM1Po+cWXhbOpxCbrt00C5LR4wE8qql/vcSLQptI64+BYBYRVsoTugmxRcXiYnr19P
- a1mUfVuHpMPG5carRR2ecoTGznwxKEoGisK5Zmu9rOqLVPI7g4ipt72e9mu4OVMjUn94
- U9OglYiTnLUfnGlqbFChq6toRLcP+o50cp7466El9QtEZLyUDO59FT9MxxC1d7qB8tPk 8Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34kqdauw3e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Nov 2020 08:24:05 -0500
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0A4D43VT053834;
-        Wed, 4 Nov 2020 08:24:05 -0500
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34kqdauw2j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Nov 2020 08:24:05 -0500
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0A4DGwV6016711;
-        Wed, 4 Nov 2020 13:24:03 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04fra.de.ibm.com with ESMTP id 34h0f6t7sj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Nov 2020 13:24:03 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0A4DO0xC56951198
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Nov 2020 13:24:00 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2649EA4055;
-        Wed,  4 Nov 2020 13:24:00 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 782D9A4040;
-        Wed,  4 Nov 2020 13:23:59 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.60.144])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Nov 2020 13:23:59 +0000 (GMT)
-Date:   Wed, 4 Nov 2020 14:23:10 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        cohuck@redhat.com, mjrosato@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v11 08/14] s390/vfio-ap: hot plug/unplug queues on
- bind/unbind of queue device
-Message-ID: <20201104142310.15f9d73b.pasic@linux.ibm.com>
-In-Reply-To: <055284df-87d8-507a-d7d7-05a73459322d@linux.ibm.com>
-References: <20201022171209.19494-1-akrowiak@linux.ibm.com>
-        <20201022171209.19494-9-akrowiak@linux.ibm.com>
-        <20201028145725.1a81c5cf.pasic@linux.ibm.com>
-        <055284df-87d8-507a-d7d7-05a73459322d@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1730244AbgKDRfz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 4 Nov 2020 12:35:55 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45490 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729162AbgKDRfz (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 4 Nov 2020 12:35:55 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 03279AD64;
+        Wed,  4 Nov 2020 17:35:53 +0000 (UTC)
+Subject: Re: [PATCH v4 1/4] mm: introduce debug_pagealloc_map_pages() helper
+To:     Mike Rapoport <rppt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Lameter <cl@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Len Brown <len.brown@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-pm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        x86@kernel.org
+References: <20201103162057.22916-1-rppt@kernel.org>
+ <20201103162057.22916-2-rppt@kernel.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <971e9638-2395-daf4-d19e-fe3cf5d34b98@suse.cz>
+Date:   Wed, 4 Nov 2020 18:35:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-04_08:2020-11-04,2020-11-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0
- spamscore=0 mlxlogscore=937 phishscore=0 clxscore=1015 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011040094
+In-Reply-To: <20201103162057.22916-2-rppt@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 3 Nov 2020 17:49:21 -0500
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> > We do this to show the no queues but bits set output in show? We could
-> > get rid of some code if we were to not z  
-
-Managed to delete "eroize" fro "zeroize"
-
+On 11/3/20 5:20 PM, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> I'm not sure what you are saying/asking here. The reason for this
-> is because there is no point in setting bits in the APCB if no queues
-> will be made available to the guest which is the case if the APM or
-> AQM are cleared.
+> When CONFIG_DEBUG_PAGEALLOC is enabled, it unmaps pages from the kernel
+> direct mapping after free_pages(). The pages than need to be mapped back
+> before they could be used. Theese mapping operations use
+> __kernel_map_pages() guarded with with debug_pagealloc_enabled().
+> 
+> The only place that calls __kernel_map_pages() without checking whether
+> DEBUG_PAGEALLOC is enabled is the hibernation code that presumes
+> availability of this function when ARCH_HAS_SET_DIRECT_MAP is set.
+> Still, on arm64, __kernel_map_pages() will bail out when DEBUG_PAGEALLOC is
+> not enabled but set_direct_map_invalid_noflush() may render some pages not
+> present in the direct map and hibernation code won't be able to save such
+> pages.
+> 
+> To make page allocation debugging and hibernation interaction more robust,
+> the dependency on DEBUG_PAGEALLOC or ARCH_HAS_SET_DIRECT_MAP has to be made
+> more explicit.
+> 
+> Start with combining the guard condition and the call to
+> __kernel_map_pages() into a single debug_pagealloc_map_pages() function to
+> emphasize that __kernel_map_pages() should not be called without
+> DEBUG_PAGEALLOC and use this new function to map/unmap pages when page
+> allocation debug is enabled.
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-Exactly my train of thought! There is no point doing work (here
-zeroizing) that has no effect.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-Also I'm leaning towards incremental updates to the shadow_apcb (instead
-of basically recomputing it from the scratch each time). One thing I'm
-particularly worried abut is that because of the third argument of
-vfio_ap_mdev_filter_guest_matrix() called filter_apid, we could end up
-with different filtering decision than previously. E.g. we decided to
-filter the card on e.g. removal of a single queueu, but then somebody
-does an assign domain, and suddenly we unplug the domain and plug the
-card. With incremental changes the shadow_apcb, we could do less work
-(revise only what needs to be), and it would be more straight forward
-to reason about the absence of inconsistent filtering.
+But, the "enable" param is hideous. I would rather have map and unmap variants 
+(and just did the same split for page poisoning) and this seems to be a good 
+opportunity. If David didn't propose it already, I'm surprised ;)
 
-Regards,
-Halil
+> ---
+>   include/linux/mm.h  | 10 ++++++++++
+>   mm/memory_hotplug.c |  3 +--
+>   mm/page_alloc.c     |  6 ++----
+>   mm/slab.c           |  8 +++-----
+>   4 files changed, 16 insertions(+), 11 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index ef360fe70aaf..1fc0609056dc 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2936,12 +2936,22 @@ kernel_map_pages(struct page *page, int numpages, int enable)
+>   {
+>   	__kernel_map_pages(page, numpages, enable);
+>   }
+> +
+> +static inline void debug_pagealloc_map_pages(struct page *page,
+> +					     int numpages, int enable)
+> +{
+> +	if (debug_pagealloc_enabled_static())
+> +		__kernel_map_pages(page, numpages, enable);
+> +}
+> +
+>   #ifdef CONFIG_HIBERNATION
+>   extern bool kernel_page_present(struct page *page);
+>   #endif	/* CONFIG_HIBERNATION */
+>   #else	/* CONFIG_DEBUG_PAGEALLOC || CONFIG_ARCH_HAS_SET_DIRECT_MAP */
+>   static inline void
+>   kernel_map_pages(struct page *page, int numpages, int enable) {}
+> +static inline void debug_pagealloc_map_pages(struct page *page,
+> +					     int numpages, int enable) {}
+>   #ifdef CONFIG_HIBERNATION
+>   static inline bool kernel_page_present(struct page *page) { return true; }
+>   #endif	/* CONFIG_HIBERNATION */
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index b44d4c7ba73b..e2b6043a4428 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -614,8 +614,7 @@ void generic_online_page(struct page *page, unsigned int order)
+>   	 * so we should map it first. This is better than introducing a special
+>   	 * case in page freeing fast path.
+>   	 */
+> -	if (debug_pagealloc_enabled_static())
+> -		kernel_map_pages(page, 1 << order, 1);
+> +	debug_pagealloc_map_pages(page, 1 << order, 1);
+>   	__free_pages_core(page, order);
+>   	totalram_pages_add(1UL << order);
+>   #ifdef CONFIG_HIGHMEM
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 23f5066bd4a5..9a66a1ff9193 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1272,8 +1272,7 @@ static __always_inline bool free_pages_prepare(struct page *page,
+>   	 */
+>   	arch_free_page(page, order);
+>   
+> -	if (debug_pagealloc_enabled_static())
+> -		kernel_map_pages(page, 1 << order, 0);
+> +	debug_pagealloc_map_pages(page, 1 << order, 0);
+>   
+>   	kasan_free_nondeferred_pages(page, order);
+>   
+> @@ -2270,8 +2269,7 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
+>   	set_page_refcounted(page);
+>   
+>   	arch_alloc_page(page, order);
+> -	if (debug_pagealloc_enabled_static())
+> -		kernel_map_pages(page, 1 << order, 1);
+> +	debug_pagealloc_map_pages(page, 1 << order, 1);
+>   	kasan_alloc_pages(page, order);
+>   	kernel_poison_pages(page, 1 << order, 1);
+>   	set_page_owner(page, order, gfp_flags);
+> diff --git a/mm/slab.c b/mm/slab.c
+> index b1113561b98b..340db0ce74c4 100644
+> --- a/mm/slab.c
+> +++ b/mm/slab.c
+> @@ -1431,10 +1431,8 @@ static bool is_debug_pagealloc_cache(struct kmem_cache *cachep)
+>   #ifdef CONFIG_DEBUG_PAGEALLOC
+>   static void slab_kernel_map(struct kmem_cache *cachep, void *objp, int map)
+>   {
+> -	if (!is_debug_pagealloc_cache(cachep))
+> -		return;
+> -
+> -	kernel_map_pages(virt_to_page(objp), cachep->size / PAGE_SIZE, map);
+> +	debug_pagealloc_map_pages(virt_to_page(objp),
+> +				  cachep->size / PAGE_SIZE, map);
+>   }
+>   
+>   #else
+> @@ -2062,7 +2060,7 @@ int __kmem_cache_create(struct kmem_cache *cachep, slab_flags_t flags)
+>   
+>   #if DEBUG
+>   	/*
+> -	 * If we're going to use the generic kernel_map_pages()
+> +	 * If we're going to use the generic debug_pagealloc_map_pages()
+>   	 * poisoning, then it's going to smash the contents of
+>   	 * the redzone and userword anyhow, so switch them off.
+>   	 */
+> 
+
