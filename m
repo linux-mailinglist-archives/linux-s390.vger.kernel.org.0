@@ -2,119 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C2CB2A63C4
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Nov 2020 12:59:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A6672A64AE
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Nov 2020 13:52:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbgKDLsg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Nov 2020 06:48:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbgKDLsf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Nov 2020 06:48:35 -0500
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31047C0613D3;
-        Wed,  4 Nov 2020 03:48:35 -0800 (PST)
-Received: by mail-pl1-x643.google.com with SMTP id b12so10186701plr.4;
-        Wed, 04 Nov 2020 03:48:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7IzbM9m4aaHXdrXJm05MLSazuYENXBo0KE7aGRSwMEM=;
-        b=ZdFcNNsEPd+MrYWXHoLvBaTyKHUZhwFwZu3J/PQqzp5Y/s91VRqgtwgRqnPdnsJFzV
-         u8ndi/4ac74yeUDpbQr7HXPlEJnbasb7cO8o7gJ5QfnXfnqvT0IrHsEaICKEwxEa70A2
-         YXFhqPLDhnbJkNUfiRkcSqJ8rcr7T7iBd7vGmo4WjMykCP58kLBQOzps+/fitCtmG7lx
-         rqQXdb82DTVqzyozftIz+18xHfX9wm2lvzWUKmKLYyJ3imRpyuFKCfkdabT8dbUsAWYG
-         nv0yauU0g8FHPsO317oAA4Yrr0jRGmrdqn85extqA7+6MeHG+mc31wlEfpFhQQxxW9Z6
-         hBNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7IzbM9m4aaHXdrXJm05MLSazuYENXBo0KE7aGRSwMEM=;
-        b=hg+Ri/MEBJrLVyt6nwfiPJxjwP5O4yU43nlDmotGDwZG0RNu/Fl7bH1fC4btlWn8GJ
-         F2C7zQC2/K5LP7czbHlu7dJMcytb/YiSGxyVI7XwJcBVs6P5s8OZQnMTWyGYD1V058yi
-         c8sxNuLdKO8IALrugfv1vPSwJVUGDNam8g/Rnd1ndAejpTPXIM2SZ/DfRYr9m8gm6Uox
-         JkOMw/WfEhmhYOfUiqh9CmHULoUxkU4YBQ8S+RzLVupWt/asmgMPmbtXIvzPZ04rCfQ9
-         GcciqVfL9Yqj8EKoRcHHxzT/t8HFi8GiR3JGKzAXMct1s5pEAjA5zBSpoIq71v27SN7d
-         LGEA==
-X-Gm-Message-State: AOAM532R3iW2Z3OOrPTUMe49g7oTa3qVLQ5V86qGG8M3TloOUEsajTIO
-        dGDUFUTt3ad70ONP+fRyAnNuw6diopW70iJdUEk=
-X-Google-Smtp-Source: ABdhPJwhKGHgOtsgYmsX8K8geLNyRT+0OoRlLf1+UEBmK6aJHTGU8p2K0A8JMelevcl7yJOdhQWuD2QnmsGaSXA3des=
-X-Received: by 2002:a17:902:d30c:b029:d6:8208:bb1 with SMTP id
- b12-20020a170902d30cb02900d682080bb1mr29348288plc.44.1604490514732; Wed, 04
- Nov 2020 03:48:34 -0800 (PST)
+        id S1729889AbgKDMwn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 4 Nov 2020 07:52:43 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56680 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729883AbgKDMwn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Nov 2020 07:52:43 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A4CZHBq027519;
+        Wed, 4 Nov 2020 07:52:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=MJ8JH3Lh2MoqiSZUwItPTOOt9VGV38gmyhUirsIf31k=;
+ b=SECxPRzbNfxFnIo9QsT5CnXrs7tdADKFodAjhRI3Tv9qUe46/diM+it2TJsLHEfjYz8B
+ OLaj7LFsUJql4V18QhvfBEMAQyTitnEMDRLhZxtCqO0xsI7EGEvZc7br9vJU/ESX0g1I
+ ksnVl4TIMWSc6jhCLsUBx1USlCC79llait2baY/VOZS1eLxbfLfrcEBMlDoz4Bq7r1Q1
+ R7ZkRI4meciVNgfJpFcaWUDjftaHc274VqXAIx1pvmQ3RxQ8N/ljphbJahcXOLZmgYcJ
+ Z4qxcgdOJ/LlOaDtVNMBATKTX7+fl7R3R9VgwuxZpv0yWaAdeQlOp2lWuRUi6VU3qJV7 qQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34krkqgckn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Nov 2020 07:52:40 -0500
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0A4Ck1Pf066012;
+        Wed, 4 Nov 2020 07:52:40 -0500
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34krkqgcjk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Nov 2020 07:52:39 -0500
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0A4CqZv3002830;
+        Wed, 4 Nov 2020 12:52:38 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma01fra.de.ibm.com with ESMTP id 34jbytsand-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Nov 2020 12:52:38 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0A4CqZH24391498
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Nov 2020 12:52:35 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5DFF8A4053;
+        Wed,  4 Nov 2020 12:52:35 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E53DA4040;
+        Wed,  4 Nov 2020 12:52:34 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.60.144])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Nov 2020 12:52:34 +0000 (GMT)
+Date:   Wed, 4 Nov 2020 13:52:18 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, mjrosato@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v11 08/14] s390/vfio-ap: hot plug/unplug queues on
+ bind/unbind of queue device
+Message-ID: <20201104135218.666bf0f5.pasic@linux.ibm.com>
+In-Reply-To: <055284df-87d8-507a-d7d7-05a73459322d@linux.ibm.com>
+References: <20201022171209.19494-1-akrowiak@linux.ibm.com>
+        <20201022171209.19494-9-akrowiak@linux.ibm.com>
+        <20201028145725.1a81c5cf.pasic@linux.ibm.com>
+        <055284df-87d8-507a-d7d7-05a73459322d@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <cover.1604410035.git.yifeifz2@illinois.edu> <4ec2970fcc819eb4d5dac2bd35233ccdadfda845.1604410035.git.yifeifz2@illinois.edu>
- <87wnz1to9n.fsf@mpe.ellerman.id.au>
-In-Reply-To: <87wnz1to9n.fsf@mpe.ellerman.id.au>
-From:   YiFei Zhu <zhuyifei1999@gmail.com>
-Date:   Wed, 4 Nov 2020 05:48:21 -0600
-Message-ID: <CABqSeAQ+3sjLXH7GVt_tZrFT_e0nNMm8QgT+FBNQYSOc8viM=A@mail.gmail.com>
-Subject: Re: [PATCH seccomp 3/8] powerpc: Enable seccomp architecture tracking
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linux Containers <containers@lists.linux-foundation.org>,
-        linux-sh@vger.kernel.org, Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Hubertus Franke <frankeh@us.ibm.com>,
-        Jack Chen <jianyan2@illinois.edu>,
-        linux-riscv@lists.infradead.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        linux-s390@vger.kernel.org, YiFei Zhu <yifeifz2@illinois.edu>,
-        linux-csky@vger.kernel.org, Tianyin Xu <tyxu@illinois.edu>,
-        linux-xtensa@linux-xtensa.org, Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Valentin Rothberg <vrothber@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Josep Torrellas <torrella@illinois.edu>,
-        Will Drewry <wad@chromium.org>, linux-parisc@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dimitrios Skarlatos <dskarlat@cs.cmu.edu>,
-        David Laight <David.Laight@aculab.com>,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, Tycho Andersen <tycho@tycho.pizza>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-04_08:2020-11-04,2020-11-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 adultscore=0 suspectscore=0 spamscore=0 mlxscore=0
+ phishscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0 impostorscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011040094
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Nov 4, 2020 at 4:22 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
-> > +#ifdef __LITTLE_ENDIAN__
->
-> As Kees mentioned this should (must?!) match the configured endian.
->
-> But I think it would still be better to use the CONFIG symbol, which is
-> CONFIG_CPU_LITTLE_ENDIAN.
+On Tue, 3 Nov 2020 17:49:21 -0500
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-My attempt here is to be consistent with asm/syscall.h
-syscall_get_arch [1]. Would it make sense to change that to
-CONFIG_CPU_LITTLE_ENDIAN then?
+> >>   
+> >> +void vfio_ap_mdev_hot_unplug_queue(struct vfio_ap_queue *q)
+> >> +{
+> >> +	unsigned long apid = AP_QID_CARD(q->apqn);
+> >> +
+> >> +	if ((q->matrix_mdev == NULL) || !vfio_ap_mdev_has_crycb(q->matrix_mdev))
+> >> +		return;
+> >> +
+> >> +	/*
+> >> +	 * If the APID is assigned to the guest, then let's
+> >> +	 * go ahead and unplug the adapter since the
+> >> +	 * architecture does not provide a means to unplug
+> >> +	 * an individual queue.
+> >> +	 */
+> >> +	if (test_bit_inv(apid, q->matrix_mdev->shadow_apcb.apm)) {
+> >> +		clear_bit_inv(apid, q->matrix_mdev->shadow_apcb.apm);  
+> > Shouldn't we check aqm as well? I mean it may be clear at this point
+> > bacause of info->aqm. If the bit is clear, we don't have to remove
+> > the apm bit.  
+> 
+> The rule we agreed upon is that if a queue is removed, we unplug
+> the card because we can't unplug an individual queue, so this code
+> is consistent with the stated rule.
 
-[1] https://elixir.bootlin.com/linux/latest/source/arch/powerpc/include/asm/syscall.h#L116
+All I'm asking for is to verify that the queue is actually plugged. The
+queue is actually plugged iff 
+test_bit_inv(apid, q->matrix_mdev->shadow_apcb.apm) && test_bit_inv(apqi,
+q->matrix_mdev->shadow_apcb.aqm).
 
-> > +# define SECCOMP_ARCH_NATIVE         (AUDIT_ARCH_PPC64 | __SECCOMP_ARCH_LE)
->
-> You use __SECCOMP_ARCH_LE there, but previously you only defined
-> __SECCOMP_ARCH_LE_BIT.
->
-> Is there some magic somewhere that defines __SECCOMP_ARCH_LE based on
-> __SECCOMP_ARCH_LE_BIT ?
+There is no point in unplugging the whole card, if the queue removed is
+unplugged in the first place.
 
-Oops, my bad here.
+> Typically, a queue is unplugged
+> because the adapter has been deconfigured or is broken which means
+> that all queues for that adapter will be removed in succession. On the
+> other hand, that situation would be handled when the last queue is
+> removed if we check the AQM, so I'm not adverse to making that
+> check if you insist. 
 
-> > +# define SECCOMP_ARCH_NATIVE_NR              NR_syscalls
-> > +# define SECCOMP_ARCH_NATIVE_NAME    "ppc64"
->
-> What's the name used for?
+I don't agree. Let's detail your scenario. We have a nicely
+operating card which is as a whole passed trough to our guest. It
+goes broken, and the ap bus decides to deconstruct the queues.
+Already the first queue removed would unplug the the card, because
+both the apm and the aqm bits are set at this point. Subsequent removals
+then see that the apm bit is removed. Actually IMHO everything works
+like without the extra check on aqm (in this scenario).
 
-This is used in the last patch in this series to report in procfs the
-name of each architecture tracked by the bitmap cache.
+Would make reasoning about the code much easier to me, so sorry I do
+insist.
 
-> Usually we use "ppc64" for 64-bit big endian and "ppc64le" for 64-bit
-> little endian.
->
-> And usually we use "ppc" for 32-bit.
+> Of course, if the queue is manually unbound from
+> the vfio driver, what you are asking for makes sense I suppose. I'll have
+> to think about this one some more, but feel free to respond to this.
 
-Ok.
+I'm not sure the situation where the queues ->mdev_matrix pointer is set
+but the apqi is not in the shadow_apcb can actually happen (races not
+considered). But I'm sure the code is suggesting it can, because 
+vfio_ap_mdev_filter_guest_matrix() has a third parameter called filter_apid,
+which governs whether the apm or the aqm bit should be removed. And
+vfio_ap_mdev_filter_guest_matrix() does get called with filter_apid=false in
+assign_domain_store() and I don't see subsequent unlink operations that would
+severe q->mdev_matrix.
 
-YiFei Zhu
+Another case where the aqm may get filtered in
+vfio_ap_mdev_filter_guest_matrix() is the info->aqm bit not set, as I've
+mentioned in my previous mail. If that can not happen, we should turn
+that into an assert.
+
+Actually if you are convinced that apqi bit is always set in the
+q->matrix_mdev->shadow_apcb.aqm, I would agree to turning that into an
+assertion instead of condition. Then if not completely convinced, I
+could at least try to trigger the assert :).
+
+Regards,
+Halil
