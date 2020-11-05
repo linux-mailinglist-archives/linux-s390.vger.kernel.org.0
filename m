@@ -2,102 +2,60 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE0AE2A764E
-	for <lists+linux-s390@lfdr.de>; Thu,  5 Nov 2020 05:21:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5C4A2A7960
+	for <lists+linux-s390@lfdr.de>; Thu,  5 Nov 2020 09:30:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgKEEVz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Nov 2020 23:21:55 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:58826 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726225AbgKEEVz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Nov 2020 23:21:55 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A54K20t146391;
-        Thu, 5 Nov 2020 04:21:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=xd9c8oQl95kc6kHWZbW3G6Q5b8JLutLP7OHMPXIx1ew=;
- b=pqWnFrjc1cIWcHRwdMsUPk+3cKRbhp0XkRAofkcbwhipS9FYcGpw5WNVPO8coNKf/MeV
- vECud+ZINB2ASW8gYwZcqm30Tpb1QQwS46LMqdwdrSE3Iudq+IHCsJWEFESDRYsu9Pi7
- mBCbD7uUrA/kmcNktiyTvAfWvBcmn4p0zxJxJSvxWIFZO/ytC002GgE7bjcqQNZV7ZZN
- +uPO5+qhjyJC9SQc7Vw3d+/ozmjXZEyY+Z0+U4yr9y4bbA6IG0qiHaG3EN3keeTFAOvO
- EgS2mY3PEdgeq4xxMXFychN19LA7rpIdxBTmdiVvlpO6NbgN+18QCob76pjcL9zS5rl9 aQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 34hhvchy9y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 05 Nov 2020 04:21:53 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A54Kkaw020885;
-        Thu, 5 Nov 2020 04:21:52 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 34hw0m0e66-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Nov 2020 04:21:52 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0A54Lpre031185;
-        Thu, 5 Nov 2020 04:21:52 GMT
-Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 04 Nov 2020 20:21:51 -0800
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Fedor Loshakov <loshakov@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        linux-scsi@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH 0/5] zfcp: cleanups, refactorings and features for 5.11
-Date:   Wed,  4 Nov 2020 23:21:46 -0500
-Message-Id: <160455005256.26277.4237038702456087390.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <cover.1603908167.git.bblock@linux.ibm.com>
-References: <cover.1603908167.git.bblock@linux.ibm.com>
+        id S1730163AbgKEIaz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 5 Nov 2020 03:30:55 -0500
+Received: from mail.fullbizgoal.com ([80.211.27.207]:50956 "EHLO
+        server1.mail.fullbizgoal.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729301AbgKEIaz (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Nov 2020 03:30:55 -0500
+Received: by server1.mail.fullbizgoal.com (Postfix, from userid 1001)
+        id 85B77A52A5; Thu,  5 Nov 2020 08:30:34 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fullbizgoal.com;
+        s=mail; t=1604565053;
+        bh=1A+RQztZunBjkjQlXgr2uQY18vlGaIq8j7jGOmWqiI0=;
+        h=Date:From:To:Subject:From;
+        b=DgxVux24oJe/JgsEz5nZuPc/QHmlfN1W/DOXc5p6WFwQfTtfJ6VQ6pSng452I06NJ
+         kZZkfSZrPw6LNfDTGUhSY36n/xSXzAevASBDgC5vwKRJFC0zwdrOg20bcBSNyh29BF
+         LU0AlzYs7sq+TnQLYPVqWZ/ANTpTzUQ0ox+pF1KHHFndxXO3o9TRbB5OZWtdJnL789
+         lA775uoWumeH8loZG79VNRtKBZStX+p+ST1Fubiq5a/4ANIgsx8DBXMZK96dZdSNXL
+         FwG8sM2i95PdV1Yx2h9pFgqhfq7rGqvLhGlO5c/NiXPi2y7A0reTZSw7e20sGVBrYA
+         0JhGYs1+xdniQ==
+Received: by mail.fullbizgoal.com for <linux-s390@vger.kernel.org>; Thu,  5 Nov 2020 08:30:14 GMT
+Message-ID: <20201105074501-0.1.2o.ezbo.0.d81iocr82d@fullbizgoal.com>
+Date:   Thu,  5 Nov 2020 08:30:14 GMT
+From:   "Ethan Smith" <ethan.smith@fullbizgoal.com>
+To:     <linux-s390@vger.kernel.org>
+Subject: Disinfectant
+X-Mailer: mail.fullbizgoal.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9795 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0 bulkscore=0
- mlxscore=0 suspectscore=0 spamscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011050030
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9795 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
- impostorscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=999
- bulkscore=0 phishscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011050030
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 28 Oct 2020 19:30:47 +0100, Benjamin Block wrote:
+Good morning,
 
-> here is a series of changes for our zfcp driver for 5.11.
-> 
-> Other than 2 smaller cleanups and clarifications for maintainability we
-> have a refactoring of how zfcp uses s390's qdio layer, and we have a
-> small feature improving our handling of out-of-band version changes to our
-> adapters (or firmware).
-> 
-> [...]
+looking for companies interested in raising additional capital by diversi=
+fying their offer in soaps, liquids and gels for hand disinfection and co=
+smetics for body and hair care.
 
-Applied to 5.11/scsi-queue, thanks!
+The distribution of innovative products corresponding to the current pref=
+erences of customers in the field of hygiene and preventive healthcare al=
+lows our partners to gain new markets and achieve better economic results=
+=2E
 
-[1/5] scsi: zfcp: Lift Input Queue tasklet from qdio
-      https://git.kernel.org/mkp/scsi/c/0b524abc2dd1
-[2/5] scsi: zfcp: Remove orphaned function declarations
-      https://git.kernel.org/mkp/scsi/c/84e7b4169f94
-[3/5] scsi: zfcp: Clarify & assert the stat_lock locking in zfcp_qdio_send()
-      https://git.kernel.org/mkp/scsi/c/efd321768d2e
-[4/5] scsi: zfcp: Process Version Change events
-      https://git.kernel.org/mkp/scsi/c/a6c37abe6988
-[5/5] scsi: zfcp: Handle event-lost notification for Version Change events
-      https://git.kernel.org/mkp/scsi/c/d90196317484
+In addition to products with bactericidal action, our range includes show=
+er gels, shampoos and hair conditioners, as well as efficient, concentrat=
+ed detergents.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+The versatility (suitable for all skin types) combined with an affordable=
+ price means that customers make an informed choice of a product among ot=
+hers available on the market.
+
+Are you interested in cooperation?
+
+Ethan Smith
