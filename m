@@ -2,93 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D72542A9726
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Nov 2020 14:41:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93DA12A9758
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Nov 2020 15:02:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgKFNli (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 6 Nov 2020 08:41:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47810 "EHLO mail.kernel.org"
+        id S1727382AbgKFOCG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 6 Nov 2020 09:02:06 -0500
+Received: from verein.lst.de ([213.95.11.211]:51668 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726708AbgKFNli (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 6 Nov 2020 08:41:38 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA5E12067B;
-        Fri,  6 Nov 2020 13:41:33 +0000 (UTC)
-Date:   Fri, 6 Nov 2020 08:41:31 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>, Guo Ren <guoren@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-doc@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH 11/11 v3] ftrace: Add recording of functions that caused
- recursion
-Message-ID: <20201106084131.7dfc3a30@gandalf.local.home>
-In-Reply-To: <20201106131317.GW20201@alley>
-References: <20201106023235.367190737@goodmis.org>
-        <20201106023548.102375687@goodmis.org>
-        <20201106131317.GW20201@alley>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727251AbgKFOCG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 6 Nov 2020 09:02:06 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C704868B02; Fri,  6 Nov 2020 15:02:01 +0100 (CET)
+Date:   Fri, 6 Nov 2020 15:02:01 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stefan Haberland <sth@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ilya Dryomov <idryomov@gmail.com>, Song Liu <song@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 06/10] dasd: implement ->set_read_only to hook into
+ BLKROSET processing
+Message-ID: <20201106140201.GA23087@lst.de>
+References: <20201103100018.683694-1-hch@lst.de> <20201103100018.683694-7-hch@lst.de> <20201105205634.GA78869@imap.linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201105205634.GA78869@imap.linux.ibm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 6 Nov 2020 14:13:17 +0100
-Petr Mladek <pmladek@suse.com> wrote:
-
-> JFYI, the code reading and writing the cache looks good to me.
+On Thu, Nov 05, 2020 at 09:56:47PM +0100, Stefan Haberland wrote:
+> > +	/* do not manipulate hardware state for partitions */
+> >  	if (bdev_is_partition(bdev))
+> > -		// ro setting is not allowed for partitions
+> > -		return -EINVAL;
+> > -	if (get_user(intval, (int __user *)argp))
+> > -		return -EFAULT;
+> > +		return 0;
+> > +
+> >  	base = dasd_device_from_gendisk(bdev->bd_disk);
+> >  	if (!base)
+> >  		return -ENODEV;
+> > -	if (!intval && test_bit(DASD_FLAG_DEVICE_RO, &base->flags)) {
+> > -		dasd_put_device(base);
+> > -		return -EROFS;
+> > -	}
+> > -	set_disk_ro(bdev->bd_disk, intval);
 > 
-> It is still possible that some entries might stay unused (filled
-> with zeroes) but it should be hard to hit in practice. It
-> is good enough from my POV.
-
-You mean the part that was commented?
-
 > 
-> I do not give Reviewed-by tag just because I somehow do not have power
-> to review the entire patch carefully enough at the moment.
+> While testing this patch I just noticed that when I set a device readonly this is
+> not going to be passed on to the partitions on this device any longer.
+> 
+> This is caused by the removed call to set_disk_ro().
+> 
+> Is this intentional or was this removed by accident?
 
-No problem. Thanks for looking at it.
+It was unintentionally intentional :)
 
-I'm adding a link to this thread, so if someone wants proof you helped out
-on this code, you can have them follow the links ;-)
-
-Anyway, even if I push this to linux-next where I stop rebasing code
-(because of test coverage), I do rebase for adding tags. So if you ever get
-around at looking at this code, I can add that tag later (before the next
-merge window), or if you find something, I could fix it with a new patch and
-give you a Reported-by.
-
--- Steve
+The generic code used already by almost all drivers in mainline only
+calls set_device_ro from blkdev_roset, that is it only sets the main
+device read-only.  dasd was the outlier here, and I didn't notice it
+actually called set_disk_ro instead of set_device_ro.   That being
+said I think setting all the partitions read-only as well when the
+full device is set read-only makes perfect sense.  I'm just a little
+worried it could cause regressions.  Let me prepare a follow on patch
+on top of the series that switches to that behavior.
