@@ -2,107 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B806D2A9798
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Nov 2020 15:27:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1BE62A991D
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Nov 2020 17:09:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgKFO1n (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 6 Nov 2020 09:27:43 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46544 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbgKFO1m (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 6 Nov 2020 09:27:42 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1604672860;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fneYivF7KPk5Vezwqp16bHvlG7pQia60PP+ozhIKNOI=;
-        b=hOSy8tf6Xv9bxsLj3BRpsgcu/m8tXPh77G9b08Scucev/08pfZ/oZN7WOboqt1Phltz0oY
-        EY+Z7IhgTgZK8/cheL0CPQ+pGMcTvUW7Ysp6ShK8LBZpwqpEn7fzXD6giDnRBpzEP5qAeT
-        BwsA/u4RxQJT0sh1JOGSdIWHppyWK2U=
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CBFB7ABCC;
-        Fri,  6 Nov 2020 14:27:39 +0000 (UTC)
-Date:   Fri, 6 Nov 2020 15:27:38 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Jonathan Corbet <corbet@lwn.net>, Guo Ren <guoren@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-doc@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH 11/11 v3] ftrace: Add recording of functions that caused
- recursion
-Message-ID: <20201106142738.GX20201@alley>
-References: <20201106023235.367190737@goodmis.org>
- <20201106023548.102375687@goodmis.org>
- <20201106131317.GW20201@alley>
- <20201106084131.7dfc3a30@gandalf.local.home>
+        id S1726176AbgKFQJZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 6 Nov 2020 11:09:25 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27836 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726010AbgKFQJZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 Nov 2020 11:09:25 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A6G35hd163495;
+        Fri, 6 Nov 2020 11:09:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=7W+KlFrvlVCE1tszckPeCRwketIIYuzjK60HHTqUggw=;
+ b=fX78gnQDgo0lZRSs4f0TaNTqhWRCEsiCARBBbJmZk56i9nMkHyjydqCTrfL8HFR50oZZ
+ V8Jl/H3D2RhII575uqX2745bZSPiDxNJ1wu6/crmy336kMjUYH8h2oDROFomrdS+Vs3z
+ IbQ/8ya4s8EZtiW9GqVciH5Kh9iwDZnxx1JD2a02r/yK5eJSuMAgWOkgmDnMxOXQFFVV
+ N4Q8/i4A9G4vxxnqmBXr7zhWYCejOYNE068+ui5Nhw1g/ondKoM7B2m0ZIGaLhGuUT0H
+ EVGnKHp5POroL6B5d2Wfze3AJ9nuuoBn2M3J/lDI/xUZHE8kIe//coxzDqnVxj31FQev 7Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34n3jpdabb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Nov 2020 11:09:05 -0500
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0A6G36xm163549;
+        Fri, 6 Nov 2020 11:09:04 -0500
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34n3jpdaaj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Nov 2020 11:09:04 -0500
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0A6G92fS014519;
+        Fri, 6 Nov 2020 16:09:02 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06fra.de.ibm.com with ESMTP id 34h01kkecx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Nov 2020 16:09:02 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0A6G907Q4522674
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 6 Nov 2020 16:09:00 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 77CEF11C054;
+        Fri,  6 Nov 2020 16:09:00 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0DD4611C050;
+        Fri,  6 Nov 2020 16:09:00 +0000 (GMT)
+Received: from imap.linux.ibm.com (unknown [9.152.85.9])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  6 Nov 2020 16:08:59 +0000 (GMT)
+Date:   Fri, 6 Nov 2020 17:08:58 +0100
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Ilya Dryomov <idryomov@gmail.com>,
+        Song Liu <song@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 06/10] dasd: implement ->set_read_only to hook into
+ BLKROSET processing
+Message-ID: <20201106160858.GA76682@imap.linux.ibm.com>
+References: <20201103100018.683694-1-hch@lst.de>
+ <20201103100018.683694-7-hch@lst.de>
+ <20201105205634.GA78869@imap.linux.ibm.com>
+ <20201106140201.GA23087@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201106084131.7dfc3a30@gandalf.local.home>
+In-Reply-To: <20201106140201.GA23087@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-06_06:2020-11-05,2020-11-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ malwarescore=0 phishscore=0 impostorscore=0 clxscore=1015 mlxlogscore=999
+ bulkscore=0 adultscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011060114
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri 2020-11-06 08:41:31, Steven Rostedt wrote:
-> On Fri, 6 Nov 2020 14:13:17 +0100
-> Petr Mladek <pmladek@suse.com> wrote:
-> 
-> > JFYI, the code reading and writing the cache looks good to me.
+Christoph Hellwig <hch@lst.de> schrieb am Fri, 06. Nov 15:02:
+> On Thu, Nov 05, 2020 at 09:56:47PM +0100, Stefan Haberland wrote:
+> > > +	/* do not manipulate hardware state for partitions */
+> > >  	if (bdev_is_partition(bdev))
+> > > -		// ro setting is not allowed for partitions
+> > > -		return -EINVAL;
+> > > -	if (get_user(intval, (int __user *)argp))
+> > > -		return -EFAULT;
+> > > +		return 0;
+> > > +
+> > >  	base = dasd_device_from_gendisk(bdev->bd_disk);
+> > >  	if (!base)
+> > >  		return -ENODEV;
+> > > -	if (!intval && test_bit(DASD_FLAG_DEVICE_RO, &base->flags)) {
+> > > -		dasd_put_device(base);
+> > > -		return -EROFS;
+> > > -	}
+> > > -	set_disk_ro(bdev->bd_disk, intval);
 > > 
-> > It is still possible that some entries might stay unused (filled
-> > with zeroes) but it should be hard to hit in practice. It
-> > is good enough from my POV.
-> 
-> You mean the part that was commented?
-
-Yeah, it is the comment problem when nr_records is pushed forward.
-
 > > 
-> > I do not give Reviewed-by tag just because I somehow do not have power
-> > to review the entire patch carefully enough at the moment.
+> > While testing this patch I just noticed that when I set a device readonly this is
+> > not going to be passed on to the partitions on this device any longer.
+> > 
+> > This is caused by the removed call to set_disk_ro().
+> > 
+> > Is this intentional or was this removed by accident?
 > 
-> No problem. Thanks for looking at it.
+> It was unintentionally intentional :)
 > 
-> I'm adding a link to this thread, so if someone wants proof you helped out
-> on this code, you can have them follow the links ;-)
-> 
-> Anyway, even if I push this to linux-next where I stop rebasing code
-> (because of test coverage), I do rebase for adding tags. So if you ever get
-> around at looking at this code, I can add that tag later (before the next
-> merge window), or if you find something, I could fix it with a new patch and
-> give you a Reported-by.
+> The generic code used already by almost all drivers in mainline only
+> calls set_device_ro from blkdev_roset, that is it only sets the main
+> device read-only.  dasd was the outlier here, and I didn't notice it
+> actually called set_disk_ro instead of set_device_ro.   That being
+> said I think setting all the partitions read-only as well when the
+> full device is set read-only makes perfect sense.  I'm just a little
+> worried it could cause regressions.  Let me prepare a follow on patch
+> on top of the series that switches to that behavior.
 
-Good to know.
+Makes sense.
+I am fine with that.
 
-Best Regards,
-Petr
+With this in mind:
+
+Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
