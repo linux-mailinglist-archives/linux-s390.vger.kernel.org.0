@@ -2,117 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9FC52A9672
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Nov 2020 13:50:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85E6A2A96C0
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Nov 2020 14:13:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgKFMuU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 6 Nov 2020 07:50:20 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31636 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727258AbgKFMuU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 Nov 2020 07:50:20 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A6CWNPH167691;
-        Fri, 6 Nov 2020 07:50:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=s5tgr6K5eJosaeBuZ5BF4PrqR+Rsk4mT8Q9l7QcUGjE=;
- b=TDIQ9cZqLuFSAjJ6QSf8K7H85g+QRH965O20L0b6XekjxRwynY+kDjsNnOEwnR3CnUHW
- 6+fuWk7umhXmtXp9W+cY9WGRdslDyLQtw2Efpi/IpK60TvjXdmj153fpfw+BwOEMoAJb
- lGwWSEYL/nXgfOj96b7e1DZhBysRZtE2F9dqfnJTLaRlsJeEHHALLDhB0B5guj8e+WKu
- Fh6xxP/ZQox49jfHdPCZ6xSQ5n2PJoJQzEas0BlPzhoLH4gkTcLCJcT5XSr48JC5kDv2
- HIlxYihFCB13WVh4udzzrAlAMIRUW0JCZ6A+WAci7jUCzHkRrEYHmBdZj0NRe26p1N6K 2w== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 34mhywfa7d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Nov 2020 07:50:16 -0500
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0A6CVg91009630;
-        Fri, 6 Nov 2020 12:50:14 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04fra.de.ibm.com with ESMTP id 34h0f6uba1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Nov 2020 12:50:14 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0A6CoBHx8782352
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Nov 2020 12:50:11 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C166A4054;
-        Fri,  6 Nov 2020 12:50:11 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18EFAA405C;
-        Fri,  6 Nov 2020 12:50:11 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  6 Nov 2020 12:50:11 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
+        id S1727337AbgKFNNV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 6 Nov 2020 08:13:21 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57040 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727169AbgKFNNV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 6 Nov 2020 08:13:21 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1604668398;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/qFlNeW+fj9kPag6iPvAKbxfuQxHVIdXyO+NAnfQv1k=;
+        b=M+tR/rKxslTPuT6FfxTzbpuuxYbiZZG3CnqFYk93k8am/VLmSymRvyUiwOy4Hr5waPoLce
+        uQiZvPathsmCgazo7IfORam7PuE22q5xJHq/iNivwhCmxch4+MaufWlLk/oXEAcDNCMlcc
+        x3wJTN1WOECehMoqwdLrqgU3bZ/wBxo=
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 6BB69AB8F;
+        Fri,  6 Nov 2020 13:13:18 +0000 (UTC)
+Date:   Fri, 6 Nov 2020 14:13:17 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Jonathan Corbet <corbet@lwn.net>, Guo Ren <guoren@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         Heiko Carstens <hca@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>
-Subject: [PATCH net 2/2] MAINTAINERS: remove Ursula Braun as s390 network maintainer
-Date:   Fri,  6 Nov 2020 13:50:08 +0100
-Message-Id: <20201106125008.36478-3-jwi@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201106125008.36478-1-jwi@linux.ibm.com>
-References: <20201106125008.36478-1-jwi@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-06_04:2020-11-05,2020-11-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 mlxlogscore=750 suspectscore=0 lowpriorityscore=0 adultscore=0
- phishscore=0 malwarescore=0 mlxscore=0 clxscore=1015 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011060088
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-doc@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [PATCH 11/11 v3] ftrace: Add recording of functions that caused
+ recursion
+Message-ID: <20201106131317.GW20201@alley>
+References: <20201106023235.367190737@goodmis.org>
+ <20201106023548.102375687@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201106023548.102375687@goodmis.org>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Ursula Braun <ubraun@linux.ibm.com>
+On Thu 2020-11-05 21:32:46, Steven Rostedt wrote:
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> 
+> This adds CONFIG_FTRACE_RECORD_RECURSION that will record to a file
+> "recursed_functions" all the functions that caused recursion while a
+> callback to the function tracer was running.
+> 
+> Changes since v2:
+> 
+>  - Use trace_recursion flags in current for protecting recursion of recursion recording
+>  - Make the recursion logic a little cleaner
+>  - Export GPL the recursion recording
 
-I am retiring soon. Thus this patch removes myself from the
-MAINTAINERS file (s390 network).
+JFYI, the code reading and writing the cache looks good to me.
 
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-[jwi: fix up the subject]
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- MAINTAINERS | 3 ---
- 1 file changed, 3 deletions(-)
+It is still possible that some entries might stay unused (filled
+with zeroes) but it should be hard to hit in practice. It
+is good enough from my POV.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e73636b75f29..d4462d7e2077 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15259,7 +15259,6 @@ F:	drivers/iommu/s390-iommu.c
- S390 IUCV NETWORK LAYER
- M:	Julian Wiedmann <jwi@linux.ibm.com>
- M:	Karsten Graul <kgraul@linux.ibm.com>
--M:	Ursula Braun <ubraun@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- S:	Supported
- W:	http://www.ibm.com/developerworks/linux/linux390/
-@@ -15270,7 +15269,6 @@ F:	net/iucv/
- S390 NETWORK DRIVERS
- M:	Julian Wiedmann <jwi@linux.ibm.com>
- M:	Karsten Graul <kgraul@linux.ibm.com>
--M:	Ursula Braun <ubraun@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- S:	Supported
- W:	http://www.ibm.com/developerworks/linux/linux390/
-@@ -15844,7 +15842,6 @@ S:	Maintained
- F:	drivers/misc/sgi-xp/
- 
- SHARED MEMORY COMMUNICATIONS (SMC) SOCKETS
--M:	Ursula Braun <ubraun@linux.ibm.com>
- M:	Karsten Graul <kgraul@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- S:	Supported
--- 
-2.17.1
+I do not give Reviewed-by tag just because I somehow do not have power
+to review the entire patch carefully enough at the moment.
 
+Best Regards,
+Petr
