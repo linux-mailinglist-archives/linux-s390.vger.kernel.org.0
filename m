@@ -2,315 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 944722A9421
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Nov 2020 11:25:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2A802A9674
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Nov 2020 13:50:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgKFKZZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 6 Nov 2020 05:25:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbgKFKZZ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 6 Nov 2020 05:25:25 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E04920691;
-        Fri,  6 Nov 2020 10:25:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604658322;
-        bh=6YzS8ko75d9YTXXdkNZu4e61owx1w6yTEHh/zi9Ys+8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qrj0z7G3y/lZrOk2fz41MdO04PyFbYhfjAhrg5AVQLxLizOCNVBjMsgKIy0bUw0Hi
-         hqqcf/Zb0mCmEIW8Ik8Ma2jhwN9eOnseMIUiq5Yvfw2pZ+LVsjQO+7jZiixAowTDoI
-         n4AsCexEDeWZTmwsOwUMKcG4RJmGkrAZ4+EUEE+o=
-Date:   Fri, 6 Nov 2020 19:25:13 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>, Guo Ren <guoren@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
+        id S1727297AbgKFMuU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 6 Nov 2020 07:50:20 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28180 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727014AbgKFMuT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 Nov 2020 07:50:19 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A6CWQVI168017;
+        Fri, 6 Nov 2020 07:50:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=2POWXI1vf/6q5lCDJut9R4rx2D73x6omtTIZ6zT6+fQ=;
+ b=esuugrn/16dn0rtVQ7Uw1QDIQRcY3tYGhkfM3ek0WweSdJJv8h9y7BeK2HS+vpmvb2Tw
+ 9gW6nN9PLXyvkKtdigsrbN9da6ucQJH0lFv93NsfauO6WOnrHOSeh+SNa5Vu+pSWH6VM
+ N2rZqErdlmFAMIEO1YDq6uC6fgyCwgLpQkF5feIIv77GpzzPCCe0J1QlahmdghpMb3s9
+ JtwNlFv4BndV3D6Qkq3aLqbS6bF0qmAYofA4ZicutOdaWiV/sKqFvzdTAHKl1XNRShfw
+ 786ArLohhXk4jjv1KuNG1OGf77s+T1vOXIoOB/61vziEESP+Tb6S4XhRGJ326ZWwOI8N 9g== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34mhywfa6r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Nov 2020 07:50:15 -0500
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0A6CXCKq021954;
+        Fri, 6 Nov 2020 12:50:13 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma06ams.nl.ibm.com with ESMTP id 34h0fcxgqt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Nov 2020 12:50:13 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0A6CoAM358196260
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 6 Nov 2020 12:50:10 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA5CDA405C;
+        Fri,  6 Nov 2020 12:50:10 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5D973A4054;
+        Fri,  6 Nov 2020 12:50:10 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  6 Nov 2020 12:50:10 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-netdev <netdev@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
         Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-csky@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 05/11 v3] kprobes/ftrace: Add recursion protection to
- the ftrace callback
-Message-Id: <20201106192513.80b330351c0cafd03134b0d1@kernel.org>
-In-Reply-To: <20201106023546.944907560@goodmis.org>
-References: <20201106023235.367190737@goodmis.org>
-        <20201106023546.944907560@goodmis.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH net 0/2] net/iucv: fixes 2020-11-06
+Date:   Fri,  6 Nov 2020 13:50:06 +0100
+Message-Id: <20201106125008.36478-1-jwi@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-06_04:2020-11-05,2020-11-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 mlxlogscore=510 suspectscore=0 lowpriorityscore=0 adultscore=0
+ phishscore=0 malwarescore=0 mlxscore=0 clxscore=1015 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011060088
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 05 Nov 2020 21:32:40 -0500
-Steven Rostedt (VMware) <rostedt@goodmis.org> wrote:
+Hi Jakub,
 
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> 
-> If a ftrace callback does not supply its own recursion protection and
-> does not set the RECURSION_SAFE flag in its ftrace_ops, then ftrace will
-> make a helper trampoline to do so before calling the callback instead of
-> just calling the callback directly.
-> 
-> The default for ftrace_ops is going to change. It will expect that handlers
-> provide their own recursion protection, unless its ftrace_ops states
-> otherwise.
-> 
-> Link: https://lkml.kernel.org/r/20201028115613.140212174@goodmis.org
-> 
+please apply the following patch series to netdev's net tree.
 
-Looks good to me.
+One fix in the shutdown path for af_iucv sockets. This is relevant for
+stable as well.
+Also sending along an update for the Maintainers file.
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Thanks,
+Julian
 
-Thank you!
+Ursula Braun (2):
+  net/af_iucv: fix null pointer dereference on shutdown
+  MAINTAINERS: remove Ursula Braun as s390 network maintainer
 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Guo Ren <guoren@kernel.org>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: linux-csky@vger.kernel.org
-> Cc: linux-parisc@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-s390@vger.kernel.org
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
-> 
-> Changes since v2:
-> 
->  - Move get_kprobe() into preempt disabled sections for various archs
-> 
-> 
->  arch/csky/kernel/probes/ftrace.c     | 12 ++++++++++--
->  arch/parisc/kernel/ftrace.c          | 16 +++++++++++++---
->  arch/powerpc/kernel/kprobes-ftrace.c | 11 ++++++++++-
->  arch/s390/kernel/ftrace.c            | 16 +++++++++++++---
->  arch/x86/kernel/kprobes/ftrace.c     | 12 ++++++++++--
->  5 files changed, 56 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/csky/kernel/probes/ftrace.c b/arch/csky/kernel/probes/ftrace.c
-> index 5264763d05be..5eb2604fdf71 100644
-> --- a/arch/csky/kernel/probes/ftrace.c
-> +++ b/arch/csky/kernel/probes/ftrace.c
-> @@ -13,16 +13,21 @@ int arch_check_ftrace_location(struct kprobe *p)
->  void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
->  			   struct ftrace_ops *ops, struct pt_regs *regs)
->  {
-> +	int bit;
->  	bool lr_saver = false;
->  	struct kprobe *p;
->  	struct kprobe_ctlblk *kcb;
->  
-> -	/* Preempt is disabled by ftrace */
-> +	bit = ftrace_test_recursion_trylock();
-> +	if (bit < 0)
-> +		return;
-> +
-> +	preempt_disable_notrace();
->  	p = get_kprobe((kprobe_opcode_t *)ip);
->  	if (!p) {
->  		p = get_kprobe((kprobe_opcode_t *)(ip - MCOUNT_INSN_SIZE));
->  		if (unlikely(!p) || kprobe_disabled(p))
-> -			return;
-> +			goto out;
->  		lr_saver = true;
->  	}
->  
-> @@ -56,6 +61,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
->  		 */
->  		__this_cpu_write(current_kprobe, NULL);
->  	}
-> +out:
-> +	preempt_enable_notrace();
-> +	ftrace_test_recursion_unlock(bit);
->  }
->  NOKPROBE_SYMBOL(kprobe_ftrace_handler);
->  
-> diff --git a/arch/parisc/kernel/ftrace.c b/arch/parisc/kernel/ftrace.c
-> index 63e3ecb9da81..13d85042810a 100644
-> --- a/arch/parisc/kernel/ftrace.c
-> +++ b/arch/parisc/kernel/ftrace.c
-> @@ -207,14 +207,21 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
->  			   struct ftrace_ops *ops, struct pt_regs *regs)
->  {
->  	struct kprobe_ctlblk *kcb;
-> -	struct kprobe *p = get_kprobe((kprobe_opcode_t *)ip);
-> +	struct kprobe *p;
-> +	int bit;
->  
-> -	if (unlikely(!p) || kprobe_disabled(p))
-> +	bit = ftrace_test_recursion_trylock();
-> +	if (bit < 0)
->  		return;
->  
-> +	preempt_disable_notrace();
-> +	p = get_kprobe((kprobe_opcode_t *)ip);
-> +	if (unlikely(!p) || kprobe_disabled(p))
-> +		goto out;
-> +
->  	if (kprobe_running()) {
->  		kprobes_inc_nmissed_count(p);
-> -		return;
-> +		goto out;
->  	}
->  
->  	__this_cpu_write(current_kprobe, p);
-> @@ -235,6 +242,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
->  		}
->  	}
->  	__this_cpu_write(current_kprobe, NULL);
-> +out:
-> +	preempt_enable_notrace();
-> +	ftrace_test_recursion_unlock(bit);
->  }
->  NOKPROBE_SYMBOL(kprobe_ftrace_handler);
->  
-> diff --git a/arch/powerpc/kernel/kprobes-ftrace.c b/arch/powerpc/kernel/kprobes-ftrace.c
-> index 972cb28174b2..5df8d50c65ae 100644
-> --- a/arch/powerpc/kernel/kprobes-ftrace.c
-> +++ b/arch/powerpc/kernel/kprobes-ftrace.c
-> @@ -18,10 +18,16 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
->  {
->  	struct kprobe *p;
->  	struct kprobe_ctlblk *kcb;
-> +	int bit;
->  
-> +	bit = ftrace_test_recursion_trylock();
-> +	if (bit < 0)
-> +		return;
-> +
-> +	preempt_disable_notrace();
->  	p = get_kprobe((kprobe_opcode_t *)nip);
->  	if (unlikely(!p) || kprobe_disabled(p))
-> -		return;
-> +		goto out;
->  
->  	kcb = get_kprobe_ctlblk();
->  	if (kprobe_running()) {
-> @@ -52,6 +58,9 @@ void kprobe_ftrace_handler(unsigned long nip, unsigned long parent_nip,
->  		 */
->  		__this_cpu_write(current_kprobe, NULL);
->  	}
-> +out:
-> +	preempt_enable_notrace();
-> +	ftrace_test_recursion_unlock(bit);
->  }
->  NOKPROBE_SYMBOL(kprobe_ftrace_handler);
->  
-> diff --git a/arch/s390/kernel/ftrace.c b/arch/s390/kernel/ftrace.c
-> index b388e87a08bf..8f31c726537a 100644
-> --- a/arch/s390/kernel/ftrace.c
-> +++ b/arch/s390/kernel/ftrace.c
-> @@ -201,14 +201,21 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
->  		struct ftrace_ops *ops, struct pt_regs *regs)
->  {
->  	struct kprobe_ctlblk *kcb;
-> -	struct kprobe *p = get_kprobe((kprobe_opcode_t *)ip);
-> +	struct kprobe *p;
-> +	int bit;
->  
-> -	if (unlikely(!p) || kprobe_disabled(p))
-> +	bit = ftrace_test_recursion_trylock();
-> +	if (bit < 0)
->  		return;
->  
-> +	preempt_disable_notrace();
-> +	p = get_kprobe((kprobe_opcode_t *)ip);
-> +	if (unlikely(!p) || kprobe_disabled(p))
-> +		goto out;
-> +
->  	if (kprobe_running()) {
->  		kprobes_inc_nmissed_count(p);
-> -		return;
-> +		goto out;
->  	}
->  
->  	__this_cpu_write(current_kprobe, p);
-> @@ -228,6 +235,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
->  		}
->  	}
->  	__this_cpu_write(current_kprobe, NULL);
-> +out:
-> +	preempt_enable_notrace();
-> +	ftrace_test_recursion_unlock(bit);
->  }
->  NOKPROBE_SYMBOL(kprobe_ftrace_handler);
->  
-> diff --git a/arch/x86/kernel/kprobes/ftrace.c b/arch/x86/kernel/kprobes/ftrace.c
-> index 681a4b36e9bb..a40a6cdfcca3 100644
-> --- a/arch/x86/kernel/kprobes/ftrace.c
-> +++ b/arch/x86/kernel/kprobes/ftrace.c
-> @@ -18,11 +18,16 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
->  {
->  	struct kprobe *p;
->  	struct kprobe_ctlblk *kcb;
-> +	int bit;
->  
-> -	/* Preempt is disabled by ftrace */
-> +	bit = ftrace_test_recursion_trylock();
-> +	if (bit < 0)
-> +		return;
-> +
-> +	preempt_disable_notrace();
->  	p = get_kprobe((kprobe_opcode_t *)ip);
->  	if (unlikely(!p) || kprobe_disabled(p))
-> -		return;
-> +		goto out;
->  
->  	kcb = get_kprobe_ctlblk();
->  	if (kprobe_running()) {
-> @@ -52,6 +57,9 @@ void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
->  		 */
->  		__this_cpu_write(current_kprobe, NULL);
->  	}
-> +out:
-> +	preempt_enable_notrace();
-> +	ftrace_test_recursion_unlock(bit);
->  }
->  NOKPROBE_SYMBOL(kprobe_ftrace_handler);
->  
-> -- 
-> 2.28.0
-> 
-> 
-
+ MAINTAINERS        | 3 ---
+ net/iucv/af_iucv.c | 3 ++-
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.17.1
+
