@@ -2,124 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1541F2AA306
-	for <lists+linux-s390@lfdr.de>; Sat,  7 Nov 2020 08:28:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 643A62AA521
+	for <lists+linux-s390@lfdr.de>; Sat,  7 Nov 2020 14:00:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgKGH20 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 7 Nov 2020 02:28:26 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39124 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbgKGH20 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 7 Nov 2020 02:28:26 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 240D3ABA2;
-        Sat,  7 Nov 2020 07:28:24 +0000 (UTC)
-Subject: Re: [PATCH, RFC 11/10] block: propagate BLKROSET to all partitions
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Ilya Dryomov <idryomov@gmail.com>,
-        Song Liu <song@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-s390@vger.kernel.org,
-        martin.petersen@oracle.com
-References: <20201106140817.GA23557@lst.de>
-From:   Coly Li <colyli@suse.de>
-Autocrypt: addr=colyli@suse.de; keydata=
- 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
-Message-ID: <a2add52e-715b-f82a-d6a0-b285f0f5acde@suse.de>
-Date:   Sat, 7 Nov 2020 15:28:15 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.1
-MIME-Version: 1.0
-In-Reply-To: <20201106140817.GA23557@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1727990AbgKGNAU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 7 Nov 2020 08:00:20 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30444 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727084AbgKGNAR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 7 Nov 2020 08:00:17 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A7CWrN0016031;
+        Sat, 7 Nov 2020 08:00:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=IkwfmOnXdTUefnGmqDZ/gtbeDsXILkzqkhZqPZ5QHUY=;
+ b=isQHfJi/XBVvbxv6XjZ+FsdfGEiDSvZ0k0ged9XbM3jmNgW2C/0G7/jCJ4AQXphFsZBI
+ wA3ewM9XIN7GD2zLK2zz63MO5vrGv+kwpLWXGeCUDH1Np+qlVgdvfZ+rJXxl5hwKSX9D
+ 183LXEZ6kNhKRKa2XlfXSPUMTq/M+oMIzNKmJEraR0d0Yjpu1OjLb1sX7iok7cMIJs2Q
+ oi+fE4BJMGtFbldk1HAyAP/laUMFDIVYvu9hh3tCdxC/esOluhLVATSq19c8/EXeWkQy
+ WfAGl/X1lFwwufHibpxAUcEQ4ZHGMbSuLct95En0MmGhJrzhgUZW9cLyn0hDM5iCylik FQ== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34ns0nbmu6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 07 Nov 2020 08:00:13 -0500
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0A7CvCCU016083;
+        Sat, 7 Nov 2020 13:00:08 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 34nk788ag5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 07 Nov 2020 13:00:08 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0A7D05bO5440056
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 7 Nov 2020 13:00:05 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9DD8EA405E;
+        Sat,  7 Nov 2020 13:00:05 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 76EC1A4040;
+        Sat,  7 Nov 2020 13:00:05 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat,  7 Nov 2020 13:00:05 +0000 (GMT)
+From:   Karsten Graul <kgraul@linux.ibm.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        hca@linux.ibm.com, raspl@linux.ibm.com
+Subject: [PATCH net-next v3 00/15] net/smc: extend diagnostic netlink interface
+Date:   Sat,  7 Nov 2020 13:59:43 +0100
+Message-Id: <20201107125958.16384-1-kgraul@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-07_07:2020-11-05,2020-11-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 malwarescore=0
+ mlxscore=100 phishscore=0 priorityscore=1501 spamscore=100 clxscore=1015
+ mlxlogscore=-1000 lowpriorityscore=0 bulkscore=0 suspectscore=0
+ impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2009150000 definitions=main-2011070085
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2020/11/6 22:08, Christoph Hellwig wrote:
-> 
-> When setting the whole device read-only (or clearing the read-only
-> state), also update the policy for all partitions.  The s390 dasd
-> driver has awlways been doing this and it makes a lot of sense.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Please apply the following patch series for smc to netdev's net-next tree.
 
-Acked-by: Coly Li <colyli@suse.de>
+This patch series refactors the current netlink API in smc_diag module
+which is used for diagnostic purposes and extends the netlink API in a
+backward compatible way so that the extended API can provide information
+about SMC linkgroups, links and devices (both for SMC-R and SMC-D) and
+can still work with the legacy netlink API.
 
-Thanks.
+Please note that patch 9 triggers a checkpatch warning because a comment
+line was added using the style of the already existing comment block.
 
+v2: In patch 10, add missing include to uapi header smc_diag.h.
 
-Coly Li
+v3: Apply code style recommendations from review comments.
+    Instead of using EXPORTs to allow the smc_diag module to access
+    data of the smc module, introduce struct smc_diag_ops and let
+    smc_diag access the required data using function pointers.
 
-> ---
->  block/ioctl.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/block/ioctl.c b/block/ioctl.c
-> index 6b785181344fe1..22f394d118c302 100644
-> --- a/block/ioctl.c
-> +++ b/block/ioctl.c
-> @@ -354,7 +354,10 @@ static int blkdev_roset(struct block_device *bdev, fmode_t mode,
->  		if (ret)
->  			return ret;
->  	}
-> -	bdev->bd_part->policy = n;
-> +	if (bdev_is_partition(bdev))
-> +		bdev->bd_part->policy = n;
-> +	else
-> +		set_disk_ro(bdev->bd_disk, n);
->  	return 0;
->  }
->  
-> 
+Guvenc Gulce (14):
+  net/smc: Use active link of the connection
+  net/smc: Add connection counters for links
+  net/smc: Add link counters for IB device ports
+  net/smc: Add diagnostic information to smc ib-device
+  net/smc: Add diagnostic information to link structure
+  net/smc: Refactor the netlink reply processing routine
+  net/smc: Add ability to work with extended SMC netlink API
+  net/smc: Introduce SMCR get linkgroup command
+  net/smc: Introduce SMCR get link command
+  net/smc: Add SMC-D Linkgroup diagnostic support
+  net/smc: Add support for obtaining SMCD device list
+  net/smc: Add support for obtaining SMCR device list
+  net/smc: Refactor smc ism v2 capability handling
+  net/smc: Add support for obtaining system information
+
+Karsten Graul (1):
+  net/smc: use helper smc_conn_abort() in listen processing
+
+ include/net/smc.h             |   2 +-
+ include/uapi/linux/smc.h      |   8 +
+ include/uapi/linux/smc_diag.h | 109 +++++
+ net/smc/af_smc.c              |  29 +-
+ net/smc/smc.h                 |   4 +-
+ net/smc/smc_clc.c             |   5 +
+ net/smc/smc_clc.h             |   1 +
+ net/smc/smc_core.c            |  62 ++-
+ net/smc/smc_core.h            |  55 ++-
+ net/smc/smc_diag.c            | 768 ++++++++++++++++++++++++++++++----
+ net/smc/smc_ib.c              |  45 ++
+ net/smc/smc_ib.h              |   5 +-
+ net/smc/smc_ism.c             |   8 +-
+ net/smc/smc_ism.h             |   5 +-
+ net/smc/smc_pnet.c            |   3 +
+ 15 files changed, 986 insertions(+), 123 deletions(-)
+
+-- 
+2.17.1
 
