@@ -2,92 +2,156 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FE322AA9C6
-	for <lists+linux-s390@lfdr.de>; Sun,  8 Nov 2020 07:34:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E8922AA9D4
+	for <lists+linux-s390@lfdr.de>; Sun,  8 Nov 2020 07:58:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726030AbgKHGe5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 8 Nov 2020 01:34:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbgKHGe4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 8 Nov 2020 01:34:56 -0500
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA86CC0613CF;
-        Sat,  7 Nov 2020 22:34:54 -0800 (PST)
-Received: by mail-pj1-x1041.google.com with SMTP id ei22so733807pjb.2;
-        Sat, 07 Nov 2020 22:34:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Kt6S+JMIQwOJCIw5xl6gOY+bhA3QLddX49Ln4+J/S5E=;
-        b=IYY4AP2WouUHHmO3MoOKKOmXZgUzX6Vps9phVlae88j2KW9/Uffo2U6+V/28oF8pMy
-         GmQ3E2drQP63zj1qK2KfNjLG3gEkqizxZ8rjZAHF2gC3/ZkZ52pYvP5QeUyUmUfTLHQG
-         vehnDICxg1gSWi8C1vV6s9GBk+1gWt7JeTRxrAdWb4qemGNAmgeEp1VSr/wRZmCKKlWB
-         QmK2B6c5FaKi4JNB7dJ4vBHxwIV7+cjR8yrSHLiJMGxeVg7gL8gRkPCeY3I5Tsppu+0X
-         doZ/x2eBHCCyDhbmlSgyT3ItpsjCw9iJawxuVnhRVOl6oNPywy68k75l7Bk4oIvg+W5O
-         FI3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Kt6S+JMIQwOJCIw5xl6gOY+bhA3QLddX49Ln4+J/S5E=;
-        b=Gw/3A5urA4W/uyCLDfG5LD/h+tE+T444aKet0Vuv0BbxQhXpbPYXwtUD9Me852lW0h
-         r7wq7mB9+qI/OT8j2QMH5Re3Lh3r+M9tCQ8HvRZhGnDCOke1ci0IFTzpWy1i7470i5/j
-         clAVinyGJLMU0bAYbiBKJDIroKI1h0jJNdNdgE6+WuZ3UhAvVpdv3oznMEdqLfmeWFQ8
-         Cvff4UAhQLQBCN42W++r5dpNDY3r/ZaTo7naJQoNtARzdWZf9T2P2704DtFg+yBZbA7+
-         MDN1hizxYf7phdhntXEMAl37nh2FVULKuyIUHWoxWb1jdcbwljBVllkBFFEvocfhSOpQ
-         zoeQ==
-X-Gm-Message-State: AOAM530BueHe+JjOumxFDFxvkPUPhDGijnnBjYjA4LCLm5N5/57PDvKS
-        tSgZHHIzlDM9FYMcDp8+xQ==
-X-Google-Smtp-Source: ABdhPJya6GqzMQ9h6deD8YgY9MQZ6eV1J9l/ifsqnG85LCg45xF2g8TIpRqjhNtlAyq7j4O0K4fjCw==
-X-Received: by 2002:a17:90a:4a15:: with SMTP id e21mr6837307pjh.130.1604817294232;
-        Sat, 07 Nov 2020 22:34:54 -0800 (PST)
-Received: from he-cluster.localdomain (67.216.221.250.16clouds.com. [67.216.221.250])
-        by smtp.gmail.com with ESMTPSA id n1sm7040745pgl.31.2020.11.07.22.34.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 07 Nov 2020 22:34:53 -0800 (PST)
-From:   xiakaixu1987@gmail.com
-X-Google-Original-From: kaixuxia@tencent.com
-To:     hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kaixu Xia <kaixuxia@tencent.com>
-Subject: [PATCH] s390/qeth: remove useless if/else
-Date:   Sun,  8 Nov 2020 14:34:47 +0800
-Message-Id: <1604817287-11258-1-git-send-email-kaixuxia@tencent.com>
-X-Mailer: git-send-email 1.8.3.1
+        id S1726062AbgKHG6N (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 8 Nov 2020 01:58:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbgKHG6N (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 8 Nov 2020 01:58:13 -0500
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FA2C20719;
+        Sun,  8 Nov 2020 06:58:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604818692;
+        bh=wFNXZxJs2g5BcW3aCm2TF4VcMb1iBggKCmWf8Xc7OXQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vEcjSbJxV1osIHprGn0uUivu2ID8+CzSj4Gez7BD1cn8ZWSCusNjvXx7R84zomGgH
+         TCfOcB3essBAWR2sfg4dWEIKILFOIgLaYZaPcH8bFTlWeVokIFRf7C18MtlyF9fZa7
+         wnZ5i133kJilecrWVEAX6ixDBBd41cTdQGyorHrk=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Lameter <cl@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Len Brown <len.brown@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-pm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        x86@kernel.org
+Subject: [PATCH v5 0/5] arch, mm: improve robustness of direct map manipulation
+Date:   Sun,  8 Nov 2020 08:57:53 +0200
+Message-Id: <20201108065758.1815-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Kaixu Xia <kaixuxia@tencent.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Fix the following coccinelle report:
+Hi,
 
-./drivers/s390/net/qeth_l3_main.c:107:2-4: WARNING: possible condition with no effect (if == else)
+During recent discussion about KVM protected memory, David raised a concern
+about usage of __kernel_map_pages() outside of DEBUG_PAGEALLOC scope [1].
 
-Both branches are the same, so remove them.
+Indeed, for architectures that define CONFIG_ARCH_HAS_SET_DIRECT_MAP it is
+possible that __kernel_map_pages() would fail, but since this function is
+void, the failure will go unnoticed.
 
-Reported-by: Tosk Robot <tencent_os_robot@tencent.com>
-Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
----
- drivers/s390/net/qeth_l3_main.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Moreover, there's lack of consistency of __kernel_map_pages() semantics
+across architectures as some guard this function with
+#ifdef DEBUG_PAGEALLOC, some refuse to update the direct map if page
+allocation debugging is disabled at run time and some allow modifying the
+direct map regardless of DEBUG_PAGEALLOC settings.
 
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index b1c1d2510d55..264b6c782382 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -104,10 +104,7 @@ static bool qeth_l3_is_addr_covered_by_ipato(struct qeth_card *card,
- 		qeth_l3_convert_addr_to_bits(ipatoe->addr, ipatoe_bits,
- 					  (ipatoe->proto == QETH_PROT_IPV4) ?
- 					  4 : 16);
--		if (addr->proto == QETH_PROT_IPV4)
--			rc = !memcmp(addr_bits, ipatoe_bits, ipatoe->mask_bits);
--		else
--			rc = !memcmp(addr_bits, ipatoe_bits, ipatoe->mask_bits);
-+		rc = !memcmp(addr_bits, ipatoe_bits, ipatoe->mask_bits);
- 		if (rc)
- 			break;
- 	}
+This set straightens this out by restoring dependency of
+__kernel_map_pages() on DEBUG_PAGEALLOC and updating the call sites
+accordingly. 
+
+Since currently the only user of __kernel_map_pages() outside
+DEBUG_PAGEALLOC is hibernation, it is updated to make direct map accesses
+there more explicit.
+
+[1] https://lore.kernel.org/lkml/2759b4bf-e1e3-d006-7d86-78a40348269d@redhat.com
+
+v5 changes:
+* use pairs of _map()/_unmap() functions instead of _map(..., int enable) as
+  Vlastimil suggested
+
+v4 changes:
+* s/WARN_ON/pr_warn_once/ per David and Kirill
+* rebase on v5.10-rc2
+* add Acked/Reviewed tags
+https://lore.kernel.org/lkml/20201103162057.22916-1-rppt@kernel.org
+
+v3 changes:
+* update arm64 changes to avoid regression, per Rick's comments
+* fix bisectability
+https://lore.kernel.org/lkml/20201101170815.9795-1-rppt@kernel.org
+
+v2 changes:
+* Rephrase patch 2 changelog to better describe the change intentions and
+implications
+* Move removal of kernel_map_pages() from patch 1 to patch 2, per David
+https://lore.kernel.org/lkml/20201029161902.19272-1-rppt@kernel.org
+
+v1:
+https://lore.kernel.org/lkml/20201025101555.3057-1-rppt@kernel.org
+
+Mike Rapoport (5):
+  mm: introduce debug_pagealloc_{map,unmap}_pages() helpers
+  slab: debug: split slab_kernel_map() to map and unmap variants
+  PM: hibernate: make direct map manipulations more explicit
+  arch, mm: restore dependency of __kernel_map_pages() on DEBUG_PAGEALLOC
+  arch, mm: make kernel_page_present() always available
+
+ arch/Kconfig                        |  3 +++
+ arch/arm64/Kconfig                  |  4 +--
+ arch/arm64/include/asm/cacheflush.h |  1 +
+ arch/arm64/mm/pageattr.c            |  6 +++--
+ arch/powerpc/Kconfig                |  5 +---
+ arch/riscv/Kconfig                  |  4 +--
+ arch/riscv/include/asm/pgtable.h    |  2 --
+ arch/riscv/include/asm/set_memory.h |  1 +
+ arch/riscv/mm/pageattr.c            | 31 ++++++++++++++++++++++
+ arch/s390/Kconfig                   |  4 +--
+ arch/sparc/Kconfig                  |  4 +--
+ arch/x86/Kconfig                    |  4 +--
+ arch/x86/include/asm/set_memory.h   |  1 +
+ arch/x86/mm/pat/set_memory.c        |  4 +--
+ include/linux/mm.h                  | 40 ++++++++++++++---------------
+ include/linux/set_memory.h          |  5 ++++
+ kernel/power/snapshot.c             | 38 +++++++++++++++++++++++++--
+ mm/memory_hotplug.c                 |  3 +--
+ mm/page_alloc.c                     |  6 ++---
+ mm/slab.c                           | 26 ++++++++++---------
+ 20 files changed, 127 insertions(+), 65 deletions(-)
+
 -- 
-2.20.0
+2.28.0
 
