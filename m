@@ -2,68 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C87C2AAD78
-	for <lists+linux-s390@lfdr.de>; Sun,  8 Nov 2020 21:59:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02FE22AAEC1
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Nov 2020 02:27:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgKHU67 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 8 Nov 2020 15:58:59 -0500
-Received: from smtprelay0088.hostedemail.com ([216.40.44.88]:39838 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727570AbgKHU67 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 8 Nov 2020 15:58:59 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 339BD18029121;
-        Sun,  8 Nov 2020 20:58:58 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,,RULES_HIT:41:355:379:599:800:960:968:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2194:2199:2393:2559:2562:2828:3138:3139:3140:3141:3142:3352:3622:3865:3867:3870:3871:3872:3873:4321:4384:5007:7514:7576:9108:10004:10400:10848:11026:11232:11473:11658:11914:12043:12048:12296:12297:12438:12740:12895:13069:13095:13311:13357:13439:13894:14181:14659:14721:21080:21433:21451:21627:30009:30045:30054:30079:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
-X-HE-Tag: bait61_5108df2272e6
-X-Filterd-Recvd-Size: 1901
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Sun,  8 Nov 2020 20:58:56 +0000 (UTC)
-Message-ID: <2b8fb8823fe73f28ef77bbdd78c9c8b2105e3077.camel@perches.com>
-Subject: Re: [PATCH] s390/qeth: remove useless if/else
-From:   Joe Perches <joe@perches.com>
-To:     xiakaixu1987@gmail.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kaixu Xia <kaixuxia@tencent.com>
-Date:   Sun, 08 Nov 2020 12:58:55 -0800
-In-Reply-To: <1604817287-11258-1-git-send-email-kaixuxia@tencent.com>
-References: <1604817287-11258-1-git-send-email-kaixuxia@tencent.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+        id S1729000AbgKIB1c (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 8 Nov 2020 20:27:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727979AbgKIB1b (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 8 Nov 2020 20:27:31 -0500
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB77C0613CF;
+        Sun,  8 Nov 2020 17:27:31 -0800 (PST)
+Received: by mail-wr1-x441.google.com with SMTP id d12so5509372wrr.13;
+        Sun, 08 Nov 2020 17:27:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=u7fInsN0dgMnu8fAzY3wCxL0kCoLw+dIKIcs/otIlLI=;
+        b=I+fNSTPnsAaAKQZ6jCM216iJlQaqEshpzb1n7Mk0P0CzlKQVMW0yctSJF0EwFXMlTJ
+         xiLFwqnKmh4YBtL+D8FXupnP4Tt4qz8hnFFA+Zi0IxhETDvazYwh8PBeTwEGF0Jbd/MN
+         0KeOnzLJElwt3V54PiLjaXC6sg/kF9o44dqzyg4MH9mIpR6ihoh3sRYnEZpCwBK7EAV+
+         9OjQek2GVeQdyqXRPNWyTxly4jN7Cz4gJNwSWokksnvR/vIrVX4YMEcKVYWlRXyZQI8m
+         f7e7Erjbc7dYLgaqoHqX7av0f3wI/G5yM5xMauv+C2BRKfQHdxgTLYS9nAo6nDzxphoU
+         O1+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=u7fInsN0dgMnu8fAzY3wCxL0kCoLw+dIKIcs/otIlLI=;
+        b=DUyckTAsaGuNfI3c8F9erYEyftyQMFuBYIWP+jT7FtaD8n1Cus/CCf7eruPhPA6F5Q
+         v7v9bhuomgx9F9IUKdjf6J6JivVW5MiIEekKWVbG8+ytuWGIwdd7ncPHVOlxSmco+JBt
+         sj+uJUHFsx6Le8TOPrzUKTvq5XHy3tDuOJJccY5UdAOvjIAt3vxxVWE7D/HFj4DARF3F
+         PDa5QwPZV0v41Gw1KqCS/SS+6ARfQF0gIvOb/FYS4JLWKPbdHx1VIYeEVnbD0WRgwIiH
+         6rdFNWpfZFWfS97gRzNWlFYqvCXcGkZAFwgOSsV5MppvSWhXSU+YBztkE3n7y+b+TDd0
+         fkbg==
+X-Gm-Message-State: AOAM533QipIwYde1RofJ8VrTU8/ziwkAXDdCYJjMm/qbyVnsqHIpWKz7
+        XFvGHuk+AZSTYC+/Er3FqO24XYAkF6fYG6yE
+X-Google-Smtp-Source: ABdhPJzVg+gmDJzxRv9nWXxxORjkO64NczFwI57Z0tklrXqaLtacHGCcCQ9AtIipvSYgKtq3GdUBFw==
+X-Received: by 2002:adf:9069:: with SMTP id h96mr15983096wrh.358.1604885249587;
+        Sun, 08 Nov 2020 17:27:29 -0800 (PST)
+Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id g17sm11485885wrw.37.2020.11.08.17.27.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Nov 2020 17:27:28 -0800 (PST)
+Subject: Re: [PATCH 00/19] Add generic user_landing tracking
+To:     Andy Lutomirski <luto@kernel.org>, Dmitry Safonov <dima@arista.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will@kernel.org>, X86 ML <x86@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>
+References: <20201108051730.2042693-1-dima@arista.com>
+ <CALCETrW-hHyh3nF3ATmy61PCy1iFqVhVYX+-ptBCMP5Bf7aJ0w@mail.gmail.com>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <9f416ebd-2535-1b57-7033-e1755e906743@gmail.com>
+Date:   Mon, 9 Nov 2020 01:27:27 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALCETrW-hHyh3nF3ATmy61PCy1iFqVhVYX+-ptBCMP5Bf7aJ0w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun, 2020-11-08 at 14:34 +0800, xiakaixu1987@gmail.com wrote:
-> From: Kaixu Xia <kaixuxia@tencent.com>
+On 11/8/20 7:07 PM, Andy Lutomirski wrote:
+> On Sat, Nov 7, 2020 at 9:17 PM Dmitry Safonov <dima@arista.com> wrote:
+>>
+>> Started from discussion [1], where was noted that currently a couple of
+>> architectures support mremap() for vdso/sigpage, but not munmap().
+>> If an application maps something on the ex-place of vdso/sigpage,
+>> later after processing signal it will land there (good luck!)
+>>
+>> Patches set is based on linux-next (next-20201106) and it depends on
+>> changes in x86/cleanups (those reclaim TIF_IA32/TIF_X32) and also
+>> on my changes in akpm (fixing several mremap() issues).
+>>
+>> Logically, the patches set divides on:
+>> - patch       1: cleanup for patches in x86/cleanups
+>> - patches  2-11: cleanups for arch_setup_additional_pages()
 > 
-> Fix the following coccinelle report:
-> 
-> ./drivers/s390/net/qeth_l3_main.c:107:2-4: WARNING: possible condition with no effect (if == else)
-> 
-> Both branches are the same, so remove them.
-[]
-> diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-[]
-> @@ -104,10 +104,7 @@ static bool qeth_l3_is_addr_covered_by_ipato(struct qeth_card *card,
->  		qeth_l3_convert_addr_to_bits(ipatoe->addr, ipatoe_bits,
->  					  (ipatoe->proto == QETH_PROT_IPV4) ?
->  					  4 : 16);
-> -		if (addr->proto == QETH_PROT_IPV4)
-> -			rc = !memcmp(addr_bits, ipatoe_bits, ipatoe->mask_bits);
-> -		else
-> -			rc = !memcmp(addr_bits, ipatoe_bits, ipatoe->mask_bits);
-> +		rc = !memcmp(addr_bits, ipatoe_bits, ipatoe->mask_bits);
+> I like these cleanups, although I think you should stop using terms
+> like "new-born".  A task being exec'd is not newborn at all -- it's in
+> the middle of a transformation.
 
-It's not always best to remove one branch.
+Thank you for looking at them, Andy :-)
 
-Is this a copy/paste defect or is it useless?
-Do you know which?
-If you do, you should state this in the commit message.
+Yeah, somehow I thought about new-execed process as a new-born binary.
+I'll try to improve changelogs in v2.
 
+Thanks,
+         Dmitry
