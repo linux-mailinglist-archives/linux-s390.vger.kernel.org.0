@@ -2,129 +2,129 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ED1F2ABEF4
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Nov 2020 15:42:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BABD22ABF73
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Nov 2020 16:11:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731416AbgKIOmD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Nov 2020 09:42:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729454AbgKIOmC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 9 Nov 2020 09:42:02 -0500
-Received: from kernel.org (unknown [77.125.7.142])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D215206E3;
-        Mon,  9 Nov 2020 14:41:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604932922;
-        bh=XyH/OGSoZtwKFi7Dr6r4PbxrZ95WCPZt6ITMBGRDbT8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AACidaKdvM9fjww+sp/aLxSmuCgmX5y5VInfhx0TIj5OjJteJpSMpOU9k+cy2ANao
-         bPCbw8OTl+tQ2hkhXviYnObTrxDMTytkrEn70tTATzIjRMFL7twkjoJg60mbELrRtH
-         jrhu4hO9i4CTCZoHNJYPLc9KZT9JgGfbJFGI+3OU=
-Date:   Mon, 9 Nov 2020 16:41:48 +0200
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christoph Lameter <cl@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Len Brown <len.brown@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-pm@vger.kernel.org,
+        id S1731626AbgKIPEQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Nov 2020 10:04:16 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41044 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731507AbgKIPEQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Nov 2020 10:04:16 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A9EXJ3S007393;
+        Mon, 9 Nov 2020 10:03:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=z5oC/8a+GTxhWeb+ZbLr8Xr4K+9R59YBdDdSSh5RKRM=;
+ b=XBIiWh0WE20556srxE4tLXEI6LHTLU0XOZ47YJ+y5FuzrW6vuf5w3TIr9w02PGtl0Vm2
+ DuyXTJVwYsCISKNILJK+M1iFuUbShIE99Jq3DvQ0X1oX8LTGL34og77coACb+wK/HnCR
+ AVRIlisnmRGpjCYnFi2E9U+kSrjh53XqIuAVfOxVS9IbINjiz9ouXPIQfH7yUyevg9fc
+ 0cuNK+RY6Rh+1w1zFDzDYDLhR8XfzoI7LW78lTBKqQts2p3iPmUCCyCpGOO1FeUilMD3
+ 8ctNR0S83H168re3lA8+p6vac/432WdtO2v2czqxzZ5czK9JDYTlY7G1LjWXEnXT8HFU zQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34q5urdbxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Nov 2020 10:03:25 -0500
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0A9EXd3B009077;
+        Mon, 9 Nov 2020 10:03:23 -0500
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34q5urdbtv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Nov 2020 10:03:23 -0500
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0A9F1mKL012969;
+        Mon, 9 Nov 2020 15:03:19 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 34p26phjpu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Nov 2020 15:03:18 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0A9F3Gqd55771522
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Nov 2020 15:03:16 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8080BAE055;
+        Mon,  9 Nov 2020 15:03:16 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9050FAE051;
+        Mon,  9 Nov 2020 15:03:15 +0000 (GMT)
+Received: from osiris (unknown [9.171.58.192])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  9 Nov 2020 15:03:15 +0000 (GMT)
+Date:   Mon, 9 Nov 2020 16:03:14 +0100
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     YiFei Zhu <zhuyifei1999@gmail.com>
+Cc:     containers@lists.linux-foundation.org,
+        YiFei Zhu <yifeifz2@illinois.edu>, linux-csky@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v5 1/5] mm: introduce debug_pagealloc_{map,unmap}_pages()
- helpers
-Message-ID: <20201109144148.GE301837@kernel.org>
-References: <20201108065758.1815-1-rppt@kernel.org>
- <20201108065758.1815-2-rppt@kernel.org>
- <4bd5ae2b-4fc6-73dc-b83b-e71826990946@suse.cz>
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Laight <David.Laight@aculab.com>,
+        Dimitrios Skarlatos <dskarlat@cs.cmu.edu>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Hubertus Franke <frankeh@us.ibm.com>,
+        Jack Chen <jianyan2@illinois.edu>,
+        Jann Horn <jannh@google.com>,
+        Josep Torrellas <torrella@illinois.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Tianyin Xu <tyxu@illinois.edu>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Tycho Andersen <tycho@tycho.pizza>,
+        Valentin Rothberg <vrothber@redhat.com>,
+        Will Drewry <wad@chromium.org>
+Subject: Re: [PATCH seccomp 5/8] s390: Enable seccomp architecture tracking
+Message-ID: <20201109150314.GA16690@osiris>
+References: <cover.1604410035.git.yifeifz2@illinois.edu>
+ <0fbe0c14d598e18effad3b648ab4808f9cd95eba.1604410035.git.yifeifz2@illinois.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4bd5ae2b-4fc6-73dc-b83b-e71826990946@suse.cz>
+In-Reply-To: <0fbe0c14d598e18effad3b648ab4808f9cd95eba.1604410035.git.yifeifz2@illinois.edu>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-09_02:2020-11-05,2020-11-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=859
+ bulkscore=0 malwarescore=0 priorityscore=1501 spamscore=0
+ lowpriorityscore=0 impostorscore=0 suspectscore=1 adultscore=0 mlxscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011090098
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Nov 09, 2020 at 12:33:46PM +0100, Vlastimil Babka wrote:
-> On 11/8/20 7:57 AM, Mike Rapoport wrote:
-> > --- a/mm/slab.c
-> > +++ b/mm/slab.c
-> > @@ -1428,21 +1428,19 @@ static bool is_debug_pagealloc_cache(struct kmem_cache *cachep)
-> >   	return false;
-> >   }
-> > -#ifdef CONFIG_DEBUG_PAGEALLOC
-> >   static void slab_kernel_map(struct kmem_cache *cachep, void *objp, int map)
-> >   {
-> >   	if (!is_debug_pagealloc_cache(cachep))
-> >   		return;
+On Tue, Nov 03, 2020 at 07:43:01AM -0600, YiFei Zhu wrote:
+> From: YiFei Zhu <yifeifz2@illinois.edu>
 > 
-> Hmm, I didn't notice earlier, sorry.
-> The is_debug_pagealloc_cache() above includes a
-> debug_pagealloc_enabled_static() check, so it should be fine to use
-> __kernel_map_pages() directly below. Otherwise we generate two static key
-> checks for the same key needlessly.
-
-Ok, I'll revert slab changes.
-
-> > -	kernel_map_pages(virt_to_page(objp), cachep->size / PAGE_SIZE, map);
-> > +	if (map)
-> > +		debug_pagealloc_map_pages(virt_to_page(objp),
-> > +					  cachep->size / PAGE_SIZE);
-> > +	else
-> > +		debug_pagealloc_unmap_pages(virt_to_page(objp),
-> > +					    cachep->size / PAGE_SIZE);
-> >   }
-> > -#else
-> > -static inline void slab_kernel_map(struct kmem_cache *cachep, void *objp,
-> > -				int map) {}
-> > -
-> > -#endif
-> > -
-> >   static void poison_obj(struct kmem_cache *cachep, void *addr, unsigned char val)
-> >   {
-> >   	int size = cachep->object_size;
-> > @@ -2062,7 +2060,7 @@ int __kmem_cache_create(struct kmem_cache *cachep, slab_flags_t flags)
-> >   #if DEBUG
-> >   	/*
-> > -	 * If we're going to use the generic kernel_map_pages()
-> > +	 * If we're going to use the generic debug_pagealloc_map_pages()
-> >   	 * poisoning, then it's going to smash the contents of
-> >   	 * the redzone and userword anyhow, so switch them off.
-> >   	 */
-> > 
+> To enable seccomp constant action bitmaps, we need to have a static
+> mapping to the audit architecture and system call table size. Add these
+> for s390.
 > 
+> Signed-off-by: YiFei Zhu <yifeifz2@illinois.edu>
+> ---
+>  arch/s390/include/asm/seccomp.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/s390/include/asm/seccomp.h b/arch/s390/include/asm/seccomp.h
+> index 795bbe0d7ca6..71d46f0ba97b 100644
+> --- a/arch/s390/include/asm/seccomp.h
+> +++ b/arch/s390/include/asm/seccomp.h
+> @@ -16,4 +16,13 @@
+>  
+>  #include <asm-generic/seccomp.h>
+>  
+> +#define SECCOMP_ARCH_NATIVE		AUDIT_ARCH_S390X
+> +#define SECCOMP_ARCH_NATIVE_NR		NR_syscalls
+> +#define SECCOMP_ARCH_NATIVE_NAME	"s390x"
+> +#ifdef CONFIG_COMPAT
+> +# define SECCOMP_ARCH_COMPAT		AUDIT_ARCH_S390
+> +# define SECCOMP_ARCH_COMPAT_NR		NR_syscalls
+> +# define SECCOMP_ARCH_COMPAT_NAME	"s390"
+> +#endif
+> +
 
--- 
-Sincerely yours,
-Mike.
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
