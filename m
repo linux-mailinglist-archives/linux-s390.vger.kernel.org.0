@@ -2,120 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02FE22AAEC1
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Nov 2020 02:27:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F6992AB1E7
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Nov 2020 08:53:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgKIB1c (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 8 Nov 2020 20:27:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbgKIB1b (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 8 Nov 2020 20:27:31 -0500
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB77C0613CF;
-        Sun,  8 Nov 2020 17:27:31 -0800 (PST)
-Received: by mail-wr1-x441.google.com with SMTP id d12so5509372wrr.13;
-        Sun, 08 Nov 2020 17:27:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=u7fInsN0dgMnu8fAzY3wCxL0kCoLw+dIKIcs/otIlLI=;
-        b=I+fNSTPnsAaAKQZ6jCM216iJlQaqEshpzb1n7Mk0P0CzlKQVMW0yctSJF0EwFXMlTJ
-         xiLFwqnKmh4YBtL+D8FXupnP4Tt4qz8hnFFA+Zi0IxhETDvazYwh8PBeTwEGF0Jbd/MN
-         0KeOnzLJElwt3V54PiLjaXC6sg/kF9o44dqzyg4MH9mIpR6ihoh3sRYnEZpCwBK7EAV+
-         9OjQek2GVeQdyqXRPNWyTxly4jN7Cz4gJNwSWokksnvR/vIrVX4YMEcKVYWlRXyZQI8m
-         f7e7Erjbc7dYLgaqoHqX7av0f3wI/G5yM5xMauv+C2BRKfQHdxgTLYS9nAo6nDzxphoU
-         O1+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=u7fInsN0dgMnu8fAzY3wCxL0kCoLw+dIKIcs/otIlLI=;
-        b=DUyckTAsaGuNfI3c8F9erYEyftyQMFuBYIWP+jT7FtaD8n1Cus/CCf7eruPhPA6F5Q
-         v7v9bhuomgx9F9IUKdjf6J6JivVW5MiIEekKWVbG8+ytuWGIwdd7ncPHVOlxSmco+JBt
-         sj+uJUHFsx6Le8TOPrzUKTvq5XHy3tDuOJJccY5UdAOvjIAt3vxxVWE7D/HFj4DARF3F
-         PDa5QwPZV0v41Gw1KqCS/SS+6ARfQF0gIvOb/FYS4JLWKPbdHx1VIYeEVnbD0WRgwIiH
-         6rdFNWpfZFWfS97gRzNWlFYqvCXcGkZAFwgOSsV5MppvSWhXSU+YBztkE3n7y+b+TDd0
-         fkbg==
-X-Gm-Message-State: AOAM533QipIwYde1RofJ8VrTU8/ziwkAXDdCYJjMm/qbyVnsqHIpWKz7
-        XFvGHuk+AZSTYC+/Er3FqO24XYAkF6fYG6yE
-X-Google-Smtp-Source: ABdhPJzVg+gmDJzxRv9nWXxxORjkO64NczFwI57Z0tklrXqaLtacHGCcCQ9AtIipvSYgKtq3GdUBFw==
-X-Received: by 2002:adf:9069:: with SMTP id h96mr15983096wrh.358.1604885249587;
-        Sun, 08 Nov 2020 17:27:29 -0800 (PST)
-Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id g17sm11485885wrw.37.2020.11.08.17.27.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 Nov 2020 17:27:28 -0800 (PST)
-Subject: Re: [PATCH 00/19] Add generic user_landing tracking
-To:     Andy Lutomirski <luto@kernel.org>, Dmitry Safonov <dima@arista.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will@kernel.org>, X86 ML <x86@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        id S1727077AbgKIHxF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Nov 2020 02:53:05 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40680 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729694AbgKIHxF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Nov 2020 02:53:05 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A97WIGq017815;
+        Mon, 9 Nov 2020 02:53:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=OXpvnKJTGjZbtghmn2g1wneefTLUdQcWo6+7TKvZ9AA=;
+ b=CSnRAYpeX2s1I3fea615MEul1QnysFkp6sASVtrbVf/PQ4L1gu1j6zzesFSzypUr+Tff
+ /NFtFy7W6dVJ8vf0jBPdfajzhK4jHonMOXQJo9sTR8pp2qnqILUOaO/DBz9eNAGjIxxU
+ Vxa5V7tbBcffQSYkTFRNJANUZWUynh0XdLQE2XB3kY1viAlPTFv5gYvFUGy4AHGGBwDX
+ QwQqDY4YP9eFE7AgLcrQX3vi2gtuy1LF10SCjRBH71bu1Kf/IR4EYRaE+G8M8oY4QDCP
+ tseHB4a3G5iG4qWFPSL6Im0Q10V4+Kg3lZFGykaQaaJtXRSCfIpYtYwmpJApMxhUwDBG hA== 
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34p9d89skb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Nov 2020 02:53:01 -0500
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0A97mCS8030311;
+        Mon, 9 Nov 2020 07:52:59 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06fra.de.ibm.com with ESMTP id 34njuh0wp6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Nov 2020 07:52:59 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0A97quR141877962
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Nov 2020 07:52:56 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 978004203F;
+        Mon,  9 Nov 2020 07:52:56 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7563842052;
+        Mon,  9 Nov 2020 07:52:51 +0000 (GMT)
+Received: from [9.145.159.20] (unknown [9.145.159.20])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  9 Nov 2020 07:52:50 +0000 (GMT)
+Subject: Re: [PATCH net 1/2] net/af_iucv: fix null pointer dereference on
+ shutdown
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     David Miller <davem@davemloft.net>,
+        linux-netdev <netdev@vger.kernel.org>,
         linux-s390 <linux-s390@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-References: <20201108051730.2042693-1-dima@arista.com>
- <CALCETrW-hHyh3nF3ATmy61PCy1iFqVhVYX+-ptBCMP5Bf7aJ0w@mail.gmail.com>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Message-ID: <9f416ebd-2535-1b57-7033-e1755e906743@gmail.com>
-Date:   Mon, 9 Nov 2020 01:27:27 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Heiko Carstens <hca@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>
+References: <20201106125008.36478-1-jwi@linux.ibm.com>
+ <20201106125008.36478-2-jwi@linux.ibm.com>
+ <20201106085928.183e0c77@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+Message-ID: <b25101c7-e08d-81b2-a2da-99dfa476f66c@linux.ibm.com>
+Date:   Mon, 9 Nov 2020 09:52:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-In-Reply-To: <CALCETrW-hHyh3nF3ATmy61PCy1iFqVhVYX+-ptBCMP5Bf7aJ0w@mail.gmail.com>
+In-Reply-To: <20201106085928.183e0c77@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-09_02:2020-11-05,2020-11-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ clxscore=1015 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 adultscore=0 phishscore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011090042
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 11/8/20 7:07 PM, Andy Lutomirski wrote:
-> On Sat, Nov 7, 2020 at 9:17 PM Dmitry Safonov <dima@arista.com> wrote:
+On 06.11.20 18:59, Jakub Kicinski wrote:
+> On Fri,  6 Nov 2020 13:50:07 +0100 Julian Wiedmann wrote:
+>> From: Ursula Braun <ubraun@linux.ibm.com>
 >>
->> Started from discussion [1], where was noted that currently a couple of
->> architectures support mremap() for vdso/sigpage, but not munmap().
->> If an application maps something on the ex-place of vdso/sigpage,
->> later after processing signal it will land there (good luck!)
+>> syzbot reported the following KASAN finding:
 >>
->> Patches set is based on linux-next (next-20201106) and it depends on
->> changes in x86/cleanups (those reclaim TIF_IA32/TIF_X32) and also
->> on my changes in akpm (fixing several mremap() issues).
+>> BUG: KASAN: nullptr-dereference in iucv_send_ctrl+0x390/0x3f0 net/iucv/af_iucv.c:385
+>> Read of size 2 at addr 000000000000021e by task syz-executor907/519
 >>
->> Logically, the patches set divides on:
->> - patch       1: cleanup for patches in x86/cleanups
->> - patches  2-11: cleanups for arch_setup_additional_pages()
+>> CPU: 0 PID: 519 Comm: syz-executor907 Not tainted 5.9.0-syzkaller-07043-gbcf9877ad213 #0
+>> Hardware name: IBM 3906 M04 701 (KVM/Linux)
+>> Call Trace:
+>>  [<00000000c576af60>] unwind_start arch/s390/include/asm/unwind.h:65 [inline]
+>>  [<00000000c576af60>] show_stack+0x180/0x228 arch/s390/kernel/dumpstack.c:135
+>>  [<00000000c9dcd1f8>] __dump_stack lib/dump_stack.c:77 [inline]
+>>  [<00000000c9dcd1f8>] dump_stack+0x268/0x2f0 lib/dump_stack.c:118
+>>  [<00000000c5fed016>] print_address_description.constprop.0+0x5e/0x218 mm/kasan/report.c:383
+>>  [<00000000c5fec82a>] __kasan_report mm/kasan/report.c:517 [inline]
+>>  [<00000000c5fec82a>] kasan_report+0x11a/0x168 mm/kasan/report.c:534
+>>  [<00000000c98b5b60>] iucv_send_ctrl+0x390/0x3f0 net/iucv/af_iucv.c:385
+>>  [<00000000c98b6262>] iucv_sock_shutdown+0x44a/0x4c0 net/iucv/af_iucv.c:1457
+>>  [<00000000c89d3a54>] __sys_shutdown+0x12c/0x1c8 net/socket.c:2204
+>>  [<00000000c89d3b70>] __do_sys_shutdown net/socket.c:2212 [inline]
+>>  [<00000000c89d3b70>] __s390x_sys_shutdown+0x38/0x48 net/socket.c:2210
+>>  [<00000000c9e36eac>] system_call+0xe0/0x28c arch/s390/kernel/entry.S:415
+>>
+>> There is nothing to shutdown if a connection has never been established.
+>> Besides that iucv->hs_dev is not yet initialized if a socket is in
+>> IUCV_OPEN state and iucv->path is not yet initialized if socket is in
+>> IUCV_BOUND state.
+>> So, just skip the shutdown calls for a socket in these states.
+>>
+>> Fixes: eac3731bd04c ("s390: Add AF_IUCV socket support")
+>> Fixes: 82492a355fac ("af_iucv: add shutdown for HS transport")
+>> Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+>> Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+>> Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 > 
-> I like these cleanups, although I think you should stop using terms
-> like "new-born".  A task being exec'd is not newborn at all -- it's in
-> the middle of a transformation.
+> Fixes tag: Fixes: eac3731bd04c ("s390: Add AF_IUCV socket support")
+> Has these problem(s):
+> 	- Subject does not match target commit subject
+> 	  Just use
+> 		git log -1 --format='Fixes: %h ("%s")'
+> 
 
-Thank you for looking at them, Andy :-)
+sigh... yes, that should have been
+Fixes: eac3731bd04c ("[S390]: Add AF_IUCV socket support")
 
-Yeah, somehow I thought about new-execed process as a new-born binary.
-I'll try to improve changelogs in v2.
-
-Thanks,
-         Dmitry
+Thanks. Will fix up and get you a v2 shortly.
