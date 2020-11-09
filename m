@@ -2,28 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B9F52AC13D
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Nov 2020 17:48:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A8F22AC4D2
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Nov 2020 20:22:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbgKIQsH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Nov 2020 11:48:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54586 "EHLO mail.kernel.org"
+        id S1729933AbgKITVo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Nov 2020 14:21:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730419AbgKIQsH (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 9 Nov 2020 11:48:07 -0500
-Received: from kernel.org (unknown [77.125.7.142])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729289AbgKITVn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 9 Nov 2020 14:21:43 -0500
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C3EA2074F;
-        Mon,  9 Nov 2020 16:47:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 143A5206D8;
+        Mon,  9 Nov 2020 19:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604940486;
-        bh=6rn/Is9/mb71Cx8T5OixcswhdKR8Yw8hRoo0YqfjdsY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2PklhGFO1GSLbrkd4w7eR0OQVXIC9bB/NRFuu0yXJ2cad3g2XWFGm5qY1CfZsxWEJ
-         hIEGvV7DG50YSNEMxKxpw57WvEfw0aU7JllVonG+2csYY0gr4DIxzUIPf5drKxbhRb
-         AQb1wGfM13MfcFzy1XYj4m6UEF/itQaci+zuEFqA=
-Date:   Mon, 9 Nov 2020 18:47:52 +0200
+        s=default; t=1604949702;
+        bh=QGTmizEK1UjKs+M3i5taZOyhlQtuke3SF4xVfj8rMZk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=k55R9YcADr0xJwXvM4j0zAp6vWZk0ETbFSE04MFUnjzJKc9PomPqxRT22PQlapBZi
+         2IzNzcdBMaDo6ymAx8eH7285ig9SBc7A4oWYDMyBtditNFHUzd3UvkTqLbh6yvgCrf
+         IK7aPEp1dRIjSK4NRfcVZ1/a4WCtbm7eFBu5gmDM=
 From:   Mike Rapoport <rppt@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Albert Ou <aou@eecs.berkeley.edu>,
@@ -46,6 +45,7 @@ Cc:     Albert Ou <aou@eecs.berkeley.edu>,
         "Kirill A. Shutemov" <kirill@shutemov.name>,
         Len Brown <len.brown@intel.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Rapoport <rppt@kernel.org>,
         Mike Rapoport <rppt@linux.ibm.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Paul Mackerras <paulus@samba.org>,
@@ -62,108 +62,136 @@ Cc:     Albert Ou <aou@eecs.berkeley.edu>,
         linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
         x86@kernel.org
-Subject: Re: [PATCH v6 0/4] arch, mm: improve robustness of direct map
- manipulation
-Message-ID: <20201109164752.GF301837@kernel.org>
-References: <20201109162415.13764-1-rppt@kernel.org>
+Subject: [PATCH v7 0/4] arch, mm: improve robustness of direct map manipulation
+Date:   Mon,  9 Nov 2020 21:21:24 +0200
+Message-Id: <20201109192128.960-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201109162415.13764-1-rppt@kernel.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Oops, this one has some rebase errors, I'll send v7 soon.
-Sorry for the noise.
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-On Mon, Nov 09, 2020 at 06:24:11PM +0200, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> Hi,
-> 
-> During recent discussion about KVM protected memory, David raised a concern
-> about usage of __kernel_map_pages() outside of DEBUG_PAGEALLOC scope [1].
-> 
-> Indeed, for architectures that define CONFIG_ARCH_HAS_SET_DIRECT_MAP it is
-> possible that __kernel_map_pages() would fail, but since this function is
-> void, the failure will go unnoticed.
-> 
-> Moreover, there's lack of consistency of __kernel_map_pages() semantics
-> across architectures as some guard this function with
-> #ifdef DEBUG_PAGEALLOC, some refuse to update the direct map if page
-> allocation debugging is disabled at run time and some allow modifying the
-> direct map regardless of DEBUG_PAGEALLOC settings.
-> 
-> This set straightens this out by restoring dependency of
-> __kernel_map_pages() on DEBUG_PAGEALLOC and updating the call sites
-> accordingly. 
-> 
-> Since currently the only user of __kernel_map_pages() outside
-> DEBUG_PAGEALLOC is hibernation, it is updated to make direct map accesses
-> there more explicit.
-> 
-> [1] https://lore.kernel.org/lkml/2759b4bf-e1e3-d006-7d86-78a40348269d@redhat.com
-> 
-> v6 changes:
-> * revert slab changes to avoid redundant check of static key
-> 
-> v5 changes:
-> * use pairs of _map()/_unmap() functions instead of _map(..., int enable) as
->   Vlastimil suggested
-> https://lore.kernel.org/lkml/20201108065758.1815-1-rppt@kernel.org
-> 
-> v4 changes:
-> * s/WARN_ON/pr_warn_once/ per David and Kirill
-> * rebase on v5.10-rc2
-> * add Acked/Reviewed tags
-> https://lore.kernel.org/lkml/20201103162057.22916-1-rppt@kernel.org
-> 
-> v3 changes:
-> * update arm64 changes to avoid regression, per Rick's comments
-> * fix bisectability
-> https://lore.kernel.org/lkml/20201101170815.9795-1-rppt@kernel.org
-> 
-> v2 changes:
-> * Rephrase patch 2 changelog to better describe the change intentions and
-> implications
-> * Move removal of kernel_map_pages() from patch 1 to patch 2, per David
-> https://lore.kernel.org/lkml/20201029161902.19272-1-rppt@kernel.org
-> 
-> v1:
-> https://lore.kernel.org/lkml/20201025101555.3057-1-rppt@kernel.org
-> 
-> Mike Rapoport (4):
->   mm: introduce debug_pagealloc_{map,unmap}_pages() helpers
->   PM: hibernate: make direct map manipulations more explicit
->   arch, mm: restore dependency of __kernel_map_pages() on DEBUG_PAGEALLOC
->   arch, mm: make kernel_page_present() always available
-> 
->  arch/Kconfig                        |  3 +++
->  arch/arm64/Kconfig                  |  4 +--
->  arch/arm64/include/asm/cacheflush.h |  1 +
->  arch/arm64/mm/pageattr.c            |  6 +++--
->  arch/powerpc/Kconfig                |  5 +---
->  arch/riscv/Kconfig                  |  4 +--
->  arch/riscv/include/asm/pgtable.h    |  2 --
->  arch/riscv/include/asm/set_memory.h |  1 +
->  arch/riscv/mm/pageattr.c            | 31 ++++++++++++++++++++++
->  arch/s390/Kconfig                   |  4 +--
->  arch/sparc/Kconfig                  |  4 +--
->  arch/x86/Kconfig                    |  4 +--
->  arch/x86/include/asm/set_memory.h   |  1 +
->  arch/x86/mm/pat/set_memory.c        |  4 +--
->  include/linux/mm.h                  | 40 ++++++++++++++---------------
->  include/linux/set_memory.h          |  5 ++++
->  kernel/power/snapshot.c             | 38 +++++++++++++++++++++++++--
->  mm/memory_hotplug.c                 |  3 +--
->  mm/page_alloc.c                     |  6 ++---
->  19 files changed, 113 insertions(+), 53 deletions(-)
-> 
-> -- 
-> 2.28.0
-> 
+Hi,
+
+During recent discussion about KVM protected memory, David raised a concern
+about usage of __kernel_map_pages() outside of DEBUG_PAGEALLOC scope [1].
+
+Indeed, for architectures that define CONFIG_ARCH_HAS_SET_DIRECT_MAP it is
+possible that __kernel_map_pages() would fail, but since this function is
+void, the failure will go unnoticed.
+
+Moreover, there's lack of consistency of __kernel_map_pages() semantics
+across architectures as some guard this function with
+#ifdef DEBUG_PAGEALLOC, some refuse to update the direct map if page
+allocation debugging is disabled at run time and some allow modifying the
+direct map regardless of DEBUG_PAGEALLOC settings.
+
+This set straightens this out by restoring dependency of
+__kernel_map_pages() on DEBUG_PAGEALLOC and updating the call sites
+accordingly. 
+
+Since currently the only user of __kernel_map_pages() outside
+DEBUG_PAGEALLOC is hibernation, it is updated to make direct map accesses
+there more explicit.
+
+[1] https://lore.kernel.org/lkml/2759b4bf-e1e3-d006-7d86-78a40348269d@redhat.com
+
+v7 changes:
+* fix a rebase error that sneaked into v6 after removal of slab changes
+
+v6 changes:
+* revert slab changes to avoid redundant check of static key
+https://lore.kernel.org/lkml/20201109162415.13764-1-rppt@kernel.org
+
+v5 changes:
+* use pairs of _map()/_unmap() functions instead of _map(..., int enable) as
+  Vlastimil suggested
+https://lore.kernel.org/lkml/20201108065758.1815-1-rppt@kernel.org
+
+v4 changes:
+* s/WARN_ON/pr_warn_once/ per David and Kirill
+* rebase on v5.10-rc2
+* add Acked/Reviewed tags
+https://lore.kernel.org/lkml/20201103162057.22916-1-rppt@kernel.org
+
+v3 changes:
+* update arm64 changes to avoid regression, per Rick's comments
+* fix bisectability
+https://lore.kernel.org/lkml/20201101170815.9795-1-rppt@kernel.org
+
+v2 changes:
+* Rephrase patch 2 changelog to better describe the change intentions and
+implications
+* Move removal of kernel_map_pages() from patch 1 to patch 2, per David
+https://lore.kernel.org/lkml/20201029161902.19272-1-rppt@kernel.org
+
+v1:
+https://lore.kernel.org/lkml/20201025101555.3057-1-rppt@kernel.org
+
+Mike Rapoport (4):
+  mm: introduce debug_pagealloc_{map,unmap}_pages() helpers
+  PM: hibernate: make direct map manipulations more explicit
+  arch, mm: restore dependency of __kernel_map_pages() on DEBUG_PAGEALLOC
+  arch, mm: make kernel_page_present() always available
+
+ arch/Kconfig                        |  3 +++
+ arch/arm64/Kconfig                  |  4 +--
+ arch/arm64/include/asm/cacheflush.h |  1 +
+ arch/arm64/mm/pageattr.c            |  6 +++--
+ arch/powerpc/Kconfig                |  5 +---
+ arch/riscv/Kconfig                  |  4 +--
+ arch/riscv/include/asm/pgtable.h    |  2 --
+ arch/riscv/include/asm/set_memory.h |  1 +
+ arch/riscv/mm/pageattr.c            | 31 ++++++++++++++++++++++
+ arch/s390/Kconfig                   |  4 +--
+ arch/sparc/Kconfig                  |  4 +--
+ arch/x86/Kconfig                    |  4 +--
+ arch/x86/include/asm/set_memory.h   |  1 +
+ arch/x86/mm/pat/set_memory.c        |  4 +--
+ include/linux/mm.h                  | 40 ++++++++++++++---------------
+ include/linux/set_memory.h          |  5 ++++
+ kernel/power/snapshot.c             | 38 +++++++++++++++++++++++++--
+ mm/memory_hotplug.c                 |  3 +--
+ mm/page_alloc.c                     |  6 ++---
+ 19 files changed, 113 insertions(+), 53 deletions(-)
 
 -- 
-Sincerely yours,
-Mike.
+2.28.0
+
+*** BLURB HERE ***
+
+Mike Rapoport (4):
+  mm: introduce debug_pagealloc_{map,unmap}_pages() helpers
+  PM: hibernate: make direct map manipulations more explicit
+  arch, mm: restore dependency of __kernel_map_pages() on
+    DEBUG_PAGEALLOC
+  arch, mm: make kernel_page_present() always available
+
+ arch/Kconfig                        |  3 +++
+ arch/arm64/Kconfig                  |  4 +--
+ arch/arm64/include/asm/cacheflush.h |  1 +
+ arch/arm64/mm/pageattr.c            |  6 +++--
+ arch/powerpc/Kconfig                |  5 +---
+ arch/riscv/Kconfig                  |  4 +--
+ arch/riscv/include/asm/pgtable.h    |  2 --
+ arch/riscv/include/asm/set_memory.h |  1 +
+ arch/riscv/mm/pageattr.c            | 31 ++++++++++++++++++++++
+ arch/s390/Kconfig                   |  4 +--
+ arch/sparc/Kconfig                  |  4 +--
+ arch/x86/Kconfig                    |  4 +--
+ arch/x86/include/asm/set_memory.h   |  1 +
+ arch/x86/mm/pat/set_memory.c        |  4 +--
+ include/linux/mm.h                  | 40 ++++++++++++++---------------
+ include/linux/set_memory.h          |  5 ++++
+ kernel/power/snapshot.c             | 38 +++++++++++++++++++++++++--
+ mm/memory_hotplug.c                 |  3 +--
+ mm/page_alloc.c                     |  6 ++---
+ mm/slab.c                           |  2 +-
+ 20 files changed, 114 insertions(+), 54 deletions(-)
+
+-- 
+2.28.0
+
