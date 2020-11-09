@@ -2,108 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22A0D2AB43A
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Nov 2020 11:02:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C86B62AB706
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Nov 2020 12:34:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgKIKCG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Nov 2020 05:02:06 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47366 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726646AbgKIKCG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Nov 2020 05:02:06 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0A99WLno165058;
-        Mon, 9 Nov 2020 05:02:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=7KmqLtkv4n+qon/WOA1vGB76k4Z2CvysOh+6wFr0wlk=;
- b=Pg5jYoF5MDJ0UAEsPDTRC6oIgorWqtGngT3O8Yq0WHOtOSKZt0FJ6nwW+9TlEH2Nke16
- uNJ9q6zEo1W8a3zLai4mUyHIZnxH6XKYp8eaJN5/XhdvjPsGlZ6u2GgBCVvSqh05mSqt
- TxKL3E3MEF0fIUy6pUARZ0Lnd/+7gyLFpnFXoeB06b5K3H3YrOJLaWTsT2D+8CiN3M5Y
- ddbPZF9gedKkzrsEkY61/VH0JvT9WfvQPfe5iOB0+I7L38z/qRmPEIwV7xxnCd7SHwny
- ZBx+WRjJ6aS65wIenJIvJdUsw2L73q8bX2trGOzubOzlsNw0/nMO0NKha3W9sesAWicw ow== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34nryaqx3c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Nov 2020 05:02:02 -0500
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0A9A1r7U024323;
-        Mon, 9 Nov 2020 10:02:00 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 34p26phaty-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Nov 2020 10:02:00 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0A9A1v9e25362800
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Nov 2020 10:01:57 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D732DA4066;
-        Mon,  9 Nov 2020 10:01:57 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80EC5A4062;
-        Mon,  9 Nov 2020 10:01:57 +0000 (GMT)
-Received: from [9.171.82.206] (unknown [9.171.82.206])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Nov 2020 10:01:57 +0000 (GMT)
-Subject: Re: [PATCH net-next v3 15/15] net/smc: Add support for obtaining
- system information
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, hca@linux.ibm.com, raspl@linux.ibm.com
-References: <20201107125958.16384-1-kgraul@linux.ibm.com>
- <20201107125958.16384-16-kgraul@linux.ibm.com>
- <20201107095540.0f45b572@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Karsten Graul <kgraul@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-Message-ID: <22bd2535-4057-12a2-ae6b-fefd33129e98@linux.ibm.com>
-Date:   Mon, 9 Nov 2020 11:01:57 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+        id S1729895AbgKILdy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Nov 2020 06:33:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54204 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729891AbgKILdy (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 9 Nov 2020 06:33:54 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 2BA62ABF4;
+        Mon,  9 Nov 2020 11:33:51 +0000 (UTC)
+Subject: Re: [PATCH v5 1/5] mm: introduce debug_pagealloc_{map,unmap}_pages()
+ helpers
+To:     Mike Rapoport <rppt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Christoph Lameter <cl@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Len Brown <len.brown@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Pavel Machek <pavel@ucw.cz>, Pekka Enberg <penberg@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-pm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org,
+        x86@kernel.org
+References: <20201108065758.1815-1-rppt@kernel.org>
+ <20201108065758.1815-2-rppt@kernel.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <4bd5ae2b-4fc6-73dc-b83b-e71826990946@suse.cz>
+Date:   Mon, 9 Nov 2020 12:33:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201107095540.0f45b572@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20201108065758.1815-2-rppt@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-09_02:2020-11-05,2020-11-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 lowpriorityscore=0 adultscore=0 malwarescore=0
- clxscore=1015 priorityscore=1501 bulkscore=0 mlxlogscore=976 mlxscore=0
- spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011090059
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 07/11/2020 18:55, Jakub Kicinski wrote:
-> On Sat,  7 Nov 2020 13:59:58 +0100 Karsten Graul wrote:
->> From: Guvenc Gulce <guvenc@linux.ibm.com>
->>
->> Add new netlink command to obtain system information
->> of the smc module.
->>
->> Signed-off-by: Guvenc Gulce <guvenc@linux.ibm.com>
->> Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-> 
-> Checkpatch says:
-> 
-> CHECK: Please don't use multiple blank lines
-> #62: FILE: include/uapi/linux/smc_diag.h:140:
->  
-> +
-> 
-> WARNING: line length of 84 exceeds 80 columns
-> #172: FILE: net/smc/smc_diag.c:687:
-> +	smcd_dev = list_first_entry_or_null(&dev_list->list, struct smcd_dev, list);
+On 11/8/20 7:57 AM, Mike Rapoport wrote:
+> --- a/mm/slab.c
+> +++ b/mm/slab.c
+> @@ -1428,21 +1428,19 @@ static bool is_debug_pagealloc_cache(struct kmem_cache *cachep)
+>   	return false;
+>   }
+>   
+> -#ifdef CONFIG_DEBUG_PAGEALLOC
+>   static void slab_kernel_map(struct kmem_cache *cachep, void *objp, int map)
+>   {
+>   	if (!is_debug_pagealloc_cache(cachep))
+>   		return;
+
+Hmm, I didn't notice earlier, sorry.
+The is_debug_pagealloc_cache() above includes a debug_pagealloc_enabled_static() 
+check, so it should be fine to use
+__kernel_map_pages() directly below. Otherwise we generate two static key checks 
+for the same key needlessly.
+
+>   
+> -	kernel_map_pages(virt_to_page(objp), cachep->size / PAGE_SIZE, map);
+> +	if (map)
+> +		debug_pagealloc_map_pages(virt_to_page(objp),
+> +					  cachep->size / PAGE_SIZE);
+> +	else
+> +		debug_pagealloc_unmap_pages(virt_to_page(objp),
+> +					    cachep->size / PAGE_SIZE);
+>   }
+>   
+> -#else
+> -static inline void slab_kernel_map(struct kmem_cache *cachep, void *objp,
+> -				int map) {}
+> -
+> -#endif
+> -
+>   static void poison_obj(struct kmem_cache *cachep, void *addr, unsigned char val)
+>   {
+>   	int size = cachep->object_size;
+> @@ -2062,7 +2060,7 @@ int __kmem_cache_create(struct kmem_cache *cachep, slab_flags_t flags)
+>   
+>   #if DEBUG
+>   	/*
+> -	 * If we're going to use the generic kernel_map_pages()
+> +	 * If we're going to use the generic debug_pagealloc_map_pages()
+>   	 * poisoning, then it's going to smash the contents of
+>   	 * the redzone and userword anyhow, so switch them off.
+>   	 */
 > 
 
-The checkpatch.pl script in net-next does not bring up this length warning.
-We will address it in a v4.
-
--- 
-Karsten
-
-(I'm a dude)
