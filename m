@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E86A42ACD1A
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Nov 2020 05:00:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AE9B2ACDC7
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Nov 2020 05:05:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387489AbgKJD4F (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Nov 2020 22:56:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57782 "EHLO mail.kernel.org"
+        id S1732588AbgKJEFJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Nov 2020 23:05:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387464AbgKJD4C (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 9 Nov 2020 22:56:02 -0500
+        id S1732456AbgKJDyN (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 9 Nov 2020 22:54:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E24B216C4;
-        Tue, 10 Nov 2020 03:56:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E60AE207BC;
+        Tue, 10 Nov 2020 03:54:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604980561;
-        bh=6Yev0pjRKHStnjnyUM7qIny4PcOwexPPhGLSFztfQ90=;
+        s=default; t=1604980452;
+        bh=6DIxz/ib5e4NY8x17EduEG3JMHRG1WPKsMLGX1UO9Bg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tMoEoeLYvhTL0/GWBrFW6bTfQA+JrslxPRRoE+mqfbAwICqkqw3k/yjavUjdfV7ly
-         X/43m0Iq7iw+X/84aUkB2djcQuQcrZISz4drl+OYW+hDnsZfr43OeqBMX+Rc2DdVuv
-         j9Y2x4lzyfq0yT/PfSrkaWE3krDf3Y/csKhnE6Tc=
+        b=qKOuTNNLssyPab/RUutGrjdpHhQX1DoRHse/xRJFssBLqeGk3XtoccSlJaZLYEKCf
+         yed7vaaDSMqWE8LWYrc++vD3nlnRLeXyU2U1UeVTwa/yMZwmKI479sueKS/ONLWiSz
+         d8JqbLYMP3z0EuGrT3JIcpW8o41ZvBokbabpAUQ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Qian Cai <cai@redhat.com>,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Heiko Carstens <hca@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/21] s390/smp: move rcu_cpu_starting() earlier
-Date:   Mon,  9 Nov 2020 22:55:35 -0500
-Message-Id: <20201110035541.424648-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.9 38/55] s390/smp: move rcu_cpu_starting() earlier
+Date:   Mon,  9 Nov 2020 22:53:01 -0500
+Message-Id: <20201110035318.423757-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201110035541.424648-1-sashal@kernel.org>
-References: <20201110035541.424648-1-sashal@kernel.org>
+In-Reply-To: <20201110035318.423757-1-sashal@kernel.org>
+References: <20201110035318.423757-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -87,19 +87,18 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index 8e31dfd85de32..888f247c9261a 100644
+index 85700bd85f98d..3b4c3140c18e7 100644
 --- a/arch/s390/kernel/smp.c
 +++ b/arch/s390/kernel/smp.c
-@@ -831,7 +831,7 @@ void __init smp_detect_cpus(void)
-  */
- static void smp_start_secondary(void *cpuvoid)
+@@ -855,13 +855,14 @@ void __init smp_detect_cpus(void)
+ 
+ static void smp_init_secondary(void)
  {
 -	int cpu = smp_processor_id();
 +	int cpu = raw_smp_processor_id();
  
  	S390_lowcore.last_update_clock = get_tod_clock();
- 	S390_lowcore.restart_stack = (unsigned long) restart_stack;
-@@ -844,6 +844,7 @@ static void smp_start_secondary(void *cpuvoid)
+ 	restore_access_regs(S390_lowcore.access_regs_save_area);
  	set_cpu_flag(CIF_ASCE_PRIMARY);
  	set_cpu_flag(CIF_ASCE_SECONDARY);
  	cpu_init();
