@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AE9B2ACDC7
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Nov 2020 05:05:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 608512ACD5D
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Nov 2020 05:01:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732588AbgKJEFJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Nov 2020 23:05:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54978 "EHLO mail.kernel.org"
+        id S1733126AbgKJDzY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Nov 2020 22:55:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732456AbgKJDyN (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 9 Nov 2020 22:54:13 -0500
+        id S1733115AbgKJDzX (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 9 Nov 2020 22:55:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E60AE207BC;
-        Tue, 10 Nov 2020 03:54:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEA6221D93;
+        Tue, 10 Nov 2020 03:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1604980452;
-        bh=6DIxz/ib5e4NY8x17EduEG3JMHRG1WPKsMLGX1UO9Bg=;
+        s=default; t=1604980522;
+        bh=/hZ9nWbGGjFN9qdOakvapm58eAu1ac2ctQXS8eUyNkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qKOuTNNLssyPab/RUutGrjdpHhQX1DoRHse/xRJFssBLqeGk3XtoccSlJaZLYEKCf
-         yed7vaaDSMqWE8LWYrc++vD3nlnRLeXyU2U1UeVTwa/yMZwmKI479sueKS/ONLWiSz
-         d8JqbLYMP3z0EuGrT3JIcpW8o41ZvBokbabpAUQ4=
+        b=sK8Z1PZ9mQf5Ku5ravqE3AoK86WLzCNGeBbu/jmMW8qYl22V5R+yt9SWiaY/lupwU
+         gtRkqgu3cRW+JOUVH90UEAGTFXkkHXPa2/ZOvDfZRo5W4jPsPZ/SIu+es5M9MhUiFa
+         XbigoRx1LavmAQPAEKtH0aP0M4zr8HEnsA0BUayI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Qian Cai <cai@redhat.com>,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Heiko Carstens <hca@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 38/55] s390/smp: move rcu_cpu_starting() earlier
-Date:   Mon,  9 Nov 2020 22:53:01 -0500
-Message-Id: <20201110035318.423757-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 30/42] s390/smp: move rcu_cpu_starting() earlier
+Date:   Mon,  9 Nov 2020 22:54:28 -0500
+Message-Id: <20201110035440.424258-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201110035318.423757-1-sashal@kernel.org>
-References: <20201110035318.423757-1-sashal@kernel.org>
+In-Reply-To: <20201110035440.424258-1-sashal@kernel.org>
+References: <20201110035440.424258-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -87,10 +87,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index 85700bd85f98d..3b4c3140c18e7 100644
+index ad426cc656e56..66d7ba61803c8 100644
 --- a/arch/s390/kernel/smp.c
 +++ b/arch/s390/kernel/smp.c
-@@ -855,13 +855,14 @@ void __init smp_detect_cpus(void)
+@@ -845,13 +845,14 @@ void __init smp_detect_cpus(void)
  
  static void smp_init_secondary(void)
  {
