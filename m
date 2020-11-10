@@ -2,75 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D5482AD53D
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Nov 2020 12:31:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0C1A2ADAE7
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Nov 2020 16:52:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbgKJLbR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Nov 2020 06:31:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31126 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726307AbgKJLbR (ORCPT
+        id S1730231AbgKJPwX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Nov 2020 10:52:23 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18954 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726721AbgKJPwW (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 10 Nov 2020 06:31:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605007876;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7z3Hj13YgE5Bn629X+ahu88D0cdtW0ZmuX8wZJLEM8Y=;
-        b=gY+dOJl0QDvk0gXC7plOQV4ak9h0MJQhFBxtY+FFs7cqmxDv12HK4Ftxf0c42Nr6BSRRNe
-        8mJ/C85muMjpmOMzzPTerD8KBdz7X3NS8ZQZndvNipm0uZ5w8VFRHRADus6ZNzgwlFcYyl
-        n7Gym4LSTHZUUMSh1FT0PucMxbPL3OI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-7dzuHxOaNkWM27hwYZaTiA-1; Tue, 10 Nov 2020 06:31:14 -0500
-X-MC-Unique: 7dzuHxOaNkWM27hwYZaTiA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 55E9F801FD4;
-        Tue, 10 Nov 2020 11:31:13 +0000 (UTC)
-Received: from gondolin (ovpn-112-243.ams2.redhat.com [10.36.112.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 606195B4A4;
-        Tue, 10 Nov 2020 11:31:08 +0000 (UTC)
-Date:   Tue, 10 Nov 2020 12:31:05 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, david@redhat.com, thuth@redhat.com,
-        linux-s390@vger.kernel.org, borntraeger@de.ibm.com,
-        imbrenda@linux.ibm.com
-Subject: Re: [PATCH] kvm: s390: pv: Mark mm as protected after the set
- secure parameters and improve cleanup
-Message-ID: <20201110123105.4b7b1235.cohuck@redhat.com>
-In-Reply-To: <20201030140141.106641-1-frankja@linux.ibm.com>
-References: <20201030140141.106641-1-frankja@linux.ibm.com>
-Organization: Red Hat GmbH
+        Tue, 10 Nov 2020 10:52:22 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AAFkv4j150651;
+        Tue, 10 Nov 2020 10:52:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=WeGskIQqtSbIZM7/zDMutEYYyecROKoFmboUQXGkHoA=;
+ b=DHvuCqjHY/4r7aTMOFYFObfsKoVrJRa+7GrUl6KNgMJp1XpZXAQmyd+AbKO/UBOtdBFa
+ 3x+9NjfrNWI8wp7YUVpHrje4gHhR2VCpWkKVMSFrpERX4gosG+nxYZsiD/I7HOBVaSp0
+ YC7WoLW29Bb0N6wbSk3KYoSVdPW2/9WN32L6s4jgTUCF6l81oWHfQFthpdCTkDZDCPvp
+ H2pjneY5wzg/+sjGYoeWTKySwi8aNkcZkT2E4PUM/f1avFlfjI0EX86Qf6VPiOSNq11F
+ nmlsJOjFdHxADQCRVi1jr2Z8L799ww+NFfA+tlTE5lJJliTTx5WeUibGO3LqjFnJ9hMe Mw== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34qanb743v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Nov 2020 10:52:19 -0500
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AAFWFgo004506;
+        Tue, 10 Nov 2020 15:50:56 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 34nk78kajq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Nov 2020 15:50:56 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AAFoscJ7930390
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Nov 2020 15:50:54 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD1324C04A;
+        Tue, 10 Nov 2020 15:50:53 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9DA2D4C050;
+        Tue, 10 Nov 2020 15:50:53 +0000 (GMT)
+Received: from linux.fritz.box (unknown [9.145.47.150])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 10 Nov 2020 15:50:53 +0000 (GMT)
+Subject: Re: [PATCH v2 00/10] DASD FC endpoint security
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20201008131336.61100-1-sth@linux.ibm.com>
+ <20201012183550.GA12341@imap.linux.ibm.com>
+ <07b0f296-e0b2-1383-56a1-0d5411c101da@kernel.dk>
+ <b5038d44-aa46-bbde-7a9f-0de46fed516a@linux.ibm.com>
+ <17e1142c-4108-6f74-971a-dee007162786@kernel.dk>
+ <ad3caaf7-ed8e-9f21-c3a6-c385139feb7b@linux.ibm.com>
+ <6468cfad-e14c-060d-a525-00d75fe66819@kernel.dk>
+From:   Stefan Haberland <sth@linux.ibm.com>
+Message-ID: <30740ed3-21b9-71cd-b48c-1d6947c6f029@linux.ibm.com>
+Date:   Tue, 10 Nov 2020 16:50:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <6468cfad-e14c-060d-a525-00d75fe66819@kernel.dk>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-10_06:2020-11-10,2020-11-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ bulkscore=0 mlxlogscore=815 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 phishscore=0 adultscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011100111
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 30 Oct 2020 10:01:41 -0400
-Janosch Frank <frankja@linux.ibm.com> wrote:
+Am 14.10.20 um 03:19 schrieb Jens Axboe:
+>
+>> So, instead could you please apply the patches for 5.11 as soon as it is
+>> suitable?
+> I will - I have it queued up, won't create anything public until we
+> get past the merge window.
+>
 
-> We can only have protected guest pages after a successful set secure
-> parameters call as only then the UV allows imports and unpacks.
-> 
-> By moving the test we can now also check for it in s390_reset_acc()
-> and do an early return if it is 0.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  arch/s390/kvm/kvm-s390.c | 2 +-
->  arch/s390/kvm/pv.c       | 3 ++-
->  arch/s390/mm/gmap.c      | 2 ++
->  3 files changed, 5 insertions(+), 2 deletions(-)
+Sorry to bother you again with this.
+Is there any outlook when you are going to push the patches to your
+for-next branch?
 
-Seems reasonable to me. I assume it has been given some coverage by now?
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Or shall I resend the patches?
 
