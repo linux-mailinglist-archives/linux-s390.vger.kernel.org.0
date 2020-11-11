@@ -2,39 +2,42 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEB372AE62E
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Nov 2020 03:10:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A19D2AE630
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Nov 2020 03:12:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732145AbgKKCKf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Nov 2020 21:10:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40476 "EHLO mail.kernel.org"
+        id S1727836AbgKKCMH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Nov 2020 21:12:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727836AbgKKCKe (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 10 Nov 2020 21:10:34 -0500
+        id S1726861AbgKKCMH (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 10 Nov 2020 21:12:07 -0500
 Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 374E821D91;
-        Wed, 11 Nov 2020 02:10:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B56621D91;
+        Wed, 11 Nov 2020 02:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605060633;
-        bh=ZuE0JnTTvKWJ/NKhSx+6dXST8n7/KdV/Gmr1SEHMabM=;
+        s=default; t=1605060726;
+        bh=0f0NXqOkTRsaaUfxpZORvgRcgdrcHQrib07uSFQ/VEU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ekp714TCByAciNz9UANyFwt4CMeyTeVzsRJYD1Kj8X1HLAAtw3gdRCTDZ3EaZ4JSQ
-         UHhx91eCMpjXrzxny/qekpMA2h8j+1UWxOteb2KENsny0/vh63B7dDTwESKSS/QQqV
-         F1dPZaVIAIYxcBABsBmMVX0bkLujX6OE+8Jy05J0=
-Date:   Tue, 10 Nov 2020 18:10:32 -0800
+        b=EymgoN1q0I9usJ0xbVomPO5Jasf9qODxgUPha7sAu7muUUaaopSUzXrMcs7hMW4C7
+         x432pvcW4Fd6q9x2lDnjHcrx/yh1GLaR+Q/Gh3EvMU9DVbNtXLNnUUcVQcSuJEnmov
+         b27FoKbriap21tIhm8fH1IsDEpm+usyO8tc0oklw=
+Date:   Tue, 10 Nov 2020 18:12:05 -0800
 From:   Jakub Kicinski <kuba@kernel.org>
-To:     Julian Wiedmann <jwi@linux.ibm.com>
-Cc:     David Miller <davem@davemloft.net>,
+To:     Ursula Braun <ubraun@linux.ibm.com>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        David Miller <davem@davemloft.net>,
         linux-netdev <netdev@vger.kernel.org>,
         linux-s390 <linux-s390@vger.kernel.org>,
         Heiko Carstens <hca@linux.ibm.com>,
         Karsten Graul <kgraul@linux.ibm.com>
-Subject: Re: [PATCH net v2 0/2] net/iucv: fixes 2020-11-09
-Message-ID: <20201110181032.55e4a320@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20201109075706.56573-1-jwi@linux.ibm.com>
+Subject: Re: [PATCH net v2 2/2] MAINTAINERS: remove Ursula Braun as s390
+ network maintainer
+Message-ID: <20201110181205.40f01ca0@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20201109075706.56573-3-jwi@linux.ibm.com>
 References: <20201109075706.56573-1-jwi@linux.ibm.com>
+        <20201109075706.56573-3-jwi@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -42,15 +45,10 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon,  9 Nov 2020 08:57:04 +0100 Julian Wiedmann wrote:
-> Hi Jakub,
+On Mon,  9 Nov 2020 08:57:06 +0100 Julian Wiedmann wrote:
+> From: Ursula Braun <ubraun@linux.ibm.com>
 > 
-> please apply the following patch series to netdev's net tree.
-> 
-> One fix in the shutdown path for af_iucv sockets. This is relevant for
-> stable as well.
-> Also sending along an update for the Maintainers file.
-> 
-> v1 -> v2: use the correct Fixes tag in patch 1 (Jakub)
+> I am retiring soon. Thus this patch removes myself from the
+> MAINTAINERS file (s390 network).
 
-Applied, and queued, thanks!
+Thanks for all the work over the years! :)
