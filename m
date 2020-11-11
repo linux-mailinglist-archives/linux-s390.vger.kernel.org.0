@@ -2,104 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E264C2AEB45
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Nov 2020 09:27:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 101FA2AF359
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Nov 2020 15:17:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725899AbgKKI1C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 11 Nov 2020 03:27:02 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18716 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725468AbgKKI1A (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 11 Nov 2020 03:27:00 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AB837Vt079858;
-        Wed, 11 Nov 2020 03:27:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=C+EAAKL2NmmLDTG9WZHc7ZR025H2ysGuvFcxiEmRd1k=;
- b=ncX3oNcH9a0aSvxy5MHycj/AM4PDECx/UXPKKJaMxbhl0QDu7rSIu+kf/ATqoTgsWwVh
- acg7gfns+3VFGO7/2Nwp5aB0DynR1mda7QDUJFw/A6ZYWJNQY080fYgm2lhQ8N91icG8
- 85XIw0M4LhyjQkqJRnUYtVPpNsjcL9G9lKW8Ty3bxDwhjHTgYt+/vU6MKBvDMQweTQDC
- 4MTVaM+ARhU5fBKxwCloj7vO1NJhB6Ow0ltZZwC+OCck6LrUxb7tBDDY02Fb6LECJF6O
- TxDrRJYAd2DkzW+bTCP/+0flQHxJVBSI+KjCVfRicNcNXq0namy7Pue2gMKC9LzgguU6 TQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34qkt0b11b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Nov 2020 03:27:00 -0500
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AB8QD5c011853;
-        Wed, 11 Nov 2020 03:26:59 -0500
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34qkt0b108-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Nov 2020 03:26:59 -0500
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AB8MjGp006661;
-        Wed, 11 Nov 2020 08:26:57 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 34nk78m24s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Nov 2020 08:26:57 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AB8QsQX6161090
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Nov 2020 08:26:54 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4511C4C063;
-        Wed, 11 Nov 2020 08:26:54 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E21D94C050;
-        Wed, 11 Nov 2020 08:26:53 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.72.90])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 11 Nov 2020 08:26:53 +0000 (GMT)
-Subject: Re: [PATCH] kvm: s390: pv: Mark mm as protected after the set secure
- parameters and improve cleanup
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     david@redhat.com, thuth@redhat.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com
-References: <20201030140141.106641-1-frankja@linux.ibm.com>
- <f4381509-bf28-2159-b5a6-7dd9e9ee4816@de.ibm.com>
- <fbb49f93-0b73-f1b4-1630-6c973058a420@linux.ibm.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Message-ID: <fd5a1f1b-1e4f-b9f1-6dc8-a7da90a655fe@de.ibm.com>
-Date:   Wed, 11 Nov 2020 09:26:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        id S1726216AbgKKNea (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 11 Nov 2020 08:34:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54062 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbgKKNea (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 11 Nov 2020 08:34:30 -0500
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 235CCC0613D1;
+        Wed, 11 Nov 2020 05:34:30 -0800 (PST)
+Received: by mail-qt1-x841.google.com with SMTP id 7so1260483qtp.1;
+        Wed, 11 Nov 2020 05:34:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ADY2JmYxE9Xly9S24Z1LRnTUA3RyY71p6BFzajWHuao=;
+        b=YJSxGfIbb1UUIY/29x8l4T1Jgc/yvQs31iNrz+gq8lShwrVPuHybhNR6GJR2b7ujTh
+         QXkNda2M3eSKkjAcLLD3C+040OUac/TeqxIQ4kKWh1L61WubktOhPd4WOSZc7To8b+sR
+         jcvHPDdLofNDeZQFZI6zTyzwiTZI58E4j7EHZSBLV1AVXppIZtxsLNOxs1YSHzxtaIyi
+         /8HpFYA+y+MUg78ZtzBB1bfvaT8TL/NlfNctAizFSHUGW5eGeI6PDGrklFXYAAJQKgEB
+         E8onifEyVUdSHl7UZUr5Lsm3j3fv9Fv5friHKntdo5FtOXwpCVL7DFWbsNCOMCfZLyYf
+         O7Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ADY2JmYxE9Xly9S24Z1LRnTUA3RyY71p6BFzajWHuao=;
+        b=LsFvUFhvtSYg5FariRxlsEZVqBjzMzARa8KF5wkM0NE7Q6ew73nia6T5CgOMeF3LEk
+         irmbL9JJDjgnuQaJQpO43jFL7qqUH0lt7UCTlz+gy2z/RT+jBrlluX74WvNfwDM05gVk
+         a/thaUMApzQhGJyg2CqeoB81ssIMyS1ykkFZSwg4WASmnYa7INsxeIfBeAh+jDJN0t3Q
+         aOzti8U5QMK0gndSGZsQmD2nXMXTP7yZfsLUk8YycmHDalx/1ZHXlS316pFVa+CAP3h6
+         abkEDqir5vcj+InWuX/z6lM9MWBeGI+ID2qC/oVUu0akYfw5UAdd3mohBXLFifZjG8K4
+         M+JA==
+X-Gm-Message-State: AOAM5336sTqmPporWB9gyUM6m4k3E9CjEQZQCHefTndrwSkWrX7l9m+D
+        ArZ0NBlYkskdtJTx0gcBDhk=
+X-Google-Smtp-Source: ABdhPJzHUfo2j/Nsf18vB+1vJm4vfXG7t/Ethu+Cj5/ykTWucn6CwriV6xUlfxlPz1n756bgw31C9g==
+X-Received: by 2002:ac8:130d:: with SMTP id e13mr23000296qtj.3.1605101669342;
+        Wed, 11 Nov 2020 05:34:29 -0800 (PST)
+Received: from localhost.localdomain (host-173-230-99-154.tnkngak.clients.pavlovmedia.com. [173.230.99.154])
+        by smtp.gmail.com with ESMTPSA id r190sm1997814qkf.101.2020.11.11.05.34.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Nov 2020 05:34:28 -0800 (PST)
+From:   YiFei Zhu <zhuyifei1999@gmail.com>
+To:     containers@lists.linux-foundation.org
+Cc:     YiFei Zhu <yifeifz2@illinois.edu>, linux-csky@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Laight <David.Laight@aculab.com>,
+        Dimitrios Skarlatos <dskarlat@cs.cmu.edu>,
+        Giuseppe Scrivano <gscrivan@redhat.com>,
+        Hubertus Franke <frankeh@us.ibm.com>,
+        Jack Chen <jianyan2@illinois.edu>,
+        Jann Horn <jannh@google.com>,
+        Josep Torrellas <torrella@illinois.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Tianyin Xu <tyxu@illinois.edu>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Tycho Andersen <tycho@tycho.pizza>,
+        Valentin Rothberg <vrothber@redhat.com>,
+        Will Drewry <wad@chromium.org>
+Subject: [PATCH seccomp v2 0/8] seccomp: add bitmap cache support on remaining arches and report cache in procfs
+Date:   Wed, 11 Nov 2020 07:33:46 -0600
+Message-Id: <cover.1605101222.git.yifeifz2@illinois.edu>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-In-Reply-To: <fbb49f93-0b73-f1b4-1630-6c973058a420@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-11_02:2020-11-10,2020-11-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=807 suspectscore=0 clxscore=1015 bulkscore=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 adultscore=0
- phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011110043
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 11.11.20 09:17, Janosch Frank wrote:
-> On 10/30/20 3:23 PM, Christian Borntraeger wrote:
->> On 30.10.20 15:01, Janosch Frank wrote:
->>> We can only have protected guest pages after a successful set secure
->>> parameters call as only then the UV allows imports and unpacks.
->>>
->>> By moving the test we can now also check for it in s390_reset_acc()
->>> and do an early return if it is 0.
->>>
->>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>
->> Can we check this into devel to give it some test coverage?
-> 
-> I think this also lacks:
-> Fixes: 29b40f105ec8 ("KVM: s390: protvirt: Add initial vm and cpu
-> lifecycle handling")
+From: YiFei Zhu <yifeifz2@illinois.edu>
 
-Yes, it does. I will schedule for kvm/master.
+This patch series enables bitmap cache for the remaining arches with
+SECCOMP_FILTER, other than MIPS.
+
+I was unable to find any of the arches having subarch-specific NR_syscalls
+macros, so generic NR_syscalls is used. SH's syscall_get_arch seems to
+only have the 32-bit subarch implementation. I'm not sure if this is
+expected.
+
+This series has not been tested; I have not built all the cross compilers
+necessary to build test, let alone run the kernel or benchmark the
+performance, so help on making sure the bitmap cache works as expected
+(selftests/seccomp/{seccomp_benchmark,seccomp_bpf}) would be appreciated.
+The series applies on top of Kees's for-next/seccomp branch.
+
+v1 -> v2:
+* ppc, sh: s/__SECCOMP_ARCH_LE_BIT/__SECCOMP_ARCH_LE/
+* ppc: add "le" suffix to arch name when the arch is little endian.
+* ppc: add explanation of why __LITTLE_ENDIAN__ is used to commit message.
+
+YiFei Zhu (8):
+  csky: Enable seccomp architecture tracking
+  parisc: Enable seccomp architecture tracking
+  powerpc: Enable seccomp architecture tracking
+  riscv: Enable seccomp architecture tracking
+  s390: Enable seccomp architecture tracking
+  sh: Enable seccomp architecture tracking
+  xtensa: Enable seccomp architecture tracking
+  seccomp/cache: Report cache data through /proc/pid/seccomp_cache
+
+ arch/Kconfig                       | 15 ++++++++
+ arch/csky/include/asm/Kbuild       |  1 -
+ arch/csky/include/asm/seccomp.h    | 11 ++++++
+ arch/parisc/include/asm/Kbuild     |  1 -
+ arch/parisc/include/asm/seccomp.h  | 22 +++++++++++
+ arch/powerpc/include/asm/seccomp.h | 23 ++++++++++++
+ arch/riscv/include/asm/seccomp.h   | 10 +++++
+ arch/s390/include/asm/seccomp.h    |  9 +++++
+ arch/sh/include/asm/seccomp.h      | 10 +++++
+ arch/xtensa/include/asm/Kbuild     |  1 -
+ arch/xtensa/include/asm/seccomp.h  | 11 ++++++
+ fs/proc/base.c                     |  6 +++
+ include/linux/seccomp.h            |  7 ++++
+ kernel/seccomp.c                   | 59 ++++++++++++++++++++++++++++++
+ 14 files changed, 183 insertions(+), 3 deletions(-)
+ create mode 100644 arch/csky/include/asm/seccomp.h
+ create mode 100644 arch/parisc/include/asm/seccomp.h
+ create mode 100644 arch/xtensa/include/asm/seccomp.h
+
+
+base-commit: 38c37e8fd3d2590c4234d8cfbc22158362f0eb04
+--
+2.29.2
