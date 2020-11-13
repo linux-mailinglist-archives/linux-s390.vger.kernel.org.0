@@ -2,50 +2,56 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D68F82B89A1
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Nov 2020 02:35:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E02312B8B98
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Nov 2020 07:26:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgKSBfT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Nov 2020 20:35:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726980AbgKSBfT (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 18 Nov 2020 20:35:19 -0500
-Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EFF9246BC;
-        Thu, 19 Nov 2020 01:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605749718;
-        bh=HoiBbmK8bNU9eGyCj2Dk0C382Jib2XukY76pUhA+RW8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=O/cq9I709X6eRPrAeOYGrz07eZ6aE39pHP9vPMV03CMP9f/uGoalRBINUGf79m+OO
-         0fXkfeS49+sAQ2cKFtqxhOHZpd0Y4hPDom6aNS3t8rRZ32qFoazzcvqs1Nu1MGsm4b
-         XX6jKhHQ7bkU1gXzyoQ3cgJQPqsXKdXJI8AFH/bc=
-Date:   Wed, 18 Nov 2020 17:35:17 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Julian Wiedmann <jwi@linux.ibm.com>
-Cc:     David Miller <davem@davemloft.net>,
-        linux-netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>
-Subject: Re: [PATCH net-next 0/9] s390/qeth: updates 2020-11-17
-Message-ID: <20201118173517.4cfaa900@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <20201117161520.1089-1-jwi@linux.ibm.com>
-References: <20201117161520.1089-1-jwi@linux.ibm.com>
+        id S1726138AbgKSGZk convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Thu, 19 Nov 2020 01:25:40 -0500
+Received: from tigeramira.ro ([88.158.78.30]:56754 "EHLO mail.tigeramira.ro"
+        rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S1726123AbgKSGZk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 19 Nov 2020 01:25:40 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.tigeramira.ro (Postfix) with ESMTP id 5CF8EA5D088
+        for <linux-s390@vger.kernel.org>; Tue, 17 Nov 2020 22:46:20 +0200 (EET)
+Received: from mail.tigeramira.ro ([127.0.0.1])
+        by localhost (mail.tigeramira.ro [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Z66S0SkU-e8x for <linux-s390@vger.kernel.org>;
+        Tue, 17 Nov 2020 22:46:04 +0200 (EET)
+Received: from mail.tigeramira.ro (localhost [127.0.0.1])
+        by mail.tigeramira.ro (Postfix) with ESMTP id 69BCEC24D3A
+        for <linux-s390@vger.kernel.org>; Sun, 15 Nov 2020 03:24:15 +0200 (EET)
+Received: from [156.96.44.214] (unknown [192.168.12.254])
+        by mail.tigeramira.ro (Postfix) with ESMTP id C643491462F
+        for <linux-s390@vger.kernel.org>; Fri, 13 Nov 2020 13:31:59 +0200 (EET)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Corporate and Personal Loan::,
+To:     linux-s390@vger.kernel.org
+From:   "Investment  Corporate" <financialcapability6@gmail.com>
+Date:   Fri, 13 Nov 2020 02:32:10 -0800
+Reply-To: hmurrah39@gmail.com
+Message-Id: <20201113113200.C643491462F@mail.tigeramira.ro>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 17 Nov 2020 17:15:11 +0100 Julian Wiedmann wrote:
-> please apply the following patch series for qeth to netdev's net-next tree.
-> 
-> This brings some cleanups, and a bunch of improvements for our
-> .get_link_ksettings() code.
+Hello linux-s390@vger.kernel.org
 
-Applied, thanks!
+
+We are Base Investment Company offering Corporate and Personal Loan at 3% Interest Rate for a duration of 10Years.
+
+
+We also pay 1% commission to brokers, who introduce project owners for finance or other opportunities.
+
+
+Please get back to me if you are interested for more
+
+details.
+
+
+Yours faithfully,
+
+Hashim Murrah
