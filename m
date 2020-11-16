@@ -2,82 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01BC92B4F0A
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Nov 2020 19:20:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E03F2B54AE
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Nov 2020 00:00:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731524AbgKPSS0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 16 Nov 2020 13:18:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:57584 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730105AbgKPSS0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 16 Nov 2020 13:18:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605550704;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tAHP+8zyc4EwCkB9PCeaZBFISgE3jVYS9b2gGcqczD8=;
-        b=My77GVUHFXsZR17ZIBPTlApCvzoRTcGLmhMHhIsUXWt+bHkMjrQUjbSmNPBQ7tXCKXgRbo
-        sV54Qv4rC/rRWNPvGjqOQAkTQ3bpJGlUpCQLz3KnrC3u2/ghjWaPHh4w74VHXz1spWcu4r
-        F2X64BYOqebSjxXB3f/MlZ3XPO9/278=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-559-WOKL3IiiMWWxRAtiHbjPEQ-1; Mon, 16 Nov 2020 13:18:23 -0500
-X-MC-Unique: WOKL3IiiMWWxRAtiHbjPEQ-1
-Received: by mail-wm1-f71.google.com with SMTP id g3so55654wmh.9
-        for <linux-s390@vger.kernel.org>; Mon, 16 Nov 2020 10:18:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tAHP+8zyc4EwCkB9PCeaZBFISgE3jVYS9b2gGcqczD8=;
-        b=e+EEaZl8nlhqWQLttbVIPrBqpZAmWTER/vk2JnkoGuFfzl3QNZ8EcrW2pzOU1uQisT
-         6kp6fpUAH4YKzwc60gN6o4ZNAPpoV4Q10G/HF1GG+CDCl/1ksOgJYmD2eYcMil3outmt
-         Cf9WjAXUDXgMJ5UYcmn6YXbk5W4dFFAmzpsKqXAJeqL5hAN5xdlNeqUgNP1WuEsbz6OM
-         HOZ4f3/zsUeAAxGuqzjPUmrnpI6G+XGa8SqvOnGgcuZNVAf+LhhzKm6xl45aOOhI73d5
-         zbZUe+zKgsmLWH38bzwAhXr06K7BogY5NEWSWR8F+AxCV6AZFp3ktdZhkezyfsRd1KIb
-         Z0ag==
-X-Gm-Message-State: AOAM530M9cSFRGiptlCjvNHRsynpXkTv2pvb2ffnGXTabqA9AXspfeGZ
-        B3OtiTaDiiG/yX5isS6VX64MaTD0feZF13fcwC6svwBPVOSc0ytDRORaMh4vsAoXAAa7fYQMdPY
-        caiPj9iZ5gx8HNRVBIuAu0g==
-X-Received: by 2002:a1c:9949:: with SMTP id b70mr150567wme.85.1605550702211;
-        Mon, 16 Nov 2020 10:18:22 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwO+z7hGfmJQS3UwtqvJGNRuNGNPfzM4u6SHMsc6XraQ5bpbjaI7svja2TpFhiq14tNRZ02Sg==
-X-Received: by 2002:a1c:9949:: with SMTP id b70mr150549wme.85.1605550702047;
-        Mon, 16 Nov 2020 10:18:22 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:c8dd:75d4:99ab:290a? ([2001:b07:6468:f312:c8dd:75d4:99ab:290a])
-        by smtp.gmail.com with ESMTPSA id s25sm144541wmh.16.2020.11.16.10.18.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Nov 2020 10:18:21 -0800 (PST)
-Subject: Re: [GIT PULL 0/2] KVM: s390: Fixes for 5.10
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Collin Walling <walling@linux.ibm.com>
-References: <20201116122033.382372-1-borntraeger@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <f2ce11de-e2b4-206e-f6d5-0f21da73cd5a@redhat.com>
-Date:   Mon, 16 Nov 2020 19:18:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        id S1726738AbgKPXAJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 16 Nov 2020 18:00:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbgKPXAJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 16 Nov 2020 18:00:09 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7EA4C0613CF;
+        Mon, 16 Nov 2020 15:00:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=pkMMx2It+5Pvco6e/Mzh+7cjlpElvgRby/hMw4rxyqs=; b=pSihbiP0NpEOovk4JegF6/FeWU
+        XH/+UeM50+Ld8mGi/S0oS6QD2oizuU5SikacL1Pr7lbExrkBag7/nF+/j00HNz0L7rxtUpqHYHF+c
+        SPhqS9d3VkJcm46rGTa3XE4AjKMsgiru+TK5a66JhFqK9D7FZqp4bZmwRPw7RfINnnJoIMIRufSlu
+        wkhkUohGrkUvQC2La2lXAiyL0rONWV4fze+BaKcLMUZo9of2cH1IvNQUYuAACJpexkgXD0ccYSWvh
+        2RZyGqv6K2ZKXZXb3mAKx/+Le4NXuhO3pGuXtcuF+Zgtz88134/+by+UMzUgISNH7ePZSAFfkJ/Eq
+        NY+3sZmQ==;
+Received: from [2601:1c0:6280:3f0::f32]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kenTh-0004T5-H3; Mon, 16 Nov 2020 23:00:05 +0000
+Subject: Re: [PATCH] md: dm-writeback: add __noreturn to BUG-ging function
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Mikulas Patocka <mpatocka@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
+References: <20201113225228.20563-1-rdunlap@infradead.org>
+ <344abf76-9405-58ba-2dc4-27cab88c974d@de.ibm.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c29eeb5d-0683-49eb-f729-38b14fac7745@infradead.org>
+Date:   Mon, 16 Nov 2020 15:00:01 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20201116122033.382372-1-borntraeger@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <344abf76-9405-58ba-2dc4-27cab88c974d@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 16/11/20 13:20, Christian Borntraeger wrote:
->    git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.10-1
+On 11/15/20 11:30 PM, Christian Borntraeger wrote:
+> 
+> 
+> On 13.11.20 23:52, Randy Dunlap wrote:
+>> Building on arch/s390/ flags this as an error, so add the
+>> __noreturn attribute modifier to prevent the build error.
+>>
+>> cc1: some warnings being treated as errors
+>> ../drivers/md/dm-writecache.c: In function 'persistent_memory_claim':
+>> ../drivers/md/dm-writecache.c:323:1: error: no return statement in function returning non-void [-Werror=return-type]
+> 
+> ok with me, but I am asking why
+> 
+> the unreachable macro is not good enough. For x86 it obviously is.
+> 
+> form arch/s390/include/asm/bug.h
+> #define BUG() do {                                      \
+>         __EMIT_BUG(0);                                  \
+>         unreachable();                                  \
+> } while (0)
+> 
 
-Pulled, thanks.
+Hi Christian,
 
-Paolo
+Good question.
+I don't see any guidance about when to use one or the other etc.
+
+I see __noreturn being used 109 times and unreachable();
+being used 33 times, but only now that I look at them.
+That had nothing to do with why I used __noreturn in the patch.
+
+> 
+>>
+>> Fixes: 48debafe4f2f ("dm: add writecache target")
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Mikulas Patocka <mpatocka@redhat.com>
+>> Cc: Alasdair Kergon <agk@redhat.com>
+>> Cc: Mike Snitzer <snitzer@redhat.com>
+>> Cc: dm-devel@redhat.com
+>> Cc: Heiko Carstens <hca@linux.ibm.com>
+>> Cc: Vasily Gorbik <gor@linux.ibm.com>
+>> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+>> Cc: linux-s390@vger.kernel.org
+>> ---
+>>  drivers/md/dm-writecache.c |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> --- linux-next-20201113.orig/drivers/md/dm-writecache.c
+>> +++ linux-next-20201113/drivers/md/dm-writecache.c
+>> @@ -317,7 +317,7 @@ err1:
+>>  	return r;
+>>  }
+>>  #else
+>> -static int persistent_memory_claim(struct dm_writecache *wc)
+>> +static int __noreturn persistent_memory_claim(struct dm_writecache *wc)
+>>  {
+>>  	BUG();
+>>  }
+>>
+
+thanks.
+-- 
+~Randy
 
