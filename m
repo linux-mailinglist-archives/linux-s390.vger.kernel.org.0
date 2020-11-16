@@ -2,206 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A0E52B4347
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Nov 2020 13:06:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C8B42B4391
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Nov 2020 13:23:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgKPMEh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 16 Nov 2020 07:04:37 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61500 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726210AbgKPMEg (ORCPT
+        id S1730052AbgKPMUl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 16 Nov 2020 07:20:41 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35202 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727027AbgKPMUk (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 16 Nov 2020 07:04:36 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AGC27jV121478;
-        Mon, 16 Nov 2020 07:04:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
- : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=pC0Z5DbjDqzptEn3rhV5tiE9IHnrlKXx1UiLvXy9tlY=;
- b=PE8e02HGwFv5YcULxmYwRz5CJzckDTtGbT0u9MCIiP0uXCc7H/kD7HftbppVkXu8ki1q
- 5BKQbuGcA8hUJ3fp4gPxpcILGQekc3CClVABmYY3atpEO8tgE1VEs/4k+LRHzQVT0oOY
- nDW3Dl8oJB9dLLpPRNMjBOsNt9/t45QGu0P+1AgNTWodo+1+85xHZWDveAwXDPVFYSDO
- LEMrfMZapwO3cZnXi8IN18FcdW/CkJZuT0QHSyteJ3n4oW6ieJuqH+FNUqiTqgNJ/5j/
- S/62Nt7hkm+FCv1gDk/3EhUOvLrz7FCHLlX+qILceUSm1N6k4hNs8LGMcXuet308uvXX Kw== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 34ujue14b8-1
+        Mon, 16 Nov 2020 07:20:40 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AGC331a150243;
+        Mon, 16 Nov 2020 07:20:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=aKyc9fIlCB1NAJIHYJRL2WFrO9tcsS9P236KmnyqNcM=;
+ b=eMdOFn4Qcxa4BeYbDw60+aprbsUNjED3jdWNbNiUc7VDyqk8qjDLSyZa2D/6WenWhU5w
+ FHGFgjF+GjVIpJvvR1RjYZX+t5P7Xw5GoW8Y9YJW8t7wZ1/rxfl244wCz7wEjW/lKUua
+ l2ECsxeds5tQ/SQ5BX/m84bL6f+AYFO1x2M3MiEpkuNF8Tgoe9h7k3ZDlDGusHn/VG0P
+ jMZdSzc6o1jxY9I/pw5u9bWy2mN6sv6aTfpK70oKJhiGI0Xp4HE7H53x/kfPs3Fb+SmF
+ 8JK4euxLF4Q9xQKll2GdDk8mP1d8w3GGbnVFNEHRcnyN1FaOC1Zb6z5o5nC36FIAO3rf ig== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34urwh0qb8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Nov 2020 07:04:32 -0500
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AGC2vOJ028059;
-        Mon, 16 Nov 2020 12:04:31 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 34t6v8a266-1
+        Mon, 16 Nov 2020 07:20:39 -0500
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AGC9U0J193682;
+        Mon, 16 Nov 2020 07:20:39 -0500
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34urwh0q9c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Nov 2020 12:04:31 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AGC4S786816290
+        Mon, 16 Nov 2020 07:20:39 -0500
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AGCCvqe010422;
+        Mon, 16 Nov 2020 12:20:37 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma05fra.de.ibm.com with ESMTP id 34t6v891pv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Nov 2020 12:20:36 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AGCKY3x66126196
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Nov 2020 12:04:28 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 13D9552050;
-        Mon, 16 Nov 2020 12:04:28 +0000 (GMT)
-Received: from oc6887364776.ibm.com (unknown [9.145.43.134])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7034152051;
-        Mon, 16 Nov 2020 12:04:27 +0000 (GMT)
-Subject: Re: [PATCH v4 04/27] s390: fix kernel-doc markups
-From:   Vineeth Vijayan <vneethv@linux.vnet.ibm.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>,
-        Alexandra Winter <wintera@linux.ibm.com>,
+        Mon, 16 Nov 2020 12:20:34 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E6003AE053;
+        Mon, 16 Nov 2020 12:20:33 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D24A4AE051;
+        Mon, 16 Nov 2020 12:20:33 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 16 Nov 2020 12:20:33 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 88103E0367; Mon, 16 Nov 2020 13:20:33 +0100 (CET)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>, Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-References: <cover.1605521731.git.mchehab+huawei@kernel.org>
- <4a9df42dfb68aed6b4a4882f6dccabf00ce932cd.1605521731.git.mchehab+huawei@kernel.org>
- <358a9d80-da01-5d91-71d8-57f453ca8617@linux.vnet.ibm.com>
-Message-ID: <77b297ff-a5ee-9ba5-54d0-1930a78bd6e5@linux.vnet.ibm.com>
-Date:   Mon, 16 Nov 2020 13:04:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
-MIME-Version: 1.0
-In-Reply-To: <358a9d80-da01-5d91-71d8-57f453ca8617@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Collin Walling <walling@linux.ibm.com>
+Subject: [GIT PULL 0/2] KVM: s390: Fixes for 5.10
+Date:   Mon, 16 Nov 2020 13:20:31 +0100
+Message-Id: <20201116122033.382372-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.28.0
 X-TM-AS-GCONF: 00
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
  definitions=2020-11-16_03:2020-11-13,2020-11-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- phishscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0
- mlxlogscore=999 adultscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 phishscore=0 bulkscore=0 mlxlogscore=747 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011160069
+ definitions=main-2011160073
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Heiko/Vasily will pick this up and will be part of the s390-tree patchset.
+Paolo,
 
-Regards
-Vineeth
+2 fixes for KVM on s390 for 5.10.
 
+The following changes since commit 6d6a18fdde8b86b919b740ad629153de432d12a8:
 
-On 11/16/20 11:38 AM, Vineeth Vijayan wrote:
-> Thank you very much for the fix.
->
-> Reviewed-by: Vineeth Vijayan <vneethv@linux.ibm.com>
->
->
->
-> On 11/16/20 11:18 AM, Mauro Carvalho Chehab wrote:
->> fix one typo:
->>     ccw driver -> ccw_driver
->>
->> and one function rename.
->>
->> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
->> ---
->>   arch/s390/include/asm/ccwdev.h | 2 +-
->>   arch/s390/include/asm/cio.h    | 2 +-
->>   2 files changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/s390/include/asm/ccwdev.h 
->> b/arch/s390/include/asm/ccwdev.h
->> index bf605e1fcf6a..0495ac635ed5 100644
->> --- a/arch/s390/include/asm/ccwdev.h
->> +++ b/arch/s390/include/asm/ccwdev.h
->> @@ -100,41 +100,41 @@ struct ccw_device {
->>    */
->>   #define PE_NONE                0x0
->>   #define PE_PATH_GONE            0x1 /* A path is no longer 
->> available. */
->>   #define PE_PATH_AVAILABLE        0x2 /* A path has become available 
->> and
->>                              was successfully verified. */
->>   #define PE_PATHGROUP_ESTABLISHED    0x4 /* A pathgroup was reset 
->> and had
->>                              to be established again. */
->>   #define PE_PATH_FCES_EVENT        0x8 /* The FCES Status of a path has
->>                            * changed. */
->>     /*
->>    * Possible CIO actions triggered by the unit check handler.
->>    */
->>   enum uc_todo {
->>       UC_TODO_RETRY,
->>       UC_TODO_RETRY_ON_NEW_PATH,
->>       UC_TODO_STOP
->>   };
->>     /**
->> - * struct ccw driver - device driver for channel attached devices
->> + * struct ccw_driver - device driver for channel attached devices
->>    * @ids: ids supported by this driver
->>    * @probe: function called on probe
->>    * @remove: function called on remove
->>    * @set_online: called when setting device online
->>    * @set_offline: called when setting device offline
->>    * @notify: notify driver of device state changes
->>    * @path_event: notify driver of channel path events
->>    * @shutdown: called at device shutdown
->>    * @prepare: prepare for pm state transition
->>    * @complete: undo work done in @prepare
->>    * @freeze: callback for freezing during hibernation snapshotting
->>    * @thaw: undo work done in @freeze
->>    * @restore: callback for restoring after hibernation
->>    * @uc_handler: callback for unit check handler
->>    * @driver: embedded device driver structure
->>    * @int_class: interruption class to use for accounting interrupts
->>    */
->>   struct ccw_driver {
->>       struct ccw_device_id *ids;
->>       int (*probe) (struct ccw_device *);
->> diff --git a/arch/s390/include/asm/cio.h b/arch/s390/include/asm/cio.h
->> index e36cb67d2441..ac02df906cae 100644
->> --- a/arch/s390/include/asm/cio.h
->> +++ b/arch/s390/include/asm/cio.h
->> @@ -312,41 +312,41 @@ struct node_descriptor {
->>   /* Device did not respond in time. */
->>   #define CIO_BOXED      0x0010
->>     /**
->>    * struct ccw_dev_id - unique identifier for ccw devices
->>    * @ssid: subchannel set id
->>    * @devno: device number
->>    *
->>    * This structure is not directly based on any hardware structure. The
->>    * hardware identifies a device by its device number and its 
->> subchannel,
->>    * which is in turn identified by its id. In order to get a unique 
->> identifier
->>    * for ccw devices across subchannel sets, @struct ccw_dev_id has been
->>    * introduced.
->>    */
->>   struct ccw_dev_id {
->>       u8 ssid;
->>       u16 devno;
->>   };
->>     /**
->> - * ccw_device_id_is_equal() - compare two ccw_dev_ids
->> + * ccw_dev_id_is_equal() - compare two ccw_dev_ids
->>    * @dev_id1: a ccw_dev_id
->>    * @dev_id2: another ccw_dev_id
->>    * Returns:
->>    *  %1 if the two structures are equal field-by-field,
->>    *  %0 if not.
->>    * Context:
->>    *  any
->>    */
->>   static inline int ccw_dev_id_is_equal(struct ccw_dev_id *dev_id1,
->>                         struct ccw_dev_id *dev_id2)
->>   {
->>       if ((dev_id1->ssid == dev_id2->ssid) &&
->>           (dev_id1->devno == dev_id2->devno))
->>           return 1;
->>       return 0;
->>   }
->>     /**
->>    * pathmask_to_pos() - find the position of the left-most bit in a 
->> pathmask
->>    * @mask: pathmask with at least one bit set
+  KVM: selftests: allow two iterations of dirty_log_perf_test (2020-11-09 09:45:17 -0500)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.10-1
+
+for you to fetch changes up to 6cbf1e960fa52e4c63a6dfa4cda8736375b34ccc:
+
+  KVM: s390: remove diag318 reset code (2020-11-11 09:31:52 +0100)
+
+----------------------------------------------------------------
+KVM: s390: Fixes for 5.10
+
+- do not reset the global diag318 data for per-cpu reset
+- do not mark memory as protected too early
+
+----------------------------------------------------------------
+Collin Walling (1):
+      KVM: s390: remove diag318 reset code
+
+Janosch Frank (1):
+      KVM: s390: pv: Mark mm as protected after the set secure parameters and improve cleanup
+
+ arch/s390/kvm/kvm-s390.c | 4 +---
+ arch/s390/kvm/pv.c       | 3 ++-
+ arch/s390/mm/gmap.c      | 2 ++
+ 3 files changed, 5 insertions(+), 4 deletions(-)
