@@ -2,117 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 052C42B68C1
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Nov 2020 16:33:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82A802B68E6
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Nov 2020 16:43:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgKQPci (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 Nov 2020 10:32:38 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15286 "EHLO
+        id S1726204AbgKQPm7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 Nov 2020 10:42:59 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34256 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727349AbgKQPch (ORCPT
+        by vger.kernel.org with ESMTP id S1725767AbgKQPm7 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 17 Nov 2020 10:32:37 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AHF3bob179583;
-        Tue, 17 Nov 2020 10:32:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=yfjkJkNeQoAa98KeUAx8dV5qOjXWTE5/WR0lGduxBqE=;
- b=V1OaPAJzksYOYd3KBN1t7w5m40H6tb+ba2piDrJCnZl8rKh6qS7MsLNVnKX2EoLjHt+e
- L7GpfwV8h06wCPnIV4tM11AqSrOMKfYEfbgcmEZQniLJsyyFOxpFNqO13lx8bdIrs29o
- vjo9I/2Hrw3rutuz+usGcPU6kSr37uF0tcJ6ERFwuoyS1H4CmGgJJlHts2zROvuWjV4D
- 7rOEYqPbaC5ewiWq2MML1VOUPkt6hfo/aTlK9hfQh+5+RJZz6/yBc3XDBqzZE0ZGPUCh
- WOkTDWnqVMQ7px4Ouj0+fA3Aw+eGMmbd2rADuRt0RKs8RzLsSQ3qORMKTYHlMK4iOLJ3 0A== 
+        Tue, 17 Nov 2020 10:42:59 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AHFWibm070855;
+        Tue, 17 Nov 2020 10:42:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=ERJWrKqq4ZyO6mTIydb3k4QoL97E2UvynHRBDzBmMgU=;
+ b=qCQV7SrfnUP5RsjDzLVD0sf05OAN0rsAvB+3hV93SwhfuPkkaOrHg+0nUiFvNoomFOPg
+ NVplLICxvbaEFsDgyBoW+ynhRxeHrb9OmObRQZ7O6DLwgy3dfkxbDsKsSL7+yW9L3ico
+ kBpxeTsJrec4nY/YCyZCrkYFuzLlFVZb6mG3/5BEOgzX1jxShAC9hzMKLHyYTlTnq9ne
+ vp4sYJwh6oqG6x0dur34tBOyn41hw7M14sYJJcfPN3iecA/3vr5lX4c8/lNW1xGTjpuc
+ 05v6tQkbRtEvLU9cQ4ExfjKfptp8xsSTzvUWdC73N8pUtCyfa2HUqbYii3UPYi0eS1XM Zg== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34vcs39etn-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34vd6hscnf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Nov 2020 10:32:36 -0500
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AHF3f2Q179857;
-        Tue, 17 Nov 2020 10:32:35 -0500
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34vcs39ery-1
+        Tue, 17 Nov 2020 10:42:58 -0500
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AHFWu1o072237;
+        Tue, 17 Nov 2020 10:42:58 -0500
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34vd6hscm7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Nov 2020 10:32:35 -0500
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AHFN18G007714;
-        Tue, 17 Nov 2020 15:32:32 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 34t6v89p74-1
+        Tue, 17 Nov 2020 10:42:58 -0500
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AHFgWtv005677;
+        Tue, 17 Nov 2020 15:42:55 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 34t6v8b2h2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Nov 2020 15:32:32 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AHFVEGS47251818
+        Tue, 17 Nov 2020 15:42:55 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AHFgqQH51577144
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Nov 2020 15:31:15 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE99242041;
-        Tue, 17 Nov 2020 15:31:14 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 832EE42047;
-        Tue, 17 Nov 2020 15:31:14 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.171.86.233])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Nov 2020 15:31:14 +0000 (GMT)
-Subject: Re: [PATCH 2/2] s390/gmap: make gmap memcg aware
-To:     Janosch Frank <frankja@linux.ibm.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>
-References: <20201117151023.424575-1-borntraeger@de.ibm.com>
- <20201117151023.424575-3-borntraeger@de.ibm.com>
- <fd9f77d2-fdd1-d2ab-d9ca-ee914ac9deaf@linux.ibm.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Message-ID: <22430706-ccb1-2df6-79ca-4db53c9d8105@de.ibm.com>
-Date:   Tue, 17 Nov 2020 16:31:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        Tue, 17 Nov 2020 15:42:52 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 568B24C044;
+        Tue, 17 Nov 2020 15:42:52 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A33E74C040;
+        Tue, 17 Nov 2020 15:42:51 +0000 (GMT)
+Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 17 Nov 2020 15:42:51 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     thuth@redhat.com, linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com
+Subject: [kvm-unit-tests PATCH 0/5] s390x: Add SIE library and simple test
+Date:   Tue, 17 Nov 2020 10:42:10 -0500
+Message-Id: <20201117154215.45855-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <fd9f77d2-fdd1-d2ab-d9ca-ee914ac9deaf@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
  definitions=2020-11-17_04:2020-11-17,2020-11-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- spamscore=0 mlxlogscore=999 suspectscore=0 clxscore=1015 phishscore=0
- mlxscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ suspectscore=0 impostorscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=780
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2009150000 definitions=main-2011170112
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+This is the absolute minimum needed to run VMs inside the KVM Unit
+Tests. It's more of a base for other tests that I can't (yet) publish
+than an addition of tests that check KVM functionality. However, I
+wanted to decrease the number of WIP patches in my private
+branch. Once the library is available maybe others will come and
+extend the SIE test itself.
 
+Yes, I have added VM management functionality like VM create/destroy,
+etc but as it is not needed right now, I'd like to exclude it from
+this patch set for now.
 
-On 17.11.20 16:22, Janosch Frank wrote:
-> On 11/17/20 4:10 PM, Christian Borntraeger wrote:
->> gmap allocations can be attributed to a process.
->>
->> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
->> Acked-by: Heiko Carstens <hca@linux.ibm.com>
->> ---
->>  arch/s390/mm/gmap.c | 30 +++++++++++++++---------------
->>  1 file changed, 15 insertions(+), 15 deletions(-)
->>
->> diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
->> index 64795d034926..9bb2c7512cd5 100644
->> --- a/arch/s390/mm/gmap.c
->> +++ b/arch/s390/mm/gmap.c
->> @@ -2,7 +2,7 @@
->>  /*
->>   *  KVM guest address space mapping code
->>   *
->> - *    Copyright IBM Corp. 2007, 2016, 2018
->> + *    Copyright IBM Corp. 2007, 2020
-> 
-> Do you mean 2007 - 2020 or did you drop the 2016 and 2018?
-> How does this even work?
+Gitlab:
+https://gitlab.com/frankja/kvm-unit-tests/-/tree/sie
 
-Last time I checked this was the IBM preferred variant to define
-the range. first and last contribution.
+CI:
+https://gitlab.com/frankja/kvm-unit-tests/-/pipelines/217336822
+
+Janosch Frank (5):
+  s390x: Add test_bit to library
+  s390x: Consolidate sclp read info
+  s390x: SCLP feature checking
+  s390x: sie: Add SIE to lib
+  s390x: sie: Add first SIE test
+
+ lib/s390x/asm-offsets.c  |  13 +++
+ lib/s390x/asm/arch_def.h |   7 ++
+ lib/s390x/asm/bitops.h   |  16 ++++
+ lib/s390x/asm/facility.h |   3 +-
+ lib/s390x/interrupt.c    |   7 ++
+ lib/s390x/io.c           |   2 +
+ lib/s390x/sclp.c         |  48 ++++++++--
+ lib/s390x/sclp.h         |  18 ++++
+ lib/s390x/sie.h          | 197 +++++++++++++++++++++++++++++++++++++++
+ lib/s390x/smp.c          |  23 ++---
+ s390x/Makefile           |   1 +
+ s390x/cstart64.S         |  56 +++++++++++
+ s390x/sie.c              | 125 +++++++++++++++++++++++++
+ 13 files changed, 495 insertions(+), 21 deletions(-)
+ create mode 100644 lib/s390x/sie.h
+ create mode 100644 s390x/sie.c
+
+-- 
+2.25.1
 
