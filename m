@@ -2,324 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15B452B69B2
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Nov 2020 17:15:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9E492B6A4E
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Nov 2020 17:32:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgKQQPl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 Nov 2020 11:15:41 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11802 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727199AbgKQQPi (ORCPT
+        id S1727993AbgKQQb5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 Nov 2020 11:31:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36956 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727147AbgKQQb5 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 17 Nov 2020 11:15:38 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AHG1jrf058146;
-        Tue, 17 Nov 2020 11:15:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=MKDdU7u5CAacRKlXh/ttlBz3XmvfI5NCWCJUdv2ip9g=;
- b=htg8Y3XK19Ye4BQcaqYMLYPpA9dGfzSglXwfulx4mEIYQ2b1znJzEVOk8Qe7dvdLCahF
- 7kh8wM4HRMXFqGDM0nCwWdZhrs9OxHL6xHzNiFaoltgezhtugGxEdRpclWH6F4sd9xAd
- 0S6NGgLb1kYKmYBxkbvilYqC1hGgJ2Z5m4KIc6lNaMxBsE83OJTH1GM/zzfanHOsrvEb
- bCuWL4mmTPTKRsm00sA8lh+zi1VMjVqfegf8esjEUA83O8ZGxNScR5xCnWxyD+u2KHfL
- bPbDHm1D6lYScU0CEDuQSNFXVPZYblSMCYI113+vrDJeynFMmnSwfwGhWsOxp9IwXXTh Bw== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 34ve31gq44-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Nov 2020 11:15:33 -0500
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AHG8Ji6029547;
-        Tue, 17 Nov 2020 16:15:32 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06fra.de.ibm.com with ESMTP id 34t6gh9pmq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Nov 2020 16:15:31 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AHGFTSY8192532
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Nov 2020 16:15:29 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E5DEDA405F;
-        Tue, 17 Nov 2020 16:15:28 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A5D45A4060;
-        Tue, 17 Nov 2020 16:15:28 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Nov 2020 16:15:28 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
+        Tue, 17 Nov 2020 11:31:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605630716;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lxDt74PLhWGBodZNX7JaAIeh6BN7s3VRDIqoAirYccw=;
+        b=DWmrmkMRKM4Et3EvRw3kbnvIfTpkg+FeAqfEzK+1a3FE04CPIJxwjitih9RmtKxp8hbxot
+        rzmrxYHeazHCuoaAATP/tBakCNdO2qsz0uUoR7z9sAmZqIUSxHWFPn7laa6EB3ciePWsjl
+        iQdy7LQu8mRGK01uojVKtwXj9Izcpl4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-373-RcfOoVoSMN6ynhrMIpuCvg-1; Tue, 17 Nov 2020 11:31:54 -0500
+X-MC-Unique: RcfOoVoSMN6ynhrMIpuCvg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A75F71868427;
+        Tue, 17 Nov 2020 16:31:51 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4AA145D9E8;
+        Tue, 17 Nov 2020 16:31:48 +0000 (UTC)
+Date:   Tue, 17 Nov 2020 11:31:47 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com,
         Heiko Carstens <hca@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 9/9] s390/qeth: improve selection of ethtool link modes
-Date:   Tue, 17 Nov 2020 17:15:20 +0100
-Message-Id: <20201117161520.1089-10-jwi@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201117161520.1089-1-jwi@linux.ibm.com>
-References: <20201117161520.1089-1-jwi@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-17_04:2020-11-17,2020-11-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- lowpriorityscore=0 spamscore=0 phishscore=0 adultscore=0
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2009150000 definitions=main-2011170114
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: md: dm-writeback: add __noreturn to BUG-ging function
+Message-ID: <20201117163147.GA27243@redhat.com>
+References: <20201113225228.20563-1-rdunlap@infradead.org>
+ <344abf76-9405-58ba-2dc4-27cab88c974d@de.ibm.com>
+ <c29eeb5d-0683-49eb-f729-38b14fac7745@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c29eeb5d-0683-49eb-f729-38b14fac7745@infradead.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The link mode is a combination of port speed and port mode. But we
-currently only consider the speed, and then typically select the
-corresponding TP-based link mode. For 1G and 10G Fibre links this means
-we display the wrong link modes.
+On Mon, Nov 16 2020 at  6:00pm -0500,
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-Move the SPEED_* switch statements inside the PORT_* cases, and only
-consider valid combinations where we can select the corresponding
-link mode. Add the relevant link modes (1000baseX, 10000baseSR and
-1000baseLR) that were introduced back with
-commit 5711a9822144 ("net: ethtool: add support for 1000BaseX and missing 10G link modes").
+> On 11/15/20 11:30 PM, Christian Borntraeger wrote:
+> > 
+> > 
+> > On 13.11.20 23:52, Randy Dunlap wrote:
+> >> Building on arch/s390/ flags this as an error, so add the
+> >> __noreturn attribute modifier to prevent the build error.
+> >>
+> >> cc1: some warnings being treated as errors
+> >> ../drivers/md/dm-writecache.c: In function 'persistent_memory_claim':
+> >> ../drivers/md/dm-writecache.c:323:1: error: no return statement in function returning non-void [-Werror=return-type]
+> > 
+> > ok with me, but I am asking why
+> > 
+> > the unreachable macro is not good enough. For x86 it obviously is.
+> > 
+> > form arch/s390/include/asm/bug.h
+> > #define BUG() do {                                      \
+> >         __EMIT_BUG(0);                                  \
+> >         unreachable();                                  \
+> > } while (0)
+> > 
+> 
+> Hi Christian,
+> 
+> Good question.
+> I don't see any guidance about when to use one or the other etc.
+> 
+> I see __noreturn being used 109 times and unreachable();
+> being used 33 times, but only now that I look at them.
+> That had nothing to do with why I used __noreturn in the patch.
 
-To differentiate between 10000baseSR and 10000baseLR, use the detailed
-media_type information that QUERY OAT provides.
+But doesn't that speak to the proper fix being needed in unreachable()?
+Or at a minimum the fix is needed to arch/s390/include/asm/bug.h's BUG.
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- drivers/s390/net/qeth_core.h      |   7 ++
- drivers/s390/net/qeth_core_main.c |  11 +++
- drivers/s390/net/qeth_ethtool.c   | 124 ++++++++++++++++++------------
- 3 files changed, 93 insertions(+), 49 deletions(-)
+I really don't think we should be papering over that by sprinkling
+__noreturn around the kernel's BUG() callers.
 
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index c604e20a5e48..9e00917286a5 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -701,10 +701,17 @@ enum qeth_pnso_mode {
- 	QETH_PNSO_ADDR_INFO,
- };
- 
-+enum qeth_link_mode {
-+	QETH_LINK_MODE_UNKNOWN,
-+	QETH_LINK_MODE_FIBRE_SHORT,
-+	QETH_LINK_MODE_FIBRE_LONG,
-+};
-+
- struct qeth_link_info {
- 	u32 speed;
- 	u8 duplex;
- 	u8 port;
-+	enum qeth_link_mode link_mode;
- };
- 
- #define QETH_BROADCAST_WITH_ECHO    0x01
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 57dad31aab4d..2752a585849d 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -5017,13 +5017,19 @@ static int qeth_init_link_info_oat_cb(struct qeth_card *card,
- 	switch (phys_if->media_type) {
- 	case QETH_QOAT_PHYS_MEDIA_COPPER:
- 		link_info->port = PORT_TP;
-+		link_info->link_mode = QETH_LINK_MODE_UNKNOWN;
- 		break;
- 	case QETH_QOAT_PHYS_MEDIA_FIBRE_SHORT:
-+		link_info->port = PORT_FIBRE;
-+		link_info->link_mode = QETH_LINK_MODE_FIBRE_SHORT;
-+		break;
- 	case QETH_QOAT_PHYS_MEDIA_FIBRE_LONG:
- 		link_info->port = PORT_FIBRE;
-+		link_info->link_mode = QETH_LINK_MODE_FIBRE_LONG;
- 		break;
- 	default:
- 		link_info->port = PORT_OTHER;
-+		link_info->link_mode = QETH_LINK_MODE_UNKNOWN;
- 		break;
- 	}
- 
-@@ -5037,6 +5043,7 @@ static void qeth_init_link_info(struct qeth_card *card)
- 	if (IS_IQD(card) || IS_VM_NIC(card)) {
- 		card->info.link_info.speed = SPEED_10000;
- 		card->info.link_info.port = PORT_FIBRE;
-+		card->info.link_info.link_mode = QETH_LINK_MODE_FIBRE_SHORT;
- 	} else {
- 		switch (card->info.link_type) {
- 		case QETH_LINK_TYPE_FAST_ETH:
-@@ -5063,6 +5070,8 @@ static void qeth_init_link_info(struct qeth_card *card)
- 			card->info.link_info.speed = SPEED_UNKNOWN;
- 			card->info.link_info.port = PORT_OTHER;
- 		}
-+
-+		card->info.link_info.link_mode = QETH_LINK_MODE_UNKNOWN;
- 	}
- 
- 	/* Get more accurate data via QUERY OAT: */
-@@ -5088,6 +5097,8 @@ static void qeth_init_link_info(struct qeth_card *card)
- 					card->info.link_info.duplex = link_info.duplex;
- 				if (link_info.port != PORT_OTHER)
- 					card->info.link_info.port = link_info.port;
-+				if (link_info.link_mode != QETH_LINK_MODE_UNKNOWN)
-+					card->info.link_info.link_mode = link_info.link_mode;
- 			}
- 		}
- 	}
-diff --git a/drivers/s390/net/qeth_ethtool.c b/drivers/s390/net/qeth_ethtool.c
-index 50b0c1810850..3a51bbff0ffe 100644
---- a/drivers/s390/net/qeth_ethtool.c
-+++ b/drivers/s390/net/qeth_ethtool.c
-@@ -324,7 +324,8 @@ static int qeth_set_per_queue_coalesce(struct net_device *dev, u32 queue,
- /* Autoneg and full-duplex are supported and advertised unconditionally.     */
- /* Always advertise and support all speeds up to specified, and only one     */
- /* specified port type.							     */
--static void qeth_set_ethtool_link_modes(struct ethtool_link_ksettings *cmd)
-+static void qeth_set_ethtool_link_modes(struct ethtool_link_ksettings *cmd,
-+					enum qeth_link_mode link_mode)
- {
- 	ethtool_link_ksettings_zero_link_mode(cmd, supported);
- 	ethtool_link_ksettings_zero_link_mode(cmd, advertising);
-@@ -337,58 +338,83 @@ static void qeth_set_ethtool_link_modes(struct ethtool_link_ksettings *cmd)
- 	case PORT_TP:
- 		ethtool_link_ksettings_add_link_mode(cmd, supported, TP);
- 		ethtool_link_ksettings_add_link_mode(cmd, advertising, TP);
-+
-+		switch (cmd->base.speed) {
-+		case SPEED_10000:
-+			ethtool_link_ksettings_add_link_mode(cmd, supported,
-+							     10000baseT_Full);
-+			ethtool_link_ksettings_add_link_mode(cmd, advertising,
-+							     10000baseT_Full);
-+			fallthrough;
-+		case SPEED_1000:
-+			ethtool_link_ksettings_add_link_mode(cmd, supported,
-+							     1000baseT_Full);
-+			ethtool_link_ksettings_add_link_mode(cmd, advertising,
-+							     1000baseT_Full);
-+			ethtool_link_ksettings_add_link_mode(cmd, supported,
-+							     1000baseT_Half);
-+			ethtool_link_ksettings_add_link_mode(cmd, advertising,
-+							     1000baseT_Half);
-+			fallthrough;
-+		case SPEED_100:
-+			ethtool_link_ksettings_add_link_mode(cmd, supported,
-+							     100baseT_Full);
-+			ethtool_link_ksettings_add_link_mode(cmd, advertising,
-+							     100baseT_Full);
-+			ethtool_link_ksettings_add_link_mode(cmd, supported,
-+							     100baseT_Half);
-+			ethtool_link_ksettings_add_link_mode(cmd, advertising,
-+							     100baseT_Half);
-+			fallthrough;
-+		case SPEED_10:
-+			ethtool_link_ksettings_add_link_mode(cmd, supported,
-+							     10baseT_Full);
-+			ethtool_link_ksettings_add_link_mode(cmd, advertising,
-+							     10baseT_Full);
-+			ethtool_link_ksettings_add_link_mode(cmd, supported,
-+							     10baseT_Half);
-+			ethtool_link_ksettings_add_link_mode(cmd, advertising,
-+							     10baseT_Half);
-+			break;
-+		default:
-+			break;
-+		}
-+
- 		break;
- 	case PORT_FIBRE:
- 		ethtool_link_ksettings_add_link_mode(cmd, supported, FIBRE);
- 		ethtool_link_ksettings_add_link_mode(cmd, advertising, FIBRE);
--		break;
--	default:
--		break;
--	}
- 
--	/* partially does fall through, to also select lower speeds */
--	switch (cmd->base.speed) {
--	case SPEED_25000:
--		ethtool_link_ksettings_add_link_mode(cmd, supported,
--						     25000baseSR_Full);
--		ethtool_link_ksettings_add_link_mode(cmd, advertising,
--						     25000baseSR_Full);
--		break;
--	case SPEED_10000:
--		ethtool_link_ksettings_add_link_mode(cmd, supported,
--						     10000baseT_Full);
--		ethtool_link_ksettings_add_link_mode(cmd, advertising,
--						     10000baseT_Full);
--		fallthrough;
--	case SPEED_1000:
--		ethtool_link_ksettings_add_link_mode(cmd, supported,
--						     1000baseT_Full);
--		ethtool_link_ksettings_add_link_mode(cmd, advertising,
--						     1000baseT_Full);
--		ethtool_link_ksettings_add_link_mode(cmd, supported,
--						     1000baseT_Half);
--		ethtool_link_ksettings_add_link_mode(cmd, advertising,
--						     1000baseT_Half);
--		fallthrough;
--	case SPEED_100:
--		ethtool_link_ksettings_add_link_mode(cmd, supported,
--						     100baseT_Full);
--		ethtool_link_ksettings_add_link_mode(cmd, advertising,
--						     100baseT_Full);
--		ethtool_link_ksettings_add_link_mode(cmd, supported,
--						     100baseT_Half);
--		ethtool_link_ksettings_add_link_mode(cmd, advertising,
--						     100baseT_Half);
--		fallthrough;
--	case SPEED_10:
--		ethtool_link_ksettings_add_link_mode(cmd, supported,
--						     10baseT_Full);
--		ethtool_link_ksettings_add_link_mode(cmd, advertising,
--						     10baseT_Full);
--		ethtool_link_ksettings_add_link_mode(cmd, supported,
--						     10baseT_Half);
--		ethtool_link_ksettings_add_link_mode(cmd, advertising,
--						     10baseT_Half);
-+		switch (cmd->base.speed) {
-+		case SPEED_25000:
-+			ethtool_link_ksettings_add_link_mode(cmd, supported,
-+							     25000baseSR_Full);
-+			ethtool_link_ksettings_add_link_mode(cmd, advertising,
-+							     25000baseSR_Full);
-+			break;
-+		case SPEED_10000:
-+			if (link_mode == QETH_LINK_MODE_FIBRE_LONG) {
-+				ethtool_link_ksettings_add_link_mode(cmd, supported,
-+								     10000baseLR_Full);
-+				ethtool_link_ksettings_add_link_mode(cmd, advertising,
-+								     10000baseLR_Full);
-+			} else if (link_mode == QETH_LINK_MODE_FIBRE_SHORT) {
-+				ethtool_link_ksettings_add_link_mode(cmd, supported,
-+								     10000baseSR_Full);
-+				ethtool_link_ksettings_add_link_mode(cmd, advertising,
-+								     10000baseSR_Full);
-+			}
-+			break;
-+		case SPEED_1000:
-+			ethtool_link_ksettings_add_link_mode(cmd, supported,
-+							     1000baseX_Full);
-+			ethtool_link_ksettings_add_link_mode(cmd, advertising,
-+							     1000baseX_Full);
-+			break;
-+		default:
-+			break;
-+		}
-+
- 		break;
- 	default:
- 		break;
-@@ -420,7 +446,7 @@ static int qeth_get_link_ksettings(struct net_device *netdev,
- 			cmd->base.port = link_info.port;
- 	}
- 
--	qeth_set_ethtool_link_modes(cmd);
-+	qeth_set_ethtool_link_modes(cmd, card->info.link_info.link_mode);
- 
- 	return 0;
- }
--- 
-2.17.1
+Maybe switch arch/s390/include/asm/bug.h's BUG to be like
+arch/mips/include/asm/bug.h?  It itself uses __noreturn with a 'static
+inline' function definition rather than #define.
+
+Does that fix the issue?
+
+Thanks,
+Mike
+
+p.s. you modified dm-writecache.c (not dm-writeback, wich doesn't
+exist).
 
