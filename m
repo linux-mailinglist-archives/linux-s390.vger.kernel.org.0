@@ -2,116 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E03F2B54AE
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Nov 2020 00:00:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A2D12B57CE
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Nov 2020 04:22:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgKPXAJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 16 Nov 2020 18:00:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgKPXAJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 16 Nov 2020 18:00:09 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7EA4C0613CF;
-        Mon, 16 Nov 2020 15:00:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=pkMMx2It+5Pvco6e/Mzh+7cjlpElvgRby/hMw4rxyqs=; b=pSihbiP0NpEOovk4JegF6/FeWU
-        XH/+UeM50+Ld8mGi/S0oS6QD2oizuU5SikacL1Pr7lbExrkBag7/nF+/j00HNz0L7rxtUpqHYHF+c
-        SPhqS9d3VkJcm46rGTa3XE4AjKMsgiru+TK5a66JhFqK9D7FZqp4bZmwRPw7RfINnnJoIMIRufSlu
-        wkhkUohGrkUvQC2La2lXAiyL0rONWV4fze+BaKcLMUZo9of2cH1IvNQUYuAACJpexkgXD0ccYSWvh
-        2RZyGqv6K2ZKXZXb3mAKx/+Le4NXuhO3pGuXtcuF+Zgtz88134/+by+UMzUgISNH7ePZSAFfkJ/Eq
-        NY+3sZmQ==;
-Received: from [2601:1c0:6280:3f0::f32]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kenTh-0004T5-H3; Mon, 16 Nov 2020 23:00:05 +0000
-Subject: Re: [PATCH] md: dm-writeback: add __noreturn to BUG-ging function
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-References: <20201113225228.20563-1-rdunlap@infradead.org>
- <344abf76-9405-58ba-2dc4-27cab88c974d@de.ibm.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c29eeb5d-0683-49eb-f729-38b14fac7745@infradead.org>
-Date:   Mon, 16 Nov 2020 15:00:01 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <344abf76-9405-58ba-2dc4-27cab88c974d@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726711AbgKQDVt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 16 Nov 2020 22:21:49 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14924 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726712AbgKQDVs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 16 Nov 2020 22:21:48 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AH327AE168361;
+        Mon, 16 Nov 2020 22:21:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=p1RvvAXxBmsENxKx6ZImxxAMZWPDabBr+EUHHUl/SDY=;
+ b=J7MDtMoLjqA2KYw4czmxA0ywVbxWljTrDqYLqRoUKTaz/hbFHlfOwFFTtOP/5vgcvmqR
+ CuSYxpRVqvyyuopmpbtoY9OC6kAhPhTHacszC9UNhm2F2nz06LcTvgk0dZrp89qmbaZU
+ FJqqOQF0fY4KranGD844TDOSSxmR7AlELb3grk3uM3eh41+6/+LaIpvHaRM/esOCKoGL
+ RitpkzdsoFB9CPoIGLKMH4/GiN3FWhORWWXFknSblg0hp2ofGI4YQTi4JOLWsQi3vzTP
+ hyGDVyjHXmJLddP1yqvAZooH4DSxS9nXeOSPTl7yd2QA9COt1zTFJny0Ywx20b3ciL7p bw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34v3yeu83a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Nov 2020 22:21:46 -0500
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AH3Ljg8028684;
+        Mon, 16 Nov 2020 22:21:45 -0500
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34v3yeu82x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Nov 2020 22:21:45 -0500
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AH38nfX003240;
+        Tue, 17 Nov 2020 03:21:43 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 34t6gh2ppu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Nov 2020 03:21:43 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AH3LeeQ53674242
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Nov 2020 03:21:41 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C0356AE053;
+        Tue, 17 Nov 2020 03:21:40 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE4E5AE045;
+        Tue, 17 Nov 2020 03:21:40 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 17 Nov 2020 03:21:40 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
+        id 6334BE036B; Tue, 17 Nov 2020 04:21:40 +0100 (CET)
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
+Subject: [RFC PATCH 0/2] Connect request callback to mdev and vfio-ccw
+Date:   Tue, 17 Nov 2020 04:21:37 +0100
+Message-Id: <20201117032139.50988-1-farman@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-16_13:2020-11-13,2020-11-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 adultscore=0 bulkscore=0 spamscore=0 mlxlogscore=893
+ priorityscore=1501 malwarescore=0 suspectscore=0 mlxscore=0 clxscore=1011
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011170020
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 11/15/20 11:30 PM, Christian Borntraeger wrote:
-> 
-> 
-> On 13.11.20 23:52, Randy Dunlap wrote:
->> Building on arch/s390/ flags this as an error, so add the
->> __noreturn attribute modifier to prevent the build error.
->>
->> cc1: some warnings being treated as errors
->> ../drivers/md/dm-writecache.c: In function 'persistent_memory_claim':
->> ../drivers/md/dm-writecache.c:323:1: error: no return statement in function returning non-void [-Werror=return-type]
-> 
-> ok with me, but I am asking why
-> 
-> the unreachable macro is not good enough. For x86 it obviously is.
-> 
-> form arch/s390/include/asm/bug.h
-> #define BUG() do {                                      \
->         __EMIT_BUG(0);                                  \
->         unreachable();                                  \
-> } while (0)
-> 
+There is a situation where removing all the paths from a device
+connected via mdev and vfio-ccw can cause some difficulty.
+Using the "chchp -c 0 xx" command to all paths will cause the
+device to be removed from the configuration, and any guest
+filesystem that is relying on that device will encounter errors.
+Interestingly, the last chchp command will actually fail to
+return to a shell prompt, and subsequent commands (another
+chchp to bring the paths back online, chzdev, etc.) will also
+hang because of the outstanding chchp.
 
-Hi Christian,
+The last chchp command drives to vfio_ccw_sch_remove() for every
+affected mediated device, and ultimately enters an infinite loop
+in vfio_del_group_dev(). This loop is broken when the guest goes
+away, which in this case doesn't occur until the guest is shutdown.
+This drives vfio_ccw_mdev_release() and thus vfio_device_release()
+to wake up the vfio_del_group_dev() thread.
 
-Good question.
-I don't see any guidance about when to use one or the other etc.
+There is also a callback mechanism called "request" to ask a
+driver (and perhaps user) to release the device, but this is not
+implemented for mdev. So this adds one to that point, and then
+wire it to vfio-ccw to pass it along to userspace. This will
+gracefully drive the unplug code, and everything behaves nicely.
 
-I see __noreturn being used 109 times and unreachable();
-being used 33 times, but only now that I look at them.
-That had nothing to do with why I used __noreturn in the patch.
+Despite the testing that was occurring, this doesn't appear related
+to the vfio-ccw channel path handling code. I can reproduce this with
+an older kernel/QEMU, which makes sense because the above behavior is
+driven from the subchannel event codepaths and not the chpid events.
+Because of that, I didn't flag anything with a Fixes tag, since it's
+seemingly been this way forever.
 
-> 
->>
->> Fixes: 48debafe4f2f ("dm: add writecache target")
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: Mikulas Patocka <mpatocka@redhat.com>
->> Cc: Alasdair Kergon <agk@redhat.com>
->> Cc: Mike Snitzer <snitzer@redhat.com>
->> Cc: dm-devel@redhat.com
->> Cc: Heiko Carstens <hca@linux.ibm.com>
->> Cc: Vasily Gorbik <gor@linux.ibm.com>
->> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
->> Cc: linux-s390@vger.kernel.org
->> ---
->>  drivers/md/dm-writecache.c |    2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> --- linux-next-20201113.orig/drivers/md/dm-writecache.c
->> +++ linux-next-20201113/drivers/md/dm-writecache.c
->> @@ -317,7 +317,7 @@ err1:
->>  	return r;
->>  }
->>  #else
->> -static int persistent_memory_claim(struct dm_writecache *wc)
->> +static int __noreturn persistent_memory_claim(struct dm_writecache *wc)
->>  {
->>  	BUG();
->>  }
->>
+Eric Farman (2):
+  vfio-mdev: Wire in a request handler for mdev parent
+  vfio-ccw: Wire in the request callback
 
-thanks.
+ drivers/s390/cio/vfio_ccw_ops.c     | 26 ++++++++++++++++++++++++++
+ drivers/s390/cio/vfio_ccw_private.h |  4 ++++
+ drivers/vfio/mdev/vfio_mdev.c       | 11 +++++++++++
+ include/linux/mdev.h                |  4 ++++
+ include/uapi/linux/vfio.h           |  1 +
+ 5 files changed, 46 insertions(+)
+
 -- 
-~Randy
+2.17.1
 
