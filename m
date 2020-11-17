@@ -2,123 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA0EA2B6D77
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Nov 2020 19:35:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 562722B6D91
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Nov 2020 19:39:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgKQSfA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 Nov 2020 13:35:00 -0500
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:44850 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727800AbgKQSfA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 17 Nov 2020 13:35:00 -0500
-Received: by mail-wr1-f43.google.com with SMTP id c17so24167033wrc.11;
-        Tue, 17 Nov 2020 10:34:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1AA8O1d406vYycb3bYf4dXKFr0iuvkHhIVLvNva/Pgw=;
-        b=U/hOI5YeHFZb4Yctyp5ik3McTfJgZ4StaDddQmwJuBLIuyDsY0dgLAhqNOP5T3Fg9U
-         Hz5GIi6F2PZOJMskycTN21KVCBmKSBxR2c0AGByJFTZiIv1eNBp0Mtyc+SjvW4dkvqZ/
-         Yp+Ul/S7AfsIG/VU2ELaxwhAHssYbubF3U2V2BTfwnyLoEgq+X/8tXlgnc6lPUSMuGa/
-         iO908g9jIddHwwOpIFXJ/nqaNLpV7o/nDXI0sJXdhjKXl8D4ibI3BIzrcpqw+20OqY0v
-         m4CeM0HYWyKo88o39hr4Zcg4PaH+xmTQ/QA3Fk/R4pzLDQm3KYHx2Wr5tzj6us5B0Snd
-         D8BQ==
-X-Gm-Message-State: AOAM530h5Ts2CVkMNfzi9OpeN65Qt0xQ2M6/RlGrr2Qw81aQxX3iJidR
-        Jo/7Z8LJ4p2K1wnol6iH35Q=
-X-Google-Smtp-Source: ABdhPJyFEZEFI39R9vrSkYcYFdLhu7f3V3Fhml752iLRLRvasSx24cUTVsvaflXcE8TNbE1zhEf8kA==
-X-Received: by 2002:a5d:5001:: with SMTP id e1mr928338wrt.20.1605638097837;
-        Tue, 17 Nov 2020 10:34:57 -0800 (PST)
-Received: from kozik-lap (adsl-84-226-167-205.adslplus.ch. [84.226.167.205])
-        by smtp.googlemail.com with ESMTPSA id r10sm4713070wmg.16.2020.11.17.10.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2020 10:34:56 -0800 (PST)
-Date:   Tue, 17 Nov 2020 19:34:55 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        id S1727552AbgKQSjs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 Nov 2020 13:39:48 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17084 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727007AbgKQSjr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 17 Nov 2020 13:39:47 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AHIWOw7149360;
+        Tue, 17 Nov 2020 13:39:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=T6Ye0CKhENIxOnxeqWCOYLZpFw1tGya9HrUY+2DOlMg=;
+ b=kAvEr5rC8uQ3wB1V6PUhwhpvWnXmCy4CYG8uz0tV5Fm0AskFbU8ePQP5yjKUFt5vVY4+
+ hJGtJCrXJNfeQie/ys6uX9USfIVedXrq83m3I1XOHDphmG35vPd8snJeldaMeXICT6IR
+ gKm/uX4FfQ6Kh0Eb8Wyhn7MkVCALZlSG5ETYexoGMw2GxfEqXw4p+8J6JhuNtPHIAw/W
+ BI0HeQfa/3kx3Cu6En/UFiqE78fezS86h/Rr7tBk5zYchviamMEnIX3zEA0vYJigojAF
+ lwABJWztXGvPRmFXlpZpKzpQLuLHaZBB5dxUhwYHH97AgEZE5Wbcnv3de+kIBvBUApIc ew== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34vb0vu0se-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Nov 2020 13:39:33 -0500
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AHISkGI006341;
+        Tue, 17 Nov 2020 18:39:30 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 34t6v8bcaq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Nov 2020 18:39:30 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AHIdRBb1245722
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Nov 2020 18:39:27 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A8C8752051;
+        Tue, 17 Nov 2020 18:39:27 +0000 (GMT)
+Received: from osiris (unknown [9.171.25.24])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 22B5252052;
+        Tue, 17 Nov 2020 18:39:27 +0000 (GMT)
+Date:   Tue, 17 Nov 2020 19:39:25 +0100
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Arnd Bergmann <arnd@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         kernel test robot <lkp@intel.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>, kbuild-all@lists.01.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Marc Zyngier <maz@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Subject: Re: irq-loongson-pch-pic.c:undefined reference to `of_iomap'
-Message-ID: <20201117183455.GA101572@kozik-lap>
+Message-ID: <20201117183925.GC4746@osiris>
 References: <202011140757.5QyVghe2-lkp@intel.com>
  <4f6f2244-033c-8413-818d-0b9c1b0b33ae@infradead.org>
  <CAK8P3a0w5MpvExp1jShAhqZ3Z08HjMALic6x2K+1_0eqFUi5QA@mail.gmail.com>
  <CAMuHMdU2L5GcEHdCHh_1-WaVVQNGkm0-CwFW5D1KS0dkqBQ3zw@mail.gmail.com>
  <CAK8P3a2+DvA4zwRBh_0cCuXJWxsg3SX8rQRZYfgB=8We9R6uiQ@mail.gmail.com>
+ <20201117183455.GA101572@kozik-lap>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a2+DvA4zwRBh_0cCuXJWxsg3SX8rQRZYfgB=8We9R6uiQ@mail.gmail.com>
+In-Reply-To: <20201117183455.GA101572@kozik-lap>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-17_07:2020-11-17,2020-11-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
+ priorityscore=1501 adultscore=0 lowpriorityscore=0 mlxlogscore=886
+ malwarescore=0 impostorscore=0 mlxscore=0 phishscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011170131
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Nov 16, 2020 at 10:21:26AM +0100, Arnd Bergmann wrote:
-> On Mon, Nov 16, 2020 at 9:37 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Mon, Nov 16, 2020 at 9:33 AM Arnd Bergmann <arnd@kernel.org> wrote:
-> > > On Mon, Nov 16, 2020 at 5:33 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> > > > On 11/13/20 3:27 PM, kernel test robot wrote:
-> > > (adding s390 folks to cc)
-> > >
-> > > I think fixing this requires a larger-scale effort. I tried building
-> > > an s390 allmodconfig
-> > > with CONFIG_PCI disabled, and got warnings and failures in many other places,
-> > > see full log at the end of this mail.
-> > >
-> > > While in theory, all of those should depend on 'HAS_IOMEM' or some other symbol,
-> > > keeping these dependencies sounds like an uphill battle, and there is not much
-> > > to be gained from building the drivers for s390 on top of compile-testing them
-> > > on more conventional architectures.
-> >
-> > Don't we need the dependencies on HAS_IOMEM for the CONFIG_UML=y
-> > case, too?
+On Tue, Nov 17, 2020 at 07:34:55PM +0100, Krzysztof Kozlowski wrote:
+> > Looking a bit further, I now find that we ended up disabling CONFIG_COMPILE_TEST
+> > entirely for arch/um, which is clearly an option that would also work for s390.
 > 
-> I would have expected that as well, but I don't see the problem when building
-> an arch/um kernel, all I get is
+> Yes, that was the easier solution than to spread "depends on HAS_IOMEM"
+> all over Kconfigs.
 > 
-> ERROR: modpost: "devm_platform_ioremap_resource"
-> [drivers/iio/adc/adi-axi-adc.ko] undefined!
-> ERROR: modpost: "devm_platform_ioremap_resource"
-> [drivers/ptp/ptp_ines.ko] undefined!
-> ERROR: modpost: "devm_ioremap_resource"
-> [drivers/net/ethernet/xilinx/xilinx_emac.ko] undefined!
-> ERROR: modpost: "devm_platform_ioremap_resource_byname"
-> [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!
-> ERROR: modpost: "devm_ioremap"
-> [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!
-> ERROR: modpost: "devm_of_iomap"
-> [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!
-> ERROR: modpost: "__open64_2" [fs/hostfs/hostfs.ko] undefined!
+> +Cc Greg KH,
 > 
-> If I disable those five drivers, I can build and link a uml kernel without
-> warnings. I could not find the difference compared to s390 here.
+> I got similar report around phy drivers:
+> https://lore.kernel.org/lkml/202011140335.tceVqHmN-lkp@intel.com/
 > 
-> Looking a bit further, I now find that we ended up disabling CONFIG_COMPILE_TEST
-> entirely for arch/um, which is clearly an option that would also work for s390.
+> When reproducing this, I saw multiple unmet dependencies on s390 for
+> MFD_SYSCON and MFD_STM32_TIMERS.
+> 
+> I suppose there is no point to fix them all because this will be
+> basically UML case, so HAS_IOMEM all over the tree.
 
-Yes, that was the easier solution than to spread "depends on HAS_IOMEM"
-all over Kconfigs.
-
-+Cc Greg KH,
-
-I got similar report around phy drivers:
-https://lore.kernel.org/lkml/202011140335.tceVqHmN-lkp@intel.com/
-
-When reproducing this, I saw multiple unmet dependencies on s390 for
-MFD_SYSCON and MFD_STM32_TIMERS.
-
-I suppose there is no point to fix them all because this will be
-basically UML case, so HAS_IOMEM all over the tree.
-
-Best regards,
-Krzysztof
-
+FWIW, I just replied a couple of minutes, but you might have missed
+that:
+---
+I'll add a patch to the s390 tree which disables CONFIG_COMPILE_TEST
+for s390. I wouldn't like to start again chasing/adding missing
+'select' or 'depends on' statements in various config files.
+---
