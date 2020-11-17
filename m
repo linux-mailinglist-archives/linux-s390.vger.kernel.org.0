@@ -2,105 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FAEF2B5910
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Nov 2020 06:19:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 829242B684C
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Nov 2020 16:10:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725804AbgKQFT4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 Nov 2020 00:19:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725355AbgKQFT4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 17 Nov 2020 00:19:56 -0500
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E3DDC0613CF
-        for <linux-s390@vger.kernel.org>; Mon, 16 Nov 2020 21:19:56 -0800 (PST)
-Received: by mail-lf1-x142.google.com with SMTP id 74so28410738lfo.5
-        for <linux-s390@vger.kernel.org>; Mon, 16 Nov 2020 21:19:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=uJFy+3A3C/ymk3cSUV9e3v1lv0Tpv8T9SnAJu61qQJs=;
-        b=eJZH3+li4VP5TBoQMiCWyf1+Aq9TABw31SIHNEIZch9GBI7RTBZpTLArwclZEYJ1PT
-         HjYk7C29n0w02s7XWdOeqxM5wEJ/Jqg8h3jhdWw/Gx5a9C607oX5+VjoCpQTy/9xXX0y
-         jaLy9wi6AD7KtiA2lapf/vVeVk3hx5pdu8I1/GgMviK7uOXTWlBoC/CfH+O0pdvQ8x3W
-         APitfEs6syjYp6rzgtC7ql3S0sppCRQvJXE9V2AIdX0VkH1oPV7x+F2e3qoaG1ubWl8/
-         prlsZnG2u10uoJ5NsfziIhKKQpvRzfFOcnZyBdyWM5T8V7SrECHIyJpqSSXh0oiqCEkQ
-         xUaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=uJFy+3A3C/ymk3cSUV9e3v1lv0Tpv8T9SnAJu61qQJs=;
-        b=tgRy/FUeI2pAyXHVgdnbiJFRtw5BTrQ79j9g5MZqIcaqwYZ2/WSm0bZ4+SgpcqN/yt
-         iVrNFhO8+EEPzsoUCzkyr9/vCVjiVxt3VGaWewqF8GSmVMXR+tv/DL4O8j7rVJ6MZNd+
-         pqdb2xUsq+f5UAfrkl0xHYnpY/8YMSZXmbcKCse3cCwrfItpiNCIasmRtvcdVkUMNkAt
-         zuo0ooC5dh5HGFVBefo/qLKd1rfWmxasJbNyL8sniFeob7/JAknb3htvIcyY7p63Ea7I
-         Q6mBNm8AI9H5XSGj1P2VR3JivWh8U6J8X6VL/F2RmTB0IMDDUrmjaaL/gVaP2LI17Rq6
-         krIQ==
-X-Gm-Message-State: AOAM533CuD6zTyLYEqV5V9x5lEXonMXdkpqaHV79BcpLqPwdJHnfwPpm
-        W7m4taoE++55D10kacMshKWDp42aZx8ebSdvw08=
-X-Google-Smtp-Source: ABdhPJxMN6TQipbvX/kBteSCB0gBmYTpbHXOgPpoMcyLsTxnaCmQCPNVJEdy3xc2X6q20p67uebwJrKdC+0F0R1TaOo=
-X-Received: by 2002:ac2:5235:: with SMTP id i21mr1186465lfl.473.1605590394454;
- Mon, 16 Nov 2020 21:19:54 -0800 (PST)
+        id S1728606AbgKQPKa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 Nov 2020 10:10:30 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60692 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726883AbgKQPK3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 17 Nov 2020 10:10:29 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AHF2uUh167402;
+        Tue, 17 Nov 2020 10:10:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=4UVWN0xema4KXC/lfxhqQdaMvSajT9kvkS5R0Z2Brkw=;
+ b=LgeCnxfbgci86UPTpmglTlLM8s28ZyqPoKLkZg46E6u7k7xAecOpObrreaxDMIaHaCh+
+ hKxkreRO9xtYa/2AG0rBGHhHfLJ76yxKmLoxUUfl4Uapp3gR5pu0gK87XFQnHuuDOddY
+ 1iFIaYAz+LoCbJtvP8ao4YfjZo7zQNI0SbInuDDM6BMP890BndPyhOe2xfK36U8PjE4i
+ 1l+CWo5Q3RR2a229k4cBtWsliTTbjvL0LTbn+kiPkL8szRLU89n/OUlHadSup+gkxWUz
+ nkX36SASrVnQ/+Aw5uI8rHETDzwuY65yUAW8s8uuLM45HK5AuRvkKinv4wvN22HAke3o lg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34vd4q0a1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Nov 2020 10:10:28 -0500
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AHF329q167937;
+        Tue, 17 Nov 2020 10:10:28 -0500
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 34vd4q0a0p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Nov 2020 10:10:28 -0500
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AHF8UYb003198;
+        Tue, 17 Nov 2020 15:10:26 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 34t6v8b1qp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Nov 2020 15:10:26 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AHFAN5w37683494
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Nov 2020 15:10:24 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DBB754C050;
+        Tue, 17 Nov 2020 15:10:23 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C83D64C040;
+        Tue, 17 Nov 2020 15:10:23 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 17 Nov 2020 15:10:23 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 799F6E23AA; Tue, 17 Nov 2020 16:10:23 +0100 (CET)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Janosch Frank <frankja@linux.vnet.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: [PATCH 0/2] KVM: s390: memcg awareness
+Date:   Tue, 17 Nov 2020 16:10:21 +0100
+Message-Id: <20201117151023.424575-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Sender: yesminesamih111@gmail.com
-Received: by 2002:a2e:3c07:0:0:0:0:0 with HTTP; Mon, 16 Nov 2020 21:19:54
- -0800 (PST)
-From:   Juliette Morgan <juliettemorgan21@gmail.com>
-Date:   Tue, 17 Nov 2020 06:19:54 +0100
-X-Google-Sender-Auth: FWbKCdsNyHky3p81SEXuHq4Jj-g
-Message-ID: <CAC+tdQh6za-3rND9fqpRY4-QSb7FePQSFitPKanLkDsNFH892w@mail.gmail.com>
-Subject: READ AND REPLY URGENT
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-17_04:2020-11-17,2020-11-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ clxscore=1015 phishscore=0 mlxlogscore=730 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011170109
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Dear God,s Select Good Day,
+This got somehow lost.  (so this is kind of a v2)
+KVM does have memcg awareness. Lets implement this also for s390kvm
+and gmap.
 
-I apologized, If this mail find's you disturbing, It might not be the
-best way to approach you as we have not met before, but due to the
-urgency of my present situation i decided  to communicate this way, so
-please pardon my manna, I am writing this mail to you with heavy tears
-In my eyes and great sorrow in my heart, My Name is Mrs.Juliette
-Morgan, and I am contacting you from my country Norway, I want to tell
-you this because I don't have any other option than to tell you as I
-was touched to open up to you,
+Christian Borntraeger (2):
+  KVM: s390: Add memcg accounting to KVM allocations
+  s390/gmap: make gmap memcg aware
 
-I married to Mr.sami Morgan. Who worked with Norway embassy in Burkina
-Faso for nine years before he died in the year 2011.We were married
-for eleven years without a child He died after a brief illness that
-lasted for only five days. Since his death I decided not to remarry,
-When my late husband was alive he deposited the sum of =E2=82=AC 8.5 Millio=
-n
-Euro (Eight million, Five hundred thousand Euros) in a bank in
-Ouagadougou the capital city of Burkina Faso in west Africa Presently
-this money is still in bank. He made this money available for
-exportation of Gold from Burkina Faso mining.
+ arch/s390/kvm/guestdbg.c  |  8 ++++----
+ arch/s390/kvm/intercept.c |  2 +-
+ arch/s390/kvm/interrupt.c | 10 +++++-----
+ arch/s390/kvm/kvm-s390.c  | 20 ++++++++++----------
+ arch/s390/kvm/priv.c      |  4 ++--
+ arch/s390/kvm/pv.c        |  6 +++---
+ arch/s390/kvm/vsie.c      |  4 ++--
+ arch/s390/mm/gmap.c       | 30 +++++++++++++++---------------
+ 8 files changed, 42 insertions(+), 42 deletions(-)
 
-Recently, My Doctor told me that I would not last for the period of
-seven months due to cancer problem. The one that disturbs me most is
-my stroke sickness.Having known my condition I decided to hand you
-over this money to take care of the less-privileged people, you will
-utilize this money the way I am going to instruct herein.
+-- 
+2.28.0
 
-I want you to take 30 Percent of the total money for your personal use
-While 70% of the money will go to charity, people in the street and
-helping the orphanage. I grew up as an Orphan and I don't have any
-body as my family member, just to endeavour that the house of God is
-maintained. Am doing this so that God will forgive my sins and accept
-my soul because these sicknesses have suffered me so much.
-
-As soon as I receive your reply I shall give you the contact of the
-bank in Burkina Faso and I will also instruct the Bank Manager to
-issue you an authority letter that will prove you the present
-beneficiary of the money in the bank that is if you assure me that you
-will act accordingly as I Stated herein.
-
-Always reply to my alternative for security purposes
-
-Hoping to receive your reply:
-From Mrs.Juliette Morgan,
