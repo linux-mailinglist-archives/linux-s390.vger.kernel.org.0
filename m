@@ -2,97 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEB7E2B8360
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Nov 2020 18:51:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E311A2B8689
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Nov 2020 22:24:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbgKRRuf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Nov 2020 12:50:35 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54852 "EHLO
+        id S1726199AbgKRVYx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 Nov 2020 16:24:53 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37599 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727776AbgKRRuf (ORCPT
+        by vger.kernel.org with ESMTP id S1726136AbgKRVYw (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 18 Nov 2020 12:50:35 -0500
+        Wed, 18 Nov 2020 16:24:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605721834;
+        s=mimecast20190719; t=1605734691;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=KiyN39i1ac3oiyIb1NhSMxljKEIgrqsk3y8a/SFB3BU=;
-        b=geU0yDa258BwqXGRd9KjiAsQOHj/9aMlpobgiJgoRHlKOuHOdICa5oh7xuFMPpAfl80uCP
-        vPfCn5zk2jyPjPvx4fiY9MlLJxfEw3nNiYQHS9xtC/o7QwZi7aD/Eg10cckumcncCK++pp
-        rOSFLWeaoAMQ9cYpkrWEyQKVHTCInyg=
+        bh=KEFetNrz9oaXnh8tgOcWj7yDkYGvE3+srDGUNa21rsk=;
+        b=OjI+6zexkC7b0hc6+fPVCJcPQFWrbs5tR9a2/0ZhjlI7zvFJ0fVWZHagsoSTUs/XVxJdQs
+        bxIF51ZbFmmLPBaoscV26QL82ISGSUJAARWx3HjnoC6iS+IJy0itp0WvBaqIOGbIy0x/iG
+        aVND0yj8I+g3DYmZ4zXlVgqBhEB7VFY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-175-VoO8jP-lNVWPzMxJ6w8sGA-1; Wed, 18 Nov 2020 12:50:32 -0500
-X-MC-Unique: VoO8jP-lNVWPzMxJ6w8sGA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-595-RQ9KstQPM4O4sGmFWuxI3A-1; Wed, 18 Nov 2020 16:24:49 -0500
+X-MC-Unique: RQ9KstQPM4O4sGmFWuxI3A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DB3C808255;
-        Wed, 18 Nov 2020 17:50:31 +0000 (UTC)
-Received: from gondolin (ovpn-113-132.ams2.redhat.com [10.36.113.132])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 71C9F5D9CA;
-        Wed, 18 Nov 2020 17:50:29 +0000 (UTC)
-Date:   Wed, 18 Nov 2020 18:50:26 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, thuth@redhat.com, linux-s390@vger.kernel.org,
-        david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com
-Subject: Re: [kvm-unit-tests PATCH 3/5] s390x: SCLP feature checking
-Message-ID: <20201118185026.776c63dd.cohuck@redhat.com>
-In-Reply-To: <20201117154215.45855-4-frankja@linux.ibm.com>
-References: <20201117154215.45855-1-frankja@linux.ibm.com>
-        <20201117154215.45855-4-frankja@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA99384A5E0;
+        Wed, 18 Nov 2020 21:24:47 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 16ACF1346F;
+        Wed, 18 Nov 2020 21:24:40 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 0AILOeFo017597;
+        Wed, 18 Nov 2020 16:24:40 -0500
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 0AILOcWa017593;
+        Wed, 18 Nov 2020 16:24:38 -0500
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Wed, 18 Nov 2020 16:24:38 -0500 (EST)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Mike Snitzer <snitzer@redhat.com>
+cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>,
+        dm-devel@redhat.com, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: md: dm-writeback: add __noreturn to BUG-ging function
+In-Reply-To: <20201118160748.GA754@redhat.com>
+Message-ID: <alpine.LRH.2.02.2011181611470.16933@file01.intranet.prod.int.rdu2.redhat.com>
+References: <20201113225228.20563-1-rdunlap@infradead.org> <344abf76-9405-58ba-2dc4-27cab88c974d@de.ibm.com> <c29eeb5d-0683-49eb-f729-38b14fac7745@infradead.org> <20201117163147.GA27243@redhat.com> <20201118154944.GB545@redhat.com>
+ <20201118160748.GA754@redhat.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 17 Nov 2020 10:42:13 -0500
-Janosch Frank <frankja@linux.ibm.com> wrote:
 
-> Availability of SIE is announced via a feature bit in a SCLP info CPU
-> entry. Let's add a framework that allows us to easily check for such
-> facilities.
+
+On Wed, 18 Nov 2020, Mike Snitzer wrote:
+
+> On Wed, Nov 18 2020 at 10:49am -0500,
+> Mike Snitzer <snitzer@redhat.com> wrote:
 > 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  lib/s390x/io.c   |  1 +
->  lib/s390x/sclp.c | 19 +++++++++++++++++++
->  lib/s390x/sclp.h | 15 +++++++++++++++
->  3 files changed, 35 insertions(+)
+> > I don't think my suggestion will help.. given it'd still leave
+> > persistent_memory_claim() without a return statement.
+> > 
+> > Think it worthwhile to just add a dummy 'return 0;' after the BUG().
+> 
+> Decided to go with this, now staged for 5.11:
+> https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.11&id=a1e4865b4dda7071f3707f7e551289ead66e38b1
 
-(...)
+Hi
 
-> +void sclp_facilities_setup(void)
-> +{
-> +	unsigned short cpu0_addr = stap();
-> +	CPUEntry *cpu;
-> +	int i;
-> +
-> +	assert(read_info);
-> +
-> +	cpu = (void *)read_info + read_info->offset_cpu;
-> +	for (i = 0; i < read_info->entries_cpu; i++, cpu++) {
-> +		if (cpu->address == cpu0_addr) {
-> +			sclp_facilities.has_sief2 = test_bit_inv(SCLP_CPU_FEATURE_SIEF2_BIT, (void *)&cpu->address);
+I would just use "return -EOPNOTSUPP;" and drop the "#ifdef 
+DM_WRITECACHE_HAS_PMEM" that you added.
 
-Can you wrap this? This line is really overlong.
+That BUG/return -EOPNOTSUPP code can't happen at all - if 
+DM_WRITECACHE_HAS_PMEM is not defined, WC_MODE_PMEM(wc) always returns 
+false - so persistent_memory_claim and BUG() can't ever be called. And if 
+it can't be called, you don't need to add a code that prints an error in 
+that case.
 
-(Also, just to understand: Is sief2 only indicated for cpu0, and not
-for the other cpus?)
+If we don't have DM_WRITECACHE_HAS_PMEM, the compiler optimizer will 
+remove all the code guarded with if (WC_MODE_PMEM(wc)) as unreachable.
 
-> +			break;
-> +		}
-> +	}
-> +}
-> +
->  /* Perform service call. Return 0 on success, non-zero otherwise. */
->  int sclp_service_call(unsigned int command, void *sccb)
->  {
+Mikulas
+
+
+From: Mikulas Patocka <mpatocka@redhat.com>
+Subject: [PATCH] dm writecache: remove BUG() and fail gracefully insteadfor-nextdm-5.11
+
+Building on arch/s390/ results in this build error:
+
+cc1: some warnings being treated as errors
+../drivers/md/dm-writecache.c: In function 'persistent_memory_claim':
+../drivers/md/dm-writecache.c:323:1: error: no return statement in function returning non-void [-Werror=return-type]
+
+Fix this by replacing the BUG() with a -EOPNOTSUPP return.
+
+Fixes: 48debafe4f2f ("dm: add writecache target")
+Cc: stable@vger.kernel.org	# v4.18+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+
+Index: linux-2.6/drivers/md/dm-writecache.c
+===================================================================
+--- linux-2.6.orig/drivers/md/dm-writecache.c
++++ linux-2.6/drivers/md/dm-writecache.c
+@@ -319,7 +319,7 @@ err1:
+ #else
+ static int persistent_memory_claim(struct dm_writecache *wc)
+ {
+-	BUG();
++	return -EOPNOTSUPP;
+ }
+ #endif
+ 
 
