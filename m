@@ -2,125 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E311A2B8689
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Nov 2020 22:24:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 756E12B86F3
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Nov 2020 22:42:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgKRVYx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Nov 2020 16:24:53 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37599 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726136AbgKRVYw (ORCPT
+        id S1727092AbgKRVmH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 Nov 2020 16:42:07 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47356 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726163AbgKRVmG (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 18 Nov 2020 16:24:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605734691;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KEFetNrz9oaXnh8tgOcWj7yDkYGvE3+srDGUNa21rsk=;
-        b=OjI+6zexkC7b0hc6+fPVCJcPQFWrbs5tR9a2/0ZhjlI7zvFJ0fVWZHagsoSTUs/XVxJdQs
-        bxIF51ZbFmmLPBaoscV26QL82ISGSUJAARWx3HjnoC6iS+IJy0itp0WvBaqIOGbIy0x/iG
-        aVND0yj8I+g3DYmZ4zXlVgqBhEB7VFY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-595-RQ9KstQPM4O4sGmFWuxI3A-1; Wed, 18 Nov 2020 16:24:49 -0500
-X-MC-Unique: RQ9KstQPM4O4sGmFWuxI3A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA99384A5E0;
-        Wed, 18 Nov 2020 21:24:47 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 16ACF1346F;
-        Wed, 18 Nov 2020 21:24:40 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 0AILOeFo017597;
-        Wed, 18 Nov 2020 16:24:40 -0500
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 0AILOcWa017593;
-        Wed, 18 Nov 2020 16:24:38 -0500
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Wed, 18 Nov 2020 16:24:38 -0500 (EST)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Mike Snitzer <snitzer@redhat.com>
-cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>,
-        dm-devel@redhat.com, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: md: dm-writeback: add __noreturn to BUG-ging function
-In-Reply-To: <20201118160748.GA754@redhat.com>
-Message-ID: <alpine.LRH.2.02.2011181611470.16933@file01.intranet.prod.int.rdu2.redhat.com>
-References: <20201113225228.20563-1-rdunlap@infradead.org> <344abf76-9405-58ba-2dc4-27cab88c974d@de.ibm.com> <c29eeb5d-0683-49eb-f729-38b14fac7745@infradead.org> <20201117163147.GA27243@redhat.com> <20201118154944.GB545@redhat.com>
- <20201118160748.GA754@redhat.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Wed, 18 Nov 2020 16:42:06 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AILXLn5054347;
+        Wed, 18 Nov 2020 16:42:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=NbQ/gadKZ3ntqG1pLK30U7VmOcV5rcTeoJvc22/oym4=;
+ b=N09o4gRlhacPTL28JCqKnR9ldJcvNzmOH1eEKoKoo+x8/HL97+OR/wqeM0mHwOyjn/V+
+ 3ljPaGTnE53msRJlKHDOgPvPGCAATm61BMwAqs+otXZTOTy+GnVCfhTaFlgLWGP/wfeV
+ fQt8wyUBVvRBulj5STab3T4HRR8JeGJbgDNkdPtMxJPfULIRCW1BCwcVXvcHXuGNu6Ho
+ 7KY9ztvMRUL1eQwMFooWT7YULrPkt/iJIwEa1Np2iPlJKkEQMdLx0+Iz6MD3cAzJXDVC
+ ff4fG+W6DytBmCCUMSfvjAX/QgKRIGvY3kkoRt8LBasx1TgFGMajO7WcVOIbGhhgr0V1 Kw== 
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34w8q4wdu7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Nov 2020 16:42:05 -0500
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AILcBmS006121;
+        Wed, 18 Nov 2020 21:42:03 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma02fra.de.ibm.com with ESMTP id 34t6v8axxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Nov 2020 21:42:03 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AILekrB8651434
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Nov 2020 21:40:46 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DEF0042047;
+        Wed, 18 Nov 2020 21:40:45 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D42F42041;
+        Wed, 18 Nov 2020 21:40:45 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Nov 2020 21:40:45 +0000 (GMT)
+From:   Karsten Graul <kgraul@linux.ibm.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        hca@linux.ibm.com, raspl@linux.ibm.com
+Subject: [PATCH net 0/2] net/smc: fixes 2020-11-18
+Date:   Wed, 18 Nov 2020 22:40:36 +0100
+Message-Id: <20201118214038.24039-1-kgraul@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-18_08:2020-11-17,2020-11-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ adultscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ bulkscore=0 malwarescore=0 impostorscore=0 mlxscore=0 suspectscore=1
+ mlxlogscore=682 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011180148
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Please apply the following patch series for smc to netdev's net tree.
 
+Patch 1 fixes the matching of link groups because with SMC-Dv2 the vlanid
+should no longer be part of this matching. Patch 2 removes a sparse message.
 
-On Wed, 18 Nov 2020, Mike Snitzer wrote:
+Karsten Graul (2):
+  net/smc: fix matching of existing link groups
+  net/smc: fix direct access to ib_gid_addr->ndev in
+    smc_ib_determine_gid()
 
-> On Wed, Nov 18 2020 at 10:49am -0500,
-> Mike Snitzer <snitzer@redhat.com> wrote:
-> 
-> > I don't think my suggestion will help.. given it'd still leave
-> > persistent_memory_claim() without a return statement.
-> > 
-> > Think it worthwhile to just add a dummy 'return 0;' after the BUG().
-> 
-> Decided to go with this, now staged for 5.11:
-> https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.11&id=a1e4865b4dda7071f3707f7e551289ead66e38b1
+ net/smc/af_smc.c   | 3 ++-
+ net/smc/smc_core.c | 3 ++-
+ net/smc/smc_ib.c   | 6 +++---
+ 3 files changed, 7 insertions(+), 5 deletions(-)
 
-Hi
-
-I would just use "return -EOPNOTSUPP;" and drop the "#ifdef 
-DM_WRITECACHE_HAS_PMEM" that you added.
-
-That BUG/return -EOPNOTSUPP code can't happen at all - if 
-DM_WRITECACHE_HAS_PMEM is not defined, WC_MODE_PMEM(wc) always returns 
-false - so persistent_memory_claim and BUG() can't ever be called. And if 
-it can't be called, you don't need to add a code that prints an error in 
-that case.
-
-If we don't have DM_WRITECACHE_HAS_PMEM, the compiler optimizer will 
-remove all the code guarded with if (WC_MODE_PMEM(wc)) as unreachable.
-
-Mikulas
-
-
-From: Mikulas Patocka <mpatocka@redhat.com>
-Subject: [PATCH] dm writecache: remove BUG() and fail gracefully insteadfor-nextdm-5.11
-
-Building on arch/s390/ results in this build error:
-
-cc1: some warnings being treated as errors
-../drivers/md/dm-writecache.c: In function 'persistent_memory_claim':
-../drivers/md/dm-writecache.c:323:1: error: no return statement in function returning non-void [-Werror=return-type]
-
-Fix this by replacing the BUG() with a -EOPNOTSUPP return.
-
-Fixes: 48debafe4f2f ("dm: add writecache target")
-Cc: stable@vger.kernel.org	# v4.18+
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-
-Index: linux-2.6/drivers/md/dm-writecache.c
-===================================================================
---- linux-2.6.orig/drivers/md/dm-writecache.c
-+++ linux-2.6/drivers/md/dm-writecache.c
-@@ -319,7 +319,7 @@ err1:
- #else
- static int persistent_memory_claim(struct dm_writecache *wc)
- {
--	BUG();
-+	return -EOPNOTSUPP;
- }
- #endif
- 
+-- 
+2.17.1
 
