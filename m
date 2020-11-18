@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B9102B8129
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Nov 2020 16:51:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 961A72B8180
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Nov 2020 17:09:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbgKRPuA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Nov 2020 10:50:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40470 "EHLO
+        id S1726510AbgKRQIe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 Nov 2020 11:08:34 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:35639 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726211AbgKRPt7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726483AbgKRQId (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 18 Nov 2020 10:49:59 -0500
+        Wed, 18 Nov 2020 11:08:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605714598;
+        s=mimecast20190719; t=1605715713;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=MQ3atbt49o/FeEWNxZ+RfU8ToGXg/yRCCUXrGgUjXe4=;
-        b=YCXWjjz6YzSTeQMANlGCYE6W9omZTXX2IsR52xfO+YmWnAuqAH15re1LS50T0Go8VEiFqK
-        An9Ej8Xl0mhvBPIZv833Vnyb68RyyhHqN8zOGxUCb62pNCrxip1bR9dRjbwv0EM/TXROcl
-        T8UsZf5TTtIzv4UbRlp7xnWkfIkjgrQ=
+        bh=3BqNy/tQG7myMKclUBJ2s6npPTjs5n4WYRwYHbVNyVg=;
+        b=H0igNk9D22aRDIXjT80KIsZeTlGDFjxnxGHk7nQqSXrYqUYlavH9TfP2jTeC2/kwUTdS3L
+        VaRAGkohIXOO0O6eYbii3f8/L0xcBH3duLLBZqD1OINoKw/O4S5g3MRwk107f52n3re/kU
+        AVO2igNYVhqUNdkTa0moeaqCAtkULNI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-542-_VdeTqYPOoqSMsJBHrnhAg-1; Wed, 18 Nov 2020 10:49:54 -0500
-X-MC-Unique: _VdeTqYPOoqSMsJBHrnhAg-1
+ us-mta-440-DZfKV5YgPiWbLUBe-DMavA-1; Wed, 18 Nov 2020 11:08:28 -0500
+X-MC-Unique: DZfKV5YgPiWbLUBe-DMavA-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39860873114;
-        Wed, 18 Nov 2020 15:49:53 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5241D814608;
+        Wed, 18 Nov 2020 16:08:27 +0000 (UTC)
 Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5DE655D9D2;
-        Wed, 18 Nov 2020 15:49:45 +0000 (UTC)
-Date:   Wed, 18 Nov 2020 10:49:44 -0500
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D4ED25DA7B;
+        Wed, 18 Nov 2020 16:07:48 +0000 (UTC)
+Date:   Wed, 18 Nov 2020 11:07:48 -0500
 From:   Mike Snitzer <snitzer@redhat.com>
 To:     Randy Dunlap <rdunlap@infradead.org>
 Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
@@ -43,80 +43,30 @@ Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
 Subject: Re: md: dm-writeback: add __noreturn to BUG-ging function
-Message-ID: <20201118154944.GB545@redhat.com>
+Message-ID: <20201118160748.GA754@redhat.com>
 References: <20201113225228.20563-1-rdunlap@infradead.org>
  <344abf76-9405-58ba-2dc4-27cab88c974d@de.ibm.com>
  <c29eeb5d-0683-49eb-f729-38b14fac7745@infradead.org>
  <20201117163147.GA27243@redhat.com>
+ <20201118154944.GB545@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201117163147.GA27243@redhat.com>
+In-Reply-To: <20201118154944.GB545@redhat.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Nov 17 2020 at 11:31am -0500,
+On Wed, Nov 18 2020 at 10:49am -0500,
 Mike Snitzer <snitzer@redhat.com> wrote:
 
-> On Mon, Nov 16 2020 at  6:00pm -0500,
-> Randy Dunlap <rdunlap@infradead.org> wrote:
+> I don't think my suggestion will help.. given it'd still leave
+> persistent_memory_claim() without a return statement.
 > 
-> > On 11/15/20 11:30 PM, Christian Borntraeger wrote:
-> > > 
-> > > 
-> > > On 13.11.20 23:52, Randy Dunlap wrote:
-> > >> Building on arch/s390/ flags this as an error, so add the
-> > >> __noreturn attribute modifier to prevent the build error.
-> > >>
-> > >> cc1: some warnings being treated as errors
-> > >> ../drivers/md/dm-writecache.c: In function 'persistent_memory_claim':
-> > >> ../drivers/md/dm-writecache.c:323:1: error: no return statement in function returning non-void [-Werror=return-type]
-> > > 
-> > > ok with me, but I am asking why
-> > > 
-> > > the unreachable macro is not good enough. For x86 it obviously is.
-> > > 
-> > > form arch/s390/include/asm/bug.h
-> > > #define BUG() do {                                      \
-> > >         __EMIT_BUG(0);                                  \
-> > >         unreachable();                                  \
-> > > } while (0)
-> > > 
-> > 
-> > Hi Christian,
-> > 
-> > Good question.
-> > I don't see any guidance about when to use one or the other etc.
-> > 
-> > I see __noreturn being used 109 times and unreachable();
-> > being used 33 times, but only now that I look at them.
-> > That had nothing to do with why I used __noreturn in the patch.
-> 
-> But doesn't that speak to the proper fix being needed in unreachable()?
-> Or at a minimum the fix is needed to arch/s390/include/asm/bug.h's BUG.
-> 
-> I really don't think we should be papering over that by sprinkling
-> __noreturn around the kernel's BUG() callers.
-> 
-> Maybe switch arch/s390/include/asm/bug.h's BUG to be like
-> arch/mips/include/asm/bug.h?  It itself uses __noreturn with a 'static
-> inline' function definition rather than #define.
-> 
-> Does that fix the issue?
-> 
-> Thanks,
-> Mike
-> 
-> p.s. you modified dm-writecache.c (not dm-writeback, wich doesn't
-> exist).
+> Think it worthwhile to just add a dummy 'return 0;' after the BUG().
 
-I don't think my suggestion will help.. given it'd still leave
-persistent_memory_claim() without a return statement.
-
-Think it worthwhile to just add a dummy 'return 0;' after the BUG().
-
-Mike
+Decided to go with this, now staged for 5.11:
+https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.11&id=a1e4865b4dda7071f3707f7e551289ead66e38b1
 
