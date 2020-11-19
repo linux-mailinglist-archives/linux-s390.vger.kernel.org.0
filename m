@@ -2,61 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB97C2B8F20
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Nov 2020 10:41:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 078892B9113
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Nov 2020 12:34:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgKSJh2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 19 Nov 2020 04:37:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:60774 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbgKSJh1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 19 Nov 2020 04:37:27 -0500
-Date:   Thu, 19 Nov 2020 10:37:23 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1605778644;
+        id S1726778AbgKSLak (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 19 Nov 2020 06:30:40 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:56633 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726495AbgKSLaj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 19 Nov 2020 06:30:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605785438;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RTHT8cPd0jDwWbny9tN1Ak7mWAynHqebtYgRe9ofWgk=;
-        b=g1EfcwvZpMfLA2hSW9npT+QgEHftZMwqOXOT/uCQDpf0IrwXrTVIfaszm275NfFfD8pkDr
-        RZVKNK+mGpTMTNFGuPLRWZLOU8826AGtwQLfSSsEBxoq0BahuqVz5OG2eImyN3HJUVL4ll
-        U8tBfZuTu2RSxHdZiWQZOIzoNQ9KbSUEDHKf8ZWQPuCzwKTefHV5JB04XmDFYqlgKDdOc+
-        a6KEY83x0BUToZ+z1ZWl6EvtV2SQi/ahHd5YwJ/DfIbfO+3qTyL6NLigWpcrh0g9refJ2k
-        2GLAKMyyq/8yqDdjMH6ClsmsojCer98zf2A+01jOBsxeX93QxwD39UNRC7bqdQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1605778644;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RTHT8cPd0jDwWbny9tN1Ak7mWAynHqebtYgRe9ofWgk=;
-        b=mv9K8Agvo52RDjAQsfkqqcqvz1VVt2c6PsB+0eq5TqQHNBAILMWka1WfmwNmqfg8o6vLHv
-        iFEq5BxVSLXJ0nDg==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Julian Wiedmann <jwi@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, Karsten Graul <kgraul@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 1/6] s390/ctcm: Put struct th_header and th_sweep on
- stack.
-Message-ID: <20201119093723.xbwq2o3k2k7kc2z3@linutronix.de>
-References: <20201118105317.605671-1-bigeasy@linutronix.de>
- <20201118105317.605671-2-bigeasy@linutronix.de>
- <88ac2454-32f4-f48b-f255-b23aedabc45b@linux.ibm.com>
- <20201119081248.iyb2dxeazgm3fhyg@linutronix.de>
- <10c005bb-f590-d213-8e43-f3411248e79f@linux.ibm.com>
+        bh=uGRN4UY9mB+JZb0NfSRYVEcCVr604axDbJuKJG4uiDI=;
+        b=RKxlfAOlwuoCDJF9aehY5mgyvHmr0KG4XOWFQXEwB9gOQAAKfx6waOi70wRhmrMsgsDxPv
+        fJnXbHax8GDNunog7+Rs4oj9tNGwON9ULNIYBAAmSDPqLXpbs58O/Ath+J86LD0rsk19S0
+        i0O+Y5KyQute8AlMybMuXrAXJbaE94k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-NkHZomPROVqV1l_N2OiT5g-1; Thu, 19 Nov 2020 06:30:34 -0500
+X-MC-Unique: NkHZomPROVqV1l_N2OiT5g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 742F83FDD;
+        Thu, 19 Nov 2020 11:30:33 +0000 (UTC)
+Received: from gondolin (ovpn-113-214.ams2.redhat.com [10.36.113.214])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ECBBE1002388;
+        Thu, 19 Nov 2020 11:30:28 +0000 (UTC)
+Date:   Thu, 19 Nov 2020 12:30:26 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] vfio-mdev: Wire in a request handler for mdev
+ parent
+Message-ID: <20201119123026.1353cb3c.cohuck@redhat.com>
+In-Reply-To: <20201117032139.50988-2-farman@linux.ibm.com>
+References: <20201117032139.50988-1-farman@linux.ibm.com>
+        <20201117032139.50988-2-farman@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <10c005bb-f590-d213-8e43-f3411248e79f@linux.ibm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2020-11-19 10:16:28 [+0200], Julian Wiedmann wrote:
-> I am not worried about performance at all. Yet readability matters.
+On Tue, 17 Nov 2020 04:21:38 +0100
+Eric Farman <farman@linux.ibm.com> wrote:
 
-As you wish. Let me respin it then.
+> While performing some destructive tests with vfio-ccw, where the
+> paths to a device are forcible removed and thus the device itself
+> is unreachable, it is rather easy to end up in an endless loop in
+> vfio_del_group_dev() due to the lack of a request callback for the
+> associated device.
+> 
+> In this example, one MDEV (77c) is used by a guest, while another
+> (77b) is not. The symptom is that the iommu is detached from the
+> mdev for 77b, but not 77c, until that guest is shutdown:
+> 
+>     [  238.794867] vfio_ccw 0.0.077b: MDEV: Unregistering
+>     [  238.794996] vfio_mdev 11f2d2bc-4083-431d-a023-eff72715c4f0: Removing from iommu group 2
+>     [  238.795001] vfio_mdev 11f2d2bc-4083-431d-a023-eff72715c4f0: MDEV: detaching iommu
+>     [  238.795036] vfio_ccw 0.0.077c: MDEV: Unregistering
+>     ...silence...
+> 
+> Let's wire in the request call back to the mdev device, so that a hot
+> unplug can be (gracefully?) handled by the parent device at the time
+> the device is being removed.
 
-Sebastian
+I think it makes a lot of sense to give the vendor driver a way to
+handle requests.
+
+> 
+> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> ---
+>  drivers/vfio/mdev/vfio_mdev.c | 11 +++++++++++
+>  include/linux/mdev.h          |  4 ++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
+> index 30964a4e0a28..2dd243f73945 100644
+> --- a/drivers/vfio/mdev/vfio_mdev.c
+> +++ b/drivers/vfio/mdev/vfio_mdev.c
+> @@ -98,6 +98,16 @@ static int vfio_mdev_mmap(void *device_data, struct vm_area_struct *vma)
+>  	return parent->ops->mmap(mdev, vma);
+>  }
+>  
+> +static void vfio_mdev_request(void *device_data, unsigned int count)
+> +{
+> +	struct mdev_device *mdev = device_data;
+> +	struct mdev_parent *parent = mdev->parent;
+> +
+> +	if (unlikely(!parent->ops->request))
+
+Hm. Do you think that all drivers should implement a ->request()
+callback?
+
+> +		return;
+> +	parent->ops->request(mdev, count);
+> +}
+> +
+>  static const struct vfio_device_ops vfio_mdev_dev_ops = {
+>  	.name		= "vfio-mdev",
+>  	.open		= vfio_mdev_open,
+
