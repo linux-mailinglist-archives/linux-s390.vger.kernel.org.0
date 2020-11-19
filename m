@@ -2,141 +2,145 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FA792B97ED
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Nov 2020 17:28:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 416282B99AB
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Nov 2020 18:44:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgKSQ2A (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 19 Nov 2020 11:28:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59220 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728994AbgKSQ2A (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 19 Nov 2020 11:28:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605803278;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nhl6Mza31IFV5WOXVT46dToEYcbqzQRdMS2ewqcNX/c=;
-        b=RA6Xf2tjqoN7d3RNLbe43r/Dh8qHgmuW0lvE9Z+S0Gh5wonaNTI9GRjPkztMreFHVSmg/n
-        saz7pYXeulmn5T94R8PAoqSBObJGvLo3V0swKwJb2hDhiulc1Obwc5wmMCLpyCGBeQt08D
-        n3MjkP5fdxp0VWrgHJuy45ki6YOnzMg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-489-hTYYL-1mMeqD31wiaXDPng-1; Thu, 19 Nov 2020 11:27:56 -0500
-X-MC-Unique: hTYYL-1mMeqD31wiaXDPng-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729730AbgKSRjm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 19 Nov 2020 12:39:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729474AbgKSRiO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 19 Nov 2020 12:38:14 -0500
+Received: from kernel.org (unknown [77.125.7.142])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3EFE3107ACFB;
-        Thu, 19 Nov 2020 16:27:55 +0000 (UTC)
-Received: from w520.home (ovpn-112-213.phx2.redhat.com [10.3.112.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C7F2C620D7;
-        Thu, 19 Nov 2020 16:27:54 +0000 (UTC)
-Date:   Thu, 19 Nov 2020 09:27:54 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Eric Farman <farman@linux.ibm.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] vfio-mdev: Wire in a request handler for mdev
- parent
-Message-ID: <20201119092754.240847b8@w520.home>
-In-Reply-To: <20201119123026.1353cb3c.cohuck@redhat.com>
-References: <20201117032139.50988-1-farman@linux.ibm.com>
-        <20201117032139.50988-2-farman@linux.ibm.com>
-        <20201119123026.1353cb3c.cohuck@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 29EAB246CE;
+        Thu, 19 Nov 2020 17:38:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1605807494;
+        bh=j8yoUgNPwUrAH9hWklc4JtHbyJwtdVtZfAXrNV5fMkU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MWotZzvHI///F7nXbNuhmcE23HQZ5TAHfxi5tuIfW5aKphZWo8XXUCe3ChRSAXaMu
+         wdcf27o/gc8PdtGoPAg1WYJ59h/sNaDRhEECk9lUAzchusO/CfDlzZTbWrUpOojACA
+         jzma0oyE1R2w5WYeSpqXSn/IUhBY8iEJuAZsXlrg=
+Date:   Thu, 19 Nov 2020 19:38:00 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Alexander Graf <graf@amazon.de>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        "Catangiu, Adrian Costin" <acatan@amazon.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jann Horn <jannh@google.com>, Willy Tarreau <w@1wt.eu>,
+        "MacCarthaigh, Colm" <colmmacc@amazon.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "bonzini@gnu.org" <bonzini@gnu.org>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        "Weiss, Radu" <raduweis@amazon.com>,
+        "oridgar@gmail.com" <oridgar@gmail.com>,
+        "ghammer@redhat.com" <ghammer@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        KVM list <kvm@vger.kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Linux API <linux-api@vger.kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        "areber@redhat.com" <areber@redhat.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Andrey Vagin <avagin@gmail.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+        "gil@azul.com" <gil@azul.com>,
+        "asmehra@redhat.com" <asmehra@redhat.com>,
+        "dgunigun@redhat.com" <dgunigun@redhat.com>,
+        "vijaysun@ca.ibm.com" <vijaysun@ca.ibm.com>
+Subject: Re: [PATCH v2] drivers/virt: vmgenid: add vm generation id driver
+Message-ID: <20201119173800.GD8537@kernel.org>
+References: <3E05451B-A9CD-4719-99D0-72750A304044@amazon.com>
+ <300d4404-3efe-880e-ef30-692eabbff5f7@de.ibm.com>
+ <da1a1fa7-a1de-d0e6-755b-dd587687765e@amazon.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <da1a1fa7-a1de-d0e6-755b-dd587687765e@amazon.de>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 19 Nov 2020 12:30:26 +0100
-Cornelia Huck <cohuck@redhat.com> wrote:
-
-> On Tue, 17 Nov 2020 04:21:38 +0100
-> Eric Farman <farman@linux.ibm.com> wrote:
+On Thu, Nov 19, 2020 at 01:51:18PM +0100, Alexander Graf wrote:
 > 
-> > While performing some destructive tests with vfio-ccw, where the
-> > paths to a device are forcible removed and thus the device itself
-> > is unreachable, it is rather easy to end up in an endless loop in
-> > vfio_del_group_dev() due to the lack of a request callback for the
-> > associated device.
-> > 
-> > In this example, one MDEV (77c) is used by a guest, while another
-> > (77b) is not. The symptom is that the iommu is detached from the
-> > mdev for 77b, but not 77c, until that guest is shutdown:
-> > 
-> >     [  238.794867] vfio_ccw 0.0.077b: MDEV: Unregistering
-> >     [  238.794996] vfio_mdev 11f2d2bc-4083-431d-a023-eff72715c4f0: Removing from iommu group 2
-> >     [  238.795001] vfio_mdev 11f2d2bc-4083-431d-a023-eff72715c4f0: MDEV: detaching iommu
-> >     [  238.795036] vfio_ccw 0.0.077c: MDEV: Unregistering
-> >     ...silence...
-> > 
-> > Let's wire in the request call back to the mdev device, so that a hot
-> > unplug can be (gracefully?) handled by the parent device at the time
-> > the device is being removed.  
 > 
-> I think it makes a lot of sense to give the vendor driver a way to
-> handle requests.
-> 
+> On 19.11.20 13:02, Christian Borntraeger wrote:
 > > 
-> > Signed-off-by: Eric Farman <farman@linux.ibm.com>
-> > ---
-> >  drivers/vfio/mdev/vfio_mdev.c | 11 +++++++++++
-> >  include/linux/mdev.h          |  4 ++++
-> >  2 files changed, 15 insertions(+)
+> > On 16.11.20 16:34, Catangiu, Adrian Costin wrote:
+> > > - Background
+> > > 
+> > > The VM Generation ID is a feature defined by Microsoft (paper:
+> > > http://go.microsoft.com/fwlink/?LinkId=260709) and supported by
+> > > multiple hypervisor vendors.
+> > > 
+> > > The feature is required in virtualized environments by apps that work
+> > > with local copies/caches of world-unique data such as random values,
+> > > uuids, monotonically increasing counters, etc.
+> > > Such apps can be negatively affected by VM snapshotting when the VM
+> > > is either cloned or returned to an earlier point in time.
+> > > 
+> > > The VM Generation ID is a simple concept meant to alleviate the issue
+> > > by providing a unique ID that changes each time the VM is restored
+> > > from a snapshot. The hw provided UUID value can be used to
+> > > differentiate between VMs or different generations of the same VM.
+> > > 
+> > > - Problem
+> > > 
+> > > The VM Generation ID is exposed through an ACPI device by multiple
+> > > hypervisor vendors but neither the vendors or upstream Linux have no
+> > > default driver for it leaving users to fend for themselves.
 > > 
-> > diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-> > index 30964a4e0a28..2dd243f73945 100644
-> > --- a/drivers/vfio/mdev/vfio_mdev.c
-> > +++ b/drivers/vfio/mdev/vfio_mdev.c
-> > @@ -98,6 +98,16 @@ static int vfio_mdev_mmap(void *device_data, struct vm_area_struct *vma)
-> >  	return parent->ops->mmap(mdev, vma);
-> >  }
-> >  
-> > +static void vfio_mdev_request(void *device_data, unsigned int count)
-> > +{
-> > +	struct mdev_device *mdev = device_data;
-> > +	struct mdev_parent *parent = mdev->parent;
-> > +
-> > +	if (unlikely(!parent->ops->request))  
+> > I see that the qemu implementation is still under discussion. What is
 > 
-> Hm. Do you think that all drivers should implement a ->request()
-> callback?
-
-It's considered optional for bus drivers in vfio-core, obviously
-mdev-core could enforce presence of this callback, but then we'd break
-existing out of tree drivers.  We don't make guarantees to out of tree
-drivers, but it feels a little petty.  We could instead encourage such
-support by printing a warning for drivers that register without a
-request callback.
-
-Minor nit, I tend to prefer:
-
-	if (callback for thing)
-		call thing
-
-Rather than
-
-	if (!callback for thing)
-		return;
-	call thing
-
-Thanks,
-Alex
-
+> Uh, the ACPI Vmgenid device emulation is in QEMU since 2.9.0 :).
 > 
-> > +		return;
-> > +	parent->ops->request(mdev, count);
-> > +}
-> > +
-> >  static const struct vfio_device_ops vfio_mdev_dev_ops = {
-> >  	.name		= "vfio-mdev",
-> >  	.open		= vfio_mdev_open,  
+> > the status of the other existing implementations. Do they already exist?
+> > In other words is ACPI a given?
+> > I think the majority of this driver could be used with just a different
+> > backend for platforms without ACPI so in any case we could factor out
+> > the backend (acpi, virtio, whatever) but if we are open we could maybe
+> > start with something else.
+> 
+> I agree 100%. I don't think we really need a new framework in the kernel for
+> that. We can just have for example an s390x specific driver that also
+> provides the same notification mechanism through a device node that is also
+> named "/dev/vmgenid", no?
+> 
+> Or alternatively we can split the generic part of this driver as soon as a
+> second one comes along and then have both driver include that generic logic.
+> 
+> The only piece where I'm unsure is how this will interact with CRIU.
 
+To C/R applications that use /dev/vmgenid CRIU need to be aware of it.
+Checkpointing and restoring withing the same "VM generation" shouldn't be
+a problem, but IMHO, making restore work after genid bump could be
+challenging.
+
+Alex, what scenario involving CRIU did you have in mind?
+
+> Can containers emulate ioctls and device nodes?
+
+Containers do not emulate ioctls but they can have /dev/vmgenid inside
+the container, so applications can use it the same way as outside the
+container.
+
+ 
+> Alex
+
+-- 
+Sincerely yours,
+Mike.
