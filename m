@@ -2,56 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 401432B8E8E
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Nov 2020 10:19:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ADA12B8E83
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Nov 2020 10:17:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725888AbgKSJSu convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Thu, 19 Nov 2020 04:18:50 -0500
-Received: from tigeramira.ro ([88.158.78.30]:41750 "EHLO mail.tigeramira.ro"
-        rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbgKSJSs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 19 Nov 2020 04:18:48 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.tigeramira.ro (Postfix) with ESMTP id 60532C7DF6A
-        for <linux-s390@vger.kernel.org>; Mon, 16 Nov 2020 09:45:12 +0200 (EET)
-Received: from mail.tigeramira.ro ([127.0.0.1])
-        by localhost (mail.tigeramira.ro [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id yuNpZ3HKqVE5 for <linux-s390@vger.kernel.org>;
-        Mon, 16 Nov 2020 09:45:10 +0200 (EET)
-Received: from mail.tigeramira.ro (localhost [127.0.0.1])
-        by mail.tigeramira.ro (Postfix) with ESMTP id 9F10AC0F6AE
-        for <linux-s390@vger.kernel.org>; Sat, 14 Nov 2020 19:22:31 +0200 (EET)
-Received: from [156.96.44.214] (unknown [192.168.12.254])
-        by mail.tigeramira.ro (Postfix) with ESMTP id B01469990D4
-        for <linux-s390@vger.kernel.org>; Fri, 13 Nov 2020 19:08:56 +0200 (EET)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1726486AbgKSJQD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 19 Nov 2020 04:16:03 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:59136 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726406AbgKSJQC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 19 Nov 2020 04:16:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605777361;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zRD5uSUHFbJ/7pmDNZtf1aSvfpbfTAex7AeYjeEcSRQ=;
+        b=Kw8D/b7CvVdffo7w+XUg91CWwU/rNbAZu1kbETfQ3QPNvTrNIjocUfNfzDRn9j4lLHvsun
+        EiexTBFTzldAe4EiqLSh97YsBQImpQ2RFrWL5uSPfrDKcaKfosOBQ6oVdSNPrzkMmiSoMh
+        ax0z2l5+rWZUofGOwrY45MM8Z+A4blY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-320-Hnr2kFZINleFYCfblVYGZw-1; Thu, 19 Nov 2020 04:15:59 -0500
+X-MC-Unique: Hnr2kFZINleFYCfblVYGZw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 589B6835DE0;
+        Thu, 19 Nov 2020 09:15:58 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-113-109.ams2.redhat.com [10.36.113.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1DDC15D6A8;
+        Thu, 19 Nov 2020 09:15:52 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH 3/5] s390x: SCLP feature checking
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com
+References: <20201117154215.45855-1-frankja@linux.ibm.com>
+ <20201117154215.45855-4-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <e9845ca1-96ac-23b8-5136-7a6916fb1b92@redhat.com>
+Date:   Thu, 19 Nov 2020 10:15:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Corporate and Personal Loan::,
-To:     linux-s390@vger.kernel.org
-From:   "Investment  Corporate" <financialcapability6@gmail.com>
-Date:   Fri, 13 Nov 2020 08:09:10 -0800
-Reply-To: hmurrah39@gmail.com
-Message-Id: <20201113170857.B01469990D4@mail.tigeramira.ro>
+In-Reply-To: <20201117154215.45855-4-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello linux-s390@vger.kernel.org
+On 17/11/2020 16.42, Janosch Frank wrote:
+> Availability of SIE is announced via a feature bit in a SCLP info CPU
+> entry. Let's add a framework that allows us to easily check for such
+> facilities.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  lib/s390x/io.c   |  1 +
+>  lib/s390x/sclp.c | 19 +++++++++++++++++++
+>  lib/s390x/sclp.h | 15 +++++++++++++++
+>  3 files changed, 35 insertions(+)
+[...]
+> diff --git a/lib/s390x/sclp.h b/lib/s390x/sclp.h
+> index 6620531..bcc9f4b 100644
+> --- a/lib/s390x/sclp.h
+> +++ b/lib/s390x/sclp.h
+> @@ -101,6 +101,20 @@ typedef struct CPUEntry {
+>      uint8_t reserved1;
+>  } __attribute__((packed)) CPUEntry;
+>  
+> +extern struct sclp_facilities sclp_facilities;
+> +
+> +struct sclp_facilities {
+> +	u64 has_sief2 : 1;
+> +};
+> +
+> +/*
+> + * test_bit() uses unsigned long ptrs so we give it the ptr to the
+> + * address member and offset bits by 1> + */
+> +enum sclp_cpu_feature_bit {
+> +	SCLP_CPU_FEATURE_SIEF2_BIT = 16 + 4,
+> +};
+
+That's kind of ugly ... why don't you simply replace the CPUEntry.features[]
+array with a bitfield, similar to what the kernel does with "struct
+sclp_core_entry" ?
+
+ Thomas
 
 
-We are Base Investment Company offering Corporate and Personal Loan at 3% Interest Rate for a duration of 10Years.
-
-
-We also pay 1% commission to brokers, who introduce project owners for finance or other opportunities.
-
-
-Please get back to me if you are interested for more
-
-details.
-
-
-Yours faithfully,
-
-Hashim Murrah
