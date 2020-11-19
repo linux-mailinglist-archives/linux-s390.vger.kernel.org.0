@@ -2,18 +2,15 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A3D872B93FA
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Nov 2020 14:58:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26D962B93FB
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Nov 2020 14:58:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbgKSN5a (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        id S1727292AbgKSN5a (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
         Thu, 19 Nov 2020 08:57:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727292AbgKSN53 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 19 Nov 2020 08:57:29 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D493C0613CF
-        for <linux-s390@vger.kernel.org>; Thu, 19 Nov 2020 05:57:29 -0800 (PST)
+Received: from Galois.linutronix.de ([193.142.43.55]:33836 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727298AbgKSN5a (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 19 Nov 2020 08:57:30 -0500
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020; t=1605794248;
@@ -21,21 +18,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/zxke28TtfO0JNYoIKGt/TuSDo9QLSIOk8rafEZ14XE=;
-        b=v2Z15WetPU3GeT7/G3/YcnOoTcIRlVQsir+VIvdPV3SkWjwQwvbpSGKWnfhNGhV1muZ7ny
-        Lay+RJe4uV9ggcTVsxWn6HfLqaKqj2SycVQmDI20bFZOwLqDbM+dEZpf6cmi41MvrcTBKx
-        6XQ95rVHMdANIxYw/MrCtEgKKoY/T7JydAWPbcV46BrdEJZc0/xQ6D98wh7iMk7XvSvDqY
-        f+/4ICTcMFRhOgBXIUQ2AL/JrMneWoNLnh3wVTO9Iv6GEYv8xXaHM4nxClKDzLK181XJsw
-        a/OPEuofDQdGDNO2PRUwFV0Q5xYlNbfrPqtut/aIb06j6S7kgO2jhnHaEcARaA==
+        bh=VdfhgkXEY/MyPqFyvIUXzuTPc0RiPbOsHtkUhRnoEVA=;
+        b=nuOARc9KzSD7DOIpWJnZ329rI33RTmphZrLcpqftz5niPt91oa6wleDx8yr1LDG4O+sPQD
+        Zo5MqCNkhYwHPzmJS6JAo6jPDwMx2gUMqs0yprjjiFP7cyO01t4qmQDgOq/mL6o8f4xxNs
+        zzUdYIODZyi8fVHWK5OlmiC2atRcGyPIpCYbkdmikfiRj4E6jNdUMlX0gZeqAyAATwEGIf
+        6+mHrANY9IFGj32zHfV7yLE2HMWOXXoj4ad/PEnvV86VGjVjXh5CXySNLEOH8p7M4SWIzO
+        ck95P65EZEWrGKrmqypBlcCq1ZIqLNTf9TzbX8dVQ8o6sjxm1Y84Ug13j4fS7Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1605794248;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/zxke28TtfO0JNYoIKGt/TuSDo9QLSIOk8rafEZ14XE=;
-        b=f4g+Q4m1K6AeSpNIYJ2kjUceLzfeiHWM05xeVs40YDk6cmdaX4rMHF48olUmaj8NIavWst
-        /26R8ct8+YoFBkBw==
+        bh=VdfhgkXEY/MyPqFyvIUXzuTPc0RiPbOsHtkUhRnoEVA=;
+        b=tJPHo4nTnl6kITVXDbFz8qx+wBHHUs+9SXagFrbIJ/JZmMEGNT2lekGTyE7RKIe7nLPrgx
+        Rn/TmLiDMsd71DBw==
 To:     linux-s390@vger.kernel.org
 Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         Karsten Graul <kgraul@linux.ibm.com>,
@@ -44,9 +41,9 @@ Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v2 5/6] s390/ctcm: Use GFP_KERNEL in add_channel().
-Date:   Thu, 19 Nov 2020 14:57:17 +0100
-Message-Id: <20201119135719.983170-6-bigeasy@linutronix.de>
+Subject: [PATCH v2 6/6] s390/ctcm: Use GFP_ATOMIC in ctcmpc_tx().
+Date:   Thu, 19 Nov 2020 14:57:18 +0100
+Message-Id: <20201119135719.983170-7-bigeasy@linutronix.de>
 In-Reply-To: <20201119135719.983170-1-bigeasy@linutronix.de>
 References: <20201119135719.983170-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
@@ -62,31 +59,51 @@ requested that code which changes behaviour depending on context should
 either be separated or the context be conveyed in an argument passed by the
 caller, which usually knows the context.
 
-The memory allocation of `ch' a few lines above is using GFP_KERNEL,
-also an allocation a few lines later is using GFP_KERNEL.
+ctcmpc_tx() is used as net_device_ops::ndo_start_xmit. This callback is
+invoked with disabled bottom halves.
 
-Use GFP_KERNEL for the memory allocation.
+Use GFP_ATOMIC for memory allocation in ctcmpc_tx().
+Remove gfp_type() since the last user is gone.
 
 Reviewed-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
  drivers/s390/net/ctcm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/net/ctcm_main.h | 5 -----
+ 2 files changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
-index 0cb130c280031..88efffe81c5ff 100644
+index 88efffe81c5ff..59e491b344fa9 100644
 --- a/drivers/s390/net/ctcm_main.c
 +++ b/drivers/s390/net/ctcm_main.c
-@@ -1322,7 +1322,7 @@ static int add_channel(struct ccw_device *cdev, enum =
-ctcm_channel_types type,
+@@ -904,7 +904,7 @@ static int ctcmpc_tx(struct sk_buff *skb, struct net_de=
+vice *dev)
+ 		CTCM_D3_DUMP((char *)skb->data, min_t(int, 32, skb->len));
 =20
- 	ch->protocol =3D priv->protocol;
- 	if (IS_MPC(priv)) {
--		ch->discontact_th =3D kzalloc(TH_HEADER_LENGTH, gfp_type());
-+		ch->discontact_th =3D kzalloc(TH_HEADER_LENGTH, GFP_KERNEL);
- 		if (ch->discontact_th =3D=3D NULL)
- 					goto nomem_return;
+ 		len =3D  skb->len + TH_HEADER_LENGTH + PDU_HEADER_LENGTH;
+-		newskb =3D __dev_alloc_skb(len, gfp_type() | GFP_DMA);
++		newskb =3D __dev_alloc_skb(len, GFP_ATOMIC | GFP_DMA);
 =20
+ 		if (!newskb) {
+ 			CTCM_DBF_TEXT_(MPC_TRACE, CTC_DBF_ERROR,
+diff --git a/drivers/s390/net/ctcm_main.h b/drivers/s390/net/ctcm_main.h
+index 16bdf23ee02b1..90bd7b3f80c31 100644
+--- a/drivers/s390/net/ctcm_main.h
++++ b/drivers/s390/net/ctcm_main.h
+@@ -298,11 +298,6 @@ struct mpc_group *ctcmpc_init_mpc_group(struct ctcm_pr=
+iv *priv);
+ /* test if struct ctcm_priv of struct net_device has MPC protocol setting =
+*/
+ #define IS_MPCDEV(dev) IS_MPC((struct ctcm_priv *)dev->ml_priv)
+=20
+-static inline gfp_t gfp_type(void)
+-{
+-	return in_interrupt() ? GFP_ATOMIC : GFP_KERNEL;
+-}
+-
+ /*
+  * Definition of our link level header.
+  */
 --=20
 2.29.2
 
