@@ -2,169 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7E092BA8E5
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Nov 2020 12:22:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4B2E2BABAD
+	for <lists+linux-s390@lfdr.de>; Fri, 20 Nov 2020 15:09:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgKTLWY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 20 Nov 2020 06:22:24 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:56716 "EHLO
+        id S1727709AbgKTOIr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 20 Nov 2020 09:08:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:49303 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727512AbgKTLWX (ORCPT
+        by vger.kernel.org with ESMTP id S1726561AbgKTOIr (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 20 Nov 2020 06:22:23 -0500
+        Fri, 20 Nov 2020 09:08:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605871342;
+        s=mimecast20190719; t=1605881326;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bMpfzkFMpz9TpFDF2855z4oIPIyAj0hnKTQ9GF8ueNE=;
-        b=U/zPLYPpX9JV8Wv0ECXnrFoAe+W8N3DGovci3x5ykJM2iQ+KSAQoK35+SKiNI31rW1yPa/
-        NxR/ag/XaFeuhK/e07AH0t9zF9sy7OBsy3x0kFETNIVVzmQhtdJr8oOTxlhZy3EBFPxpmx
-        1zhBpmKA8axkOuxMqwXHwVz3DldVuVg=
+        bh=aGTiEL+52RoWS+9nd1Ms/clbRnrmeizFKg1laIg8ttk=;
+        b=TYCFMskMjQCCAF3CMB/pt2WApYLkNp3I0J23AOW8axT8dU9HBBEv3fDbvDPN9CilPn2pEO
+        kfkp5vthjHFrWX9C1HQDygdDjG6LhBdeQUF8U2H/THe4lljyxs5umf2QV6VxisoCShxNx2
+        l/LVbYQbszD9pNm2oD9fR0o9xyK+9yg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-400-IHox_ptLPpG_wJH2tAFxVQ-1; Fri, 20 Nov 2020 06:22:18 -0500
-X-MC-Unique: IHox_ptLPpG_wJH2tAFxVQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-206-jDTPSWkfN9q9QjQ53M0X-Q-1; Fri, 20 Nov 2020 09:08:42 -0500
+X-MC-Unique: jDTPSWkfN9q9QjQ53M0X-Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCE2D107ACE3;
-        Fri, 20 Nov 2020 11:22:16 +0000 (UTC)
-Received: from gondolin (ovpn-112-250.ams2.redhat.com [10.36.112.250])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C82FB5D6B1;
-        Fri, 20 Nov 2020 11:22:11 +0000 (UTC)
-Date:   Fri, 20 Nov 2020 12:22:09 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] vfio-mdev: Wire in a request handler for mdev
- parent
-Message-ID: <20201120122209.18f89fb5.cohuck@redhat.com>
-In-Reply-To: <27946d84-ae22-6882-67a5-edb5bd782bfa@linux.ibm.com>
-References: <20201117032139.50988-1-farman@linux.ibm.com>
-        <20201117032139.50988-2-farman@linux.ibm.com>
-        <20201119123026.1353cb3c.cohuck@redhat.com>
-        <20201119092754.240847b8@w520.home>
-        <27946d84-ae22-6882-67a5-edb5bd782bfa@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F640814410;
+        Fri, 20 Nov 2020 14:08:41 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7663519C46;
+        Fri, 20 Nov 2020 14:08:37 +0000 (UTC)
+Date:   Fri, 20 Nov 2020 09:08:20 -0500
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>,
+        dm-devel@redhat.com, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: md: dm-writeback: add __noreturn to BUG-ging function
+Message-ID: <20201120140819.GA7359@redhat.com>
+References: <20201113225228.20563-1-rdunlap@infradead.org>
+ <344abf76-9405-58ba-2dc4-27cab88c974d@de.ibm.com>
+ <c29eeb5d-0683-49eb-f729-38b14fac7745@infradead.org>
+ <20201117163147.GA27243@redhat.com>
+ <20201118154944.GB545@redhat.com>
+ <20201118160748.GA754@redhat.com>
+ <alpine.LRH.2.02.2011181611470.16933@file01.intranet.prod.int.rdu2.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.02.2011181611470.16933@file01.intranet.prod.int.rdu2.redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 19 Nov 2020 15:04:08 -0500
-Eric Farman <farman@linux.ibm.com> wrote:
-
-> On 11/19/20 11:27 AM, Alex Williamson wrote:
-> > On Thu, 19 Nov 2020 12:30:26 +0100
-> > Cornelia Huck <cohuck@redhat.com> wrote:
-> >   
-> >> On Tue, 17 Nov 2020 04:21:38 +0100
-> >> Eric Farman <farman@linux.ibm.com> wrote:
-> >>  
-> >>> While performing some destructive tests with vfio-ccw, where the
-> >>> paths to a device are forcible removed and thus the device itself
-> >>> is unreachable, it is rather easy to end up in an endless loop in
-> >>> vfio_del_group_dev() due to the lack of a request callback for the
-> >>> associated device.
-> >>>
-> >>> In this example, one MDEV (77c) is used by a guest, while another
-> >>> (77b) is not. The symptom is that the iommu is detached from the
-> >>> mdev for 77b, but not 77c, until that guest is shutdown:
-> >>>
-> >>>      [  238.794867] vfio_ccw 0.0.077b: MDEV: Unregistering
-> >>>      [  238.794996] vfio_mdev 11f2d2bc-4083-431d-a023-eff72715c4f0: Removing from iommu group 2
-> >>>      [  238.795001] vfio_mdev 11f2d2bc-4083-431d-a023-eff72715c4f0: MDEV: detaching iommu
-> >>>      [  238.795036] vfio_ccw 0.0.077c: MDEV: Unregistering
-> >>>      ...silence...
-> >>>
-> >>> Let's wire in the request call back to the mdev device, so that a hot
-> >>> unplug can be (gracefully?) handled by the parent device at the time
-> >>> the device is being removed.  
-> >>
-> >> I think it makes a lot of sense to give the vendor driver a way to
-> >> handle requests.
-> >>  
-> >>>
-> >>> Signed-off-by: Eric Farman <farman@linux.ibm.com>
-> >>> ---
-> >>>   drivers/vfio/mdev/vfio_mdev.c | 11 +++++++++++
-> >>>   include/linux/mdev.h          |  4 ++++
-> >>>   2 files changed, 15 insertions(+)
-> >>>
-> >>> diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-> >>> index 30964a4e0a28..2dd243f73945 100644
-> >>> --- a/drivers/vfio/mdev/vfio_mdev.c
-> >>> +++ b/drivers/vfio/mdev/vfio_mdev.c
-> >>> @@ -98,6 +98,16 @@ static int vfio_mdev_mmap(void *device_data, struct vm_area_struct *vma)
-> >>>   	return parent->ops->mmap(mdev, vma);
-> >>>   }
-> >>>   
-> >>> +static void vfio_mdev_request(void *device_data, unsigned int count)
-> >>> +{
-> >>> +	struct mdev_device *mdev = device_data;
-> >>> +	struct mdev_parent *parent = mdev->parent;
-> >>> +
-> >>> +	if (unlikely(!parent->ops->request))  
-> >>
-> >> Hm. Do you think that all drivers should implement a ->request()
-> >> callback?  
-> > 
-> > It's considered optional for bus drivers in vfio-core, obviously
-> > mdev-core could enforce presence of this callback, but then we'd break
-> > existing out of tree drivers.  We don't make guarantees to out of tree
-> > drivers, but it feels a little petty.  We could instead encourage such
-> > support by printing a warning for drivers that register without a
-> > request callback.  
-> 
-> Coincidentally, I'd considered adding a dev_warn_once() message in
-> drivers/vfio/vfio.c:vfio_del_group_dev() when vfio_device->ops->request
-> is NULL, and thus we're looping endlessly (and silently). But adding 
-> this patch and not patch 2 made things silent again, so I left it out. 
-> Putting a warning when the driver registers seems cool.
-
-If we expect to run into problems without a callback, a warning seems
-fine. Then we can also continue to use the (un)likely annotation
-without it being weird.
+On Wed, Nov 18 2020 at  4:24pm -0500,
+Mikulas Patocka <mpatocka@redhat.com> wrote:
 
 > 
-> > 
-> > Minor nit, I tend to prefer:
-> > 
-> > 	if (callback for thing)
-> > 		call thing
-> > 
-> > Rather than
-> > 
-> > 	if (!callback for thing)
-> > 		return;
-> > 	call thing  
 > 
-> I like it too.  I'll set it up that way in v2.
+> On Wed, 18 Nov 2020, Mike Snitzer wrote:
+> 
+> > On Wed, Nov 18 2020 at 10:49am -0500,
+> > Mike Snitzer <snitzer@redhat.com> wrote:
+> > 
+> > > I don't think my suggestion will help.. given it'd still leave
+> > > persistent_memory_claim() without a return statement.
+> > > 
+> > > Think it worthwhile to just add a dummy 'return 0;' after the BUG().
+> > 
+> > Decided to go with this, now staged for 5.11:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.11&id=a1e4865b4dda7071f3707f7e551289ead66e38b1
+> 
+> Hi
+> 
+> I would just use "return -EOPNOTSUPP;" and drop the "#ifdef 
+> DM_WRITECACHE_HAS_PMEM" that you added.
+> 
+> That BUG/return -EOPNOTSUPP code can't happen at all - if 
+> DM_WRITECACHE_HAS_PMEM is not defined, WC_MODE_PMEM(wc) always returns 
+> false - so persistent_memory_claim and BUG() can't ever be called. And if 
+> it can't be called, you don't need to add a code that prints an error in 
+> that case.
+> 
+> If we don't have DM_WRITECACHE_HAS_PMEM, the compiler optimizer will 
+> remove all the code guarded with if (WC_MODE_PMEM(wc)) as unreachable.
+> 
+> Mikulas
 
-That also would be my preference, although existing code uses the
-second pattern.
-
-> 
-> > 
-> > Thanks,
-> > Alex
-> >   
-> >>  
-> >>> +		return;
-> >>> +	parent->ops->request(mdev, count);
-> >>> +}
-> >>> +
-> >>>   static const struct vfio_device_ops vfio_mdev_dev_ops = {
-> >>>   	.name		= "vfio-mdev",
-> >>>   	.open		= vfio_mdev_open,  
-> >   
-> 
+Fair enough.
 
