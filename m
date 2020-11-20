@@ -2,97 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4B2E2BABAD
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Nov 2020 15:09:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC3912BB219
+	for <lists+linux-s390@lfdr.de>; Fri, 20 Nov 2020 19:10:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgKTOIr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 20 Nov 2020 09:08:47 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:49303 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726561AbgKTOIr (ORCPT
+        id S1729637AbgKTSHu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 20 Nov 2020 13:07:50 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25568 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729284AbgKTSHu (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 20 Nov 2020 09:08:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605881326;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aGTiEL+52RoWS+9nd1Ms/clbRnrmeizFKg1laIg8ttk=;
-        b=TYCFMskMjQCCAF3CMB/pt2WApYLkNp3I0J23AOW8axT8dU9HBBEv3fDbvDPN9CilPn2pEO
-        kfkp5vthjHFrWX9C1HQDygdDjG6LhBdeQUF8U2H/THe4lljyxs5umf2QV6VxisoCShxNx2
-        l/LVbYQbszD9pNm2oD9fR0o9xyK+9yg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-206-jDTPSWkfN9q9QjQ53M0X-Q-1; Fri, 20 Nov 2020 09:08:42 -0500
-X-MC-Unique: jDTPSWkfN9q9QjQ53M0X-Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F640814410;
-        Fri, 20 Nov 2020 14:08:41 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7663519C46;
-        Fri, 20 Nov 2020 14:08:37 +0000 (UTC)
-Date:   Fri, 20 Nov 2020 09:08:20 -0500
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>,
-        dm-devel@redhat.com, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: md: dm-writeback: add __noreturn to BUG-ging function
-Message-ID: <20201120140819.GA7359@redhat.com>
-References: <20201113225228.20563-1-rdunlap@infradead.org>
- <344abf76-9405-58ba-2dc4-27cab88c974d@de.ibm.com>
- <c29eeb5d-0683-49eb-f729-38b14fac7745@infradead.org>
- <20201117163147.GA27243@redhat.com>
- <20201118154944.GB545@redhat.com>
- <20201118160748.GA754@redhat.com>
- <alpine.LRH.2.02.2011181611470.16933@file01.intranet.prod.int.rdu2.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.02.2011181611470.16933@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Fri, 20 Nov 2020 13:07:50 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AKI1seg136543;
+        Fri, 20 Nov 2020 13:07:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=hZJYjGbJ7SSpHfEryz4NfRrrOXGkbrELDzJma1AXbIQ=;
+ b=LkseijrRHGNCQfU+0KXt2mw27pIboWpP4daQ7V/MaCgloJ/Nph3y7eg27D0nR3XMTtBy
+ o3geZgLMc6owPnRaPvENQgygN2eY+6z6ig72VsqlOlS+vAGZsxq/vHbDwaGxsBYgL85z
+ AczaHTzejhhY9zVzBwzIKF7uFpq6VDsKENDpQLoTO5kZAlUBRb/tziYk4TQ7zsc1Pwwp
+ t2DeCQpLM2NuDPFuao+8O2OWskDK9+6WpdxUB/oXIrs9xenunGXg+O0CODGK6m+QDbN/
+ 0tRWsSnOmJou7nwZXU3nx+TkVdP7BmvuzNVGhIihvntDHnK6gp4mNu3LTG2xGxuTmUMq /Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34xdrw3kng-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Nov 2020 13:07:49 -0500
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AKI5Ibe155441;
+        Fri, 20 Nov 2020 13:07:49 -0500
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34xdrw3km3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Nov 2020 13:07:49 -0500
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AKI3XJa006091;
+        Fri, 20 Nov 2020 18:07:46 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06fra.de.ibm.com with ESMTP id 34t6ghbcth-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Nov 2020 18:07:46 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AKI7hBL60752252
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 20 Nov 2020 18:07:43 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 75B8FA4060;
+        Fri, 20 Nov 2020 18:07:43 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64280A4064;
+        Fri, 20 Nov 2020 18:07:43 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 20 Nov 2020 18:07:43 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
+        id 0E732E23B0; Fri, 20 Nov 2020 19:07:43 +0100 (CET)
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        Eric Farman <farman@linux.ibm.com>
+Subject: [PATCH v2 0/2] Connect request callback to mdev and vfio-ccw
+Date:   Fri, 20 Nov 2020 19:07:38 +0100
+Message-Id: <20201120180740.87837-1-farman@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-20_09:2020-11-20,2020-11-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ malwarescore=0 bulkscore=0 lowpriorityscore=0 spamscore=0 impostorscore=0
+ phishscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011200120
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Nov 18 2020 at  4:24pm -0500,
-Mikulas Patocka <mpatocka@redhat.com> wrote:
+There is a situation where removing all the paths from a device
+connected via mdev and vfio-ccw can cause some difficulty.
+Using the "chchp -c 0 xx" command to all paths will cause the
+device to be removed from the configuration, and any guest
+filesystem that is relying on that device will encounter errors.
+Interestingly, the last chchp command will actually fail to
+return to a shell prompt, and subsequent commands (another
+chchp to bring the paths back online, chzdev, etc.) will also
+hang because of the outstanding chchp.
 
-> 
-> 
-> On Wed, 18 Nov 2020, Mike Snitzer wrote:
-> 
-> > On Wed, Nov 18 2020 at 10:49am -0500,
-> > Mike Snitzer <snitzer@redhat.com> wrote:
-> > 
-> > > I don't think my suggestion will help.. given it'd still leave
-> > > persistent_memory_claim() without a return statement.
-> > > 
-> > > Think it worthwhile to just add a dummy 'return 0;' after the BUG().
-> > 
-> > Decided to go with this, now staged for 5.11:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/device-mapper/linux-dm.git/commit/?h=dm-5.11&id=a1e4865b4dda7071f3707f7e551289ead66e38b1
-> 
-> Hi
-> 
-> I would just use "return -EOPNOTSUPP;" and drop the "#ifdef 
-> DM_WRITECACHE_HAS_PMEM" that you added.
-> 
-> That BUG/return -EOPNOTSUPP code can't happen at all - if 
-> DM_WRITECACHE_HAS_PMEM is not defined, WC_MODE_PMEM(wc) always returns 
-> false - so persistent_memory_claim and BUG() can't ever be called. And if 
-> it can't be called, you don't need to add a code that prints an error in 
-> that case.
-> 
-> If we don't have DM_WRITECACHE_HAS_PMEM, the compiler optimizer will 
-> remove all the code guarded with if (WC_MODE_PMEM(wc)) as unreachable.
-> 
-> Mikulas
+The last chchp command drives to vfio_ccw_sch_remove() for every
+affected mediated device, and ultimately enters an infinite loop
+in vfio_del_group_dev(). This loop is broken when the guest goes
+away, which in this case doesn't occur until the guest is shutdown.
+This drives vfio_ccw_mdev_release() and thus vfio_device_release()
+to wake up the vfio_del_group_dev() thread.
 
-Fair enough.
+There is also a callback mechanism called "request" to ask a
+driver (and perhaps user) to release the device, but this is not
+implemented for mdev. So this adds one to that point, and then
+wire it to vfio-ccw to pass it along to userspace. This will
+gracefully drive the unplug code, and everything behaves nicely.
+
+Despite the testing that was occurring, this doesn't appear related
+to the vfio-ccw channel path handling code. I can reproduce this with
+an older kernel/QEMU, which makes sense because the above behavior is
+driven from the subchannel event codepaths and not the chpid events.
+Because of that, I didn't flag anything with a Fixes tag, since it's
+seemingly been this way forever.
+
+RFC->V2:
+ - Patch 1
+   - Added a message when registering a device without a request callback
+   - Changed the "if(!callback) return" to "if(callback) do" layout
+   - Removed "unlikely" from "if(callback)" logic
+   - Clarified some wording in the device ops struct commentary
+ - Patch 2
+   - Added Conny's r-b
+
+Eric Farman (2):
+  vfio-mdev: Wire in a request handler for mdev parent
+  vfio-ccw: Wire in the request callback
+
+ drivers/s390/cio/vfio_ccw_ops.c     | 26 ++++++++++++++++++++++++++
+ drivers/s390/cio/vfio_ccw_private.h |  4 ++++
+ drivers/vfio/mdev/mdev_core.c       |  4 ++++
+ drivers/vfio/mdev/vfio_mdev.c       | 10 ++++++++++
+ include/linux/mdev.h                |  4 ++++
+ include/uapi/linux/vfio.h           |  1 +
+ 6 files changed, 49 insertions(+)
+
+-- 
+2.17.1
 
