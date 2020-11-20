@@ -2,51 +2,51 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB0DB2BA585
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Nov 2020 10:11:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 956602BA70B
+	for <lists+linux-s390@lfdr.de>; Fri, 20 Nov 2020 11:07:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbgKTJJw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 20 Nov 2020 04:09:52 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5588 "EHLO
+        id S1726896AbgKTKHJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 20 Nov 2020 05:07:09 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34852 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726765AbgKTJJu (ORCPT
+        by vger.kernel.org with ESMTP id S1727137AbgKTKHI (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 20 Nov 2020 04:09:50 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AK95Jhd009126;
-        Fri, 20 Nov 2020 04:09:47 -0500
+        Fri, 20 Nov 2020 05:07:08 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AKA2A6g160105;
+        Fri, 20 Nov 2020 05:07:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=zcEYbh9PEbpo0u35NzLSoomzBB8B/DZ7utv2nWVLZxs=;
- b=TDVk/93qq15OGc4IGqYEkz5FLe/BObNqqgJUpSA9O8P1SLIZGv+DCvuoSrUCq2yi++b3
- dMVp5BsIeVPEMXN8pXzO1xPOw5xUa24xo5egLR8EC8gWdcMxZN0y46LjoJhPlonAuNqW
- 4rdegcAP1Jw3ix10/U+ZKO6nbnJDJh6g3agaaUxUaF0InGRqq+r13S++YsLkkCos3m0z
- h7ImPrhOI83o6J7SR2bOJyXpCdJqm9f+QgbgRTn5g/P9V+9qlGdRgx0Tg3R1TSY/hvZR
- bOa2Gwr94OgH5Nj2mllMug+lXz2uMsxO4mK/3gw4dzidDOXD6QmX41QjTTHb97+vheD8 Vg== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 34xakj0fes-1
+ : date : message-id; s=pp1;
+ bh=ceNSdD8BsGwIi2MityEclqQHO4eg8Omuo9lv4TCw5lw=;
+ b=HnernEPUTwLdJ5CsCZpjRdyxN1ZRdOXR6ytocYvMAnHGbTMN5o7YCjxodpQFBxvt0N0g
+ qhMVCjHjdcGk+wrw4Rk32O+ANveh20ApIwI4PEY4wNSsG/HSNi0k0PIcnquIHxHIuO7B
+ csqGN3LZrMT2h1QW3a//tIDX2Shpiw+iBhD3SoGaT6Gb6jqiZ29CEJj1sQQ6RzNYtMlH
+ bxOqosaZxiKtJ8nwW+Cr1HNDDKALdRzcAaYBVarb9CHVLD3Qz9eBrtc7xSQqQrLp7GBN
+ qEVofGfHU8RgyPmDBqeOvvU92I/Uw3jCh4x4qsZGY3xxGFipBAqLb7mEXx7NedwOnDx4 Bg== 
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34x9264yvh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Nov 2020 04:09:47 -0500
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AK98Nri002779;
-        Fri, 20 Nov 2020 09:09:44 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06fra.de.ibm.com with ESMTP id 34t6ghb5hx-1
+        Fri, 20 Nov 2020 05:07:06 -0500
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AKA3Y1M032211;
+        Fri, 20 Nov 2020 10:07:03 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04fra.de.ibm.com with ESMTP id 34t6v8b68j-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Nov 2020 09:09:44 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AK99fQ364881136
+        Fri, 20 Nov 2020 10:07:03 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AKA709V8192754
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Nov 2020 09:09:41 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A613142049;
-        Fri, 20 Nov 2020 09:09:41 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 61DB142047;
-        Fri, 20 Nov 2020 09:09:41 +0000 (GMT)
+        Fri, 20 Nov 2020 10:07:00 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B399CA4059;
+        Fri, 20 Nov 2020 10:07:00 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6ED6BA4051;
+        Fri, 20 Nov 2020 10:07:00 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Nov 2020 09:09:41 +0000 (GMT)
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 20 Nov 2020 10:07:00 +0000 (GMT)
 From:   Julian Wiedmann <jwi@linux.ibm.com>
 To:     David Miller <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -55,67 +55,57 @@ Cc:     linux-netdev <netdev@vger.kernel.org>,
         Heiko Carstens <hca@linux.ibm.com>,
         Karsten Graul <kgraul@linux.ibm.com>,
         Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net 4/4] s390/qeth: fix tear down of async TX buffers
-Date:   Fri, 20 Nov 2020 10:09:39 +0100
-Message-Id: <20201120090939.101406-5-jwi@linux.ibm.com>
+Subject: [PATCH net] net/af_iucv: set correct sk_protocol for child sockets
+Date:   Fri, 20 Nov 2020 11:06:57 +0100
+Message-Id: <20201120100657.34407-1-jwi@linux.ibm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201120090939.101406-1-jwi@linux.ibm.com>
-References: <20201120090939.101406-1-jwi@linux.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-20_03:2020-11-19,2020-11-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 impostorscore=0 clxscore=1015 malwarescore=0 mlxlogscore=994
- lowpriorityscore=0 phishscore=0 mlxscore=0 bulkscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011200056
+ definitions=2020-11-20_04:2020-11-19,2020-11-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ suspectscore=2 priorityscore=1501 adultscore=0 mlxlogscore=916 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 clxscore=1015 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011200063
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-When qeth_iqd_tx_complete() detects that a TX buffer requires additional
-async completion via QAOB, it might fail to replace the queue entry's
-metadata (and ends up triggering recovery).
+Child sockets erroneously inherit their parent's sk_type (ie. SOCK_*),
+instead of the PF_IUCV protocol that the parent was created with in
+iucv_sock_create().
 
-Assume now that the device gets torn down, overruling the recovery.
-If the QAOB notification then arrives before the tear down has
-sufficiently progressed, the buffer state is changed to
-QETH_QDIO_BUF_HANDLED_DELAYED by qeth_qdio_handle_aob().
+We're currently not using sk->sk_protocol ourselves, so this shouldn't
+have much impact (except eg. getting the output in skb_dump() right).
 
-The tear down code calls qeth_drain_output_queue(), where
-qeth_cleanup_handled_pending() will then attempt to replace such a
-buffer _again_. If it succeeds this time, the buffer ends up dangling in
-its replacement's ->next_pending list ... where it will never be freed,
-since there's no further call to qeth_cleanup_handled_pending().
-
-But the second attempt isn't actually needed, we can simply leave the
-buffer on the queue and re-use it after a potential recovery has
-completed. The qeth_clear_output_buffer() in qeth_drain_output_queue()
-will ensure that it's in a clean state again.
-
-Fixes: 72861ae792c2 ("qeth: recovery through asynchronous delivery")
+Fixes: eac3731bd04c ("[S390]: Add AF_IUCV socket support")
 Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 ---
- drivers/s390/net/qeth_core_main.c | 6 ------
- 1 file changed, 6 deletions(-)
+ net/iucv/af_iucv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 48f9e4a027bf..e27319de7b00 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -500,12 +500,6 @@ static void qeth_cleanup_handled_pending(struct qeth_qdio_out_q *q, int bidx,
- 
- 		}
+diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
+index 047238f01ba6..db7d888914fa 100644
+--- a/net/iucv/af_iucv.c
++++ b/net/iucv/af_iucv.c
+@@ -1645,7 +1645,7 @@ static int iucv_callback_connreq(struct iucv_path *path,
  	}
--	if (forced_cleanup && (atomic_read(&(q->bufs[bidx]->state)) ==
--					QETH_QDIO_BUF_HANDLED_DELAYED)) {
--		/* for recovery situations */
--		qeth_init_qdio_out_buf(q, bidx);
--		QETH_CARD_TEXT(q->card, 2, "clprecov");
--	}
- }
  
- static void qeth_qdio_handle_aob(struct qeth_card *card,
+ 	/* Create the new socket */
+-	nsk = iucv_sock_alloc(NULL, sk->sk_type, GFP_ATOMIC, 0);
++	nsk = iucv_sock_alloc(NULL, sk->sk_protocol, GFP_ATOMIC, 0);
+ 	if (!nsk) {
+ 		err = pr_iucv->path_sever(path, user_data);
+ 		iucv_path_free(path);
+@@ -1851,7 +1851,7 @@ static int afiucv_hs_callback_syn(struct sock *sk, struct sk_buff *skb)
+ 		goto out;
+ 	}
+ 
+-	nsk = iucv_sock_alloc(NULL, sk->sk_type, GFP_ATOMIC, 0);
++	nsk = iucv_sock_alloc(NULL, sk->sk_protocol, GFP_ATOMIC, 0);
+ 	bh_lock_sock(sk);
+ 	if ((sk->sk_state != IUCV_LISTEN) ||
+ 	    sk_acceptq_is_full(sk) ||
 -- 
 2.17.1
 
