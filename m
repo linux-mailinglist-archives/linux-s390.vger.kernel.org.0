@@ -2,53 +2,59 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 722232BBC86
-	for <lists+linux-s390@lfdr.de>; Sat, 21 Nov 2020 04:05:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D2232BC283
+	for <lists+linux-s390@lfdr.de>; Sat, 21 Nov 2020 23:50:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgKUDDk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 20 Nov 2020 22:03:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52450 "EHLO mail.kernel.org"
+        id S1728195AbgKUWuF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 21 Nov 2020 17:50:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725785AbgKUDDj (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 20 Nov 2020 22:03:39 -0500
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45972223FD;
-        Sat, 21 Nov 2020 03:03:39 +0000 (UTC)
+        id S1728171AbgKUWuF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 21 Nov 2020 17:50:05 -0500
+Content-Type: text/plain; charset="utf-8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605927819;
-        bh=mrM4Gugrlpa2bnssw1SCVzGj1JzWL3uov9Ec+7IOQVc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yLoRFwIRJvq68jxigwle4dd9GzGZykFl6j2+3/EeubUYUW+QakdM0ybKRxjGeDuYF
-         O+Uz69+/VdiIJzM7cEjkASo3q4tamHkusB2WZe3MS4d1pqKO+X7eiq95Ph7o32jClv
-         unjYrS6Eof8AicfZZHhCr3QShs1ZXvN9e6Gs9c8Q=
-Date:   Fri, 20 Nov 2020 19:03:38 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Julian Wiedmann <jwi@linux.ibm.com>
-Cc:     David Miller <davem@davemloft.net>,
-        linux-netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>
-Subject: Re: [PATCH net 0/4] s390/qeth: fixes 2020-11-20
-Message-ID: <20201120190338.2ca6153c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20201120090939.101406-1-jwi@linux.ibm.com>
-References: <20201120090939.101406-1-jwi@linux.ibm.com>
+        s=default; t=1605999005;
+        bh=59dTnBru2tft41afGYLdjHHG7GwdJpwIORZwX0kdtSo=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=klA+Sb9ohP+6jBtpNdxWmVD1GkWidTJy6jVpMMFt/AbxNJTvX95Xz5k0AGL3nVbnV
+         MmuZXfuPQpg9cLQXeqbUnbVlPiHUJeFHTJcSirNPdfCtx5VKDOYZAZ1l7aEOgxTmsC
+         8fJcGQYOchyUnjm7/udN3/LVmXTOBpb1wTl04PWw=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net/af_iucv: set correct sk_protocol for child sockets
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <160599900499.23624.16990303223238817146.git-patchwork-notify@kernel.org>
+Date:   Sat, 21 Nov 2020 22:50:04 +0000
+References: <20201120100657.34407-1-jwi@linux.ibm.com>
+In-Reply-To: <20201120100657.34407-1-jwi@linux.ibm.com>
+To:     Julian Wiedmann <jwi@linux.ibm.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, hca@linux.ibm.com, kgraul@linux.ibm.com
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 20 Nov 2020 10:09:35 +0100 Julian Wiedmann wrote:
-> please apply the following patch series to netdev's net tree.
-> 
-> This brings several fixes for qeth's af_iucv-specific code paths.
-> 
-> Also one fix by Alexandra for the recently added BR_LEARNING_SYNC
-> support. We want to trust the feature indication bit, so that HW can
-> mask it out if there's any issues on their end.
+Hello:
 
-Applied, thank you!
+This patch was applied to netdev/net.git (refs/heads/master):
+
+On Fri, 20 Nov 2020 11:06:57 +0100 you wrote:
+> Child sockets erroneously inherit their parent's sk_type (ie. SOCK_*),
+> instead of the PF_IUCV protocol that the parent was created with in
+> iucv_sock_create().
+> 
+> We're currently not using sk->sk_protocol ourselves, so this shouldn't
+> have much impact (except eg. getting the output in skb_dump() right).
+> 
+> [...]
+
+Here is the summary with links:
+  - [net] net/af_iucv: set correct sk_protocol for child sockets
+    https://git.kernel.org/netdev/net/c/c5dab0941fcd
+
+You are awesome, thank you!
+--
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
