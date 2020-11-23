@@ -2,68 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C8232BFB0E
-	for <lists+linux-s390@lfdr.de>; Sun, 22 Nov 2020 22:53:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B1872BFE29
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Nov 2020 03:29:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbgKVVxC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 22 Nov 2020 16:53:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725964AbgKVVxC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 22 Nov 2020 16:53:02 -0500
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9347C0613CF;
-        Sun, 22 Nov 2020 13:53:01 -0800 (PST)
-Received: by mail-ej1-x641.google.com with SMTP id 7so20635469ejm.0;
-        Sun, 22 Nov 2020 13:53:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:sender:from:mime-version:content-transfer-encoding
-         :content-description:subject:to:date:reply-to;
-        bh=holMzMixu6L4mPkY4KLX0AXrH3B7KLU6Q1+gVZ1hbDo=;
-        b=kkEE2V/YTTXDP5iHa3YrPOSdcZLMhJBaNU2uvO4O+F7eWx/ZdiNHkZ5JWAyxfml2yz
-         Xx7QhOEgl9gsQTZ4Rw5mg37MCvMnN4nQOu7t022g//OeEI/hJd13ZZ4s0l+HLN81fzN1
-         rSLae9LX7Jdo+68Drg0Lw9usPVqV9Zy1+KSnppN4eDy8UtiiCVIBzHNlzUu+t3MU0wvq
-         8rgautXwv4twReCvOFkxotL8AFuTtST670y361zFDUXtfvxwGOtz+kMkeW7HZNxzGHWP
-         MkboQCkN7RHFRunmIASJcYTWYpwaOk7ylfSX2OfnbY4l9SrXFZWJsj/MHqsT/4zo+f01
-         z9/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:sender:from:mime-version
-         :content-transfer-encoding:content-description:subject:to:date
-         :reply-to;
-        bh=holMzMixu6L4mPkY4KLX0AXrH3B7KLU6Q1+gVZ1hbDo=;
-        b=boPZFz+4vX/BPP/IA5zNxwxy3wRRemH3PkEM5r1NDzz3W5VtSOpPgnf3j8Cc79JqXI
-         y2U3hxXFI4hgngUr2Onzrs2ehjhCuArsE35YvgUvzcK1oxkUSZ5y3217IfUgEFVmb69/
-         Y7R/TZ1+uv+/bpw3J2N6Q56XAuB0i8p/+/M/RNYCgvbpMp29/VxtY6CGr74Iv0qRn3CF
-         evPUn/2MsfWQM0NmsYAeYp25ePgXYNA/Vyq8hqsjSNMZsU8N+b9hGVwIWQBcddgBKPOx
-         owtoOftZF4GlsEEoGbqOWN81ww7Z/Xe6I1zVsp0kyowxEDf9d9UWHtG4HIrVY2HH7XZO
-         /WcQ==
-X-Gm-Message-State: AOAM533B+QrwUKraf0tMEvKc/roK7IZOmJNREqFkfpbDO/rOJ34OAt1x
-        4VgXMXOLfsdi6QUOkYIsv2A=
-X-Google-Smtp-Source: ABdhPJxIvCoN6ejsxVn/kZD1YN4/NZaWchQdgBWWfn9gva47N9Zsr4++kl6rOmBDY5t8RVVJU/YyCA==
-X-Received: by 2002:a17:906:8058:: with SMTP id x24mr42971092ejw.272.1606081980452;
-        Sun, 22 Nov 2020 13:53:00 -0800 (PST)
-Received: from [192.168.43.48] ([197.210.35.67])
-        by smtp.gmail.com with ESMTPSA id i19sm3978482ejz.71.2020.11.22.13.52.54
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Sun, 22 Nov 2020 13:52:59 -0800 (PST)
-Message-ID: <5fbaddbb.1c69fb81.9b3f2.103f@mx.google.com>
-Sender: Lena Torres <ad482289@gmail.com>
-From:   Adelina Zeuki <anglicaramose@gmail.com>
-X-Google-Original-From: "Adelina Zeuki" <  adelinazeuki@gmail.comm >
-Content-Type: text/plain; charset="iso-8859-1"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Hello !!
-To:     Recipients <adelinazeuki@gmail.comm>
-Date:   Sun, 22 Nov 2020 21:52:53 +0000
-Reply-To: adelinazeuki@gmail.com
+        id S1726885AbgKWC3P (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 22 Nov 2020 21:29:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:51952 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725788AbgKWC3O (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 22 Nov 2020 21:29:14 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFB6630E;
+        Sun, 22 Nov 2020 18:29:13 -0800 (PST)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.82.200])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 529663F70D;
+        Sun, 22 Nov 2020 18:29:09 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC 0/3] mm/hotplug: Pre-validate the address range with platform
+Date:   Mon, 23 Nov 2020 07:58:46 +0530
+Message-Id: <1606098529-7907-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi dear,
+This series adds a mechanism allowing platforms to weigh in and prevalidate
+incoming address range before proceeding further with the memory hotplug.
+This helps prevent potential platform errors for the given address range,
+down the hotplug call chain, which inevitably fails the hotplug itself.
 
-Can i talk with you ?
+This mechanism was suggested by David Hildenbrand during another discussion
+with respect to a memory hotplug fix on arm64 platform.
+
+https://lore.kernel.org/linux-arm-kernel/1600332402-30123-1-git-send-email-anshuman.khandual@arm.com/
+
+This mechanism focuses on the addressibility aspect and not [sub] section
+alignment aspect. Hence check_hotplug_memory_range() and check_pfn_span()
+have been left unchanged. Wondering if all these can still be unified in
+an expanded memhp_range_allowed() check, that can be called from multiple
+memory hot add and remove paths.
+
+This series applies on v5.10-rc5 and has been slightly tested on arm64.
+But looking for some early feedback here.
+
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (3):
+  mm/hotplug: Pre-validate the address range with platform
+  arm64/mm: Define arch_get_addressable_range()
+  s390/mm: Define arch_get_addressable_range()
+
+ arch/arm64/include/asm/memory.h |  3 ++
+ arch/arm64/mm/mmu.c             | 19 ++++++------
+ arch/s390/include/asm/mmu.h     |  2 ++
+ arch/s390/mm/vmem.c             | 16 ++++++++---
+ include/linux/memory_hotplug.h  | 51 +++++++++++++++++++++++++++++++++
+ mm/memory_hotplug.c             | 29 ++++++-------------
+ mm/memremap.c                   |  9 +++++-
+ 7 files changed, 96 insertions(+), 33 deletions(-)
+
+-- 
+2.20.1
+
