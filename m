@@ -2,100 +2,107 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C6222C116D
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Nov 2020 18:08:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2F372C11B3
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Nov 2020 18:16:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390216AbgKWRDh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 23 Nov 2020 12:03:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47207 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729815AbgKWRDg (ORCPT
+        id S2387720AbgKWRPt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 Nov 2020 12:15:49 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39676 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732295AbgKWRPt (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 23 Nov 2020 12:03:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606151015;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KQjlYGpM0Jo472SEJajFJgHSfKbcvhfoBX2kIE5oOZw=;
-        b=YU0yAUHYOOjTuWHPv6QylR1LfvSn/A83sczBrcmJxg/pYBkz9fySeJTOBNIaLnFYY5niwm
-        nZ4+m5Z3ZVotzVKhx7xQITCHN6wRPripaUB+iH8vYoSSJN4Ja3dt/Xut1lJu+4cvKrLhgv
-        GU7KrEhr4KJZXvQSsoo8q4G2qcdQMG4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-505-WuQ-qpwTOPqDoVFfXdXKkw-1; Mon, 23 Nov 2020 12:03:31 -0500
-X-MC-Unique: WuQ-qpwTOPqDoVFfXdXKkw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3055805BF6;
-        Mon, 23 Nov 2020 17:03:28 +0000 (UTC)
-Received: from gondolin (ovpn-113-104.ams2.redhat.com [10.36.113.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3909A5C1C4;
-        Mon, 23 Nov 2020 17:03:19 +0000 (UTC)
-Date:   Mon, 23 Nov 2020 18:03:16 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com, fiuczy@linux.ibm.com, frankja@linux.ibm.com,
-        david@redhat.com, hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v11 05/14] s390/vfio-ap: implement in-use callback for
- vfio_ap driver
-Message-ID: <20201123180316.79273751.cohuck@redhat.com>
-In-Reply-To: <20201114004722.76c999e0.pasic@linux.ibm.com>
-References: <20201022171209.19494-1-akrowiak@linux.ibm.com>
-        <20201022171209.19494-6-akrowiak@linux.ibm.com>
-        <20201027142711.1b57825e.pasic@linux.ibm.com>
-        <6a5feb16-46b5-9dca-7e85-7d344b0ffa24@linux.ibm.com>
-        <20201114004722.76c999e0.pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+        Mon, 23 Nov 2020 12:15:49 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0ANH4LRp014476;
+        Mon, 23 Nov 2020 12:15:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=THMpAouGIjleJboEsMLVa9YthvobYJGUhZDsdxouUvk=;
+ b=A160ecPJFRFonzQQZm5evAXAIvdHGCZenWKhwhMIbmor2/UIguvjv1Bk7Y23IfcKjkgR
+ uKvy1wQnqei7BpQV1O3DB0YSCNiWHDGSHW8WbxB63Wrc31DMPrWA/w/LB7pqmvH4b7Lo
+ 9Jhz75wF8dbicjfK40wTO0K6GgJZMtx6XIP2bo+0r303IpNINWLSEEfYWyZuMpjhTeyV
+ L37j8gfeYS+fm64uv6TMiCJj0hP9JsZN0KE56Q6fRrjy1KXYPRKYE9UHEUr6NIoearZy
+ CZCanuegwFeMyf9fgUYpOZjwl2E+vYkYcEbfTk/zBYRrCpUT8lYxabWFnyUUqAoFRGQw HA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34yvnrxbte-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Nov 2020 12:15:48 -0500
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0ANHEaSR038489;
+        Mon, 23 Nov 2020 12:15:48 -0500
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34yvnrxbsj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Nov 2020 12:15:48 -0500
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0ANH82T1010128;
+        Mon, 23 Nov 2020 17:15:46 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 34xth8arf6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 23 Nov 2020 17:15:46 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0ANHFhUM62128554
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Nov 2020 17:15:44 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD4BA11C052;
+        Mon, 23 Nov 2020 17:15:43 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64BCF11C054;
+        Mon, 23 Nov 2020 17:15:43 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.171.54.238])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 23 Nov 2020 17:15:43 +0000 (GMT)
+Subject: Re: [PATCH 0/2] KVM: s390: memcg awareness
+To:     Janosch Frank <frankja@linux.vnet.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <20201117151023.424575-1-borntraeger@de.ibm.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Message-ID: <ef538cd6-b82f-0773-3848-f3b5232e7412@de.ibm.com>
+Date:   Mon, 23 Nov 2020 18:15:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20201117151023.424575-1-borntraeger@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-23_14:2020-11-23,2020-11-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ mlxlogscore=958 spamscore=0 suspectscore=0 priorityscore=1501
+ malwarescore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011230114
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, 14 Nov 2020 00:47:22 +0100
-Halil Pasic <pasic@linux.ibm.com> wrote:
 
-> On Fri, 13 Nov 2020 12:14:22 -0500
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-> [..]
-> > >>   }
-> > >>   
-> > >> +#define MDEV_SHARING_ERR "Userspace may not re-assign queue %02lx.%04lx " \
-> > >> +			 "already assigned to %s"
-> > >> +
-> > >> +static void vfio_ap_mdev_log_sharing_err(const char *mdev_name,
-> > >> +					 unsigned long *apm,
-> > >> +					 unsigned long *aqm)
-> > >> +{
-> > >> +	unsigned long apid, apqi;
-> > >> +
-> > >> +	for_each_set_bit_inv(apid, apm, AP_DEVICES)
-> > >> +		for_each_set_bit_inv(apqi, aqm, AP_DOMAINS)
-> > >> +			pr_err(MDEV_SHARING_ERR, apid, apqi, mdev_name);  
-> > > Isn't error rather severe for this? For my taste even warning would be
-> > > severe for this.  
-> > 
-> > The user only sees a EADDRINUSE returned from the sysfs interface,
-> > so Conny asked if I could log a message to indicate which APQNs are
-> > in use by which mdev. I can change this to an info message, but it
-> > will be missed if the log level is set higher. Maybe Conny can put in
-> > her two cents here since she asked for this.
-> >   
+
+On 17.11.20 16:10, Christian Borntraeger wrote:
+> This got somehow lost.  (so this is kind of a v2)
+> KVM does have memcg awareness. Lets implement this also for s390kvm
+> and gmap.
 > 
-> I'm looking forward to Conny's opinion. :)
+> Christian Borntraeger (2):
+>   KVM: s390: Add memcg accounting to KVM allocations
+>   s390/gmap: make gmap memcg aware
 
-(only just saw this; -ETOOMANYEMAILS)
-
-It is probably not an error in the sense of "things are broken, this
-cannot work"; but I'd consider this at least a warning "this does not
-work as you intended".
-
+both applied.
+> 
+>  arch/s390/kvm/guestdbg.c  |  8 ++++----
+>  arch/s390/kvm/intercept.c |  2 +-
+>  arch/s390/kvm/interrupt.c | 10 +++++-----
+>  arch/s390/kvm/kvm-s390.c  | 20 ++++++++++----------
+>  arch/s390/kvm/priv.c      |  4 ++--
+>  arch/s390/kvm/pv.c        |  6 +++---
+>  arch/s390/kvm/vsie.c      |  4 ++--
+>  arch/s390/mm/gmap.c       | 30 +++++++++++++++---------------
+>  8 files changed, 42 insertions(+), 42 deletions(-)
+> 
