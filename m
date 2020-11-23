@@ -2,93 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7059C2BFE2D
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Nov 2020 03:29:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 700E72C0FD7
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Nov 2020 17:13:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgKWC3Z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 22 Nov 2020 21:29:25 -0500
-Received: from foss.arm.com ([217.140.110.172]:51996 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727092AbgKWC3Z (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 22 Nov 2020 21:29:25 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79A60106F;
-        Sun, 22 Nov 2020 18:29:24 -0800 (PST)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.82.200])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6532A3F70D;
-        Sun, 22 Nov 2020 18:29:21 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC 3/3] s390/mm: Define arch_get_addressable_range()
-Date:   Mon, 23 Nov 2020 07:58:49 +0530
-Message-Id: <1606098529-7907-4-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1606098529-7907-1-git-send-email-anshuman.khandual@arm.com>
-References: <1606098529-7907-1-git-send-email-anshuman.khandual@arm.com>
+        id S2389608AbgKWQJM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 Nov 2020 11:09:12 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45482 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732077AbgKWQJL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 23 Nov 2020 11:09:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606147750;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vudEG5bLsot0T0VPkaODIJMcaiPIyeTC0NncFZ09Eyo=;
+        b=IP7Z3Di1EfIhF6XRWByVcFRKmGDEv8wMbsG02V8L6znmi77wMp84QVuSplitdf2+VWUoAd
+        /m6AfBWjlEKAKukNfmXObZTDWWb+mKUDzTXGUOzZrEIJEhgvZBTFFKC33Oz3juixdrnMOc
+        wpgOjpQQTrVEQk0udGSqV5PhZbsDDXs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-291-JqoY7vdGNFOHnuyf7fplsg-1; Mon, 23 Nov 2020 11:09:05 -0500
+X-MC-Unique: JqoY7vdGNFOHnuyf7fplsg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84A4A800050;
+        Mon, 23 Nov 2020 16:09:04 +0000 (UTC)
+Received: from gondolin (ovpn-113-104.ams2.redhat.com [10.36.113.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0A2AE60864;
+        Mon, 23 Nov 2020 16:08:59 +0000 (UTC)
+Date:   Mon, 23 Nov 2020 17:08:57 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
+        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>
+Subject: Re: [PATCH 1/2] KVM: s390: Add memcg accounting to KVM allocations
+Message-ID: <20201123170857.1218d5e7.cohuck@redhat.com>
+In-Reply-To: <20201117151023.424575-2-borntraeger@de.ibm.com>
+References: <20201117151023.424575-1-borntraeger@de.ibm.com>
+        <20201117151023.424575-2-borntraeger@de.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This overrides arch_get_addressable_range() on s390 platform and drops
-now redudant similar check in vmem_add_mapping().
+On Tue, 17 Nov 2020 16:10:22 +0100
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: linux-s390@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/s390/include/asm/mmu.h |  2 ++
- arch/s390/mm/vmem.c         | 16 ++++++++++++----
- 2 files changed, 14 insertions(+), 4 deletions(-)
+> Almost all kvm allocations in the s390x KVM code can be attributed to
+> process that triggers the allocation (in other words, no global
 
-diff --git a/arch/s390/include/asm/mmu.h b/arch/s390/include/asm/mmu.h
-index e12ff0f29d1a..f92d3926b188 100644
---- a/arch/s390/include/asm/mmu.h
-+++ b/arch/s390/include/asm/mmu.h
-@@ -55,4 +55,6 @@ static inline int tprot(unsigned long addr)
- 	return rc;
- }
- 
-+#define arch_get_addressable_range arch_get_addressable_range
-+struct range arch_get_addressable_range(bool need_mapping);
- #endif
-diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
-index b239f2ba93b0..e03ad0ed13a7 100644
---- a/arch/s390/mm/vmem.c
-+++ b/arch/s390/mm/vmem.c
-@@ -532,14 +532,22 @@ void vmem_remove_mapping(unsigned long start, unsigned long size)
- 	mutex_unlock(&vmem_mutex);
- }
- 
-+struct range arch_get_addressable_range(bool need_mapping)
-+{
-+	struct range memhp_range;
-+
-+	memhp_range.start = 0;
-+	if (need_mapping)
-+		memhp_range.end =  VMEM_MAX_PHYS;
-+	else
-+		memhp_range.end = (1ULL << (MAX_PHYSMEM_BITS + 1)) - 1;
-+	return memhp_range;
-+}
-+
- int vmem_add_mapping(unsigned long start, unsigned long size)
- {
- 	int ret;
- 
--	if (start + size > VMEM_MAX_PHYS ||
--	    start + size < start)
--		return -ERANGE;
--
- 	mutex_lock(&vmem_mutex);
- 	ret = vmem_add_range(start, size);
- 	if (ret)
--- 
-2.20.1
+s/process/the process/
+
+> allocation for other guests). This will help the memcg controller to do
+
+s/do/make/
+
+> the right decisions.
+> 
+> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> Acked-by: Heiko Carstens <hca@linux.ibm.com>
+> ---
+>  arch/s390/kvm/guestdbg.c  |  8 ++++----
+>  arch/s390/kvm/intercept.c |  2 +-
+>  arch/s390/kvm/interrupt.c | 10 +++++-----
+>  arch/s390/kvm/kvm-s390.c  | 20 ++++++++++----------
+>  arch/s390/kvm/priv.c      |  4 ++--
+>  arch/s390/kvm/pv.c        |  6 +++---
+>  arch/s390/kvm/vsie.c      |  4 ++--
+>  7 files changed, 27 insertions(+), 27 deletions(-)
+
+Didn't do a deep review, but looks reasonable.
+
+Acked-by: Cornelia Huck <cohuck@redhat.com>
 
