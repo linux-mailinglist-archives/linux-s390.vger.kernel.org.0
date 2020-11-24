@@ -2,130 +2,99 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC1562C1E1E
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Nov 2020 07:24:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3978C2C2175
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Nov 2020 10:34:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbgKXGWt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Nov 2020 01:22:49 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:10458 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729350AbgKXGWt (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 24 Nov 2020 01:22:49 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4CgDTc6cn9z9tySj;
-        Tue, 24 Nov 2020 07:22:44 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 7SMUS3ayqCaK; Tue, 24 Nov 2020 07:22:44 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4CgDTc4pfsz9tySZ;
-        Tue, 24 Nov 2020 07:22:44 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7B16D8B7A3;
-        Tue, 24 Nov 2020 07:22:45 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id AD3TmhH4TGpE; Tue, 24 Nov 2020 07:22:45 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 634098B79F;
-        Tue, 24 Nov 2020 07:22:44 +0100 (CET)
-Subject: Re: [PATCH v2 09/19] s390/vdso: Remove vdso_base pointer from
- mm->context
-To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-References: <20201124002932.1220517-1-dima@arista.com>
- <20201124002932.1220517-10-dima@arista.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <7ec0d6b6-64b1-6095-c574-febca7478aa7@csgroup.eu>
-Date:   Tue, 24 Nov 2020 07:22:45 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
-MIME-Version: 1.0
-In-Reply-To: <20201124002932.1220517-10-dima@arista.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        id S1729704AbgKXJeO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Nov 2020 04:34:14 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44488 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727901AbgKXJeO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 24 Nov 2020 04:34:14 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AO9WARr011799
+        for <linux-s390@vger.kernel.org>; Tue, 24 Nov 2020 04:34:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=F0joviIwnKkZuQzA2SpcgA1QkDs/8S5As4+lEuppGi4=;
+ b=T37R22QJeQNtUCYXid0W3coG7ezzxFcmfB5OK2iz2SprOZo0NwmnryU9ExJ9Hh3yzQGs
+ qSyFwHD3JqM9mpPxnnIdHB9vrJgkWI9z3+5aYY0Wz919MPa4EdQIEeQbatWZloKSMpxX
+ VIL0Z76/8LUX6ESwXlCWfIo3cijoGCA+HJ8/FsrvWLJ8zCaqVzAVkwsnXAovNauwzfLS
+ pKjC3AAd/4Dsa3nIylePSbctDCTHYF7H2iT3ZOIt59dKGogHcJcTFtbViROAE76LB+/i
+ 3jHpsz60/hsizTtIuqJr7u44qZaYQD/jVdH/x794C29B/zPaWOJepL3WXRCVRbRVK26M ng== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 350rkp4xbr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 24 Nov 2020 04:34:13 -0500
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AO9WI2l012347
+        for <linux-s390@vger.kernel.org>; Tue, 24 Nov 2020 04:34:13 -0500
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 350rkp4xb4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Nov 2020 04:34:13 -0500
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AO9XXGe026530;
+        Tue, 24 Nov 2020 09:34:11 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 34xt5hbem4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Nov 2020 09:34:11 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AO9Y87a61407642
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Nov 2020 09:34:08 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 59C33AE053;
+        Tue, 24 Nov 2020 09:34:08 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B954AE05A;
+        Tue, 24 Nov 2020 09:34:08 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 24 Nov 2020 09:34:08 +0000 (GMT)
+From:   Vineeth Vijayan <vneethv@linux.ibm.com>
+To:     cohuck@redhat.com, oberpar@linux.ibm.com
+Cc:     linux-s390@vger.kernel.org, farman@linux.ibm.com,
+        fiuczy@linux.ibm.com
+Subject: [RFC 0/1] Remove uevent suppression logic from css driver
+Date:   Tue, 24 Nov 2020 10:34:06 +0100
+Message-Id: <20201124093407.23189-1-vneethv@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-24_03:2020-11-24,2020-11-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 priorityscore=1501 mlxlogscore=605 spamscore=0 bulkscore=0
+ lowpriorityscore=0 phishscore=0 mlxscore=0 adultscore=0 clxscore=1011
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011240056
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+This RFC is a follow-up for the below mentioned thread.
+https://marc.info/?l=linux-s390&m=158591045732735&w=2
+
+As mentioned in the RFD, we tried to remove the uevent suppression
+logic from the css driver. I think this would help the vfio-cww 
+udev-rules to bind to the subchannel before the io-subchanneli driver.
+
+Here, the uevent is generated after,stsch() and css_sch_is_valid() 
+which makes sure that the subchannel is valid.
 
 
-Le 24/11/2020 à 01:29, Dmitry Safonov a écrit :
-> Not used any more.
+Vineeth Vijayan (1):
+  s390/cio: Remove uevent-suppress from css driver
 
-Same, what about mremap(), why can it be removed ?
+ drivers/s390/cio/chsc_sch.c     |  5 -----
+ drivers/s390/cio/css.c          | 19 -------------------
+ drivers/s390/cio/device.c       | 18 ------------------
+ drivers/s390/cio/eadm_sch.c     |  5 -----
+ drivers/s390/cio/vfio_ccw_drv.c |  5 -----
+ 5 files changed, 52 deletions(-)
 
-> 
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: linux-s390@vger.kernel.org
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
-> ---
->   arch/s390/include/asm/mmu.h |  1 -
->   arch/s390/kernel/vdso.c     | 10 ----------
->   2 files changed, 11 deletions(-)
-> 
-> diff --git a/arch/s390/include/asm/mmu.h b/arch/s390/include/asm/mmu.h
-> index e12ff0f29d1a..095d0596f700 100644
-> --- a/arch/s390/include/asm/mmu.h
-> +++ b/arch/s390/include/asm/mmu.h
-> @@ -15,7 +15,6 @@ typedef struct {
->   	unsigned long gmap_asce;
->   	unsigned long asce;
->   	unsigned long asce_limit;
-> -	unsigned long vdso_base;
->   	/* The mmu context belongs to a secure guest. */
->   	atomic_t is_protected;
->   	/*
-> diff --git a/arch/s390/kernel/vdso.c b/arch/s390/kernel/vdso.c
-> index 810b72f8985c..3f07711a07c1 100644
-> --- a/arch/s390/kernel/vdso.c
-> +++ b/arch/s390/kernel/vdso.c
-> @@ -58,18 +58,9 @@ static vm_fault_t vdso_fault(const struct vm_special_mapping *sm,
->   	return 0;
->   }
->   
-> -static int vdso_mremap(const struct vm_special_mapping *sm,
-> -		       struct vm_area_struct *vma)
-> -{
-> -	current->mm->context.vdso_base = vma->vm_start;
-> -
-> -	return 0;
-> -}
-> -
->   static const struct vm_special_mapping vdso_mapping = {
->   	.name = "[vdso]",
->   	.fault = vdso_fault,
-> -	.mremap = vdso_mremap,
->   };
->   
->   static int __init vdso_setup(char *str)
-> @@ -204,7 +195,6 @@ int arch_setup_additional_pages(unsigned long *sysinfo_ehdr)
->   		goto out_up;
->   	}
->   
-> -	current->mm->context.vdso_base = vdso_base;
->   	*sysinfo_ehdr = vdso_base;
->   	rc = 0;
->   
-> 
+-- 
+2.17.1
+
