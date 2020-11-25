@@ -2,119 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 298AE2C4677
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Nov 2020 18:09:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BEB82C46B8
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Nov 2020 18:27:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbgKYRHT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 25 Nov 2020 12:07:19 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33246 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730293AbgKYRHT (ORCPT
+        id S1731336AbgKYR1d (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 25 Nov 2020 12:27:33 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59131 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730653AbgKYR1d (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 25 Nov 2020 12:07:19 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0APH2VtP006630;
-        Wed, 25 Nov 2020 12:07:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to : sender; s=pp1;
- bh=Ncy3un7Mk9a3HgaKgU8ECzla06RPArkUvrBxSyMW5XY=;
- b=JiqWRQ60w9cLeWy2x6vGrY7NghfRzqVmMbhO7bX0PiXjJeKgzlbC8I5zZlY2y8Nj/boH
- 8YBKACvOPWNprD8LySyw1e7387fWZa2l5QTbEptoamAfmBgKL3Oc43oWxh+OTr46cFUG
- 2KFORErbyAGPqzW2+5JbMf7kSIqydZaZKaUaEUhdEQaKewdcM/32iGWtX3fAAhxEQ0Kf
- n9aYkyINkrhNbz8JfI1LhX2XxfyZfFItUoXXObLu56SPGld+UpMAzFKqCThXQDZdSbkG
- YavD23vpflCN0EQandNmrZ+Lzt4tcZgN/DLqjVX2WHcgAzVSTwmPkj8Qexdbck207sFz /Q== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 351u5q8dsm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Nov 2020 12:07:04 -0500
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0APH2qlK010586;
-        Wed, 25 Nov 2020 17:07:02 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06ams.nl.ibm.com with ESMTP id 34xt5hcw10-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Nov 2020 17:07:02 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0APH6x7M18874716
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Nov 2020 17:06:59 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 966704C04E;
-        Wed, 25 Nov 2020 17:06:59 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 843324C040;
-        Wed, 25 Nov 2020 17:06:59 +0000 (GMT)
-Received: from t480-pf1aa2c2 (unknown [9.145.2.194])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 25 Nov 2020 17:06:59 +0000 (GMT)
-Received: from bblock by t480-pf1aa2c2 with local (Exim 4.94)
-        (envelope-from <bblock@linux.ibm.com>)
-        id 1khyFu-002ZXe-FD; Wed, 25 Nov 2020 18:06:58 +0100
-Date:   Wed, 25 Nov 2020 18:06:58 +0100
-From:   Benjamin Block <bblock@linux.ibm.com>
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Steffen Maier <maier@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-Subject: Re: [PATCH] scsi: zfcp: fix use-after-free in zfcp_unit_remove
-Message-ID: <20201125170658.GB8578@t480-pf1aa2c2>
-References: <20201120074854.31754-1-miaoqinglang@huawei.com>
+        Wed, 25 Nov 2020 12:27:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606325251;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=128QzWN5ZV6H8TGg9AgMhcOfUvIwMfuRP45rtKXIJzc=;
+        b=IFy6WZPhFFrp/NBGH5ZbRm8E4UFDbzgpuK7LsSXBKFWxpSXek7fEgUpGUsrNO5O3w9h3at
+        fU1EynJb91uPE6ndTXQUyNtKfrghjHt8mE5FgaD6n3Yd/X4OoRwkQfxLoxtYbo0dXcC83v
+        ej+jBEJL1RfSUr1+xf9JOjXI7W88UcY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-303-VZlW4DNdMHaUwzfL9ixwkA-1; Wed, 25 Nov 2020 12:27:24 -0500
+X-MC-Unique: VZlW4DNdMHaUwzfL9ixwkA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 95D7D1087D6C;
+        Wed, 25 Nov 2020 17:27:20 +0000 (UTC)
+Received: from [10.36.112.131] (ovpn-112-131.ams2.redhat.com [10.36.112.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 18B3260BE5;
+        Wed, 25 Nov 2020 17:27:18 +0000 (UTC)
+Subject: Re: [RFC 3/3] s390/mm: Define arch_get_addressable_range()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1606098529-7907-1-git-send-email-anshuman.khandual@arm.com>
+ <1606098529-7907-4-git-send-email-anshuman.khandual@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <fc5ebaf9-ce6a-95fd-a2fe-84bfdf73512a@redhat.com>
+Date:   Wed, 25 Nov 2020 18:27:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20201120074854.31754-1-miaoqinglang@huawei.com>
-Sender: Benjamin Block <bblock@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-25_10:2020-11-25,2020-11-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=946
- suspectscore=0 malwarescore=0 clxscore=1015 impostorscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011250104
+In-Reply-To: <1606098529-7907-4-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Nov 20, 2020 at 03:48:54PM +0800, Qinglang Miao wrote:
-> kfree(port) is called in put_device(&port->dev) so that following
-> use would cause use-after-free bug.
+On 23.11.20 03:28, Anshuman Khandual wrote:
+> This overrides arch_get_addressable_range() on s390 platform and drops
+> now redudant similar check in vmem_add_mapping().
 > 
-> The former put_device is redundant for device_unregister contains
-> put_device already. So just remove it to fix this.
-> 
-> Fixes: 86bdf218a717 ("[SCSI] zfcp: cleanup unit sysfs attribute usage")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: linux-s390@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > ---
->  drivers/s390/scsi/zfcp_unit.c | 2 --
->  1 file changed, 2 deletions(-)
+>  arch/s390/include/asm/mmu.h |  2 ++
+>  arch/s390/mm/vmem.c         | 16 ++++++++++++----
+>  2 files changed, 14 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/s390/scsi/zfcp_unit.c b/drivers/s390/scsi/zfcp_unit.c
-> index e67bf7388..664b77853 100644
-> --- a/drivers/s390/scsi/zfcp_unit.c
-> +++ b/drivers/s390/scsi/zfcp_unit.c
-> @@ -255,8 +255,6 @@ int zfcp_unit_remove(struct zfcp_port *port, u64 fcp_lun)
->  		scsi_device_put(sdev);
->  	}
+> diff --git a/arch/s390/include/asm/mmu.h b/arch/s390/include/asm/mmu.h
+> index e12ff0f29d1a..f92d3926b188 100644
+> --- a/arch/s390/include/asm/mmu.h
+> +++ b/arch/s390/include/asm/mmu.h
+> @@ -55,4 +55,6 @@ static inline int tprot(unsigned long addr)
+>  	return rc;
+>  }
 >  
-> -	put_device(&unit->dev);
+> +#define arch_get_addressable_range arch_get_addressable_range
+> +struct range arch_get_addressable_range(bool need_mapping);
+>  #endif
+> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
+> index b239f2ba93b0..e03ad0ed13a7 100644
+> --- a/arch/s390/mm/vmem.c
+> +++ b/arch/s390/mm/vmem.c
+> @@ -532,14 +532,22 @@ void vmem_remove_mapping(unsigned long start, unsigned long size)
+>  	mutex_unlock(&vmem_mutex);
+>  }
+>  
+> +struct range arch_get_addressable_range(bool need_mapping)
+> +{
+> +	struct range memhp_range;
+> +
+> +	memhp_range.start = 0;
+> +	if (need_mapping)
+> +		memhp_range.end =  VMEM_MAX_PHYS;
+> +	else
+> +		memhp_range.end = (1ULL << (MAX_PHYSMEM_BITS + 1)) - 1;
+> +	return memhp_range;
+> +}
+> +
+>  int vmem_add_mapping(unsigned long start, unsigned long size)
+>  {
+>  	int ret;
+>  
+> -	if (start + size > VMEM_MAX_PHYS ||
+> -	    start + size < start)
+> -		return -ERANGE;
 > -
->  	device_unregister(&unit->dev);
->  
->  	return 0;
+>  	mutex_lock(&vmem_mutex);
+>  	ret = vmem_add_range(start, size);
+>  	if (ret)
+> 
 
-Same as in the other mail for `zfcp_sysfs_port_remove_store()`. We
-explicitly get a new ref in `_zfcp_unit_find()`, so we also need to put
-that away again.
+Note that vmem_add_mapping() is also called from extmem
+(arch/s390/mm/extmem.c).
 
 -- 
-Best Regards, Benjamin Block  / Linux on IBM Z Kernel Development / IBM Systems
-IBM Deutschland Research & Development GmbH    /    https://www.ibm.com/privacy
-Vorsitz. AufsR.: Gregor Pillen         /        Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: AmtsG Stuttgart, HRB 243294
+Thanks,
+
+David / dhildenb
+
