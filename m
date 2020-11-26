@@ -2,125 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 517142C565C
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Nov 2020 14:45:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4D5A2C56B0
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Nov 2020 15:10:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389919AbgKZNpn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 26 Nov 2020 08:45:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:33392 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390196AbgKZNpn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 26 Nov 2020 08:45:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D0F431B;
-        Thu, 26 Nov 2020 05:45:42 -0800 (PST)
-Received: from [192.168.0.130] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 660B23F71F;
-        Thu, 26 Nov 2020 05:45:40 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [RFC 3/3] s390/mm: Define arch_get_addressable_range()
-To:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1606098529-7907-1-git-send-email-anshuman.khandual@arm.com>
- <1606098529-7907-4-git-send-email-anshuman.khandual@arm.com>
- <fc5ebaf9-ce6a-95fd-a2fe-84bfdf73512a@redhat.com>
-Message-ID: <6223eabd-fbe5-2ece-1a73-172b4b67bdde@arm.com>
-Date:   Thu, 26 Nov 2020 19:15:08 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S2389951AbgKZOIi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 26 Nov 2020 09:08:38 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31008 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388291AbgKZOIi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 26 Nov 2020 09:08:38 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AQE32qB072410;
+        Thu, 26 Nov 2020 09:08:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=sj6pwlTM26uzANfJRuGsI+hlWiYKct3Y5yGAfXZ2MGg=;
+ b=DNC64MryATRapW8LQ/hvVVrdoqPxfUeZuizKs5n0RuVwYyPugRoSQ1Z+02GViZWEXMEP
+ aaW/8XWsJIsUXphfX8ZFe+cfoHWffoZCPdDVpY31sD0VxdR6NAsW5JPAs+TyJtwDkoJ2
+ wIVVnpRGV7MfBwIRMaa1dn2LGITMa/y4IEN/GgCMHf33NnS4VPMNgECo+VXHlY+/9ya2
+ azU0AokZ6oYnQyqiKlHacy/umzZRTe1Ym0moYALSNQVhbhZr2Li6FktpLgoJvc53KIfG
+ yzlM7nZVYPQoDOr52r+QV84lhl/ddezxunLgSoeohbGqXgMAemzVXjBfU+Hsdmw10zIO 3w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 352dp68ct9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Nov 2020 09:08:35 -0500
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AQE3G8h073452;
+        Thu, 26 Nov 2020 09:08:35 -0500
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 352dp68csm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Nov 2020 09:08:35 -0500
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AQE2Vvi001097;
+        Thu, 26 Nov 2020 14:08:33 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 34xth8dp6v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Nov 2020 14:08:33 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AQE8Uvf6619710
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Nov 2020 14:08:30 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E9B0AE057;
+        Thu, 26 Nov 2020 14:08:30 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD762AE045;
+        Thu, 26 Nov 2020 14:08:29 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.171.0.176])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Thu, 26 Nov 2020 14:08:29 +0000 (GMT)
+Date:   Thu, 26 Nov 2020 15:08:28 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, mjrosato@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v12 05/17] s390/vfio-ap: manage link between queue
+ struct and matrix mdev
+Message-ID: <20201126150828.78776e62.pasic@linux.ibm.com>
+In-Reply-To: <20201124214016.3013-6-akrowiak@linux.ibm.com>
+References: <20201124214016.3013-1-akrowiak@linux.ibm.com>
+        <20201124214016.3013-6-akrowiak@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <fc5ebaf9-ce6a-95fd-a2fe-84bfdf73512a@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-26_04:2020-11-26,2020-11-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ bulkscore=0 clxscore=1015 impostorscore=0 suspectscore=2 phishscore=0
+ spamscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011260085
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Tue, 24 Nov 2020 16:40:04 -0500
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
+> @@ -1155,6 +1243,11 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>  			     matrix_mdev->matrix.apm_max + 1) {
+>  		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+>  				     matrix_mdev->matrix.aqm_max + 1) {
+> +			q = vfio_ap_mdev_get_queue(matrix_mdev,
+> +						   AP_MKQID(apid, apqi));
+> +			if (!q)
+> +				continue;
+> +
+>  			ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>  			/*
+>  			 * Regardless whether a queue turns out to be busy, or
+> @@ -1164,9 +1257,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>  			if (ret)
+>  				rc = ret;
+>  
+> -			q = vfio_ap_get_queue(matrix_mdev, AP_MKQID(apid, apqi);
+> -			if (q)
+> -				vfio_ap_free_aqic_resources(q);
+> +			vfio_ap_free_aqic_resources(q);
+>  		}
+>  	}
 
-On 11/25/20 10:57 PM, David Hildenbrand wrote:
-> On 23.11.20 03:28, Anshuman Khandual wrote:
->> This overrides arch_get_addressable_range() on s390 platform and drops
->> now redudant similar check in vmem_add_mapping().
->>
->> Cc: Heiko Carstens <hca@linux.ibm.com>
->> Cc: Vasily Gorbik <gor@linux.ibm.com>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: linux-s390@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  arch/s390/include/asm/mmu.h |  2 ++
->>  arch/s390/mm/vmem.c         | 16 ++++++++++++----
->>  2 files changed, 14 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/s390/include/asm/mmu.h b/arch/s390/include/asm/mmu.h
->> index e12ff0f29d1a..f92d3926b188 100644
->> --- a/arch/s390/include/asm/mmu.h
->> +++ b/arch/s390/include/asm/mmu.h
->> @@ -55,4 +55,6 @@ static inline int tprot(unsigned long addr)
->>  	return rc;
->>  }
->>  
->> +#define arch_get_addressable_range arch_get_addressable_range
->> +struct range arch_get_addressable_range(bool need_mapping);
->>  #endif
->> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
->> index b239f2ba93b0..e03ad0ed13a7 100644
->> --- a/arch/s390/mm/vmem.c
->> +++ b/arch/s390/mm/vmem.c
->> @@ -532,14 +532,22 @@ void vmem_remove_mapping(unsigned long start, unsigned long size)
->>  	mutex_unlock(&vmem_mutex);
->>  }
->>  
->> +struct range arch_get_addressable_range(bool need_mapping)
->> +{
->> +	struct range memhp_range;
->> +
->> +	memhp_range.start = 0;
->> +	if (need_mapping)
->> +		memhp_range.end =  VMEM_MAX_PHYS;
->> +	else
->> +		memhp_range.end = (1ULL << (MAX_PHYSMEM_BITS + 1)) - 1;
->> +	return memhp_range;
->> +}
->> +
->>  int vmem_add_mapping(unsigned long start, unsigned long size)
->>  {
->>  	int ret;
->>  
->> -	if (start + size > VMEM_MAX_PHYS ||
->> -	    start + size < start)
->> -		return -ERANGE;
->> -
->>  	mutex_lock(&vmem_mutex);
->>  	ret = vmem_add_range(start, size);
->>  	if (ret)
->>
-> 
-> Note that vmem_add_mapping() is also called from extmem
-> (arch/s390/mm/extmem.c).
+During the review of v11 we discussed this. Introducing this the one
+way around, just to change it in the next patch, which should deal
+with something different makes no sense to me.
 
-Right, probably something like this should be able to take care of
-the range check, it lost out earlier.
-
-diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
-index 5060956b8e7d..c61620ae5ee6 100644
---- a/arch/s390/mm/extmem.c
-+++ b/arch/s390/mm/extmem.c
-@@ -337,6 +337,11 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
-                goto out_free_resource;
-        }
- 
-+       if (seg->end + 1 > VMEM_MAX_PHYS || seg->end + 1 < seg->start) {
-+               rc = -ERANGE;
-+               goto out_resource;
-+       }
-+
-        rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
-        if (rc)
-                goto out_resource;
+BTW I've provided a ton of feedback for '[PATCH v11 03/14]
+s390/vfio-ap: manage link between queue struct and matrix mdev', but I
+can't find your response to that. Some of the things resurface here, and
+I don't feel like repeating myself. Can you provide me an answer to
+the v11 version?
