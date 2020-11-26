@@ -2,130 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BA9B2C59BE
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Nov 2020 18:02:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B35682C5D2A
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Nov 2020 21:40:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403953AbgKZRAq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 26 Nov 2020 12:00:46 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61356 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2403791AbgKZRAq (ORCPT
+        id S2390845AbgKZUja (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 26 Nov 2020 15:39:30 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24974 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731876AbgKZUja (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 26 Nov 2020 12:00:46 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AQGVSXw064087;
-        Thu, 26 Nov 2020 12:00:45 -0500
+        Thu, 26 Nov 2020 15:39:30 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AQKWYwt135982;
+        Thu, 26 Nov 2020 15:39:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id; s=pp1;
- bh=xLLYkQqQFU+OX7rJCIVxSIQbccOuUwR6E7EFl8NMsZs=;
- b=X6Tu8KUGX44DlQ1Dlxlgp4jUsSIwqwQlzSiGqLmEIqwjbuMHG7pohUKez3lYTU3LUskR
- jqSKk1bqDbYkTD1U05NXCGgCDXA+Mw3tT6QpCeVtKojq+jANRDQAbX9Aq1qJ8wUyme4m
- v6EOYJiVTncGS2RwusY19tWks2mNILYVIziJPcG+/cZ0e81w4riERxz52mv1cHCe9rVL
- 7NDRgVny+MGZd1ynRYVLHb9koqmbREI23iZL0jIbrJtK1jP9nC8Njwn42MaoKKG0aqKQ
- 3FW5yo6To8PquPfPz8RGDoR4eNWiKdvhuu1OquBGYQFMYKVIbnhlP6pQll0b+MpbuTlk Aw== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3526nps8bx-1
+ bh=pmIMzYQBt29CRMNybnh56i8MrKprOvl+WEisRXkv0fs=;
+ b=fMh2kghYLUoSkMPzFvjJh4RtYuIXaMd5Br3l1UuaOTARK0j7TGm+4sWJuo8FDpw1Xj3J
+ lZKLnBarlkgP3+nl6kcZFZOQhZsxOosVozawzR6TyeY6TAUPCudFP4xV9NvZJzRq1PWg
+ NSAJOE89uX0dLBN02x+H6/4U6VWYt3Q2FcfA6jWOD1WsKF+XzCAgmI5gDidnBNOyRP7C
+ Dr/EmN2lN8o5bUGQmbl+YUCm998/O1Mv3jkGfxcVplI+aXyH0EvsktwEe1s6kcZft8TH
+ Nsrf0y3Y+Q4PvZemDgqQ+WUeTJCCb/t0a2nLe9uGJpDN3XUMDuGTvAx2VnJY4jmNgaHQ bg== 
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 352kdg05kb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Nov 2020 12:00:45 -0500
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AQGwD6b003406;
-        Thu, 26 Nov 2020 17:00:43 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03ams.nl.ibm.com with ESMTP id 34xth8durw-1
+        Thu, 26 Nov 2020 15:39:26 -0500
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AQKbO9i001629;
+        Thu, 26 Nov 2020 20:39:24 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06fra.de.ibm.com with ESMTP id 351pca0qk6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Nov 2020 17:00:42 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AQH0dWi53084544
+        Thu, 26 Nov 2020 20:39:24 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AQKdLcs55902638
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Nov 2020 17:00:40 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC4494204D;
-        Thu, 26 Nov 2020 17:00:39 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 543724203F;
-        Thu, 26 Nov 2020 17:00:39 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.159.67])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 26 Nov 2020 17:00:39 +0000 (GMT)
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: [PATCH v3] s390/pci: fix CPU address in MSI for directed IRQ
-Date:   Thu, 26 Nov 2020 18:00:37 +0100
-Message-Id: <1606410037-11436-1-git-send-email-agordeev@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 26 Nov 2020 20:39:21 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03D25A404D;
+        Thu, 26 Nov 2020 20:39:21 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C1DF1A4040;
+        Thu, 26 Nov 2020 20:39:20 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 26 Nov 2020 20:39:20 +0000 (GMT)
+From:   Karsten Graul <kgraul@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Stefan Raspl <raspl@linux.ibm.com>, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH net-next v6 00/14] net/smc: Add support for generic netlink API
+Date:   Thu, 26 Nov 2020 21:39:02 +0100
+Message-Id: <20201126203916.56071-1-kgraul@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-26_06:2020-11-26,2020-11-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 suspectscore=0 lowpriorityscore=0 adultscore=0 spamscore=0
- phishscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1011
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011260097
+ definitions=2020-11-26_09:2020-11-26,2020-11-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxlogscore=740 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ impostorscore=0 mlxscore=0 malwarescore=0 spamscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011260124
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The directed MSIs are delivered to CPUs whose address is
-written to the MSI message data. The current code assumes
-that a CPU logical number (as it is seen by the kernel)
-is also that CPU address.
+Please apply the following patch series for smc to netdev's net-next tree.
 
-The above assumption is not correct, as the CPU address
-is rather the value returned by STAP instruction. That
-value does not necessarily match the kernel logical CPU
-number.
+Up to version 4 this patch series was using the sock_diag netlink
+infrastructure. This version is using the generic netlink API. Generic
+netlink API offers a better type safety between kernel and userspace
+communication.
+Using the generic netlink API the smc module can now provide information
+about SMC linkgroups, links and devices (both for SMC-R and SMC-D).
 
-Fixes: e979ce7bced2 ("s390/pci: provide support for CPU directed interrupts")
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- arch/s390/pci/pci_irq.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+v2: Add missing include to uapi header smc_diag.h.
 
-diff --git a/arch/s390/pci/pci_irq.c b/arch/s390/pci/pci_irq.c
-index 743f257cf2cb..75217fb63d7b 100644
---- a/arch/s390/pci/pci_irq.c
-+++ b/arch/s390/pci/pci_irq.c
-@@ -103,9 +103,10 @@ static int zpci_set_irq_affinity(struct irq_data *data, const struct cpumask *de
- {
- 	struct msi_desc *entry = irq_get_msi_desc(data->irq);
- 	struct msi_msg msg = entry->msg;
-+	int cpu_addr = smp_cpu_get_cpu_address(cpumask_first(dest));
- 
- 	msg.address_lo &= 0xff0000ff;
--	msg.address_lo |= (cpumask_first(dest) << 8);
-+	msg.address_lo |= (cpu_addr << 8);
- 	pci_write_msi_msg(data->irq, &msg);
- 
- 	return IRQ_SET_MASK_OK;
-@@ -238,6 +239,7 @@ int arch_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
- 	unsigned long bit;
- 	struct msi_desc *msi;
- 	struct msi_msg msg;
-+	int cpu_addr;
- 	int rc, irq;
- 
- 	zdev->aisb = -1UL;
-@@ -287,9 +289,15 @@ int arch_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
- 					 handle_percpu_irq);
- 		msg.data = hwirq - bit;
- 		if (irq_delivery == DIRECTED) {
-+			if (msi->affinity)
-+				cpu = cpumask_first(&msi->affinity->mask);
-+			else
-+				cpu = 0;
-+			cpu_addr = smp_cpu_get_cpu_address(cpu);
-+
- 			msg.address_lo = zdev->msi_addr & 0xff0000ff;
--			msg.address_lo |= msi->affinity ?
--				(cpumask_first(&msi->affinity->mask) << 8) : 0;
-+			msg.address_lo |= (cpu_addr << 8);
-+
- 			for_each_possible_cpu(cpu) {
- 				airq_iv_set_data(zpci_ibv[cpu], hwirq, irq);
- 			}
+v3: Apply code style recommendations from review comments.
+    Instead of using EXPORTs to allow the smc_diag module to access
+    data of the smc module, introduce struct smc_diag_ops and let
+    smc_diag access the required data using function pointers.
+
+v4: Address checkpatch.pl warnings. Do not use static inline for
+    functions.
+
+v5: Use generic netlink API instead of the sock_diag netlink
+    infrastructure.
+
+v6: Integrate more review comments from Jakub.
+
+Guvenc Gulce (13):
+  net/smc: Use active link of the connection
+  net/smc: Add connection counters for links
+  net/smc: Add link counters for IB device ports
+  net/smc: Add diagnostic information to smc ib-device
+  net/smc: Add diagnostic information to link structure
+  net/smc: Refactor smc ism v2 capability handling
+  net/smc: Introduce generic netlink interface for diagnostic purposes
+  net/smc: Add support for obtaining system information
+  net/smc: Introduce SMCR get linkgroup command
+  net/smc: Introduce SMCR get link command
+  net/smc: Add SMC-D Linkgroup diagnostic support
+  net/smc: Add support for obtaining SMCD device list
+  net/smc: Add support for obtaining SMCR device list
+
+Karsten Graul (1):
+  net/smc: use helper smc_conn_abort() in listen processing
+
+ include/uapi/linux/smc.h | 126 +++++++++++++
+ net/smc/Makefile         |   2 +-
+ net/smc/af_smc.c         |  39 ++--
+ net/smc/smc_clc.c        |   5 +
+ net/smc/smc_clc.h        |   1 +
+ net/smc/smc_core.c       | 399 ++++++++++++++++++++++++++++++++++++++-
+ net/smc/smc_core.h       |  49 +++++
+ net/smc/smc_diag.c       |  23 +--
+ net/smc/smc_ib.c         | 200 ++++++++++++++++++++
+ net/smc/smc_ib.h         |   6 +
+ net/smc/smc_ism.c        |  99 +++++++++-
+ net/smc/smc_ism.h        |   6 +-
+ net/smc/smc_netlink.c    |  78 ++++++++
+ net/smc/smc_netlink.h    |  32 ++++
+ net/smc/smc_pnet.c       |   2 +
+ 15 files changed, 1022 insertions(+), 45 deletions(-)
+ create mode 100644 net/smc/smc_netlink.c
+ create mode 100644 net/smc/smc_netlink.h
+
 -- 
-2.26.0
+2.17.1
 
