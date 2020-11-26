@@ -2,64 +2,83 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7ED02C4C33
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Nov 2020 01:35:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DADD2C4C98
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Nov 2020 02:28:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730017AbgKZAdT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 25 Nov 2020 19:33:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbgKZAdS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 25 Nov 2020 19:33:18 -0500
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 124EB2064B;
-        Thu, 26 Nov 2020 00:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606350798;
-        bh=2Xvi6CB6PeTHm2HSq3rbewypFHSNNA2x6hc4Rubrz0k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qRrHhtrnIQnMd//+Q228+AXjAtFWaSwbRf4YfcahTaQs7uyeXYlicRV2LO8DBgjE9
-         6ci+NqE8PjR8j+rWKoC9c7di65sUFKSKY0kTbzP+VODhUQYkokVzubAHt0PLtJDZz9
-         hPNoEiet1jmMalV7G5wZHh3KI+Ugyn8yY1k/hPLA=
-Date:   Wed, 25 Nov 2020 16:33:17 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Karsten Graul <kgraul@linux.ibm.com>
-Cc:     David Miller <davem@davemloft.net>,
+        id S1730632AbgKZB1p (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 25 Nov 2020 20:27:45 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:8402 "EHLO
+        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730067AbgKZB1p (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 25 Nov 2020 20:27:45 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ChKqs5czRz73q7;
+        Thu, 26 Nov 2020 09:27:21 +0800 (CST)
+Received: from [10.174.177.149] (10.174.177.149) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 26 Nov 2020 09:27:41 +0800
+Subject: Re: [PATCH] scsi: zfcp: fix use-after-free in zfcp_unit_remove
+To:     Benjamin Block <bblock@linux.ibm.com>
+CC:     Steffen Maier <maier@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH net-next v5 12/14] net/smc: Add SMC-D Linkgroup
- diagnostic support
-Message-ID: <20201125163317.05b7e22b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20201124175047.56949-13-kgraul@linux.ibm.com>
-References: <20201124175047.56949-1-kgraul@linux.ibm.com>
-        <20201124175047.56949-13-kgraul@linux.ibm.com>
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>
+References: <20201120074854.31754-1-miaoqinglang@huawei.com>
+ <20201125170658.GB8578@t480-pf1aa2c2>
+From:   Qinglang Miao <miaoqinglang@huawei.com>
+Message-ID: <4c65bead-2553-171e-54d2-87a9de0330e8@huawei.com>
+Date:   Thu, 26 Nov 2020 09:27:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20201125170658.GB8578@t480-pf1aa2c2>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.177.149]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 24 Nov 2020 18:50:45 +0100 Karsten Graul wrote:
-> +static int smc_nl_fill_smcd_lgr(struct smc_link_group *lgr,
-> +				struct sk_buff *skb,
-> +				struct netlink_callback *cb)
-> +{
-> +	char smc_host[SMC_MAX_HOSTNAME_LEN + 1];
-> +	char smc_pnet[SMC_MAX_PNETID_LEN + 1];
-> +	char smc_eid[SMC_MAX_EID_LEN + 1];
-> +	struct nlattr *v2_attrs;
-> +	struct nlattr *attrs;
-> +	void *nlh;
-> +
-> +	nlh = genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq,
-> +			  &smc_gen_nl_family, NLM_F_MULTI,
-> +			  SMC_NETLINK_GET_LGR_SMCD);
-> +	if (!nlh)
-> +		return -EMSGSIZE;
 
-In the previous patched you had a goto here. I prefer direct return,
-but either way - please be consistent.
+
+ÔÚ 2020/11/26 1:06, Benjamin Block Ð´µÀ:
+> On Fri, Nov 20, 2020 at 03:48:54PM +0800, Qinglang Miao wrote:
+>> kfree(port) is called in put_device(&port->dev) so that following
+>> use would cause use-after-free bug.
+>>
+>> The former put_device is redundant for device_unregister contains
+>> put_device already. So just remove it to fix this.
+>>
+>> Fixes: 86bdf218a717 ("[SCSI] zfcp: cleanup unit sysfs attribute usage")
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+>> ---
+>>   drivers/s390/scsi/zfcp_unit.c | 2 --
+>>   1 file changed, 2 deletions(-)
+>>
+>> diff --git a/drivers/s390/scsi/zfcp_unit.c b/drivers/s390/scsi/zfcp_unit.c
+>> index e67bf7388..664b77853 100644
+>> --- a/drivers/s390/scsi/zfcp_unit.c
+>> +++ b/drivers/s390/scsi/zfcp_unit.c
+>> @@ -255,8 +255,6 @@ int zfcp_unit_remove(struct zfcp_port *port, u64 fcp_lun)
+>>   		scsi_device_put(sdev);
+>>   	}
+>>   
+>> -	put_device(&unit->dev);
+>> -
+>>   	device_unregister(&unit->dev);
+>>  >>   	return 0;
+> 
+> Same as in the other mail for `zfcp_sysfs_port_remove_store()`. We
+> explicitly get a new ref in `_zfcp_unit_find()`, so we also need to put
+> that away again.
+>
+Sorry, Benjamin, I don't think so, because device_unregister calls 
+put_device inside.
+
+It seem's that another put_device before or after device_unregister is 
+useless and even might cause an use-after-free.
+
