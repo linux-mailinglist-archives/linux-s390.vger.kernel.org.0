@@ -2,155 +2,201 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CD042C6A16
-	for <lists+linux-s390@lfdr.de>; Fri, 27 Nov 2020 17:49:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 908842C6A80
+	for <lists+linux-s390@lfdr.de>; Fri, 27 Nov 2020 18:18:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731799AbgK0Qqn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 27 Nov 2020 11:46:43 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21453 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731559AbgK0Qqn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 27 Nov 2020 11:46:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606495601;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=R51dwmJxWu1gwhdxk3dRVskkx4S0TgN03vZwhcFNpvs=;
-        b=TXH5DhEzt4vccFglOjcc4QazZse0aLEwRUW8k53h4oz5ciAF8Q5s3ckAhugP/NhZQwTQA0
-        zgSluazNiT9vAkUX6WxcRYav+j5xUD1CMX7pK5w5K99nveT9XhthEmI5IqvbWH1yz+Oyxf
-        gJ55p7ScLAy6OlbBY4U4hT+CqqO7CXM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281--qutg5zyPySQi8SUnnRcvQ-1; Fri, 27 Nov 2020 11:46:37 -0500
-X-MC-Unique: -qutg5zyPySQi8SUnnRcvQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 49BA41005D50;
-        Fri, 27 Nov 2020 16:46:36 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-113-70.ams2.redhat.com [10.36.113.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 14B6B60BF1;
-        Fri, 27 Nov 2020 16:46:30 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v2 6/7] s390x: Add diag318 intercept test
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        cohuck@redhat.com, linux-s390@vger.kernel.org
-References: <20201127130629.120469-1-frankja@linux.ibm.com>
- <20201127130629.120469-7-frankja@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <f1f8ce84-e30a-29c5-8ab6-7294cdc248ce@redhat.com>
-Date:   Fri, 27 Nov 2020 17:46:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1732142AbgK0RSc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 27 Nov 2020 12:18:32 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:59137 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731485AbgK0RSc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 27 Nov 2020 12:18:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1606497510; x=1638033510;
+  h=to:cc:references:from:subject:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=ZDsRW21yvSMTemLZASbYFkblDZ5o8TFcQuYu06fdz2U=;
+  b=jONVFjC8PrNrQVTmAOgsi0SV826IyO77j5nzQe3D5ov5dD0hXcNtzfoZ
+   EHv0yL+4QLwZU58aJDsueedQqK2QCGje3wRav1XW7WLVbFZohA1KHypVA
+   Lnwg4gB5yBvN/3E/F4Yi+TSYOH2qgBZDd6FXPQQdaL+1eGBonBVi+3E2S
+   s=;
+X-IronPort-AV: E=Sophos;i="5.78,375,1599523200"; 
+   d="scan'208";a="98530105"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-98acfc19.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 27 Nov 2020 17:18:21 +0000
+Received: from EX13D08EUB004.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
+        by email-inbound-relay-1d-98acfc19.us-east-1.amazon.com (Postfix) with ESMTPS id 77698A176E;
+        Fri, 27 Nov 2020 17:18:11 +0000 (UTC)
+Received: from 4c32759f87cf.ant.amazon.com (10.43.160.21) by
+ EX13D08EUB004.ant.amazon.com (10.43.166.158) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 27 Nov 2020 17:17:57 +0000
+To:     Alexander Graf <graf@amazon.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jann Horn <jannh@google.com>
+CC:     Willy Tarreau <w@1wt.eu>,
+        "MacCarthaigh, Colm" <colmmacc@amazon.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "bonzini@gnu.org" <bonzini@gnu.org>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        "Weiss, Radu" <raduweis@amazon.com>,
+        "oridgar@gmail.com" <oridgar@gmail.com>,
+        "ghammer@redhat.com" <ghammer@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        KVM list <kvm@vger.kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Linux API <linux-api@vger.kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        "areber@redhat.com" <areber@redhat.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Andrey Vagin <avagin@gmail.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>,
+        "gil@azul.com" <gil@azul.com>,
+        "asmehra@redhat.com" <asmehra@redhat.com>,
+        "dgunigun@redhat.com" <dgunigun@redhat.com>,
+        "vijaysun@ca.ibm.com" <vijaysun@ca.ibm.com>
+References: <3E05451B-A9CD-4719-99D0-72750A304044@amazon.com>
+ <f78a0a2f-d26a-6b50-c252-b4610e5f8273@amazon.de>
+From:   "Catangiu, Adrian Costin" <acatan@amazon.com>
+Subject: Re: [PATCH v2] drivers/virt: vmgenid: add vm generation id driver
+Message-ID: <ded94f0f-9c60-38b3-6217-03d3c0edd613@amazon.com>
+Date:   Fri, 27 Nov 2020 19:17:53 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
+ Gecko/20100101 Thunderbird/78.4.3
 MIME-Version: 1.0
-In-Reply-To: <20201127130629.120469-7-frankja@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <f78a0a2f-d26a-6b50-c252-b4610e5f8273@amazon.de>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Originating-IP: [10.43.160.21]
+X-ClientProxiedBy: EX13D14UWB001.ant.amazon.com (10.43.161.158) To
+ EX13D08EUB004.ant.amazon.com (10.43.166.158)
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 27/11/2020 14.06, Janosch Frank wrote:
-> Not much to test except for the privilege and specification
-> exceptions.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  lib/s390x/sclp.c  |  2 ++
->  lib/s390x/sclp.h  |  6 +++++-
->  s390x/intercept.c | 19 +++++++++++++++++++
->  3 files changed, 26 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/s390x/sclp.c b/lib/s390x/sclp.c
-> index 68833b5..3966086 100644
-> --- a/lib/s390x/sclp.c
-> +++ b/lib/s390x/sclp.c
-> @@ -138,6 +138,8 @@ void sclp_facilities_setup(void)
->  
->  	assert(read_info);
->  
-> +	sclp_facilities.has_diag318 = read_info->byte_134_diag318;
-> +
->  	cpu = (void *)read_info + read_info->offset_cpu;
->  	for (i = 0; i < read_info->entries_cpu; i++, cpu++) {
->  		if (cpu->address == cpu0_addr) {
-> diff --git a/lib/s390x/sclp.h b/lib/s390x/sclp.h
-> index e18f7e6..4e564dd 100644
-> --- a/lib/s390x/sclp.h
-> +++ b/lib/s390x/sclp.h
-> @@ -108,7 +108,8 @@ extern struct sclp_facilities sclp_facilities;
->  
->  struct sclp_facilities {
->  	uint64_t has_sief2 : 1;
-> -	uint64_t : 63;
-> +	uint64_t has_diag318 : 1;
-> +	uint64_t : 62;
->  };
->  
->  typedef struct ReadInfo {
-> @@ -133,6 +134,9 @@ typedef struct ReadInfo {
->      uint16_t highest_cpu;
->      uint8_t  _reserved5[124 - 122];     /* 122-123 */
->      uint32_t hmfai;
-> +    uint8_t reserved7[134 - 128];
-> +    uint8_t byte_134_diag318 : 1;
-> +    uint8_t : 7;
->      struct CPUEntry entries[0];
->  } __attribute__((packed)) ReadInfo;
->  
-> diff --git a/s390x/intercept.c b/s390x/intercept.c
-> index 2e38257..615f0a0 100644
-> --- a/s390x/intercept.c
-> +++ b/s390x/intercept.c
-> @@ -10,6 +10,7 @@
->   * under the terms of the GNU Library General Public License version 2.
->   */
->  #include <libcflat.h>
-> +#include <sclp.h>
->  #include <asm/asm-offsets.h>
->  #include <asm/interrupt.h>
->  #include <asm/page.h>
-> @@ -154,6 +155,23 @@ static void test_testblock(void)
->  	check_pgm_int_code(PGM_INT_CODE_ADDRESSING);
->  }
->  
-> +static void test_diag318(void)
-> +{
-> +	expect_pgm_int();
-> +	enter_pstate();
-> +	asm volatile("diag %0,0,0x318\n" : : "d" (0x42));
-> +	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
-> +
-> +	if (!sclp_facilities.has_diag318)
-> +		expect_pgm_int();
-> +
-> +	asm volatile("diag %0,0,0x318\n" : : "d" (0x42));
-> +
-> +	if (!sclp_facilities.has_diag318)
-> +		check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
-> +
-
-Maybe remove the empty line above.
-
-> +}
-> +
->  struct {
->  	const char *name;
->  	void (*func)(void);
-> @@ -164,6 +182,7 @@ struct {
->  	{ "stap", test_stap, false },
->  	{ "stidp", test_stidp, false },
->  	{ "testblock", test_testblock, false },
-> +	{ "diag318", test_diag318, false },
->  	{ NULL, NULL, false }
->  };
->  
-> 
-
-Reviewed-by: Thomas Huth <thuth@redhat.com>
+Ck9uIDE4LzExLzIwMjAgMTI6MzAsIEFsZXhhbmRlciBHcmFmIHdyb3RlOgo+Cj4KPiBPbiAxNi4x
+MS4yMCAxNjozNCwgQ2F0YW5naXUsIEFkcmlhbiBDb3N0aW4gd3JvdGU6Cj4+IC0gRnV0dXJlIGlt
+cHJvdmVtZW50cwo+Pgo+PiBJZGVhbGx5IHdlIHdvdWxkIHdhbnQgdGhlIGRyaXZlciB0byByZWdp
+c3RlciBpdHNlbGYgYmFzZWQgb24gZGV2aWNlcycKPj4gX0NJRCBhbmQgbm90IF9ISUQsIGJ1dCB1
+bmZvcnR1bmF0ZWx5IEkgY291bGRuJ3QgZmluZCBhIHdheSB0byBkbyB0aGF0Lgo+PiBUaGUgcHJv
+YmxlbSBpcyB0aGF0IEFDUEkgZGV2aWNlIG1hdGNoaW5nIGlzIGRvbmUgYnkKPj4gJ19fYWNwaV9t
+YXRjaF9kZXZpY2UoKScgd2hpY2ggZXhjbHVzaXZlbHkgbG9va3MgYXQKPj4gJ2FjcGlfaGFyZHdh
+cmVfaWQgKmh3aWQnLgo+Pgo+PiBUaGVyZSBpcyBhIHBhdGggZm9yIHBsYXRmb3JtIGRldmljZXMg
+dG8gbWF0Y2ggb24gX0NJRCB3aGVuIF9ISUQgaXMKPj4gJ1BSUDAwMDEnIC0gYnV0IHRoaXMgaXMg
+bm90IHRoZSBjYXNlIGZvciB0aGUgUWVtdSB2bWdlbmlkIGRldmljZS4KPj4KPj4gR3VpZGFuY2Ug
+YW5kIGhlbHAgaGVyZSB3b3VsZCBiZSBncmVhdGx5IGFwcHJlY2lhdGVkLgo+Cj4gVGhhdCBvbmUg
+aXMgcHJldHR5IGltcG9ydGFudCBJTUhPLiBIb3cgYWJvdXQgdGhlIGZvbGxvd2luZyAocHJvYmFi
+bHkKPiBwcmV0dHkgbWFuZ2xlZCkgcGF0Y2g/IFRoYXQgc2VlbXMgdG8gd29yayBmb3IgbWUuIFRo
+ZSBBQ1BJIGNoYW5nZQo+IHdvdWxkIG9idmlvdXNseSBuZWVkIHRvIGJlIGl0cyBvd24gc3RhbmQg
+YWxvbmUgY2hhbmdlIGFuZCBuZWVkcyBwcm9wZXIKPiBhc3Nlc3NtZW50IHdoZXRoZXIgaXQgY291
+bGQgcG9zc2libHkgYnJlYWsgYW55IGV4aXN0aW5nIHN5c3RlbXMuCj4KPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9hY3BpL2J1cy5jIGIvZHJpdmVycy9hY3BpL2J1cy5jCj4gaW5kZXggMTY4MmY4YjQ1
+NGEyLi40NTI0NDNkNzlkODcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9hY3BpL2J1cy5jCj4gKysr
+IGIvZHJpdmVycy9hY3BpL2J1cy5jCj4gQEAgLTc0OCw3ICs3NDgsNyBAQCBzdGF0aWMgYm9vbCBf
+X2FjcGlfbWF0Y2hfZGV2aWNlKHN0cnVjdCBhY3BpX2RldmljZQo+ICpkZXZpY2UsCj4gwqDCoMKg
+wqDCoMKgwqDCoCAvKiBGaXJzdCwgY2hlY2sgdGhlIEFDUEkvUE5QIElEcyBwcm92aWRlZCBieSB0
+aGUgY2FsbGVyLiAqLwo+IMKgwqDCoMKgwqDCoMKgwqAgaWYgKGFjcGlfaWRzKSB7Cj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIGZvciAoaWQgPSBhY3BpX2lkczsgaWQtPmlkWzBdIHx8IGlkLT5j
+bHM7IGlkKyspIHsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIChpZC0+aWRb
+MF0gJiYgIXN0cmNtcCgoY2hhciAqKWlkLT5pZCwgaHdpZC0+aWQpKQo+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgaWYgKGlkLT5pZFswXSAmJiAhc3RybmNtcCgoY2hhciAqKWlkLT5p
+ZCwgaHdpZC0+aWQsCj4gQUNQSV9JRF9MRU4gLSAxKSkKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIGdvdG8gb3V0X2FjcGlfbWF0Y2g7Cj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgaWYgKGlkLT5jbHMgJiYgX19hY3BpX21hdGNoX2RldmljZV9jbHMo
+aWQsIGh3aWQpKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZ290
+byBvdXRfYWNwaV9tYXRjaDsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy92aXJ0L3ZtZ2VuaWQuYyBi
+L2RyaXZlcnMvdmlydC92bWdlbmlkLmMKPiBpbmRleCA3NWE3ODdkYThhYWQuLjBiZmE0MjJjZjA5
+NCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3ZpcnQvdm1nZW5pZC5jCj4gKysrIGIvZHJpdmVycy92
+aXJ0L3ZtZ2VuaWQuYwo+IEBAIC0zNTYsNyArMzU2LDggQEAgc3RhdGljIHZvaWQgdm1nZW5pZF9h
+Y3BpX25vdGlmeShzdHJ1Y3QgYWNwaV9kZXZpY2UKPiAqZGV2aWNlLCB1MzIgZXZlbnQpCj4gwqB9
+Cj4KPiDCoHN0YXRpYyBjb25zdCBzdHJ1Y3QgYWNwaV9kZXZpY2VfaWQgdm1nZW5pZF9pZHNbXSA9
+IHsKPiAtwqDCoMKgIHsiUUVNVVZHSUQiLCAwfSwKPiArwqDCoMKgIC8qIFRoaXMgcmVhbGx5IGlz
+IFZNX0dlbl9Db3VudGVyLCBidXQgd2UgY2FuIG9ubHkgbWF0Y2ggOAo+IGNoYXJhY3RlcnMgKi8K
+PiArwqDCoMKgIHsiVk1fR0VOX0MiLCAwfSwKPiDCoMKgwqDCoCB7IiIsIDB9LAo+IMKgfTsKPgoK
+TG9va3MgbGVnaXQuIEkgY2FuIHByb3Bvc2UgYSBwYXRjaCB3aXRoIGl0LCBidXQgaG93IGRvIHdl
+IHZhbGlkYXRlIGl0CmRvZXNuJ3QgYnJlYWsgYW55IGRldmljZXM/CgoKPj4gKzIpIEFTWU5DIHNp
+bXBsaWZpZWQgZXhhbXBsZTo6Cj4+ICsKPj4gK8KgwqDCoCB2b2lkIGhhbmRsZV9pb19vbl92bWdl
+bmZkKGludCB2bWdlbmZkKQo+PiArwqDCoMKgIHsKPj4gK8KgwqDCoMKgwqDCoMKgIHVuc2lnbmVk
+IGdlbmlkOwo+PiArCj4+ICvCoMKgwqDCoMKgwqDCoCAvLyBiZWNhdXNlIG9mIFZNIGdlbmVyYXRp
+b24gY2hhbmdlLCB3ZSBuZWVkIHRvIHJlYnVpbGQgd29ybGQKPj4gK8KgwqDCoMKgwqDCoMKgIHJl
+c2VlZF9hcHBfZW52KCk7Cj4+ICsKPj4gK8KgwqDCoMKgwqDCoMKgIC8vIHJlYWQgbmV3IGdlbiBJ
+RCAtIHdlIG5lZWQgaXQgdG8gY29uZmlybSB3ZSd2ZSBoYW5kbGVkIHVwZGF0ZQo+PiArwqDCoMKg
+wqDCoMKgwqAgcmVhZChmZCwgJmdlbmlkLCBzaXplb2YoZ2VuaWQpKTsKPgo+IFRoaXMgaXMgcmFj
+eSBpbiBjYXNlIHR3byBjb25zZWN1dGl2ZSBzbmFwc2hvdHMgaGFwcGVuLiBUaGUgcmVhZCBuZWVk
+cwo+IHRvIGdvIGJlZm9yZSB0aGUgcmVzZWVkLgo+ClN3aXRjaGVkIHRoZW0gYXJvdW5kIGxpa2Ug
+eW91IHN1Z2dlc3QgdG8gYXZvaWQgY29uZnVzaW9uLgoKQnV0IEkgZG9uJ3Qgc2VlIGEgcHJvYmxl
+bSB3aXRoIHRoaXMgcmFjZS4gVGhlIGlkZWEgaGVyZSBpcyB0byB0cmlnZ2VyCnJlc2VlZF9hcHBf
+ZW52KCkgd2hpY2ggZG9lc24ndCBkZXBlbmQgb24gdGhlIGdlbmVyYXRpb24gY291bnRlciB2YWx1
+ZS4KV2hldGhlciBpdCBnZXRzIGluY3JlbWVudGVkIG9uY2Ugb3IgTiB0aW1lcyBpcyBpcnJlbGV2
+YW50LCB3ZSdyZSBqdXN0CmludGVyZXN0ZWQgdGhhdCB3ZSBwYXVzZSBleGVjdXRpb24gYW5kIHJl
+c2VlZCBiZWZvcmUgcmVzdW1pbmcgKGluCmJldHdlZW4gdGhlc2UsIHdoZXRoZXIgTiBvciBNIGdl
+bmVyYXRpb24gY2hhbmdlcyBpcyB0aGUgc2FtZSB0aGluZykuCgo+PiArMykgTWFwcGVkIG1lbW9y
+eSBwb2xsaW5nIHNpbXBsaWZpZWQgZXhhbXBsZTo6Cj4+ICsKPj4gK8KgwqDCoCAvKgo+PiArwqDC
+oMKgwqAgKiBhcHAvbGlicmFyeSBmdW5jdGlvbiB0aGF0IHByb3ZpZGVzIGNhY2hlZCBzZWNyZXRz
+Cj4+ICvCoMKgwqDCoCAqLwo+PiArwqDCoMKgIGNoYXIgKiBzYWZlX2NhY2hlZF9zZWNyZXQoYXBw
+X2RhdGFfdCAqYXBwKQo+PiArwqDCoMKgIHsKPj4gK8KgwqDCoMKgwqDCoMKgIGNoYXIgKnNlY3Jl
+dDsKPj4gK8KgwqDCoMKgwqDCoMKgIHZvbGF0aWxlIHVuc2lnbmVkICpjb25zdCBnZW5pZF9wdHIg
+PSBnZXRfdm1nZW5pZF9tYXBwaW5nKGFwcCk7Cj4+ICvCoMKgwqAgYWdhaW46Cj4+ICvCoMKgwqDC
+oMKgwqDCoCBzZWNyZXQgPSBfX2NhY2hlZF9zZWNyZXQoYXBwKTsKPj4gKwo+PiArwqDCoMKgwqDC
+oMKgwqAgaWYgKHVubGlrZWx5KCpnZW5pZF9wdHIgIT0gYXBwLT5jYWNoZWRfZ2VuaWQpKSB7Cj4+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC8vIHJlYnVpbGQgd29ybGQgdGhlbiBjb25maXJtIHRo
+ZSBnZW5pZCB1cGRhdGUgKHRocnUgd3JpdGUpCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJl
+YnVpbGRfY2FjaGVzKGFwcCk7Cj4+ICsKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYXBwLT5j
+YWNoZWRfZ2VuaWQgPSAqZ2VuaWRfcHRyOwo+Cj4gVGhpcyBpcyByYWN5IGFnYWluLiBZb3UgbmVl
+ZCB0byByZWFkIHRoZSBnZW5pZCBiZWZvcmUgcmVidWlsZCBhbmQgc2V0Cj4gaXQgaGVyZS4KPgpJ
+IGRvbid0IHNlZSB0aGUgcmFjZS4gR2VuIGNvdW50ZXIgaXMgcmVhZCBmcm9tIHZvbGF0aWxlIG1h
+cHBlZCBtZW0sIG9uCmRldGVjdGVkIGNoYW5nZSB3ZSByZWJ1aWxkIHdvcmxkLCBjb25maXJtIHRo
+ZSB1cGRhdGUgYmFjayB0byB0aGUgZHJpdmVyCnRoZW4gcmVzdGFydCB0aGUgbG9vcC4gTG9vcCB3
+aWxsIGJyZWFrIHdoZW4gbm8gbW9yZSBjaGFuZ2VzIGhhcHBlbi4KCj4+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIGFja192bWdlbmlkX3VwZGF0ZShhcHApOwo+PiArCj4+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIGdvdG8gYWdhaW47Cj4+ICvCoMKgwqDCoMKgwqDCoCB9Cj4+ICsKPj4gK8KgwqDC
+oMKgwqDCoMKgIHJldHVybiBzZWNyZXQ7Cj4+ICvCoMKgwqAgfQo+PiArCgo+PiArCj4+ICtzdGF0
+aWMgaW50IHZtZ2VuaWRfY2xvc2Uoc3RydWN0IGlub2RlICppbm9kZSwgc3RydWN0IGZpbGUgKmZp
+bGUpCj4+ICt7Cj4+ICvCoMKgwqAgc3RydWN0IGZpbGVfZGF0YSAqZmlsZV9kYXRhID0gZmlsZS0+
+cHJpdmF0ZV9kYXRhOwo+PiArwqDCoMKgIHN0cnVjdCBkZXZfZGF0YSAqcHJpdiA9IGZpbGVfZGF0
+YS0+ZGV2X2RhdGE7Cj4+ICsKPj4gK8KgwqDCoCBpZiAoZmlsZV9kYXRhLT5hY2tlZF9nZW5fY291
+bnRlciAhPSBwcml2LT5nZW5lcmF0aW9uX2NvdW50ZXIpCj4+ICvCoMKgwqDCoMKgwqDCoCB2bWdl
+bmlkX3B1dF9vdXRkYXRlZF93YXRjaGVycyhwcml2KTsKPgo+IElzIHRoaXMgcmFjeT8gQ291bGQg
+dGhlcmUgYmUgYSBzbmFwc2hvdCBub3RpZmljYXRpb24gY29taW5nIGJldHdlZW4KPiB0aGUgYnJh
+bmNoIGFuZCB0aGUgcHV0Pwo+ClRoaXMgaXMgaW5kZWVkIHJhY3ksIHdpbGwgZml4IGl0IGluIHBh
+dGNoIHYzLgo+PiArwqDCoMKgIGF0b21pY19kZWMoJnByaXYtPndhdGNoZXJzKTsKPj4gK8KgwqDC
+oCBrZnJlZShmaWxlX2RhdGEpOwo+PiArCj4+ICvCoMKgwqAgcmV0dXJuIDA7Cj4+ICt9Cgo+PiAr
+c3RhdGljIHNzaXplX3Qgdm1nZW5pZF93cml0ZShzdHJ1Y3QgZmlsZSAqZmlsZSwgY29uc3QgY2hh
+ciBfX3VzZXIKPj4gKnVidWYsCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2l6
+ZV90IGNvdW50LCBsb2ZmX3QgKnBwb3MpCj4+ICt7Cj4+ICvCoMKgwqAgc3RydWN0IGZpbGVfZGF0
+YSAqZmlsZV9kYXRhID0gZmlsZS0+cHJpdmF0ZV9kYXRhOwo+PiArwqDCoMKgIHN0cnVjdCBkZXZf
+ZGF0YSAqcHJpdiA9IGZpbGVfZGF0YS0+ZGV2X2RhdGE7Cj4+ICvCoMKgwqAgdW5zaWduZWQgaW50
+IGFja2VkX2dlbl9jb3VudDsKPj4gKwo+PiArwqDCoMKgIC8qIGRpc2FsbG93IHBhcnRpYWwgd3Jp
+dGVzICovCj4+ICvCoMKgwqAgaWYgKGNvdW50ICE9IHNpemVvZihhY2tlZF9nZW5fY291bnQpKQo+
+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FSU5WQUw7Cj4+ICvCoMKgwqAgaWYgKGNvcHlfZnJv
+bV91c2VyKCZhY2tlZF9nZW5fY291bnQsIHVidWYsIGNvdW50KSkKPj4gK8KgwqDCoMKgwqDCoMKg
+IHJldHVybiAtRUZBVUxUOwo+PiArwqDCoMKgIC8qIHdyb25nIGdlbi1jb3VudGVyIGFja25vd2xl
+ZGdlZCAqLwo+PiArwqDCoMKgIGlmIChhY2tlZF9nZW5fY291bnQgIT0gcHJpdi0+Z2VuZXJhdGlv
+bl9jb3VudGVyKQo+PiArwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FSU5WQUw7Cj4+ICsKPj4gK8Kg
+wqDCoCBpZiAoZmlsZV9kYXRhLT5hY2tlZF9nZW5fY291bnRlciAhPSBwcml2LT5nZW5lcmF0aW9u
+X2NvdW50ZXIpIHsKPj4gK8KgwqDCoMKgwqDCoMKgIC8qIHVwZGF0ZSBsb2NhbCB2aWV3IG9mIFVV
+SUQgKi8KPj4gK8KgwqDCoMKgwqDCoMKgIGZpbGVfZGF0YS0+YWNrZWRfZ2VuX2NvdW50ZXIgPSBh
+Y2tlZF9nZW5fY291bnQ7Cj4+ICvCoMKgwqDCoMKgwqDCoCB2bWdlbmlkX3B1dF9vdXRkYXRlZF93
+YXRjaGVycyhwcml2KTsKPgo+IFNhbWUgcXVlc3Rpb24gaGVyZTogV2hhdCBpZiB0aGVyZSBpcyBh
+IG5vdGlmaWNhdGlvbiBiZXR3ZWVuIHRoZSBicmFuY2gKPiBhbmQgdGhlIHB1dD8KPgpSaWdodCwg
+cmFjeSBoZXJlIGFzIHdlbGwuIFdpbGwgZml4IGluIHBhdGNoIHYzLgoKClRoYW5rcywKCkFkcmlh
+bi4KCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgKFJvbWFuaWEpIFMuUi5MLiByZWdpc3Rl
+cmVkIG9mZmljZTogMjdBIFNmLiBMYXphciBTdHJlZXQsIFVCQzUsIGZsb29yIDIsIElhc2ksIElh
+c2kgQ291bnR5LCA3MDAwNDUsIFJvbWFuaWEuIFJlZ2lzdGVyZWQgaW4gUm9tYW5pYS4gUmVnaXN0
+cmF0aW9uIG51bWJlciBKMjIvMjYyMS8yMDA1Lgo=
 
