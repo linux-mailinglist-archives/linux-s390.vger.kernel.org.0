@@ -2,201 +2,163 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 116952C6191
-	for <lists+linux-s390@lfdr.de>; Fri, 27 Nov 2020 10:22:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7CF62C6284
+	for <lists+linux-s390@lfdr.de>; Fri, 27 Nov 2020 11:09:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgK0JVb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 27 Nov 2020 04:21:31 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13028 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726014AbgK0JVa (ORCPT
+        id S1726014AbgK0KJc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 27 Nov 2020 05:09:32 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53602 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725854AbgK0KJb (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 27 Nov 2020 04:21:30 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AR92sIY043644;
-        Fri, 27 Nov 2020 04:21:23 -0500
+        Fri, 27 Nov 2020 05:09:31 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0ARA2TPO120254;
+        Fri, 27 Nov 2020 05:09:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=3+5uFdJAzDE4hZmH6EUh+WOYOUNSgrvapC3XLw32IjA=;
- b=lLAIN5yANAURYCJl0yBfWvtt3a+Pbq/yJRGKVD1TRzRd4oQDvcBsLf0N9e7Gm0BesOVy
- pn4szDUNuMqu+hdIGo79tHyVDTmayh+YGy6bK6Jrb4L6vU600OmdzXz58lnna4P1iLRi
- Km20hr+bdDI0UIli8Iun2FgmoEJXz4UkCNaS1ETXnap5LYYAsS2OD9/ogH/scIvRsDE2
- xMK7WeE9EyUg0ype3Pj4bLKDQzAgvWQy7u5xq6eSoVLYIGcJ/sa1+fSDAQAr1lCi8A+O
- EdMwRLlDhgQj96pWH98cGCeCOOHnzcx2+AAmPR2a/a5dwwSaSSXL9n4YNP/O3tbNbFUQ eQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 352we6j8dq-1
+ bh=9CgQx4X+B/5a/3dpEyVt7OrqSJb7OKqR7acV/bnm/xs=;
+ b=iYxKZuUVOaPRvdH6KB3glvcC3v5U66b97zEuMO9HzekYAXjNISR2+cyodV5Smks6KwWq
+ 1guUJjYdzhh8qGr6OYledPyYO6ZB5csWRCL3SPmlhYrt4JILb3K+54xXiQ0Q9bkxYWkY
+ 4pn3EM83IyQQSS80lnGY2hPc8lrKjs4Y/og1iyV9hEVPicGQQWsdygnPQDe4qi84AaPE
+ uSQnYUOJocjAyvBEKvagqazAmblZGuBwcmtcSkObe97i0m8WdMWJ8czEhhF+bzCniwS/
+ 62lFgI9y9QjXRsmNNfmfrdp4oSQIHT0bdfso2Nqg+CKl7SWupiKcKd+OYRtzrO4+9xWm MQ== 
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 352uke60gh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Nov 2020 04:21:22 -0500
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AR93VLw046547;
-        Fri, 27 Nov 2020 04:21:22 -0500
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 352we6j8d4-1
+        Fri, 27 Nov 2020 05:09:30 -0500
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0ARA2Nhh013374;
+        Fri, 27 Nov 2020 10:09:28 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03fra.de.ibm.com with ESMTP id 352jgsgsr5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Nov 2020 04:21:22 -0500
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AR97Uot002117;
-        Fri, 27 Nov 2020 09:21:20 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04fra.de.ibm.com with ESMTP id 352drkgdm6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Nov 2020 09:21:20 +0000
+        Fri, 27 Nov 2020 10:09:28 +0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AR9LHjC53674460
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0ARA8AdJ7012932
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Nov 2020 09:21:17 GMT
+        Fri, 27 Nov 2020 10:08:10 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D9F2AE053;
-        Fri, 27 Nov 2020 09:21:17 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7CAA6AE053;
+        Fri, 27 Nov 2020 10:08:10 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 12C36AE04D;
-        Fri, 27 Nov 2020 09:21:17 +0000 (GMT)
-Received: from oc4120165700.ibm.com (unknown [9.145.51.25])
+        by IMSVA (Postfix) with ESMTP id 45951AE05A;
+        Fri, 27 Nov 2020 10:08:10 +0000 (GMT)
+Received: from [9.171.3.231] (unknown [9.171.3.231])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Nov 2020 09:21:16 +0000 (GMT)
-Subject: Re: [PATCH] scsi: zfcp: fix use-after-free in zfcp_unit_remove
-To:     Benjamin Block <bblock@linux.ibm.com>,
-        Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-References: <20201120074854.31754-1-miaoqinglang@huawei.com>
- <20201125170658.GB8578@t480-pf1aa2c2>
- <4c65bead-2553-171e-54d2-87a9de0330e8@huawei.com>
- <20201126091353.50cf6ab6.cohuck@redhat.com>
- <20201126094259.GE8578@t480-pf1aa2c2>
- <9ba663ad-97fe-6c2a-e15a-45f2de1f0af0@huawei.com>
- <20201126151242.GI8578@t480-pf1aa2c2>
-From:   Steffen Maier <maier@linux.ibm.com>
-Message-ID: <90356c8e-f523-1d16-45a2-0c8b9fae15c0@linux.ibm.com>
-Date:   Fri, 27 Nov 2020 10:21:16 +0100
+        Fri, 27 Nov 2020 10:08:10 +0000 (GMT)
+Subject: Re: [PATCH v3] s390/pci: fix CPU address in MSI for directed IRQ
+To:     Halil Pasic <pasic@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1606410037-11436-1-git-send-email-agordeev@linux.ibm.com>
+ <20201127095633.60f8a544.pasic@linux.ibm.com>
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+Message-ID: <16fe9017-407f-1bb0-1599-fb46d93009fc@linux.ibm.com>
+Date:   Fri, 27 Nov 2020 11:08:10 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.3.1
 MIME-Version: 1.0
-In-Reply-To: <20201126151242.GI8578@t480-pf1aa2c2>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20201127095633.60f8a544.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-27_04:2020-11-26,2020-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
- clxscore=1011 suspectscore=0 mlxscore=0 spamscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011270052
+ definitions=2020-11-27_05:2020-11-26,2020-11-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ phishscore=0 clxscore=1011 suspectscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011270058
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 11/26/20 4:12 PM, Benjamin Block wrote:
-> On Thu, Nov 26, 2020 at 08:07:32PM +0800, Qinglang Miao wrote:
->> 在 2020/11/26 17:42, Benjamin Block 写道:
->>> On Thu, Nov 26, 2020 at 09:13:53AM +0100, Cornelia Huck wrote:
->>>> On Thu, 26 Nov 2020 09:27:41 +0800
->>>> Qinglang Miao <miaoqinglang@huawei.com> wrote:
->>>>> 在 2020/11/26 1:06, Benjamin Block 写道:
->>>>>> On Fri, Nov 20, 2020 at 03:48:54PM +0800, Qinglang Miao wrote:
-> ....
->>> Let's go by example. If we assume the reference count of `unit->dev` is
->>> R, and the function starts with R = 1 (otherwise the deivce would've
->>> been freed already), we get:
->>>
->>>       int zfcp_unit_remove(struct zfcp_port *port, u64 fcp_lun)
->>>       {
->>>       	struct zfcp_unit *unit;
->>>       	struct scsi_device *sdev;
->>>       	write_lock_irq(&port->unit_list_lock);
->>> // unit->dev (R = 1)
->>>       	unit = _zfcp_unit_find(port, fcp_lun);
->>> // get_device(&unit->dev)
->>> // unit->dev (R = 2)
->>>       	if (unit)
->>>       		list_del(&unit->list);
->>>       	write_unlock_irq(&port->unit_list_lock);
->>>       	if (!unit)
->>>       		return -EINVAL;
->>>       	sdev = zfcp_unit_sdev(unit);
->>>       	if (sdev) {
->>>       		scsi_remove_device(sdev);
->>>       		scsi_device_put(sdev);
->>>       	}
->>> // unit->dev (R = 2)
->>>       	put_device(&unit->dev);
->>> // unit->dev (R = 1)
->>>       	device_unregister(&unit->dev);
->>> // unit->dev (R = 0)
->>>       	return 0;
->>>       }
->>>
->>> If we now apply this patch, we'd end up with R = 1 after
->>> `device_unregister()`, and the device would not be properly removed.
->>>
->>> If you still think that's wrong, then you'll need to better explain why.
->>>
->> Hi Banjamin and Cornelia,
->>
->> Your replies make me reliaze that I've been holding a mistake understanding
->> of put_device() as well as reference count.
->>
->> Thanks for you two's patient explanation !!
->>
->> BTW, should I send a v2 on these two patches to move the position of
->> put_device()?
+
+
+On 11/27/20 9:56 AM, Halil Pasic wrote:
+> On Thu, 26 Nov 2020 18:00:37 +0100
+> Alexander Gordeev <agordeev@linux.ibm.com> wrote:
 > 
-> Feel free to do so.
+>> The directed MSIs are delivered to CPUs whose address is
+>> written to the MSI message data. The current code assumes
+>> that a CPU logical number (as it is seen by the kernel)
+>> is also that CPU address.
+>>
+>> The above assumption is not correct, as the CPU address
+>> is rather the value returned by STAP instruction. That
+>> value does not necessarily match the kernel logical CPU
+>> number.
+>>
+>> Fixes: e979ce7bced2 ("s390/pci: provide support for CPU directed interrupts")
+>> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+>> ---
+>>  arch/s390/pci/pci_irq.c | 14 +++++++++++---
+>>  1 file changed, 11 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/s390/pci/pci_irq.c b/arch/s390/pci/pci_irq.c
+>> index 743f257cf2cb..75217fb63d7b 100644
+>> --- a/arch/s390/pci/pci_irq.c
+>> +++ b/arch/s390/pci/pci_irq.c
+>> @@ -103,9 +103,10 @@ static int zpci_set_irq_affinity(struct irq_data *data, const struct cpumask *de
+>>  {
+>>  	struct msi_desc *entry = irq_get_msi_desc(data->irq);
+>>  	struct msi_msg msg = entry->msg;
+>> +	int cpu_addr = smp_cpu_get_cpu_address(cpumask_first(dest));
+>>  
+>>  	msg.address_lo &= 0xff0000ff;
+>> -	msg.address_lo |= (cpumask_first(dest) << 8);
+>> +	msg.address_lo |= (cpu_addr << 8);
+>>  	pci_write_msi_msg(data->irq, &msg);
+>>  
+>>  	return IRQ_SET_MASK_OK;
+>> @@ -238,6 +239,7 @@ int arch_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
+>>  	unsigned long bit;
+>>  	struct msi_desc *msi;
+>>  	struct msi_msg msg;
+>> +	int cpu_addr;
+>>  	int rc, irq;
+>>  
+>>  	zdev->aisb = -1UL;
+>> @@ -287,9 +289,15 @@ int arch_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
+>>  					 handle_percpu_irq);
+>>  		msg.data = hwirq - bit;
+>>  		if (irq_delivery == DIRECTED) {
+>> +			if (msi->affinity)
+>> +				cpu = cpumask_first(&msi->affinity->mask);
+>> +			else
+>> +				cpu = 0;
+>> +			cpu_addr = smp_cpu_get_cpu_address(cpu);
+>> +
 > 
-> I think having the `put_device()` call after `device_unregister()` in
-> both `zfcp_unit_remove()` and `zfcp_sysfs_port_remove_store()` is more
-> natural, because it ought to be the last time we touch the object in
-> both functions.
+> I thin style wise, I would prefer keeping the ternary operator instead
+> of rewriting it as an if-then-else, i.e.:
+>                         cpu_addr = smp_cpu_get_cpu_address(msi->affinity ?      
+>                                 cpumask_first(&msi->affinity->mask) : 0);
+> but either way:
+> 
+> Reviewed-by: Halil Pasic <pasic@linux.ibm.com> 
 
-If you move put_device(), you could add a comment like we did here to explain 
-which (hidden) get_device is undone:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/s390/scsi?id=ef4021fe5fd77ced0323cede27979d80a56211ca
-("scsi: zfcp: fix to prevent port_remove with pure auto scan LUNs (only sdevs)")
-So in this patch it could be:
-	put_device(&unit->dev); /* undo _zfcp_unit_find() */
-And in the other patch it could be:
-	put_device(&port->dev); /* undo zfcp_get_port_by_wwpn() */
-Then it would be clearer next time somebody looks at the code.
+Thanks for your review, lets keep the if/else its certainly not less
+readable even if it may be less pretty.
 
-Especially for the other patch on zfcp_sysfs_port_remove_store() moving the 
-put_device(&port->dev) to at least *after* the call of 
-zfcp_erp_port_shutdown(port, 0, "syprs_1") would make the code cleaner to me. 
-Along the idead of passing the port to zfcp_erp_port_shutdown with the 
-reference we got from zfcp_get_port_by_wwpn(). That said, the current code is 
-of course still correct as we currently have the port ref of the earlier 
-device_register so passing the port to zfcp_erp_port_shutdown() is safe.
+Found another thing (not directly in the touched code) but I'm now
+wondering about. In zpci_handle_cpu_local_irq()
+we do
+	struct airq_iv *dibv = zpci_ibv[smp_processor_id()];
 
-If we wanted to make the gets and puts nicely nested, then we could move the 
-puts to just before the device_unregister, but that's bike shedding:
-	device_register()   --+
-	get_device() --+      |
-	put_device() --+      |
-	device_unregister() --+
+does that also need to use some _address() variant? If it does that
+then dicatates that the CPU addresses must start at 0.
 
-Benjamin's suggested move location works for me, too. After all, the kdoc of 
-device_unregister explicitly mentions the possibility that other refs might 
-continue to exist after device_unregister was called:
-	device_register()   --+
-	get_device() ---------|--+
-	device_unregister() --+  |
-	put_device() ------------+
-
--- 
-Mit freundlichen Gruessen / Kind regards
-Steffen Maier
-
-Linux on IBM Z Development
-
-https://www.ibm.com/privacy/us/en/
-IBM Deutschland Research & Development GmbH
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschaeftsfuehrung: Dirk Wittkopp
-Sitz der Gesellschaft: Boeblingen
-Registergericht: Amtsgericht Stuttgart, HRB 243294
+> 
+>>  			msg.address_lo = zdev->msi_addr & 0xff0000ff;
+>> -			msg.address_lo |= msi->affinity ?
+>> -				(cpumask_first(&msi->affinity->mask) << 8) : 0;
+>> +			msg.address_lo |= (cpu_addr << 8);
+>> +
+>>  			for_each_possible_cpu(cpu) {
+>>  				airq_iv_set_data(zpci_ibv[cpu], hwirq, irq);
+>>  			}
+> 
