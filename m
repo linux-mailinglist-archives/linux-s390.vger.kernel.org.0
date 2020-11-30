@@ -2,596 +2,508 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66F322C8E2F
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Nov 2020 20:37:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6628C2C8FD9
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Nov 2020 22:21:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbgK3Tg6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Nov 2020 14:36:58 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44344 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725987AbgK3Tg6 (ORCPT
+        id S2387645AbgK3VVp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 Nov 2020 16:21:45 -0500
+Received: from gproxy10-pub.mail.unifiedlayer.com ([69.89.20.226]:38744 "EHLO
+        gproxy10-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387531AbgK3VVo (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 30 Nov 2020 14:36:58 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AUJVfZ0093172;
-        Mon, 30 Nov 2020 14:36:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=SJMFmkYWoR8qw+FMGXEm+AItSYG0GNxu49cgDQNKvuU=;
- b=ONJ6DDFDRvhAVCWBPelJgLn3QQfl8P7pcDdOflGooOD79BEbfI57ESR6YICTNJ5MT6xo
- OZvhuQloNNwtRN2L5KEyWTaTdOgkhToOIg0ZGNImCWacU8SJZx8AKt+gEbJfsTWVdWq9
- W+X7gmNaySTKyEwyYmQDOhsQqorUmSouFfuw+ZCfn2EV/BNS7FM97p9PyN2l/KkIO1UU
- HPbOteLIgfxFCnbv8Xf4jb7Xm29fbZzA/MZurA5tjb91GjF6xqxfy6b0XSW3SbYN8eZC
- px04uRLbYU0+JVcGJgp6YkckgJKXn4oHV4BPV1kfmk7eMS31zdm4oq5Xoz3+VPZbZmaq Ag== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3556641kh4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Nov 2020 14:36:15 -0500
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AUJVp21093853;
-        Mon, 30 Nov 2020 14:36:14 -0500
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3556641kgv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Nov 2020 14:36:14 -0500
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AUJW2L3018237;
-        Mon, 30 Nov 2020 19:36:13 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma01dal.us.ibm.com with ESMTP id 353e68xqck-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Nov 2020 19:36:13 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AUJaBmS852650
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Nov 2020 19:36:11 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D31ECAC059;
-        Mon, 30 Nov 2020 19:36:11 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 06464AC05B;
-        Mon, 30 Nov 2020 19:36:10 +0000 (GMT)
-Received: from cpe-66-24-58-13.stny.res.rr.com (unknown [9.85.195.249])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 30 Nov 2020 19:36:10 +0000 (GMT)
-Subject: Re: [PATCH v12 12/17] s390/vfio-ap: allow hot plug/unplug of AP
- resources using mdev device
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        cohuck@redhat.com, mjrosato@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-References: <20201124214016.3013-1-akrowiak@linux.ibm.com>
- <20201124214016.3013-13-akrowiak@linux.ibm.com>
- <20201129025250.16eb8355.pasic@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <103cbe02-2093-c950-8d65-d3dc385942ce@linux.ibm.com>
-Date:   Mon, 30 Nov 2020 14:36:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 30 Nov 2020 16:21:44 -0500
+X-Greylist: delayed 1256 seconds by postgrey-1.27 at vger.kernel.org; Mon, 30 Nov 2020 16:21:42 EST
+Received: from CMGW (unknown [10.9.0.13])
+        by gproxy10.mail.unifiedlayer.com (Postfix) with ESMTP id EF6F4140504
+        for <linux-s390@vger.kernel.org>; Mon, 30 Nov 2020 14:00:05 -0700 (MST)
+Received: from bh-25.webhostbox.net ([208.91.199.152])
+        by cmsmtp with ESMTP
+        id jqHFkFSrCi1lMjqHFkDet2; Mon, 30 Nov 2020 14:00:05 -0700
+X-Authority-Reason: nr=8
+X-Authority-Analysis: v=2.2 cv=VoRTO6+n c=1 sm=1 tr=0
+ a=QNED+QcLUkoL9qulTODnwA==:117 a=2cfIYNtKkjgZNaOwnGXpGw==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=kj9zAlcOel0A:10 a=nNwsprhYR40A:10
+ a=evQFzbml-YQA:10 a=7CQSdrXTAAAA:8 a=VnNF1IyMAAAA:8 a=JfrnYn6hAAAA:8
+ a=d8xRA4_IbAGvrRFoWPAA:9 a=CjuIK1q_8ugA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
+ a=1CNFftbPRP8L7MoqJWF3:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=roeck-us.net; s=default; h=In-Reply-To:Content-Type:MIME-Version:References
+        :Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding
+        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=hCZTowaLyEHW6YYaHf3Q6tS/A49oGSz1G4d7e0CvueY=; b=cNjjmOOiz1wAOESNlCHfZMiQgy
+        Pm7BQUT3qV8d2BUGrJkPfMbbdsepw1Xs5vG+1ZPPkRcBOK8t+RoAyv4BMABoxevongYMMcmlzgWCA
+        z3u2RvapyxIfn3XzDn/h733CpiL4+IZZ8xDoE3tgW+ak7sU+wS7LD2S+AgCEUsXN5IKfKRFfVzLE8
+        r9sP55y3YjIuccEYwvJv8lubHkuwZmwswNTArhF3afAcgwfmOtTiuMqGUa/9DIt4PHh/YqbXjjgP5
+        5ILCRQzw0ao5dXWDx0yi1nwiq4oGXE+U+K6AW7/R5RyzJ3RNKA7trBhXBX4++W1PVi7uO8y75Y6n1
+        4Np4te7w==;
+Received: from 108-223-40-66.lightspeed.sntcca.sbcglobal.net ([108.223.40.66]:56604 helo=localhost)
+        by bh-25.webhostbox.net with esmtpa (Exim 4.93)
+        (envelope-from <linux@roeck-us.net>)
+        id 1kjqHE-001BwD-1O; Mon, 30 Nov 2020 21:00:04 +0000
+Date:   Mon, 30 Nov 2020 13:00:03 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     rafael@kernel.org, viresh.kumar@linaro.org, mingo@kernel.org,
+        x86@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        svens@linux.ibm.com, linux-kernel@vger.kernel.org,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/idle: Fix arch_cpu_idle() vs tracing
+Message-ID: <20201130210003.GA40619@roeck-us.net>
+References: <20201120114145.197714127@infradead.org>
+ <20201120114925.594122626@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20201129025250.16eb8355.pasic@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-30_08:2020-11-30,2020-11-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=3 clxscore=1015
- phishscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
- bulkscore=0 mlxlogscore=999 spamscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011300122
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201120114925.594122626@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - bh-25.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - roeck-us.net
+X-BWhitelist: no
+X-Source-IP: 108.223.40.66
+X-Source-L: No
+X-Exim-ID: 1kjqHE-001BwD-1O
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 108-223-40-66.lightspeed.sntcca.sbcglobal.net (localhost) [108.223.40.66]:56604
+X-Source-Auth: guenter@roeck-us.net
+X-Email-Count: 1
+X-Source-Cap: cm9lY2s7YWN0aXZzdG07YmgtMjUud2ViaG9zdGJveC5uZXQ=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Fri, Nov 20, 2020 at 12:41:46PM +0100, Peter Zijlstra wrote:
+> We call arch_cpu_idle() with RCU disabled, but then use
+> local_irq_{en,dis}able(), which invokes tracing, which relies on RCU.
+> 
+> Switch all arch_cpu_idle() implementations to use
+> raw_local_irq_{en,dis}able() and carefully manage the
+> lockdep,rcu,tracing state like we do in entry.
+> 
+> (XXX: we really should change arch_cpu_idle() to not return with
+> interrupts enabled)
+> 
 
+Has this patch been tested on s390 ? Reason for asking is that it causes
+all my s390 emulations to crash. Reverting it fixes the problem.
 
-On 11/28/20 8:52 PM, Halil Pasic wrote:
-> On Tue, 24 Nov 2020 16:40:11 -0500
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->
->> Let's hot plug/unplug adapters, domains and control domains assigned to or
->> unassigned from an AP matrix mdev device while it is in use by a guest per
->> the following rules:
->>
->> * Assign an adapter to mdev's matrix:
->>
->>    The adapter will be hot plugged into the guest under the following
->>    conditions:
->>    1. The adapter is not yet assigned to the guest's matrix
->>    2. At least one domain is assigned to the guest's matrix
->>    3. Each APQN derived from the APID of the newly assigned adapter and
->>       the APQIs of the domains already assigned to the guest's
->>       matrix references a queue device bound to the vfio_ap device driver.
->>
->>    The adapter and each domain assigned to the mdev's matrix will be hot
->>    plugged into the guest under the following conditions:
->>    1. The adapter is not yet assigned to the guest's matrix
->>    2. No domains are assigned to the guest's matrix
->>    3  At least one domain is assigned to the mdev's matrix
->>    4. Each APQN derived from the APID of the newly assigned adapter and
->>       the APQIs of the domains assigned to the mdev's matrix references a
->>       queue device bound to the vfio_ap device driver.
->>
->> * Unassign an adapter from mdev's matrix:
->>
->>    The adapter will be hot unplugged from the KVM guest if it is
->>    assigned to the guest's matrix.
->>
->> * Assign a domain to mdev's matrix:
->>
->>    The domain will be hot plugged into the guest under the following
->>    conditions:
->>    1. The domain is not yet assigned to the guest's matrix
->>    2. At least one adapter is assigned to the guest's matrix
->>    3. Each APQN derived from the APQI of the newly assigned domain and
->>       the APIDs of the adapters already assigned to the guest's
->>       matrix references a queue device bound to the vfio_ap device driver.
->>
->>    The domain and each adapter assigned to the mdev's matrix will be hot
->>    plugged into the guest under the following conditions:
->>    1. The domain is not yet assigned to the guest's matrix
->>    2. No adapters are assigned to the guest's matrix
->>    3  At least one adapter is assigned to the mdev's matrix
->>    4. Each APQN derived from the APQI of the newly assigned domain and
->>       the APIDs of the adapters assigned to the mdev's matrix references a
->>       queue device bound to the vfio_ap device driver.
->>
->> * Unassign adapter from mdev's matrix:
->>
->>    The domain will be hot unplugged from the KVM guest if it is
->>    assigned to the guest's matrix.
->>
->> * Assign a control domain:
->>
->>    The control domain will be hot plugged into the KVM guest if it is not
->>    assigned to the guest's APCB. The AP architecture ensures a guest will
->>    only get access to the control domain if it is in the host's AP
->>    configuration, so there is no risk in hot plugging it; however, it will
->>    become automatically available to the guest when it is added to the host
->>    configuration.
->>
->> * Unassign a control domain:
->>
->>    The control domain will be hot unplugged from the KVM guest if it is
->>    assigned to the guest's APCB.
-> This is where things start getting tricky. E.g. do we need to revise
-> filtering after an unassign? (For example an assign_adapter X didn't
-> change the shadow, because queue XY was missing, but now we unplug domain
-> Y. Should the adapter X pop up? I guess it should.)
+Guenter
 
-I suppose that makes sense at the expense of making the code
-more complex. It is essentially what we had in the prior version
-which used the same filtering code for assignment as well as
-host AP configuration changes.
-
->
->
->> Note: Now that hot plug/unplug is implemented, there is the possibility
->>        that an assignment/unassignment of an adapter, domain or control
->>        domain could be initiated while the guest is starting, so the
->>        matrix device lock will be taken for the group notification callback
->>        that initializes the guest's APCB when the KVM pointer is made
->>        available to the vfio_ap device driver.
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> ---
->>   drivers/s390/crypto/vfio_ap_ops.c | 190 +++++++++++++++++++++++++-----
->>   1 file changed, 159 insertions(+), 31 deletions(-)
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
->> index 586ec5776693..4f96b7861607 100644
->> --- a/drivers/s390/crypto/vfio_ap_ops.c
->> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->> @@ -631,6 +631,60 @@ static void vfio_ap_mdev_manage_qlinks(struct ap_matrix_mdev *matrix_mdev,
->>   	}
->>   }
->>   
->> +static bool vfio_ap_assign_apid_to_apcb(struct ap_matrix_mdev *matrix_mdev,
->> +					unsigned long apid)
->> +{
->> +	unsigned long apqi, apqn;
->> +	unsigned long *aqm = matrix_mdev->shadow_apcb.aqm;
->> +
->> +	/*
->> +	 * If the APID is already assigned to the guest's shadow APCB, there is
->> +	 * no need to assign it.
->> +	 */
->> +	if (test_bit_inv(apid, matrix_mdev->shadow_apcb.apm))
->> +		return false;
->> +
->> +	/*
->> +	 * If no domains have yet been assigned to the shadow APCB and one or
->> +	 * more domains have been assigned to the matrix mdev, then use
->> +	 * the domains assigned to the matrix mdev; otherwise, there is nothing
->> +	 * to assign to the shadow APCB.
->> +	 */
->> +	if (bitmap_empty(matrix_mdev->shadow_apcb.aqm, AP_DOMAINS)) {
->> +		if (bitmap_empty(matrix_mdev->matrix.aqm, AP_DOMAINS))
->> +			return false;
->> +
->> +		aqm = matrix_mdev->matrix.aqm;
->> +	}
->> +
->> +	/* Make sure all APQNs are bound to the vfio_ap driver */
->> +	for_each_set_bit_inv(apqi, aqm, AP_DOMAINS) {
->> +		apqn = AP_MKQID(apid, apqi);
->> +
->> +		if (vfio_ap_mdev_get_queue(matrix_mdev, apqn) == NULL)
->> +			return false;
->> +	}
->> +
->> +	set_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
->> +
->> +	/*
->> +	 * If we verified APQNs using the domains assigned to the matrix mdev,
->> +	 * then copy the APQIs of those domains into the guest's APCB
->> +	 */
->> +	if (bitmap_empty(matrix_mdev->shadow_apcb.aqm, AP_DOMAINS))
->> +		bitmap_copy(matrix_mdev->shadow_apcb.aqm,
->> +			    matrix_mdev->matrix.aqm, AP_DOMAINS);
->> +
->> +	return true;
->> +}
-> What is the rationale behind the shadow aqm empty special handling?
-
-The rationale was to avoid taking the VCPUs
-out of SIE in order to make an update to the guest's APCB
-unnecessarily. For example, suppose the guest is started
-without access to any APQNs (i.e., all matrix and shadow_apcb
-masks are zeros). Now suppose the administrator proceeds to
-start assigning AP resources to the mdev. Let's say he starts
-by assigning adapters 1 through 100. The code below will return
-true indicating the shadow_apcb was updated. Consequently,
-the calling code will commit the changes to the guest's
-APCB. The problem there is that in order to update the guest's
-VCPUs, they will have to be taken out of SIE, yet the guest will
-not get access to the adapter since no domains have yet been
-assigned to the APCB. Doing this 100 times - once for each
-adapter 1-100 - is probably a bad idea.
-
->   I.e.
-> why not simply:
->
->
-> static bool vfio_ap_assign_apid_to_apcb(struct ap_matrix_mdev *matrix_mdev,
->                                          unsigned long apid)
-> {
->          unsigned long apqi, apqn;
->          unsigned long *aqm = matrix_mdev->shadow_apcb.aqm;
->                                                                                  
->          /*
->           * If the APID is already assigned to the guest's shadow APCB, there is
->           * no need to assign it.
->           */
->          if (test_bit_inv(apid, matrix_mdev->shadow_apcb.apm))
->                  return false;
->                                                                                  
->          /* Make sure all APQNs are bound to the vfio_ap driver */
->          for_each_set_bit_inv(apqi, aqm, AP_DOMAINS) {
->                  apqn = AP_MKQID(apid, apqi);
->                                                                                  
->                  if (vfio_ap_mdev_get_queue(matrix_mdev, apqn) == NULL)
->                          return false;
->          }
->                                                                                  
->          set_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
->                                                                                  
->          return true;
-> }
->
-> Please answer the questions I've asked, and note that I will have to
-> return to this patch, later.
->
-> Regards,
-> Halil
->
->> +
->> +static void vfio_ap_mdev_hot_plug_adapter(struct ap_matrix_mdev *matrix_mdev,
->> +					  unsigned long apid)
->> +{
->> +	if (vfio_ap_assign_apid_to_apcb(matrix_mdev, apid))
->> +		vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
->> +}
->> +
->>   /**
->>    * assign_adapter_store
->>    *
->> @@ -673,10 +727,6 @@ static ssize_t assign_adapter_store(struct device *dev,
->>   	struct mdev_device *mdev = mdev_from_dev(dev);
->>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
->>   
->> -	/* If the guest is running, disallow assignment of adapter */
->> -	if (matrix_mdev->kvm)
->> -		return -EBUSY;
->> -
->>   	ret = kstrtoul(buf, 0, &apid);
->>   	if (ret)
->>   		return ret;
->> @@ -698,12 +748,22 @@ static ssize_t assign_adapter_store(struct device *dev,
->>   	}
->>   	set_bit_inv(apid, matrix_mdev->matrix.apm);
->>   	vfio_ap_mdev_manage_qlinks(matrix_mdev, LINK_APID, apid);
->> +	vfio_ap_mdev_hot_plug_adapter(matrix_mdev, apid);
->>   	mutex_unlock(&matrix_dev->lock);
->>   
->>   	return count;
->>   }
->>   static DEVICE_ATTR_WO(assign_adapter);
->>   
->> +static void vfio_ap_mdev_hot_unplug_adapter(struct ap_matrix_mdev *matrix_mdev,
->> +					    unsigned long apid)
->> +{
->> +	if (test_bit_inv(apid, matrix_mdev->shadow_apcb.apm)) {
->> +		clear_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
->> +		vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
->> +	}
->> +}
->> +
->>   /**
->>    * unassign_adapter_store
->>    *
->> @@ -730,10 +790,6 @@ static ssize_t unassign_adapter_store(struct device *dev,
->>   	struct mdev_device *mdev = mdev_from_dev(dev);
->>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
->>   
->> -	/* If the guest is running, disallow un-assignment of adapter */
->> -	if (matrix_mdev->kvm)
->> -		return -EBUSY;
->> -
->>   	ret = kstrtoul(buf, 0, &apid);
->>   	if (ret)
->>   		return ret;
->> @@ -744,12 +800,67 @@ static ssize_t unassign_adapter_store(struct device *dev,
->>   	mutex_lock(&matrix_dev->lock);
->>   	clear_bit_inv((unsigned long)apid, matrix_mdev->matrix.apm);
->>   	vfio_ap_mdev_manage_qlinks(matrix_mdev, UNLINK_APID, apid);
->> +	vfio_ap_mdev_hot_unplug_adapter(matrix_mdev, apid);
->>   	mutex_unlock(&matrix_dev->lock);
->>   
->>   	return count;
->>   }
->>   static DEVICE_ATTR_WO(unassign_adapter);
->>   
->> +static bool vfio_ap_assign_apqi_to_apcb(struct ap_matrix_mdev *matrix_mdev,
->> +					unsigned long apqi)
->> +{
->> +	unsigned long apid, apqn;
->> +	unsigned long *apm = matrix_mdev->shadow_apcb.apm;
->> +
->> +	/*
->> +	 * If the APQI is already assigned to the guest's shadow APCB, there is
->> +	 * no need to assign it.
->> +	 */
->> +	if (test_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm))
->> +		return false;
->> +
->> +	/*
->> +	 * If no adapters have yet been assigned to the shadow APCB and one or
->> +	 * more adapters have been assigned to the matrix mdev, then use
->> +	 * the adapters assigned to the matrix mdev; otherwise, there is nothing
->> +	 * to assign to the shadow APCB.
->> +	 */
->> +	if (bitmap_empty(matrix_mdev->shadow_apcb.apm, AP_DEVICES)) {
->> +		if (bitmap_empty(matrix_mdev->matrix.apm, AP_DEVICES))
->> +			return false;
->> +
->> +		apm = matrix_mdev->matrix.apm;
->> +	}
->> +
->> +	/* Make sure all APQNs are bound to the vfio_ap driver */
->> +	for_each_set_bit_inv(apid, apm, AP_DEVICES) {
->> +		apqn = AP_MKQID(apid, apqi);
->> +
->> +		if (vfio_ap_mdev_get_queue(matrix_mdev, apqn) == NULL)
->> +			return false;
->> +	}
->> +
->> +	set_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
->> +
->> +	/*
->> +	 * If we verified APQNs using the adapters assigned to the matrix mdev,
->> +	 * then copy the APIDs of those adapters into the guest's APCB
->> +	 */
->> +	if (bitmap_empty(matrix_mdev->shadow_apcb.apm, AP_DEVICES))
->> +		bitmap_copy(matrix_mdev->shadow_apcb.apm,
->> +			    matrix_mdev->matrix.apm, AP_DEVICES);
->> +
->> +	return true;
->> +}
->> +
->> +static void vfio_ap_mdev_hot_plug_domain(struct ap_matrix_mdev *matrix_mdev,
->> +					 unsigned long apqi)
->> +{
->> +	if (vfio_ap_assign_apqi_to_apcb(matrix_mdev, apqi))
->> +		vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
->> +}
->> +
->>   /**
->>    * assign_domain_store
->>    *
->> @@ -793,10 +904,6 @@ static ssize_t assign_domain_store(struct device *dev,
->>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
->>   	unsigned long max_apqi = matrix_mdev->matrix.aqm_max;
->>   
->> -	/* If the guest is running, disallow assignment of domain */
->> -	if (matrix_mdev->kvm)
->> -		return -EBUSY;
->> -
->>   	ret = kstrtoul(buf, 0, &apqi);
->>   	if (ret)
->>   		return ret;
->> @@ -817,12 +924,21 @@ static ssize_t assign_domain_store(struct device *dev,
->>   	}
->>   	set_bit_inv(apqi, matrix_mdev->matrix.aqm);
->>   	vfio_ap_mdev_manage_qlinks(matrix_mdev, LINK_APQI, apqi);
->> +	vfio_ap_mdev_hot_plug_domain(matrix_mdev, apqi);
->>   	mutex_unlock(&matrix_dev->lock);
->>   
->>   	return count;
->>   }
->>   static DEVICE_ATTR_WO(assign_domain);
->>   
->> +static void vfio_ap_mdev_hot_unplug_domain(struct ap_matrix_mdev *matrix_mdev,
->> +					   unsigned long apqi)
->> +{
->> +	if (test_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm)) {
->> +		clear_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
->> +		vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
->> +	}
->> +}
->>   
->>   /**
->>    * unassign_domain_store
->> @@ -850,10 +966,6 @@ static ssize_t unassign_domain_store(struct device *dev,
->>   	struct mdev_device *mdev = mdev_from_dev(dev);
->>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
->>   
->> -	/* If the guest is running, disallow un-assignment of domain */
->> -	if (matrix_mdev->kvm)
->> -		return -EBUSY;
->> -
->>   	ret = kstrtoul(buf, 0, &apqi);
->>   	if (ret)
->>   		return ret;
->> @@ -864,12 +976,22 @@ static ssize_t unassign_domain_store(struct device *dev,
->>   	mutex_lock(&matrix_dev->lock);
->>   	clear_bit_inv((unsigned long)apqi, matrix_mdev->matrix.aqm);
->>   	vfio_ap_mdev_manage_qlinks(matrix_mdev, UNLINK_APQI, apqi);
->> +	vfio_ap_mdev_hot_unplug_domain(matrix_mdev, apqi);
->>   	mutex_unlock(&matrix_dev->lock);
->>   
->>   	return count;
->>   }
->>   static DEVICE_ATTR_WO(unassign_domain);
->>   
->> +static void vfio_ap_mdev_hot_plug_ctl_domain(struct ap_matrix_mdev *matrix_mdev,
->> +					     unsigned long domid)
->> +{
->> +	if (!test_bit_inv(domid, matrix_mdev->shadow_apcb.adm)) {
->> +		set_bit_inv(domid, matrix_mdev->shadow_apcb.adm);
->> +		vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
->> +	}
->> +}
->> +
->>   /**
->>    * assign_control_domain_store
->>    *
->> @@ -895,10 +1017,6 @@ static ssize_t assign_control_domain_store(struct device *dev,
->>   	struct mdev_device *mdev = mdev_from_dev(dev);
->>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
->>   
->> -	/* If the guest is running, disallow assignment of control domain */
->> -	if (matrix_mdev->kvm)
->> -		return -EBUSY;
->> -
->>   	ret = kstrtoul(buf, 0, &id);
->>   	if (ret)
->>   		return ret;
->> @@ -914,12 +1032,23 @@ static ssize_t assign_control_domain_store(struct device *dev,
->>   	if (!mutex_trylock(&matrix_dev->lock))
->>   		return -EBUSY;
->>   	set_bit_inv(id, matrix_mdev->matrix.adm);
->> +	vfio_ap_mdev_hot_plug_ctl_domain(matrix_mdev, id);
->>   	mutex_unlock(&matrix_dev->lock);
->>   
->>   	return count;
->>   }
->>   static DEVICE_ATTR_WO(assign_control_domain);
->>   
->> +static void
->> +vfio_ap_mdev_hot_unplug_ctl_domain(struct ap_matrix_mdev *matrix_mdev,
->> +				   unsigned long domid)
->> +{
->> +	if (test_bit_inv(domid, matrix_mdev->shadow_apcb.adm)) {
->> +		clear_bit_inv(domid, matrix_mdev->shadow_apcb.adm);
->> +		vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
->> +	}
->> +}
->> +
->>   /**
->>    * unassign_control_domain_store
->>    *
->> @@ -946,10 +1075,6 @@ static ssize_t unassign_control_domain_store(struct device *dev,
->>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
->>   	unsigned long max_domid =  matrix_mdev->matrix.adm_max;
->>   
->> -	/* If the guest is running, disallow un-assignment of control domain */
->> -	if (matrix_mdev->kvm)
->> -		return -EBUSY;
->> -
->>   	ret = kstrtoul(buf, 0, &domid);
->>   	if (ret)
->>   		return ret;
->> @@ -958,6 +1083,7 @@ static ssize_t unassign_control_domain_store(struct device *dev,
->>   
->>   	mutex_lock(&matrix_dev->lock);
->>   	clear_bit_inv(domid, matrix_mdev->matrix.adm);
->> +	vfio_ap_mdev_hot_unplug_ctl_domain(matrix_mdev, domid);
->>   	mutex_unlock(&matrix_dev->lock);
->>   
->>   	return count;
->> @@ -1099,8 +1225,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
->>   {
->>   	struct ap_matrix_mdev *m;
->>   
->> -	mutex_lock(&matrix_dev->lock);
->> -
->>   	list_for_each_entry(m, &matrix_dev->mdev_list, node) {
->>   		if ((m != matrix_mdev) && (m->kvm == kvm)) {
->>   			mutex_unlock(&matrix_dev->lock);
->> @@ -1111,7 +1235,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
->>   	matrix_mdev->kvm = kvm;
->>   	kvm_get_kvm(kvm);
->>   	kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
->> -	mutex_unlock(&matrix_dev->lock);
->>   
->>   	return 0;
->>   }
->> @@ -1148,7 +1271,7 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
->>   static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
->>   				       unsigned long action, void *data)
->>   {
->> -	int ret;
->> +	int ret = NOTIFY_DONE;
->>   	struct ap_matrix_mdev *matrix_mdev;
->>   
->>   	if (action != VFIO_GROUP_NOTIFY_SET_KVM)
->> @@ -1156,23 +1279,28 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
->>   
->>   	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
->>   
->> +	mutex_lock(&matrix_dev->lock);
->> +
->>   	if (!data) {
->>   		if (matrix_mdev->kvm)
->>   			kvm_put_kvm(matrix_mdev->kvm);
->>   
->>   		matrix_mdev->kvm = NULL;
->>   
->> -		return NOTIFY_OK;
->> +		ret = NOTIFY_OK;
->> +		goto done;
->>   	}
->>   
->>   	ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
->>   	if (ret)
->> -		return NOTIFY_DONE;
->> +		goto done;
->>   
->>   	vfio_ap_mdev_init_apcb(matrix_mdev);
->>   	vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
->>   
->> -	return NOTIFY_OK;
->> +done:
->> +	mutex_unlock(&matrix_dev->lock);
->> +	return ret;
->>   }
->>   
->>   static int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
-
+> Reported-by: Mark Rutland <mark.rutland@arm.com>
+> Reported-by: Sven Schnelle <svens@linux.ibm.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/alpha/kernel/process.c      |    2 +-
+>  arch/arm/kernel/process.c        |    2 +-
+>  arch/arm64/kernel/process.c      |    2 +-
+>  arch/csky/kernel/process.c       |    2 +-
+>  arch/h8300/kernel/process.c      |    2 +-
+>  arch/hexagon/kernel/process.c    |    2 +-
+>  arch/ia64/kernel/process.c       |    2 +-
+>  arch/microblaze/kernel/process.c |    2 +-
+>  arch/mips/kernel/idle.c          |   12 ++++++------
+>  arch/nios2/kernel/process.c      |    2 +-
+>  arch/openrisc/kernel/process.c   |    2 +-
+>  arch/parisc/kernel/process.c     |    2 +-
+>  arch/powerpc/kernel/idle.c       |    4 ++--
+>  arch/riscv/kernel/process.c      |    2 +-
+>  arch/s390/kernel/idle.c          |    2 +-
+>  arch/sh/kernel/idle.c            |    2 +-
+>  arch/sparc/kernel/leon_pmc.c     |    4 ++--
+>  arch/sparc/kernel/process_32.c   |    2 +-
+>  arch/sparc/kernel/process_64.c   |    4 ++--
+>  arch/um/kernel/process.c         |    2 +-
+>  arch/x86/include/asm/mwait.h     |    2 --
+>  arch/x86/kernel/process.c        |   12 +++++++-----
+>  kernel/sched/idle.c              |   28 +++++++++++++++++++++++++++-
+>  23 files changed, 62 insertions(+), 36 deletions(-)
+> 
+> --- a/arch/alpha/kernel/process.c
+> +++ b/arch/alpha/kernel/process.c
+> @@ -57,7 +57,7 @@ EXPORT_SYMBOL(pm_power_off);
+>  void arch_cpu_idle(void)
+>  {
+>  	wtint(0);
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  void arch_cpu_idle_dead(void)
+> --- a/arch/arm/kernel/process.c
+> +++ b/arch/arm/kernel/process.c
+> @@ -71,7 +71,7 @@ void arch_cpu_idle(void)
+>  		arm_pm_idle();
+>  	else
+>  		cpu_do_idle();
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  void arch_cpu_idle_prepare(void)
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -126,7 +126,7 @@ void arch_cpu_idle(void)
+>  	 * tricks
+>  	 */
+>  	cpu_do_idle();
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  #ifdef CONFIG_HOTPLUG_CPU
+> --- a/arch/csky/kernel/process.c
+> +++ b/arch/csky/kernel/process.c
+> @@ -102,6 +102,6 @@ void arch_cpu_idle(void)
+>  #ifdef CONFIG_CPU_PM_STOP
+>  	asm volatile("stop\n");
+>  #endif
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  #endif
+> --- a/arch/h8300/kernel/process.c
+> +++ b/arch/h8300/kernel/process.c
+> @@ -57,7 +57,7 @@ asmlinkage void ret_from_kernel_thread(v
+>   */
+>  void arch_cpu_idle(void)
+>  {
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  	__asm__("sleep");
+>  }
+>  
+> --- a/arch/hexagon/kernel/process.c
+> +++ b/arch/hexagon/kernel/process.c
+> @@ -44,7 +44,7 @@ void arch_cpu_idle(void)
+>  {
+>  	__vmwait();
+>  	/*  interrupts wake us up, but irqs are still disabled */
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  /*
+> --- a/arch/ia64/kernel/process.c
+> +++ b/arch/ia64/kernel/process.c
+> @@ -239,7 +239,7 @@ void arch_cpu_idle(void)
+>  	if (mark_idle)
+>  		(*mark_idle)(1);
+>  
+> -	safe_halt();
+> +	raw_safe_halt();
+>  
+>  	if (mark_idle)
+>  		(*mark_idle)(0);
+> --- a/arch/microblaze/kernel/process.c
+> +++ b/arch/microblaze/kernel/process.c
+> @@ -149,5 +149,5 @@ int dump_fpu(struct pt_regs *regs, elf_f
+>  
+>  void arch_cpu_idle(void)
+>  {
+> -       local_irq_enable();
+> +       raw_local_irq_enable();
+>  }
+> --- a/arch/mips/kernel/idle.c
+> +++ b/arch/mips/kernel/idle.c
+> @@ -33,19 +33,19 @@ static void __cpuidle r3081_wait(void)
+>  {
+>  	unsigned long cfg = read_c0_conf();
+>  	write_c0_conf(cfg | R30XX_CONF_HALT);
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  static void __cpuidle r39xx_wait(void)
+>  {
+>  	if (!need_resched())
+>  		write_c0_conf(read_c0_conf() | TX39_CONF_HALT);
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  void __cpuidle r4k_wait(void)
+>  {
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  	__r4k_wait();
+>  }
+>  
+> @@ -64,7 +64,7 @@ void __cpuidle r4k_wait_irqoff(void)
+>  		"	.set	arch=r4000	\n"
+>  		"	wait			\n"
+>  		"	.set	pop		\n");
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  /*
+> @@ -84,7 +84,7 @@ static void __cpuidle rm7k_wait_irqoff(v
+>  		"	wait						\n"
+>  		"	mtc0	$1, $12		# stalls until W stage	\n"
+>  		"	.set	pop					\n");
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  /*
+> @@ -257,7 +257,7 @@ void arch_cpu_idle(void)
+>  	if (cpu_wait)
+>  		cpu_wait();
+>  	else
+> -		local_irq_enable();
+> +		raw_local_irq_enable();
+>  }
+>  
+>  #ifdef CONFIG_CPU_IDLE
+> --- a/arch/nios2/kernel/process.c
+> +++ b/arch/nios2/kernel/process.c
+> @@ -33,7 +33,7 @@ EXPORT_SYMBOL(pm_power_off);
+>  
+>  void arch_cpu_idle(void)
+>  {
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  /*
+> --- a/arch/openrisc/kernel/process.c
+> +++ b/arch/openrisc/kernel/process.c
+> @@ -79,7 +79,7 @@ void machine_power_off(void)
+>   */
+>  void arch_cpu_idle(void)
+>  {
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  	if (mfspr(SPR_UPR) & SPR_UPR_PMP)
+>  		mtspr(SPR_PMR, mfspr(SPR_PMR) | SPR_PMR_DME);
+>  }
+> --- a/arch/parisc/kernel/process.c
+> +++ b/arch/parisc/kernel/process.c
+> @@ -169,7 +169,7 @@ void __cpuidle arch_cpu_idle_dead(void)
+>  
+>  void __cpuidle arch_cpu_idle(void)
+>  {
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  
+>  	/* nop on real hardware, qemu will idle sleep. */
+>  	asm volatile("or %%r10,%%r10,%%r10\n":::);
+> --- a/arch/powerpc/kernel/idle.c
+> +++ b/arch/powerpc/kernel/idle.c
+> @@ -52,9 +52,9 @@ void arch_cpu_idle(void)
+>  		 * interrupts enabled, some don't.
+>  		 */
+>  		if (irqs_disabled())
+> -			local_irq_enable();
+> +			raw_local_irq_enable();
+>  	} else {
+> -		local_irq_enable();
+> +		raw_local_irq_enable();
+>  		/*
+>  		 * Go into low thread priority and possibly
+>  		 * low power mode.
+> --- a/arch/riscv/kernel/process.c
+> +++ b/arch/riscv/kernel/process.c
+> @@ -36,7 +36,7 @@ extern asmlinkage void ret_from_kernel_t
+>  void arch_cpu_idle(void)
+>  {
+>  	wait_for_interrupt();
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  void show_regs(struct pt_regs *regs)
+> --- a/arch/s390/kernel/idle.c
+> +++ b/arch/s390/kernel/idle.c
+> @@ -123,7 +123,7 @@ void arch_cpu_idle_enter(void)
+>  void arch_cpu_idle(void)
+>  {
+>  	enabled_wait();
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  void arch_cpu_idle_exit(void)
+> --- a/arch/sh/kernel/idle.c
+> +++ b/arch/sh/kernel/idle.c
+> @@ -22,7 +22,7 @@ static void (*sh_idle)(void);
+>  void default_idle(void)
+>  {
+>  	set_bl_bit();
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  	/* Isn't this racy ? */
+>  	cpu_sleep();
+>  	clear_bl_bit();
+> --- a/arch/sparc/kernel/leon_pmc.c
+> +++ b/arch/sparc/kernel/leon_pmc.c
+> @@ -50,7 +50,7 @@ static void pmc_leon_idle_fixup(void)
+>  	register unsigned int address = (unsigned int)leon3_irqctrl_regs;
+>  
+>  	/* Interrupts need to be enabled to not hang the CPU */
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  
+>  	__asm__ __volatile__ (
+>  		"wr	%%g0, %%asr19\n"
+> @@ -66,7 +66,7 @@ static void pmc_leon_idle_fixup(void)
+>  static void pmc_leon_idle(void)
+>  {
+>  	/* Interrupts need to be enabled to not hang the CPU */
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  
+>  	/* For systems without power-down, this will be no-op */
+>  	__asm__ __volatile__ ("wr	%g0, %asr19\n\t");
+> --- a/arch/sparc/kernel/process_32.c
+> +++ b/arch/sparc/kernel/process_32.c
+> @@ -74,7 +74,7 @@ void arch_cpu_idle(void)
+>  {
+>  	if (sparc_idle)
+>  		(*sparc_idle)();
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  /* XXX cli/sti -> local_irq_xxx here, check this works once SMP is fixed. */
+> --- a/arch/sparc/kernel/process_64.c
+> +++ b/arch/sparc/kernel/process_64.c
+> @@ -62,11 +62,11 @@ void arch_cpu_idle(void)
+>  {
+>  	if (tlb_type != hypervisor) {
+>  		touch_nmi_watchdog();
+> -		local_irq_enable();
+> +		raw_local_irq_enable();
+>  	} else {
+>  		unsigned long pstate;
+>  
+> -		local_irq_enable();
+> +		raw_local_irq_enable();
+>  
+>                  /* The sun4v sleeping code requires that we have PSTATE.IE cleared over
+>                   * the cpu sleep hypervisor call.
+> --- a/arch/um/kernel/process.c
+> +++ b/arch/um/kernel/process.c
+> @@ -217,7 +217,7 @@ void arch_cpu_idle(void)
+>  {
+>  	cpu_tasks[current_thread_info()->cpu].pid = os_getpid();
+>  	um_idle_sleep();
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  int __cant_sleep(void) {
+> --- a/arch/x86/include/asm/mwait.h
+> +++ b/arch/x86/include/asm/mwait.h
+> @@ -88,8 +88,6 @@ static inline void __mwaitx(unsigned lon
+>  
+>  static inline void __sti_mwait(unsigned long eax, unsigned long ecx)
+>  {
+> -	trace_hardirqs_on();
+> -
+>  	mds_idle_clear_cpu_buffers();
+>  	/* "mwait %eax, %ecx;" */
+>  	asm volatile("sti; .byte 0x0f, 0x01, 0xc9;"
+> --- a/arch/x86/kernel/process.c
+> +++ b/arch/x86/kernel/process.c
+> @@ -685,7 +685,7 @@ void arch_cpu_idle(void)
+>   */
+>  void __cpuidle default_idle(void)
+>  {
+> -	safe_halt();
+> +	raw_safe_halt();
+>  }
+>  #if defined(CONFIG_APM_MODULE) || defined(CONFIG_HALTPOLL_CPUIDLE_MODULE)
+>  EXPORT_SYMBOL(default_idle);
+> @@ -736,6 +736,8 @@ void stop_this_cpu(void *dummy)
+>  /*
+>   * AMD Erratum 400 aware idle routine. We handle it the same way as C3 power
+>   * states (local apic timer and TSC stop).
+> + *
+> + * XXX this function is completely buggered vs RCU and tracing.
+>   */
+>  static void amd_e400_idle(void)
+>  {
+> @@ -757,9 +759,9 @@ static void amd_e400_idle(void)
+>  	 * The switch back from broadcast mode needs to be called with
+>  	 * interrupts disabled.
+>  	 */
+> -	local_irq_disable();
+> +	raw_local_irq_disable();
+>  	tick_broadcast_exit();
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  /*
+> @@ -801,9 +803,9 @@ static __cpuidle void mwait_idle(void)
+>  		if (!need_resched())
+>  			__sti_mwait(0, 0);
+>  		else
+> -			local_irq_enable();
+> +			raw_local_irq_enable();
+>  	} else {
+> -		local_irq_enable();
+> +		raw_local_irq_enable();
+>  	}
+>  	__current_clr_polling();
+>  }
+> --- a/kernel/sched/idle.c
+> +++ b/kernel/sched/idle.c
+> @@ -78,7 +78,7 @@ void __weak arch_cpu_idle_dead(void) { }
+>  void __weak arch_cpu_idle(void)
+>  {
+>  	cpu_idle_force_poll = 1;
+> -	local_irq_enable();
+> +	raw_local_irq_enable();
+>  }
+>  
+>  /**
+> @@ -94,9 +94,35 @@ void __cpuidle default_idle_call(void)
+>  
+>  		trace_cpu_idle(1, smp_processor_id());
+>  		stop_critical_timings();
+> +
+> +		/*
+> +		 * arch_cpu_idle() is supposed to enable IRQs, however
+> +		 * we can't do that because of RCU and tracing.
+> +		 *
+> +		 * Trace IRQs enable here, then switch off RCU, and have
+> +		 * arch_cpu_idle() use raw_local_irq_enable(). Note that
+> +		 * rcu_idle_enter() relies on lockdep IRQ state, so switch that
+> +		 * last -- this is very similar to the entry code.
+> +		 */
+> +		trace_hardirqs_on_prepare();
+> +		lockdep_hardirqs_on_prepare(_THIS_IP_);
+>  		rcu_idle_enter();
+> +		lockdep_hardirqs_on(_THIS_IP_);
+> +
+>  		arch_cpu_idle();
+> +
+> +		/*
+> +		 * OK, so IRQs are enabled here, but RCU needs them disabled to
+> +		 * turn itself back on.. funny thing is that disabling IRQs
+> +		 * will cause tracing, which needs RCU. Jump through hoops to
+> +		 * make it 'work'.
+> +		 */
+> +		raw_local_irq_disable();
+> +		lockdep_hardirqs_off(_THIS_IP_);
+>  		rcu_idle_exit();
+> +		lockdep_hardirqs_on(_THIS_IP_);
+> +		raw_local_irq_enable();
+> +
+>  		start_critical_timings();
+>  		trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
+>  	}
+> 
+> 
