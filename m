@@ -2,71 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27E252C834D
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Nov 2020 12:32:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F75C2C83D0
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Nov 2020 13:05:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725902AbgK3LcU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Nov 2020 06:32:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:50659 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728670AbgK3LcU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 30 Nov 2020 06:32:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606735854;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ztgW78hDbZG440TaygK/xcuYD+gvBMHcHSRtBLHRxgY=;
-        b=Stdv9Ah07R9QPnLtB67IvAHsYvkxhzH7xD1JVil0g2wK65Qd713R6u11tlksUqpdd5Bnda
-        Swar9soh5GU8IZBRuytQGonC720YSV3nqLjiTjf14s1oSjtihBvi1+ULC8aiE7F9jp4qPW
-        xKG/eHJwsZU1XmO/BAS225tG856QraE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-406-lm6et4kuN3-OkM8ui5ku4A-1; Mon, 30 Nov 2020 06:30:50 -0500
-X-MC-Unique: lm6et4kuN3-OkM8ui5ku4A-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F31AC190D343;
-        Mon, 30 Nov 2020 11:30:48 +0000 (UTC)
-Received: from gondolin (ovpn-113-87.ams2.redhat.com [10.36.113.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 79A7B5D9C0;
-        Mon, 30 Nov 2020 11:30:44 +0000 (UTC)
-Date:   Mon, 30 Nov 2020 12:30:41 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, thuth@redhat.com, david@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests PATCH v2 6/7] s390x: Add diag318 intercept test
-Message-ID: <20201130123041.0b176afc.cohuck@redhat.com>
-In-Reply-To: <20201127130629.120469-7-frankja@linux.ibm.com>
-References: <20201127130629.120469-1-frankja@linux.ibm.com>
-        <20201127130629.120469-7-frankja@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1727020AbgK3MEj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 Nov 2020 07:04:39 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8218 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbgK3MEj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 Nov 2020 07:04:39 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Cl3lt6HX9zkjgZ;
+        Mon, 30 Nov 2020 20:03:22 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 30 Nov 2020 20:03:47 +0800
+From:   Qinglang Miao <miaoqinglang@huawei.com>
+To:     Steffen Maier <maier@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+CC:     <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Qinglang Miao" <miaoqinglang@huawei.com>
+Subject: [PATCH] scsi: zfcp: move the position of put_device
+Date:   Mon, 30 Nov 2020 20:11:49 +0800
+Message-ID: <20201130121149.194131-1-miaoqinglang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 27 Nov 2020 08:06:28 -0500
-Janosch Frank <frankja@linux.ibm.com> wrote:
+Have the `put_device()` call after `device_unregister()` in both
+`zfcp_unit_remove()` and `zfcp_sysfs_port_remove_store()` to make
+it more natural, for put_device() ought to be the last time we
+touch the object in both functions.
 
-> Not much to test except for the privilege and specification
-> exceptions.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  lib/s390x/sclp.c  |  2 ++
->  lib/s390x/sclp.h  |  6 +++++-
->  s390x/intercept.c | 19 +++++++++++++++++++
->  3 files changed, 26 insertions(+), 1 deletion(-)
-> 
+Suggested-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+---
+ drivers/s390/scsi/zfcp_sysfs.c | 4 ++--
+ drivers/s390/scsi/zfcp_unit.c  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+diff --git a/drivers/s390/scsi/zfcp_sysfs.c b/drivers/s390/scsi/zfcp_sysfs.c
+index 8d9662e8b..edfeed4ba 100644
+--- a/drivers/s390/scsi/zfcp_sysfs.c
++++ b/drivers/s390/scsi/zfcp_sysfs.c
+@@ -327,10 +327,10 @@ static ssize_t zfcp_sysfs_port_remove_store(struct device *dev,
+ 	list_del(&port->list);
+ 	write_unlock_irq(&adapter->port_list_lock);
+ 
+-	put_device(&port->dev);
+-
+ 	zfcp_erp_port_shutdown(port, 0, "syprs_1");
+ 	device_unregister(&port->dev);
++
++	put_device(&port->dev);
+  out:
+ 	zfcp_ccw_adapter_put(adapter);
+ 	return retval ? retval : (ssize_t) count;
+diff --git a/drivers/s390/scsi/zfcp_unit.c b/drivers/s390/scsi/zfcp_unit.c
+index e67bf7388..4ee355ae1 100644
+--- a/drivers/s390/scsi/zfcp_unit.c
++++ b/drivers/s390/scsi/zfcp_unit.c
+@@ -255,9 +255,9 @@ int zfcp_unit_remove(struct zfcp_port *port, u64 fcp_lun)
+ 		scsi_device_put(sdev);
+ 	}
+ 
+-	put_device(&unit->dev);
+-
+ 	device_unregister(&unit->dev);
+ 
++	put_device(&unit->dev);
++
+ 	return 0;
+ }
+-- 
+2.23.0
 
