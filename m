@@ -2,418 +2,304 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96DA92C8C44
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Nov 2020 19:12:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C4B62C8C10
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Nov 2020 19:04:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgK3SLm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Nov 2020 13:11:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54150 "EHLO
+        id S1729441AbgK3SEc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 Nov 2020 13:04:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbgK3SLm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 Nov 2020 13:11:42 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 823D0C0613D2;
-        Mon, 30 Nov 2020 10:11:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=R+zzLdYfKZFmJ36yLKNtpCZ9PINkATWvA4dyjIcnWFM=; b=PPuo2qmVcjPQdsoH9RsaGnoTpr
-        RLpBILWYSmwb32KJcipwmMDPkU+lg7H/pYit/9nT84/HkhNMhc+KrEZ8svXyRFykwQvcAArOM7jD3
-        PfGOKi5ZAfpl352M7K28KCbcS0W7mdDU1JqCuRgTcmWCqixAVJ/0pt276xS0UmD5UJzm0S1aKkjXM
-        AhvC5zEwQgMLmPTq0L+4W3LMQMioVuMVhjUZSvVUqU+wKz3qf1ABNPZdHezeSiVUkqD0qDjtBWWpw
-        Dnmt/CPzIx0Xtnwpn295u5g/V8S8ROtK1EPhSyBO7JZdpEe8BhbkAGHw10fQeEcEN2uuLMEjzNnCH
-        F9Tkq+nw==;
-Received: from 089144198196.atnat0007.highway.a1.net ([89.144.198.196] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kjnda-00079A-78; Mon, 30 Nov 2020 18:10:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     dm-devel@redhat.com, linux-block@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH 5/5] block: remove the request_queue to argument request based tracepoints
-Date:   Mon, 30 Nov 2020 18:58:54 +0100
-Message-Id: <20201130175854.982460-6-hch@lst.de>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201130175854.982460-1-hch@lst.de>
-References: <20201130175854.982460-1-hch@lst.de>
+        with ESMTP id S1729437AbgK3SEc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 Nov 2020 13:04:32 -0500
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFDCFC0617A6
+        for <linux-s390@vger.kernel.org>; Mon, 30 Nov 2020 10:03:51 -0800 (PST)
+Received: by mail-pj1-x1044.google.com with SMTP id v1so55213pjr.2
+        for <linux-s390@vger.kernel.org>; Mon, 30 Nov 2020 10:03:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q4aiUo+R2FBXYOJi5Lz6koIizaWvK7CXEvnPP0gtkHY=;
+        b=WJN/cBIIUk6MohKQRQk8JObz3Y9LIRoDzY/g4r9a3kx9ncZpcSl9Ijsv5SCGIzibSh
+         0TlyUwNA6WUTeVaDji0unOXv2cdZvhXuvxjCnwjIn3x+0V8XE3TAIDrJzsrpNG+3aDf4
+         O64vuJ+VwNbyqtWnGvDLZtyNBklkHcD86NkM+4KIgWOyxWehIcHAbicMIjz8UVVfaNdu
+         3KCfphu4L9CefgQu1LAF6kGWwy5dKyguiC1tYJR9q8cvgpGxIPIYuSAgf5my0+GwTpWT
+         jRZr3rRQ0PbEFDMRsQGjs3CEbCzRbcnlGqc5b5xAzkV8ryWyPL0pCFk54q9NH+Gmr1KI
+         NhYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q4aiUo+R2FBXYOJi5Lz6koIizaWvK7CXEvnPP0gtkHY=;
+        b=N3LVHqeId/HWkpy+Nv7OiB9FIyjf790M/i9i824BF27fugE0FHHl7gjzH9sZvmPVCy
+         uumZOXEL6xVXEWKtTAMfUYHvFq+iXQekSM5bkFNumlchskfkEpZz81QMCbGUxWd8PC4p
+         TVRavJVMCwkRApP08MCoxW2T7HTIn5RnqRjArk2cP89R4sH/TwTgsqH/CK5wnHzvk80q
+         iOxIRu77mhNk7y6oUtIievTIXgKXQKhNszN3yqsRSQGOgH7NxOIJP6jOdBEDEG6qx0xL
+         vo/JKHh6ZEOa5Qxzk9Gi9LSJ6mF0OCZQBxOcBcZMKcVAHGIBUYSNeO/ZsoCIMYD+powf
+         nvGA==
+X-Gm-Message-State: AOAM532updgXFyPHxnTzOUvSIgGjlyXqtNj6V9W0SXd7NGZdeOPi+/yZ
+        JovdPq2WVDv1Fkyx4iD4La2P9Lhzc0qnSoWMnwUR7g==
+X-Google-Smtp-Source: ABdhPJxHm++0XMttvWDRWWKqxHdfZjFoymYvLuXf+7L3uOgrG9s2Gg6KNpvokgO5TP6MqRad6jHADnjuLxLnCan07K8=
+X-Received: by 2002:a17:90a:2e8c:: with SMTP id r12mr27529821pjd.101.1606759430885;
+ Mon, 30 Nov 2020 10:03:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <20201127164131.2244124-18-daniel.vetter@ffwll.ch>
+ <202011280356.rPWHFNW4-lkp@intel.com> <20201130142820.GN401619@phenom.ffwll.local>
+In-Reply-To: <20201130142820.GN401619@phenom.ffwll.local>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 30 Nov 2020 10:03:40 -0800
+Message-ID: <CAKwvOdnSrsnTgPEuQJyaOTSkTP2dR9208Y66HQG_h1e2LKfqtw@mail.gmail.com>
+Subject: Re: [PATCH v7 17/17] mm: add mmu_notifier argument to follow_pfn
+To:     Vasily Gorbik <gor@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, kbuild-all@lists.01.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        kvm <kvm@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The request_queue can trivially be derived from the request.
+On Mon, Nov 30, 2020 at 6:28 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> So I guess kvm platforms that don't set KVM_ARCH_WANT_MMU_NOTIFIER exist,
+> and at least on powerpc they're consistent with KVM_CAP_SYNC_MMU
+> signalling that the guest pagetables stays in sync automatically with any
+> updates. So for that case I guess we could use unsafe_follow_pfn.
+>
+> But on s390 this seems different: No mmu notifier, but KVM_CAP_SYNC_MMU is
+> set. So I guess there's some hardware magic on s390 that I don't know
+> about.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/blk-merge.c            |  2 +-
- block/blk-mq-sched.c         |  2 +-
- block/blk-mq.c               |  8 +++----
- drivers/md/dm-rq.c           |  2 +-
- drivers/s390/scsi/zfcp_fsf.c |  3 +--
- include/linux/blktrace_api.h |  5 ++--
- include/trace/events/block.h | 30 ++++++++++--------------
- kernel/trace/blktrace.c      | 44 ++++++++++++++----------------------
- 8 files changed, 39 insertions(+), 57 deletions(-)
++ Vasily + Heiko +s390
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 4071daa88a5eaf..7497d86fff3834 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -799,7 +799,7 @@ static struct request *attempt_merge(struct request_queue *q,
- 	 */
- 	blk_account_io_merge_request(next);
- 
--	trace_block_rq_merge(q, next);
-+	trace_block_rq_merge(next);
- 
- 	/*
- 	 * ownership of bio passed from next to req, return 'next' for
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index d1eafe2c045caa..deff4e826e234d 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -386,7 +386,7 @@ EXPORT_SYMBOL_GPL(blk_mq_sched_try_insert_merge);
- 
- void blk_mq_sched_request_inserted(struct request *rq)
- {
--	trace_block_rq_insert(rq->q, rq);
-+	trace_block_rq_insert(rq);
- }
- EXPORT_SYMBOL_GPL(blk_mq_sched_request_inserted);
- 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 13636458f32f1c..bb669b415a387e 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -732,7 +732,7 @@ void blk_mq_start_request(struct request *rq)
- {
- 	struct request_queue *q = rq->q;
- 
--	trace_block_rq_issue(q, rq);
-+	trace_block_rq_issue(rq);
- 
- 	if (test_bit(QUEUE_FLAG_STATS, &q->queue_flags)) {
- 		rq->io_start_time_ns = ktime_get_ns();
-@@ -759,7 +759,7 @@ static void __blk_mq_requeue_request(struct request *rq)
- 
- 	blk_mq_put_driver_tag(rq);
- 
--	trace_block_rq_requeue(q, rq);
-+	trace_block_rq_requeue(rq);
- 	rq_qos_requeue(q, rq);
- 
- 	if (blk_mq_request_started(rq)) {
-@@ -1820,7 +1820,7 @@ static inline void __blk_mq_insert_req_list(struct blk_mq_hw_ctx *hctx,
- 
- 	lockdep_assert_held(&ctx->lock);
- 
--	trace_block_rq_insert(hctx->queue, rq);
-+	trace_block_rq_insert(rq);
- 
- 	if (at_head)
- 		list_add(&rq->queuelist, &ctx->rq_lists[type]);
-@@ -1877,7 +1877,7 @@ void blk_mq_insert_requests(struct blk_mq_hw_ctx *hctx, struct blk_mq_ctx *ctx,
- 	 */
- 	list_for_each_entry(rq, list, queuelist) {
- 		BUG_ON(rq->mq_ctx != ctx);
--		trace_block_rq_insert(hctx->queue, rq);
-+		trace_block_rq_insert(rq);
- 	}
- 
- 	spin_lock(&ctx->lock);
-diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
-index 729a72ec30ccae..13b4385f4d5a92 100644
---- a/drivers/md/dm-rq.c
-+++ b/drivers/md/dm-rq.c
-@@ -397,7 +397,7 @@ static int map_request(struct dm_rq_target_io *tio)
- 		}
- 
- 		/* The target has remapped the I/O so dispatch it */
--		trace_block_rq_remap(clone->q, clone, disk_devt(dm_disk(md)),
-+		trace_block_rq_remap(clone, disk_devt(dm_disk(md)),
- 				     blk_rq_pos(rq));
- 		ret = dm_dispatch_clone_request(clone, rq);
- 		if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE) {
-diff --git a/drivers/s390/scsi/zfcp_fsf.c b/drivers/s390/scsi/zfcp_fsf.c
-index 6cb963a0677714..37d450f4695281 100644
---- a/drivers/s390/scsi/zfcp_fsf.c
-+++ b/drivers/s390/scsi/zfcp_fsf.c
-@@ -2359,8 +2359,7 @@ static void zfcp_fsf_req_trace(struct zfcp_fsf_req *req, struct scsi_cmnd *scsi)
- 		}
- 	}
- 
--	blk_add_driver_data(scsi->request->q, scsi->request, &blktrc,
--			    sizeof(blktrc));
-+	blk_add_driver_data(scsi->request, &blktrc, sizeof(blktrc));
- }
- 
- /**
-diff --git a/include/linux/blktrace_api.h b/include/linux/blktrace_api.h
-index 3b6ff5902edce6..05556573b896a2 100644
---- a/include/linux/blktrace_api.h
-+++ b/include/linux/blktrace_api.h
-@@ -75,8 +75,7 @@ static inline bool blk_trace_note_message_enabled(struct request_queue *q)
- 	return ret;
- }
- 
--extern void blk_add_driver_data(struct request_queue *q, struct request *rq,
--				void *data, size_t len);
-+extern void blk_add_driver_data(struct request *rq, void *data, size_t len);
- extern int blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 			   struct block_device *bdev,
- 			   char __user *arg);
-@@ -90,7 +89,7 @@ extern struct attribute_group blk_trace_attr_group;
- #else /* !CONFIG_BLK_DEV_IO_TRACE */
- # define blk_trace_ioctl(bdev, cmd, arg)		(-ENOTTY)
- # define blk_trace_shutdown(q)				do { } while (0)
--# define blk_add_driver_data(q, rq, data, len)		do {} while (0)
-+# define blk_add_driver_data(rq, data, len)		do {} while (0)
- # define blk_trace_setup(q, name, dev, bdev, arg)	(-ENOTTY)
- # define blk_trace_startstop(q, start)			(-ENOTTY)
- # define blk_trace_remove(q)				(-ENOTTY)
-diff --git a/include/trace/events/block.h b/include/trace/events/block.h
-index 8fb89574d8677f..0d782663a005dc 100644
---- a/include/trace/events/block.h
-+++ b/include/trace/events/block.h
-@@ -64,7 +64,6 @@ DEFINE_EVENT(block_buffer, block_dirty_buffer,
- 
- /**
-  * block_rq_requeue - place block IO request back on a queue
-- * @q: queue holding operation
-  * @rq: block IO operation request
-  *
-  * The block operation request @rq is being placed back into queue
-@@ -73,9 +72,9 @@ DEFINE_EVENT(block_buffer, block_dirty_buffer,
-  */
- TRACE_EVENT(block_rq_requeue,
- 
--	TP_PROTO(struct request_queue *q, struct request *rq),
-+	TP_PROTO(struct request *rq),
- 
--	TP_ARGS(q, rq),
-+	TP_ARGS(rq),
- 
- 	TP_STRUCT__entry(
- 		__field(  dev_t,	dev			)
-@@ -147,9 +146,9 @@ TRACE_EVENT(block_rq_complete,
- 
- DECLARE_EVENT_CLASS(block_rq,
- 
--	TP_PROTO(struct request_queue *q, struct request *rq),
-+	TP_PROTO(struct request *rq),
- 
--	TP_ARGS(q, rq),
-+	TP_ARGS(rq),
- 
- 	TP_STRUCT__entry(
- 		__field(  dev_t,	dev			)
-@@ -181,7 +180,6 @@ DECLARE_EVENT_CLASS(block_rq,
- 
- /**
-  * block_rq_insert - insert block operation request into queue
-- * @q: target queue
-  * @rq: block IO operation request
-  *
-  * Called immediately before block operation request @rq is inserted
-@@ -191,14 +189,13 @@ DECLARE_EVENT_CLASS(block_rq,
-  */
- DEFINE_EVENT(block_rq, block_rq_insert,
- 
--	TP_PROTO(struct request_queue *q, struct request *rq),
-+	TP_PROTO(struct request *rq),
- 
--	TP_ARGS(q, rq)
-+	TP_ARGS(rq)
- );
- 
- /**
-  * block_rq_issue - issue pending block IO request operation to device driver
-- * @q: queue holding operation
-  * @rq: block IO operation operation request
-  *
-  * Called when block operation request @rq from queue @q is sent to a
-@@ -206,14 +203,13 @@ DEFINE_EVENT(block_rq, block_rq_insert,
-  */
- DEFINE_EVENT(block_rq, block_rq_issue,
- 
--	TP_PROTO(struct request_queue *q, struct request *rq),
-+	TP_PROTO(struct request *rq),
- 
--	TP_ARGS(q, rq)
-+	TP_ARGS(rq)
- );
- 
- /**
-  * block_rq_merge - merge request with another one in the elevator
-- * @q: queue holding operation
-  * @rq: block IO operation operation request
-  *
-  * Called when block operation request @rq from queue @q is merged to another
-@@ -221,9 +217,9 @@ DEFINE_EVENT(block_rq, block_rq_issue,
-  */
- DEFINE_EVENT(block_rq, block_rq_merge,
- 
--	TP_PROTO(struct request_queue *q, struct request *rq),
-+	TP_PROTO(struct request *rq),
- 
--	TP_ARGS(q, rq)
-+	TP_ARGS(rq)
- );
- 
- /**
-@@ -491,7 +487,6 @@ TRACE_EVENT(block_bio_remap,
- 
- /**
-  * block_rq_remap - map request for a block operation request
-- * @q: queue holding the operation
-  * @rq: block IO operation request
-  * @dev: device for the operation
-  * @from: original sector for the operation
-@@ -502,10 +497,9 @@ TRACE_EVENT(block_bio_remap,
-  */
- TRACE_EVENT(block_rq_remap,
- 
--	TP_PROTO(struct request_queue *q, struct request *rq, dev_t dev,
--		 sector_t from),
-+	TP_PROTO(struct request *rq, dev_t dev, sector_t from),
- 
--	TP_ARGS(q, rq, dev, from),
-+	TP_ARGS(rq, dev, from),
- 
- 	TP_STRUCT__entry(
- 		__field( dev_t,		dev		)
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 405637144a0389..7839a78205c243 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -795,12 +795,12 @@ static u64 blk_trace_bio_get_cgid(struct request_queue *q, struct bio *bio)
- #endif
- 
- static u64
--blk_trace_request_get_cgid(struct request_queue *q, struct request *rq)
-+blk_trace_request_get_cgid(struct request *rq)
- {
- 	if (!rq->bio)
- 		return 0;
- 	/* Use the first bio */
--	return blk_trace_bio_get_cgid(q, rq->bio);
-+	return blk_trace_bio_get_cgid(rq->q, rq->bio);
- }
- 
- /*
-@@ -841,40 +841,35 @@ static void blk_add_trace_rq(struct request *rq, int error,
- 	rcu_read_unlock();
- }
- 
--static void blk_add_trace_rq_insert(void *ignore,
--				    struct request_queue *q, struct request *rq)
-+static void blk_add_trace_rq_insert(void *ignore, struct request *rq)
- {
- 	blk_add_trace_rq(rq, 0, blk_rq_bytes(rq), BLK_TA_INSERT,
--			 blk_trace_request_get_cgid(q, rq));
-+			 blk_trace_request_get_cgid(rq));
- }
- 
--static void blk_add_trace_rq_issue(void *ignore,
--				   struct request_queue *q, struct request *rq)
-+static void blk_add_trace_rq_issue(void *ignore, struct request *rq)
- {
- 	blk_add_trace_rq(rq, 0, blk_rq_bytes(rq), BLK_TA_ISSUE,
--			 blk_trace_request_get_cgid(q, rq));
-+			 blk_trace_request_get_cgid(rq));
- }
- 
--static void blk_add_trace_rq_merge(void *ignore,
--				   struct request_queue *q, struct request *rq)
-+static void blk_add_trace_rq_merge(void *ignore, struct request *rq)
- {
- 	blk_add_trace_rq(rq, 0, blk_rq_bytes(rq), BLK_TA_BACKMERGE,
--			 blk_trace_request_get_cgid(q, rq));
-+			 blk_trace_request_get_cgid(rq));
- }
- 
--static void blk_add_trace_rq_requeue(void *ignore,
--				     struct request_queue *q,
--				     struct request *rq)
-+static void blk_add_trace_rq_requeue(void *ignore, struct request *rq)
- {
- 	blk_add_trace_rq(rq, 0, blk_rq_bytes(rq), BLK_TA_REQUEUE,
--			 blk_trace_request_get_cgid(q, rq));
-+			 blk_trace_request_get_cgid(rq));
- }
- 
- static void blk_add_trace_rq_complete(void *ignore, struct request *rq,
- 			int error, unsigned int nr_bytes)
- {
- 	blk_add_trace_rq(rq, error, nr_bytes, BLK_TA_COMPLETE,
--			 blk_trace_request_get_cgid(rq->q, rq));
-+			 blk_trace_request_get_cgid(rq));
- }
- 
- /**
-@@ -1037,16 +1032,14 @@ static void blk_add_trace_bio_remap(void *ignore, struct bio *bio, dev_t dev,
-  *     Add a trace for that action.
-  *
-  **/
--static void blk_add_trace_rq_remap(void *ignore,
--				   struct request_queue *q,
--				   struct request *rq, dev_t dev,
-+static void blk_add_trace_rq_remap(void *ignore, struct request *rq, dev_t dev,
- 				   sector_t from)
- {
- 	struct blk_trace *bt;
- 	struct blk_io_trace_remap r;
- 
- 	rcu_read_lock();
--	bt = rcu_dereference(q->blk_trace);
-+	bt = rcu_dereference(rq->q->blk_trace);
- 	if (likely(!bt)) {
- 		rcu_read_unlock();
- 		return;
-@@ -1058,13 +1051,12 @@ static void blk_add_trace_rq_remap(void *ignore,
- 
- 	__blk_add_trace(bt, blk_rq_pos(rq), blk_rq_bytes(rq),
- 			rq_data_dir(rq), 0, BLK_TA_REMAP, 0,
--			sizeof(r), &r, blk_trace_request_get_cgid(q, rq));
-+			sizeof(r), &r, blk_trace_request_get_cgid(rq));
- 	rcu_read_unlock();
- }
- 
- /**
-  * blk_add_driver_data - Add binary message with driver-specific data
-- * @q:		queue the io is for
-  * @rq:		io request
-  * @data:	driver-specific data
-  * @len:	length of driver-specific data
-@@ -1073,14 +1065,12 @@ static void blk_add_trace_rq_remap(void *ignore,
-  *     Some drivers might want to write driver-specific data per request.
-  *
-  **/
--void blk_add_driver_data(struct request_queue *q,
--			 struct request *rq,
--			 void *data, size_t len)
-+void blk_add_driver_data(struct request *rq, void *data, size_t len)
- {
- 	struct blk_trace *bt;
- 
- 	rcu_read_lock();
--	bt = rcu_dereference(q->blk_trace);
-+	bt = rcu_dereference(rq->q->blk_trace);
- 	if (likely(!bt)) {
- 		rcu_read_unlock();
- 		return;
-@@ -1088,7 +1078,7 @@ void blk_add_driver_data(struct request_queue *q,
- 
- 	__blk_add_trace(bt, blk_rq_trace_sector(rq), blk_rq_bytes(rq), 0, 0,
- 				BLK_TA_DRV_DATA, 0, len, data,
--				blk_trace_request_get_cgid(q, rq));
-+				blk_trace_request_get_cgid(rq));
- 	rcu_read_unlock();
- }
- EXPORT_SYMBOL_GPL(blk_add_driver_data);
+>
+> Not sure what to do with this now here ...
+> -Daniel
+>
+>
+> On Sat, Nov 28, 2020 at 03:10:40AM +0800, kernel test robot wrote:
+> > Hi Daniel,
+> >
+> > I love your patch! Yet something to improve:
+> >
+> > [auto build test ERROR on linuxtv-media/master]
+> > [also build test ERROR on char-misc/char-misc-testing v5.10-rc5]
+> > [cannot apply to hnaz-linux-mm/master next-20201127]
+> > [If your patch is applied to the wrong git tree, kindly drop us a note.
+> > And when submitting patch, we suggest to use '--base' as documented in
+> > https://git-scm.com/docs/git-format-patch]
+> >
+> > url:    https://github.com/0day-ci/linux/commits/Daniel-Vetter/follow_pfn-and-other-iomap-races/20201128-004421
+> > base:   git://linuxtv.org/media_tree.git master
+> > config: s390-randconfig-r032-20201127 (attached as .config)
+> > compiler: clang version 12.0.0 (https://github.com/llvm/llvm-project f095ac11a9550530a4a54298debb8b04b36422be)
+> > reproduce (this is a W=1 build):
+> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >         chmod +x ~/bin/make.cross
+> >         # install s390 cross compiling tool for clang build
+> >         # apt-get install binutils-s390x-linux-gnu
+> >         # https://github.com/0day-ci/linux/commit/d76a3489433ce67d45da86aa12953385427f0ac9
+> >         git remote add linux-review https://github.com/0day-ci/linux
+> >         git fetch --no-tags linux-review Daniel-Vetter/follow_pfn-and-other-iomap-races/20201128-004421
+> >         git checkout d76a3489433ce67d45da86aa12953385427f0ac9
+> >         # save the attached .config to linux build tree
+> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=s390
+> >
+> > If you fix the issue, kindly add following tag as appropriate
+> > Reported-by: kernel test robot <lkp@intel.com>
+> >
+> > All errors (new ones prefixed by >>):
+> >
+> >    In file included from arch/s390/include/asm/kvm_para.h:25:
+> >    In file included from arch/s390/include/asm/diag.h:12:
+> >    In file included from include/linux/if_ether.h:19:
+> >    In file included from include/linux/skbuff.h:31:
+> >    In file included from include/linux/dma-mapping.h:10:
+> >    In file included from include/linux/scatterlist.h:9:
+> >    In file included from arch/s390/include/asm/io.h:80:
+> >    include/asm-generic/io.h:490:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+> >            val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+> >                                                            ~~~~~~~~~~ ^
+> >    include/uapi/linux/byteorder/big_endian.h:34:59: note: expanded from macro '__le32_to_cpu'
+> >    #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
+> >                                                              ^
+> >    include/uapi/linux/swab.h:119:21: note: expanded from macro '__swab32'
+> >            ___constant_swab32(x) :                 \
+> >                               ^
+> >    include/uapi/linux/swab.h:21:12: note: expanded from macro '___constant_swab32'
+> >            (((__u32)(x) & (__u32)0x00ff0000UL) >>  8) |            \
+> >                      ^
+> >    In file included from arch/s390/kvm/../../../virt/kvm/kvm_main.c:18:
+> >    In file included from include/linux/kvm_host.h:32:
+> >    In file included from include/linux/kvm_para.h:5:
+> >    In file included from include/uapi/linux/kvm_para.h:36:
+> >    In file included from arch/s390/include/asm/kvm_para.h:25:
+> >    In file included from arch/s390/include/asm/diag.h:12:
+> >    In file included from include/linux/if_ether.h:19:
+> >    In file included from include/linux/skbuff.h:31:
+> >    In file included from include/linux/dma-mapping.h:10:
+> >    In file included from include/linux/scatterlist.h:9:
+> >    In file included from arch/s390/include/asm/io.h:80:
+> >    include/asm-generic/io.h:490:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+> >            val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+> >                                                            ~~~~~~~~~~ ^
+> >    include/uapi/linux/byteorder/big_endian.h:34:59: note: expanded from macro '__le32_to_cpu'
+> >    #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
+> >                                                              ^
+> >    include/uapi/linux/swab.h:119:21: note: expanded from macro '__swab32'
+> >            ___constant_swab32(x) :                 \
+> >                               ^
+> >    include/uapi/linux/swab.h:22:12: note: expanded from macro '___constant_swab32'
+> >            (((__u32)(x) & (__u32)0xff000000UL) >> 24)))
+> >                      ^
+> >    In file included from arch/s390/kvm/../../../virt/kvm/kvm_main.c:18:
+> >    In file included from include/linux/kvm_host.h:32:
+> >    In file included from include/linux/kvm_para.h:5:
+> >    In file included from include/uapi/linux/kvm_para.h:36:
+> >    In file included from arch/s390/include/asm/kvm_para.h:25:
+> >    In file included from arch/s390/include/asm/diag.h:12:
+> >    In file included from include/linux/if_ether.h:19:
+> >    In file included from include/linux/skbuff.h:31:
+> >    In file included from include/linux/dma-mapping.h:10:
+> >    In file included from include/linux/scatterlist.h:9:
+> >    In file included from arch/s390/include/asm/io.h:80:
+> >    include/asm-generic/io.h:490:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+> >            val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+> >                                                            ~~~~~~~~~~ ^
+> >    include/uapi/linux/byteorder/big_endian.h:34:59: note: expanded from macro '__le32_to_cpu'
+> >    #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
+> >                                                              ^
+> >    include/uapi/linux/swab.h:120:12: note: expanded from macro '__swab32'
+> >            __fswab32(x))
+> >                      ^
+> >    In file included from arch/s390/kvm/../../../virt/kvm/kvm_main.c:18:
+> >    In file included from include/linux/kvm_host.h:32:
+> >    In file included from include/linux/kvm_para.h:5:
+> >    In file included from include/uapi/linux/kvm_para.h:36:
+> >    In file included from arch/s390/include/asm/kvm_para.h:25:
+> >    In file included from arch/s390/include/asm/diag.h:12:
+> >    In file included from include/linux/if_ether.h:19:
+> >    In file included from include/linux/skbuff.h:31:
+> >    In file included from include/linux/dma-mapping.h:10:
+> >    In file included from include/linux/scatterlist.h:9:
+> >    In file included from arch/s390/include/asm/io.h:80:
+> >    include/asm-generic/io.h:501:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+> >            __raw_writeb(value, PCI_IOBASE + addr);
+> >                                ~~~~~~~~~~ ^
+> >    include/asm-generic/io.h:511:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+> >            __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+> >                                                          ~~~~~~~~~~ ^
+> >    include/asm-generic/io.h:521:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+> >            __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+> >                                                          ~~~~~~~~~~ ^
+> >    include/asm-generic/io.h:609:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+> >            readsb(PCI_IOBASE + addr, buffer, count);
+> >                   ~~~~~~~~~~ ^
+> >    include/asm-generic/io.h:617:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+> >            readsw(PCI_IOBASE + addr, buffer, count);
+> >                   ~~~~~~~~~~ ^
+> >    include/asm-generic/io.h:625:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+> >            readsl(PCI_IOBASE + addr, buffer, count);
+> >                   ~~~~~~~~~~ ^
+> >    include/asm-generic/io.h:634:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+> >            writesb(PCI_IOBASE + addr, buffer, count);
+> >                    ~~~~~~~~~~ ^
+> >    include/asm-generic/io.h:643:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+> >            writesw(PCI_IOBASE + addr, buffer, count);
+> >                    ~~~~~~~~~~ ^
+> >    include/asm-generic/io.h:652:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+> >            writesl(PCI_IOBASE + addr, buffer, count);
+> >                    ~~~~~~~~~~ ^
+> > >> arch/s390/kvm/../../../virt/kvm/kvm_main.c:1894:40: error: no member named 'mmu_notifier' in 'struct kvm'
+> >            r = follow_pfn(vma, addr, &pfn, &kvm->mmu_notifier);
+> >                                             ~~~  ^
+> >    arch/s390/kvm/../../../virt/kvm/kvm_main.c:1909:41: error: no member named 'mmu_notifier' in 'struct kvm'
+> >                    r = follow_pfn(vma, addr, &pfn, &kvm->mmu_notifier);
+> >                                                     ~~~  ^
+> >    20 warnings and 2 errors generated.
+> >
+> > vim +1894 arch/s390/kvm/../../../virt/kvm/kvm_main.c
+> >
+> >   1885
+> >   1886        static int hva_to_pfn_remapped(struct kvm *kvm, struct vm_area_struct *vma,
+> >   1887                                       unsigned long addr, bool *async,
+> >   1888                                       bool write_fault, bool *writable,
+> >   1889                                       kvm_pfn_t *p_pfn)
+> >   1890        {
+> >   1891                unsigned long pfn;
+> >   1892                int r;
+> >   1893
+> > > 1894                r = follow_pfn(vma, addr, &pfn, &kvm->mmu_notifier);
+> >   1895                if (r) {
+> >   1896                        /*
+> >   1897                         * get_user_pages fails for VM_IO and VM_PFNMAP vmas and does
+> >   1898                         * not call the fault handler, so do it here.
+> >   1899                         */
+> >   1900                        bool unlocked = false;
+> >   1901                        r = fixup_user_fault(current->mm, addr,
+> >   1902                                             (write_fault ? FAULT_FLAG_WRITE : 0),
+> >   1903                                             &unlocked);
+> >   1904                        if (unlocked)
+> >   1905                                return -EAGAIN;
+> >   1906                        if (r)
+> >   1907                                return r;
+> >   1908
+> >   1909                        r = follow_pfn(vma, addr, &pfn, &kvm->mmu_notifier);
+> >   1910                        if (r)
+> >   1911                                return r;
+> >   1912
+> >   1913                }
+> >   1914
+> >   1915                if (writable)
+> >   1916                        *writable = true;
+> >   1917
+> >   1918                /*
+> >   1919                 * Get a reference here because callers of *hva_to_pfn* and
+> >   1920                 * *gfn_to_pfn* ultimately call kvm_release_pfn_clean on the
+> >   1921                 * returned pfn.  This is only needed if the VMA has VM_MIXEDMAP
+> >   1922                 * set, but the kvm_get_pfn/kvm_release_pfn_clean pair will
+> >   1923                 * simply do nothing for reserved pfns.
+> >   1924                 *
+> >   1925                 * Whoever called remap_pfn_range is also going to call e.g.
+> >   1926                 * unmap_mapping_range before the underlying pages are freed,
+> >   1927                 * causing a call to our MMU notifier.
+> >   1928                 */
+> >   1929                kvm_get_pfn(pfn);
+> >   1930
+> >   1931                *p_pfn = pfn;
+> >   1932                return 0;
+> >   1933        }
+> >   1934
+> >
+> > ---
+> > 0-DAY CI Kernel Test Service, Intel Corporation
+> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+>
+>
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20201130142820.GN401619%40phenom.ffwll.local.
+
+
+
 -- 
-2.29.2
-
+Thanks,
+~Nick Desaulniers
