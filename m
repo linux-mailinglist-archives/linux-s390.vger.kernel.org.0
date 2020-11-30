@@ -2,304 +2,596 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C4B62C8C10
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Nov 2020 19:04:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66F322C8E2F
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Nov 2020 20:37:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbgK3SEc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Nov 2020 13:04:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729437AbgK3SEc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 Nov 2020 13:04:32 -0500
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFDCFC0617A6
-        for <linux-s390@vger.kernel.org>; Mon, 30 Nov 2020 10:03:51 -0800 (PST)
-Received: by mail-pj1-x1044.google.com with SMTP id v1so55213pjr.2
-        for <linux-s390@vger.kernel.org>; Mon, 30 Nov 2020 10:03:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q4aiUo+R2FBXYOJi5Lz6koIizaWvK7CXEvnPP0gtkHY=;
-        b=WJN/cBIIUk6MohKQRQk8JObz3Y9LIRoDzY/g4r9a3kx9ncZpcSl9Ijsv5SCGIzibSh
-         0TlyUwNA6WUTeVaDji0unOXv2cdZvhXuvxjCnwjIn3x+0V8XE3TAIDrJzsrpNG+3aDf4
-         O64vuJ+VwNbyqtWnGvDLZtyNBklkHcD86NkM+4KIgWOyxWehIcHAbicMIjz8UVVfaNdu
-         3KCfphu4L9CefgQu1LAF6kGWwy5dKyguiC1tYJR9q8cvgpGxIPIYuSAgf5my0+GwTpWT
-         jRZr3rRQ0PbEFDMRsQGjs3CEbCzRbcnlGqc5b5xAzkV8ryWyPL0pCFk54q9NH+Gmr1KI
-         NhYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q4aiUo+R2FBXYOJi5Lz6koIizaWvK7CXEvnPP0gtkHY=;
-        b=N3LVHqeId/HWkpy+Nv7OiB9FIyjf790M/i9i824BF27fugE0FHHl7gjzH9sZvmPVCy
-         uumZOXEL6xVXEWKtTAMfUYHvFq+iXQekSM5bkFNumlchskfkEpZz81QMCbGUxWd8PC4p
-         TVRavJVMCwkRApP08MCoxW2T7HTIn5RnqRjArk2cP89R4sH/TwTgsqH/CK5wnHzvk80q
-         iOxIRu77mhNk7y6oUtIievTIXgKXQKhNszN3yqsRSQGOgH7NxOIJP6jOdBEDEG6qx0xL
-         vo/JKHh6ZEOa5Qxzk9Gi9LSJ6mF0OCZQBxOcBcZMKcVAHGIBUYSNeO/ZsoCIMYD+powf
-         nvGA==
-X-Gm-Message-State: AOAM532updgXFyPHxnTzOUvSIgGjlyXqtNj6V9W0SXd7NGZdeOPi+/yZ
-        JovdPq2WVDv1Fkyx4iD4La2P9Lhzc0qnSoWMnwUR7g==
-X-Google-Smtp-Source: ABdhPJxHm++0XMttvWDRWWKqxHdfZjFoymYvLuXf+7L3uOgrG9s2Gg6KNpvokgO5TP6MqRad6jHADnjuLxLnCan07K8=
-X-Received: by 2002:a17:90a:2e8c:: with SMTP id r12mr27529821pjd.101.1606759430885;
- Mon, 30 Nov 2020 10:03:50 -0800 (PST)
+        id S1728675AbgK3Tg6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 Nov 2020 14:36:58 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44344 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725987AbgK3Tg6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 30 Nov 2020 14:36:58 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AUJVfZ0093172;
+        Mon, 30 Nov 2020 14:36:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=SJMFmkYWoR8qw+FMGXEm+AItSYG0GNxu49cgDQNKvuU=;
+ b=ONJ6DDFDRvhAVCWBPelJgLn3QQfl8P7pcDdOflGooOD79BEbfI57ESR6YICTNJ5MT6xo
+ OZvhuQloNNwtRN2L5KEyWTaTdOgkhToOIg0ZGNImCWacU8SJZx8AKt+gEbJfsTWVdWq9
+ W+X7gmNaySTKyEwyYmQDOhsQqorUmSouFfuw+ZCfn2EV/BNS7FM97p9PyN2l/KkIO1UU
+ HPbOteLIgfxFCnbv8Xf4jb7Xm29fbZzA/MZurA5tjb91GjF6xqxfy6b0XSW3SbYN8eZC
+ px04uRLbYU0+JVcGJgp6YkckgJKXn4oHV4BPV1kfmk7eMS31zdm4oq5Xoz3+VPZbZmaq Ag== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3556641kh4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Nov 2020 14:36:15 -0500
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AUJVp21093853;
+        Mon, 30 Nov 2020 14:36:14 -0500
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3556641kgv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Nov 2020 14:36:14 -0500
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AUJW2L3018237;
+        Mon, 30 Nov 2020 19:36:13 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01dal.us.ibm.com with ESMTP id 353e68xqck-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Nov 2020 19:36:13 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AUJaBmS852650
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Nov 2020 19:36:11 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D31ECAC059;
+        Mon, 30 Nov 2020 19:36:11 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 06464AC05B;
+        Mon, 30 Nov 2020 19:36:10 +0000 (GMT)
+Received: from cpe-66-24-58-13.stny.res.rr.com (unknown [9.85.195.249])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 30 Nov 2020 19:36:10 +0000 (GMT)
+Subject: Re: [PATCH v12 12/17] s390/vfio-ap: allow hot plug/unplug of AP
+ resources using mdev device
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, mjrosato@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+References: <20201124214016.3013-1-akrowiak@linux.ibm.com>
+ <20201124214016.3013-13-akrowiak@linux.ibm.com>
+ <20201129025250.16eb8355.pasic@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <103cbe02-2093-c950-8d65-d3dc385942ce@linux.ibm.com>
+Date:   Mon, 30 Nov 2020 14:36:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20201127164131.2244124-18-daniel.vetter@ffwll.ch>
- <202011280356.rPWHFNW4-lkp@intel.com> <20201130142820.GN401619@phenom.ffwll.local>
-In-Reply-To: <20201130142820.GN401619@phenom.ffwll.local>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 30 Nov 2020 10:03:40 -0800
-Message-ID: <CAKwvOdnSrsnTgPEuQJyaOTSkTP2dR9208Y66HQG_h1e2LKfqtw@mail.gmail.com>
-Subject: Re: [PATCH v7 17/17] mm: add mmu_notifier argument to follow_pfn
-To:     Vasily Gorbik <gor@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>, kbuild-all@lists.01.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        kvm <kvm@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201129025250.16eb8355.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-30_08:2020-11-30,2020-11-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=3 clxscore=1015
+ phishscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
+ bulkscore=0 mlxlogscore=999 spamscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011300122
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Nov 30, 2020 at 6:28 AM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> So I guess kvm platforms that don't set KVM_ARCH_WANT_MMU_NOTIFIER exist,
-> and at least on powerpc they're consistent with KVM_CAP_SYNC_MMU
-> signalling that the guest pagetables stays in sync automatically with any
-> updates. So for that case I guess we could use unsafe_follow_pfn.
->
-> But on s390 this seems different: No mmu notifier, but KVM_CAP_SYNC_MMU is
-> set. So I guess there's some hardware magic on s390 that I don't know
-> about.
-
-+ Vasily + Heiko +s390
-
->
-> Not sure what to do with this now here ...
-> -Daniel
->
->
-> On Sat, Nov 28, 2020 at 03:10:40AM +0800, kernel test robot wrote:
-> > Hi Daniel,
-> >
-> > I love your patch! Yet something to improve:
-> >
-> > [auto build test ERROR on linuxtv-media/master]
-> > [also build test ERROR on char-misc/char-misc-testing v5.10-rc5]
-> > [cannot apply to hnaz-linux-mm/master next-20201127]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch]
-> >
-> > url:    https://github.com/0day-ci/linux/commits/Daniel-Vetter/follow_pfn-and-other-iomap-races/20201128-004421
-> > base:   git://linuxtv.org/media_tree.git master
-> > config: s390-randconfig-r032-20201127 (attached as .config)
-> > compiler: clang version 12.0.0 (https://github.com/llvm/llvm-project f095ac11a9550530a4a54298debb8b04b36422be)
-> > reproduce (this is a W=1 build):
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         # install s390 cross compiling tool for clang build
-> >         # apt-get install binutils-s390x-linux-gnu
-> >         # https://github.com/0day-ci/linux/commit/d76a3489433ce67d45da86aa12953385427f0ac9
-> >         git remote add linux-review https://github.com/0day-ci/linux
-> >         git fetch --no-tags linux-review Daniel-Vetter/follow_pfn-and-other-iomap-races/20201128-004421
-> >         git checkout d76a3489433ce67d45da86aa12953385427f0ac9
-> >         # save the attached .config to linux build tree
-> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross ARCH=s390
-> >
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kernel test robot <lkp@intel.com>
-> >
-> > All errors (new ones prefixed by >>):
-> >
-> >    In file included from arch/s390/include/asm/kvm_para.h:25:
-> >    In file included from arch/s390/include/asm/diag.h:12:
-> >    In file included from include/linux/if_ether.h:19:
-> >    In file included from include/linux/skbuff.h:31:
-> >    In file included from include/linux/dma-mapping.h:10:
-> >    In file included from include/linux/scatterlist.h:9:
-> >    In file included from arch/s390/include/asm/io.h:80:
-> >    include/asm-generic/io.h:490:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-> >            val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-> >                                                            ~~~~~~~~~~ ^
-> >    include/uapi/linux/byteorder/big_endian.h:34:59: note: expanded from macro '__le32_to_cpu'
-> >    #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-> >                                                              ^
-> >    include/uapi/linux/swab.h:119:21: note: expanded from macro '__swab32'
-> >            ___constant_swab32(x) :                 \
-> >                               ^
-> >    include/uapi/linux/swab.h:21:12: note: expanded from macro '___constant_swab32'
-> >            (((__u32)(x) & (__u32)0x00ff0000UL) >>  8) |            \
-> >                      ^
-> >    In file included from arch/s390/kvm/../../../virt/kvm/kvm_main.c:18:
-> >    In file included from include/linux/kvm_host.h:32:
-> >    In file included from include/linux/kvm_para.h:5:
-> >    In file included from include/uapi/linux/kvm_para.h:36:
-> >    In file included from arch/s390/include/asm/kvm_para.h:25:
-> >    In file included from arch/s390/include/asm/diag.h:12:
-> >    In file included from include/linux/if_ether.h:19:
-> >    In file included from include/linux/skbuff.h:31:
-> >    In file included from include/linux/dma-mapping.h:10:
-> >    In file included from include/linux/scatterlist.h:9:
-> >    In file included from arch/s390/include/asm/io.h:80:
-> >    include/asm-generic/io.h:490:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-> >            val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-> >                                                            ~~~~~~~~~~ ^
-> >    include/uapi/linux/byteorder/big_endian.h:34:59: note: expanded from macro '__le32_to_cpu'
-> >    #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-> >                                                              ^
-> >    include/uapi/linux/swab.h:119:21: note: expanded from macro '__swab32'
-> >            ___constant_swab32(x) :                 \
-> >                               ^
-> >    include/uapi/linux/swab.h:22:12: note: expanded from macro '___constant_swab32'
-> >            (((__u32)(x) & (__u32)0xff000000UL) >> 24)))
-> >                      ^
-> >    In file included from arch/s390/kvm/../../../virt/kvm/kvm_main.c:18:
-> >    In file included from include/linux/kvm_host.h:32:
-> >    In file included from include/linux/kvm_para.h:5:
-> >    In file included from include/uapi/linux/kvm_para.h:36:
-> >    In file included from arch/s390/include/asm/kvm_para.h:25:
-> >    In file included from arch/s390/include/asm/diag.h:12:
-> >    In file included from include/linux/if_ether.h:19:
-> >    In file included from include/linux/skbuff.h:31:
-> >    In file included from include/linux/dma-mapping.h:10:
-> >    In file included from include/linux/scatterlist.h:9:
-> >    In file included from arch/s390/include/asm/io.h:80:
-> >    include/asm-generic/io.h:490:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-> >            val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-> >                                                            ~~~~~~~~~~ ^
-> >    include/uapi/linux/byteorder/big_endian.h:34:59: note: expanded from macro '__le32_to_cpu'
-> >    #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-> >                                                              ^
-> >    include/uapi/linux/swab.h:120:12: note: expanded from macro '__swab32'
-> >            __fswab32(x))
-> >                      ^
-> >    In file included from arch/s390/kvm/../../../virt/kvm/kvm_main.c:18:
-> >    In file included from include/linux/kvm_host.h:32:
-> >    In file included from include/linux/kvm_para.h:5:
-> >    In file included from include/uapi/linux/kvm_para.h:36:
-> >    In file included from arch/s390/include/asm/kvm_para.h:25:
-> >    In file included from arch/s390/include/asm/diag.h:12:
-> >    In file included from include/linux/if_ether.h:19:
-> >    In file included from include/linux/skbuff.h:31:
-> >    In file included from include/linux/dma-mapping.h:10:
-> >    In file included from include/linux/scatterlist.h:9:
-> >    In file included from arch/s390/include/asm/io.h:80:
-> >    include/asm-generic/io.h:501:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-> >            __raw_writeb(value, PCI_IOBASE + addr);
-> >                                ~~~~~~~~~~ ^
-> >    include/asm-generic/io.h:511:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-> >            __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-> >                                                          ~~~~~~~~~~ ^
-> >    include/asm-generic/io.h:521:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-> >            __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-> >                                                          ~~~~~~~~~~ ^
-> >    include/asm-generic/io.h:609:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-> >            readsb(PCI_IOBASE + addr, buffer, count);
-> >                   ~~~~~~~~~~ ^
-> >    include/asm-generic/io.h:617:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-> >            readsw(PCI_IOBASE + addr, buffer, count);
-> >                   ~~~~~~~~~~ ^
-> >    include/asm-generic/io.h:625:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-> >            readsl(PCI_IOBASE + addr, buffer, count);
-> >                   ~~~~~~~~~~ ^
-> >    include/asm-generic/io.h:634:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-> >            writesb(PCI_IOBASE + addr, buffer, count);
-> >                    ~~~~~~~~~~ ^
-> >    include/asm-generic/io.h:643:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-> >            writesw(PCI_IOBASE + addr, buffer, count);
-> >                    ~~~~~~~~~~ ^
-> >    include/asm-generic/io.h:652:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-> >            writesl(PCI_IOBASE + addr, buffer, count);
-> >                    ~~~~~~~~~~ ^
-> > >> arch/s390/kvm/../../../virt/kvm/kvm_main.c:1894:40: error: no member named 'mmu_notifier' in 'struct kvm'
-> >            r = follow_pfn(vma, addr, &pfn, &kvm->mmu_notifier);
-> >                                             ~~~  ^
-> >    arch/s390/kvm/../../../virt/kvm/kvm_main.c:1909:41: error: no member named 'mmu_notifier' in 'struct kvm'
-> >                    r = follow_pfn(vma, addr, &pfn, &kvm->mmu_notifier);
-> >                                                     ~~~  ^
-> >    20 warnings and 2 errors generated.
-> >
-> > vim +1894 arch/s390/kvm/../../../virt/kvm/kvm_main.c
-> >
-> >   1885
-> >   1886        static int hva_to_pfn_remapped(struct kvm *kvm, struct vm_area_struct *vma,
-> >   1887                                       unsigned long addr, bool *async,
-> >   1888                                       bool write_fault, bool *writable,
-> >   1889                                       kvm_pfn_t *p_pfn)
-> >   1890        {
-> >   1891                unsigned long pfn;
-> >   1892                int r;
-> >   1893
-> > > 1894                r = follow_pfn(vma, addr, &pfn, &kvm->mmu_notifier);
-> >   1895                if (r) {
-> >   1896                        /*
-> >   1897                         * get_user_pages fails for VM_IO and VM_PFNMAP vmas and does
-> >   1898                         * not call the fault handler, so do it here.
-> >   1899                         */
-> >   1900                        bool unlocked = false;
-> >   1901                        r = fixup_user_fault(current->mm, addr,
-> >   1902                                             (write_fault ? FAULT_FLAG_WRITE : 0),
-> >   1903                                             &unlocked);
-> >   1904                        if (unlocked)
-> >   1905                                return -EAGAIN;
-> >   1906                        if (r)
-> >   1907                                return r;
-> >   1908
-> >   1909                        r = follow_pfn(vma, addr, &pfn, &kvm->mmu_notifier);
-> >   1910                        if (r)
-> >   1911                                return r;
-> >   1912
-> >   1913                }
-> >   1914
-> >   1915                if (writable)
-> >   1916                        *writable = true;
-> >   1917
-> >   1918                /*
-> >   1919                 * Get a reference here because callers of *hva_to_pfn* and
-> >   1920                 * *gfn_to_pfn* ultimately call kvm_release_pfn_clean on the
-> >   1921                 * returned pfn.  This is only needed if the VMA has VM_MIXEDMAP
-> >   1922                 * set, but the kvm_get_pfn/kvm_release_pfn_clean pair will
-> >   1923                 * simply do nothing for reserved pfns.
-> >   1924                 *
-> >   1925                 * Whoever called remap_pfn_range is also going to call e.g.
-> >   1926                 * unmap_mapping_range before the underlying pages are freed,
-> >   1927                 * causing a call to our MMU notifier.
-> >   1928                 */
-> >   1929                kvm_get_pfn(pfn);
-> >   1930
-> >   1931                *p_pfn = pfn;
-> >   1932                return 0;
-> >   1933        }
-> >   1934
-> >
-> > ---
-> > 0-DAY CI Kernel Test Service, Intel Corporation
-> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->
->
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20201130142820.GN401619%40phenom.ffwll.local.
 
 
+On 11/28/20 8:52 PM, Halil Pasic wrote:
+> On Tue, 24 Nov 2020 16:40:11 -0500
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> Let's hot plug/unplug adapters, domains and control domains assigned to or
+>> unassigned from an AP matrix mdev device while it is in use by a guest per
+>> the following rules:
+>>
+>> * Assign an adapter to mdev's matrix:
+>>
+>>    The adapter will be hot plugged into the guest under the following
+>>    conditions:
+>>    1. The adapter is not yet assigned to the guest's matrix
+>>    2. At least one domain is assigned to the guest's matrix
+>>    3. Each APQN derived from the APID of the newly assigned adapter and
+>>       the APQIs of the domains already assigned to the guest's
+>>       matrix references a queue device bound to the vfio_ap device driver.
+>>
+>>    The adapter and each domain assigned to the mdev's matrix will be hot
+>>    plugged into the guest under the following conditions:
+>>    1. The adapter is not yet assigned to the guest's matrix
+>>    2. No domains are assigned to the guest's matrix
+>>    3  At least one domain is assigned to the mdev's matrix
+>>    4. Each APQN derived from the APID of the newly assigned adapter and
+>>       the APQIs of the domains assigned to the mdev's matrix references a
+>>       queue device bound to the vfio_ap device driver.
+>>
+>> * Unassign an adapter from mdev's matrix:
+>>
+>>    The adapter will be hot unplugged from the KVM guest if it is
+>>    assigned to the guest's matrix.
+>>
+>> * Assign a domain to mdev's matrix:
+>>
+>>    The domain will be hot plugged into the guest under the following
+>>    conditions:
+>>    1. The domain is not yet assigned to the guest's matrix
+>>    2. At least one adapter is assigned to the guest's matrix
+>>    3. Each APQN derived from the APQI of the newly assigned domain and
+>>       the APIDs of the adapters already assigned to the guest's
+>>       matrix references a queue device bound to the vfio_ap device driver.
+>>
+>>    The domain and each adapter assigned to the mdev's matrix will be hot
+>>    plugged into the guest under the following conditions:
+>>    1. The domain is not yet assigned to the guest's matrix
+>>    2. No adapters are assigned to the guest's matrix
+>>    3  At least one adapter is assigned to the mdev's matrix
+>>    4. Each APQN derived from the APQI of the newly assigned domain and
+>>       the APIDs of the adapters assigned to the mdev's matrix references a
+>>       queue device bound to the vfio_ap device driver.
+>>
+>> * Unassign adapter from mdev's matrix:
+>>
+>>    The domain will be hot unplugged from the KVM guest if it is
+>>    assigned to the guest's matrix.
+>>
+>> * Assign a control domain:
+>>
+>>    The control domain will be hot plugged into the KVM guest if it is not
+>>    assigned to the guest's APCB. The AP architecture ensures a guest will
+>>    only get access to the control domain if it is in the host's AP
+>>    configuration, so there is no risk in hot plugging it; however, it will
+>>    become automatically available to the guest when it is added to the host
+>>    configuration.
+>>
+>> * Unassign a control domain:
+>>
+>>    The control domain will be hot unplugged from the KVM guest if it is
+>>    assigned to the guest's APCB.
+> This is where things start getting tricky. E.g. do we need to revise
+> filtering after an unassign? (For example an assign_adapter X didn't
+> change the shadow, because queue XY was missing, but now we unplug domain
+> Y. Should the adapter X pop up? I guess it should.)
 
--- 
-Thanks,
-~Nick Desaulniers
+I suppose that makes sense at the expense of making the code
+more complex. It is essentially what we had in the prior version
+which used the same filtering code for assignment as well as
+host AP configuration changes.
+
+>
+>
+>> Note: Now that hot plug/unplug is implemented, there is the possibility
+>>        that an assignment/unassignment of an adapter, domain or control
+>>        domain could be initiated while the guest is starting, so the
+>>        matrix device lock will be taken for the group notification callback
+>>        that initializes the guest's APCB when the KVM pointer is made
+>>        available to the vfio_ap device driver.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_ops.c | 190 +++++++++++++++++++++++++-----
+>>   1 file changed, 159 insertions(+), 31 deletions(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+>> index 586ec5776693..4f96b7861607 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -631,6 +631,60 @@ static void vfio_ap_mdev_manage_qlinks(struct ap_matrix_mdev *matrix_mdev,
+>>   	}
+>>   }
+>>   
+>> +static bool vfio_ap_assign_apid_to_apcb(struct ap_matrix_mdev *matrix_mdev,
+>> +					unsigned long apid)
+>> +{
+>> +	unsigned long apqi, apqn;
+>> +	unsigned long *aqm = matrix_mdev->shadow_apcb.aqm;
+>> +
+>> +	/*
+>> +	 * If the APID is already assigned to the guest's shadow APCB, there is
+>> +	 * no need to assign it.
+>> +	 */
+>> +	if (test_bit_inv(apid, matrix_mdev->shadow_apcb.apm))
+>> +		return false;
+>> +
+>> +	/*
+>> +	 * If no domains have yet been assigned to the shadow APCB and one or
+>> +	 * more domains have been assigned to the matrix mdev, then use
+>> +	 * the domains assigned to the matrix mdev; otherwise, there is nothing
+>> +	 * to assign to the shadow APCB.
+>> +	 */
+>> +	if (bitmap_empty(matrix_mdev->shadow_apcb.aqm, AP_DOMAINS)) {
+>> +		if (bitmap_empty(matrix_mdev->matrix.aqm, AP_DOMAINS))
+>> +			return false;
+>> +
+>> +		aqm = matrix_mdev->matrix.aqm;
+>> +	}
+>> +
+>> +	/* Make sure all APQNs are bound to the vfio_ap driver */
+>> +	for_each_set_bit_inv(apqi, aqm, AP_DOMAINS) {
+>> +		apqn = AP_MKQID(apid, apqi);
+>> +
+>> +		if (vfio_ap_mdev_get_queue(matrix_mdev, apqn) == NULL)
+>> +			return false;
+>> +	}
+>> +
+>> +	set_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
+>> +
+>> +	/*
+>> +	 * If we verified APQNs using the domains assigned to the matrix mdev,
+>> +	 * then copy the APQIs of those domains into the guest's APCB
+>> +	 */
+>> +	if (bitmap_empty(matrix_mdev->shadow_apcb.aqm, AP_DOMAINS))
+>> +		bitmap_copy(matrix_mdev->shadow_apcb.aqm,
+>> +			    matrix_mdev->matrix.aqm, AP_DOMAINS);
+>> +
+>> +	return true;
+>> +}
+> What is the rationale behind the shadow aqm empty special handling?
+
+The rationale was to avoid taking the VCPUs
+out of SIE in order to make an update to the guest's APCB
+unnecessarily. For example, suppose the guest is started
+without access to any APQNs (i.e., all matrix and shadow_apcb
+masks are zeros). Now suppose the administrator proceeds to
+start assigning AP resources to the mdev. Let's say he starts
+by assigning adapters 1 through 100. The code below will return
+true indicating the shadow_apcb was updated. Consequently,
+the calling code will commit the changes to the guest's
+APCB. The problem there is that in order to update the guest's
+VCPUs, they will have to be taken out of SIE, yet the guest will
+not get access to the adapter since no domains have yet been
+assigned to the APCB. Doing this 100 times - once for each
+adapter 1-100 - is probably a bad idea.
+
+>   I.e.
+> why not simply:
+>
+>
+> static bool vfio_ap_assign_apid_to_apcb(struct ap_matrix_mdev *matrix_mdev,
+>                                          unsigned long apid)
+> {
+>          unsigned long apqi, apqn;
+>          unsigned long *aqm = matrix_mdev->shadow_apcb.aqm;
+>                                                                                  
+>          /*
+>           * If the APID is already assigned to the guest's shadow APCB, there is
+>           * no need to assign it.
+>           */
+>          if (test_bit_inv(apid, matrix_mdev->shadow_apcb.apm))
+>                  return false;
+>                                                                                  
+>          /* Make sure all APQNs are bound to the vfio_ap driver */
+>          for_each_set_bit_inv(apqi, aqm, AP_DOMAINS) {
+>                  apqn = AP_MKQID(apid, apqi);
+>                                                                                  
+>                  if (vfio_ap_mdev_get_queue(matrix_mdev, apqn) == NULL)
+>                          return false;
+>          }
+>                                                                                  
+>          set_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
+>                                                                                  
+>          return true;
+> }
+>
+> Please answer the questions I've asked, and note that I will have to
+> return to this patch, later.
+>
+> Regards,
+> Halil
+>
+>> +
+>> +static void vfio_ap_mdev_hot_plug_adapter(struct ap_matrix_mdev *matrix_mdev,
+>> +					  unsigned long apid)
+>> +{
+>> +	if (vfio_ap_assign_apid_to_apcb(matrix_mdev, apid))
+>> +		vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
+>> +}
+>> +
+>>   /**
+>>    * assign_adapter_store
+>>    *
+>> @@ -673,10 +727,6 @@ static ssize_t assign_adapter_store(struct device *dev,
+>>   	struct mdev_device *mdev = mdev_from_dev(dev);
+>>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>>   
+>> -	/* If the guest is running, disallow assignment of adapter */
+>> -	if (matrix_mdev->kvm)
+>> -		return -EBUSY;
+>> -
+>>   	ret = kstrtoul(buf, 0, &apid);
+>>   	if (ret)
+>>   		return ret;
+>> @@ -698,12 +748,22 @@ static ssize_t assign_adapter_store(struct device *dev,
+>>   	}
+>>   	set_bit_inv(apid, matrix_mdev->matrix.apm);
+>>   	vfio_ap_mdev_manage_qlinks(matrix_mdev, LINK_APID, apid);
+>> +	vfio_ap_mdev_hot_plug_adapter(matrix_mdev, apid);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   
+>>   	return count;
+>>   }
+>>   static DEVICE_ATTR_WO(assign_adapter);
+>>   
+>> +static void vfio_ap_mdev_hot_unplug_adapter(struct ap_matrix_mdev *matrix_mdev,
+>> +					    unsigned long apid)
+>> +{
+>> +	if (test_bit_inv(apid, matrix_mdev->shadow_apcb.apm)) {
+>> +		clear_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
+>> +		vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
+>> +	}
+>> +}
+>> +
+>>   /**
+>>    * unassign_adapter_store
+>>    *
+>> @@ -730,10 +790,6 @@ static ssize_t unassign_adapter_store(struct device *dev,
+>>   	struct mdev_device *mdev = mdev_from_dev(dev);
+>>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>>   
+>> -	/* If the guest is running, disallow un-assignment of adapter */
+>> -	if (matrix_mdev->kvm)
+>> -		return -EBUSY;
+>> -
+>>   	ret = kstrtoul(buf, 0, &apid);
+>>   	if (ret)
+>>   		return ret;
+>> @@ -744,12 +800,67 @@ static ssize_t unassign_adapter_store(struct device *dev,
+>>   	mutex_lock(&matrix_dev->lock);
+>>   	clear_bit_inv((unsigned long)apid, matrix_mdev->matrix.apm);
+>>   	vfio_ap_mdev_manage_qlinks(matrix_mdev, UNLINK_APID, apid);
+>> +	vfio_ap_mdev_hot_unplug_adapter(matrix_mdev, apid);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   
+>>   	return count;
+>>   }
+>>   static DEVICE_ATTR_WO(unassign_adapter);
+>>   
+>> +static bool vfio_ap_assign_apqi_to_apcb(struct ap_matrix_mdev *matrix_mdev,
+>> +					unsigned long apqi)
+>> +{
+>> +	unsigned long apid, apqn;
+>> +	unsigned long *apm = matrix_mdev->shadow_apcb.apm;
+>> +
+>> +	/*
+>> +	 * If the APQI is already assigned to the guest's shadow APCB, there is
+>> +	 * no need to assign it.
+>> +	 */
+>> +	if (test_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm))
+>> +		return false;
+>> +
+>> +	/*
+>> +	 * If no adapters have yet been assigned to the shadow APCB and one or
+>> +	 * more adapters have been assigned to the matrix mdev, then use
+>> +	 * the adapters assigned to the matrix mdev; otherwise, there is nothing
+>> +	 * to assign to the shadow APCB.
+>> +	 */
+>> +	if (bitmap_empty(matrix_mdev->shadow_apcb.apm, AP_DEVICES)) {
+>> +		if (bitmap_empty(matrix_mdev->matrix.apm, AP_DEVICES))
+>> +			return false;
+>> +
+>> +		apm = matrix_mdev->matrix.apm;
+>> +	}
+>> +
+>> +	/* Make sure all APQNs are bound to the vfio_ap driver */
+>> +	for_each_set_bit_inv(apid, apm, AP_DEVICES) {
+>> +		apqn = AP_MKQID(apid, apqi);
+>> +
+>> +		if (vfio_ap_mdev_get_queue(matrix_mdev, apqn) == NULL)
+>> +			return false;
+>> +	}
+>> +
+>> +	set_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
+>> +
+>> +	/*
+>> +	 * If we verified APQNs using the adapters assigned to the matrix mdev,
+>> +	 * then copy the APIDs of those adapters into the guest's APCB
+>> +	 */
+>> +	if (bitmap_empty(matrix_mdev->shadow_apcb.apm, AP_DEVICES))
+>> +		bitmap_copy(matrix_mdev->shadow_apcb.apm,
+>> +			    matrix_mdev->matrix.apm, AP_DEVICES);
+>> +
+>> +	return true;
+>> +}
+>> +
+>> +static void vfio_ap_mdev_hot_plug_domain(struct ap_matrix_mdev *matrix_mdev,
+>> +					 unsigned long apqi)
+>> +{
+>> +	if (vfio_ap_assign_apqi_to_apcb(matrix_mdev, apqi))
+>> +		vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
+>> +}
+>> +
+>>   /**
+>>    * assign_domain_store
+>>    *
+>> @@ -793,10 +904,6 @@ static ssize_t assign_domain_store(struct device *dev,
+>>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>>   	unsigned long max_apqi = matrix_mdev->matrix.aqm_max;
+>>   
+>> -	/* If the guest is running, disallow assignment of domain */
+>> -	if (matrix_mdev->kvm)
+>> -		return -EBUSY;
+>> -
+>>   	ret = kstrtoul(buf, 0, &apqi);
+>>   	if (ret)
+>>   		return ret;
+>> @@ -817,12 +924,21 @@ static ssize_t assign_domain_store(struct device *dev,
+>>   	}
+>>   	set_bit_inv(apqi, matrix_mdev->matrix.aqm);
+>>   	vfio_ap_mdev_manage_qlinks(matrix_mdev, LINK_APQI, apqi);
+>> +	vfio_ap_mdev_hot_plug_domain(matrix_mdev, apqi);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   
+>>   	return count;
+>>   }
+>>   static DEVICE_ATTR_WO(assign_domain);
+>>   
+>> +static void vfio_ap_mdev_hot_unplug_domain(struct ap_matrix_mdev *matrix_mdev,
+>> +					   unsigned long apqi)
+>> +{
+>> +	if (test_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm)) {
+>> +		clear_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
+>> +		vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
+>> +	}
+>> +}
+>>   
+>>   /**
+>>    * unassign_domain_store
+>> @@ -850,10 +966,6 @@ static ssize_t unassign_domain_store(struct device *dev,
+>>   	struct mdev_device *mdev = mdev_from_dev(dev);
+>>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>>   
+>> -	/* If the guest is running, disallow un-assignment of domain */
+>> -	if (matrix_mdev->kvm)
+>> -		return -EBUSY;
+>> -
+>>   	ret = kstrtoul(buf, 0, &apqi);
+>>   	if (ret)
+>>   		return ret;
+>> @@ -864,12 +976,22 @@ static ssize_t unassign_domain_store(struct device *dev,
+>>   	mutex_lock(&matrix_dev->lock);
+>>   	clear_bit_inv((unsigned long)apqi, matrix_mdev->matrix.aqm);
+>>   	vfio_ap_mdev_manage_qlinks(matrix_mdev, UNLINK_APQI, apqi);
+>> +	vfio_ap_mdev_hot_unplug_domain(matrix_mdev, apqi);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   
+>>   	return count;
+>>   }
+>>   static DEVICE_ATTR_WO(unassign_domain);
+>>   
+>> +static void vfio_ap_mdev_hot_plug_ctl_domain(struct ap_matrix_mdev *matrix_mdev,
+>> +					     unsigned long domid)
+>> +{
+>> +	if (!test_bit_inv(domid, matrix_mdev->shadow_apcb.adm)) {
+>> +		set_bit_inv(domid, matrix_mdev->shadow_apcb.adm);
+>> +		vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
+>> +	}
+>> +}
+>> +
+>>   /**
+>>    * assign_control_domain_store
+>>    *
+>> @@ -895,10 +1017,6 @@ static ssize_t assign_control_domain_store(struct device *dev,
+>>   	struct mdev_device *mdev = mdev_from_dev(dev);
+>>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>>   
+>> -	/* If the guest is running, disallow assignment of control domain */
+>> -	if (matrix_mdev->kvm)
+>> -		return -EBUSY;
+>> -
+>>   	ret = kstrtoul(buf, 0, &id);
+>>   	if (ret)
+>>   		return ret;
+>> @@ -914,12 +1032,23 @@ static ssize_t assign_control_domain_store(struct device *dev,
+>>   	if (!mutex_trylock(&matrix_dev->lock))
+>>   		return -EBUSY;
+>>   	set_bit_inv(id, matrix_mdev->matrix.adm);
+>> +	vfio_ap_mdev_hot_plug_ctl_domain(matrix_mdev, id);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   
+>>   	return count;
+>>   }
+>>   static DEVICE_ATTR_WO(assign_control_domain);
+>>   
+>> +static void
+>> +vfio_ap_mdev_hot_unplug_ctl_domain(struct ap_matrix_mdev *matrix_mdev,
+>> +				   unsigned long domid)
+>> +{
+>> +	if (test_bit_inv(domid, matrix_mdev->shadow_apcb.adm)) {
+>> +		clear_bit_inv(domid, matrix_mdev->shadow_apcb.adm);
+>> +		vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
+>> +	}
+>> +}
+>> +
+>>   /**
+>>    * unassign_control_domain_store
+>>    *
+>> @@ -946,10 +1075,6 @@ static ssize_t unassign_control_domain_store(struct device *dev,
+>>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>>   	unsigned long max_domid =  matrix_mdev->matrix.adm_max;
+>>   
+>> -	/* If the guest is running, disallow un-assignment of control domain */
+>> -	if (matrix_mdev->kvm)
+>> -		return -EBUSY;
+>> -
+>>   	ret = kstrtoul(buf, 0, &domid);
+>>   	if (ret)
+>>   		return ret;
+>> @@ -958,6 +1083,7 @@ static ssize_t unassign_control_domain_store(struct device *dev,
+>>   
+>>   	mutex_lock(&matrix_dev->lock);
+>>   	clear_bit_inv(domid, matrix_mdev->matrix.adm);
+>> +	vfio_ap_mdev_hot_unplug_ctl_domain(matrix_mdev, domid);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   
+>>   	return count;
+>> @@ -1099,8 +1225,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
+>>   {
+>>   	struct ap_matrix_mdev *m;
+>>   
+>> -	mutex_lock(&matrix_dev->lock);
+>> -
+>>   	list_for_each_entry(m, &matrix_dev->mdev_list, node) {
+>>   		if ((m != matrix_mdev) && (m->kvm == kvm)) {
+>>   			mutex_unlock(&matrix_dev->lock);
+>> @@ -1111,7 +1235,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
+>>   	matrix_mdev->kvm = kvm;
+>>   	kvm_get_kvm(kvm);
+>>   	kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
+>> -	mutex_unlock(&matrix_dev->lock);
+>>   
+>>   	return 0;
+>>   }
+>> @@ -1148,7 +1271,7 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
+>>   static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>>   				       unsigned long action, void *data)
+>>   {
+>> -	int ret;
+>> +	int ret = NOTIFY_DONE;
+>>   	struct ap_matrix_mdev *matrix_mdev;
+>>   
+>>   	if (action != VFIO_GROUP_NOTIFY_SET_KVM)
+>> @@ -1156,23 +1279,28 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>>   
+>>   	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
+>>   
+>> +	mutex_lock(&matrix_dev->lock);
+>> +
+>>   	if (!data) {
+>>   		if (matrix_mdev->kvm)
+>>   			kvm_put_kvm(matrix_mdev->kvm);
+>>   
+>>   		matrix_mdev->kvm = NULL;
+>>   
+>> -		return NOTIFY_OK;
+>> +		ret = NOTIFY_OK;
+>> +		goto done;
+>>   	}
+>>   
+>>   	ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
+>>   	if (ret)
+>> -		return NOTIFY_DONE;
+>> +		goto done;
+>>   
+>>   	vfio_ap_mdev_init_apcb(matrix_mdev);
+>>   	vfio_ap_mdev_commit_shadow_apcb(matrix_mdev);
+>>   
+>> -	return NOTIFY_OK;
+>> +done:
+>> +	mutex_unlock(&matrix_dev->lock);
+>> +	return ret;
+>>   }
+>>   
+>>   static int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+
