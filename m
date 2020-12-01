@@ -2,49 +2,41 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A9062CA204
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Dec 2020 13:02:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73A492CA333
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Dec 2020 13:56:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388745AbgLAL5d (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Dec 2020 06:57:33 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10194 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387398AbgLAL5d (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Dec 2020 06:57:33 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B1BX0bc111105;
-        Tue, 1 Dec 2020 06:56:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : references : date : in-reply-to : message-id : mime-version :
- content-type; s=pp1; bh=6Uq1pBXTUJQ0I5Z0XX8ssaCGOTNU/guwHEsEYmYuW0Q=;
- b=Sn8Cdkt13Jyv7oyRe7IGm8TTwlSJLl/pgkEZIM30F7jF7CzF3ihPvIAapdHYBk89oGj1
- qOJsGt8eOjvrtxcbngQVKaLSyR+c/aavLfWfC+8oJ91DAVvuHYk2qxl/GHcQqOujpxJn
- VcEhKYkEUmWZW9nJmq7IJ664pNykNfheRuauJI+8V1aon7WtecOvrmXrcjTxBgBxTVi2
- 5tEqRPg+cCWS61Pp8Av2kCh4h86wlsZXTdZtiIsG/uWva/SXuXUTYNIoFO+87gkezT+m
- 2NZRwRmPy/4xIelsDkx3R+7XErxZvlHNFczDRJlqD1jOOBn0bwskc8IL1KcDVMZw8M/j pw== 
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 355j4px7jw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Dec 2020 06:56:33 -0500
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B1BktlX030612;
-        Tue, 1 Dec 2020 11:56:30 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03fra.de.ibm.com with ESMTP id 353e684k29-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Dec 2020 11:56:30 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B1BuRkS51904846
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Dec 2020 11:56:27 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D5E9B52057;
-        Tue,  1 Dec 2020 11:56:27 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 646815204E;
-        Tue,  1 Dec 2020 11:56:27 +0000 (GMT)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
+        id S1728237AbgLAMxi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Dec 2020 07:53:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbgLAMxh (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Dec 2020 07:53:37 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96F46C0613D4;
+        Tue,  1 Dec 2020 04:52:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=eFhg/PuMOFyaGES3o6MisTQ/pHI2d3l4wdhXLJMTbdo=; b=C1zB8W8J+Sm6jWREgozBBWXo35
+        BjjxzDDheKVebPUlT4p0vuwuJ2HZIKfU6T3cV8/ITFox3ZR4MEwC3AKW8tTokROdNM99Utk2Nm+C5
+        0Ren6IvoRMzKo8QDKLNxaX/JFyTQohFbcOOLwLnVXtvs6kyHWsprifV/Jmib0SDhOIltGyV33F4/a
+        J8kmsQ6zSFwmdQzM9Ip29z7fQv5p6Yed2GL/g+bj/GZn8I4qiw4EpRRJXgJGxARVe1CP2tJYr6vMv
+        c/vd8PxVE2q3ElP6uo5yFnmuGK5HIHdJ44JCJVQe5XSt1F8vgvP703UUtTmbyK7/yI7dwq8o0m+Ym
+        H4wvCjFw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kk59E-0006BG-LK; Tue, 01 Dec 2020 12:52:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33DFD302753;
+        Tue,  1 Dec 2020 13:52:47 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0226B236418FC; Tue,  1 Dec 2020 13:52:46 +0100 (CET)
+Date:   Tue, 1 Dec 2020 13:52:46 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sven Schnelle <svens@linux.ibm.com>
 Cc:     Guenter Roeck <linux@roeck-us.net>, rafael@kernel.org,
         viresh.kumar@linaro.org, mingo@kernel.org, x86@kernel.org,
         mark.rutland@arm.com, will@kernel.org,
@@ -54,58 +46,50 @@ Cc:     Guenter Roeck <linux@roeck-us.net>, rafael@kernel.org,
         linux-s390@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
 Subject: Re: [PATCH 1/2] sched/idle: Fix arch_cpu_idle() vs tracing
+Message-ID: <20201201125246.GV2414@hirez.programming.kicks-ass.net>
 References: <20201120114145.197714127@infradead.org>
-        <20201120114925.594122626@infradead.org>
-        <20201130210003.GA40619@roeck-us.net>
-        <20201201110209.GQ3040@hirez.programming.kicks-ass.net>
-Date:   Tue, 01 Dec 2020 12:56:27 +0100
-In-Reply-To: <20201201110209.GQ3040@hirez.programming.kicks-ass.net> (Peter
-        Zijlstra's message of "Tue, 1 Dec 2020 12:02:09 +0100")
-Message-ID: <yt9dh7p54u50.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+ <20201120114925.594122626@infradead.org>
+ <20201130210003.GA40619@roeck-us.net>
+ <20201201110209.GQ3040@hirez.programming.kicks-ass.net>
+ <yt9dh7p54u50.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-12-01_04:2020-11-30,2020-12-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- bulkscore=0 spamscore=0 adultscore=0 impostorscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=580 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012010075
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yt9dh7p54u50.fsf@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Peter,
+On Tue, Dec 01, 2020 at 12:56:27PM +0100, Sven Schnelle wrote:
+> Hi Peter,
+> 
+> Peter Zijlstra <peterz@infradead.org> writes:
+> 
+> > On Mon, Nov 30, 2020 at 01:00:03PM -0800, Guenter Roeck wrote:
+> >> On Fri, Nov 20, 2020 at 12:41:46PM +0100, Peter Zijlstra wrote:
+> >> > We call arch_cpu_idle() with RCU disabled, but then use
+> >> > local_irq_{en,dis}able(), which invokes tracing, which relies on RCU.
+> >> > 
+> >> > Switch all arch_cpu_idle() implementations to use
+> >> > raw_local_irq_{en,dis}able() and carefully manage the
+> >> > lockdep,rcu,tracing state like we do in entry.
+> >> > 
+> >> > (XXX: we really should change arch_cpu_idle() to not return with
+> >> > interrupts enabled)
+> >> > 
+> >> 
+> >> Has this patch been tested on s390 ? Reason for asking is that it causes
+> >> all my s390 emulations to crash. Reverting it fixes the problem.
+> >
+> > My understanding is that it changes the error on s390. Previously it
+> > would complain about the local_irq_enable() in arch_cpu_idle(), now it
+> > complains when taking an interrupt during idle.
+> 
+> I looked into adding the required functionality for s390, but the code
+> we would need to add to entry.S is rather large - as you noted we would
+> have to duplicate large portions of irqentry_enter() into our code.
+> Given that s390 was fine before that patch, can you revert it and submit
+> it again during the next merge window?
 
-Peter Zijlstra <peterz@infradead.org> writes:
-
-> On Mon, Nov 30, 2020 at 01:00:03PM -0800, Guenter Roeck wrote:
->> On Fri, Nov 20, 2020 at 12:41:46PM +0100, Peter Zijlstra wrote:
->> > We call arch_cpu_idle() with RCU disabled, but then use
->> > local_irq_{en,dis}able(), which invokes tracing, which relies on RCU.
->> > 
->> > Switch all arch_cpu_idle() implementations to use
->> > raw_local_irq_{en,dis}able() and carefully manage the
->> > lockdep,rcu,tracing state like we do in entry.
->> > 
->> > (XXX: we really should change arch_cpu_idle() to not return with
->> > interrupts enabled)
->> > 
->> 
->> Has this patch been tested on s390 ? Reason for asking is that it causes
->> all my s390 emulations to crash. Reverting it fixes the problem.
->
-> My understanding is that it changes the error on s390. Previously it
-> would complain about the local_irq_enable() in arch_cpu_idle(), now it
-> complains when taking an interrupt during idle.
-
-I looked into adding the required functionality for s390, but the code
-we would need to add to entry.S is rather large - as you noted we would
-have to duplicate large portions of irqentry_enter() into our code.
-Given that s390 was fine before that patch, can you revert it and submit
-it again during the next merge window?
-
-Thanks
-Sven
+I'm not sure I understand how s390 was fine without it, let me consdier.
+Also, what's the status of ARM64, they do need this too.
