@@ -2,42 +2,49 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73A492CA333
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Dec 2020 13:56:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83AAB2CA374
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Dec 2020 14:09:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgLAMxi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Dec 2020 07:53:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgLAMxh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Dec 2020 07:53:37 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96F46C0613D4;
-        Tue,  1 Dec 2020 04:52:57 -0800 (PST)
+        id S1727077AbgLANHm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Dec 2020 08:07:42 -0500
+Received: from gproxy6-pub.mail.unifiedlayer.com ([67.222.39.168]:34719 "EHLO
+        gproxy6-pub.mail.unifiedlayer.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728800AbgLANHl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Dec 2020 08:07:41 -0500
+Received: from cmgw14.unifiedlayer.com (unknown [10.9.0.14])
+        by gproxy6.mail.unifiedlayer.com (Postfix) with ESMTP id B44011E06A9
+        for <linux-s390@vger.kernel.org>; Tue,  1 Dec 2020 06:06:59 -0700 (MST)
+Received: from bh-25.webhostbox.net ([208.91.199.152])
+        by cmsmtp with ESMTP
+        id k5MxkZFS0wNNlk5MxklMcR; Tue, 01 Dec 2020 06:06:59 -0700
+X-Authority-Reason: nr=8
+X-Authority-Analysis: v=2.3 cv=cqm1bWwi c=1 sm=1 tr=0
+ a=QNED+QcLUkoL9qulTODnwA==:117 a=2cfIYNtKkjgZNaOwnGXpGw==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=kj9zAlcOel0A:10:nop_charset_1
+ a=zTNgK-yGK50A:10:nop_rcvd_month_year
+ a=evQFzbml-YQA:10:endurance_base64_authed_username_1 a=JfrnYn6hAAAA:8
+ a=YWtRXzOXAAAA:8 a=olmuuQao6RMEz0gzl2QA:9 a=CjuIK1q_8ugA:10:nop_charset_2
+ a=1CNFftbPRP8L7MoqJWF3:22 a=XosyFl2cby_8ldcV-F0Q:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eFhg/PuMOFyaGES3o6MisTQ/pHI2d3l4wdhXLJMTbdo=; b=C1zB8W8J+Sm6jWREgozBBWXo35
-        BjjxzDDheKVebPUlT4p0vuwuJ2HZIKfU6T3cV8/ITFox3ZR4MEwC3AKW8tTokROdNM99Utk2Nm+C5
-        0Ren6IvoRMzKo8QDKLNxaX/JFyTQohFbcOOLwLnVXtvs6kyHWsprifV/Jmib0SDhOIltGyV33F4/a
-        J8kmsQ6zSFwmdQzM9Ip29z7fQv5p6Yed2GL/g+bj/GZn8I4qiw4EpRRJXgJGxARVe1CP2tJYr6vMv
-        c/vd8PxVE2q3ElP6uo5yFnmuGK5HIHdJ44JCJVQe5XSt1F8vgvP703UUtTmbyK7/yI7dwq8o0m+Ym
-        H4wvCjFw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kk59E-0006BG-LK; Tue, 01 Dec 2020 12:52:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33DFD302753;
-        Tue,  1 Dec 2020 13:52:47 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0226B236418FC; Tue,  1 Dec 2020 13:52:46 +0100 (CET)
-Date:   Tue, 1 Dec 2020 13:52:46 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sven Schnelle <svens@linux.ibm.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>, rafael@kernel.org,
+        d=roeck-us.net; s=default; h=In-Reply-To:Content-Type:MIME-Version:References
+        :Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding
+        :Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/jjSGUaq3fI4DbfKuYoM37LOgNCu1qQEZMKSfC94mCQ=; b=Ds9DFF8xGJGreZPv3GZx5HX/Ch
+        taX9ghp2ZOeLSxAHkKBa1gdppeYzIu3A0enrQKhEy0ZEkqM3ori7sawAppJqcwsXjqlsdnJaBuMu2
+        fxetayiLvyEwKh4DGUg7zmBGdiEYltBmbrn0jqigC80RianPzWiZF+69lNd5kSnAdB4lQwEBg4Hob
+        cU18V3wH/vVo3cicQUAGXTvpWX6bfmHNeWbIaoR51o0FGryWHmGgRRCqEXdH9o3zU0n9xe8FGUGsy
+        QaXDrnHNU/+ppzh57SufECIMv+JTc40JWq41M/Fy46Apco+5zsEvxnLp+hi1izgz6a1HAz1e67gYR
+        Ei+6e08Q==;
+Received: from 108-223-40-66.lightspeed.sntcca.sbcglobal.net ([108.223.40.66]:59838 helo=localhost)
+        by bh-25.webhostbox.net with esmtpa (Exim 4.93)
+        (envelope-from <linux@roeck-us.net>)
+        id 1kk5Mv-0003Gj-QB; Tue, 01 Dec 2020 13:06:57 +0000
+Date:   Tue, 1 Dec 2020 05:06:57 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>, rafael@kernel.org,
         viresh.kumar@linaro.org, mingo@kernel.org, x86@kernel.org,
         mark.rutland@arm.com, will@kernel.org,
         linux-kernel@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
@@ -46,50 +53,88 @@ Cc:     Guenter Roeck <linux@roeck-us.net>, rafael@kernel.org,
         linux-s390@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>
 Subject: Re: [PATCH 1/2] sched/idle: Fix arch_cpu_idle() vs tracing
-Message-ID: <20201201125246.GV2414@hirez.programming.kicks-ass.net>
+Message-ID: <20201201130657.GA232197@roeck-us.net>
 References: <20201120114145.197714127@infradead.org>
  <20201120114925.594122626@infradead.org>
  <20201130210003.GA40619@roeck-us.net>
  <20201201110209.GQ3040@hirez.programming.kicks-ass.net>
  <yt9dh7p54u50.fsf@linux.ibm.com>
+ <20201201125246.GV2414@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <yt9dh7p54u50.fsf@linux.ibm.com>
+In-Reply-To: <20201201125246.GV2414@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - bh-25.webhostbox.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - roeck-us.net
+X-BWhitelist: no
+X-Source-IP: 108.223.40.66
+X-Source-L: No
+X-Exim-ID: 1kk5Mv-0003Gj-QB
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 108-223-40-66.lightspeed.sntcca.sbcglobal.net (localhost) [108.223.40.66]:59838
+X-Source-Auth: guenter@roeck-us.net
+X-Email-Count: 2
+X-Source-Cap: cm9lY2s7YWN0aXZzdG07YmgtMjUud2ViaG9zdGJveC5uZXQ=
+X-Local-Domain: yes
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Dec 01, 2020 at 12:56:27PM +0100, Sven Schnelle wrote:
-> Hi Peter,
+On Tue, Dec 01, 2020 at 01:52:46PM +0100, Peter Zijlstra wrote:
+> On Tue, Dec 01, 2020 at 12:56:27PM +0100, Sven Schnelle wrote:
+> > Hi Peter,
+> > 
+> > Peter Zijlstra <peterz@infradead.org> writes:
+> > 
+> > > On Mon, Nov 30, 2020 at 01:00:03PM -0800, Guenter Roeck wrote:
+> > >> On Fri, Nov 20, 2020 at 12:41:46PM +0100, Peter Zijlstra wrote:
+> > >> > We call arch_cpu_idle() with RCU disabled, but then use
+> > >> > local_irq_{en,dis}able(), which invokes tracing, which relies on RCU.
+> > >> > 
+> > >> > Switch all arch_cpu_idle() implementations to use
+> > >> > raw_local_irq_{en,dis}able() and carefully manage the
+> > >> > lockdep,rcu,tracing state like we do in entry.
+> > >> > 
+> > >> > (XXX: we really should change arch_cpu_idle() to not return with
+> > >> > interrupts enabled)
+> > >> > 
+> > >> 
+> > >> Has this patch been tested on s390 ? Reason for asking is that it causes
+> > >> all my s390 emulations to crash. Reverting it fixes the problem.
+> > >
+> > > My understanding is that it changes the error on s390. Previously it
+> > > would complain about the local_irq_enable() in arch_cpu_idle(), now it
+> > > complains when taking an interrupt during idle.
+> > 
+> > I looked into adding the required functionality for s390, but the code
+> > we would need to add to entry.S is rather large - as you noted we would
+> > have to duplicate large portions of irqentry_enter() into our code.
+> > Given that s390 was fine before that patch, can you revert it and submit
+> > it again during the next merge window?
 > 
-> Peter Zijlstra <peterz@infradead.org> writes:
-> 
-> > On Mon, Nov 30, 2020 at 01:00:03PM -0800, Guenter Roeck wrote:
-> >> On Fri, Nov 20, 2020 at 12:41:46PM +0100, Peter Zijlstra wrote:
-> >> > We call arch_cpu_idle() with RCU disabled, but then use
-> >> > local_irq_{en,dis}able(), which invokes tracing, which relies on RCU.
-> >> > 
-> >> > Switch all arch_cpu_idle() implementations to use
-> >> > raw_local_irq_{en,dis}able() and carefully manage the
-> >> > lockdep,rcu,tracing state like we do in entry.
-> >> > 
-> >> > (XXX: we really should change arch_cpu_idle() to not return with
-> >> > interrupts enabled)
-> >> > 
-> >> 
-> >> Has this patch been tested on s390 ? Reason for asking is that it causes
-> >> all my s390 emulations to crash. Reverting it fixes the problem.
-> >
-> > My understanding is that it changes the error on s390. Previously it
-> > would complain about the local_irq_enable() in arch_cpu_idle(), now it
-> > complains when taking an interrupt during idle.
-> 
-> I looked into adding the required functionality for s390, but the code
-> we would need to add to entry.S is rather large - as you noted we would
-> have to duplicate large portions of irqentry_enter() into our code.
-> Given that s390 was fine before that patch, can you revert it and submit
-> it again during the next merge window?
+> I'm not sure I understand how s390 was fine without it, let me consdier.
+> Also, what's the status of ARM64, they do need this too.
 
-I'm not sure I understand how s390 was fine without it, let me consdier.
-Also, what's the status of ARM64, they do need this too.
+For v5.10-rc6:
+
+Build results:
+	total: 154 pass: 154 fail: 0
+Qemu test results:
+	total: 426 pass: 421 fail: 5
+Failed tests:
+	s390:defconfig:initrd
+	s390:defconfig:virtio-blk-ccw:rootfs
+	s390:defconfig:scsi[virtio-ccw]:rootfs
+	s390:defconfig:virtio-pci:rootfs
+	s390:defconfig:scsi[virtio-pci]:rootfs
+
+At least with qemu all other tests/architectures are fine.
+You can find the tested architectures at https://kerneltests.org/builders.
+
+Guenter
