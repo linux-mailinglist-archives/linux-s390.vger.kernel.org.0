@@ -2,46 +2,46 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C80B22CABB3
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Dec 2020 20:22:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D6AD32CAC69
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Dec 2020 20:34:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404257AbgLATVt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Dec 2020 14:21:49 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29324 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727229AbgLATVt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Dec 2020 14:21:49 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B1J1xsR020501;
-        Tue, 1 Dec 2020 14:21:05 -0500
+        id S1727977AbgLATdF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Dec 2020 14:33:05 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44550 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728704AbgLATdF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Dec 2020 14:33:05 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B1J3fbY030727;
+        Tue, 1 Dec 2020 14:32:19 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references; s=pp1;
- bh=/89SxBV3e40iB7nFteWwA1cQdx7LzWXNG1hw9nPXzpw=;
- b=CPsTA1TgFvIZFOrZSdAhniwJCNwKf61dvF/Kkv7UPYuRXXWYJd0HkSYwWt8PIQ55KemO
- jgcOL9VqfVB6w5zdO+ajZu9Mj7jyNwvT5E0jwBk2tgaNykkXQmU7ZZxAR2HDp4u9rx0D
- uPJ0zS+gUKDEym7HKBUIZpAy+2QEFCyedSkE5RVzuAKQaBgcWPoJMU/jACTREgzrcQn/
- dsav5fydKtkY7rLc1gPcCJNw4gu/xk1AgJtggHCcsL3naZRxrQr4IKYd/kgHvdHJkxEA
- jhZSpddSczrrE5z/G0PffT7Oou6zjZdPBAhMoFxCHuDC7SkBw1wJqdEI7Gzu2y4CZY3l Rw== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 355k18r5t7-1
+ bh=8KW0O8Sl1Bca4QwRMFLysS18jTtHvyRpWnv0PnJOvqM=;
+ b=YOlRBmCqb8HvrKNd7xQgNlUYIrw4jNBZ+A0Pxg42IVHNkU6UvbtNVCDg6kZixIYV4Ckq
+ vfAMI05TukibLBmC24SsePBXMtVr4HChRuykyG1cpATggRUaD4JDmshqw0gd26VhLwIe
+ TTNOZq/Lk6iC319OYtzb+9eWP9l3dEU+dKMUAnBEpu74Ba+pP1ZbKnJIRVQCHb29374w
+ X/kArQhBpTLHAW/OKV2Ob3AgU9sT8M1nf3fQeckPzQSH2phAbQvF6j4auj3RLBjw8Fg1
+ TpGx4Fs6aR+sik2tKqyBN+iBK2aRS0Jpe06zGRF+HbSrB03DINJkmOPCpC7DsVlyx5gp Cw== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 355jwva9xn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Dec 2020 14:21:04 -0500
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B1JHY1p027648;
+        Tue, 01 Dec 2020 14:28:19 -0500
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B1JIKi8018323;
         Tue, 1 Dec 2020 19:21:02 GMT
 Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04fra.de.ibm.com with ESMTP id 353e689srt-1
+        by ppma04ams.nl.ibm.com with ESMTP id 353e683eu0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Tue, 01 Dec 2020 19:21:02 +0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B1JKxSV5767806
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B1JKxgJ5767808
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Tue, 1 Dec 2020 19:20:59 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5718CAE051;
+        by IMSVA (Postfix) with ESMTP id A2188AE04D;
         Tue,  1 Dec 2020 19:20:59 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 139E1AE04D;
+        by IMSVA (Postfix) with ESMTP id 631DBAE045;
         Tue,  1 Dec 2020 19:20:59 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
@@ -52,184 +52,215 @@ To:     David Miller <davem@davemloft.net>,
 Cc:     Heiko Carstens <hca@linux.ibm.com>,
         Stefan Raspl <raspl@linux.ibm.com>, netdev@vger.kernel.org,
         linux-s390@vger.kernel.org
-Subject: [PATCH net-next v7 13/14] net/smc: Add support for obtaining SMCD device list
-Date:   Tue,  1 Dec 2020 20:20:48 +0100
-Message-Id: <20201201192049.53517-14-kgraul@linux.ibm.com>
+Subject: [PATCH net-next v7 14/14] net/smc: Add support for obtaining SMCR device list
+Date:   Tue,  1 Dec 2020 20:20:49 +0100
+Message-Id: <20201201192049.53517-15-kgraul@linux.ibm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20201201192049.53517-1-kgraul@linux.ibm.com>
 References: <20201201192049.53517-1-kgraul@linux.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
  definitions=2020-12-01_07:2020-11-30,2020-12-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- suspectscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012010112
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ suspectscore=2 impostorscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012010112
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 From: Guvenc Gulce <guvenc@linux.ibm.com>
 
-Deliver SMCD device information via netlink based
+Deliver SMCR device information via netlink based
 diagnostic interface.
 
 Signed-off-by: Guvenc Gulce <guvenc@linux.ibm.com>
 Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
 ---
- include/uapi/linux/smc.h | 28 +++++++++++++
- net/smc/smc_core.h       | 28 +++++++++++++
- net/smc/smc_ism.c        | 91 ++++++++++++++++++++++++++++++++++++++++
- net/smc/smc_ism.h        |  1 +
- net/smc/smc_netlink.c    |  6 +++
- 5 files changed, 154 insertions(+)
+ include/uapi/linux/smc.h |  13 +++-
+ net/smc/smc_core.c       |   2 +-
+ net/smc/smc_ib.c         | 156 +++++++++++++++++++++++++++++++++++++++
+ net/smc/smc_ib.h         |   2 +
+ net/smc/smc_netlink.c    |   6 ++
+ 5 files changed, 176 insertions(+), 3 deletions(-)
 
 diff --git a/include/uapi/linux/smc.h b/include/uapi/linux/smc.h
-index 707e8af4f0c8..3cb40ab049d9 100644
+index 3cb40ab049d9..3e68da07fba2 100644
 --- a/include/uapi/linux/smc.h
 +++ b/include/uapi/linux/smc.h
-@@ -37,12 +37,15 @@ enum {				/* SMC PNET Table commands */
- #define SMC_GENL_FAMILY_NAME		"SMC_GEN_NETLINK"
- #define SMC_GENL_FAMILY_VERSION		1
- 
-+#define SMC_PCI_ID_STR_LEN		16 /* Max length of pci id string */
-+
- /* SMC_GENL_FAMILY commands */
- enum {
- 	SMC_NETLINK_GET_SYS_INFO = 1,
- 	SMC_NETLINK_GET_LGR_SMCR,
+@@ -46,6 +46,7 @@ enum {
  	SMC_NETLINK_GET_LINK_SMCR,
  	SMC_NETLINK_GET_LGR_SMCD,
-+	SMC_NETLINK_GET_DEV_SMCD,
+ 	SMC_NETLINK_GET_DEV_SMCD,
++	SMC_NETLINK_GET_DEV_SMCR,
  };
  
  /* SMC_GENL_FAMILY top level attributes */
-@@ -52,6 +55,7 @@ enum {
- 	SMC_GEN_LGR_SMCR,		/* nest */
+@@ -56,6 +57,7 @@ enum {
  	SMC_GEN_LINK_SMCR,		/* nest */
  	SMC_GEN_LGR_SMCD,		/* nest */
-+	SMC_GEN_DEV_SMCD,		/* nest */
+ 	SMC_GEN_DEV_SMCD,		/* nest */
++	SMC_GEN_DEV_SMCR,		/* nest */
  	__SMC_GEN_MAX,
  	SMC_GEN_MAX = __SMC_GEN_MAX - 1
  };
-@@ -122,4 +126,28 @@ enum {
- 	__SMC_NLA_LGR_D_MAX,
+@@ -127,16 +129,20 @@ enum {
  	SMC_NLA_LGR_D_MAX = __SMC_NLA_LGR_D_MAX - 1
  };
+ 
+-/* SMC_NLA_DEV_PORT attributes */
++/* SMC_NLA_DEV_PORT nested attributes */
+ enum {
+ 	SMC_NLA_DEV_PORT_UNSPEC,
+ 	SMC_NLA_DEV_PORT_PNET_USR,	/* u8 */
+ 	SMC_NLA_DEV_PORT_PNETID,	/* string */
++	SMC_NLA_DEV_PORT_NETDEV,	/* u32 */
++	SMC_NLA_DEV_PORT_STATE,		/* u8 */
++	SMC_NLA_DEV_PORT_VALID,		/* u8 */
++	SMC_NLA_DEV_PORT_LNK_CNT,	/* u32 */
+ 	__SMC_NLA_DEV_PORT_MAX,
+ 	SMC_NLA_DEV_PORT_MAX = __SMC_NLA_DEV_PORT_MAX - 1
+ };
+ 
+-/* SMC_GEN_DEV_SMCD attributes */
++/* SMC_GEN_DEV_SMCD and SMC_GEN_DEV_SMCR attributes */
+ enum {
+ 	SMC_NLA_DEV_UNSPEC,
+ 	SMC_NLA_DEV_USE_CNT,		/* u32 */
+@@ -147,7 +153,10 @@ enum {
+ 	SMC_NLA_DEV_PCI_DEVICE,		/* u16 */
+ 	SMC_NLA_DEV_PCI_ID,		/* string */
+ 	SMC_NLA_DEV_PORT,		/* nest */
++	SMC_NLA_DEV_PORT2,		/* nest */
++	SMC_NLA_DEV_IB_NAME,		/* string */
+ 	__SMC_NLA_DEV_MAX,
+ 	SMC_NLA_DEV_MAX = __SMC_NLA_DEV_MAX - 1
+ };
 +
-+/* SMC_NLA_DEV_PORT attributes */
-+enum {
-+	SMC_NLA_DEV_PORT_UNSPEC,
-+	SMC_NLA_DEV_PORT_PNET_USR,	/* u8 */
-+	SMC_NLA_DEV_PORT_PNETID,	/* string */
-+	__SMC_NLA_DEV_PORT_MAX,
-+	SMC_NLA_DEV_PORT_MAX = __SMC_NLA_DEV_PORT_MAX - 1
-+};
-+
-+/* SMC_GEN_DEV_SMCD attributes */
-+enum {
-+	SMC_NLA_DEV_UNSPEC,
-+	SMC_NLA_DEV_USE_CNT,		/* u32 */
-+	SMC_NLA_DEV_IS_CRIT,		/* u8 */
-+	SMC_NLA_DEV_PCI_FID,		/* u32 */
-+	SMC_NLA_DEV_PCI_CHID,		/* u16 */
-+	SMC_NLA_DEV_PCI_VENDOR,		/* u16 */
-+	SMC_NLA_DEV_PCI_DEVICE,		/* u16 */
-+	SMC_NLA_DEV_PCI_ID,		/* string */
-+	SMC_NLA_DEV_PORT,		/* nest */
-+	__SMC_NLA_DEV_MAX,
-+	SMC_NLA_DEV_MAX = __SMC_NLA_DEV_MAX - 1
-+};
  #endif /* _UAPI_LINUX_SMC_H */
-diff --git a/net/smc/smc_core.h b/net/smc/smc_core.h
-index 0b6899a7f634..e8e448771f85 100644
---- a/net/smc/smc_core.h
-+++ b/net/smc/smc_core.h
-@@ -13,6 +13,8 @@
- #define _SMC_CORE_H
+diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+index ac2cc593f25f..59342b519e34 100644
+--- a/net/smc/smc_core.c
++++ b/net/smc/smc_core.c
+@@ -38,7 +38,7 @@
+ #define SMC_LGR_FREE_DELAY_SERV		(600 * HZ)
+ #define SMC_LGR_FREE_DELAY_CLNT		(SMC_LGR_FREE_DELAY_SERV + 10 * HZ)
  
- #include <linux/atomic.h>
-+#include <linux/smc.h>
-+#include <linux/pci.h>
- #include <rdma/ib_verbs.h>
- #include <net/genetlink.h>
- 
-@@ -380,6 +382,32 @@ static inline void smc_gid_be16_convert(__u8 *buf, u8 *gid_raw)
- 		be16_to_cpu(((__be16 *)gid_raw)[7]));
- }
- 
-+struct smc_pci_dev {
-+	__u32		pci_fid;
-+	__u16		pci_pchid;
-+	__u16		pci_vendor;
-+	__u16		pci_device;
-+	__u8		pci_id[SMC_PCI_ID_STR_LEN];
-+};
-+
-+static inline void smc_set_pci_values(struct pci_dev *pci_dev,
-+				      struct smc_pci_dev *smc_dev)
-+{
-+	smc_dev->pci_vendor = pci_dev->vendor;
-+	smc_dev->pci_device = pci_dev->device;
-+	snprintf(smc_dev->pci_id, sizeof(smc_dev->pci_id), "%s",
-+		 pci_name(pci_dev));
-+#if IS_ENABLED(CONFIG_S390)
-+	{ /* Set s390 specific PCI information */
-+	struct zpci_dev *zdev;
-+
-+	zdev = to_zpci(pci_dev);
-+	smc_dev->pci_fid = zdev->fid;
-+	smc_dev->pci_pchid = zdev->pchid;
-+	}
-+#endif
-+}
-+
- struct smc_sock;
- struct smc_clc_msg_accept_confirm;
- struct smc_clc_msg_local;
-diff --git a/net/smc/smc_ism.c b/net/smc/smc_ism.c
-index 2456ee8228cd..524ef64a191a 100644
---- a/net/smc/smc_ism.c
-+++ b/net/smc/smc_ism.c
-@@ -15,6 +15,7 @@
+-static struct smc_lgr_list smc_lgr_list = {	/* established link groups */
++struct smc_lgr_list smc_lgr_list = {	/* established link groups */
+ 	.lock = __SPIN_LOCK_UNLOCKED(smc_lgr_list.lock),
+ 	.list = LIST_HEAD_INIT(smc_lgr_list.list),
+ 	.num = 0,
+diff --git a/net/smc/smc_ib.c b/net/smc/smc_ib.c
+index 61b025c912a9..89ea10675a7d 100644
+--- a/net/smc/smc_ib.c
++++ b/net/smc/smc_ib.c
+@@ -25,6 +25,7 @@
  #include "smc_core.h"
- #include "smc_ism.h"
- #include "smc_pnet.h"
+ #include "smc_wr.h"
+ #include "smc.h"
 +#include "smc_netlink.h"
  
- struct smcd_dev_list smcd_dev_list = {
- 	.list = LIST_HEAD_INIT(smcd_dev_list.list),
-@@ -207,6 +208,96 @@ int smc_ism_register_dmb(struct smc_link_group *lgr, int dmb_len,
+ #define SMC_MAX_CQE 32766	/* max. # of completion queue elements */
+ 
+@@ -326,6 +327,161 @@ int smc_ib_create_protection_domain(struct smc_link *lnk)
  	return rc;
  }
  
-+static int smc_nl_handle_smcd_dev(struct smcd_dev *smcd,
++static bool smcr_diag_is_dev_critical(struct smc_lgr_list *smc_lgr,
++				      struct smc_ib_device *smcibdev)
++{
++	struct smc_link_group *lgr;
++	bool rc = false;
++	int i;
++
++	spin_lock_bh(&smc_lgr->lock);
++	list_for_each_entry(lgr, &smc_lgr->list, list) {
++		if (lgr->is_smcd)
++			continue;
++		for (i = 0; i < SMC_LINKS_PER_LGR_MAX; i++) {
++			if (lgr->lnk[i].state == SMC_LNK_UNUSED ||
++			    lgr->lnk[i].smcibdev != smcibdev)
++				continue;
++			if (lgr->type == SMC_LGR_SINGLE ||
++			    lgr->type == SMC_LGR_ASYMMETRIC_LOCAL) {
++				rc = true;
++				goto out;
++			}
++		}
++	}
++out:
++	spin_unlock_bh(&smc_lgr->lock);
++	return rc;
++}
++
++static int smc_nl_handle_dev_port(struct sk_buff *skb,
++				  struct ib_device *ibdev,
++				  struct smc_ib_device *smcibdev,
++				  int port)
++{
++	char smc_pnet[SMC_MAX_PNETID_LEN + 1];
++	struct nlattr *port_attrs;
++	unsigned char port_state;
++	int lnk_count = 0;
++
++	port_attrs = nla_nest_start(skb, SMC_NLA_DEV_PORT + port);
++	if (!port_attrs)
++		goto errout;
++
++	if (nla_put_u8(skb, SMC_NLA_DEV_PORT_PNET_USR,
++		       smcibdev->pnetid_by_user[port]))
++		goto errattr;
++	snprintf(smc_pnet, sizeof(smc_pnet), "%s",
++		 (char *)&smcibdev->pnetid[port]);
++	if (nla_put_string(skb, SMC_NLA_DEV_PORT_PNETID, smc_pnet))
++		goto errattr;
++	if (nla_put_u32(skb, SMC_NLA_DEV_PORT_NETDEV,
++			smcibdev->ndev_ifidx[port]))
++		goto errattr;
++	if (nla_put_u8(skb, SMC_NLA_DEV_PORT_VALID, 1))
++		goto errattr;
++	port_state = smc_ib_port_active(smcibdev, port + 1);
++	if (nla_put_u8(skb, SMC_NLA_DEV_PORT_STATE, port_state))
++		goto errattr;
++	lnk_count = atomic_read(&smcibdev->lnk_cnt_by_port[port]);
++	if (nla_put_u32(skb, SMC_NLA_DEV_PORT_LNK_CNT, lnk_count))
++		goto errattr;
++	nla_nest_end(skb, port_attrs);
++	return 0;
++errattr:
++	nla_nest_cancel(skb, port_attrs);
++errout:
++	return -EMSGSIZE;
++}
++
++static int smc_nl_handle_smcr_dev(struct smc_ib_device *smcibdev,
 +				  struct sk_buff *skb,
 +				  struct netlink_callback *cb)
 +{
-+	char smc_pnet[SMC_MAX_PNETID_LEN + 1];
++	char smc_ibname[IB_DEVICE_NAME_MAX + 1];
 +	struct smc_pci_dev smc_pci_dev;
-+	struct nlattr *port_attrs;
++	struct pci_dev *pci_dev;
++	unsigned char is_crit;
 +	struct nlattr *attrs;
-+	int use_cnt = 0;
 +	void *nlh;
++	int i;
 +
 +	nlh = genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq,
 +			  &smc_gen_nl_family, NLM_F_MULTI,
-+			  SMC_NETLINK_GET_DEV_SMCD);
++			  SMC_NETLINK_GET_DEV_SMCR);
 +	if (!nlh)
 +		goto errmsg;
-+	attrs = nla_nest_start(skb, SMC_GEN_DEV_SMCD);
++	attrs = nla_nest_start(skb, SMC_GEN_DEV_SMCR);
 +	if (!attrs)
 +		goto errout;
-+	use_cnt = atomic_read(&smcd->lgr_cnt);
-+	if (nla_put_u32(skb, SMC_NLA_DEV_USE_CNT, use_cnt))
-+		goto errattr;
-+	if (nla_put_u8(skb, SMC_NLA_DEV_IS_CRIT, use_cnt > 0))
++	is_crit = smcr_diag_is_dev_critical(&smc_lgr_list, smcibdev);
++	if (nla_put_u8(skb, SMC_NLA_DEV_IS_CRIT, is_crit))
 +		goto errattr;
 +	memset(&smc_pci_dev, 0, sizeof(smc_pci_dev));
-+	smc_set_pci_values(to_pci_dev(smcd->dev.parent), &smc_pci_dev);
++	pci_dev = to_pci_dev(smcibdev->ibdev->dev.parent);
++	smc_set_pci_values(pci_dev, &smc_pci_dev);
 +	if (nla_put_u32(skb, SMC_NLA_DEV_PCI_FID, smc_pci_dev.pci_fid))
 +		goto errattr;
 +	if (nla_put_u16(skb, SMC_NLA_DEV_PCI_CHID, smc_pci_dev.pci_pchid))
@@ -240,45 +271,43 @@ index 2456ee8228cd..524ef64a191a 100644
 +		goto errattr;
 +	if (nla_put_string(skb, SMC_NLA_DEV_PCI_ID, smc_pci_dev.pci_id))
 +		goto errattr;
-+
-+	port_attrs = nla_nest_start(skb, SMC_NLA_DEV_PORT);
-+	if (!port_attrs)
++	snprintf(smc_ibname, sizeof(smc_ibname), "%s", smcibdev->ibdev->name);
++	if (nla_put_string(skb, SMC_NLA_DEV_IB_NAME, smc_ibname))
 +		goto errattr;
-+	if (nla_put_u8(skb, SMC_NLA_DEV_PORT_PNET_USR, smcd->pnetid_by_user))
-+		goto errportattr;
-+	snprintf(smc_pnet, sizeof(smc_pnet), "%s", smcd->pnetid);
-+	if (nla_put_string(skb, SMC_NLA_DEV_PORT_PNETID, smc_pnet))
-+		goto errportattr;
++	for (i = 1; i <= SMC_MAX_PORTS; i++) {
++		if (!rdma_is_port_valid(smcibdev->ibdev, i))
++			continue;
++		if (smc_nl_handle_dev_port(skb, smcibdev->ibdev,
++					   smcibdev, i - 1))
++			goto errattr;
++	}
 +
-+	nla_nest_end(skb, port_attrs);
 +	nla_nest_end(skb, attrs);
 +	genlmsg_end(skb, nlh);
 +	return 0;
 +
-+errportattr:
-+	nla_nest_cancel(skb, port_attrs);
 +errattr:
 +	nla_nest_cancel(skb, attrs);
 +errout:
-+	nlmsg_cancel(skb, nlh);
++	genlmsg_cancel(skb, nlh);
 +errmsg:
 +	return -EMSGSIZE;
 +}
 +
-+static void smc_nl_prep_smcd_dev(struct smcd_dev_list *dev_list,
++static void smc_nl_prep_smcr_dev(struct smc_ib_devices *dev_list,
 +				 struct sk_buff *skb,
 +				 struct netlink_callback *cb)
 +{
 +	struct smc_nl_dmp_ctx *cb_ctx = smc_nl_dmp_ctx(cb);
++	struct smc_ib_device *smcibdev;
 +	int snum = cb_ctx->pos[0];
-+	struct smcd_dev *smcd;
 +	int num = 0;
 +
 +	mutex_lock(&dev_list->mutex);
-+	list_for_each_entry(smcd, &dev_list->list, list) {
++	list_for_each_entry(smcibdev, &dev_list->list, list) {
 +		if (num < snum)
 +			goto next;
-+		if (smc_nl_handle_smcd_dev(smcd, skb, cb))
++		if (smc_nl_handle_smcr_dev(smcibdev, skb, cb))
 +			goto errout;
 +next:
 +		num++;
@@ -288,45 +317,53 @@ index 2456ee8228cd..524ef64a191a 100644
 +	cb_ctx->pos[0] = num;
 +}
 +
-+int smcd_nl_get_device(struct sk_buff *skb, struct netlink_callback *cb)
++int smcr_nl_get_device(struct sk_buff *skb, struct netlink_callback *cb)
 +{
-+	smc_nl_prep_smcd_dev(&smcd_dev_list, skb, cb);
++	smc_nl_prep_smcr_dev(&smc_ib_devices, skb, cb);
 +	return skb->len;
 +}
 +
- struct smc_ism_event_work {
- 	struct work_struct work;
- 	struct smcd_dev *smcd;
-diff --git a/net/smc/smc_ism.h b/net/smc/smc_ism.h
-index 481a4b7df30b..113efc7352ed 100644
---- a/net/smc/smc_ism.h
-+++ b/net/smc/smc_ism.h
-@@ -52,4 +52,5 @@ void smc_ism_get_system_eid(struct smcd_dev *dev, u8 **eid);
- u16 smc_ism_get_chid(struct smcd_dev *dev);
- bool smc_ism_is_v2_capable(void);
- void smc_ism_init(void);
-+int smcd_nl_get_device(struct sk_buff *skb, struct netlink_callback *cb);
+ static void smc_ib_qp_event_handler(struct ib_event *ibevent, void *priv)
+ {
+ 	struct smc_link *lnk = (struct smc_link *)priv;
+diff --git a/net/smc/smc_ib.h b/net/smc/smc_ib.h
+index ab37da341fa8..3085f5180da7 100644
+--- a/net/smc/smc_ib.h
++++ b/net/smc/smc_ib.h
+@@ -30,6 +30,7 @@ struct smc_ib_devices {			/* list of smc ib devices definition */
+ };
+ 
+ extern struct smc_ib_devices	smc_ib_devices; /* list of smc ib devices */
++extern struct smc_lgr_list smc_lgr_list; /* list of linkgroups */
+ 
+ struct smc_ib_device {				/* ib-device infos for smc */
+ 	struct list_head	list;
+@@ -91,4 +92,5 @@ void smc_ib_sync_sg_for_device(struct smc_link *lnk,
+ int smc_ib_determine_gid(struct smc_ib_device *smcibdev, u8 ibport,
+ 			 unsigned short vlan_id, u8 gid[], u8 *sgid_index);
+ bool smc_ib_is_valid_local_systemid(void);
++int smcr_nl_get_device(struct sk_buff *skb, struct netlink_callback *cb);
  #endif
 diff --git a/net/smc/smc_netlink.c b/net/smc/smc_netlink.c
-index 95bce936534f..debdeec53728 100644
+index debdeec53728..140419a19dbf 100644
 --- a/net/smc/smc_netlink.c
 +++ b/net/smc/smc_netlink.c
-@@ -17,6 +17,7 @@
- #include <linux/smc.h>
+@@ -18,6 +18,7 @@
  
  #include "smc_core.h"
-+#include "smc_ism.h"
+ #include "smc_ism.h"
++#include "smc_ib.h"
  #include "smc_netlink.h"
  
  #define SMC_CMD_MAX_ATTR 1
-@@ -43,6 +44,11 @@ static const struct genl_ops smc_gen_nl_ops[] = {
+@@ -49,6 +50,11 @@ static const struct genl_ops smc_gen_nl_ops[] = {
  		/* can be retrieved by unprivileged users */
- 		.dumpit = smcd_nl_get_lgr,
+ 		.dumpit = smcd_nl_get_device,
  	},
 +	{
-+		.cmd = SMC_NETLINK_GET_DEV_SMCD,
++		.cmd = SMC_NETLINK_GET_DEV_SMCR,
 +		/* can be retrieved by unprivileged users */
-+		.dumpit = smcd_nl_get_device,
++		.dumpit = smcr_nl_get_device,
 +	},
  };
  
