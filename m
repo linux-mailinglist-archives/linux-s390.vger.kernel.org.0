@@ -2,32 +2,33 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB2EF2C9557
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Dec 2020 03:40:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D1152C9783
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Dec 2020 07:25:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgLACkI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Nov 2020 21:40:08 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:8893 "EHLO
-        szxga07-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgLACkI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 Nov 2020 21:40:08 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ClRBF33dlz763R;
-        Tue,  1 Dec 2020 10:39:01 +0800 (CST)
+        id S1726684AbgLAGYu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Dec 2020 01:24:50 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:8168 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgLAGYu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Dec 2020 01:24:50 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ClX9P1PFPz15W1S;
+        Tue,  1 Dec 2020 14:23:37 +0800 (CST)
 Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 1 Dec 2020 10:39:16 +0800
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 1 Dec 2020 14:23:51 +0800
 From:   Qinglang Miao <miaoqinglang@huawei.com>
-To:     Steffen Maier <maier@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        "Heiko Carstens" <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
+        "Christian Borntraeger" <borntraeger@de.ibm.com>
 CC:     <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         "Qinglang Miao" <miaoqinglang@huawei.com>
-Subject: [PATCH v2] scsi: zfcp: move the position of put_device
-Date:   Tue, 1 Dec 2020 10:47:16 +0800
-Message-ID: <20201201024716.42926-1-miaoqinglang@huawei.com>
+Subject: [PATCH] s390: cio: fix use-after-free in ccw_device_destroy_console
+Date:   Tue, 1 Dec 2020 14:31:50 +0800
+Message-ID: <20201201063150.82128-1-miaoqinglang@huawei.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
@@ -38,56 +39,40 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Have the `put_device()` call after `device_unregister()` in both
-`zfcp_unit_remove()` and `zfcp_sysfs_port_remove_store()` to make
-it more natural, for put_device() ought to be the last time we
-touch the object in both functions.
+put_device calls release function which do kfree() inside.
+So following use of sch&cdev would cause use-after-free bugs.
 
-And add comments after put_device to make codes clearer.
+Fix these by simply adjusting the position of put_device.
 
-Suggested-by: Steffen Maier <maier@linux.ibm.com>
-Suggested-by: Benjamin Block <bblock@linux.ibm.com>
+Fixes: 37db8985b211 ("s390/cio: add basic protected virtualization support")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Suggested-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
 ---
- v2: add comments after put_device as Steffen suggested.
+ This patch is indeed a v2 of older one. Considering that the
+ patch's name has changed, I think a normal prefix 'PATCH' is
+ better.
 
- drivers/s390/scsi/zfcp_sysfs.c | 4 ++--
- drivers/s390/scsi/zfcp_unit.c  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/s390/cio/device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/scsi/zfcp_sysfs.c b/drivers/s390/scsi/zfcp_sysfs.c
-index 8d9662e8b..ef6d35a37 100644
---- a/drivers/s390/scsi/zfcp_sysfs.c
-+++ b/drivers/s390/scsi/zfcp_sysfs.c
-@@ -327,10 +327,10 @@ static ssize_t zfcp_sysfs_port_remove_store(struct device *dev,
- 	list_del(&port->list);
- 	write_unlock_irq(&adapter->port_list_lock);
+diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+index b29fe8d50..33280ca18 100644
+--- a/drivers/s390/cio/device.c
++++ b/drivers/s390/cio/device.c
+@@ -1664,10 +1664,10 @@ void __init ccw_device_destroy_console(struct ccw_device *cdev)
+ 	struct io_subchannel_private *io_priv = to_io_private(sch);
  
--	put_device(&port->dev);
--
- 	zfcp_erp_port_shutdown(port, 0, "syprs_1");
- 	device_unregister(&port->dev);
-+
-+	put_device(&port->dev); /* undo zfcp_get_port_by_wwpn() */
-  out:
- 	zfcp_ccw_adapter_put(adapter);
- 	return retval ? retval : (ssize_t) count;
-diff --git a/drivers/s390/scsi/zfcp_unit.c b/drivers/s390/scsi/zfcp_unit.c
-index e67bf7388..59333f025 100644
---- a/drivers/s390/scsi/zfcp_unit.c
-+++ b/drivers/s390/scsi/zfcp_unit.c
-@@ -255,9 +255,9 @@ int zfcp_unit_remove(struct zfcp_port *port, u64 fcp_lun)
- 		scsi_device_put(sdev);
- 	}
- 
--	put_device(&unit->dev);
--
- 	device_unregister(&unit->dev);
- 
-+	put_device(&unit->dev); /* undo _zfcp_unit_find() */
-+
- 	return 0;
+ 	set_io_private(sch, NULL);
+-	put_device(&sch->dev);
+-	put_device(&cdev->dev);
+ 	dma_free_coherent(&sch->dev, sizeof(*io_priv->dma_area),
+ 			  io_priv->dma_area, io_priv->dma_area_dma);
++	put_device(&sch->dev);
++	put_device(&cdev->dev);
+ 	kfree(io_priv);
  }
+ 
 -- 
 2.23.0
 
