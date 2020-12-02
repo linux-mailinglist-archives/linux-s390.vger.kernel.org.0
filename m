@@ -2,174 +2,142 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 982822CC7D2
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Dec 2020 21:31:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F09B2CC7E3
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Dec 2020 21:35:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgLBUa3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Dec 2020 15:30:29 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:29134 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727857AbgLBUa3 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Dec 2020 15:30:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606940942;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fCxAKSCZe5m5KQLZ03JszdsFqurd7mJTU7sYz3VIef4=;
-        b=Ae6B/DuMQCtnFMZOBiG32cylj2+sEUNFszoQMBo5dphyZgw0B6xziNDfdOBVmqSUc/B8WL
-        //n5htgcT7RT+hlCGApTtwGa4k4IzOxH1pxcKOVJobfeycko6BRAlDBLCOn1ezuUSg7Mex
-        4DrdX/FhE61wCfz6sfGp0EhKWCA64wg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-180-L_iiw6j8ObGjXtYHOHaNaQ-1; Wed, 02 Dec 2020 15:28:58 -0500
-X-MC-Unique: L_iiw6j8ObGjXtYHOHaNaQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18F54803F57;
-        Wed,  2 Dec 2020 20:28:39 +0000 (UTC)
-Received: from w520.home (ovpn-112-10.phx2.redhat.com [10.3.112.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 93F8F60854;
-        Wed,  2 Dec 2020 20:28:38 +0000 (UTC)
-Date:   Wed, 2 Dec 2020 13:28:38 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] vfio-mdev: Wire in a request handler for mdev
- parent
-Message-ID: <20201202132838.6a872c17@w520.home>
-In-Reply-To: <20201120180740.87837-2-farman@linux.ibm.com>
-References: <20201120180740.87837-1-farman@linux.ibm.com>
-        <20201120180740.87837-2-farman@linux.ibm.com>
+        id S1729969AbgLBUdb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Dec 2020 15:33:31 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21050 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729712AbgLBUdb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Dec 2020 15:33:31 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B2KVwBA130825;
+        Wed, 2 Dec 2020 15:32:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=7k64mIQiHaWy//PZEHcOuqC7YfTe5Wp86SAsalsGFaI=;
+ b=rN+M6x+LlMC8bCMdbdoM2WvFtpCPRZzBTx7BP4asjjkokc01+1K/lRQSMP7ZPFCjo4yN
+ N/2RYqkAcC9qCD+CwpB73aOJwncBnIiGWh5ZCosszqrjqmKEpRNsm2k5cvgGfildYYmc
+ rTMB/cv0lejPpqu5zLu8XpQ/Tm7bf092666Gs5Yd7iMwiWfmlVS6G+33m3SD/OiVeLm+
+ 8tsWd+ZVDisIDZJl0wMckruFUGsnhh5qXz3PYbVD7Qece8PxZn5KbGGZrd8oPn+iPDlM
+ 0BczSZ2LKl6btAnj8sc6xg6uhTf0EhlN4ZriCpjkRVqtfXMST2LVATmXg1BuPQcoKwjm JA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3563qcaxbp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Dec 2020 15:32:41 -0500
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B2KWfsF133876;
+        Wed, 2 Dec 2020 15:32:41 -0500
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3563qcaxas-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Dec 2020 15:32:41 -0500
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B2KSDbJ001956;
+        Wed, 2 Dec 2020 20:32:38 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 35693xgefb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Dec 2020 20:32:38 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B2KWaHp22413764
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Dec 2020 20:32:36 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4B711A4059;
+        Wed,  2 Dec 2020 20:32:36 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 26841A404D;
+        Wed,  2 Dec 2020 20:32:35 +0000 (GMT)
+Received: from osiris (unknown [9.171.12.240])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  2 Dec 2020 20:32:35 +0000 (GMT)
+Date:   Wed, 2 Dec 2020 21:32:33 +0100
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [RFC V2 3/3] s390/mm: Define arch_get_mappable_range()
+Message-ID: <20201202203233.GB11274@osiris>
+References: <1606706992-26656-1-git-send-email-anshuman.khandual@arm.com>
+ <1606706992-26656-4-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1606706992-26656-4-git-send-email-anshuman.khandual@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-12-02_12:2020-11-30,2020-12-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=5
+ priorityscore=1501 adultscore=0 clxscore=1011 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 mlxlogscore=880 spamscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012020119
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 20 Nov 2020 19:07:39 +0100
-Eric Farman <farman@linux.ibm.com> wrote:
-
-> While performing some destructive tests with vfio-ccw, where the
-> paths to a device are forcible removed and thus the device itself
-> is unreachable, it is rather easy to end up in an endless loop in
-> vfio_del_group_dev() due to the lack of a request callback for the
-> associated device.
+On Mon, Nov 30, 2020 at 08:59:52AM +0530, Anshuman Khandual wrote:
+> This overrides arch_get_mappabble_range() on s390 platform and drops now
+> redundant similar check in vmem_add_mapping(). This compensates by adding
+> a new check __segment_load() to preserve the existing functionality.
 > 
-> In this example, one MDEV (77c) is used by a guest, while another
-> (77b) is not. The symptom is that the iommu is detached from the
-> mdev for 77b, but not 77c, until that guest is shutdown:
-> 
->     [  238.794867] vfio_ccw 0.0.077b: MDEV: Unregistering
->     [  238.794996] vfio_mdev 11f2d2bc-4083-431d-a023-eff72715c4f0: Removing from iommu group 2
->     [  238.795001] vfio_mdev 11f2d2bc-4083-431d-a023-eff72715c4f0: MDEV: detaching iommu
->     [  238.795036] vfio_ccw 0.0.077c: MDEV: Unregistering
->     ...silence...
-> 
-> Let's wire in the request call back to the mdev device, so that a
-> device being physically removed from the host can be (gracefully?)
-> handled by the parent device at the time the device is removed.
-> 
-> Add a message when registering the device if a driver doesn't
-> provide this callback, so a clue is given that this same loop
-> may be encountered in a similar situation.
-> 
-> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: linux-s390@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > ---
->  drivers/vfio/mdev/mdev_core.c |  4 ++++
->  drivers/vfio/mdev/vfio_mdev.c | 10 ++++++++++
->  include/linux/mdev.h          |  4 ++++
->  3 files changed, 18 insertions(+)
+>  arch/s390/mm/extmem.c |  5 +++++
+>  arch/s390/mm/vmem.c   | 13 +++++++++----
+>  2 files changed, 14 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index b558d4cfd082..6de97d25a3f8 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -154,6 +154,10 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
->  	if (!dev)
->  		return -EINVAL;
+> diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
+> index 5060956b8e7d..cc055a78f7b6 100644
+> --- a/arch/s390/mm/extmem.c
+> +++ b/arch/s390/mm/extmem.c
+> @@ -337,6 +337,11 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
+>  		goto out_free_resource;
+>  	}
 >  
-> +	/* Not mandatory, but its absence could be a problem */
-> +	if (!ops->request)
-> +		dev_info(dev, "Driver cannot be asked to release device\n");
+> +	if (seg->end + 1 > VMEM_MAX_PHYS || seg->end + 1 < seg->start_addr) {
+> +		rc = -ERANGE;
+> +		goto out_resource;
+> +	}
 > +
->  	mutex_lock(&parent_list_lock);
->  
->  	/* Check for duplicate */
-> diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-> index 30964a4e0a28..06d8fc4a6d72 100644
-> --- a/drivers/vfio/mdev/vfio_mdev.c
-> +++ b/drivers/vfio/mdev/vfio_mdev.c
-> @@ -98,6 +98,15 @@ static int vfio_mdev_mmap(void *device_data, struct vm_area_struct *vma)
->  	return parent->ops->mmap(mdev, vma);
+>  	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
+>  	if (rc)
+>  		goto out_resource;
+> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
+> index b239f2ba93b0..06dddcc0ce06 100644
+> --- a/arch/s390/mm/vmem.c
+> +++ b/arch/s390/mm/vmem.c
+> @@ -532,14 +532,19 @@ void vmem_remove_mapping(unsigned long start, unsigned long size)
+>  	mutex_unlock(&vmem_mutex);
 >  }
 >  
-> +static void vfio_mdev_request(void *device_data, unsigned int count)
+> +struct range arch_get_mappable_range(void)
 > +{
-> +	struct mdev_device *mdev = device_data;
-> +	struct mdev_parent *parent = mdev->parent;
+> +	struct range memhp_range;
 > +
-> +	if (parent->ops->request)
-> +		parent->ops->request(mdev, count);
-
-What do you think about duplicating the count==0 notice in the else
-case here?  ie.
-
-	else if (count == 0)
-		dev_notice(mdev_dev(mdev), "No mdev vendor driver	request callback support, blocked until released by user\n");
-
-This at least puts something in the log a bit closer to the timeframe
-of a possible issue versus the registration nag.  vfio-core could do
-this too, but vfio-mdev registers a request callback on behalf of all
-mdev devices, so vfio-core would no longer have visibility for this
-case.
-
-Otherwise this series looks fine to me and I can take it through the
-vfio tree.  Thanks,
-
-Alex
-
+> +	memhp_range.start = 0;
+> +	memhp_range.end =  VMEM_MAX_PHYS;
+> +	return memhp_range;
 > +}
 > +
->  static const struct vfio_device_ops vfio_mdev_dev_ops = {
->  	.name		= "vfio-mdev",
->  	.open		= vfio_mdev_open,
-> @@ -106,6 +115,7 @@ static const struct vfio_device_ops vfio_mdev_dev_ops = {
->  	.read		= vfio_mdev_read,
->  	.write		= vfio_mdev_write,
->  	.mmap		= vfio_mdev_mmap,
-> +	.request	= vfio_mdev_request,
->  };
+>  int vmem_add_mapping(unsigned long start, unsigned long size)
+>  {
+>  	int ret;
 >  
->  static int vfio_mdev_probe(struct device *dev)
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-> index 0ce30ca78db0..9004375c462e 100644
-> --- a/include/linux/mdev.h
-> +++ b/include/linux/mdev.h
-> @@ -72,6 +72,9 @@ struct device *mdev_get_iommu_device(struct device *dev);
->   * @mmap:		mmap callback
->   *			@mdev: mediated device structure
->   *			@vma: vma structure
-> + * @request:		request callback to release device
-> + *			@mdev: mediated device structure
-> + *			@count: request sequence number
->   * Parent device that support mediated device should be registered with mdev
->   * module with mdev_parent_ops structure.
->   **/
-> @@ -92,6 +95,7 @@ struct mdev_parent_ops {
->  	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
->  			 unsigned long arg);
->  	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
-> +	void	(*request)(struct mdev_device *mdev, unsigned int count);
->  };
->  
->  /* interface for exporting mdev supported type attributes */
+> -	if (start + size > VMEM_MAX_PHYS ||
+> -	    start + size < start)
+> -		return -ERANGE;
+> -
 
+I really fail to see how this could be considered an improvement for
+s390. Especially I do not like that the (central) range check is now
+moved to the caller (__segment_load). Which would mean potential
+additional future callers would have to duplicate that code as well.
