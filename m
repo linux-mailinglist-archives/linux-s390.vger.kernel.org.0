@@ -2,141 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C61802CB8E5
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Dec 2020 10:32:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7D732CBCBD
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Dec 2020 13:18:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgLBJbs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Dec 2020 04:31:48 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14350 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725933AbgLBJbs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Dec 2020 04:31:48 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B2974ev057931;
-        Wed, 2 Dec 2020 04:31:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=XxaPJFdIMj03wiPkR94xduSAaB2Nr3+hESgg+Js918I=;
- b=RL02g1YOxSjCr4wSPyEGoYBByVqulNtwJPG7TvyI50l5dMDI4eGqi/RuaRP+GwJDHdU5
- 3cIdypr48Ufd4f1gQ6gfvC7rK7knFNBHGpSadeoMGnz28C733exKB2O3A0nz9yhRN7+l
- 1hIuJl/FyPdQ+q8gmKHoYvjC0jNa14FR36/bzF+WuBT4oQ9UkVrbCmQXNVM6tzAh8B4G
- 2Az+GkB6wvyoPQa+aT9PUbn87F3eZxwauFVwCXydOXBqGgOmOeJlG02OY0L3wwz6DhO8
- SZP16aq8+GRw+bfWhjaGQEk1F1tWOCOBnCY5+0Rsrn/e4Rq4zSCpxFBEX4bkXgoRPTv8 FQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3567ypgmy2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Dec 2020 04:30:58 -0500
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B29E0nn084120;
-        Wed, 2 Dec 2020 04:30:58 -0500
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3567ypgmxa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Dec 2020 04:30:58 -0500
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B29RnEJ028901;
-        Wed, 2 Dec 2020 09:30:56 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 353e6842e8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Dec 2020 09:30:56 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B29Urlm5505728
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Dec 2020 09:30:53 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 45D694C040;
-        Wed,  2 Dec 2020 09:30:53 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E5F274C044;
-        Wed,  2 Dec 2020 09:30:52 +0000 (GMT)
-Received: from oc6887364776.ibm.com (unknown [9.145.74.189])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Dec 2020 09:30:52 +0000 (GMT)
-Subject: Re: [PATCH] s390: cio: fix use-after-free in
- ccw_device_destroy_console
-To:     Qinglang Miao <miaoqinglang@huawei.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20201201063150.82128-1-miaoqinglang@huawei.com>
-From:   Vineeth Vijayan <vneethv@linux.vnet.ibm.com>
-Message-ID: <5081f172-32e6-dda5-4937-4d5c70e7f660@linux.vnet.ibm.com>
-Date:   Wed, 2 Dec 2020 10:30:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        id S1729845AbgLBMQo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Dec 2020 07:16:44 -0500
+Received: from foss.arm.com ([217.140.110.172]:37766 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729843AbgLBMQn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 2 Dec 2020 07:16:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34FC7101E;
+        Wed,  2 Dec 2020 04:15:58 -0800 (PST)
+Received: from [192.168.0.130] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E52D3F718;
+        Wed,  2 Dec 2020 04:15:56 -0800 (PST)
+Subject: Re: [RFC V2 1/3] mm/hotplug: Prevalidate the address range being
+ added with platform
+To:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1606706992-26656-1-git-send-email-anshuman.khandual@arm.com>
+ <1606706992-26656-2-git-send-email-anshuman.khandual@arm.com>
+ <864c701a-4391-f768-1b95-1992e21835a2@redhat.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <349f7b33-cd5b-4240-e7c0-d8ad39c8ba71@arm.com>
+Date:   Wed, 2 Dec 2020 17:45:39 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20201201063150.82128-1-miaoqinglang@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <864c701a-4391-f768-1b95-1992e21835a2@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-12-02_01:2020-11-30,2020-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- suspectscore=2 phishscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
- adultscore=0 clxscore=1011 lowpriorityscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012020050
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Thank you.With a very minor modification in the commit-message,
 
-Reviewed-by: Vineeth Vijayan <vneethv@linux.ibm.com>
+On 12/2/20 2:50 PM, David Hildenbrand wrote:
+> On 30.11.20 04:29, Anshuman Khandual wrote:
+>> This introduces memhp_range_allowed() which can be called in various memory
+>> hotplug paths to prevalidate the address range which is being added, with
+>> the platform. Then memhp_range_allowed() calls memhp_get_pluggable_range()
+>> which provides applicable address range depending on whether linear mapping
+>> is required or not. For ranges that require linear mapping, it calls a new
+>> arch callback arch_get_mappable_range() which the platform can override. So
+>> the new callback, in turn provides the platform an opportunity to configure
+>> acceptable memory hotplug address ranges in case there are constraints.
+>>
+>> This mechanism will help prevent platform specific errors deep down during
+>> hotplug calls. This drops now redundant check_hotplug_memory_addressable()
+>> check in __add_pages().
+>>
+> 
+> 
+> [...]
+> 
+>>  /*
+>>   * Reasonably generic function for adding memory.  It is
+>>   * expected that archs that support memory hotplug will
+>> @@ -317,10 +304,6 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+>>  	if (WARN_ON_ONCE(!params->pgprot.pgprot))
+>>  		return -EINVAL;
+>>  
+>> -	err = check_hotplug_memory_addressable(pfn, nr_pages);
+>> -	if (err)
+>> -		return err;
+>> -
+> 
+> I was wondering if we should add a VM_BUG_ON(!memhp_range_allowed())
+> here to make it clearer that callers are expected to check that first.
+> Maybe an other places as well (e.g., arch code where we remove the
+> original checks)
 
-I will push this and Vasliy/Heiko will take this up for the next 
-s390-tree upstream-release.
+Makes sense, will add them.
 
+> 
+> [...]
+> 
+> 
+>>  #endif /* CONFIG_MEMORY_HOTREMOVE */
+>> diff --git a/mm/memremap.c b/mm/memremap.c
+>> index 16b2fb482da1..26c1825756cc 100644
+>> --- a/mm/memremap.c
+>> +++ b/mm/memremap.c
+>> @@ -185,6 +185,7 @@ static void dev_pagemap_percpu_release(struct percpu_ref *ref)
+>>  static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
+>>  		int range_id, int nid)
+>>  {
+>> +	const bool is_private = pgmap->type == MEMORY_DEVICE_PRIVATE;
+>>  	struct range *range = &pgmap->ranges[range_id];
+>>  	struct dev_pagemap *conflict_pgmap;
+>>  	int error, is_ram;
+>> @@ -230,6 +231,9 @@ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
+>>  	if (error)
+>>  		goto err_pfn_remap;
+>>  
+>> +	if (!memhp_range_allowed(range->start, range_len(range), !is_private))
+>> +		goto err_pfn_remap;
+>> +
+>>  	mem_hotplug_begin();
+>>  
+>>  	/*
+>> @@ -243,7 +247,7 @@ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
+>>  	 * the CPU, we do want the linear mapping and thus use
+>>  	 * arch_add_memory().
+>>  	 */
+>> -	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+>> +	if (is_private) {
+>>  		error = add_pages(nid, PHYS_PFN(range->start),
+>>  				PHYS_PFN(range_len(range)), params);
+>>  	} else {
+>>
+> 
+> In general, LGTM.
+> 
 
-On 12/1/20 7:31 AM, Qinglang Miao wrote:
-> put_device calls release function which do kfree() inside.
-> So following use of sch&cdev would cause use-after-free bugs.
->
-> Fix these by simply adjusting the position of put_device.
-
-Modified the commit-message as below. Just for the clarification.
-
---
-
-Use of sch->dev reference after the put_device() call could trigger
-the use-after-free bugs.
-
-Fix this by simply adjusting the position of put_device.
---
->
-> Fixes: 37db8985b211 ("s390/cio: add basic protected virtualization support")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Suggested-by: Cornelia Huck <cohuck@redhat.com>
-> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
-> ---
->   This patch is indeed a v2 of older one. Considering that the
->   patch's name has changed, I think a normal prefix 'PATCH' is
->   better.
->
->   drivers/s390/cio/device.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-> index b29fe8d50..33280ca18 100644
-> --- a/drivers/s390/cio/device.c
-> +++ b/drivers/s390/cio/device.c
-> @@ -1664,10 +1664,10 @@ void __init ccw_device_destroy_console(struct ccw_device *cdev)
->   	struct io_subchannel_private *io_priv = to_io_private(sch);
->   
->   	set_io_private(sch, NULL);
-> -	put_device(&sch->dev);
-> -	put_device(&cdev->dev);
->   	dma_free_coherent(&sch->dev, sizeof(*io_priv->dma_area),
->   			  io_priv->dma_area, io_priv->dma_area_dma);
-> +	put_device(&sch->dev);
-> +	put_device(&cdev->dev);
->   	kfree(io_priv);
->   }
->   
+Okay
