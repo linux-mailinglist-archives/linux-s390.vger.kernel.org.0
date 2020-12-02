@@ -2,141 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B32CA2CC7E8
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Dec 2020 21:37:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 257E32CC9B4
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Dec 2020 23:42:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbgLBUgg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Dec 2020 15:36:36 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25158 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726162AbgLBUgf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Dec 2020 15:36:35 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B2KY1DP048621;
-        Wed, 2 Dec 2020 15:35:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=AROrU5uf8FK5x25WkTE5ro/clfKSdtvAsxWSgMb/DW0=;
- b=rf4IyNHjmfnEiS2+lIiNIdBQqHl5jL7DT9zBRVckrF/rF4FB0uHEkbWDZd5YsiR96Dd7
- EXXfwoYnvjFGsCrWK0JtkqS/QFgnsV9JX5qibBvjXB3YKQoAA6X4kGBQFKeS7TQC/31l
- P6XywBDf+wFWDt3W55N4mqKJV7+7OsK81XO3AtTutTXIqIrmb58FuoFAhn8Ht1kX9GHd
- L5nlbLO8k51y9UHheELtlgjY1X88/SIOsnjIAI4qXjDYqgt9ClulzTSDythmSYdIsw+8
- H350sfvep7tgBtYiNyN0PJ80N+Rc90br0Wr5ZtaI5OYx/oH9TtD1CWWlrZZ+WEbsgaln 9A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 356dgfr1mb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Dec 2020 15:35:47 -0500
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B2KY8VG049170;
-        Wed, 2 Dec 2020 15:35:46 -0500
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 356dgfr1kf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Dec 2020 15:35:46 -0500
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B2KRwv9032470;
-        Wed, 2 Dec 2020 20:35:44 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 353e68acha-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Dec 2020 20:35:44 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B2KZg9H27197908
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Dec 2020 20:35:42 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 46254A4040;
-        Wed,  2 Dec 2020 20:35:42 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B5A2DA4057;
-        Wed,  2 Dec 2020 20:35:41 +0000 (GMT)
-Received: from osiris (unknown [9.171.12.240])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  2 Dec 2020 20:35:41 +0000 (GMT)
-Date:   Wed, 2 Dec 2020 21:35:40 +0100
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC V2 0/3] mm/hotplug: Pre-validate the address range with
- platform
-Message-ID: <20201202203540.GC11274@osiris>
-References: <1606706992-26656-1-git-send-email-anshuman.khandual@arm.com>
+        id S1728377AbgLBWgc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Dec 2020 17:36:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbgLBWgb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Dec 2020 17:36:31 -0500
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76373C0613D6;
+        Wed,  2 Dec 2020 14:35:51 -0800 (PST)
+Received: by mail-qk1-x735.google.com with SMTP id x25so388953qkj.3;
+        Wed, 02 Dec 2020 14:35:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fDRCmKzmG6EnsCDvgSnP9O6h60abQiEIqQj5Un1xVQs=;
+        b=QTGfcA/KAa1F9u20M9X6dp1tGwTJ9l9iQ/B4uJNQYW4ffy94d2eTrAs+WZtVW5mBwy
+         NG/vQbWHcBLBk1Y9Fnfsn5UXGRjaBzMCME72Y3CWeA2k/TMOPd0ke2fhL+tOfi0lIdqv
+         jpJAQJ+yOhL8DvusELZ8ozOUQ4OZUDjaR7sFDAUIBLr2EIGBvnLYJTGIhrxhEHuSonll
+         3jtLZuq++ZEr3zcGDUFAArIh4qSX5RajDjHpZu/4y6Vr0qwBwKeYw9vmbKWv0+c0ogQ5
+         QptM0aJqqEphnjzgRQgy8JYQA21xDcGZw58d6cTygsB3v8XdCOSBjClFfyrDiGsz0Xqo
+         qnNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=fDRCmKzmG6EnsCDvgSnP9O6h60abQiEIqQj5Un1xVQs=;
+        b=ptt54fump8bqBOw9/4npS5wQM/izSrrnJFfNLgy70Pf6Wz68oVed/POKOsZnldwDmv
+         GwIdk/0RpsDYXC5KpQQavwdHavVoOqY+E0orYg8bvB9sy6NCVhgdGhOxPZoyqc6WdQdL
+         yYZuDgfyN9QQlDd7YpReqjiIT0LHfmt/Dd5oRUb/8MvrrUxwM5Zoy2vUKJRXNaj8yCR9
+         5yiXwr0ljpAk/q2NbA08zUTuTYorD8+xjlb/CsHSr20t0Xx5mhQzZ2GJJkl/IzUHNHHE
+         hqdW0CFeuVibD/+SjaVXF4XOWzYV7mjFU/rrliv5v1od40Wh5rl97vp1/5Ya2CnrtJ9k
+         jj+g==
+X-Gm-Message-State: AOAM531bMuBos0WjzcLJfDZh1uWRDrI0MK31dKe1ew2KUSmwFapFaniQ
+        p75YlihkmvDb8pm14tK2ZFNs7lXv3d65aA==
+X-Google-Smtp-Source: ABdhPJyMGutGFjHzf5aJ0KpE53xmkUwgzzDYFiQltazRaUqs1lE+hnd/Glbacs9CB2txXmoV49DhhA==
+X-Received: by 2002:a37:6712:: with SMTP id b18mr5498qkc.340.1606948550514;
+        Wed, 02 Dec 2020 14:35:50 -0800 (PST)
+Received: from localhost ([2620:10d:c091:480::1:ec0f])
+        by smtp.gmail.com with ESMTPSA id l79sm59809qke.1.2020.12.02.14.35.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Dec 2020 14:35:49 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Wed, 2 Dec 2020 17:35:21 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
+        Song Liu <song@kernel.org>, dm-devel@redhat.com,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: store a pointer to the block_device in struct bio (again)
+Message-ID: <X8gWqZ6li+CvgF4i@mtj.duckdns.org>
+References: <20201201165424.2030647-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1606706992-26656-1-git-send-email-anshuman.khandual@arm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-12-02_12:2020-11-30,2020-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- bulkscore=0 impostorscore=0 priorityscore=1501 spamscore=0 mlxlogscore=792
- lowpriorityscore=0 adultscore=0 phishscore=0 mlxscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012020119
+In-Reply-To: <20201201165424.2030647-1-hch@lst.de>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Nov 30, 2020 at 08:59:49AM +0530, Anshuman Khandual wrote:
-> This series adds a mechanism allowing platforms to weigh in and prevalidate
-> incoming address range before proceeding further with the memory hotplug.
-> This helps prevent potential platform errors for the given address range,
-> down the hotplug call chain, which inevitably fails the hotplug itself.
+On Tue, Dec 01, 2020 at 05:54:15PM +0100, Christoph Hellwig wrote:
+> Hi Jens,
 > 
-> This mechanism was suggested by David Hildenbrand during another discussion
-> with respect to a memory hotplug fix on arm64 platform.
+> this series switches back from storing the gendisk + partno to storing
+> a block_device pointer in struct bio.  The reason is two fold:  for one
+> the new struct block_device actually is always available, removing the
+> need to avoid originally.  Second the merge struct block_device is much
+> more useful than the old one, as storing it avoids the need for looking
+> up what used to be hd_struct during partition remapping and I/O
+> accounting.
 > 
-> https://lore.kernel.org/linux-arm-kernel/1600332402-30123-1-git-send-email-anshuman.khandual@arm.com/
-> 
-> This mechanism focuses on the addressibility aspect and not [sub] section
-> alignment aspect. Hence check_hotplug_memory_range() and check_pfn_span()
-> have been left unchanged. Wondering if all these can still be unified in
-> an expanded memhp_range_allowed() check, that can be called from multiple
-> memory hot add and remove paths.
-> 
-> This series applies on v5.10-rc6 and has been slightly tested on arm64.
-> But looking for some early feedback here.
-> 
-> Changes in RFC V2:
-> 
-> Incorporated all review feedbacks from David.
-> 
-> - Added additional range check in __segment_load() on s390 which was lost
-> - Changed is_private init in pagemap_range()
-> - Moved the framework into mm/memory_hotplug.c
-> - Made arch_get_addressable_range() a __weak function
-> - Renamed arch_get_addressable_range() as arch_get_mappable_range()
-> - Callback arch_get_mappable_range() only handles range requiring linear mapping
-> - Merged multiple memhp_range_allowed() checks in register_memory_resource()
-> - Replaced WARN() with pr_warn() in memhp_range_allowed()
-> - Replaced error return code ERANGE with E2BIG
-> 
-> Changes in RFC V1:
-> 
-> https://lore.kernel.org/linux-mm/1606098529-7907-1-git-send-email-anshuman.khandual@arm.com/
-> 
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
+> Note that this series depends on the posted but not merged
+> "block tracepoint cleanups" series.
 
-Btw. please use git send-email's --cc-cover option to make sure that
-all patches of this series will be sent to all listed cc's.
-I really dislike to receive only the cover-letter and maybe on patch
-and then have to figure out where to find the rest.
+I'm late but everything looks good to me. So much better than the mess we
+had before. Thank you.
 
-Thanks :)
+The only thing I noticed is that blkdev_get_no_open() can now use
+kobject_get() instead of kobject_get_unless_zero() as bdev lookup is
+synchronously disabled before device_del().
+
+-- 
+tejun
