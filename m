@@ -2,91 +2,165 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92B512CDC06
-	for <lists+linux-s390@lfdr.de>; Thu,  3 Dec 2020 18:12:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3CCC2CDCD8
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Dec 2020 18:57:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731502AbgLCRLu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 3 Dec 2020 12:11:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbgLCRLt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Dec 2020 12:11:49 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E614C061A54;
-        Thu,  3 Dec 2020 09:10:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0lhCxHLgf8TSOAvypxgyZdt6AOtyZg3i7+GSOy69WwU=; b=jeeAqf558AfAqY1ZPTR4HfNgwX
-        YopjYarSwRSdQuGeGyjCSNFpvTWHEYq7+8CHvDrMVdGazF9BvP9no40RR9phvvpP85cND+YTv5ln8
-        KPsTGbcRveY23zSbT4NayaXcOaWGv8eD84pD4++pebfb9TdeUpWsXFyBzsbMD+4DIqsHk8ZIrsRiW
-        I7PtW3gWf5TUhQ5JidDUj/TGspfxPwztfLhtU0q/hd+wkoe4vNNFcR8XRjZIn82vi+bkd0ZTVcg/Z
-        fo0RR2g2KJYGfC5KQ9XiTR/EvLYuZJdjOjJWpHZAgMtF0E4z09yRlsVs8vjqzUSCTdzo9+Ps9L8Qg
-        SgThpYbg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kks7U-0000Aw-Oc; Thu, 03 Dec 2020 17:10:17 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 71A073059DD;
-        Thu,  3 Dec 2020 18:10:15 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5647C2029C718; Thu,  3 Dec 2020 18:10:15 +0100 (CET)
-Date:   Thu, 3 Dec 2020 18:10:15 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-csky@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org
-Subject: Re: [PATCH AUTOSEL 5.9 27/39] sched/idle: Fix arch_cpu_idle() vs
- tracing
-Message-ID: <20201203171015.GN2414@hirez.programming.kicks-ass.net>
-References: <20201203132834.930999-1-sashal@kernel.org>
- <20201203132834.930999-27-sashal@kernel.org>
- <20201203145442.GC9994@osiris>
+        id S1729218AbgLCR4I (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 3 Dec 2020 12:56:08 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55834 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726689AbgLCR4I (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Dec 2020 12:56:08 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B3HgVBB130409;
+        Thu, 3 Dec 2020 12:55:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=vnnDq3LW8NH7z3EXaRPTTKXXk2eAYKFIH7G5x9+b+n8=;
+ b=qqQfzH3di/nngU2D7SwAJ6cmTu2fKJYDOCzTesOU9A80datEsjIm6HaRvmpfUPM9kuZw
+ iOUGphZae+EGf7jH1LDyHZ5WZ9Q67ZgfYAsl/FPwAk5wmmyndCtsvVyE7xdB1TaxhTie
+ nVpfMap992yStNx9MLanwnNyZnosS9GoHdX+Uwf1a+C8tH12Bux78x6pfh1LnJNblQHK
+ BMflDSgx5Ct8dwBIHRSs1phrzt4BQfNjV8Z9KGsWywvwGI6pmaudQaJauPx4zhxXk0bt
+ 4zZbPIljHstd6KLpVfiPkXDoppjOhjHSxQfEwmD4bmiqOY78RrI602lZYh88dLvo5Ij2 PA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 355jjjymec-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Dec 2020 12:55:26 -0500
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B3HXHZt099635;
+        Thu, 3 Dec 2020 12:55:25 -0500
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 355jjjymc2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Dec 2020 12:55:25 -0500
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B3HqewP010067;
+        Thu, 3 Dec 2020 17:55:19 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06fra.de.ibm.com with ESMTP id 353dthav3t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Dec 2020 17:55:19 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B3HtGDx9765572
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 3 Dec 2020 17:55:17 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D017B5205A;
+        Thu,  3 Dec 2020 17:55:16 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.171.64.213])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 52B8E5204F;
+        Thu,  3 Dec 2020 17:55:16 +0000 (GMT)
+Date:   Thu, 3 Dec 2020 18:55:14 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, borntraeger@de.ibm.com, cohuck@redhat.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com, david@redhat.com
+Subject: Re: [PATCH] s390/vfio-ap: Clean up vfio_ap resources when KVM
+ pointer invalidated
+Message-ID: <20201203185514.54060568.pasic@linux.ibm.com>
+In-Reply-To: <20201202234101.32169-1-akrowiak@linux.ibm.com>
+References: <20201202234101.32169-1-akrowiak@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201203145442.GC9994@osiris>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-12-03_10:2020-12-03,2020-12-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 impostorscore=0
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012030104
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Dec 03, 2020 at 03:54:42PM +0100, Heiko Carstens wrote:
-> On Thu, Dec 03, 2020 at 08:28:21AM -0500, Sasha Levin wrote:
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > 
-> > [ Upstream commit 58c644ba512cfbc2e39b758dd979edd1d6d00e27 ]
-> > 
-> > We call arch_cpu_idle() with RCU disabled, but then use
-> > local_irq_{en,dis}able(), which invokes tracing, which relies on RCU.
-> > 
-> > Switch all arch_cpu_idle() implementations to use
-> > raw_local_irq_{en,dis}able() and carefully manage the
-> > lockdep,rcu,tracing state like we do in entry.
-> > 
-> > (XXX: we really should change arch_cpu_idle() to not return with
-> > interrupts enabled)
-> > 
-> > Reported-by: Sven Schnelle <svens@linux.ibm.com>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> > Tested-by: Mark Rutland <mark.rutland@arm.com>
-> > Link: https://lkml.kernel.org/r/20201120114925.594122626@infradead.org
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> This patch broke s390 irq state tracing. A patch to fix this is
-> scheduled to be merged upstream today (hopefully).
-> Therefore I think this patch should not yet go into 5.9 stable.
+On Wed,  2 Dec 2020 18:41:01 -0500
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-Agreed.
+> The vfio_ap device driver registers a group notifier with VFIO when the
+> file descriptor for a VFIO mediated device for a KVM guest is opened to
+> receive notification that the KVM pointer is set (VFIO_GROUP_NOTIFY_SET_KVM
+> event). When the KVM pointer is set, the vfio_ap driver stashes the pointer
+> and calls the kvm_get_kvm() function to increment its reference counter.
+> When the notifier is called to make notification that the KVM pointer has
+> been set to NULL, the driver should clean up any resources associated with
+> the KVM pointer and decrement its reference counter. The current
+> implementation does not take care of this clean up.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+
+Do we need a Fixes tag? Do we need this backported? In my opinion
+this is necessary since the interrupt patches.
+
+> ---
+>  drivers/s390/crypto/vfio_ap_ops.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index e0bde8518745..eeb9c9130756 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -1083,6 +1083,17 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
+>  	return NOTIFY_DONE;
+>  }
+>  
+> +static void vfio_ap_mdev_put_kvm(struct ap_matrix_mdev *matrix_mdev)
+
+I don't like the name. The function does more that put_kvm. Maybe
+something  like _disconnect_kvm()?
+
+> +{
+> +	if (matrix_mdev->kvm) {
+> +		(matrix_mdev->kvm);
+> +		matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+
+Is a plain assignment to arch.crypto.pqap_hook apropriate, or do we need
+to take more care?
+
+For instance kvm_arch_crypto_set_masks() takes kvm->lock before poking
+kvm->arch.crypto.crycb.
+
+> +		vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
+> +		kvm_put_kvm(matrix_mdev->kvm);
+> +		matrix_mdev->kvm = NULL;
+> +	}
+> +}
+> +
+>  static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>  				       unsigned long action, void *data)
+>  {
+> @@ -1095,7 +1106,7 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>  	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
+>  
+>  	if (!data) {
+> -		matrix_mdev->kvm = NULL;
+> +		vfio_ap_mdev_put_kvm(matrix_mdev);
+
+The lock question was already raised.
+
+What are the exact circumstances under which this branch can be taken?
+
+>  		return NOTIFY_OK;
+>  	}
+>  
+> @@ -1222,13 +1233,7 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
+>  	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>  
+>  	mutex_lock(&matrix_dev->lock);
+> -	if (matrix_mdev->kvm) {
+> -		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
+> -		matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+> -		vfio_ap_mdev_reset_queues(mdev);
+> -		kvm_put_kvm(matrix_mdev->kvm);
+> -		matrix_mdev->kvm = NULL;
+> -	}
+> +	vfio_ap_mdev_put_kvm(matrix_mdev);
+>  	mutex_unlock(&matrix_dev->lock);
+>  
+>  	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+
