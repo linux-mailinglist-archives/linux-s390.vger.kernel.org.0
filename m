@@ -2,108 +2,77 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFF632CD9A7
-	for <lists+linux-s390@lfdr.de>; Thu,  3 Dec 2020 15:57:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F11492CDA3B
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Dec 2020 16:40:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730894AbgLCOzs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 3 Dec 2020 09:55:48 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39640 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725903AbgLCOzs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Dec 2020 09:55:48 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B3Eexhl182531;
-        Thu, 3 Dec 2020 09:54:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=aTanWXDu6GDQOgBiwV6VCa4+Gz8xmuiEnuHmxtcgxPE=;
- b=JqgdPm8hiRdcgHmP2Asq50K14PiR4++DD5Vd+nt7oiR5rd0dVWxNV+CyaTMf2v55XBpe
- s+gVM1OtIwF2Xnm6yZRH5aEnHoH29g2Yy8k/Ydrh+57AZhG9ihxP6O/ACCzsKz7KkpOm
- 9uS4eAhzbs0Rj2Rj4AMToilq6M0k4MDriKFj72s90FNSX+Q9/pCO+3fSr2ZGQr23vN8l
- GYsZ4WHeDjYTuCodVhHapE4fIyykKImPmGci1Z/T4XpayaYDLVLAdQj2574h9vrX3CRA
- fq8QCuZA7L9FqVJdEZDAIvcQsl+YOkjb9kuPNJCT0dbuGMlFlnmoHAfQVay2BAazStvv tQ== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3571nssyg2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Dec 2020 09:54:49 -0500
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B3EppGY020571;
-        Thu, 3 Dec 2020 14:54:47 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 35693xh8ty-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Dec 2020 14:54:47 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B3EsjwT26083698
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Dec 2020 14:54:45 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DDC8C11C054;
-        Thu,  3 Dec 2020 14:54:44 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0F8A611C058;
-        Thu,  3 Dec 2020 14:54:44 +0000 (GMT)
-Received: from osiris (unknown [9.171.50.208])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  3 Dec 2020 14:54:43 +0000 (GMT)
-Date:   Thu, 3 Dec 2020 15:54:42 +0100
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-csky@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org
-Subject: Re: [PATCH AUTOSEL 5.9 27/39] sched/idle: Fix arch_cpu_idle() vs
- tracing
-Message-ID: <20201203145442.GC9994@osiris>
-References: <20201203132834.930999-1-sashal@kernel.org>
- <20201203132834.930999-27-sashal@kernel.org>
+        id S1731025AbgLCPji (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 3 Dec 2020 10:39:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731020AbgLCPjg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Dec 2020 10:39:36 -0500
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 708B1C061A4E;
+        Thu,  3 Dec 2020 07:38:56 -0800 (PST)
+Received: by mail-qv1-xf2f.google.com with SMTP id x13so1116138qvk.8;
+        Thu, 03 Dec 2020 07:38:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8iYfZK7k4LKkXHjhIpzgbWtlDMSLNvryIb4qP/617/A=;
+        b=tpufTalSbO0eNIfTsDIaVnM9GvN1vOpIyW5c/FifFknghjMD702zlT7JqxfLMFSp+0
+         7Kqm6Y5m0AYzDyoQonaunJfaHgLbzESQp/ST8nqIkGC6tERhtem1UHM4UBIKz+HjSvgN
+         hpgcDQtxbfvYuzWwOjxqSxOncUMnf9i3DWbT7mHk7nfLkNcnCpJQi7TuuOtChXfYGuwd
+         Hqn5DA/BenvcqWl0+HELqOOZ4LcMOZxJtCqd7ceUpu6wmKqK58L5GYe0GMrPc4u3jkwr
+         daM8pct9z5AQ8HepKdKB/zmNIA0eSHqop8euUyiz3gqYQhqL2RWO341yAU42nWywa2UD
+         95lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=8iYfZK7k4LKkXHjhIpzgbWtlDMSLNvryIb4qP/617/A=;
+        b=XiY8R0aF2e0xGVI4KKPgXmzwNYE6ws4IIRejIEllCvUnoQAvU5V2phd/D211KP8+GL
+         twKkyd98bhW40pzkzRcymLu8pI4fS37kM4DBmlsw9+ioFy5msFqpcpuyEdnVUStEEEO5
+         UqQNqFERvMvAv/XcI40XSHoOtn91IYnRJ4fyAWzT7whFN13yG3yNHSxCSvLEpQU5qLPG
+         DE+dRmB0ViL+EUZGOwNpl/Jynlr3eEKBxs4QyEI6Bl9awoMScmFeUSeOxDSTlWA6WFtM
+         55j5FcZgxnucFXO2Up++AjBadKkFjWbpbZAWKbh1ovfrS2HFaErku4tjZ9fysCj/MSV6
+         jxfA==
+X-Gm-Message-State: AOAM530L1Zyj5QTnNEvQ7eh6ZqwHm7YjfQLMW95sx6VPbC9gGtNyMVBc
+        jeGr1ogsMF9DnfCDPua0+gY=
+X-Google-Smtp-Source: ABdhPJx09aEGriwr3pY6WH0RuczKuf2fJnXuG/xMIJwR9iDX4IW9IWBXN98EBXBwIGOF+0zIbLpqjA==
+X-Received: by 2002:a0c:db8c:: with SMTP id m12mr3854958qvk.11.1607009935544;
+        Thu, 03 Dec 2020 07:38:55 -0800 (PST)
+Received: from localhost (dhcp-6c-ae-f6-dc-d8-61.cpe.echoes.net. [72.28.8.195])
+        by smtp.gmail.com with ESMTPSA id a85sm1723149qkg.3.2020.12.03.07.38.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Dec 2020 07:38:54 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Thu, 3 Dec 2020 10:38:26 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: block tracepoint cleanups
+Message-ID: <X8kGcgHvk8L22Nc+@mtj.duckdns.org>
+References: <20201130175854.982460-1-hch@lst.de>
+ <20201203082559.GA15521@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201203132834.930999-27-sashal@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-12-03_07:2020-12-03,2020-12-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=999 bulkscore=0 clxscore=1031 priorityscore=1501 adultscore=0
- suspectscore=0 spamscore=0 phishscore=0 malwarescore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012030085
+In-Reply-To: <20201203082559.GA15521@lst.de>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Dec 03, 2020 at 08:28:21AM -0500, Sasha Levin wrote:
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
-> [ Upstream commit 58c644ba512cfbc2e39b758dd979edd1d6d00e27 ]
-> 
-> We call arch_cpu_idle() with RCU disabled, but then use
-> local_irq_{en,dis}able(), which invokes tracing, which relies on RCU.
-> 
-> Switch all arch_cpu_idle() implementations to use
-> raw_local_irq_{en,dis}able() and carefully manage the
-> lockdep,rcu,tracing state like we do in entry.
-> 
-> (XXX: we really should change arch_cpu_idle() to not return with
-> interrupts enabled)
-> 
-> Reported-by: Sven Schnelle <svens@linux.ibm.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> Tested-by: Mark Rutland <mark.rutland@arm.com>
-> Link: https://lkml.kernel.org/r/20201120114925.594122626@infradead.org
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+On Thu, Dec 03, 2020 at 09:25:59AM +0100, Christoph Hellwig wrote:
+> Whom can I trick into reviewing this fairly simple series now that
+> the one dependig on it got fully reviewed?
 
-This patch broke s390 irq state tracing. A patch to fix this is
-scheduled to be merged upstream today (hopefully).
-Therefore I think this patch should not yet go into 5.9 stable.
+Care to resend? I'd be happy to take a look later today.
+
+Thanks.
+
+-- 
+tejun
