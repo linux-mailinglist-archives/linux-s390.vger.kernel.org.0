@@ -2,102 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 422802CD297
-	for <lists+linux-s390@lfdr.de>; Thu,  3 Dec 2020 10:36:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 194282CD34D
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Dec 2020 11:22:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgLCJdy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 3 Dec 2020 04:33:54 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50243 "EHLO
+        id S1728979AbgLCKUy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 3 Dec 2020 05:20:54 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:26719 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728834AbgLCJdy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Dec 2020 04:33:54 -0500
+        by vger.kernel.org with ESMTP id S1726898AbgLCKUy (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Dec 2020 05:20:54 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606987947;
+        s=mimecast20190719; t=1606990767;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Jmel3tjqsc7Vgh83Ue1t0WC/6y10c9bSGUCqUms/GTA=;
-        b=fytLYeqFhBUljgJsUu+Llyir/MVEfsMjpaz01XOrLVxMYFds90+n7Ao+qF3eGqqXP3/0G9
-        jF/8aF5LbYR1xZ+afLEfFHXtWcnfxspNm0RpXvjP1QAVYxmgeC6xi1xdtW1WlDKkH0vEu5
-        hEEGHPzq5lrd8RCIa9O2AR6gj/0TJ0A=
+        bh=fdoqPowfgaPwgdpg4xdqnBSrmpGIg2cYmWgzjzhfZg8=;
+        b=fRvA6L11HUgtZ5AMV1SGzeD2s7XR8A6Bivy1XMGJnOcKkga/q2dQvXJbxIMgC4mnxhsILG
+        BzZ0j/XTeZXLdJeoHTxLWmD+9h+b9AwYvcwEm5RTwWueKtvK1sPctjK/Fv9SKt839EgFOU
+        sG9Py8IXnqhC5cO43OB8i2ORGUZ726Y=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-337-oQcaGzWtP5-v7yXp30SHvg-1; Thu, 03 Dec 2020 04:32:25 -0500
-X-MC-Unique: oQcaGzWtP5-v7yXp30SHvg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-294-NznW8gA9Op-k8sBayTMKlw-1; Thu, 03 Dec 2020 05:19:23 -0500
+X-MC-Unique: NznW8gA9Op-k8sBayTMKlw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D5D9185E497;
-        Thu,  3 Dec 2020 09:32:24 +0000 (UTC)
-Received: from T590 (ovpn-13-173.pek2.redhat.com [10.72.13.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 627CB1899A;
-        Thu,  3 Dec 2020 09:32:10 +0000 (UTC)
-Date:   Thu, 3 Dec 2020 17:32:01 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        Coly Li <colyli@suse.de>, Song Liu <song@kernel.org>,
-        dm-devel@redhat.com, linux-bcache@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH 3/9] block: store a block_device pointer in struct bio
-Message-ID: <20201203093201.GC633702@T590>
-References: <20201201165424.2030647-1-hch@lst.de>
- <20201201165424.2030647-4-hch@lst.de>
- <20201203063941.GA629758@T590>
- <20201203071055.GA633702@T590>
- <20201203082951.GA15581@lst.de>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A4141936B8F;
+        Thu,  3 Dec 2020 10:19:17 +0000 (UTC)
+Received: from gondolin (ovpn-113-106.ams2.redhat.com [10.36.113.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE6E35D6AC;
+        Thu,  3 Dec 2020 10:19:09 +0000 (UTC)
+Date:   Thu, 3 Dec 2020 11:19:07 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, borntraeger@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com, david@redhat.com
+Subject: Re: [PATCH] s390/vfio-ap: Clean up vfio_ap resources when KVM
+ pointer invalidated
+Message-ID: <20201203111907.72a89884.cohuck@redhat.com>
+In-Reply-To: <20201202234101.32169-1-akrowiak@linux.ibm.com>
+References: <20201202234101.32169-1-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201203082951.GA15581@lst.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Dec 03, 2020 at 09:29:51AM +0100, Christoph Hellwig wrote:
-> On Thu, Dec 03, 2020 at 03:10:55PM +0800, Ming Lei wrote:
-> > On Thu, Dec 03, 2020 at 02:40:04PM +0800, Ming Lei wrote:
-> > > On Tue, Dec 01, 2020 at 05:54:18PM +0100, Christoph Hellwig wrote:
-> > > > Replace the gendisk pointer in struct bio with a pointer to the newly
-> > > > improved struct block device.  From that the gendisk can be trivially
-> > > > accessed with an extra indirection, but it also allows to directly
-> > > > look up all information related to partition remapping.
-> > > 
-> > > The extra indirection is often done in fast path, so just wondering why
-> > > you don't consider to embed gendisk into block_device? Then the extra
-> > > indirection can be avoided.
-> > 
-> > oops, that is only possible for disk, and indirection is still needed
-> > for partitions.
+On Wed,  2 Dec 2020 18:41:01 -0500
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+
+> The vfio_ap device driver registers a group notifier with VFIO when the
+> file descriptor for a VFIO mediated device for a KVM guest is opened to
+> receive notification that the KVM pointer is set (VFIO_GROUP_NOTIFY_SET_KVM
+> event). When the KVM pointer is set, the vfio_ap driver stashes the pointer
+> and calls the kvm_get_kvm() function to increment its reference counter.
+> When the notifier is called to make notification that the KVM pointer has
+> been set to NULL, the driver should clean up any resources associated with
+> the KVM pointer and decrement its reference counter. The current
+> implementation does not take care of this clean up.
 > 
-> I looked into that, but given that the block device is allocated as part
-> of the inode we'd need to tell ->alloc_inode if we want to allocate the
-> small inode without the gendisk, or the large one with it which doesn't
-> work with the current interface.
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_ops.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index e0bde8518745..eeb9c9130756 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -1083,6 +1083,17 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
+>  	return NOTIFY_DONE;
+>  }
+>  
+> +static void vfio_ap_mdev_put_kvm(struct ap_matrix_mdev *matrix_mdev)
+> +{
+> +	if (matrix_mdev->kvm) {
+> +		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
+> +		matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+> +		vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
+> +		kvm_put_kvm(matrix_mdev->kvm);
+> +		matrix_mdev->kvm = NULL;
+> +	}
+> +}
+> +
+>  static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>  				       unsigned long action, void *data)
+>  {
+> @@ -1095,7 +1106,7 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>  	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
+>  
+>  	if (!data) {
+> -		matrix_mdev->kvm = NULL;
+> +		vfio_ap_mdev_put_kvm(matrix_mdev);
 
-I guess it could be done without fs code change, because now block device is
-always allocated by bdev_alloc() since 22ae8ce8b892("block: simplify bdev/disk
-lookup in blkdev_get"). And one manual inode allocation with a bit duplication
-from new_inode_pseudo() should be fine:
+Hm. I'm wondering whether you need to hold the maxtrix_dev lock here as
+well?
 
-	allocate big inode for disk, and small for partition
-	inode_init_always(sb, inode);
-    if (inode) {
-            spin_lock(&inode->i_lock);
-            inode->i_state = 0;
-            spin_unlock(&inode->i_lock);
-            INIT_LIST_HEAD(&inode->i_sb_list);
-			inode_sb_list_add(inode);
-    }
-
-> Beause the hd_struct is gone we're
-> still not using more structures in the I/O path than we did before.
-
-Indeed, and block_device instance is often cached in IO path.
-
-
-thanks,
-Ming
+>  		return NOTIFY_OK;
+>  	}
+>  
+> @@ -1222,13 +1233,7 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
+>  	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>  
+>  	mutex_lock(&matrix_dev->lock);
+> -	if (matrix_mdev->kvm) {
+> -		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
+> -		matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+> -		vfio_ap_mdev_reset_queues(mdev);
+> -		kvm_put_kvm(matrix_mdev->kvm);
+> -		matrix_mdev->kvm = NULL;
+> -	}
+> +	vfio_ap_mdev_put_kvm(matrix_mdev);
+>  	mutex_unlock(&matrix_dev->lock);
+>  
+>  	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
 
