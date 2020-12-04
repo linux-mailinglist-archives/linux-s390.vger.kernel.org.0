@@ -2,143 +2,187 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A33432CE68D
-	for <lists+linux-s390@lfdr.de>; Fri,  4 Dec 2020 04:30:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAA8A2CEFF3
+	for <lists+linux-s390@lfdr.de>; Fri,  4 Dec 2020 15:44:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbgLDD2H (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 3 Dec 2020 22:28:07 -0500
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:30553 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgLDD2H (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Dec 2020 22:28:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1607052487; x=1638588487;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=wWO2+DoWaprIN+ldI6tSNf2ap63KBTYEr/zzwHBX9eo=;
-  b=UPXRQXxq7kdz9NmjDUSKUZa7hD/h68UyWXn4L1xkdkqNvS8fK2mGpqRF
-   gsJaWlO4NfQztaxLhLSsZ9ZpZ1lN2l4Tzd4RpIChy4qx6xOiFhpbsjimM
-   sp77SYXhaf2DZsYbSaDR44scpEO61UOK+b9A6/wgIDrVV8wxpFYRTuZNI
-   CSUAQdNyQvmtuwmJ+W+Tf+XmIPNg17GcDhGBfBU8VGa5AK90RObcj00Ig
-   1D4BK3MZK0fZM/nCfTdScI+LlYgHvQl4KKq16mDWPyBmWwbvdpVOne9yB
-   8Oarv1lKFJIAVyaSNU+n65gmW4Hicw15TLuVfuzyOXIPBfb6ph2nNOP+i
-   Q==;
-IronPort-SDR: yUq91tqXF2LsarP7EtILDOBsI4RalTlpr+6bx0CUT+/p6GVafo94M3ZrpNYw67lW8IQgiT7W9u
- km3dx4nkAyirCKVxRkOTqzJZx8O9QEh9nWPbcCAgLXfXhsRUv3Flwb7erp1QyFEZAYiCsZuPwj
- Y61lC7VZ7023690lHXAqRIHks8MQXUt5ridAJREtC6u/GB7KHMnm5ZiV9P+gLuRNwn8Jbiqrob
- GLx8Dw37AzZsob0lcPj2cyhM9or0OszzR7svXGNOIJkM9s4KZDDg5Rf4J3XxBplnRhz80FveWe
- HGY=
-X-IronPort-AV: E=Sophos;i="5.78,391,1599494400"; 
-   d="scan'208";a="154367154"
-Received: from mail-cys01nam02lp2054.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.54])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Dec 2020 11:27:14 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JSS1AuauH3HoNhZBKJ6bhSOfHCsTLXm2ccD2xOIHrGLRUpa5AAPDf7QVchEfOgHQn0SsBxIyWnQGhP8T5aNwWt8a84uWR1zhuPVzAXkZIkJVUomGRBIhcVysQiFLTq1x2nFLcYniZedM/UNth+8ciISWC/Eb6mGNkJ2w0vjwAootlEdz+GbjAFD2XkZgved9LsVnKhmhx9cn6rp0V0rVvb+N2MUJpC4lrUaFcILU1ElTlUfC032pGvoOhbSMZIjLCP67ROA55lgcRFy2zHyJmyUaKcGMR9XLM0/9en+2IVk46L/3qf538DOVAV6hV/fdp0Rep5EbhcY5FFhbi19MxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wWO2+DoWaprIN+ldI6tSNf2ap63KBTYEr/zzwHBX9eo=;
- b=gnlWFtb1mIx4MGJdRD5GBWqUivnNDdvw9hGq6uOFuY64W7WxElb4LDWhauCplysCAeZcXqb/saytA+E4rARhZMSv04rhhTcCYQWw10IOCTDLyLGkzOABNew43tZ459krJBdf1QOAFg9K8aQkJ1K+BSDJqm70TtgDAjbYwPhwTRn23QIoxRlOnAiusS4BQFlbDM2PX3Uhczu552XTPiwuwPpaSq3mG9tlLmS6rNbC1BEhs9l0v3WiqpbNgu/nf+FpSE94nbLWfBMKghpJr+CjF7idhayMcXmEt9PFamRAd0vhVC6Ec8n5cUCvp9b/TGtRbDHAbWuB1N/XOpmRDoWEOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wWO2+DoWaprIN+ldI6tSNf2ap63KBTYEr/zzwHBX9eo=;
- b=b7toHbMTWaCDwpHrt13CKUSr8BeGBcjCa+5Fez51y/VfFqgl1V+9Mp+0h7j5q3g50sB87qMjj2Uqfbhldjzkx//pn0OfGj9pc6MCG0lNtyYWBCCuCVMfRtqQv7pBb09yw4wuLEidUZzmFbY5fuewPBMiwZky4y2wmwYnppTNFJ4=
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
- by BY5PR04MB7123.namprd04.prod.outlook.com (2603:10b6:a03:227::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3632.17; Fri, 4 Dec
- 2020 03:27:13 +0000
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::99ae:ab95:7c27:99e4]) by BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::99ae:ab95:7c27:99e4%7]) with mapi id 15.20.3611.031; Fri, 4 Dec 2020
- 03:27:13 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-CC:     Tejun Heo <tj@kernel.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH 4/5] block: remove the request_queue argument to the
- block_bio_remap tracepoint
-Thread-Topic: [PATCH 4/5] block: remove the request_queue argument to the
- block_bio_remap tracepoint
-Thread-Index: AQHWyZEJoVE+oQs4z0qWLLn8W3RcJw==
-Date:   Fri, 4 Dec 2020 03:27:13 +0000
-Message-ID: <BYAPR04MB496575248C66C4AB2877445986F10@BYAPR04MB4965.namprd04.prod.outlook.com>
-References: <20201203162139.2110977-1-hch@lst.de>
- <20201203162139.2110977-5-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 68c24a4c-f4b2-48b0-48d0-08d898047e3f
-x-ms-traffictypediagnostic: BY5PR04MB7123:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR04MB7123388399DA578319F5129486F10@BY5PR04MB7123.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1824;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ePi2l043tN8CtI5QSJRecw050P7c/r84tFQIc6e9QM1RetHr0pUL2ZXkpzXlgBsjvcTWs/R4X6IwTsIf7gz/d+k4DqnM0Bq0yU1k7Byga+0ALKX0SfjXim7VBLzLXT1mkWjCjQy7GVUwUwhjo7aa3D5dMJ2LRBnsJ9TK2TZwHcQt1x+dxLPkj+W+NXbBavHMnH95YzlJtDSFtLEzB/W4mdcTKMAjopQEaXWJQORvYyUz40M4qsxalqxG0u2DE/gVl7stzvTgQrEwfhbvrL3SGv5iX70i5sNDthVE8LyBCZCk5/k5m+8DwCHqQk8LhHEE2Dmxp0EiEizaBu8L6ST7XA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(478600001)(66476007)(66446008)(66946007)(64756008)(186003)(66556008)(4326008)(54906003)(316002)(110136005)(26005)(558084003)(2906002)(7696005)(33656002)(6506007)(86362001)(71200400001)(53546011)(5660300002)(76116006)(52536014)(8676002)(8936002)(55016002)(9686003)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?UP1o6D+b4Ihym0hj217FRpSNmpmUzpEwAhCoBaqMYHZ6ubcKPk8Es5t2kctR?=
- =?us-ascii?Q?DClV54C0ru6+fy4LbMJnwZmvyfVLX9wEShZtZL+GvfpBYI8EiOiK9mzOkpTB?=
- =?us-ascii?Q?Pm5pjGxY2gU/vzpUuRgWHa6LF7dEdbVlek5o/W5xXZV67g2xnD3oLxZNJzDf?=
- =?us-ascii?Q?A46RJS+NHKyd4flZLzmhrrLvBVSI4lzdP6ad6brdVC6XfQXC1qJurcb+vhJA?=
- =?us-ascii?Q?0buwVqmoII1nCrwgXrAYIgiKxvsuAjCrRPPSfxlN5iOYWXk1wXIRqxtSCrZS?=
- =?us-ascii?Q?079BgwrR1kQMBYOx/caTYA2I8YxNCgUOdJWECaGygsy+7tk17bYeTxhplD4X?=
- =?us-ascii?Q?tH0I0meyU/Odk1CFCdSXE3Aqkfdl24JRL7pkkLOHsBKprNTlmrZ5UrLeLsYJ?=
- =?us-ascii?Q?YS0U7r3hTj4OfaMbtiQZeWKLGjs7Ex8+E3Ac477sjPv7Ttgk6sitGCFIgSgi?=
- =?us-ascii?Q?5Fx72MjTpnDW+XMbKtyYpT7hNK3JJBDdBc6EZIXMeD6Z+zdkEY7Mkrx44pMW?=
- =?us-ascii?Q?tN+fY7XYLXwwWp+oRpSmjBN7eVGFTH0KG69aMnNrI/mAKX9AFCkEfDnKE3MS?=
- =?us-ascii?Q?1BtH4qBI0kcuUHqhdG9Q9sM8BKtbbKplkRnMSkERfuR38qEPhx1fSl/EDo6x?=
- =?us-ascii?Q?Z1y//SxWFaahSnDge6ChSHGWOIVtnhRd5H1y71f3bMo033eTpgqGSB7Elaj2?=
- =?us-ascii?Q?Y0dGx3ZKyv3Bb2FdiRKJx8d9yAsRppjx48aKEqiT4wD3Z5Ak82OUKsLVrKg7?=
- =?us-ascii?Q?dR0CbEYWqkQcllFQQOkr626eOk8fkBZOBECd/UKh2yWiMlNJRzb3LpaE+qL2?=
- =?us-ascii?Q?iOj+aKlvfPfhnlY0lG5Ewqf7jzXRijK9IYxF8DNNncsGQ4xlnswS+tRbzTVv?=
- =?us-ascii?Q?yL0le+9rgNyPdc3/0I+U+6k9veN4KcB4I9efneIOenwcuBzX8OA/6AMe2Jd/?=
- =?us-ascii?Q?lu6TVB+8uJfml5XX/DbPME2Kx+wbJwB9vU/JeDjbq4hSiTUEE/5xnvJeO2we?=
- =?us-ascii?Q?KFJQ?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1730308AbgLDOoo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 4 Dec 2020 09:44:44 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37122 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730305AbgLDOoo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 4 Dec 2020 09:44:44 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B4EcdUd072217;
+        Fri, 4 Dec 2020 09:44:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=W6A48oeKkW1/exMBFLB4Ks4aBQ/6lU6DCngSIYTfzFA=;
+ b=amwllr+PzdkHNyZmvpML95rbFUhcF1Jo14+R9Quo6hB4rmxdE226s3dLKaweJS+fRU+c
+ GMi8m7k1ZkGggkzxy9CDJFYU86uVvnybYLlVYx5Elr3qA5dcqz3jdPDGaC83GHhJXxzb
+ ATVmHUOLleymEnc2+rEcWjLq+fXsa8px4jufmPzzlSQOOgcGBsvnXlw6xoEQfDwr9Q1s
+ LV7AEm19ITiZ0I2CwTV80v8PdO771o7JgVU0jVbAAK8sH0GS1YJITrWXhlBp+XxKN3+p
+ 8vTpCG7Z3CBUOIeO0dNOM0Q5Et7gkofltwAksKAn/Yu2ZCgKkTniSSowOAfBqz5GPvG4 pQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 357ps78h76-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Dec 2020 09:44:03 -0500
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B4Ecjqe072942;
+        Fri, 4 Dec 2020 09:44:02 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 357ps78h6h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Dec 2020 09:44:02 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B4EhaER026535;
+        Fri, 4 Dec 2020 14:44:01 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma02dal.us.ibm.com with ESMTP id 3569xuxc44-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Dec 2020 14:44:01 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B4Ei0Zp1376794
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 4 Dec 2020 14:44:00 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C8D32B2064;
+        Fri,  4 Dec 2020 14:44:00 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4E93AB205F;
+        Fri,  4 Dec 2020 14:44:00 +0000 (GMT)
+Received: from cpe-66-24-58-13.stny.res.rr.com (unknown [9.85.195.249])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  4 Dec 2020 14:44:00 +0000 (GMT)
+Subject: Re: [PATCH] s390/vfio-ap: Clean up vfio_ap resources when KVM pointer
+ invalidated
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, borntraeger@de.ibm.com, cohuck@redhat.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com, david@redhat.com
+References: <20201202234101.32169-1-akrowiak@linux.ibm.com>
+ <20201203185514.54060568.pasic@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <a8a90aed-97df-6f10-85c2-8e18dba8f085@linux.ibm.com>
+Date:   Fri, 4 Dec 2020 09:43:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB4965.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68c24a4c-f4b2-48b0-48d0-08d898047e3f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Dec 2020 03:27:13.7173
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LBtDKIFQLlcIfmYgchMeh3j1swFuVC2I2k3lAVErrnVdZNuXGLWxjm40YinIjc0xW+BMhn2UZQu1/ZOqziFIIoopg5hd2KMDq6GjWbWJqJA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR04MB7123
+In-Reply-To: <20201203185514.54060568.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-12-04_05:2020-12-04,2020-12-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 impostorscore=0
+ priorityscore=1501 clxscore=1015 phishscore=0 bulkscore=0 mlxlogscore=999
+ suspectscore=3 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012040084
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 12/3/20 08:26, Christoph Hellwig wrote:=0A=
-> The request_queue can trivially be derived from the bio.=0A=
->=0A=
-> Signed-off-by: Christoph Hellwig <hch@lst.de>=0A=
-> Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
-> Reviewed-by: Hannes Reinecke <hare@suse.de>=0A=
-> ---=0A=
-=0A=
-Looks good.=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
-=0A=
+
+
+On 12/3/20 12:55 PM, Halil Pasic wrote:
+> On Wed,  2 Dec 2020 18:41:01 -0500
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> The vfio_ap device driver registers a group notifier with VFIO when the
+>> file descriptor for a VFIO mediated device for a KVM guest is opened to
+>> receive notification that the KVM pointer is set (VFIO_GROUP_NOTIFY_SET_KVM
+>> event). When the KVM pointer is set, the vfio_ap driver stashes the pointer
+>> and calls the kvm_get_kvm() function to increment its reference counter.
+>> When the notifier is called to make notification that the KVM pointer has
+>> been set to NULL, the driver should clean up any resources associated with
+>> the KVM pointer and decrement its reference counter. The current
+>> implementation does not take care of this clean up.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> Do we need a Fixes tag? Do we need this backported? In my opinion
+> this is necessary since the interrupt patches.
+>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_ops.c | 21 +++++++++++++--------
+>>   1 file changed, 13 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+>> index e0bde8518745..eeb9c9130756 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -1083,6 +1083,17 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
+>>   	return NOTIFY_DONE;
+>>   }
+>>   
+>> +static void vfio_ap_mdev_put_kvm(struct ap_matrix_mdev *matrix_mdev)
+> I don't like the name. The function does more that put_kvm. Maybe
+> something  like _disconnect_kvm()?
+>
+>> +{
+>> +	if (matrix_mdev->kvm) {
+>> +		(matrix_mdev->kvm);
+>> +		matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+> Is a plain assignment to arch.crypto.pqap_hook apropriate, or do we need
+> to take more care?
+>
+> For instance kvm_arch_crypto_set_masks() takes kvm->lock before poking
+> kvm->arch.crypto.crycb.
+
+I do not think so. The CRYCB is used by KVM to provide crypto resources
+to the guest so it makes sense to protect it from changes to it while 
+passing
+the AP devices through to the guest. The hook is used only when an AQIC
+executed on the guest is intercepted by KVM. If the notifier
+is being invoked to notify vfio_ap that KVM has been set to NULL, this means
+the guest is gone in which case there will be no AP instructions to 
+intercept.
+
+>
+>> +		vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
+>> +		kvm_put_kvm(matrix_mdev->kvm);
+>> +		matrix_mdev->kvm = NULL;
+>> +	}
+>> +}
+>> +
+>>   static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>>   				       unsigned long action, void *data)
+>>   {
+>> @@ -1095,7 +1106,7 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>>   	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
+>>   
+>>   	if (!data) {
+>> -		matrix_mdev->kvm = NULL;
+>> +		vfio_ap_mdev_put_kvm(matrix_mdev);
+> The lock question was already raised.
+>
+> What are the exact circumstances under which this branch can be taken?
+
+Under normal circumstances (i.e., the mdev fd is closed before the guest
+terminates), this notifier is not be called because the release callback
+(invoked when the mdev fd is closed) unregisters the notifier. This fix is
+primarily to ensure that proper cleanup is done should the notifier get
+called; for example, if userspace does not close the mdev fd before
+shutting the guest down.
+
+>
+>>   		return NOTIFY_OK;
+>>   	}
+>>   
+>> @@ -1222,13 +1233,7 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
+>>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>>   
+>>   	mutex_lock(&matrix_dev->lock);
+>> -	if (matrix_mdev->kvm) {
+>> -		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
+>> -		matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+>> -		vfio_ap_mdev_reset_queues(mdev);
+>> -		kvm_put_kvm(matrix_mdev->kvm);
+>> -		matrix_mdev->kvm = NULL;
+>> -	}
+>> +	vfio_ap_mdev_put_kvm(matrix_mdev);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   
+>>   	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+
