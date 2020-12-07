@@ -2,204 +2,197 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 958382D0B7E
-	for <lists+linux-s390@lfdr.de>; Mon,  7 Dec 2020 09:10:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E82302D0C99
+	for <lists+linux-s390@lfdr.de>; Mon,  7 Dec 2020 10:06:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725783AbgLGIKf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 7 Dec 2020 03:10:35 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20978 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725905AbgLGIKf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Dec 2020 03:10:35 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B788tBo165705
-        for <linux-s390@vger.kernel.org>; Mon, 7 Dec 2020 03:09:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=uV8JfzHdR/TalMBMmI+bwcEvlPWlREVjFzlERtWn3s0=;
- b=OJn/zJFX4mChkHfByp3/6H5nWMH8PSCXZk+OaTD3yjhH2qnf4FBDumBeIK1C1R6pBXF9
- SziaMPKczLcnUBkVEdLdA7NsgPUZP9bNRtfA2ZX9oD03qFBztHUEbbNOaigDQqT3xwUi
- B8/y7SfEF9QgSwFlidn9P5mJMo47B8SHN5aj9o+AZ2R1XbVGzi+75d7iyS9ND7QeU3IA
- PEHklnog8ut25VvXywOozu+iK7V3PBIrEX0mAaEcei4AH+/aBAxxXf0wBab1ihV1dfKl
- dMDaHql8T/8GmuGtRUKFUztUkkNJfgSZkBoIPojIJz/MfOJpVsvF6Q/NA3FG1lv1dNR4 nA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 359futh232-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 07 Dec 2020 03:09:53 -0500
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B789crM168162
-        for <linux-s390@vger.kernel.org>; Mon, 7 Dec 2020 03:09:53 -0500
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 359futh22p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Dec 2020 03:09:53 -0500
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B786QmH009691;
-        Mon, 7 Dec 2020 08:09:51 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 3581fhj90a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Dec 2020 08:09:51 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B789m6E63832388
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Dec 2020 08:09:49 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D96A511C052;
-        Mon,  7 Dec 2020 08:09:48 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 73D7111C04C;
-        Mon,  7 Dec 2020 08:09:48 +0000 (GMT)
-Received: from oc6887364776.ibm.com (unknown [9.145.49.106])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Dec 2020 08:09:48 +0000 (GMT)
-Subject: Re: [RFC 1/1] s390/cio: Remove uevent-suppress from css driver
-To:     Vineeth Vijayan <vneethv@linux.vnet.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     oberpar@linux.ibm.com, linux-s390@vger.kernel.org,
-        farman@linux.ibm.com, fiuczy@linux.ibm.com,
-        Halil Pasic <pasic@linux.ibm.com>
-References: <20201124093407.23189-1-vneethv@linux.ibm.com>
- <20201124093407.23189-2-vneethv@linux.ibm.com>
- <20201124140220.77c65539.cohuck@redhat.com>
- <4be7e163-1118-d365-7d25-df39ba78181f@linux.vnet.ibm.com>
-From:   Vineeth Vijayan <vneethv@linux.ibm.com>
-Message-ID: <0b4e34b7-7a4e-71b0-8a64-ea909e64f416@linux.ibm.com>
-Date:   Mon, 7 Dec 2020 09:09:48 +0100
+        id S1726416AbgLGJEm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 7 Dec 2020 04:04:42 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52627 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726104AbgLGJEl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Dec 2020 04:04:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1607331797;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kTBrO+OTon/BmOp3fwNS5rOxfgsjT5TGx0AQt2Ixnks=;
+        b=eBrUsMmB9sJ5hlNtCBFryyg6e+EP5z4+7MEHegKZ1AAx9Xe4cPhq+tcHqvMr41X5bdgmfe
+        LxVr9oXhu6Hd78YjQxitVV/tQtHsfaM0OUiSzM0jv+8J5/HJNwGEkTpD1emjYbvGL0/LWf
+        KfUGkEM7Ui5kXPBoxVh15LP0HlpHRUk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-23-y1pivGv4M2KB9EywnAwuGA-1; Mon, 07 Dec 2020 04:03:15 -0500
+X-MC-Unique: y1pivGv4M2KB9EywnAwuGA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E7B081842140;
+        Mon,  7 Dec 2020 09:03:13 +0000 (UTC)
+Received: from [10.36.114.33] (ovpn-114-33.ams2.redhat.com [10.36.114.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0898160C4D;
+        Mon,  7 Dec 2020 09:03:11 +0000 (UTC)
+Subject: Re: [RFC V2 3/3] s390/mm: Define arch_get_mappable_range()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>
+References: <1606706992-26656-1-git-send-email-anshuman.khandual@arm.com>
+ <1606706992-26656-4-git-send-email-anshuman.khandual@arm.com>
+ <20201202203233.GB11274@osiris>
+ <24905c32-f6c1-97a0-000f-f822b9870ea5@arm.com> <20201203115133.GB9994@osiris>
+ <4d6c9ec4-f1be-46b9-5d67-5c53f5afedc5@redhat.com>
+ <62c60c9e-20d6-25bd-94d0-78bfed0f2476@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <02dfe6f5-efb6-c04d-c34a-a1e7393625cf@redhat.com>
+Date:   Mon, 7 Dec 2020 10:03:11 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <4be7e163-1118-d365-7d25-df39ba78181f@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <62c60c9e-20d6-25bd-94d0-78bfed0f2476@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-12-07_05:2020-12-04,2020-12-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 phishscore=0 adultscore=0 impostorscore=0
- spamscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012070046
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Cornelia,
-
-A bit more on this RFC.
-I think this is a required change in the CIO layer, especially because there
-are lot of validations before we call the probe, which makes sure that we
-are not generating the uevent on an invalid (without a ccw-device connected)
-subchannel and we dont expect a uevent-storm with the current code-base.
-So, in anyway, Removing the suppression in the uevent is a cleaner way 
-for the
-css driver.
-
-But, the more i look at this patch and discuss on this, i think this is 
-not complete.
-i.e as you know, the main reason for this RFC was the the below thread.
-https://marc.info/?l=linux-s390&m=158591045732735&w=2
-We are still not solving the problem that was mentioned in that RFD.
-
-There are couple of things which we needs to consider here. With this 
-patch, the uevents
-are generated before doing the initialization or before finding the 
-ccw-device
-connected. Which means, the udev-rules have to manage with a 
-non-initialized setup
-compared to the previous version (Version without this patch). As you 
-mentioned, the
-current user-space programs which works with this uevent, especially in 
-case of vfio-ccw
-will have a problem.
-Second point is, there is no guarantee on the current code that the 
-uevent generated
-will be used by udev-rules of vfio-ccw instead of io-subchannel driver. 
-This means, we
-need to do some more modifications on the udev-rules, which can then 
-decide which
-driver should bind with the subchannel. I think that is the only way to 
-avoid the
-problems we are facing with the driver_override.
-I would like to get your expert-opinion on the modifications that can be 
-done on the
-vfio-ccw udev-rules to make it sync with the current patch.
-
-Regards
-Vineeth
-
-
-On 11/25/20 10:40 AM, Vineeth Vijayan wrote:
-> Thank you for looking in to this.
->
-> On 11/24/20 2:02 PM, Cornelia Huck wrote:
->> On Tue, 24 Nov 2020 10:34:07 +0100
->> Vineeth Vijayan <vneethv@linux.ibm.com> wrote:
->>
->>> 'commit fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")'
->>> introduced the uevent suppression of subchannels. Even though there
->>> are reasons for wanting to delay the uevent, it also introduces
->>> problems. i.e On some platforms (qemu), where the udev-rule for the
->>> subchannel needs to do driver_override to bind the vfio-ccw driver
->>> instead of io_subchannel driver, but the suppressed uevent is
->>> generated only when the device is found on the subchannel. By the
->>> time it generates the uevent, it makes it difficult for the vfio-ccw
->>> udev-rules to work.
->>> This patch removes the uevent-suppress logic from the css driver.
->>> The ADD uevent will be generated when there is a valid subchannel
->>> and not after binding the valid device. The uevent generates while
->>> device_add() during css_sch_device_register() function.
+On 07.12.20 05:38, Anshuman Khandual wrote:
+> 
+> 
+> On 12/3/20 5:31 PM, David Hildenbrand wrote:
+>> On 03.12.20 12:51, Heiko Carstens wrote:
+>>> On Thu, Dec 03, 2020 at 06:03:00AM +0530, Anshuman Khandual wrote:
+>>>>>> diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
+>>>>>> index 5060956b8e7d..cc055a78f7b6 100644
+>>>>>> --- a/arch/s390/mm/extmem.c
+>>>>>> +++ b/arch/s390/mm/extmem.c
+>>>>>> @@ -337,6 +337,11 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
+>>>>>>  		goto out_free_resource;
+>>>>>>  	}
+>>>>>>  
+>>>>>> +	if (seg->end + 1 > VMEM_MAX_PHYS || seg->end + 1 < seg->start_addr) {
+>>>>>> +		rc = -ERANGE;
+>>>>>> +		goto out_resource;
+>>>>>> +	}
+>>>>>> +
+>>>>>>  	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
+>>>>>>  	if (rc)
+>>>>>>  		goto out_resource;
+>>>>>> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
+>>>>>> index b239f2ba93b0..06dddcc0ce06 100644
+>>>>>> --- a/arch/s390/mm/vmem.c
+>>>>>> +++ b/arch/s390/mm/vmem.c
+>>>>>> @@ -532,14 +532,19 @@ void vmem_remove_mapping(unsigned long start, unsigned long size)
+>>>>>>  	mutex_unlock(&vmem_mutex);
+>>>>>>  }
+>>>>>>  
+>>>>>> +struct range arch_get_mappable_range(void)
+>>>>>> +{
+>>>>>> +	struct range memhp_range;
+>>>>>> +
+>>>>>> +	memhp_range.start = 0;
+>>>>>> +	memhp_range.end =  VMEM_MAX_PHYS;
+>>>>>> +	return memhp_range;
+>>>>>> +}
+>>>>>> +
+>>>>>>  int vmem_add_mapping(unsigned long start, unsigned long size)
+>>>>>>  {
+>>>>>>  	int ret;
+>>>>>>  
+>>>>>> -	if (start + size > VMEM_MAX_PHYS ||
+>>>>>> -	    start + size < start)
+>>>>>> -		return -ERANGE;
+>>>>>> -
+>>>>>
+>>>>> I really fail to see how this could be considered an improvement for
+>>>>> s390. Especially I do not like that the (central) range check is now
+>>>>> moved to the caller (__segment_load). Which would mean potential
+>>>>> additional future callers would have to duplicate that code as well.
+>>>>
+>>>> The physical range check is being moved to the generic hotplug code
+>>>> via arch_get_mappable_range() instead, making the existing check in
+>>>> vmem_add_mapping() redundant. Dropping the check there necessitates
+>>>> adding back a similar check in __segment_load(). Otherwise there
+>>>> will be a loss of functionality in terms of range check.
+>>>>
+>>>> May be we could just keep this existing check in vmem_add_mapping()
+>>>> as well in order avoid this movement but then it would be redundant
+>>>> check in every hotplug path.
+>>>>
+>>>> So I guess the choice is to either have redundant range checks in
+>>>> all hotplug paths or future internal callers of vmem_add_mapping()
+>>>> take care of the range check.
 >>>
->>> Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
->>> ---
->>>   drivers/s390/cio/chsc_sch.c     |  5 -----
->>>   drivers/s390/cio/css.c          | 19 -------------------
->>>   drivers/s390/cio/device.c       | 18 ------------------
->>>   drivers/s390/cio/eadm_sch.c     |  5 -----
->>>   drivers/s390/cio/vfio_ccw_drv.c |  5 -----
->>>   5 files changed, 52 deletions(-)
->> While I really like that diffstat, I hope that this is actually safe 
->> for userspace programs processing uevents. Previously, we generated 
->> the ADD uevent only when all parts were setup and ready to use 
->> (including a child ccw_device, for example). Now, the ADD uevent is 
->> created earlier, before drivers have done their setup. Do existing 
->> udev rules still work as expected? (...)
->
-> I am still working on this. I have done minimal tests as of now. 
-> Mostly with the available LPARs/zVMs. And it looks ok. But, i know 
-> there are many fragile setups out there and the change in the "timing" 
-> (The uevents generated earlier) could be a potential issue on that. I 
-> will keep you updated on my findings.
->
-> About this RFC, i just wanted make sure that we are on same page with 
-> regards to the RFD that you shared.
->>> @@ -1055,16 +1047,6 @@ static int io_subchannel_probe(struct 
->>> subchannel *sch)
->>>                         "attributes for subchannel "
->>>                         "0.%x.%04x (rc=%d)\n",
->>>                         sch->schid.ssid, sch->schid.sch_no, rc);
->>> -        /*
->>> -         * The console subchannel already has an associated 
->>> ccw_device.
->>> -         * Throw the delayed uevent for the subchannel, register
->>> -         * the ccw_device and exit.
->> I would keep the comment that we already have a ccw_device here. I.e.
+>>> The problem I have with this current approach from an architecture
+>>> perspective: we end up having two completely different methods which
+>>> are doing the same and must be kept in sync. This might be obvious
+>>> looking at this patch, but I'm sure this will go out-of-sync (aka
+>>> broken) sooner or later.
 >>
->> /*
->>   * The console subchannel already has an associated ccw_device.
->>   * Register it and exit.
->>   */
+>> Exactly, there should be one function only that was the whole idea of
+>> arch_get_mappable_range().
 >>
->>> -         */
->>> -        if (dev_get_uevent_suppress(&sch->dev)) {
->>> -            /* should always be the case for the console */
->>> -            dev_set_uevent_suppress(&sch->dev, 0);
->>> -            kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
->>> -        }
->>>           cdev = sch_get_cdev(sch);
->>>           rc = ccw_device_add(cdev);
->>>           if (rc) {
->> (...)
+>>>
+>>> Therefore I would really like to see a single method to do the range
+>>> checking. Maybe you could add a callback into architecture code, so
+>>> that such an architecture specific function could also be used
+>>> elsewhere. Dunno.
+>>>
 >>
+>> I think we can just switch to using "memhp_range_allowed()" here then
+>> after implementing arch_get_mappable_range().
+>>
+>> Doesn't hurt to double check in vmem_add_mapping() - especially to keep
+>> extmem working without changes. At least for callers of memory hotplug
+>> it's then clear which values actually won't fail deep down in arch code.
+> 
+> But there is a small problem here. memhp_range_allowed() is now defined
+> and available with CONFIG_MEMORY_HOTPLUG where as vmem_add_mapping() and
+> __segment_load() are generally available without any config dependency.
+> So if CONFIG_MEMORY_HOTPLUG is not enabled there will be a build failure
+> in vmem_add_mapping() for memhp_range_allowed() symbol.
+> 
+> We could just move VM_BUG_ON(!memhp_range_allowed(start, size, 1)) check
+> from vmem_add_mapping() to arch_add_memory() like on arm64 platform. But
+> then __segment_load() would need that additional new check to compensate
+> as proposed earlier.
+> 
+> Also leaving vmem_add_mapping() and __segment_load() unchanged will cause
+> the address range check to be called three times on the hotplug path i.e
+> 
+> 1. register_memory_resource()
+> 2. arch_add_memory()
+> 3. vmem_add_mapping()
+> 
+> Moving memhp_range_allowed() check inside arch_add_memory() seems better
+> and consistent with arm64. Also in the future, any platform which choose
+> to override arch_get_mappable() will have this additional VM_BUG_ON() in
+> their arch_add_memory().
+
+Yeah, it might not make sense to add these checks all over the place.
+The important part is that
+
+1. There is a check somewhere (and if it's deep down in arch code)
+2. There is an obvious way for callers to find out what valid values are.
+
+
+I guess it would be good enough to
+
+a) Factor out getting arch ranges into arch_get_mappable_range()
+b) Provide memhp_get_pluggable_range()
+
+Both changes only make sense with an in-tree user. I'm planning on using
+this functionality in virtio-mem code. I can pickup your patches, drop
+the superfluous checks, and use it from virtio-mem code. Makese sense
+(BTW, looks like we'll see aarch64 support for virtio-mem soon)?
+
+-- 
+Thanks,
+
+David / dhildenb
+
