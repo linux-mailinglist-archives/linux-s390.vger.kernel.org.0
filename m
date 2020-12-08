@@ -2,167 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18C112D2E35
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Dec 2020 16:28:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C945A2D3129
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Dec 2020 18:33:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbgLHP2K (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Dec 2020 10:28:10 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49230 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730004AbgLHP2J (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Dec 2020 10:28:09 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B8Ewv9r066396;
-        Tue, 8 Dec 2020 10:27:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=W85YL1dcXF/cQQmTjiYg+YSjrvyToTPW+4OEJYW2+9o=;
- b=F4V5NpO/CqmYNlXWS9VKX3Xpyi0G6EfTCSFiyG1vjjUoB8Ye5gUtxXIM9HriAGf0wDKw
- RQxhp9f+gMcs9AVnJ5iESE1VncHImvYPuEW4E/E4o/7E/ue9/8usggc8urEAvf2nnQdv
- H/ARpNjWlmgG9rrDl2f0D9MlHFR9fSTCY4Wuk1LDVVQZHwhHLQ+WYLv7otTNg0BF5SSr
- CJCiSxB4M7hmGWaaij8Q2BtjZAVpYOVRH1odLD8EueVkl7a7Qure0l09e9WWcLkDFzgH
- bzA6oDwQcrSfG8O+kS+7rhpFLKHn6ZrSxuDhJZeNlnAIHMsVpl6GVV7tSK1O0wMMILrv Wg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 35aany3cjb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Dec 2020 10:27:17 -0500
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B8ExBQk068063;
-        Tue, 8 Dec 2020 10:27:17 -0500
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 35aany3chb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Dec 2020 10:27:17 -0500
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B8FGSRh031607;
-        Tue, 8 Dec 2020 15:27:14 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06ams.nl.ibm.com with ESMTP id 3581fhkps2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Dec 2020 15:27:14 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B8FRCe230474644
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Dec 2020 15:27:12 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A1C51AE045;
-        Tue,  8 Dec 2020 15:27:12 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4CA6DAE053;
-        Tue,  8 Dec 2020 15:27:11 +0000 (GMT)
-Received: from osiris (unknown [9.171.80.71])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  8 Dec 2020 15:27:11 +0000 (GMT)
-Date:   Tue, 8 Dec 2020 16:27:09 +0100
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
-        catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/3] s390/mm: Define arch_get_mappable_range()
-Message-ID: <20201208152709.GA26979@osiris>
-References: <1607400978-31595-1-git-send-email-anshuman.khandual@arm.com>
- <1607400978-31595-4-git-send-email-anshuman.khandual@arm.com>
+        id S1730672AbgLHRcn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Dec 2020 12:32:43 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21022 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730671AbgLHRcn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Dec 2020 12:32:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1607448676;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dwqJR2yJGvDj0C6HcDNS3VH5GquEkFKIGcDXRG8j3AI=;
+        b=PWUaFtf6NTlp722stNsiuQBKVC64QNMVMlrO3ofjcf86cSN5z23uFj2T5X1k01pP4Nj4W+
+        5N/7BieQNL9Vz7QXG50sS/MRUuxTCcnme/v8/Cct9zdUZXpBjJWUB/HoaGgbs9D73b/7Ma
+        O+7CFovkMRmjTkYK6+qFdTGdpFhh6wU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-135-qkdkRzGOPqOT7yHqeYxkWQ-1; Tue, 08 Dec 2020 12:31:08 -0500
+X-MC-Unique: qkdkRzGOPqOT7yHqeYxkWQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 10603107ACF6;
+        Tue,  8 Dec 2020 17:30:58 +0000 (UTC)
+Received: from gondolin (ovpn-113-5.ams2.redhat.com [10.36.113.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 830155D9DD;
+        Tue,  8 Dec 2020 17:30:56 +0000 (UTC)
+Date:   Tue, 8 Dec 2020 18:30:54 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Vineeth Vijayan <vneethv@linux.ibm.com>
+Cc:     Vineeth Vijayan <vneethv@linux.vnet.ibm.com>,
+        oberpar@linux.ibm.com, linux-s390@vger.kernel.org,
+        farman@linux.ibm.com, fiuczy@linux.ibm.com,
+        Halil Pasic <pasic@linux.ibm.com>
+Subject: Re: [RFC 1/1] s390/cio: Remove uevent-suppress from css driver
+Message-ID: <20201208183054.44f4fc2d.cohuck@redhat.com>
+In-Reply-To: <0b4e34b7-7a4e-71b0-8a64-ea909e64f416@linux.ibm.com>
+References: <20201124093407.23189-1-vneethv@linux.ibm.com>
+        <20201124093407.23189-2-vneethv@linux.ibm.com>
+        <20201124140220.77c65539.cohuck@redhat.com>
+        <4be7e163-1118-d365-7d25-df39ba78181f@linux.vnet.ibm.com>
+        <0b4e34b7-7a4e-71b0-8a64-ea909e64f416@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1607400978-31595-4-git-send-email-anshuman.khandual@arm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-08_09:2020-12-08,2020-12-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=5 phishscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- priorityscore=1501 clxscore=1015 bulkscore=0 impostorscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012080086
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Dec 08, 2020 at 09:46:18AM +0530, Anshuman Khandual wrote:
-> This overrides arch_get_mappabble_range() on s390 platform which will be
-> used with recently added generic framework. It drops a redundant similar
-> check in vmem_add_mapping() while compensating __segment_load() with a new
-> address range check to preserve the existing functionality. It also adds a
-> VM_BUG_ON() check that would ensure that memhp_range_allowed() has already
-> been called on the hotplug path.
-> 
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  arch/s390/mm/extmem.c |  5 +++++
->  arch/s390/mm/init.c   | 10 ++++++++++
->  arch/s390/mm/vmem.c   |  4 ----
->  3 files changed, 15 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
-> index 5060956b8e7d..cc055a78f7b6 100644
-> --- a/arch/s390/mm/extmem.c
-> +++ b/arch/s390/mm/extmem.c
-> @@ -337,6 +337,11 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
->  		goto out_free_resource;
->  	}
->  
-> +	if (seg->end + 1 > VMEM_MAX_PHYS || seg->end + 1 < seg->start_addr) {
-> +		rc = -ERANGE;
-> +		goto out_resource;
-> +	}
-> +
->  	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
->  	if (rc)
->  		goto out_resource;
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index 77767850d0d0..64937baabf93 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -278,6 +278,15 @@ device_initcall(s390_cma_mem_init);
->  
->  #endif /* CONFIG_CMA */
->  
-> +struct range arch_get_mappable_range(void)
-> +{
-> +	struct range memhp_range;
-> +
-> +	memhp_range.start = 0;
-> +	memhp_range.end =  VMEM_MAX_PHYS;
-> +	return memhp_range;
-> +}
-> +
->  int arch_add_memory(int nid, u64 start, u64 size,
->  		    struct mhp_params *params)
->  {
-> @@ -291,6 +300,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
->  	if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
->  		return -EINVAL;
->  
-> +	VM_BUG_ON(!memhp_range_allowed(start, size, 1));
->  	rc = vmem_add_mapping(start, size);
->  	if (rc)
->  		return rc;
-> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
-> index b239f2ba93b0..749eab43aa93 100644
-> --- a/arch/s390/mm/vmem.c
-> +++ b/arch/s390/mm/vmem.c
-> @@ -536,10 +536,6 @@ int vmem_add_mapping(unsigned long start, unsigned long size)
->  {
->  	int ret;
->  
-> -	if (start + size > VMEM_MAX_PHYS ||
-> -	    start + size < start)
-> -		return -ERANGE;
-> -
+On Mon, 7 Dec 2020 09:09:48 +0100
+Vineeth Vijayan <vneethv@linux.ibm.com> wrote:
 
-Is there a reason why you added the memhp_range_allowed() check call
-to arch_add_memory() instead of vmem_add_mapping()? If you would do
-that, then the extra code in __segment_load() wouldn't be
-required.
-Even though the error message from memhp_range_allowed() might be
-highly confusing.
+> Hi Cornelia,
+> 
+> A bit more on this RFC.
+> I think this is a required change in the CIO layer, especially because there
+> are lot of validations before we call the probe, which makes sure that we
+> are not generating the uevent on an invalid (without a ccw-device connected)
+> subchannel and we dont expect a uevent-storm with the current code-base.
+> So, in anyway, Removing the suppression in the uevent is a cleaner way 
+> for the
+> css driver.
+
+Agreed. A device being found not operational during actual ccw device
+setup but not earlier is probably an edge case.
+
+> 
+> But, the more i look at this patch and discuss on this, i think this is 
+> not complete.
+> i.e as you know, the main reason for this RFC was the the below thread.
+> https://marc.info/?l=linux-s390&m=158591045732735&w=2
+> We are still not solving the problem that was mentioned in that RFD.
+> 
+> There are couple of things which we needs to consider here. With this 
+> patch, the uevents
+> are generated before doing the initialization or before finding the 
+> ccw-device
+> connected. Which means, the udev-rules have to manage with a 
+> non-initialized setup
+> compared to the previous version (Version without this patch). As you 
+> mentioned, the
+> current user-space programs which works with this uevent, especially in 
+> case of vfio-ccw
+> will have a problem.
+
+IIUC, we'll get the "normal" ADD uevent when the subchannel device is
+registered (i.e. made visible). For the vfio-ccw case, we want the
+driverctl rule to match in this case, so that the driver override can
+be set before the subchannel device ends up being bound to the I/O
+subchannel driver. So I think that removing the suppression is giving
+us exactly what we want? Modulo any errors in the initialization
+sequence we might currently have in the css bus code, of course.
+
+I'm not sure how many rules actually care about events for the
+subchannel device; the ccw device seems like the more helpful device to
+watch out for.
+
+> Second point is, there is no guarantee on the current code that the 
+> uevent generated
+> will be used by udev-rules of vfio-ccw instead of io-subchannel driver. 
+> This means, we
+> need to do some more modifications on the udev-rules, which can then 
+> decide which
+> driver should bind with the subchannel. I think that is the only way to 
+> avoid the
+> problems we are facing with the driver_override.
+
+Looking on my LPAR, it seems the driverctl rule is the second in
+priority; i.e., it will be called before nearly everything else. This
+should suffice, I hope?
+
+> I would like to get your expert-opinion on the modifications that can be 
+> done on the
+> vfio-ccw udev-rules to make it sync with the current patch.
+
+I think the vfio-ccw specific rules are those we need to worry about
+the least. Again, from a quick browse on my LPAR, the existing rules
+seem pretty sane AFAICS. I cannot speak for all the different distros,
+though :)
+
+One thing that probably should be changed together with the removal of
+the uevent suppression is the de-registration of the subchannel device
+by the ccw bus. Likely an edge case, but might cause confusion when a
+subchannel is immediately gone again.
+
