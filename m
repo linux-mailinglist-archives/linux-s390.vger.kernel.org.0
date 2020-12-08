@@ -2,136 +2,141 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92C6E2D2A37
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Dec 2020 13:03:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53ECD2D2BA3
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Dec 2020 14:09:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgLHMC6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Dec 2020 07:02:58 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:42278 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbgLHMC5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Dec 2020 07:02:57 -0500
-Received: by mail-io1-f69.google.com with SMTP id m9so14240127ioa.9
-        for <linux-s390@vger.kernel.org>; Tue, 08 Dec 2020 04:02:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ptLqDQ6cimNz4gFNOQpJaAWoh4l9vnK6+rwqXMdFNUM=;
-        b=EHaok9pzGC5tZm9KOv8uk1ZVH/jAc9lpSc3CfhssKCA/4Wkp+LHTQPfBdDyBPfAsEC
-         eXxEb/vlDTe8DQzv4P9F55pP4MRR08k7/lxdCeq8L9E01XfKRiBhc7G1ZB0/VfECSp+G
-         7oryqAW0sJ8bwTt8r8EWyk/t7fhN3tZ4DZVfeluOMwzTmTVZflUO4AWyeFIHUm1bq+t4
-         Ak4SNX/l4OfVkTZlHVZXw0HOws6h/JYHvYvVtsMKHPI0M1nvVygRsiTTSdq1rn6l26SO
-         g9FvSwYxyphvsh8fd8sesgN3PtyVimCM/jvBbN4bk7qWX+1UM/508KdzJGkSAsQww5Ur
-         1OIA==
-X-Gm-Message-State: AOAM531mlEVq0uyIt7+f+Np4sCfwRYuMQim5azCK4+pkCVJSOZ5P+a0i
-        ng9tG8fOTIBUUm17OKvOw2sOoZYawTIMOrl61KV9F23E9une
-X-Google-Smtp-Source: ABdhPJxGsYHsqnMHtduKr+6+ilPgQEtkjeZWRKy+Rznj6g2RNN7KdCMNnbGX8YMsjaOulGn4sGFV0IkOzspizk95l7yOWztrWiHO
-MIME-Version: 1.0
-X-Received: by 2002:a05:6602:8d:: with SMTP id h13mr24559903iob.163.1607428931082;
- Tue, 08 Dec 2020 04:02:11 -0800 (PST)
-Date:   Tue, 08 Dec 2020 04:02:11 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000705ff605b5f2b656@google.com>
-Subject: BUG: unable to handle kernel paging request in smc_nl_handle_smcr_dev
-From:   syzbot <syzbot+600fef7c414ee7e2d71b@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kgraul@linux.ibm.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+        id S1725881AbgLHNJq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Dec 2020 08:09:46 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48694 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726104AbgLHNJq (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Dec 2020 08:09:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1607432899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EHKuHbhmgYJQ9JfRsXEOl5wxu9DokPSdVH97Cc8P2Fw=;
+        b=aLZcxY+HL2uCKs5cogbp52RpcfILDzQYyVnX4NRDuwAzYGaQPEtEynd7ikSy+lrthiuxwM
+        mJMfsxNiNsYkY0wHyS6Udh2L4Jj+UxacFc0hPoE4HFF+Ka//btzyodLVBLqIVfTpS2aVXo
+        kgit5l72pFOHLjzhXpmCnzdl3pIbp6A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-259-wb2SdLBENymOO0KHhm_coQ-1; Tue, 08 Dec 2020 08:08:17 -0500
+X-MC-Unique: wb2SdLBENymOO0KHhm_coQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 31A4E1934111;
+        Tue,  8 Dec 2020 13:08:15 +0000 (UTC)
+Received: from ovpn-114-102.rdu2.redhat.com (ovpn-114-102.rdu2.redhat.com [10.10.114.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 93EC85D6AB;
+        Tue,  8 Dec 2020 13:08:10 +0000 (UTC)
+Message-ID: <35ccbf886b1e02323eff96df480c6d5f1123023e.camel@redhat.com>
+Subject: Re: store a pointer to the block_device in struct bio (again)
+From:   Qian Cai <qcai@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Coly Li <colyli@suse.de>, Song Liu <song@kernel.org>,
+        dm-devel@redhat.com, linux-bcache@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-block@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Date:   Tue, 08 Dec 2020 08:08:10 -0500
+In-Reply-To: <20201208110403.GA22179@lst.de>
+References: <20201201165424.2030647-1-hch@lst.de>
+         <920899710c9e8dcce16e561c6d832e4e9c03cd73.camel@redhat.com>
+         <20201208110403.GA22179@lst.de>
 Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello,
+On Tue, 2020-12-08 at 12:04 +0100, Christoph Hellwig wrote:
+> can you send me details of your device mapper setup, e.g. which targets
+> are used, are they used on top of whole device or partitions.  Do you
+> use partitions on top of the dm devices?  Are any other stacking devices
+> involved?
 
-syzbot found the following issue on:
+It is a standard RHEL8 installation using "autopart", so I don't think it uses
+any particular targets. It is just a plain LVM backed by ahci (sda2 and sdb1.
+Some other affected systems use smartpqi/NVM). The kernel has only dm-mirror
+enabled but I don't think it uses it anyway.
 
-HEAD commit:    b1f7b098 Merge branch 's390-qeth-next'
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=164d246b500000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2ac2dabe250b3a58
-dashboard link: https://syzkaller.appspot.com/bug?extid=600fef7c414ee7e2d71b
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+# grep -i _DM_ .config | grep -v ^#
+CONFIG_BLK_DEV_DM_BUILTIN=y
+CONFIG_DM_MIRROR=m
+CONFIG_DM_UEVENT=y
 
-Unfortunately, I don't have any reproducer for this issue yet.
+# lvdisplay
+  --- Logical volume ---
+  LV Path                /dev/rhel_ibm-p9wr-10/home
+  LV Name                home
+  VG Name                rhel_ibm-p9wr-10
+  LV UUID                ETS2PI-yedc-7AJ6-NUP2-uAYD-6api-bp9nqv
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                <3.57 TiB
+  Current LE             934662
+  Segments               2
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     8192
+  Block device           254:2
+   
+  --- Logical volume ---
+  LV Path                /dev/rhel_ibm-p9wr-10/root
+  LV Name                root
+  VG Name                rhel_ibm-p9wr-10
+  LV UUID                ozakb8-2DWE-YBI9-4nnc-gwk8-mMuf-s3EPsB
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                70.00 GiB
+  Current LE             17920
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     8192
+  Block device           254:0
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+600fef7c414ee7e2d71b@syzkaller.appspotmail.com
+# pvdisplay 
+  --- Physical volume ---
+  PV Name               /dev/sda2
+  VG Name               rhel_ibm-p9wr-10
+  PV Size               <1.82 TiB / not usable 4.00 MiB
+  Allocatable           yes (but full)
+  PE Size               4.00 MiB
+  Total PE              476675
+  Free PE               0
+  Allocated PE          476675
+  PV UUID               0Tv2Az-vx7S-HLPd-66Ff-tH6H-dte1-tjSZ7i
+   
+  --- Physical volume ---
+  PV Name               /dev/sdb1
+  VG Name               rhel_ibm-p9wr-10
+  PV Size               <1.82 TiB / not usable 4.00 MiB
+  Allocatable           yes (but full)
+  PE Size               4.00 MiB
+  Total PE              476931
+  Free PE               0
+  Allocated PE          476931
+  PV UUID               4LfZJN-NxbJ-39OC-VBKP-jv5P-hciK-BOdiML
 
-BUG: unable to handle page fault for address: ffffffffffffff84
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD b08f067 P4D b08f067 PUD b091067 PMD 0 
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 21334 Comm: syz-executor.1 Not tainted 5.10.0-rc6-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:smc_set_pci_values net/smc/smc_core.h:396 [inline]
-RIP: 0010:smc_nl_handle_smcr_dev.isra.0+0x4bd/0x11b0 net/smc/smc_ib.c:422
-Code: 00 00 00 fc ff df 48 8d 7b 84 48 89 fa 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 59 0c 00 00 <0f> b7 43 84 48 8d 7b 86 48 89 fa 48 c1 ea 03 66 89 84 24 ee 00 00
-RSP: 0018:ffffc900018b7228 EFLAGS: 00010246
-RAX: 0000000000000005 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffffffff84
-RBP: ffffffff8ccc6120 R08: 0000000000000001 R09: ffffc900018b7310
-R10: fffff52000316e65 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff88802f52d540 R14: dffffc0000000000 R15: ffff888062412014
-FS:  00007f9ce0405700(0000) GS:ffff8880b9e00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffff84 CR3: 0000000013c46000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- smc_nl_prep_smcr_dev net/smc/smc_ib.c:469 [inline]
- smcr_nl_get_device+0xdf/0x1f0 net/smc/smc_ib.c:481
- genl_lock_dumpit+0x60/0x90 net/netlink/genetlink.c:623
- netlink_dump+0x4b9/0xb70 net/netlink/af_netlink.c:2268
- __netlink_dump_start+0x642/0x900 net/netlink/af_netlink.c:2373
- genl_family_rcv_msg_dumpit+0x2af/0x310 net/netlink/genetlink.c:686
- genl_family_rcv_msg net/netlink/genetlink.c:780 [inline]
- genl_rcv_msg+0x434/0x580 net/netlink/genetlink.c:800
- netlink_rcv_skb+0x153/0x420 net/netlink/af_netlink.c:2494
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:811
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:671
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2331
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2385
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2418
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45e0f9
-Code: 0d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b3 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f9ce0404c68 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045e0f9
-RDX: 0000000000000000 RSI: 0000000020000040 RDI: 0000000000000003
-RBP: 000000000119bfc0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000119bf8c
-R13: 00007ffda3a6b65f R14: 00007f9ce04059c0 R15: 000000000119bf8c
-Modules linked in:
-CR2: ffffffffffffff84
----[ end trace 7323b30ca37a03b9 ]---
-RIP: 0010:smc_set_pci_values net/smc/smc_core.h:396 [inline]
-RIP: 0010:smc_nl_handle_smcr_dev.isra.0+0x4bd/0x11b0 net/smc/smc_ib.c:422
-Code: 00 00 00 fc ff df 48 8d 7b 84 48 89 fa 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 59 0c 00 00 <0f> b7 43 84 48 8d 7b 86 48 89 fa 48 c1 ea 03 66 89 84 24 ee 00 00
-RSP: 0018:ffffc900018b7228 EFLAGS: 00010246
-RAX: 0000000000000005 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffffffff84
-RBP: ffffffff8ccc6120 R08: 0000000000000001 R09: ffffc900018b7310
-R10: fffff52000316e65 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff88802f52d540 R14: dffffc0000000000 R15: ffff888062412014
-FS:  00007f9ce0405700(0000) GS:ffff8880b9e00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffff84 CR3: 0000000013c46000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+# lsblk 
+NAME                        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda                           8:0    1  1.8T  0 disk 
+├─sda1                        8:1    1    1G  0 part /boot
+└─sda2                        8:2    1  1.8T  0 part 
+  ├─rhel_ibm--p9wr--10-root 254:0    0   70G  0 lvm  /
+  └─rhel_ibm--p9wr--10-home 254:2    0  3.6T  0 lvm  /home
+sdb                           8:16   1  1.8T  0 disk 
+└─sdb1                        8:17   1  1.8T  0 part 
+  └─rhel_ibm--p9wr--10-home 254:2    0  3.6T  0 lvm  /home
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
