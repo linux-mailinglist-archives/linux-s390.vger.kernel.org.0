@@ -2,221 +2,136 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 666A92D2983
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Dec 2020 12:06:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92C6E2D2A37
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Dec 2020 13:03:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgLHLEt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Dec 2020 06:04:49 -0500
-Received: from verein.lst.de ([213.95.11.211]:45802 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727815AbgLHLEs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 8 Dec 2020 06:04:48 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 503686736F; Tue,  8 Dec 2020 12:04:04 +0100 (CET)
-Date:   Tue, 8 Dec 2020 12:04:03 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Qian Cai <qcai@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Tejun Heo <tj@kernel.org>, Coly Li <colyli@suse.de>,
-        Song Liu <song@kernel.org>, dm-devel@redhat.com,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: store a pointer to the block_device in struct bio (again)
-Message-ID: <20201208110403.GA22179@lst.de>
-References: <20201201165424.2030647-1-hch@lst.de> <920899710c9e8dcce16e561c6d832e4e9c03cd73.camel@redhat.com>
+        id S1729307AbgLHMC6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Dec 2020 07:02:58 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:42278 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbgLHMC5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Dec 2020 07:02:57 -0500
+Received: by mail-io1-f69.google.com with SMTP id m9so14240127ioa.9
+        for <linux-s390@vger.kernel.org>; Tue, 08 Dec 2020 04:02:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ptLqDQ6cimNz4gFNOQpJaAWoh4l9vnK6+rwqXMdFNUM=;
+        b=EHaok9pzGC5tZm9KOv8uk1ZVH/jAc9lpSc3CfhssKCA/4Wkp+LHTQPfBdDyBPfAsEC
+         eXxEb/vlDTe8DQzv4P9F55pP4MRR08k7/lxdCeq8L9E01XfKRiBhc7G1ZB0/VfECSp+G
+         7oryqAW0sJ8bwTt8r8EWyk/t7fhN3tZ4DZVfeluOMwzTmTVZflUO4AWyeFIHUm1bq+t4
+         Ak4SNX/l4OfVkTZlHVZXw0HOws6h/JYHvYvVtsMKHPI0M1nvVygRsiTTSdq1rn6l26SO
+         g9FvSwYxyphvsh8fd8sesgN3PtyVimCM/jvBbN4bk7qWX+1UM/508KdzJGkSAsQww5Ur
+         1OIA==
+X-Gm-Message-State: AOAM531mlEVq0uyIt7+f+Np4sCfwRYuMQim5azCK4+pkCVJSOZ5P+a0i
+        ng9tG8fOTIBUUm17OKvOw2sOoZYawTIMOrl61KV9F23E9une
+X-Google-Smtp-Source: ABdhPJxGsYHsqnMHtduKr+6+ilPgQEtkjeZWRKy+Rznj6g2RNN7KdCMNnbGX8YMsjaOulGn4sGFV0IkOzspizk95l7yOWztrWiHO
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <920899710c9e8dcce16e561c6d832e4e9c03cd73.camel@redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Received: by 2002:a05:6602:8d:: with SMTP id h13mr24559903iob.163.1607428931082;
+ Tue, 08 Dec 2020 04:02:11 -0800 (PST)
+Date:   Tue, 08 Dec 2020 04:02:11 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000705ff605b5f2b656@google.com>
+Subject: BUG: unable to handle kernel paging request in smc_nl_handle_smcr_dev
+From:   syzbot <syzbot+600fef7c414ee7e2d71b@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kgraul@linux.ibm.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Qian,
+Hello,
 
-can you send me details of your device mapper setup, e.g. which targets
-are used, are they used on top of whole device or partitions.  Do you
-use partitions on top of the dm devices?  Are any other stacking devices
-involved?
+syzbot found the following issue on:
 
-On Mon, Dec 07, 2020 at 01:56:26PM -0500, Qian Cai wrote:
-> On Tue, 2020-12-01 at 17:54 +0100, Christoph Hellwig wrote:
-> > Hi Jens,
-> > 
-> > this series switches back from storing the gendisk + partno to storing
-> > a block_device pointer in struct bio.  The reason is two fold:  for one
-> > the new struct block_device actually is always available, removing the
-> > need to avoid originally.  Second the merge struct block_device is much
-> > more useful than the old one, as storing it avoids the need for looking
-> > up what used to be hd_struct during partition remapping and I/O
-> > accounting.
-> > 
-> > Note that this series depends on the posted but not merged
-> > "block tracepoint cleanups" series.
-> 
-> Reverting this patchset on the top of today's linux-next fixed data corruptions
-> everywhere, i.e.,
-> 
-> $ git revert --no-edit a54895fa057c..4498a8536c81
-> (with a trivial conflict resolution with the commit "block: move
-> blk_rq_bio_prep() to linux/blk-mq.h")
-> 
-> .config (if ever matters and also happened on POWER9 NV):
-> https://cailca.coding.net/public/linux/mm/git/files/master/x86.config
-> 
-> == XFS failed to mount ==
-> [   55.116279][ T1507] XFS (dm-0): Mounting V5 Filesystem
-> [   55.144671][ T1507] XFS (dm-0): Corruption warning: Metadata has LSN (3:70242) ahead of current LSN (3:66504). Please unmount and run xfs_repair (>= v4.3) to resolve.
-> [   55.159965][ T1507] XFS (dm-0): log mount/recovery failed: error -22
-> [   55.288632][ T1507] XFS (dm-0): log mount failed
-> 
-> In this case, it is not possible to mount the XFS rootfs anymore, and it can be
-> repaired with "-L". However, we could lost vital files. Then, I have to re-
-> install the system.
-> 
-> systemd[1]: System cannot boot: Missing /etc/machine-id and /etc is mounted read-only.
-> systemd[1]: Booting up is supported only when:
-> systemd[1]: 1) /etc/machine-id exists and is populated.
-> systemd[1]: 2) /etc/machine-id exists and is empty.
-> systemd[1]: 3) /etc/machine-id is missing and /etc is writable.
-> lvm2-activation-generator: lvmconfig failed
-> systemd[1]: Failed to populate /etc with preset unit settings, ignoring: No such file or directory
-> 
-> == systemd core dump ==
-> [   46.124485][ T1028] Process 1028(systemd-coredum) has RLIMIT_CORE set to 1
-> [   46.131434][ T1028] Aborting core
-> [   46.143366][ T1027] systemd-cgroups (1027) used greatest stack depth: 23512 bytes left
-> [   46.384430][    T1] printk: systemd: 20 output lines suppressed due to ratelimiting
-> [   46.447620][    T1] traps: systemd[1] trap invalid opcode ip:7f44c485fee6 sp:7ffee96e6960 error:0 in libm-2.28.so[7f44c481a000+181000]
-> [   46.492643][ T1029] traps: systemd-coredum[1029] trap invalid opcode ip:7f2f60471ee6 sp:7ffd58f76e00 error:0 in libm-2.28.so[7f2f6042c000+181000]
-> [   46.505968][ T1029] Process 1029(systemd-coredum) has RLIMIT_CORE set to 1
-> [   46.512900][ T1029] Aborting core
-> [   46.520024][    T1] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000084
-> [   46.528437][    T1] CPU: 32 PID: 1 Comm: systemd Not tainted 5.10.0-rc6-next-20201207 #1
-> [   46.536581][    T1] Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-> [   46.545860][    T1] Call Trace:
-> [   46.549038][    T1]  dump_stack+0x99/0xcb
-> [   46.553082][    T1]  panic+0x20c/0x48b
-> [   46.556860][    T1]  ? print_oops_end_marker.cold.10+0x10/0x10
-> [   46.562739][    T1]  ? do_signal_stop+0x690/0x690
-> [   46.567478][    T1]  ? do_exit+0x226/0x2410
-> [   46.571690][    T1]  do_exit.cold.38+0x1de/0x1e5
-> [   46.576346][    T1]  ? rcu_read_lock_sched_held+0xa1/0xd0
-> [   46.581782][    T1]  ? rcu_read_lock_bh_held+0xb0/0xb0
-> [   46.586955][    T1]  ? mm_update_next_owner+0x750/0x750
-> [   46.592215][    T1]  ? get_signal+0x80f/0x1f90
-> [   46.596688][    T1]  do_group_exit+0xf0/0x2e0
-> [   46.601076][    T1]  get_signal+0x35a/0x1f90
-> [   46.605380][    T1]  ? finish_task_switch+0x1bb/0xa80
-> [   46.610468][    T1]  arch_do_signal_or_restart+0x1d8/0x690
-> [   46.615993][    T1]  ? __setup_rt_frame.isra.15+0x1830/0x1830
-> [   46.621781][    T1]  ? __sched_text_start+0x8/0x8
-> [   46.626521][    T1]  ? asm_exc_invalid_op+0xa/0x20
-> [   46.631347][    T1]  exit_to_user_mode_prepare+0xde/0x170
-> [   46.636782][    T1]  irqentry_exit_to_user_mode+0x5/0x30
-> [   46.642129][    T1]  asm_exc_invalid_op+0x12/0x20
-> [   46.646868][    T1] RIP: 0033:0x7f44c485fee6
-> [   46.651171][    T1] Code: 6d 6e 6f 70 71 72 73 74 75 76 77 78 79 7a 0a 00 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a <61> 62 63 64 65 66 67 68 6a 69 6b 6c 6d 6e 6f 70 71 72 73 74 75 76
-> [   46.670757][    T1] RSP: 002b:00007ffee96e6960 EFLAGS: 00010202
-> [   46.676719][    T1] RAX: 00007f44c481c780 RBX: 00007f44c4825e78 RCX: 0000000000000000
-> [   46.684600][    T1] RDX: 00007ffee96e6a90 RSI: 0000000000000000 RDI: 00007f44c481c780
-> [   46.692480][    T1] RBP: 00007ffee96e6a90 R08: 00007f44c85d88a8 R09: 00007f44c85d88a8
-> [   46.700360][    T1] R10: 00007f44ca38e4f0 R11: 00007f44c481a000 R12: 00007f44c481c780
-> [   46.708241][    T1] R13: 00007f44c4826088 R14: 00007f44c4b9b128 R15: 00007f44ca38e4f0
-> [   46.716523][    T1] Kernel Offset: 0x11000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> [   46.728244][    T1] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000084 ]---
-> 
-> == git coredump == 
-> # coredumpctl dump
->            PID: 1906 (git)
->            UID: 0 (root)
->            GID: 0 (root)
->         Signal: 11 (SEGV)
->      Timestamp: Mon 2020-12-07 10:10:36 EST (34s ago)
->        Boot ID: 5dd9e21b02e4487f96d2ffeed3140f22
->     Machine ID: 00f60cae470d4f54a377e935638619c5
->        Storage: /var/lib/systemd/coredump/core.git.0.5dd9e21b02e4487f96d2ffeed3140f22.1906.1607353836000000.lz4
->        Message: Process 1906 (git) of user 0 dumped core.
->                 
->                 Stack trace of thread 1906:
->                 #0  0x00007fff845af9dc _dl_relocate_object (/usr/lib64/ld-2.28.so)
->                 #1  0x00007fff845a6664 dl_main (/usr/lib64/ld-2.28.so)
->                 #2  0x00007fff845c0448 _dl_sysdep_start (/usr/lib64/ld-2.28.so)
->                 #3  0x00007fff845a1cbc _dl_start_final (/usr/lib64/ld-2.28.so)
->                 #4  0x00007fff845a2dbc _dl_start (/usr/lib64/ld-2.28.so)
->                 #5  0x00007fff845a1458 _start (/usr/lib64/ld-2.28.so)
-> 
-> > 
-> > A git tree is also available:
-> > 
-> >     git://git.infradead.org/users/hch/block.git bi_bdev
-> > 
-> > Gitweb:
-> > 
-> >     http://git.infradead.org/users/hch/block.git/shortlog/refs/heads/bi_bdev
-> > 
-> > Diffstat:
-> >  arch/m68k/emu/nfblock.c             |    2 
-> >  arch/xtensa/platforms/iss/simdisk.c |    2 
-> >  block/bio-integrity.c               |   18 +-
-> >  block/bio.c                         |   31 +---
-> >  block/blk-cgroup.c                  |    7 
-> >  block/blk-core.c                    |   99 ++++++-------
-> >  block/blk-crypto-fallback.c         |    2 
-> >  block/blk-crypto.c                  |    2 
-> >  block/blk-merge.c                   |   17 +-
-> >  block/blk-mq.c                      |    2 
-> >  block/blk-settings.c                |    2 
-> >  block/blk-throttle.c                |    2 
-> >  block/blk.h                         |    9 -
-> >  block/bounce.c                      |    2 
-> >  block/genhd.c                       |  261 +++-------------------------------
-> > --
-> >  block/partitions/core.c             |   31 ----
-> >  drivers/block/brd.c                 |    8 -
-> >  drivers/block/drbd/drbd_int.h       |    4 
-> >  drivers/block/drbd/drbd_req.c       |    2 
-> >  drivers/block/null_blk_main.c       |    2 
-> >  drivers/block/pktcdvd.c             |    4 
-> >  drivers/block/ps3vram.c             |    2 
-> >  drivers/block/rsxx/dev.c            |    2 
-> >  drivers/block/umem.c                |    2 
-> >  drivers/block/zram/zram_drv.c       |    2 
-> >  drivers/lightnvm/pblk-init.c        |    2 
-> >  drivers/md/bcache/debug.c           |    2 
-> >  drivers/md/bcache/request.c         |   39 +++--
-> >  drivers/md/dm-bio-record.h          |    9 -
-> >  drivers/md/dm-raid1.c               |   10 -
-> >  drivers/md/dm.c                     |   14 -
-> >  drivers/md/md-linear.c              |    2 
-> >  drivers/md/md.c                     |   10 -
-> >  drivers/md/md.h                     |    6 
-> >  drivers/md/raid1.c                  |    6 
-> >  drivers/md/raid10.c                 |   12 -
-> >  drivers/md/raid5.c                  |    2 
-> >  drivers/nvdimm/blk.c                |    4 
-> >  drivers/nvdimm/btt.c                |    4 
-> >  drivers/nvdimm/pmem.c               |    4 
-> >  drivers/nvme/host/core.c            |    6 
-> >  drivers/nvme/host/lightnvm.c        |    3 
-> >  drivers/nvme/host/multipath.c       |    6 
-> >  drivers/nvme/host/rdma.c            |    2 
-> >  drivers/s390/block/dasd.c           |   26 ---
-> >  drivers/s390/block/dcssblk.c        |    6 
-> >  drivers/s390/block/xpram.c          |    2 
-> >  fs/btrfs/check-integrity.c          |   10 -
-> >  fs/btrfs/raid56.c                   |    7 
-> >  fs/btrfs/scrub.c                    |    2 
-> >  fs/direct-io.c                      |    2 
-> >  fs/f2fs/data.c                      |   12 -
-> >  include/linux/bio.h                 |   18 +-
-> >  include/linux/blk_types.h           |    3 
-> >  include/linux/blkdev.h              |   20 --
-> >  include/linux/genhd.h               |   21 --
-> >  kernel/trace/blktrace.c             |   16 +-
-> >  mm/page_io.c                        |    2 
-> >  58 files changed, 251 insertions(+), 556 deletions(-)
----end quoted text---
+HEAD commit:    b1f7b098 Merge branch 's390-qeth-next'
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=164d246b500000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2ac2dabe250b3a58
+dashboard link: https://syzkaller.appspot.com/bug?extid=600fef7c414ee7e2d71b
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+600fef7c414ee7e2d71b@syzkaller.appspotmail.com
+
+BUG: unable to handle page fault for address: ffffffffffffff84
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD b08f067 P4D b08f067 PUD b091067 PMD 0 
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 21334 Comm: syz-executor.1 Not tainted 5.10.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:smc_set_pci_values net/smc/smc_core.h:396 [inline]
+RIP: 0010:smc_nl_handle_smcr_dev.isra.0+0x4bd/0x11b0 net/smc/smc_ib.c:422
+Code: 00 00 00 fc ff df 48 8d 7b 84 48 89 fa 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 59 0c 00 00 <0f> b7 43 84 48 8d 7b 86 48 89 fa 48 c1 ea 03 66 89 84 24 ee 00 00
+RSP: 0018:ffffc900018b7228 EFLAGS: 00010246
+RAX: 0000000000000005 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffffffff84
+RBP: ffffffff8ccc6120 R08: 0000000000000001 R09: ffffc900018b7310
+R10: fffff52000316e65 R11: 0000000000000000 R12: 0000000000000000
+R13: ffff88802f52d540 R14: dffffc0000000000 R15: ffff888062412014
+FS:  00007f9ce0405700(0000) GS:ffff8880b9e00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffff84 CR3: 0000000013c46000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ smc_nl_prep_smcr_dev net/smc/smc_ib.c:469 [inline]
+ smcr_nl_get_device+0xdf/0x1f0 net/smc/smc_ib.c:481
+ genl_lock_dumpit+0x60/0x90 net/netlink/genetlink.c:623
+ netlink_dump+0x4b9/0xb70 net/netlink/af_netlink.c:2268
+ __netlink_dump_start+0x642/0x900 net/netlink/af_netlink.c:2373
+ genl_family_rcv_msg_dumpit+0x2af/0x310 net/netlink/genetlink.c:686
+ genl_family_rcv_msg net/netlink/genetlink.c:780 [inline]
+ genl_rcv_msg+0x434/0x580 net/netlink/genetlink.c:800
+ netlink_rcv_skb+0x153/0x420 net/netlink/af_netlink.c:2494
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:811
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:671
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2331
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2385
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2418
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45e0f9
+Code: 0d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b3 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f9ce0404c68 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045e0f9
+RDX: 0000000000000000 RSI: 0000000020000040 RDI: 0000000000000003
+RBP: 000000000119bfc0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000119bf8c
+R13: 00007ffda3a6b65f R14: 00007f9ce04059c0 R15: 000000000119bf8c
+Modules linked in:
+CR2: ffffffffffffff84
+---[ end trace 7323b30ca37a03b9 ]---
+RIP: 0010:smc_set_pci_values net/smc/smc_core.h:396 [inline]
+RIP: 0010:smc_nl_handle_smcr_dev.isra.0+0x4bd/0x11b0 net/smc/smc_ib.c:422
+Code: 00 00 00 fc ff df 48 8d 7b 84 48 89 fa 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 59 0c 00 00 <0f> b7 43 84 48 8d 7b 86 48 89 fa 48 c1 ea 03 66 89 84 24 ee 00 00
+RSP: 0018:ffffc900018b7228 EFLAGS: 00010246
+RAX: 0000000000000005 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffffffff84
+RBP: ffffffff8ccc6120 R08: 0000000000000001 R09: ffffc900018b7310
+R10: fffff52000316e65 R11: 0000000000000000 R12: 0000000000000000
+R13: ffff88802f52d540 R14: dffffc0000000000 R15: ffff888062412014
+FS:  00007f9ce0405700(0000) GS:ffff8880b9e00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffff84 CR3: 0000000013c46000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
