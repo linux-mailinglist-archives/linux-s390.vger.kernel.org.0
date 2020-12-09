@@ -2,98 +2,80 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 635A62D3E13
-	for <lists+linux-s390@lfdr.de>; Wed,  9 Dec 2020 10:05:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABE932D3E49
+	for <lists+linux-s390@lfdr.de>; Wed,  9 Dec 2020 10:13:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgLIJCh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 9 Dec 2020 04:02:37 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18430 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725942AbgLIJCb (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 9 Dec 2020 04:02:31 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B98X6en091104;
-        Wed, 9 Dec 2020 04:01:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=awsZamTLPaU+5tkz5kiSEfp1JQoyFZR14s0OZ+51DUs=;
- b=RIxw/UooIYfmtBcw2J7pLfoAlk0/eaRjbI9Ha1cgo2uIS7y/hXog8T9BzCwm2EZO7cMQ
- 6gktpTEYo15OzNlMXufTG3ftsKPfME6HeT2/wWk9IS5QK8vqOwaLT97wRZyM5UwAblVS
- 4W2QyqK9BGtZZ2Gdjjvah16X2tRi6iYvlwSiOpe0AePq/Qp0S0ehxhrt1vOn9GV3Vf2B
- 5Fx2+2k8hALl5AWO1f1l6mpwOrxx/ydkp5ilM24iy12JbgUVd3fGHxMShdkiG5W0cnh+
- EEu3iPkNTL02F6S98Ty9rQYnT1xWB5/Y/6/NYNfe+s+Fg8WZ/27BsSK637JH1kSy+7a7 YQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35aqjyx78r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Dec 2020 04:01:50 -0500
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B98nblM150700;
-        Wed, 9 Dec 2020 04:01:50 -0500
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35aqjyx77n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Dec 2020 04:01:50 -0500
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B98r7xM001215;
-        Wed, 9 Dec 2020 09:01:48 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06fra.de.ibm.com with ESMTP id 3581fhj8xm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Dec 2020 09:01:48 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B991jv661800750
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Dec 2020 09:01:45 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C4A5C4C044;
-        Wed,  9 Dec 2020 09:01:45 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6CCA34C059;
-        Wed,  9 Dec 2020 09:01:45 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.171.15.225])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  9 Dec 2020 09:01:45 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH 0/2] s390x: Move from LGPL 2 to GPL 2
+        id S1728673AbgLIJNt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 9 Dec 2020 04:13:49 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:24423 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726860AbgLIJNt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 9 Dec 2020 04:13:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1607505143;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=oHM2DWq1uWKh5/OGUd2jrweWBxQqu1H5rwkAzz/IlRk=;
+        b=TDyg2yFNr8QJyh49JehUhXmfEDLMmYnHaKh6SY0yLQXubpa9va08qs+PzDoNkJgxzrUY43
+        4OHOI8TPbcAh7C+kAZ5lazq3fp23vY+U9BM+pX17/XiYxXIJku7qDLO1TOZfkkyAj5xO9d
+        dYkuenRBiGu1Xz44Q8NHvXGnCsLiT3g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-AG0OACrqMCKJmo56Aj4Gkg-1; Wed, 09 Dec 2020 04:12:19 -0500
+X-MC-Unique: AG0OACrqMCKJmo56Aj4Gkg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 511641842158;
+        Wed,  9 Dec 2020 09:12:18 +0000 (UTC)
+Received: from [10.36.114.167] (ovpn-114-167.ams2.redhat.com [10.36.114.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 49A325C238;
+        Wed,  9 Dec 2020 09:12:17 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH 1/2] s390x: Move to GPL 2 and SPDX license
+ identifiers
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     thuth@redhat.com, david@redhat.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org
+Cc:     thuth@redhat.com, cohuck@redhat.com, linux-s390@vger.kernel.org
 References: <20201208150902.32383-1-frankja@linux.ibm.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Message-ID: <c91bd49f-4d4d-42d3-7551-195d0d77060a@de.ibm.com>
-Date:   Wed, 9 Dec 2020 10:01:45 +0100
+ <20201208150902.32383-2-frankja@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <d0e8582e-8734-739b-d279-1e8004f379a3@redhat.com>
+Date:   Wed, 9 Dec 2020 10:12:16 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201208150902.32383-1-frankja@linux.ibm.com>
+In-Reply-To: <20201208150902.32383-2-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-09_07:2020-12-08,2020-12-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- spamscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0 impostorscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 mlxlogscore=956
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012090060
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
 On 08.12.20 16:09, Janosch Frank wrote:
-> KVM and the KVM unit tests should be able to share code to improve
-> development speed and the LGPL is currently preventing us from doing
-> exactly that. Additionally we have a multitude of different licenses
-> in s390x files: GPL 2 only, GPL 2 or greater, LGPL 2 and LGPL 2.1 or
-> later.
+> In the past we had some issues when developers wanted to use code
+> snippets or constants from the kernel in a test or in the library. To
+> remedy that the s390x maintainers decided to move all files to GPL
+> 2 (if possible).
 > 
-> This patch set tries to move the licenses to GPL 2 where
-> possible. Also we introduce the SPDX identifiers so the file headers
-> are more readable.
+> At the same time let's move to SPDX identifiers as they are much nicer
+> to read.
 > 
 
-Makes perfect sense.
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com
+If I am not wrong, your patch only replaces existing license text by
+SPDX identifiers. So I find this commit message rather confusing. The
+"at the same time" is actually the only thing that is being done - or am
+I missing something important?
+
+I wonder of we can just convert everything to GPL-2.0-or-later, the list
+of people that contributed to most files is rather limited, so getting
+most acks should be easy.
+
+-- 
+Thanks,
+
+David / dhildenb
+
