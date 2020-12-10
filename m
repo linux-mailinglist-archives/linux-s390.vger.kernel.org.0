@@ -2,97 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53FC62D5A97
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Dec 2020 13:35:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6FDA2D5D88
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Dec 2020 15:27:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgLJMep (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Dec 2020 07:34:45 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60142 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728199AbgLJMeo (ORCPT
+        id S2390035AbgLJO04 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Dec 2020 09:26:56 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22794 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389933AbgLJO0z (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 10 Dec 2020 07:34:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607603598;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=J+KcZJva1JHnm2VE0m2PQnQTxCgdEEnkxtAmetNWcaI=;
-        b=OSBu7q1i2jRRukxQPZKvvtpVfhbDRZDcFg4GtXwp2Y9AFspmUOZuXrytYRt62fapKsgKXo
-        wgpNTzZdPKIvtFB/BgM2ZXVsKGFgNjrdV2hUjiuf96NKeaDc6/tzbgZNZ5y/zDvfsuCDMz
-        tqDgj9m9U2jnbzcmGZn33Y8U/WL5Jvs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-254-SEh5N4KeNU66XMmL6OwI1g-1; Thu, 10 Dec 2020 07:33:16 -0500
-X-MC-Unique: SEh5N4KeNU66XMmL6OwI1g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2E56410A0F44;
-        Thu, 10 Dec 2020 12:33:15 +0000 (UTC)
-Received: from gondolin (ovpn-112-77.ams2.redhat.com [10.36.112.77])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 55D316F965;
-        Thu, 10 Dec 2020 12:33:09 +0000 (UTC)
-Date:   Thu, 10 Dec 2020 13:33:06 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     alex.williamson@redhat.com, schnelle@linux.ibm.com,
-        pmorel@linux.ibm.com, borntraeger@de.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 0/4] vfio-pci/zdev: Fixing s390 vfio-pci ISM support
-Message-ID: <20201210133306.70d1a556.cohuck@redhat.com>
-In-Reply-To: <1607545670-1557-1-git-send-email-mjrosato@linux.ibm.com>
-References: <1607545670-1557-1-git-send-email-mjrosato@linux.ibm.com>
-Organization: Red Hat GmbH
+        Thu, 10 Dec 2020 09:26:55 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BAE5KIH137723;
+        Thu, 10 Dec 2020 09:26:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=sIct3ma9V/iBuzV7f52S+uJZk5QhKcVNkka4/nB3NiE=;
+ b=KLe6ScgXAJRVqgLDgW823ONUE2on6KVoQWLmrzUmejIfnb4PbBO5DQRWC3qdcDWqOt2W
+ GM08Adg/FHWwgmTctAWbPdefA4pm13tMD01uDaVZYv2Fy6f33jMOQz4iRRbA2NRer/Dl
+ kIv1UlQJ8YWzsNw1DoAXjpF6hr33hXWQXUyV2vSa/mGkLx/Rx2jCsGHrWTnVSPA9AhkP
+ dIsB362RMsN9/tgNjYjRRg62dOpTwZS9ZcQkB1CCRkloDBxPjcuqnw17fkSN0OwA+RxC
+ 1c5cOLdU6bu4DJ8lgOB8+bI6zJxUlDzOBikf8RCuwrXuoZFoa8EjRllW/DMOpjE9AlYE 4Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35bknv3r1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Dec 2020 09:26:07 -0500
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BAENb7b040835;
+        Thu, 10 Dec 2020 09:26:07 -0500
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35bknv3r0m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Dec 2020 09:26:06 -0500
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BAEHVjZ011706;
+        Thu, 10 Dec 2020 14:26:04 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 3581u85vkk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Dec 2020 14:26:04 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BAEQ1W557803092
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Dec 2020 14:26:01 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC45C52075;
+        Thu, 10 Dec 2020 14:26:00 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id CAB635207B;
+        Thu, 10 Dec 2020 14:26:00 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 898ADE0450; Thu, 10 Dec 2020 15:26:00 +0100 (CET)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>, Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Collin Walling <walling@linux.ibm.com>
+Subject: [GIT PULL 0/4] KVM: s390: features and test for 5.11
+Date:   Thu, 10 Dec 2020 15:25:55 +0100
+Message-Id: <20201210142600.6771-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.28.0
+X-TM-AS-GCONF: 00
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2020-12-10_05:2020-12-09,2020-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ mlxscore=0 bulkscore=0 suspectscore=0 phishscore=0 malwarescore=0
+ impostorscore=0 mlxlogscore=940 lowpriorityscore=0 priorityscore=1501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012100084
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed,  9 Dec 2020 15:27:46 -0500
-Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+Paolo,
 
-> Today, ISM devices are completely disallowed for vfio-pci passthrough as
-> QEMU will reject the device due to an (inappropriate) MSI-X check.
-> However, in an effort to enable ISM device passthrough, I realized that the
-> manner in which ISM performs block write operations is highly incompatible
-> with the way that QEMU s390 PCI instruction interception and
-> vfio_pci_bar_rw break up I/O operations into 8B and 4B operations -- ISM
-> devices have particular requirements in regards to the alignment, size and
-> order of writes performed.  Furthermore, they require that legacy/non-MIO
-> s390 PCI instructions are used, which is also not guaranteed when the I/O
-> is passed through the typical userspace channels.
+the following changes since commit f8394f232b1eab649ce2df5c5f15b0e528c92091:
 
-The part about the non-MIO instructions confuses me. How can MIO
-instructions be generated with the current code, and why does changing
-the write pattern help?
+  Linux 5.10-rc3 (2020-11-08 16:10:16 -0800)
 
-> 
-> As a result, this patchset proposes a new VFIO region to allow a guest to
-> pass certain PCI instruction intercepts directly to the s390 host kernel
-> PCI layer for exeuction, pinning the guest buffer in memory briefly in
-> order to execute the requested PCI instruction.
-> 
-> Matthew Rosato (4):
->   s390/pci: track alignment/length strictness for zpci_dev
->   vfio-pci/zdev: Pass the relaxed alignment flag
->   s390/pci: Get hardware-reported max store block length
->   vfio-pci/zdev: Introduce the zPCI I/O vfio region
-> 
->  arch/s390/include/asm/pci.h         |   4 +-
->  arch/s390/include/asm/pci_clp.h     |   7 +-
->  arch/s390/pci/pci_clp.c             |   2 +
->  drivers/vfio/pci/vfio_pci.c         |   8 ++
->  drivers/vfio/pci/vfio_pci_private.h |   6 ++
->  drivers/vfio/pci/vfio_pci_zdev.c    | 160 ++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/vfio.h           |   4 +
->  include/uapi/linux/vfio_zdev.h      |  33 ++++++++
->  8 files changed, 221 insertions(+), 3 deletions(-)
-> 
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-next-5.11-1
+
+for you to fetch changes up to 50a05be484cb70d9dfb55fa5a6ed57eab193901f:
+
+  KVM: s390: track synchronous pfault events in kvm_stat (2020-12-10 14:20:26 +0100)
+
+----------------------------------------------------------------
+KVM: s390: Features and Test for 5.11
+
+- memcg accouting for s390 specific parts of kvm and gmap
+- selftest for diag318
+- new kvm_stat for when async_pf falls back to sync
+
+The selftest even triggers a non-critical bug that is unrelated
+to diag318, fix will follow later.
+
+----------------------------------------------------------------
+Christian Borntraeger (3):
+      KVM: s390: Add memcg accounting to KVM allocations
+      s390/gmap: make gmap memcg aware
+      KVM: s390: track synchronous pfault events in kvm_stat
+
+Collin Walling (1):
+      KVM: selftests: sync_regs test for diag318
+
+ arch/s390/include/asm/kvm_host.h                   |  1 +
+ arch/s390/kvm/guestdbg.c                           |  8 +--
+ arch/s390/kvm/intercept.c                          |  2 +-
+ arch/s390/kvm/interrupt.c                          | 10 +--
+ arch/s390/kvm/kvm-s390.c                           | 22 +++---
+ arch/s390/kvm/priv.c                               |  4 +-
+ arch/s390/kvm/pv.c                                 |  6 +-
+ arch/s390/kvm/vsie.c                               |  4 +-
+ arch/s390/mm/gmap.c                                | 30 ++++----
+ tools/testing/selftests/kvm/Makefile               |  2 +-
+ .../kvm/include/s390x/diag318_test_handler.h       | 13 ++++
+ .../selftests/kvm/lib/s390x/diag318_test_handler.c | 82 ++++++++++++++++++++++
+ tools/testing/selftests/kvm/s390x/sync_regs_test.c | 16 ++++-
+ 13 files changed, 156 insertions(+), 44 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/include/s390x/diag318_test_handler.h
+ create mode 100644 tools/testing/selftests/kvm/lib/s390x/diag318_test_handler.c
