@@ -2,122 +2,182 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E99FA2D4C3B
-	for <lists+linux-s390@lfdr.de>; Wed,  9 Dec 2020 21:53:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AF842D52BB
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Dec 2020 05:19:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731019AbgLIUxb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 9 Dec 2020 15:53:31 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5624 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726227AbgLIUxb (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 9 Dec 2020 15:53:31 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0B9KWXIf021859;
-        Wed, 9 Dec 2020 15:52:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
- : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=10ioeuJE2bkIm5pz7lZv+a8MyIhqu9LDDDbuOWf3B44=;
- b=JV9ylOWsAq310dSSCBQWT7GzkjabPwzoaG1fErUCfQQxJidadMDUgTT0b2JL6FMDGl9b
- jI+5OfQaHVAIZT7WHwplqvVN6Ri7C9inUjnTzlQ6ukHA8Lv9uHX57gwJ04kF+7IdXSkD
- Il9rrx2gPdU3rP8/q268YDv3KCsBs0NhM5XO03vLufwmMe5VnJDjRCHWZ2nvo+paG7T8
- cNK1jtriDcVyoUv3ysHsu15b3xNw9UT5gL0zRx7XeO215ClTMMgn4kG7GydUKgF5fExu
- j9kSxGESLhyzPFWESOtnKHxpsq0NcvINaVk5Ss2S7aygm0BFH/ywWfTfobVEFbk6m8BK 7g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35ayxnc2fj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Dec 2020 15:52:50 -0500
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0B9Kph8f104760;
-        Wed, 9 Dec 2020 15:52:50 -0500
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35ayxnc2f9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Dec 2020 15:52:49 -0500
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0B9Kl1RD004138;
-        Wed, 9 Dec 2020 20:52:49 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma04dal.us.ibm.com with ESMTP id 3581u9u0b1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 09 Dec 2020 20:52:49 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0B9KqlVB32768278
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Dec 2020 20:52:47 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F2880112061;
-        Wed,  9 Dec 2020 20:52:46 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6A686112062;
-        Wed,  9 Dec 2020 20:52:44 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.163.37.122])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  9 Dec 2020 20:52:44 +0000 (GMT)
-Subject: Re: [RFC 0/4] vfio-pci/zdev: Fixing s390 vfio-pci ISM support
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-To:     alex.williamson@redhat.com, cohuck@redhat.com,
-        schnelle@linux.ibm.com
-Cc:     pmorel@linux.ibm.com, borntraeger@de.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1607545670-1557-1-git-send-email-mjrosato@linux.ibm.com>
-Message-ID: <765a8b73-a879-ea96-d13e-8fd574b363be@linux.ibm.com>
-Date:   Wed, 9 Dec 2020 15:52:43 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        id S1730932AbgLJETC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 9 Dec 2020 23:19:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:46396 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729968AbgLJETC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 9 Dec 2020 23:19:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58E8631B;
+        Wed,  9 Dec 2020 20:18:16 -0800 (PST)
+Received: from [10.163.83.83] (unknown [10.163.83.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 360093F66B;
+        Wed,  9 Dec 2020 20:18:10 -0800 (PST)
+Subject: Re: [PATCH 3/3] s390/mm: Define arch_get_mappable_range()
+To:     Heiko Carstens <hca@linux.ibm.com>
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
+        catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <1607400978-31595-1-git-send-email-anshuman.khandual@arm.com>
+ <1607400978-31595-4-git-send-email-anshuman.khandual@arm.com>
+ <20201208152709.GA26979@osiris>
+ <7484e153-6c77-8325-6195-621fe144011e@arm.com> <20201209145717.GD7160@osiris>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <04da0f9c-d50e-7729-5e4c-b0dc4e76d608@arm.com>
+Date:   Thu, 10 Dec 2020 09:48:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1607545670-1557-1-git-send-email-mjrosato@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20201209145717.GD7160@osiris>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-09_16:2020-12-09,2020-12-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- mlxscore=0 spamscore=0 lowpriorityscore=0 phishscore=0 impostorscore=0
- adultscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012090140
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 12/9/20 3:27 PM, Matthew Rosato wrote:
-> Today, ISM devices are completely disallowed for vfio-pci passthrough as
-> QEMU will reject the device due to an (inappropriate) MSI-X check.
-> However, in an effort to enable ISM device passthrough, I realized that the
-> manner in which ISM performs block write operations is highly incompatible
-> with the way that QEMU s390 PCI instruction interception and
-> vfio_pci_bar_rw break up I/O operations into 8B and 4B operations -- ISM
-> devices have particular requirements in regards to the alignment, size and
-> order of writes performed.  Furthermore, they require that legacy/non-MIO
-> s390 PCI instructions are used, which is also not guaranteed when the I/O
-> is passed through the typical userspace channels.
-> 
-> As a result, this patchset proposes a new VFIO region to allow a guest to
-> pass certain PCI instruction intercepts directly to the s390 host kernel
-> PCI layer for exeuction, pinning the guest buffer in memory briefly in
-> order to execute the requested PCI instruction.
-> 
-> Matthew Rosato (4):
->    s390/pci: track alignment/length strictness for zpci_dev
->    vfio-pci/zdev: Pass the relaxed alignment flag
->    s390/pci: Get hardware-reported max store block length
->    vfio-pci/zdev: Introduce the zPCI I/O vfio region
-> 
->   arch/s390/include/asm/pci.h         |   4 +-
->   arch/s390/include/asm/pci_clp.h     |   7 +-
->   arch/s390/pci/pci_clp.c             |   2 +
->   drivers/vfio/pci/vfio_pci.c         |   8 ++
->   drivers/vfio/pci/vfio_pci_private.h |   6 ++
->   drivers/vfio/pci/vfio_pci_zdev.c    | 160 ++++++++++++++++++++++++++++++++++++
->   include/uapi/linux/vfio.h           |   4 +
->   include/uapi/linux/vfio_zdev.h      |  33 ++++++++
->   8 files changed, 221 insertions(+), 3 deletions(-)
-> 
 
-Associated qemu patchset:
-https://lists.gnu.org/archive/html/qemu-devel/2020-12/msg02377.html
+
+On 12/9/20 8:27 PM, Heiko Carstens wrote:
+> On Wed, Dec 09, 2020 at 08:07:04AM +0530, Anshuman Khandual wrote:
+>>>> +	if (seg->end + 1 > VMEM_MAX_PHYS || seg->end + 1 < seg->start_addr) {
+>>>> +		rc = -ERANGE;
+>>>> +		goto out_resource;
+>>>> +	}
+>>>> +
+> ...
+>>>> +struct range arch_get_mappable_range(void)
+>>>> +{
+>>>> +	struct range memhp_range;
+>>>> +
+>>>> +	memhp_range.start = 0;
+>>>> +	memhp_range.end =  VMEM_MAX_PHYS;
+>>>> +	return memhp_range;
+>>>> +}
+>>>> +
+>>>>  int arch_add_memory(int nid, u64 start, u64 size,
+>>>>  		    struct mhp_params *params)
+>>>>  {
+>>>> @@ -291,6 +300,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>>>  	if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
+>>>>  		return -EINVAL;
+>>>>  
+>>>> +	VM_BUG_ON(!memhp_range_allowed(start, size, 1));
+>>>>  	rc = vmem_add_mapping(start, size);
+>>>>  	if (rc)
+>>> Is there a reason why you added the memhp_range_allowed() check call
+>>> to arch_add_memory() instead of vmem_add_mapping()? If you would do
+>>
+>> As I had mentioned previously, memhp_range_allowed() is available with
+>> CONFIG_MEMORY_HOTPLUG but vmem_add_mapping() is always available. Hence
+>> there will be a build failure in vmem_add_mapping() for the range check
+>> memhp_range_allowed() without memory hotplug enabled.
+>>
+>>> that, then the extra code in __segment_load() wouldn't be
+>>> required.
+>>> Even though the error message from memhp_range_allowed() might be
+>>> highly confusing.
+>>
+>> Alternatively leaving __segment_load() and vmem_add_memory() unchanged
+>> will create three range checks i.e two memhp_range_allowed() and the
+>> existing VMEM_MAX_PHYS check in vmem_add_mapping() on all the hotplug
+>> paths, which is not optimal.
+> 
+> Ah, sorry. I didn't follow this discussion too closely. I just thought
+> my point of view would be clear: let's not have two different ways to
+> check for the same thing which must be kept in sync.
+> Therefore I was wondering why this next version is still doing
+> that. Please find a way to solve this.
+
+The following change is after the current series and should work with
+and without memory hotplug enabled. There will be just a single place
+i.e vmem_get_max_addr() to update in case the maximum address changes
+from VMEM_MAX_PHYS to something else later.
+
+diff --git a/arch/s390/include/asm/sections.h b/arch/s390/include/asm/sections.h
+index 0c21514..2da496f 100644
+--- a/arch/s390/include/asm/sections.h
++++ b/arch/s390/include/asm/sections.h
+@@ -16,6 +16,7 @@ static inline int arch_is_kernel_initmem_freed(unsigned long addr)
+ 	       addr < (unsigned long)__init_end;
+ }
+ 
++unsigned long vmem_get_max_addr(void);
+ /*
+  * .boot.data section contains variables "shared" between the decompressor and
+  * the decompressed kernel. The decompressor will store values in them, and
+diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
+index cc055a7..1bddd6f 100644
+--- a/arch/s390/mm/extmem.c
++++ b/arch/s390/mm/extmem.c
+@@ -28,6 +28,7 @@
+ #include <asm/extmem.h>
+ #include <asm/cpcmd.h>
+ #include <asm/setup.h>
++#include <asm/sections.h>
+ 
+ #define DCSS_PURGESEG   0x08
+ #define DCSS_LOADSHRX	0x20
+@@ -287,6 +288,13 @@ segment_overlaps_others (struct dcss_segment *seg)
+ 	return 0;
+ }
+ 
++static bool segment_outside_range(struct dcss_segment *seg)
++{
++	unsigned long max_addr = vmem_get_max_addr();
++
++	return (seg->end + 1 > max_addr || seg->end + 1 < seg->start_addr);
++}
++
+ /*
+  * real segment loading function, called from segment_load
+  */
+@@ -337,7 +345,7 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
+ 		goto out_free_resource;
+ 	}
+ 
+-	if (seg->end + 1 > VMEM_MAX_PHYS || seg->end + 1 < seg->start_addr) {
++	if (segment_outside_range(seg)) {
+ 		rc = -ERANGE;
+ 		goto out_resource;
+ 	}
+diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+index 64937ba..5c6ee9f 100644
+--- a/arch/s390/mm/init.c
++++ b/arch/s390/mm/init.c
+@@ -283,7 +283,7 @@ struct range arch_get_mappable_range(void)
+ 	struct range memhp_range;
+ 
+ 	memhp_range.start = 0;
+-	memhp_range.end =  VMEM_MAX_PHYS;
++	memhp_range.end =  vmem_get_max_addr();
+ 	return memhp_range;
+ }
+ 
+diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
+index 749eab4..6044e85 100644
+--- a/arch/s390/mm/vmem.c
++++ b/arch/s390/mm/vmem.c
+@@ -532,6 +532,11 @@ void vmem_remove_mapping(unsigned long start, unsigned long size)
+ 	mutex_unlock(&vmem_mutex);
+ }
+ 
++unsigned long vmem_get_max_addr(void)
++{
++        return VMEM_MAX_PHYS;
++}
++
+ int vmem_add_mapping(unsigned long start, unsigned long size)
+ {
+ 	int ret;
+-- 
+2.7.4
 
