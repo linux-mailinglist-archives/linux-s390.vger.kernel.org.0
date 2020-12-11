@@ -2,325 +2,153 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DC912D73E3
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Dec 2020 11:27:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E3732D74CF
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Dec 2020 12:39:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733026AbgLKKYc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 11 Dec 2020 05:24:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40316 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731174AbgLKKYE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 11 Dec 2020 05:24:04 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1607682195; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        id S2391948AbgLKLjO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 11 Dec 2020 06:39:14 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28497 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390721AbgLKLjI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 11 Dec 2020 06:39:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1607686662;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Ylj5Ou5EGxXoY8HzgwHM13TBu2785E6dSVq65gzanwU=;
-        b=JX3YEGDayzn/l2cWmgQW18vQXaGMPfebAVghI4mXIKoPFWr46I+1iXrHo1/89wbKgnsUQw
-        fJfjpQHih3nDIAzyPuBktA46WbSRZFyDOHCZ4ClWbuCsmJrqvPgr1yruvflf2j4L0wRo2h
-        gXPAph/J2UIJAu9VFo9bE4J63Z3Pprg=
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 86CDFADA2;
-        Fri, 11 Dec 2020 10:23:15 +0000 (UTC)
-Subject: Re: [patch 27/30] xen/events: Only force affinity mask for percpu
- interrupts
-To:     Thomas Gleixner <tglx@linutronix.de>, boris.ostrovsky@oracle.com,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci@vger.kernel.org,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>
-References: <20201210192536.118432146@linutronix.de>
- <20201210194045.250321315@linutronix.de>
- <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com>
- <a4bce428-4420-6064-c7cc-7136a7544a52@suse.com>
- <874kksiras.fsf@nanos.tec.linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <83b596c7-453b-34b5-a6a5-6c04d20e818a@suse.com>
-Date:   Fri, 11 Dec 2020 11:23:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        bh=RqIjgNGP8EpRseSxFoBnqE8y63I178BwzCy3MXCM4mw=;
+        b=P9CqhEabNE6oWYOM3cVWYUFfrJ6IXkC0fI7E4uAVLJ33ouNsWyViYDwB63kZ6/A/CgeI1L
+        B0Un3Nx9Tbl/fRfMfReERXv622aGIzEWMSvwKnmPdkaEdVO0bwY8MLDLpCsbo5eKjW8z3I
+        dske0BzE2EB6zpibJj5gF02p412Obbk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-91-uYx1psuZPVahtzYjTJGM0w-1; Fri, 11 Dec 2020 06:37:40 -0500
+X-MC-Unique: uYx1psuZPVahtzYjTJGM0w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 282FC190A7A4;
+        Fri, 11 Dec 2020 11:37:38 +0000 (UTC)
+Received: from gondolin (ovpn-112-240.ams2.redhat.com [10.36.112.240])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 851305D705;
+        Fri, 11 Dec 2020 11:37:32 +0000 (UTC)
+Date:   Fri, 11 Dec 2020 12:37:29 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     alex.williamson@redhat.com, schnelle@linux.ibm.com,
+        pmorel@linux.ibm.com, borntraeger@de.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC 1/4] s390/pci: track alignment/length strictness for
+ zpci_dev
+Message-ID: <20201211123729.37647fa0.cohuck@redhat.com>
+In-Reply-To: <15132f7f-cad7-d663-a8b9-90f417e85c81@linux.ibm.com>
+References: <1607545670-1557-1-git-send-email-mjrosato@linux.ibm.com>
+        <1607545670-1557-2-git-send-email-mjrosato@linux.ibm.com>
+        <20201210113318.136636e2.cohuck@redhat.com>
+        <15132f7f-cad7-d663-a8b9-90f417e85c81@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <874kksiras.fsf@nanos.tec.linutronix.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="JLZob3e3TcGZaffU2V6GYg9zw25iTy30k"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---JLZob3e3TcGZaffU2V6GYg9zw25iTy30k
-Content-Type: multipart/mixed; boundary="W7MOwpcHMEZDHVpnNeRdRpRviypq0k3b2";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Thomas Gleixner <tglx@linutronix.de>, boris.ostrovsky@oracle.com,
- LKML <linux-kernel@vger.kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Marc Zyngier <maz@kernel.org>,
- Stefano Stabellini <sstabellini@kernel.org>, xen-devel@lists.xenproject.org,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, afzal mohammed <afzal.mohd.ma@gmail.com>,
- linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
- linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Christian Borntraeger <borntraeger@de.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@linux.ie>,
- Daniel Vetter <daniel@ffwll.ch>,
- Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
- Chris Wilson <chris@chris-wilson.co.uk>,
- Wambui Karuga <wambui.karugax@gmail.com>, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- Lee Jones <lee.jones@linaro.org>, Jon Mason <jdmason@kudzu.us>,
- Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>,
- linux-ntb@googlegroups.com, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Michal Simek <michal.simek@xilinx.com>, linux-pci@vger.kernel.org,
- Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
- Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Tariq Toukan <tariqt@nvidia.com>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>
-Message-ID: <83b596c7-453b-34b5-a6a5-6c04d20e818a@suse.com>
-Subject: Re: [patch 27/30] xen/events: Only force affinity mask for percpu
- interrupts
-References: <20201210192536.118432146@linutronix.de>
- <20201210194045.250321315@linutronix.de>
- <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com>
- <a4bce428-4420-6064-c7cc-7136a7544a52@suse.com>
- <874kksiras.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <874kksiras.fsf@nanos.tec.linutronix.de>
+On Thu, 10 Dec 2020 10:26:22 -0500
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
---W7MOwpcHMEZDHVpnNeRdRpRviypq0k3b2
-Content-Type: multipart/mixed;
- boundary="------------C0A97F76D1E2DDEBCBB7C379"
-Content-Language: en-US
+> On 12/10/20 5:33 AM, Cornelia Huck wrote:
+> > On Wed,  9 Dec 2020 15:27:47 -0500
+> > Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+> >   
+> >> Some zpci device types (e.g., ISM) follow different rules for length
+> >> and alignment of pci instructions.  Recognize this and keep track of
+> >> it in the zpci_dev.
+> >>
+> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> >> Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> >> Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+> >> ---
+> >>   arch/s390/include/asm/pci.h     | 3 ++-
+> >>   arch/s390/include/asm/pci_clp.h | 4 +++-
+> >>   arch/s390/pci/pci_clp.c         | 1 +
+> >>   3 files changed, 6 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+> >> index 2126289..f16ffba 100644
+> >> --- a/arch/s390/include/asm/pci.h
+> >> +++ b/arch/s390/include/asm/pci.h
+> >> @@ -133,7 +133,8 @@ struct zpci_dev {
+> >>   	u8		has_hp_slot	: 1;
+> >>   	u8		is_physfn	: 1;
+> >>   	u8		util_str_avail	: 1;
+> >> -	u8		reserved	: 4;
+> >> +	u8		relaxed_align	: 1;
+> >> +	u8		reserved	: 3;
+> >>   	unsigned int	devfn;		/* DEVFN part of the RID*/
+> >>   
+> >>   	struct mutex lock;
+> >> diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
+> >> index 1f4b666..9fb7cbf 100644
+> >> --- a/arch/s390/include/asm/pci_clp.h
+> >> +++ b/arch/s390/include/asm/pci_clp.h
+> >> @@ -150,7 +150,9 @@ struct clp_rsp_query_pci_grp {
+> >>   	u16			:  4;
+> >>   	u16 noi			: 12;	/* number of interrupts */
+> >>   	u8 version;
+> >> -	u8			:  6;
+> >> +	u8			:  4;
+> >> +	u8 relaxed_align	:  1;	/* Relax length and alignment rules */
+> >> +	u8			:  1;
+> >>   	u8 frame		:  1;
+> >>   	u8 refresh		:  1;	/* TLB refresh mode */
+> >>   	u16 reserved2;
+> >> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+> >> index 153720d..630f8fc 100644
+> >> --- a/arch/s390/pci/pci_clp.c
+> >> +++ b/arch/s390/pci/pci_clp.c
+> >> @@ -103,6 +103,7 @@ static void clp_store_query_pci_fngrp(struct zpci_dev *zdev,
+> >>   	zdev->max_msi = response->noi;
+> >>   	zdev->fmb_update = response->mui;
+> >>   	zdev->version = response->version;
+> >> +	zdev->relaxed_align = response->relaxed_align;
+> >>   
+> >>   	switch (response->version) {
+> >>   	case 1:  
+> > 
+> > Hm, what does that 'relaxed alignment' imply? Is that something that
+> > can apply to emulated devices as well?
+> >   
+> The relaxed alignment simply loosens the rules on the PCISTB instruction 
+> so that it doesn't have to be on particular boundaries / have a minimum 
+> length restriction, these effectively allow ISM devices to use PCISTB 
+> instead of PCISTG for just about everything.  If you have a look at the 
+> patch "s390x/pci: Handle devices that support relaxed alignment" from 
+> the linked qemu set, you can get an idea of what the bit changes via the 
+> way qemu has to be more permissive of what the guest provides for PCISTB.
 
-This is a multi-part message in MIME format.
---------------C0A97F76D1E2DDEBCBB7C379
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Ok, so it is basically a characteristic of a specific device that
+changes the rules of what pcistb will accept.
 
-On 11.12.20 11:13, Thomas Gleixner wrote:
-> On Fri, Dec 11 2020 at 07:17, J=C3=BCrgen Gro=C3=9F wrote:
->> On 11.12.20 00:20, boris.ostrovsky@oracle.com wrote:
->>>
->>> On 12/10/20 2:26 PM, Thomas Gleixner wrote:
->>>> All event channel setups bind the interrupt on CPU0 or the target CP=
-U for
->>>> percpu interrupts and overwrite the affinity mask with the correspon=
-ding
->>>> cpumask. That does not make sense.
->>>>
->>>> The XEN implementation of irqchip::irq_set_affinity() already picks =
-a
->>>> single target CPU out of the affinity mask and the actual target is =
-stored
->>>> in the effective CPU mask, so destroying the user chosen affinity ma=
-sk
->>>> which might contain more than one CPU is wrong.
->>>>
->>>> Change the implementation so that the channel is bound to CPU0 at th=
-e XEN
->>>> level and leave the affinity mask alone. At startup of the interrupt=
+> 
+> Re: emulated devices...  The S390 PCI I/O layer in the guest is always 
+> issuing strict? aligned I/O for PCISTB, and if it decided to later 
+> change that behavior it would need to look at this CLP bit to decide 
+> whether that would be a valid operation for a given PCI function anyway. 
+>   This bit will remain off in the CLP response we give for emulated 
+> devices, ensuring that should such a change occur in the guest s390 PCI 
+> I/O layer, we'd just continue getting strictly-aligned PCISTB.
 
->>>> affinity will be assigned out of the affinity mask and the XEN bindi=
-ng will
->>>> be updated.
->>>
->>>
->>> If that's the case then I wonder whether we need this call at all and=
- instead bind at startup time.
->>
->> This binding to cpu0 was introduced with commit 97253eeeb792d61ed2
->> and I have no reason to believe the underlying problem has been
->> eliminated.
->=20
->      "The kernel-side VCPU binding was not being correctly set for newl=
-y
->       allocated or bound interdomain events.  In ARM guests where 2-lev=
-el
->       events were used, this would result in no interdomain events bein=
-g
->       handled because the kernel-side VCPU masks would all be clear.
->=20
->       x86 guests would work because the irq affinity was set during irq=
+My question was more whether that was a feature that might make sense
+to emulate on the hypervisor side for fully emulated devices. I'd like
+to leave the door open for emulated devices to advertise this and make
+it possible for guests using those devices to use pcistb with the
+relaxed rules, if it makes sense.
 
->       setup and this would set the correct kernel-side VCPU binding."
->=20
-> I'm not convinced that this is really correctly analyzed because affini=
-ty
-> setting is done at irq startup.
->=20
->                  switch (__irq_startup_managed(desc, aff, force)) {
-> 	        case IRQ_STARTUP_NORMAL:
-> 	                ret =3D __irq_startup(desc);
->                          irq_setup_affinity(desc);
-> 			break;
->=20
-> which is completely architecture agnostic. So why should this magically=
+I guess we can easily retrofit this if we come up with a use case for it.
 
-> work on x86 and not on ARM if both are using the same XEN irqchip with
-> the same irqchip callbacks.
-
-I think this might be related to _initial_ cpu binding of events and
-changing the binding later. This might be handled differently in the
-hypervisor.
-
-
-Juergen
-
---------------C0A97F76D1E2DDEBCBB7C379
-Content-Type: application/pgp-keys;
- name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
- filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOBy=
-cWx
-w3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJvedYm8O=
-f8Z
-d621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y=
-9bf
-IhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xq=
-G7/
-377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR=
-3Jv
-c3MgPGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsEFgIDA=
-QIe
-AQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4FUGNQH2lvWAUy+dnyT=
-hpw
-dtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3TyevpB0CA3dbBQp0OW0fgCetToGIQrg0=
-MbD
-1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u+6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbv=
-oPH
-Z8SlM4KWm8rG+lIkGurqqu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v=
-5QL
-+qHI3EIPtyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVyZ=
-2Vu
-IEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJCAcDAgEGFQgCC=
-QoL
-BBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4RF7HoZhPVPogNVbC4YA6lW7Dr=
-Wf0
-teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz78X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC=
-/nu
-AFVGy+67q2DH8As3KPu0344TBDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0Lh=
-ITT
-d9jLzdDad1pQSToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLm=
-XBK
-7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkMnQfvUewRz=
-80h
-SnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMBAgAjBQJTjHDXAhsDBwsJC=
-AcD
-AgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJn=
-FOX
-gMLdBQgBlVPO3/D9R8LtF9DBAFPNhlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1=
-jnD
-kfJZr6jrbjgyoZHiw/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0=
-N51
-N5JfVRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwPOoE+l=
-otu
-fe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK/1xMI3/+8jbO0tsn1=
-tqS
-EUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuZGU+wsB5BBMBAgAjBQJTjHDrA=
-hsD
-BwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3=
-g3O
-ZUEBmDHVVbqMtzwlmNC4k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5=
-dM7
-wRqzgJpJwK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu5=
-D+j
-LRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzBTNh30FVKK1Evm=
-V2x
-AKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37IoN1EblHI//x/e2AaIHpzK5h88N=
-Eaw
-QsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpW=
-nHI
-s98ndPUDpnoxWQugJ6MpMncr0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZR=
-wgn
-BC5mVM6JjQ5xDk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNV=
-bVF
-LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mmwe0icXKLk=
-pEd
-IXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0Iv3OOImwTEe4co3c1mwARA=
-QAB
-wsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMvQ/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEw=
-Tbe
-8YFsw2V/Buv6Z4Mysln3nQK5ZadD534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1=
-vJz
-Q1fOU8lYFpZXTXIHb+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8=
-VGi
-wXvTyJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqcsuylW=
-svi
-uGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5BjR/i1DG86lem3iBDX=
-zXs
-ZDn8R38=3D
-=3D2wuH
------END PGP PUBLIC KEY BLOCK-----
-
---------------C0A97F76D1E2DDEBCBB7C379--
-
---W7MOwpcHMEZDHVpnNeRdRpRviypq0k3b2--
-
---JLZob3e3TcGZaffU2V6GYg9zw25iTy30k
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAl/TSJEFAwAAAAAACgkQsN6d1ii/Ey+l
-mgf/d2+/6FRTlqTIKtgTaI9zWYXHFZUVv6aYW6iBE6VxANXvSWq9HMk6KnsreMEFtZ6/gFqr/hEu
-oLKI4zId8FjcveupY8yiEXvBkWDXXQHXm2vw2fO6Fe2D0RCcR0QLeFpvolQBAp0s4pGQNCWixekr
-Q6YyAWOKOmAjWmLsSsyend9GfjL+BFR6pObB4CLRdm5rvQHbPW6pNHBTTX2bxeszchEibXqmy+eX
-K7jbAijkr/Vq+9h84FBdAOZQRgXCIrWI14ae2O+8CGs9w5v/Yczedv+z4knUyDtXHly4+zuhkPSW
-tmVXo5DD0Oh4PaNITuXRo6Y9sSrWG1w22F+SVn8vKg==
-=c494
------END PGP SIGNATURE-----
-
---JLZob3e3TcGZaffU2V6GYg9zw25iTy30k--
