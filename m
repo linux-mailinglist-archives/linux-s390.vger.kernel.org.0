@@ -2,204 +2,177 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4C7D2D81E9
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Dec 2020 23:24:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F058D2D8281
+	for <lists+linux-s390@lfdr.de>; Sat, 12 Dec 2020 00:00:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393335AbgLKWXq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 11 Dec 2020 17:23:46 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20130 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389930AbgLKWXX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 11 Dec 2020 17:23:23 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BBMEYsQ186323;
-        Fri, 11 Dec 2020 17:22:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=CvZ6ed3lQl/BG9srwuIEWAY0PIXHO1HWpFDNCxW9pag=;
- b=O1A4+xcyVxSnAEQKiPSe2hlzYeImTzZV3Jin+Qk45dU1NkxeRaECMnXVp0YKXkhqYscY
- M5wJyJSZ1p9ixi9dyWmhmFRmxyZpnJ6xXjbZzcxB9kyJeWl1+acwVBT28fYd+SpN7IE+
- oYiHIZTSAyEI51hCo/ir/lrC5ENNF5hHntacxeef58l3ulZUWU+dNzi+QGUPCji04O9M
- tPaBea4vIIWKalw93NTWFc8QfGT2VT2hnPgszhwSmW6YabLFvCMzj1wIEczGj1gizH78
- Dxa6NJlTZabuTWWnaR1mBOJamt1LvKL7SUkcn1uXpXBcqvLsetH0WfZB2cwNQ43tJbhx ZQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35chcrg51m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Dec 2020 17:22:27 -0500
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BBMGK99191066;
-        Fri, 11 Dec 2020 17:22:26 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35chcrg51e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Dec 2020 17:22:26 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BBMCSqr021964;
-        Fri, 11 Dec 2020 22:22:25 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma02dal.us.ibm.com with ESMTP id 3581uaqkf7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Dec 2020 22:22:25 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BBMMOtp24576384
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Dec 2020 22:22:24 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 11CEEC605A;
-        Fri, 11 Dec 2020 22:22:24 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64776C6057;
-        Fri, 11 Dec 2020 22:22:22 +0000 (GMT)
-Received: from cpe-66-24-58-13.stny.res.rr.com.com (unknown [9.85.193.150])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 11 Dec 2020 22:22:22 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     stable@vger.kernel.org, gregkh@linuxfoundation.org,
-        sashal@kernel.org, borntraeger@de.ibm.com, cohuck@redhat.com,
-        kwankhede@nvidia.com, pbonzini@redhat.com,
-        alex.williamson@redhat.com, pasic@linux.vnet.ibm.com,
-        Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v2 2/2] s390/vfio-ap: reverse group notifier actions when KVM pointer invalidated
-Date:   Fri, 11 Dec 2020 17:22:11 -0500
-Message-Id: <20201211222211.20869-3-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20201211222211.20869-1-akrowiak@linux.ibm.com>
-References: <20201211222211.20869-1-akrowiak@linux.ibm.com>
+        id S2436951AbgLKW57 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 11 Dec 2020 17:57:59 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38364 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407062AbgLKW5d (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 11 Dec 2020 17:57:33 -0500
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1607727400;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RMdJ5cNpvG94MqmN/2d6QVEWUP/YrLyBgV8MUkzsNlA=;
+        b=0WcDMUhLUE5DmQJjljMHI2zWwird6I5Vzppg/zn6AZ6e1OM3STU+JeGE05b5oqLFOvFfmh
+        CDXWZX+LKXvz41MQk+jw0mabsf/xLxFNSlsc7D+IqZgppXn+tyA6NewoUrmvCeXtmt2AST
+        EViRmHdbhCgpLeje9DpFYTQlqeoEtc+eq14ZwN+Y4G4vhAzpgACbffqabmLR4OWIgQ5TkH
+        0732UhUwEAjs3Gs9iSFScNlfSc9uVrpQKD7eElRAgICAQIyVgSIk6IrtHhKDjUooShlbLw
+        6lnH9jzEFDJiTz3F4zTjotppmf5h8vHSXnbS356QRRnsZMAn1kegUSilRX0RVQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1607727400;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RMdJ5cNpvG94MqmN/2d6QVEWUP/YrLyBgV8MUkzsNlA=;
+        b=ljcajSXupjVbHPbFKhUP57PPTY2aSW+D5nnua5xYh57kSUlRXkx3yzKeC3jH07q5vSS64l
+        BGsVaGm3g05BhRAQ==
+To:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        boris.ostrovsky@oracle.com,
+        =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-pci@vger.kernel.org,
+        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Tariq Toukan <tariqt@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>
+Subject: Re: [patch 27/30] xen/events: Only force affinity mask for percpu interrupts
+In-Reply-To: <edbedd7a-4463-d934-73c9-fa046c19cf6d@citrix.com>
+References: <20201210192536.118432146@linutronix.de> <20201210194045.250321315@linutronix.de> <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com> <2164a0ce-0e0d-c7dc-ac97-87c8f384ad82@suse.com> <871rfwiknd.fsf@nanos.tec.linutronix.de> <9806692f-24a3-4b6f-ae55-86bd66481271@oracle.com> <877dpoghio.fsf@nanos.tec.linutronix.de> <edbedd7a-4463-d934-73c9-fa046c19cf6d@citrix.com>
+Date:   Fri, 11 Dec 2020 23:56:40 +0100
+Message-ID: <87y2i4eytz.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-11_09:2020-12-11,2020-12-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- malwarescore=0 bulkscore=0 priorityscore=1501 mlxscore=0
- lowpriorityscore=0 suspectscore=3 phishscore=0 clxscore=1015
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2009150000 definitions=main-2012110145
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The vfio_ap device driver registers a group notifier with VFIO when the
-file descriptor for a VFIO mediated device for a KVM guest is opened to
-receive notification that the KVM pointer is set (VFIO_GROUP_NOTIFY_SET_KVM
-event). When the KVM pointer is set, the vfio_ap driver takes the
-following actions:
-1. Stashes the KVM pointer in the vfio_ap_mdev struct that holds the state
-   of the mediated device.
-2. Calls the kvm_get_kvm() function to increment its reference counter.
-3. Sets the function pointer to the function that handles interception of
-   the instruction that enables/disables interrupt processing.
+Andrew,
 
-When the notifier is called to make notification that the KVM pointer has
-been set to NULL, the driver should reverse the actions taken when the
-KVM pointer was set as well as unplugging the AP devices passed through
-to the KVM guest.
+On Fri, Dec 11 2020 at 22:21, Andrew Cooper wrote:
+> On 11/12/2020 21:27, Thomas Gleixner wrote:
+>> It's not any different from the hardware example at least not as far as
+>> I understood the code.
+>
+> Xen's event channels do have a couple of quirks.
 
-Fixes: 258287c994de ("s390: vfio-ap: implement mediated device open callback")
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c | 40 ++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+Why am I not surprised?
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index c854d7ab2079..1c3c2a0898b9 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -1033,8 +1033,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
- {
- 	struct ap_matrix_mdev *m;
- 
--	mutex_lock(&matrix_dev->lock);
--
- 	list_for_each_entry(m, &matrix_dev->mdev_list, node) {
- 		if ((m != matrix_mdev) && (m->kvm == kvm)) {
- 			mutex_unlock(&matrix_dev->lock);
-@@ -1045,7 +1043,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
- 	matrix_mdev->kvm = kvm;
- 	kvm_get_kvm(kvm);
- 	kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
--	mutex_unlock(&matrix_dev->lock);
- 
- 	return 0;
- }
-@@ -1079,35 +1076,49 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
- 	return NOTIFY_DONE;
- }
- 
-+static void vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
-+{
-+	kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
-+	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
-+	vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
-+	kvm_put_kvm(matrix_mdev->kvm);
-+	matrix_mdev->kvm = NULL;
-+}
-+
- static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
- 				       unsigned long action, void *data)
- {
--	int ret;
-+	int ret, notify_rc = NOTIFY_DONE;
- 	struct ap_matrix_mdev *matrix_mdev;
- 
- 	if (action != VFIO_GROUP_NOTIFY_SET_KVM)
- 		return NOTIFY_OK;
- 
- 	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
-+	mutex_lock(&matrix_dev->lock);
- 
- 	if (!data) {
--		matrix_mdev->kvm = NULL;
--		return NOTIFY_OK;
-+		if (matrix_mdev->kvm)
-+			vfio_ap_mdev_unset_kvm(matrix_mdev);
-+		notify_rc = NOTIFY_OK;
-+		goto notify_done;
- 	}
- 
- 	ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
- 	if (ret)
--		return NOTIFY_DONE;
-+		goto notify_done;
- 
- 	/* If there is no CRYCB pointer, then we can't copy the masks */
- 	if (!matrix_mdev->kvm->arch.crypto.crycbd)
--		return NOTIFY_DONE;
-+		goto notify_done;
- 
- 	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
- 				  matrix_mdev->matrix.aqm,
- 				  matrix_mdev->matrix.adm);
- 
--	return NOTIFY_OK;
-+notify_done:
-+	mutex_unlock(&matrix_dev->lock);
-+	return notify_rc;
- }
- 
- static struct vfio_ap_queue *vfio_ap_find_queue(int apqn)
-@@ -1234,13 +1245,10 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
- 	mutex_lock(&matrix_dev->lock);
--	if (matrix_mdev->kvm) {
--		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
--		matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
--		vfio_ap_mdev_reset_queues(mdev);
--		kvm_put_kvm(matrix_mdev->kvm);
--		matrix_mdev->kvm = NULL;
--	}
-+	if (matrix_mdev->kvm)
-+		vfio_ap_mdev_unset_kvm(matrix_mdev);
-+	else
-+		vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
- 	mutex_unlock(&matrix_dev->lock);
- 
- 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
--- 
-2.21.1
+> Binding an event channel always results in one spurious event being
+> delivered.=C2=A0 This is to cover notifications which can get lost during=
+ the
+> bidirectional setup, or re-setups in certain configurations.
+>
+> Binding an interdomain or pirq event channel always defaults to vCPU0.=C2=
+=A0
+> There is no way to atomically set the affinity while binding.=C2=A0 I bel=
+ieve
+> the API predates SMP guest support in Xen, and noone has fixed it up
+> since.
 
+That's fine. I'm not changing that.
+
+What I'm changing is the unwanted and unnecessary overwriting of the
+actual affinity mask.
+
+We have a similar issue on real hardware where we can only target _one_
+CPU and not all CPUs in the affinity mask. So we still can preserve the
+(user) requested mask and just affine it to one CPU which is reflected
+in the effective affinity mask. This the right thing to do for two
+reasons:
+
+   1) It allows proper interrupt distribution
+
+   2) It does not break (user) requested affinity when the effective
+      target CPU goes offline and the affinity mask still contains
+      online CPUs. If you overwrite it you lost track of the requested
+      broader mask.
+
+> As a consequence, the guest will observe the event raised on vCPU0 as
+> part of setting up the event, even if it attempts to set a different
+> affinity immediately afterwards.=C2=A0 A little bit of care needs to be t=
+aken
+> when binding an event channel on vCPUs other than 0, to ensure that the
+> callback is safe with respect to any remaining state needing
+> initialisation.
+
+That's preserved for all non percpu interrupts. The percpu variant of
+VIRQ and IPIs did binding to vCPU !=3D 0 already before this change.
+
+> Beyond this, there is nothing magic I'm aware of.
+>
+> We have seen soft lockups before in certain scenarios, simply due to the
+> quantity of events hitting vCPU0 before irqbalance gets around to
+> spreading the load.=C2=A0 This is why there is an attempt to round-robin =
+the
+> userspace event channel affinities by default, but I still don't see why
+> this would need custom affinity logic itself.
+
+Just the previous attempt makes no sense for the reasons I outlined in
+the changelog. So now with this new spreading mechanics you get the
+distribution for all cases:
+
+  1) Post setup using and respecting the default affinity mask which can
+     be set as a kernel commandline parameter.
+
+  2) Runtime (user) requested affinity change with a mask which contains
+     more than one vCPU. The previous logic always chose the first one
+     in the mask.
+
+     So assume userspace affines 4 irqs to a CPU 0-3 and 4 irqs to CPU
+     4-7 then 4 irqs end up on CPU0 and 4 on CPU4
+
+     The new algorithm which is similar to what we have on x86 (minus
+     the vector space limitation) picks the CPU which has the least
+     number of channels affine to it at that moment. If e.g. all 8 CPUs
+     have the same number of vectors before that change then in the
+     example above the first 4 are spread to CPU0-3 and the second 4 to
+     CPU4-7
+
+Thanks,
+
+        tglx
+=20=20=20
