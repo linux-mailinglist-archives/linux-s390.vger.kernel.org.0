@@ -2,164 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB99B2D77F7
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Dec 2020 15:35:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58BE72D7802
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Dec 2020 15:37:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406282AbgLKOdP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 11 Dec 2020 09:33:15 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:44700 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406261AbgLKOcd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 11 Dec 2020 09:32:33 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BBEK3q4153543;
-        Fri, 11 Dec 2020 14:29:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=XwmNJXsce0biO7XLe+zGaIsjtrmRfK/vTz0mYn6nQBU=;
- b=bR7yH4+1kTFS/uaRb9qwsHTyFm2EoNVmWnQB/6uOrO708u+eqNtBobFpmn1ttrRdH1ys
- eWZmcv+9rBDGS0S9dxVH7WJEjVIq3kan/8A2J+2JEfl4cmi6SdTHDxhFZ9FOjgghK0i/
- gSlqjyBs3FtwP3+ZAOMx//Xrh2s4GGZVNmZZvw8Dg7A8ucgqyFuZ1jZz6HYR0R/QX3KB
- jq1go8jZfLC3JdZILS9AqGFwicAYPALMmwsEwRd+5bZO9goG03a6o19lTH5pgGTEdXEs
- I4ECgSmCCiTYqeMDSavCaEpGT9QkWsYwEp7lVPsTzWiLDfHkK38lg3Q5ATAnYCJ8Q3TZ zQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 3581mratkd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 11 Dec 2020 14:29:21 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BBEPIII069767;
-        Fri, 11 Dec 2020 14:29:20 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 358kstfcjw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Dec 2020 14:29:20 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0BBETD7i006093;
-        Fri, 11 Dec 2020 14:29:13 GMT
-Received: from [10.39.222.144] (/10.39.222.144)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 11 Dec 2020 06:29:13 -0800
-Subject: Re: [patch 27/30] xen/events: Only force affinity mask for percpu
- interrupts
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci@vger.kernel.org,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>
-References: <20201210192536.118432146@linutronix.de>
- <20201210194045.250321315@linutronix.de>
- <7f7af60f-567f-cdef-f8db-8062a44758ce@oracle.com>
- <2164a0ce-0e0d-c7dc-ac97-87c8f384ad82@suse.com>
- <871rfwiknd.fsf@nanos.tec.linutronix.de>
-From:   boris.ostrovsky@oracle.com
-Organization: Oracle Corporation
-Message-ID: <9806692f-24a3-4b6f-ae55-86bd66481271@oracle.com>
-Date:   Fri, 11 Dec 2020 09:29:09 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.5.1
+        id S2394075AbgLKOg5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 11 Dec 2020 09:36:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37826 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2392273AbgLKOgn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 11 Dec 2020 09:36:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1607697316;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OJMP31tePBJjjh6Q77mzSRtZF5z0111CoyEfOWh0hbo=;
+        b=JINwqf3cDNnmpW5ET7PIF2tOKJZxeXCJitdLaIR7W2Wk84P0hwztFONsNeGV3DHUlQf6es
+        uxGNI/UytCBghZNFXYL96wJuLW+RQ7B9yULYS4/H7dLpgtzxcWN53kSEFlYknzf3dxBvWf
+        84/zQGBGzxevp5wYcrgfCjcAGN/44U0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-5b1P3Kg2PIGV1v3YQoie7A-1; Fri, 11 Dec 2020 09:35:12 -0500
+X-MC-Unique: 5b1P3Kg2PIGV1v3YQoie7A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 833FA107ACFE;
+        Fri, 11 Dec 2020 14:35:10 +0000 (UTC)
+Received: from gondolin (ovpn-112-240.ams2.redhat.com [10.36.112.240])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C0F360BF1;
+        Fri, 11 Dec 2020 14:35:04 +0000 (UTC)
+Date:   Fri, 11 Dec 2020 15:35:01 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     alex.williamson@redhat.com, schnelle@linux.ibm.com,
+        pmorel@linux.ibm.com, borntraeger@de.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC 0/4] vfio-pci/zdev: Fixing s390 vfio-pci ISM support
+Message-ID: <20201211153501.7767a603.cohuck@redhat.com>
+In-Reply-To: <ce9d4ef2-2629-59b7-99ed-4c8212cb004f@linux.ibm.com>
+References: <1607545670-1557-1-git-send-email-mjrosato@linux.ibm.com>
+        <20201210133306.70d1a556.cohuck@redhat.com>
+        <ce9d4ef2-2629-59b7-99ed-4c8212cb004f@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <871rfwiknd.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9831 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012110094
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9831 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
- clxscore=1015 malwarescore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 phishscore=0 spamscore=0 impostorscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012110093
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Thu, 10 Dec 2020 10:51:23 -0500
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-On 12/11/20 7:37 AM, Thomas Gleixner wrote:
-> On Fri, Dec 11 2020 at 13:10, Jürgen Groß wrote:
->> On 11.12.20 00:20, boris.ostrovsky@oracle.com wrote:
->>> On 12/10/20 2:26 PM, Thomas Gleixner wrote:
->>>> All event channel setups bind the interrupt on CPU0 or the target CPU for
->>>> percpu interrupts and overwrite the affinity mask with the corresponding
->>>> cpumask. That does not make sense.
->>>>
->>>> The XEN implementation of irqchip::irq_set_affinity() already picks a
->>>> single target CPU out of the affinity mask and the actual target is stored
->>>> in the effective CPU mask, so destroying the user chosen affinity mask
->>>> which might contain more than one CPU is wrong.
->>>>
->>>> Change the implementation so that the channel is bound to CPU0 at the XEN
->>>> level and leave the affinity mask alone. At startup of the interrupt
->>>> affinity will be assigned out of the affinity mask and the XEN binding will
->>>> be updated.
->>>
->>> If that's the case then I wonder whether we need this call at all and instead bind at startup time.
->> After some discussion with Thomas on IRC and xen-devel archaeology the
->> result is: this will be needed especially for systems running on a
->> single vcpu (e.g. small guests), as the .irq_set_affinity() callback
->> won't be called in this case when starting the irq.
+> On 12/10/20 7:33 AM, Cornelia Huck wrote:
+> > On Wed,  9 Dec 2020 15:27:46 -0500
+> > Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+> >   
+> >> Today, ISM devices are completely disallowed for vfio-pci passthrough as
+> >> QEMU will reject the device due to an (inappropriate) MSI-X check.
+> >> However, in an effort to enable ISM device passthrough, I realized that the
+> >> manner in which ISM performs block write operations is highly incompatible
+> >> with the way that QEMU s390 PCI instruction interception and
+> >> vfio_pci_bar_rw break up I/O operations into 8B and 4B operations -- ISM
+> >> devices have particular requirements in regards to the alignment, size and
+> >> order of writes performed.  Furthermore, they require that legacy/non-MIO
+> >> s390 PCI instructions are used, which is also not guaranteed when the I/O
+> >> is passed through the typical userspace channels.  
+> > 
+> > The part about the non-MIO instructions confuses me. How can MIO
+> > instructions be generated with the current code, and why does changing  
+> 
+> So to be clear, they are not being generated at all in the guest as the 
+> necessary facility is reported as unavailable.
+> 
+> Let's talk about Linux in LPAR / the host kernel:  When hardware that 
+> supports MIO instructions is available, all userspace I/O traffic is 
+> going to be routed through the MIO variants of the s390 PCI 
+> instructions.  This is working well for other device types, but does not 
+> work for ISM which does not support these variants.  However, the ISM 
+> driver also does not invoke the userspace I/O routines for the kernel, 
+> it invokes the s390 PCI layer directly, which in turn ensures the proper 
+> PCI instructions are used -- This approach falls apart when the guest 
+> ISM driver invokes those routines in the guest -- we (qemu) pass those 
+> non-MIO instructions from the guest as memory operations through 
+> vfio-pci, traversing through the vfio I/O layer in the guest 
+> (vfio_pci_bar_rw and friends), where we then arrive in the host s390 PCI 
+> layer -- where the MIO variant is used because the facility is available.
+> 
+> Per conversations with Niklas (on CC), it's not trivial to decide by the 
+> time we reach the s390 PCI I/O layer to switch gears and use the non-MIO 
+> instruction set.
+> 
+> > the write pattern help?  
+> 
+> The write pattern is a separate issue from non-MIO instruction 
+> requirements...  Certain address spaces require specific instructions to 
+> be used (so, no substituting PCISTG for PCISTB - that happens too by 
+> default for any writes coming into the host s390 PCI layer that are 
+> <=8B, and they all are when the PCISTB is broken up into 8B memory 
+> operations that travel through vfio_pci_bar_rw, which further breaks 
+> those up into 4B operations).  There's also a requirement for some 
+> writes that the data, if broken up, be written in a certain order in 
+> order to properly trigger events. :(  The ability to pass the entire 
+> PCISTB payload vs breaking it into 8B chunks is also significantly faster.
 
+Let me summarize this to make sure I understand this new region
+correctly:
 
-On UP are we not then going to end up with an empty affinity mask? Or are we guaranteed to have it set to 1 by interrupt generic code?
+- some devices may have relaxed alignment/length requirements for
+  pcistb (and friends?)
+- some devices may actually require writes to be done in a large chunk
+  instead of being broken up (is that a strict subset of the devices
+  above?)
+- some devices do not support the new MIO instructions (is that a
+  subset of the relaxed alignment devices? I'm not familiar with the
+  MIO instructions)
 
+The patchsets introduce a new region that (a) is used by QEMU to submit
+writes in one go, and (b) makes sure to call into the non-MIO
+instructions directly; it's basically killing two birds with one stone
+for ISM devices. Are these two requirements (large writes and non-MIO)
+always going hand-in-hand, or is ISM just an odd device?
 
-This is actually why I brought this up in the first place --- a potential mismatch between the affinity mask and Xen-specific data (e.g. info->cpu and then protocol-specific data in event channel code). Even if they are re-synchronized later, at startup time (for SMP).
+If there's an expectation that the new region will always use the
+non-MIO instructions (in addition to the changed write handling), it
+should be noted in the description for the region as well.
 
-
-I don't see anything that would cause a problem right now but I worry that this inconsistency may come up at some point.
-
-
--boris
-
-
-> That's right, but not limited to ARM. The same problem exists on x86 UP.
-> So yes, the call makes sense, but the changelog is not really useful.
-> Let me add a comment to this.
->
-> Thanks,
->
->         tglx
->
