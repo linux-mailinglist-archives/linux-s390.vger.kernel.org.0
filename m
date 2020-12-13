@@ -2,150 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 353902D8CD8
-	for <lists+linux-s390@lfdr.de>; Sun, 13 Dec 2020 12:37:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 618292D8DDC
+	for <lists+linux-s390@lfdr.de>; Sun, 13 Dec 2020 15:14:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405915AbgLMLgq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 13 Dec 2020 06:36:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgLMLgp (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 13 Dec 2020 06:36:45 -0500
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BAB5C0613CF;
-        Sun, 13 Dec 2020 03:36:05 -0800 (PST)
-Received: by mail-ed1-x541.google.com with SMTP id cw27so14150670edb.5;
-        Sun, 13 Dec 2020 03:36:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yO3vpR//yJ3KukN+tPfw/ullrK0O2qQE7kKjDuWCMp8=;
-        b=c6i+ahBjD9/Rh0qH45as2/C0d/Lv5nDMeI06jod3TPucN2QtiguKTRZxCznQ+jpaBW
-         gvv5i+HN/z0qVNmozmLuRxtFAJ9V7+Ekywb7P9Eyni0NfuaKlPKyK+aL+VAfVSMYk6ET
-         IsS0+k2gRUdseUfqRF/UdU5bAlwQl7B5WJwI1REXIqN2aaNIVtttoMQkfvNoRFm/NQ/2
-         CwmCf0DUfVLjwlDCo2/HXyzoa2xfU2BeyMBSUUM5MgQ4udzSF7fTqhAJZgUGdY3OmduU
-         Wly23cmVni7LPdYQgfxlnoj5hfppXocENHNXxV4IuuZv3YXWmfxmP1sbgWNiQqwcc5pM
-         VImw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yO3vpR//yJ3KukN+tPfw/ullrK0O2qQE7kKjDuWCMp8=;
-        b=DIjS1DZKaA1uLx9DUmPK6kHRRxVbahEomjt24v6MM407hxRMSGH/kLlDM3dmdUzlw+
-         YNJw6S0nJxRbeKD2SbRBpjxXMY6GaiWKCCB/frBCxBniC1lKSmFbM9uJz0Avi+F0YyPB
-         xiKrXyWFzxSJa1WDFME2Q086r/UarRHZulaOAIWLFNLc8l7ZMn0tzXBFJ6G1hq6yXkh3
-         roGnCrhzARLUtrRzTuz/2Tw8f0VVAeo2ttug4Zd07opJJ3cPwO4fywfC2EHMQF9zxwpJ
-         S4ZpVLZUZAqvGQvVUvqQfN1AWmGgFPAEYmRdcboSw8QzqI+9zLmmlVK8RYQxH4MzQ0zy
-         kH4Q==
-X-Gm-Message-State: AOAM530IIddpA/44A76Lf8MS4Wf7DwSLSneaoPaZMgvyfOXnF+JDxSWb
-        b5vGQDpqDc+e4Bfbl+mNhjw=
-X-Google-Smtp-Source: ABdhPJzH+/aSvmgK74NOHKHONm6dhSpADhiv/j9gb2Z3Pv7veSPcdPhRE3SKaG8WhajpgAcAsGPlGw==
-X-Received: by 2002:a50:a6c9:: with SMTP id f9mr20130904edc.158.1607859364213;
-        Sun, 13 Dec 2020 03:36:04 -0800 (PST)
-Received: from [192.168.0.107] ([77.127.34.194])
-        by smtp.gmail.com with ESMTPSA id ef11sm11222266ejb.15.2020.12.13.03.35.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Dec 2020 03:36:03 -0800 (PST)
-Subject: Re: [patch 23/30] net/mlx5: Use effective interrupt affinity
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
+        id S2436938AbgLMOLr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 13 Dec 2020 09:11:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2395199AbgLMOLL (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 13 Dec 2020 09:11:11 -0500
+Date:   Sun, 13 Dec 2020 09:10:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1607868630;
+        bh=S0NZCKTHXO1/XgTBibTeHKY2NyaV+jWp9oZjgvuSOZg=;
+        h=From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nFttyLKxDFdTzDqG+uV+ZMYwIDraCwmT1csa8RGjNQtB2KNQuC3CWvsr8XvQHFTkX
+         bOVfEZ3hZGq/q87besC+Bjzp/UHT9BZ6/avesb9g234GUTyQ6mz9ZdKVWLvvWayKcR
+         5IsZC3of1cWOok1XpWOR2jKmC5sWYP7UWQbjwfCJNcyT1mEousS3/8Iz7qmQngrF+E
+         UBfwNFX/Xim1w8qNAQxV89tayOf16Xozhta7DOpqMYNyp+n+eIU7Y985xkZoMGJ7UI
+         W/Q6SnFz+H4jXIWSjxGFg8FVH/fANHjQkaleEJRhOabM6QD83DoUX7CgAE554wRsQU
+         Zom91bCLKheaA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci@vger.kernel.org,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-References: <20201210192536.118432146@linutronix.de>
- <20201210194044.876342330@linutronix.de>
-From:   Tariq Toukan <ttoukan.linux@gmail.com>
-Message-ID: <f0a01d6e-0333-e929-eabb-28cb444effe0@gmail.com>
-Date:   Sun, 13 Dec 2020 13:35:57 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-csky@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 5.9 27/39] sched/idle: Fix arch_cpu_idle() vs
+ tracing
+Message-ID: <20201213141029.GQ643756@sasha-vm>
+References: <20201203132834.930999-1-sashal@kernel.org>
+ <20201203132834.930999-27-sashal@kernel.org>
+ <20201203145442.GC9994@osiris>
+ <20201203171015.GN2414@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20201210194044.876342330@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20201203171015.GN2414@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Thu, Dec 03, 2020 at 06:10:15PM +0100, Peter Zijlstra wrote:
+>On Thu, Dec 03, 2020 at 03:54:42PM +0100, Heiko Carstens wrote:
+>> On Thu, Dec 03, 2020 at 08:28:21AM -0500, Sasha Levin wrote:
+>> > From: Peter Zijlstra <peterz@infradead.org>
+>> >
+>> > [ Upstream commit 58c644ba512cfbc2e39b758dd979edd1d6d00e27 ]
+>> >
+>> > We call arch_cpu_idle() with RCU disabled, but then use
+>> > local_irq_{en,dis}able(), which invokes tracing, which relies on RCU.
+>> >
+>> > Switch all arch_cpu_idle() implementations to use
+>> > raw_local_irq_{en,dis}able() and carefully manage the
+>> > lockdep,rcu,tracing state like we do in entry.
+>> >
+>> > (XXX: we really should change arch_cpu_idle() to not return with
+>> > interrupts enabled)
+>> >
+>> > Reported-by: Sven Schnelle <svens@linux.ibm.com>
+>> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> > Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+>> > Tested-by: Mark Rutland <mark.rutland@arm.com>
+>> > Link: https://lkml.kernel.org/r/20201120114925.594122626@infradead.org
+>> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>
+>> This patch broke s390 irq state tracing. A patch to fix this is
+>> scheduled to be merged upstream today (hopefully).
+>> Therefore I think this patch should not yet go into 5.9 stable.
+>
+>Agreed.
 
+I'll also grab b1cae1f84a0f ("s390: fix irq state tracing"). Thanks!
 
-On 12/10/2020 9:25 PM, Thomas Gleixner wrote:
-> Using the interrupt affinity mask for checking locality is not really
-> working well on architectures which support effective affinity masks.
-> 
-> The affinity mask is either the system wide default or set by user space,
-> but the architecture can or even must reduce the mask to the effective set,
-> which means that checking the affinity mask itself does not really tell
-> about the actual target CPUs.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Saeed Mahameed <saeedm@nvidia.com>
-> Cc: Leon Romanovsky <leon@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: netdev@vger.kernel.org
-> Cc: linux-rdma@vger.kernel.org
-> ---
->   drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> @@ -1998,7 +1998,7 @@ static int mlx5e_open_channel(struct mlx
->   	c->num_tc   = params->num_tc;
->   	c->xdp      = !!params->xdp_prog;
->   	c->stats    = &priv->channel_stats[ix].ch;
-> -	c->aff_mask = irq_get_affinity_mask(irq);
-> +	c->aff_mask = irq_get_effective_affinity_mask(irq);
->   	c->lag_port = mlx5e_enumerate_lag_port(priv->mdev, ix);
->   
->   	netif_napi_add(netdev, &c->napi, mlx5e_napi_poll, 64);
-> 
-
-Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
-
-Thanks.
+-- 
+Thanks,
+Sasha
