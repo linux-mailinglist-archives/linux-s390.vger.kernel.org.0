@@ -2,144 +2,500 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07BF02DA26D
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Dec 2020 22:15:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8DDB2DA42E
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Dec 2020 00:36:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503599AbgLNVOF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Dec 2020 16:14:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728461AbgLNVNv (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 14 Dec 2020 16:13:51 -0500
-Message-ID: <0f8eda3bbed1100c1c1f7015dd5c172f8d735c94.camel@kernel.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607980391;
-        bh=Pzvi/5ISTUEc02BC83hB6nniQmkTHPAhNCBBNcfKAUY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Ks3P3xnvXkJSp+uh7CcZoik6MJkEKtx2PvE0VYPE/pepC3FjT65YOm45Ebhka542Q
-         KDRZnMtG6PVk8azMh03nN0D62HLqcKsXaM3NGfl0cnBfDn4M/eCG3Bapi5UEiWJojE
-         Wz5xGjdq/ndTqDY7tNprPuvOQMJrfpTrREHq07hUDedim+JiPcYSm9y/a+CVpdgIGp
-         tK5qViUVIaC1nIaet1VMQYFfwNA6Uv7knO5wHsw+J306Af6r5YPeiXS/tptiFYTABJ
-         2yXmYvRm101qHL41Iu7+0L42D5JI7GLbb235mT9lCcvuGwm/DUlfBNloCq8GKc5F9/
-         KjhGS5BzrCEJg==
-Subject: Re: [patch 22/30] net/mlx5: Replace irq_to_desc() abuse
-From:   Saeed Mahameed <saeed@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-parisc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-pci@vger.kernel.org,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Leon Romanovsky <leon@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-Date:   Mon, 14 Dec 2020 13:13:07 -0800
-In-Reply-To: <20201210194044.769458162@linutronix.de>
-References: <20201210192536.118432146@linutronix.de>
-         <20201210194044.769458162@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        id S1726319AbgLNXdv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Dec 2020 18:33:51 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56588 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725789AbgLNXdm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 14 Dec 2020 18:33:42 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BENVuP7076184;
+        Mon, 14 Dec 2020 18:32:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=DGMO/CvQ7kZECIbVR1Sk7ifLl79WLaerDfYDioZwgis=;
+ b=hRE8z9twTKZ/vdPnYPQ9wk0m/bnptJRViydiXc3LzFO8Zrj31NwkrAwTpug0pu+oF+3s
+ V8Q/ZeNW47vLQ/ULknvJokSxFsN6O078E5otGkrVcq7hOOLDf07shpxdBHYudW8af3PX
+ g9HCzXXNS3Y4TAsfYljWqP+8ZX1AxObruWNF+hkUDAaJ2F1fdh5dS1QtGI/dlKIsE5m8
+ LPWOJ/pX7S+7rkZHAELkMtAtVZHn/GA3c8SUHJveqs9QgtSjzE3gAccraIt9KMqiweUT
+ Fb7fEyDpQcpfG+LoiWkeNRh2H3j50TorsUfsy0f1cnDqRc1Yu3JjJY3tl45A9mQPbcHj Zw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 35ehjgr908-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Dec 2020 18:32:55 -0500
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BENVxxk076497;
+        Mon, 14 Dec 2020 18:32:55 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 35ehjgr903-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Dec 2020 18:32:55 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BENNM1c008664;
+        Mon, 14 Dec 2020 23:32:54 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma04dal.us.ibm.com with ESMTP id 35cng90a2d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Dec 2020 23:32:54 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BENWqZq29688264
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Dec 2020 23:32:52 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44318AE062;
+        Mon, 14 Dec 2020 23:32:52 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 69B67AE05F;
+        Mon, 14 Dec 2020 23:32:51 +0000 (GMT)
+Received: from cpe-66-24-58-13.stny.res.rr.com (unknown [9.85.193.150])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 14 Dec 2020 23:32:51 +0000 (GMT)
+Subject: Re: [PATCH v12 05/17] s390/vfio-ap: manage link between queue struct
+ and matrix mdev
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, mjrosato@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+References: <20201124214016.3013-1-akrowiak@linux.ibm.com>
+ <20201124214016.3013-6-akrowiak@linux.ibm.com>
+ <20201126154538.2004f0a5.pasic@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <606e0b66-adca-15b4-c8a9-804056fc11e5@linux.ibm.com>
+Date:   Mon, 14 Dec 2020 18:32:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20201126154538.2004f0a5.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2020-12-14_12:2020-12-11,2020-12-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ priorityscore=1501 malwarescore=0 impostorscore=0 mlxscore=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 mlxlogscore=999 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012140153
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 2020-12-10 at 20:25 +0100, Thomas Gleixner wrote:
-> No driver has any business with the internals of an interrupt
-> descriptor. Storing a pointer to it just to use yet another helper at
-> the
-> actual usage site to retrieve the affinity mask is creative at best.
-> Just
-> because C does not allow encapsulation does not mean that the kernel
-> has no
-> limits.
-> 
-
-you can't blame the developers for using stuff from include/linux/
-Not all developers are the same, and sometime we don't read in between
-the lines, you can't assume all driver developers to be expert on irq
-APIs disciplines.
-
-your rules must be programmatically expressed, for instance,
-you can just hide struct irq_desc and irq_to_desc() in kernel/irq/ and
-remove them from include/linux/ header files, if you want privacy in
-your subsystem, don't put all your header files on display under
-include/linux.
 
 
-> Retrieve a pointer to the affinity mask itself and use that. It's
-> still
-> using an interface which is usually not for random drivers, but
-> definitely
-> less hideous than the previous hack.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/en.h      |    2 +-
->  drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    2 +-
->  drivers/net/ethernet/mellanox/mlx5/core/en_txrx.c |    6 +-----
->  3 files changed, 3 insertions(+), 7 deletions(-)
-> 
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-> @@ -669,7 +669,7 @@ struct mlx5e_channel {
->  	spinlock_t                 async_icosq_lock;
->  
->  	/* data path - accessed per napi poll */
-> -	struct irq_desc *irq_desc;
-> +	const struct cpumask	  *aff_mask;
->  	struct mlx5e_ch_stats     *stats;
->  
->  	/* control */
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> @@ -1998,7 +1998,7 @@ static int mlx5e_open_channel(struct mlx
->  	c->num_tc   = params->num_tc;
->  	c->xdp      = !!params->xdp_prog;
->  	c->stats    = &priv->channel_stats[ix].ch;
-> -	c->irq_desc = irq_to_desc(irq);
-> +	c->aff_mask = irq_get_affinity_mask(irq);
+On 11/26/20 9:45 AM, Halil Pasic wrote:
+> On Tue, 24 Nov 2020 16:40:04 -0500
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> Let's create links between each queue device bound to the vfio_ap device
+>> driver and the matrix mdev to which the queue is assigned. The idea is to
+>> facilitate efficient retrieval of the objects representing the queue
+>> devices and matrix mdevs as well as to verify that a queue assigned to
+>> a matrix mdev is bound to the driver.
+>>
+>> The links will be created as follows:
+>>
+>>     * When the queue device is probed, if its APQN is assigned to a matrix
+>>       mdev, the structures representing the queue device and the matrix mdev
+>>       will be linked.
+>>
+>>     * When an adapter or domain is assigned to a matrix mdev, for each new
+>>       APQN assigned that references a queue device bound to the vfio_ap
+>>       device driver, the structures representing the queue device and the
+>>       matrix mdev will be linked.
+>>
+>> The links will be removed as follows:
+>>
+>>     * When the queue device is removed, if its APQN is assigned to a matrix
+>>       mdev, the structures representing the queue device and the matrix mdev
+>>       will be unlinked.
+>>
+>>     * When an adapter or domain is unassigned from a matrix mdev, for each
+>>       APQN unassigned that references a queue device bound to the vfio_ap
+>>       device driver, the structures representing the queue device and the
+>>       matrix mdev will be unlinked.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> Actually some aspects of this look much better than last time,
+> but I'm afraid there one new issue that must be corrected -- see below.
+>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_ops.c     | 161 +++++++++++++++++++++++---
+>>   drivers/s390/crypto/vfio_ap_private.h |   3 +
+>>   2 files changed, 146 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+>> index dc699fd54505..07caf871943c 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -28,7 +28,6 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
+>>   
+>>   /**
+>>    * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
+>> - * @matrix_mdev: the associated mediated matrix
+>>    * @apqn: The queue APQN
+>>    *
+>>    * Retrieve a queue with a specific APQN from the AP queue devices attached to
+>> @@ -36,32 +35,36 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
+>>    *
+>>    * Returns the pointer to the vfio_ap_queue with the specified APQN, or NULL.
+>>    */
+>> -static struct vfio_ap_queue *vfio_ap_get_queue(
+>> -					struct ap_matrix_mdev *matrix_mdev,
+>> -					int apqn)
+>> +static struct vfio_ap_queue *vfio_ap_get_queue(int apqn)
+>>   {
+>>   	struct ap_queue *queue;
+>>   	struct vfio_ap_queue *q = NULL;
+>>   
+>> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
+>> -		return NULL;
+>> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
+>> -		return NULL;
+>> -
+>>   	queue = ap_get_qdev(apqn);
+>>   	if (!queue)
+>>   		return NULL;
+>>   
+>>   	put_device(&queue->ap_dev.device);
+>>   
+>> -	if (queue->ap_dev.device.driver == &matrix_dev->vfio_ap_drv->driver) {
+>> +	if (queue->ap_dev.device.driver == &matrix_dev->vfio_ap_drv->driver)
+>>   		q = dev_get_drvdata(&queue->ap_dev.device);
+>> -		q->matrix_mdev = matrix_mdev;
+>> -	}
+>>   
+>>   	return q;
+>>   }
+>>   
+>> +static struct vfio_ap_queue *
+>> +vfio_ap_mdev_get_queue(struct ap_matrix_mdev *matrix_mdev, unsigned long apqn)
+>> +{
+>> +	struct vfio_ap_queue *q;
+>> +
+>> +	hash_for_each_possible(matrix_mdev->qtable, q, mdev_qnode, apqn) {
+>> +		if (q && (q->apqn == apqn))
+>> +			return q;
+>> +	}
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>>   /**
+>>    * vfio_ap_wait_for_irqclear
+>>    * @apqn: The AP Queue number
+>> @@ -172,7 +175,6 @@ static struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+>>   		  status.response_code);
+>>   end_free:
+>>   	vfio_ap_free_aqic_resources(q);
+>> -	q->matrix_mdev = NULL;
+>>   	return status;
+>>   }
+>>   
+>> @@ -288,7 +290,7 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
+>>   	matrix_mdev = container_of(vcpu->kvm->arch.crypto.pqap_hook,
+>>   				   struct ap_matrix_mdev, pqap_hook);
+>>   
+>> -	q = vfio_ap_get_queue(matrix_mdev, apqn);
+>> +	q = vfio_ap_mdev_get_queue(matrix_mdev, apqn);
+>>   	if (!q)
+>>   		goto out_unlock;
+>>   
+>> @@ -331,6 +333,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
+>>   
+>>   	matrix_mdev->mdev = mdev;
+>>   	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->matrix);
+>> +	hash_init(matrix_mdev->qtable);
+>>   	mdev_set_drvdata(mdev, matrix_mdev);
+>>   	matrix_mdev->pqap_hook.hook = handle_pqap;
+>>   	matrix_mdev->pqap_hook.owner = THIS_MODULE;
+>> @@ -559,6 +562,87 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+>>   	return 0;
+>>   }
+>>   
+>> +enum qlink_action {
+>> +	LINK_APID,
+>> +	LINK_APQI,
+>> +	UNLINK_APID,
+>> +	UNLINK_APQI,
+>> +};
+>> +
+>> +static void vfio_ap_mdev_link_queue(struct ap_matrix_mdev *matrix_mdev,
+>> +				    unsigned long apid, unsigned long apqi)
+>> +{
+>> +	struct vfio_ap_queue *q;
+>> +
+>> +	q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+>> +	if (q) {
+>> +		q->matrix_mdev = matrix_mdev;
+>> +		hash_add(matrix_mdev->qtable,
+>> +			 &q->mdev_qnode, q->apqn);
+>> +	}
+>> +}
+>> +
+>> +static void vfio_ap_mdev_unlink_queue(unsigned long apid, unsigned long apqi)
+>> +{
+>> +	struct vfio_ap_queue *q;
+>> +
+>> +	q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+>> +	if (q) {
+>> +		q->matrix_mdev = NULL;
+>> +		hash_del(&q->mdev_qnode);
+>> +	}
+>> +}
+>
+>
+> I would do
+>
+> +static void vfio_ap_mdev_unlink_queue(struct vfio_ap_queue *q)
+> +{
+> +	if (!q)
+> +		return;
+> +	q->matrix_mdev = NULL;
+> +	hash_del(&q->mdev_qnode);
+> +}
+> +
+> +static void vfio_ap_mdev_unlink_queue_by_id(unsigned long apid, unsigned long apqi)
+> +{
+> +	struct vfio_ap_queue *q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+> +	
+> +	vfio_ap_mdev_unlink_queue(q);
+> +}
 
-as long as the affinity mask pointer stays the same for the lifetime of
-the irq vector.
+I agree because of the case you made below.
 
-Assuming that:
-Acked-by: Saeed Mahameed <saeedm@nvidia.com>
+>
+>> +
+>> +/**
+>> + * vfio_ap_mdev_manage_qlinks
+>> + *
+>> + * @matrix_mdev: The matrix mdev to link.
+>> + * @action:	 The action to take on @qlink_id.
+>> + * @qlink_id:	 The APID or APQI of the queues to link.
+>> + *
+>> + * Sets or clears the links between the queues with the specified @qlink_id
+>> + * and the @matrix_mdev:
+>> + *	@action == LINK_APID:	Set the links between the @matrix_mdev and the
+>> + *				queues with the specified @qlink_id (APID)
+>> + *	@action == LINK_APQI:	Set the links between the @matrix_mdev and the
+>> + *				queues with the specified @qlink_id (APQI)
+>> + *	@action == UNLINK_APID:	Clear the links between the @matrix_mdev and the
+>> + *				queues with the specified @qlink_id (APID)
+>> + *	@action == UNLINK_APQI:	Clear the links between the @matrix_mdev and the
+>> + *				queues with the specified @qlink_id (APQI)
+>> + */
+>> +static void vfio_ap_mdev_manage_qlinks(struct ap_matrix_mdev *matrix_mdev,
+>> +				       enum qlink_action action,
+>> +				       unsigned long qlink_id)
+>> +{
+>> +	unsigned long id;
+>> +
+>> +	switch (action) {
+>> +	case LINK_APID:
+>> +		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
+>> +				     matrix_mdev->matrix.aqm_max + 1)
+>> +			vfio_ap_mdev_link_queue(matrix_mdev, qlink_id, id);
+>> +		break;
+>> +	case UNLINK_APID:
+>> +		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
+>> +				     matrix_mdev->matrix.aqm_max + 1)
+>> +			vfio_ap_mdev_unlink_queue(qlink_id, id);
+>> +		break;
+>> +	case LINK_APQI:
+>> +		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
+>> +				     matrix_mdev->matrix.apm_max + 1)
+>> +			vfio_ap_mdev_link_queue(matrix_mdev, id, qlink_id);
+>> +		break;
+>> +	case UNLINK_APQI:
+>> +		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
+>> +				     matrix_mdev->matrix.apm_max + 1)
+>> +			vfio_ap_mdev_link_queue(matrix_mdev, id, qlink_id);
+>> +		break;
+>> +	default:
+>> +		WARN_ON_ONCE(1);
+>> +	}
+>> +}
+>> +
+>>   /**
+>>    * assign_adapter_store
+>>    *
+>> @@ -628,6 +712,7 @@ static ssize_t assign_adapter_store(struct device *dev,
+>>   	if (ret)
+>>   		goto share_err;
+>>   
+>> +	vfio_ap_mdev_manage_qlinks(matrix_mdev, LINK_APID, apid);
+>>   	ret = count;
+>>   	goto done;
+>>   
+>> @@ -679,6 +764,7 @@ static ssize_t unassign_adapter_store(struct device *dev,
+>>   
+>>   	mutex_lock(&matrix_dev->lock);
+>>   	clear_bit_inv((unsigned long)apid, matrix_mdev->matrix.apm);
+>> +	vfio_ap_mdev_manage_qlinks(matrix_mdev, UNLINK_APID, apid);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   
+>>   	return count;
+>> @@ -769,6 +855,7 @@ static ssize_t assign_domain_store(struct device *dev,
+>>   	if (ret)
+>>   		goto share_err;
+>>   
+>> +	vfio_ap_mdev_manage_qlinks(matrix_mdev, LINK_APQI, apqi);
+>>   	ret = count;
+>>   	goto done;
+>>   
+>> @@ -821,6 +908,7 @@ static ssize_t unassign_domain_store(struct device *dev,
+>>   
+>>   	mutex_lock(&matrix_dev->lock);
+>>   	clear_bit_inv((unsigned long)apqi, matrix_mdev->matrix.aqm);
+>> +	vfio_ap_mdev_manage_qlinks(matrix_mdev, UNLINK_APQI, apqi);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   
+>>   	return count;
+>> @@ -1155,6 +1243,11 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>>   			     matrix_mdev->matrix.apm_max + 1) {
+>>   		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+>>   				     matrix_mdev->matrix.aqm_max + 1) {
+>> +			q = vfio_ap_mdev_get_queue(matrix_mdev,
+>> +						   AP_MKQID(apid, apqi));
+>> +			if (!q)
+>> +				continue;
+>> +
+>>   			ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>>   			/*
+>>   			 * Regardless whether a queue turns out to be busy, or
+>> @@ -1164,9 +1257,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>>   			if (ret)
+>>   				rc = ret;
+>>   
+>> -			q = vfio_ap_get_queue(matrix_mdev, AP_MKQID(apid, apqi);
+>> -			if (q)
+>> -				vfio_ap_free_aqic_resources(q);
+>> +			vfio_ap_free_aqic_resources(q);
+>>   		}
+>>   	}
+>>   
+>> @@ -1292,6 +1383,29 @@ void vfio_ap_mdev_unregister(void)
+>>   	mdev_unregister_device(&matrix_dev->device);
+>>   }
+>>   
+>> +/*
+>> + * vfio_ap_queue_link_mdev
+>> + *
+>> + * @q: The queue to link with the matrix mdev.
+>> + *
+>> + * Links @q with the matrix mdev to which the queue's APQN is assigned.
+>> + */
+>> +static void vfio_ap_queue_link_mdev(struct vfio_ap_queue *q)
+>> +{
+>> +	unsigned long apid = AP_QID_CARD(q->apqn);
+>> +	unsigned long apqi = AP_QID_QUEUE(q->apqn);
+>> +	struct ap_matrix_mdev *matrix_mdev;
+>> +
+>> +	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
+>> +		if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
+>> +		    test_bit_inv(apqi, matrix_mdev->matrix.aqm)) {
+>> +			q->matrix_mdev = matrix_mdev;
+>> +			hash_add(matrix_mdev->qtable, &q->mdev_qnode, q->apqn);
+>> +			break;
+>> +		}
+>> +	}
+>> +}
+>> +
+>>   /**
+>>    * vfio_ap_mdev_probe_queue:
+>>    *
+>> @@ -1305,9 +1419,13 @@ int vfio_ap_mdev_probe_queue(struct ap_device *apdev)
+>>   	q = kzalloc(sizeof(*q), GFP_KERNEL);
+>>   	if (!q)
+>>   		return -ENOMEM;
+>> +	mutex_lock(&matrix_dev->lock);
+>>   	dev_set_drvdata(&apdev->device, q);
+>>   	q->apqn = to_ap_queue(&apdev->device)->qid;
+>>   	q->saved_isc = VFIO_AP_ISC_INVALID;
+>> +	vfio_ap_queue_link_mdev(q);
+>> +	mutex_unlock(&matrix_dev->lock);
+>> +
+>>   	return 0;
+>>   }
+>>   
+>> @@ -1328,7 +1446,14 @@ void vfio_ap_mdev_remove_queue(struct ap_device *apdev)
+>>   	apid = AP_QID_CARD(q->apqn);
+>>   	apqi = AP_QID_QUEUE(q->apqn);
+>>   	vfio_ap_mdev_reset_queue(apid, apqi, 1);
+> Does it make sense to reset if !q->matrix_dev?
 
+This line of code was not modified from what is upstream, so I don't
+think this patch or even this patch series is the appropriate place to
+question this. If you feel strongly that we shouldn't reset the queue
+when it is unbound from the vfio_ap device driver, we can discuss
+that offline and create an individual patch specifically for that
+purpose.
+
+>
+>> -	vfio_ap_irq_disable(q);
+>> +	if (q->matrix_mdev) {
+>> +		if (q->matrix_mdev->kvm) {
+>> +			vfio_ap_free_aqic_resources(q);
+> Again this belongs to the previous patch.
+
+Actually, it belongs in patch 01/14 but I agree, it does not belong
+in this patch.
+
+>
+>> +			kvm_put_kvm(q->matrix_mdev->kvm);
+> This kvm_put_kvm() makes no sense to me! Please explain. Where
+> is the corresponding kvm_get_kvm()?
+
+The kvm_get_kvm() is in the group notifier callback, but it definitely
+doesn't belong here with this patch.
+
+>
+>> +		}
+>> +		hash_del(&q->mdev_qnode);
+>> +		q->matrix_mdev = NULL;
+> This shouuld be an unlink_queue(q).
+
+Okay.
+
+>
+>> +	}
+>>   	kfree(q);
+>>   	mutex_unlock(&matrix_dev->lock);
+>>   }
+>> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+>> index d9003de4fbad..4e5cc72fc0db 100644
+>> --- a/drivers/s390/crypto/vfio_ap_private.h
+>> +++ b/drivers/s390/crypto/vfio_ap_private.h
+>> @@ -18,6 +18,7 @@
+>>   #include <linux/delay.h>
+>>   #include <linux/mutex.h>
+>>   #include <linux/kvm_host.h>
+>> +#include <linux/hashtable.h>
+>>   
+>>   #include "ap_bus.h"
+>>   
+>> @@ -86,6 +87,7 @@ struct ap_matrix_mdev {
+>>   	struct kvm *kvm;
+>>   	struct kvm_s390_module_hook pqap_hook;
+>>   	struct mdev_device *mdev;
+>> +	DECLARE_HASHTABLE(qtable, 8);
+>>   };
+>>   
+>>   extern int vfio_ap_mdev_register(void);
+>> @@ -97,6 +99,7 @@ struct vfio_ap_queue {
+>>   	int	apqn;
+>>   #define VFIO_AP_ISC_INVALID 0xff
+>>   	unsigned char saved_isc;
+>> +	struct hlist_node mdev_qnode;
+>>   };
+>>   
+>>   int vfio_ap_mdev_probe_queue(struct ap_device *queue);
 
