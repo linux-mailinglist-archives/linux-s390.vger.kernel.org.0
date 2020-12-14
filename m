@@ -2,130 +2,183 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BE262D911C
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Dec 2020 00:14:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 918B92D9664
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Dec 2020 11:37:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgLMXOA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 13 Dec 2020 18:14:00 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3024 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725874AbgLMXOA (ORCPT
+        id S2436805AbgLNKgz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Dec 2020 05:36:55 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12648 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2436572AbgLNKgz (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 13 Dec 2020 18:14:00 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BDN2Oee181123;
-        Sun, 13 Dec 2020 18:13:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
+        Mon, 14 Dec 2020 05:36:55 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BEAYQc2010671;
+        Mon, 14 Dec 2020 05:36:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=9NT1XXYa5wl70p6HiLU6THBshqdAzNi8Zkj2uMWS2zk=;
- b=ke1LRtflBMoE0uW00iX/TKszmRaXuAK+7JG2qlV8Poy71vKPqjpZqn13LQTvFNINFBXG
- SSm/MHkwnUcsBdMN5NbxkvLqodDlHyZtN7zGssmo6MYV89QJJFraod0zWWy2dTigBvYi
- v0UKLpBmefbDq4X242R2kfh1eVA/XafadhIQHO7bTO9l///D1OWTElE6Z2fzInFuxAg5
- lZs8dV2Eq7hlVSZ2NAbNsEBmjoMv18ftPnxfNEJhfCNCHn4oUChpqp0oMEoaoMUoffb1
- Uzr3Rn16aOHYhOHUKdgtBdQ+Nwk+VwFn/TJASxTQRotXuvP+9XZAAubhNGaVZo1ei65y yA== 
+ bh=TL0E756GVDlYlkk14G7BJCT9SVvDQ61sP4GI8lSS11Q=;
+ b=YNcPm+BgsFI9QUlIcRhnhIQtjoRrCbWuON83Bgs+2bpZj2HUtlErLgAm3kxwGO5n0dKg
+ n0TzYlnA9r4rNOGSfZw45+JD5qTfJCHUqXlRH60rkd7Ph9vWE7fn5UfZ0CFGUszO9jy+
+ 50xPucUXdoEt1KvSUcOYBN9o746ITRdanIHw7FifNRC6KmiLe2JB4DbIXuk9Lck8D7Ys
+ KPqXgpe2EpDHxemejMAs52EGCcmVWxlYGU/XaExSg9cFIvW4G6HS2CnRlqg0qwEy7H+S
+ DJjws4nJ4cPhdm/cO7brGOsev0p5ZJ2/mH4Igh9IgRy1fNWX9AigSHRVvaQHuMQYWtA8 Mg== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 35du45he5q-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35e5c9hqw3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 13 Dec 2020 18:13:18 -0500
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BDNAoBu010826;
-        Sun, 13 Dec 2020 18:13:17 -0500
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 35du45he5b-1
+        Mon, 14 Dec 2020 05:36:14 -0500
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BEAYasj011252;
+        Mon, 14 Dec 2020 05:36:14 -0500
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35e5c9hqux-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 13 Dec 2020 18:13:17 -0500
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BDNDFaD009621;
-        Sun, 13 Dec 2020 23:13:15 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04fra.de.ibm.com with ESMTP id 35cng88ste-1
+        Mon, 14 Dec 2020 05:36:13 -0500
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BEAWvr1026930;
+        Mon, 14 Dec 2020 10:36:11 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03fra.de.ibm.com with ESMTP id 35cng8b1jn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 13 Dec 2020 23:13:15 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BDNDCU728639512
+        Mon, 14 Dec 2020 10:36:11 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BEAYrVA57278910
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 13 Dec 2020 23:13:12 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 759305204E;
-        Sun, 13 Dec 2020 23:13:12 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.171.55.88])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id EC61D52051;
-        Sun, 13 Dec 2020 23:13:11 +0000 (GMT)
-Date:   Mon, 14 Dec 2020 00:13:10 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, borntraeger@de.ibm.com, cohuck@redhat.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com, david@redhat.com
-Subject: Re: [PATCH] s390/vfio-ap: Clean up vfio_ap resources when KVM
- pointer invalidated
-Message-ID: <20201214001310.2cb6f1ff.pasic@linux.ibm.com>
-In-Reply-To: <ff21dd8e-9ac7-8625-5c77-4705e1344477@linux.ibm.com>
-References: <20201202234101.32169-1-akrowiak@linux.ibm.com>
-        <ab3f1948-bb23-c0d0-7205-f46cd6dbe99d@linux.ibm.com>
-        <20201208014018.3f89527f.pasic@linux.ibm.com>
-        <ff21dd8e-9ac7-8625-5c77-4705e1344477@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Mon, 14 Dec 2020 10:34:53 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 340214C058;
+        Mon, 14 Dec 2020 10:34:53 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CE4224C04E;
+        Mon, 14 Dec 2020 10:34:52 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.40.101])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 14 Dec 2020 10:34:52 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v3 4/8] s390x: Split assembly and move to
+ s390x/asm/
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
+Cc:     david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        cohuck@redhat.com, linux-s390@vger.kernel.org
+References: <20201211100039.63597-1-frankja@linux.ibm.com>
+ <20201211100039.63597-5-frankja@linux.ibm.com>
+ <5f1e9f51-86d9-4bb1-1dcf-09ec687419f4@redhat.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Message-ID: <34bf37fd-ba78-7cd4-7d46-dce1f27b8f62@linux.ibm.com>
+Date:   Mon, 14 Dec 2020 11:34:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <5f1e9f51-86d9-4bb1-1dcf-09ec687419f4@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-13_06:2020-12-11,2020-12-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 phishscore=0 adultscore=0 mlxlogscore=907
- priorityscore=1501 malwarescore=0 spamscore=0 mlxscore=0 impostorscore=0
- bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012130177
+ definitions=2020-12-14_04:2020-12-11,2020-12-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 bulkscore=0 lowpriorityscore=0 phishscore=0 mlxlogscore=999
+ suspectscore=0 impostorscore=0 spamscore=0 mlxscore=0 adultscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012140075
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 11 Dec 2020 16:08:53 -0500
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> >>> +static void vfio_ap_mdev_put_kvm(struct ap_matrix_mdev *matrix_mdev)
-> >>> +{
-> >>> +	if (matrix_mdev->kvm) {
-> >>> +		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
-> >>> +		matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
-> >>> +		vfio_ap_mdev_reset_queues(matrix_mdev->mdev);  
-> >> This reset probably does not belong here since there is no
-> >> reason to reset the queues in the group notifier (see below).  
-> > What about kvm_s390_gisc_unregister()? That needs a valid kvm
-> > pointer, or? Or is it OK to not pair a kvm_s390_gisc_register()
-> > with an kvm_s390_gisc_unregister()?  
+On 12/11/20 1:18 PM, Thomas Huth wrote:
+> On 11/12/2020 11.00, Janosch Frank wrote:
+>> I've added too much to cstart64.S which is not start related
+>> already. Now that I want to add even more code it's time to split
+>> cstart64.S. lib.S has functions that are used in tests. macros.S
+>> contains macros which are used in cstart64.S and lib.S
+>>
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> ---
+>>  s390x/Makefile             |   8 +--
+>>  s390x/{ => asm}/cstart64.S | 119 ++-----------------------------------
+>>  s390x/asm/lib.S            |  65 ++++++++++++++++++++
+>>  s390x/asm/macros.S         |  77 ++++++++++++++++++++++++
+>>  4 files changed, 150 insertions(+), 119 deletions(-)
+>>  rename s390x/{ => asm}/cstart64.S (50%)
+>>  create mode 100644 s390x/asm/lib.S
+>>  create mode 100644 s390x/asm/macros.S
+>>
+>> diff --git a/s390x/Makefile b/s390x/Makefile
+>> index b079a26..fb62e87 100644
+>> --- a/s390x/Makefile
+>> +++ b/s390x/Makefile
+>> @@ -66,10 +66,10 @@ cflatobjs += lib/s390x/css_lib.o
+>>  
+>>  OBJDIRS += lib/s390x
+>>  
+>> -cstart.o = $(TEST_DIR)/cstart64.o
+>> +asmlib = $(TEST_DIR)/asm/cstart64.o $(TEST_DIR)/asm/lib.o
+>>  
+>>  FLATLIBS = $(libcflat)
+>> -%.elf: %.o $(FLATLIBS) $(SRCDIR)/s390x/flat.lds $(cstart.o)
+>> +%.elf: %.o $(FLATLIBS) $(SRCDIR)/s390x/flat.lds $(asmlib)
+>>  	$(CC) $(CFLAGS) -c -o $(@:.elf=.aux.o) \
+>>  		$(SRCDIR)/lib/auxinfo.c -DPROGNAME=\"$@\"
+>>  	$(CC) $(LDFLAGS) -o $@ -T $(SRCDIR)/s390x/flat.lds \
+>> @@ -87,7 +87,7 @@ FLATLIBS = $(libcflat)
+>>  	$(GENPROTIMG) --host-key-document $(HOST_KEY_DOCUMENT) --no-verify --image $< -o $@
+>>  
+>>  arch_clean: asm_offsets_clean
+>> -	$(RM) $(TEST_DIR)/*.{o,elf,bin} $(TEST_DIR)/.*.d lib/s390x/.*.d
+>> +	$(RM) $(TEST_DIR)/*.{o,elf,bin} $(TEST_DIR)/.*.d lib/s390x/.*.d $(TEST_DIR)/asm/*.{o,elf,bin} $(TEST_DIR)/asm/.*.d
+>>  
+>>  generated-files = $(asm-offsets)
+>> -$(tests:.elf=.o) $(cstart.o) $(cflatobjs): $(generated-files)
+>> +$(tests:.elf=.o) $(asmlib) $(cflatobjs): $(generated-files)
 > 
-> I probably should have been more specific about what I meant.
-> I was thinking that the reset should not be dependent upon
-> whether there is a KVM pointer or not since this function is
-> also called from the release callback. On the other hand,
-> the vfio_ap_mdev_reset_queues function calls the
-> vfio_ap_irq_disable (AQIC) function after each queue is reset.
-> The vfio_ap_irq_disable function also cleans up the AQIC
-> resources which requires that the KVM point is valid, so if
-> the vfio_ap_reset_queues function is not called with a
-> valid KVM pointer, that could result in an exception.
-> 
-> The thing is, it is unnecessary to disable interrupts after
-> resetting a queue because the reset disables interrupts,
-> so I think I should include a patch for this fix that does the
-> following:
-> 
-> 1. Removes the disabling of interrupts subsequent to resetting
->      a queue.
-> 2. Includes the cleanup of AQIC resources when a queue is
->      reset if a KVM pointer is present.
+> Did you check this with both, in-tree and out-of-tree builds?
+> (I wonder whether that new asm directory needs some special handling for
+> out-of-tree builds?)
 
-Sounds like a plan. I see, in your v2 vfio_ap_mdev_unset_kvm()
-does call vfio_ap_mdev_reset_queues() even when called from the
-group notifier. I also like that the cleanup of AQIC resources is
-a part of queue_reset. In fact I asked a while ago (Message-ID:
-<20201027074846.30ee0ddc.pasic@linux.ibm.com> in October) to make
-vfio_ap_mdev_reset_queue() call vfio_ap_free_aqic_resources(q).
+I'm not a big fan of out-of-tree builds, so I didn't check.
+To get those builds working we would need to create the asm directory in
+the $testdir
 
-Regards,
-Halil 
+> 
+>> diff --git a/s390x/asm/lib.S b/s390x/asm/lib.S
+>> new file mode 100644
+>> index 0000000..4d78ec6
+>> --- /dev/null
+>> +++ b/s390x/asm/lib.S
+>> @@ -0,0 +1,65 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * s390x assembly library
+>> + *
+>> + * Copyright (c) 2019 IBM Corp.
+>> + *
+>> + * Authors:
+>> + *    Janosch Frank <frankja@linux.ibm.com>
+>> + */
+>> +#include <asm/asm-offsets.h>
+>> +#include <asm/sigp.h>
+>> +
+>> +#include "macros.S"
+>> +
+>> +/*
+>> + * load_reset calling convention:
+>> + * %r2 subcode (0 or 1)
+>> + */
+>> +.globl diag308_load_reset
+>> +diag308_load_reset:
+> 
+> Thinking about this twice ... this function is only used by s390x/diag308.c,
+> so it's not really a library function, but rather part of a single test ...
+> I think it would be cleaner to put it into a separate file instead, what do
+> you think?
+
+I don't really want to split this any further.
+Moving the asm files into an own directory already improves readability
+a lot for me and I don't need more files if they aren't absolutely
+necessary.
+
+> 
+>  Thomas
+> 
+> 
 
