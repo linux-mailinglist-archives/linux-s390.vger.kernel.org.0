@@ -2,153 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BED182DB3B1
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Dec 2020 19:26:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B87672DB413
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Dec 2020 19:55:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbgLOSYw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Dec 2020 13:24:52 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:34729 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731270AbgLOSYl (ORCPT
+        id S1731778AbgLOSxT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Dec 2020 13:53:19 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34474 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731767AbgLOSxO (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 15 Dec 2020 13:24:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1608056582;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A21obnB1sOAmglaRS5v6764SnqmcKMcG7eZk/uWaP0s=;
-        b=EHr8GLlHJ4UT4T7A8pMMQjyYn2e6x4IZgzG9WJz7GPGJnOMHh3zuEA6jsw88BPAnK1H5cq
-        pKOT3+YB5L0HkasWo2Ml+4HBmoIDpO74MFhhD3vBg6Q4DVi1Oy66YbpddSnMNwua9U20WP
-        8BYaXcrBOtURTKybrYhPkZQQh2bsae0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-2-CNql23LhPuWO5PcDe9mJhw-1; Tue, 15 Dec 2020 13:13:13 -0500
-X-MC-Unique: CNql23LhPuWO5PcDe9mJhw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9C843107ACF8;
-        Tue, 15 Dec 2020 18:13:11 +0000 (UTC)
-Received: from gondolin (ovpn-114-220.ams2.redhat.com [10.36.114.220])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1A44B1F078;
-        Tue, 15 Dec 2020 18:13:09 +0000 (UTC)
-Date:   Tue, 15 Dec 2020 19:13:07 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.vnet.ibm.com>,
-        oberpar@linux.ibm.com, linux-s390@vger.kernel.org,
-        farman@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [RFC 1/1] s390/cio: Remove uevent-suppress from css driver
-Message-ID: <20201215191307.281c6e6f.cohuck@redhat.com>
-In-Reply-To: <20201209135203.0008ab18.pasic@linux.ibm.com>
-References: <20201124093407.23189-1-vneethv@linux.ibm.com>
-        <20201124093407.23189-2-vneethv@linux.ibm.com>
-        <20201124140220.77c65539.cohuck@redhat.com>
-        <4be7e163-1118-d365-7d25-df39ba78181f@linux.vnet.ibm.com>
-        <0b4e34b7-7a4e-71b0-8a64-ea909e64f416@linux.ibm.com>
-        <20201208183054.44f4fc2d.cohuck@redhat.com>
-        <20201209135203.0008ab18.pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+        Tue, 15 Dec 2020 13:53:14 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BFIYoAP131577;
+        Tue, 15 Dec 2020 13:52:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=PcVoxPd+ouBc/AI8p99dbs+lJQKrEG95kYdrjQrEewo=;
+ b=Dzq4TAQjDuXa62CHAy2cPPYdo+lWkGfWVNsYsWIT/4ZNIoMLZavq0zXRBpAsWFFakzVh
+ t1i3drNhytHRpSVPYhFfL9RZFlEyF0L7mRZ9ycS5m60RsdgeXiuwxZOY8IE5qlPsCqPF
+ N/nUws/WSxzjW82gu7Ii14T3txOVnYW0mFTAEAi99tAu17sDwREfD1DLLf8PpRGpAW/2
+ 0x15AEwbTVTgi7x1I91bfMp6IkFGzz6WECv0qNXXLXHdjZ06OPJXL1uxeury7UH/qb9T
+ QG8FEsbJb6lKlBVmgmBFsv9qCSJ36qduYoWkUzaGAudUbKHgjSW2PBm1cTa+wT3PEltm Gw== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 35f093q9j3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Dec 2020 13:52:32 -0500
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BFIpwrG000961;
+        Tue, 15 Dec 2020 18:52:30 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 35cng8bhbr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Dec 2020 18:52:30 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BFIqSC423462160
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Dec 2020 18:52:28 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 09633A4040;
+        Tue, 15 Dec 2020 18:52:28 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9A3C0A4051;
+        Tue, 15 Dec 2020 18:52:27 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.171.18.42])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 15 Dec 2020 18:52:27 +0000 (GMT)
+Subject: Re: [PATCH] lib/zlib: fix inflating zlib streams on s390
+To:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+References: <20201215155551.894884-1-iii@linux.ibm.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Message-ID: <ea249b70-5b47-8e7c-b667-1146d20a0a65@de.ibm.com>
+Date:   Tue, 15 Dec 2020 19:52:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20201215155551.894884-1-iii@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2020-12-15_12:2020-12-15,2020-12-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=919
+ lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0 adultscore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012150122
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 9 Dec 2020 13:52:03 +0100
-Halil Pasic <pasic@linux.ibm.com> wrote:
+On 15.12.20 16:55, Ilya Leoshkevich wrote:
+> Decompressing zlib streams on s390 fails with "incorrect data check"
+> error.
+> 
+> Userspace zlib checks inflate_state.flags in order to byteswap checksums
+> only for zlib streams, and s390 hardware inflate code, which was ported
+> from there, tries to match this behavior. At the same time, kernel zlib
+> does not use inflate_state.flags, so it contains essentially random
+> values. For many use cases either zlib stream is zeroed out or checksum
+> is not used, so this problem is masked, but at least SquashFS is still
+> affected.
+> 
+> Fix by always passing a checksum to and from the hardware as is, which
+> matches zlib_inflate()'s expectations.
+> 
+> Fixes: 126196100063 ("lib/zlib: add s390 hardware support for kernel zlib_inflate")
+> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 
-> On Tue, 8 Dec 2020 18:30:54 +0100
-> Cornelia Huck <cohuck@redhat.com> wrote:
-> 
-> > > 
-> > > But, the more i look at this patch and discuss on this, i think this is 
-> > > not complete.
-> > > i.e as you know, the main reason for this RFC was the the below thread.
-> > > https://marc.info/?l=linux-s390&m=158591045732735&w=2
-> > > We are still not solving the problem that was mentioned in that RFD.
-> > > 
-> > > There are couple of things which we needs to consider here. With this 
-> > > patch, the uevents
-> > > are generated before doing the initialization or before finding the 
-> > > ccw-device
-> > > connected. Which means, the udev-rules have to manage with a 
-> > > non-initialized setup
-> > > compared to the previous version (Version without this patch). As you 
-> > > mentioned, the
-> > > current user-space programs which works with this uevent, especially in 
-> > > case of vfio-ccw
-> > > will have a problem.    
-> > 
-> > IIUC, we'll get the "normal" ADD uevent when the subchannel device is
-> > registered (i.e. made visible). For the vfio-ccw case, we want the
-> > driverctl rule to match in this case, so that the driver override can
-> > be set before the subchannel device ends up being bound to the I/O
-> > subchannel driver. So I think that removing the suppression is giving
-> > us exactly what we want? Modulo any errors in the initialization
-> > sequence we might currently have in the css bus code, of course.
-> >  
-> 
-> I believe, I'm the originator of these concerns, yet I find my
-> concern hard to recognize in the comment of Vineeth, so let me
-> please try to explain this in a different way.
-> 
-> AFAIK the uevent handling is asynchronous with regards to matching and
-> probing, in a sense that there is no synchronization mechanism that
-> ensures, the userspace has had the ADD event handled (e.g.
-> driver_override set_ before the kernel proceeds with matching and
-> probing of the device. Am I wrong about this?
-> 
-> If I'm, with the suppression gone we end up with race, where userspace
-> may or may not set driver_override in time.
-> 
-> The man page of driverctl
-> (https://manpages.debian.org/testing/driverctl/driverctl.8.en.html)
-> claims that: "driverctl integrates with udev to support overriding driver
-> selection for both cold- and hotplugged devices from the moment of discovery, ..."
-> and "The driver overrides created by driverctl are persistent across
-> system reboots by default."
-> 
-> Writing to the driver_override sysfs attribute does not auto-rebind. So
-> if we can't ensure being in time to set driver_override for the
-> subchannel before the io_subchannel driver binds, then the userspace
-> should handle this situation (by unbind and bind) to ensure the
-> effectiveness of 'driver override'. I couldn't find that code in
-> driverctl, and I assume if we had that, driver override would work
-> without this patch. Conny, does that sound about right?
-> 
-> My argument is purely speculative. I didn't try this out, but trying
-> stuff out is of limited value with races anyway. Vineeth did you try?
-> If not, I could check this out myself some time later.
+With a zlib compressed squashfs:
 
-Whenever we delegate policy decisions like that to userspace, we'll end
-up with uncertainty depending on timing. I don't think that there's any
-way around it. (FWIW, driver_override for pci behaves just the same,
-unless I misread the code.)
+Tested-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
 
-What removing the uevent suppression does give us is at least a chance
-to influence the driver that is being bound and not wait until we have
-a fully setup ccw device as a child as well.
+We should add
 
+Cc: <stable@vger.kernel.org> # 5.6
+
+> ---
+>  lib/zlib_dfltcc/dfltcc_inflate.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/lib/zlib_dfltcc/dfltcc_inflate.c b/lib/zlib_dfltcc/dfltcc_inflate.c
+> index db107016d29b..fb60b5a6a1cb 100644
+> --- a/lib/zlib_dfltcc/dfltcc_inflate.c
+> +++ b/lib/zlib_dfltcc/dfltcc_inflate.c
+> @@ -125,7 +125,7 @@ dfltcc_inflate_action dfltcc_inflate(
+>      param->ho = (state->write - state->whave) & ((1 << HB_BITS) - 1);
+>      if (param->hl)
+>          param->nt = 0; /* Honor history for the first block */
+> -    param->cv = state->flags ? REVERSE(state->check) : state->check;
+> +    param->cv = state->check;
 >  
-> > I'm not sure how many rules actually care about events for the
-> > subchannel device; the ccw device seems like the more helpful device to
-> > watch out for.  
+>      /* Inflate */
+>      do {
+> @@ -138,7 +138,7 @@ dfltcc_inflate_action dfltcc_inflate(
+>      state->bits = param->sbb;
+>      state->whave = param->hl;
+>      state->write = (param->ho + param->hl) & ((1 << HB_BITS) - 1);
+> -    state->check = state->flags ? REVERSE(param->cv) : param->cv;
+> +    state->check = param->cv;
+>      if (cc == DFLTCC_CC_OP2_CORRUPT && param->oesc != 0) {
+>          /* Report an error if stream is corrupted */
+>          state->mode = BAD;
 > 
-> I tend to agree, but the problem with vfio-ccw is that (currently) we
-> don't have a ccw device in the host, because we pass-through the
-> subchannel. When we interrogate the subchannel, we do learn if there
-> is a device and if, what is its devno. If I were to run a system with
-> vfio-ccw passthrough, I would want to passthrough the subchannel that
-> talks to the DASD (identified by devno) I need passed through to my
-> guest.
-
-I think that can be solved by simply adding the devno as a variable to
-the uevent (valid if it's an I/O subchannel; we don't register the
-subchannel in the first place if dnv is not set.)
-
