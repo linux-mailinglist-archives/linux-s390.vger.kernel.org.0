@@ -2,127 +2,206 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CE702DC370
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Dec 2020 16:52:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA1792DC3BF
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Dec 2020 17:08:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgLPPwL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 16 Dec 2020 10:52:11 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56096 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726588AbgLPPwL (ORCPT
+        id S1726013AbgLPQIr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 16 Dec 2020 11:08:47 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59122 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725287AbgLPQIr (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 16 Dec 2020 10:52:11 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BGFmGld088188;
-        Wed, 16 Dec 2020 10:51:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=p7vlv5ObQcx8ENP+5QNUyc3+HEaSDTcPof+0nzOPxd4=;
- b=oZgXirULPmIlly6NzAtCJN6ETOoZ0+jz6RVPn2MqtsD32cuItJV56ZopHGoIIURx8k4F
- fOkKzkk/SpBNeWSyqxgYp6sxEPP/pekssqiZZTM6i80vdjzJS7hxlTy0O/Pb2Zxrk3Y9
- BJ+zzv2n9xhfGeI3xFRToQhDVHE23GGEFog1e7rIH2rduJ0yzoIsgm5hGjBA7lfFGNeR
- 83TRSf8DDO8ylyd7eaaXrPJ8VkzZC/KXo0sToPIF/+LUwqJjMlL6HGF3D98UP45F10LG
- 5BSDVMAePatU/y9HlArw4CaDqvlwY1aBCavE9R+8h9umfCrrkjXrQ6ml9uu8t+BDUlJE GA== 
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 35fn6sr1up-1
+        Wed, 16 Dec 2020 11:08:47 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BGG2gji019291;
+        Wed, 16 Dec 2020 11:08:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
+ : references : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=1RiaaU+lVrVe1PHRL4Cd/QJW3N+3D/itnxFlckjehK8=;
+ b=lfRxpc7x+I1Sdq4pukKrDILiozO5ZAm+Yi06bXOI+UrnuA2KMfE6uzSmHAv+gW2Ki/qV
+ oF461Wx/5xdZPIyshlE7VtAkR910/3xIeImUQhOA/wmYg1gr+uT0jCeRR0qdp1oIpxt5
+ Zv5d9qdPVGI8fbiW1k+/lEi5yR+6eelmirJ8UMGUFOmRt5tBzbjdxQwdQDWbkhx97Ulc
+ EmIEvK9UydaZ51EGYJKepDLVKC+QiK3k+SbeOvesl5Bb59xzUvKE+Q7/845TB/4m7rdf
+ +3A8Pllphrs4HKkuSyJP5JZw7C8x7I5B1Yz6Y4vfwxn0h3vD1Lc6l+YwMdM6xTI06Lf2 tg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35fgqrhrw9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Dec 2020 10:51:29 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BGFWsrK008845;
-        Wed, 16 Dec 2020 15:51:28 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma02dal.us.ibm.com with ESMTP id 35d52634ep-1
+        Wed, 16 Dec 2020 11:08:03 -0500
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BGG3Zau025190;
+        Wed, 16 Dec 2020 11:08:02 -0500
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35fgqrhrug-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Dec 2020 15:51:28 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BGFpRV311796900
+        Wed, 16 Dec 2020 11:08:02 -0500
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BGG7HgA006404;
+        Wed, 16 Dec 2020 16:07:59 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03fra.de.ibm.com with ESMTP id 35cng8emh2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Dec 2020 16:07:59 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BGG5PI935586378
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Dec 2020 15:51:27 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42C1A136055;
-        Wed, 16 Dec 2020 15:51:27 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 039A7136051;
-        Wed, 16 Dec 2020 15:51:25 +0000 (GMT)
-Received: from [9.145.24.37] (unknown [9.145.24.37])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Wed, 16 Dec 2020 15:51:25 +0000 (GMT)
-Subject: Re: [PATCH] lib/zlib: fix inflating zlib streams on s390
-To:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-References: <20201215155551.894884-1-iii@linux.ibm.com>
-From:   Zaslonko Mikhail <zaslonko@linux.ibm.com>
-Message-ID: <3994efae-3699-7a50-6081-3eeb3272c947@linux.ibm.com>
-Date:   Wed, 16 Dec 2020 16:51:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
-MIME-Version: 1.0
-In-Reply-To: <20201215155551.894884-1-iii@linux.ibm.com>
+        Wed, 16 Dec 2020 16:05:25 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C18995204E;
+        Wed, 16 Dec 2020 16:05:25 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.171.82.131])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9EAFD52052;
+        Wed, 16 Dec 2020 16:05:24 +0000 (GMT)
+Subject: Re: [PATCH v3] s390/vfio-ap: clean up vfio_ap resources when KVM
+ pointer invalidated
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        cohuck@redhat.com, kwankhede@nvidia.com, pbonzini@redhat.com,
+        alex.williamson@redhat.com, pasic@linux.vnet.ibm.com
+References: <20201214165617.28685-1-akrowiak@linux.ibm.com>
+ <20201215115746.3552e873.pasic@linux.ibm.com>
+ <44ffb312-964a-95c3-d691-38221cee2c0a@de.ibm.com>
+ <20201216022140.02741788.pasic@linux.ibm.com>
+ <ae6e5c7a-0159-035e-2bd3-0a749f81a7c0@de.ibm.com>
+Message-ID: <1039a56a-f8d7-15f7-d6a6-cb126468bdff@de.ibm.com>
+Date:   Wed, 16 Dec 2020 17:05:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
+In-Reply-To: <ae6e5c7a-0159-035e-2bd3-0a749f81a7c0@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-16_05:2020-12-15,2020-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1011
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 phishscore=0
- spamscore=0 bulkscore=0 adultscore=0 suspectscore=0 mlxlogscore=956
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012160101
+ definitions=2020-12-16_06:2020-12-15,2020-12-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ clxscore=1015 spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0
+ adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012160105
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Acked-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
 
-Please, also add:
-Cc: <stable@vger.kernel.org> # 5.6
 
-On 15.12.2020 16:55, Ilya Leoshkevich wrote:
-> Decompressing zlib streams on s390 fails with "incorrect data check"
-> error.
+On 16.12.20 10:58, Christian Borntraeger wrote:
+> On 16.12.20 02:21, Halil Pasic wrote:
+>> On Tue, 15 Dec 2020 19:10:20 +0100
+>> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+>>
+>>>
+>>>
+>>> On 15.12.20 11:57, Halil Pasic wrote:
+>>>> On Mon, 14 Dec 2020 11:56:17 -0500
+>>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>>>>
+>>>>> The vfio_ap device driver registers a group notifier with VFIO when the
+>>>>> file descriptor for a VFIO mediated device for a KVM guest is opened to
+>>>>> receive notification that the KVM pointer is set (VFIO_GROUP_NOTIFY_SET_KVM
+>>>>> event). When the KVM pointer is set, the vfio_ap driver takes the
+>>>>> following actions:
+>>>>> 1. Stashes the KVM pointer in the vfio_ap_mdev struct that holds the state
+>>>>>    of the mediated device.
+>>>>> 2. Calls the kvm_get_kvm() function to increment its reference counter.
+>>>>> 3. Sets the function pointer to the function that handles interception of
+>>>>>    the instruction that enables/disables interrupt processing.
+>>>>> 4. Sets the masks in the KVM guest's CRYCB to pass AP resources through to
+>>>>>    the guest.
+>>>>>
+>>>>> In order to avoid memory leaks, when the notifier is called to receive
+>>>>> notification that the KVM pointer has been set to NULL, the vfio_ap device
+>>>>> driver should reverse the actions taken when the KVM pointer was set.
+>>>>>
+>>>>> Fixes: 258287c994de ("s390: vfio-ap: implement mediated device open callback")
+>>>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>>>>> ---
+>>>>>  drivers/s390/crypto/vfio_ap_ops.c | 29 ++++++++++++++++++++---------
+>>>>>  1 file changed, 20 insertions(+), 9 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+>>>>> index e0bde8518745..cd22e85588e1 100644
+>>>>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>>>>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>>>>> @@ -1037,8 +1037,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
+>>>>>  {
+>>>>>  	struct ap_matrix_mdev *m;
+>>>>>
+>>>>> -	mutex_lock(&matrix_dev->lock);
+>>>>> -
+>>>>>  	list_for_each_entry(m, &matrix_dev->mdev_list, node) {
+>>>>>  		if ((m != matrix_mdev) && (m->kvm == kvm)) {
+>>>>>  			mutex_unlock(&matrix_dev->lock);
+>>>>> @@ -1049,7 +1047,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
+>>>>>  	matrix_mdev->kvm = kvm;
+>>>>>  	kvm_get_kvm(kvm);
+>>>>>  	kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
+>>>>> -	mutex_unlock(&matrix_dev->lock);
+>>>>>
+>>>>>  	return 0;
+>>>>>  }
+>>>>> @@ -1083,35 +1080,49 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
+>>>>>  	return NOTIFY_DONE;
+>>>>>  }
+>>>>>
+>>>>> +static void "(struct ap_matrix_mdev *matrix_mdev)
+>>>>> +{
+>>>>> +	kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
+>>>>> +	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+>>>>
+>>>>
+>>>> This patch LGTM. The only concern I have with it is whether a
+>>>> different cpu is guaranteed to observe the above assignment as
+>>>> an atomic operation. I think we didn't finish this discussion
+>>>> at v1, or did we?
+>>>
+>>> You mean just this assigment:
+>>>>> +	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+>>> should either have the old or the new value, but not halve zero halve old?
+>>>
+>>
+>> Yes that is the assignment I was referring to. Old value will work as well because
+>> kvm holds a reference to this module while in the pqap_hook.
+>>  
+>>> Normally this should be ok (and I would consider this a compiler bug if
+>>> this is split into 2 32 bit zeroes) But if you really want to be sure then we
+>>> can use WRITE_ONCE.
+>>
+>> Just my curiosity: what would make this a bug? Is it the s390 elf ABI,
+>> or some gcc feature, or even the C standard? Also how exactly would
+>> WRITE_ONCE, also access via volatile help in this particular situation?
 > 
-> Userspace zlib checks inflate_state.flags in order to byteswap checksums
-> only for zlib streams, and s390 hardware inflate code, which was ported
-> from there, tries to match this behavior. At the same time, kernel zlib
-> does not use inflate_state.flags, so it contains essentially random
-> values. For many use cases either zlib stream is zeroed out or checksum
-> is not used, so this problem is masked, but at least SquashFS is still
-> affected.
+> I think its a tricky things and not strictly guaranteed, but there is a lot
+> of code that relies on the atomicity of word sizes. see for example the discussion
+> here
+> https://lore.kernel.org/lkml/CAHk-=wgC4+kV9AiLokw7cPP429rKCU+vjA8cWAfyOjC3MtqC4A@mail.gmail.com/
 > 
-> Fix by always passing a checksum to and from the hardware as is, which
-> matches zlib_inflate()'s expectations.
-> 
-> Fixes: 126196100063 ("lib/zlib: add s390 hardware support for kernel zlib_inflate")
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> ---
->  lib/zlib_dfltcc/dfltcc_inflate.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/zlib_dfltcc/dfltcc_inflate.c b/lib/zlib_dfltcc/dfltcc_inflate.c
-> index db107016d29b..fb60b5a6a1cb 100644
-> --- a/lib/zlib_dfltcc/dfltcc_inflate.c
-> +++ b/lib/zlib_dfltcc/dfltcc_inflate.c
-> @@ -125,7 +125,7 @@ dfltcc_inflate_action dfltcc_inflate(
->      param->ho = (state->write - state->whave) & ((1 << HB_BITS) - 1);
->      if (param->hl)
->          param->nt = 0; /* Honor history for the first block */
-> -    param->cv = state->flags ? REVERSE(state->check) : state->check;
-> +    param->cv = state->check;
->  
->      /* Inflate */
->      do {
-> @@ -138,7 +138,7 @@ dfltcc_inflate_action dfltcc_inflate(
->      state->bits = param->sbb;
->      state->whave = param->hl;
->      state->write = (param->ho + param->hl) & ((1 << HB_BITS) - 1);
-> -    state->check = state->flags ? REVERSE(param->cv) : param->cv;
-> +    state->check = param->cv;
->      if (cc == DFLTCC_CC_OP2_CORRUPT && param->oesc != 0) {
->          /* Report an error if stream is corrupted */
->          state->mode = BAD;
-> 
+> WRITE_ONCE will not change the guarantees a lot, but it is mostly a documentation
+> that we assume atomic access here.
+
+After looking again at the code, I think I have to correct myself.
+WRITE_ONCE does not look necessary.
+
+
+Another thing, though:
+Shouldnt we also replace this code
+
+[...]
+static void vfio_ap_mdev_release(struct mdev_device *mdev)
+{
+        struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+
+        mutex_lock(&matrix_dev->lock);
+        if (matrix_mdev->kvm) {
+--->          kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
+--->          matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+--->          vfio_ap_mdev_reset_queues(mdev);
+--->          kvm_put_kvm(matrix_mdev->kvm);
+--->          matrix_mdev->kvm = NULL;
+[...]
+
+with vfio_ap_mdev_unset_kvm ?
