@@ -2,206 +2,193 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA1792DC3BF
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Dec 2020 17:08:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD6DB2DC488
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Dec 2020 17:46:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726013AbgLPQIr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 16 Dec 2020 11:08:47 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59122 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725287AbgLPQIr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 16 Dec 2020 11:08:47 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BGG2gji019291;
-        Wed, 16 Dec 2020 11:08:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
- : references : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=1RiaaU+lVrVe1PHRL4Cd/QJW3N+3D/itnxFlckjehK8=;
- b=lfRxpc7x+I1Sdq4pukKrDILiozO5ZAm+Yi06bXOI+UrnuA2KMfE6uzSmHAv+gW2Ki/qV
- oF461Wx/5xdZPIyshlE7VtAkR910/3xIeImUQhOA/wmYg1gr+uT0jCeRR0qdp1oIpxt5
- Zv5d9qdPVGI8fbiW1k+/lEi5yR+6eelmirJ8UMGUFOmRt5tBzbjdxQwdQDWbkhx97Ulc
- EmIEvK9UydaZ51EGYJKepDLVKC+QiK3k+SbeOvesl5Bb59xzUvKE+Q7/845TB/4m7rdf
- +3A8Pllphrs4HKkuSyJP5JZw7C8x7I5B1Yz6Y4vfwxn0h3vD1Lc6l+YwMdM6xTI06Lf2 tg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35fgqrhrw9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Dec 2020 11:08:03 -0500
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BGG3Zau025190;
-        Wed, 16 Dec 2020 11:08:02 -0500
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35fgqrhrug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Dec 2020 11:08:02 -0500
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BGG7HgA006404;
-        Wed, 16 Dec 2020 16:07:59 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03fra.de.ibm.com with ESMTP id 35cng8emh2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Dec 2020 16:07:59 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BGG5PI935586378
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Dec 2020 16:05:25 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C18995204E;
-        Wed, 16 Dec 2020 16:05:25 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.171.82.131])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9EAFD52052;
-        Wed, 16 Dec 2020 16:05:24 +0000 (GMT)
-Subject: Re: [PATCH v3] s390/vfio-ap: clean up vfio_ap resources when KVM
- pointer invalidated
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        cohuck@redhat.com, kwankhede@nvidia.com, pbonzini@redhat.com,
-        alex.williamson@redhat.com, pasic@linux.vnet.ibm.com
-References: <20201214165617.28685-1-akrowiak@linux.ibm.com>
- <20201215115746.3552e873.pasic@linux.ibm.com>
- <44ffb312-964a-95c3-d691-38221cee2c0a@de.ibm.com>
- <20201216022140.02741788.pasic@linux.ibm.com>
- <ae6e5c7a-0159-035e-2bd3-0a749f81a7c0@de.ibm.com>
-Message-ID: <1039a56a-f8d7-15f7-d6a6-cb126468bdff@de.ibm.com>
-Date:   Wed, 16 Dec 2020 17:05:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
-In-Reply-To: <ae6e5c7a-0159-035e-2bd3-0a749f81a7c0@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        id S1726155AbgLPQpv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 16 Dec 2020 11:45:51 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:41449 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgLPQpv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 16 Dec 2020 11:45:51 -0500
+Received: from [192.168.1.155] ([95.114.81.192]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MuV3i-1jyRGU2hXe-00rXEZ; Wed, 16 Dec 2020 17:42:32 +0100
+Subject: Re: [PATCH] arch: fix 'unexpected IRQ trap at vector' warnings
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     James.Bottomley@HansenPartnership.com, deller@gmx.de,
+        benh@kernel.crashing.org, paulus@samba.org, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-um@lists.infradead.org
+References: <20201207143146.30021-1-info@metux.net>
+ <877dptt5av.fsf@mpe.ellerman.id.au> <87y2i7298s.fsf@nanos.tec.linutronix.de>
+ <33001e60-cbfc-f114-55bf-f347f21fee9b@metux.net>
+ <87a6ueu3af.fsf@nanos.tec.linutronix.de>
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+Message-ID: <7cee04bd-b962-c6cd-19d7-b1f63926f570@metux.net>
+Date:   Wed, 16 Dec 2020 17:42:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-16_06:2020-12-15,2020-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- clxscore=1015 spamscore=0 priorityscore=1501 impostorscore=0 bulkscore=0
- adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012160105
+In-Reply-To: <87a6ueu3af.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:9QidD+UOA3aQi22640zZ/omWcJwb9FdXzbOn1+rph3fp70+BAEy
+ xiHMss2Z38gUE+IeS5tIoSSjstWL3MM0hiXjHEXqQiN33u9305dgjBtGQGQ9R0jw9jl3BXw
+ 3haty8Z/ZIT578dbL2gr1uXSSptrO7tgSaDczmwRur8kNQrMTQCDAhfPIvtpvW5xdrNcE6l
+ /3ipd/qGBjEmcqF+JVADw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1c3FXG1AarQ=:uENEIXu+5B78KhBw8odEAh
+ t2n63aeaR6l+oZZpBcUolFIx68WUSwq80Kjla3XzmpU+7LEqKYqk5DJ8Cpuc3xqMuzS+/hKG8
+ ZcUo+KcwsrSBANuPbsel/wjt3MFHRZYJHA4IdMEYalu69edBJuPr7Hje829QYjpHvzdMrxUlH
+ nLoCidRT/7wStm53pXjfxwWqsXzWzidAalC3VjRoEkBvoQXdYws86NMtuPYqfJ9eLMI1PdHKl
+ ym9AZiKnjiwqeojoHz69Z1XJZyDZO7HRLTJuv2eWfJeJwepHjfGNWpKOcPB/9cKUp4F3s3qTx
+ Nc1Boc7wMF6QjHO6bW9fUsIFnMTWT8wm4dEVJURsCTv4kosjTDc9aQ02UfU99Bl51tUn2iHsq
+ lademp5fXFsFmUatD5hx0Klk4xdb6UX8KKn/iNWalz41fKV68HlE5Amwo5NVF
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 16.12.20 10:58, Christian Borntraeger wrote:
-> On 16.12.20 02:21, Halil Pasic wrote:
->> On Tue, 15 Dec 2020 19:10:20 +0100
->> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+On 15.12.20 23:12, Thomas Gleixner wrote:
+> On Tue, Dec 15 2020 at 21:12, Enrico Weigelt wrote:
+>> On 09.12.20 00:01, Thomas Gleixner wrote:
+>>>   3) It's invoked from __handle_domain_irq() when the 'hwirq' which is
+>>>      handed in by the caller does not resolve to a mapped Linux
+>>>      interrupt which is pretty much the same as the x86 situation above
+>>>      in #1, but it prints useless data.
+>>>
+>>>      It prints 'irq' which is invalid but it does not print the really
+>>>      interesting 'hwirq' which was handed in by the caller and did
+>>>      not resolve.
 >>
->>>
->>>
->>> On 15.12.20 11:57, Halil Pasic wrote:
->>>> On Mon, 14 Dec 2020 11:56:17 -0500
->>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->>>>
->>>>> The vfio_ap device driver registers a group notifier with VFIO when the
->>>>> file descriptor for a VFIO mediated device for a KVM guest is opened to
->>>>> receive notification that the KVM pointer is set (VFIO_GROUP_NOTIFY_SET_KVM
->>>>> event). When the KVM pointer is set, the vfio_ap driver takes the
->>>>> following actions:
->>>>> 1. Stashes the KVM pointer in the vfio_ap_mdev struct that holds the state
->>>>>    of the mediated device.
->>>>> 2. Calls the kvm_get_kvm() function to increment its reference counter.
->>>>> 3. Sets the function pointer to the function that handles interception of
->>>>>    the instruction that enables/disables interrupt processing.
->>>>> 4. Sets the masks in the KVM guest's CRYCB to pass AP resources through to
->>>>>    the guest.
->>>>>
->>>>> In order to avoid memory leaks, when the notifier is called to receive
->>>>> notification that the KVM pointer has been set to NULL, the vfio_ap device
->>>>> driver should reverse the actions taken when the KVM pointer was set.
->>>>>
->>>>> Fixes: 258287c994de ("s390: vfio-ap: implement mediated device open callback")
->>>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->>>>> ---
->>>>>  drivers/s390/crypto/vfio_ap_ops.c | 29 ++++++++++++++++++++---------
->>>>>  1 file changed, 20 insertions(+), 9 deletions(-)
->>>>>
->>>>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
->>>>> index e0bde8518745..cd22e85588e1 100644
->>>>> --- a/drivers/s390/crypto/vfio_ap_ops.c
->>>>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->>>>> @@ -1037,8 +1037,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
->>>>>  {
->>>>>  	struct ap_matrix_mdev *m;
->>>>>
->>>>> -	mutex_lock(&matrix_dev->lock);
->>>>> -
->>>>>  	list_for_each_entry(m, &matrix_dev->mdev_list, node) {
->>>>>  		if ((m != matrix_mdev) && (m->kvm == kvm)) {
->>>>>  			mutex_unlock(&matrix_dev->lock);
->>>>> @@ -1049,7 +1047,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
->>>>>  	matrix_mdev->kvm = kvm;
->>>>>  	kvm_get_kvm(kvm);
->>>>>  	kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
->>>>> -	mutex_unlock(&matrix_dev->lock);
->>>>>
->>>>>  	return 0;
->>>>>  }
->>>>> @@ -1083,35 +1080,49 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
->>>>>  	return NOTIFY_DONE;
->>>>>  }
->>>>>
->>>>> +static void "(struct ap_matrix_mdev *matrix_mdev)
->>>>> +{
->>>>> +	kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
->>>>> +	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
->>>>
->>>>
->>>> This patch LGTM. The only concern I have with it is whether a
->>>> different cpu is guaranteed to observe the above assignment as
->>>> an atomic operation. I think we didn't finish this discussion
->>>> at v1, or did we?
->>>
->>> You mean just this assigment:
->>>>> +	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
->>> should either have the old or the new value, but not halve zero halve old?
->>>
->>
->> Yes that is the assignment I was referring to. Old value will work as well because
->> kvm holds a reference to this module while in the pqap_hook.
->>  
->>> Normally this should be ok (and I would consider this a compiler bug if
->>> this is split into 2 32 bit zeroes) But if you really want to be sure then we
->>> can use WRITE_ONCE.
->>
->> Just my curiosity: what would make this a bug? Is it the s390 elf ABI,
->> or some gcc feature, or even the C standard? Also how exactly would
->> WRITE_ONCE, also access via volatile help in this particular situation?
+>> I wouldn't say the irq-nr isn't interesting. In my particular case it
+>> was quite what I've been looking for. But you're right, hwirq should
+>> also be printed.
 > 
-> I think its a tricky things and not strictly guaranteed, but there is a lot
-> of code that relies on the atomicity of word sizes. see for example the discussion
-> here
-> https://lore.kernel.org/lkml/CAHk-=wgC4+kV9AiLokw7cPP429rKCU+vjA8cWAfyOjC3MtqC4A@mail.gmail.com/
+> The number is _not_ interesting in this case. It's useless because the
+> function does:
+
+Oh, I've mixed up the cases - I only had the other one, down below.
+
+>     irq = hwirq;
 > 
-> WRITE_ONCE will not change the guarantees a lot, but it is mostly a documentation
-> that we assume atomic access here.
+>     if (lookup)
+>         irq = find_mapping(hwirq);
+> 
+>     if (!irq || irq >= nr_irqs)
+>        -> BAD
 
-After looking again at the code, I think I have to correct myself.
-WRITE_ONCE does not look necessary.
+When exactly can that happen ? Only when some hardware sending an IRQ,
+but no driver listening to it, or are there other cases ?
+
+By the way: who's supposed to call that function ? Only irqchip's
+(and the few soc specific 1st-level irq handlers) ? I'm asking, because
+we have lots of gpio drivers, which have their own irq domain, but go
+the generic_handle_irq() route. Same for some SOC-specific irqchips.
+
+Should they also call handle_domain_irq() instead ?
+
+> In both cases the only interesting information is that hwirq does not
+> resolve to a valid Linux interrupt number and which hwirq number caused
+> that.
+
+Don't we also need know which irqchip the hwirq number belongs to ?
+
+> If you look really then you find out that there is exactly _ONE_
+> architecture which does anything else than incrementing a counter and/or
+> printing stuff: X86, which has a big fat comment explaining why. The
+> only way to ack an interrupt on X86 is to issue EOI on the local APIC,
+> i.e. it does _not_ need any further information.
+
+Yeah, found it :)
+
+At this point I wonder whether the ack_APIC_irq() call could be done
+somewhere further up in the call chain, eg. handle_irq() or
+common_interrupt() ?
+
+If that works, we IMHO could drop ack_bad_irq() completely (except for
+the counter and printk, which we could consolidate elsewhere anyways)
+
+>> ... rethinking this further ... shouldn't we also pass in even more data
+>> (eg. irq_desc, irqchip, ...), so this function can check which hw to
+>> actually talk to ?
+> 
+> There are 3 ways to get there:
+> 
+>       1) via dummy chip which obviously has no hardware associated
+
+... which also calls print_irq_desc() ..
+
+>       2) via handle_bad_irq() which prints the info already
+
+print_irq_desc() doesn't seem to print the hwirq ... shall we fix this ?
+
+>       3) __handle_domain_irq() which cannot print anything and obviously
+>          cannot figure out the hw to talk to because there is no irq
+>          descriptor associated.
+
+Okay, what's the conclusion ? Drop printouts in the ack_bad_irq()'s ?
+
+>>>   4) It's invoked from the dummy irq chip which is installed for a
+>>>      couple of truly virtual interrupts where the invocation of
+>>>      dummy_irq_chip::irq_ack() is indicating wreckage.
+>>>
+>>>      In that case the Linux irq number is the thing which is printed.
+>>>
+>>> So no. It's not just inconsistent it's in some places outright
+>>> wrong. What we really want is:
+>>>
+>>> ack_bad_irq(int hwirq, int virq)
+>>
+>> is 'int' correct here ?
+> 
+> This was just for illustration.
+
+Okay, thanks. Just discovered already have an irq_hw_number_t, which
+doesn't seem to be used everywhere ... shall we fix that ?
+
+>> OTOH: since both callers (dummychip.c, handle.c) already dump out before
+>> ack_bad_irq(), do we need to print out anything at all ?
+> 
+> Not all callers print something, but yes this could do with some general
+> cleanup.
+
+I've found three callers, only one (__handle_domain_irq() in irqdesc.c)
+doesn't print out anything. I belive, adding a pr_warn() here and drop
+all the printouts in ack_bad_irq()'s makes sense.
+
+> The error counter is independent of that, but yes there is room for
+> consolidation.
+
+Ok, I've already started hacking a bit here: adding an atomic_t counter
+in kernel/irq/handle.c and inline'd accessor functions in
+include/asm-generic/irq.h (just feeling that accessors are a bit cleaner
+than direct access). Would that be okay ?
+
+By the way: I still wonder whether my case should have ever reached
+ack_bad_irq().
+
+The irqdescs had been allocated via devm_irq_alloc_descs(), and the
+driver just called generic_handle_irq() with base irq + gpio nr.
+So, IMHO it was a valid linux irq number, but no (explicit) handler.
+
+I wonder whether ack'ing those virtual irqs onto hw could be harmful.
 
 
-Another thing, though:
-Shouldnt we also replace this code
+--mtx
 
-[...]
-static void vfio_ap_mdev_release(struct mdev_device *mdev)
-{
-        struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
-
-        mutex_lock(&matrix_dev->lock);
-        if (matrix_mdev->kvm) {
---->          kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
---->          matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
---->          vfio_ap_mdev_reset_queues(mdev);
---->          kvm_put_kvm(matrix_mdev->kvm);
---->          matrix_mdev->kvm = NULL;
-[...]
-
-with vfio_ap_mdev_unset_kvm ?
+-- 
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
