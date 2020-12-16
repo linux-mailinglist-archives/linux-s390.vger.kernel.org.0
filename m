@@ -2,93 +2,181 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59DBD2DB761
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Dec 2020 01:05:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 465152DB865
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Dec 2020 02:22:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726226AbgLPABd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Dec 2020 19:01:33 -0500
-Received: from sonic305-21.consmr.mail.gq1.yahoo.com ([98.137.64.84]:43639
-        "EHLO sonic305-21.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726049AbgLOXki (ORCPT
+        id S1726100AbgLPBWi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Dec 2020 20:22:38 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8018 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725952AbgLPBWi (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 15 Dec 2020 18:40:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1608075561; bh=ZkwtcN1Znn8ElcNfcf+qBswC+LM15JB4pYSZu2ijlTk=; h=Date:From:Subject:To:References:In-Reply-To:From:Subject; b=bsOksqOjy08JRuM1vNMYKY63ugniz6HKC1zmUhBC5VKH2e12SAHB008RzBECewMo+icMFJI6NYQhG4/OH7Z/GLk5hLZgxT6F8kZiz5UMvuAYx2D/hINMWnQtozRzOnLfAyfg4lGjSjjFIIidoNVJcMiw2bwjvwedEWRGxpRnyM3Ldt3qrWOgqFbOOiBgI3BZuVeYXjfeaWjeGeT0MBIBWTGZika6x6BAqY+x1IAlvkfZB4WTzvSUQjuyI/HEv0kpieYrUu5GWR9OVUjFxGsut6hwHVFFNYOj3DlUB/PQIYAldTAgtvZgISakZfFzJiNQVM/20ujq6L1prYQ3+1aTYw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1608075561; bh=sa9UqAHRB7t41f/GLWfHt+ZwGcZHRuwzz9vsWaaIuHi=; h=Date:From:Subject:To:From:Subject; b=jBqLOED7uPJH+hPV5WVZNIV/P86RjHeCPnWryS+Z+teP5vUvDvppKa/KgpFjsDGAyX9x5IVqe+MNZRFJB5wO7GjSO7NrcrdbtS1i1Cme4DGBGEmM0jUIHuBXr+OHecGvV7frx91OwbA8b5xY+qrzhHM/5e4s7p781cSM5YNwfIKpYsLgKfnFNg83UyrBfJWg4ioEuMwW13uUB7hTvBTivVGYHzSpMaP5scMnwuPq4A0xgJH7L62FGyU7yxofnHAZEjRZVoCzfy4+YdMpUhltJUNVEe2aZs4O59gIQy2zlFm0AkPZB1YIqvAWU3PE6Sh8JQefZqwhHUv/kiFoAQioAQ==
-X-YMail-OSG: JulUi2QVM1nOM7VAg5vRbxJvcPrCfaXBKUng8mGlePCsxSIq3rtbyl96cSN5qFK
- 7.h4Aa88liq6HVnGOUXcsPeXL74TBWciCtyW_KeIQUDxofTYYXt5IHkQm_umaVImY3W8liebEIU4
- szvNP5o2H3HY3PIhLLi9iNOUkBJ2yguyZZ4umprzcIXvxROcjUkrtUF8dVFU5Y3xwGuCdvPCLPqj
- mLREEVIFTPri8ysQqktoHfLQdaQYt8xV18xWtfZtrMrOK_JzwXGk7SW7sYwSNosu9uwQQJEIYp25
- cTHfIxdQVf4lWmsA.CIzdUsg8QPSpTavYfCr6LO0SfIZRWuzGApiP8U6LWearQZG1UoSMaGOlmvV
- QK3kWN4RGWv9HSH1Hg82mcZreKjG.nLZe.u_SHz2u_rWetzTpPUsB1yRuKpBnteJnWvrO.qum9.z
- mv0L0fE0DATM5I0.NwaT7tn2NiCPFmwsqfsc9.kyWtiASArq.zAo2RpYFPlBPXhEbPBlCENQEQKv
- s5QeeeNSDN1OwLxmgN5B5wiM7K_r72En.FDRAtdIxWMRCAOJKiCjmnzIEoMIk3FFRaoSWD9jNBrW
- Oax9cagl6c79yx1SMZUw7ySAIVUiSnngUQlsee9F1VF7DviJZxvYlHBMNbteIpirbYjbC6Z9rvGd
- uIH6K0NPiK9DtjyFmrZzLewFlF_wE_jjzO.nvjjRG5DkZVtY4xYLtBfRNyfvz.5E4gb6oRmifOoI
- yfzOfhS68sbdmcv.z2QoB95lDfu3Lh2usQc9_iLkRfF2x0fJZKLWl5yMHJXhjqc5CL0OBrD_Quwn
- vlJyTIvFRHi9cuQOYThWQ7mmLMLJno6OSpcAiAh_Ov4rS_62MmN5bX.L_8AtKoD663erfbVNhRAK
- _rkXoHsNSR41yhY_.keMq9DQU_iI2kQWkNUYGpVI5GpnJWjdlBqWagg20f40YxDoPHDa6tXsqhlb
- ZZA.yEr0wXymIX4mjuMRnTLupT1nD4oq_M65fcyBFE.nyrW3Fet4XndSxEbOE.bwMM60PNwxD1Nz
- eJvvTM6.CqVT_feH0fVAhigwiI4l.YfplONEEAyRsLwhS_HH6gbt4JPTz6fLQWku6QOq5lpehXsZ
- KUeYwDTIJkmNzjjmCeg3GbP4xFEhYYaUIg42LJ.97ldAT9iYf8g.c7P.7KUMMArV5ypQrnw1j6CD
- 0JxTjhsdTnF49PUfrYa0s_MEKYvrly5B2WyCbpAcG9EFoTFhU.LWSbdyHz8C.Dcva4VHJIgt8XYf
- Gi5MaKoYfAvOC4MAgTmJ4ZOg0q3eMDsHGs.gyr.XUwV6rOJIFsQkmWHe5rSAMGlXIPUW8t8tg3dJ
- EvwOP9NXlwMJ566bOyAKEwOMCM34ICqvVjQsUOrkPwQ4lyO74vG6CfNeJQLhgtteaNJckXbbMYom
- 0JTVZbosF0m5qEi1TVusHClEGP7Z4xbDXarz8NRWZI_ZNZFL.tIYlsO22EHLzE22YQPFWcWAkth1
- NZ_M2bnWezpO5GVnUliz65SktX_0SpmT5rqk7GR_19caN3LB.MaDOkY4ecZ0XcBRN8uEIFI64YWy
- 1My91erfKvO3oXGTtA7m7jZSqJjGz3K7Il_Tb_XdT8YVxK._qI6DnY0Qp4Yh0m5nj4k9R6JN.Ikx
- VasRMIlnL.xwcgifvV.4GjcKSJahPRp5GpCTEBPcurH1zDt9QwztI3Zv07uC5koUrcwqGNtnc3XD
- gFmL1quC.BGbahu9v8eRrCAEIppDmZO.72mlMtzLhZENeSQiSuo4cPtoMsGBJN_KUy8VeztqYzFD
- EfxCmL21bPq.A4QLIFTpRzDhKirGiOWr0Bq2IHZfHT5ijhUpfqv5K.6JgXPa1IMg7DM_Gow4vzuP
- SeW27Y0P4zHN3SxUy2r61UDe1ZbNJ9k4MwzC6YoC_d6QOi46NjldipKhbIqHo6o71_eEjH9uwL_i
- _zgJQIT_J3itRCrREf451k4iZvlUlSyX5IczmCMYrOsE7cfoqb0Nyc7DTrbKJHMnBwBJix09Ckpz
- .teceLV2ymIU0aOOwiX.44MLRrUl5Wg7YYqY8CI2J7cC3fPw5cIxg5O4UXv7pvPyVvE2W3hJgO9F
- wrGwyKCcY0bXQu3GN6OoCkX6jNSHTPoYu5k7WLYoK7tcL3eS0LE5PG9xVEoyy7oXWUlyZshME2qI
- KO_DK.c_1z4S77qdx7g5kAF.OHVQX6ndSiRlwpiBBGFE2ThKR.xWlfNg8OtjD_wkPzbb8jPOhVmZ
- _pWEzmIMWTGML6UG6XRrr26iSpK.L_5qJkOWiU_JTnF0dRNmoQeW6JpP_jzs8qwn3izwaxkDlldY
- 4.oHtiHpqde8T4uIl9ob33_.aMuSa_PkLK9CJYHa7_B_gmqr37Xx9ToobzNTJjlOlg5SwfFGAHk7
- 3vK2RZcMYwoQjAmf3xX38T1lWinVefLaW4ivnACyz9UikzJX0SBJKjQLkSc_afdyIjXARY_Urvn_
- QMkkwGljA8VbvJ2CWPJ0BMEmUwiCYzPtTyHlmQiOv9yAAxhuCg32.jgPJVuvGU7Iet6xroUXpqsM
- t99A9lEGlYWGE_SBf56PyMeXAk.yv3NBa7T4I43u.X.xjVy7D01r4ED5lpaQ7RCnx.XfVJFK6Btg
- sQRdIz_UER_rNkMUrGDlzs8dnJMpxICv7gh0fSIrB4JgTsIn9g3Oy5eZZvHp5d6lEj6PgrUHyrSu
- qCDbrnZdiqIFiE3TS9ywhnHJKOP31TMCVzhypQtBC9KPedUuZe0GGlqPLWBVgc2E6nm8L4s2b56N
- UlyZdlKFUyeBoFy8vhS8Q1XuFHcLinhhwKHbG8s60WOAZAmRNkYJ1AEtD_trNzcKQ7a8f.oS6a8I
- _UgJD1jFuMJeAjp4Nd2zY.fTu_1t5CBIPBgaVlesmI_6dUDjGS5M6zjHuoD.IHF5YAwJNQW764XX
- hYuc-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.gq1.yahoo.com with HTTP; Tue, 15 Dec 2020 23:39:21 +0000
-Received: by smtp409.mail.ne1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 7f42f66753ff764add4cd34d24e29391;
-          Tue, 15 Dec 2020 23:39:20 +0000 (UTC)
-Date:   Tue, 15 Dec 2020 18:39:17 -0500
-From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Subject: Re: [RFC PATCH] treewide: remove bzip2 compression support
-To:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-mips@vger.kernel.org,
-        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org
-References: <20201215190315.8681-1-alex_y_xu.ref@yahoo.ca>
-        <20201215190315.8681-1-alex_y_xu@yahoo.ca>
-In-Reply-To: <20201215190315.8681-1-alex_y_xu@yahoo.ca>
+        Tue, 15 Dec 2020 20:22:38 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BG10x1x028450;
+        Tue, 15 Dec 2020 20:21:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=0+BnuKA8p1Jrwe6PPrdqKhHIW1sVQdnh7AMkQ8h2wWA=;
+ b=PUxN2HawcIcUXGlDLWk/G/PbfI4DzbDsJevw+pjpQgSAhet6dX4KQar6jHYFPsaVhrW9
+ 5I/MiCEeXMQDi5hxudlQ7QgptKQUT9cYAouWEycYjQjXTODYbAT1Yat7GGH+dI08AyVP
+ MNtWC0FzIh/QX5PzoSwXTYJvKL5NYfv+2qr79FcfDk33OcbkhlcPHjljUSM6XX0XWEV6
+ xXytFGWKxzNiiWzFcbk9Ey406fUiVMKKUNpgbfnuIJeX0d85U2ba9wMAu0DlNEdTn1dX
+ c/tI9hdo8NNg6GIwXnZ8I9XggHcXtI/wrF0WuSU4Oal7NpmZP4wp3PM3MEtupoTB/tjE 4w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35f5qe42ve-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Dec 2020 20:21:50 -0500
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BG1Ln4l094992;
+        Tue, 15 Dec 2020 20:21:49 -0500
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35f5qe42v2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Dec 2020 20:21:49 -0500
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BG1D8sk027041;
+        Wed, 16 Dec 2020 01:21:48 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma05fra.de.ibm.com with ESMTP id 35cng89y8e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Dec 2020 01:21:47 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BG1LjWR31457654
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Dec 2020 01:21:45 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E93EBAE045;
+        Wed, 16 Dec 2020 01:21:44 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4931AAE053;
+        Wed, 16 Dec 2020 01:21:44 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.171.86.205])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Wed, 16 Dec 2020 01:21:44 +0000 (GMT)
+Date:   Wed, 16 Dec 2020 02:21:40 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        stable@vger.kernel.org, gregkh@linuxfoundation.org,
+        sashal@kernel.org, cohuck@redhat.com, kwankhede@nvidia.com,
+        pbonzini@redhat.com, alex.williamson@redhat.com,
+        pasic@linux.vnet.ibm.com
+Subject: Re: [PATCH v3] s390/vfio-ap: clean up vfio_ap resources when KVM
+ pointer invalidated
+Message-ID: <20201216022140.02741788.pasic@linux.ibm.com>
+In-Reply-To: <44ffb312-964a-95c3-d691-38221cee2c0a@de.ibm.com>
+References: <20201214165617.28685-1-akrowiak@linux.ibm.com>
+        <20201215115746.3552e873.pasic@linux.ibm.com>
+        <44ffb312-964a-95c3-d691-38221cee2c0a@de.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Message-Id: <1608075451.ootu1tx25o.none@localhost>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: WebService/1.1.17278 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.8)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2020-12-15_13:2020-12-15,2020-12-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ impostorscore=0 spamscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
+ mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012160001
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Excerpts from Alex Xu (Hello71)'s message of December 15, 2020 2:03 pm:
-> bzip2 is either slower or larger than every other supported algorithm,
-> according to benchmarks at [0]. It is far slower to decompress than any
-> other algorithm, and still larger than lzma, xz, and zstd.
->=20
-> [0] https://lore.kernel.org/lkml/1588791882.08g1378g67.none@localhost/
->=20
-> Signed-off-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
+On Tue, 15 Dec 2020 19:10:20 +0100
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-Upon further research, I found that bzip2 removal was already=20
-implemented as part of zstd addition, but were apparently abandoned in=20
-an effort to get zstd in. I will check those patches and try sending=20
-those instead. Thanks to all reviewers for comments on this patch.
+> 
+> 
+> On 15.12.20 11:57, Halil Pasic wrote:
+> > On Mon, 14 Dec 2020 11:56:17 -0500
+> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> > 
+> >> The vfio_ap device driver registers a group notifier with VFIO when the
+> >> file descriptor for a VFIO mediated device for a KVM guest is opened to
+> >> receive notification that the KVM pointer is set (VFIO_GROUP_NOTIFY_SET_KVM
+> >> event). When the KVM pointer is set, the vfio_ap driver takes the
+> >> following actions:
+> >> 1. Stashes the KVM pointer in the vfio_ap_mdev struct that holds the state
+> >>    of the mediated device.
+> >> 2. Calls the kvm_get_kvm() function to increment its reference counter.
+> >> 3. Sets the function pointer to the function that handles interception of
+> >>    the instruction that enables/disables interrupt processing.
+> >> 4. Sets the masks in the KVM guest's CRYCB to pass AP resources through to
+> >>    the guest.
+> >>
+> >> In order to avoid memory leaks, when the notifier is called to receive
+> >> notification that the KVM pointer has been set to NULL, the vfio_ap device
+> >> driver should reverse the actions taken when the KVM pointer was set.
+> >>
+> >> Fixes: 258287c994de ("s390: vfio-ap: implement mediated device open callback")
+> >> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> >> ---
+> >>  drivers/s390/crypto/vfio_ap_ops.c | 29 ++++++++++++++++++++---------
+> >>  1 file changed, 20 insertions(+), 9 deletions(-)
+> >>
+> >> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> >> index e0bde8518745..cd22e85588e1 100644
+> >> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> >> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> >> @@ -1037,8 +1037,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
+> >>  {
+> >>  	struct ap_matrix_mdev *m;
+> >>
+> >> -	mutex_lock(&matrix_dev->lock);
+> >> -
+> >>  	list_for_each_entry(m, &matrix_dev->mdev_list, node) {
+> >>  		if ((m != matrix_mdev) && (m->kvm == kvm)) {
+> >>  			mutex_unlock(&matrix_dev->lock);
+> >> @@ -1049,7 +1047,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
+> >>  	matrix_mdev->kvm = kvm;
+> >>  	kvm_get_kvm(kvm);
+> >>  	kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
+> >> -	mutex_unlock(&matrix_dev->lock);
+> >>
+> >>  	return 0;
+> >>  }
+> >> @@ -1083,35 +1080,49 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
+> >>  	return NOTIFY_DONE;
+> >>  }
+> >>
+> >> +static void vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
+> >> +{
+> >> +	kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
+> >> +	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+> > 
+> > 
+> > This patch LGTM. The only concern I have with it is whether a
+> > different cpu is guaranteed to observe the above assignment as
+> > an atomic operation. I think we didn't finish this discussion
+> > at v1, or did we?
+> 
+> You mean just this assigment:
+> >> +	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+> should either have the old or the new value, but not halve zero halve old?
+>
+
+Yes that is the assignment I was referring to. Old value will work as well because
+kvm holds a reference to this module while in the pqap_hook.
+ 
+> Normally this should be ok (and I would consider this a compiler bug if
+> this is split into 2 32 bit zeroes) But if you really want to be sure then we
+> can use WRITE_ONCE.
+
+Just my curiosity: what would make this a bug? Is it the s390 elf ABI,
+or some gcc feature, or even the C standard? Also how exactly would
+WRITE_ONCE, also access via volatile help in this particular situation?
+
+I agree, if the member is properly aligned, (which it is),
+normally/probably we are fine on s390x (which is also a given). 
+
+> I think we take this via the s390 tree? I can add the WRITE_ONCE when applying?
+
+Yes that works fine with me.
+
+Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
