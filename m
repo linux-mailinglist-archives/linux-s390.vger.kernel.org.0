@@ -2,193 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CD6DB2DC488
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Dec 2020 17:46:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7C972DC77A
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Dec 2020 21:01:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgLPQpv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 16 Dec 2020 11:45:51 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:41449 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbgLPQpv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 16 Dec 2020 11:45:51 -0500
-Received: from [192.168.1.155] ([95.114.81.192]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MuV3i-1jyRGU2hXe-00rXEZ; Wed, 16 Dec 2020 17:42:32 +0100
-Subject: Re: [PATCH] arch: fix 'unexpected IRQ trap at vector' warnings
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     James.Bottomley@HansenPartnership.com, deller@gmx.de,
-        benh@kernel.crashing.org, paulus@samba.org, jdike@addtoit.com,
-        richard@nod.at, anton.ivanov@cambridgegreys.com, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-um@lists.infradead.org
-References: <20201207143146.30021-1-info@metux.net>
- <877dptt5av.fsf@mpe.ellerman.id.au> <87y2i7298s.fsf@nanos.tec.linutronix.de>
- <33001e60-cbfc-f114-55bf-f347f21fee9b@metux.net>
- <87a6ueu3af.fsf@nanos.tec.linutronix.de>
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-Message-ID: <7cee04bd-b962-c6cd-19d7-b1f63926f570@metux.net>
-Date:   Wed, 16 Dec 2020 17:42:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1727903AbgLPUBh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 16 Dec 2020 15:01:37 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42044 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727027AbgLPUBg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 16 Dec 2020 15:01:36 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BGJWKsW177543;
+        Wed, 16 Dec 2020 15:00:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=ukgGyv0rQrNMw1i5qVhyrpzV7aI2cPAKbS26lUD1rD4=;
+ b=jyUKVUCaZdk6IIN3JP5H68NPSX0S1319O3XcyKl4oIvXIJFi4+EpNw0oWD8880SQJTvA
+ 24elereFaOXGRDIP1O9rKzob5Gb+g0Qxe5+LGQqWWrrdT3Mc9MWhD4cDARALwAJ8uLAj
+ oADv2Piab/FQ0NCH2wVkiIzMywkGBxT6nHXLvbaHPaIaxs42wvVeypffNHJOMCxe0fzo
+ Crw80v2T7U4GLLZiFQ395e8hetnnvMtWUHEq06qw3aZXdEJUhszB3Cp0GHTovFjr/+Nt
+ Qmo0tFLKuwKJYBLiDoxeSwtj5NEvhlFKJ32HprAhwsm+6IGpanFd8HO/IEEr7btFPRwU tw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 35fp0bngud-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Dec 2020 15:00:52 -0500
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BGJewTk019937;
+        Wed, 16 Dec 2020 15:00:51 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 35fp0bngu3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Dec 2020 15:00:51 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BGJvP2H015580;
+        Wed, 16 Dec 2020 20:00:50 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma04dal.us.ibm.com with ESMTP id 35cng9jsba-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Dec 2020 20:00:50 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BGK0lFD25625038
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Dec 2020 20:00:47 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 33EE0BE053;
+        Wed, 16 Dec 2020 20:00:47 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C07B1BE04F;
+        Wed, 16 Dec 2020 20:00:45 +0000 (GMT)
+Received: from cpe-66-24-58-13.stny.res.rr.com (unknown [9.85.193.150])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 16 Dec 2020 20:00:45 +0000 (GMT)
+Subject: Re: [PATCH v12 09/17] s390/vfio-ap: sysfs attribute to display the
+ guest's matrix
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, mjrosato@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+References: <20201124214016.3013-1-akrowiak@linux.ibm.com>
+ <20201124214016.3013-10-akrowiak@linux.ibm.com>
+ <20201129014904.4fafdbba.pasic@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <831cbbac-06bb-dade-c291-2e1954003da4@linux.ibm.com>
+Date:   Wed, 16 Dec 2020 15:00:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <87a6ueu3af.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:9QidD+UOA3aQi22640zZ/omWcJwb9FdXzbOn1+rph3fp70+BAEy
- xiHMss2Z38gUE+IeS5tIoSSjstWL3MM0hiXjHEXqQiN33u9305dgjBtGQGQ9R0jw9jl3BXw
- 3haty8Z/ZIT578dbL2gr1uXSSptrO7tgSaDczmwRur8kNQrMTQCDAhfPIvtpvW5xdrNcE6l
- /3ipd/qGBjEmcqF+JVADw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1c3FXG1AarQ=:uENEIXu+5B78KhBw8odEAh
- t2n63aeaR6l+oZZpBcUolFIx68WUSwq80Kjla3XzmpU+7LEqKYqk5DJ8Cpuc3xqMuzS+/hKG8
- ZcUo+KcwsrSBANuPbsel/wjt3MFHRZYJHA4IdMEYalu69edBJuPr7Hje829QYjpHvzdMrxUlH
- nLoCidRT/7wStm53pXjfxwWqsXzWzidAalC3VjRoEkBvoQXdYws86NMtuPYqfJ9eLMI1PdHKl
- ym9AZiKnjiwqeojoHz69Z1XJZyDZO7HRLTJuv2eWfJeJwepHjfGNWpKOcPB/9cKUp4F3s3qTx
- Nc1Boc7wMF6QjHO6bW9fUsIFnMTWT8wm4dEVJURsCTv4kosjTDc9aQ02UfU99Bl51tUn2iHsq
- lademp5fXFsFmUatD5hx0Klk4xdb6UX8KKn/iNWalz41fKV68HlE5Amwo5NVF
+In-Reply-To: <20201129014904.4fafdbba.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2020-12-16_08:2020-12-15,2020-12-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 suspectscore=0 bulkscore=0 adultscore=0 clxscore=1015
+ malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012160118
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 15.12.20 23:12, Thomas Gleixner wrote:
-> On Tue, Dec 15 2020 at 21:12, Enrico Weigelt wrote:
->> On 09.12.20 00:01, Thomas Gleixner wrote:
->>>   3) It's invoked from __handle_domain_irq() when the 'hwirq' which is
->>>      handed in by the caller does not resolve to a mapped Linux
->>>      interrupt which is pretty much the same as the x86 situation above
->>>      in #1, but it prints useless data.
->>>
->>>      It prints 'irq' which is invalid but it does not print the really
->>>      interesting 'hwirq' which was handed in by the caller and did
->>>      not resolve.
+Thanks for the review.
+
+On 11/28/20 7:49 PM, Halil Pasic wrote:
+> On Tue, 24 Nov 2020 16:40:08 -0500
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> The matrix of adapters and domains configured in a guest's APCB may
+>> differ from the matrix of adapters and domains assigned to the matrix mdev,
+>> so this patch introduces a sysfs attribute to display the matrix of
+>> adapters and domains that are or will be assigned to the APCB of a guest
+>> that is or will be using the matrix mdev. For a matrix mdev denoted by
+>> $uuid, the guest matrix can be displayed as follows:
 >>
->> I wouldn't say the irq-nr isn't interesting. In my particular case it
->> was quite what I've been looking for. But you're right, hwirq should
->> also be printed.
-> 
-> The number is _not_ interesting in this case. It's useless because the
-> function does:
-
-Oh, I've mixed up the cases - I only had the other one, down below.
-
->     irq = hwirq;
-> 
->     if (lookup)
->         irq = find_mapping(hwirq);
-> 
->     if (!irq || irq >= nr_irqs)
->        -> BAD
-
-When exactly can that happen ? Only when some hardware sending an IRQ,
-but no driver listening to it, or are there other cases ?
-
-By the way: who's supposed to call that function ? Only irqchip's
-(and the few soc specific 1st-level irq handlers) ? I'm asking, because
-we have lots of gpio drivers, which have their own irq domain, but go
-the generic_handle_irq() route. Same for some SOC-specific irqchips.
-
-Should they also call handle_domain_irq() instead ?
-
-> In both cases the only interesting information is that hwirq does not
-> resolve to a valid Linux interrupt number and which hwirq number caused
-> that.
-
-Don't we also need know which irqchip the hwirq number belongs to ?
-
-> If you look really then you find out that there is exactly _ONE_
-> architecture which does anything else than incrementing a counter and/or
-> printing stuff: X86, which has a big fat comment explaining why. The
-> only way to ack an interrupt on X86 is to issue EOI on the local APIC,
-> i.e. it does _not_ need any further information.
-
-Yeah, found it :)
-
-At this point I wonder whether the ack_APIC_irq() call could be done
-somewhere further up in the call chain, eg. handle_irq() or
-common_interrupt() ?
-
-If that works, we IMHO could drop ack_bad_irq() completely (except for
-the counter and printk, which we could consolidate elsewhere anyways)
-
->> ... rethinking this further ... shouldn't we also pass in even more data
->> (eg. irq_desc, irqchip, ...), so this function can check which hw to
->> actually talk to ?
-> 
-> There are 3 ways to get there:
-> 
->       1) via dummy chip which obviously has no hardware associated
-
-... which also calls print_irq_desc() ..
-
->       2) via handle_bad_irq() which prints the info already
-
-print_irq_desc() doesn't seem to print the hwirq ... shall we fix this ?
-
->       3) __handle_domain_irq() which cannot print anything and obviously
->          cannot figure out the hw to talk to because there is no irq
->          descriptor associated.
-
-Okay, what's the conclusion ? Drop printouts in the ack_bad_irq()'s ?
-
->>>   4) It's invoked from the dummy irq chip which is installed for a
->>>      couple of truly virtual interrupts where the invocation of
->>>      dummy_irq_chip::irq_ack() is indicating wreckage.
->>>
->>>      In that case the Linux irq number is the thing which is printed.
->>>
->>> So no. It's not just inconsistent it's in some places outright
->>> wrong. What we really want is:
->>>
->>> ack_bad_irq(int hwirq, int virq)
+>>     cat /sys/devices/vfio_ap/matrix/$uuid/guest_matrix
 >>
->> is 'int' correct here ?
-> 
-> This was just for illustration.
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> Code looks good, but it may be a little early, since the treatment of
+> guset_matrix is changed by the following patches.
 
-Okay, thanks. Just discovered already have an irq_hw_number_t, which
-doesn't seem to be used everywhere ... shall we fix that ?
-
->> OTOH: since both callers (dummychip.c, handle.c) already dump out before
->> ack_bad_irq(), do we need to print out anything at all ?
-> 
-> Not all callers print something, but yes this could do with some general
-> cleanup.
-
-I've found three callers, only one (__handle_domain_irq() in irqdesc.c)
-doesn't print out anything. I belive, adding a pr_warn() here and drop
-all the printouts in ack_bad_irq()'s makes sense.
-
-> The error counter is independent of that, but yes there is room for
-> consolidation.
-
-Ok, I've already started hacking a bit here: adding an atomic_t counter
-in kernel/irq/handle.c and inline'd accessor functions in
-include/asm-generic/irq.h (just feeling that accessors are a bit cleaner
-than direct access). Would that be okay ?
-
-By the way: I still wonder whether my case should have ever reached
-ack_bad_irq().
-
-The irqdescs had been allocated via devm_irq_alloc_descs(), and the
-driver just called generic_handle_irq() with base irq + gpio nr.
-So, IMHO it was a valid linux irq number, but no (explicit) handler.
-
-I wonder whether ack'ing those virtual irqs onto hw could be harmful.
-
-
---mtx
-
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
