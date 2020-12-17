@@ -2,213 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6B922DCA1E
-	for <lists+linux-s390@lfdr.de>; Thu, 17 Dec 2020 01:48:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4CA22DCDF5
+	for <lists+linux-s390@lfdr.de>; Thu, 17 Dec 2020 09:59:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgLQArV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 16 Dec 2020 19:47:21 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20508 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725840AbgLQArV (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 16 Dec 2020 19:47:21 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BH0Vnxe060111;
-        Wed, 16 Dec 2020 19:46:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=MMZcpmGp7ah2YnbS+GCiRlxFc96g72boKJm+UYPD+qo=;
- b=U/ytN3ST4TuTeaVsti0YThv+c/fjfXcIkFE00+xpWlJ1caR68LeCUeK9ApuTkIt2DTB1
- lB6vfM+YrCqHk35z/VFtpbVdKEGARJLSDeE1GADY/TYI9W9p5S6i+GEh3abXBFGmUQJv
- mkM8QEcLe5lSeW2K1FOsxjzo4gr7jcdBV5J0NV/Q4XCbfbDxTaM3gfzl2OQRGXa1cVe4
- PdPN95BUIuyOr6BoQ4FmIJJu7vqwzuHO0Lp/Fnn6iNKZYPD4j6NGjXKshtHetZA4hSR1
- 3i4iwUCAFaecX2/zVkzEkThnRkp5wjjzYDqgV74QLhOOHARNP2U7VBFdtbPcF+l3MIy7 9Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35fvmgrj6x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Dec 2020 19:46:40 -0500
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BH0kdTZ115230;
-        Wed, 16 Dec 2020 19:46:39 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35fvmgrj6g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 16 Dec 2020 19:46:39 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BH0ajdH012170;
-        Thu, 17 Dec 2020 00:46:38 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01wdc.us.ibm.com with ESMTP id 35cng922xa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 17 Dec 2020 00:46:38 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BH0kaRe17629484
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Dec 2020 00:46:37 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E6156BE051;
-        Thu, 17 Dec 2020 00:46:36 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA66ABE058;
-        Thu, 17 Dec 2020 00:46:35 +0000 (GMT)
-Received: from cpe-66-24-58-13.stny.res.rr.com (unknown [9.85.193.150])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 17 Dec 2020 00:46:35 +0000 (GMT)
-Subject: Re: [PATCH v3] s390/vfio-ap: clean up vfio_ap resources when KVM
- pointer invalidated
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, cohuck@redhat.com, kwankhede@nvidia.com,
-        pbonzini@redhat.com, alex.williamson@redhat.com,
-        pasic@linux.vnet.ibm.com
-References: <20201214165617.28685-1-akrowiak@linux.ibm.com>
- <20201215115746.3552e873.pasic@linux.ibm.com>
- <44ffb312-964a-95c3-d691-38221cee2c0a@de.ibm.com>
- <20201216022140.02741788.pasic@linux.ibm.com>
- <ae6e5c7a-0159-035e-2bd3-0a749f81a7c0@de.ibm.com>
- <1039a56a-f8d7-15f7-d6a6-cb126468bdff@de.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <b763a147-5122-5342-30b8-8ddbbbe0696f@linux.ibm.com>
-Date:   Wed, 16 Dec 2020 19:46:34 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726533AbgLQI6u (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 17 Dec 2020 03:58:50 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:38888 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727306AbgLQI6u (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 17 Dec 2020 03:58:50 -0500
+Received: by mail-io1-f70.google.com with SMTP id q140so26635410iod.5
+        for <linux-s390@vger.kernel.org>; Thu, 17 Dec 2020 00:58:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=5cdTyg19qBt9YC2udx7QDD/ru4hNARFKf9MbeLvUc/Q=;
+        b=RXaMm/+9b02ZFHhOyAGEDSS4d3ejKGWp1ApM+MgyZO5aHKp5WUAMsuk446pK6DMwYa
+         xSvLxf0HMEqaMuUrk3Qyv6kgGEXb4hhptmggoLY5u72qIAjuB4Zy+miIwe9IDQNqYe2e
+         wU21ncCFCuqZbpN8hcwh/INUmvSROppLyHIaL/t2SBLtnpeg286JUTJuYDdYsspeVCLs
+         +D+QQW3Wm63IJAbEb7/R25dFo8ujOvex3g8hOSUU3M1Fp5hJ0ByMfM+81rJG1UlOGCAb
+         48jw/G0lXzja6kxN/PUO4e894SUOKFaSZtorb5kqxJoTyw55HRMbBMm5PNgfv4q4Bajd
+         /cRQ==
+X-Gm-Message-State: AOAM530bxnLPMf7AeQcXWeGKc3ntSPuzB/8gKl7gXnLx6Gayt9AYhZvc
+        4ZSgPZoIQoETQ5SAus/B1QzXIOBJCaLrTn3axtgvTkZUfqLu
+X-Google-Smtp-Source: ABdhPJyroSQRk3u2Kgqk9k1IMqZK+ZIarvm8U7vD5XMcHIe/xISvRPgvS3PTj7MYKw3HdAMLaRIftbrvL+w3mJGJZtgWCvzAVCJq
 MIME-Version: 1.0
-In-Reply-To: <1039a56a-f8d7-15f7-d6a6-cb126468bdff@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-16_12:2020-12-15,2020-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 bulkscore=0 clxscore=1015
- suspectscore=0 adultscore=0 priorityscore=1501 phishscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012160149
+X-Received: by 2002:a05:6638:154:: with SMTP id y20mr46705828jao.119.1608195489267;
+ Thu, 17 Dec 2020 00:58:09 -0800 (PST)
+Date:   Thu, 17 Dec 2020 00:58:09 -0800
+In-Reply-To: <000000000000705ff605b5f2b656@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000de052a05b6a5301c@google.com>
+Subject: Re: BUG: unable to handle kernel paging request in smc_nl_handle_smcr_dev
+From:   syzbot <syzbot+600fef7c414ee7e2d71b@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kgraul@linux.ibm.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+syzbot has found a reproducer for the following issue on:
 
+HEAD commit:    5e60366d Merge tag 'fallthrough-fixes-clang-5.11-rc1' of g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17842c13500000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=503d0089cd701d6d
+dashboard link: https://syzkaller.appspot.com/bug?extid=600fef7c414ee7e2d71b
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17d8e41f500000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17962287500000
 
-On 12/16/20 11:05 AM, Christian Borntraeger wrote:
->
-> On 16.12.20 10:58, Christian Borntraeger wrote:
->> On 16.12.20 02:21, Halil Pasic wrote:
->>> On Tue, 15 Dec 2020 19:10:20 +0100
->>> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
->>>
->>>>
->>>> On 15.12.20 11:57, Halil Pasic wrote:
->>>>> On Mon, 14 Dec 2020 11:56:17 -0500
->>>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->>>>>
->>>>>> The vfio_ap device driver registers a group notifier with VFIO when the
->>>>>> file descriptor for a VFIO mediated device for a KVM guest is opened to
->>>>>> receive notification that the KVM pointer is set (VFIO_GROUP_NOTIFY_SET_KVM
->>>>>> event). When the KVM pointer is set, the vfio_ap driver takes the
->>>>>> following actions:
->>>>>> 1. Stashes the KVM pointer in the vfio_ap_mdev struct that holds the state
->>>>>>     of the mediated device.
->>>>>> 2. Calls the kvm_get_kvm() function to increment its reference counter.
->>>>>> 3. Sets the function pointer to the function that handles interception of
->>>>>>     the instruction that enables/disables interrupt processing.
->>>>>> 4. Sets the masks in the KVM guest's CRYCB to pass AP resources through to
->>>>>>     the guest.
->>>>>>
->>>>>> In order to avoid memory leaks, when the notifier is called to receive
->>>>>> notification that the KVM pointer has been set to NULL, the vfio_ap device
->>>>>> driver should reverse the actions taken when the KVM pointer was set.
->>>>>>
->>>>>> Fixes: 258287c994de ("s390: vfio-ap: implement mediated device open callback")
->>>>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->>>>>> ---
->>>>>>   drivers/s390/crypto/vfio_ap_ops.c | 29 ++++++++++++++++++++---------
->>>>>>   1 file changed, 20 insertions(+), 9 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
->>>>>> index e0bde8518745..cd22e85588e1 100644
->>>>>> --- a/drivers/s390/crypto/vfio_ap_ops.c
->>>>>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->>>>>> @@ -1037,8 +1037,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
->>>>>>   {
->>>>>>   	struct ap_matrix_mdev *m;
->>>>>>
->>>>>> -	mutex_lock(&matrix_dev->lock);
->>>>>> -
->>>>>>   	list_for_each_entry(m, &matrix_dev->mdev_list, node) {
->>>>>>   		if ((m != matrix_mdev) && (m->kvm == kvm)) {
->>>>>>   			mutex_unlock(&matrix_dev->lock);
->>>>>> @@ -1049,7 +1047,6 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
->>>>>>   	matrix_mdev->kvm = kvm;
->>>>>>   	kvm_get_kvm(kvm);
->>>>>>   	kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
->>>>>> -	mutex_unlock(&matrix_dev->lock);
->>>>>>
->>>>>>   	return 0;
->>>>>>   }
->>>>>> @@ -1083,35 +1080,49 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
->>>>>>   	return NOTIFY_DONE;
->>>>>>   }
->>>>>>
->>>>>> +static void "(struct ap_matrix_mdev *matrix_mdev)
->>>>>> +{
->>>>>> +	kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
->>>>>> +	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
->>>>>
->>>>> This patch LGTM. The only concern I have with it is whether a
->>>>> different cpu is guaranteed to observe the above assignment as
->>>>> an atomic operation. I think we didn't finish this discussion
->>>>> at v1, or did we?
->>>> You mean just this assigment:
->>>>>> +	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
->>>> should either have the old or the new value, but not halve zero halve old?
->>>>
->>> Yes that is the assignment I was referring to. Old value will work as well because
->>> kvm holds a reference to this module while in the pqap_hook.
->>>   
->>>> Normally this should be ok (and I would consider this a compiler bug if
->>>> this is split into 2 32 bit zeroes) But if you really want to be sure then we
->>>> can use WRITE_ONCE.
->>> Just my curiosity: what would make this a bug? Is it the s390 elf ABI,
->>> or some gcc feature, or even the C standard? Also how exactly would
->>> WRITE_ONCE, also access via volatile help in this particular situation?
->> I think its a tricky things and not strictly guaranteed, but there is a lot
->> of code that relies on the atomicity of word sizes. see for example the discussion
->> here
->> https://lore.kernel.org/lkml/CAHk-=wgC4+kV9AiLokw7cPP429rKCU+vjA8cWAfyOjC3MtqC4A@mail.gmail.com/
->>
->> WRITE_ONCE will not change the guarantees a lot, but it is mostly a documentation
->> that we assume atomic access here.
-> After looking again at the code, I think I have to correct myself.
-> WRITE_ONCE does not look necessary.
->
->
-> Another thing, though:
-> Shouldnt we also replace this code
->
-> [...]
-> static void vfio_ap_mdev_release(struct mdev_device *mdev)
-> {
->          struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
->
->          mutex_lock(&matrix_dev->lock);
->          if (matrix_mdev->kvm) {
-> --->          kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
-> --->          matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
-> --->          vfio_ap_mdev_reset_queues(mdev);
-> --->          kvm_put_kvm(matrix_mdev->kvm);
-> --->          matrix_mdev->kvm = NULL;
-> [...]
->
-> with vfio_ap_mdev_unset_kvm ?
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+600fef7c414ee7e2d71b@syzkaller.appspotmail.com
 
-I had that in the v2 patches, but mistakenly removed it
-because of a misinterpretation of the docs on posting a
-patch for a stable release. I'll restore it since I have to
-remove the unlock from the vfio_ap_mdev_unset_kvm
-function.
-
+infiniband syz1: set active
+infiniband syz1: added macvtap0
+RDS/IB: syz1: added
+smc: adding ib device syz1 with port count 1
+smc:    ib device syz1 port 1 has pnetid 
+BUG: unable to handle page fault for address: ffffffffffffff74
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD b48f067 P4D b48f067 PUD b491067 PMD 0 
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 8688 Comm: syz-executor225 Not tainted 5.10.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:smc_set_pci_values net/smc/smc_core.h:396 [inline]
+RIP: 0010:smc_nl_handle_smcr_dev.isra.0+0x4e1/0x1280 net/smc/smc_ib.c:422
+Code: fc ff df 48 8d bb 74 ff ff ff 48 89 fa 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 29 0d 00 00 <0f> b7 83 74 ff ff ff 48 8d bb 76 ff ff ff 48 89 fa 48 c1 ea 03 66
+RSP: 0018:ffffc90001f87220 EFLAGS: 00010246
+RAX: 0000000000000005 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffffffff74
+RBP: ffffffff8d5ac140 R08: 0000000000000001 R09: ffffc90001f87308
+R10: fffff520003f0e64 R11: 1ffffffff1e2db6c R12: 000000001b556831
+R13: ffff888013e29540 R14: dffffc0000000000 R15: ffff88802a360014
+FS:  00000000015bf880(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffff74 CR3: 000000002687b000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ smc_nl_prep_smcr_dev net/smc/smc_ib.c:469 [inline]
+ smcr_nl_get_device+0xdf/0x1f0 net/smc/smc_ib.c:481
+ genl_lock_dumpit+0x60/0x90 net/netlink/genetlink.c:623
+ netlink_dump+0x4d9/0xb90 net/netlink/af_netlink.c:2268
+ __netlink_dump_start+0x665/0x920 net/netlink/af_netlink.c:2373
+ genl_family_rcv_msg_dumpit+0x2af/0x310 net/netlink/genetlink.c:686
+ genl_family_rcv_msg net/netlink/genetlink.c:780 [inline]
+ genl_rcv_msg+0x43c/0x590 net/netlink/genetlink.c:800
+ netlink_rcv_skb+0x153/0x420 net/netlink/af_netlink.c:2494
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:811
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0x907/0xe40 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2336
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2390
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2423
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x443fd9
+Code: e8 6c 05 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe909694e8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000443fd9
+RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000004
+RBP: 00007ffe909694f0 R08: 0000000001bbbbbb R09: 0000000001bbbbbb
+R10: 0000000001bbbbbb R11: 0000000000000246 R12: 00007ffe90969500
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+CR2: ffffffffffffff74
+---[ end trace 45a80c2d5f347bdc ]---
+RIP: 0010:smc_set_pci_values net/smc/smc_core.h:396 [inline]
+RIP: 0010:smc_nl_handle_smcr_dev.isra.0+0x4e1/0x1280 net/smc/smc_ib.c:422
+Code: fc ff df 48 8d bb 74 ff ff ff 48 89 fa 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 29 0d 00 00 <0f> b7 83 74 ff ff ff 48 8d bb 76 ff ff ff 48 89 fa 48 c1 ea 03 66
+RSP: 0018:ffffc90001f87220 EFLAGS: 00010246
+RAX: 0000000000000005 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffffffff74
+RBP: ffffffff8d5ac140 R08: 0000000000000001 R09: ffffc90001f87308
+R10: fffff520003f0e64 R11: 1ffffffff1e2db6c R12: 000000001b556831
+R13: ffff888013e29540 R14: dffffc0000000000 R15: ffff88802a360014
+FS:  00000000015bf880(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffff74 CR3: 000000002687b000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
