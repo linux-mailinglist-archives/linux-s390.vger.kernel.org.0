@@ -2,133 +2,175 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4CA22DCDF5
-	for <lists+linux-s390@lfdr.de>; Thu, 17 Dec 2020 09:59:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 106852DCE8A
+	for <lists+linux-s390@lfdr.de>; Thu, 17 Dec 2020 10:39:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgLQI6u (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 17 Dec 2020 03:58:50 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:38888 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727306AbgLQI6u (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 17 Dec 2020 03:58:50 -0500
-Received: by mail-io1-f70.google.com with SMTP id q140so26635410iod.5
-        for <linux-s390@vger.kernel.org>; Thu, 17 Dec 2020 00:58:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=5cdTyg19qBt9YC2udx7QDD/ru4hNARFKf9MbeLvUc/Q=;
-        b=RXaMm/+9b02ZFHhOyAGEDSS4d3ejKGWp1ApM+MgyZO5aHKp5WUAMsuk446pK6DMwYa
-         xSvLxf0HMEqaMuUrk3Qyv6kgGEXb4hhptmggoLY5u72qIAjuB4Zy+miIwe9IDQNqYe2e
-         wU21ncCFCuqZbpN8hcwh/INUmvSROppLyHIaL/t2SBLtnpeg286JUTJuYDdYsspeVCLs
-         +D+QQW3Wm63IJAbEb7/R25dFo8ujOvex3g8hOSUU3M1Fp5hJ0ByMfM+81rJG1UlOGCAb
-         48jw/G0lXzja6kxN/PUO4e894SUOKFaSZtorb5kqxJoTyw55HRMbBMm5PNgfv4q4Bajd
-         /cRQ==
-X-Gm-Message-State: AOAM530bxnLPMf7AeQcXWeGKc3ntSPuzB/8gKl7gXnLx6Gayt9AYhZvc
-        4ZSgPZoIQoETQ5SAus/B1QzXIOBJCaLrTn3axtgvTkZUfqLu
-X-Google-Smtp-Source: ABdhPJyroSQRk3u2Kgqk9k1IMqZK+ZIarvm8U7vD5XMcHIe/xISvRPgvS3PTj7MYKw3HdAMLaRIftbrvL+w3mJGJZtgWCvzAVCJq
+        id S1726877AbgLQJjU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 17 Dec 2020 04:39:20 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:41968 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725871AbgLQJjS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 17 Dec 2020 04:39:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1608197872;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mikdXqxOQUmFSJUILlBGsIFt6CBxIrSXNkMzSbIKjmM=;
+        b=hPx7AHaRVpxmpBIukoIcZzsgzLRZQzEHxILVc8+m8nVRZO6wBHomf9Y/EypCXb8O00K650
+        pUAsdip08B8eW/10vJzTatR1GwfzBB8Xg3V9iSkoUQ1nv3wwo7Ygk9TuYwr8HcPbq0Z/lh
+        XiyTDRDs0tzLfVVKZp24FL2XO2R683Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-410-gF_XJdaQPcWhCliuAQ9Plw-1; Thu, 17 Dec 2020 04:37:51 -0500
+X-MC-Unique: gF_XJdaQPcWhCliuAQ9Plw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D742D801817;
+        Thu, 17 Dec 2020 09:37:49 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-112-175.ams2.redhat.com [10.36.112.175])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CD4591992D;
+        Thu, 17 Dec 2020 09:37:44 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v3 5/8] s390x: sie: Add SIE to lib
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        cohuck@redhat.com, linux-s390@vger.kernel.org
+References: <20201211100039.63597-1-frankja@linux.ibm.com>
+ <20201211100039.63597-6-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <0bb4934a-23b6-bf4f-2742-3892c17c81d0@redhat.com>
+Date:   Thu, 17 Dec 2020 10:37:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:154:: with SMTP id y20mr46705828jao.119.1608195489267;
- Thu, 17 Dec 2020 00:58:09 -0800 (PST)
-Date:   Thu, 17 Dec 2020 00:58:09 -0800
-In-Reply-To: <000000000000705ff605b5f2b656@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000de052a05b6a5301c@google.com>
-Subject: Re: BUG: unable to handle kernel paging request in smc_nl_handle_smcr_dev
-From:   syzbot <syzbot+600fef7c414ee7e2d71b@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kgraul@linux.ibm.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201211100039.63597-6-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+On 11/12/2020 11.00, Janosch Frank wrote:
+> This commit adds the definition of the SIE control block struct and
+> the assembly to execute SIE and save/restore guest registers.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  lib/s390x/asm-offsets.c  |  13 +++
+>  lib/s390x/asm/arch_def.h |   7 ++
+>  lib/s390x/interrupt.c    |   7 ++
+>  lib/s390x/sie.h          | 197 +++++++++++++++++++++++++++++++++++++++
+>  s390x/asm/lib.S          |  56 +++++++++++
+>  5 files changed, 280 insertions(+)
+>  create mode 100644 lib/s390x/sie.h
+> 
+> diff --git a/lib/s390x/asm-offsets.c b/lib/s390x/asm-offsets.c
+> index ee94ed3..35697de 100644
+> --- a/lib/s390x/asm-offsets.c
+> +++ b/lib/s390x/asm-offsets.c
+> @@ -8,6 +8,7 @@
+>  #include <libcflat.h>
+>  #include <kbuild.h>
+>  #include <asm/arch_def.h>
+> +#include <sie.h>
+>  
+>  int main(void)
+>  {
+> @@ -69,6 +70,18 @@ int main(void)
+>  	OFFSET(GEN_LC_ARS_SA, lowcore, ars_sa);
+>  	OFFSET(GEN_LC_CRS_SA, lowcore, crs_sa);
+>  	OFFSET(GEN_LC_PGM_INT_TDB, lowcore, pgm_int_tdb);
+> +	OFFSET(__SF_GPRS, stack_frame, gprs);
+> +	OFFSET(__SF_SIE_CONTROL, stack_frame, empty1[0]);
+> +	OFFSET(__SF_SIE_SAVEAREA, stack_frame, empty1[1]);
+> +	OFFSET(__SF_SIE_REASON, stack_frame, empty1[2]);
+> +	OFFSET(__SF_SIE_FLAGS, stack_frame, empty1[3]);
+> +	OFFSET(SIE_SAVEAREA_HOST_GRS, vm_save_area, host.grs[0]);
+> +	OFFSET(SIE_SAVEAREA_HOST_FPRS, vm_save_area, host.fprs[0]);
+> +	OFFSET(SIE_SAVEAREA_HOST_FPC, vm_save_area, host.fpc);
+> +	OFFSET(SIE_SAVEAREA_GUEST_GRS, vm_save_area, guest.grs[0]);
+> +	OFFSET(SIE_SAVEAREA_GUEST_FPRS, vm_save_area, guest.fprs[0]);
+> +	OFFSET(SIE_SAVEAREA_GUEST_FPC, vm_save_area, guest.fpc);
+> +
+>  
+>  	return 0;
+>  }
+> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+> index f3ab830..5a13cf2 100644
+> --- a/lib/s390x/asm/arch_def.h
+> +++ b/lib/s390x/asm/arch_def.h
+> @@ -8,6 +8,13 @@
+>  #ifndef _ASM_S390X_ARCH_DEF_H_
+>  #define _ASM_S390X_ARCH_DEF_H_
+>  
+> +struct stack_frame {
+> +	unsigned long back_chain;
+> +	unsigned long empty1[5];
+> +	unsigned long gprs[10];
+> +	unsigned int  empty2[8];
 
-HEAD commit:    5e60366d Merge tag 'fallthrough-fixes-clang-5.11-rc1' of g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17842c13500000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=503d0089cd701d6d
-dashboard link: https://syzkaller.appspot.com/bug?extid=600fef7c414ee7e2d71b
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17d8e41f500000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17962287500000
+I think you can drop empty2 ?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+600fef7c414ee7e2d71b@syzkaller.appspotmail.com
+> +};
+> +
+>  struct psw {
+>  	uint64_t	mask;
+>  	uint64_t	addr;
+> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
+> index bac8862..3858096 100644
+> --- a/lib/s390x/interrupt.c
+> +++ b/lib/s390x/interrupt.c
+> @@ -11,6 +11,7 @@
+>  #include <asm/barrier.h>
+>  #include <sclp.h>
+>  #include <interrupt.h>
+> +#include <sie.h>
+>  
+>  static bool pgm_int_expected;
+>  static bool ext_int_expected;
+> @@ -57,6 +58,12 @@ void register_pgm_cleanup_func(void (*f)(void))
+>  
+>  static void fixup_pgm_int(void)
+>  {
+> +	/* If we have an error on SIE we directly move to sie_exit */
+> +	if (lc->pgm_old_psw.addr >= (uint64_t)&sie_entry &&
+> +	    lc->pgm_old_psw.addr <= (uint64_t)&sie_entry + 10) {
 
-infiniband syz1: set active
-infiniband syz1: added macvtap0
-RDS/IB: syz1: added
-smc: adding ib device syz1 with port count 1
-smc:    ib device syz1 port 1 has pnetid 
-BUG: unable to handle page fault for address: ffffffffffffff74
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD b48f067 P4D b48f067 PUD b491067 PMD 0 
-Oops: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 8688 Comm: syz-executor225 Not tainted 5.10.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:smc_set_pci_values net/smc/smc_core.h:396 [inline]
-RIP: 0010:smc_nl_handle_smcr_dev.isra.0+0x4e1/0x1280 net/smc/smc_ib.c:422
-Code: fc ff df 48 8d bb 74 ff ff ff 48 89 fa 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 29 0d 00 00 <0f> b7 83 74 ff ff ff 48 8d bb 76 ff ff ff 48 89 fa 48 c1 ea 03 66
-RSP: 0018:ffffc90001f87220 EFLAGS: 00010246
-RAX: 0000000000000005 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffffffff74
-RBP: ffffffff8d5ac140 R08: 0000000000000001 R09: ffffc90001f87308
-R10: fffff520003f0e64 R11: 1ffffffff1e2db6c R12: 000000001b556831
-R13: ffff888013e29540 R14: dffffc0000000000 R15: ffff88802a360014
-FS:  00000000015bf880(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffff74 CR3: 000000002687b000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- smc_nl_prep_smcr_dev net/smc/smc_ib.c:469 [inline]
- smcr_nl_get_device+0xdf/0x1f0 net/smc/smc_ib.c:481
- genl_lock_dumpit+0x60/0x90 net/netlink/genetlink.c:623
- netlink_dump+0x4d9/0xb90 net/netlink/af_netlink.c:2268
- __netlink_dump_start+0x665/0x920 net/netlink/af_netlink.c:2373
- genl_family_rcv_msg_dumpit+0x2af/0x310 net/netlink/genetlink.c:686
- genl_family_rcv_msg net/netlink/genetlink.c:780 [inline]
- genl_rcv_msg+0x43c/0x590 net/netlink/genetlink.c:800
- netlink_rcv_skb+0x153/0x420 net/netlink/af_netlink.c:2494
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:811
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
- netlink_sendmsg+0x907/0xe40 net/netlink/af_netlink.c:1919
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2336
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2390
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2423
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x443fd9
-Code: e8 6c 05 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffe909694e8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000443fd9
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000004
-RBP: 00007ffe909694f0 R08: 0000000001bbbbbb R09: 0000000001bbbbbb
-R10: 0000000001bbbbbb R11: 0000000000000246 R12: 00007ffe90969500
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
-CR2: ffffffffffffff74
----[ end trace 45a80c2d5f347bdc ]---
-RIP: 0010:smc_set_pci_values net/smc/smc_core.h:396 [inline]
-RIP: 0010:smc_nl_handle_smcr_dev.isra.0+0x4e1/0x1280 net/smc/smc_ib.c:422
-Code: fc ff df 48 8d bb 74 ff ff ff 48 89 fa 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2 0f 85 29 0d 00 00 <0f> b7 83 74 ff ff ff 48 8d bb 76 ff ff ff 48 89 fa 48 c1 ea 03 66
-RSP: 0018:ffffc90001f87220 EFLAGS: 00010246
-RAX: 0000000000000005 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffffffff74
-RBP: ffffffff8d5ac140 R08: 0000000000000001 R09: ffffc90001f87308
-R10: fffff520003f0e64 R11: 1ffffffff1e2db6c R12: 000000001b556831
-R13: ffff888013e29540 R14: dffffc0000000000 R15: ffff88802a360014
-FS:  00000000015bf880(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffff74 CR3: 000000002687b000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Can you please explain that "magic" number 10 in the comment?
+
+> +		lc->pgm_old_psw.addr = (uint64_t)&sie_exit;
+> +	}
+> +
+>  	switch (lc->pgm_int_code) {
+>  	case PGM_INT_CODE_PRIVILEGED_OPERATION:
+>  		/* Normal operation is in supervisor state, so this exception
+> diff --git a/lib/s390x/sie.h b/lib/s390x/sie.h
+> new file mode 100644
+> index 0000000..b00bdf4
+> --- /dev/null
+> +++ b/lib/s390x/sie.h
+[...]
+> +extern u64 sie_entry;
+> +extern u64 sie_exit;
+
+Maybe better:
+
+extern uint16_t sie_entry[];
+extern uint16_t sie_exit[];
+
+?
+
+Or even:
+
+extern void sie_entry();
+extern void sie_exit();
+
+?
+
+ Thomas
 
