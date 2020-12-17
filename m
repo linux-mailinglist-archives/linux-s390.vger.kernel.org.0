@@ -2,125 +2,143 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8F6E2DCF91
-	for <lists+linux-s390@lfdr.de>; Thu, 17 Dec 2020 11:37:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BC942DD0B5
+	for <lists+linux-s390@lfdr.de>; Thu, 17 Dec 2020 12:46:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbgLQKgR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 17 Dec 2020 05:36:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34632 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726012AbgLQKgR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 17 Dec 2020 05:36:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1608201291;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eqY2w6dSIRH1MNQI1hoEdbukxwbUdfb0mL7JD2vR9OA=;
-        b=QEkrPiP4TtQ1HPSxY09C1vuDXlDlyPsTBKfHndXryjoWLLZe3kbJSb206YM+JZhFzYLoLa
-        9lww83NH0cNqEyExR3WMwiTte6i6lU9grBSEJMZOrICccioXcQvNUGSWzj1lJn3wQkCOdV
-        XQOiMRxZUQ7qq/HKMXnbhvrBy2fP/9w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-373-Mv_KQb5jPI6rxqUJVLJa2Q-1; Thu, 17 Dec 2020 05:34:49 -0500
-X-MC-Unique: Mv_KQb5jPI6rxqUJVLJa2Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 079E78030A5;
-        Thu, 17 Dec 2020 10:34:48 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-112-175.ams2.redhat.com [10.36.112.175])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EF8F310013C0;
-        Thu, 17 Dec 2020 10:34:42 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v3 7/8] s390x: Add diag318 intercept test
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     david@redhat.com, imbrenda@linux.ibm.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org
-References: <20201211100039.63597-1-frankja@linux.ibm.com>
- <20201211100039.63597-8-frankja@linux.ibm.com>
- <4f689585-ae2e-4632-9055-f2332d9f7751@redhat.com>
- <44d6ac32-f7ac-6b33-ea9e-e037f936a181@de.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <24e9883c-22d5-de4f-0001-d271855d7ea3@redhat.com>
-Date:   Thu, 17 Dec 2020 11:34:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        id S1727871AbgLQLpw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 17 Dec 2020 06:45:52 -0500
+Received: from foss.arm.com ([217.140.110.172]:59360 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728041AbgLQLpv (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 17 Dec 2020 06:45:51 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DF2E31B;
+        Thu, 17 Dec 2020 03:45:05 -0800 (PST)
+Received: from [10.163.84.19] (unknown [10.163.84.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A06803F66E;
+        Thu, 17 Dec 2020 03:45:01 -0800 (PST)
+Subject: Re: [PATCH 3/3] s390/mm: Define arch_get_mappable_range()
+To:     David Hildenbrand <david@redhat.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
+        catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20201210065845.GA20691@osiris>
+ <E026809E-4624-4ACE-B309-0443704C637B@redhat.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <401e72a7-7865-455a-4c7f-79278e3f0af0@arm.com>
+Date:   Thu, 17 Dec 2020 17:15:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <44d6ac32-f7ac-6b33-ea9e-e037f936a181@de.ibm.com>
+In-Reply-To: <E026809E-4624-4ACE-B309-0443704C637B@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 17/12/2020 10.59, Christian Borntraeger wrote:
+
+
+On 12/10/20 12:34 PM, David Hildenbrand wrote:
 > 
-> 
-> On 17.12.20 10:53, Thomas Huth wrote:
->> On 11/12/2020 11.00, Janosch Frank wrote:
->>> Not much to test except for the privilege and specification
->>> exceptions.
->>>
->>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>> Reviewed-by: Thomas Huth <thuth@redhat.com>
->>> ---
->>>  lib/s390x/sclp.c  |  2 ++
->>>  lib/s390x/sclp.h  |  6 +++++-
->>>  s390x/intercept.c | 19 +++++++++++++++++++
->>>  3 files changed, 26 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/lib/s390x/sclp.c b/lib/s390x/sclp.c
->>> index cf6ea7c..0001993 100644
->>> --- a/lib/s390x/sclp.c
->>> +++ b/lib/s390x/sclp.c
->>> @@ -138,6 +138,8 @@ void sclp_facilities_setup(void)
->>>  
->>>  	assert(read_info);
->>>  
->>> +	sclp_facilities.has_diag318 = read_info->byte_134_diag318;
->>> +
->>>  	cpu = (void *)read_info + read_info->offset_cpu;
->>>  	for (i = 0; i < read_info->entries_cpu; i++, cpu++) {
->>>  		if (cpu->address == cpu0_addr) {
->>> diff --git a/lib/s390x/sclp.h b/lib/s390x/sclp.h
->>> index 6c86037..58f8e54 100644
->>> --- a/lib/s390x/sclp.h
->>> +++ b/lib/s390x/sclp.h
->>> @@ -105,7 +105,8 @@ extern struct sclp_facilities sclp_facilities;
->>>  
->>>  struct sclp_facilities {
->>>  	uint64_t has_sief2 : 1;
->>> -	uint64_t : 63;
->>> +	uint64_t has_diag318 : 1;
->>> +	uint64_t : 62;
->>>  };
->>>  
->>>  typedef struct ReadInfo {
->>> @@ -130,6 +131,9 @@ typedef struct ReadInfo {
->>>      uint16_t highest_cpu;
->>>      uint8_t  _reserved5[124 - 122];     /* 122-123 */
->>>      uint32_t hmfai;
->>> +    uint8_t reserved7[134 - 128];
->>> +    uint8_t byte_134_diag318 : 1;
->>> +    uint8_t : 7;
->>>      struct CPUEntry entries[0];
+>> Am 10.12.2020 um 07:58 schrieb Heiko Carstens <hca@linux.ibm.com>:
 >>
->> ... the entries[] array can be moved around here without any further ado?
->> Looks confusing to me. Should there be a CPUEntry array here at all, or only
->> in ReadCpuInfo?
+>> ﻿On Thu, Dec 10, 2020 at 09:48:11AM +0530, Anshuman Khandual wrote:
+>>>>> Alternatively leaving __segment_load() and vmem_add_memory() unchanged
+>>>>> will create three range checks i.e two memhp_range_allowed() and the
+>>>>> existing VMEM_MAX_PHYS check in vmem_add_mapping() on all the hotplug
+>>>>> paths, which is not optimal.
+>>>>
+>>>> Ah, sorry. I didn't follow this discussion too closely. I just thought
+>>>> my point of view would be clear: let's not have two different ways to
+>>>> check for the same thing which must be kept in sync.
+>>>> Therefore I was wondering why this next version is still doing
+>>>> that. Please find a way to solve this.
+>>>
+>>> The following change is after the current series and should work with
+>>> and without memory hotplug enabled. There will be just a single place
+>>> i.e vmem_get_max_addr() to update in case the maximum address changes
+>>> from VMEM_MAX_PHYS to something else later.
+>>
+>> Still not. That's way too much code churn for what you want to achieve.
+>> If the s390 specific patch would look like below you can add
+>>
+>> Acked-by: Heiko Carstens <hca@linux.ibm.com>
+>>
+>> But please make sure that the arch_get_mappable_range() prototype in
+>> linux/memory_hotplug.h is always visible and does not depend on
+>> CONFIG_MEMORY_HOTPLUG. I'd like to avoid seeing sparse warnings
+>> because of this.
+>>
+>> Thanks.
+>>
+>> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+>> index 77767850d0d0..e0e78234ae57 100644
+>> --- a/arch/s390/mm/init.c
+>> +++ b/arch/s390/mm/init.c
+>> @@ -291,6 +291,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>    if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
+>>        return -EINVAL;
+>>
+>> +    VM_BUG_ON(!memhp_range_allowed(start, size, 1));
+>>    rc = vmem_add_mapping(start, size);
+>>    if (rc)
+>>        return rc;
+>> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
+>> index b239f2ba93b0..ccd55e2f97f9 100644
+>> --- a/arch/s390/mm/vmem.c
+>> +++ b/arch/s390/mm/vmem.c
+>> @@ -4,6 +4,7 @@
+>>  *    Author(s): Heiko Carstens <heiko.carstens@de.ibm.com>
+>>  */
+>>
+>> +#include <linux/memory_hotplug.h>
+>> #include <linux/memblock.h>
+>> #include <linux/pfn.h>
+>> #include <linux/mm.h>
+>> @@ -532,11 +533,23 @@ void vmem_remove_mapping(unsigned long start, unsigned long size)
+>>    mutex_unlock(&vmem_mutex);
+>> }
+>>
+>> +struct range arch_get_mappable_range(void)
+>> +{
+>> +    struct range range;
+>> +
+>> +    range.start = 0;
+>> +    range.end = VMEM_MAX_PHYS;
+>> +    return range;
+>> +}
+>> +
+>> int vmem_add_mapping(unsigned long start, unsigned long size)
+>> {
+>> +    struct range range;
+>>    int ret;
+>>
+>> -    if (start + size > VMEM_MAX_PHYS ||
+>> +    range = arch_get_mappable_range();
+>> +    if (start < range.start ||
+>> +        start + size > range.end ||
+>>        start + size < start)
+>>        return -ERANGE;
+>>
+>>
 > 
-> there is offset_cpu for the cpu entries at the beginning of the structure.
+> Right, what I had in mind as reply to v1. Not sure if we really need new checks in common code. Having a new memhp_get_pluggable_range() would be sufficient for my use case (virtio-mem).
 
-Ah, thanks, right, this was used earlier in the patch series, now I
-remember. But I think the "struct CPUEntry entries[0]" here is rather
-confusing, since there is no guarantee that the entries are really at this
-location ... I think this line should rather be replaced by a comment saying
-that offset_cpu should be used instead.
+Hello David,
 
- Thomas
+Quick question. Currently memhp_get_pluggable_range() is a mm/memory_hotplug.c
+internal static inline function. Only memhp_range_allowed() is available via
+the header include/linux/memory_hotplug.h But For memhp_get_pluggable_range()
+to be visible to the drivers, it needs to get included in the header and also
+be exported via EXPORT_SYMBOL_GPL() in mm/memory_hotplug.c OR just move the
+entire definition as static inline into the header itself. Wondering which way
+would be better ?
 
+- Anshuman
