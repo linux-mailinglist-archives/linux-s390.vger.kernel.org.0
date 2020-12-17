@@ -2,148 +2,219 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D86CB2DD450
-	for <lists+linux-s390@lfdr.de>; Thu, 17 Dec 2020 16:38:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AAA02DD488
+	for <lists+linux-s390@lfdr.de>; Thu, 17 Dec 2020 16:47:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbgLQPi2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 17 Dec 2020 10:38:28 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35099 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726548AbgLQPi2 (ORCPT
+        id S1728491AbgLQPqJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 17 Dec 2020 10:46:09 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51394 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728131AbgLQPqI (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 17 Dec 2020 10:38:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1608219421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=haU9+3I1EhIsBNBQ9QQHsINvaKlrWDyUkN+Krpx5g3E=;
-        b=YSw5ho8BFeijhr0obSsT9+1gu94hmj4h/9sBoNHObKGYZCefK7JQm/GiG0YzzVGeCIPoAd
-        fCGrVD7Qfk/nVWQm/UCeYTrIATM56HibNwj9V/1I0N9YQn/RjKSb+2jF1jMj/4eDRx7nRi
-        bzXDRv5GPbA7TgvM8UzMiXYK/H51bG8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-527-DUapDB9LPfuK0b6oViVdOA-1; Thu, 17 Dec 2020 10:36:56 -0500
-X-MC-Unique: DUapDB9LPfuK0b6oViVdOA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5BBC89CC03;
-        Thu, 17 Dec 2020 15:36:54 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-112-175.ams2.redhat.com [10.36.112.175])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C04AA19C71;
-        Thu, 17 Dec 2020 15:36:49 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v3 7/8] s390x: Add diag318 intercept test
-To:     Janosch Frank <frankja@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        kvm@vger.kernel.org
-Cc:     david@redhat.com, imbrenda@linux.ibm.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org
+        Thu, 17 Dec 2020 10:46:08 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BHFWkHO105623;
+        Thu, 17 Dec 2020 10:45:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=to : cc : references :
+ from : subject : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=SrSnq+Lrp7lcCITWSoGuDUVXJL8pnv1ZhaLX/A4f3Ls=;
+ b=ZbHeRtrglZO7HSyskmLWJSZgLaQeHLxc6HmPNZLplQPijqabufQ3iZZAXypFyDR2JNIq
+ njSjGpSA3MhLWRsgloNVZ0uEL94cwYA6At6F2IdF57MsVuMPam5XB5JqjEGHZUxwhP0q
+ jHlFPjU+vpAmfAdV7440sSKQBu9/WPGa/NtW3Lahg5+70g/NGfrqZsD3C/ZI3NNl8am7
+ dcAYUtP+Qlt88r1JMUqiciPKAcHzfIamhczV6ulaU7p24rXMdb3PpOqeccxbF57b3RvV
+ +IZCIxUwowniSFqW4B6rGuTB/SWcvXgFbwmPJXnYkNedcRIW5ai5H2FJWFesvqsRnQTK yg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35g8prb92a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Dec 2020 10:45:27 -0500
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BHFWwIG106940;
+        Thu, 17 Dec 2020 10:45:27 -0500
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35g8prb91b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Dec 2020 10:45:27 -0500
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BHFSDGu015195;
+        Thu, 17 Dec 2020 15:45:25 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 35fbp5hjdy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Dec 2020 15:45:25 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BHFjMnE35651930
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Dec 2020 15:45:22 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2EA7E42049;
+        Thu, 17 Dec 2020 15:45:22 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C16E84203F;
+        Thu, 17 Dec 2020 15:45:21 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.181.71])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 17 Dec 2020 15:45:21 +0000 (GMT)
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
+Cc:     david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        cohuck@redhat.com, linux-s390@vger.kernel.org
 References: <20201211100039.63597-1-frankja@linux.ibm.com>
- <20201211100039.63597-8-frankja@linux.ibm.com>
- <4f689585-ae2e-4632-9055-f2332d9f7751@redhat.com>
- <44d6ac32-f7ac-6b33-ea9e-e037f936a181@de.ibm.com>
- <24e9883c-22d5-de4f-0001-d271855d7ea3@redhat.com>
- <23af5bca-dd2c-43bd-b2b4-6c7e2031517f@linux.ibm.com>
- <b4bd9043-bf90-fe88-f237-b4f9948ba94e@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <dfc2c6bf-78ed-9f1f-0659-bee8437b46ca@redhat.com>
-Date:   Thu, 17 Dec 2020 16:36:48 +0100
+ <20201211100039.63597-6-frankja@linux.ibm.com>
+ <0bb4934a-23b6-bf4f-2742-3892c17c81d0@redhat.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [kvm-unit-tests PATCH v3 5/8] s390x: sie: Add SIE to lib
+Message-ID: <365acc5e-0f57-ed9e-cee3-b321827fd2b6@linux.ibm.com>
+Date:   Thu, 17 Dec 2020 16:45:21 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-In-Reply-To: <b4bd9043-bf90-fe88-f237-b4f9948ba94e@linux.ibm.com>
+In-Reply-To: <0bb4934a-23b6-bf4f-2742-3892c17c81d0@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2020-12-17_10:2020-12-15,2020-12-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 impostorscore=0 mlxscore=0 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012170106
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 17/12/2020 16.31, Janosch Frank wrote:
-> On 12/17/20 3:31 PM, Janosch Frank wrote:
->> On 12/17/20 11:34 AM, Thomas Huth wrote:
->>> On 17/12/2020 10.59, Christian Borntraeger wrote:
->>>>
->>>>
->>>> On 17.12.20 10:53, Thomas Huth wrote:
->>>>> On 11/12/2020 11.00, Janosch Frank wrote:
->>>>>> Not much to test except for the privilege and specification
->>>>>> exceptions.
->>>>>>
->>>>>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>>>>> Reviewed-by: Thomas Huth <thuth@redhat.com>
->>>>>> ---
->>>>>>  lib/s390x/sclp.c  |  2 ++
->>>>>>  lib/s390x/sclp.h  |  6 +++++-
->>>>>>  s390x/intercept.c | 19 +++++++++++++++++++
->>>>>>  3 files changed, 26 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/lib/s390x/sclp.c b/lib/s390x/sclp.c
->>>>>> index cf6ea7c..0001993 100644
->>>>>> --- a/lib/s390x/sclp.c
->>>>>> +++ b/lib/s390x/sclp.c
->>>>>> @@ -138,6 +138,8 @@ void sclp_facilities_setup(void)
->>>>>>  
->>>>>>  	assert(read_info);
->>>>>>  
->>>>>> +	sclp_facilities.has_diag318 = read_info->byte_134_diag318;
->>>>>> +
->>>>>>  	cpu = (void *)read_info + read_info->offset_cpu;
->>>>>>  	for (i = 0; i < read_info->entries_cpu; i++, cpu++) {
->>>>>>  		if (cpu->address == cpu0_addr) {
->>>>>> diff --git a/lib/s390x/sclp.h b/lib/s390x/sclp.h
->>>>>> index 6c86037..58f8e54 100644
->>>>>> --- a/lib/s390x/sclp.h
->>>>>> +++ b/lib/s390x/sclp.h
->>>>>> @@ -105,7 +105,8 @@ extern struct sclp_facilities sclp_facilities;
->>>>>>  
->>>>>>  struct sclp_facilities {
->>>>>>  	uint64_t has_sief2 : 1;
->>>>>> -	uint64_t : 63;
->>>>>> +	uint64_t has_diag318 : 1;
->>>>>> +	uint64_t : 62;
->>>>>>  };
->>>>>>  
->>>>>>  typedef struct ReadInfo {
->>>>>> @@ -130,6 +131,9 @@ typedef struct ReadInfo {
->>>>>>      uint16_t highest_cpu;
->>>>>>      uint8_t  _reserved5[124 - 122];     /* 122-123 */
->>>>>>      uint32_t hmfai;
->>>>>> +    uint8_t reserved7[134 - 128];
->>>>>> +    uint8_t byte_134_diag318 : 1;
->>>>>> +    uint8_t : 7;
->>>>>>      struct CPUEntry entries[0];
->>>>>
->>>>> ... the entries[] array can be moved around here without any further ado?
->>>>> Looks confusing to me. Should there be a CPUEntry array here at all, or only
->>>>> in ReadCpuInfo?
->>>>
->>>> there is offset_cpu for the cpu entries at the beginning of the structure.
->>>
->>> Ah, thanks, right, this was used earlier in the patch series, now I
->>> remember. But I think the "struct CPUEntry entries[0]" here is rather
->>> confusing, since there is no guarantee that the entries are really at this
->>> location ... I think this line should rather be replaced by a comment saying
->>> that offset_cpu should be used instead.
+On 12/17/20 10:37 AM, Thomas Huth wrote:
+> On 11/12/2020 11.00, Janosch Frank wrote:
+>> This commit adds the definition of the SIE control block struct and
+>> the assembly to execute SIE and save/restore guest registers.
 >>
->> Sure, as long as it's clear that there's something at the end, I'm fine
->> with it.
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> ---
+>>  lib/s390x/asm-offsets.c  |  13 +++
+>>  lib/s390x/asm/arch_def.h |   7 ++
+>>  lib/s390x/interrupt.c    |   7 ++
+>>  lib/s390x/sie.h          | 197 +++++++++++++++++++++++++++++++++++++++
+>>  s390x/asm/lib.S          |  56 +++++++++++
+>>  5 files changed, 280 insertions(+)
+>>  create mode 100644 lib/s390x/sie.h
+>>
+>> diff --git a/lib/s390x/asm-offsets.c b/lib/s390x/asm-offsets.c
+>> index ee94ed3..35697de 100644
+>> --- a/lib/s390x/asm-offsets.c
+>> +++ b/lib/s390x/asm-offsets.c
+>> @@ -8,6 +8,7 @@
+>>  #include <libcflat.h>
+>>  #include <kbuild.h>
+>>  #include <asm/arch_def.h>
+>> +#include <sie.h>
+>>  
+>>  int main(void)
+>>  {
+>> @@ -69,6 +70,18 @@ int main(void)
+>>  	OFFSET(GEN_LC_ARS_SA, lowcore, ars_sa);
+>>  	OFFSET(GEN_LC_CRS_SA, lowcore, crs_sa);
+>>  	OFFSET(GEN_LC_PGM_INT_TDB, lowcore, pgm_int_tdb);
+>> +	OFFSET(__SF_GPRS, stack_frame, gprs);
+>> +	OFFSET(__SF_SIE_CONTROL, stack_frame, empty1[0]);
+>> +	OFFSET(__SF_SIE_SAVEAREA, stack_frame, empty1[1]);
+>> +	OFFSET(__SF_SIE_REASON, stack_frame, empty1[2]);
+>> +	OFFSET(__SF_SIE_FLAGS, stack_frame, empty1[3]);
+>> +	OFFSET(SIE_SAVEAREA_HOST_GRS, vm_save_area, host.grs[0]);
+>> +	OFFSET(SIE_SAVEAREA_HOST_FPRS, vm_save_area, host.fprs[0]);
+>> +	OFFSET(SIE_SAVEAREA_HOST_FPC, vm_save_area, host.fpc);
+>> +	OFFSET(SIE_SAVEAREA_GUEST_GRS, vm_save_area, guest.grs[0]);
+>> +	OFFSET(SIE_SAVEAREA_GUEST_FPRS, vm_save_area, guest.fprs[0]);
+>> +	OFFSET(SIE_SAVEAREA_GUEST_FPC, vm_save_area, guest.fpc);
+>> +
+>>  
+>>  	return 0;
+>>  }
+>> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+>> index f3ab830..5a13cf2 100644
+>> --- a/lib/s390x/asm/arch_def.h
+>> +++ b/lib/s390x/asm/arch_def.h
+>> @@ -8,6 +8,13 @@
+>>  #ifndef _ASM_S390X_ARCH_DEF_H_
+>>  #define _ASM_S390X_ARCH_DEF_H_
+>>  
+>> +struct stack_frame {
+>> +	unsigned long back_chain;
+>> +	unsigned long empty1[5];
+>> +	unsigned long gprs[10];
+>> +	unsigned int  empty2[8];
 > 
-> I would add that to the "fix style issues" patch or into an own patch.
-> Any preferences?
+> I think you can drop empty2 ?
 
-I think a separate patch is cleaner.
+Since I don't need to allocate it I could also remove the gprs. We only
+use empty1 right now as far as I know.
 
-> -       struct CPUEntry entries[0];
-> +       /*
-> +        * The cpu entries follow, they start at the offset specified
-> +        * in offset_cpu.
-> +        */
+> 
+>> +};
+>> +
+>>  struct psw {
+>>  	uint64_t	mask;
+>>  	uint64_t	addr;
+>> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
+>> index bac8862..3858096 100644
+>> --- a/lib/s390x/interrupt.c
+>> +++ b/lib/s390x/interrupt.c
+>> @@ -11,6 +11,7 @@
+>>  #include <asm/barrier.h>
+>>  #include <sclp.h>
+>>  #include <interrupt.h>
+>> +#include <sie.h>
+>>  
+>>  static bool pgm_int_expected;
+>>  static bool ext_int_expected;
+>> @@ -57,6 +58,12 @@ void register_pgm_cleanup_func(void (*f)(void))
+>>  
+>>  static void fixup_pgm_int(void)
+>>  {
+>> +	/* If we have an error on SIE we directly move to sie_exit */
+>> +	if (lc->pgm_old_psw.addr >= (uint64_t)&sie_entry &&
+>> +	    lc->pgm_old_psw.addr <= (uint64_t)&sie_entry + 10) {
+> 
+> Can you please explain that "magic" number 10 in the comment?
 
-Sounds good, thanks!
+I think using sie_exit would make more sense than explaining that
+sie_entry + 10 bytes is the location of sie_exit.
 
- Thomas
+
+> 
+>> +		lc->pgm_old_psw.addr = (uint64_t)&sie_exit;
+>> +	}
+>> +
+>>  	switch (lc->pgm_int_code) {
+>>  	case PGM_INT_CODE_PRIVILEGED_OPERATION:
+>>  		/* Normal operation is in supervisor state, so this exception
+>> diff --git a/lib/s390x/sie.h b/lib/s390x/sie.h
+>> new file mode 100644
+>> index 0000000..b00bdf4
+>> --- /dev/null
+>> +++ b/lib/s390x/sie.h
+> [...]
+>> +extern u64 sie_entry;
+>> +extern u64 sie_exit;
+> 
+> Maybe better:
+> 
+> extern uint16_t sie_entry[];
+> extern uint16_t sie_exit[];
+> 
+> ?
+> 
+> Or even:
+> 
+> extern void sie_entry();
+> extern void sie_exit();
+
+Definitely better since I don't return values in sie_exit anymore (I
+used to before).
+
+> 
+> ?
+> 
+>  Thomas
+> 
 
