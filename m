@@ -2,117 +2,127 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE7AD2DF4FB
-	for <lists+linux-s390@lfdr.de>; Sun, 20 Dec 2020 11:20:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E86682DF578
+	for <lists+linux-s390@lfdr.de>; Sun, 20 Dec 2020 14:19:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbgLTKPa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 20 Dec 2020 05:15:30 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39596 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727010AbgLTKPa (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 20 Dec 2020 05:15:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1608459243;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=L7WBlnc4uBH3yp60EsaVmDi0Gnm0WESlPJ7pAkexlYE=;
-        b=DRy611g2dWyYHGJ6E0rKQqgcsFC1pYd2V4n23wkCciITpt08V4+/SijjNNdwLqvLiB+ozu
-        mwo7rGasgm2Lo4YJA0SacV3BA0svf0GCiY7cZ3SwyMNuar+YqvGF7cwsYwwRZ39MO2NEEW
-        FuZ3TdC6mHUGcDy83zKzW5Rs0v7AA3M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-99-EkyDCo7HO9-EaJpq7SKZJg-1; Sun, 20 Dec 2020 05:14:01 -0500
-X-MC-Unique: EkyDCo7HO9-EaJpq7SKZJg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2519615720;
-        Sun, 20 Dec 2020 10:14:00 +0000 (UTC)
-Received: from [10.36.112.16] (ovpn-112-16.ams2.redhat.com [10.36.112.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A9D996294D;
-        Sun, 20 Dec 2020 10:13:58 +0000 (UTC)
-Subject: Re: [PATCH v1 4/4] s390/kvm: VSIE: correctly handle MVPG when in VSIE
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, frankja@linux.ibm.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, stable@vger.kernel.org
-References: <20201218141811.310267-1-imbrenda@linux.ibm.com>
- <20201218141811.310267-5-imbrenda@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <6836573a-a49d-9d9f-49e0-96b5aa479c52@redhat.com>
-Date:   Sun, 20 Dec 2020 11:13:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+        id S1727426AbgLTNOy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 20 Dec 2020 08:14:54 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:41793 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgLTNOx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 20 Dec 2020 08:14:53 -0500
+Received: by mail-il1-f198.google.com with SMTP id f19so7009487ilk.8
+        for <linux-s390@vger.kernel.org>; Sun, 20 Dec 2020 05:14:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=fGj2OjlxlDy1Zgg+Kr3WB9Wk2gajexubY628list+ps=;
+        b=pFg/I9r+Sk6/qBYQ9/c7ZhGMbEOXVHNr/I8TcvaM94bsb0TYyUeA056com1UYfZ/Wd
+         X88VaIG541RiH94ooefjwE9dSBksl9NL+rBhnTL+LXfhX+ooGYNaYL7YXskLSlvB0Cnv
+         NA3ootEIrR/u1aQmBxHRZcgICJBZgTxoKvIQ7SVT/n4XqSDpSslMN59kbfE+Z51giLuo
+         fwPli0srV0tUdert5fsgoytYww0p5cp+VRYxNVTXV6sP/lesFONDDTLXS9uQ7iMAk8dx
+         x7uyfPSzl1xQkB8xqs9SJyPlAbe+JxIUivdbYBEUOKjFj2YCRLuo8Dxq/CWrunrX0Jjy
+         yPYw==
+X-Gm-Message-State: AOAM532j1INhGTTNHc6p88VJ0A/f6HyAmhzlgXv+/b8C1bp9MkzpsBvf
+        q/uW10WsSrUOKuNajE43m3Oha8VjBe2qylEBw+2q/a809irY
+X-Google-Smtp-Source: ABdhPJyyo+upCdVM4BxURMm9/zk2XCoEKlzd9IgU1yZJvSuAcA/pHb0/HfPRc6mU1UZXEqMGoed5dTAn8/UBgmCk+eNxEnzLp05g
 MIME-Version: 1.0
-In-Reply-To: <20201218141811.310267-5-imbrenda@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Received: by 2002:a5e:9b06:: with SMTP id j6mr10946043iok.171.1608470052365;
+ Sun, 20 Dec 2020 05:14:12 -0800 (PST)
+Date:   Sun, 20 Dec 2020 05:14:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001a6adb05b6e51e3e@google.com>
+Subject: KASAN: global-out-of-bounds Read in smc_nl_get_sys_info
+From:   syzbot <syzbot+f4708c391121cfc58396@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kgraul@linux.ibm.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 18.12.20 15:18, Claudio Imbrenda wrote:
-> Correctly handle the MVPG instruction when issued by a VSIE guest.
-> 
+Hello,
 
-I remember that MVPG SIE documentation was completely crazy and full of
-corner cases. :)
+syzbot found the following issue on:
 
-Looking at arch/s390/kvm/intercept.c:handle_mvpg_pei(), I can spot that
+HEAD commit:    3db1a3fa Merge tag 'staging-5.11-rc1' of git://git.kernel...
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=121dc937500000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2764fc28a92339f9
+dashboard link: https://syzkaller.appspot.com/bug?extid=f4708c391121cfc58396
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16522287500000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1144680f500000
 
-1. "This interception can only happen for guests with DAT disabled ..."
-2. KVM does not make use of any mvpg state inside the SCB.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+f4708c391121cfc58396@syzkaller.appspotmail.com
 
-Can this be observed with Linux guests?
+==================================================================
+BUG: KASAN: global-out-of-bounds in string_nocheck lib/vsprintf.c:611 [inline]
+BUG: KASAN: global-out-of-bounds in string+0x39c/0x3d0 lib/vsprintf.c:693
+Read of size 1 at addr ffffffff8faea960 by task syz-executor646/8509
+
+CPU: 0 PID: 8509 Comm: syz-executor646 Not tainted 5.10.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:79 [inline]
+ dump_stack+0x107/0x163 lib/dump_stack.c:120
+ print_address_description.constprop.0.cold+0x5/0x4c8 mm/kasan/report.c:385
+ __kasan_report mm/kasan/report.c:545 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:562
+ string_nocheck lib/vsprintf.c:611 [inline]
+ string+0x39c/0x3d0 lib/vsprintf.c:693
+ vsnprintf+0x71b/0x14f0 lib/vsprintf.c:2618
+ snprintf+0xbb/0xf0 lib/vsprintf.c:2751
+ smc_nl_get_sys_info+0x493/0x880 net/smc/smc_core.c:249
+ genl_lock_dumpit+0x60/0x90 net/netlink/genetlink.c:623
+ netlink_dump+0x4b9/0xb70 net/netlink/af_netlink.c:2268
+ __netlink_dump_start+0x642/0x900 net/netlink/af_netlink.c:2373
+ genl_family_rcv_msg_dumpit+0x2af/0x310 net/netlink/genetlink.c:686
+ genl_family_rcv_msg net/netlink/genetlink.c:780 [inline]
+ genl_rcv_msg+0x434/0x580 net/netlink/genetlink.c:800
+ netlink_rcv_skb+0x153/0x420 net/netlink/af_netlink.c:2494
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:811
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2336
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2390
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2423
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x440299
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff4b943e58 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440299
+RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401aa0
+R13: 0000000000401b30 R14: 0000000000000000 R15: 0000000000000000
+
+The buggy address belongs to the variable:
+ smc_hostname+0x20/0x40
+
+Memory state around the buggy address:
+ ffffffff8faea800: 00 00 f9 f9 f9 f9 f9 f9 00 00 f9 f9 f9 f9 f9 f9
+ ffffffff8faea880: 00 00 f9 f9 f9 f9 f9 f9 00 00 f9 f9 f9 f9 f9 f9
+>ffffffff8faea900: 00 f9 f9 f9 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
+                                                       ^
+ ffffffff8faea980: 04 f9 f9 f9 f9 f9 f9 f9 00 00 f9 f9 f9 f9 f9 f9
+ ffffffff8faeaa00: 00 00 f9 f9 f9 f9 f9 f9 00 00 f9 f9 f9 f9 f9 f9
+==================================================================
 
 
-Can I get some information on what information is stored at [0xc0, 0xd)
-inside the SCB? I assume it's:
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-0xc0: guest physical address of source PTE
-0xc8: guest physical address of target PTE
-
-
-Also, which conditions have to be met such that we get a ICPT_PARTEXEC:
-
-a) State of guest DAT (I assume off?)
-b) State of PTEs: What happens if there is no PTE (I assume we need two
-PTEs, otherwise no such intercept)? I assume we get an intercept if one
-of both PTEs is not present or the destination PTE is protected. Correct?
-
-So, when we (g1) get an intercept for g3, can we be sure 0xc0 and 0xc8
-in the scb are both valid g1 addresses pointing at our PTE, and what do
-we know about these PTEs (one not present or destination protected)?
-
-[...]
->  /*
->   * Run the vsie on a shadow scb and a shadow gmap, without any further
->   * sanity checks, handling SIE faults.
-> @@ -1063,6 +1132,10 @@ static int do_vsie_run(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
->  		if ((scb_s->ipa & 0xf000) != 0xf000)
->  			scb_s->ipa += 0x1000;
->  		break;
-> +	case ICPT_PARTEXEC:
-> +		if (scb_s->ipa == 0xb254)
-
-Old code hat "/* MVPG only */" - why is this condition now necessary?
-
-> +			rc = vsie_handle_mvpg(vcpu, vsie_page);
-> +		break;
->  	}
->  	return rc;
->  }
-> 
-
-
--- 
-Thanks,
-
-David / dhildenb
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
