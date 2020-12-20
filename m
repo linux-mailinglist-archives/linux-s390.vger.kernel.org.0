@@ -2,43 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AFED2DF280
-	for <lists+linux-s390@lfdr.de>; Sun, 20 Dec 2020 01:19:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 760972DF4DC
+	for <lists+linux-s390@lfdr.de>; Sun, 20 Dec 2020 10:42:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgLTASz convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Sat, 19 Dec 2020 19:18:55 -0500
-Received: from mail.univ-alger.dz ([193.194.83.97]:33728 "EHLO
-        mail.univ-alger.dz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgLTASz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 19 Dec 2020 19:18:55 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.univ-alger.dz (Postfix) with ESMTP id B9B894E60BA1;
-        Sat, 19 Dec 2020 20:04:43 +0100 (CET)
-Received: from mail.univ-alger.dz ([127.0.0.1])
-        by localhost (mail.univ-alger.dz [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id HZLBslpA7IkG; Sat, 19 Dec 2020 20:04:43 +0100 (CET)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.univ-alger.dz (Postfix) with ESMTP id AE56C4E0346F;
-        Sat, 19 Dec 2020 16:28:16 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mail.univ-alger.dz
-Received: from mail.univ-alger.dz ([127.0.0.1])
-        by localhost (mail.univ-alger.dz [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id dKaYPIhcdrsW; Sat, 19 Dec 2020 16:28:16 +0100 (CET)
-Received: from MACBOOK341C.localdomain (unknown [45.132.227.75])
-        by mail.univ-alger.dz (Postfix) with ESMTPSA id 1BF364E24160;
-        Sat, 19 Dec 2020 16:16:03 +0100 (CET)
-Content-Type: text/plain; charset="utf-8"
+        id S1727298AbgLTJl7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 20 Dec 2020 04:41:59 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40077 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727254AbgLTJl7 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 20 Dec 2020 04:41:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1608457232;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qu181/SxorcHfWdvdcSj+pkwAFVA8G1yAvMSmmXwoBY=;
+        b=OTgqvvLaaV9F2TkJxisc/Ara2Xtm0ktSN0x6lqlHwELMMkVhSgME+dctV1/sNBz03/RhIq
+        VP05HAWOZpfX7Rr0x20IYyd0V9wdX9WGROJQuUrTZjfDsr/ryisY5fzTmTluj4tK2Va0W/
+        cPurN3tji28VaY7V52B8bUu4+94zWTo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-BXSYY0nONT25flmeROQzhA-1; Sun, 20 Dec 2020 04:40:30 -0500
+X-MC-Unique: BXSYY0nONT25flmeROQzhA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 744291005504;
+        Sun, 20 Dec 2020 09:40:29 +0000 (UTC)
+Received: from [10.36.112.16] (ovpn-112-16.ams2.redhat.com [10.36.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 438AD2CD65;
+        Sun, 20 Dec 2020 09:40:28 +0000 (UTC)
+Subject: Re: [PATCH v1 0/4] s390/kvm: fix MVPG when in VSIE
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, frankja@linux.ibm.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+References: <20201218141811.310267-1-imbrenda@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <5947ede7-7f9f-cdaa-b827-75a5715e4f12@redhat.com>
+Date:   Sun, 20 Dec 2020 10:40:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: =?utf-8?q?Sie_haben_eine_Spende_von_=E2=82=AC_5=2E800=2E000=2C00=2E?=
-To:     Recipients <z.benamor@univ-alger.dz>
-From:   "Mrs. Mavis" <z.benamor@univ-alger.dz>
-Date:   Sat, 19 Dec 2020 07:15:51 -0800
-Reply-To: wanczykm61@gmail.com
-Message-Id: <20201219151604.1BF364E24160@mail.univ-alger.dz>
+In-Reply-To: <20201218141811.310267-1-imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Sie haben eine Spende von € 5.800.000,00. von Mavis Wanczyk antworten Sie mit diesem Code [MW530342019], um die Spende zu erhalten
+On 18.12.20 15:18, Claudio Imbrenda wrote:
+> The current handling of the MVPG instruction when executed in a nested
+> guest is wrong, and can lead to the nested guest hanging.
+
+Hi,
+
+thanks for spotting and debugging! Is this related to nested guests
+hanging while migrating (mentioned by Janosch at some point)?
+
+Or can this not be reproduced with actual Linux guests?
+
+Thanks!
+
+> 
+> This patchset fixes the behaviour to be more architecturally correct,
+> and fixes the hangs observed.
+> 
+> Claudio Imbrenda (4):
+>   s390/kvm: VSIE: stop leaking host addresses
+>   s390/kvm: extend guest_translate for MVPG interpretation
+>   s390/kvm: add kvm_s390_vsie_mvpg_check needed for VSIE MVPG
+>   s390/kvm: VSIE: correctly handle MVPG when in VSIE
+> 
+>  arch/s390/kvm/gaccess.c | 88 ++++++++++++++++++++++++++++++++++++++---
+>  arch/s390/kvm/gaccess.h |  3 ++
+>  arch/s390/kvm/vsie.c    | 78 +++++++++++++++++++++++++++++++++---
+>  3 files changed, 159 insertions(+), 10 deletions(-)
+> 
+
+
+-- 
+Thanks,
+
+David / dhildenb
+
