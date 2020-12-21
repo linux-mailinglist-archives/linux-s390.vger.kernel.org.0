@@ -2,49 +2,66 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1132B2DFDBF
-	for <lists+linux-s390@lfdr.de>; Mon, 21 Dec 2020 16:54:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CD902DFE34
+	for <lists+linux-s390@lfdr.de>; Mon, 21 Dec 2020 17:53:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725949AbgLUPyD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 21 Dec 2020 10:54:03 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30913 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725790AbgLUPyC (ORCPT
+        id S1725785AbgLUQwI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 21 Dec 2020 11:52:08 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56858 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725780AbgLUQwI (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 21 Dec 2020 10:54:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1608565955;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5QTKz5XkmqntuEWQ3ug73+/SkbbyNfpApCfrbz+lf6I=;
-        b=Sx00hj56TEguBoRZ+wQa1x7psgM2ynD5nTrgI3oPpdMc4AY4gVHiwz+O8dq6iIcUkKPb1p
-        jvnYSFXsNkj0X5bqVDpQAkzYuNWj34EffxPlfsHGuTsAFSo6IptGxdEUmlcJ0hwdhXK/BX
-        NyqPUJZEqIYYfpPOmllzG/3SJdG8z7o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-154-UVisZkIjNXKahBgRvN50bg-1; Mon, 21 Dec 2020 10:52:34 -0500
-X-MC-Unique: UVisZkIjNXKahBgRvN50bg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C07DCAFAA4;
-        Mon, 21 Dec 2020 15:52:23 +0000 (UTC)
-Received: from gondolin (ovpn-113-49.ams2.redhat.com [10.36.113.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CFE45C3E9;
-        Mon, 21 Dec 2020 15:52:22 +0000 (UTC)
-Date:   Mon, 21 Dec 2020 16:52:19 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Boris Fiuczynski <fiuczy@linux.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Mon, 21 Dec 2020 11:52:08 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BLGXNl2171473
+        for <linux-s390@vger.kernel.org>; Mon, 21 Dec 2020 11:51:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=0FjEqHVtQ5nc23hLwBe9pEnXnxpvdJB5mKpAfkL4jx4=;
+ b=EBCi7txkCNJPtg0AH9jLSEZ8c3Vl2CYXm9RPa6/pNDGMmA+wG6yaEQ1y0U0jtP2FmF0g
+ EYwbQFC+CX+fyWynEUbGTGuO1A3eXHW9rv5VlskukMkazKuPbzx11JivrbGFI+2bQYDb
+ YPIe5e4btxyKvQ5zGTJAmc+3EcrEv8NMNJ9DLStnm3PlMm1J1qQP7rqlsGvUupGRkkM+
+ Awst8ujUqbT2wXD73VZPnX2RJlqDKzGCxDjqYiMybUwHguWz2Nie/jIvzjgFWcgaC5F6
+ zfkb/ZAokmLGr4JbKgdA7iF89BPZ6Elu4BYXHiGvMjTYI1UojDj67ltHDDfNwFbFfHWj lA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 35jy2v0vfh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 21 Dec 2020 11:51:27 -0500
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BLGXl1M172836
+        for <linux-s390@vger.kernel.org>; Mon, 21 Dec 2020 11:51:26 -0500
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 35jy2v0vep-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 21 Dec 2020 11:51:26 -0500
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BLGl3El030369;
+        Mon, 21 Dec 2020 16:51:24 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04fra.de.ibm.com with ESMTP id 35h95895ax-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 21 Dec 2020 16:51:24 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BLGpL3628180944
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 21 Dec 2020 16:51:21 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3684A5204E;
+        Mon, 21 Dec 2020 16:51:21 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.171.5.180])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id B351A52059;
+        Mon, 21 Dec 2020 16:51:20 +0000 (GMT)
+Date:   Mon, 21 Dec 2020 17:51:17 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Vineeth Vijayan <vneethv@linux.ibm.com>,
         Vineeth Vijayan <vneethv@linux.vnet.ibm.com>,
         oberpar@linux.ibm.com, linux-s390@vger.kernel.org,
-        farman@linux.ibm.com
+        farman@linux.ibm.com, fiuczy@linux.ibm.com
 Subject: Re: [RFC 1/1] s390/cio: Remove uevent-suppress from css driver
-Message-ID: <20201221165219.7f2aa7c6.cohuck@redhat.com>
-In-Reply-To: <20201219082006.2529bcec.pasic@linux.ibm.com>
+Message-ID: <20201221175117.2c5f5fcb.pasic@linux.ibm.com>
+In-Reply-To: <20201221164634.11cd3813.cohuck@redhat.com>
 References: <20201124093407.23189-1-vneethv@linux.ibm.com>
         <20201124093407.23189-2-vneethv@linux.ibm.com>
         <20201124140220.77c65539.cohuck@redhat.com>
@@ -53,76 +70,73 @@ References: <20201124093407.23189-1-vneethv@linux.ibm.com>
         <20201208183054.44f4fc2d.cohuck@redhat.com>
         <20201209135203.0008ab18.pasic@linux.ibm.com>
         <20201215191307.281c6e6f.cohuck@redhat.com>
-        <89146a87-371a-f148-057b-d3b7ce0cc21e@linux.ibm.com>
-        <20201216130710.5aa6a933.cohuck@redhat.com>
-        <20201219082006.2529bcec.pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+        <20201219073316.1be609d5.pasic@linux.ibm.com>
+        <20201221164634.11cd3813.cohuck@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2020-12-21_09:2020-12-21,2020-12-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
+ bulkscore=0 lowpriorityscore=0 clxscore=1015 suspectscore=0 phishscore=0
+ impostorscore=0 adultscore=0 spamscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012210114
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, 19 Dec 2020 08:20:06 +0100
-Halil Pasic <pasic@linux.ibm.com> wrote:
+On Mon, 21 Dec 2020 16:46:34 +0100
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-> On Wed, 16 Dec 2020 13:07:10 +0100
-> Cornelia Huck <cohuck@redhat.com> wrote:
+> On Sat, 19 Dec 2020 07:33:16 +0100
+> Halil Pasic <pasic@linux.ibm.com> wrote:
 > 
-> > On Wed, 16 Dec 2020 12:53:41 +0100
-> > Boris Fiuczynski <fiuczy@linux.ibm.com> wrote:
-> >   
-> > > On 12/15/20 7:13 PM, Cornelia Huck wrote:  
-> > > >>       
-> > > >>> I'm not sure how many rules actually care about events for the
-> > > >>> subchannel device; the ccw device seems like the more helpful device to
-> > > >>> watch out for.    
-> > > >> I tend to agree, but the problem with vfio-ccw is that (currently) we
-> > > >> don't have a ccw device in the host, because we pass-through the
-> > > >> subchannel. When we interrogate the subchannel, we do learn if there
-> > > >> is a device and if, what is its devno. If I were to run a system with
-> > > >> vfio-ccw passthrough, I would want to passthrough the subchannel that
-> > > >> talks to the DASD (identified by devno) I need passed through to my
-> > > >> guest.    
-> > > > I think that can be solved by simply adding the devno as a variable to
-> > > > the uevent (valid if it's an I/O subchannel; we don't register the
-> > > > subchannel in the first place if dnv is not set.)
-> > > >     
-> > > Providing the devno in the context of the udev event certainly helps if 
-> > > the event consumer would base its actions on it.
-> > > As far as I understand the driver_override mechanics driverctl sets the 
-> > > override based on a specified device. In that case the devno would not 
-> > > be looked at and the subchannel would end up with a vfio-ccw driver even 
-> > > so the ccw device might not be the one we want to use as pass-through 
-> > > device.  
+> > I finally came around to test this. In my experience driverctl works for
+> > subchannels and vfio_ccw without this patch, and continues to work with
+> > it. I found the code in driverctl that does the unbind and the implicit
+> > bind (via drivers_probe after after driver_override was set).
 > > 
-> > Hm, maybe we need to make a change in driverctl that allows per-bus
-> > custom rules?
-> >   
+> > So now I have to ask, how exactly was the original problem diagnosed?
+> > 
+> > In https://marc.info/?l=linux-s390&m=158591045732735&w=2 there is a
+> > paragraph like:
+> > 
+> > """
+> > So while there's definitely a good reason for wanting to delay uevents,
+> > it is also introducing problems. One is udev rules for subchannels that
+> > are supposed to do something before a driver binds (e.g. setting
+> > driver_override to bind an I/O subchannel to vfio_ccw instead of
+> > io_subchannel) are not effective, as the ADD uevent will only be
+> > generated when the io_subchannel driver is already done with doing all
+> > setup. Another one is that only the ADD uevent is generated after
+> > uevent suppression is lifted; any other uevents that might have been
+> > generated are lost.
+> > """
+> > 
+> > This is not how driverclt works! I.e. it deals with the situation that
+> > the I/O subchannel was already bound to the io_subchannel driver at
+> > the time the udev rule installed by driverctl activates (via the
+> > mechanism I described above).
 > 
-> The issue with that is, that this problem ain't bus specific. I.e. it
-> could make perfect sense to driver_override a certain ccw tape device to
-> an alternative tape driver.
-
-But ccw does not provide driver_override? Confused.
-
+> That's... weird. It definitely did not work on the LPAR I initially
+> tried it out on!
 > 
-> The problem is, that the only way driverctl can identify a device is a
-> (name_of_the_bus), device_name_on_the bus) pair. Currently the udev rule
-> installed by driverctl simply ooks fora file 
-> /etc/driverctl.d/$env{SUBSYSTEM}-$kernel
-> which basically encodes the current selection criteria.
-> 
-> Can yo please elaborate on your idea? How would you extend the driverctl
-> cli and how would persistence look like for these custom rules? Would
-> you make driverctl write an udev rule for each such device/custom rule
-> on 'set-override' command instead of file in /etc/driverctl.d?
 
-I have not really looked at how to implement this. But we could have
-driverctl support an optional "additional_parameters" option, which
-allows to specify key/value pairs that have to match. I guess that
-should be dropped into the driverctl config directory, and generate an
-additional check?
+I think Boris told me some weeks ago that it didn't work for him either.
+I will check with him after the winter sleep.
+
+> However, I think removing the suppression still looks like a good idea:
+> we still have the "any uevent other than ADD will have been lost"
+> problem.
+> 
+
+I agree. I didn't look into the details, in general I think removing
+quirks specific to 390 (when possible) is a good thing.
+
+Regards,
+Halil
 
