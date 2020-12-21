@@ -2,183 +2,207 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 122232DFEF5
-	for <lists+linux-s390@lfdr.de>; Mon, 21 Dec 2020 18:29:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B37352E008B
+	for <lists+linux-s390@lfdr.de>; Mon, 21 Dec 2020 19:57:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgLURYZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 21 Dec 2020 12:24:25 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48322 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725997AbgLURYY (ORCPT
+        id S1725931AbgLUS5R (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 21 Dec 2020 13:57:17 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17212 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725883AbgLUS5Q (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 21 Dec 2020 12:24:24 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BLH3DcU023802
-        for <linux-s390@vger.kernel.org>; Mon, 21 Dec 2020 12:23:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=8X/ZpoZSsfXWKYse2Ntud2/tLk4Uq2W7NHjEnSeGA2k=;
- b=Lptti04vvNa5SXsS+nc09Q1ZMRNumqc48ANzab+RwAZgOaqkIFzs00+f7ig3zLRFcCY+
- Ks5SNNR76/NkH7tpe+haxxA44EJlVi62o1ejoCn7m0GV11snindxdnRDqBOGv7klsKHm
- x0ucGtXHexcoMWuRTMTu+1n29dNiVt5O8L/RL5G+TJs327XonWsZYbTmAAd0aW5uCQx+
- rJOZgzoIvSA9NNRSRingiowxmNtzvOLHhZyxMloLHA9bSzx+6J2MIsnU5OcV7tMkuXLn
- eOYMneRHOp9tYBMfIQhopuDBWBFbDbAwJ077OFr31XriQ+b30KQAOHxy/zDJQPP9x9t6 aw== 
+        Mon, 21 Dec 2020 13:57:16 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BLIht5P076431;
+        Mon, 21 Dec 2020 13:56:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=kbzJ7ryv5p0ZhVmMAUh4iYRadSfOtNqvQimC3qmEzr4=;
+ b=NYwSTIrM6c5YtXbTQWRM78oYqSJTJwQXBzEWD0WWdK9oQIgGUtX2/CkoCJ2h6GAbhRNd
+ aJJCzrCymeb8yKyo8ae6YaAGeAQP8yNIqSCp4vWkxsH/FaSUu88hchdhNCsZ/iy/9v+q
+ c46GxlWwNzM4eHAMlh7gyTDIgbHIDhBpUDfQNwEyyPWEU0M944cyQ8o2xI0mNdJ7NgZ9
+ CUbDztWXv7KksgOtGJWq+5khidr3Hm2gcbdx6rAa7DF8pHoPbpI3GyIAo1/1dGR+IQCo
+ 8xQ30G3YZ2Rbj/Cv/+RpIUcMgIutruwfeCPJB1wU+TOMaVzzn+ApLGLXEkA0bhkCTz4F 4g== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35jxasb0f8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 21 Dec 2020 12:23:41 -0500
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BLH3HP8023953
-        for <linux-s390@vger.kernel.org>; Mon, 21 Dec 2020 12:23:40 -0500
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35jxasb0e5-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35k181r9mq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Dec 2020 12:23:39 -0500
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BLHM5u1001801;
-        Mon, 21 Dec 2020 17:23:36 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 35h958a8tp-1
+        Mon, 21 Dec 2020 13:56:35 -0500
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BLIiUt3080528;
+        Mon, 21 Dec 2020 13:56:35 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35k181r9mb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 21 Dec 2020 17:23:36 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BLHNXYJ15204728
+        Mon, 21 Dec 2020 13:56:35 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BLIr7kp031425;
+        Mon, 21 Dec 2020 18:56:34 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma02dal.us.ibm.com with ESMTP id 35h958wn7k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 21 Dec 2020 18:56:34 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BLIuWWL19857870
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Dec 2020 17:23:33 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 954A0A4059;
-        Mon, 21 Dec 2020 17:23:33 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C55CA4051;
-        Mon, 21 Dec 2020 17:23:33 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.171.5.180])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Mon, 21 Dec 2020 17:23:33 +0000 (GMT)
-Date:   Mon, 21 Dec 2020 18:23:31 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Boris Fiuczynski <fiuczy@linux.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.vnet.ibm.com>,
-        oberpar@linux.ibm.com, linux-s390@vger.kernel.org,
-        farman@linux.ibm.com
-Subject: Re: [RFC 1/1] s390/cio: Remove uevent-suppress from css driver
-Message-ID: <20201221182331.11152c3e.pasic@linux.ibm.com>
-In-Reply-To: <20201221165219.7f2aa7c6.cohuck@redhat.com>
-References: <20201124093407.23189-1-vneethv@linux.ibm.com>
-        <20201124093407.23189-2-vneethv@linux.ibm.com>
-        <20201124140220.77c65539.cohuck@redhat.com>
-        <4be7e163-1118-d365-7d25-df39ba78181f@linux.vnet.ibm.com>
-        <0b4e34b7-7a4e-71b0-8a64-ea909e64f416@linux.ibm.com>
-        <20201208183054.44f4fc2d.cohuck@redhat.com>
-        <20201209135203.0008ab18.pasic@linux.ibm.com>
-        <20201215191307.281c6e6f.cohuck@redhat.com>
-        <89146a87-371a-f148-057b-d3b7ce0cc21e@linux.ibm.com>
-        <20201216130710.5aa6a933.cohuck@redhat.com>
-        <20201219082006.2529bcec.pasic@linux.ibm.com>
-        <20201221165219.7f2aa7c6.cohuck@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Mon, 21 Dec 2020 18:56:32 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8E26F6E04C;
+        Mon, 21 Dec 2020 18:56:32 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F9AF6E04E;
+        Mon, 21 Dec 2020 18:56:31 +0000 (GMT)
+Received: from cpe-66-24-58-13.stny.res.rr.com.com (unknown [9.85.193.150])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 21 Dec 2020 18:56:31 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     stable@vger.kernel.org, borntraeger@de.ibm.com, cohuck@redhat.com,
+        kwankhede@nvidia.com, pbonzini@redhat.com,
+        alex.williamson@redhat.com, pasic@linux.vnet.ibm.com,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Subject: [PATCH v4] s390/vfio-ap: clean up vfio_ap resources when KVM pointer invalidated
+Date:   Mon, 21 Dec 2020 13:56:25 -0500
+Message-Id: <20201221185625.24914-1-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-21_09:2020-12-21,2020-12-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 phishscore=0 spamscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 mlxlogscore=999 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012210122
+ definitions=2020-12-21_10:2020-12-21,2020-12-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
+ phishscore=0 clxscore=1015 spamscore=0 impostorscore=0 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012210128
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 21 Dec 2020 16:52:19 +0100
-Cornelia Huck <cohuck@redhat.com> wrote:
+The vfio_ap device driver registers a group notifier with VFIO when the
+file descriptor for a VFIO mediated device for a KVM guest is opened to
+receive notification that the KVM pointer is set (VFIO_GROUP_NOTIFY_SET_KVM
+event). When the KVM pointer is set, the vfio_ap driver takes the
+following actions:
+1. Stashes the KVM pointer in the vfio_ap_mdev struct that holds the state
+   of the mediated device.
+2. Calls the kvm_get_kvm() function to increment its reference counter.
+3. Sets the function pointer to the function that handles interception of
+   the instruction that enables/disables interrupt processing.
+4. Sets the masks in the KVM guest's CRYCB to pass AP resources through to
+   the guest.
 
-> On Sat, 19 Dec 2020 08:20:06 +0100
-> Halil Pasic <pasic@linux.ibm.com> wrote:
-> 
-> > On Wed, 16 Dec 2020 13:07:10 +0100
-> > Cornelia Huck <cohuck@redhat.com> wrote:
-> > 
-> > > On Wed, 16 Dec 2020 12:53:41 +0100
-> > > Boris Fiuczynski <fiuczy@linux.ibm.com> wrote:
-> > >   
-> > > > On 12/15/20 7:13 PM, Cornelia Huck wrote:  
-> > > > >>       
-> > > > >>> I'm not sure how many rules actually care about events for the
-> > > > >>> subchannel device; the ccw device seems like the more helpful device to
-> > > > >>> watch out for.    
-> > > > >> I tend to agree, but the problem with vfio-ccw is that (currently) we
-> > > > >> don't have a ccw device in the host, because we pass-through the
-> > > > >> subchannel. When we interrogate the subchannel, we do learn if there
-> > > > >> is a device and if, what is its devno. If I were to run a system with
-> > > > >> vfio-ccw passthrough, I would want to passthrough the subchannel that
-> > > > >> talks to the DASD (identified by devno) I need passed through to my
-> > > > >> guest.    
-> > > > > I think that can be solved by simply adding the devno as a variable to
-> > > > > the uevent (valid if it's an I/O subchannel; we don't register the
-> > > > > subchannel in the first place if dnv is not set.)
-> > > > >     
-> > > > Providing the devno in the context of the udev event certainly helps if 
-> > > > the event consumer would base its actions on it.
-> > > > As far as I understand the driver_override mechanics driverctl sets the 
-> > > > override based on a specified device. In that case the devno would not 
-> > > > be looked at and the subchannel would end up with a vfio-ccw driver even 
-> > > > so the ccw device might not be the one we want to use as pass-through 
-> > > > device.  
-> > > 
-> > > Hm, maybe we need to make a change in driverctl that allows per-bus
-> > > custom rules?
-> > >   
-> > 
-> > The issue with that is, that this problem ain't bus specific. I.e. it
-> > could make perfect sense to driver_override a certain ccw tape device to
-> > an alternative tape driver.
-> 
-> But ccw does not provide driver_override? Confused.
-> 
+In order to avoid memory leaks, when the notifier is called to receive
+notification that the KVM pointer has been set to NULL, the vfio_ap device
+driver should reverse the actions taken when the KVM pointer was set.
 
-Right, but it could. That is not my point. I was arguing with 'per-bus
-custom rules'.
+Fixes: 258287c994de ("s390: vfio-ap: implement mediated device open callback")
+Cc: stable@vger.kernel.org
+Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c | 42 +++++++++++++++++--------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
 
-> > 
-> > The problem is, that the only way driverctl can identify a device is a
-> > (name_of_the_bus), device_name_on_the bus) pair. Currently the udev rule
-> > installed by driverctl simply ooks fora file 
-> > /etc/driverctl.d/$env{SUBSYSTEM}-$kernel
-> > which basically encodes the current selection criteria.
-> > 
-> > Can yo please elaborate on your idea? How would you extend the driverctl
-> > cli and how would persistence look like for these custom rules? Would
-> > you make driverctl write an udev rule for each such device/custom rule
-> > on 'set-override' command instead of file in /etc/driverctl.d?
-> 
-> I have not really looked at how to implement this. But we could have
-> driverctl support an optional "additional_parameters" option, which
-> allows to specify key/value pairs that have to match. I guess that
-> should be dropped into the driverctl config directory, and generate an
-> additional check?
-> 
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index e0bde8518745..44f3378540d5 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -1037,19 +1037,14 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
+ {
+ 	struct ap_matrix_mdev *m;
+ 
+-	mutex_lock(&matrix_dev->lock);
+-
+ 	list_for_each_entry(m, &matrix_dev->mdev_list, node) {
+-		if ((m != matrix_mdev) && (m->kvm == kvm)) {
+-			mutex_unlock(&matrix_dev->lock);
++		if ((m != matrix_mdev) && (m->kvm == kvm))
+ 			return -EPERM;
+-		}
+ 	}
+ 
+ 	matrix_mdev->kvm = kvm;
+ 	kvm_get_kvm(kvm);
+ 	kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
+-	mutex_unlock(&matrix_dev->lock);
+ 
+ 	return 0;
+ }
+@@ -1083,35 +1078,49 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
+ 	return NOTIFY_DONE;
+ }
+ 
++static void vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
++{
++	kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
++	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
++	vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
++	kvm_put_kvm(matrix_mdev->kvm);
++	matrix_mdev->kvm = NULL;
++}
++
+ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+ 				       unsigned long action, void *data)
+ {
+-	int ret;
++	int ret, notify_rc = NOTIFY_DONE;
+ 	struct ap_matrix_mdev *matrix_mdev;
+ 
+ 	if (action != VFIO_GROUP_NOTIFY_SET_KVM)
+ 		return NOTIFY_OK;
+ 
+ 	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
++	mutex_lock(&matrix_dev->lock);
+ 
+ 	if (!data) {
+-		matrix_mdev->kvm = NULL;
+-		return NOTIFY_OK;
++		if (matrix_mdev->kvm)
++			vfio_ap_mdev_unset_kvm(matrix_mdev);
++		notify_rc = NOTIFY_OK;
++		goto notify_done;
+ 	}
+ 
+ 	ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
+ 	if (ret)
+-		return NOTIFY_DONE;
++		goto notify_done;
+ 
+ 	/* If there is no CRYCB pointer, then we can't copy the masks */
+ 	if (!matrix_mdev->kvm->arch.crypto.crycbd)
+-		return NOTIFY_DONE;
++		goto notify_done;
+ 
+ 	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
+ 				  matrix_mdev->matrix.aqm,
+ 				  matrix_mdev->matrix.adm);
+ 
+-	return NOTIFY_OK;
++notify_done:
++	mutex_unlock(&matrix_dev->lock);
++	return notify_rc;
+ }
+ 
+ static void vfio_ap_irq_disable_apqn(int apqn)
+@@ -1222,13 +1231,8 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
+ 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+ 
+ 	mutex_lock(&matrix_dev->lock);
+-	if (matrix_mdev->kvm) {
+-		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
+-		matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+-		vfio_ap_mdev_reset_queues(mdev);
+-		kvm_put_kvm(matrix_mdev->kvm);
+-		matrix_mdev->kvm = NULL;
+-	}
++	if (matrix_mdev->kvm)
++		vfio_ap_mdev_unset_kvm(matrix_mdev);
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+ 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+-- 
+2.21.1
 
-The devil is always in the details. I'm sure something can be done :).
-Key/value pairs for matching fits IMHO better with new udev rules than
-with files in the driverctl config dir that somehow generate additiona
-checks. One thing I didn't understand is, are you proposing an invocation
-like 
-driverctl -b css --additional_params="DEVNO=<devno>" \
-set-override <subchannel_no> vfio_ccw
-or 
-driverctl -b css --additional_params="DEVNO=<devno>" \
-set-override vfio_ccw
-?
-
-The first one would safeguard against passing through the wrong devno,
-but I think, we actually want to be oblivious about the subchannel
-number.
-
-Regards,
-Halil
