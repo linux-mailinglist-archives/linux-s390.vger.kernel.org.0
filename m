@@ -2,40 +2,42 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 284982E1211
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Dec 2020 03:20:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AEB8F2E1512
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Dec 2020 03:49:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgLWCSn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Dec 2020 21:18:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45508 "EHLO mail.kernel.org"
+        id S1727814AbgLWCra (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Dec 2020 21:47:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728255AbgLWCSn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 22 Dec 2020 21:18:43 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EE2E1233CF;
-        Wed, 23 Dec 2020 02:17:36 +0000 (UTC)
+        id S1729624AbgLWCWU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 22 Dec 2020 21:22:20 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B97C723159;
+        Wed, 23 Dec 2020 02:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608689857;
-        bh=rXQV/FbwXtW6YFjp/v9Yl5YPNCcMELSS6lgk2Pej4wc=;
+        s=k20201202; t=1608690099;
+        bh=ST061G8MW2LBbseYmREPujE3LibuuL27qmDShgwhKoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mtXFSspq47RJVWzrF79ZjVhavXrzvqDQ2nT2HF1Jx8HH1MwQNfMvdGz6lr9Q6GhK4
-         qjh1087VfFiOYfnHisoYvDkUW+vueES5/cFicM13y8WQ2ypT6S4GWhRXg4vai2Cc1h
-         618IAJpfg/O/ARAkEUfMOKe8od7O9K6Fq4a/EBt0SVIpZ15RktgPWoyRf6Pu/HCk5X
-         8W60rLkH4CIATBuQbzlZVF6+ycn7FEil2Xb8FaL7XP2pFGdGj9ipj8Fa1LU2ttBjwB
-         D/C1p+tv3LxkOWM/VGydH+iHfTEYTId++qDDg+aYTG4jnko+pYhybNwBt/DVKRgQ1j
-         41/H2zSGhsYtQ==
+        b=t2J4tuoOee2mrYMXjfqi+q/XzR15fOSFIMYHwV5CvrfNsG/wgv4Iqh+xnalqRlxsq
+         ZjuV6cW8AzWKz+4EipFmQQK9UT7VxkhFuoi4tLp9/H2mCYcNrcvADI1hqEJwCXdUmr
+         oaslTEO3RfXjWJLt8ltb01ZUtCQLvRShFt2ZlQhmdDQaVWFzudaYC7lMH9Mi5B4ghs
+         EAlR3y/U3DjFwjqjbyxyjCw+aKdSPQpwMQSTrYYF3d+tXKwAX9/ZwhmYREvkD3nnn3
+         LAfnrZ4ptfVbslZdzS2LH8i5RF4ETOMYm2lotAMnaZeGAmdHiEvEPp2t8XAfdN61MW
+         VVVUsgvnz3fCg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 055/217] s390: make sure vmemmap is top region table entry aligned
-Date:   Tue, 22 Dec 2020 21:13:44 -0500
-Message-Id: <20201223021626.2790791-55-sashal@kernel.org>
+Cc:     =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 29/87] s390/dasd: Fix operational path inconsistency
+Date:   Tue, 22 Dec 2020 21:20:05 -0500
+Message-Id: <20201223022103.2792705-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201223021626.2790791-1-sashal@kernel.org>
-References: <20201223021626.2790791-1-sashal@kernel.org>
+In-Reply-To: <20201223022103.2792705-1-sashal@kernel.org>
+References: <20201223022103.2792705-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -43,51 +45,52 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Jan Höppner <hoeppner@linux.ibm.com>
 
-[ Upstream commit 97b142b7400bdce93aa674df044a4bc58e88f08c ]
+[ Upstream commit 9e34c8ba91697cb7441805c36d92ab3e695df6e0 ]
 
-Since commit 29d37e5b82f3 ("s390/protvirt: add ultravisor initialization")
-vmax is adjusted to the ultravisor secure storage limit. This limit is
-currently applied when 4-level paging is used. Later vmax is also used
-to align vmemmap address to the top region table entry border. When vmax
-is set to the ultravisor secure storage limit this is no longer the case.
+During online processing and setting up a DASD device, the configuration
+data for operational paths is read and validated two times
+(dasd_eckd_read_conf()). The first time to provide information that are
+necessary for the LCU setup. A second time after the LCU setup as a
+device might report different configuration data then.
 
-Instead of changing vmax, make only MODULES_END be affected by the
-secure storage limit, so that vmax stays intact for further vmemmap
-address alignment.
+When the configuration setup for each operational path is being
+validated, an initial call to dasd_eckd_clear_conf_data() is issued.
+This call wipes all previously available configuration data and path
+information for each path.
+However, the operational path mask is not updated during this process.
 
-Reviewed-by: Alexander Gordeev <agordeev@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+As a result, the stored operational path mask might no longer correspond
+to the operational paths mask reported by the CIO layer, as several
+paths might be gone between the two dasd_eckd_read_conf() calls.
+
+This inconsistency leads to more severe issues in later path handling
+changes. Fix this by removing the channel paths from the operational
+path mask during the dasd_eckd_clear_conf_data() call.
+
+Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/setup.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/s390/block/dasd_eckd.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index 4d843e64496f4..f8e31dde5ac07 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -567,13 +567,14 @@ static void __init setup_memory_end(void)
- 		vmax = _REGION2_SIZE; /* 3-level kernel page table */
- 	else
- 		vmax = _REGION1_SIZE; /* 4-level kernel page table */
-+	/* module area is at the end of the kernel address space. */
-+	MODULES_END = vmax;
- 	if (is_prot_virt_host())
--		adjust_to_uv_max(&vmax);
-+		adjust_to_uv_max(&MODULES_END);
- #ifdef CONFIG_KASAN
--	vmax = kasan_vmax;
-+	vmax = _REGION1_SIZE;
-+	MODULES_END = kasan_vmax;
- #endif
--	/* module area is at the end of the kernel address space. */
--	MODULES_END = vmax;
- 	MODULES_VADDR = MODULES_END - MODULES_LEN;
- 	VMALLOC_END = MODULES_VADDR;
- 	VMALLOC_START = VMALLOC_END - vmalloc_size;
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index a2e34c853ca98..a801ee11843c3 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -981,6 +981,7 @@ static void dasd_eckd_clear_conf_data(struct dasd_device *device)
+ 		device->path[i].cssid = 0;
+ 		device->path[i].ssid = 0;
+ 		device->path[i].chpid = 0;
++		dasd_path_notoper(device, i);
+ 	}
+ }
+ 
 -- 
 2.27.0
 
