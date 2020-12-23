@@ -2,27 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEB8F2E1512
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Dec 2020 03:49:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 589962E1483
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Dec 2020 03:47:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgLWCra (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Dec 2020 21:47:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51404 "EHLO mail.kernel.org"
+        id S1727744AbgLWCkM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Dec 2020 21:40:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729624AbgLWCWU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 22 Dec 2020 21:22:20 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B97C723159;
-        Wed, 23 Dec 2020 02:21:38 +0000 (UTC)
+        id S1730041AbgLWCXi (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 22 Dec 2020 21:23:38 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 41B6022285;
+        Wed, 23 Dec 2020 02:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608690099;
-        bh=ST061G8MW2LBbseYmREPujE3LibuuL27qmDShgwhKoY=;
+        s=k20201202; t=1608690203;
+        bh=dlPK8qwjMFLQj/6PoRsBher83gGN/kW0ZzHTXe3r0ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t2J4tuoOee2mrYMXjfqi+q/XzR15fOSFIMYHwV5CvrfNsG/wgv4Iqh+xnalqRlxsq
-         ZjuV6cW8AzWKz+4EipFmQQK9UT7VxkhFuoi4tLp9/H2mCYcNrcvADI1hqEJwCXdUmr
-         oaslTEO3RfXjWJLt8ltb01ZUtCQLvRShFt2ZlQhmdDQaVWFzudaYC7lMH9Mi5B4ghs
-         EAlR3y/U3DjFwjqjbyxyjCw+aKdSPQpwMQSTrYYF3d+tXKwAX9/ZwhmYREvkD3nnn3
-         LAfnrZ4ptfVbslZdzS2LH8i5RF4ETOMYm2lotAMnaZeGAmdHiEvEPp2t8XAfdN61MW
-         VVVUsgvnz3fCg==
+        b=XceV7ySEbvHWVbH7zzp7UrrCK5ltXFPes+28PlvvLy61PP1Z4REy3VOFN1wEtKByx
+         p+SKDxSywAhxy0wE6Z7NUCVvwopxT0cV0Ty3J/by6/7ucMxg5Jg7r/xiaKkomqvKIR
+         8yxeWnMC/kZOXpOatC3PBBEMYpDZlBsSfUHgqupz8PEwfo5rJkGNhH4vd0WEglKgve
+         Kr28uUyFvt2kJQ2VCqJR2NN/E+H0csFO27Zt/iievyloit6myQwilBtvhHUXSHlNC9
+         354EfMUItSI2hGMADmVUmupo9Vpg7NcJkzpAo2DWCTZvFUXm0rXRlpwmiSFb4I/6km
+         aruaoHGQvYYgA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
@@ -30,12 +30,12 @@ Cc:     =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
         Cornelia Huck <cohuck@redhat.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
         linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 29/87] s390/dasd: Fix operational path inconsistency
-Date:   Tue, 22 Dec 2020 21:20:05 -0500
-Message-Id: <20201223022103.2792705-29-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 24/66] s390/dasd: Fix operational path inconsistency
+Date:   Tue, 22 Dec 2020 21:22:10 -0500
+Message-Id: <20201223022253.2793452-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201223022103.2792705-1-sashal@kernel.org>
-References: <20201223022103.2792705-1-sashal@kernel.org>
+In-Reply-To: <20201223022253.2793452-1-sashal@kernel.org>
+References: <20201223022253.2793452-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -80,10 +80,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index a2e34c853ca98..a801ee11843c3 100644
+index aa651403546ff..8769b90c49a30 100644
 --- a/drivers/s390/block/dasd_eckd.c
 +++ b/drivers/s390/block/dasd_eckd.c
-@@ -981,6 +981,7 @@ static void dasd_eckd_clear_conf_data(struct dasd_device *device)
+@@ -979,6 +979,7 @@ static void dasd_eckd_clear_conf_data(struct dasd_device *device)
  		device->path[i].cssid = 0;
  		device->path[i].ssid = 0;
  		device->path[i].chpid = 0;
