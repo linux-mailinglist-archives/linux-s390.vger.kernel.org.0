@@ -2,74 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B106A2E98F6
-	for <lists+linux-s390@lfdr.de>; Mon,  4 Jan 2021 16:38:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE8272E9A6F
+	for <lists+linux-s390@lfdr.de>; Mon,  4 Jan 2021 17:13:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbhADPiX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 4 Jan 2021 10:38:23 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48042 "EHLO
+        id S1727608AbhADQJt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 4 Jan 2021 11:09:49 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49903 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727522AbhADPiW (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 4 Jan 2021 10:38:22 -0500
+        by vger.kernel.org with ESMTP id S1726300AbhADQJs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 4 Jan 2021 11:09:48 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1609774616;
+        s=mimecast20190719; t=1609776501;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Wcrw+NpZAZ4cyYiYlRnmiZrkDJtugvQ8JiKGHsSokGg=;
-        b=STCbTgGK7KaTRa7jNH0iTo72wt4zLgYWo6krWAf8AdhHGfLo2RDXzT/YYAh6Nt9BZ853Na
-        qPYsNRjU3DLn/cfzkxFZl4qS1/5MDxhfvl8hFinIFWFSJfh9UZgtMnQhtx+wNtn5MNOpfg
-        KUdF+voe5RAQdD8iCbVGM0eDl6+sbEc=
+        bh=iCAALDuWRacu50XtT51NThRS2gMEi63ytyilijXxcII=;
+        b=GPeNeFbUfXcs0Cdo+Ys5jYjEpChG8dFwBts9SOZiSKE5CHbEkMxqVqglzawXBPnqzOQq7m
+        Gaxnkfu7QktFDI8ow5HDtBHYHKoj14i+SPy6prG5hdQVjjVdYZTiUu+84J2TJ68YHjZNxR
+        8QlFs6jiUBCbyAvVjwGrvodyZrsYUHE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-567-aFEXv2VNOQ2AdcHHwmbh5g-1; Mon, 04 Jan 2021 10:36:54 -0500
-X-MC-Unique: aFEXv2VNOQ2AdcHHwmbh5g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-581-1_pgLx88Nra8cXTYwW6CHg-1; Mon, 04 Jan 2021 11:08:19 -0500
+X-MC-Unique: 1_pgLx88Nra8cXTYwW6CHg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81D7EBBEE0;
-        Mon,  4 Jan 2021 15:36:52 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 23A73BBEEB;
+        Mon,  4 Jan 2021 16:08:18 +0000 (UTC)
 Received: from [10.36.114.59] (ovpn-114-59.ams2.redhat.com [10.36.114.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C5E3271B0;
-        Mon,  4 Jan 2021 15:36:51 +0000 (UTC)
-Subject: Re: [PATCH v1 1/4] s390/kvm: VSIE: stop leaking host addresses
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B9AC771C93;
+        Mon,  4 Jan 2021 16:08:16 +0000 (UTC)
+Subject: Re: [PATCH v1 4/4] s390/kvm: VSIE: correctly handle MVPG when in VSIE
 To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
 Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
         frankja@linux.ibm.com, kvm@vger.kernel.org,
         linux-s390@vger.kernel.org, stable@vger.kernel.org
 References: <20201218141811.310267-1-imbrenda@linux.ibm.com>
- <20201218141811.310267-2-imbrenda@linux.ibm.com>
- <b1a31982-a967-7439-1a7c-3c948deeb79d@redhat.com>
- <20210104145802.7a2274a2@ibm-vm>
+ <20201218141811.310267-5-imbrenda@linux.ibm.com>
+ <6836573a-a49d-9d9f-49e0-96b5aa479c52@redhat.com>
+ <20210104162231.4e56ab47@ibm-vm>
 From:   David Hildenbrand <david@redhat.com>
 Organization: Red Hat GmbH
-Message-ID: <4d7ea3de-61b7-af89-a3d4-5a4b5749f667@redhat.com>
-Date:   Mon, 4 Jan 2021 16:36:50 +0100
+Message-ID: <3376268b-7fd7-9fbe-b483-fe7471038a18@redhat.com>
+Date:   Mon, 4 Jan 2021 17:08:15 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.5.0
 MIME-Version: 1.0
-In-Reply-To: <20210104145802.7a2274a2@ibm-vm>
+In-Reply-To: <20210104162231.4e56ab47@ibm-vm>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
->> In that case, it's pretty much a random number (of a random page used
->> as a leave page table) and does not let g1 identify locations of
->> symbols etc. If so, I don't think this is a "clear security issue"
->> and suggest squashing this into the actual fix (#p4 I assume).
+On 04.01.21 16:22, Claudio Imbrenda wrote:
+> On Sun, 20 Dec 2020 11:13:57 +0100
+> David Hildenbrand <david@redhat.com> wrote:
 > 
-> yeah __maybe__ I overstated the importance ;)
+>> On 18.12.20 15:18, Claudio Imbrenda wrote:
+>>> Correctly handle the MVPG instruction when issued by a VSIE guest.
+>>>   
+>>
+>> I remember that MVPG SIE documentation was completely crazy and full
+>> of corner cases. :)
 > 
-> But I would still like to keep it as a separate patch, looks more
-> straightforward to me
->  
+> you remember correctly
+> 
+>> Looking at arch/s390/kvm/intercept.c:handle_mvpg_pei(), I can spot
+>> that
+>>
+>> 1. "This interception can only happen for guests with DAT disabled
+>> ..." 2. KVM does not make use of any mvpg state inside the SCB.
+>>
+>> Can this be observed with Linux guests?
+> 
+> a Linux guest will typically not run with DAT disabled
+> 
+>> Can I get some information on what information is stored at [0xc0,
+>> 0xd) inside the SCB? I assume it's:
+>>
+>> 0xc0: guest physical address of source PTE
+>> 0xc8: guest physical address of target PTE
+> 
+> yes (plus 3 flags in the lower bits of each)
 
-I don't see a need to split this up. Just fix it right away.
+Thanks! Do the flags tell us what the deal with the PTE was? If yes,
+what's the meaning of the separate flags?
+
+I assume something like "invalid, proteced, ??"
+
+I'm asking because I think we can handle this a little easier.
+
+> 
+>> [...]
+>>>  /*
+>>>   * Run the vsie on a shadow scb and a shadow gmap, without any
+>>> further
+>>>   * sanity checks, handling SIE faults.
+>>> @@ -1063,6 +1132,10 @@ static int do_vsie_run(struct kvm_vcpu
+>>> *vcpu, struct vsie_page *vsie_page) if ((scb_s->ipa & 0xf000) !=
+>>> 0xf000) scb_s->ipa += 0x1000;
+>>>  		break;
+>>> +	case ICPT_PARTEXEC:
+>>> +		if (scb_s->ipa == 0xb254)  
+>>
+>> Old code hat "/* MVPG only */" - why is this condition now necessary?
+> 
+> old code was wrong ;)
+
+
+arch/s390/kvm/intercept.c:handle_partial_execution() we only seem to handle
+
+1. MVPG
+2. SIGP PEI
+
+The latter is only relevant for external calls. IIRC, this is only active
+with sigp interpretation - which is never active under vsie (ECA_SIGPI).
+
 
 
 -- 
