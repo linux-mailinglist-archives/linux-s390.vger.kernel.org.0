@@ -2,168 +2,171 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 452FC2EA8D2
-	for <lists+linux-s390@lfdr.de>; Tue,  5 Jan 2021 11:34:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5136C2EB2F2
+	for <lists+linux-s390@lfdr.de>; Tue,  5 Jan 2021 20:01:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbhAEKcm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 Jan 2021 05:32:42 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45788 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728135AbhAEKcm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Jan 2021 05:32:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1609842675;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TCdWrkSxLou0I6q81I1C/gts0l+m7St/LyKjpTgDhNY=;
-        b=YmthS8mZNonyCIeuftazH7v5uB0mtGDR7rQ1MaQaFl0ooci8k9XOK9nL2o98akPqGYla0A
-        mM6QJz5oJzMN4U+o94I36OpQHBpnDuK67ZaP4WN/3x01tCsmJkEWQpaOPsy9rUA9Pr+VrS
-        jyqMnoW28gn9nkygoHzwMiE9O9CbgTE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-589-BTmzTlDvM8-rSTiBU-5qZA-1; Tue, 05 Jan 2021 05:31:11 -0500
-X-MC-Unique: BTmzTlDvM8-rSTiBU-5qZA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7159A803630;
-        Tue,  5 Jan 2021 10:31:10 +0000 (UTC)
-Received: from [10.36.114.117] (ovpn-114-117.ams2.redhat.com [10.36.114.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1A78471CA2;
-        Tue,  5 Jan 2021 10:31:08 +0000 (UTC)
-Subject: Re: [PATCH v1 3/4] s390/kvm: add kvm_s390_vsie_mvpg_check needed for
- VSIE MVPG
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, frankja@linux.ibm.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, stable@vger.kernel.org
-References: <20201218141811.310267-1-imbrenda@linux.ibm.com>
- <20201218141811.310267-4-imbrenda@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <ae6f3ec4-773f-2527-6cb5-7aaf803f73bf@redhat.com>
-Date:   Tue, 5 Jan 2021 11:31:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+        id S1729314AbhAETB0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 Jan 2021 14:01:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbhAETBZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Jan 2021 14:01:25 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56C34C061793;
+        Tue,  5 Jan 2021 11:00:45 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id p22so1814872edu.11;
+        Tue, 05 Jan 2021 11:00:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c5LZXFqIn7R6ClYrbd/6/3ilXkYKGJa1HfU8I20ifNQ=;
+        b=UMo2yfkpB8AvlnBYGmcSD+GN0v2P93kzIO5HmMuC4rlmA0G38BGILNalSWjga7yuma
+         PDhNzqGFsUHfF7NsgEbiaJ4vLrT9CrFi9Z5QN7S0R340K9THPaA2sxGoi8mblbUNwMo9
+         VAdBZzA/K00rP6mn+SHFHzg0ifqumdugVQEZx3kBb92drt6ga7l9KFaPwkSeJOOlFctq
+         /izyzfBgxJpjaHkGgF75ptYsm4TJHGp6rxzZQbBDG4n21lHlMp3bS6eWPe52jRD0YOxa
+         YcUB6NlOBCtAGM+lFmU+0rIXlp4CmfaSc8owGCAWKNxpakuTfgYBEZ0OCs+F3L5pftMr
+         6mEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=c5LZXFqIn7R6ClYrbd/6/3ilXkYKGJa1HfU8I20ifNQ=;
+        b=Iv+mrDE9gLFLiP/+ISRBUF9G78PCoZBwv0C1i7GTrhYDDAwwiXq5GJg+bFgYExlowU
+         La5/362gQarPr+0LLGIadFURqoW2P2CEp5hR7GKrUXwRbaYnlVRlKA6ULtZwzXEFp8ui
+         vpY4qYCPXXtOQ65QLvrpSgPq/Aj2mXxEzR/0Ucrf+o7u7qGhCXwhYQyBRdGL+68vfYXj
+         Mpgs7p3qjg3eWYsw4Cq4Do9xTExfC+LRzfYKoYcbLnQuERkd84z6+p7Zn4rdfGq/f5o+
+         b4gVFK9nLTmQYUCEVikcNF5GCHlWtHps69BJDrSPQANKI3ib0zuCHH4rt4Zj8Wkrmdfh
+         ntIw==
+X-Gm-Message-State: AOAM532bL8alQ5NOU79tQuqsxJ15ilSROyMj9AtcqNMOZQdDYn5dbaTL
+        liV5hQXq+ThOG4o3Rc3n/ZA=
+X-Google-Smtp-Source: ABdhPJznueE1o/c0JdMAL2zDb2vf4Kz/hlQoaaf+SWuxB9TPtU7OsSSGi6W7WVwfCNZENmLZhaZ1wA==
+X-Received: by 2002:aa7:c698:: with SMTP id n24mr1166300edq.277.1609873244092;
+        Tue, 05 Jan 2021 11:00:44 -0800 (PST)
+Received: from localhost.localdomain (5-12-227-87.residential.rdsnet.ro. [5.12.227.87])
+        by smtp.gmail.com with ESMTPSA id z13sm205084edq.48.2021.01.05.11.00.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Jan 2021 11:00:43 -0800 (PST)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jiri Benc <jbenc@redhat.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Eric Dumazet <edumazet@google.com>,
+        George McCollister <george.mccollister@gmail.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Westphal <fw@strlen.de>, linux-s390@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, linux-parisc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+        dev@openvswitch.org
+Subject: [RFC PATCH v2 net-next 00/12] Make .ndo_get_stats64 sleepable
+Date:   Tue,  5 Jan 2021 20:58:50 +0200
+Message-Id: <20210105185902.3922928-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20201218141811.310267-4-imbrenda@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 18.12.20 15:18, Claudio Imbrenda wrote:
-> Add kvm_s390_vsie_mvpg_check to perform the necessary checks in case an
-> MVPG instruction intercepts in a VSIE guest.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> ---
->  arch/s390/kvm/gaccess.c | 55 +++++++++++++++++++++++++++++++++++++++++
->  arch/s390/kvm/gaccess.h |  3 +++
->  2 files changed, 58 insertions(+)
-> 
-> diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
-> index 8e256a233583..90e9baff6eac 100644
-> --- a/arch/s390/kvm/gaccess.c
-> +++ b/arch/s390/kvm/gaccess.c
-> @@ -1228,3 +1228,58 @@ int kvm_s390_shadow_fault(struct kvm_vcpu *vcpu, struct gmap *sg,
->  	mmap_read_unlock(sg->mm);
->  	return rc;
->  }
-> +
-> +static int kvm_s390_mvpg_check_one(struct kvm_vcpu *vcpu, unsigned long *addr,
-> +			     const int edat, const union asce asce,
-> +			     const enum gacc_mode mode, unsigned long *pteptr)
-> +{
-> +	enum prot_type prot;
-> +	int rc;
-> +
-> +	rc = guest_translate(vcpu, *addr, addr, asce, mode, &prot, pteptr);
-> +	if (rc <= 0)
-> +		return rc;
-> +
-> +	switch (rc) {
-> +	case PGM_REGION_FIRST_TRANS:
-> +	case PGM_REGION_SECOND_TRANS:
-> +	case PGM_REGION_THIRD_TRANS:
-> +	case PGM_SEGMENT_TRANSLATION:
-> +		if (!edat)
-> +			return trans_exc(vcpu, rc, *addr, 0, mode, prot);
-> +		*pteptr |= 4;
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Hmmm, I wonder why that is necessary. Can't we set that in all relevant
-cases in guest_translate() just as you do via
+Changes in v2:
+- Addressed the recursion issues in .ndo_get_stats64 from bonding and
+  net_failover.
+- Renamed netdev_lists_lock to netif_lists_lock
+- Stopped taking netif_lists_lock from drivers as much as possible.
 
-*entryptr |= dat_protection ? 6 : 4;
+This series converts all callers of dev_get_stats() to be in sleepable
+context, so that we can do more work in the .ndo_get_stats64 method.
 
+The situation today is that if we have hardware that needs to be
+accessed through a slow bus like SPI, or through a firmware, we cannot
+do that directly in .ndo_get_stats64, so we have to poll counters
+periodically and return a cached (not up to date) copy in the atomic NDO
+callback. This is undesirable on both ends: more work than strictly
+needed is being done, and the end result is also worse (not guaranteed
+to be up to date). So converting the code paths to be compatible with
+sleeping seems to make more sense.
 
-Can you enlighten me? :)
+This is marked as Request For Comments for a reason.
 
-> +		fallthrough;
-> +	case PGM_PAGE_TRANSLATION:
-> +		return -ENOENT;
-> +	default:
-> +		return rc;
-> +	}
-> +}
-> +
-> +int kvm_s390_vsie_mvpg_check(struct kvm_vcpu *vcpu, unsigned long r1,
-> +			     unsigned long r2, void *gpei)
-> +{
-> +	unsigned long pei[2] = {0};
-> +	union ctlreg0 cr0;
-> +	union asce cr1;
-> +	int edat, rc1, rc2;
-> +
-> +	cr0.val = vcpu->arch.sie_block->gcr[0];
-> +	cr1.val = vcpu->arch.sie_block->gcr[1];
-> +	edat = cr0.edat && test_kvm_facility(vcpu->kvm, 8);
-> +
-> +	rc1 = kvm_s390_mvpg_check_one(vcpu, &r1, edat, cr1, GACC_FETCH, pei);
-> +	rc2 = kvm_s390_mvpg_check_one(vcpu, &r2, edat, cr1, GACC_STORE, pei + 1);
-> +
-> +	if (rc1 == -ENOENT || rc2 == -ENOENT) {
-> +		memcpy(gpei, pei, sizeof(pei));
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Cc: Jay Vosburgh <j.vosburgh@gmail.com>
+Cc: Veaceslav Falico <vfalico@gmail.com>
+Cc: Andy Gospodarek <andy@greyhouse.net>
+Cc: Sridhar Samudrala <sridhar.samudrala@intel.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: linux-parisc@vger.kernel.org
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
 
-I'd really prefer just passing two unsigned long pointers to
-kvm_s390_vsie_mvpg_check() and eventually directly forwarding them to
-kvm_s390_mvpg_check_one().
+Vladimir Oltean (12):
+  net: mark dev_base_lock for deprecation
+  net: introduce a mutex for the netns interface lists
+  net: procfs: hold netif_lists_lock when retrieving device statistics
+  net: sysfs: don't hold dev_base_lock while retrieving device
+    statistics
+  s390/appldata_net_sum: hold the netdev lists lock when retrieving
+    device statistics
+  parisc/led: reindent the code that gathers device statistics
+  parisc/led: hold the netdev lists lock when retrieving device
+    statistics
+  net: make dev_get_stats return void
+  net: net_failover: ensure .ndo_get_stats64 can sleep
+  net: bonding: ensure .ndo_get_stats64 can sleep
+  net: mark ndo_get_stats64 as being able to sleep
+  net: remove obsolete comments about ndo_get_stats64 context from eth
+    drivers
 
-> +		return -ENOENT;
-> +	}
-> +
-> +	if (rc2 < 0)
-> +		return rc2;
-> +	if (rc1 < 0)
-> +		return rc1;
-> +
-> +	return 0;
-> +}
-> diff --git a/arch/s390/kvm/gaccess.h b/arch/s390/kvm/gaccess.h
-> index f4c51756c462..2c53cee3b29f 100644
-> --- a/arch/s390/kvm/gaccess.h
-> +++ b/arch/s390/kvm/gaccess.h
-> @@ -166,6 +166,9 @@ int check_gva_range(struct kvm_vcpu *vcpu, unsigned long gva, u8 ar,
->  int access_guest(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar, void *data,
->  		 unsigned long len, enum gacc_mode mode);
->  
-> +int kvm_s390_vsie_mvpg_check(struct kvm_vcpu *vcpu, unsigned long r1,
-> +			     unsigned long r2, void *gpei);
-> +
->  int access_guest_real(struct kvm_vcpu *vcpu, unsigned long gra,
->  		      void *data, unsigned long len, enum gacc_mode mode);
->  
-> 
-
+ Documentation/networking/netdevices.rst       |   8 +-
+ Documentation/networking/statistics.rst       |   9 +-
+ arch/s390/appldata/appldata_net_sum.c         |  33 ++---
+ drivers/leds/trigger/ledtrig-netdev.c         |   9 +-
+ drivers/net/bonding/bond_main.c               | 121 +++++++++---------
+ drivers/net/ethernet/cisco/enic/enic_main.c   |   1 -
+ .../net/ethernet/hisilicon/hns/hns_ethtool.c  |  51 ++++----
+ .../net/ethernet/intel/ixgbe/ixgbe_ethtool.c  |   7 +-
+ drivers/net/ethernet/intel/ixgbevf/ethtool.c  |   7 +-
+ drivers/net/ethernet/nvidia/forcedeth.c       |   2 -
+ drivers/net/ethernet/sfc/efx_common.c         |   1 -
+ drivers/net/ethernet/sfc/falcon/efx.c         |   1 -
+ drivers/net/net_failover.c                    |  63 ++++++---
+ drivers/parisc/led.c                          |  37 +++---
+ drivers/scsi/fcoe/fcoe_transport.c            |   6 +-
+ drivers/usb/gadget/function/rndis.c           |  45 +++----
+ include/linux/netdevice.h                     |  13 +-
+ include/net/bonding.h                         |  52 +++++++-
+ include/net/net_failover.h                    |   9 +-
+ include/net/net_namespace.h                   |   6 +
+ net/8021q/vlanproc.c                          |  15 +--
+ net/core/dev.c                                |  69 ++++++----
+ net/core/net-procfs.c                         |  48 +++----
+ net/core/net-sysfs.c                          |  10 +-
+ net/openvswitch/vport.c                       |  25 ++--
+ 25 files changed, 372 insertions(+), 276 deletions(-)
 
 -- 
-Thanks,
-
-David / dhildenb
+2.25.1
 
