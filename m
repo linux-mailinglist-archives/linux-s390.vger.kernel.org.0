@@ -2,102 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C2362ED580
-	for <lists+linux-s390@lfdr.de>; Thu,  7 Jan 2021 18:26:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DA792ED595
+	for <lists+linux-s390@lfdr.de>; Thu,  7 Jan 2021 18:29:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbhAGRZf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 7 Jan 2021 12:25:35 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20258 "EHLO
+        id S1729088AbhAGR23 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 7 Jan 2021 12:28:29 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9034 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727753AbhAGRZf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 Jan 2021 12:25:35 -0500
+        by vger.kernel.org with ESMTP id S1727959AbhAGR23 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 Jan 2021 12:28:29 -0500
 Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 107H8QYl070236;
-        Thu, 7 Jan 2021 12:24:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=LvuoETH3gMSE0cQfUwQj3zbpBWwtOo8g7TICjxm7DsM=;
- b=GokkWDASicCBb6cAad9HaRpWo1Me4deAACWhm9AB17Bls95YsmddIhDAalcRChnuGewj
- BoSuaCI2su/0wS+hU1zMImxE3WcYCgX0ESUwowxfm5o1j+OWIb7qYtH3RoNMCisnZzWC
- oOEXd1hclOy6hG+kE0xvrSYQD/2kTjerY0DbWpOmqRJPwq4TYMw6GEpIkEe9HouakudY
- ROxFlFGWV+NYhqu+iaySgIfWI50H+GyXiK9PF/t0QZJgtHeMmMf4Mx1NJ6FT5hqD0SZn
- ZaPNJj5mcC2WmJKoqsjjqJX2nHTx82DAReMpH6W/qymEcx2jg+RwGyYWr44LCOXTF8y3 rg== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35x5juhxgc-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 107H8PxE069192;
+        Thu, 7 Jan 2021 12:27:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=SFJ0drAgUkEw+VFOj0hRumM7RsaV232r2ZUNTrGEgnQ=;
+ b=cnz+hdVABrM4TbTaaJl+oxp2ArIk+MilWUVC7SV9KAUHvzl75KrNQYRt3owBfO8BBkGu
+ ynWdafyeqG5lQ68QaDDwZIAjGXTYd+CQK5V4lDViYFAGtLxkNtFI/QjX6id00EbFW1DD
+ DDf7u2yX3/xdTyn53EntvN/ShqJI8NH+QkHw9Lq28u3MSeeyI9iZ0/I1PE0BWx7VUFoH
+ B17ypHOdt4hnw+k5/sgyRHK3bqFn8QsefuC3VY76LeiUbXy4LclK4Dd1mfKnz8wZWdNr
+ cjsWP6B+BQ62mOjWW2F6MJ4/5bOYIwLfJHA/f2+zFXnTNy5tdj2jL7kE6KrIIl7qmS/l Gg== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35x5juj0fr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 Jan 2021 12:24:53 -0500
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 107HChx5006006;
-        Thu, 7 Jan 2021 17:24:51 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 35tgf8d2hx-1
+        Thu, 07 Jan 2021 12:27:37 -0500
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 107HBtHI025311;
+        Thu, 7 Jan 2021 17:27:35 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 35wd379724-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 07 Jan 2021 17:24:51 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 107HOmmQ41288090
+        Thu, 07 Jan 2021 17:27:35 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 107HRXrf32637436
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Jan 2021 17:24:48 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C8AED42042;
-        Thu,  7 Jan 2021 17:24:48 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78E9742045;
-        Thu,  7 Jan 2021 17:24:48 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 Jan 2021 17:24:48 +0000 (GMT)
+        Thu, 7 Jan 2021 17:27:33 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 861DF11C052;
+        Thu,  7 Jan 2021 17:27:33 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F57111C050;
+        Thu,  7 Jan 2021 17:27:33 +0000 (GMT)
+Received: from [9.145.66.183] (unknown [9.145.66.183])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  7 Jan 2021 17:27:33 +0000 (GMT)
+Subject: Re: [PATCH -next] s390: cio: Use DEFINE_SPINLOCK() for spinlock
+To:     Zheng Yongjun <zhengyongjun3@huawei.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20201223141512.1178-1-zhengyongjun3@huawei.com>
 From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net 3/3] s390/qeth: fix L2 header access in qeth_l3_osa_features_check()
-Date:   Thu,  7 Jan 2021 18:24:42 +0100
-Message-Id: <20210107172442.1737-4-jwi@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210107172442.1737-1-jwi@linux.ibm.com>
-References: <20210107172442.1737-1-jwi@linux.ibm.com>
+Message-ID: <3aed4509-a903-5b26-3667-ad420b1bbb7b@linux.ibm.com>
+Date:   Thu, 7 Jan 2021 18:27:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
+MIME-Version: 1.0
+In-Reply-To: <20201223141512.1178-1-zhengyongjun3@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
  definitions=2021-01-07_07:2021-01-07,2021-01-07 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
  malwarescore=0 impostorscore=0 spamscore=0 adultscore=0 phishscore=0
- suspectscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015
+ suspectscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1011
  priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2009150000 definitions=main-2101070100
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-ip_finish_output_gso() may call .ndo_features_check() even before the
-skb has a L2 header. This conflicts with qeth_get_ip_version()'s attempt
-to inspect the L2 header via vlan_eth_hdr().
+On 23.12.20 15:15, Zheng Yongjun wrote:
+> spinlock can be initialized automatically with DEFINE_SPINLOCK()
+> rather than explicitly calling spin_lock_init().
+> 
+> Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+> ---
+>  drivers/s390/cio/css.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
+> index cca1a7c4bb33..022f573f0bcc 100644
+> --- a/drivers/s390/cio/css.c
+> +++ b/drivers/s390/cio/css.c
+> @@ -647,13 +647,12 @@ static void css_sch_todo(struct work_struct *work)
+>  }
+>  
+>  static struct idset *slow_subchannel_set;
+> -static spinlock_t slow_subchannel_lock;
+> +static DEFINE_SPINLOCK(slow_subchannel_lock);
+>  static wait_queue_head_t css_eval_wq;
+>  static atomic_t css_eval_scheduled;
+>  
+>  static int __init slow_subchannel_init(void)
+>  {
+> -	spin_lock_init(&slow_subchannel_lock);
 
-Switch to vlan_get_protocol(), as already used further down in the
-common qeth_features_check() path.
 
-Fixes: f13ade199391 ("s390/qeth: run non-offload L3 traffic over common xmit path")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- drivers/s390/net/qeth_l3_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>  	atomic_set(&css_eval_scheduled, 0);
+>  	init_waitqueue_head(&css_eval_wq);
 
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 6970597bc885..4c2cae7ae9a7 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -1813,7 +1813,7 @@ static netdev_features_t qeth_l3_osa_features_check(struct sk_buff *skb,
- 						    struct net_device *dev,
- 						    netdev_features_t features)
- {
--	if (qeth_get_ip_version(skb) != 4)
-+	if (vlan_get_protocol(skb) != htons(ETH_P_IP))
- 		features &= ~NETIF_F_HW_VLAN_CTAG_TX;
- 	return qeth_features_check(skb, dev, features);
- }
--- 
-2.17.1
+Mind turning these two into static initializations as well? Thanks.
 
+
+>  	slow_subchannel_set = idset_sch_new();
+> 
