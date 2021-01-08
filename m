@@ -2,72 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D76D2EEB97
-	for <lists+linux-s390@lfdr.de>; Fri,  8 Jan 2021 04:01:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4C1D2EF1A2
+	for <lists+linux-s390@lfdr.de>; Fri,  8 Jan 2021 12:51:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbhAHDAt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 7 Jan 2021 22:00:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726655AbhAHDAt (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 7 Jan 2021 22:00:49 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id E46932368A;
-        Fri,  8 Jan 2021 03:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610074808;
-        bh=kCuB/7uJZHOg94e3ct8vvQCklpn/WXKKPXlErn2JK8E=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=PS1ZlYVAtfWcrnP16vg5f+0ItjXfKZ9pcNA9NV3S2ABkgyrv20lwvrOxLPx/1wTP5
-         VGMOhKjfV/jM4MRkku3+G7B6vvN1yd9nlo1KmHUfsTF0L96k5XiTgVFBeaYlbk+O2e
-         GmeKoniQ5bujEj7xHHAp4LHIW8OsBp0HeaT7I86G/ZAnOgNqZVWsn5YOwV9f4oS2iM
-         tohji3ymJgLVOgJTqb/MMf7PkXXjK3Wdn7Byu5ngRDQaVzxSUsbkwQJVn4y6aFz2k5
-         4FquX3d8BYGAhX10GGxksWst8Qpn7Gke5SKCt95sPmTxp9qXuYVlZ6aJlypm3mqatg
-         7JRk1MXx5gjwA==
-Received: from pdx-korg-docbuild-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-1.ci.codeaurora.org (Postfix) with ESMTP id D3D06605AC;
-        Fri,  8 Jan 2021 03:00:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        id S1726829AbhAHLvJ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Fri, 8 Jan 2021 06:51:09 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:36426 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726545AbhAHLvH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 8 Jan 2021 06:51:07 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-227-JrkSGbMLN9-FUY2lxHNdvQ-1; Fri, 08 Jan 2021 11:49:28 +0000
+X-MC-Unique: JrkSGbMLN9-FUY2lxHNdvQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 8 Jan 2021 11:49:27 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 8 Jan 2021 11:49:27 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+Subject: RE: [PATCH 05/11] iov_iter: merge the compat case into
+ rw_copy_check_uvector
+Thread-Topic: [PATCH 05/11] iov_iter: merge the compat case into
+ rw_copy_check_uvector
+Thread-Index: AQHWkCRUvpDO9SBAlU68E+WeFLSma6oeR04A
+Date:   Fri, 8 Jan 2021 11:49:27 +0000
+Message-ID: <7167a94511a84f30b18733d56007a7a5@AcuMS.aculab.com>
+References: <20200921143434.707844-1-hch@lst.de>
+ <20200921143434.707844-6-hch@lst.de>
+In-Reply-To: <20200921143434.707844-6-hch@lst.de>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/3] s390/qeth: fixes 2021-01-07
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <161007480886.26739.12705141595571763670.git-patchwork-notify@kernel.org>
-Date:   Fri, 08 Jan 2021 03:00:08 +0000
-References: <20210107172442.1737-1-jwi@linux.ibm.com>
-In-Reply-To: <20210107172442.1737-1-jwi@linux.ibm.com>
-To:     Julian Wiedmann <jwi@linux.ibm.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, hca@linux.ibm.com, kgraul@linux.ibm.com
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello:
-
-This series was applied to netdev/net.git (refs/heads/master):
-
-On Thu,  7 Jan 2021 18:24:39 +0100 you wrote:
-> Hi Dave & Jakub,
+From: Christoph Hellwig <hch@lst.de>
+> Sent: 21 September 2020 15:34
 > 
-> please apply the following patch series to netdev's net tree.
+> Stop duplicating the iovec verify code, and instead add add a
+> __import_iovec helper that does the whole verify and import, but takes
+> a bool compat to decided on the native or compat layout.  This also
+> ends up massively simplifying the calling conventions.
 > 
-> This brings two locking fixes for the device control path.
-> Also one fix for a path where our .ndo_features_check() attempts to
-> access a non-existent L2 header.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  lib/iov_iter.c | 195 ++++++++++++++++++-------------------------------
+>  1 file changed, 70 insertions(+), 125 deletions(-)
 > 
-> [...]
+> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+> index a64867501a7483..8bfa47b63d39aa 100644
+> --- a/lib/iov_iter.c
+> +++ b/lib/iov_iter.c
+> @@ -10,6 +10,7 @@
+>  #include <net/checksum.h>
+>  #include <linux/scatterlist.h>
+>  #include <linux/instrumented.h>
+> +#include <linux/compat.h>
+> 
+>  #define PIPE_PARANOIA /* for now */
+> 
+> @@ -1650,43 +1651,76 @@ const void *dup_iter(struct iov_iter *new, struct iov_iter *old, gfp_t flags)
+>  }
+>  EXPORT_SYMBOL(dup_iter);
+> 
+> -static ssize_t rw_copy_check_uvector(int type,
+> -		const struct iovec __user *uvector, unsigned long nr_segs,
+> -		unsigned long fast_segs, struct iovec *fast_pointer,
+> -		struct iovec **ret_pointer)
+> +static int compat_copy_iovecs_from_user(struct iovec *iov,
+> +		const struct iovec __user *uvector, unsigned long nr_segs)
+> +{
+> +	const struct compat_iovec __user *uiov =
+> +		(const struct compat_iovec __user *)uvector;
+> +	unsigned long i;
+> +	int ret = -EFAULT;
+> +
+> +	if (!user_access_begin(uvector, nr_segs * sizeof(*uvector)))
+> +		return -EFAULT;
 
-Here is the summary with links:
-  - [net,1/3] s390/qeth: fix deadlock during recovery
-    https://git.kernel.org/netdev/net/c/0b9902c1fcc5
-  - [net,2/3] s390/qeth: fix locking for discipline setup / removal
-    https://git.kernel.org/netdev/net/c/b41b554c1ee7
-  - [net,3/3] s390/qeth: fix L2 header access in qeth_l3_osa_features_check()
-    https://git.kernel.org/netdev/net/c/f9c4845385c8
+I little bit late, but the above isn't quite right.
+It should be sizeof(*iouv) - the length is double what it should be.
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Not that access_ok() can fail for compat addresses
+and the extra length won't matter for architectures that
+need the address/length to open an address hole into userspace.
 
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
