@@ -2,131 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4C1D2EF1A2
-	for <lists+linux-s390@lfdr.de>; Fri,  8 Jan 2021 12:51:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB8A22EFCB9
+	for <lists+linux-s390@lfdr.de>; Sat,  9 Jan 2021 02:27:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbhAHLvJ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Fri, 8 Jan 2021 06:51:09 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:36426 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726545AbhAHLvH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 8 Jan 2021 06:51:07 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-227-JrkSGbMLN9-FUY2lxHNdvQ-1; Fri, 08 Jan 2021 11:49:28 +0000
-X-MC-Unique: JrkSGbMLN9-FUY2lxHNdvQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 8 Jan 2021 11:49:27 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 8 Jan 2021 11:49:27 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christoph Hellwig' <hch@lst.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>
-Subject: RE: [PATCH 05/11] iov_iter: merge the compat case into
- rw_copy_check_uvector
-Thread-Topic: [PATCH 05/11] iov_iter: merge the compat case into
- rw_copy_check_uvector
-Thread-Index: AQHWkCRUvpDO9SBAlU68E+WeFLSma6oeR04A
-Date:   Fri, 8 Jan 2021 11:49:27 +0000
-Message-ID: <7167a94511a84f30b18733d56007a7a5@AcuMS.aculab.com>
-References: <20200921143434.707844-1-hch@lst.de>
- <20200921143434.707844-6-hch@lst.de>
-In-Reply-To: <20200921143434.707844-6-hch@lst.de>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        id S1725872AbhAIB11 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 8 Jan 2021 20:27:27 -0500
+Received: from mga07.intel.com ([134.134.136.100]:50567 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbhAIB11 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 8 Jan 2021 20:27:27 -0500
+IronPort-SDR: SZZHvTH4jzrRzmk2V629i7ByuRAkLY8x6A36qhXCFu4SmRRSJEZKeuTYnILrnpibuDYLiIY9Qy
+ 2dTYF3/O9M8w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9858"; a="241751945"
+X-IronPort-AV: E=Sophos;i="5.79,333,1602572400"; 
+   d="scan'208";a="241751945"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2021 17:26:45 -0800
+IronPort-SDR: M5Tr2XvGFmxX+W4P8wLF02CuPB7ws/wk22au9Q44KKdH932StrzCfalObBHczxDvZ9P6SgNFNJ
+ KTEFGhp599sQ==
+X-IronPort-AV: E=Sophos;i="5.79,333,1602572400"; 
+   d="scan'208";a="399163877"
+Received: from jekeller-mobl1.amr.corp.intel.com (HELO [10.212.196.132]) ([10.212.196.132])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jan 2021 17:26:43 -0800
+Subject: Re: [RFC PATCH v2 net-next 00/12] Make .ndo_get_stats64 sleepable
+To:     Vladimir Oltean <olteanv@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jiri Benc <jbenc@redhat.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Eric Dumazet <edumazet@google.com>,
+        George McCollister <george.mccollister@gmail.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Florian Westphal <fw@strlen.de>, linux-s390@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, linux-parisc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+        dev@openvswitch.org
+References: <20210105185902.3922928-1-olteanv@gmail.com>
+ <20210106134516.jnh2b5p5oww4cghz@skbuf>
+From:   Jacob Keller <jacob.e.keller@intel.com>
+Organization: Intel Corporation
+Message-ID: <e0edda65-5421-94aa-19c5-1bd88a602f92@intel.com>
+Date:   Fri, 8 Jan 2021 17:26:40 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+In-Reply-To: <20210106134516.jnh2b5p5oww4cghz@skbuf>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
-> Sent: 21 September 2020 15:34
-> 
-> Stop duplicating the iovec verify code, and instead add add a
-> __import_iovec helper that does the whole verify and import, but takes
-> a bool compat to decided on the native or compat layout.  This also
-> ends up massively simplifying the calling conventions.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  lib/iov_iter.c | 195 ++++++++++++++++++-------------------------------
->  1 file changed, 70 insertions(+), 125 deletions(-)
-> 
-> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-> index a64867501a7483..8bfa47b63d39aa 100644
-> --- a/lib/iov_iter.c
-> +++ b/lib/iov_iter.c
-> @@ -10,6 +10,7 @@
->  #include <net/checksum.h>
->  #include <linux/scatterlist.h>
->  #include <linux/instrumented.h>
-> +#include <linux/compat.h>
-> 
->  #define PIPE_PARANOIA /* for now */
-> 
-> @@ -1650,43 +1651,76 @@ const void *dup_iter(struct iov_iter *new, struct iov_iter *old, gfp_t flags)
->  }
->  EXPORT_SYMBOL(dup_iter);
-> 
-> -static ssize_t rw_copy_check_uvector(int type,
-> -		const struct iovec __user *uvector, unsigned long nr_segs,
-> -		unsigned long fast_segs, struct iovec *fast_pointer,
-> -		struct iovec **ret_pointer)
-> +static int compat_copy_iovecs_from_user(struct iovec *iov,
-> +		const struct iovec __user *uvector, unsigned long nr_segs)
-> +{
-> +	const struct compat_iovec __user *uiov =
-> +		(const struct compat_iovec __user *)uvector;
-> +	unsigned long i;
-> +	int ret = -EFAULT;
-> +
-> +	if (!user_access_begin(uvector, nr_segs * sizeof(*uvector)))
-> +		return -EFAULT;
 
-I little bit late, but the above isn't quite right.
-It should be sizeof(*iouv) - the length is double what it should be.
 
-Not that access_ok() can fail for compat addresses
-and the extra length won't matter for architectures that
-need the address/length to open an address hole into userspace.
+On 1/6/2021 5:45 AM, Vladimir Oltean wrote:
+> On Tue, Jan 05, 2021 at 08:58:50PM +0200, Vladimir Oltean wrote:
+>> This is marked as Request For Comments for a reason.
+> 
+> If nobody has any objections, I will remove the memory leaks I
+> introduced to check if anybody is paying attention, and I will resubmit
+> this as a non-RFC series.
+> 
 
-	David
+I read through this, and it makes sense to me. I admit that I still
+don't grasp all the details of the locking involved.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Thanks,
+Jake
