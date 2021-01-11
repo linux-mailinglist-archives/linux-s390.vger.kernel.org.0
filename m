@@ -2,100 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75E3B2F0FD6
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Jan 2021 11:15:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 50C802F1046
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Jan 2021 11:42:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbhAKKPV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 Jan 2021 05:15:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbhAKKPU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 11 Jan 2021 05:15:20 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513DEC061786;
-        Mon, 11 Jan 2021 02:14:40 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1610360078;
+        id S1729329AbhAKKlm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 Jan 2021 05:41:42 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41033 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726594AbhAKKll (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 11 Jan 2021 05:41:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1610361615;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=vdITQROn2Urg2SWnxxpWECg8/2piMq1rysKQi+Js6AM=;
-        b=UnYkeRyOrRU1KtT5e+L+fQ3h1X+pI6IQmvvPVQCyBzb6fOAslMZh9kmf6riX6Uc0jR5HAW
-        kLM9jzvLqGc+Imjy/0I2rAsMH2VpuQIdJ98CwfEhcoTYCCXiQ/XwFpRt6Jep7zrPxwT0va
-        Xwof1xtTH5Z/PeoiWTuI7XI6GZ2R5aGzpohXNnayNbUAXzj5+Rf7t2lNRSQCuUkrunBvvh
-        E6YQGrr8aPBg88a1jm3tkQeNaO9yiXQdYW2cQM+bbmj0FEDrh39+sh5VynpFZhESsKImAx
-        DwV8ajINKrlorxI1UlTNWgwAXJMXRe809J7/lTBl2XxW6BUf7G/4P1Qx4lUTcA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1610360078;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vdITQROn2Urg2SWnxxpWECg8/2piMq1rysKQi+Js6AM=;
-        b=X4gUVuzYQlznnJ4rBpJlj0pVo1A0rJo22Rpjt8+XaTFqV54Id4MU7M5oqDy1KDl8a6a4jG
-        +hpoSFj00cPTvyCg==
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        dri-devel@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Saeed Mahameed <saeedm@nvidia.com>, netdev@vger.kernel.org,
+        bh=SXDYc0wJR1WVDdg07JHpUA2tSMEFWcqIlRZk9oZHqH8=;
+        b=i/utmrOoDDOXGuOArmq9H3VAEP+GWH/VcUSXCCAUSrHr2zH0aJlS83101GHQQcMjfqe4x1
+        ENeWeKQRDxRLGLd7MCNzDJWY6vuTrCcwmkw/cnFdrjB6Djk4WPRuqkFuynRl5dAMI653No
+        WzrFodKjRVzAMINKofi46arVM2qr4X8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-337-JoQK4F-oPEq0NI9cddKRPQ-1; Mon, 11 Jan 2021 05:40:11 -0500
+X-MC-Unique: JoQK4F-oPEq0NI9cddKRPQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75351190B2A0;
+        Mon, 11 Jan 2021 10:40:09 +0000 (UTC)
+Received: from [10.36.115.103] (ovpn-115-103.ams2.redhat.com [10.36.115.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0CA8A5C232;
+        Mon, 11 Jan 2021 10:40:06 +0000 (UTC)
+Subject: Re: [PATCH V2 3/3] s390/mm: Define arch_get_mappable_range()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org, hca@linux.ibm.com,
+        catalin.marinas@arm.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
         Will Deacon <will@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-s390@vger.kernel.org,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        xen-devel@lists.xenproject.org, Leon Romanovsky <leon@kernel.org>,
-        linux-rdma@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Helge Deller <deller@gmx.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-pci@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        David Airlie <airlied@linux.ie>, linux-gpio@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        linux-parisc@vger.kernel.org,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Tariq Toukan <tariqt@nvidia.com>, Jon Mason <jdmason@kudzu.us>,
-        linux-ntb@googlegroups.com, intel-gfx@lists.freedesktop.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [patch 02/30] genirq: Move status flag checks to core
-In-Reply-To: <20201227192049.GA195845@roeck-us.net>
-References: <20201210192536.118432146@linutronix.de> <20201210194042.703779349@linutronix.de> <20201227192049.GA195845@roeck-us.net>
-Date:   Mon, 11 Jan 2021 11:14:38 +0100
-Message-ID: <87im837pbl.fsf@nanos.tec.linutronix.de>
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <1608218912-28932-1-git-send-email-anshuman.khandual@arm.com>
+ <1608218912-28932-4-git-send-email-anshuman.khandual@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <87ae0b7c-0e95-6068-900e-d813a53f2732@redhat.com>
+Date:   Mon, 11 Jan 2021 11:40:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1608218912-28932-4-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun, Dec 27 2020 at 11:20, Guenter Roeck wrote:
-> On Thu, Dec 10, 2020 at 08:25:38PM +0100, Thomas Gleixner wrote:
-> Yes, but that means that irq_check_status_bit() may be called from modules,
-> but it is not exported, resulting in build errors such as the following.
->
-> arm64:allmodconfig:
->
-> ERROR: modpost: "irq_check_status_bit" [drivers/perf/arm_spe_pmu.ko] undefined!
+On 17.12.20 16:28, Anshuman Khandual wrote:
+> This overrides arch_get_mappabble_range() on s390 platform which will be
+> used with recently added generic framework. It modifies the existing range
+> check in vmem_add_mapping() using arch_get_mappable_range(). It also adds a
+> VM_BUG_ON() check that would ensure that memhp_range_allowed() has already
+> been called on the hotplug path.
+> 
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: linux-s390@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Acked-by: Heiko Carstens <hca@linux.ibm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  arch/s390/mm/init.c |  1 +
+>  arch/s390/mm/vmem.c | 15 ++++++++++++++-
+>  2 files changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> index 77767850d0d0..e0e78234ae57 100644
+> --- a/arch/s390/mm/init.c
+> +++ b/arch/s390/mm/init.c
+> @@ -291,6 +291,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>  	if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
+>  		return -EINVAL;
+>  
+> +	VM_BUG_ON(!memhp_range_allowed(start, size, 1));
 
-Duh. Yes, that lacks an export obviously.
+s/1/true/
 
+>  	rc = vmem_add_mapping(start, size);
+>  	if (rc)
+>  		return rc;
+> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
+> index b239f2ba93b0..e10e563ad2b4 100644
+> --- a/arch/s390/mm/vmem.c
+> +++ b/arch/s390/mm/vmem.c
+> @@ -4,6 +4,7 @@
+>   *    Author(s): Heiko Carstens <heiko.carstens@de.ibm.com>
+>   */
+>  
+> +#include <linux/memory_hotplug.h>
+>  #include <linux/memblock.h>
+>  #include <linux/pfn.h>
+>  #include <linux/mm.h>
+> @@ -532,11 +533,23 @@ void vmem_remove_mapping(unsigned long start, unsigned long size)
+>  	mutex_unlock(&vmem_mutex);
+>  }
+>  
+> +struct range arch_get_mappable_range(void)
+> +{
+> +	struct range memhp_range;
+> +
+> +	memhp_range.start = 0;
+> +	memhp_range.end =  VMEM_MAX_PHYS;
+
+s/  / /
+
+IIRC, the range is inclusive? "VMEM_MAX_PHYS - 1" then, and adjust the
+check below.
+
+> +	return memhp_range;
+> +}
+> +
+
+
+-- 
 Thanks,
 
-        tglx
+David / dhildenb
+
