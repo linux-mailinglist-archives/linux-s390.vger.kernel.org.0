@@ -2,160 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDBB82F256E
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Jan 2021 02:48:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD42C2F26C5
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Jan 2021 04:44:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbhALBVD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 Jan 2021 20:21:03 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28512 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727919AbhALBVD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 11 Jan 2021 20:21:03 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10C11m6r030847;
-        Mon, 11 Jan 2021 20:20:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=IY0FNg71Sd157RzPniY1lE+vTVNWXVrYaKLd5+dZUus=;
- b=pl70X5Brw7oPjuMZR83X6VVo58j+9jtpC9Vsz7ePsqwG5kbgQfMRgJl/RYVP5eEuNmmD
- EPdLY2lKNRAdvjOnRFCiwlfgHcNasP4WyfxIu0/eQhQMzjCRlnKkp6PA3WSE6qg7XfUL
- 5/Xr2a56riF0g/4+B8zh8Mg0dOjQFrOoHHbaQroExTgEpPrXprJfdrIHnu71eT5ndxRn
- EppxVJiMDAOxF09pq2ZEj9dxFRwNqDvdayLgGtkgJ1mWznYY4jWifUGmZj9paS7xjy2s
- h71rXC7iVy6fLpP7ohNrnKS7T576WrCcwBqbTF75tLUMUoqHRX1WFC8qjV4ZvM+SZkNC sg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 361114scr1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Jan 2021 20:20:20 -0500
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10C1BAG5071534;
-        Mon, 11 Jan 2021 20:20:20 -0500
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 361114scqk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 11 Jan 2021 20:20:20 -0500
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10C1Gv59007873;
-        Tue, 12 Jan 2021 01:20:18 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 35y447txp1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Jan 2021 01:20:18 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10C1KFqo38142306
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Jan 2021 01:20:15 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 94A0011C052;
-        Tue, 12 Jan 2021 01:20:15 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB16D11C054;
-        Tue, 12 Jan 2021 01:20:14 +0000 (GMT)
-Received: from li-e979b1cc-23ba-11b2-a85c-dfd230f6cf82 (unknown [9.171.92.32])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Tue, 12 Jan 2021 01:20:14 +0000 (GMT)
-Date:   Tue, 12 Jan 2021 02:20:12 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, mjrosato@linux.ibm.com
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        cohuck@redhat.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com, fiuczy@linux.ibm.com, frankja@linux.ibm.com,
-        david@redhat.com, hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v13 11/15] s390/vfio-ap: implement in-use callback for
- vfio_ap driver
-Message-ID: <20210112022012.4bad464f.pasic@linux.ibm.com>
-In-Reply-To: <20201223011606.5265-12-akrowiak@linux.ibm.com>
-References: <20201223011606.5265-1-akrowiak@linux.ibm.com>
-        <20201223011606.5265-12-akrowiak@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1727764AbhALDoT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 Jan 2021 22:44:19 -0500
+Received: from foss.arm.com ([217.140.110.172]:39592 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727762AbhALDoT (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 11 Jan 2021 22:44:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFC95101E;
+        Mon, 11 Jan 2021 19:43:32 -0800 (PST)
+Received: from [192.168.0.130] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5A053F66E;
+        Mon, 11 Jan 2021 19:43:28 -0800 (PST)
+Subject: Re: [PATCH V2 1/3] mm/hotplug: Prevalidate the address range being
+ added with platform
+To:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org, hca@linux.ibm.com,
+        catalin.marinas@arm.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <1608218912-28932-1-git-send-email-anshuman.khandual@arm.com>
+ <1608218912-28932-2-git-send-email-anshuman.khandual@arm.com>
+ <10e733fa-4568-d38f-9b95-2ccc5dc627b8@redhat.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <c23e9740-0779-d6b7-2ff7-f6f9f9085f0d@arm.com>
+Date:   Tue, 12 Jan 2021 09:13:49 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-11_34:2021-01-11,2021-01-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 priorityscore=1501 bulkscore=0 spamscore=0 malwarescore=0
- phishscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101120000
+In-Reply-To: <10e733fa-4568-d38f-9b95-2ccc5dc627b8@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 22 Dec 2020 20:16:02 -0500
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> Let's implement the callback to indicate when an APQN
-> is in use by the vfio_ap device driver. The callback is
-> invoked whenever a change to the apmask or aqmask would
-> result in one or more queue devices being removed from the driver. The
-> vfio_ap device driver will indicate a resource is in use
-> if the APQN of any of the queue devices to be removed are assigned to
-> any of the matrix mdevs under the driver's control.
-> 
-> There is potential for a deadlock condition between the matrix_dev->lock
-> used to lock the matrix device during assignment of adapters and domains
-> and the ap_perms_mutex locked by the AP bus when changes are made to the
-> sysfs apmask/aqmask attributes.
-> 
-> Consider following scenario (courtesy of Halil Pasic):
-> 1) apmask_store() takes ap_perms_mutex
-> 2) assign_adapter_store() takes matrix_dev->lock
-> 3) apmask_store() calls vfio_ap_mdev_resource_in_use() which tries
->    to take matrix_dev->lock
-> 4) assign_adapter_store() calls ap_apqn_in_matrix_owned_by_def_drv
->    which tries to take ap_perms_mutex
-> 
-> BANG!
-> 
-> To resolve this issue, instead of using the mutex_lock(&matrix_dev->lock)
-> function to lock the matrix device during assignment of an adapter or
-> domain to a matrix_mdev as well as during the in_use callback, the
-> mutex_trylock(&matrix_dev->lock) function will be used. If the lock is not
-> obtained, then the assignment and in_use functions will terminate with
-> -EBUSY.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_drv.c     |  1 +
->  drivers/s390/crypto/vfio_ap_ops.c     | 21 ++++++++++++++++++---
->  drivers/s390/crypto/vfio_ap_private.h |  2 ++
->  3 files changed, 21 insertions(+), 3 deletions(-)
-> 
-[..]
->  }
-> +
-> +int vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long *aqm)
-> +{
-> +	int ret;
-> +
-> +	if (!mutex_trylock(&matrix_dev->lock))
-> +		return -EBUSY;
-> +	ret = vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm);
 
-If we detect that resources are in use, then we spit warnings to the
-message log, right?
+On 1/11/21 4:21 PM, David Hildenbrand wrote:
+> On 17.12.20 16:28, Anshuman Khandual wrote:
+>> This introduces memhp_range_allowed() which can be called in various memory
+>> hotplug paths to prevalidate the address range which is being added, with
+>> the platform. Then memhp_range_allowed() calls memhp_get_pluggable_range()
+>> which provides applicable address range depending on whether linear mapping
+>> is required or not. For ranges that require linear mapping, it calls a new
+>> arch callback arch_get_mappable_range() which the platform can override. So
+>> the new callback, in turn provides the platform an opportunity to configure
+>> acceptable memory hotplug address ranges in case there are constraints.
+>>
+>> This mechanism will help prevent platform specific errors deep down during
+>> hotplug calls. This drops now redundant check_hotplug_memory_addressable()
+>> check in __add_pages() but instead adds a VM_BUG_ON() check which would
+>> ensure that the range has been validated with memhp_range_allowed() earlier
+>> in the call chain. Besides memhp_get_pluggable_range() also can be used by
+>> potential memory hotplug callers to avail the allowed physical range which
+>> would go through on a given platform.
+>>
+>> This does not really add any new range check in generic memory hotplug but
+>> instead compensates for lost checks in arch_add_memory() where applicable
+>> and check_hotplug_memory_addressable(), with unified memhp_range_allowed().
+>>
+> 
+> Subject s/mm\/hotplug/mm\/memory_hotplug/
 
-@Matt: Is your userspace tooling going to guarantee that this will never
-happen?
+Sure, will do.
 
-> +	mutex_unlock(&matrix_dev->lock);
-> +
-> +	return ret;
-> +}
-> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-> index d2d26ba18602..15b7cd74843b 100644
-> --- a/drivers/s390/crypto/vfio_ap_private.h
-> +++ b/drivers/s390/crypto/vfio_ap_private.h
-> @@ -107,4 +107,6 @@ struct vfio_ap_queue {
->  int vfio_ap_mdev_probe_queue(struct ap_device *queue);
->  void vfio_ap_mdev_remove_queue(struct ap_device *queue);
->  
-> +int vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long *aqm);
-> +
->  #endif /* _VFIO_AP_PRIVATE_H_ */
+> 
+> Everywhere in this patch: Use "true/false" for boolean values.
 
+Sure, will change.
+
+> 
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Suggested-by: David Hildenbrand <david@redhat.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  include/linux/memory_hotplug.h | 10 +++++
+>>  mm/memory_hotplug.c            | 79 +++++++++++++++++++++++++---------
+>>  mm/memremap.c                  |  6 +++
+>>  3 files changed, 75 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+>> index 551093b74596..8d72354758c8 100644
+>> --- a/include/linux/memory_hotplug.h
+>> +++ b/include/linux/memory_hotplug.h
+>> @@ -70,6 +70,9 @@ typedef int __bitwise mhp_t;
+>>   */
+>>  #define MEMHP_MERGE_RESOURCE	((__force mhp_t)BIT(0))
+>>  
+>> +bool memhp_range_allowed(u64 start, u64 size, bool need_mapping);
+>> +struct range memhp_get_pluggable_range(bool need_mapping);
+> 
+> AFAIKs, all memhp_get_pluggable_range() users pass "1".
+
+Right.
+
+> 
+> What about the "add_pages()-only" path?
+
+I had dropped memhp_range_allowed() changes for add_pages() in pagemap_range()
+because you had mentioned not to add any new checks in the generic code. Will
+add it back if that is preferred.
