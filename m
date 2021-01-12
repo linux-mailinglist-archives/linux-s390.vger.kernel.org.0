@@ -2,187 +2,166 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6F942F35A3
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Jan 2021 17:26:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C2E02F3623
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Jan 2021 17:51:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406783AbhALQYW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 12 Jan 2021 11:24:22 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18294 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2406223AbhALQYT (ORCPT
+        id S2390109AbhALQuZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 12 Jan 2021 11:50:25 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41420 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728583AbhALQuZ (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 12 Jan 2021 11:24:19 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10CG5x7i108538;
-        Tue, 12 Jan 2021 11:21:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=xJq3yq08V7yshNl1XkvYQh750dekA5DkqILLPZa6+Rk=;
- b=EbDjmzA6VypGd37UkZyPUtR8P0gP0i2TcxrK730rzWx9xO6B3WTpbDGPVtPFi2fpubRW
- xnwrAD0zApPbgqIFQnTftqdFGHF2IHyZw/pq7NSd0aJ0S5lJIlY7NJSp2n9RRbTcqd2d
- gQMXTsHwMh5MGbxvY3k5m8qjmjp8IfwxzlcgNe7B+j1gwjnHzCh3ragExdDArHMATb/d
- 9ZKlOHqt/2Xvg/G247TlD3OAANrNsh6SKIGGAMuf0qZsrk84yvCXEmi7X+rsWvpGXA9R
- O6Q9R9NOVNCb0Y6WNub2bb21S9IIEhjomTfhPiGltQwtqDckL6dIGaOzI6XEBtJpW/vd Wg== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 361e7yswcb-1
+        Tue, 12 Jan 2021 11:50:25 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10CGhYHD049845;
+        Tue, 12 Jan 2021 11:49:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=CPMisSnatD+99YHPEmUR1gJHKPbc6b/P6VGnKEl2XEg=;
+ b=WIxRtdVJkgC2F1P0pAbAhstw5Fm4CSpnf+4WSbX0PmlNljQKYP62l2Q4kIX5xLduynUb
+ FRSqWGwEHWFOXAlWbGXPUGUGNyPdNypz8Q6BEbcQBPRYWuS3hUHGyDNBF5JzKBiv2aWO
+ JBou5WE3pNT/BqhYfJ47oaks4Z0XvFa1CeGXs+yujgMhdPypssRIVUQARh1dDBPXZhYS
+ mvXoLIVNUPtPT7L2dZF2sYpQhESrmM+c2p5C3sUoAwpzcZtP4W1DqKBstW/eBm2lsmnt
+ xFNKAnmp3iwwJp5DO0F3m36VfhVdbcl3uIq70gdpsw/JhLK1QhUsG1upaYFeY/1hmAzq ww== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 361fhr85um-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Jan 2021 11:21:34 -0500
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10CGHgAq011880;
-        Tue, 12 Jan 2021 16:21:33 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04fra.de.ibm.com with ESMTP id 3604h999ff-1
+        Tue, 12 Jan 2021 11:49:44 -0500
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10CGiosU057090;
+        Tue, 12 Jan 2021 11:49:44 -0500
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 361fhr85tr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Jan 2021 16:21:33 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10CGLSl336045282
+        Tue, 12 Jan 2021 11:49:43 -0500
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10CGmwKT027605;
+        Tue, 12 Jan 2021 16:49:41 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma01fra.de.ibm.com with ESMTP id 35y44820qm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Jan 2021 16:49:41 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10CGncTG40829412
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Jan 2021 16:21:28 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AF13BA4059;
-        Tue, 12 Jan 2021 16:21:28 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B32AA404D;
-        Tue, 12 Jan 2021 16:21:28 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Jan 2021 16:21:28 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH net 2/2] net/smc: use memcpy instead of snprintf to avoid out of bounds read
-Date:   Tue, 12 Jan 2021 17:21:22 +0100
-Message-Id: <20210112162122.26832-3-kgraul@linux.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210112162122.26832-1-kgraul@linux.ibm.com>
-References: <20210112162122.26832-1-kgraul@linux.ibm.com>
+        Tue, 12 Jan 2021 16:49:38 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 633EC5204E;
+        Tue, 12 Jan 2021 16:49:38 +0000 (GMT)
+Received: from li-e979b1cc-23ba-11b2-a85c-dfd230f6cf82 (unknown [9.171.60.135])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id A848352050;
+        Tue, 12 Jan 2021 16:49:37 +0000 (GMT)
+Date:   Tue, 12 Jan 2021 17:49:35 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v13 11/15] s390/vfio-ap: implement in-use callback for
+ vfio_ap driver
+Message-ID: <20210112174935.41cbda87.pasic@linux.ibm.com>
+In-Reply-To: <d717a554-6d0c-6075-38fd-e725b9622437@linux.ibm.com>
+References: <20201223011606.5265-1-akrowiak@linux.ibm.com>
+        <20201223011606.5265-12-akrowiak@linux.ibm.com>
+        <20210112022012.4bad464f.pasic@linux.ibm.com>
+        <d717a554-6d0c-6075-38fd-e725b9622437@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-12_10:2021-01-12,2021-01-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- impostorscore=0 mlxlogscore=999 spamscore=0 bulkscore=0 adultscore=0
- malwarescore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101120090
+ definitions=2021-01-12_12:2021-01-12,2021-01-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ impostorscore=0 spamscore=0 suspectscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101120091
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Guvenc Gulce <guvenc@linux.ibm.com>
+On Tue, 12 Jan 2021 09:14:07 -0500
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-Using snprintf() to convert not null-terminated strings to null
-terminated strings may cause out of bounds read in the source string.
-Therefore use memcpy() and terminate the target string with a null
-afterwards.
+> On 1/11/21 8:20 PM, Halil Pasic wrote:
+> > On Tue, 22 Dec 2020 20:16:02 -0500
+> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> >   
+> >> Let's implement the callback to indicate when an APQN
+> >> is in use by the vfio_ap device driver. The callback is
+> >> invoked whenever a change to the apmask or aqmask would
+> >> result in one or more queue devices being removed from the driver. The
+> >> vfio_ap device driver will indicate a resource is in use
+> >> if the APQN of any of the queue devices to be removed are assigned to
+> >> any of the matrix mdevs under the driver's control.
+> >>
+> >> There is potential for a deadlock condition between the matrix_dev->lock
+> >> used to lock the matrix device during assignment of adapters and domains
+> >> and the ap_perms_mutex locked by the AP bus when changes are made to the
+> >> sysfs apmask/aqmask attributes.
+> >>
+> >> Consider following scenario (courtesy of Halil Pasic):
+> >> 1) apmask_store() takes ap_perms_mutex
+> >> 2) assign_adapter_store() takes matrix_dev->lock
+> >> 3) apmask_store() calls vfio_ap_mdev_resource_in_use() which tries
+> >>     to take matrix_dev->lock
+> >> 4) assign_adapter_store() calls ap_apqn_in_matrix_owned_by_def_drv
+> >>     which tries to take ap_perms_mutex
+> >>
+> >> BANG!
+> >>
+> >> To resolve this issue, instead of using the mutex_lock(&matrix_dev->lock)
+> >> function to lock the matrix device during assignment of an adapter or
+> >> domain to a matrix_mdev as well as during the in_use callback, the
+> >> mutex_trylock(&matrix_dev->lock) function will be used. If the lock is not
+> >> obtained, then the assignment and in_use functions will terminate with
+> >> -EBUSY.
+> >>
+> >> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> >> ---
+> >>   drivers/s390/crypto/vfio_ap_drv.c     |  1 +
+> >>   drivers/s390/crypto/vfio_ap_ops.c     | 21 ++++++++++++++++++---
+> >>   drivers/s390/crypto/vfio_ap_private.h |  2 ++
+> >>   3 files changed, 21 insertions(+), 3 deletions(-)
+> >>  
+> > [..]  
+> >>   }
+> >> +
+> >> +int vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long *aqm)
+> >> +{
+> >> +	int ret;
+> >> +
+> >> +	if (!mutex_trylock(&matrix_dev->lock))
+> >> +		return -EBUSY;
+> >> +	ret = vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm);  
+> > 
+> > If we detect that resources are in use, then we spit warnings to the
+> > message log, right?
+> > 
+> > @Matt: Is your userspace tooling going to guarantee that this will never
+> > happen?  
+> 
+> Yes, but only when using the tooling to modify apmask/aqmask.  You would 
+> still be able to create such a scenario by bypassing the tooling and 
+> invoking the sysfs interfaces directly.
+> 
+> 
 
-Fixes: a3db10efcc4c ("net/smc: Add support for obtaining SMCR device list")
-Signed-off-by: Guvenc Gulce <guvenc@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
----
- net/smc/smc_core.c | 17 +++++++++++------
- net/smc/smc_ib.c   |  6 +++---
- net/smc/smc_ism.c  |  3 ++-
- 3 files changed, 16 insertions(+), 10 deletions(-)
+Since, I suppose, the tooling is going to catch this anyway, and produce
+much better feedback to the user, I believe we should be fine degrading
+the severity to info or debug. 
 
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index 8d866b4ed8f6..0df85a12651e 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -258,7 +258,8 @@ int smc_nl_get_sys_info(struct sk_buff *skb, struct netlink_callback *cb)
- 		smc_ism_get_system_eid(smcd_dev, &seid);
- 	mutex_unlock(&smcd_dev_list.mutex);
- 	if (seid && smc_ism_is_v2_capable()) {
--		snprintf(smc_seid, sizeof(smc_seid), "%s", seid);
-+		memcpy(smc_seid, seid, SMC_MAX_EID_LEN);
-+		smc_seid[SMC_MAX_EID_LEN] = 0;
- 		if (nla_put_string(skb, SMC_NLA_SYS_SEID, smc_seid))
- 			goto errattr;
- 	}
-@@ -296,7 +297,8 @@ static int smc_nl_fill_lgr(struct smc_link_group *lgr,
- 		goto errattr;
- 	if (nla_put_u8(skb, SMC_NLA_LGR_R_VLAN_ID, lgr->vlan_id))
- 		goto errattr;
--	snprintf(smc_target, sizeof(smc_target), "%s", lgr->pnet_id);
-+	memcpy(smc_target, lgr->pnet_id, SMC_MAX_PNETID_LEN);
-+	smc_target[SMC_MAX_PNETID_LEN] = 0;
- 	if (nla_put_string(skb, SMC_NLA_LGR_R_PNETID, smc_target))
- 		goto errattr;
- 
-@@ -313,7 +315,7 @@ static int smc_nl_fill_lgr_link(struct smc_link_group *lgr,
- 				struct sk_buff *skb,
- 				struct netlink_callback *cb)
- {
--	char smc_ibname[IB_DEVICE_NAME_MAX + 1];
-+	char smc_ibname[IB_DEVICE_NAME_MAX];
- 	u8 smc_gid_target[41];
- 	struct nlattr *attrs;
- 	u32 link_uid = 0;
-@@ -462,7 +464,8 @@ static int smc_nl_fill_smcd_lgr(struct smc_link_group *lgr,
- 		goto errattr;
- 	if (nla_put_u32(skb, SMC_NLA_LGR_D_CHID, smc_ism_get_chid(lgr->smcd)))
- 		goto errattr;
--	snprintf(smc_pnet, sizeof(smc_pnet), "%s", lgr->smcd->pnetid);
-+	memcpy(smc_pnet, lgr->smcd->pnetid, SMC_MAX_PNETID_LEN);
-+	smc_pnet[SMC_MAX_PNETID_LEN] = 0;
- 	if (nla_put_string(skb, SMC_NLA_LGR_D_PNETID, smc_pnet))
- 		goto errattr;
- 
-@@ -475,10 +478,12 @@ static int smc_nl_fill_smcd_lgr(struct smc_link_group *lgr,
- 		goto errv2attr;
- 	if (nla_put_u8(skb, SMC_NLA_LGR_V2_OS, lgr->peer_os))
- 		goto errv2attr;
--	snprintf(smc_host, sizeof(smc_host), "%s", lgr->peer_hostname);
-+	memcpy(smc_host, lgr->peer_hostname, SMC_MAX_HOSTNAME_LEN);
-+	smc_host[SMC_MAX_HOSTNAME_LEN] = 0;
- 	if (nla_put_string(skb, SMC_NLA_LGR_V2_PEER_HOST, smc_host))
- 		goto errv2attr;
--	snprintf(smc_eid, sizeof(smc_eid), "%s", lgr->negotiated_eid);
-+	memcpy(smc_eid, lgr->negotiated_eid, SMC_MAX_EID_LEN);
-+	smc_eid[SMC_MAX_EID_LEN] = 0;
- 	if (nla_put_string(skb, SMC_NLA_LGR_V2_NEG_EID, smc_eid))
- 		goto errv2attr;
- 
-diff --git a/net/smc/smc_ib.c b/net/smc/smc_ib.c
-index ddd7fac98b1d..7d7ba0320d5a 100644
---- a/net/smc/smc_ib.c
-+++ b/net/smc/smc_ib.c
-@@ -371,8 +371,8 @@ static int smc_nl_handle_dev_port(struct sk_buff *skb,
- 	if (nla_put_u8(skb, SMC_NLA_DEV_PORT_PNET_USR,
- 		       smcibdev->pnetid_by_user[port]))
- 		goto errattr;
--	snprintf(smc_pnet, sizeof(smc_pnet), "%s",
--		 (char *)&smcibdev->pnetid[port]);
-+	memcpy(smc_pnet, &smcibdev->pnetid[port], SMC_MAX_PNETID_LEN);
-+	smc_pnet[SMC_MAX_PNETID_LEN] = 0;
- 	if (nla_put_string(skb, SMC_NLA_DEV_PORT_PNETID, smc_pnet))
- 		goto errattr;
- 	if (nla_put_u32(skb, SMC_NLA_DEV_PORT_NETDEV,
-@@ -414,7 +414,7 @@ static int smc_nl_handle_smcr_dev(struct smc_ib_device *smcibdev,
- 				  struct sk_buff *skb,
- 				  struct netlink_callback *cb)
- {
--	char smc_ibname[IB_DEVICE_NAME_MAX + 1];
-+	char smc_ibname[IB_DEVICE_NAME_MAX];
- 	struct smc_pci_dev smc_pci_dev;
- 	struct pci_dev *pci_dev;
- 	unsigned char is_crit;
-diff --git a/net/smc/smc_ism.c b/net/smc/smc_ism.c
-index 524ef64a191a..9c6e95882553 100644
---- a/net/smc/smc_ism.c
-+++ b/net/smc/smc_ism.c
-@@ -250,7 +250,8 @@ static int smc_nl_handle_smcd_dev(struct smcd_dev *smcd,
- 		goto errattr;
- 	if (nla_put_u8(skb, SMC_NLA_DEV_PORT_PNET_USR, smcd->pnetid_by_user))
- 		goto errportattr;
--	snprintf(smc_pnet, sizeof(smc_pnet), "%s", smcd->pnetid);
-+	memcpy(smc_pnet, smcd->pnetid, SMC_MAX_PNETID_LEN);
-+	smc_pnet[SMC_MAX_PNETID_LEN] = 0;
- 	if (nla_put_string(skb, SMC_NLA_DEV_PORT_PNETID, smc_pnet))
- 		goto errportattr;
- 
--- 
-2.17.1
+I would prefer not producing a warning here, because I believe it is
+likely to do more harm, than good (by implying a kernel problem, as I
+don't think based on the message one will think that it is an userspace
+problem). But if everybody else agrees, that we want a warning here, then
+I can live with that as well.
 
+Regards,
+Halil
