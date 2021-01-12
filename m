@@ -2,108 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4F082F3188
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Jan 2021 14:26:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CCDB2F3297
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Jan 2021 15:07:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387421AbhALNWF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 12 Jan 2021 08:22:05 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61852 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733164AbhALNWD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 12 Jan 2021 08:22:03 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10CD4bx3160665;
-        Tue, 12 Jan 2021 08:21:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=z0KUrILbnCB/14DwbsiY2AomilgKtDh1jKZtYPRzXH8=;
- b=ThAdNU+ky9NjR6/wb/V4qy+Alt1IGfia//VmA1K8HxkgE/5BA2wfcpX5jKs3K/paLO3F
- WCqo3006pRLxy05GTpIsLjsXz9zXc+M8/x/us8Q7S9x7P/xOkqX844OYHb4yBJn2YIwk
- 1rAsQetIpOiXbsMAooxDpPAxkdUkextvYQO+Jb63kxaAroqgMByI7a0wECXXE3kirt+B
- 5b2+Smr6zAnXxn9quGmB576O1ZmjrgkFnN/yDfbPrQe3y9aT+Uz+DObltDQeXjY0sZ5q
- VKmPMTjc/8mf64sRi/0EZ5ScKgUv0VQR/5jqDmNYUak09zu5EVlC6WCTdyKL8zfotO2Y 1Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 361c19h7he-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Jan 2021 08:21:23 -0500
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10CD56hD163582;
-        Tue, 12 Jan 2021 08:21:22 -0500
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 361c19h7gq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Jan 2021 08:21:22 -0500
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10CDIE7b026421;
-        Tue, 12 Jan 2021 13:21:20 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 35y448bp1r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Jan 2021 13:21:20 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10CDLHNP46530840
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Jan 2021 13:21:17 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AFCA24C04E;
-        Tue, 12 Jan 2021 13:21:17 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DEF4A4C044;
-        Tue, 12 Jan 2021 13:21:16 +0000 (GMT)
-Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Jan 2021 13:21:16 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     thuth@redhat.com, david@redhat.com, borntraeger@de.ibm.com,
-        imbrenda@linux.ibm.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org
-Subject: [kvm-unit-tests PATCH v4 9/9] s390x: sclp: Add CPU entry offset comment
-Date:   Tue, 12 Jan 2021 08:20:54 -0500
-Message-Id: <20210112132054.49756-10-frankja@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210112132054.49756-1-frankja@linux.ibm.com>
-References: <20210112132054.49756-1-frankja@linux.ibm.com>
+        id S2387858AbhALOFw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 12 Jan 2021 09:05:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730158AbhALOFv (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 12 Jan 2021 09:05:51 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A42AE22CE3;
+        Tue, 12 Jan 2021 14:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610460310;
+        bh=YIZSFd4ngdBu3d+V+tCrhUDlUF7epBaWbFsCZCkzGJs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S+ljzYYL3QMPhhApX5VwhFNyceVrA27EHM0FStNvwzUR1cQ7GFOIPOcEYTO0fdDaA
+         Kj7O7lmy0yWuWK+AZisJL2LrmlkoM/j63MxdM7S787vyvaT4LD71jTgKDStmGrzxuQ
+         L0/NqqEzqp6wU8ndgl0gsmTuxMJL2Vz98cUyPebone1iHGoyH3HLXEv/yY8kVzE9/C
+         3JxXpkug6tFhHh2/KJ9Ii5coAgelm+gr542ObqppAE3GEOphOgXDNiAJFxaofg4s3u
+         N68pjfATVrUXDVMPlwIcydiug5iK5JLd2AIK2alwIqlmLf7Si7Qy4TLd2kqk9nbCgG
+         c2IYKYoLXP3bw==
+Date:   Tue, 12 Jan 2021 14:05:00 +0000
+From:   Will Deacon <will@kernel.org>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        msalter@redhat.com, jacquiot.aurelien@gmail.com,
+        ysato@users.sourceforge.jp, geert@linux-m68k.org,
+        tsbogend@alpha.franken.de, ley.foon.tan@intel.com,
+        jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+        shorne@gmail.com, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, benh@kernel.crashing.org, paulus@samba.org,
+        dalias@libc.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        sstabellini@kernel.org, chris@zankel.net, jcmvbkbc@gmail.com,
+        christian@brauner.io, linux-alpha@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] arch: consolidate pm_power_off callback
+Message-ID: <20210112140459.GC9277@willie-the-truck>
+References: <20201227140129.19932-1-info@metux.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-12_07:2021-01-12,2021-01-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- malwarescore=0 mlxlogscore=999 adultscore=0 bulkscore=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2101120073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201227140129.19932-1-info@metux.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Let's make it clear that there is something at the end of the
-struct. The exact offset is reported by the cpu_offset member.
+On Sun, Dec 27, 2020 at 03:01:28PM +0100, Enrico Weigelt, metux IT consult wrote:
+> Move the pm_power_off callback into one global place and also add an
+> function for conditionally calling it (when not NULL), in order to remove
+> code duplication in all individual archs.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
----
- lib/s390x/sclp.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+[...]
 
-diff --git a/lib/s390x/sclp.h b/lib/s390x/sclp.h
-index dccbaa8..395895f 100644
---- a/lib/s390x/sclp.h
-+++ b/lib/s390x/sclp.h
-@@ -134,7 +134,10 @@ typedef struct ReadInfo {
- 	uint8_t reserved7[134 - 128];
- 	uint8_t byte_134_diag318 : 1;
- 	uint8_t : 7;
--	struct CPUEntry entries[0];
-+	/*
-+	 * The cpu entries follow, they start at the offset specified
-+	 * in offset_cpu.
-+	 */
- } __attribute__((packed)) ReadInfo;
- 
- typedef struct ReadCpuInfo {
--- 
-2.25.1
+> diff --git a/kernel/reboot.c b/kernel/reboot.c
+> index eb1b15850761..ec4cd66dd1ae 100644
+> --- a/kernel/reboot.c
+> +++ b/kernel/reboot.c
+> @@ -53,6 +53,16 @@ int reboot_force;
+>  void (*pm_power_off_prepare)(void);
+>  EXPORT_SYMBOL_GPL(pm_power_off_prepare);
+>  
+> +void (*pm_power_off)(void);
+> +EXPORT_SYMBOL_GPL(pm_power_off);
+> +
+> +void do_power_off(void)
+> +{
+> +	if (pm_power_off)
+> +		pm_power_off();
+> +}
+> +EXPORT_SYMBOL_GPL(do_power_off);
 
+Could this just live as a static inline in pm.h to avoid having to export
+the extra symbol?
+
+Will
