@@ -2,72 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FBB82F49CB
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Jan 2021 12:21:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EF752F4AF5
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Jan 2021 13:08:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbhAMLNl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 13 Jan 2021 06:13:41 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:57935 "EHLO
+        id S1726259AbhAMMGK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 Jan 2021 07:06:10 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55564 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727744AbhAMLNl (ORCPT
+        by vger.kernel.org with ESMTP id S1726474AbhAMMGK (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 13 Jan 2021 06:13:41 -0500
+        Wed, 13 Jan 2021 07:06:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1610536335;
+        s=mimecast20190719; t=1610539484;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oll8g1vmFOV5axq2EQdWBmlxRtNj0eliiIt8uSJZEmU=;
-        b=Wo5VQ31M+isgDDmt4VQbVUEpcCDT2afUB9H8JArWQDoA28iXKK1/4oSHOze4OqmiDyJg1R
-        s1TKE23sCerJkFmLUPFQ+nevBl9zE1gDCOBksRfvj3g/UqCPMHtnSmgQljxKhsh6laf2Ah
-        n4m9I4xtiTy/VT6SVwRGuSrEoBWdGcY=
+        bh=MyOD2IO3QG3ZtzfasndTqDoePaXBuAYrdfGO2nBFrhY=;
+        b=QNqlgtBcBBwQHuMH+9Cf7BsiKJ8sttgJWhGrBtyqwJP/nnyTWs0J+b6qnBQZf6+y73YMTt
+        946DYb8hr+j6uJIu2HHmlb9uO5jkN7CHDETSmpJmPp+9Hlc2W6+pYDkqywTgSqttSbayNJ
+        ynLoZoaZwIyXegsFB/LcBgjhexdkopA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-585-xF8qjynWNTadDegKZ2YYOA-1; Wed, 13 Jan 2021 06:12:10 -0500
-X-MC-Unique: xF8qjynWNTadDegKZ2YYOA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-571-zt60VG1XPp2iHwjYKJFxNQ-1; Wed, 13 Jan 2021 07:04:42 -0500
+X-MC-Unique: zt60VG1XPp2iHwjYKJFxNQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 215C680A5C0;
-        Wed, 13 Jan 2021 11:12:09 +0000 (UTC)
-Received: from gondolin (ovpn-114-8.ams2.redhat.com [10.36.114.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BEC166A908;
-        Wed, 13 Jan 2021 11:12:04 +0000 (UTC)
-Date:   Wed, 13 Jan 2021 12:12:02 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, thuth@redhat.com, david@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests PATCH v4 7/9] s390x: Add diag318 intercept test
-Message-ID: <20210113121202.3ca9b201.cohuck@redhat.com>
-In-Reply-To: <20210112132054.49756-8-frankja@linux.ibm.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0EDFC80DDE0;
+        Wed, 13 Jan 2021 12:04:41 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-112-122.ams2.redhat.com [10.36.112.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A13EC18AAB;
+        Wed, 13 Jan 2021 12:04:36 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v4 4/9] s390x: Split assembly into multiple
+ files
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        cohuck@redhat.com, linux-s390@vger.kernel.org
 References: <20210112132054.49756-1-frankja@linux.ibm.com>
-        <20210112132054.49756-8-frankja@linux.ibm.com>
-Organization: Red Hat GmbH
+ <20210112132054.49756-5-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <c07280f6-f56c-ea6c-1255-28a36a2385c0@redhat.com>
+Date:   Wed, 13 Jan 2021 13:04:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20210112132054.49756-5-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 12 Jan 2021 08:20:52 -0500
-Janosch Frank <frankja@linux.ibm.com> wrote:
-
-> Not much to test except for the privilege and specification
-> exceptions.
+On 12/01/2021 14.20, Janosch Frank wrote:
+> I've added too much to cstart64.S which is not start related
+> already. Now that I want to add even more code it's time to split
+> cstart64.S. lib.S has functions that are used in tests. macros.S
+> contains macros which are used in cstart64.S and lib.S
 > 
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
-> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> Acked-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 > ---
->  lib/s390x/sclp.c  |  1 +
->  lib/s390x/sclp.h  |  6 +++++-
->  s390x/intercept.c | 19 +++++++++++++++++++
->  3 files changed, 25 insertions(+), 1 deletion(-)
+>   s390x/Makefile   |   6 +--
+>   s390x/cstart64.S | 119 ++---------------------------------------------
+>   s390x/lib.S      |  65 ++++++++++++++++++++++++++
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+lib.S is a very generic name ... maybe rather use cpuasm.S or something similar?
+
+Anway,
+Acked-by: Thomas Huth <thuth@redhat.com>
 
