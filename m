@@ -2,44 +2,40 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 356552F4377
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Jan 2021 06:04:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FBF42F44CA
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Jan 2021 08:05:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725950AbhAMFEg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 13 Jan 2021 00:04:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:58490 "EHLO foss.arm.com"
+        id S1726110AbhAMHDF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 Jan 2021 02:03:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:59548 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbhAMFEg (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 13 Jan 2021 00:04:36 -0500
+        id S1726011AbhAMHDE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 13 Jan 2021 02:03:04 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 727961042;
-        Tue, 12 Jan 2021 21:03:50 -0800 (PST)
-Received: from [192.168.0.130] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E6A73F70D;
-        Tue, 12 Jan 2021 21:03:45 -0800 (PST)
-Subject: Re: [PATCH V2 1/3] mm/hotplug: Prevalidate the address range being
- added with platform
-To:     David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, hca@linux.ibm.com,
-        catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD715101E;
+        Tue, 12 Jan 2021 23:02:18 -0800 (PST)
+Received: from [10.163.88.174] (unknown [10.163.88.174])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41C083F70D;
+        Tue, 12 Jan 2021 23:02:14 -0800 (PST)
+Subject: Re: [PATCH V2 3/3] s390/mm: Define arch_get_mappable_range()
+To:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org, hca@linux.ibm.com,
+        catalin.marinas@arm.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
         Will Deacon <will@kernel.org>,
         Ard Biesheuvel <ardb@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
 References: <1608218912-28932-1-git-send-email-anshuman.khandual@arm.com>
- <1608218912-28932-2-git-send-email-anshuman.khandual@arm.com>
- <10e733fa-4568-d38f-9b95-2ccc5dc627b8@redhat.com>
- <20210111134303.GA3031@linux> <e2b53f0a-482d-2045-6162-6de2510c9690@arm.com>
- <556a8a62-7bb2-d16b-67ea-57c87c1a6aa7@redhat.com>
+ <1608218912-28932-4-git-send-email-anshuman.khandual@arm.com>
+ <87ae0b7c-0e95-6068-900e-d813a53f2732@redhat.com>
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <041d9344-b07c-c6f9-c41a-01057470c350@arm.com>
-Date:   Wed, 13 Jan 2021 10:34:04 +0530
+Message-ID: <1efac09f-3eea-51fd-7754-98659a5e0054@arm.com>
+Date:   Wed, 13 Jan 2021 12:32:34 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <556a8a62-7bb2-d16b-67ea-57c87c1a6aa7@redhat.com>
+In-Reply-To: <87ae0b7c-0e95-6068-900e-d813a53f2732@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -49,56 +45,95 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 1/12/21 3:39 PM, David Hildenbrand wrote:
-> On 12.01.21 04:51, Anshuman Khandual wrote:
+On 1/11/21 4:10 PM, David Hildenbrand wrote:
+> On 17.12.20 16:28, Anshuman Khandual wrote:
+>> This overrides arch_get_mappabble_range() on s390 platform which will be
+>> used with recently added generic framework. It modifies the existing range
+>> check in vmem_add_mapping() using arch_get_mappable_range(). It also adds a
+>> VM_BUG_ON() check that would ensure that memhp_range_allowed() has already
+>> been called on the hotplug path.
 >>
+>> Cc: Heiko Carstens <hca@linux.ibm.com>
+>> Cc: Vasily Gorbik <gor@linux.ibm.com>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: linux-s390@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Acked-by: Heiko Carstens <hca@linux.ibm.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/s390/mm/init.c |  1 +
+>>  arch/s390/mm/vmem.c | 15 ++++++++++++++-
+>>  2 files changed, 15 insertions(+), 1 deletion(-)
 >>
->> On 1/11/21 7:13 PM, Oscar Salvador wrote:
->>> On Mon, Jan 11, 2021 at 11:51:47AM +0100, David Hildenbrand wrote:
->>>> AFAIKs, all memhp_get_pluggable_range() users pass "1".
->>>>
->>>> What about the "add_pages()-only" path?
->>>
->>> I guess you refer to memremap_pages(), right?
->>
->> Right, via pagemap_range().
->>
->>> If so, moving the added memhp_range_allowed() check above the if-else might do
->>> the trick
->>>
->> We had that code in the earlier version. But dropped it, as we did
->> not want to add any new checks in the generic code. Can add it back
->> if that is preferred.
+>> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+>> index 77767850d0d0..e0e78234ae57 100644
+>> --- a/arch/s390/mm/init.c
+>> +++ b/arch/s390/mm/init.c
+>> @@ -291,6 +291,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>  	if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
+>>  		return -EINVAL;
+>>  
+>> +	VM_BUG_ON(!memhp_range_allowed(start, size, 1));
 > 
-> I remember discussing replacing the check in __add_pages() instead. But
+> s/1/true/
 
-The proposed change for __add_pages() now seems misleading. Instead of
-VM_BUG_ON(), memhp_range_allowed() should be checked directly for a non
-linear mapping i.e with 'false' argument and return prematurely in case
-that check fails.
+Sure, will do.
 
-s/VM_BUG_ON(!memhp_range_allowed(.., 1)/!memhp_range_allowed(.., 0)/
+> 
+>>  	rc = vmem_add_mapping(start, size);
+>>  	if (rc)
+>>  		return rc;
+>> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
+>> index b239f2ba93b0..e10e563ad2b4 100644
+>> --- a/arch/s390/mm/vmem.c
+>> +++ b/arch/s390/mm/vmem.c
+>> @@ -4,6 +4,7 @@
+>>   *    Author(s): Heiko Carstens <heiko.carstens@de.ibm.com>
+>>   */
+>>  
+>> +#include <linux/memory_hotplug.h>
+>>  #include <linux/memblock.h>
+>>  #include <linux/pfn.h>
+>>  #include <linux/mm.h>
+>> @@ -532,11 +533,23 @@ void vmem_remove_mapping(unsigned long start, unsigned long size)
+>>  	mutex_unlock(&vmem_mutex);
+>>  }
+>>  
+>> +struct range arch_get_mappable_range(void)
+>> +{
+>> +	struct range memhp_range;
+>> +
+>> +	memhp_range.start = 0;
+>> +	memhp_range.end =  VMEM_MAX_PHYS;
+> 
+> s/  / /
+> 
+> IIRC, the range is inclusive? "VMEM_MAX_PHYS - 1" then, and adjust the
+> check below.
 
- /*
-  * Reasonably generic function for adding memory.  It is
-  * expected that archs that support memory hotplug will
-@@ -317,10 +304,7 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
- 	if (WARN_ON_ONCE(!params->pgprot.pgprot))
- 		return -EINVAL;
+Right, the memory range is inclusive at both ends. Hence will update the
+code here.
+
+diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
+index 21cabe3473d7..afc39ff1cc8d 100644
+--- a/arch/s390/mm/vmem.c
++++ b/arch/s390/mm/vmem.c
+@@ -538,7 +538,7 @@ struct range arch_get_mappable_range(void)
+        struct range memhp_range;
  
--	err = check_hotplug_memory_addressable(pfn, nr_pages);
--	if (err)
--		return err;
--
-+	VM_BUG_ON(!memhp_range_allowed(PFN_PHYS(pfn), nr_pages * PAGE_SIZE, 1));
- 	if (altmap) {
- 		/*
- 		 * Validate altmap is within bounds of the total request
-@@ -1181,6 +1165,61 @@ int add_memory_driver_managed(int nid, u64 start, u64 size,
+        memhp_range.start = 0;
+-       memhp_range.end =  VMEM_MAX_PHYS;
++       memhp_range.end =  VMEM_MAX_PHYS - 1;
+        return memhp_range;
+ }
+ 
+@@ -549,7 +549,7 @@ int vmem_add_mapping(unsigned long start, unsigned long size)
+ 
+        range = arch_get_mappable_range();
+        if (start < range.start ||
+-           start + size > range.end ||
++           start + size > range.end + 1 ||
+            start + size < start)
+                return -ERANGE;
 
-
-> I don't really care where the check ends up being. As discussed, at some
-> point, we should provide versions of add_pages() and arch_add_pages()
-> that don't immediately end in arch-code.
-
-Sure. But for now, AFAICS the above replacement should be sufficient.
+(start + size - 1) is valid only when it is upto the inclusive range.end value.
