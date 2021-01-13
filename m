@@ -2,71 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0BDA2F4321
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Jan 2021 05:31:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 356552F4377
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Jan 2021 06:04:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725787AbhAMEat (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 12 Jan 2021 23:30:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54962 "EHLO mail.kernel.org"
+        id S1725950AbhAMFEg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 Jan 2021 00:04:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:58490 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbhAMEat (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 12 Jan 2021 23:30:49 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id D83092312E;
-        Wed, 13 Jan 2021 04:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610512208;
-        bh=JDELMkeE1VzXHGuVA+uSEDO+LE6CH2XlgfiEGacHxCw=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=c1rGz1Rr6fvixGwqLnIA7TQoe/HePVRe2K1TB7MoRUT9vJciD7M7iWqA3yMV+dQ60
-         wlfamwacxdhyxpuy/dHM23/CxmIxIReokZiy8XxtUN/HGwHlSMS99ai2vbcH48uJfY
-         BHnPBjOhRfxp/w8PU16mqxEUSxFuMEttWuhQGUZl8uAez47weGY3u5fcg9IT5D3fsG
-         jZ9MqJRPGNKqy0IOFiTkFKB1s6f0T+cYJ1qaaRLulvPU1rKs20hvCyfgnZ1ABmx9Er
-         aVXVSJZcig3NTEiCSPcHO7rtT6Xlyz+K+VWJe18jBcz/8BpKxFnN7n3rECwCQwABgq
-         Tq95lXE8r0QHQ==
-Received: from pdx-korg-docbuild-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-1.ci.codeaurora.org (Postfix) with ESMTP id C8E42604E9;
-        Wed, 13 Jan 2021 04:30:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        id S1725873AbhAMFEg (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 13 Jan 2021 00:04:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 727961042;
+        Tue, 12 Jan 2021 21:03:50 -0800 (PST)
+Received: from [192.168.0.130] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E6A73F70D;
+        Tue, 12 Jan 2021 21:03:45 -0800 (PST)
+Subject: Re: [PATCH V2 1/3] mm/hotplug: Prevalidate the address range being
+ added with platform
+To:     David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org, hca@linux.ibm.com,
+        catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <1608218912-28932-1-git-send-email-anshuman.khandual@arm.com>
+ <1608218912-28932-2-git-send-email-anshuman.khandual@arm.com>
+ <10e733fa-4568-d38f-9b95-2ccc5dc627b8@redhat.com>
+ <20210111134303.GA3031@linux> <e2b53f0a-482d-2045-6162-6de2510c9690@arm.com>
+ <556a8a62-7bb2-d16b-67ea-57c87c1a6aa7@redhat.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <041d9344-b07c-c6f9-c41a-01057470c350@arm.com>
+Date:   Wed, 13 Jan 2021 10:34:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/2] net/smc: fix out of bound access in netlink interface
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <161051220881.5581.17205976954559864201.git-patchwork-notify@kernel.org>
-Date:   Wed, 13 Jan 2021 04:30:08 +0000
-References: <20210112162122.26832-1-kgraul@linux.ibm.com>
-In-Reply-To: <20210112162122.26832-1-kgraul@linux.ibm.com>
-To:     Karsten Graul <kgraul@linux.ibm.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, hca@linux.ibm.com,
-        raspl@linux.ibm.com, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org
+In-Reply-To: <556a8a62-7bb2-d16b-67ea-57c87c1a6aa7@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello:
 
-This series was applied to netdev/net.git (refs/heads/master):
 
-On Tue, 12 Jan 2021 17:21:20 +0100 you wrote:
-> Please apply the following patch for smc to netdev's net tree.
+On 1/12/21 3:39 PM, David Hildenbrand wrote:
+> On 12.01.21 04:51, Anshuman Khandual wrote:
+>>
+>>
+>> On 1/11/21 7:13 PM, Oscar Salvador wrote:
+>>> On Mon, Jan 11, 2021 at 11:51:47AM +0100, David Hildenbrand wrote:
+>>>> AFAIKs, all memhp_get_pluggable_range() users pass "1".
+>>>>
+>>>> What about the "add_pages()-only" path?
+>>>
+>>> I guess you refer to memremap_pages(), right?
+>>
+>> Right, via pagemap_range().
+>>
+>>> If so, moving the added memhp_range_allowed() check above the if-else might do
+>>> the trick
+>>>
+>> We had that code in the earlier version. But dropped it, as we did
+>> not want to add any new checks in the generic code. Can add it back
+>> if that is preferred.
 > 
-> Both patches fix possible out-of-bounds reads. The original code expected
-> that snprintf() reads len-1 bytes from source and appends the terminating
-> null, but actually snprintf() first copies len bytes and finally overwrites
-> the last byte with a null.
-> Fix this by using memcpy() and terminating the string afterwards.
-> 
-> [...]
+> I remember discussing replacing the check in __add_pages() instead. But
 
-Here is the summary with links:
-  - [net,1/2] smc: fix out of bound access in smc_nl_get_sys_info()
-    https://git.kernel.org/netdev/net/c/25fe2c9c4cd2
-  - [net,2/2] net/smc: use memcpy instead of snprintf to avoid out of bounds read
-    https://git.kernel.org/netdev/net/c/8a4465368964
+The proposed change for __add_pages() now seems misleading. Instead of
+VM_BUG_ON(), memhp_range_allowed() should be checked directly for a non
+linear mapping i.e with 'false' argument and return prematurely in case
+that check fails.
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+s/VM_BUG_ON(!memhp_range_allowed(.., 1)/!memhp_range_allowed(.., 0)/
+
+ /*
+  * Reasonably generic function for adding memory.  It is
+  * expected that archs that support memory hotplug will
+@@ -317,10 +304,7 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+ 	if (WARN_ON_ONCE(!params->pgprot.pgprot))
+ 		return -EINVAL;
+ 
+-	err = check_hotplug_memory_addressable(pfn, nr_pages);
+-	if (err)
+-		return err;
+-
++	VM_BUG_ON(!memhp_range_allowed(PFN_PHYS(pfn), nr_pages * PAGE_SIZE, 1));
+ 	if (altmap) {
+ 		/*
+ 		 * Validate altmap is within bounds of the total request
+@@ -1181,6 +1165,61 @@ int add_memory_driver_managed(int nid, u64 start, u64 size,
 
 
+> I don't really care where the check ends up being. As discussed, at some
+> point, we should provide versions of add_pages() and arch_add_pages()
+> that don't immediately end in arch-code.
+
+Sure. But for now, AFAICS the above replacement should be sufficient.
