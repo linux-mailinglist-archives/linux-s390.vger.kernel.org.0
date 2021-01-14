@@ -2,205 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2517F2F604B
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Jan 2021 12:39:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CD242F6179
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Jan 2021 14:04:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbhANLht (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Jan 2021 06:37:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728760AbhANLhp (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Jan 2021 06:37:45 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89064C06179C
-        for <linux-s390@vger.kernel.org>; Thu, 14 Jan 2021 03:36:23 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id g3so2776808plp.2
-        for <linux-s390@vger.kernel.org>; Thu, 14 Jan 2021 03:36:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=K53rIUWFg+2NzMpnNP/wzeIo2pw3X/PtpyXjjqm6X/A=;
-        b=yha5Sz7nrBOViBAUVVawiHrRfg7B0X6DVDhFqk/rTaSzFzSDjdbt60VG1Ti9mbUg0C
-         MuXQdHMPnzu9sTUW57+4FXGQu0jY0XygLy7vSOMsA79LE9WnmeDGxiNZlyYIrQs+uu4/
-         Bi92yjJVJyrIy2Rn/1p3NrLfRib7aKX4X4/dgdQGYh4gJw0pss4jAx0+yK5bt9EN3oSZ
-         wbhaQ0o4025GjZqU+da/+0cToWRVVpVVOxRM+baVJQZAYRAHT8nrLltqzjd7ksX4uyWI
-         5lVOUidpWjZ90eZnZOMX/bgoKBiW9owFi++iVdSS1WPHhek9A9HSh+JrP5Rjaw1DobfM
-         z8Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=K53rIUWFg+2NzMpnNP/wzeIo2pw3X/PtpyXjjqm6X/A=;
-        b=PgIVoLEsVdQsDgVBoMU6RB0/rYmzOgDhSFpCj2G+4s2UQJVvEg1/pyIruqIuek7IUl
-         RFL0gGmGT/GidWP33nyCBDge0duVerlBlXm3ICqRntrIeNAJz4HgZVZt0kEfyvXKBS07
-         wrmLkBoPMZqBG2sxc5GpU/0ylKFreU0Oyyn9HXPtpKrNXaKTIkP0z4XngSfwW77t5j2O
-         cPQ5PxHnCuo0dNoOu5QixXr+6UnS4XvxBskJcf7ZLXXhTx8I6Y50x/HXqRxVROqQBE6D
-         wnMXOlV8DpfHPXwWI2JJnkRRR6gSjDKubX+hqyGSe4xjpLnzKUU7d+77jAhi7Y1dwWMa
-         XQhQ==
-X-Gm-Message-State: AOAM5323WZ0qim+2y7T4BJPwSHAPwHvl61yUSIdihDw1LXSnTGp6aDk9
-        OWB7ZxI4dhadWkuTxSlL2c7Tyg==
-X-Google-Smtp-Source: ABdhPJyrhQSFTRly6eOnUfGEEGNcN9Mp6TDf4H+ZJZfpCZV+Ixo+RcxAdTtUVRtYMi7nHjuWFGAVwA==
-X-Received: by 2002:a17:90a:de95:: with SMTP id n21mr1003624pjv.7.1610624183140;
-        Thu, 14 Jan 2021 03:36:23 -0800 (PST)
-Received: from localhost ([122.172.85.111])
-        by smtp.gmail.com with ESMTPSA id h5sm5618766pgl.86.2021.01.14.03.36.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Jan 2021 03:36:22 -0800 (PST)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Robert Richter <rric@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Arnd Bergmann <arnd@kernel.org>, oprofile-list@lists.sf.net,
-        William Cohen <wcohen@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        anmar.oueja@linaro.org, Christoph Hellwig <hch@infradead.org>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 12/18] arch: s390: Remove CONFIG_OPROFILE support
-Date:   Thu, 14 Jan 2021 17:05:25 +0530
-Message-Id: <d898acaf9320125e9c23b18a16ecd88d70f24170.1610622251.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
-In-Reply-To: <cover.1610622251.git.viresh.kumar@linaro.org>
-References: <cover.1610622251.git.viresh.kumar@linaro.org>
+        id S1728752AbhANNEN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Jan 2021 08:04:13 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29470 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726579AbhANNEN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 14 Jan 2021 08:04:13 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10ED2wQ9074497
+        for <linux-s390@vger.kernel.org>; Thu, 14 Jan 2021 08:03:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=NKXYlOmMAXS26mMmaXRY2IBFebq/eB9PCDMhNT9qAT0=;
+ b=aW00QlwP6/ZQXKSAcUS1l58g5RYpmynPJnLfi8WEN54GdfxNpsx6Tu5zbgv6qtvswmLW
+ tFwPtNrk8HOIg49IEC+h/ThtSDTx64Eqqb2q2GTvRSG9ayVQPEmeipzPWue8FBEOi7se
+ QZLzggD0B+A69IN2HplXG3D5NJvRRk0hkc7Qpp2Vzxk00Bogcn0ilfI2wdk5ukSuEZDj
+ YTQdXiTOKGMClPH13JA6nI0JdKrvc6hZ5+SUJapUMlRz09TLc7XmDEQli26DiNw/FTKf
+ A0gG7LSCWte5tgYT9IfOLCTu1vEknWQQUPjXQO8jRSYY4HJlBNsEZLqnrxL6ksXNd6xA eQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 362p9prch8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 14 Jan 2021 08:03:32 -0500
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10ED3TNB079056
+        for <linux-s390@vger.kernel.org>; Thu, 14 Jan 2021 08:03:31 -0500
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 362p9prcfk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 Jan 2021 08:03:31 -0500
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10ECgCTR022225;
+        Thu, 14 Jan 2021 13:03:29 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06ams.nl.ibm.com with ESMTP id 35ydrde1ds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 Jan 2021 13:03:29 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10ED3Qan23265540
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 Jan 2021 13:03:26 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5663FA4051;
+        Thu, 14 Jan 2021 13:03:26 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C857A406D;
+        Thu, 14 Jan 2021 13:03:26 +0000 (GMT)
+Received: from [10.0.2.15] (unknown [9.145.156.122])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 14 Jan 2021 13:03:25 +0000 (GMT)
+Subject: Re: [RFC 1/1] s390/cio: Remove uevent-suppress from css driver
+To:     Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Cc:     Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.vnet.ibm.com>,
+        oberpar@linux.ibm.com, linux-s390@vger.kernel.org,
+        farman@linux.ibm.com
+References: <20201124093407.23189-1-vneethv@linux.ibm.com>
+ <20201124093407.23189-2-vneethv@linux.ibm.com>
+ <20201124140220.77c65539.cohuck@redhat.com>
+ <4be7e163-1118-d365-7d25-df39ba78181f@linux.vnet.ibm.com>
+ <0b4e34b7-7a4e-71b0-8a64-ea909e64f416@linux.ibm.com>
+ <20201208183054.44f4fc2d.cohuck@redhat.com>
+ <20201209135203.0008ab18.pasic@linux.ibm.com>
+ <20201215191307.281c6e6f.cohuck@redhat.com>
+ <20201219073316.1be609d5.pasic@linux.ibm.com>
+ <20201221164634.11cd3813.cohuck@redhat.com>
+ <20201221175117.2c5f5fcb.pasic@linux.ibm.com>
+From:   Boris Fiuczynski <fiuczy@linux.ibm.com>
+Message-ID: <d4dffa29-60b3-db27-fca7-ee4901c77162@linux.ibm.com>
+Date:   Thu, 14 Jan 2021 14:03:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20201221175117.2c5f5fcb.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2021-01-14_04:2021-01-14,2021-01-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 adultscore=0 impostorscore=0
+ bulkscore=0 priorityscore=1501 spamscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2101140074
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The "oprofile" user-space tools don't use the kernel OPROFILE support
-any more, and haven't in a long time. User-space has been converted to
-the perf interfaces.
+On 12/21/20 5:51 PM, Halil Pasic wrote:
+> On Mon, 21 Dec 2020 16:46:34 +0100
+> Cornelia Huck <cohuck@redhat.com> wrote:
+> 
+>> On Sat, 19 Dec 2020 07:33:16 +0100
+>> Halil Pasic <pasic@linux.ibm.com> wrote:
+>>
+>>> I finally came around to test this. In my experience driverctl works for
+>>> subchannels and vfio_ccw without this patch, and continues to work with
+>>> it. I found the code in driverctl that does the unbind and the implicit
+>>> bind (via drivers_probe after after driver_override was set).
+>>>
+>>> So now I have to ask, how exactly was the original problem diagnosed?
+>>>
+>>> In https://marc.info/?l=linux-s390&m=158591045732735&w=2 there is a
+>>> paragraph like:
+>>>
+>>> """
+>>> So while there's definitely a good reason for wanting to delay uevents,
+>>> it is also introducing problems. One is udev rules for subchannels that
+>>> are supposed to do something before a driver binds (e.g. setting
+>>> driver_override to bind an I/O subchannel to vfio_ccw instead of
+>>> io_subchannel) are not effective, as the ADD uevent will only be
+>>> generated when the io_subchannel driver is already done with doing all
+>>> setup. Another one is that only the ADD uevent is generated after
+>>> uevent suppression is lifted; any other uevents that might have been
+>>> generated are lost.
+>>> """
+>>>
+>>> This is not how driverclt works! I.e. it deals with the situation that
+>>> the I/O subchannel was already bound to the io_subchannel driver at
+>>> the time the udev rule installed by driverctl activates (via the
+>>> mechanism I described above).
+>>
+>> That's... weird. It definitely did not work on the LPAR I initially
+>> tried it out on!
+>>
+> 
+> I think Boris told me some weeks ago that it didn't work for him either.
+> I will check with him after the winter sleep.
 
-Remove the old oprofile's architecture specific support.
+Yesterday I used driverctl successfully for a subchannel on F33.
 
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- arch/s390/Kconfig                 |  1 -
- arch/s390/Makefile                |  3 ---
- arch/s390/configs/debug_defconfig |  1 -
- arch/s390/configs/defconfig       |  1 -
- arch/s390/oprofile/Makefile       | 10 ---------
- arch/s390/oprofile/init.c         | 37 -------------------------------
- 6 files changed, 53 deletions(-)
- delete mode 100644 arch/s390/oprofile/Makefile
- delete mode 100644 arch/s390/oprofile/init.c
+Not sure what went wrong a couple of months ago but I cannot reproduce 
+driverctl not working now.
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index c72874f09741..f84444ef3860 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -174,7 +174,6 @@ config S390
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_NMI
- 	select HAVE_NOP_MCOUNT
--	select HAVE_OPROFILE
- 	select HAVE_PCI
- 	select HAVE_PERF_EVENTS
- 	select HAVE_PERF_REGS
-diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index 8db267d2a543..e443ed9947bd 100644
---- a/arch/s390/Makefile
-+++ b/arch/s390/Makefile
-@@ -134,9 +134,6 @@ core-y		+= arch/s390/
- libs-y		+= arch/s390/lib/
- drivers-y	+= drivers/s390/
- 
--# must be linked after kernel
--drivers-$(CONFIG_OPROFILE)	+= arch/s390/oprofile/
--
- boot		:= arch/s390/boot
- syscalls	:= arch/s390/kernel/syscalls
- tools		:= arch/s390/tools
-diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
-index c4f6ff98a612..8b94347705e5 100644
---- a/arch/s390/configs/debug_defconfig
-+++ b/arch/s390/configs/debug_defconfig
-@@ -57,7 +57,6 @@ CONFIG_CMM=m
- CONFIG_APPLDATA_BASE=y
- CONFIG_KVM=m
- CONFIG_S390_UNWIND_SELFTEST=y
--CONFIG_OPROFILE=m
- CONFIG_KPROBES=y
- CONFIG_JUMP_LABEL=y
- CONFIG_STATIC_KEYS_SELFTEST=y
-diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
-index 51135893cffe..9db1232e09f4 100644
---- a/arch/s390/configs/defconfig
-+++ b/arch/s390/configs/defconfig
-@@ -55,7 +55,6 @@ CONFIG_CMM=m
- CONFIG_APPLDATA_BASE=y
- CONFIG_KVM=m
- CONFIG_S390_UNWIND_SELFTEST=m
--CONFIG_OPROFILE=m
- CONFIG_KPROBES=y
- CONFIG_JUMP_LABEL=y
- # CONFIG_GCC_PLUGINS is not set
-diff --git a/arch/s390/oprofile/Makefile b/arch/s390/oprofile/Makefile
-deleted file mode 100644
-index 36261f9d360b..000000000000
---- a/arch/s390/oprofile/Makefile
-+++ /dev/null
-@@ -1,10 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_OPROFILE) += oprofile.o
--
--DRIVER_OBJS = $(addprefix ../../../drivers/oprofile/, \
--		oprof.o cpu_buffer.o buffer_sync.o \
--		event_buffer.o oprofile_files.o \
--		oprofilefs.o oprofile_stats.o  \
--		timer_int.o )
--
--oprofile-y :=	$(DRIVER_OBJS) init.o
-diff --git a/arch/s390/oprofile/init.c b/arch/s390/oprofile/init.c
-deleted file mode 100644
-index 7441857df51b..000000000000
---- a/arch/s390/oprofile/init.c
-+++ /dev/null
-@@ -1,37 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * S390 Version
-- *   Copyright IBM Corp. 2002, 2011
-- *   Author(s): Thomas Spatzier (tspat@de.ibm.com)
-- *   Author(s): Mahesh Salgaonkar (mahesh@linux.vnet.ibm.com)
-- *   Author(s): Heinz Graalfs (graalfs@linux.vnet.ibm.com)
-- *   Author(s): Andreas Krebbel (krebbel@linux.vnet.ibm.com)
-- *
-- * @remark Copyright 2002-2011 OProfile authors
-- */
--
--#include <linux/oprofile.h>
--#include <linux/init.h>
--#include <asm/processor.h>
--#include <asm/unwind.h>
--
--static void s390_backtrace(struct pt_regs *regs, unsigned int depth)
--{
--	struct unwind_state state;
--
--	unwind_for_each_frame(&state, current, regs, 0) {
--		if (depth-- == 0)
--			break;
--		oprofile_add_trace(state.ip);
--	}
--}
--
--int __init oprofile_arch_init(struct oprofile_operations *ops)
--{
--	ops->backtrace = s390_backtrace;
--	return 0;
--}
--
--void oprofile_arch_exit(void)
--{
--}
+> 
+>> However, I think removing the suppression still looks like a good idea:
+>> we still have the "any uevent other than ADD will have been lost"
+>> problem.
+>>
+I totally agree with this.
+
+> 
+> I agree. I didn't look into the details, in general I think removing
+> quirks specific to 390 (when possible) is a good thing.
+> 
+> Regards,
+> Halil
+> 
+
+
 -- 
-2.25.0.rc1.19.g042ed3e048af
+Mit freundlichen Grüßen/Kind regards
+    Boris Fiuczynski
 
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen
+Registergericht: Amtsgericht Stuttgart, HRB 243294
