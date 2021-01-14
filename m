@@ -2,95 +2,205 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83E722F5CB5
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Jan 2021 09:58:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2517F2F604B
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Jan 2021 12:39:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbhANI6J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Jan 2021 03:58:09 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55758 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725989AbhANI6J (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 14 Jan 2021 03:58:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1610614603;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5mIiTKZ0bfdwT4qAJDHJUFiHYjyZoxrSZVhHEnOGK0k=;
-        b=RgMMlFB12rgTatAK+ZF2lL5yVKHCZvAKPQpx/QrZv080SuO+Y4eGG4I+YRK2VT0z/7Mz1d
-        jkusICgFRdfAceB1jSJ3S2V2wAIjrfizOfgCBmlo3d2OjO57otxbv2XkcHGswe5tMDL6FW
-        /GAAM3wt2e7qeUuVaDVKg5mfZQ6Nz8o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-4-ydnULg91ODGgpsJD_s2gLA-1; Thu, 14 Jan 2021 03:54:11 -0500
-X-MC-Unique: ydnULg91ODGgpsJD_s2gLA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB2571572A;
-        Thu, 14 Jan 2021 08:54:09 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-112-108.ams2.redhat.com [10.36.112.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E88A077715;
-        Thu, 14 Jan 2021 08:54:04 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v4 4/9] s390x: Split assembly into multiple
- files
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        cohuck@redhat.com, linux-s390@vger.kernel.org
-References: <20210112132054.49756-1-frankja@linux.ibm.com>
- <20210112132054.49756-5-frankja@linux.ibm.com>
- <c07280f6-f56c-ea6c-1255-28a36a2385c0@redhat.com>
- <fce05f26-8cdb-009d-a88d-c799c3784506@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <46f771fa-f1a2-825e-8cd0-d9a81d1b1d73@redhat.com>
-Date:   Thu, 14 Jan 2021 09:54:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.3
+        id S1727378AbhANLht (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Jan 2021 06:37:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728760AbhANLhp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Jan 2021 06:37:45 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89064C06179C
+        for <linux-s390@vger.kernel.org>; Thu, 14 Jan 2021 03:36:23 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id g3so2776808plp.2
+        for <linux-s390@vger.kernel.org>; Thu, 14 Jan 2021 03:36:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=K53rIUWFg+2NzMpnNP/wzeIo2pw3X/PtpyXjjqm6X/A=;
+        b=yha5Sz7nrBOViBAUVVawiHrRfg7B0X6DVDhFqk/rTaSzFzSDjdbt60VG1Ti9mbUg0C
+         MuXQdHMPnzu9sTUW57+4FXGQu0jY0XygLy7vSOMsA79LE9WnmeDGxiNZlyYIrQs+uu4/
+         Bi92yjJVJyrIy2Rn/1p3NrLfRib7aKX4X4/dgdQGYh4gJw0pss4jAx0+yK5bt9EN3oSZ
+         wbhaQ0o4025GjZqU+da/+0cToWRVVpVVOxRM+baVJQZAYRAHT8nrLltqzjd7ksX4uyWI
+         5lVOUidpWjZ90eZnZOMX/bgoKBiW9owFi++iVdSS1WPHhek9A9HSh+JrP5Rjaw1DobfM
+         z8Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=K53rIUWFg+2NzMpnNP/wzeIo2pw3X/PtpyXjjqm6X/A=;
+        b=PgIVoLEsVdQsDgVBoMU6RB0/rYmzOgDhSFpCj2G+4s2UQJVvEg1/pyIruqIuek7IUl
+         RFL0gGmGT/GidWP33nyCBDge0duVerlBlXm3ICqRntrIeNAJz4HgZVZt0kEfyvXKBS07
+         wrmLkBoPMZqBG2sxc5GpU/0ylKFreU0Oyyn9HXPtpKrNXaKTIkP0z4XngSfwW77t5j2O
+         cPQ5PxHnCuo0dNoOu5QixXr+6UnS4XvxBskJcf7ZLXXhTx8I6Y50x/HXqRxVROqQBE6D
+         wnMXOlV8DpfHPXwWI2JJnkRRR6gSjDKubX+hqyGSe4xjpLnzKUU7d+77jAhi7Y1dwWMa
+         XQhQ==
+X-Gm-Message-State: AOAM5323WZ0qim+2y7T4BJPwSHAPwHvl61yUSIdihDw1LXSnTGp6aDk9
+        OWB7ZxI4dhadWkuTxSlL2c7Tyg==
+X-Google-Smtp-Source: ABdhPJyrhQSFTRly6eOnUfGEEGNcN9Mp6TDf4H+ZJZfpCZV+Ixo+RcxAdTtUVRtYMi7nHjuWFGAVwA==
+X-Received: by 2002:a17:90a:de95:: with SMTP id n21mr1003624pjv.7.1610624183140;
+        Thu, 14 Jan 2021 03:36:23 -0800 (PST)
+Received: from localhost ([122.172.85.111])
+        by smtp.gmail.com with ESMTPSA id h5sm5618766pgl.86.2021.01.14.03.36.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Jan 2021 03:36:22 -0800 (PST)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Robert Richter <rric@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Arnd Bergmann <arnd@kernel.org>, oprofile-list@lists.sf.net,
+        William Cohen <wcohen@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        anmar.oueja@linaro.org, Christoph Hellwig <hch@infradead.org>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 12/18] arch: s390: Remove CONFIG_OPROFILE support
+Date:   Thu, 14 Jan 2021 17:05:25 +0530
+Message-Id: <d898acaf9320125e9c23b18a16ecd88d70f24170.1610622251.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
+In-Reply-To: <cover.1610622251.git.viresh.kumar@linaro.org>
+References: <cover.1610622251.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <fce05f26-8cdb-009d-a88d-c799c3784506@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 13/01/2021 13.15, Janosch Frank wrote:
-> On 1/13/21 1:04 PM, Thomas Huth wrote:
->> On 12/01/2021 14.20, Janosch Frank wrote:
->>> I've added too much to cstart64.S which is not start related
->>> already. Now that I want to add even more code it's time to split
->>> cstart64.S. lib.S has functions that are used in tests. macros.S
->>> contains macros which are used in cstart64.S and lib.S
->>>
->>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>> Acked-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
->>> ---
->>>    s390x/Makefile   |   6 +--
->>>    s390x/cstart64.S | 119 ++---------------------------------------------
->>>    s390x/lib.S      |  65 ++++++++++++++++++++++++++
->>
->> lib.S is a very generic name ... maybe rather use cpuasm.S or something similar?
-> 
-> instr.S ?
+The "oprofile" user-space tools don't use the kernel OPROFILE support
+any more, and haven't in a long time. User-space has been converted to
+the perf interfaces.
 
-Hmm, no, if I read something like that, I'd expect wrapper functions for 
-single instructions, which is not what we have here.
+Remove the old oprofile's architecture specific support.
 
-Looking at the two functions, both are related to CPU stuff (reset and 
-state), so something with "cpu" in the name would be best, I think. Maybe 
-just cpu.S ?
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ arch/s390/Kconfig                 |  1 -
+ arch/s390/Makefile                |  3 ---
+ arch/s390/configs/debug_defconfig |  1 -
+ arch/s390/configs/defconfig       |  1 -
+ arch/s390/oprofile/Makefile       | 10 ---------
+ arch/s390/oprofile/init.c         | 37 -------------------------------
+ 6 files changed, 53 deletions(-)
+ delete mode 100644 arch/s390/oprofile/Makefile
+ delete mode 100644 arch/s390/oprofile/init.c
 
-Or if you intend to add non-CPU related stuff here later, maybe something 
-like misc.S ?
-
-> Or maybe entry.S to make it similar to the kernel?
-
-No, entry.S sounds like a startup code, which we already have in cstart64.S, 
-so I'd rather avoid that name.
-
-  Thomas
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index c72874f09741..f84444ef3860 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -174,7 +174,6 @@ config S390
+ 	select HAVE_MOD_ARCH_SPECIFIC
+ 	select HAVE_NMI
+ 	select HAVE_NOP_MCOUNT
+-	select HAVE_OPROFILE
+ 	select HAVE_PCI
+ 	select HAVE_PERF_EVENTS
+ 	select HAVE_PERF_REGS
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index 8db267d2a543..e443ed9947bd 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -134,9 +134,6 @@ core-y		+= arch/s390/
+ libs-y		+= arch/s390/lib/
+ drivers-y	+= drivers/s390/
+ 
+-# must be linked after kernel
+-drivers-$(CONFIG_OPROFILE)	+= arch/s390/oprofile/
+-
+ boot		:= arch/s390/boot
+ syscalls	:= arch/s390/kernel/syscalls
+ tools		:= arch/s390/tools
+diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
+index c4f6ff98a612..8b94347705e5 100644
+--- a/arch/s390/configs/debug_defconfig
++++ b/arch/s390/configs/debug_defconfig
+@@ -57,7 +57,6 @@ CONFIG_CMM=m
+ CONFIG_APPLDATA_BASE=y
+ CONFIG_KVM=m
+ CONFIG_S390_UNWIND_SELFTEST=y
+-CONFIG_OPROFILE=m
+ CONFIG_KPROBES=y
+ CONFIG_JUMP_LABEL=y
+ CONFIG_STATIC_KEYS_SELFTEST=y
+diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
+index 51135893cffe..9db1232e09f4 100644
+--- a/arch/s390/configs/defconfig
++++ b/arch/s390/configs/defconfig
+@@ -55,7 +55,6 @@ CONFIG_CMM=m
+ CONFIG_APPLDATA_BASE=y
+ CONFIG_KVM=m
+ CONFIG_S390_UNWIND_SELFTEST=m
+-CONFIG_OPROFILE=m
+ CONFIG_KPROBES=y
+ CONFIG_JUMP_LABEL=y
+ # CONFIG_GCC_PLUGINS is not set
+diff --git a/arch/s390/oprofile/Makefile b/arch/s390/oprofile/Makefile
+deleted file mode 100644
+index 36261f9d360b..000000000000
+--- a/arch/s390/oprofile/Makefile
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_OPROFILE) += oprofile.o
+-
+-DRIVER_OBJS = $(addprefix ../../../drivers/oprofile/, \
+-		oprof.o cpu_buffer.o buffer_sync.o \
+-		event_buffer.o oprofile_files.o \
+-		oprofilefs.o oprofile_stats.o  \
+-		timer_int.o )
+-
+-oprofile-y :=	$(DRIVER_OBJS) init.o
+diff --git a/arch/s390/oprofile/init.c b/arch/s390/oprofile/init.c
+deleted file mode 100644
+index 7441857df51b..000000000000
+--- a/arch/s390/oprofile/init.c
++++ /dev/null
+@@ -1,37 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * S390 Version
+- *   Copyright IBM Corp. 2002, 2011
+- *   Author(s): Thomas Spatzier (tspat@de.ibm.com)
+- *   Author(s): Mahesh Salgaonkar (mahesh@linux.vnet.ibm.com)
+- *   Author(s): Heinz Graalfs (graalfs@linux.vnet.ibm.com)
+- *   Author(s): Andreas Krebbel (krebbel@linux.vnet.ibm.com)
+- *
+- * @remark Copyright 2002-2011 OProfile authors
+- */
+-
+-#include <linux/oprofile.h>
+-#include <linux/init.h>
+-#include <asm/processor.h>
+-#include <asm/unwind.h>
+-
+-static void s390_backtrace(struct pt_regs *regs, unsigned int depth)
+-{
+-	struct unwind_state state;
+-
+-	unwind_for_each_frame(&state, current, regs, 0) {
+-		if (depth-- == 0)
+-			break;
+-		oprofile_add_trace(state.ip);
+-	}
+-}
+-
+-int __init oprofile_arch_init(struct oprofile_operations *ops)
+-{
+-	ops->backtrace = s390_backtrace;
+-	return 0;
+-}
+-
+-void oprofile_arch_exit(void)
+-{
+-}
+-- 
+2.25.0.rc1.19.g042ed3e048af
 
