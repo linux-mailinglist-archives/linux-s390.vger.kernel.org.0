@@ -2,175 +2,525 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E31DC2F701F
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Jan 2021 02:45:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F9BB2F737C
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Jan 2021 08:05:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731612AbhAOBpf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Jan 2021 20:45:35 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24478 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731572AbhAOBpe (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 14 Jan 2021 20:45:34 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10F1WU4R013878;
-        Thu, 14 Jan 2021 20:44:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=evF+qaGB2h93cdj3mzjNUqR1zgSKOzNs8g7BPvKWQ3w=;
- b=LLpIILW4zfNlOu9ih5LXwWoJ2MB/c/rAGoCFxmhW2+DjsQq8/50/ZUMuw0wyFpi/dBOJ
- 3TYo14EKm7goQy7grXjKLwXarcwmAMVop5n33e4QLmVJjoZAeVH5q4AqI3dQ8862mafz
- zCmX7zUeKqrVteNitYT2I6NSR4sVLWFgFGgOuE/5IPsVdnEU5Dij7Vzr1LDEk5rM7vPy
- M51L93m15TMeffGqCvKKLsDgeD0hE3pNK6P52CbSQk20EeJw44hCyUwsGfTf5MAwx90s
- 0mATMnwAFXCmAVWnS81Y1LKzRJLHIS0Z25Y9Iv38UVeLKiz2We+MHnGMJX+tysAxPUAg Dg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 362yhn317b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Jan 2021 20:44:51 -0500
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10F1dNj3064167;
-        Thu, 14 Jan 2021 20:44:51 -0500
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 362yhn315p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Jan 2021 20:44:50 -0500
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10F1gHkZ020077;
-        Fri, 15 Jan 2021 01:44:47 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 35ydrdep9s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 15 Jan 2021 01:44:47 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10F1iiPx25559518
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Jan 2021 01:44:44 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6A0604C052;
-        Fri, 15 Jan 2021 01:44:44 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD47B4C046;
-        Fri, 15 Jan 2021 01:44:43 +0000 (GMT)
-Received: from li-e979b1cc-23ba-11b2-a85c-dfd230f6cf82 (unknown [9.171.66.6])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 15 Jan 2021 01:44:43 +0000 (GMT)
-Date:   Fri, 15 Jan 2021 02:44:41 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        cohuck@redhat.com, mjrosato@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v13 06/15] s390/vfio-ap: allow assignment of unavailable
- AP queues to mdev device
-Message-ID: <20210115024441.1d8f41bc.pasic@linux.ibm.com>
-In-Reply-To: <270e192b-b88d-b072-428c-6cbfc0f9a280@linux.ibm.com>
-References: <20201223011606.5265-1-akrowiak@linux.ibm.com>
-        <20201223011606.5265-7-akrowiak@linux.ibm.com>
-        <20210111214037.477f0f03.pasic@linux.ibm.com>
-        <270e192b-b88d-b072-428c-6cbfc0f9a280@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1730051AbhAOHEe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Jan 2021 02:04:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbhAOHEb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Jan 2021 02:04:31 -0500
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AA24C061575;
+        Thu, 14 Jan 2021 23:03:50 -0800 (PST)
+Received: by mail-pf1-x436.google.com with SMTP id b3so4925437pft.3;
+        Thu, 14 Jan 2021 23:03:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=GHiYLWes15995yc06JXjproFwSKI9EhRTzfJK8Em9SI=;
+        b=VuQxLNreZ35kgOv9t50bPmMmRYfdkoMyenmcQ/EDiL+khkwLjA9TiaeWqm8RE+0z5J
+         dJMnoqkNtpJ1vG4fRJ04X1k47+3GXa8DrrEpMY9XbvvaQDogHwCuIKtSthDXdn7B+psV
+         LLMjBR/e+Dkqs27AHDNisqoPuW0e47Zp2vCrNUEJRIsM65Y1hyOF60ujN5G+mVYCqmRt
+         lE+aEa9thbHHIIwH/bcuweSMJ/b5Zp+RON0M0MddkMSsHMojeueLCI6AYwxpCXSqVODX
+         3qjJY+iwd58/bhyAB4Ak0o5l/ViRZO3c3fC0mS1r/UaLnBREjoKNbKdVPsSTW8eGAeJr
+         TlQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GHiYLWes15995yc06JXjproFwSKI9EhRTzfJK8Em9SI=;
+        b=Svm4X1qu0SxEfD41qvCe89/nBaUL+EB26KqMZwXa0esM3vSxGFoZP7LCqqodEUHAJ9
+         P8FnL2Lahm0nwAgdsfEZcXDangJFYvLY/CKFVBGzmqItfgNVEd2kmZBJuYqHGYel5XDM
+         g06y/wfiaPA6LfOt0LyxrupNPHxyDOmmQw7/a9VQti4/SNC1uDVb+/oX8WN3HgnDj7G4
+         N7c68kEkcsLI43z6lM/jZBMZFrDoIAePIZAvVpnwr5adIN5SRgtZhZTYeZKN0ZdjMB39
+         DGZnYi/4hH5ebcT77/19PFTkwFaoQa1QfdI+ySo1Ca6RJD8tgrFgzLeR1U73UHTCMfcB
+         ATmQ==
+X-Gm-Message-State: AOAM530tsb5SUONvTY/9rCFXCYqjWlWl7X6LalrshMT7NlhOyTlh12UL
+        UoA3foY5zbdP8CtIt+fSrQ4=
+X-Google-Smtp-Source: ABdhPJy33sFGOuEJVL/71ZTFrs1JqOaDhD02Tw/th8z46pDfvhRBV6ViKBsRBoDKqTo0JFodgh2g5A==
+X-Received: by 2002:a62:8050:0:b029:19d:e8b4:ba1 with SMTP id j77-20020a6280500000b029019de8b40ba1mr11371438pfd.69.1610694229866;
+        Thu, 14 Jan 2021 23:03:49 -0800 (PST)
+Received: from localhost.localdomain (76-242-91-105.lightspeed.sntcca.sbcglobal.net. [76.242.91.105])
+        by smtp.gmail.com with ESMTPSA id h8sm8399086pjc.2.2021.01.14.23.03.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Jan 2021 23:03:49 -0800 (PST)
+From:   sonicadvance1@gmail.com
+X-Google-Original-From: Sonicadvance1@gmail.com
+Cc:     Ryan Houdek <Sonicadvance1@gmail.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Xiaoming Ni <nixiaoming@huawei.com>,
+        David Rientjes <rientjes@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Minchan Kim <minchan@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oleg Nesterov <oleg@redhat.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Jan Kara <jack@suse.cz>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: [PATCH] Adds a new ioctl32 syscall for backwards compatibility layers
+Date:   Thu, 14 Jan 2021 23:02:50 -0800
+Message-Id: <20210115070326.294332-1-Sonicadvance1@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20210106064807.253112-1-Sonicadvance1@gmail.com>
+References: <20210106064807.253112-1-Sonicadvance1@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-14_10:2021-01-14,2021-01-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- clxscore=1015 lowpriorityscore=0 mlxlogscore=999 malwarescore=0
- spamscore=0 bulkscore=0 mlxscore=0 priorityscore=1501 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101150003
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 14 Jan 2021 12:54:39 -0500
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+From: Ryan Houdek <Sonicadvance1@gmail.com>
 
-> >>   /**
-> >>    * vfio_ap_mdev_verify_no_sharing
-> >>    *
-> >> - * Verifies that the APQNs derived from the cross product of the AP adapter IDs
-> >> - * and AP queue indexes comprising the AP matrix are not configured for another
-> >> - * mediated device. AP queue sharing is not allowed.
-> >> + * Verifies that each APQN derived from the Cartesian product of the AP adapter
-> >> + * IDs and AP queue indexes comprising the AP matrix are not configured for
-> >> + * another mediated device. AP queue sharing is not allowed.
-> >>    *
-> >> - * @matrix_mdev: the mediated matrix device
-> >> + * @matrix_mdev: the mediated matrix device to which the APQNs being verified
-> >> + *		 are assigned.
-> >> + * @mdev_apm: mask indicating the APIDs of the APQNs to be verified
-> >> + * @mdev_aqm: mask indicating the APQIs of the APQNs to be verified
-> >>    *
-> >> - * Returns 0 if the APQNs are not shared, otherwise; returns -EADDRINUSE.
-> >> + * Returns 0 if the APQNs are not shared, otherwise; returns -EBUSY.
-> >>    */
-> >> -static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
-> >> +static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev,
-> >> +					  unsigned long *mdev_apm,
-> >> +					  unsigned long *mdev_aqm)
-> >>   {
-> >>   	struct ap_matrix_mdev *lstdev;
-> >>   	DECLARE_BITMAP(apm, AP_DEVICES);
-> >> @@ -523,20 +426,31 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
-> >>   		 * We work on full longs, as we can only exclude the leftover
-> >>   		 * bits in non-inverse order. The leftover is all zeros.
-> >>   		 */
-> >> -		if (!bitmap_and(apm, matrix_mdev->matrix.apm,
-> >> -				lstdev->matrix.apm, AP_DEVICES))
-> >> +		if (!bitmap_and(apm, mdev_apm, lstdev->matrix.apm, AP_DEVICES))
-> >>   			continue;
-> >>   
-> >> -		if (!bitmap_and(aqm, matrix_mdev->matrix.aqm,
-> >> -				lstdev->matrix.aqm, AP_DOMAINS))
-> >> +		if (!bitmap_and(aqm, mdev_aqm, lstdev->matrix.aqm, AP_DOMAINS))
-> >>   			continue;
-> >>   
-> >> -		return -EADDRINUSE;
-> >> +		vfio_ap_mdev_log_sharing_err(dev_name(mdev_dev(lstdev->mdev)),
-> >> +					     apm, aqm);
-> >> +
-> >> +		return -EBUSY;  
-> > Why do we change -EADDRINUSE to -EBUSY? This gets bubbled up to
-> > userspace, or? So a tool that checks for the other mdev has it
-> > condition by checking for -EADDRINUSE, would be confused...  
-> 
-> Back in v8 of the series, Christian suggested the occurrences
-> of -EADDRINUSE should be replaced by the more appropriate
-> -EBUSY (Message ID <d7954c15-b14f-d6e5-0193-aadca61883a8@de.ibm.com>),
-> so I changed it here. It does get bubbled up to userspace, so you make a 
-> valid point. I will
-> change it back. I will, however, set the value returned from the
-> __verify_card_reservations() function in ap_bus.c to -EBUSY as
-> suggested by Christian.
+Problem presented:
+A backwards compatibility layer that allows running x86-64 and x86
+processes inside of an AArch64 process.
+  - CPU is emulated
+  - Syscall interface is mostly passthrough
+  - Some syscalls require patching or emulation depending on behaviour
+  - Not viable from the emulator design to use an AArch32 host process
 
-As long as the error code for an ephemeral failure due to can't take a
-lock right now, and the error code for a failure due to a sharing
-conflict are (which most likely requires admin action to be resolved)
-I'm fine.
+x86-64 and x86 userspace emulator source:
+https://github.com/FEX-Emu/FEX
+Usage of ioctl32 is currently in a downstream fork. This will be the
+first user of the syscall.
 
-Choosing EBUSY for sharing conflict, and something else for can't take
-lock for the bus attributes, while choosing EADDRINUSE for sharing
-conflict, and EBUSY for can't take lock in the case of the mdev
-attributes (assign_*; unassign_*) sounds confusing to me, but is still
-better than collating the two conditions. Maybe we can choose EAGAIN
-or EWOULDBLOCK for the can't take the lock right now. I don't know.
+Cross documentation:
+https://github.com/FEX-Emu/FEX/wiki/32Bit-x86-Woes#ioctl---54
 
-I'm open to suggestions. And if Christian wants to change this for
-the already released interfaces, I will have to live with that. But it
-has to be a conscious decision at least.
+ioctls are opaque from the emulator perspective and the data wants to be
+passed through a syscall as unimpeded as possible.
+Sadly due to ioctl struct differences between x86 and x86-64, we need a
+syscall that exposes the compatibility ioctl handler to userspace in a
+64bit process.
 
-What I consider tricky about EBUSY, is that according to my intuition,
-in pseudocode, object.operation(argument) returns -EBUSY probably tells
-me that object is busy (i.e. is in the middle of something incompatible
-with performing operation). In our case, it is not the object that is
-busy, but the resource denoted by the argument.
+This is necessary behaves of the behaviour differences that occur
+between an x86 process doing an ioctl and an x86-64 process doing an
+ioctl.
 
-Regards,
-Halil
+Both of which are captured and passed through the AArch64 ioctl space.
+This is implementing a new ioctl32 syscall that allows us to pass 32bit
+x86 ioctls through to the kernel with zero or minimal manipulation.
+
+The only supported hosts where we care about this currently is AArch64
+and x86-64 (For testing purposes).
+PPC64LE, MIPS64LE, and RISC-V64 might be interesting to support in the
+future; But I don't have any platforms that get anywhere near Cortex-A77
+performance in those architectures. Nor do I have the time to bring up
+the emulator on them.
+x86-64 can get to the compatibility ioctl through the int $0x80 handler.
+
+This does not solve the following problems:
+1) compat_alloc_user_space inside ioctl
+2) ioctls that check task mode instead of entry point for behaviour
+3) ioctls allocating memory
+4) struct packing problems between architectures
+
+Workarounds for the problems presented:
+1a) Do a stack pivot to the lower 32bits from userspace
+  - Forces host 64bit process to have its thread stacks to live in 32bit
+  space. Not ideal.
+  - Only do a stack pivot on ioctl to save previous 32bit VA space
+1b) Teach kernel that compat_alloc_userspace can return a 64bit pointer
+  - x86-64 truncates stack from this function
+  - AArch64 returns the full stack pointer
+  - Only ~29 users. Validating all of them support a 64bit stack is
+  trivial?
+
+2a) Any application using these can be checked for compatibility in
+userspace and put on a block list.
+2b) Fix any ioctls doing broken behaviour based on task mode rather than
+ioctl entry point
+
+3a) Userspace consumes all VA space above 32bit. Forcing allocations to
+occur in lower 32bits
+  - This is the current implementation
+3b) Ensure any allocation in the ioctl handles ioctl entrypoint rather
+than just allow generic memory allocations in full VA space
+  - This is hard to guarantee
+
+4a) Blocklist any application using ioctls that have different struct
+packing across the boundary
+  - Can happen when struct packing of 32bit x86 application goes down
+  the aarch64 compat_ioctl path
+  - Userspace is a AArch64 process passing 32bit x86 ioctl structures
+  through the compat_ioctl path which is typically for AArch32 processes
+  - None currently identified
+4b) Work with upstream kernel and userspace projects to evaluate and fix
+  - Identify the problem ioctls
+  - Implement a new ioctl with more sane struct packing that matches
+  cross-arch
+  - Implement new ioctl while maintaining backwards compatibility with
+  previous ioctl handler
+  - Change upstream project to use the new compatibility ioctl
+  - ioctl deprecation will be case by case per device and project
+4b) Userspace implements a full ioctl emulation layer
+  - Parses the full ioctl tree
+  - Either passes through ioctls that it doesn't understand or
+  transforms ioctls that it knows are trouble
+  - Has the downside that it can still run in to edge cases that will
+  fail
+  - Performance of additional tracking is a concern
+  - Prone to failure keeping the kernel ioctl and userspace ioctl
+  handling in sync
+  - Really want to have it in the kernel space as much as possible
+
+Signed-off-by: Ryan Houdek <Sonicadvance1@gmail.com>
+---
+ arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
+ arch/arm/tools/syscall.tbl                  |  1 +
+ arch/arm64/include/asm/unistd.h             |  2 +-
+ arch/arm64/include/asm/unistd32.h           |  2 ++
+ arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |  2 ++
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |  1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |  1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
+ fs/ioctl.c                                  | 18 ++++++++++++++++--
+ include/linux/syscalls.h                    |  4 ++++
+ include/uapi/asm-generic/unistd.h           |  9 ++++++++-
+ kernel/sys_ni.c                             |  3 +++
+ tools/include/uapi/asm-generic/unistd.h     |  9 ++++++++-
+ 23 files changed, 59 insertions(+), 5 deletions(-)
+
+diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
+index a6617067dbe6..81e70fd241d7 100644
+--- a/arch/alpha/kernel/syscalls/syscall.tbl
++++ b/arch/alpha/kernel/syscalls/syscall.tbl
+@@ -481,3 +481,4 @@
+ 549	common	faccessat2			sys_faccessat2
+ 550	common	process_madvise			sys_process_madvise
+ 551	common	epoll_pwait2			sys_epoll_pwait2
++552	common	ioctl32			sys_ni_syscall
+diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+index 20e1170e2e0a..98fbf1af1169 100644
+--- a/arch/arm/tools/syscall.tbl
++++ b/arch/arm/tools/syscall.tbl
+@@ -455,3 +455,4 @@
+ 439	common	faccessat2			sys_faccessat2
+ 440	common	process_madvise			sys_process_madvise
+ 441	common	epoll_pwait2			sys_epoll_pwait2
++442	common	ioctl32			sys_ni_syscall
+diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+index 86a9d7b3eabe..949788f5ba40 100644
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+@@ -38,7 +38,7 @@
+ #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
+ #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
+ 
+-#define __NR_compat_syscalls		442
++#define __NR_compat_syscalls		443
+ #endif
+ 
+ #define __ARCH_WANT_SYS_CLONE
+diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
+index cccfbbefbf95..35e3bc83dbdc 100644
+--- a/arch/arm64/include/asm/unistd32.h
++++ b/arch/arm64/include/asm/unistd32.h
+@@ -891,6 +891,8 @@ __SYSCALL(__NR_faccessat2, sys_faccessat2)
+ __SYSCALL(__NR_process_madvise, sys_process_madvise)
+ #define __NR_epoll_pwait2 441
+ __SYSCALL(__NR_epoll_pwait2, compat_sys_epoll_pwait2)
++#define __NR_ioctl32 442
++__SYSCALL(__NR_ioctl32, compat_sys_ioctl)
+ 
+ /*
+  * Please add new compat syscalls above this comment and update
+diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
+index bfc00f2bd437..087fc9627357 100644
+--- a/arch/ia64/kernel/syscalls/syscall.tbl
++++ b/arch/ia64/kernel/syscalls/syscall.tbl
+@@ -362,3 +362,4 @@
+ 439	common	faccessat2			sys_faccessat2
+ 440	common	process_madvise			sys_process_madvise
+ 441	common	epoll_pwait2			sys_epoll_pwait2
++442	common	sys_ioctl32			sys_ioctl32
+diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
+index 7fe4e45c864c..502b2f87ab60 100644
+--- a/arch/m68k/kernel/syscalls/syscall.tbl
++++ b/arch/m68k/kernel/syscalls/syscall.tbl
+@@ -441,3 +441,4 @@
+ 439	common	faccessat2			sys_faccessat2
+ 440	common	process_madvise			sys_process_madvise
+ 441	common	epoll_pwait2			sys_epoll_pwait2
++442	common	ioctl32			sys_ni_syscall
+diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
+index a522adf194ab..e69be6c836d2 100644
+--- a/arch/microblaze/kernel/syscalls/syscall.tbl
++++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+@@ -447,3 +447,4 @@
+ 439	common	faccessat2			sys_faccessat2
+ 440	common	process_madvise			sys_process_madvise
+ 441	common	epoll_pwait2			sys_epoll_pwait2
++442	common	ioctl32			sys_ni_syscall
+diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
+index 0f03ad223f33..ba395218446f 100644
+--- a/arch/mips/kernel/syscalls/syscall_n32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+@@ -380,3 +380,4 @@
+ 439	n32	faccessat2			sys_faccessat2
+ 440	n32	process_madvise			sys_process_madvise
+ 441	n32	epoll_pwait2			compat_sys_epoll_pwait2
++442	n32	ioctl32			sys_ni_syscall
+diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
+index 91649690b52f..f42f939702e2 100644
+--- a/arch/mips/kernel/syscalls/syscall_n64.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+@@ -356,3 +356,5 @@
+ 439	n64	faccessat2			sys_faccessat2
+ 440	n64	process_madvise			sys_process_madvise
+ 441	n64	epoll_pwait2			sys_epoll_pwait2
++441	n64	epoll_pwait2			sys_epoll_pwait2
++442	n64	ioctl32			sys_ioctl32
+diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
+index 4bad0c40aed6..b08ff6066f06 100644
+--- a/arch/mips/kernel/syscalls/syscall_o32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
+@@ -429,3 +429,4 @@
+ 439	o32	faccessat2			sys_faccessat2
+ 440	o32	process_madvise			sys_process_madvise
+ 441	o32	epoll_pwait2			sys_epoll_pwait2		compat_sys_epoll_pwait2
++442	o32	ioctl32			sys_ni_syscall
+diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
+index 6bcc31966b44..84d2b88d92fa 100644
+--- a/arch/parisc/kernel/syscalls/syscall.tbl
++++ b/arch/parisc/kernel/syscalls/syscall.tbl
+@@ -439,3 +439,4 @@
+ 439	common	faccessat2			sys_faccessat2
+ 440	common	process_madvise			sys_process_madvise
+ 441	common	epoll_pwait2			sys_epoll_pwait2		compat_sys_epoll_pwait2
++442	64	ioctl32			sys_ioctl32
+diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+index f744eb5cba88..9f04d73cf649 100644
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@ -531,3 +531,4 @@
+ 439	common	faccessat2			sys_faccessat2
+ 440	common	process_madvise			sys_process_madvise
+ 441	common	epoll_pwait2			sys_epoll_pwait2		compat_sys_epoll_pwait2
++442	64	sys_ioctl32				sys_ioctl32
+diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+index d443423495e5..2c90c0ecb5c7 100644
+--- a/arch/s390/kernel/syscalls/syscall.tbl
++++ b/arch/s390/kernel/syscalls/syscall.tbl
+@@ -444,3 +444,4 @@
+ 439  common	faccessat2		sys_faccessat2			sys_faccessat2
+ 440  common	process_madvise		sys_process_madvise		sys_process_madvise
+ 441  common	epoll_pwait2		sys_epoll_pwait2		compat_sys_epoll_pwait2
++442	64	sys_ioctl32			sys_ni_syscall
+diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
+index 9df40ac0ebc0..1e02a13fa049 100644
+--- a/arch/sh/kernel/syscalls/syscall.tbl
++++ b/arch/sh/kernel/syscalls/syscall.tbl
+@@ -444,3 +444,4 @@
+ 439	common	faccessat2			sys_faccessat2
+ 440	common	process_madvise			sys_process_madvise
+ 441	common	epoll_pwait2			sys_epoll_pwait2
++442	common	ioctl32			sys_ni_syscall
+diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
+index 40d8c7cd8298..f7d24678d0b1 100644
+--- a/arch/sparc/kernel/syscalls/syscall.tbl
++++ b/arch/sparc/kernel/syscalls/syscall.tbl
+@@ -487,3 +487,4 @@
+ 439	common	faccessat2			sys_faccessat2
+ 440	common	process_madvise			sys_process_madvise
+ 441	common	epoll_pwait2			sys_epoll_pwait2		compat_sys_epoll_pwait2
++442	64	sys_ioctl32			sys_ioctl32
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index 874aeacde2dd..b1a3461e1e20 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -446,3 +446,4 @@
+ 439	i386	faccessat2		sys_faccessat2
+ 440	i386	process_madvise		sys_process_madvise
+ 441	i386	epoll_pwait2		sys_epoll_pwait2		compat_sys_epoll_pwait2
++442	i386	ioctl32		sys_ni_syscall
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 78672124d28b..0250a04df0df 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -363,6 +363,7 @@
+ 439	common	faccessat2		sys_faccessat2
+ 440	common	process_madvise		sys_process_madvise
+ 441	common	epoll_pwait2		sys_epoll_pwait2
++442	64	ioctl32		sys_ioctl32
+ 
+ #
+ # Due to a historical design error, certain syscalls are numbered differently
+diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
+index 46116a28eeed..34b653b36b7b 100644
+--- a/arch/xtensa/kernel/syscalls/syscall.tbl
++++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+@@ -412,3 +412,4 @@
+ 439	common	faccessat2			sys_faccessat2
+ 440	common	process_madvise			sys_process_madvise
+ 441	common	epoll_pwait2			sys_epoll_pwait2
++442	common	ioctl32			sys_ni_syscall
+diff --git a/fs/ioctl.c b/fs/ioctl.c
+index 4e6cc0a7d69c..7b324a21a257 100644
+--- a/fs/ioctl.c
++++ b/fs/ioctl.c
+@@ -790,8 +790,8 @@ long compat_ptr_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ }
+ EXPORT_SYMBOL(compat_ptr_ioctl);
+ 
+-COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
+-		       compat_ulong_t, arg)
++long do_ioctl32(unsigned int fd, unsigned int cmd,
++			compat_ulong_t arg)
+ {
+ 	struct fd f = fdget(fd);
+ 	int error;
+@@ -850,4 +850,18 @@ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
+ 
+ 	return error;
+ }
++
++COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
++			compat_ulong_t, arg)
++{
++	return do_ioctl32(fd, cmd, arg);
++}
++
++#if BITS_PER_LONG == 64
++SYSCALL_DEFINE3(ioctl32, unsigned int, fd, unsigned int, cmd,
++			compat_ulong_t, arg)
++{
++	return do_ioctl32(fd, cmd, arg);
++}
++#endif
+ #endif
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index f3929aff39cf..fb7bac17167a 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -386,6 +386,10 @@ asmlinkage long sys_inotify_rm_watch(int fd, __s32 wd);
+ /* fs/ioctl.c */
+ asmlinkage long sys_ioctl(unsigned int fd, unsigned int cmd,
+ 				unsigned long arg);
++#if defined(CONFIG_COMPAT) && BITS_PER_LONG == 64
++asmlinkage long sys_ioctl32(unsigned int fd, unsigned int cmd,
++				compat_ulong_t arg);
++#endif
+ 
+ /* fs/ioprio.c */
+ asmlinkage long sys_ioprio_set(int which, int who, int ioprio);
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index 728752917785..18279e5b7b4f 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -862,8 +862,15 @@ __SYSCALL(__NR_process_madvise, sys_process_madvise)
+ #define __NR_epoll_pwait2 441
+ __SC_COMP(__NR_epoll_pwait2, sys_epoll_pwait2, compat_sys_epoll_pwait2)
+ 
++#define __NR_ioctl32 442
++#ifdef CONFIG_COMPAT
++__SC_COMP(__NR_ioctl32, sys_ioctl32, compat_sys_ioctl)
++#else
++__SC_COMP(__NR_ioctl32, sys_ni_syscall, sys_ni_syscall)
++#endif
++
+ #undef __NR_syscalls
+-#define __NR_syscalls 442
++#define __NR_syscalls 443
+ 
+ /*
+  * 32 bit systems traditionally used different
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index 19aa806890d5..5a2f25eb341c 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -302,6 +302,9 @@ COND_SYSCALL(recvmmsg_time32);
+ COND_SYSCALL_COMPAT(recvmmsg_time32);
+ COND_SYSCALL_COMPAT(recvmmsg_time64);
+ 
++COND_SYSCALL(ioctl32);
++COND_SYSCALL_COMPAT(ioctl32);
++
+ /*
+  * Architecture specific syscalls: see further below
+  */
+diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
+index 728752917785..18279e5b7b4f 100644
+--- a/tools/include/uapi/asm-generic/unistd.h
++++ b/tools/include/uapi/asm-generic/unistd.h
+@@ -862,8 +862,15 @@ __SYSCALL(__NR_process_madvise, sys_process_madvise)
+ #define __NR_epoll_pwait2 441
+ __SC_COMP(__NR_epoll_pwait2, sys_epoll_pwait2, compat_sys_epoll_pwait2)
+ 
++#define __NR_ioctl32 442
++#ifdef CONFIG_COMPAT
++__SC_COMP(__NR_ioctl32, sys_ioctl32, compat_sys_ioctl)
++#else
++__SC_COMP(__NR_ioctl32, sys_ni_syscall, sys_ni_syscall)
++#endif
++
+ #undef __NR_syscalls
+-#define __NR_syscalls 442
++#define __NR_syscalls 443
+ 
+ /*
+  * 32 bit systems traditionally used different
+-- 
+2.27.0
+
