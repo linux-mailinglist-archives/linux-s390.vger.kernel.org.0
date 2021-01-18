@@ -2,179 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 810BC2FA0EF
-	for <lists+linux-s390@lfdr.de>; Mon, 18 Jan 2021 14:14:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E7572FA12A
+	for <lists+linux-s390@lfdr.de>; Mon, 18 Jan 2021 14:19:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404321AbhARNOC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 Jan 2021 08:14:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:35658 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404325AbhARNN7 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 18 Jan 2021 08:13:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D709A106F;
-        Mon, 18 Jan 2021 05:13:12 -0800 (PST)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.89.163])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E12693F719;
-        Mon, 18 Jan 2021 05:13:05 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org, akpm@linux-foundation.org, david@redhat.com,
-        hca@linux.ibm.com, catalin.marinas@arm.com
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        teawater <teawaterz@linux.alibaba.com>,
-        Pankaj Gupta <pankaj.gupta@cloud.ionos.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH RFC] virtio-mem: check against memhp_get_pluggable_range() which memory we can hotplug
-Date:   Mon, 18 Jan 2021 18:43:02 +0530
-Message-Id: <1610975582-12646-5-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1610975582-12646-1-git-send-email-anshuman.khandual@arm.com>
-References: <1610975582-12646-1-git-send-email-anshuman.khandual@arm.com>
+        id S2392132AbhARNSr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 Jan 2021 08:18:47 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40972 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2392128AbhARNSh (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 18 Jan 2021 08:18:37 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10ID3YJB019940;
+        Mon, 18 Jan 2021 08:17:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=8tkeQGsFBR/19zcWcJgkcGEoGDrufQhBcasXaTGWg7k=;
+ b=ByWD7pDIfYf3wyXqbQRR1fzo3SW8h1KBpBYjehTgDt0Guu4/c77prxGgo7f+/pYT4RPy
+ twWqFFhrBBE26D1GF9C7Va914vfxt3KxpwRB7390iR2uwWKEt2QRZX6JkQ7K4+uo/6ZG
+ YtTgp14O2Fc9Y8fjQlhl175FmJqF83kZ5HuBb8ba7AFkugKoXMArNi2EtIK083fhiAA8
+ RLht0u9b4jmcyweiANTf84YXPRZbFiLOr0X9kEa1PY/4rUd9/PPJXhNeffTG+tf1kX6y
+ UQ0X7+jRlxypaEwA9NJHg0nwxQKcAm89N30FvIJpYoUH0IuSTKUdhkO/pAs2Z8+685+K 3Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36586hchur-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Jan 2021 08:17:46 -0500
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10ID3u3M023436;
+        Mon, 18 Jan 2021 08:17:46 -0500
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36586hchtj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Jan 2021 08:17:45 -0500
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10IDHIup010618;
+        Mon, 18 Jan 2021 13:17:43 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06fra.de.ibm.com with ESMTP id 363qdh92te-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Jan 2021 13:17:42 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10IDHdCk39387466
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Jan 2021 13:17:40 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D844242047;
+        Mon, 18 Jan 2021 13:17:39 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C547D42045;
+        Mon, 18 Jan 2021 13:17:39 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 18 Jan 2021 13:17:39 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 6FDC5E02A3; Mon, 18 Jan 2021 14:17:39 +0100 (CET)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Janosch Frank <frankja@linux.vnet.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: [PATCH 0/1] diag9c forwarding
+Date:   Mon, 18 Jan 2021 14:17:38 +0100
+Message-Id: <20210118131739.7272-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2021-01-18_11:2021-01-18,2021-01-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 phishscore=0 clxscore=1015 adultscore=0
+ priorityscore=1501 suspectscore=0 malwarescore=0 mlxscore=0
+ mlxlogscore=880 spamscore=0 bulkscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2101180077
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+This patch will forward the yieldto hypercall (diag9c) if in the host
+the target CPU is also not running. As we do not yet have performance
+data (and recommendations) the default is turned off, but this can
+be changed during runtime.
 
-Right now, we only check against MAX_PHYSMEM_BITS - but turns out there
-are more restrictions of which memory we can actually hotplug, especially
-om arm64 or s390x once we support them: we might receive something like
--E2BIG or -ERANGE from add_memory_driver_managed(), stopping device
-operation.
+Pierre Morel (1):
+  s390:kvm: diag9c forwarding
 
-So, check right when initializing the device which memory we can add,
-warning the user. Try only adding actually pluggable ranges: in the worst
-case, no memory provided by our device is pluggable.
+ arch/s390/include/asm/kvm_host.h |  1 +
+ arch/s390/include/asm/smp.h      |  1 +
+ arch/s390/kernel/smp.c           |  1 +
+ arch/s390/kvm/diag.c             | 31 ++++++++++++++++++++++++++++---
+ arch/s390/kvm/kvm-s390.c         |  6 ++++++
+ arch/s390/kvm/kvm-s390.h         |  8 ++++++++
+ 6 files changed, 45 insertions(+), 3 deletions(-)
 
-In the usual case, we expect all device memory to be pluggable, and in
-corner cases only some memory at the end of the device-managed memory
-region to not be pluggable.
-
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Jason Wang <jasowang@redhat.com>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: catalin.marinas@arm.com
-Cc: teawater <teawaterz@linux.alibaba.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Pankaj Gupta <pankaj.gupta@cloud.ionos.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: hca@linux.ibm.com
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- drivers/virtio/virtio_mem.c | 40 +++++++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 9fc9ec4a25f5..1fe40b2d7b6d 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -2222,7 +2222,7 @@ static int virtio_mem_unplug_pending_mb(struct virtio_mem *vm)
-  */
- static void virtio_mem_refresh_config(struct virtio_mem *vm)
- {
--	const uint64_t phys_limit = 1UL << MAX_PHYSMEM_BITS;
-+	const struct range pluggable_range = memhp_get_pluggable_range(true);
- 	uint64_t new_plugged_size, usable_region_size, end_addr;
- 
- 	/* the plugged_size is just a reflection of what _we_ did previously */
-@@ -2234,15 +2234,25 @@ static void virtio_mem_refresh_config(struct virtio_mem *vm)
- 	/* calculate the last usable memory block id */
- 	virtio_cread_le(vm->vdev, struct virtio_mem_config,
- 			usable_region_size, &usable_region_size);
--	end_addr = vm->addr + usable_region_size;
--	end_addr = min(end_addr, phys_limit);
-+	end_addr = min(vm->addr + usable_region_size - 1,
-+		       pluggable_range.end);
- 
--	if (vm->in_sbm)
--		vm->sbm.last_usable_mb_id =
--					 virtio_mem_phys_to_mb_id(end_addr) - 1;
--	else
--		vm->bbm.last_usable_bb_id =
--				     virtio_mem_phys_to_bb_id(vm, end_addr) - 1;
-+	if (vm->in_sbm) {
-+		vm->sbm.last_usable_mb_id = virtio_mem_phys_to_mb_id(end_addr);
-+		if (!IS_ALIGNED(end_addr + 1, memory_block_size_bytes()))
-+			vm->sbm.last_usable_mb_id--;
-+	} else {
-+		vm->bbm.last_usable_bb_id = virtio_mem_phys_to_bb_id(vm,
-+								     end_addr);
-+		if (!IS_ALIGNED(end_addr + 1, vm->bbm.bb_size))
-+			vm->bbm.last_usable_bb_id--;
-+	}
-+	/*
-+	 * If we cannot plug any of our device memory (e.g., nothing in the
-+	 * usable region is addressable), the last usable memory block id will
-+	 * be smaller than the first usable memory block id. We'll stop
-+	 * attempting to add memory with -ENOSPC from our main loop.
-+	 */
- 
- 	/* see if there is a request to change the size */
- 	virtio_cread_le(vm->vdev, struct virtio_mem_config, requested_size,
-@@ -2364,6 +2374,7 @@ static int virtio_mem_init_vq(struct virtio_mem *vm)
- 
- static int virtio_mem_init(struct virtio_mem *vm)
- {
-+	const struct range pluggable_range = memhp_get_pluggable_range(true);
- 	const uint64_t phys_limit = 1UL << MAX_PHYSMEM_BITS;
- 	uint64_t sb_size, addr;
- 	uint16_t node_id;
-@@ -2405,9 +2416,10 @@ static int virtio_mem_init(struct virtio_mem *vm)
- 	if (!IS_ALIGNED(vm->addr + vm->region_size, memory_block_size_bytes()))
- 		dev_warn(&vm->vdev->dev,
- 			 "The alignment of the physical end address can make some memory unusable.\n");
--	if (vm->addr + vm->region_size > phys_limit)
-+	if (vm->addr < pluggable_range.start ||
-+	    vm->addr + vm->region_size - 1 > pluggable_range.end)
- 		dev_warn(&vm->vdev->dev,
--			 "Some memory is not addressable. This can make some memory unusable.\n");
-+			 "Some device memory is not addressable/pluggable. This can make some memory unusable.\n");
- 
- 	/*
- 	 * We want subblocks to span at least MAX_ORDER_NR_PAGES and
-@@ -2429,7 +2441,8 @@ static int virtio_mem_init(struct virtio_mem *vm)
- 				     vm->sbm.sb_size;
- 
- 		/* Round up to the next full memory block */
--		addr = vm->addr + memory_block_size_bytes() - 1;
-+		addr = max_t(uint64_t, vm->addr, pluggable_range.start) +
-+		       memory_block_size_bytes() - 1;
- 		vm->sbm.first_mb_id = virtio_mem_phys_to_mb_id(addr);
- 		vm->sbm.next_mb_id = vm->sbm.first_mb_id;
- 	} else {
-@@ -2450,7 +2463,8 @@ static int virtio_mem_init(struct virtio_mem *vm)
- 		}
- 
- 		/* Round up to the next aligned big block */
--		addr = vm->addr + vm->bbm.bb_size - 1;
-+		addr = max_t(uint64_t, vm->addr, pluggable_range.start) +
-+		       vm->bbm.bb_size - 1;
- 		vm->bbm.first_bb_id = virtio_mem_phys_to_bb_id(vm, addr);
- 		vm->bbm.next_bb_id = vm->bbm.first_bb_id;
- 	}
 -- 
-2.20.1
+2.28.0
 
