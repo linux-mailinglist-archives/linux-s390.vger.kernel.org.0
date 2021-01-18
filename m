@@ -2,161 +2,69 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C04FF2F9D23
-	for <lists+linux-s390@lfdr.de>; Mon, 18 Jan 2021 11:49:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A2D32F9E41
+	for <lists+linux-s390@lfdr.de>; Mon, 18 Jan 2021 12:35:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388521AbhARKrz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 Jan 2021 05:47:55 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48766 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389168AbhARJom (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 18 Jan 2021 04:44:42 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10I94Z7q066679;
-        Mon, 18 Jan 2021 04:43:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
- : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=g5bTtGK4YsiH4lgIBhWyxvLyKLrqrfOq5ojp65ETm+A=;
- b=sN4tlDaADIvsD4RVoT+4r+K+UlJt5wssGOjL116Yxb1hepv+DpwCFuXIYaWpHePA0vLg
- RvzJdJdbDrs4WtzehuE9Z/F4uL7/vWwM3+0X8ITD9hHHWHepNVMcxOxaeHUrRuC7iSWk
- 7xyllHCV3waPnmQHUNPpKhS+j1UJwYdp2kVpMSBrfbY7vIA9pr/hCNmFKPc2Si8BQ2pR
- nGPgRlt1J/gN5mRDzh33zMvgux1NhrnFa+CiQq8ry7axuBjqBT2WSc66nhJ3zNDgfZum
- K1e6JLu/uFGHfkBduZBX8W+9gJg/xNJITmYlqwrCvrpQb1RXciar6p8Uexy62KNRqIWf oA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3657a697rq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 Jan 2021 04:43:59 -0500
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10I9H79P113936;
-        Mon, 18 Jan 2021 04:43:59 -0500
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3657a697qy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 Jan 2021 04:43:59 -0500
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10I9Qtw4000832;
-        Mon, 18 Jan 2021 09:43:56 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma01fra.de.ibm.com with ESMTP id 363qs88ydh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 18 Jan 2021 09:43:56 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10I9hr7323724490
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 18 Jan 2021 09:43:53 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C47D7AE053;
-        Mon, 18 Jan 2021 09:43:53 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 56446AE045;
-        Mon, 18 Jan 2021 09:43:53 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.77.2])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 18 Jan 2021 09:43:53 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v4 0/9] s390x: Add SIE library and simple
- tests
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     thuth@redhat.com, david@redhat.com, borntraeger@de.ibm.com,
-        imbrenda@linux.ibm.com, cohuck@redhat.com,
+        id S2390348AbhARLd3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 Jan 2021 06:33:29 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:40653 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390223AbhARLdP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Jan 2021 06:33:15 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1l1Sli-0003Nq-Pt; Mon, 18 Jan 2021 11:32:22 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         linux-s390@vger.kernel.org
-References: <20210112132054.49756-1-frankja@linux.ibm.com>
-Message-ID: <45420c5f-cf5f-a3bc-d555-6093d88a0c59@linux.ibm.com>
-Date:   Mon, 18 Jan 2021 10:43:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] s390/tape: Fix spelling mistake in function name tape_3590_erp_succeded
+Date:   Mon, 18 Jan 2021 11:32:22 +0000
+Message-Id: <20210118113222.71708-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-In-Reply-To: <20210112132054.49756-1-frankja@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-18_07:2021-01-15,2021-01-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- clxscore=1015 spamscore=0 lowpriorityscore=0 malwarescore=0
- impostorscore=0 suspectscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101180053
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 1/12/21 2:20 PM, Janosch Frank wrote:
-> This is the absolute minimum needed to run VMs inside the KVM Unit
-> Tests. It's more of a base for other tests that I can't (yet) publish
-> than an addition of tests that check KVM functionality. However, I
-> wanted to decrease the number of WIP patches in my private
-> branch. Once the library is available maybe others will come and
-> extend the SIE test itself.
-> 
-> Yes, I have added VM management functionality like VM create/destroy,
-> etc but as it is not needed right now, I'd like to exclude it from
-> this patch set for now.
+From: Colin Ian King <colin.king@canonical.com>
 
-I've picked patches 1-8.
-Patch 9 is dropped for now, it's only a comment anyway.
+Rename tape_3590_erp_succeded to tape_3590_erp_succeeded to fix a
+spelling mistake in the function name.
 
-Thanks for all of your review comments!
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/s390/char/tape_3590.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> v4:
-> 	* Removed asm directory and moved all asm files into s390x/ (I changed my view)
-> 	* Review fixes
-> 	* Removed a stray newline in the asm offsets file
-> 
-> v3:
-> 	* Rebased on re-license patches
-> 	* Split assembly
-> 	* Now using ICPT_* constants
-> 	* Added read_info asserts
-> 	* Fixed missing spin_lock() in smp.c lib
-> 	* Replaced duplicated code in sie test with generic intercept test
-> 	* Replaced uv-guest.x bit testing with test_bit_inv()
-> 	* Some other minor cleanups
-> 
-> Gitlab:
-> https://gitlab.com/frankja/kvm-unit-tests/-/tree/sie
-> 
-> CI:
-> https://gitlab.com/frankja/kvm-unit-tests/-/pipelines/240506525
-> 
-> 
-> Janosch Frank (9):
->   s390x: Add test_bit to library
->   s390x: Consolidate sclp read info
->   s390x: SCLP feature checking
->   s390x: Split assembly into multiple files
->   s390x: sie: Add SIE to lib
->   s390x: sie: Add first SIE test
->   s390x: Add diag318 intercept test
->   s390x: Fix sclp.h style issues
->   s390x: sclp: Add CPU entry offset comment
-> 
->  lib/s390x/asm-offsets.c  |  11 +++
->  lib/s390x/asm/arch_def.h |   9 ++
->  lib/s390x/asm/bitops.h   |  26 ++++++
->  lib/s390x/asm/facility.h |   3 +-
->  lib/s390x/interrupt.c    |   7 ++
->  lib/s390x/io.c           |   2 +
->  lib/s390x/sclp.c         |  57 +++++++++--
->  lib/s390x/sclp.h         | 181 +++++++++++++++++++----------------
->  lib/s390x/sie.h          | 197 +++++++++++++++++++++++++++++++++++++++
->  lib/s390x/smp.c          |  27 +++---
->  s390x/Makefile           |   7 +-
->  s390x/cstart64.S         | 119 +----------------------
->  s390x/intercept.c        |  19 ++++
->  s390x/lib.S              | 121 ++++++++++++++++++++++++
->  s390x/macros.S           |  77 +++++++++++++++
->  s390x/sie.c              | 113 ++++++++++++++++++++++
->  s390x/unittests.cfg      |   3 +
->  s390x/uv-guest.c         |   6 +-
->  18 files changed, 761 insertions(+), 224 deletions(-)
->  create mode 100644 lib/s390x/sie.h
->  create mode 100644 s390x/lib.S
->  create mode 100644 s390x/macros.S
->  create mode 100644 s390x/sie.c
-> 
+diff --git a/drivers/s390/char/tape_3590.c b/drivers/s390/char/tape_3590.c
+index ecf8c5006a0e..0d484fe43d7e 100644
+--- a/drivers/s390/char/tape_3590.c
++++ b/drivers/s390/char/tape_3590.c
+@@ -761,7 +761,7 @@ tape_3590_done(struct tape_device *device, struct tape_request *request)
+  * This function is called, when error recovery was successful
+  */
+ static inline int
+-tape_3590_erp_succeded(struct tape_device *device, struct tape_request *request)
++tape_3590_erp_succeeded(struct tape_device *device, struct tape_request *request)
+ {
+ 	DBF_EVENT(3, "Error Recovery successful for %s\n",
+ 		  tape_op_verbose[request->op]);
+@@ -831,7 +831,7 @@ tape_3590_erp_basic(struct tape_device *device, struct tape_request *request,
+ 	case SENSE_BRA_PER:
+ 		return tape_3590_erp_failed(device, request, irb, rc);
+ 	case SENSE_BRA_CONT:
+-		return tape_3590_erp_succeded(device, request);
++		return tape_3590_erp_succeeded(device, request);
+ 	case SENSE_BRA_RE:
+ 		return tape_3590_erp_retry(device, request, irb);
+ 	case SENSE_BRA_DRE:
+-- 
+2.29.2
 
