@@ -2,90 +2,146 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 502952FA872
-	for <lists+linux-s390@lfdr.de>; Mon, 18 Jan 2021 19:15:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42DD72FAC6D
+	for <lists+linux-s390@lfdr.de>; Mon, 18 Jan 2021 22:18:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407454AbhARSOI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 Jan 2021 13:14:08 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22555 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2393605AbhARRbr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 18 Jan 2021 12:31:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1610991019;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WHxs6Cnwftt0lFLGJnl0K9RDZpS8tR+YPpQa7alFW5g=;
-        b=c9flOCviGqIlJSIAbc+Ip04PTMKwtpOlkc/4PtS4tCLMkXd0Jq5Wtdy7aw1HUTGb+JggG/
-        cEB1viv8TJ+s716ZWzOfXWAaHBJ7sS3wZ9+ukbrW6aNHRpF3XORM8KDynve912yx+MY7Nr
-        3f5EIHb87GfsAFAC6MQTMJt/Ph+fxVM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-529-EgK-sjARNTKjr0aufeudTw-1; Mon, 18 Jan 2021 12:30:15 -0500
-X-MC-Unique: EgK-sjARNTKjr0aufeudTw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25D6AAFA81;
-        Mon, 18 Jan 2021 17:30:14 +0000 (UTC)
-Received: from gondolin (ovpn-114-2.ams2.redhat.com [10.36.114.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 27DAE60C67;
-        Mon, 18 Jan 2021 17:30:11 +0000 (UTC)
-Date:   Mon, 18 Jan 2021 18:30:09 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        id S2438042AbhARVRs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 Jan 2021 16:17:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2438039AbhARVRn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 18 Jan 2021 16:17:43 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7C12A22D6D;
+        Mon, 18 Jan 2021 21:17:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611004623;
+        bh=Bf5ce9CwufzdXB6Cszk/JHnQAMJKk7yu7BGgTzZuCSo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LSZPSc7BWIsNzEaHLKe7yEIG9KNqgbKXfKyRktjAby0y7HZvmvU7E9JqGpqKwv8Rh
+         QSEva9QcRNHTxZuQ6dcW+X4uTTN4r0q44YGcHF8iqjwICLiD3nNIozaOGvtG4727Bu
+         fnppCuI1Qm8TJPShRUXdGqj2iUAsxkCdMWtA2zLZAFOGKL7b0oXDNmD/O/fmTWwO2N
+         JxysIMDWOQGshoSqH9ybxjBpBCXNyTOElGKJ5OzxGorwDtuWtBsJ9viFNEGkohy3Aq
+         KPGW8VFAx16F7KPqfgIJWs+gU1JKxdHyZk8MdZM5GDIq9mcqtDG0w5eT83Yo12LT/c
+         VeMQF3Q1JAatA==
+From:   Mark Brown <broonie@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH 1/1] s390/dasd: Fix inconsistent kobject removal
-Message-ID: <20210118183009.43f5c037.cohuck@redhat.com>
-In-Reply-To: <20210118165518.14578-2-sth@linux.ibm.com>
-References: <20210118165518.14578-1-sth@linux.ibm.com>
-        <20210118165518.14578-2-sth@linux.ibm.com>
-Organization: Red Hat GmbH
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>, x86@kernel.org,
+        linux-s390@vger.kernel.org, live-patching@vger.kernel.org
+Subject: [PATCH] stacktrace: Move documentation for arch_stack_walk_reliable() to header
+Date:   Mon, 18 Jan 2021 21:10:21 +0000
+Message-Id: <20210118211021.42308-1-broonie@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Patch-Hashes: v=1; h=sha256; i=Kh6NyXsqh0zq94gMuzBCs8afziAecd1XZurszyuxEhw=; m=lBSJGIM2NPehiVUZenL6miw4iuwRv6ZZam6wKeaI2Fc=; p=nPcWpKdBDbrmbYT1hqEf1yR8qtxRXTJfKeEoIt+tgd4=; g=f1dfd626035b5ec1394ca2d18e3f85690f794e7e
+X-Patch-Sig: m=pgp; i=broonie@kernel.org; s=0xC3F436CA30F5D8EB; b=iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmAF+SQACgkQJNaLcl1Uh9Cs6wf/aqA G6y6D8pTtW7LLVv2mo8pg0eS7xvIoxAytK6r1e333xaWzTG/baO+RT+iFPwQ5yX1piIWMoq8vSyNH JxKA1KV5Z+t6GdISS7IOuhOtjmWbEinFJWrE2yxtAmav3G/mf9h/mWu5EXLO5x9yrpxJc7gABI/gt c39Sqj0qy7Yi/ObkyNxvs/xvtxWkamPxiRI8rNh0s2HNribSDoBzs2DoDzMLQnxq2830LUJreef3y rDm9nBpx/r9sKn3SAM+RNr8Oj14q0ikuS1bEjyfFtccDIE9ryO4hkhaPPltzThoSxLIQfhUUZQdCe LjzErGmpayPVgqavyekkxzbMvn/6eRg==
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 18 Jan 2021 17:55:18 +0100
-Stefan Haberland <sth@linux.ibm.com> wrote:
+Currently arch_stack_wallk_reliable() is documented with an identical
+comment in both x86 and S/390 implementations which is a bit redundant.
+Move this to the header and convert to kerneldoc while we're at it.
 
-> From: Jan H=C3=B6ppner <hoeppner@linux.ibm.com>
->=20
-> Our intention was to only remove path kobjects whenever a device is
-> being set offline. However, one corner case was missing.
->=20
-> If a device is disabled and enabled (using the IOCTLs BIODASDDISABLE and
-> BIODASDENABLE respectively), the enabling process will call
-> dasd_eckd_reload_device() which itself calls dasd_eckd_read_conf() in
-> order to update path information. During that update,
-> dasd_eckd_clear_conf_data() clears all old data and also removes all
-> kobjects. This will leave us with an inconsistent state of path kobjects
-> and a subsequent path verification leads to a failing kobject creation.
->=20
-> Fix this by removing kobjects only in the context of offlining a device
-> as initially intended.
->=20
-> Fixes: 19508b204740 ("s390/dasd: Display FC Endpoint Security information=
- via sysfs")
-> Reported-by: Stefan Haberland <sth@linux.ibm.com>
-> Signed-off-by: Jan H=C3=B6ppner <hoeppner@linux.ibm.com>
-> Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
-> ---
->  drivers/s390/block/dasd_devmap.c | 20 ++++++++++++++------
->  drivers/s390/block/dasd_eckd.c   |  3 ++-
->  drivers/s390/block/dasd_int.h    |  2 +-
->  3 files changed, 17 insertions(+), 8 deletions(-)
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Miroslav Benes <mbenes@suse.cz>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: x86@kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: live-patching@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ arch/s390/kernel/stacktrace.c |  6 ------
+ arch/x86/kernel/stacktrace.c  |  6 ------
+ include/linux/stacktrace.h    | 19 +++++++++++++++++++
+ 3 files changed, 19 insertions(+), 12 deletions(-)
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+diff --git a/arch/s390/kernel/stacktrace.c b/arch/s390/kernel/stacktrace.c
+index 7f1266c24f6b..101477b3e263 100644
+--- a/arch/s390/kernel/stacktrace.c
++++ b/arch/s390/kernel/stacktrace.c
+@@ -24,12 +24,6 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 	}
+ }
+ 
+-/*
+- * This function returns an error if it detects any unreliable features of the
+- * stack.  Otherwise it guarantees that the stack trace is reliable.
+- *
+- * If the task is not 'current', the caller *must* ensure the task is inactive.
+- */
+ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 			     void *cookie, struct task_struct *task)
+ {
+diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+index 8627fda8d993..15b058eefc4e 100644
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -29,12 +29,6 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 	}
+ }
+ 
+-/*
+- * This function returns an error if it detects any unreliable features of the
+- * stack.  Otherwise it guarantees that the stack trace is reliable.
+- *
+- * If the task is not 'current', the caller *must* ensure the task is inactive.
+- */
+ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 			     void *cookie, struct task_struct *task)
+ {
+diff --git a/include/linux/stacktrace.h b/include/linux/stacktrace.h
+index 50e2df30b0aa..9edecb494e9e 100644
+--- a/include/linux/stacktrace.h
++++ b/include/linux/stacktrace.h
+@@ -52,8 +52,27 @@ typedef bool (*stack_trace_consume_fn)(void *cookie, unsigned long addr);
+  */
+ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 		     struct task_struct *task, struct pt_regs *regs);
++
++/**
++ * arch_stack_walk_reliable - Architecture specific function to walk the
++ *			      stack reliably
++ *
++ * @consume_entry:	Callback which is invoked by the architecture code for
++ *			each entry.
++ * @cookie:		Caller supplied pointer which is handed back to
++ *			@consume_entry
++ * @task:		Pointer to a task struct, can be NULL
++ *
++ * This function returns an error if it detects any unreliable
++ * features of the stack. Otherwise it guarantees that the stack
++ * trace is reliable.
++ *
++ * If the task is not 'current', the caller *must* ensure the task is
++ * inactive and its stack is pinned.
++ */
+ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry, void *cookie,
+ 			     struct task_struct *task);
++
+ void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
+ 			  const struct pt_regs *regs);
+ 
+-- 
+2.20.1
 
