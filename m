@@ -2,133 +2,161 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92FCD2FBDFE
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Jan 2021 18:45:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42FA82FBE01
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Jan 2021 18:45:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391452AbhASOum (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 Jan 2021 09:50:42 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22610 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390079AbhASM35 (ORCPT
+        id S2404174AbhASOvK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 Jan 2021 09:51:10 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44150 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391410AbhASNOz (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 19 Jan 2021 07:29:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611059288;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AhjCwJFmaF4VoVFL0RJQTcNJ5s76fuD8bDbj/NSCKEs=;
-        b=Tr6h6vtHMVoBg0k5AvN6Q2bBCIkKRqQyLlgc36WoAcwLlFzxGx+typj6pL7WAS+HeAOXmR
-        xrdV+Xtpe1xl3mJ28ttUQptRGoqmGqWGNGyzIwQ3hCTQORKsfgRkkl89+3m/qU6ZZ8bdc3
-        rStv4nSYjZVQUCutXCKfAwQqZBVg/m8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-81-nrkVVke_PFu7qpYui4RBcQ-1; Tue, 19 Jan 2021 07:28:04 -0500
-X-MC-Unique: nrkVVke_PFu7qpYui4RBcQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7B5B10054FF;
-        Tue, 19 Jan 2021 12:28:01 +0000 (UTC)
-Received: from [10.36.114.143] (ovpn-114-143.ams2.redhat.com [10.36.114.143])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1DE255D9F8;
-        Tue, 19 Jan 2021 12:27:53 +0000 (UTC)
-Subject: Re: [PATCH RFC] virtio-mem: check against memhp_get_pluggable_range()
- which memory we can hotplug
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
-        akpm@linux-foundation.org, hca@linux.ibm.com,
-        catalin.marinas@arm.com
-Cc:     Oscar Salvador <osalvador@suse.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        teawater <teawaterz@linux.alibaba.com>,
-        Pankaj Gupta <pankaj.gupta@cloud.ionos.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <1610975582-12646-1-git-send-email-anshuman.khandual@arm.com>
- <1610975582-12646-5-git-send-email-anshuman.khandual@arm.com>
- <a1644ce0-427f-7a5c-b90a-547e61341a75@arm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <630a8785-222d-26ed-a57a-ac5b58d7a04d@redhat.com>
-Date:   Tue, 19 Jan 2021 13:27:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.0
+        Tue, 19 Jan 2021 08:14:55 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10JDA3jh056532;
+        Tue, 19 Jan 2021 08:12:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=ET6sLnP+eJhqvkmcsRzmxETAVCUxIheSvgW3gOmrth4=;
+ b=g1NZg/akGdKOW3552smjVc/TaElmonUL+GWJbUf3xTnyi0HT7cLsWpReL0QyiP0TPws6
+ O3hHji/pWuvCapaoYGeucFpbyH88+jLb8hLoz5OxyAGICxNvM1zs9mLYNIQ4LKSOVV2E
+ GO382NHnAinSDNPvVSPOB7uBRy+vIedP8IrDzU6cG/Wy0jDJsFZPuAFiAt9QJ2Zb9ed2
+ gAwDprUVbmpQtPM+X5Lz5f5ZpUg3bIdp72schIbVeVacj35L8ZfQndTQU6pm0hwQPaP4
+ OeR/YrN+EzlpEIq65KNo8aT1ubGnfqS6G89B+icbL2JHyMUsL0tVNIavgViR/AC8dv0N 6g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 365ypcrm2j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Jan 2021 08:12:13 -0500
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10JDBtfd068086;
+        Tue, 19 Jan 2021 08:12:12 -0500
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 365ypcrm1q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Jan 2021 08:12:12 -0500
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10JCv16X002704;
+        Tue, 19 Jan 2021 13:12:09 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma01fra.de.ibm.com with ESMTP id 363qs89ke8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Jan 2021 13:12:09 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10JDC6UQ39321954
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Jan 2021 13:12:07 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D562AA404D;
+        Tue, 19 Jan 2021 13:12:06 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5080CA4053;
+        Tue, 19 Jan 2021 13:12:06 +0000 (GMT)
+Received: from ibm-vm (unknown [9.145.4.167])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Jan 2021 13:12:06 +0000 (GMT)
+Date:   Tue, 19 Jan 2021 14:11:33 +0100
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        thuth@redhat.com, david@redhat.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, linux-s390@vger.kernel.org, gor@linux.ibm.com,
+        mihajlov@linux.ibm.com
+Subject: Re: [PATCH 1/2] s390: uv: Fix sysfs max number of VCPUs reporting
+Message-ID: <20210119141133.186273c1@ibm-vm>
+In-Reply-To: <20210119100402.84734-2-frankja@linux.ibm.com>
+References: <20210119100402.84734-1-frankja@linux.ibm.com>
+        <20210119100402.84734-2-frankja@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <a1644ce0-427f-7a5c-b90a-547e61341a75@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2021-01-19_04:2021-01-18,2021-01-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ suspectscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 spamscore=0 bulkscore=0 priorityscore=1501
+ impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2009150000 definitions=main-2101190077
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 18.01.21 14:21, Anshuman Khandual wrote:
-> 
-> 
-> On 1/18/21 6:43 PM, Anshuman Khandual wrote:
->> From: David Hildenbrand <david@redhat.com>
->>
->> Right now, we only check against MAX_PHYSMEM_BITS - but turns out there
->> are more restrictions of which memory we can actually hotplug, especially
->> om arm64 or s390x once we support them: we might receive something like
->> -E2BIG or -ERANGE from add_memory_driver_managed(), stopping device
->> operation.
->>
->> So, check right when initializing the device which memory we can add,
->> warning the user. Try only adding actually pluggable ranges: in the worst
->> case, no memory provided by our device is pluggable.
->>
->> In the usual case, we expect all device memory to be pluggable, and in
->> corner cases only some memory at the end of the device-managed memory
->> region to not be pluggable.
->>
->> Cc: "Michael S. Tsirkin" <mst@redhat.com>
->> Cc: Jason Wang <jasowang@redhat.com>
->> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
->> Cc: Michal Hocko <mhocko@kernel.org>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: catalin.marinas@arm.com
->> Cc: teawater <teawaterz@linux.alibaba.com>
->> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
->> Cc: Pankaj Gupta <pankaj.gupta@cloud.ionos.com>
->> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Cc: hca@linux.ibm.com
->> Cc: Vasily Gorbik <gor@linux.ibm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Ard Biesheuvel <ardb@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Heiko Carstens <hca@linux.ibm.com>
->> Cc: Michal Hocko <mhocko@kernel.org>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> 
-> Hello David,
-> 
-> As your original patch was in the RFC state, I have just maintained
-> the same here as well. But once you test this patch along with the
-> new series, please do let me know if this needs to be converted to
-> a normal PATCH instead. Thank you.
+On Tue, 19 Jan 2021 05:04:01 -0500
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-I'll give it a churn on x86-64, where not that much should change. It
-will be interesting to test with arm64 in such corner cases in the future.
+> The number reported by the query is N-1 and I think people reading the
+> sysfs file would expect N instead. For users creating VMs there's no
+> actual difference because KVM's limit is currently below the UV's
+> limit.
+> 
+> The naming of the field is a bit misleading. Number in this context is
+> used like ID and starts at 0. The query field denotes the maximum
+> number that can be put into the VCPU number field in the "create
+> secure CPU" UV call.
 
-Thanks
+once you address Christian's comments:
 
--- 
-Thanks,
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 
-David / dhildenb
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> Fixes: a0f60f8431999 ("s390/protvirt: Add sysfs firmware interface
+> for Ultravisor information") Cc: stable@vger.kernel.org
+> ---
+>  arch/s390/boot/uv.c        | 2 +-
+>  arch/s390/include/asm/uv.h | 4 ++--
+>  arch/s390/kernel/uv.c      | 2 +-
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/s390/boot/uv.c b/arch/s390/boot/uv.c
+> index a15c033f53ca..afb721082989 100644
+> --- a/arch/s390/boot/uv.c
+> +++ b/arch/s390/boot/uv.c
+> @@ -35,7 +35,7 @@ void uv_query_info(void)
+>  		uv_info.guest_cpu_stor_len = uvcb.cpu_stor_len;
+>  		uv_info.max_sec_stor_addr =
+> ALIGN(uvcb.max_guest_stor_addr, PAGE_SIZE); uv_info.max_num_sec_conf
+> = uvcb.max_num_sec_conf;
+> -		uv_info.max_guest_cpus = uvcb.max_guest_cpus;
+> +		uv_info.max_guest_cpu_id = uvcb.max_guest_cpu_num;
+>  	}
+>  
+>  #ifdef CONFIG_PROTECTED_VIRTUALIZATION_GUEST
+> diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
+> index 0325fc0469b7..c484c95ea142 100644
+> --- a/arch/s390/include/asm/uv.h
+> +++ b/arch/s390/include/asm/uv.h
+> @@ -96,7 +96,7 @@ struct uv_cb_qui {
+>  	u32 max_num_sec_conf;
+>  	u64 max_guest_stor_addr;
+>  	u8  reserved88[158 - 136];
+> -	u16 max_guest_cpus;
+> +	u16 max_guest_cpu_num;
+>  	u8  reserveda0[200 - 160];
+>  } __packed __aligned(8);
+>  
+> @@ -273,7 +273,7 @@ struct uv_info {
+>  	unsigned long guest_cpu_stor_len;
+>  	unsigned long max_sec_stor_addr;
+>  	unsigned int max_num_sec_conf;
+> -	unsigned short max_guest_cpus;
+> +	unsigned short max_guest_cpu_id;
+>  };
+>  
+>  extern struct uv_info uv_info;
+> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
+> index 883bfed9f5c2..b2d2ad153067 100644
+> --- a/arch/s390/kernel/uv.c
+> +++ b/arch/s390/kernel/uv.c
+> @@ -368,7 +368,7 @@ static ssize_t uv_query_max_guest_cpus(struct
+> kobject *kobj, struct kobj_attribute *attr, char *page)
+>  {
+>  	return scnprintf(page, PAGE_SIZE, "%d\n",
+> -			uv_info.max_guest_cpus);
+> +			uv_info.max_guest_cpu_id + 1);
+>  }
+>  
+>  static struct kobj_attribute uv_query_max_guest_cpus_attr =
 
