@@ -2,146 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42DD72FAC6D
-	for <lists+linux-s390@lfdr.de>; Mon, 18 Jan 2021 22:18:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 105262FBA3B
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Jan 2021 15:56:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438042AbhARVRs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 Jan 2021 16:17:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2438039AbhARVRn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 18 Jan 2021 16:17:43 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7C12A22D6D;
-        Mon, 18 Jan 2021 21:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611004623;
-        bh=Bf5ce9CwufzdXB6Cszk/JHnQAMJKk7yu7BGgTzZuCSo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LSZPSc7BWIsNzEaHLKe7yEIG9KNqgbKXfKyRktjAby0y7HZvmvU7E9JqGpqKwv8Rh
-         QSEva9QcRNHTxZuQ6dcW+X4uTTN4r0q44YGcHF8iqjwICLiD3nNIozaOGvtG4727Bu
-         fnppCuI1Qm8TJPShRUXdGqj2iUAsxkCdMWtA2zLZAFOGKL7b0oXDNmD/O/fmTWwO2N
-         JxysIMDWOQGshoSqH9ybxjBpBCXNyTOElGKJ5OzxGorwDtuWtBsJ9viFNEGkohy3Aq
-         KPGW8VFAx16F7KPqfgIJWs+gU1JKxdHyZk8MdZM5GDIq9mcqtDG0w5eT83Yo12LT/c
-         VeMQF3Q1JAatA==
-From:   Mark Brown <broonie@kernel.org>
+        id S2389004AbhASOsH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 Jan 2021 09:48:07 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64088 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389581AbhASKGR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 19 Jan 2021 05:06:17 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10JA1X6G151764;
+        Tue, 19 Jan 2021 05:05:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=MvkOlGB+RFnvJiq75XxoiH7oyCh3GyINVvbzK2tCWM4=;
+ b=K9U6X4TN/FiYk/SyYKH13ymxkQjDqsLpZxYnTW3BkrL5BRs6s1RkT+6bKGFTBO7SS7Ht
+ CoJTdETT+FEyu7Pbpti2cHsprWZ3AnQxOPG/JHvdMZV2wTSyal1GN5e0HKvW+pBTEoq7
+ j3idvfbP6d7TYhYwvGzlO/rbVC/oz+BmzHJqn9f9LWzvs3pX95T8mx7zq5qeELAQw1M6
+ NfkkqdEprbwJ40CZ6dntk/clGg8PqTVv7Al4FGPTh9+TxJEMErVl0nijp8ZNoN6SwUvx
+ ooHAiATBj5IxyQxAHQXnA5F33MZsyggd8XU6Omo4dZrnDH0lbfRa8woIvlppXldF5aSu tw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 365vx10rf7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Jan 2021 05:05:35 -0500
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10JA1X3u151767;
+        Tue, 19 Jan 2021 05:05:28 -0500
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 365vx10r3b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Jan 2021 05:05:28 -0500
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10JA3xb0022520;
+        Tue, 19 Jan 2021 10:05:02 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma06fra.de.ibm.com with ESMTP id 363qdh9h41-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Jan 2021 10:05:02 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10JA4rdZ16122366
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Jan 2021 10:04:53 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 65E804C04A;
+        Tue, 19 Jan 2021 10:04:59 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 57E324C05C;
+        Tue, 19 Jan 2021 10:04:58 +0000 (GMT)
+Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Jan 2021 10:04:58 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>, x86@kernel.org,
-        linux-s390@vger.kernel.org, live-patching@vger.kernel.org
-Subject: [PATCH] stacktrace: Move documentation for arch_stack_walk_reliable() to header
-Date:   Mon, 18 Jan 2021 21:10:21 +0000
-Message-Id: <20210118211021.42308-1-broonie@kernel.org>
-X-Mailer: git-send-email 2.20.1
+Cc:     kvm@vger.kernel.org, thuth@redhat.com, david@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com, cohuck@redhat.com,
+        linux-s390@vger.kernel.org, gor@linux.ibm.com,
+        mihajlov@linux.ibm.com
+Subject: [PATCH 0/2] s390: uv: small UV fixes
+Date:   Tue, 19 Jan 2021 05:04:00 -0500
+Message-Id: <20210119100402.84734-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; i=Kh6NyXsqh0zq94gMuzBCs8afziAecd1XZurszyuxEhw=; m=lBSJGIM2NPehiVUZenL6miw4iuwRv6ZZam6wKeaI2Fc=; p=nPcWpKdBDbrmbYT1hqEf1yR8qtxRXTJfKeEoIt+tgd4=; g=f1dfd626035b5ec1394ca2d18e3f85690f794e7e
-X-Patch-Sig: m=pgp; i=broonie@kernel.org; s=0xC3F436CA30F5D8EB; b=iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmAF+SQACgkQJNaLcl1Uh9Cs6wf/aqA G6y6D8pTtW7LLVv2mo8pg0eS7xvIoxAytK6r1e333xaWzTG/baO+RT+iFPwQ5yX1piIWMoq8vSyNH JxKA1KV5Z+t6GdISS7IOuhOtjmWbEinFJWrE2yxtAmav3G/mf9h/mWu5EXLO5x9yrpxJc7gABI/gt c39Sqj0qy7Yi/ObkyNxvs/xvtxWkamPxiRI8rNh0s2HNribSDoBzs2DoDzMLQnxq2830LUJreef3y rDm9nBpx/r9sKn3SAM+RNr8Oj14q0ikuS1bEjyfFtccDIE9ryO4hkhaPPltzThoSxLIQfhUUZQdCe LjzErGmpayPVgqavyekkxzbMvn/6eRg==
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2021-01-19_02:2021-01-18,2021-01-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ adultscore=0 impostorscore=0 mlxlogscore=719 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 suspectscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101190058
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Currently arch_stack_wallk_reliable() is documented with an identical
-comment in both x86 and S/390 implementations which is a bit redundant.
-Move this to the header and convert to kerneldoc while we're at it.
+Two small fixes:
+    * Handle 3d PGMs where the address space id is not known
+    * Clean up the UV query VCPU number field naming (it's N-1 not N as number in this context means ID)
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Miroslav Benes <mbenes@suse.cz>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Joe Lawrence <joe.lawrence@redhat.com>
-Cc: x86@kernel.org
-Cc: linux-s390@vger.kernel.org
-Cc: live-patching@vger.kernel.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- arch/s390/kernel/stacktrace.c |  6 ------
- arch/x86/kernel/stacktrace.c  |  6 ------
- include/linux/stacktrace.h    | 19 +++++++++++++++++++
- 3 files changed, 19 insertions(+), 12 deletions(-)
+Janosch Frank (2):
+  s390: uv: Fix sysfs max number of VCPUs reporting
+  s390: mm: Fix secure storage access exception handling
 
-diff --git a/arch/s390/kernel/stacktrace.c b/arch/s390/kernel/stacktrace.c
-index 7f1266c24f6b..101477b3e263 100644
---- a/arch/s390/kernel/stacktrace.c
-+++ b/arch/s390/kernel/stacktrace.c
-@@ -24,12 +24,6 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
- 	}
- }
- 
--/*
-- * This function returns an error if it detects any unreliable features of the
-- * stack.  Otherwise it guarantees that the stack trace is reliable.
-- *
-- * If the task is not 'current', the caller *must* ensure the task is inactive.
-- */
- int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
- 			     void *cookie, struct task_struct *task)
- {
-diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
-index 8627fda8d993..15b058eefc4e 100644
---- a/arch/x86/kernel/stacktrace.c
-+++ b/arch/x86/kernel/stacktrace.c
-@@ -29,12 +29,6 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
- 	}
- }
- 
--/*
-- * This function returns an error if it detects any unreliable features of the
-- * stack.  Otherwise it guarantees that the stack trace is reliable.
-- *
-- * If the task is not 'current', the caller *must* ensure the task is inactive.
-- */
- int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
- 			     void *cookie, struct task_struct *task)
- {
-diff --git a/include/linux/stacktrace.h b/include/linux/stacktrace.h
-index 50e2df30b0aa..9edecb494e9e 100644
---- a/include/linux/stacktrace.h
-+++ b/include/linux/stacktrace.h
-@@ -52,8 +52,27 @@ typedef bool (*stack_trace_consume_fn)(void *cookie, unsigned long addr);
-  */
- void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
- 		     struct task_struct *task, struct pt_regs *regs);
-+
-+/**
-+ * arch_stack_walk_reliable - Architecture specific function to walk the
-+ *			      stack reliably
-+ *
-+ * @consume_entry:	Callback which is invoked by the architecture code for
-+ *			each entry.
-+ * @cookie:		Caller supplied pointer which is handed back to
-+ *			@consume_entry
-+ * @task:		Pointer to a task struct, can be NULL
-+ *
-+ * This function returns an error if it detects any unreliable
-+ * features of the stack. Otherwise it guarantees that the stack
-+ * trace is reliable.
-+ *
-+ * If the task is not 'current', the caller *must* ensure the task is
-+ * inactive and its stack is pinned.
-+ */
- int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry, void *cookie,
- 			     struct task_struct *task);
-+
- void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
- 			  const struct pt_regs *regs);
- 
+ arch/s390/boot/uv.c        |  2 +-
+ arch/s390/include/asm/uv.h |  4 ++--
+ arch/s390/kernel/uv.c      |  2 +-
+ arch/s390/mm/fault.c       | 14 ++++++++++++++
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
 -- 
-2.20.1
+2.25.1
 
