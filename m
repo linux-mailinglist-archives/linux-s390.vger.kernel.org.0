@@ -2,123 +2,193 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 678D12FBDEB
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Jan 2021 18:44:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DF632FBDEF
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Jan 2021 18:44:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732015AbhASOr4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 Jan 2021 09:47:56 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62166 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389551AbhASKFs (ORCPT
+        id S2389649AbhASOsl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 Jan 2021 09:48:41 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21652 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389775AbhASKQn (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 19 Jan 2021 05:05:48 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10JA1l50010572;
-        Tue, 19 Jan 2021 05:05:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=moOU28gvvMta6uWMdNJk6EeImI3fQmyyyTwDtyprFDY=;
- b=SWwLGAPUJ9Muz4W82v6pk5dFnLded0DcWW6lq+Gzwt73PX59XTfThAzlPXg4Af/EDExC
- YPaRcX8Uo/JiE/c05LrPZB5atbZTrlx91KSGkuYNUtc7eA5l4tM+T6SQIMMa3FRDq9qi
- BLuPkwxgWvualcgg8BIrzpP6Bx55Yxsk003u47vy55Ygekhs2S5hIL74vevOWvwfdqgR
- HkejhMq9ipKupusED+pnRK2+rizMRBa4B4UdaNMG6mjXPgEa5w7HSIKU0TY+6lE4P4yd
- FX4ww07hqVlANv+wBgeLeohk/sg4X7aWHmq64SBt6d3VvM2/YUBC7IO/rUWqa+ZT4/9h Cg== 
+        Tue, 19 Jan 2021 05:16:43 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10JA2efg044144;
+        Tue, 19 Jan 2021 05:16:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type; s=pp1; bh=B2pfOzVPEWvrcHf8yuZvNxs75twumi6cIm3uTetfPxo=;
+ b=anpCZsIvzh/U0xNy88BrxMctEm1epYTZwdD6KKNKNIUD0qVGLei7kvqD3w3/V+4mjy0t
+ jIgSsvv8ERd+ZiI64SjhKoceEEyIZSAPYY+xnTgGY1yiN48NEjzE9G2JLvMr9E+dovO+
+ xnaQAAPmY6Jpy+1JBJ9fg0DwcoCeE1q8w+tX6/ntmVxb6ShaN0w6jLZWiVHMxXJMeDqi
+ d21C00uc86n1oaOKw3viD4PbrTsABHrqChoia7CUQuBlTa3QgZ8tvA5wLpV0jeAd4QR8
+ AyAfBp7j4NrtK1uZGfpyObj/EIZUf5qzKV6OW9PsRVM5Jb9S47G+D1j97VbfSaRhCIIh 2g== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 365w8wg6tb-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 365v8wjahd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Jan 2021 05:05:06 -0500
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10JA2tDJ015937;
-        Tue, 19 Jan 2021 05:05:06 -0500
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 365w8wg6s9-1
+        Tue, 19 Jan 2021 05:16:01 -0500
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10JA3Gnm046710;
+        Tue, 19 Jan 2021 05:16:00 -0500
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 365v8wjagj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Jan 2021 05:05:06 -0500
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10JA3MSq009050;
-        Tue, 19 Jan 2021 10:05:04 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 363qs7jx2h-1
+        Tue, 19 Jan 2021 05:16:00 -0500
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10JACOuV013493;
+        Tue, 19 Jan 2021 10:15:58 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04fra.de.ibm.com with ESMTP id 363t0y9fct-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Jan 2021 10:05:04 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10JA516M33620394
+        Tue, 19 Jan 2021 10:15:58 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10JAFn0u23331170
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Jan 2021 10:05:01 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C67BE4C040;
-        Tue, 19 Jan 2021 10:05:01 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA0814C059;
-        Tue, 19 Jan 2021 10:05:00 +0000 (GMT)
-Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 19 Jan 2021 10:05:00 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
+        Tue, 19 Jan 2021 10:15:49 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6A187AE045;
+        Tue, 19 Jan 2021 10:15:55 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB94CAE055;
+        Tue, 19 Jan 2021 10:15:54 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.154.17])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Jan 2021 10:15:54 +0000 (GMT)
+Subject: Re: [PATCH 1/2] s390: uv: Fix sysfs max number of VCPUs reporting
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org
 Cc:     kvm@vger.kernel.org, thuth@redhat.com, david@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com, cohuck@redhat.com,
+        imbrenda@linux.ibm.com, cohuck@redhat.com,
         linux-s390@vger.kernel.org, gor@linux.ibm.com,
         mihajlov@linux.ibm.com
-Subject: [PATCH 2/2] s390: mm: Fix secure storage access exception handling
-Date:   Tue, 19 Jan 2021 05:04:02 -0500
-Message-Id: <20210119100402.84734-3-frankja@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210119100402.84734-1-frankja@linux.ibm.com>
 References: <20210119100402.84734-1-frankja@linux.ibm.com>
+ <20210119100402.84734-2-frankja@linux.ibm.com>
+ <d72e2823-f30f-02be-1ee5-445496ca9dbc@de.ibm.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Message-ID: <945319e9-641b-70ea-0e0b-2e71f73cf086@linux.ibm.com>
+Date:   Tue, 19 Jan 2021 11:15:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d72e2823-f30f-02be-1ee5-445496ca9dbc@de.ibm.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="JXmkQwHCz3sbY2Fj0qkTT5EXxMRwhLeHS"
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
  definitions=2021-01-19_02:2021-01-18,2021-01-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- malwarescore=0 suspectscore=0 priorityscore=1501 mlxscore=0
- mlxlogscore=999 clxscore=1011 spamscore=0 impostorscore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101190058
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
+ mlxscore=0 phishscore=0 adultscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2009150000 definitions=main-2101190060
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Turns out that the bit 61 in the TEID is not always 1 and if that's
-the case the address space ID and the address are
-unpredictable. Without an address and it's address space ID we can't
-export memory and hence we can only send a SIGSEGV to the process or
-panic the kernel depending on who caused the exception.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--JXmkQwHCz3sbY2Fj0qkTT5EXxMRwhLeHS
+Content-Type: multipart/mixed; boundary="lz5q6hLeak3dWPor1jJiwzRZnMqWZiCIj";
+ protected-headers="v1"
+From: Janosch Frank <frankja@linux.ibm.com>
+To: Christian Borntraeger <borntraeger@de.ibm.com>,
+ linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org, thuth@redhat.com, david@redhat.com,
+ imbrenda@linux.ibm.com, cohuck@redhat.com, linux-s390@vger.kernel.org,
+ gor@linux.ibm.com, mihajlov@linux.ibm.com
+Message-ID: <945319e9-641b-70ea-0e0b-2e71f73cf086@linux.ibm.com>
+Subject: Re: [PATCH 1/2] s390: uv: Fix sysfs max number of VCPUs reporting
+References: <20210119100402.84734-1-frankja@linux.ibm.com>
+ <20210119100402.84734-2-frankja@linux.ibm.com>
+ <d72e2823-f30f-02be-1ee5-445496ca9dbc@de.ibm.com>
+In-Reply-To: <d72e2823-f30f-02be-1ee5-445496ca9dbc@de.ibm.com>
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Fixes: 084ea4d611a3d ("s390/mm: add (non)secure page access exceptions handlers")
-Cc: stable@vger.kernel.org
----
- arch/s390/mm/fault.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+--lz5q6hLeak3dWPor1jJiwzRZnMqWZiCIj
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index e30c7c781172..5442937e5b4b 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -791,6 +791,20 @@ void do_secure_storage_access(struct pt_regs *regs)
- 	struct page *page;
- 	int rc;
- 
-+	/* There are cases where we don't have a TEID. */
-+	if (!(regs->int_parm_long & 0x4)) {
-+		/*
-+		 * Userspace could for example try to execute secure
-+		 * storage and trigger this. We should tell it that it
-+		 * shouldn't do that.
-+		 */
-+		if (user_mode(regs)) {
-+			send_sig(SIGSEGV, current, 0);
-+			return;
-+		} else
-+			panic("Unexpected PGM 0x3d with TEID bit 61=0");
-+	}
-+
- 	switch (get_fault_type(regs)) {
- 	case USER_FAULT:
- 		mm = current->mm;
--- 
-2.25.1
+On 1/19/21 11:11 AM, Christian Borntraeger wrote:
+>=20
+>=20
+> On 19.01.21 11:04, Janosch Frank wrote:
+>> The number reported by the query is N-1 and I think people reading the=
+
+>> sysfs file would expect N instead. For users creating VMs there's no
+>> actual difference because KVM's limit is currently below the UV's
+>> limit.
+>>
+>> The naming of the field is a bit misleading. Number in this context is=
+
+>> used like ID and starts at 0. The query field denotes the maximum
+>> number that can be put into the VCPU number field in the "create
+>> secure CPU" UV call.
+>>
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> Fixes: a0f60f8431999 ("s390/protvirt: Add sysfs firmware interface for=
+ Ultravisor information")
+>> Cc: stable@vger.kernel.org
+>> ---
+>>  arch/s390/boot/uv.c        | 2 +-
+>>  arch/s390/include/asm/uv.h | 4 ++--
+>>  arch/s390/kernel/uv.c      | 2 +-
+>>  3 files changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/s390/boot/uv.c b/arch/s390/boot/uv.c
+>> index a15c033f53ca..afb721082989 100644
+>> --- a/arch/s390/boot/uv.c
+>> +++ b/arch/s390/boot/uv.c
+>> @@ -35,7 +35,7 @@ void uv_query_info(void)
+>>  		uv_info.guest_cpu_stor_len =3D uvcb.cpu_stor_len;
+>>  		uv_info.max_sec_stor_addr =3D ALIGN(uvcb.max_guest_stor_addr, PAGE_=
+SIZE);
+>>  		uv_info.max_num_sec_conf =3D uvcb.max_num_sec_conf;
+>> -		uv_info.max_guest_cpus =3D uvcb.max_guest_cpus;
+>> +		uv_info.max_guest_cpu_id =3D uvcb.max_guest_cpu_num;
+>>  	}
+>> =20
+>>  #ifdef CONFIG_PROTECTED_VIRTUALIZATION_GUEST
+>> diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
+>> index 0325fc0469b7..c484c95ea142 100644
+>> --- a/arch/s390/include/asm/uv.h
+>> +++ b/arch/s390/include/asm/uv.h
+>> @@ -96,7 +96,7 @@ struct uv_cb_qui {
+>>  	u32 max_num_sec_conf;
+>>  	u64 max_guest_stor_addr;
+>>  	u8  reserved88[158 - 136];
+>> -	u16 max_guest_cpus;
+>> +	u16 max_guest_cpu_num;
+>=20
+> I think it would read better if we name this also max_guest_cpu_id.
+> Otherwise this looks good.
+>=20
+
+Yes, but I wanted to have the same name as in the specification.
+So, what do we value more?
+
+
+--lz5q6hLeak3dWPor1jJiwzRZnMqWZiCIj--
+
+--JXmkQwHCz3sbY2Fj0qkTT5EXxMRwhLeHS
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAmAGsVkFAwAAAAAACgkQ41TmuOI4ufh3
+8RAAvEI3EI9BFL8WyNz+3cZsOMr9YUwTDQ8hH1ZmxYf6Gn2dxY91L1Tq1KENifEOI00d6N3XSyar
+hPt+dZfuumEBMgVgS/7gj68rzf1hMl0aiZzdPAmlCGHbrz/QcwXkcYUyY2Xl5xAyx7AmoI/31JZL
+BzYcxOce3LWBiW//oukm2WUC5iF5QTpDxj0SoOBBhs/F4p2eIxD6PLZ0H1ft5+DDU4sJMZx7t2f+
+yuyKeGZVjtbGheoCambagQIbfsT67hBo1GNlwXF9AYlfC5U9uqorblnEFAqSevdxxjd0aAd0LOJK
+egB+7ERukG4vIcLDXxUEUSfNXlj98I92XLs8sLuZZRmfHLGkMp6hRUuXLXuuATK6lVwtSC22u6ll
+3SG1+pQaB9jGkgsfh3BjKcJyU2YDOurCvhrPOYep4AeI/WQPDhCgRDcQ5YQG+Ts0vaGzaqQjRo9H
+i3lYOsEU1pxGkXMA7ypDDRQoB1+8hj2eeLpxDHnpEm2o8SelCwS/kFxg2+rVusYnnMzG0yoAW9yR
+U01P5kUO6EC0+4rpz2rsI0pNy4pZop36j7ZEqr+RPseXnEk21FOopwOpKArmwb+v394rpvel+Syk
+RZnJSvnYE9nJAxZquBVuS7b338azcFe3tYsbF8YssBV9h9yHdrCEO/MalIYpJGnTZdk0uGEcz/oh
+3os=
+=GVgv
+-----END PGP SIGNATURE-----
+
+--JXmkQwHCz3sbY2Fj0qkTT5EXxMRwhLeHS--
 
