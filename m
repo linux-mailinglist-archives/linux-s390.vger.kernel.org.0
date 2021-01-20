@@ -2,123 +2,141 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 892802FCD1D
-	for <lists+linux-s390@lfdr.de>; Wed, 20 Jan 2021 10:05:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D4232FD008
+	for <lists+linux-s390@lfdr.de>; Wed, 20 Jan 2021 13:23:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbhATJEa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 20 Jan 2021 04:04:30 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15456 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727427AbhATJDo (ORCPT
+        id S1731433AbhATMWZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 20 Jan 2021 07:22:25 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:37775 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387646AbhATKlf (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 20 Jan 2021 04:03:44 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10K91kRv070532;
-        Wed, 20 Jan 2021 04:03:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=WTDZ9aYsWOWABpjc4bX1QkrE9uWJbUYyZ6lhbsp3NbM=;
- b=UXwmT+kNQHqdA2kllHP7p1VOhnhXBbQ9/qOSm8xpjG0hplwAlbArPGLAJFdfax4wHf05
- Vj06ithKjHqeVbIf+KTmswjupgvfLY6hAUm72nTec36+5GEl3ooYTJTZlymFImgv2J1c
- GO5CrR8gpjUooqreEfaF5GoEj7JYGFLlYRme873NyGnnPZ1oqIAq0iaVwYjcwZOkENGf
- fdVEMv2W587TPerlR4Zj39va90sDVdCTUaI1S1ul5EGaWbRRhm6UVbIzSLrahgg4F2fq
- lV3qRrABXP4LMe+hRDUuBlMxtAEMENRotw4t/TiGsNuVtnPI/DSOujHDa9XG3MOxZjAn YA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 366ff73bgb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Jan 2021 04:03:02 -0500
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10K92jkh073694;
-        Wed, 20 Jan 2021 04:02:45 -0500
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 366ff73awh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Jan 2021 04:02:44 -0500
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10K8qfr7009557;
-        Wed, 20 Jan 2021 09:02:12 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06ams.nl.ibm.com with ESMTP id 3668nwrctt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Jan 2021 09:02:12 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10K929Xe40567204
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Jan 2021 09:02:09 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 314914C05A;
-        Wed, 20 Jan 2021 09:02:09 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A49314C046;
-        Wed, 20 Jan 2021 09:02:08 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.39.155])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Jan 2021 09:02:08 +0000 (GMT)
-Subject: Re: [PATCH 0/4] vfio-pci/zdev: Fixing s390 vfio-pci ISM support
-To:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        alex.williamson@redhat.com, cohuck@redhat.com,
-        schnelle@linux.ibm.com
-Cc:     borntraeger@de.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1611086550-32765-1-git-send-email-mjrosato@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <d44a5da8-1cb9-8b1c-ef48-caea4bda2fa8@linux.ibm.com>
-Date:   Wed, 20 Jan 2021 10:02:08 +0100
+        Wed, 20 Jan 2021 05:41:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611139199;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RtHg9smHqxIpjluq3oLZYsQNrVvpjsSlKeat5q09TUI=;
+        b=cR8SkLUmVPqMfnkRp/AW3QC6yUw0ej0mj3eYlXunLqrvsLc6FK/P61c837qVTLqait/gC2
+        UHSH7MzSdj84yO9PmiJqEkZPyHQK+dphqrWODBOrpgIg1DawzzzDEd6f/T+SqxXEqJ1Fk/
+        7cdlp5BFpJzINWtcvdC5PH5z4jggZGs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-374-9yww2jV9OASCNtYxr91j0g-1; Wed, 20 Jan 2021 05:39:55 -0500
+X-MC-Unique: 9yww2jV9OASCNtYxr91j0g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A2171005D44;
+        Wed, 20 Jan 2021 10:39:53 +0000 (UTC)
+Received: from [10.36.115.161] (ovpn-115-161.ams2.redhat.com [10.36.115.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A27FA5D9C2;
+        Wed, 20 Jan 2021 10:39:50 +0000 (UTC)
+Subject: Re: [PATCH V3 3/3] s390/mm: Define arch_get_mappable_range()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org, hca@linux.ibm.com,
+        catalin.marinas@arm.com
+Cc:     Oscar Salvador <osalvador@suse.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1610975582-12646-1-git-send-email-anshuman.khandual@arm.com>
+ <1610975582-12646-4-git-send-email-anshuman.khandual@arm.com>
+ <cbdb32af-74af-ceb2-fa68-3912ef20d784@redhat.com>
+ <a58eb974-4700-d877-7033-4ad6dfd2476f@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <31c19215-3f25-4d60-29f6-77127c05abbb@redhat.com>
+Date:   Wed, 20 Jan 2021 11:39:49 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-In-Reply-To: <1611086550-32765-1-git-send-email-mjrosato@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <a58eb974-4700-d877-7033-4ad6dfd2476f@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-20_02:2021-01-18,2021-01-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 adultscore=0 lowpriorityscore=0 mlxlogscore=999
- clxscore=1011 mlxscore=0 suspectscore=0 phishscore=0 spamscore=0
- impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2009150000 definitions=main-2101200049
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 1/19/21 9:02 PM, Matthew Rosato wrote:
-> Today, ISM devices are completely disallowed for vfio-pci passthrough as
-> QEMU will reject the device due to an (inappropriate) MSI-X check.
-> However, in an effort to enable ISM device passthrough, I realized that the
-> manner in which ISM performs block write operations is highly incompatible
-> with the way that QEMU s390 PCI instruction interception and
-> vfio_pci_bar_rw break up I/O operations into 8B and 4B operations -- ISM
-> devices have particular requirements in regards to the alignment, size and
-> order of writes performed.  Furthermore, they require that legacy/non-MIO
-> s390 PCI instructions are used, which is also not guaranteed when the I/O
-> is passed through the typical userspace channels.
+On 20.01.21 09:28, Anshuman Khandual wrote:
 > 
-> As a result, this patchset proposes a new VFIO region to allow a guest to
-> pass certain PCI instruction intercepts directly to the s390 host kernel
-> PCI layer for execution, pinning the guest buffer in memory briefly in
-> order to execute the requested PCI instruction.
 > 
-> Changes from RFC -> v1:
-> - No functional changes, just minor commentary changes -- Re-posting along
-> with updated QEMU set.
+> On 1/19/21 5:56 PM, David Hildenbrand wrote:
+>> On 18.01.21 14:13, Anshuman Khandual wrote:
+>>> This overrides arch_get_mappabble_range() on s390 platform which will be
+>>> used with recently added generic framework. It modifies the existing range
+>>> check in vmem_add_mapping() using arch_get_mappable_range(). It also adds a
+>>> VM_BUG_ON() check that would ensure that memhp_range_allowed() has already
+>>> been called on the hotplug path.
+>>>
+>>> Cc: Heiko Carstens <hca@linux.ibm.com>
+>>> Cc: Vasily Gorbik <gor@linux.ibm.com>
+>>> Cc: David Hildenbrand <david@redhat.com>
+>>> Cc: linux-s390@vger.kernel.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Acked-by: Heiko Carstens <hca@linux.ibm.com>
+>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>> ---
+>>>  arch/s390/mm/init.c |  1 +
+>>>  arch/s390/mm/vmem.c | 15 ++++++++++++++-
+>>>  2 files changed, 15 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+>>> index 73a163065b95..97017a4bcc90 100644
+>>> --- a/arch/s390/mm/init.c
+>>> +++ b/arch/s390/mm/init.c
+>>> @@ -297,6 +297,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>>  	if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
+>>>  		return -EINVAL;
+>>>  
+>>> +	VM_BUG_ON(!memhp_range_allowed(start, size, true));
+>>>  	rc = vmem_add_mapping(start, size);
+>>>  	if (rc)
+>>>  		return rc;
+>>> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
+>>> index 01f3a5f58e64..afc39ff1cc8d 100644
+>>> --- a/arch/s390/mm/vmem.c
+>>> +++ b/arch/s390/mm/vmem.c
+>>> @@ -4,6 +4,7 @@
+>>>   *    Author(s): Heiko Carstens <heiko.carstens@de.ibm.com>
+>>>   */
+>>>  
+>>> +#include <linux/memory_hotplug.h>
+>>>  #include <linux/memblock.h>
+>>>  #include <linux/pfn.h>
+>>>  #include <linux/mm.h>
+>>> @@ -532,11 +533,23 @@ void vmem_remove_mapping(unsigned long start, unsigned long size)
+>>>  	mutex_unlock(&vmem_mutex);
+>>>  }
+>>>  
+>>> +struct range arch_get_mappable_range(void)
+>>> +{
+>>> +	struct range memhp_range;
+>>
+>> You could do:
+>>
+>> memhp_range = {
+>> 	.start = 0,
+>> 	.end =  VMEM_MAX_PHYS - 1,
+>> };
+>>
+>> Similar in the arm64 patch.
 > 
+> There is a comment block just before this assignment on arm64. Also
+> it seems like code style preference and Heiko had originally agreed
+> on this particular patch. Could we just leave it unchanged please ?
 
-Hi,
-
-there are is a concerns about this patch series:
-As the title says it is strongly related to ISM hardware.
-
-Why being so specific?
-
-Regards,
-Pierre
+That's not how review works. But as I said, "You could do".
 
 -- 
-Pierre Morel
-IBM Lab Boeblingen
+Thanks,
+
+David / dhildenb
+
