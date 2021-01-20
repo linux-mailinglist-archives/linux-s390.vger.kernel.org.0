@@ -2,174 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB3DF2FD01B
-	for <lists+linux-s390@lfdr.de>; Wed, 20 Jan 2021 13:34:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8F092FD01D
+	for <lists+linux-s390@lfdr.de>; Wed, 20 Jan 2021 13:34:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732995AbhATMZp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 20 Jan 2021 07:25:45 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18480 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388488AbhATLoY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 20 Jan 2021 06:44:24 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10KBVg61173909;
-        Wed, 20 Jan 2021 06:43:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=YsztOlHfLiOvcDQxGPeoPu4supOISAUJzc/Mkybzi4A=;
- b=HRlFvPAi5AaA0ondap/eyk6hqC6Fv1l+1UYqJNE0Ez/4ApWsTatntC2YBsZyn0XLYfPH
- 9UsQXc5a9tcq4M51sOtQ3Swh/GSo0Jt7FfTJ7psfLRy4sP3hOa4nVCT4Lsomth2FOPuG
- Q7zVi7cpcuFaZV9gTSg72qAKu+Ejq+X0gA79F0V33eT7DJVmjPvP7TkFmZhbeornn8d9
- +8AA9ziSKiu+NJ2coe+EXBOBQymmKKNiVx0egvQK/gtfH2vHX6oWNdDQfNxiObiRn66i
- Jh7+3iFRdMSuZNv5/YHy3jLxXcRmekFAj0TVqDZqhDFAAXOBIATn4H5cmvAxVm2QSjfv xQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 366jtphnm3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Jan 2021 06:43:44 -0500
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10KBVwqV174717;
-        Wed, 20 Jan 2021 06:43:43 -0500
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 366jtphnke-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Jan 2021 06:43:43 -0500
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10KBfMSo001718;
-        Wed, 20 Jan 2021 11:43:41 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06fra.de.ibm.com with ESMTP id 3668p90912-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Jan 2021 11:43:41 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10KBhdiF32899532
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Jan 2021 11:43:39 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E2280AE055;
-        Wed, 20 Jan 2021 11:43:38 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 17E4EAE051;
-        Wed, 20 Jan 2021 11:43:38 +0000 (GMT)
-Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Jan 2021 11:43:37 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     pbonzini@redhat.com
-Cc:     kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
-        borntraeger@de.ibm.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com
-Subject: [kvm-unit-tests GIT PULL 11/11] s390x: Fix uv_call() exception behavior
-Date:   Wed, 20 Jan 2021 06:41:58 -0500
-Message-Id: <20210120114158.104559-12-frankja@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210120114158.104559-1-frankja@linux.ibm.com>
-References: <20210120114158.104559-1-frankja@linux.ibm.com>
+        id S1732997AbhATMZs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 20 Jan 2021 07:25:48 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57914 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732901AbhATL7O (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 20 Jan 2021 06:59:14 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7B1E1AAAE;
+        Wed, 20 Jan 2021 11:58:17 +0000 (UTC)
+Date:   Wed, 20 Jan 2021 12:58:14 +0100
+From:   Oscar Salvador <osalvador@suse.de>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org, hca@linux.ibm.com,
+        catalin.marinas@arm.com, Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 1/3] mm/memory_hotplug: Prevalidate the address range
+ being added with platform
+Message-ID: <20210120115814.GA7107@localhost.localdomain>
+References: <1610975582-12646-1-git-send-email-anshuman.khandual@arm.com>
+ <1610975582-12646-2-git-send-email-anshuman.khandual@arm.com>
+ <691872bb-b251-83e0-126e-afd54683c83e@redhat.com>
+ <3d4f3b14-0715-b2b3-b015-04b8a77abfb8@arm.com>
+ <30bbf862-06a4-bd1d-b902-61aa4183b819@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-20_02:2021-01-18,2021-01-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- phishscore=0 mlxscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
- adultscore=0 mlxlogscore=999 suspectscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101200064
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <30bbf862-06a4-bd1d-b902-61aa4183b819@redhat.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On a program exception we usually skip the instruction that caused the
-exception and continue. That won't work for UV calls since a "brc
-3,0b" will retry the instruction if the CC is > 1. Let's forgo the brc
-when checking for privilege exceptions and use a uv_call_once().
+On Wed, Jan 20, 2021 at 11:41:53AM +0100, David Hildenbrand wrote:
+> On 20.01.21 09:33, Anshuman Khandual wrote:
+> > 
+> > 
+> > On 1/19/21 5:51 PM, David Hildenbrand wrote:
+> >> On 18.01.21 14:12, Anshuman Khandual wrote:
+> >>> This introduces memhp_range_allowed() which can be called in various memory
+> >>> hotplug paths to prevalidate the address range which is being added, with
+> >>> the platform. Then memhp_range_allowed() calls memhp_get_pluggable_range()
+> >>> which provides applicable address range depending on whether linear mapping
+> >>> is required or not. For ranges that require linear mapping, it calls a new
+> >>> arch callback arch_get_mappable_range() which the platform can override. So
+> >>> the new callback, in turn provides the platform an opportunity to configure
+> >>> acceptable memory hotplug address ranges in case there are constraints.
+> >>>
+> >>> This mechanism will help prevent platform specific errors deep down during
+> >>> hotplug calls. This drops now redundant check_hotplug_memory_addressable()
+> >>> check in __add_pages() but instead adds a VM_BUG_ON() check which would
+> >>
+> >> In this patch, you keep the __add_pages() checks. But as discussed, we
+> >> could perform it in mm/memremap.c:pagemap_range() insted and convert it
+> >> to a VM_BUG_ON().
+> > 
+> > Just to be sure, will the following change achieve what you are
+> > suggesting here. pagemap_range() after this change, will again
+> > be the same like the V1 series.
+> 
+> Yeah, as we used to have in v1. Maybe other reviewers (@Oscar?) have a
+> different opinion.
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Suggested-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Thomas Huth <thuth@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
----
- lib/s390x/asm/uv.h | 24 ++++++++++++++++--------
- s390x/uv-guest.c   |  6 +++---
- 2 files changed, 19 insertions(+), 11 deletions(-)
+No, I think that placing the check in pagemap_range() out of the if-else
+makes much more sense.
+Actually, unless my memory  fails me that is what I suggested in v2.
 
-diff --git a/lib/s390x/asm/uv.h b/lib/s390x/asm/uv.h
-index 4c2fc48..39d2dc0 100644
---- a/lib/s390x/asm/uv.h
-+++ b/lib/s390x/asm/uv.h
-@@ -50,19 +50,12 @@ struct uv_cb_share {
- 	u64 reserved28;
- } __attribute__((packed))  __attribute__((aligned(8)));
- 
--static inline int uv_call(unsigned long r1, unsigned long r2)
-+static inline int uv_call_once(unsigned long r1, unsigned long r2)
- {
- 	int cc;
- 
--	/*
--	 * The brc instruction will take care of the cc 2/3 case where
--	 * we need to continue the execution because we were
--	 * interrupted. The inline assembly will only return on
--	 * success/error i.e. cc 0/1.
--	*/
- 	asm volatile(
- 		"0:	.insn rrf,0xB9A40000,%[r1],%[r2],0,0\n"
--		"		brc	3,0b\n"
- 		"		ipm	%[cc]\n"
- 		"		srl	%[cc],28\n"
- 		: [cc] "=d" (cc)
-@@ -71,4 +64,19 @@ static inline int uv_call(unsigned long r1, unsigned long r2)
- 	return cc;
- }
- 
-+static inline int uv_call(unsigned long r1, unsigned long r2)
-+{
-+	int cc;
-+
-+	/*
-+	 * CC 2 and 3 tell us to re-execute because the instruction
-+	 * hasn't yet finished.
-+	 */
-+	do {
-+		cc = uv_call_once(r1, r2);
-+	} while (cc > 1);
-+
-+	return cc;
-+}
-+
- #endif
-diff --git a/s390x/uv-guest.c b/s390x/uv-guest.c
-index e51b85e..9954444 100644
---- a/s390x/uv-guest.c
-+++ b/s390x/uv-guest.c
-@@ -29,7 +29,7 @@ static void test_priv(void)
- 	uvcb.len = sizeof(struct uv_cb_qui);
- 	expect_pgm_int();
- 	enter_pstate();
--	uv_call(0, (u64)&uvcb);
-+	uv_call_once(0, (u64)&uvcb);
- 	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
- 	report_prefix_pop();
- 
-@@ -38,7 +38,7 @@ static void test_priv(void)
- 	uvcb.len = sizeof(struct uv_cb_share);
- 	expect_pgm_int();
- 	enter_pstate();
--	uv_call(0, (u64)&uvcb);
-+	uv_call_once(0, (u64)&uvcb);
- 	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
- 	report_prefix_pop();
- 
-@@ -47,7 +47,7 @@ static void test_priv(void)
- 	uvcb.len = sizeof(struct uv_cb_share);
- 	expect_pgm_int();
- 	enter_pstate();
--	uv_call(0, (u64)&uvcb);
-+	uv_call_once(0, (u64)&uvcb);
- 	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
- 	report_prefix_pop();
- 
+I plan to have a look at the series later this week as I am fairly busy
+atm.
+
+Thanks
+
+
 -- 
-2.25.1
-
+Oscar Salvador
+SUSE L3
