@@ -2,136 +2,80 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C5062FDA85
-	for <lists+linux-s390@lfdr.de>; Wed, 20 Jan 2021 21:13:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CDDB12FDB64
+	for <lists+linux-s390@lfdr.de>; Wed, 20 Jan 2021 22:25:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732588AbhATUMK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 20 Jan 2021 15:12:10 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38474 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389670AbhATODU (ORCPT
+        id S1726184AbhATNod (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 20 Jan 2021 08:44:33 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:42305 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728812AbhATMsK (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 20 Jan 2021 09:03:20 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10KE2G21075548;
-        Wed, 20 Jan 2021 09:02:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=BAeaN5aBw1Q1PNgOFJ8a2pj1N9pC+et+J5r+lRzxBFA=;
- b=l91Ri8xOsipANoIIycqtLBHKYLAU8Ann/AVRRpi9XQrGmmcd8rlvx06T+Qc+p22dGvQP
- TTmReR2tk1f2qkDWC0TIaZHtOZwoOE1h1pPbHzjLpfp+Q5AzHtyGKw3M81g2rKC25ua1
- Sk/dvPDeZo7EAnXo/VlFDnuzSJjyeXh0NADZcplgDMLAHanvDQLanmW9ZORZXuIFuZkP
- BuzCyk4aiLbYwFApTDkRsT2qnW1XnfXDT3QQ85gCHB0bZOVQXKTpPsLi31nAy5fEoqXW
- xQ+MFV4SmQ9LOV3Dl/9fr5JzcRstsYIwsHsCSZ74f0jqfZI+22pajxccCus48v1+IGzR RA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 366nn0gk3e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Jan 2021 09:02:31 -0500
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10KE2OfX075868;
-        Wed, 20 Jan 2021 09:02:24 -0500
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 366nn0gjxg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Jan 2021 09:02:24 -0500
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10KDvsJ6024442;
-        Wed, 20 Jan 2021 14:02:13 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma01wdc.us.ibm.com with ESMTP id 3668s74k8h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Jan 2021 14:02:13 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10KE29RR22938058
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Jan 2021 14:02:09 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C2A22BE051;
-        Wed, 20 Jan 2021 14:02:09 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B57C8BE04F;
-        Wed, 20 Jan 2021 14:02:08 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.211.56.144])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Jan 2021 14:02:08 +0000 (GMT)
-Subject: Re: [PATCH 0/4] vfio-pci/zdev: Fixing s390 vfio-pci ISM support
-To:     Pierre Morel <pmorel@linux.ibm.com>, alex.williamson@redhat.com,
-        cohuck@redhat.com, schnelle@linux.ibm.com
-Cc:     borntraeger@de.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1611086550-32765-1-git-send-email-mjrosato@linux.ibm.com>
- <d44a5da8-1cb9-8b1c-ef48-caea4bda2fa8@linux.ibm.com>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-Message-ID: <18cf09c6-5331-b5df-c421-aade717f9766@linux.ibm.com>
-Date:   Wed, 20 Jan 2021 09:02:07 -0500
+        Wed, 20 Jan 2021 07:48:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611146804;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=k+BpkyaexVwIjrPU5KJtj1aN8DF4ysQcoxRYEH3ORP4=;
+        b=IzZGxz3Xew8YVRsBbi7GB+rRH+hKCmCrW0X2OOaZzTbfDWalgopYclBa2++zsMedh1SOZC
+        Pvvp8HjeltNakS3D3lAxD8rOEQDjOGYtQfqv/PlBVAUesejv1UWMRLrE+Lz2CZIY/+R9IV
+        MYQeCRjXsapxllePFH+Kx6S4MD/ES6o=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-242-H9k3kFJ-PSW7IbyLBiGe-g-1; Wed, 20 Jan 2021 07:46:42 -0500
+X-MC-Unique: H9k3kFJ-PSW7IbyLBiGe-g-1
+Received: by mail-ej1-f71.google.com with SMTP id q11so7467028ejd.0
+        for <linux-s390@vger.kernel.org>; Wed, 20 Jan 2021 04:46:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=k+BpkyaexVwIjrPU5KJtj1aN8DF4ysQcoxRYEH3ORP4=;
+        b=nFGddqWUsUkogS5p09uiFAP2hpcA/48tk4IK8VvAdpkGnW7wvHn+yMDdGf4bl1xUYb
+         Ksb8yce/iRsLXxs1rndqnQEOlNiaw6/TDJQg+Ys2kL0WUCFB3R26uNbN110onZFg4I8r
+         pM46mhmePnGuMMb1xMig5SuXj5dsOM0qhc/YpuiMNhNpJcI/0SABwP134PKzM6GBIDCF
+         OHNlRXNk0z9Kqj4lAHtaFEyUtlFZwiwGoFooFgrqcCmqOLQhQ935E5rF/oyFb+Lyw/2n
+         TrYBVQslq3eItV3cyc7Z1QpNQap496bSp8qoQbCMw00TZGPZBshcnSEiRli+w4FCR0+T
+         vldQ==
+X-Gm-Message-State: AOAM5306ufytv3QrxPgrP8u3BobI11abpLy/bKDchIj8RgWZxbvN0iNx
+        3nCgCJ5q05u7o9AXN7fUNxfCuGY+QuRKQD4ahP9/UkUEnhkITYpgZVbSfskmfnTczIVVuezOiie
+        SvvzDD1knSe1GD/UynSyjMg==
+X-Received: by 2002:a05:6402:4c1:: with SMTP id n1mr7211726edw.66.1611146801382;
+        Wed, 20 Jan 2021 04:46:41 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxkPjX3RI3ZL5PKU22ojPETwG7C2LrsncmQBlG68XGpAbggp2j5SnJeHKiIFIcUBxpyf7yXXA==
+X-Received: by 2002:a05:6402:4c1:: with SMTP id n1mr7211712edw.66.1611146801268;
+        Wed, 20 Jan 2021 04:46:41 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:5e2c:eb9a:a8b6:fd3e? ([2001:b07:6468:f312:5e2c:eb9a:a8b6:fd3e])
+        by smtp.gmail.com with ESMTPSA id b101sm1059835edf.49.2021.01.20.04.46.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Jan 2021 04:46:39 -0800 (PST)
+Subject: Re: [kvm-unit-tests GIT PULL 00/11] s390x update
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, david@redhat.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, linux-s390@vger.kernel.org,
+        imbrenda@linux.ibm.com
+References: <20210120114158.104559-1-frankja@linux.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <3c78d5a9-338a-3a72-e49b-225d1d0883d0@redhat.com>
+Date:   Wed, 20 Jan 2021 13:46:38 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.0
 MIME-Version: 1.0
-In-Reply-To: <d44a5da8-1cb9-8b1c-ef48-caea4bda2fa8@linux.ibm.com>
+In-Reply-To: <20210120114158.104559-1-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-20_05:2021-01-20,2021-01-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- impostorscore=0 spamscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- lowpriorityscore=0 adultscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101200079
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 1/20/21 4:02 AM, Pierre Morel wrote:
-> 
-> 
-> On 1/19/21 9:02 PM, Matthew Rosato wrote:
->> Today, ISM devices are completely disallowed for vfio-pci passthrough as
->> QEMU will reject the device due to an (inappropriate) MSI-X check.
->> However, in an effort to enable ISM device passthrough, I realized 
->> that the
->> manner in which ISM performs block write operations is highly 
->> incompatible
->> with the way that QEMU s390 PCI instruction interception and
->> vfio_pci_bar_rw break up I/O operations into 8B and 4B operations -- ISM
->> devices have particular requirements in regards to the alignment, size 
->> and
->> order of writes performed.  Furthermore, they require that legacy/non-MIO
->> s390 PCI instructions are used, which is also not guaranteed when the I/O
->> is passed through the typical userspace channels.
->>
->> As a result, this patchset proposes a new VFIO region to allow a guest to
->> pass certain PCI instruction intercepts directly to the s390 host kernel
->> PCI layer for execution, pinning the guest buffer in memory briefly in
->> order to execute the requested PCI instruction.
->>
->> Changes from RFC -> v1:
->> - No functional changes, just minor commentary changes -- Re-posting 
->> along
->> with updated QEMU set.
->>
-> 
-> Hi,
-> 
-> there are is a concerns about this patch series:
-> As the title says it is strongly related to ISM hardware.
-> 
-> Why being so specific?
+On 20/01/21 12:41, Janosch Frank wrote:
+>    https://gitlab.com/frankja/kvm-unit-tests.git  tags/s390x-2021-20-01
 
-Because prior investigations have shown that the region can only be 
-safely used by a device type that does not implement MSI-X (use of this 
-region by a vfio-pci device that has MSI-X capability interferes with 
-vfio-pci MSI-X masking, since we are bypassing the typical VFIO bar 
-regions and vfio-pci MSI-X masking is triggered by those region accesses).
+Pulled, thanks.
 
-So, in lieu of another suggestion that would overcome that issue (nobody 
-has suggested anything thus far), the proposal is to limit the region's 
-use to fix the specific problem at hand (ISM devices won't function 
-properly if passed through).  That doesn't preclude this region from 
-being used for a different device type later, but ISM is why we are 
-introducing it now.
-
+Paolo
 
