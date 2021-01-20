@@ -2,162 +2,189 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36D792FD00F
+	by mail.lfdr.de (Postfix) with ESMTP id AF6CF2FD010
 	for <lists+linux-s390@lfdr.de>; Wed, 20 Jan 2021 13:34:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731803AbhATMYE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 20 Jan 2021 07:24:04 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:53621 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732250AbhATLDV (ORCPT
+        id S1728515AbhATMYL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 20 Jan 2021 07:24:11 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13228 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388385AbhATLoQ (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 20 Jan 2021 06:03:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611140511;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+z2tcwO7de5N4TVau2AL14xxCOhlqfPxup9LRCqTy94=;
-        b=fb9bgOeufazA5d6onoW7QEd42z6i14PihyxKbn80ZEuj53rbQFVPsVVkUwg4JVPrp8vTTj
-        sbYN/ak67ahQGVJgY8No/o7YefZBZyHv01XANx7chm/thFRJElupRLbge5j6piHRfEUcGv
-        eCSCWID6KCIzo4fOE0kIypnbvQ95bTw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-28-5bVKMRbcNqO1rsUPK-hbrA-1; Wed, 20 Jan 2021 06:01:50 -0500
-X-MC-Unique: 5bVKMRbcNqO1rsUPK-hbrA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B296559;
-        Wed, 20 Jan 2021 11:01:48 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-114-135.ams2.redhat.com [10.36.114.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 101445C8AB;
-        Wed, 20 Jan 2021 11:01:43 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v3 2/3] s390x: define UV compatible I/O
- allocation
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com,
-        drjones@redhat.com, pbonzini@redhat.com
-References: <1611085944-21609-1-git-send-email-pmorel@linux.ibm.com>
- <1611085944-21609-3-git-send-email-pmorel@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <2558695f-4ab7-d6e9-c857-0e8473ada775@redhat.com>
-Date:   Wed, 20 Jan 2021 12:01:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        Wed, 20 Jan 2021 06:44:16 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10KBaeqe022584;
+        Wed, 20 Jan 2021 06:43:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=mWfXdUSwEOyiqniHeylHVpIJoi0TTJz2NAGWPnowU7A=;
+ b=WjKhHEW6z3F35yqYHOC+AIRE9yjLydqP/9kZ/bjTW0icieI5v4E0K/HdlZkQXm6KuU3l
+ m9ee2Ksy5/c5lh8OB+HkG0EkEFlFEDrTrvn5cehxyyplgSo7E0X+/KX06Us3LjVVZH4l
+ 9cNrQJ0cnc9yoNbwH1h+5sP4YYXsEORShQge5qrPHKT60QMxfEICyPz9seHo+dWe0M47
+ FSzAWRCk72L/MTVkV2g3g+Busmfz7AGlebSYaX+1rC7iRrskdrT0/fmcA7tPI17GnUY+
+ Rd3BGz6Y9c4qqxZwKWHUEuUha4iLsRNNehzgg0xzu7JZ2Tj3moy+JSgj0zJSB0nburYd 7g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 366jnb24rx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Jan 2021 06:43:34 -0500
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10KBd8v8036323;
+        Wed, 20 Jan 2021 06:43:33 -0500
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 366jnb24qc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Jan 2021 06:43:33 -0500
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10KBfPqx013629;
+        Wed, 20 Jan 2021 11:43:31 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 3668parhcd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Jan 2021 11:43:31 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10KBhLbU21365148
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Jan 2021 11:43:22 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 04A24AE04D;
+        Wed, 20 Jan 2021 11:43:28 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2BAF6AE059;
+        Wed, 20 Jan 2021 11:43:27 +0000 (GMT)
+Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 20 Jan 2021 11:43:27 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     pbonzini@redhat.com
+Cc:     kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com,
+        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com
+Subject: [kvm-unit-tests GIT PULL 00/11] s390x update
+Date:   Wed, 20 Jan 2021 06:41:47 -0500
+Message-Id: <20210120114158.104559-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <1611085944-21609-3-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2021-01-20_02:2021-01-18,2021-01-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ mlxlogscore=999 priorityscore=1501 mlxscore=0 impostorscore=0 adultscore=0
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2101200064
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 19/01/2021 20.52, Pierre Morel wrote:
-> To centralize the memory allocation for I/O we define
-> the alloc_io_page/free_io_page functions which share the I/O
-> memory with the host in case the guest runs with
-> protected virtualization.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->   lib/s390x/malloc_io.c | 50 +++++++++++++++++++++++++++++++++++++++++++
->   lib/s390x/malloc_io.h | 18 ++++++++++++++++
->   s390x/Makefile        |  1 +
->   3 files changed, 69 insertions(+)
->   create mode 100644 lib/s390x/malloc_io.c
->   create mode 100644 lib/s390x/malloc_io.h
-> 
-> diff --git a/lib/s390x/malloc_io.c b/lib/s390x/malloc_io.c
-> new file mode 100644
-> index 0000000..2a946e0
-> --- /dev/null
-> +++ b/lib/s390x/malloc_io.c
-> @@ -0,0 +1,50 @@
-> +/*
-> + * I/O page allocation
-> + *
-> + * Copyright (c) 2021 IBM Corp
-> + *
-> + * Authors:
-> + *  Pierre Morel <pmorel@linux.ibm.com>
-> + *
-> + * This code is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2.
+Dear Paolo,
 
-Janosch recently started to introduce SPDX identifieres to the s390x code, 
-so I think it would be good to use them here, too.
+please pull the following changes or merge them on gitlab:
 
-> + * Using this interface provide host access to the allocated pages in
-> + * case the guest is a secure guest.
-> + * This is needed for I/O buffers.
-> + *
-> + */
-> +#include <libcflat.h>
-> +#include <asm/page.h>
-> +#include <asm/uv.h>
-> +#include <malloc_io.h>
-> +#include <alloc_page.h>
-> +#include <asm/facility.h>
-> +
-> +void *alloc_io_page(int size)
-> +{
-> +	void *p;
-> +
-> +	assert(size <= PAGE_SIZE);
+* Moved to SPDX license identifiers and cleaning up licenses
+* Added test_bit(_inv)() & SCLP feature bit checking
+* Added first SIE lib and test for nesting tests
+* Added diag318 emulation test
+* Small UV fix
 
-Apart from the assert() statement, the size parameter seems to be completely 
-unused. It's also weird to have the function named alloc_something_page() 
-and then have a parameter that takes bytes. Thus I'd suggest to either drop 
-the size parameter completely, or to rename the function to alloc_io_mem and 
-then to alloc multiple pages below in case the size is bigger than 
-PAGE_SIZE. Or maybe even to name the function alloc_io_pages and then use 
-"int num_pages" as a parameter, allowing to allocate multiple pages at once?
 
-> +
-> +	p = alloc_pages_flags(1, AREA_DMA31);
-> +	if (!p)
-> +		return NULL;
-> +	memset(p, 0, PAGE_SIZE);
-> +
-> +	if (!test_facility(158))
-> +		return p;
-> +
-> +	if (uv_set_shared((unsigned long)p) == 0)
-> +		return p;
-> +
-> +	free_pages(p);
-> +	return NULL;
-> +}
-> +
-> +void free_io_page(void *p)
-> +{
-> +	if (test_facility(158))
-> +		uv_remove_shared((unsigned long)p);
-> +	free_pages(p);
-> +}
-> diff --git a/lib/s390x/malloc_io.h b/lib/s390x/malloc_io.h
-> new file mode 100644
-> index 0000000..f780191
-> --- /dev/null
-> +++ b/lib/s390x/malloc_io.h
-> @@ -0,0 +1,18 @@
-> +/*
-> + * I/O allocations
-> + *
-> + * Copyright (c) 2021 IBM Corp
-> + *
-> + * Authors:
-> + *  Pierre Morel <pmorel@linux.ibm.com>
-> + *
-> + * This code is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2.
-> + */
-Please also add SPDX license information here.
+Gitlab merge request:
+https://gitlab.com/kvm-unit-tests/kvm-unit-tests/-/merge_requests/4
 
-  Thomas
+
+The following changes since commit 4a54e8a3a88be171814e31dd6ab9b7a766644e32:
+
+  lib/alloc_page: Properly handle requests for fresh blocks (2021-01-19 13:18:54 -0500)
+
+are available in the Git repository at:
+
+  https://gitlab.com/frankja/kvm-unit-tests.git tags/s390x-2021-20-01
+
+for you to fetch changes up to 88fb0e5d52be357d3aab854c5c16303fe1608335:
+
+  s390x: Fix uv_call() exception behavior (2021-01-20 04:15:21 -0500)
+
+
+Janosch Frank (11):
+  s390x: Move to GPL 2 and SPDX license identifiers
+  s390x: lib: Move to GPL 2 and SPDX license identifiers
+  s390x: Add test_bit to library
+  s390x: Consolidate sclp read info
+  s390x: SCLP feature checking
+  s390x: Split assembly into multiple files
+  s390x: sie: Add SIE to lib
+  s390x: sie: Add first SIE test
+  s390x: Add diag318 intercept test
+  s390x: Fix sclp.h style issues
+  s390x: Fix uv_call() exception behavior
+
+ lib/s390x/asm-offsets.c     |  15 ++-
+ lib/s390x/asm/arch_def.h    |  13 ++-
+ lib/s390x/asm/asm-offsets.h |   4 +-
+ lib/s390x/asm/barrier.h     |   4 +-
+ lib/s390x/asm/bitops.h      |  26 +++++
+ lib/s390x/asm/cpacf.h       |   1 +
+ lib/s390x/asm/facility.h    |   7 +-
+ lib/s390x/asm/float.h       |   4 +-
+ lib/s390x/asm/interrupt.h   |   4 +-
+ lib/s390x/asm/io.h          |   4 +-
+ lib/s390x/asm/mem.h         |   4 +-
+ lib/s390x/asm/page.h        |   4 +-
+ lib/s390x/asm/pgtable.h     |   4 +-
+ lib/s390x/asm/sigp.h        |   4 +-
+ lib/s390x/asm/spinlock.h    |   4 +-
+ lib/s390x/asm/stack.h       |   4 +-
+ lib/s390x/asm/time.h        |   4 +-
+ lib/s390x/asm/uv.h          |  24 +++--
+ lib/s390x/css.h             |   4 +-
+ lib/s390x/css_dump.c        |   4 +-
+ lib/s390x/css_lib.c         |   4 +-
+ lib/s390x/interrupt.c       |  11 +-
+ lib/s390x/io.c              |   6 +-
+ lib/s390x/mmu.c             |   4 +-
+ lib/s390x/mmu.h             |   4 +-
+ lib/s390x/sclp-console.c    |   5 +-
+ lib/s390x/sclp.c            |  61 +++++++++--
+ lib/s390x/sclp.h            | 183 ++++++++++++++++++---------------
+ lib/s390x/sie.h             | 198 ++++++++++++++++++++++++++++++++++++
+ lib/s390x/smp.c             |  31 +++---
+ lib/s390x/smp.h             |   4 +-
+ lib/s390x/stack.c           |   4 +-
+ lib/s390x/vm.c              |   3 +-
+ lib/s390x/vm.h              |   3 +-
+ s390x/Makefile              |   7 +-
+ s390x/cmm.c                 |   4 +-
+ s390x/cpu.S                 | 121 ++++++++++++++++++++++
+ s390x/cpumodel.c            |   4 +-
+ s390x/css.c                 |   4 +-
+ s390x/cstart64.S            | 123 +---------------------
+ s390x/diag10.c              |   4 +-
+ s390x/diag288.c             |   4 +-
+ s390x/diag308.c             |   5 +-
+ s390x/emulator.c            |   4 +-
+ s390x/gs.c                  |   4 +-
+ s390x/iep.c                 |   4 +-
+ s390x/intercept.c           |  23 ++++-
+ s390x/macros.S              |  77 ++++++++++++++
+ s390x/pfmf.c                |   4 +-
+ s390x/sclp.c                |   4 +-
+ s390x/selftest.c            |   4 +-
+ s390x/sie.c                 | 113 ++++++++++++++++++++
+ s390x/skey.c                |   4 +-
+ s390x/skrf.c                |   4 +-
+ s390x/smp.c                 |   4 +-
+ s390x/sthyi.c               |   4 +-
+ s390x/sthyi.h               |   4 +-
+ s390x/stsi.c                |   4 +-
+ s390x/unittests.cfg         |   3 +
+ s390x/uv-guest.c            |  16 ++-
+ s390x/vector.c              |   4 +-
+ 61 files changed, 831 insertions(+), 392 deletions(-)
+ create mode 100644 lib/s390x/sie.h
+ create mode 100644 s390x/cpu.S
+ create mode 100644 s390x/macros.S
+ create mode 100644 s390x/sie.c
+
+-- 
+2.25.1
 
