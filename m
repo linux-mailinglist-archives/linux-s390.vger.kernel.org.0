@@ -2,22 +2,24 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 890FE2FCCBA
-	for <lists+linux-s390@lfdr.de>; Wed, 20 Jan 2021 09:30:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C5CE2FCCD5
+	for <lists+linux-s390@lfdr.de>; Wed, 20 Jan 2021 09:40:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbhATI3h (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 20 Jan 2021 03:29:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:49836 "EHLO foss.arm.com"
+        id S1727742AbhATIgn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 20 Jan 2021 03:36:43 -0500
+Received: from foss.arm.com ([217.140.110.172]:50122 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730313AbhATI3I (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 20 Jan 2021 03:29:08 -0500
+        id S1730937AbhATIeQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 20 Jan 2021 03:34:16 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE2A611B3;
-        Wed, 20 Jan 2021 00:28:13 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B59BC11B3;
+        Wed, 20 Jan 2021 00:33:26 -0800 (PST)
 Received: from [10.163.90.172] (unknown [10.163.90.172])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FC453F68F;
-        Wed, 20 Jan 2021 00:28:09 -0800 (PST)
-Subject: Re: [PATCH V3 3/3] s390/mm: Define arch_get_mappable_range()
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F3A53F68F;
+        Wed, 20 Jan 2021 00:33:22 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH V3 1/3] mm/memory_hotplug: Prevalidate the address range
+ being added with platform
 To:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
         akpm@linux-foundation.org, hca@linux.ibm.com,
         catalin.marinas@arm.com
@@ -29,15 +31,14 @@ Cc:     Oscar Salvador <osalvador@suse.de>,
         linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <1610975582-12646-1-git-send-email-anshuman.khandual@arm.com>
- <1610975582-12646-4-git-send-email-anshuman.khandual@arm.com>
- <cbdb32af-74af-ceb2-fa68-3912ef20d784@redhat.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <a58eb974-4700-d877-7033-4ad6dfd2476f@arm.com>
-Date:   Wed, 20 Jan 2021 13:58:32 +0530
+ <1610975582-12646-2-git-send-email-anshuman.khandual@arm.com>
+ <691872bb-b251-83e0-126e-afd54683c83e@redhat.com>
+Message-ID: <3d4f3b14-0715-b2b3-b015-04b8a77abfb8@arm.com>
+Date:   Wed, 20 Jan 2021 14:03:45 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <cbdb32af-74af-ceb2-fa68-3912ef20d784@redhat.com>
+In-Reply-To: <691872bb-b251-83e0-126e-afd54683c83e@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -47,98 +48,91 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 1/19/21 5:56 PM, David Hildenbrand wrote:
-> On 18.01.21 14:13, Anshuman Khandual wrote:
->> This overrides arch_get_mappabble_range() on s390 platform which will be
->> used with recently added generic framework. It modifies the existing range
->> check in vmem_add_mapping() using arch_get_mappable_range(). It also adds a
->> VM_BUG_ON() check that would ensure that memhp_range_allowed() has already
->> been called on the hotplug path.
+On 1/19/21 5:51 PM, David Hildenbrand wrote:
+> On 18.01.21 14:12, Anshuman Khandual wrote:
+>> This introduces memhp_range_allowed() which can be called in various memory
+>> hotplug paths to prevalidate the address range which is being added, with
+>> the platform. Then memhp_range_allowed() calls memhp_get_pluggable_range()
+>> which provides applicable address range depending on whether linear mapping
+>> is required or not. For ranges that require linear mapping, it calls a new
+>> arch callback arch_get_mappable_range() which the platform can override. So
+>> the new callback, in turn provides the platform an opportunity to configure
+>> acceptable memory hotplug address ranges in case there are constraints.
 >>
->> Cc: Heiko Carstens <hca@linux.ibm.com>
->> Cc: Vasily Gorbik <gor@linux.ibm.com>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: linux-s390@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Acked-by: Heiko Carstens <hca@linux.ibm.com>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  arch/s390/mm/init.c |  1 +
->>  arch/s390/mm/vmem.c | 15 ++++++++++++++-
->>  2 files changed, 15 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
->> index 73a163065b95..97017a4bcc90 100644
->> --- a/arch/s390/mm/init.c
->> +++ b/arch/s390/mm/init.c
->> @@ -297,6 +297,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
->>  	if (WARN_ON_ONCE(params->pgprot.pgprot != PAGE_KERNEL.pgprot))
->>  		return -EINVAL;
->>  
->> +	VM_BUG_ON(!memhp_range_allowed(start, size, true));
->>  	rc = vmem_add_mapping(start, size);
->>  	if (rc)
->>  		return rc;
->> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
->> index 01f3a5f58e64..afc39ff1cc8d 100644
->> --- a/arch/s390/mm/vmem.c
->> +++ b/arch/s390/mm/vmem.c
->> @@ -4,6 +4,7 @@
->>   *    Author(s): Heiko Carstens <heiko.carstens@de.ibm.com>
->>   */
->>  
->> +#include <linux/memory_hotplug.h>
->>  #include <linux/memblock.h>
->>  #include <linux/pfn.h>
->>  #include <linux/mm.h>
->> @@ -532,11 +533,23 @@ void vmem_remove_mapping(unsigned long start, unsigned long size)
->>  	mutex_unlock(&vmem_mutex);
->>  }
->>  
->> +struct range arch_get_mappable_range(void)
->> +{
->> +	struct range memhp_range;
+>> This mechanism will help prevent platform specific errors deep down during
+>> hotplug calls. This drops now redundant check_hotplug_memory_addressable()
+>> check in __add_pages() but instead adds a VM_BUG_ON() check which would
 > 
-> You could do:
-> 
-> memhp_range = {
-> 	.start = 0,
-> 	.end =  VMEM_MAX_PHYS - 1,
-> };
-> 
-> Similar in the arm64 patch.
+> In this patch, you keep the __add_pages() checks. But as discussed, we
+> could perform it in mm/memremap.c:pagemap_range() insted and convert it
+> to a VM_BUG_ON().
 
-There is a comment block just before this assignment on arm64. Also
-it seems like code style preference and Heiko had originally agreed
-on this particular patch. Could we just leave it unchanged please ?
+Just to be sure, will the following change achieve what you are
+suggesting here. pagemap_range() after this change, will again
+be the same like the V1 series.
 
-> 
->> +
->> +	memhp_range.start = 0;
->> +	memhp_range.end =  VMEM_MAX_PHYS - 1;
->> +	return memhp_range;
->> +}
->> +
->>  int vmem_add_mapping(unsigned long start, unsigned long size)
->>  {
->> +	struct range range;
->>  	int ret;
->>  
->> -	if (start + size > VMEM_MAX_PHYS ||
->> +	range = arch_get_mappable_range();
-> 
-> You could do
-> 
-> struct range range = arch_get_mappable_range();
+---
+ mm/memory_hotplug.c |  3 +--
+ mm/memremap.c       | 12 +++++-------
+ 2 files changed, 6 insertions(+), 9 deletions(-)
 
-Sure, will change this though.
-
-> 
->> +	if (start < range.start ||
->> +	    start + size > range.end + 1 ||
->>  	    start + size < start)
->>  		return -ERANGE;
->>  
->>
-> 
-> 
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 46faa914aa25..10d4ec8f349c 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -304,8 +304,7 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+ 	if (WARN_ON_ONCE(!params->pgprot.pgprot))
+ 		return -EINVAL;
+ 
+-	if(!memhp_range_allowed(PFN_PHYS(pfn), nr_pages * PAGE_SIZE, false))
+-		return -E2BIG;
++	VM_BUG_ON(!memhp_range_allowed(PFN_PHYS(pfn), nr_pages * PAGE_SIZE, false));
+ 
+ 	if (altmap) {
+ 		/*
+diff --git a/mm/memremap.c b/mm/memremap.c
+index e15b13736f6a..26c1825756cc 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -185,6 +185,7 @@ static void dev_pagemap_percpu_release(struct percpu_ref *ref)
+ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
+ 		int range_id, int nid)
+ {
++	const bool is_private = pgmap->type == MEMORY_DEVICE_PRIVATE;
+ 	struct range *range = &pgmap->ranges[range_id];
+ 	struct dev_pagemap *conflict_pgmap;
+ 	int error, is_ram;
+@@ -230,6 +231,9 @@ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
+ 	if (error)
+ 		goto err_pfn_remap;
+ 
++	if (!memhp_range_allowed(range->start, range_len(range), !is_private))
++		goto err_pfn_remap;
++
+ 	mem_hotplug_begin();
+ 
+ 	/*
+@@ -243,7 +247,7 @@ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
+ 	 * the CPU, we do want the linear mapping and thus use
+ 	 * arch_add_memory().
+ 	 */
+-	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
++	if (is_private) {
+ 		error = add_pages(nid, PHYS_PFN(range->start),
+ 				PHYS_PFN(range_len(range)), params);
+ 	} else {
+@@ -253,12 +257,6 @@ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
+ 			goto err_kasan;
+ 		}
+ 
+-		if (!memhp_range_allowed(range->start, range_len(range), true)) {
+-			error = -ERANGE;
+-			mem_hotplug_done();
+-			goto err_add_memory;
+-		}
+-
+ 		error = arch_add_memory(nid, range->start, range_len(range),
+ 					params);
+ 	}
+-- 
+2.20.1
