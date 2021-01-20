@@ -2,131 +2,162 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6B902FD016
-	for <lists+linux-s390@lfdr.de>; Wed, 20 Jan 2021 13:34:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36D792FD00F
+	for <lists+linux-s390@lfdr.de>; Wed, 20 Jan 2021 13:34:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731412AbhATMXn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 20 Jan 2021 07:23:43 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:56352 "EHLO
+        id S1731803AbhATMYE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 20 Jan 2021 07:24:04 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:53621 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731277AbhATKu1 (ORCPT
+        by vger.kernel.org with ESMTP id S1732250AbhATLDV (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 20 Jan 2021 05:50:27 -0500
+        Wed, 20 Jan 2021 06:03:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611139741;
+        s=mimecast20190719; t=1611140511;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RvHvFu8tLMqu5uqkDtNhlThCTmTs4Eu9AXXwvK/+6BQ=;
-        b=IVY38THNxOO3lda6g6dXlrf0fk+j3uO/Z/jUWjN71Q1BMTcQtU0r8PipJNr0fXgBFg82p4
-        AXVWNV89WBDnTMCBTz56BcwJ4mMrbAlL+Ln2Vp/Blbv1da0tFpZr/UI8kxnGKdehe8q4HS
-        /x7Rh+DyxICvqqQ33IIKUPjfVhBSBPg=
+        bh=+z2tcwO7de5N4TVau2AL14xxCOhlqfPxup9LRCqTy94=;
+        b=fb9bgOeufazA5d6onoW7QEd42z6i14PihyxKbn80ZEuj53rbQFVPsVVkUwg4JVPrp8vTTj
+        sbYN/ak67ahQGVJgY8No/o7YefZBZyHv01XANx7chm/thFRJElupRLbge5j6piHRfEUcGv
+        eCSCWID6KCIzo4fOE0kIypnbvQ95bTw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-22-ZE9jRAHPM7K_6X7ikR51MQ-1; Wed, 20 Jan 2021 05:48:59 -0500
-X-MC-Unique: ZE9jRAHPM7K_6X7ikR51MQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-28-5bVKMRbcNqO1rsUPK-hbrA-1; Wed, 20 Jan 2021 06:01:50 -0500
+X-MC-Unique: 5bVKMRbcNqO1rsUPK-hbrA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 62273107ACE3;
-        Wed, 20 Jan 2021 10:48:58 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B296559;
+        Wed, 20 Jan 2021 11:01:48 +0000 (UTC)
 Received: from thuth.remote.csb (ovpn-114-135.ams2.redhat.com [10.36.114.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 40B1260916;
-        Wed, 20 Jan 2021 10:48:53 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v3 1/3] s390x: pv: implement routine to
- share/unshare memory
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 101445C8AB;
+        Wed, 20 Jan 2021 11:01:43 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v3 2/3] s390x: define UV compatible I/O
+ allocation
 To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
         david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com,
         drjones@redhat.com, pbonzini@redhat.com
 References: <1611085944-21609-1-git-send-email-pmorel@linux.ibm.com>
- <1611085944-21609-2-git-send-email-pmorel@linux.ibm.com>
+ <1611085944-21609-3-git-send-email-pmorel@linux.ibm.com>
 From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <211a4bd3-763a-f8fc-3c08-8d8d1809cc7c@redhat.com>
-Date:   Wed, 20 Jan 2021 11:48:52 +0100
+Message-ID: <2558695f-4ab7-d6e9-c857-0e8473ada775@redhat.com>
+Date:   Wed, 20 Jan 2021 12:01:42 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.0
 MIME-Version: 1.0
-In-Reply-To: <1611085944-21609-2-git-send-email-pmorel@linux.ibm.com>
+In-Reply-To: <1611085944-21609-3-git-send-email-pmorel@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 19/01/2021 20.52, Pierre Morel wrote:
-> When communicating with the host we need to share part of
-> the memory.
-> 
-> Let's implement the ultravisor calls for this.
+> To centralize the memory allocation for I/O we define
+> the alloc_io_page/free_io_page functions which share the I/O
+> memory with the host in case the guest runs with
+> protected virtualization.
 > 
 > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Suggested-by: Janosch Frank <frankja@linux.ibm.com>
-> Acked-by: Cornelia Huck <cohuck@redhat.com>
 > ---
->   lib/s390x/asm/uv.h | 38 ++++++++++++++++++++++++++++++++++++++
->   1 file changed, 38 insertions(+)
+>   lib/s390x/malloc_io.c | 50 +++++++++++++++++++++++++++++++++++++++++++
+>   lib/s390x/malloc_io.h | 18 ++++++++++++++++
+>   s390x/Makefile        |  1 +
+>   3 files changed, 69 insertions(+)
+>   create mode 100644 lib/s390x/malloc_io.c
+>   create mode 100644 lib/s390x/malloc_io.h
 > 
-> diff --git a/lib/s390x/asm/uv.h b/lib/s390x/asm/uv.h
-> index 4c2fc48..1242336 100644
-> --- a/lib/s390x/asm/uv.h
-> +++ b/lib/s390x/asm/uv.h
-> @@ -71,4 +71,42 @@ static inline int uv_call(unsigned long r1, unsigned long r2)
->   	return cc;
->   }
->   
-> +static inline int share(unsigned long addr, u16 cmd)
-> +{
-> +	struct uv_cb_share uvcb = {
-> +		.header.cmd = cmd,
-> +		.header.len = sizeof(uvcb),
-> +		.paddr = addr
-> +	};
-> +	int cc;
-> +
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	if (!cc && (uvcb.header.rc == 0x0001))
-
-You can drop the innermost parentheses.
-
-> +		return 0;
-> +
-> +	report_info("cc %d response code: %04x", cc, uvcb.header.rc);
-> +	return -1;
-> +}
-> +
+> diff --git a/lib/s390x/malloc_io.c b/lib/s390x/malloc_io.c
+> new file mode 100644
+> index 0000000..2a946e0
+> --- /dev/null
+> +++ b/lib/s390x/malloc_io.c
+> @@ -0,0 +1,50 @@
 > +/*
-> + * Guest 2 request to the Ultravisor to make a page shared with the
-> + * hypervisor for IO.
+> + * I/O page allocation
 > + *
-> + * @addr: Real or absolute address of the page to be shared
+> + * Copyright (c) 2021 IBM Corp
+> + *
+> + * Authors:
+> + *  Pierre Morel <pmorel@linux.ibm.com>
+> + *
+> + * This code is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2.
 
-When is it real, and when is it absolute?
+Janosch recently started to introduce SPDX identifieres to the s390x code, 
+so I think it would be good to use them here, too.
 
+> + * Using this interface provide host access to the allocated pages in
+> + * case the guest is a secure guest.
+> + * This is needed for I/O buffers.
+> + *
 > + */
-> +static inline int uv_set_shared(unsigned long addr)
+> +#include <libcflat.h>
+> +#include <asm/page.h>
+> +#include <asm/uv.h>
+> +#include <malloc_io.h>
+> +#include <alloc_page.h>
+> +#include <asm/facility.h>
+> +
+> +void *alloc_io_page(int size)
 > +{
-> +	return share(addr, UVC_CMD_SET_SHARED_ACCESS);
+> +	void *p;
+> +
+> +	assert(size <= PAGE_SIZE);
+
+Apart from the assert() statement, the size parameter seems to be completely 
+unused. It's also weird to have the function named alloc_something_page() 
+and then have a parameter that takes bytes. Thus I'd suggest to either drop 
+the size parameter completely, or to rename the function to alloc_io_mem and 
+then to alloc multiple pages below in case the size is bigger than 
+PAGE_SIZE. Or maybe even to name the function alloc_io_pages and then use 
+"int num_pages" as a parameter, allowing to allocate multiple pages at once?
+
+> +
+> +	p = alloc_pages_flags(1, AREA_DMA31);
+> +	if (!p)
+> +		return NULL;
+> +	memset(p, 0, PAGE_SIZE);
+> +
+> +	if (!test_facility(158))
+> +		return p;
+> +
+> +	if (uv_set_shared((unsigned long)p) == 0)
+> +		return p;
+> +
+> +	free_pages(p);
+> +	return NULL;
 > +}
 > +
+> +void free_io_page(void *p)
+> +{
+> +	if (test_facility(158))
+> +		uv_remove_shared((unsigned long)p);
+> +	free_pages(p);
+> +}
+> diff --git a/lib/s390x/malloc_io.h b/lib/s390x/malloc_io.h
+> new file mode 100644
+> index 0000000..f780191
+> --- /dev/null
+> +++ b/lib/s390x/malloc_io.h
+> @@ -0,0 +1,18 @@
 > +/*
-> + * Guest 2 request to the Ultravisor to make a page unshared.
+> + * I/O allocations
 > + *
-> + * @addr: Real or absolute address of the page to be unshared
-
-dito
-
+> + * Copyright (c) 2021 IBM Corp
+> + *
+> + * Authors:
+> + *  Pierre Morel <pmorel@linux.ibm.com>
+> + *
+> + * This code is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2.
 > + */
-> +static inline int uv_remove_shared(unsigned long addr)
-> +{
-> +	return share(addr, UVC_CMD_REMOVE_SHARED_ACCESS);
-> +}
-> +
->   #endif
+Please also add SPDX license information here.
 
-Apart from the nits:
-Acked-by: Thomas Huth <thuth@redhat.com>
+  Thomas
 
