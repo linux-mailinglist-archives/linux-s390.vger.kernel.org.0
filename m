@@ -2,161 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B6C22FE654
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Jan 2021 10:27:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 156FA2FE64A
+	for <lists+linux-s390@lfdr.de>; Thu, 21 Jan 2021 10:25:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbhAUJ0h (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 21 Jan 2021 04:26:37 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50678 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728320AbhAUJU4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 21 Jan 2021 04:20:56 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10L92Tri140419;
-        Thu, 21 Jan 2021 04:20:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=zmiHxZF+KdKsdkIAlIVz+JM5U9W387S6gaHJi1yZNxI=;
- b=GRQLxEHqCocr6KT8+bg9VTuD8xzXsSLvja6saG9OQSOyG1leAxE1Z7FUkPXZn7NqAXMn
- pqitkM3peBiw4loum6n6Ps8oeynK5SrhI0NFDpQBJWfD11GRODuRnmS339I80OnRejgR
- 0gw3DJneIXPA+snWV5WsfmT7uLBqNEnhl2DI4US9CVZN7Gk85VNrKWu2asjJbQZLV1hd
- +FHK1uLP90/2t98jflbqOdeUL6R13MDY2vW2xz5wxNnPz+WdsvHqkvf5tEuTmfyUlm6x
- h7FP+Pqt/Hv1ZdeXvxJCoPWgneOWIKIlgxwjsWbhpNixm7uyznQeBUOHX/OblYyl2koo bA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3675ra2ar3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Jan 2021 04:20:10 -0500
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10L93DkG143376;
-        Thu, 21 Jan 2021 04:20:10 -0500
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3675ra2apy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Jan 2021 04:20:10 -0500
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10L9Gcc6022465;
-        Thu, 21 Jan 2021 09:20:08 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06ams.nl.ibm.com with ESMTP id 3668nwsg7h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Jan 2021 09:20:07 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10L9K58w46006696
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Jan 2021 09:20:05 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25B9211C04C;
-        Thu, 21 Jan 2021 09:20:05 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9983211C04A;
-        Thu, 21 Jan 2021 09:20:04 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.165.35])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 21 Jan 2021 09:20:04 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v4 1/3] s390x: pv: implement routine to
- share/unshare memory
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
-        cohuck@redhat.com, imbrenda@linux.ibm.com, drjones@redhat.com,
-        pbonzini@redhat.com
-References: <1611220392-22628-1-git-send-email-pmorel@linux.ibm.com>
- <1611220392-22628-2-git-send-email-pmorel@linux.ibm.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-Message-ID: <a4ad5c0f-2e77-4ea9-9efd-f4d000f17b72@linux.ibm.com>
-Date:   Thu, 21 Jan 2021 10:20:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        id S1728563AbhAUJYx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 21 Jan 2021 04:24:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54092 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728568AbhAUJYU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 21 Jan 2021 04:24:20 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D74B4AAAE;
+        Thu, 21 Jan 2021 09:23:35 +0000 (UTC)
+Date:   Thu, 21 Jan 2021 10:23:33 +0100
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org, hca@linux.ibm.com,
+        catalin.marinas@arm.com, Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 1/3] mm/memory_hotplug: Prevalidate the address range
+ being added with platform
+Message-ID: <20210121092328.GA11001@linux>
+References: <1610975582-12646-1-git-send-email-anshuman.khandual@arm.com>
+ <1610975582-12646-2-git-send-email-anshuman.khandual@arm.com>
+ <691872bb-b251-83e0-126e-afd54683c83e@redhat.com>
+ <3d4f3b14-0715-b2b3-b015-04b8a77abfb8@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1611220392-22628-2-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-21_03:2021-01-20,2021-01-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 spamscore=0
- impostorscore=0 malwarescore=0 phishscore=0 adultscore=0 suspectscore=0
- clxscore=1015 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2009150000 definitions=main-2101210045
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3d4f3b14-0715-b2b3-b015-04b8a77abfb8@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 1/21/21 10:13 AM, Pierre Morel wrote:
-> When communicating with the host we need to share part of
-> the memory.
-> 
-> Let's implement the ultravisor calls for this.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Suggested-by: Janosch Frank <frankja@linux.ibm.com>
-> Acked-by: Cornelia Huck <cohuck@redhat.com>
-> Acked-by: Thomas Huth <thuth@redhat.com>
-> ---
->  lib/s390x/asm/uv.h | 38 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
-> 
-> diff --git a/lib/s390x/asm/uv.h b/lib/s390x/asm/uv.h
-> index 4c2fc48..8400026 100644
-> --- a/lib/s390x/asm/uv.h
-> +++ b/lib/s390x/asm/uv.h
-> @@ -71,4 +71,42 @@ static inline int uv_call(unsigned long r1, unsigned long r2)
->  	return cc;
->  }
->  
-> +static inline int share(unsigned long addr, u16 cmd)
-> +{
-> +	struct uv_cb_share uvcb = {
-> +		.header.cmd = cmd,
-> +		.header.len = sizeof(uvcb),
-> +		.paddr = addr
-> +	};
-> +	int cc;
-> +
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	if (!cc && uvcb.header.rc == 0x0001)
+On Wed, Jan 20, 2021 at 02:03:45PM +0530, Anshuman Khandual wrote:
+> Just to be sure, will the following change achieve what you are
+> suggesting here. pagemap_range() after this change, will again
+> be the same like the V1 series.
 
-s/0x0001/UVC_RC_EXECUTED/
+With below diff on top it looks good to me:
 
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
-> +		return 0;
-> +
-> +	report_info("cc %d response code: %04x", cc, uvcb.header.rc);
-
-Will the print have the string UV in it or will I need to guess that a
-UV call failed?
-
-I'm wondering if an assert would make more sense, if callers are
-interested in the uv rc they will need to write an own share function
+The only nit I would have is whether the declaration of arch_get_mappable_range
+should be in include/linux/memory_hotplug.h.
+As you pointed out, arch_get_mappable_range() might be used by the platform
+for other purposes, and since you are defining it out of CONFIG_MEMORY_HOTPLUG
 anyway.
+Would include/linu/memory.h be a better fit?
 
-> +	return -1;
-> +}
+As I said, nothing to bikeshed about, just my thoughts.
+
+> ---
+>  mm/memory_hotplug.c |  3 +--
+>  mm/memremap.c       | 12 +++++-------
+>  2 files changed, 6 insertions(+), 9 deletions(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 46faa914aa25..10d4ec8f349c 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -304,8 +304,7 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
+>  	if (WARN_ON_ONCE(!params->pgprot.pgprot))
+>  		return -EINVAL;
+>  
+> -	if(!memhp_range_allowed(PFN_PHYS(pfn), nr_pages * PAGE_SIZE, false))
+> -		return -E2BIG;
+> +	VM_BUG_ON(!memhp_range_allowed(PFN_PHYS(pfn), nr_pages * PAGE_SIZE, false));
+>  
+>  	if (altmap) {
+>  		/*
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index e15b13736f6a..26c1825756cc 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -185,6 +185,7 @@ static void dev_pagemap_percpu_release(struct percpu_ref *ref)
+>  static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
+>  		int range_id, int nid)
+>  {
+> +	const bool is_private = pgmap->type == MEMORY_DEVICE_PRIVATE;
+>  	struct range *range = &pgmap->ranges[range_id];
+>  	struct dev_pagemap *conflict_pgmap;
+>  	int error, is_ram;
+> @@ -230,6 +231,9 @@ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
+>  	if (error)
+>  		goto err_pfn_remap;
+>  
+> +	if (!memhp_range_allowed(range->start, range_len(range), !is_private))
+> +		goto err_pfn_remap;
 > +
-> +/*
-> + * Guest 2 request to the Ultravisor to make a page shared with the
-> + * hypervisor for IO.
-> + *
-> + * @addr: Real or absolute address of the page to be shared
-> + */
-> +static inline int uv_set_shared(unsigned long addr)
-> +{
-> +	return share(addr, UVC_CMD_SET_SHARED_ACCESS);
-> +}
-> +
-> +/*
-> + * Guest 2 request to the Ultravisor to make a page unshared.
-> + *
-> + * @addr: Real or absolute address of the page to be unshared
-> + */
-> +static inline int uv_remove_shared(unsigned long addr)
-> +{
-> +	return share(addr, UVC_CMD_REMOVE_SHARED_ACCESS);
-> +}
-> +
->  #endif
+>  	mem_hotplug_begin();
+>  
+>  	/*
+> @@ -243,7 +247,7 @@ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
+>  	 * the CPU, we do want the linear mapping and thus use
+>  	 * arch_add_memory().
+>  	 */
+> -	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+> +	if (is_private) {
+>  		error = add_pages(nid, PHYS_PFN(range->start),
+>  				PHYS_PFN(range_len(range)), params);
+>  	} else {
+> @@ -253,12 +257,6 @@ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
+>  			goto err_kasan;
+>  		}
+>  
+> -		if (!memhp_range_allowed(range->start, range_len(range), true)) {
+> -			error = -ERANGE;
+> -			mem_hotplug_done();
+> -			goto err_add_memory;
+> -		}
+> -
+>  		error = arch_add_memory(nid, range->start, range_len(range),
+>  					params);
+>  	}
+> -- 
+> 2.20.1
 > 
 
+-- 
+Oscar Salvador
+SUSE L3
