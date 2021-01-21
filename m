@@ -2,146 +2,166 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFAAB2FE4D8
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Jan 2021 09:24:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 393CE2FE5DD
+	for <lists+linux-s390@lfdr.de>; Thu, 21 Jan 2021 10:09:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbhAUIXA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 21 Jan 2021 03:23:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48408 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727724AbhAUIWc (ORCPT
+        id S1727900AbhAUJI5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 21 Jan 2021 04:08:57 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39794 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726251AbhAUJI0 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 21 Jan 2021 03:22:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611217264;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0gba4+t4e2AipgLr57aF/TlL6LFHCc9J8pUh2gVcris=;
-        b=BcpzMVeXNkj07EDc1NvNPrD3UGpnPj81WtvN2iBHpA19n4MdLpJI/OVw7ui7dDu6z1DtiO
-        PoL5f7PudjaFgrOe7B8Bz7gaFfASpfxO73CPY0n255ghgFZiPKKoU2XofmyxedY2Rrm3Wo
-        ZnIio3scO5iB+X/vY2O0ZnXWo7vaMew=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-471-RYrER6NZN9yxIYxlQV358g-1; Thu, 21 Jan 2021 03:20:59 -0500
-X-MC-Unique: RYrER6NZN9yxIYxlQV358g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4DEF310054FF;
-        Thu, 21 Jan 2021 08:20:57 +0000 (UTC)
-Received: from gondolin (ovpn-113-94.ams2.redhat.com [10.36.113.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 546B871C9A;
-        Thu, 21 Jan 2021 08:20:47 +0000 (UTC)
-Date:   Thu, 21 Jan 2021 09:20:44 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        stable@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        mjrosato@linux.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com, fiuczy@linux.ibm.com, frankja@linux.ibm.com,
-        david@redhat.com
-Subject: Re: [PATCH 1/1] s390/vfio-ap: No need to disable IRQ after queue
- reset
-Message-ID: <20210121092044.628b77c7.cohuck@redhat.com>
-In-Reply-To: <20210121072008.76523-1-pasic@linux.ibm.com>
-References: <20210121072008.76523-1-pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+        Thu, 21 Jan 2021 04:08:26 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10L95jIw171612;
+        Thu, 21 Jan 2021 04:07:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=F5x62VVNkmWy1MUATkZQoh4CM5LN79z9h+Gu4OnKQQs=;
+ b=PKR3tNYIpNwn6Ql3Ssr9VEkSscyu5WcvkKiX/YRkrCxZx5qdeSuoBH/k7hwnuaIggnZ5
+ oVm1LyM53d0ajSdvq397nQlRS3bo7G2eB4+HFJwB9pOuV0cireZ4HBGnYAh6oIgpz/k+
+ oaoJqgqHSof1pWLB04U7d6lUw/+pODJqwvdhGrl0ohGgKnrjl9293EKkji42AMDXq73T
+ nJ/aPO41uDJ3dXEpTbssgL2eUWhAMvwBP3sObrmBUC5M+GIZLvIQ07FxqTUneflIec2S
+ YJ8r4lvUUxjD2LYpL9PQ0640lWlVqJ87vYO9RGLaykwECdgsQVjGoXPAzyjRCj8eNp+9 9g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3676p28136-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Jan 2021 04:07:35 -0500
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10L97ZJv178205;
+        Thu, 21 Jan 2021 04:07:35 -0500
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3676p2812n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Jan 2021 04:07:35 -0500
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10L94VqX021512;
+        Thu, 21 Jan 2021 09:07:33 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04fra.de.ibm.com with ESMTP id 3668pj8s7e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Jan 2021 09:07:32 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10L97T6l47382976
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Jan 2021 09:07:30 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA9DDA4059;
+        Thu, 21 Jan 2021 09:07:29 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 54544A4051;
+        Thu, 21 Jan 2021 09:07:29 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.36.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 21 Jan 2021 09:07:29 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v3 3/3] s390x: css: pv: css test adaptation
+ for PV
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com,
+        drjones@redhat.com, pbonzini@redhat.com
+References: <1611085944-21609-1-git-send-email-pmorel@linux.ibm.com>
+ <1611085944-21609-4-git-send-email-pmorel@linux.ibm.com>
+ <b4656e81-1492-d902-73cf-5a08a0a6247d@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <b08a9fa2-6b08-d616-ba3d-a04140490f75@linux.ibm.com>
+Date:   Thu, 21 Jan 2021 10:07:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <b4656e81-1492-d902-73cf-5a08a0a6247d@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2021-01-21_04:2021-01-20,2021-01-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 clxscore=1015 adultscore=0
+ impostorscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101210048
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 21 Jan 2021 08:20:08 +0100
-Halil Pasic <pasic@linux.ibm.com> wrote:
 
-> From: Tony Krowiak <akrowiak@linux.ibm.com>
-> 
-> The queues assigned to a matrix mediated device are currently reset when:
-> 
-> * The VFIO_DEVICE_RESET ioctl is invoked
-> * The mdev fd is closed by userspace (QEMU)
-> * The mdev is removed from sysfs.
-> 
-> Immediately after the reset of a queue, a call is made to disable
-> interrupts for the queue. This is entirely unnecessary because the reset of
-> a queue disables interrupts, so this will be removed.
-> 
-> Furthermore, vfio_ap_irq_disable() does an unconditional PQAP/AQIC which
-> can result in a specification exception (when the corresponding facility
-> is not available), so this is actually a bugfix.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> [pasic@linux.ibm.com: minor rework before merging]
-> Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-> Fixes: ec89b55e3bce ("s390: ap: implement PAPQ AQIC interception in kernel")
-> Cc: <stable@vger.kernel.org>
-> 
-> ---
-> 
-> Since it turned out disabling the interrupts via PQAP/AQIC is not only
-> unnecesary but also buggy, we decided to put this patch, which
-> used to be apart of the series https://lkml.org/lkml/2020/12/22/757 on the fast
-> lane.
-> 
-> If the backports turn out to be a bother, which I hope won't be the case
-> not, I am happy to help with those.
-> 
-> ---
->  drivers/s390/crypto/vfio_ap_drv.c     |   6 +-
->  drivers/s390/crypto/vfio_ap_ops.c     | 100 ++++++++++++++++----------
->  drivers/s390/crypto/vfio_ap_private.h |  12 ++--
->  3 files changed, 69 insertions(+), 49 deletions(-)
-> 
 
-(...)
-
-> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-> index f46dde56b464..28e9d9989768 100644
-> --- a/drivers/s390/crypto/vfio_ap_private.h
-> +++ b/drivers/s390/crypto/vfio_ap_private.h
-> @@ -88,11 +88,6 @@ struct ap_matrix_mdev {
->  	struct mdev_device *mdev;
->  };
->  
-> -extern int vfio_ap_mdev_register(void);
-> -extern void vfio_ap_mdev_unregister(void);
-> -int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
-> -			     unsigned int retry);
-> -
->  struct vfio_ap_queue {
->  	struct ap_matrix_mdev *matrix_mdev;
->  	unsigned long saved_pfn;
-> @@ -100,5 +95,10 @@ struct vfio_ap_queue {
->  #define VFIO_AP_ISC_INVALID 0xff
->  	unsigned char saved_isc;
->  };
-> -struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q);
-> +
-> +int vfio_ap_mdev_register(void);
-> +void vfio_ap_mdev_unregister(void);
-
-Nit: was moving these two necessary?
-
-> +int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q,
-> +			     unsigned int retry);
-> +
->  #endif /* _VFIO_AP_PRIVATE_H_ */
+On 1/20/21 1:03 PM, Thomas Huth wrote:
+> On 19/01/2021 20.52, Pierre Morel wrote:
+>> We want the tests to automatically work with or without protected
+>> virtualisation.
+>> To do this we need to share the I/O memory with the host.
+>>
+>> Let's replace all static allocations with dynamic allocations
+>> to clearly separate shared and private memory.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> ---
+> [...]
+>> diff --git a/s390x/css.c b/s390x/css.c
+>> index ee3bc83..4b0b6b1 100644
+>> --- a/s390x/css.c
+>> +++ b/s390x/css.c
+>> @@ -17,13 +17,15 @@
+>>   #include <interrupt.h>
+>>   #include <asm/arch_def.h>
+>> +#include <malloc_io.h>
+>>   #include <css.h>
+>> +#include <asm/barrier.h>
+>>   #define DEFAULT_CU_TYPE        0x3832 /* virtio-ccw */
+>>   static unsigned long cu_type = DEFAULT_CU_TYPE;
+>>   static int test_device_sid;
+>> -static struct senseid senseid;
+>> +static struct senseid *senseid;
+>>   static void test_enumerate(void)
+>>   {
+>> @@ -57,6 +59,7 @@ static void test_enable(void)
+>>    */
+>>   static void test_sense(void)
+>>   {
+>> +    struct ccw1 *ccw;
+>>       int ret;
+>>       int len;
+>> @@ -80,9 +83,15 @@ static void test_sense(void)
+>>       lowcore_ptr->io_int_param = 0;
+>> -    memset(&senseid, 0, sizeof(senseid));
+>> -    ret = start_single_ccw(test_device_sid, CCW_CMD_SENSE_ID,
+>> -                   &senseid, sizeof(senseid), CCW_F_SLI);
+>> +    senseid = alloc_io_page(sizeof(*senseid));
 > 
-> base-commit: 9791581c049c10929e97098374dd1716a81fefcc
+> Would it make sense to move the above alloc_io_page into the ccw_alloc() 
+> function, too?
 
-Anyway, if I didn't entangle myself in the various branches, this seems
-sane.
+If the goal is to have all allocations inside the ccw_alloc(),
+I don't think so, we may have an already allocated buffer for which we 
+want to pass the address without any allocation inside ccw_alloc() to 
+reuse the same buffer.
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
+> 
+>> +    if (!senseid)
+>> +        goto error_senseid;
+>> +
+>> +    ccw = ccw_alloc(CCW_CMD_SENSE_ID, senseid, sizeof(*senseid), 
+>> CCW_F_SLI);
+>> +    if (!ccw)
+>> +        goto error_ccw;
+>> +
+>> +    ret = start_ccw1_chain(test_device_sid, ccw);
+>>       if (ret)
+>>           goto error;
+> 
+> I think you should add a "report(0, ...)" or report_abort() in front of 
+> all three gotos above - otherwise the problems might go unnoticed.
+
+Yes, right, I will do this,
+Thanks.
+
+Pierre
+
+
+-- 
+Pierre Morel
+IBM Lab Boeblingen
