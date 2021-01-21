@@ -2,137 +2,145 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1785D2FE79B
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Jan 2021 11:30:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7991F2FEACF
+	for <lists+linux-s390@lfdr.de>; Thu, 21 Jan 2021 13:57:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbhAUK3V (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 21 Jan 2021 05:29:21 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:22982 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729345AbhAUK3L (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 Jan 2021 05:29:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1611224950; x=1642760950;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:mime-version:content-transfer-encoding:subject;
-  bh=hqeYFR4tFeQmudUNvthDELGWhM89CIKBNi0DsWXyEWk=;
-  b=Q8S906t5OTVl40iIFi9oZUD+dhbUYO19vJlPhAsqVH9cXHxBg62CTm4c
-   DKdFJXa2tP4oNBgAm8A3ECW1gpn900G1uDtRX9TWBuGW4nO43Gd89EAxT
-   W9adoQWCCqGc0chH9F7hfPosRmHqcu7QCCIL6mgvNp5KnWJBK8bzzJ+KZ
-   8=;
-X-IronPort-AV: E=Sophos;i="5.79,363,1602547200"; 
-   d="scan'208";a="112527416"
-Subject: Re: [PATCH v4 0/2] System Generation ID driver and VMGENID backend
-Thread-Topic: [PATCH v4 0/2] System Generation ID driver and VMGENID backend
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 21 Jan 2021 10:28:20 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id A95A7A1766;
-        Thu, 21 Jan 2021 10:28:18 +0000 (UTC)
-Received: from EX13D01UWB003.ant.amazon.com (10.43.161.94) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 21 Jan 2021 10:28:18 +0000
-Received: from EX13D08EUB004.ant.amazon.com (10.43.166.158) by
- EX13d01UWB003.ant.amazon.com (10.43.161.94) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 21 Jan 2021 10:28:16 +0000
-Received: from EX13D08EUB004.ant.amazon.com ([10.43.166.158]) by
- EX13D08EUB004.ant.amazon.com ([10.43.166.158]) with mapi id 15.00.1497.010;
- Thu, 21 Jan 2021 10:28:16 +0000
-From:   "Catangiu, Adrian Costin" <acatan@amazon.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Graf (AWS), Alexander" <graf@amazon.de>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "rppt@kernel.org" <rppt@kernel.org>,
-        "0x7f454c46@gmail.com" <0x7f454c46@gmail.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "Jason@zx2c4.com" <Jason@zx2c4.com>,
-        "jannh@google.com" <jannh@google.com>, "w@1wt.eu" <w@1wt.eu>,
-        "MacCarthaigh, Colm" <colmmacc@amazon.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "tytso@mit.edu" <tytso@mit.edu>,
-        "ebiggers@kernel.org" <ebiggers@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "bonzini@gnu.org" <bonzini@gnu.org>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "Weiss, Radu" <raduweis@amazon.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "areber@redhat.com" <areber@redhat.com>,
-        "ovzxemul@gmail.com" <ovzxemul@gmail.com>,
-        "avagin@gmail.com" <avagin@gmail.com>,
-        "ptikhomirov@virtuozzo.com" <ptikhomirov@virtuozzo.com>,
-        "gil@azul.com" <gil@azul.com>,
-        "asmehra@redhat.com" <asmehra@redhat.com>,
-        "dgunigun@redhat.com" <dgunigun@redhat.com>,
-        "vijaysun@ca.ibm.com" <vijaysun@ca.ibm.com>,
-        "oridgar@gmail.com" <oridgar@gmail.com>,
-        "ghammer@redhat.com" <ghammer@redhat.com>
-Thread-Index: AQHW6NzBCUlWHHU+FkK+vi5glcJcE6oj8LeAgA4fV4A=
-Date:   Thu, 21 Jan 2021 10:28:16 +0000
-Message-ID: <9952EF0C-CD1D-4EDB-BAB8-21F72C0BF90D@amazon.com>
-References: <1610453760-13812-1-git-send-email-acatan@amazon.com>
- <20210112074658-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20210112074658-mutt-send-email-mst@kernel.org>
-Accept-Language: en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.164.195]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B3101E87ED31714D98C7F1E02527BB78@amazon.com>
+        id S1728764AbhAUMzv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 21 Jan 2021 07:55:51 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26298 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729576AbhAUKfm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 21 Jan 2021 05:35:42 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10LAV31q089813;
+        Thu, 21 Jan 2021 05:34:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=TZ7aDjxUa13IAdCxCu1hlw5UfGIcj/AfDRbgbyilYM8=;
+ b=PPR2MO5r6H5ImQpoFITPMlC83ox/raYI16KO5XUspLypGm9qlOCWbhWOAez1+nVLwpTZ
+ KLVmWeD9wXG+BkWIPgAcnWHy1j5UZ3XOBmahUE9UiLKOZfZQq/vXv6gtww35veTBLZrY
+ m8InR1zWGWoI+M3fnMzNQ82HaYIdJWzXZnPUBPdhmm2FcCCdg5jB4ftFtoQxLfs9BGi6
+ AzTEuR4HIQIwPWcVKBfjOVoJX300zmmFPi00+eVOhzlNCTFDj2v3DPzZ8TbXsuefDbVQ
+ RMzZH07bswy0amIe4tm1RvxPSlPtEkMs2dRvU+j6190G/agTrTJspLs9yiBJwkfxY5pV xA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3677uhr976-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Jan 2021 05:34:47 -0500
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10LAVn1F092961;
+        Thu, 21 Jan 2021 05:34:47 -0500
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3677uhr953-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Jan 2021 05:34:46 -0500
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10LAXgwY027447;
+        Thu, 21 Jan 2021 10:34:45 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04fra.de.ibm.com with ESMTP id 3668pj8tdg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Jan 2021 10:34:44 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10LAYfpK30802236
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Jan 2021 10:34:41 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BFC2B11C064;
+        Thu, 21 Jan 2021 10:34:41 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E471811C054;
+        Thu, 21 Jan 2021 10:34:40 +0000 (GMT)
+Received: from li-e979b1cc-23ba-11b2-a85c-dfd230f6cf82 (unknown [9.171.12.187])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Thu, 21 Jan 2021 10:34:40 +0000 (GMT)
+Date:   Thu, 21 Jan 2021 11:34:38 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        stable@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        mjrosato@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, fiuczy@linux.ibm.com, frankja@linux.ibm.com,
+        david@redhat.com
+Subject: Re: [PATCH 1/1] s390/vfio-ap: No need to disable IRQ after queue
+ reset
+Message-ID: <20210121113438.2e40c5f9.pasic@linux.ibm.com>
+In-Reply-To: <20210121092044.628b77c7.cohuck@redhat.com>
+References: <20210121072008.76523-1-pasic@linux.ibm.com>
+        <20210121092044.628b77c7.cohuck@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2021-01-21_04:2021-01-21,2021-01-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0 spamscore=0
+ mlxscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101210052
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-T24gMTIvMDEvMjAyMSwgMTQ6NDksICJNaWNoYWVsIFMuIFRzaXJraW4iIDxtc3RAcmVkaGF0LmNv
-bT4gd3JvdGU6DQoNCiAgICBPbiBUdWUsIEphbiAxMiwgMjAyMSBhdCAwMjoxNTo1OFBNICswMjAw
-LCBBZHJpYW4gQ2F0YW5naXUgd3JvdGU6DQogICAgPiBUaGUgZmlyc3QgcGF0Y2ggaW4gdGhlIHNl
-dCBpbXBsZW1lbnRzIGEgZGV2aWNlIGRyaXZlciB3aGljaCBleHBvc2VzIGENCiAgICA+IHJlYWQt
-b25seSBkZXZpY2UgL2Rldi9zeXNnZW5pZCB0byB1c2Vyc3BhY2UsIHdoaWNoIGNvbnRhaW5zIGEN
-CiAgICA+IG1vbm90b25pY2FsbHkgaW5jcmVhc2luZyB1MzIgZ2VuZXJhdGlvbiBjb3VudGVyLiBM
-aWJyYXJpZXMgYW5kDQogICAgPiBhcHBsaWNhdGlvbnMgYXJlIGV4cGVjdGVkIHRvIG9wZW4oKSB0
-aGUgZGV2aWNlLCBhbmQgdGhlbiBjYWxsIHJlYWQoKQ0KICAgID4gd2hpY2ggYmxvY2tzIHVudGls
-IHRoZSBTeXNHZW5JZCBjaGFuZ2VzLiBGb2xsb3dpbmcgYW4gdXBkYXRlLCByZWFkKCkNCiAgICA+
-IGNhbGxzIG5vIGxvbmdlciBibG9jayB1bnRpbCB0aGUgYXBwbGljYXRpb24gYWNrbm93bGVkZ2Vz
-IHRoZSBuZXcNCiAgICA+IFN5c0dlbklkIGJ5IHdyaXRlKClpbmcgaXQgYmFjayB0byB0aGUgZGV2
-aWNlLiBOb24tYmxvY2tpbmcgcmVhZCgpIGNhbGxzDQogICAgPiByZXR1cm4gRUFHQUlOIHdoZW4g
-dGhlcmUgaXMgbm8gbmV3IFN5c0dlbklkIGF2YWlsYWJsZS4gQWx0ZXJuYXRpdmVseSwNCiAgICA+
-IGxpYnJhcmllcyBjYW4gbW1hcCgpIHRoZSBkZXZpY2UgdG8gZ2V0IGEgc2luZ2xlIHNoYXJlZCBw
-YWdlIHdoaWNoDQogICAgPiBjb250YWlucyB0aGUgbGF0ZXN0IFN5c0dlbklkIGF0IG9mZnNldCAw
-Lg0KDQogICAgTG9va2luZyBhdCBzb21lIHNwZWNpZmljYXRpb25zLCB0aGUgZ2VuIElEIG1pZ2h0
-IGFjdHVhbGx5IGJlIGxvY2F0ZWQNCiAgICBhdCBhbiBhcmJpdHJhcnkgYWRkcmVzcy4gSG93IGFi
-b3V0IGluc3RlYWQgb2YgaGFyZC1jb2RpbmcgdGhlIG9mZnNldCwNCiAgICB3ZSBleHBvc2UgaXQg
-ZS5nLiBpbiBzeXNmcz8NCg0KVGhlIGZ1bmN0aW9uYWxpdHkgaXMgc3BsaXQgYmV0d2VlbiBTeXNH
-ZW5JRCB3aGljaCBleHBvc2VzIGFuIGludGVybmFsIHUzMg0KY291bnRlciB0byB1c2Vyc3BhY2Us
-IGFuZCBhbiAob3B0aW9uYWwpIFZtR2VuSUQgYmFja2VuZCB3aGljaCBkcml2ZXMNClN5c0dlbklE
-IGdlbmVyYXRpb24gY2hhbmdlcyBiYXNlZCBvbiBodyB2bWdlbmlkIHVwZGF0ZXMuDQoNClRoZSBo
-dyBVVUlEIHlvdSdyZSByZWZlcnJpbmcgdG8gKHZtZ2VuaWQpIGlzIG5vdCBtbWFwLWVkIHRvIHVz
-ZXJzcGFjZSBvcg0Kb3RoZXJ3aXNlIGV4cG9zZWQgdG8gdXNlcnNwYWNlLiBJdCBpcyBvbmx5IHVz
-ZWQgaW50ZXJuYWxseSBieSB0aGUgdm1nZW5pZA0KZHJpdmVyIHRvIGZpbmQgb3V0IGFib3V0IFZN
-IGdlbmVyYXRpb24gY2hhbmdlcyBhbmQgZHJpdmUgdGhlIG1vcmUgZ2VuZXJpYw0KU3lzR2VuSUQu
-DQoNClRoZSBTeXNHZW5JRCB1MzIgbW9ub3RvbmljIGluY3JlYXNpbmcgY291bnRlciBpcyB0aGUg
-b25lIHRoYXQgaXMgbW1hcGVkIHRvDQp1c2Vyc3BhY2UsIGJ1dCBpdCBpcyBhIHNvZnR3YXJlIGNv
-dW50ZXIuIEkgZG9uJ3Qgc2VlIGFueSB2YWx1ZSBpbiB1c2luZyBhIGR5bmFtaWMNCm9mZnNldCBp
-biB0aGUgbW1hcGVkIHBhZ2UuIE9mZnNldCAwIGlzIGZhc3QgYW5kIGVhc3kgYW5kIG1vc3QgaW1w
-b3J0YW50bHkgaXQgaXMNCnN0YXRpYyBzbyBubyBuZWVkIHRvIGR5bmFtaWNhbGx5IGNhbGN1bGF0
-ZSBvciBmaW5kIGl0IGF0IHJ1bnRpbWUuDQoNClRoYW5rcywNCkFkcmlhbi4NCg0KCgoKQW1hem9u
-IERldmVsb3BtZW50IENlbnRlciAoUm9tYW5pYSkgUy5SLkwuIHJlZ2lzdGVyZWQgb2ZmaWNlOiAy
-N0EgU2YuIExhemFyIFN0cmVldCwgVUJDNSwgZmxvb3IgMiwgSWFzaSwgSWFzaSBDb3VudHksIDcw
-MDA0NSwgUm9tYW5pYS4gUmVnaXN0ZXJlZCBpbiBSb21hbmlhLiBSZWdpc3RyYXRpb24gbnVtYmVy
-IEoyMi8yNjIxLzIwMDUuCg==
+On Thu, 21 Jan 2021 09:20:44 +0100
+Cornelia Huck <cohuck@redhat.com> wrote:
 
+> On Thu, 21 Jan 2021 08:20:08 +0100
+> Halil Pasic <pasic@linux.ibm.com> wrote:
+[..]
+> > --- a/drivers/s390/crypto/vfio_ap_private.h
+> > +++ b/drivers/s390/crypto/vfio_ap_private.h
+> > @@ -88,11 +88,6 @@ struct ap_matrix_mdev {
+> >  	struct mdev_device *mdev;
+> >  };
+> >  
+> > -extern int vfio_ap_mdev_register(void);
+> > -extern void vfio_ap_mdev_unregister(void);
+> > -int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+> > -			     unsigned int retry);
+> > -
+> >  struct vfio_ap_queue {
+> >  	struct ap_matrix_mdev *matrix_mdev;
+> >  	unsigned long saved_pfn;
+> > @@ -100,5 +95,10 @@ struct vfio_ap_queue {
+> >  #define VFIO_AP_ISC_INVALID 0xff
+> >  	unsigned char saved_isc;
+> >  };
+> > -struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q);
+> > +
+> > +int vfio_ap_mdev_register(void);
+> > +void vfio_ap_mdev_unregister(void);  
+> 
+> Nit: was moving these two necessary?
+> 
+
+No not strictly necessary. I decided that having the data types
+first and the function prototypes in one place after the former
+is nicer.
+
+> > +int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q,
+> > +			     unsigned int retry);
+> > +
+> >  #endif /* _VFIO_AP_PRIVATE_H_ */
+> > 
+> > base-commit: 9791581c049c10929e97098374dd1716a81fefcc  
+> 
+> Anyway, if I didn't entangle myself in the various branches, this seems
+> sane.
+> 
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> 
+
+Thank you very much!
+
+Regards,
+Halil
