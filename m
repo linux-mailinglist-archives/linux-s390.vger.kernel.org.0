@@ -2,176 +2,148 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25FDF2FEF74
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Jan 2021 16:51:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DC6F2FEFE1
+	for <lists+linux-s390@lfdr.de>; Thu, 21 Jan 2021 17:13:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387570AbhAUPts (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 21 Jan 2021 10:49:48 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55096 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387591AbhAUPs4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 21 Jan 2021 10:48:56 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10LFWcO0076482;
-        Thu, 21 Jan 2021 10:48:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=zAoJfSZs2n7NA8SgelhwznWhQSOIrIVR7zt2Tq9lWRI=;
- b=JS9cX69Kk9ItXCjod0okeysVonTyeE8q+jESUCbv6MhJL8gv5GAGq/tP0rOmJ8oI/J6x
- 9f5d61AfnZouEFSf7/6+wVkHAfXl+lSNKPHvRoov14btJpZLZSAu0m43kQ+3zhDLP2U3
- ZMccdGFPV+bKsr8vIwy5RjirGZN8lRZcOg3QQevtcKybyorIOVUApFZyXq4czqgZrsvv
- 6FoojcHQT7b2kxAXu3BJ5F8XvT4gi04pMd619rV9aNFPcdrDAqzXXB3Ntughd0/f677b
- H/5HPRkDYyODUkpaRDVXZhdgCJcxxOSfcdDZHm3+9Za+lAE9LyQuHnkQYawk8KNNluuH iQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 367c8h8tf8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Jan 2021 10:48:15 -0500
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10LFWmvN078436;
-        Thu, 21 Jan 2021 10:48:14 -0500
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 367c8h8teh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Jan 2021 10:48:14 -0500
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10LFWtVU007042;
-        Thu, 21 Jan 2021 15:48:13 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 3668nwssuc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Jan 2021 15:48:12 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10LFmATT41746786
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Jan 2021 15:48:10 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 03530A4051;
-        Thu, 21 Jan 2021 15:48:10 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E7D9A4053;
-        Thu, 21 Jan 2021 15:48:09 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.36.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 21 Jan 2021 15:48:09 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v4 2/3] s390x: define UV compatible I/O
- allocation
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
-        cohuck@redhat.com, imbrenda@linux.ibm.com, drjones@redhat.com,
-        pbonzini@redhat.com
-References: <1611220392-22628-1-git-send-email-pmorel@linux.ibm.com>
- <1611220392-22628-3-git-send-email-pmorel@linux.ibm.com>
- <6c232520-dbd1-80e4-e3a3-949964df7403@linux.ibm.com>
- <3bce47db-c58c-6a2e-be72-9953f16a2dd4@linux.ibm.com>
- <75d5f645-cbfb-0a39-54ff-c61c67ed6355@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <f531448e-6f3b-6386-0f9b-240b160cd596@linux.ibm.com>
-Date:   Thu, 21 Jan 2021 16:48:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        id S2387802AbhAUQMu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 21 Jan 2021 11:12:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731699AbhAUQMf (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 21 Jan 2021 11:12:35 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 850CB23A23;
+        Thu, 21 Jan 2021 16:11:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1611245514;
+        bh=OVEIUtuoedkG3hYog+0eKNwTMSkV3Iyaz4tQF4gL37s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TDmjjmYc2BPSpXyZFdoZg8JVTFco3/YGBUCAyn/QQrkgOOBQcjmTjcb/h7iGHeggz
+         K2bxCcc/CaRmmDGbJwKsrKuX8rK2S51/fvbDu7P6OiH9Dy/F10V3Of2BBIx0PLGi4R
+         yH2TC9RpAVoMjTV9gfoL4JB8xGs2WyjkssWPUKdk=
+Date:   Thu, 21 Jan 2021 17:11:51 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>
+Subject: Re: [RFC 1/1] s390/pci: expose UID checking state in sysfs
+Message-ID: <YAmnx2AkVc0rbibQ@kroah.com>
+References: <1cf42837-bf98-944f-697c-8407a0ebd623@linux.ibm.com>
+ <20210121155445.GA2657778@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <75d5f645-cbfb-0a39-54ff-c61c67ed6355@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-21_08:2021-01-21,2021-01-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 suspectscore=0 priorityscore=1501
- clxscore=1015 bulkscore=0 phishscore=0 mlxscore=0 spamscore=0
- impostorscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2009150000 definitions=main-2101210085
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210121155445.GA2657778@bjorn-Precision-5520>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 1/21/21 2:48 PM, Janosch Frank wrote:
-> On 1/21/21 2:02 PM, Pierre Morel wrote:
->>
->>
->> On 1/21/21 10:46 AM, Janosch Frank wrote:
->>> On 1/21/21 10:13 AM, Pierre Morel wrote:
->>>> To centralize the memory allocation for I/O we define
->>>> the alloc_io_page/free_io_page functions which share the I/O
->>>> memory with the host in case the guest runs with
->>>> protected virtualization.
->>>>
->>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->>>> ---
->>>>    MAINTAINERS           |  1 +
->>>>    lib/s390x/malloc_io.c | 70 +++++++++++++++++++++++++++++++++++++++++++
->>>>    lib/s390x/malloc_io.h | 45 ++++++++++++++++++++++++++++
->>>>    s390x/Makefile        |  1 +
->>>>    4 files changed, 117 insertions(+)
->>>>    create mode 100644 lib/s390x/malloc_io.c
->>>>    create mode 100644 lib/s390x/malloc_io.h
->>>>
->>>> diff --git a/MAINTAINERS b/MAINTAINERS
->>>> index 54124f6..89cb01e 100644
->>>> --- a/MAINTAINERS
->>>> +++ b/MAINTAINERS
->>>> @@ -82,6 +82,7 @@ M: Thomas Huth <thuth@redhat.com>
->>>>    M: David Hildenbrand <david@redhat.com>
->>>>    M: Janosch Frank <frankja@linux.ibm.com>
->>>>    R: Cornelia Huck <cohuck@redhat.com>
->>>> +R: Pierre Morel <pmorel@linux.ibm.com>
->>>
->>> If you're ok with the amount of mails you'll get then go ahead.
->>> But I think maintainer file changes should always be in a separate patch.
->>>
->>>>    L: kvm@vger.kernel.org
->>>>    L: linux-s390@vger.kernel.org
->>>>    F: s390x/*
->>>> diff --git a/lib/s390x/malloc_io.c b/lib/s390x/malloc_io.c
->>>> new file mode 100644
->>>> index 0000000..bfe8c6a
->>>> --- /dev/null
->>>> +++ b/lib/s390x/malloc_io.c
->>>> @@ -0,0 +1,70 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>
->>> I think we wanted to use:
->>
->> @Janosch , @Thomas
->>
->>> /* SPDX-License-Identifier: GPL-2.0-or-later */
->>
->> or
->>
->> // SPDX-License-Identifier: GPL-2.0-only
->>
->> later or only ?
->>
->> /* or // ?
->>
->>
->> If both are OK, I will take the Janosch proposition which is in use in
->> vm.[ch] and ignore the Linux checkpatch warning.
->>
->> Just to : Why are you people not using the Linux style code completely
->> instead of making new exceptions.
->>
->> i.e. SPDX license and MAINTAINERS
->>
+On Thu, Jan 21, 2021 at 09:54:45AM -0600, Bjorn Helgaas wrote:
+> [Greg may be able to help compare/contrast this s390 UID with udev
+> persistent names]
 > 
-> s390 also has /* */ style SPDX and GPL2.0+ statements in the kernel...
+> On Thu, Jan 21, 2021 at 04:31:55PM +0100, Niklas Schnelle wrote:
+> > On 1/15/21 4:29 PM, Bjorn Helgaas wrote:
+> > > On Fri, Jan 15, 2021 at 12:20:59PM +0100, Niklas Schnelle wrote:
+> > >> On 1/14/21 5:14 PM, Greg Kroah-Hartman wrote:
+> > >>> On Thu, Jan 14, 2021 at 04:51:17PM +0100, Niklas Schnelle wrote:
+> > >>>> On 1/14/21 4:17 PM, Greg Kroah-Hartman wrote:
+> > >>>>> On Thu, Jan 14, 2021 at 04:06:11PM +0100, Niklas Schnelle wrote:
+> > >>>>>> On 1/14/21 2:58 PM, Greg Kroah-Hartman wrote:
+> > >>>>>>> On Thu, Jan 14, 2021 at 02:44:53PM +0100, Christian Brauner wrote:
+> > >>>>>>>> On Thu, Jan 14, 2021 at 02:20:10PM +0100, Niklas Schnelle wrote:
+> > >>>>>>>>> On 1/13/21 7:55 PM, Bjorn Helgaas wrote:
+> > >>>>>>>>>> On Wed, Jan 13, 2021 at 08:47:58AM +0100, Niklas Schnelle wrote:
+> > >>>>>>>>>>> On 1/12/21 10:50 PM, Bjorn Helgaas wrote:
+> > >> ... snip ...
+> > >>
+> > >>>
+> > >>>> 	if (!zpci_global_kset)
+> > >>>> 		return -ENOMEM;
+> > >>>>
+> > >>>> 	return sysfs_create_group(&zpci_global_kset->kobj, &zpci_attr_group_global);
+> > >>>
+> > >>> Huge hint, if in a driver, or bus subsystem, and you call sysfs_*,
+> > >>> that's usually a huge clue that you are doing something wrong.
+> > >>>
+> > >>> Try the above again, with a simple attribute group, and name for it, and
+> > >>> it should "just work".
+> > >>
+> > >> I'm probably missing something but I don't get how this could work
+> > >> in this case. If I'm seeing this right the default attribute group
+> > >> here is pci_bus_type.bus_groups and that is already set in
+> > >> drivers/pci/pci-driver.c so I don't think I should set that.
+> > >>
+> > >> I did however find bus_create_file() which does work when using the
+> > >> path /sys/bus/pci/uid_checking instead. This would work for us if
+> > >> Bjorn is okay with that path and the code is really clean and simple
+> > >> too.
+> > >>
+> > >> That said, I think we could also add something like
+> > >> bus_create_group().  Then we could use that to also clean up
+> > >> drivers/pci/slot.c:pci_slot_init() and get the original path
+> > >> /sys/bus/pci/zpci/uid_checking.
+> > > 
+> > > I don't think "uid_checking" is quite the right name.  It says
+> > > something about the *implementation*, but it doesn't convey what that
+> > > *means* to userspace.  IIUC this file tells userspace something about
+> > > whether a given PCI device always has the same PCI domain/bus/dev/fn
+> > > address (or maybe just the same domain?)
+> > > 
+> > > It sounds like this feature could be useful beyond just s390, and
+> > > other arches might implement it differently, without the UID concept.
+> > > If so, I'm OK with something at the /sys/bus/pci/xxx level as long as
+> > > the name is not s390-specific (and "uid" sounds s390-specific).
+> > > 
+> > > I assume it would also help with the udev/systemd end if you could
+> > > make this less s390 dependent.
+> > 
+> > I've thought about this more and even implemented a proof of concept
+> > patch for a global attribute using a pcibios_has_reproducible_addressing()
+> > hook. 
+> > 
+> > However after implementing it I think as a more general and
+> > future proof concept it makes more sense to do this as a per device
+> > attribute, maybe as another flag in "stuct pci_dev" named something
+> > like "reliable_address". My reasoning behind this can be best be seen
+> > with a QEMU example. While I expect that QEMU can easily guarantee
+> > that one can always use "0000:01:00.0" for a virtio-pci NIC and
+> > thus enp1s0 interface name, the same might be harder to guarantee
+> > for a SR-IOV VF passed through with vfio-pci in that same VM and
+> > even less so if a thunderbolt controller is passed through and
+> > enumeration may depend on daisy chaining. The QEMU example
+> > also applies to s390 and maybe others will in the future.
 > 
-> Since KUT has way less developers the style rules aren't as strict and
-> currently I see that as an advantage. Following checkpatch down the
-> cliff is a bad idea in the kernel and for unit tests. It's most often
-> correct, but not always.
+> I'm a little wary of using the PCI geographical address
+> ("0000:01:00.0") as a stable name.  Even if you can make a way to use
+> that to identify a specific device instance, regardless of how it is
+> plugged in or passed through, it sounds like we could end up with
+> "physical PCI addresses" and "virtual PCI addresses" that look the
+> same and would cause confusion.
+
+Agreed, as we all know, PCI addresses are never a stable name and can
+change every boot on some systems.  Never rely on them, but you can use
+them as a "hint" for something that you have to determine is different
+from something else that is the same type of device.
+
+> This concept sounds similar to the udev concept of a "persistent
+> device name".  What advantages does this s390 UID have over the udev
+> approach?
 > 
+> There are optional PCI device serial numbers that we currently don't
+> really make use of.  Would that be a generic way to help with this?
 
-Oh OK,
-thanks for the explanation,
+Only if you can require that they be unique.  Is there such a
+requirement and who enforces it?
 
-Pierre
+For USB, it was only "required" to have unique serial numbers for one
+class of devices (printers), and even then, it really wasn't enforced
+that much so you can't rely on it being unique at all, which makes it
+pretty useless :(
 
--- 
-Pierre Morel
-IBM Lab Boeblingen
+thanks,
+
+greg k-h
