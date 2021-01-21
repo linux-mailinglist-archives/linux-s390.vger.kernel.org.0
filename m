@@ -2,129 +2,132 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E2222FE6E5
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Jan 2021 10:58:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8BF42FE6EE
+	for <lists+linux-s390@lfdr.de>; Thu, 21 Jan 2021 11:00:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbhAUJ47 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 21 Jan 2021 04:56:59 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:52573 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728456AbhAUJ4F (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 Jan 2021 04:56:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1611222964; x=1642758964;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:mime-version:content-transfer-encoding:subject;
-  bh=tikY/ymWGHG7OvzSMWQNvUsnxukhLkfx1pylHsOnXHM=;
-  b=oH7NzyUYqX8s/yOzRqT08+gUGL+RdiMqEjXO+0aAZ6RwzaT2LpcLxv1T
-   TPtGII3IUIpy0fapAjbu0dD2q1UYal6lZx3KhFOOobAB02tSUV2LU+im9
-   YcJ/fhXOxv4mDAsWHW8WVWfxoLUdjZXwdBXu1uj1xELdYOPNpD5+fIMyW
-   o=;
-X-IronPort-AV: E=Sophos;i="5.79,363,1602547200"; 
-   d="scan'208";a="112521061"
-Subject: Re: [PATCH v4 1/2] drivers/misc: sysgenid: add system generation id driver
-Thread-Topic: [PATCH v4 1/2] drivers/misc: sysgenid: add system generation id driver
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 21 Jan 2021 09:55:14 +0000
-Received: from EX13MTAUEE001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
-        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id CA814A25BB;
-        Thu, 21 Jan 2021 09:55:03 +0000 (UTC)
-Received: from EX13D08UEE004.ant.amazon.com (10.43.62.182) by
- EX13MTAUEE001.ant.amazon.com (10.43.62.226) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 21 Jan 2021 09:54:28 +0000
-Received: from EX13D08EUB004.ant.amazon.com (10.43.166.158) by
- EX13D08UEE004.ant.amazon.com (10.43.62.182) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 21 Jan 2021 09:54:27 +0000
-Received: from EX13D08EUB004.ant.amazon.com ([10.43.166.158]) by
- EX13D08EUB004.ant.amazon.com ([10.43.166.158]) with mapi id 15.00.1497.010;
- Thu, 21 Jan 2021 09:54:27 +0000
-From:   "Catangiu, Adrian Costin" <acatan@amazon.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "Graf (AWS), Alexander" <graf@amazon.de>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "rppt@kernel.org" <rppt@kernel.org>,
-        "0x7f454c46@gmail.com" <0x7f454c46@gmail.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "Jason@zx2c4.com" <Jason@zx2c4.com>,
-        "jannh@google.com" <jannh@google.com>, "w@1wt.eu" <w@1wt.eu>,
-        "MacCarthaigh, Colm" <colmmacc@amazon.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "tytso@mit.edu" <tytso@mit.edu>,
-        "ebiggers@kernel.org" <ebiggers@kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "bonzini@gnu.org" <bonzini@gnu.org>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "Weiss, Radu" <raduweis@amazon.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "areber@redhat.com" <areber@redhat.com>,
-        "ovzxemul@gmail.com" <ovzxemul@gmail.com>,
-        "avagin@gmail.com" <avagin@gmail.com>,
-        "ptikhomirov@virtuozzo.com" <ptikhomirov@virtuozzo.com>,
-        "gil@azul.com" <gil@azul.com>,
-        "asmehra@redhat.com" <asmehra@redhat.com>,
-        "dgunigun@redhat.com" <dgunigun@redhat.com>,
-        "vijaysun@ca.ibm.com" <vijaysun@ca.ibm.com>,
-        "oridgar@gmail.com" <oridgar@gmail.com>,
-        "ghammer@redhat.com" <ghammer@redhat.com>
-Thread-Index: AQHW6NzJ6Ner/CpAZ0GLGgCheKaWxKoj9j+AgA4QXAA=
-Date:   Thu, 21 Jan 2021 09:54:27 +0000
-Message-ID: <0EFE3365-1698-4BFB-B2F2-BEF1A2634E45@amazon.com>
-References: <1610453760-13812-1-git-send-email-acatan@amazon.com>
- <1610453760-13812-2-git-send-email-acatan@amazon.com>
- <X/2fP9LNWXvp7up9@kroah.com>
-In-Reply-To: <X/2fP9LNWXvp7up9@kroah.com>
-Accept-Language: en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.164.195]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AC44F688DB044F439484826026445BBE@amazon.com>
+        id S1728657AbhAUJ7b (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 21 Jan 2021 04:59:31 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60206 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728838AbhAUJ7O (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 21 Jan 2021 04:59:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611223068;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vjsx8NNg7QU5UqLR81grwFscZo5YAJDDorGAAazwLP4=;
+        b=aDwHr22ybNuz3+RlYKddq5g+BFWJavA3Z5+cO8YWHSvyX2zUDBuO39inUoKrsPBXnf/zkY
+        pU/1Ra4X5flPeTlRbIzsuoIL3UpNNNS8YxftnH1vR4HLMVCS6pJnPBmfpBRjbWpGBXKiQy
+        9xTOTr1VztqarFRSYymYlW3ouvsHYYc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-307-qVKfsRoLMJKyWRy80DNzPw-1; Thu, 21 Jan 2021 04:57:44 -0500
+X-MC-Unique: qVKfsRoLMJKyWRy80DNzPw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14B9A107ACF6;
+        Thu, 21 Jan 2021 09:57:41 +0000 (UTC)
+Received: from [10.36.115.70] (ovpn-115-70.ams2.redhat.com [10.36.115.70])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1FB0319D9B;
+        Thu, 21 Jan 2021 09:57:32 +0000 (UTC)
+Subject: Re: [PATCH RFC] virtio-mem: check against memhp_get_pluggable_range()
+ which memory we can hotplug
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org, hca@linux.ibm.com,
+        catalin.marinas@arm.com
+Cc:     Oscar Salvador <osalvador@suse.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        teawater <teawaterz@linux.alibaba.com>,
+        Pankaj Gupta <pankaj.gupta@cloud.ionos.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <1610975582-12646-1-git-send-email-anshuman.khandual@arm.com>
+ <1610975582-12646-5-git-send-email-anshuman.khandual@arm.com>
+ <a1644ce0-427f-7a5c-b90a-547e61341a75@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <36a10a6f-a2c7-b108-5054-5e4f3e1a1daf@redhat.com>
+Date:   Thu, 21 Jan 2021 10:57:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+In-Reply-To: <a1644ce0-427f-7a5c-b90a-547e61341a75@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-T24gMTIvMDEvMjAyMSwgMTU6MDcsICJHcmVnIEtIIiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5v
-cmc+IHdyb3RlOg0KDQogICAgT24gVHVlLCBKYW4gMTIsIDIwMjEgYXQgMDI6MTU6NTlQTSArMDIw
-MCwgQWRyaWFuIENhdGFuZ2l1IHdyb3RlOg0KICAgID4gKyAgUGFydGlhbCByZWFkcyBhcmUgbm90
-IGFsbG93ZWQgLSByZWFkIGJ1ZmZlciBuZWVkcyB0byBiZSBhdCBsZWFzdA0KICAgID4gKyAgYGBz
-aXplb2YodW5zaWduZWQpYGAgaW4gc2l6ZS4NCg0KICAgICJzaXplb2YodW5zaWduZWQpIj8gIEhv
-dyBhYm91dCBiZWluZyBzcGVjaWZpYyBhbmQgbWFraW5nIHRoaXMgYSByZWFsICJYDQogICAgYml0
-cyBiaWciIHZhbHVlIHBsZWFzZS4NCg0KICAgICJ1bnNpZ25lZCIgZG9lcyBub3Qgd29yayB3ZWxs
-IGFjcm9zcyB1c2VyL2tlcm5lbCBib3VuZHJpZXMuICBPaywgdGhhdCdzDQogICAgb24gdW5kZXJz
-dGF0ZW1lbnQsIHRoZSBjb3JyZWN0IHRoaW5nIGlzICJkb2VzIG5vdCB3b3JrIGF0IGFsbCIuDQoN
-CiAgICBQbGVhc2UgYmUgc3BlY2lmaWMgaW4geW91ciBhcGlzLg0KDQogICAgVGhpcyBpcyBsaXN0
-ZWQgZWxzZXdoZXJlIGFsc28uDQoNClJpZ2h0LCB3aWxsIGRvIQ0KDQogICAgPiArICAtIFNZU0dF
-TklEX0dFVF9PVVREQVRFRF9XQVRDSEVSUzogaW1tZWRpYXRlbHkgcmV0dXJucyB0aGUgbnVtYmVy
-IG9mDQogICAgPiArICAgICpvdXRkYXRlZCogd2F0Y2hlcnMgLSBudW1iZXIgb2YgZmlsZSBkZXNj
-cmlwdG9ycyB0aGF0IHdlcmUgb3Blbg0KICAgID4gKyAgICBkdXJpbmcgYSBzeXN0ZW0gZ2VuZXJh
-dGlvbiBjaGFuZ2UsIGFuZCB3aGljaCBoYXZlIG5vdCB5ZXQgY29uZmlybWVkDQogICAgPiArICAg
-IHRoZSBuZXcgZ2VuZXJhdGlvbiBjb3VudGVyLg0KDQogICAgQnV0IHRoaXMgbnVtYmVyIGNhbiBp
-bnN0YW50bHkgY2hhbmdlIGFmdGVyIGl0IGlzIHJlYWQsIHdoYXQgZ29vZCBpcyBpdD8NCiAgICBJ
-dCBzaG91bGQgbmV2ZXIgYmUgcmVsaWVkIG9uLCBzbyB3aHkgaXMgdGhpcyBuZWVkZWQgYXQgYWxs
-Pw0KDQogICAgV2hhdCBjYW4gdXNlcnNwYWNlIGRvIHdpdGggdGhpcyBpbmZvcm1hdGlvbj8NCg0K
-VGhhdCBpcyB0cnVlLCBhIHVzZXJzcGFjZSBwcm9jZXNzIGVpdGhlciBoYXMgdG8gd2FpdCBmb3Ig
-YWxsIHRvIGFkanVzdCB0byB0aGUgbmV3IGdlbmVyYXRpb24NCm9yIG5vdCBjYXJlIGFib3V0IG90
-aGVyIHByb2Nlc3Nlcy4gSW50ZXJtZWRpYXRlIHByb2JpbmcgZG9lc24ndCBicmluZyByZWFsIHZh
-bHVlLiBXaWxsIHJlbW92ZS4NCg0KICAgIHRoYW5rcywNCg0KICAgIGdyZWcgay1oDQoNClRoYW5r
-cyBmb3IgdGhlIGZlZWRiYWNrIQ0KQWRyaWFuLg0KDQoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2Vu
-dGVyIChSb21hbmlhKSBTLlIuTC4gcmVnaXN0ZXJlZCBvZmZpY2U6IDI3QSBTZi4gTGF6YXIgU3Ry
-ZWV0LCBVQkM1LCBmbG9vciAyLCBJYXNpLCBJYXNpIENvdW50eSwgNzAwMDQ1LCBSb21hbmlhLiBS
-ZWdpc3RlcmVkIGluIFJvbWFuaWEuIFJlZ2lzdHJhdGlvbiBudW1iZXIgSjIyLzI2MjEvMjAwNS4K
+On 18.01.21 14:21, Anshuman Khandual wrote:
+> 
+> 
+> On 1/18/21 6:43 PM, Anshuman Khandual wrote:
+>> From: David Hildenbrand <david@redhat.com>
+>>
+>> Right now, we only check against MAX_PHYSMEM_BITS - but turns out there
+>> are more restrictions of which memory we can actually hotplug, especially
+>> om arm64 or s390x once we support them: we might receive something like
+>> -E2BIG or -ERANGE from add_memory_driver_managed(), stopping device
+>> operation.
+>>
+>> So, check right when initializing the device which memory we can add,
+>> warning the user. Try only adding actually pluggable ranges: in the worst
+>> case, no memory provided by our device is pluggable.
+>>
+>> In the usual case, we expect all device memory to be pluggable, and in
+>> corner cases only some memory at the end of the device-managed memory
+>> region to not be pluggable.
+>>
+>> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+>> Cc: Jason Wang <jasowang@redhat.com>
+>> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Cc: Oscar Salvador <osalvador@suse.de>
+>> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: catalin.marinas@arm.com
+>> Cc: teawater <teawaterz@linux.alibaba.com>
+>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+>> Cc: Pankaj Gupta <pankaj.gupta@cloud.ionos.com>
+>> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Cc: hca@linux.ibm.com
+>> Cc: Vasily Gorbik <gor@linux.ibm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Heiko Carstens <hca@linux.ibm.com>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
+> Hello David,
+> 
+> As your original patch was in the RFC state, I have just maintained
+> the same here as well. But once you test this patch along with the
+> new series, please do let me know if this needs to be converted to
+> a normal PATCH instead. Thank you.
+
+Yes, you can drop the RFC part. I assume you'll send another revision,
+I'll do another test there, thanks!
+
+
+-- 
+Thanks,
+
+David / dhildenb
 
