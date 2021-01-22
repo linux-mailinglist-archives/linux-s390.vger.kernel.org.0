@@ -2,233 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3FC72FFDAE
-	for <lists+linux-s390@lfdr.de>; Fri, 22 Jan 2021 08:56:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89F6F2FFE23
+	for <lists+linux-s390@lfdr.de>; Fri, 22 Jan 2021 09:30:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbhAVH4j (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 22 Jan 2021 02:56:39 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52728 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726485AbhAVH4g (ORCPT
+        id S1726834AbhAVI1O (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 22 Jan 2021 03:27:14 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52764 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726247AbhAVI0y (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 22 Jan 2021 02:56:36 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10M7G0Rg083954;
-        Fri, 22 Jan 2021 02:55:54 -0500
+        Fri, 22 Jan 2021 03:26:54 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10M8CRbB128393;
+        Fri, 22 Jan 2021 03:26:12 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=KvfEZdyuw4m9MoibtTM88SuJrnr14OJyRbDvUVEna44=;
- b=Dz+OHfqVI28xQrYlBPAjsVKSIWbhOTSpgB0NJghyOEDfXPzMKb2xJ17n+/XCoJSXl6tF
- cVVg5MJTwEN3KgEPasX71qaX/5T6wUAR7LkhTE6g10o1e1Y7RpQirHjR6vgvyFe1Qq9R
- jk4V9wVZvtydm1KMrPjeKANqjyUOtNW1f8581F/py7UussQNksI1x/bthZ2yYsGMs8xy
- GD7sZeEZW4Svx0ZW+hbu6j3o1RIdUirfuXbaBiMfuDyzFinP56b+yeYgioPV/30vOizu
- 2LEd4KL84/TiKstgPlcn6WCMAZuaEo5obFgFkQU6gTkOq0P4G7Tt8gD6KoqjYNrAA5jM 2g== 
+ bh=mw4V63uEuhF15jfLZx5263/9Tfcis6S2XeJ6PjdZCk8=;
+ b=nng7M2CnBTGNSXaITZDAwVUx+HwDBtm2EiOs8ckI+Od24wRDL3f/BUcL8PuV6yGni6Cu
+ gdiAUdVnLgR9KI7Z1jiV1/1neFtq6GnHE8Ol2JLCbbbArrlVCN2uCpBEPw3vBKY8fl+W
+ cpbA+iIRADpbOOTlkDTzvVzUzsYyhZM3D7bOH+veD3wH11lS7VUts38V0FVT4lqAysNm
+ eeZnVjuMJPu8RdBwtFjG8sTJUyG16O641GjQvRG8+zT0Fpk64KTlX91LL1TVms/fks9Y
+ B7w2Qrj97lfm/HsKqmSKBrHq7KEGhuVNKOvUdSOuX4j0SgBDL5guvnUmb+dMRI7cyB/w eA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 367t5ugy83-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 367u05g9wb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Jan 2021 02:55:54 -0500
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10M7HOfM090604;
-        Fri, 22 Jan 2021 02:55:54 -0500
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 367t5ugy78-1
+        Fri, 22 Jan 2021 03:26:12 -0500
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10M8Dn3T131567;
+        Fri, 22 Jan 2021 03:26:11 -0500
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 367u05g9vp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Jan 2021 02:55:53 -0500
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10M7lP0d004343;
-        Fri, 22 Jan 2021 07:55:52 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 367k0p0ay8-1
+        Fri, 22 Jan 2021 03:26:11 -0500
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10M8HY7s015508;
+        Fri, 22 Jan 2021 08:26:10 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma01fra.de.ibm.com with ESMTP id 367k0v06aq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Jan 2021 07:55:52 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10M7tg3037093648
+        Fri, 22 Jan 2021 08:26:09 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10M8Q61m33030512
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Jan 2021 07:55:42 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 499E611C04C;
-        Fri, 22 Jan 2021 07:55:49 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C910111C05B;
-        Fri, 22 Jan 2021 07:55:48 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.14.230])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 22 Jan 2021 07:55:48 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v4 2/3] s390x: define UV compatible I/O
- allocation
-To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com,
-        drjones@redhat.com, pbonzini@redhat.com
-References: <1611220392-22628-1-git-send-email-pmorel@linux.ibm.com>
- <1611220392-22628-3-git-send-email-pmorel@linux.ibm.com>
- <a50c9d35-4a67-4adc-4647-98df14300ada@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <ff1f7e69-6962-5d1d-d7be-51089c735993@linux.ibm.com>
-Date:   Fri, 22 Jan 2021 08:55:48 +0100
+        Fri, 22 Jan 2021 08:26:07 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CBECFA4064;
+        Fri, 22 Jan 2021 08:26:06 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 585A9A405F;
+        Fri, 22 Jan 2021 08:26:06 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.171.82.42])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 22 Jan 2021 08:26:06 +0000 (GMT)
+Subject: Re: [PATCH v5] s390/vfio-ap: clean up vfio_ap resources when KVM
+ pointer invalidated
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     stable@vger.kernel.org, cohuck@redhat.com, kwankhede@nvidia.com,
+        pbonzini@redhat.com, alex.williamson@redhat.com,
+        pasic@linux.vnet.ibm.com, Halil Pasic <pasic@linux.ibm.com>
+References: <20201223012013.5418-1-akrowiak@linux.ibm.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Message-ID: <0649ba1e-ecd3-890a-72b5-a8ff54417faf@de.ibm.com>
+Date:   Fri, 22 Jan 2021 09:26:06 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.0
 MIME-Version: 1.0
-In-Reply-To: <a50c9d35-4a67-4adc-4647-98df14300ada@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20201223012013.5418-1-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
  definitions=2021-01-22_03:2021-01-21,2021-01-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 spamscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
- clxscore=1015 mlxlogscore=999 malwarescore=0 suspectscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101220036
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 priorityscore=1501 impostorscore=0
+ phishscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101220038
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 1/21/21 10:32 AM, Thomas Huth wrote:
-
-...snip...
-
->> +#include <asm/facility.h>
->> +
->> +static int share_pages(void *p, int count)
->> +{
->> +    int i = 0;
->> +
->> +    for (i = 0; i < count; i++, p += PAGE_SIZE)
->> +        if (uv_set_shared((unsigned long)p))
->> +            return i;
+On 23.12.20 02:20, Tony Krowiak wrote:
+> The vfio_ap device driver registers a group notifier with VFIO when the
+> file descriptor for a VFIO mediated device for a KVM guest is opened to
+> receive notification that the KVM pointer is set (VFIO_GROUP_NOTIFY_SET_KVM
+> event). When the KVM pointer is set, the vfio_ap driver takes the
+> following actions:
+> 1. Stashes the KVM pointer in the vfio_ap_mdev struct that holds the state
+>    of the mediated device.
+> 2. Calls the kvm_get_kvm() function to increment its reference counter.
+> 3. Sets the function pointer to the function that handles interception of
+>    the instruction that enables/disables interrupt processing.
+> 4. Sets the masks in the KVM guest's CRYCB to pass AP resources through to
+>    the guest.
 > 
-> Just a matter of taste, but you could replace the "return i" here also 
-> with a "break" since you're returning i below anyway.
-
-right a single out point is always better.
-
+> In order to avoid memory leaks, when the notifier is called to receive
+> notification that the KVM pointer has been set to NULL, the vfio_ap device
+> driver should reverse the actions taken when the KVM pointer was set.
 > 
->> +    return i;
->> +}
->> +
->> +static void unshare_pages(void *p, int count)
->> +{
->> +    int i;
->> +
->> +    for (i = count; i > 0; i--, p += PAGE_SIZE)
->> +        uv_remove_shared((unsigned long)p);
->> +}
->> +
->> +void *alloc_io_pages(int size, int flags)
-> 
-> I still think the naming or size parameter is confusing here. If I read 
-> something like alloc_io_pages(), I'd expect a "num_pages" parameter. So 
-> if you want to keep the "size" in bytes, I'd suggest to rename the 
-> function to "alloc_io_mem" instead.
-
-OK, I rename the function, allowing the user to keep a simple interface
-without having to calculate the page order.
-
-> 
->> +{
->> +    int order = (size >> PAGE_SHIFT);
-> 
-> I think this is wrong. According to the description of alloc_pages_flag, 
-> it allocates "1ull << order" pages.
-> So you likely want to do this instead here:
-> 
->          int order = get_order(size >> PAGE_SHIFT);
-
-you are absolutely right.
-
-> 
->> +    void *p;
->> +    int n;
->> +
->> +    assert(size);
->> +
->> +    p = alloc_pages_flags(order, AREA_DMA31 | flags);
->> +    if (!p || !test_facility(158))
->> +        return p;
->> +
->> +    n = share_pages(p, 1 << order);
->> +    if (n == 1 << order)
->> +        return p;
->> +
->> +    unshare_pages(p, n);
->> +    free_pages(p);
->> +    return NULL;
->> +}
->> +
->> +void free_io_pages(void *p, int size)
->> +{
->> +    int order = size >> PAGE_SHIFT;
-> 
-> dito?
-
-yes :(
-
-> 
->> +    assert(IS_ALIGNED((uintptr_t)p, PAGE_SIZE));
->> +
->> +    if (test_facility(158))
->> +        unshare_pages(p, 1 << order);
->> +    free_pages(p);
->> +}
->> diff --git a/lib/s390x/malloc_io.h b/lib/s390x/malloc_io.h
->> new file mode 100644
->> index 0000000..494dfe9
->> --- /dev/null
->> +++ b/lib/s390x/malloc_io.h
->> @@ -0,0 +1,45 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
-> 
-> GPL-2.0-only please.
-
-almmost... I use:
-/* SPDX-License-Identifier: GPL-2.0-or-later */
-
-as in other files updated by janosch if this is not a problem.
-
-> 
->> +/*
->> + * I/O allocations
->> + *
->> + * Copyright (c) 2021 IBM Corp
->> + *
->> + * Authors:
->> + *  Pierre Morel <pmorel@linux.ibm.com>
->> + *
->> + */
->> +#ifndef _S390X_MALLOC_IO_H_
->> +#define _S390X_MALLOC_IO_H_
->> +
->> +/*
->> + * Allocates a page aligned page bound range of contiguous real or
->> + * absolute memory in the DMA31 region large enough to contain size
->> + * bytes.
->> + * If Protected Virtualization facility is present, shares the pages
->> + * with the host.
->> + * If all the pages for the specified size cannot be reserved,
->> + * the function rewinds the partial allocation and a NULL pointer
->> + * is returned.
->> + *
->> + * @size: the minimal size allocated in byte.
->> + * @flags: the flags used for the underlying page allocator.
->> + *
->> + * Errors:
->> + *   The allocation will assert the size parameter, will fail if the
->> + *   underlying page allocator fail or in the case of protected
->> + *   virtualisation if the sharing of the pages fails.
-> 
-> I think "virtualization" (with an z) is more common than "virtualisation".
-
-OK
+> Fixes: 258287c994de ("s390: vfio-ap: implement mediated device open callback")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
 
-Thanks,
-Pierre
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
+Just to keep you up2date why this patch is still waiting in our queue. This triggered
+a lockdep splat in the CI which we want to fix first.
