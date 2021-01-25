@@ -2,58 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D98DE3046E6
-	for <lists+linux-s390@lfdr.de>; Tue, 26 Jan 2021 19:46:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D70AD30477D
+	for <lists+linux-s390@lfdr.de>; Tue, 26 Jan 2021 20:08:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390606AbhAZRTb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 26 Jan 2021 12:19:31 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:57360 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390905AbhAZJKO (ORCPT
+        id S1727330AbhAZF7z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 26 Jan 2021 00:59:55 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:35906 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727123AbhAYJzl (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 26 Jan 2021 04:10:14 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=abaci-bugfix@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UMyJhuB_1611652154;
-Received: from j63c13417.sqa.eu95.tbsite.net(mailfrom:abaci-bugfix@linux.alibaba.com fp:SMTPD_---0UMyJhuB_1611652154)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 26 Jan 2021 17:09:17 +0800
-From:   Jiapeng Zhong <abaci-bugfix@linux.alibaba.com>
-To:     hca@linux.ibm.com
-Cc:     gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiapeng Zhong <abaci-bugfix@linux.alibaba.com>
-Subject: [PATCH] s390: Simplify the calculation of variables
-Date:   Tue, 26 Jan 2021 17:09:12 +0800
-Message-Id: <1611652152-58139-1-git-send-email-abaci-bugfix@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 25 Jan 2021 04:55:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611568415;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Hrcm87Lm5vA7qkXiODp26/0zBnb9xwFRvemPxGgdCUw=;
+        b=dNAXXoY6NWPEJcvHFn4j5XNbsYqIboVL78sIt0WC+Kiy/1+H/naPVoH95bE4vr6As2EGSA
+        wzOHYnQ7q2HoVb9ZUnQ/A12fYulpgHP4NqEYw1beSMbA3LeVYYUnegEJ2GemAj4dOMOrtq
+        UfldKIabjdank/A+kRfZ6GEM/DTvRlY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-366-w9-sc5eSOOSknhbbMcDNeg-1; Mon, 25 Jan 2021 04:53:33 -0500
+X-MC-Unique: w9-sc5eSOOSknhbbMcDNeg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61E651005504;
+        Mon, 25 Jan 2021 09:53:31 +0000 (UTC)
+Received: from [10.36.115.13] (ovpn-115-13.ams2.redhat.com [10.36.115.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AADDC5D9D7;
+        Mon, 25 Jan 2021 09:53:28 +0000 (UTC)
+Subject: Re: [PATCH V4 0/4] mm/memory_hotplug: Pre-validate the address range
+ with platform
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        akpm@linux-foundation.org, hca@linux.ibm.com,
+        catalin.marinas@arm.com
+Cc:     Oscar Salvador <osalvador@suse.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1611543532-18698-1-git-send-email-anshuman.khandual@arm.com>
+ <c60ecbed-9073-83f9-e9e2-1f79a80cfe44@redhat.com>
+ <8260d6fe-7df5-c667-2514-0d94cf87d31c@arm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <fb18a191-4c65-faf8-29ee-780a6c1ab55e@redhat.com>
+Date:   Mon, 25 Jan 2021 10:53:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
+MIME-Version: 1.0
+In-Reply-To: <8260d6fe-7df5-c667-2514-0d94cf87d31c@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Fix the following coccicheck warnings:
+On 25.01.21 10:52, Anshuman Khandual wrote:
+> 
+> 
+> On 1/25/21 2:55 PM, David Hildenbrand wrote:
+>> On 25.01.21 03:58, Anshuman Khandual wrote:
+>>> This series adds a mechanism allowing platforms to weigh in and prevalidate
+>>> incoming address range before proceeding further with the memory hotplug.
+>>> This helps prevent potential platform errors for the given address range,
+>>> down the hotplug call chain, which inevitably fails the hotplug itself.
+>>>
+>>> This mechanism was suggested by David Hildenbrand during another discussion
+>>> with respect to a memory hotplug fix on arm64 platform.
+>>>
+>>> https://lore.kernel.org/linux-arm-kernel/1600332402-30123-1-git-send-email-anshuman.khandual@arm.com/
+>>>
+>>> This mechanism focuses on the addressibility aspect and not [sub] section
+>>> alignment aspect. Hence check_hotplug_memory_range() and check_pfn_span()
+>>> have been left unchanged. Wondering if all these can still be unified in
+>>> an expanded memhp_range_allowed() check, that can be called from multiple
+>>> memory hot add and remove paths.
+>>>
+>>> This series applies on v5.11-rc5 and has been tested on arm64. But only
+>>> build tested on s390.
+>>>
+>>
+>> Note that this fails to apply right now to both, -next and Linus' tree.
+>> Do you have a branch with he patches on top I can use for a quick test?
+>> Thanks
+>>
+> 
+> Applied all four patches on v5.11-rc5.
+> 
+> https://gitlab.arm.com/linux-arm/linux-anshuman/-/tree/mm/hotplug_callback/v4/
+> 
 
-./arch/s390/include/asm/scsw.h:528:48-50: WARNING !A || A && B is
-equivalent to !A || B.
+Ah, my fault, they do apply directly on v5.11-rc5 (not sure what I
+messed up jumping between branches - thanks!). Will give it a test.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Jiapeng Zhong <abaci-bugfix@linux.alibaba.com>
----
- arch/s390/include/asm/scsw.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/s390/include/asm/scsw.h b/arch/s390/include/asm/scsw.h
-index c00f7b0..a7c3ccf 100644
---- a/arch/s390/include/asm/scsw.h
-+++ b/arch/s390/include/asm/scsw.h
-@@ -525,8 +525,7 @@ static inline int scsw_cmd_is_valid_pno(union scsw *scsw)
- 	return (scsw->cmd.fctl != 0) &&
- 	       (scsw->cmd.stctl & SCSW_STCTL_STATUS_PEND) &&
- 	       (!(scsw->cmd.stctl & SCSW_STCTL_INTER_STATUS) ||
--		 ((scsw->cmd.stctl & SCSW_STCTL_INTER_STATUS) &&
--		  (scsw->cmd.actl & SCSW_ACTL_SUSPENDED)));
-+		  (scsw->cmd.actl & SCSW_ACTL_SUSPENDED));
- }
- 
- /**
 -- 
-1.8.3.1
+Thanks,
+
+David / dhildenb
 
