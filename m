@@ -2,114 +2,106 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F49D304781
-	for <lists+linux-s390@lfdr.de>; Tue, 26 Jan 2021 20:08:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C9E8305153
+	for <lists+linux-s390@lfdr.de>; Wed, 27 Jan 2021 05:49:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbhAZGAe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 26 Jan 2021 01:00:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25154 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730333AbhAYPok (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 25 Jan 2021 10:44:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611589382;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TwUrudT149MlYBAjlrkqwTg7VCY0+Yq9+gSFRKaR80s=;
-        b=R0MG4Vl5xYyFXu7s01yRws16Mc0TIihwk5LcxupJJ3P4bZrai0zKZhHn0Fqh0aeJ3KvyzU
-        uPJ1HioP5Dl6Xb+zoSn17/B9oCb4O3EDxiHl1mFLqoV8h0vrbAGUi8ApCHd6GCc+d33MkB
-        M05eYHzapTHF2mKeAF2Yzp2q8IRUFqQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-27-wFt5wxUKNkKXGw7gDZYURA-1; Mon, 25 Jan 2021 10:42:58 -0500
-X-MC-Unique: wFt5wxUKNkKXGw7gDZYURA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1765809DC9;
-        Mon, 25 Jan 2021 15:42:56 +0000 (UTC)
-Received: from gondolin (ovpn-113-161.ams2.redhat.com [10.36.113.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9017D5E1A4;
-        Mon, 25 Jan 2021 15:42:54 +0000 (UTC)
-Date:   Mon, 25 Jan 2021 16:42:52 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        schnelle@linux.ibm.com, pmorel@linux.ibm.com,
-        borntraeger@de.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] vfio-pci/zdev: Introduce the zPCI I/O vfio region
-Message-ID: <20210125164252.1d1af6cd.cohuck@redhat.com>
-In-Reply-To: <9c363ff5-b76c-d697-98e2-cf091a404d15@linux.ibm.com>
-References: <1611086550-32765-1-git-send-email-mjrosato@linux.ibm.com>
-        <1611086550-32765-5-git-send-email-mjrosato@linux.ibm.com>
-        <20210122164843.269f806c@omen.home.shazbot.org>
-        <9c363ff5-b76c-d697-98e2-cf091a404d15@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S232701AbhA0EpJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 26 Jan 2021 23:45:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404663AbhAZTve (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 26 Jan 2021 14:51:34 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A0DB222B2C;
+        Tue, 26 Jan 2021 19:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611690648;
+        bh=/6ngywS810oXL2ZA1A4zcs8uV/FXPP53uDQM5zBbkwM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nac9SDFmG9oX4kG01dO+elCsbd182MDOZNKBY25QVfMXGNtTi2SRohLDsEvkXLyLX
+         JQeI/D7hch3yS7BQP1yGU5/0ES3eaGXsd7pyXOeJFb7Wq+DdmCxwiGddsUD86o9U29
+         ZK5HG0LZSIS27WlJ0ACtqd7CvehtAyqdTUhbHHy8Cw9bvbNBMUXSfVisB1BSrDR0ns
+         LsJmwNl32NfluNr+HJiFMIMDe//5g5e1P8MvXgDQGQjT3zko6g26EUb5gha/nLgXGP
+         7w0wks0rLmp+9X2RLeETkn7r8M1RVYhknuxWKoqm8Hq0aIgDFK9DMwM87ySNsUXFo6
+         OGKZB0giQ1gtw==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] Fix "ordering" comment typos
+Date:   Tue, 26 Jan 2021 13:50:42 -0600
+Message-Id: <20210126195042.2909405-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 25 Jan 2021 09:40:38 -0500
-Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-> On 1/22/21 6:48 PM, Alex Williamson wrote:
-> > On Tue, 19 Jan 2021 15:02:30 -0500
-> > Matthew Rosato <mjrosato@linux.ibm.com> wrote:
-> >   
-> >> Some s390 PCI devices (e.g. ISM) perform I/O operations that have very
-> >> specific requirements in terms of alignment as well as the patterns in
-> >> which the data is read/written. Allowing these to proceed through the
-> >> typical vfio_pci_bar_rw path will cause them to be broken in up in such a
-> >> way that these requirements can't be guaranteed. In addition, ISM devices
-> >> do not support the MIO codepaths that might be triggered on vfio I/O coming
-> >> from userspace; we must be able to ensure that these devices use the
-> >> non-MIO instructions.  To facilitate this, provide a new vfio region by
-> >> which non-MIO instructions can be passed directly to the host kernel s390
-> >> PCI layer, to be reliably issued as non-MIO instructions.
-> >>
-> >> This patch introduces the new vfio VFIO_REGION_SUBTYPE_IBM_ZPCI_IO region
-> >> and implements the ability to pass PCISTB and PCILG instructions over it,
-> >> as these are what is required for ISM devices.  
-> > 
-> > There have been various discussions about splitting vfio-pci to allow
-> > more device specific drivers rather adding duct tape and bailing wire
-> > for various device specific features to extend vfio-pci.  The latest
-> > iteration is here[1].  Is it possible that such a solution could simply
-> > provide the standard BAR region indexes, but with an implementation that
-> > works on s390, rather than creating new device specific regions to
-> > perform the same task?  Thanks,
-> > 
-> > Alex
-> > 
-> > [1]https://lore.kernel.org/lkml/20210117181534.65724-1-mgurtovoy@nvidia.com/
-> >   
-> 
-> Thanks for the pointer, I'll have to keep an eye on this.  An approach 
-> like this could solve some issues, but I think a main issue that still 
-> remains with relying on the standard BAR region indexes (whether using 
-> the current vfio-pci driver or a device-specific driver) is that QEMU 
-> writes to said BAR memory region are happening in, at most, 8B chunks 
-> (which then, in the current general-purpose vfio-pci code get further 
-> split up into 4B iowrite operations).  The alternate approach I'm 
-> proposing here is allowing for the whole payload (4K) in a single 
-> operation, which is significantly faster.  So, I suspect even with a 
-> device specific driver we'd want this sort of a region anyhow..
+Fix comment typos in "ordering".
 
-I'm also wondering about device specific vs architecture/platform
-specific handling.
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ arch/s390/include/asm/facility.h             | 2 +-
+ drivers/gpu/drm/qxl/qxl_drv.c                | 2 +-
+ drivers/net/wireless/intel/iwlwifi/fw/file.h | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-If we're trying to support ISM devices, that's device specific
-handling; but if we're trying to add more generic things like the large
-payload support, that's not necessarily tied to a device, is it? For
-example, could a device support large payload if plugged into a z, but
-not if plugged into another machine?
+
+Unless somebody objects, I'll just merge these typo fixes via the PCI tree.
+
+
+diff --git a/arch/s390/include/asm/facility.h b/arch/s390/include/asm/facility.h
+index 68c476b20b57..91b5d714d28f 100644
+--- a/arch/s390/include/asm/facility.h
++++ b/arch/s390/include/asm/facility.h
+@@ -44,7 +44,7 @@ static inline int __test_facility(unsigned long nr, void *facilities)
+ }
+ 
+ /*
+- * The test_facility function uses the bit odering where the MSB is bit 0.
++ * The test_facility function uses the bit ordering where the MSB is bit 0.
+  * That makes it easier to query facility bits with the bit number as
+  * documented in the Principles of Operation.
+  */
+diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
+index 6e7f16f4cec7..dab190a547cc 100644
+--- a/drivers/gpu/drm/qxl/qxl_drv.c
++++ b/drivers/gpu/drm/qxl/qxl_drv.c
+@@ -141,7 +141,7 @@ static void qxl_drm_release(struct drm_device *dev)
+ 
+ 	/*
+ 	 * TODO: qxl_device_fini() call should be in qxl_pci_remove(),
+-	 * reodering qxl_modeset_fini() + qxl_device_fini() calls is
++	 * reordering qxl_modeset_fini() + qxl_device_fini() calls is
+ 	 * non-trivial though.
+ 	 */
+ 	qxl_modeset_fini(qdev);
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/file.h b/drivers/net/wireless/intel/iwlwifi/fw/file.h
+index 597bc88479ba..04fbfe5cbeb0 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/file.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/file.h
+@@ -866,7 +866,7 @@ struct iwl_fw_dbg_trigger_time_event {
+  * tx_bar: tid bitmap to configure on what tid the trigger should occur
+  *	when a BAR is send (for an Rx BlocAck session).
+  * frame_timeout: tid bitmap to configure on what tid the trigger should occur
+- *	when a frame times out in the reodering buffer.
++ *	when a frame times out in the reordering buffer.
+  */
+ struct iwl_fw_dbg_trigger_ba {
+ 	__le16 rx_ba_start;
+-- 
+2.25.1
 
