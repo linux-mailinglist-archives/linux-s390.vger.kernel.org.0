@@ -2,117 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B758D305B6D
-	for <lists+linux-s390@lfdr.de>; Wed, 27 Jan 2021 13:31:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37DC7305B85
+	for <lists+linux-s390@lfdr.de>; Wed, 27 Jan 2021 13:37:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237959AbhA0Ma7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 27 Jan 2021 07:30:59 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56866 "EHLO
+        id S1343525AbhA0Mev (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 27 Jan 2021 07:34:51 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45102 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237961AbhA0M2x (ORCPT
+        by vger.kernel.org with ESMTP id S237969AbhA0Mb3 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 27 Jan 2021 07:28:53 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10RC2o2o086614;
-        Wed, 27 Jan 2021 07:27:40 -0500
+        Wed, 27 Jan 2021 07:31:29 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10RC2Nkh117828;
+        Wed, 27 Jan 2021 07:30:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
  subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=yAL17kfc48Z4BiRbtL4ut6pvuFXm4N9KOyQ3CdCN/7M=;
- b=ozPAJihs0Pdnhajajx0Cx7EhJhDAHUudmsvS75PAuRTM+2LzoFr/lhMavxG9dbcBapEn
- vReMZ8rPB8JrqB70W1FKmFjEyHp/eJ/sq2w31fenKZej3q5QhvZeUgsQ+Syi90ASk7ZO
- x5R4poy+XGkZHw5L9X6NSZYnkqar61SJsOcxYNBHbawIdKQm2H/DWfgrcuZ3kJdA3Luj
- ra9tvfaKtWf7iPHkOycCLKWYaZP1d9N1lBYgYIeub9muzuHm4nsu3IINYWL+PbMGYhfU
- MN0PwGJUiCLdOpLHbyUhGP6qXcfK6tDJ8GprrAJ3wVp3m4eCyLMWXDDp2TZ7yAA7Lovj pw== 
+ in-reply-to; s=pp1; bh=rwzNdVxaabwTTzTgTZiXcpB5MZiv4i4Keynxr5b824I=;
+ b=VKGYx+Yu4qp0Ov/MuEfEu9mWOggHrC9iBzT/DriErNwUnp7Z7Hhi7zMFSGM3KDJX8WqB
+ +hN1QC7L1GaKVhph2FRR2Eb9TttgHq8HwB2Sy85+bCDMJBRRR+zwMyxbcfOI97dGUFG0
+ CTyloZkSAYkmfUodCXcbRk5JbW+LoNHAnTUuz/BN7bo1yoNDnGr/MBYHy+PJ/FNuReDx
+ WG/1rSlWm6EHh8wKm2Gv8UAywyN3D4T/wrP9BzIQlrrfEFNCrylyJQ2+Yb4Ux1hQZw0R
+ m5B03B9I4ikPy1xSn1z0EA1QAggwZV5UmVkM8PCCzjXvU5trcFNyq+yc461hLLjsvQ1W Hg== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36b3kfr9uk-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36awe7eyxp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Jan 2021 07:27:39 -0500
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10RC3Ugb092531;
-        Wed, 27 Jan 2021 07:27:39 -0500
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36b3kfr9tb-1
+        Wed, 27 Jan 2021 07:30:37 -0500
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 10RC30MO119656;
+        Wed, 27 Jan 2021 07:30:37 -0500
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36awe7eyws-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Jan 2021 07:27:39 -0500
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10RCDt7T027459;
-        Wed, 27 Jan 2021 12:27:37 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03fra.de.ibm.com with ESMTP id 368be89ybk-1
+        Wed, 27 Jan 2021 07:30:37 -0500
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10RCEBZL002533;
+        Wed, 27 Jan 2021 12:30:34 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma01fra.de.ibm.com with ESMTP id 368be81ya7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Jan 2021 12:27:36 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10RCRXq829688178
+        Wed, 27 Jan 2021 12:30:34 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10RCUVv446793006
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Jan 2021 12:27:34 GMT
+        Wed, 27 Jan 2021 12:30:31 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C5C434204C;
-        Wed, 27 Jan 2021 12:27:33 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8C60442042;
+        Wed, 27 Jan 2021 12:30:31 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2097F42045;
-        Wed, 27 Jan 2021 12:27:33 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id DE3BF42045;
+        Wed, 27 Jan 2021 12:30:30 +0000 (GMT)
 Received: from localhost (unknown [9.171.68.8])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 27 Jan 2021 12:27:33 +0000 (GMT)
-Date:   Wed, 27 Jan 2021 13:27:31 +0100
+        Wed, 27 Jan 2021 12:30:30 +0000 (GMT)
+Date:   Wed, 27 Jan 2021 13:30:29 +0100
 From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>, x86@kernel.org,
-        linux-s390@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH] stacktrace: Move documentation for
- arch_stack_walk_reliable() to header
-Message-ID: <your-ad-here.call-01611750451-ext-7215@work.hours>
-References: <20210118211021.42308-1-broonie@kernel.org>
+        Dave Airlie <airlied@redhat.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] Fix "ordering" comment typos
+Message-ID: <your-ad-here.call-01611750629-ext-5157@work.hours>
+References: <20210126195042.2909405-1-helgaas@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210118211021.42308-1-broonie@kernel.org>
+In-Reply-To: <20210126195042.2909405-1-helgaas@kernel.org>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
  definitions=2021-01-27_05:2021-01-27,2021-01-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- spamscore=0 adultscore=0 malwarescore=0 mlxscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101270067
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 spamscore=0 clxscore=1011 suspectscore=0
+ impostorscore=0 bulkscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=936 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2009150000 definitions=main-2101270063
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 09:10:21PM +0000, Mark Brown wrote:
-> Currently arch_stack_wallk_reliable() is documented with an identical
-> comment in both x86 and S/390 implementations which is a bit redundant.
-> Move this to the header and convert to kerneldoc while we're at it.
+On Tue, Jan 26, 2021 at 01:50:42PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> Cc: Jiri Kosina <jikos@kernel.org>
-> Cc: Miroslav Benes <mbenes@suse.cz>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Joe Lawrence <joe.lawrence@redhat.com>
-> Cc: x86@kernel.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: live-patching@vger.kernel.org
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Fix comment typos in "ordering".
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->  arch/s390/kernel/stacktrace.c |  6 ------
->  arch/x86/kernel/stacktrace.c  |  6 ------
->  include/linux/stacktrace.h    | 19 +++++++++++++++++++
->  3 files changed, 19 insertions(+), 12 deletions(-)
+>  arch/s390/include/asm/facility.h             | 2 +-
+>  drivers/gpu/drm/qxl/qxl_drv.c                | 2 +-
+>  drivers/net/wireless/intel/iwlwifi/fw/file.h | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> 
+> Unless somebody objects, I'll just merge these typo fixes via the PCI tree.
+> 
+> 
+> diff --git a/arch/s390/include/asm/facility.h b/arch/s390/include/asm/facility.h
+> index 68c476b20b57..91b5d714d28f 100644
+> --- a/arch/s390/include/asm/facility.h
+> +++ b/arch/s390/include/asm/facility.h
+> @@ -44,7 +44,7 @@ static inline int __test_facility(unsigned long nr, void *facilities)
+>  }
+>  
+>  /*
+> - * The test_facility function uses the bit odering where the MSB is bit 0.
+> + * The test_facility function uses the bit ordering where the MSB is bit 0.
+>   * That makes it easier to query facility bits with the bit number as
+>   * documented in the Principles of Operation.
+>   */
 
 Acked-by: Vasily Gorbik <gor@linux.ibm.com>
