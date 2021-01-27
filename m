@@ -2,92 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B14B53058BC
-	for <lists+linux-s390@lfdr.de>; Wed, 27 Jan 2021 11:47:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A4AB3058D6
+	for <lists+linux-s390@lfdr.de>; Wed, 27 Jan 2021 11:53:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343493AbhA0Kqu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 27 Jan 2021 05:46:50 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39968 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236145AbhA0Kpo (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 27 Jan 2021 05:45:44 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 02C94ACBA;
-        Wed, 27 Jan 2021 10:45:02 +0000 (UTC)
-Date:   Wed, 27 Jan 2021 11:45:01 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Mark Brown <broonie@kernel.org>
-cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>, x86@kernel.org,
-        linux-s390@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH] stacktrace: Move documentation for arch_stack_walk_reliable()
- to header
-In-Reply-To: <20210118211021.42308-1-broonie@kernel.org>
-Message-ID: <alpine.LSU.2.21.2101271141460.27114@pobox.suse.cz>
-References: <20210118211021.42308-1-broonie@kernel.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S233940AbhA0KvX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 27 Jan 2021 05:51:23 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43800 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234866AbhA0KtL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 27 Jan 2021 05:49:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611744458;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PP9Ul/YBsk5CTiiCyoAnHai9JYjJsBJOgzDDyFHnB7c=;
+        b=TmtLTq0OTHkuSTAmLSeAF0TKLpl7qbWH97IclJCz2G2Zms73HnaRdpupg7IcoF+Y0e7wrh
+        9mBUdnajvaRWp9R7tXu+q5vcMJpbikARzWY52FhTL3wWiMqNd36Cf/oXITv1BZ7EGIKTEd
+        MaUF9BmeG8Ep8cI3/eUu+BkRukwGomE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-334-nJC8auqJNRmuy2_Fu7Z3iw-1; Wed, 27 Jan 2021 05:47:36 -0500
+X-MC-Unique: nJC8auqJNRmuy2_Fu7Z3iw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ECC9A1005E40;
+        Wed, 27 Jan 2021 10:47:34 +0000 (UTC)
+Received: from gondolin (ovpn-112-95.ams2.redhat.com [10.36.112.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 158A65D9C6;
+        Wed, 27 Jan 2021 10:47:29 +0000 (UTC)
+Date:   Wed, 27 Jan 2021 11:47:27 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com,
+        imbrenda@linux.ibm.com, drjones@redhat.com, pbonzini@redhat.com
+Subject: Re: [kvm-unit-tests PATCH v5 2/3] s390x: define UV compatible I/O
+ allocation
+Message-ID: <20210127114727.1be31923.cohuck@redhat.com>
+In-Reply-To: <1611322060-1972-3-git-send-email-pmorel@linux.ibm.com>
+References: <1611322060-1972-1-git-send-email-pmorel@linux.ibm.com>
+        <1611322060-1972-3-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 18 Jan 2021, Mark Brown wrote:
+On Fri, 22 Jan 2021 14:27:39 +0100
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> Currently arch_stack_wallk_reliable() is documented with an identical
-> comment in both x86 and S/390 implementations which is a bit redundant.
-> Move this to the header and convert to kerneldoc while we're at it.
+> To centralize the memory allocation for I/O we define
+> the alloc_io_mem/free_io_mem functions which share the I/O
+> memory with the host in case the guest runs with
+> protected virtualization.
+> 
+> These functions allocate on a page integral granularity to
+> ensure a dedicated sharing of the allocated objects.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  lib/s390x/malloc_io.c | 71 +++++++++++++++++++++++++++++++++++++++++++
+>  lib/s390x/malloc_io.h | 45 +++++++++++++++++++++++++++
+>  s390x/Makefile        |  1 +
+>  3 files changed, 117 insertions(+)
+>  create mode 100644 lib/s390x/malloc_io.c
+>  create mode 100644 lib/s390x/malloc_io.h
 
-Makes sense.
- 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> Cc: Jiri Kosina <jikos@kernel.org>
-> Cc: Miroslav Benes <mbenes@suse.cz>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Joe Lawrence <joe.lawrence@redhat.com>
-> Cc: x86@kernel.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: live-patching@vger.kernel.org
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-
-> diff --git a/arch/s390/kernel/stacktrace.c b/arch/s390/kernel/stacktrace.c
-> index 7f1266c24f6b..101477b3e263 100644
-> --- a/arch/s390/kernel/stacktrace.c
-> +++ b/arch/s390/kernel/stacktrace.c
-> @@ -24,12 +24,6 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
->  	}
->  }
->  
-> -/*
-> - * This function returns an error if it detects any unreliable features of the
-> - * stack.  Otherwise it guarantees that the stack trace is reliable.
-> - *
-> - * If the task is not 'current', the caller *must* ensure the task is inactive.
-> - */
->  int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
->  			     void *cookie, struct task_struct *task)
->  {
-
-Just a note. arch/powerpc/kernel/stacktrace.c has the same for 
-__save_stack_trace_tsk_reliable(), but it would not be nice to pollute 
-include/linux/stacktrace.h with that in my opinion. It is an old 
-infrastructure after all.
-
-Miroslav
