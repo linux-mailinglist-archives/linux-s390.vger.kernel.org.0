@@ -2,76 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E1CD3084B0
-	for <lists+linux-s390@lfdr.de>; Fri, 29 Jan 2021 05:51:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9947308A52
+	for <lists+linux-s390@lfdr.de>; Fri, 29 Jan 2021 17:36:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231956AbhA2EvB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 28 Jan 2021 23:51:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52840 "EHLO mail.kernel.org"
+        id S231596AbhA2Qf4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 29 Jan 2021 11:35:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231948AbhA2Euz (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 28 Jan 2021 23:50:55 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 783D064E00;
-        Fri, 29 Jan 2021 04:50:13 +0000 (UTC)
+        id S231642AbhA2Qdy (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 29 Jan 2021 11:33:54 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A0FC164DFB;
+        Fri, 29 Jan 2021 16:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611895813;
-        bh=hFO4wZFk+MmDuUL0+KttA/ndgg/tAmxp+GtIV9fTC1Q=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=bidV6eG5JONi/OgtHGC3rorSjNlYk317n/5SDb8vDgac6vQNfI34kXeUk1IwXUS0Z
-         Aq5JX2Xu9sfSH+e+B46NFazSjYSBGtYkfpcdaYzbCJZqGHM8ChTTBxesd/X1jEs6o4
-         EFpor6859oisoIvM79EsFKU58GCpMos/k0OPwxjQE6a/huiFtyn04o/iw7riXluOwA
-         esWs5ITl4/5W/+TaA0yFSE3hYV3EhrradSEGxs1BAnX5tawA308EL7rYEOTRGd4pZV
-         7QYFBoiamxRq3a3vHRVmwT/i5eMpsJrkYgz3jOmqBdeAs9u0jP/vpHXcRAtSpxHpTD
-         cDUoYSQvsgD/Q==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 690EA65324;
-        Fri, 29 Jan 2021 04:50:13 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        s=k20201202; t=1611937470;
+        bh=rX//8lmNsK9ouUWLaFuelzOZswldJFRqZnwM9SrzbmA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rIdEcRXyknFPg6vCzipnjyc/WTpKmyVlmoOuN2YwQwtLSqPW+EJuS+WD4+mmtmLKX
+         5gwOC0Z/ybiPmQnrOTa5DIRP0EqAkElggSbcll5Mb43sr62i2YUhpexHQULXJat2jy
+         t8gzwcPAlLkFM/HjstxhS06O3sImop4QIX3GpQsMvn/XvnpP0qeTH6ccTQeGbsJFiT
+         43ospAl2b7n4fvB5j2fjm+yxiWBJePUJtikrT7XbZEOnXC501ZBbw0lCpbTd01mHZG
+         8npsCU1Y65UT2PgkQ3xfqqvnU5/rvG4k1Qx5v6xqT3b0Q+eY0XRk4h9Z2RwE7u356y
+         534BjZuz4AGww==
+Date:   Fri, 29 Jan 2021 10:24:28 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] Fix "ordering" comment typos
+Message-ID: <20210129162428.GA85218@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/5] net/iucv: updates 2021-01-28
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <161189581342.32508.4406500317410182987.git-patchwork-notify@kernel.org>
-Date:   Fri, 29 Jan 2021 04:50:13 +0000
-References: <20210128114108.39409-1-jwi@linux.ibm.com>
-In-Reply-To: <20210128114108.39409-1-jwi@linux.ibm.com>
-To:     Julian Wiedmann <jwi@linux.ibm.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, hca@linux.ibm.com, kgraul@linux.ibm.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210126195042.2909405-1-helgaas@kernel.org>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello:
-
-This series was applied to netdev/net-next.git (refs/heads/master):
-
-On Thu, 28 Jan 2021 12:41:03 +0100 you wrote:
-> Hi Dave & Jakub,
+On Tue, Jan 26, 2021 at 01:50:42PM -0600, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> please apply the following patch series for iucv to netdev's net-next tree.
+> Fix comment typos in "ordering".
 > 
-> This reworks & simplifies the TX notification path in af_iucv, so that we
-> can send out SG skbs over TRANS_HIPER sockets. Also remove a noisy
-> WARN_ONCE() in the RX path.
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  arch/s390/include/asm/facility.h             | 2 +-
+>  drivers/gpu/drm/qxl/qxl_drv.c                | 2 +-
+>  drivers/net/wireless/intel/iwlwifi/fw/file.h | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> [...]
+> 
+> Unless somebody objects, I'll just merge these typo fixes via the PCI tree.
 
-Here is the summary with links:
-  - [net-next,1/5] net/af_iucv: remove WARN_ONCE on malformed RX packets
-    https://git.kernel.org/netdev/net-next/c/27e9c1de5299
-  - [net-next,2/5] net/af_iucv: don't lookup the socket on TX notification
-    https://git.kernel.org/netdev/net-next/c/c464444fa2ca
-  - [net-next,3/5] net/af_iucv: count packets in the xmit path
-    https://git.kernel.org/netdev/net-next/c/ef6af7bdb9e6
-  - [net-next,4/5] net/af_iucv: don't track individual TX skbs for TRANS_HIPER sockets
-    https://git.kernel.org/netdev/net-next/c/80bc97aa0aaa
-  - [net-next,5/5] net/af_iucv: build SG skbs for TRANS_HIPER sockets
-    https://git.kernel.org/netdev/net-next/c/2c3b4456c812
+Applied to pci/misc for v5.12 with acks from Kalle and Vasily.
 
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+> diff --git a/arch/s390/include/asm/facility.h b/arch/s390/include/asm/facility.h
+> index 68c476b20b57..91b5d714d28f 100644
+> --- a/arch/s390/include/asm/facility.h
+> +++ b/arch/s390/include/asm/facility.h
+> @@ -44,7 +44,7 @@ static inline int __test_facility(unsigned long nr, void *facilities)
+>  }
+>  
+>  /*
+> - * The test_facility function uses the bit odering where the MSB is bit 0.
+> + * The test_facility function uses the bit ordering where the MSB is bit 0.
+>   * That makes it easier to query facility bits with the bit number as
+>   * documented in the Principles of Operation.
+>   */
+> diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
+> index 6e7f16f4cec7..dab190a547cc 100644
+> --- a/drivers/gpu/drm/qxl/qxl_drv.c
+> +++ b/drivers/gpu/drm/qxl/qxl_drv.c
+> @@ -141,7 +141,7 @@ static void qxl_drm_release(struct drm_device *dev)
+>  
+>  	/*
+>  	 * TODO: qxl_device_fini() call should be in qxl_pci_remove(),
+> -	 * reodering qxl_modeset_fini() + qxl_device_fini() calls is
+> +	 * reordering qxl_modeset_fini() + qxl_device_fini() calls is
+>  	 * non-trivial though.
+>  	 */
+>  	qxl_modeset_fini(qdev);
+> diff --git a/drivers/net/wireless/intel/iwlwifi/fw/file.h b/drivers/net/wireless/intel/iwlwifi/fw/file.h
+> index 597bc88479ba..04fbfe5cbeb0 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/fw/file.h
+> +++ b/drivers/net/wireless/intel/iwlwifi/fw/file.h
+> @@ -866,7 +866,7 @@ struct iwl_fw_dbg_trigger_time_event {
+>   * tx_bar: tid bitmap to configure on what tid the trigger should occur
+>   *	when a BAR is send (for an Rx BlocAck session).
+>   * frame_timeout: tid bitmap to configure on what tid the trigger should occur
+> - *	when a frame times out in the reodering buffer.
+> + *	when a frame times out in the reordering buffer.
+>   */
+>  struct iwl_fw_dbg_trigger_ba {
+>  	__le16 rx_ba_start;
+> -- 
+> 2.25.1
+> 
