@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6F693084AA
-	for <lists+linux-s390@lfdr.de>; Fri, 29 Jan 2021 05:51:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E1CD3084B0
+	for <lists+linux-s390@lfdr.de>; Fri, 29 Jan 2021 05:51:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231953AbhA2Eu6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 28 Jan 2021 23:50:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52828 "EHLO mail.kernel.org"
+        id S231956AbhA2EvB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 28 Jan 2021 23:51:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231949AbhA2Euz (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        id S231948AbhA2Euz (ORCPT <rfc822;linux-s390@vger.kernel.org>);
         Thu, 28 Jan 2021 23:50:55 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 65C0564DFF;
+Received: by mail.kernel.org (Postfix) with ESMTPS id 783D064E00;
         Fri, 29 Jan 2021 04:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1611895813;
-        bh=OaKU/i9LYJEwFQuXbpuYKe7u4dHORHYFI+FXGmT5YSA=;
+        bh=hFO4wZFk+MmDuUL0+KttA/ndgg/tAmxp+GtIV9fTC1Q=;
         h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=HlaeY6AVks9nvGH0JWzyIIIyxvzvTTvtVCp9jrHARlRB5Xl+QfkBBGqhKJEWrIzcp
-         i1RsdO2ka9bEtNWqY35jvbHTFuj439mWHZLEkkcLjEus/SEzCUXBzNOdQqGj8DXx/J
-         U0cQtrh8OoiY6Lq8KT2oSSQfxRVa6UPpaS9NfQxDjwNqjdh9Nr96IX0cIS+cczH9vc
-         nSPpeF/guA32vjZL+7u5tBYl0IWrIDLXQ08mVW+d6nEDJ9zRHnwnAN1bYHVIoQng3D
-         ZQdN7ocuVQ7ktxeUy88D5eC6SjLS6I5NhZ3eRiYb0pDZTjrG7HUf3bMySn7VQY8XBq
-         GH+qQZMl5JXYQ==
+        b=bidV6eG5JONi/OgtHGC3rorSjNlYk317n/5SDb8vDgac6vQNfI34kXeUk1IwXUS0Z
+         Aq5JX2Xu9sfSH+e+B46NFazSjYSBGtYkfpcdaYzbCJZqGHM8ChTTBxesd/X1jEs6o4
+         EFpor6859oisoIvM79EsFKU58GCpMos/k0OPwxjQE6a/huiFtyn04o/iw7riXluOwA
+         esWs5ITl4/5W/+TaA0yFSE3hYV3EhrradSEGxs1BAnX5tawA308EL7rYEOTRGd4pZV
+         7QYFBoiamxRq3a3vHRVmwT/i5eMpsJrkYgz3jOmqBdeAs9u0jP/vpHXcRAtSpxHpTD
+         cDUoYSQvsgD/Q==
 Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 56C516530E;
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 690EA65324;
         Fri, 29 Jan 2021 04:50:13 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/5] s390/qeth: updates 2021-01-28
+Subject: Re: [PATCH net-next 0/5] net/iucv: updates 2021-01-28
 From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <161189581335.32508.16613001486603059232.git-patchwork-notify@kernel.org>
+Message-Id: <161189581342.32508.4406500317410182987.git-patchwork-notify@kernel.org>
 Date:   Fri, 29 Jan 2021 04:50:13 +0000
-References: <20210128112551.18780-1-jwi@linux.ibm.com>
-In-Reply-To: <20210128112551.18780-1-jwi@linux.ibm.com>
+References: <20210128114108.39409-1-jwi@linux.ibm.com>
+In-Reply-To: <20210128114108.39409-1-jwi@linux.ibm.com>
 To:     Julian Wiedmann <jwi@linux.ibm.com>
 Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
         linux-s390@vger.kernel.org, hca@linux.ibm.com, kgraul@linux.ibm.com
@@ -46,29 +46,28 @@ Hello:
 
 This series was applied to netdev/net-next.git (refs/heads/master):
 
-On Thu, 28 Jan 2021 12:25:46 +0100 you wrote:
+On Thu, 28 Jan 2021 12:41:03 +0100 you wrote:
 > Hi Dave & Jakub,
 > 
-> please apply the following patch series for qeth to netdev's net-next tree.
+> please apply the following patch series for iucv to netdev's net-next tree.
 > 
-> Nothing special, mostly fine-tuning and follow-on cleanups for earlier fixes.
-> 
-> Thanks,
-> Julian
+> This reworks & simplifies the TX notification path in af_iucv, so that we
+> can send out SG skbs over TRANS_HIPER sockets. Also remove a noisy
+> WARN_ONCE() in the RX path.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,1/5] s390/qeth: clean up load/remove code for disciplines
-    https://git.kernel.org/netdev/net-next/c/ea12f1b3c828
-  - [net-next,2/5] s390/qeth: remove qeth_get_ip_version()
-    https://git.kernel.org/netdev/net-next/c/17f3a8b5f5c9
-  - [net-next,3/5] s390/qeth: pass proto to qeth_l3_get_cast_type()
-    https://git.kernel.org/netdev/net-next/c/c61dff3c1ef7
-  - [net-next,4/5] s390/qeth: make cast type selection for af_iucv skbs robust
-    https://git.kernel.org/netdev/net-next/c/a667fee181b2
-  - [net-next,5/5] s390/qeth: don't fake a TX completion interrupt after TX error
-    https://git.kernel.org/netdev/net-next/c/d6e515031517
+  - [net-next,1/5] net/af_iucv: remove WARN_ONCE on malformed RX packets
+    https://git.kernel.org/netdev/net-next/c/27e9c1de5299
+  - [net-next,2/5] net/af_iucv: don't lookup the socket on TX notification
+    https://git.kernel.org/netdev/net-next/c/c464444fa2ca
+  - [net-next,3/5] net/af_iucv: count packets in the xmit path
+    https://git.kernel.org/netdev/net-next/c/ef6af7bdb9e6
+  - [net-next,4/5] net/af_iucv: don't track individual TX skbs for TRANS_HIPER sockets
+    https://git.kernel.org/netdev/net-next/c/80bc97aa0aaa
+  - [net-next,5/5] net/af_iucv: build SG skbs for TRANS_HIPER sockets
+    https://git.kernel.org/netdev/net-next/c/2c3b4456c812
 
 You are awesome, thank you!
 --
