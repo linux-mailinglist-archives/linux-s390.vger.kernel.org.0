@@ -2,109 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9947308A52
-	for <lists+linux-s390@lfdr.de>; Fri, 29 Jan 2021 17:36:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE2A830966E
+	for <lists+linux-s390@lfdr.de>; Sat, 30 Jan 2021 16:57:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231596AbhA2Qf4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 29 Jan 2021 11:35:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231642AbhA2Qdy (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 29 Jan 2021 11:33:54 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A0FC164DFB;
-        Fri, 29 Jan 2021 16:24:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611937470;
-        bh=rX//8lmNsK9ouUWLaFuelzOZswldJFRqZnwM9SrzbmA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=rIdEcRXyknFPg6vCzipnjyc/WTpKmyVlmoOuN2YwQwtLSqPW+EJuS+WD4+mmtmLKX
-         5gwOC0Z/ybiPmQnrOTa5DIRP0EqAkElggSbcll5Mb43sr62i2YUhpexHQULXJat2jy
-         t8gzwcPAlLkFM/HjstxhS06O3sImop4QIX3GpQsMvn/XvnpP0qeTH6ccTQeGbsJFiT
-         43ospAl2b7n4fvB5j2fjm+yxiWBJePUJtikrT7XbZEOnXC501ZBbw0lCpbTd01mHZG
-         8npsCU1Y65UT2PgkQ3xfqqvnU5/rvG4k1Qx5v6xqT3b0Q+eY0XRk4h9Z2RwE7u356y
-         534BjZuz4AGww==
-Date:   Fri, 29 Jan 2021 10:24:28 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        id S232223AbhA3P40 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 30 Jan 2021 10:56:26 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59072 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232246AbhA3Pzh (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 30 Jan 2021 10:55:37 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 10UFVvPd086826;
+        Sat, 30 Jan 2021 10:32:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : mime-version : content-type; s=pp1;
+ bh=iXLTdo0C74vOzG+j6or/m9JYFZbVE/5zreKtvpJwZmg=;
+ b=QpzzlNDRQEU3q7Hh38fCUUeXNmXCT+UoDK75U34yhznvbORcAsCby1zdP68epCFbd2J+
+ sffsVQPqZGLL5gNkt8bwugwt7PPddgVCjWLGcpPaMLX0Lbzm3PJrp56mJ8tTrHkBUu14
+ cnahLeaV0qurYqeBIrNHBjt3zEIPjkQYefli0UTWa3MibDpzvOUZoGkUhKZmkFG4H3Cr
+ we7Nk0oMBHe89Xh6RhOi+uo6YzTfrOlliKvn+Na9sO+4p/BVOSFetKKUd3tEwwPkUJUW
+ CfWgMpVx0Jc2Osr7cRPXPTO8PZBhMz9HtLxLRfiBzXKtRsWqO7Rd27oGCS8n9PS0Ugmd 4Q== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36da3703x2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 30 Jan 2021 10:32:46 -0500
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 10UFWQrX014999;
+        Sat, 30 Jan 2021 15:32:43 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 36cxqh8cxk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 30 Jan 2021 15:32:43 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 10UFWeBT40698152
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 30 Jan 2021 15:32:40 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D933AE053;
+        Sat, 30 Jan 2021 15:32:40 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4AF20AE04D;
+        Sat, 30 Jan 2021 15:32:40 +0000 (GMT)
+Received: from localhost (unknown [9.171.87.176])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat, 30 Jan 2021 15:32:40 +0000 (GMT)
+Date:   Sat, 30 Jan 2021 16:32:38 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] Fix "ordering" comment typos
-Message-ID: <20210129162428.GA85218@bjorn-Precision-5520>
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 updates for 5.11-rc6
+Message-ID: <your-ad-here.call-01612020758-ext-9054@work.hours>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210126195042.2909405-1-helgaas@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
+ definitions=2021-01-30_11:2021-01-29,2021-01-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 malwarescore=0 phishscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=999 adultscore=0 lowpriorityscore=0
+ clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2009150000 definitions=main-2101300084
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 01:50:42PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Fix comment typos in "ordering".
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  arch/s390/include/asm/facility.h             | 2 +-
->  drivers/gpu/drm/qxl/qxl_drv.c                | 2 +-
->  drivers/net/wireless/intel/iwlwifi/fw/file.h | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> 
-> Unless somebody objects, I'll just merge these typo fixes via the PCI tree.
+Hello Linus,
 
-Applied to pci/misc for v5.12 with acks from Kalle and Vasily.
+please pull s390 fixes for 5.11-rc6.
 
-> diff --git a/arch/s390/include/asm/facility.h b/arch/s390/include/asm/facility.h
-> index 68c476b20b57..91b5d714d28f 100644
-> --- a/arch/s390/include/asm/facility.h
-> +++ b/arch/s390/include/asm/facility.h
-> @@ -44,7 +44,7 @@ static inline int __test_facility(unsigned long nr, void *facilities)
->  }
->  
->  /*
-> - * The test_facility function uses the bit odering where the MSB is bit 0.
-> + * The test_facility function uses the bit ordering where the MSB is bit 0.
->   * That makes it easier to query facility bits with the bit number as
->   * documented in the Principles of Operation.
->   */
-> diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-> index 6e7f16f4cec7..dab190a547cc 100644
-> --- a/drivers/gpu/drm/qxl/qxl_drv.c
-> +++ b/drivers/gpu/drm/qxl/qxl_drv.c
-> @@ -141,7 +141,7 @@ static void qxl_drm_release(struct drm_device *dev)
->  
->  	/*
->  	 * TODO: qxl_device_fini() call should be in qxl_pci_remove(),
-> -	 * reodering qxl_modeset_fini() + qxl_device_fini() calls is
-> +	 * reordering qxl_modeset_fini() + qxl_device_fini() calls is
->  	 * non-trivial though.
->  	 */
->  	qxl_modeset_fini(qdev);
-> diff --git a/drivers/net/wireless/intel/iwlwifi/fw/file.h b/drivers/net/wireless/intel/iwlwifi/fw/file.h
-> index 597bc88479ba..04fbfe5cbeb0 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/fw/file.h
-> +++ b/drivers/net/wireless/intel/iwlwifi/fw/file.h
-> @@ -866,7 +866,7 @@ struct iwl_fw_dbg_trigger_time_event {
->   * tx_bar: tid bitmap to configure on what tid the trigger should occur
->   *	when a BAR is send (for an Rx BlocAck session).
->   * frame_timeout: tid bitmap to configure on what tid the trigger should occur
-> - *	when a frame times out in the reodering buffer.
-> + *	when a frame times out in the reordering buffer.
->   */
->  struct iwl_fw_dbg_trigger_ba {
->  	__le16 rx_ba_start;
-> -- 
-> 2.25.1
-> 
+Thank you,
+Vasily
+
+The following changes since commit 6ee1d745b7c9fd573fba142a2efdad76a9f1cb04:
+
+  Linux 5.11-rc5 (2021-01-24 16:47:14 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.11-4
+
+for you to fetch changes up to e82080e1f456467cc185fe65ee69fe9f9bd0b576:
+
+  s390: uv: Fix sysfs max number of VCPUs reporting (2021-01-27 13:00:04 +0100)
+
+----------------------------------------------------------------
+- Fix max number of VCPUs reported via ultravisor information sysfs interface.
+
+- Fix memory leaks during vfio-ap resources clean up on KVM pointer
+  invalidation notification.
+
+- Fix potential specification exception by avoiding unnecessary interrupts
+  disable after queue reset in vfio-ap.
+
+----------------------------------------------------------------
+Janosch Frank (1):
+      s390: uv: Fix sysfs max number of VCPUs reporting
+
+Tony Krowiak (2):
+      s390/vfio-ap: clean up vfio_ap resources when KVM pointer invalidated
+      s390/vfio-ap: No need to disable IRQ after queue reset
+
+ arch/s390/boot/uv.c                   |   2 +-
+ arch/s390/include/asm/uv.h            |   4 +-
+ arch/s390/kernel/uv.c                 |   2 +-
+ drivers/s390/crypto/vfio_ap_drv.c     |   6 +-
+ drivers/s390/crypto/vfio_ap_ops.c     | 149 ++++++++++++++++++++--------------
+ drivers/s390/crypto/vfio_ap_private.h |  12 +--
+ 6 files changed, 101 insertions(+), 74 deletions(-)
