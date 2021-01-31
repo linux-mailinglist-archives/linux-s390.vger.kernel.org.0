@@ -2,51 +2,51 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C7DD30994A
-	for <lists+linux-s390@lfdr.de>; Sun, 31 Jan 2021 01:16:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16569309950
+	for <lists+linux-s390@lfdr.de>; Sun, 31 Jan 2021 01:18:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232359AbhAaAQ2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 30 Jan 2021 19:16:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50156 "EHLO
+        id S232636AbhAaART (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 30 Jan 2021 19:17:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231923AbhAaAQZ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 30 Jan 2021 19:16:25 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D7DC061573;
-        Sat, 30 Jan 2021 16:16:00 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id gx1so8805861pjb.1;
-        Sat, 30 Jan 2021 16:16:00 -0800 (PST)
+        with ESMTP id S232547AbhAaAQ6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 30 Jan 2021 19:16:58 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03D5EC061793;
+        Sat, 30 Jan 2021 16:16:19 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id d2so2788668pjs.4;
+        Sat, 30 Jan 2021 16:16:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Jev1wiWdNEkoa3b5we7mwySN7+peVnZdbvakus8eSVc=;
-        b=uRa4ADRTKO5i5COQvWLPU4qY1EMon9DkDTf7L36O1WRx6jv1cr9/AWXWllg3pm0rPY
-         errvkA+cflE9+SB9s5lBE+y9QDKLSgR/8FNFUyUJEctduq0CVEuTbciq9LV45Twu+lqq
-         qGIWwhU1hcch1pvo8/3eeHx6XvMmnT2/ES7yTg2J7UBFUgaM6AJZB62JLes/2VruVsm1
-         ik1OsVH+pe4VVb5u1Noe0bjwz2cwC0NmCdYDnbspnzoMlTC+/OBy/EmOnW4e3f7pkujC
-         7Wed1mpQSso2lCW9DQqybF+MciVf69usSIeNr/aGkKgjK9ob9pQ3HqJ80RNob9nwoTUC
-         Zjig==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cP3jkcKrTRH72l/nN753Ht9O0hI+z4GxWtjo9/TstQ0=;
+        b=sqMbwBBCmtEWdXV8UsvISdoaOS2TT+Sq7SoU/b0WKpDqVNz8EtnPQlLhzpd3UsBzUx
+         hQ5UoK2AYi5qpvyUA0nAMjyg3cwdUHmmivktrUhp+zKfzCYzQs9po/oAG8PwbCK877S8
+         IGtqaKTHzV7hpNgx2cLRgC5sPpRMt6+scT/Twg4rBw29fMP6x+JziDsjtzgt5f78Q4oX
+         ysXVJPstkA7O2i959e5wXSosND85hEU1WA/jlpNhdPovBAHLO/+q2JfGw1O2uVEiqj9n
+         bS79KY0ePgjgeEGMVFL0B8/3h3wpfvsvp7u4xgMnh8yGLkgR+BnoN3VTB+Q87BsWVoX9
+         ceCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Jev1wiWdNEkoa3b5we7mwySN7+peVnZdbvakus8eSVc=;
-        b=RrJIoiBcrFWkpsN652cmxLgwXRozwNdN/o/OgSbdYnHil2paTiN/Y/aizmeK1PjoZv
-         ay3riA3HoERB8FAFi5QizZ7HmdX/9IXrCQDYMEpyNhgoPno/CV/3A/tfq2QNsxmqXY71
-         HABjDCYQsI2fr38ivs8LyiK1TrS6u1yIe4f5aHGCpTdX1PkfXJY+gqBlH3VWTokuST5y
-         qZULsavi4sJYs6CWtah09dMlf4g14h2VjyQ13cxHGj9Aopuv4DMlQdHGHxbBNtHsqAd6
-         WN13CwSl7GfhJ3M5zwqX4mxiMxXgfhknyUlhy5oYQf3Kt+JbIGmBC6/AqRyDyFq4NuWF
-         WPXg==
-X-Gm-Message-State: AOAM533DzRqWhLmrXcTS0Ic86Qr712XVxJZWgNE/n6XqzYuaMYZ6nuv9
-        WZBAHzeHvzusnhmJuyAViWU=
-X-Google-Smtp-Source: ABdhPJxtqymzuq/2oCFWxbY1nPgxQ0gdZMV/DtjBdonnxzW4ylc7cypN18PltIxgs7oBWpiExWw4CA==
-X-Received: by 2002:a17:902:b212:b029:df:ec2e:6a1f with SMTP id t18-20020a170902b212b02900dfec2e6a1fmr11469893plr.24.1612052160076;
-        Sat, 30 Jan 2021 16:16:00 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cP3jkcKrTRH72l/nN753Ht9O0hI+z4GxWtjo9/TstQ0=;
+        b=HxRJgjo6VReyHHMNptc2Mr9RBHbklnMfokjPsjLKGEk43yrhL9M3TsIReIygfNlJKa
+         RGG3Kh5vRfPbc1q6TG20gMIWc56TaRN9h7MNoTvUmN66e+zjbduSDmeRwN58Nf7BC+9Z
+         Ef+AXAM9v6HTNu9Dnt0bU7j/aesZKe68tvHAVLPgl1S2wu8TgZ3M6wUNDUMUAF9wNCqt
+         eoHYRTEP6U/gpJJ3pbwrGLc5NjED+XCghcUAAs7F2dTG3zoDVE1F2vwzsBDbdPpJv4O7
+         qB21yUWKPc5aEokVIB7lbsftv0gUpFMAAAbvyDNIvwwa7chvKZkpVWXqf0HofRFJ3Hi6
+         WmPg==
+X-Gm-Message-State: AOAM532a3w+a1CCLkmiLKybcYeo/ardGyeDlFGyNVDggqvDsl2BwhaV1
+        wHyT49ji4zTUpYwjJ0f2/os=
+X-Google-Smtp-Source: ABdhPJwfaKAtwjR3StROIV1ECyYsNwj8eV5UZEKT4kWHE+4J7kAATUd8KQouQDX54qtt+0fmavw6Pw==
+X-Received: by 2002:a17:90b:350b:: with SMTP id ls11mr10705500pjb.166.1612052178479;
+        Sat, 30 Jan 2021 16:16:18 -0800 (PST)
 Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id e12sm13127365pga.13.2021.01.30.16.15.57
+        by smtp.gmail.com with ESMTPSA id e12sm13127365pga.13.2021.01.30.16.16.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Jan 2021 16:15:59 -0800 (PST)
+        Sat, 30 Jan 2021 16:16:17 -0800 (PST)
 From:   Nadav Amit <nadav.amit@gmail.com>
 X-Google-Original-From: Nadav Amit
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
@@ -55,18 +55,18 @@ Cc:     Nadav Amit <namit@vmware.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-csky@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Nick Piggin <npiggin@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        Yu Zhao <yuzhao@google.com>
-Subject: [RFC 00/20] TLB batching consolidation and enhancements
-Date:   Sat, 30 Jan 2021 16:11:12 -0800
-Message-Id: <20210131001132.3368247-1-namit@vmware.com>
+        Will Deacon <will@kernel.org>, Yu Zhao <yuzhao@google.com>,
+        Nick Piggin <npiggin@gmail.com>, linux-csky@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        x86@kernel.org
+Subject: [RFC 11/20] mm/tlb: remove arch-specific tlb_start/end_vma()
+Date:   Sat, 30 Jan 2021 16:11:23 -0800
+Message-Id: <20210131001132.3368247-12-namit@vmware.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210131001132.3368247-1-namit@vmware.com>
+References: <20210131001132.3368247-1-namit@vmware.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -75,162 +75,280 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 From: Nadav Amit <namit@vmware.com>
 
-There are currently (at least?) 5 different TLB batching schemes in the
-kernel:
+Architecture-specific tlb_start_vma() and tlb_end_vma() seem
+unnecessary. They are currently used for:
 
-1. Using mmu_gather (e.g., zap_page_range()).
+1. Avoid per-VMA TLB flushes. This can be determined by introducing
+   a new config option.
 
-2. Using {inc|dec}_tlb_flush_pending() to inform other threads on the
-   ongoing deferred TLB flush and flushing the entire range eventually
-   (e.g., change_protection_range()).
+2. Avoid saving information on the vma that is being flushed. Saving
+   this information, even for architectures that do not need it, is
+   cheap and we will need it for per-VMA deferred TLB flushing.
 
-3. arch_{enter|leave}_lazy_mmu_mode() for sparc and powerpc (and Xen?).
+3. Avoid calling flush_cache_range().
 
-4. Batching per-table flushes (move_ptes()).
+Remove the architecture specific tlb_start_vma() and tlb_end_vma() in
+the following manner, corresponding to the previous requirements:
 
-5. By setting a flag on that a deferred TLB flush operation takes place,
-   flushing when (try_to_unmap_one() on x86).
+1. Introduce a new config option -
+   ARCH_WANT_AGGRESSIVE_TLB_FLUSH_BATCHING - to allow architectures to
+   define whether they want aggressive TLB flush batching (instead of
+   flushing mappings of each VMA separately).
 
-It seems that (1)-(4) can be consolidated. In addition, it seems that
-(5) is racy. It also seems there can be many redundant TLB flushes, and
-potentially TLB-shootdown storms, for instance during batched
-reclamation (using try_to_unmap_one()) if at the same time mmu_gather
-defers TLB flushes.
+2. Save information on the vma regardless of architecture. Saving this
+   information should have negligible overhead, and they will be
+   needed for fine granularity TLB flushes.
 
-More aggressive TLB batching may be possible, but this patch-set does
-not add such batching. The proposed changes would enable such batching
-in a later time.
+3. flush_cache_range() is anyhow not defined for the architectures that
+   implement tlb_start/end_vma().
 
-Admittedly, I do not understand how things are not broken today, which
-frightens me to make further batching before getting things in order.
-For instance, why is ok for zap_pte_range() to batch dirty-PTE flushes
-for each page-table (but not in greater granularity). Can't
-ClearPageDirty() be called before the flush, causing writes after
-ClearPageDirty() and before the flush to be lost?
+No functional change intended.
 
-This patch-set therefore performs the following changes:
-
-1. Change mprotect, task_mmu and mapping_dirty_helpers to use mmu_gather
-   instead of {inc|dec}_tlb_flush_pending().
-
-2. Avoid TLB flushes if PTE permission is not demoted.
-
-3. Cleans up mmu_gather to be less arch-dependant.
-
-4. Uses mm's generations to track in finer granularity, either per-VMA
-   or per page-table, whether a pending mmu_gather operation is
-   outstanding. This should allow to avoid some TLB flushes when KSM or
-   memory reclamation takes place while another operation such as
-   munmap() or mprotect() is running.
-
-5. Changes try_to_unmap_one() flushing scheme, as the current seems
-   broken to track in a bitmap which CPUs have outstanding TLB flushes
-   instead of having a flag.
-
-Further optimizations are possible, such as changing move_ptes() to use
-mmu_gather.
-
-The patches were very very lightly tested. I am looking forward for your
-feedback regarding the overall approaches, and whether to split them
-into multiple patch-sets.
-
+Signed-off-by: Nadav Amit <namit@vmware.com>
 Cc: Andrea Arcangeli <aarcange@redhat.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: linux-csky@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-s390@vger.kernel.org
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Nick Piggin <npiggin@gmail.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Will Deacon <will@kernel.org>
-Cc: x86@kernel.org
 Cc: Yu Zhao <yuzhao@google.com>
+Cc: Nick Piggin <npiggin@gmail.com>
+Cc: linux-csky@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+Cc: x86@kernel.org
+---
+ arch/csky/Kconfig               |  1 +
+ arch/csky/include/asm/tlb.h     | 12 ------------
+ arch/powerpc/Kconfig            |  1 +
+ arch/powerpc/include/asm/tlb.h  |  2 --
+ arch/s390/Kconfig               |  1 +
+ arch/s390/include/asm/tlb.h     |  3 ---
+ arch/sparc/Kconfig              |  1 +
+ arch/sparc/include/asm/tlb_64.h |  2 --
+ arch/x86/Kconfig                |  1 +
+ arch/x86/include/asm/tlb.h      |  3 ---
+ include/asm-generic/tlb.h       | 15 +++++----------
+ init/Kconfig                    |  8 ++++++++
+ 12 files changed, 18 insertions(+), 32 deletions(-)
 
-
-Nadav Amit (20):
-  mm/tlb: fix fullmm semantics
-  mm/mprotect: use mmu_gather
-  mm/mprotect: do not flush on permission promotion
-  mm/mapping_dirty_helpers: use mmu_gather
-  mm/tlb: move BATCHED_UNMAP_TLB_FLUSH to tlb.h
-  fs/task_mmu: use mmu_gather interface of clear-soft-dirty
-  mm: move x86 tlb_gen to generic code
-  mm: store completed TLB generation
-  mm: create pte/pmd_tlb_flush_pending()
-  mm: add pte_to_page()
-  mm/tlb: remove arch-specific tlb_start/end_vma()
-  mm/tlb: save the VMA that is flushed during tlb_start_vma()
-  mm/tlb: introduce tlb_start_ptes() and tlb_end_ptes()
-  mm: move inc/dec_tlb_flush_pending() to mmu_gather.c
-  mm: detect deferred TLB flushes in vma granularity
-  mm/tlb: per-page table generation tracking
-  mm/tlb: updated completed deferred TLB flush conditionally
-  mm: make mm_cpumask() volatile
-  lib/cpumask: introduce cpumask_atomic_or()
-  mm/rmap: avoid potential races
-
- arch/arm/include/asm/bitops.h         |   4 +-
- arch/arm/include/asm/pgtable.h        |   4 +-
- arch/arm64/include/asm/pgtable.h      |   4 +-
- arch/csky/Kconfig                     |   1 +
- arch/csky/include/asm/tlb.h           |  12 --
- arch/powerpc/Kconfig                  |   1 +
- arch/powerpc/include/asm/tlb.h        |   2 -
- arch/s390/Kconfig                     |   1 +
- arch/s390/include/asm/tlb.h           |   3 -
- arch/sparc/Kconfig                    |   1 +
- arch/sparc/include/asm/pgtable_64.h   |   9 +-
- arch/sparc/include/asm/tlb_64.h       |   2 -
- arch/sparc/mm/init_64.c               |   2 +-
- arch/x86/Kconfig                      |   3 +
- arch/x86/hyperv/mmu.c                 |   2 +-
- arch/x86/include/asm/mmu.h            |  10 -
- arch/x86/include/asm/mmu_context.h    |   1 -
- arch/x86/include/asm/paravirt_types.h |   2 +-
- arch/x86/include/asm/pgtable.h        |  24 +--
- arch/x86/include/asm/tlb.h            |  21 +-
- arch/x86/include/asm/tlbbatch.h       |  15 --
- arch/x86/include/asm/tlbflush.h       |  61 ++++--
- arch/x86/mm/tlb.c                     |  52 +++--
- arch/x86/xen/mmu_pv.c                 |   2 +-
- drivers/firmware/efi/efi.c            |   1 +
- fs/proc/task_mmu.c                    |  29 ++-
- include/asm-generic/bitops/find.h     |   8 +-
- include/asm-generic/tlb.h             | 291 +++++++++++++++++++++-----
- include/linux/bitmap.h                |  21 +-
- include/linux/cpumask.h               |  40 ++--
- include/linux/huge_mm.h               |   3 +-
- include/linux/mm.h                    |  29 ++-
- include/linux/mm_types.h              | 166 ++++++++++-----
- include/linux/mm_types_task.h         |  13 --
- include/linux/pgtable.h               |   2 +-
- include/linux/smp.h                   |   6 +-
- init/Kconfig                          |  21 ++
- kernel/fork.c                         |   2 +
- kernel/smp.c                          |   8 +-
- lib/bitmap.c                          |  33 ++-
- lib/cpumask.c                         |   8 +-
- lib/find_bit.c                        |  10 +-
- mm/huge_memory.c                      |   6 +-
- mm/init-mm.c                          |   1 +
- mm/internal.h                         |  16 --
- mm/ksm.c                              |   2 +-
- mm/madvise.c                          |   6 +-
- mm/mapping_dirty_helpers.c            |  52 +++--
- mm/memory.c                           |   2 +
- mm/mmap.c                             |   1 +
- mm/mmu_gather.c                       |  59 +++++-
- mm/mprotect.c                         |  55 ++---
- mm/mremap.c                           |   2 +-
- mm/pgtable-generic.c                  |   2 +-
- mm/rmap.c                             |  42 ++--
- mm/vmscan.c                           |   1 +
- 56 files changed, 803 insertions(+), 374 deletions(-)
- delete mode 100644 arch/x86/include/asm/tlbbatch.h
-
+diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
+index 89dd2fcf38fa..924ff5721240 100644
+--- a/arch/csky/Kconfig
++++ b/arch/csky/Kconfig
+@@ -8,6 +8,7 @@ config CSKY
+ 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_QUEUED_RWLOCKS if NR_CPUS>2
++	select ARCH_WANT_AGGRESSIVE_TLB_FLUSH_BATCHING
+ 	select ARCH_WANT_FRAME_POINTERS if !CPU_CK610
+ 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+ 	select COMMON_CLK
+diff --git a/arch/csky/include/asm/tlb.h b/arch/csky/include/asm/tlb.h
+index fdff9b8d70c8..8130a5f09a6b 100644
+--- a/arch/csky/include/asm/tlb.h
++++ b/arch/csky/include/asm/tlb.h
+@@ -6,18 +6,6 @@
+ 
+ #include <asm/cacheflush.h>
+ 
+-#define tlb_start_vma(tlb, vma) \
+-	do { \
+-		if (!(tlb)->fullmm) \
+-			flush_cache_range(vma, (vma)->vm_start, (vma)->vm_end); \
+-	}  while (0)
+-
+-#define tlb_end_vma(tlb, vma) \
+-	do { \
+-		if (!(tlb)->fullmm) \
+-			flush_tlb_range(vma, (vma)->vm_start, (vma)->vm_end); \
+-	}  while (0)
+-
+ #define tlb_flush(tlb) flush_tlb_mm((tlb)->mm)
+ 
+ #include <asm-generic/tlb.h>
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 107bb4319e0e..d9761b6f192a 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -151,6 +151,7 @@ config PPC
+ 	select ARCH_USE_CMPXCHG_LOCKREF		if PPC64
+ 	select ARCH_USE_QUEUED_RWLOCKS		if PPC_QUEUED_SPINLOCKS
+ 	select ARCH_USE_QUEUED_SPINLOCKS	if PPC_QUEUED_SPINLOCKS
++	select ARCH_WANT_AGGRESSIVE_TLB_FLUSH_BATCHING
+ 	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select ARCH_WANT_IRQS_OFF_ACTIVATE_MM
+ 	select ARCH_WANT_LD_ORPHAN_WARN
+diff --git a/arch/powerpc/include/asm/tlb.h b/arch/powerpc/include/asm/tlb.h
+index 160422a439aa..880b7daf904e 100644
+--- a/arch/powerpc/include/asm/tlb.h
++++ b/arch/powerpc/include/asm/tlb.h
+@@ -19,8 +19,6 @@
+ 
+ #include <linux/pagemap.h>
+ 
+-#define tlb_start_vma(tlb, vma)	do { } while (0)
+-#define tlb_end_vma(tlb, vma)	do { } while (0)
+ #define __tlb_remove_tlb_entry	__tlb_remove_tlb_entry
+ 
+ #define tlb_flush tlb_flush
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index c72874f09741..5b3dc5ca9873 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -113,6 +113,7 @@ config S390
+ 	select ARCH_USE_BUILTIN_BSWAP
+ 	select ARCH_USE_CMPXCHG_LOCKREF
+ 	select ARCH_WANTS_DYNAMIC_TASK_STRUCT
++	select ARCH_WANT_AGGRESSIVE_TLB_FLUSH_BATCHING
+ 	select ARCH_WANT_DEFAULT_BPF_JIT
+ 	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select BUILDTIME_TABLE_SORT
+diff --git a/arch/s390/include/asm/tlb.h b/arch/s390/include/asm/tlb.h
+index 954fa8ca6cbd..03f31d59f97c 100644
+--- a/arch/s390/include/asm/tlb.h
++++ b/arch/s390/include/asm/tlb.h
+@@ -27,9 +27,6 @@ static inline void tlb_flush(struct mmu_gather *tlb);
+ static inline bool __tlb_remove_page_size(struct mmu_gather *tlb,
+ 					  struct page *page, int page_size);
+ 
+-#define tlb_start_vma(tlb, vma)			do { } while (0)
+-#define tlb_end_vma(tlb, vma)			do { } while (0)
+-
+ #define tlb_flush tlb_flush
+ #define pte_free_tlb pte_free_tlb
+ #define pmd_free_tlb pmd_free_tlb
+diff --git a/arch/sparc/Kconfig b/arch/sparc/Kconfig
+index c9c34dc52b7d..fb46e1b6f177 100644
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -51,6 +51,7 @@ config SPARC
+ 	select NEED_DMA_MAP_STATE
+ 	select NEED_SG_DMA_LENGTH
+ 	select SET_FS
++	select ARCH_WANT_AGGRESSIVE_TLB_FLUSH_BATCHING
+ 
+ config SPARC32
+ 	def_bool !64BIT
+diff --git a/arch/sparc/include/asm/tlb_64.h b/arch/sparc/include/asm/tlb_64.h
+index 779a5a0f0608..3037187482db 100644
+--- a/arch/sparc/include/asm/tlb_64.h
++++ b/arch/sparc/include/asm/tlb_64.h
+@@ -22,8 +22,6 @@ void smp_flush_tlb_mm(struct mm_struct *mm);
+ void __flush_tlb_pending(unsigned long, unsigned long, unsigned long *);
+ void flush_tlb_pending(void);
+ 
+-#define tlb_start_vma(tlb, vma) do { } while (0)
+-#define tlb_end_vma(tlb, vma)	do { } while (0)
+ #define tlb_flush(tlb)	flush_tlb_pending()
+ 
+ /*
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 6bd4d626a6b3..d56b0f5cb00c 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -101,6 +101,7 @@ config X86
+ 	select ARCH_USE_QUEUED_RWLOCKS
+ 	select ARCH_USE_QUEUED_SPINLOCKS
+ 	select ARCH_USE_SYM_ANNOTATIONS
++	select ARCH_WANT_AGGRESSIVE_TLB_FLUSH_BATCHING
+ 	select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+ 	select ARCH_WANT_DEFAULT_BPF_JIT	if X86_64
+ 	select ARCH_WANTS_DYNAMIC_TASK_STRUCT
+diff --git a/arch/x86/include/asm/tlb.h b/arch/x86/include/asm/tlb.h
+index 1bfe979bb9bc..580636cdc257 100644
+--- a/arch/x86/include/asm/tlb.h
++++ b/arch/x86/include/asm/tlb.h
+@@ -2,9 +2,6 @@
+ #ifndef _ASM_X86_TLB_H
+ #define _ASM_X86_TLB_H
+ 
+-#define tlb_start_vma(tlb, vma) do { } while (0)
+-#define tlb_end_vma(tlb, vma) do { } while (0)
+-
+ #define tlb_flush tlb_flush
+ static inline void tlb_flush(struct mmu_gather *tlb);
+ 
+diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+index 427bfcc6cdec..b97136b7010b 100644
+--- a/include/asm-generic/tlb.h
++++ b/include/asm-generic/tlb.h
+@@ -334,8 +334,8 @@ static inline void __tlb_reset_range(struct mmu_gather *tlb)
+ 
+ #ifdef CONFIG_MMU_GATHER_NO_RANGE
+ 
+-#if defined(tlb_flush) || defined(tlb_start_vma) || defined(tlb_end_vma)
+-#error MMU_GATHER_NO_RANGE relies on default tlb_flush(), tlb_start_vma() and tlb_end_vma()
++#if defined(tlb_flush)
++#error MMU_GATHER_NO_RANGE relies on default tlb_flush()
+ #endif
+ 
+ /*
+@@ -362,10 +362,6 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
+ 
+ #ifndef tlb_flush
+ 
+-#if defined(tlb_start_vma) || defined(tlb_end_vma)
+-#error Default tlb_flush() relies on default tlb_start_vma() and tlb_end_vma()
+-#endif
+-
+ /*
+  * When an architecture does not provide its own tlb_flush() implementation
+  * but does have a reasonably efficient flush_vma_range() implementation
+@@ -486,7 +482,6 @@ static inline unsigned long tlb_get_unmap_size(struct mmu_gather *tlb)
+  * case where we're doing a full MM flush.  When we're doing a munmap,
+  * the vmas are adjusted to only cover the region to be torn down.
+  */
+-#ifndef tlb_start_vma
+ static inline void tlb_start_vma(struct mmu_gather *tlb, struct vm_area_struct *vma)
+ {
+ 	if (tlb->fullmm)
+@@ -495,14 +490,15 @@ static inline void tlb_start_vma(struct mmu_gather *tlb, struct vm_area_struct *
+ 	tlb_update_vma_flags(tlb, vma);
+ 	flush_cache_range(vma, vma->vm_start, vma->vm_end);
+ }
+-#endif
+ 
+-#ifndef tlb_end_vma
+ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vma)
+ {
+ 	if (tlb->fullmm)
+ 		return;
+ 
++	if (IS_ENABLED(CONFIG_ARCH_WANT_AGGRESSIVE_TLB_FLUSH_BATCHING))
++		return;
++
+ 	/*
+ 	 * Do a TLB flush and reset the range at VMA boundaries; this avoids
+ 	 * the ranges growing with the unused space between consecutive VMAs,
+@@ -511,7 +507,6 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
+ 	 */
+ 	tlb_flush_mmu_tlbonly(tlb);
+ }
+-#endif
+ 
+ #ifdef CONFIG_ARCH_HAS_TLB_GENERATIONS
+ 
+diff --git a/init/Kconfig b/init/Kconfig
+index 3d11a0f7c8cc..14a599a48738 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -849,6 +849,14 @@ config ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+ config ARCH_HAS_TLB_GENERATIONS
+ 	bool
+ 
++#
++# For architectures that prefer to batch TLB flushes aggressively, i.e.,
++# not to flush after changing or removing each VMA. The architecture must
++# provide its own tlb_flush() function.
++config ARCH_WANT_AGGRESSIVE_TLB_FLUSH_BATCHING
++	bool
++	depends on !CONFIG_MMU_GATHER_NO_GATHER
++
+ config CC_HAS_INT128
+ 	def_bool !$(cc-option,$(m64-flag) -D__SIZEOF_INT128__=0) && 64BIT
+ 
 -- 
 2.25.1
 
