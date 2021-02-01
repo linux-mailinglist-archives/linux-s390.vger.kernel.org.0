@@ -2,183 +2,85 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B87D30A783
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Feb 2021 13:24:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCEBE30A7E7
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Feb 2021 13:46:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbhBAMXn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 1 Feb 2021 07:23:43 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42376 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229500AbhBAMXl (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Feb 2021 07:23:41 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 111CBejE068905;
-        Mon, 1 Feb 2021 07:22:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=0CsY5/MfbVfHO833FCNa1XGAQEdhJHUd+HRdVcWP2pk=;
- b=WbZXVLyizstXSM4bXi0eY/4QOVrrEXdpxzc94LDQ0zH5xnQ5QJQZkm+Ly6TqmGcBUs64
- aD9gXjXp4K0ET3MdYDjzkCnNrCao2+/msu9WXm1QmYq0rEfUc2rdA3v5lo1iFXhFTr0j
- bWmV5lJgTRifbNoG2Y0CDDXhTA6IBN416tpNVDRoKrZmAQb76RhnOSadBRu5NqvdQsXj
- rqBpOdKrk3PZ6IEYZGuIi06u2/OhQ/Smb3dFedc5uob16vS8x3bUQd8vJXQscrpprrm2
- qN4TktmtTqa2NatUWl5en4kSJCJ6Rza/t4vWk4zW/na/qQX0AQkS8Qlp5feu4m8ynyZk dQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 36ehe80axm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Feb 2021 07:22:58 -0500
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 111CBesq068888;
-        Mon, 1 Feb 2021 07:22:58 -0500
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 36ehe80ax5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Feb 2021 07:22:58 -0500
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 111CCSaw015675;
-        Mon, 1 Feb 2021 12:22:56 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 36cy38hu72-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Feb 2021 12:22:56 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 111CMrDK35127784
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Feb 2021 12:22:53 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 796F24C058;
-        Mon,  1 Feb 2021 12:22:53 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1333F4C050;
-        Mon,  1 Feb 2021 12:22:53 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.68.23])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Feb 2021 12:22:52 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v1 2/5] s390x: css: simplifications of the
- tests
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
-        cohuck@redhat.com, imbrenda@linux.ibm.com
-References: <1611930869-25745-1-git-send-email-pmorel@linux.ibm.com>
- <1611930869-25745-3-git-send-email-pmorel@linux.ibm.com>
- <4f5ca0b9-378e-431c-33ec-79946bdf21b2@linux.ibm.com>
- <10f3108b-c1fe-7da9-7153-803690d311d4@linux.ibm.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-Message-ID: <0069eb2c-7b9c-1582-c86f-0c68a147d608@linux.ibm.com>
-Date:   Mon, 1 Feb 2021 13:22:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S229852AbhBAMpu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 1 Feb 2021 07:45:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229707AbhBAMps (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Feb 2021 07:45:48 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 617DCC061573;
+        Mon,  1 Feb 2021 04:45:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=iS8iy+q7Izh8AM4pbDoHtBgYLQUACj4slse1odTb8Xw=; b=m7ji0VO1MSn1lX6BI0jJ/Yb9pR
+        9LbSnyqEyG+WShVFDi6LLpOxh725y4TN5ZOzvkdZzaqe2VLLrMyA0w5DmjmAmnD9zsr9kHInq0sjB
+        ii38K9XKQhFn7sOI40UlVOovRxxAgm9h9jejp9eCBLKegUodvH0TprmeRQ27HIdL/dZ9Y9TeAXH+T
+        AH4kD9PgJxscyRe30c+nsFbhAUZbIF86CVRIvrNnDHqiAHo82ZC5vwPaZdUNJSPPkp0ldDsBPBc8P
+        BJXcBzycInlMsr0+a7N0JA8WObI/EMjH6YDE79gmnKGPIcRn4F4Lq0ejsbhou5qIjm5vd3EqnQ2UW
+        /oN5DJpg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1l6YZH-00Dm54-Iu; Mon, 01 Feb 2021 12:44:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7D8C9303A02;
+        Mon,  1 Feb 2021 13:44:34 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 65B2620C8E303; Mon,  1 Feb 2021 13:44:34 +0100 (CET)
+Date:   Mon, 1 Feb 2021 13:44:34 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, X86 ML <x86@kernel.org>,
+        Yu Zhao <yuzhao@google.com>
+Subject: Re: [RFC 00/20] TLB batching consolidation and enhancements
+Message-ID: <YBf3sl3M+j3hJRoM@hirez.programming.kicks-ass.net>
+References: <20210131001132.3368247-1-namit@vmware.com>
+ <1612063149.2awdsvvmhj.astroid@bobo.none>
+ <A1589669-34AE-4E15-8358-79BAD7C72520@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <10f3108b-c1fe-7da9-7153-803690d311d4@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
- definitions=2021-02-01_04:2021-01-29,2021-02-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- phishscore=0 spamscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
- adultscore=0 bulkscore=0 lowpriorityscore=0 mlxlogscore=999 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102010059
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <A1589669-34AE-4E15-8358-79BAD7C72520@vmware.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2/1/21 1:15 PM, Pierre Morel wrote:
-> 
-> 
-> On 2/1/21 11:11 AM, Janosch Frank wrote:
->> On 1/29/21 3:34 PM, Pierre Morel wrote:
-> 
-> ...snip...
-> 
->>> diff --git a/lib/s390x/css_lib.c b/lib/s390x/css_lib.c
->>> index fe05021..f300969 100644
->>> --- a/lib/s390x/css_lib.c
->>> +++ b/lib/s390x/css_lib.c
->>> @@ -118,6 +118,31 @@ out:
->>>   	return schid;
->>>   }
->>>   
->>> +/*
->>> + * css_enable: enable the subchannel with the specified ISC
->>
->> enabled or enable?
-> 
-> Forgot to change the cut and paste :(
-> 
-> /*
->   * css_enabled: report if the sub channel is enabled
-> 
->>
->> I.e. do you test if it is enabled or do you want to enable it.
->>
->>> + * @schid: Subchannel Identifier
->>> + * Return value:
->>> + *   true if the subchannel is enabled
->>> + *   false otherwise
->>> + */
->>> +bool css_enabled(int schid)
->>> +{
->>> +	struct pmcw *pmcw = &schib.pmcw;
->>> +	int cc;
->>> +
->>> +	cc = stsch(schid, &schib);
->>> +	if (cc) {
->>> +		report_info("stsch: updating sch %08x failed with cc=%d",
->>> +			    schid, cc);
->>> +		return false;
->>> +	}
->>> +
->>> +	if (!(pmcw->flags & PMCW_ENABLE)) {
->>> +		report_info("stsch: sch %08x not enabled", schid);
->>> +		return 0;
->>
->> Please stay with true/false or change the return type to int and use ints.
-> 
-> yes
-> 
->>
->>> +	}
->>> +	return true;
->>> +}
-> 
-> ...snip...
-> 
->>> @@ -129,16 +120,21 @@ static void test_sense(void)
->>>   	report_info("reserved 0x%02x cu_type 0x%04x cu_model 0x%02x dev_type 0x%04x dev_model 0x%02x",
->>>   		    senseid->reserved, senseid->cu_type, senseid->cu_model,
->>>   		    senseid->dev_type, senseid->dev_model);
->>> +	report_info("cu_type expected 0x%04x got 0x%04x", (uint16_t)cu_type,
->>> +		    senseid->cu_type);
->>>   
->>> -	report(senseid->cu_type == cu_type, "cu_type expected 0x%04x got 0x%04x",
->>> -	       (uint16_t)cu_type, senseid->cu_type);
->>> +	retval = senseid->cu_type == cu_type;
->>>   
->>>   error:
->>>   	free_io_mem(ccw, sizeof(*ccw));
->>>   error_ccw:
->>>   	free_io_mem(senseid, sizeof(*senseid));
->>> -error_senseid:
->>> -	unregister_io_int_func(css_irq_io);
->>> +	return retval;
->>
->> Could you return senseid->cu_type == cu_type here?
-> 
-> It would work for the current code and DEFAULT_CU_TYPE.
-> But I do not think it is a good idea due to the goto we have in error 
-> case before I find that it makes the code less understandable.
-> 
-> Other opinion?
+On Sun, Jan 31, 2021 at 07:57:01AM +0000, Nadav Amit wrote:
+> > On Jan 30, 2021, at 7:30 PM, Nicholas Piggin <npiggin@gmail.com> wrote:
 
-That's why I asked, it wasn't a direct suggestion.
-I'm not a big fan of the ret/retval naming but the function is short so
-it should be ok.
-
+> > I'll go through the patches a bit more closely when they all come 
+> > through. Sparc and powerpc of course need the arch lazy mode to get 
+> > per-page/pte information for operations that are not freeing pages, 
+> > which is what mmu gather is designed for.
 > 
-> Thanks for the comments,
-> Pierre
-> 
+> IIUC you mean any PTE change requires a TLB flush. Even setting up a new PTE
+> where no previous PTE was set, right?
 
+These are the HASH architectures. Their hardware doesn't walk the
+page-tables, but it consults a hash-table to resolve page translations.
+
+They _MUST_ flush the entries under the PTL to avoid ever seeing
+conflicting information, which will make them really unhappy. They can
+do this because they have TLBI broadcast.
+
+There's a few more details I'm sure, but those seem to have slipped from
+my mind.
