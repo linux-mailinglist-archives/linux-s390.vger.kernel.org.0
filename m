@@ -2,183 +2,199 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9170C30C545
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Feb 2021 17:19:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5933D30C7B7
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Feb 2021 18:29:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235731AbhBBQSL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Feb 2021 11:18:11 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59248 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236137AbhBBQQL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Feb 2021 11:16:11 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 112GDOtl137758;
-        Tue, 2 Feb 2021 11:15:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=Yto4Q4S51dPnvwNvL9+elMmy/TSPqDq0etEpfyp42IE=;
- b=pElyvGYWhcKwN6QnBtuwzQgpZBU6bPpEJ6HOBD4943o6TTmrU0t586A3XHGWpHwnNSZz
- xObpMpUF1lWk59+xmmOXemXk8AzDP82tFQfUSskvkMLXhQO0RWBSsVkYQM1xvhdMaJa8
- mwB8Vh8jajIo1Ms/9lHRicBbDkQQcmy3FsDPUgDwqClS7hm5o19upKeZOa81ICCcgsZb
- CIQ/AOHRrRfYNLIvNWRm5jrYl52ofEnkKspVb946H4SxyRpssVFgaVeuMtlXiwxI0/AR
- LflQp+2EautK8zW5w5MgrBiR4T0Oo5aA4qrtWu6oViiGhDsHmlrc5f+gPQXbETbcddmi yQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36fa2m02ex-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Feb 2021 11:15:28 -0500
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 112GE3pV139587;
-        Tue, 2 Feb 2021 11:15:28 -0500
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36fa2m02ds-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Feb 2021 11:15:28 -0500
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 112Fah3q004976;
-        Tue, 2 Feb 2021 16:15:26 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 36cy38k1tt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Feb 2021 16:15:26 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 112GFNI225493778
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Feb 2021 16:15:23 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C7CDA4054;
-        Tue,  2 Feb 2021 16:15:23 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08C84A4066;
-        Tue,  2 Feb 2021 16:15:23 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.19.13])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  2 Feb 2021 16:15:22 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v1 3/5] s390x: css: implementing Set
- CHannel Monitor
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com,
-        imbrenda@linux.ibm.com
+        id S236850AbhBBR3M (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Feb 2021 12:29:12 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40995 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237312AbhBBR0v (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Feb 2021 12:26:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612286725;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=U03ZGHQ39lo1H/R4t4Uwy6eD2Es1NBuz4KMoEVY1yK8=;
+        b=Qrp260OsVxr9++NyKCVcsE3xhm5l3PdC7r/t7Qmf+Yw+Er7vlZud9Ae2uzWdjrnL4TTlTz
+        3ZABgHP3RngW0bos5LE+hvGVqHSs1c5S3enAWGGzr3fI+8XRe6bPCpFwYUpsiBcvnhw+b/
+        fBlqK7u1/FUGjYppVvBvRVv5dIll/18=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251-VS2pXZN1MJi6bTi0igr6UQ-1; Tue, 02 Feb 2021 12:25:22 -0500
+X-MC-Unique: VS2pXZN1MJi6bTi0igr6UQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E3CFAFA82;
+        Tue,  2 Feb 2021 17:25:21 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-112-112.ams2.redhat.com [10.36.112.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D9235C5FC;
+        Tue,  2 Feb 2021 17:25:16 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v1 1/5] s390x: css: Store CSS
+ Characteristics
+To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com
 References: <1611930869-25745-1-git-send-email-pmorel@linux.ibm.com>
- <1611930869-25745-4-git-send-email-pmorel@linux.ibm.com>
- <20210202124818.6084bb36.cohuck@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <e28ee611-faad-bb2d-ede2-3efcb7b56c53@linux.ibm.com>
-Date:   Tue, 2 Feb 2021 17:15:22 +0100
+ <1611930869-25745-2-git-send-email-pmorel@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <74ad7962-9217-5110-4089-9b83d519cfc1@redhat.com>
+Date:   Tue, 2 Feb 2021 18:25:15 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <20210202124818.6084bb36.cohuck@redhat.com>
+In-Reply-To: <1611930869-25745-2-git-send-email-pmorel@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
- definitions=2021-02-02_07:2021-02-02,2021-02-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- malwarescore=0 impostorscore=0 phishscore=0 spamscore=0 lowpriorityscore=0
- mlxscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102020106
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 2/2/21 12:48 PM, Cornelia Huck wrote:
-> On Fri, 29 Jan 2021 15:34:27 +0100
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
+On 29/01/2021 15.34, Pierre Morel wrote:
+> CSS characteristics exposes the features of the Channel SubSystem.
+> Let's use Store Channel Subsystem Characteristics to retrieve
+> the features of the CSS.
 > 
->> We implement the call of the Set CHannel Monitor instruction,
->> starting the monitoring of the all Channel Sub System, and
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>   lib/s390x/css.h     | 57 +++++++++++++++++++++++++++++++++++++++++++++
+>   lib/s390x/css_lib.c | 50 ++++++++++++++++++++++++++++++++++++++-
+>   s390x/css.c         | 12 ++++++++++
+>   3 files changed, 118 insertions(+), 1 deletion(-)
 > 
-> "initializing channel subsystem monitoring" ?
+> diff --git a/lib/s390x/css.h b/lib/s390x/css.h
+> index 3e57445..bc0530d 100644
+> --- a/lib/s390x/css.h
+> +++ b/lib/s390x/css.h
+> @@ -288,4 +288,61 @@ int css_residual_count(unsigned int schid);
+>   void enable_io_isc(uint8_t isc);
+>   int wait_and_check_io_completion(int schid);
+>   
+> +/*
+> + * CHSC definitions
+> + */
+> +struct chsc_header {
+> +	u16 len;
+> +	u16 code;
+> +};
+> +
+> +/* Store Channel Subsystem Characteristics */
+> +struct chsc_scsc {
+> +	struct chsc_header req;
+> +	u32 reserved1;
+> +	u32 reserved2;
+> +	u32 reserved3;
+> +	struct chsc_header res;
+> +	u32 format;
+> +	u64 general_char[255];
+> +	u64 chsc_char[254];
+> +};
+> +extern struct chsc_scsc *chsc_scsc;
+> +
+> +#define CSS_GENERAL_FEAT_BITLEN	(255 * 64)
+> +#define CSS_CHSC_FEAT_BITLEN	(254 * 64)
+> +
+> +int get_chsc_scsc(void);
+> +
+> +static inline int _chsc(void *p)
+> +{
+> +	int cc;
+> +
+> +	asm volatile(
+> +		"	.insn   rre,0xb25f0000,%2,0\n"
+> +		"	ipm     %0\n"
+> +		"	srl     %0,28\n"
+> +		: "=d" (cc), "=m" (p)
+> +		: "d" (p), "m" (p)
+> +		: "cc");
+> +
+> +	return cc;
+> +}
+> +
+> +#define CHSC_SCSC	0x0010
+> +#define CHSC_SCSC_LEN	0x0010
+> +
+> +static inline int chsc(void *p, uint16_t code, uint16_t len)
+> +{
+> +	struct chsc_header *h = p;
+> +
+> +	h->code = code;
+> +	h->len = len;
+> +	return _chsc(p);
+> +}
+> +
+> +#include <bitops.h>
+> +#define css_general_feature(bit) test_bit_inv(bit, chsc_scsc->general_char)
+> +#define css_chsc_feature(bit) test_bit_inv(bit, chsc_scsc->chsc_char)
+> +
+>   #endif
+> diff --git a/lib/s390x/css_lib.c b/lib/s390x/css_lib.c
+> index 3c24480..fe05021 100644
+> --- a/lib/s390x/css_lib.c
+> +++ b/lib/s390x/css_lib.c
+> @@ -15,11 +15,59 @@
+>   #include <asm/arch_def.h>
+>   #include <asm/time.h>
+>   #include <asm/arch_def.h>
+> -
+> +#include <alloc_page.h>
+>   #include <malloc_io.h>
+>   #include <css.h>
+>   
+>   static struct schib schib;
+> +struct chsc_scsc *chsc_scsc;
+> +
+> +int get_chsc_scsc(void)
+> +{
+> +	int i, n;
+> +	int ret = 0;
+> +	char buffer[510];
+> +	char *p;
+> +
+> +	report_prefix_push("Channel Subsystem Call");
+> +
+> +	if (chsc_scsc) {
+> +		report_info("chsc_scsc already initialized");
+> +		goto end;
+> +	}
+> +
+> +	chsc_scsc = alloc_pages(0);
+> +	report_info("scsc_scsc at: %016lx", (u64)chsc_scsc);
+> +	if (!chsc_scsc) {
+> +		ret = -1;
+> +		report(0, "could not allocate chsc_scsc page!");
+> +		goto end;
+> +	}
+> +
+> +	ret = chsc(chsc_scsc, CHSC_SCSC, CHSC_SCSC_LEN);
+> +	if (ret) {
+> +		report(0, "chsc: CC %d", ret);
+> +		goto end;
+> +	}
+> +
+> +	for (i = 0, p = buffer; i < CSS_GENERAL_FEAT_BITLEN; i++)
+> +		if (css_general_feature(i)) {
+> +			n = snprintf(p, sizeof(buffer) - ret, "%d,", i);
+> +			p += n;
+> +		}
+> +	report_info("General features: %s", buffer);
+> +
+> +	for (i = 0, p = buffer, ret = 0; i < CSS_CHSC_FEAT_BITLEN; i++)
+> +		if (css_chsc_feature(i)) {
+> +			n = snprintf(p, sizeof(buffer) - ret, "%d,", i);
+> +			p += n;
+> +		}
 
-Yes, better I take this.
+Please use curly braces for the for-loops here, too. Rationale: Kernel 
+coding style:
 
-> 
->> the initialization of the monitoring on a Sub Channel.
-> 
-> "enabling monitoring for a subchannel" ?
-> 
->>
->> An initial test reports the presence of the extended measurement
->> block feature.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
->>   lib/s390x/css.h     | 17 +++++++++-
->>   lib/s390x/css_lib.c | 77 +++++++++++++++++++++++++++++++++++++++++++++
->>   s390x/css.c         |  7 +++++
->>   3 files changed, 100 insertions(+), 1 deletion(-)
->>
-> 
-> (...)
-> 
->> diff --git a/lib/s390x/css_lib.c b/lib/s390x/css_lib.c
->> index f300969..9e0f568 100644
->> --- a/lib/s390x/css_lib.c
->> +++ b/lib/s390x/css_lib.c
->> @@ -205,6 +205,83 @@ retry:
->>   	return -1;
->>   }
->>   
->> +/*
->> + * css_enable_mb: enable the subchannel Mesurement Block
->> + * @schid: Subchannel Identifier
->> + * @mb   : 64bit address of the measurement block
->> + * @format1: set if format 1 is to be used
->> + * @mbi : the measurement block offset
->> + * @flags : PMCW_MBUE to enable measurement block update
->> + *	    PMCW_DCTME to enable device connect time
->> + * Return value:
->> + *   On success: 0
->> + *   On error the CC of the faulty instruction
->> + *      or -1 if the retry count is exceeded.
->> + */
->> +int css_enable_mb(int schid, uint64_t mb, int format1, uint16_t mbi,
->> +		  uint16_t flags)
->> +{
->> +	struct pmcw *pmcw = &schib.pmcw;
->> +	int retry_count = 0;
->> +	int cc;
->> +
->> +	/* Read the SCHIB for this subchannel */
->> +	cc = stsch(schid, &schib);
->> +	if (cc) {
->> +		report_info("stsch: sch %08x failed with cc=%d", schid, cc);
->> +		return cc;
->> +	}
->> +
->> +retry:
->> +	/* Update the SCHIB to enable the measurement block */
->> +	pmcw->flags |= flags;
->> +
->> +	if (format1)
->> +		pmcw->flags2 |= PMCW_MBF1;
->> +	else
->> +		pmcw->flags2 &= ~PMCW_MBF1;
->> +
->> +	pmcw->mbi = mbi;
->> +	schib.mbo = mb;
->> +
->> +	/* Tell the CSS we want to modify the subchannel */
->> +	cc = msch(schid, &schib);
-> 
-> Setting some invalid flags for measurements in the schib could lead to
-> an operand exception. Do we want to rely on the caller always getting
-> it right, or should we add handling for those invalid flags? (Might
-> also make a nice test case.)
+"Also, use braces when a loop contains more than a single simple statement"
 
-Yes it does.
-I add new test cases to test if we get the right error.
+  Thanks,
+   Thomas
 
-
-Thanks,
-Pierre
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
