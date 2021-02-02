@@ -2,185 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B86F330C807
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Feb 2021 18:40:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B5F530C8FD
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Feb 2021 19:06:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237644AbhBBRis (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Feb 2021 12:38:48 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21556 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237649AbhBBRgu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Feb 2021 12:36:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612287323;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=O4oTsdRd/8zp7Nz1DPVOiX2FHvUnLLUX8No6k0DaE4g=;
-        b=KR53mCPo4C2qVRjUMhVuqqPkAyo5CuLzUxyD3SXtAU8kWtb2TSy8DHr7MLlXqF79LTyWc7
-        B3bUlGBromdWDt6Ivqra+3CTIoXNumdo5O9OdpAlkuNeEvsHRCx7vTao9Ufh62PRzQnBy2
-        vtnk2Hslj4Kzjv3oLwpjZXXWZmstMPI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-120-F-7Hn6pjP9ejWcbt5wZ6eg-1; Tue, 02 Feb 2021 12:35:19 -0500
-X-MC-Unique: F-7Hn6pjP9ejWcbt5wZ6eg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 88C2D192AB78;
-        Tue,  2 Feb 2021 17:35:18 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-112-112.ams2.redhat.com [10.36.112.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A2BB6544E8;
-        Tue,  2 Feb 2021 17:35:13 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v1 4/5] s390x: css: SCHM tests format 0
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com
-References: <1611930869-25745-1-git-send-email-pmorel@linux.ibm.com>
- <1611930869-25745-5-git-send-email-pmorel@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <b3086f69-98fa-07c0-72c7-711c17e71c9d@redhat.com>
-Date:   Tue, 2 Feb 2021 18:35:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S238013AbhBBSF7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Feb 2021 13:05:59 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59470 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S234405AbhBBSBR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Feb 2021 13:01:17 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 112HUxl6004795;
+        Tue, 2 Feb 2021 13:00:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=xvHIsgzKyZQkrHD83FTOBU/tApKe6WvjIoLg2C2AXP8=;
+ b=cwdpNrRxJ/zUjhQ+fJsDXxK0tJ9NwIoJHYynpeprhsPqe0IzjMbg6CJcZ6N0T8HBtIxI
+ ACZN2p7hI7doMK/BDjFrp/oKCjFdcobad4qmda2wF/BtdYIkVw1luWoowqTNIY/5oY7n
+ FBr08x6PPKeE8ROuJR0FR9Ja6/BcpXmvwFlvYQQIBh0XUTChrtRMbtYvGbe3zHsHOJ5/
+ El10H/DMecbzk8MAy19IMVlFRuvbWMzHp/4BMHXvJMm5Us3UqhoghihVDOE6+3/EPpMs
+ qgBIYOiAoSUvoWMvMj6P44pueiIvqFVEkfCMcBFWIXchtk7a6ZZRLZMN0P1/OEtLCyp1 2g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 36fb3n14aj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Feb 2021 13:00:34 -0500
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 112HV3Id005344;
+        Tue, 2 Feb 2021 13:00:34 -0500
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 36fb3n149j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Feb 2021 13:00:34 -0500
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 112HrQ39030725;
+        Tue, 2 Feb 2021 18:00:32 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06fra.de.ibm.com with ESMTP id 36cxqh9mqx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 Feb 2021 18:00:32 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 112I0K4v29819208
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Feb 2021 18:00:20 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 61275AE057;
+        Tue,  2 Feb 2021 18:00:29 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 054A7AE063;
+        Tue,  2 Feb 2021 18:00:29 +0000 (GMT)
+Received: from ibm-vm.ibmuc.com (unknown [9.145.15.83])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  2 Feb 2021 18:00:28 +0000 (GMT)
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH v2 0/2] s390/kvm: fix MVPG when in VSIE
+Date:   Tue,  2 Feb 2021 19:00:26 +0100
+Message-Id: <20210202180028.876888-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <1611930869-25745-5-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
+ definitions=2021-02-02_08:2021-02-02,2021-02-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 mlxscore=0 clxscore=1015 impostorscore=0 phishscore=0
+ adultscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 mlxlogscore=825
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102020112
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 29/01/2021 15.34, Pierre Morel wrote:
-> We tests the update of the mesurement block format 0, the
-> mesurement block origin is calculated from the mbo argument
-> used by the SCHM instruction and the offset calculated using
-> the measurement block index of the SCHIB.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->   lib/s390x/css.h | 29 ++++++++++++++++++++++++++++
->   s390x/css.c     | 51 +++++++++++++++++++++++++++++++++++++++++++++++++
->   2 files changed, 80 insertions(+)
-> 
-> diff --git a/lib/s390x/css.h b/lib/s390x/css.h
-> index 938f0ab..ba0bc67 100644
-> --- a/lib/s390x/css.h
-> +++ b/lib/s390x/css.h
-> @@ -358,7 +358,36 @@ static inline void schm(void *mbo, unsigned int flags)
->   	asm("schm" : : "d" (__gpr2), "d" (__gpr1));
->   }
->   
-> +#define SCHM_DCTM	1 /* activate Device Connection TiMe */
-> +#define SCHM_MBU	2 /* activate Measurement Block Update */
-> +
->   int css_enable_mb(int schid, uint64_t mb, int format1, uint16_t mbi,
->   		  uint16_t flags);
->   
-> +struct measurement_block_format0 {
-> +	uint16_t ssch_rsch_count;
-> +	uint16_t sample_count;
-> +	uint32_t device_connect_time;
-> +	uint32_t function_pending_time;
-> +	uint32_t device_disconnect_time;
-> +	uint32_t cu_queuing_time;
-> +	uint32_t device_active_only_time;
-> +	uint32_t device_busy_time;
-> +	uint32_t initial_cmd_resp_time;
-> +};
-> +
-> +struct measurement_block_format1 {
-> +	uint32_t ssch_rsch_count;
-> +	uint32_t sample_count;
-> +	uint32_t device_connect_time;
-> +	uint32_t function_pending_time;
-> +	uint32_t device_disconnect_time;
-> +	uint32_t cu_queuing_time;
-> +	uint32_t device_active_only_time;
-> +	uint32_t device_busy_time;
-> +	uint32_t initial_cmd_resp_time;
-> +	uint32_t irq_delay_time;
-> +	uint32_t irq_prio_delay_time;
-> +};
-> +
->   #endif
-> diff --git a/s390x/css.c b/s390x/css.c
-> index 000ce04..2e9ea47 100644
-> --- a/s390x/css.c
-> +++ b/s390x/css.c
-> @@ -155,10 +155,61 @@ static void css_init(void)
->   	report(1, "CSS initialized");
->   }
->   
-> +#define SCHM_UPDATE_CNT 10
-> +static void test_schm_fmt0(struct measurement_block_format0 *mb0)
-> +{
-> +	int ret;
-> +	int i;
-> +
-> +	report_prefix_push("Format 0");
-> +	ret = css_enable_mb(test_device_sid, 0, 0, 0, PMCW_MBUE);
-> +	if (ret) {
-> +		report(0, "Enabling measurement_block_format0");
-> +		goto end;
-> +	}
-> +
-> +	for (i = 0; i < SCHM_UPDATE_CNT; i++) {
-> +		if (!do_test_sense()) {
-> +			report(0, "Error during sense");
-> +			break;
-> +		}
-> +	}
-> +
-> +	report_info("ssch_rsch_count: %d", mb0->ssch_rsch_count);
-> +	report_info("sample_count: %d", mb0->sample_count);
-> +	report_info("device_connect_time: %d", mb0->device_connect_time);
-> +	report_info("function_pending_time: %d", mb0->function_pending_time);
-> +	report_info("device_disconnect_time: %d", mb0->device_disconnect_time);
-> +	report_info("cu_queuing_time: %d", mb0->cu_queuing_time);
-> +	report_info("device_active_only_time: %d", mb0->device_active_only_time);
-> +	report_info("device_busy_time: %d", mb0->device_busy_time);
-> +	report_info("initial_cmd_resp_time: %d", mb0->initial_cmd_resp_time);
-> +
-> +	report(i == mb0->ssch_rsch_count,
-> +	       "SSCH expected %d measured %d", i, mb0->ssch_rsch_count);
-> +
-> +end:
-> +	report_prefix_pop();
-> +}
-> +
->   static void test_schm(void)
->   {
-> +	struct measurement_block_format0 *mb0;
-> +
->   	if (css_general_feature(CSSC_EXTENDED_MEASUREMENT_BLOCK))
->   		report_info("Extended measurement block available");
-> +
-> +	mb0 = alloc_io_mem(sizeof(struct measurement_block_format0), 0);
-> +	if (!mb0) {
-> +		report(0, "measurement_block_format0 allocation");
-> +		goto end_free;
+The current handling of the MVPG instruction when executed in a nested
+guest is wrong, and can lead to the nested guest hanging.
 
-If allocation failed, there is certainly no need to try to free it, so you 
-can get rid of the goto and the label here and return directly instead. Or 
-maybe
-Maybe also simply use report_abort() in this case?
+This patchset fixes the behaviour to be more architecturally correct,
+and fixes the hangs observed.
 
-  Thomas
+v1->v2
+* complete rewrite
 
+Claudio Imbrenda (2):
+  s390/kvm: extend kvm_s390_shadow_fault to return entry pointer
+  s390/kvm: VSIE: correctly handle MVPG when in VSIE
 
-> +	}
-> +
-> +	schm(mb0, SCHM_MBU);
-> +	test_schm_fmt0(mb0);
-> +
-> +end_free:
-> +	free_io_mem(mb0, sizeof(struct measurement_block_format0));
->   }
->   
->   static struct {
-> 
+ arch/s390/kvm/gaccess.c |  26 ++++++++--
+ arch/s390/kvm/gaccess.h |   5 +-
+ arch/s390/kvm/vsie.c    | 102 ++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 119 insertions(+), 14 deletions(-)
+
+-- 
+2.26.2
 
