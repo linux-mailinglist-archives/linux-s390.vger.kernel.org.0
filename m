@@ -2,199 +2,144 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5933D30C7B7
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Feb 2021 18:29:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F9D430C7DA
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Feb 2021 18:33:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236850AbhBBR3M (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Feb 2021 12:29:12 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40995 "EHLO
+        id S237616AbhBBRdN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Feb 2021 12:33:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:44128 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237312AbhBBR0v (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Feb 2021 12:26:51 -0500
+        by vger.kernel.org with ESMTP id S237487AbhBBRb2 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Feb 2021 12:31:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612286725;
+        s=mimecast20190719; t=1612287002;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=U03ZGHQ39lo1H/R4t4Uwy6eD2Es1NBuz4KMoEVY1yK8=;
-        b=Qrp260OsVxr9++NyKCVcsE3xhm5l3PdC7r/t7Qmf+Yw+Er7vlZud9Ae2uzWdjrnL4TTlTz
-        3ZABgHP3RngW0bos5LE+hvGVqHSs1c5S3enAWGGzr3fI+8XRe6bPCpFwYUpsiBcvnhw+b/
-        fBlqK7u1/FUGjYppVvBvRVv5dIll/18=
+        bh=HPZ3creScpQEExnhVsJILHItpjZC6SwU5BrqG5rqdx8=;
+        b=WDGgFB+daOJrf/XrRpGdOLE7SCowcLW/W29W5FhS4F+7HztimFoKvnTv3xp60KuvQUmrHp
+        drSPgWGohlkdoTCf9WH43KXY2okScUlj/P2gxSGzgB9tQNSQZo7e+HFBtnG4bcqjGZhR6u
+        kxxc17zECwPxAyAcK/7omOPYcLVAhpg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-251-VS2pXZN1MJi6bTi0igr6UQ-1; Tue, 02 Feb 2021 12:25:22 -0500
-X-MC-Unique: VS2pXZN1MJi6bTi0igr6UQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-126-P3WC4TVFMqyXTD9L0qakVA-1; Tue, 02 Feb 2021 12:29:59 -0500
+X-MC-Unique: P3WC4TVFMqyXTD9L0qakVA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E3CFAFA82;
-        Tue,  2 Feb 2021 17:25:21 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C48A10066FE;
+        Tue,  2 Feb 2021 17:29:50 +0000 (UTC)
 Received: from thuth.remote.csb (ovpn-112-112.ams2.redhat.com [10.36.112.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D9235C5FC;
-        Tue,  2 Feb 2021 17:25:16 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v1 1/5] s390x: css: Store CSS
- Characteristics
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 65D9960C5F;
+        Tue,  2 Feb 2021 17:29:48 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v1 2/5] s390x: css: simplifications of the
+ tests
 To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
         david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com
 References: <1611930869-25745-1-git-send-email-pmorel@linux.ibm.com>
- <1611930869-25745-2-git-send-email-pmorel@linux.ibm.com>
+ <1611930869-25745-3-git-send-email-pmorel@linux.ibm.com>
 From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <74ad7962-9217-5110-4089-9b83d519cfc1@redhat.com>
-Date:   Tue, 2 Feb 2021 18:25:15 +0100
+Message-ID: <daf7ef77-98fc-3e29-d753-78b933a494d5@redhat.com>
+Date:   Tue, 2 Feb 2021 18:29:47 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <1611930869-25745-2-git-send-email-pmorel@linux.ibm.com>
+In-Reply-To: <1611930869-25745-3-git-send-email-pmorel@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 29/01/2021 15.34, Pierre Morel wrote:
-> CSS characteristics exposes the features of the Channel SubSystem.
-> Let's use Store Channel Subsystem Characteristics to retrieve
-> the features of the CSS.
+> In order to ease the writing of tests based on:
+> - interrupt
+> - enabling a subchannel
+> - using multiple I/O on a channel without disabling it
+> 
+> We do the following simplifications:
+> - the I/O interrupt handler is registered on CSS initialization
+> - We do not enable again a subchannel in senseid if it is already
+>    enabled
+> - we add a css_enabled() function to test if a subchannel is enabled
 > 
 > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 > ---
->   lib/s390x/css.h     | 57 +++++++++++++++++++++++++++++++++++++++++++++
->   lib/s390x/css_lib.c | 50 ++++++++++++++++++++++++++++++++++++++-
->   s390x/css.c         | 12 ++++++++++
->   3 files changed, 118 insertions(+), 1 deletion(-)
-> 
-> diff --git a/lib/s390x/css.h b/lib/s390x/css.h
-> index 3e57445..bc0530d 100644
-> --- a/lib/s390x/css.h
-> +++ b/lib/s390x/css.h
-> @@ -288,4 +288,61 @@ int css_residual_count(unsigned int schid);
->   void enable_io_isc(uint8_t isc);
->   int wait_and_check_io_completion(int schid);
+[...]
+> diff --git a/s390x/css.c b/s390x/css.c
+> index 18dbf01..230f819 100644
+> --- a/s390x/css.c
+> +++ b/s390x/css.c
+> @@ -56,36 +56,27 @@ static void test_enable(void)
+>    * - We need the test device as the first recognized
+>    *   device by the enumeration.
+>    */
+> -static void test_sense(void)
+> +static bool do_test_sense(void)
+>   {
+>   	struct ccw1 *ccw;
+> +	bool retval = false;
+>   	int ret;
+>   	int len;
 >   
-> +/*
-> + * CHSC definitions
-> + */
-> +struct chsc_header {
-> +	u16 len;
-> +	u16 code;
-> +};
-> +
-> +/* Store Channel Subsystem Characteristics */
-> +struct chsc_scsc {
-> +	struct chsc_header req;
-> +	u32 reserved1;
-> +	u32 reserved2;
-> +	u32 reserved3;
-> +	struct chsc_header res;
-> +	u32 format;
-> +	u64 general_char[255];
-> +	u64 chsc_char[254];
-> +};
-> +extern struct chsc_scsc *chsc_scsc;
-> +
-> +#define CSS_GENERAL_FEAT_BITLEN	(255 * 64)
-> +#define CSS_CHSC_FEAT_BITLEN	(254 * 64)
-> +
-> +int get_chsc_scsc(void);
-> +
-> +static inline int _chsc(void *p)
-> +{
-> +	int cc;
-> +
-> +	asm volatile(
-> +		"	.insn   rre,0xb25f0000,%2,0\n"
-> +		"	ipm     %0\n"
-> +		"	srl     %0,28\n"
-> +		: "=d" (cc), "=m" (p)
-> +		: "d" (p), "m" (p)
-> +		: "cc");
-> +
-> +	return cc;
-> +}
-> +
-> +#define CHSC_SCSC	0x0010
-> +#define CHSC_SCSC_LEN	0x0010
-> +
-> +static inline int chsc(void *p, uint16_t code, uint16_t len)
-> +{
-> +	struct chsc_header *h = p;
-> +
-> +	h->code = code;
-> +	h->len = len;
-> +	return _chsc(p);
-> +}
-> +
-> +#include <bitops.h>
-> +#define css_general_feature(bit) test_bit_inv(bit, chsc_scsc->general_char)
-> +#define css_chsc_feature(bit) test_bit_inv(bit, chsc_scsc->chsc_char)
-> +
->   #endif
-> diff --git a/lib/s390x/css_lib.c b/lib/s390x/css_lib.c
-> index 3c24480..fe05021 100644
-> --- a/lib/s390x/css_lib.c
-> +++ b/lib/s390x/css_lib.c
-> @@ -15,11 +15,59 @@
->   #include <asm/arch_def.h>
->   #include <asm/time.h>
->   #include <asm/arch_def.h>
+>   	if (!test_device_sid) {
+>   		report_skip("No device");
+> -		return;
+> +		return retval;
+>   	}
+>   
+> -	ret = css_enable(test_device_sid, IO_SCH_ISC);
+> -	if (ret) {
+> -		report(0, "Could not enable the subchannel: %08x",
+> -		       test_device_sid);
+> -		return;
+> +	if (!css_enabled(test_device_sid)) {
+> +		report(0, "enabled subchannel: %08x", test_device_sid);
+> +		return retval;
+>   	}
+>   
+> -	ret = register_io_int_func(css_irq_io);
+> -	if (ret) {
+> -		report(0, "Could not register IRQ handler");
+> -		return;
+> -	}
 > -
-> +#include <alloc_page.h>
->   #include <malloc_io.h>
->   #include <css.h>
+> -	lowcore_ptr->io_int_param = 0;
+> -
+>   	senseid = alloc_io_mem(sizeof(*senseid), 0);
+>   	if (!senseid) {
+>   		report(0, "Allocation of senseid");
+> -		goto error_senseid;
+> +		return retval;
+>   	}
 >   
->   static struct schib schib;
-> +struct chsc_scsc *chsc_scsc;
-> +
-> +int get_chsc_scsc(void)
-> +{
-> +	int i, n;
-> +	int ret = 0;
-> +	char buffer[510];
-> +	char *p;
-> +
-> +	report_prefix_push("Channel Subsystem Call");
-> +
-> +	if (chsc_scsc) {
-> +		report_info("chsc_scsc already initialized");
-> +		goto end;
-> +	}
-> +
-> +	chsc_scsc = alloc_pages(0);
-> +	report_info("scsc_scsc at: %016lx", (u64)chsc_scsc);
-> +	if (!chsc_scsc) {
-> +		ret = -1;
-> +		report(0, "could not allocate chsc_scsc page!");
-> +		goto end;
-> +	}
-> +
-> +	ret = chsc(chsc_scsc, CHSC_SCSC, CHSC_SCSC_LEN);
-> +	if (ret) {
-> +		report(0, "chsc: CC %d", ret);
-> +		goto end;
-> +	}
-> +
-> +	for (i = 0, p = buffer; i < CSS_GENERAL_FEAT_BITLEN; i++)
-> +		if (css_general_feature(i)) {
-> +			n = snprintf(p, sizeof(buffer) - ret, "%d,", i);
-> +			p += n;
-> +		}
-> +	report_info("General features: %s", buffer);
-> +
-> +	for (i = 0, p = buffer, ret = 0; i < CSS_CHSC_FEAT_BITLEN; i++)
-> +		if (css_chsc_feature(i)) {
-> +			n = snprintf(p, sizeof(buffer) - ret, "%d,", i);
-> +			p += n;
-> +		}
+>   	ccw = ccw_alloc(CCW_CMD_SENSE_ID, senseid, sizeof(*senseid), CCW_F_SLI);
+> @@ -129,16 +120,21 @@ static void test_sense(void)
+>   	report_info("reserved 0x%02x cu_type 0x%04x cu_model 0x%02x dev_type 0x%04x dev_model 0x%02x",
+>   		    senseid->reserved, senseid->cu_type, senseid->cu_model,
+>   		    senseid->dev_type, senseid->dev_model);
+> +	report_info("cu_type expected 0x%04x got 0x%04x", (uint16_t)cu_type,
+> +		    senseid->cu_type);
+>   
+> -	report(senseid->cu_type == cu_type, "cu_type expected 0x%04x got 0x%04x",
+> -	       (uint16_t)cu_type, senseid->cu_type);
+> +	retval = senseid->cu_type == cu_type;
+>   
+>   error:
+>   	free_io_mem(ccw, sizeof(*ccw));
+>   error_ccw:
+>   	free_io_mem(senseid, sizeof(*senseid));
+> -error_senseid:
+> -	unregister_io_int_func(css_irq_io);
+> +	return retval;
+> +}
 
-Please use curly braces for the for-loops here, too. Rationale: Kernel 
-coding style:
+Maybe use "success" as a name for the variable instead of "retval"? ... 
+since it's a boolean value...
 
-"Also, use braces when a loop contains more than a single simple statement"
-
-  Thanks,
-   Thomas
+  Thomas
 
