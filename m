@@ -2,49 +2,49 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A8BD30BCFB
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Feb 2021 12:27:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2692830BD6A
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Feb 2021 12:52:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231348AbhBBLZu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Feb 2021 06:25:50 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:29976 "EHLO
+        id S231282AbhBBLuB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Feb 2021 06:50:01 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33604 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231292AbhBBLYx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Feb 2021 06:24:53 -0500
+        by vger.kernel.org with ESMTP id S231157AbhBBLt7 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Feb 2021 06:49:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612265002;
+        s=mimecast20190719; t=1612266513;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JBKHPjk6x41Zxs6Yt8JX4pz4Bnku1mhHjwDqemu0bMI=;
-        b=PIPaL1asF2plLPcKmQRuh24XpwSX/BVG6V8kaF/FshFIqeZVk3F7TLOrf8RCyX6xIHnEg/
-        qMzCNKRVBUmHTLrAkWg6saVMi8G8aJ0vkI+4bRFUt6EDP7aQS69jLFnSpZ4eWMlwh+AS36
-        oRMMUbfu6+vLbXwl/qQkMLLTSDLZSJM=
+        bh=58+78T5j/zr0YoqqIeJqBu8SPu3V3qztEXBV0KpmkVU=;
+        b=Ocihw2GVJn5pLu3VaU2pNpTnCpMJxJNUVmPVJ0hZFtCQ9ZC5nybl2pevvpWrfNXxlnDGoj
+        HWVM+hs0q7WAz6DKEMPmMq5aBIq2BtvDWxB78GJR28z82DNU2avuXhj3FVphCL1A2YbDkq
+        /R5XOPG/dS8C7ZaZ7AyCb9eRIem5CA4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-487-DfZjf_KzOf6k9o836jiJcg-1; Tue, 02 Feb 2021 06:23:19 -0500
-X-MC-Unique: DfZjf_KzOf6k9o836jiJcg-1
+ us-mta-553-LDFRZODdM7eCJ48R-Yba7A-1; Tue, 02 Feb 2021 06:48:27 -0500
+X-MC-Unique: LDFRZODdM7eCJ48R-Yba7A-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89CA21F764;
-        Tue,  2 Feb 2021 11:23:18 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4220E107ACE6;
+        Tue,  2 Feb 2021 11:48:26 +0000 (UTC)
 Received: from gondolin (ovpn-113-169.ams2.redhat.com [10.36.113.169])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EDA9310016FB;
-        Tue,  2 Feb 2021 11:23:13 +0000 (UTC)
-Date:   Tue, 2 Feb 2021 12:23:11 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D7DD1100164C;
+        Tue,  2 Feb 2021 11:48:20 +0000 (UTC)
+Date:   Tue, 2 Feb 2021 12:48:18 +0100
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Pierre Morel <pmorel@linux.ibm.com>
 Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
         frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com,
         imbrenda@linux.ibm.com
-Subject: Re: [kvm-unit-tests PATCH v1 2/5] s390x: css: simplifications of
- the tests
-Message-ID: <20210202122311.3c1ead1c.cohuck@redhat.com>
-In-Reply-To: <1611930869-25745-3-git-send-email-pmorel@linux.ibm.com>
+Subject: Re: [kvm-unit-tests PATCH v1 3/5] s390x: css: implementing Set
+ CHannel Monitor
+Message-ID: <20210202124818.6084bb36.cohuck@redhat.com>
+In-Reply-To: <1611930869-25745-4-git-send-email-pmorel@linux.ibm.com>
 References: <1611930869-25745-1-git-send-email-pmorel@linux.ibm.com>
-        <1611930869-25745-3-git-send-email-pmorel@linux.ibm.com>
+        <1611930869-25745-4-git-send-email-pmorel@linux.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -54,198 +54,126 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 29 Jan 2021 15:34:26 +0100
+On Fri, 29 Jan 2021 15:34:27 +0100
 Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> In order to ease the writing of tests based on:
-> - interrupt
-> - enabling a subchannel
-> - using multiple I/O on a channel without disabling it
+> We implement the call of the Set CHannel Monitor instruction,
+> starting the monitoring of the all Channel Sub System, and
+
+"initializing channel subsystem monitoring" ?
+
+> the initialization of the monitoring on a Sub Channel.
+
+"enabling monitoring for a subchannel" ?
+
 > 
-> We do the following simplifications:
-> - the I/O interrupt handler is registered on CSS initialization
-> - We do not enable again a subchannel in senseid if it is already
->   enabled
-> - we add a css_enabled() function to test if a subchannel is enabled
+> An initial test reports the presence of the extended measurement
+> block feature.
 > 
 > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 > ---
->  lib/s390x/css.h     |  1 +
->  lib/s390x/css_lib.c | 37 ++++++++++++++++++++++++----------
->  s390x/css.c         | 49 +++++++++++++++++++++++++--------------------
->  3 files changed, 54 insertions(+), 33 deletions(-)
+>  lib/s390x/css.h     | 17 +++++++++-
+>  lib/s390x/css_lib.c | 77 +++++++++++++++++++++++++++++++++++++++++++++
+>  s390x/css.c         |  7 +++++
+>  3 files changed, 100 insertions(+), 1 deletion(-)
 > 
-> diff --git a/lib/s390x/css.h b/lib/s390x/css.h
-> index bc0530d..f8bfa37 100644
-> --- a/lib/s390x/css.h
-> +++ b/lib/s390x/css.h
-> @@ -278,6 +278,7 @@ int css_enumerate(void);
->  
->  #define IO_SCH_ISC      3
->  int css_enable(int schid, int isc);
-> +bool css_enabled(int schid);
->  
->  /* Library functions */
->  int start_ccw1_chain(unsigned int sid, struct ccw1 *ccw);
+
+(...)
+
 > diff --git a/lib/s390x/css_lib.c b/lib/s390x/css_lib.c
-> index fe05021..f300969 100644
+> index f300969..9e0f568 100644
 > --- a/lib/s390x/css_lib.c
 > +++ b/lib/s390x/css_lib.c
-> @@ -118,6 +118,31 @@ out:
->  	return schid;
+> @@ -205,6 +205,83 @@ retry:
+>  	return -1;
 >  }
 >  
 > +/*
-> + * css_enable: enable the subchannel with the specified ISC
+> + * css_enable_mb: enable the subchannel Mesurement Block
 > + * @schid: Subchannel Identifier
+> + * @mb   : 64bit address of the measurement block
+> + * @format1: set if format 1 is to be used
+> + * @mbi : the measurement block offset
+> + * @flags : PMCW_MBUE to enable measurement block update
+> + *	    PMCW_DCTME to enable device connect time
 > + * Return value:
-> + *   true if the subchannel is enabled
-> + *   false otherwise
+> + *   On success: 0
+> + *   On error the CC of the faulty instruction
+> + *      or -1 if the retry count is exceeded.
 > + */
-> +bool css_enabled(int schid)
+> +int css_enable_mb(int schid, uint64_t mb, int format1, uint16_t mbi,
+> +		  uint16_t flags)
 > +{
 > +	struct pmcw *pmcw = &schib.pmcw;
+> +	int retry_count = 0;
 > +	int cc;
 > +
+> +	/* Read the SCHIB for this subchannel */
+> +	cc = stsch(schid, &schib);
+> +	if (cc) {
+> +		report_info("stsch: sch %08x failed with cc=%d", schid, cc);
+> +		return cc;
+> +	}
+> +
+> +retry:
+> +	/* Update the SCHIB to enable the measurement block */
+> +	pmcw->flags |= flags;
+> +
+> +	if (format1)
+> +		pmcw->flags2 |= PMCW_MBF1;
+> +	else
+> +		pmcw->flags2 &= ~PMCW_MBF1;
+> +
+> +	pmcw->mbi = mbi;
+> +	schib.mbo = mb;
+> +
+> +	/* Tell the CSS we want to modify the subchannel */
+> +	cc = msch(schid, &schib);
+
+Setting some invalid flags for measurements in the schib could lead to
+an operand exception. Do we want to rely on the caller always getting
+it right, or should we add handling for those invalid flags? (Might
+also make a nice test case.)
+
+> +	if (cc) {
+> +		/*
+> +		 * If the subchannel is status pending or
+> +		 * if a function is in progress,
+> +		 * we consider both cases as errors.
+> +		 */
+> +		report_info("msch: sch %08x failed with cc=%d", schid, cc);
+> +		return cc;
+> +	}
+> +
+> +	/*
+> +	 * Read the SCHIB again to verify the measurement block origin
+> +	 */
 > +	cc = stsch(schid, &schib);
 > +	if (cc) {
 > +		report_info("stsch: updating sch %08x failed with cc=%d",
 > +			    schid, cc);
-> +		return false;
+> +		return cc;
 > +	}
 > +
-> +	if (!(pmcw->flags & PMCW_ENABLE)) {
-> +		report_info("stsch: sch %08x not enabled", schid);
+> +	if (schib.mbo == mb) {
+> +		report_info("stsch: sch %08x successfully modified after %d retries",
+> +			    schid, retry_count);
 > +		return 0;
 > +	}
-> +	return true;
-> +}
->  /*
->   * css_enable: enable the subchannel with the specified ISC
->   * @schid: Subchannel Identifier
-> @@ -167,18 +192,8 @@ retry:
->  	/*
->  	 * Read the SCHIB again to verify the enablement
->  	 */
-> -	cc = stsch(schid, &schib);
-> -	if (cc) {
-> -		report_info("stsch: updating sch %08x failed with cc=%d",
-> -			    schid, cc);
-> -		return cc;
-> -	}
-> -
-> -	if ((pmcw->flags & flags) == flags) {
-> -		report_info("stsch: sch %08x successfully modified after %d retries",
-> -			    schid, retry_count);
-> +	if (css_enabled(schid))
-
-This is a slightly different test now. Previously, you also checked
-whether the ISC matched the requested one. Not sure how valuable that
-test was.
-
->  		return 0;
-> -	}
->  
->  	if (retry_count++ < MAX_ENABLE_RETRIES) {
->  		mdelay(10); /* the hardware was not ready, give it some time */
-> diff --git a/s390x/css.c b/s390x/css.c
-> index 18dbf01..230f819 100644
-> --- a/s390x/css.c
-> +++ b/s390x/css.c
-> @@ -56,36 +56,27 @@ static void test_enable(void)
->   * - We need the test device as the first recognized
->   *   device by the enumeration.
->   */
-> -static void test_sense(void)
-> +static bool do_test_sense(void)
->  {
->  	struct ccw1 *ccw;
-> +	bool retval = false;
->  	int ret;
->  	int len;
->  
->  	if (!test_device_sid) {
->  		report_skip("No device");
-> -		return;
-> +		return retval;
->  	}
->  
-> -	ret = css_enable(test_device_sid, IO_SCH_ISC);
-> -	if (ret) {
-> -		report(0, "Could not enable the subchannel: %08x",
-> -		       test_device_sid);
-> -		return;
-> +	if (!css_enabled(test_device_sid)) {
-> +		report(0, "enabled subchannel: %08x", test_device_sid);
-
-Isn't that a _not_ enabled subchannel?
-
-> +		return retval;
->  	}
->  
-> -	ret = register_io_int_func(css_irq_io);
-> -	if (ret) {
-> -		report(0, "Could not register IRQ handler");
-> -		return;
-> -	}
-> -
-> -	lowcore_ptr->io_int_param = 0;
-> -
->  	senseid = alloc_io_mem(sizeof(*senseid), 0);
->  	if (!senseid) {
->  		report(0, "Allocation of senseid");
-> -		goto error_senseid;
-> +		return retval;
->  	}
->  
->  	ccw = ccw_alloc(CCW_CMD_SENSE_ID, senseid, sizeof(*senseid), CCW_F_SLI);
-> @@ -129,16 +120,21 @@ static void test_sense(void)
->  	report_info("reserved 0x%02x cu_type 0x%04x cu_model 0x%02x dev_type 0x%04x dev_model 0x%02x",
->  		    senseid->reserved, senseid->cu_type, senseid->cu_model,
->  		    senseid->dev_type, senseid->dev_model);
-> +	report_info("cu_type expected 0x%04x got 0x%04x", (uint16_t)cu_type,
-> +		    senseid->cu_type);
->  
-> -	report(senseid->cu_type == cu_type, "cu_type expected 0x%04x got 0x%04x",
-> -	       (uint16_t)cu_type, senseid->cu_type);
-> +	retval = senseid->cu_type == cu_type;
->  
->  error:
->  	free_io_mem(ccw, sizeof(*ccw));
->  error_ccw:
->  	free_io_mem(senseid, sizeof(*senseid));
-> -error_senseid:
-> -	unregister_io_int_func(css_irq_io);
-> +	return retval;
-> +}
 > +
-> +static void test_sense(void)
-> +{
-> +	report(do_test_sense(), "Got CU type expected");
->  }
->  
->  static void css_init(void)
-> @@ -146,8 +142,17 @@ static void css_init(void)
->  	int ret;
->  
->  	ret = get_chsc_scsc();
-> -	if (!ret)
-> -		report(1, " ");
-> +	if (ret)
-> +		return;
-
-Shouldn't you report a failure here?
-
-> +
-> +	ret = register_io_int_func(css_irq_io);
-> +	if (ret) {
-> +		report(0, "Could not register IRQ handler");
-> +		return;
+> +	if (retry_count++ < MAX_ENABLE_RETRIES) {
+> +		mdelay(10); /* the hardware was not ready, give it some time */
+> +		goto retry;
 > +	}
-> +	lowcore_ptr->io_int_param = 0;
 > +
-> +	report(1, "CSS initialized");
->  }
+> +	report_info("msch: modifying sch %08x failed after %d retries. pmcw flags: %04x",
+> +		    schid, retry_count, pmcw->flags);
+> +	return -1;
+> +}
+> +
+>  static struct irb irb;
 >  
->  static struct {
+>  void css_irq_io(void)
+
+(...)
 
