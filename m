@@ -2,84 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9159C30EF43
-	for <lists+linux-s390@lfdr.de>; Thu,  4 Feb 2021 10:12:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B17A830EFDF
+	for <lists+linux-s390@lfdr.de>; Thu,  4 Feb 2021 10:44:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234755AbhBDJKE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 4 Feb 2021 04:10:04 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:2823 "EHLO
-        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234551AbhBDJFi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 4 Feb 2021 04:05:38 -0500
-Received: from dggeme712-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4DWXd15Zt2z13qPK;
-        Thu,  4 Feb 2021 17:02:45 +0800 (CST)
-Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
- dggeme712-chm.china.huawei.com (10.1.199.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2106.2; Thu, 4 Feb 2021 17:04:53 +0800
-Received: from dggeme760-chm.china.huawei.com ([10.6.80.70]) by
- dggeme760-chm.china.huawei.com ([10.6.80.70]) with mapi id 15.01.2106.006;
- Thu, 4 Feb 2021 17:04:54 +0800
-From:   zhengyongjun <zhengyongjun3@huawei.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "frankja@linux.ibm.com" <frankja@linux.ibm.com>,
-        "david@redhat.com" <david@redhat.com>,
-        "imbrenda@linux.ibm.com" <imbrenda@linux.ibm.com>,
-        "hca@linux.ibm.com" <hca@linux.ibm.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0ggLW5leHRdIEtWTTogczM5MDogUmV0dXJuIHRoZSBj?=
- =?utf-8?Q?orrect_errno_code?=
-Thread-Topic: [PATCH -next] KVM: s390: Return the correct errno code
-Thread-Index: AQHW+sxe+9VtHsKHv0ikz4RcsRV9SqpHJNSAgAACygCAAIxGMA==
-Date:   Thu, 4 Feb 2021 09:04:53 +0000
-Message-ID: <e6926214bd4048ec93f9ad13f83205d3@huawei.com>
-References: <20210204080523.18943-1-zhengyongjun3@huawei.com>
- <20210204093227.3f088c8a.cohuck@redhat.com>
- <267785c5-527d-3294-cc7e-670d49d87082@de.ibm.com>
-In-Reply-To: <267785c5-527d-3294-cc7e-670d49d87082@de.ibm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.178.249]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        id S234830AbhBDJol (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 4 Feb 2021 04:44:41 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3880 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233668AbhBDJol (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 4 Feb 2021 04:44:41 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 1149ZJJo169754;
+        Thu, 4 Feb 2021 04:44:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=CQWMxx1hmeEzZhBunnvHM8lC+epV/QzR0n+V3uXocnA=;
+ b=K0XRuCMP+ibOb/RUkSXGLHh+ug1O/wObOV/S8gy3RFl0R+atX69AnKWc+EzgDa0lz0HH
+ V2Lj5XtfLjgvGGa5qrXmh9Mg4BPZpmHqFLdwHQs08zt+hHywjRN9H9N10gGHs4EPG9uP
+ /SmnyplZB7DtFPmVxY6QNqoYNBhwJFXrKezYajoNRlP8wuTtFGOdNRxrJkY0Shtfn/ae
+ zxjt4GqxftBOCtPTF7UAmlM6J46eeXm2AqXif7Sgbnw5chTv2wLTDXSeGVChRAHKKOtI
+ RhvzmffBWLChHlFts39TAuKRSMJZjh9sfcD5ky797zjb3D7RKUdBo3nCP4TdLyVGPqBI RA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36gddfj80k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Feb 2021 04:43:59 -0500
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 1149b0rG178779;
+        Thu, 4 Feb 2021 04:43:59 -0500
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36gddfj7yq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Feb 2021 04:43:59 -0500
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 1149hvHC001971;
+        Thu, 4 Feb 2021 09:43:57 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04fra.de.ibm.com with ESMTP id 36g8ker4ru-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 04 Feb 2021 09:43:56 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1149hjDR28180982
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 4 Feb 2021 09:43:45 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0EDB242045;
+        Thu,  4 Feb 2021 09:43:54 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B74E242047;
+        Thu,  4 Feb 2021 09:43:53 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  4 Feb 2021 09:43:53 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>
+Subject: [RFC v2 0/1] s390/pci: expose UID checking state in sysfs
+Date:   Thu,  4 Feb 2021 10:43:52 +0100
+Message-Id: <20210204094353.63819-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
+ definitions=2021-02-04_05:2021-02-04,2021-02-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 bulkscore=0 malwarescore=0 adultscore=0 impostorscore=0
+ phishscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102040060
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-VGhhbmtzIGZvciB5b3VyIGFkdmljZSwgSSB3aWxsIGRvIHRoaXMgYmV0dGVyIGxhdGVyIDopDQoN
-Ci0tLS0t6YKu5Lu25Y6f5Lu2LS0tLS0NCuWPkeS7tuS6ujogQ2hyaXN0aWFuIEJvcm50cmFlZ2Vy
-IFttYWlsdG86Ym9ybnRyYWVnZXJAZGUuaWJtLmNvbV0gDQrlj5HpgIHml7bpl7Q6IDIwMjHlubQy
-5pyINOaXpSAxNjo0Mg0K5pS25Lu25Lq6OiBDb3JuZWxpYSBIdWNrIDxjb2h1Y2tAcmVkaGF0LmNv
-bT47IHpoZW5neW9uZ2p1biA8emhlbmd5b25nanVuM0BodWF3ZWkuY29tPg0K5oqE6YCBOiBrdm1A
-dmdlci5rZXJuZWwub3JnOyBsaW51eC1zMzkwQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgZnJhbmtqYUBsaW51eC5pYm0uY29tOyBkYXZpZEByZWRoYXQuY29t
-OyBpbWJyZW5kYUBsaW51eC5pYm0uY29tOyBoY2FAbGludXguaWJtLmNvbTsgZ29yQGxpbnV4Lmli
-bS5jb20NCuS4u+mimDogUmU6IFtQQVRDSCAtbmV4dF0gS1ZNOiBzMzkwOiBSZXR1cm4gdGhlIGNv
-cnJlY3QgZXJybm8gY29kZQ0KDQpPbiAwNC4wMi4yMSAwOTozMiwgQ29ybmVsaWEgSHVjayB3cm90
-ZToNCj4gT24gVGh1LCA0IEZlYiAyMDIxIDE2OjA1OjIzICswODAwDQo+IFpoZW5nIFlvbmdqdW4g
-PHpoZW5neW9uZ2p1bjNAaHVhd2VpLmNvbT4gd3JvdGU6DQo+IA0KPj4gV2hlbiB2YWxsb2MgZmFp
-bGVkLCBzaG91bGQgcmV0dXJuIEVOT01FTSByYXRoZXIgdGhhbiBFTk9CVUYuDQo+Pg0KPj4gU2ln
-bmVkLW9mZi1ieTogWmhlbmcgWW9uZ2p1biA8emhlbmd5b25nanVuM0BodWF3ZWkuY29tPg0KPj4g
-LS0tDQo+PiAgYXJjaC9zMzkwL2t2bS9pbnRlcnJ1cHQuYyB8IDIgKy0NCj4+ICAxIGZpbGUgY2hh
-bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEv
-YXJjaC9zMzkwL2t2bS9pbnRlcnJ1cHQuYyBiL2FyY2gvczM5MC9rdm0vaW50ZXJydXB0LmMgDQo+
-PiBpbmRleCAyZjE3NzI5OGM2NjMuLjZiN2FjYzI3Y2ZhMiAxMDA2NDQNCj4+IC0tLSBhL2FyY2gv
-czM5MC9rdm0vaW50ZXJydXB0LmMNCj4+ICsrKyBiL2FyY2gvczM5MC9rdm0vaW50ZXJydXB0LmMN
-Cj4+IEBAIC0yMjUyLDcgKzIyNTIsNyBAQCBzdGF0aWMgaW50IGdldF9hbGxfZmxvYXRpbmdfaXJx
-cyhzdHJ1Y3Qga3ZtICprdm0sIHU4IF9fdXNlciAqdXNyYnVmLCB1NjQgbGVuKQ0KPj4gIAkgKi8N
-Cj4+ICAJYnVmID0gdnphbGxvYyhsZW4pOw0KPj4gIAlpZiAoIWJ1ZikNCj4+IC0JCXJldHVybiAt
-RU5PQlVGUzsNCj4+ICsJCXJldHVybiAtRU5PTUVNOw0KPj4gIA0KPj4gIAltYXhfaXJxcyA9IGxl
-biAvIHNpemVvZihzdHJ1Y3Qga3ZtX3MzOTBfaXJxKTsNCj4+ICANCj4gDQo+IFRoaXMgYnJlYWtz
-IGEgdXNlciBzcGFjZSBpbnRlcmZhY2UgKHNlZSB0aGUgY29tbWVudCByaWdodCBhYm92ZSB0aGUg
-DQo+IHZ6YWxsb2MpLg0KDQoNClJpZ2h0LiBQbGVhc2UgZG8gbm90IHNlbmQgKGdlbmVyYXRlZD8p
-IHBhdGNoZXMgd2l0aG91dCBsb29raW5nIGF0IHRoZSBjb2RlIHRoYXQgeW91IGFyZSBwYXRjaGlu
-Zy4NCg==
+Hi Bjorn,
+
+this is a follow-up to my previous RFC of exposing our s390 specific UID
+Checking attribute at /sys/bus/pci/zpci/unique_uids. As suggested by Greg
+(thanks!) this version changes things to use named attributes directly without
+resorting to any raw kobject handling, as a result the code moves to
+drivers/pci/pci-sysfs.c with a CONFIG_S390 ifdef. Also I've changed the wording
+to be more restrictive about what this attribute means. Instead of directly
+calling out its current use to determine if UIDs are used as PCI domains it now
+only explicitly claims that /sys/bus/pci/devices/<dev>/uid is guaranteed to be
+a unique user-defined (in the zVM/KVM/LPAR configuration not Linux user-space)
+identifier for the PCI function.
+
+We've had some more internal discussion on this and are also considering to
+instead put this attribute at /sys/firmware/zpci/unique_uids but as far as
+I can see this strictly requires the use of raw kobject handling and loses us
+the direct relation with PCI so I wanted to give this just one more shot and
+get your opinion on it.
+
+Thanks,
+Niklas
+
+
+Niklas Schnelle (1):
+  PCI: Add s390 specific UID uniqueness attribute
+
+ Documentation/ABI/testing/sysfs-bus-pci |  9 +++++++++
+ drivers/pci/pci-sysfs.c                 | 21 +++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+
+-- 
+2.17.1
+
