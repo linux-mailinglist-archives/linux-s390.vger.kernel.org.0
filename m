@@ -2,270 +2,229 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 95A1730F916
-	for <lists+linux-s390@lfdr.de>; Thu,  4 Feb 2021 18:07:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9588330FC9C
+	for <lists+linux-s390@lfdr.de>; Thu,  4 Feb 2021 20:27:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237747AbhBDRGZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 4 Feb 2021 12:06:25 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23618 "EHLO
+        id S238884AbhBDSSO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 4 Feb 2021 13:18:14 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20660 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237582AbhBDRGM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 4 Feb 2021 12:06:12 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 114H2Rhe037926;
-        Thu, 4 Feb 2021 12:05:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc :
- references : subject : message-id : date : mime-version : in-reply-to :
+        by vger.kernel.org with ESMTP id S238197AbhBDRKu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 4 Feb 2021 12:10:50 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 114H4m5l131531;
+        Thu, 4 Feb 2021 12:10:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=to : cc : references :
+ from : subject : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=aTVVl3DuZwN67f9uTF/DPSBJWx3naC6MYU+g9NfDftM=;
- b=IUOI6bITqVCUvnzN3HFiAe3unjrAtomTwYDkfRSdtUmH4EF3HYXnPw2RIGBACuDmz+Xx
- 3OCf7oxBX+kCz6kyL7Ko5dT805EJAlbNs9qA559j7fqys6BhiBSrO7JAp2FSTViIIWxo
- Adb/ngr4XN+Rj/4Vjxttkn89iezPhqb7Muo21yjYgKEVxlrtDhopIc9bW0mrqTAwpZ6E
- DJC3le+IBXSIhpiZmxllrF5EY1N1cQDGMoLaWBFbZzCSOW6bJQPJDAJLsPjlEbJMjJE0
- VUUkZ8s1Q3fliGa8L/YeG0Vz85aHtUtFq0x2yGvoXg+PAKLM4LPL2YRr7u508zjnekaJ Yw== 
+ bh=A0AOv2ksEzzrI7TSnWxIE4cIeqSbOgMsBaQGBlzBN5I=;
+ b=R9xyUdoTN+laeMG9HK9FHxBsIfgCM7FH5ZJre2kLFWNNeTZIjb1MhKsbwwWhwT2SNMyr
+ D74xH6YXE8hxj9nsMsE/eikL+r3EM4HmBcPvLmEryNLFheV+SOEsKd4/1ukfI3LAGUlr
+ hjwXGhsOonkrZCTTZHmM9rwnO7a6EfwHceo9+Dm8VJoAp4MG41B5NRGYZD9zKnHw2yOI
+ EuJHl6Bk6yUkqP/0MQR+J+mWabHjS5EaL6T/bVPF/lblsLaFrn/f8O6s0S2GnlLVlQy8
+ 3QHeelmeRjKruI7yjUD4HAxqdvtHpuxHu0fqttzbSFxRuyrsN3PcS5j0pLplLmsdPHUm pA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36gmx5g9bc-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36gm2cjhkx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Feb 2021 12:05:31 -0500
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 114H3Gsc044648;
-        Thu, 4 Feb 2021 12:05:28 -0500
+        Thu, 04 Feb 2021 12:10:09 -0500
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 114H5u7R138152;
+        Thu, 4 Feb 2021 12:10:08 -0500
 Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36gmx5g8tu-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36gm2cjhje-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Feb 2021 12:05:28 -0500
+        Thu, 04 Feb 2021 12:10:08 -0500
 Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 114H2GfH015762;
-        Thu, 4 Feb 2021 17:05:19 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 36fwcw15wa-1
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 114H8Ras019661;
+        Thu, 4 Feb 2021 17:10:06 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 36fwcw160p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Feb 2021 17:05:19 +0000
+        Thu, 04 Feb 2021 17:10:06 +0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 114H57D835848636
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 114HA22c37290310
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Feb 2021 17:05:07 GMT
+        Thu, 4 Feb 2021 17:10:02 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 61C1DAE053;
-        Thu,  4 Feb 2021 17:05:16 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 75A2BAE05A;
+        Thu,  4 Feb 2021 17:10:02 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E9F55AE04D;
-        Thu,  4 Feb 2021 17:05:15 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0ED7EAE057;
+        Thu,  4 Feb 2021 17:10:02 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.145.164.237])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  4 Feb 2021 17:05:15 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
+        Thu,  4 Feb 2021 17:10:01 +0000 (GMT)
 To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
         linux-kernel@vger.kernel.org
 Cc:     borntraeger@de.ibm.com, david@redhat.com, kvm@vger.kernel.org,
         linux-s390@vger.kernel.org, stable@vger.kernel.org
 References: <20210202180028.876888-1-imbrenda@linux.ibm.com>
- <20210202180028.876888-2-imbrenda@linux.ibm.com>
- <16522b25-a590-fbc4-0eb6-3537d8032577@linux.ibm.com>
-Subject: Re: [PATCH v2 1/2] s390/kvm: extend kvm_s390_shadow_fault to return
- entry pointer
-Message-ID: <264deb2a-a86e-79e3-9db1-ecfe265a6a10@linux.ibm.com>
-Date:   Thu, 4 Feb 2021 18:05:15 +0100
+ <20210202180028.876888-3-imbrenda@linux.ibm.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [PATCH v2 2/2] s390/kvm: VSIE: correctly handle MVPG when in VSIE
+Message-ID: <2e409ab1-1865-d59a-dc89-2d30f2657a38@linux.ibm.com>
+Date:   Thu, 4 Feb 2021 18:10:01 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <16522b25-a590-fbc4-0eb6-3537d8032577@linux.ibm.com>
+In-Reply-To: <20210202180028.876888-3-imbrenda@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
- definitions=2021-02-04_08:2021-02-04,2021-02-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 bulkscore=0 clxscore=1015 impostorscore=0 adultscore=0
- lowpriorityscore=0 phishscore=0 mlxscore=0 spamscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102040101
+ definitions=2021-02-04_09:2021-02-04,2021-02-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ clxscore=1015 phishscore=0 lowpriorityscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 malwarescore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102040104
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2/4/21 5:34 PM, Janosch Frank wrote:
-> On 2/2/21 7:00 PM, Claudio Imbrenda wrote:
->> Extend kvm_s390_shadow_fault to return the pointer to the valid leaf
->> DAT table entry, or to the invalid entry.
->>
->> Also return some flags in the lower bits of the address:
->> DAT_PROT: indicates that DAT protection applies because of the
->>           protection bit in the segment (or, if EDAT, region) tables
->> NOT_PTE: indicates that the address of the DAT table entry returned
->>          does not refer to a PTE, but to a segment or region table.
->>
->> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
->> Cc: stable@vger.kernel.org
->> ---
->>  arch/s390/kvm/gaccess.c | 26 ++++++++++++++++++++++----
->>  arch/s390/kvm/gaccess.h |  5 ++++-
->>  arch/s390/kvm/vsie.c    |  8 ++++----
->>  3 files changed, 30 insertions(+), 9 deletions(-)
->>
->> diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
->> index 6d6b57059493..2d7bcbfb185e 100644
->> --- a/arch/s390/kvm/gaccess.c
->> +++ b/arch/s390/kvm/gaccess.c
->> @@ -1034,6 +1034,7 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
->>  			rfte.val = ptr;
->>  			goto shadow_r2t;
->>  		}
->> +		*pgt = ptr + vaddr.rfx * 8;
+On 2/2/21 7:00 PM, Claudio Imbrenda wrote:
+> Correctly handle the MVPG instruction when issued by a VSIE guest.
 > 
-> So pgt either is a table entry if rc > 0 or a pointer to the first pte
-> on rc == 0 after this change?
-> 
-> Hrm, if it is really based on RCs than I might be able to come to terms
-> with having two things in a ptr with the name pgt. But it needs a
-> comment change.
-> 
->>  		rc = gmap_read_table(parent, ptr + vaddr.rfx * 8, &rfte.val);
->>  		if (rc)
->>  			return rc;
->> @@ -1060,6 +1061,7 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
->>  			rste.val = ptr;
->>  			goto shadow_r3t;
->>  		}
->> +		*pgt = ptr + vaddr.rsx * 8;
->>  		rc = gmap_read_table(parent, ptr + vaddr.rsx * 8, &rste.val);
->>  		if (rc)
->>  			return rc;
->> @@ -1087,6 +1089,7 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
->>  			rtte.val = ptr;
->>  			goto shadow_sgt;
->>  		}
->> +		*pgt = ptr + vaddr.rtx * 8;
->>  		rc = gmap_read_table(parent, ptr + vaddr.rtx * 8, &rtte.val);
->>  		if (rc)
->>  			return rc;
->> @@ -1123,6 +1126,7 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
->>  			ste.val = ptr;
->>  			goto shadow_pgt;
->>  		}
->> +		*pgt = ptr + vaddr.sx * 8;
->>  		rc = gmap_read_table(parent, ptr + vaddr.sx * 8, &ste.val);
->>  		if (rc)
->>  			return rc;
->> @@ -1157,6 +1161,8 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
->>   * @vcpu: virtual cpu
->>   * @sg: pointer to the shadow guest address space structure
->>   * @saddr: faulting address in the shadow gmap
->> + * @pteptr: will contain the address of the faulting DAT table entry, or of
->> + *          the valid leaf, plus some flags
-> 
-> pteptr is not the right name if it can be two things
+> Fixes: a3508fbe9dc6d ("KVM: s390: vsie: initial support for nested virtualization")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 
-You use it for pei only, right?
+So far the patch looks ok to me and way better to understand than v1,
+good job
 
+> ---
+>  arch/s390/kvm/vsie.c | 94 +++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 89 insertions(+), 5 deletions(-)
 > 
->>   *
->>   * Returns: - 0 if the shadow fault was successfully resolved
->>   *	    - > 0 (pgm exception code) on exceptions while faulting
->> @@ -1165,11 +1171,11 @@ static int kvm_s390_shadow_tables(struct gmap *sg, unsigned long saddr,
->>   *	    - -ENOMEM if out of memory
->>   */
->>  int kvm_s390_shadow_fault(struct kvm_vcpu *vcpu, struct gmap *sg,
->> -			  unsigned long saddr)
->> +			  unsigned long saddr, unsigned long *pteptr)
->>  {
->>  	union vaddress vaddr;
->>  	union page_table_entry pte;
->> -	unsigned long pgt;
->> +	unsigned long pgt = 0;
->>  	int dat_protection, fake;
->>  	int rc;
->>  
->> @@ -1191,8 +1197,20 @@ int kvm_s390_shadow_fault(struct kvm_vcpu *vcpu, struct gmap *sg,
->>  		pte.val = pgt + vaddr.px * PAGE_SIZE;
->>  		goto shadow_page;
->>  	}
->> -	if (!rc)
->> -		rc = gmap_read_table(sg->parent, pgt + vaddr.px * 8, &pte.val);
->> +
->> +	switch (rc) {
->> +	case PGM_SEGMENT_TRANSLATION:
->> +	case PGM_REGION_THIRD_TRANS:
->> +	case PGM_REGION_SECOND_TRANS:
->> +	case PGM_REGION_FIRST_TRANS:
->> +		pgt |= NOT_PTE;
-> 
-> GACC_TRANSL_ENTRY_INV ?
-> 
->> +		break;
->> +	case 0:
->> +		pgt += vaddr.px * 8;
->> +		rc = gmap_read_table(sg->parent, pgt, &pte.val);
->> +	}
->> +	if (*pteptr)
->> +		*pteptr = pgt | dat_protection * DAT_PROT;
->>  	if (!rc && pte.i)
->>  		rc = PGM_PAGE_TRANSLATION;
->>  	if (!rc && pte.z)
->> diff --git a/arch/s390/kvm/gaccess.h b/arch/s390/kvm/gaccess.h
->> index f4c51756c462..66a6e2cec97a 100644
->> --- a/arch/s390/kvm/gaccess.h
->> +++ b/arch/s390/kvm/gaccess.h
->> @@ -359,7 +359,10 @@ void ipte_unlock(struct kvm_vcpu *vcpu);
->>  int ipte_lock_held(struct kvm_vcpu *vcpu);
->>  int kvm_s390_check_low_addr_prot_real(struct kvm_vcpu *vcpu, unsigned long gra);
->>  
->> +#define DAT_PROT 2
-> 
-> GACC_TRANSL_ENTRY_PROT
+> diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
+> index 7db022141db3..2db49749e27b 100644
+> --- a/arch/s390/kvm/vsie.c
+> +++ b/arch/s390/kvm/vsie.c
+> @@ -416,11 +416,6 @@ static void unshadow_scb(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
+>  		memcpy((void *)((u64)scb_o + 0xc0),
+>  		       (void *)((u64)scb_s + 0xc0), 0xf0 - 0xc0);
 
-Ok after a second pass that's not what's going on here.
-Those basically directly correspond to the MVPG PEI indication bits, right?
+Magic offsets being magic
+Another item for my todo list.
 
-Do we also need to consider bit 63?
+>  		break;
+> -	case ICPT_PARTEXEC:
+> -		/* MVPG only */
+> -		memcpy((void *)((u64)scb_o + 0xc0),
+> -		       (void *)((u64)scb_s + 0xc0), 0xd0 - 0xc0);
+> -		break;
+>  	}
+>  
+>  	if (scb_s->ihcpu != 0xffffU)
+> @@ -982,6 +977,91 @@ static int handle_stfle(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
+>  	return 0;
+>  }
+>  
+> +static u64 vsie_get_register(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page, u8 reg)
+> +{
+> +	reg &= 0xf;
+> +	switch (reg) {
+> +	case 15:
+> +		return vsie_page->scb_s.gg15;
+> +	case 14:
+> +		return vsie_page->scb_s.gg14;
+> +	default:
+> +		return vcpu->run->s.regs.gprs[reg];
+> +	}
+> +}
+> +
+> +static int vsie_handle_mvpg(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
+> +{
+> +	struct kvm_s390_sie_block *scb_s = &vsie_page->scb_s;
+> +	unsigned long pei1, pei2, src, dest, mask = PAGE_MASK;
+> +	u64 *pei_block = &vsie_page->scb_o->mcic;
+> +	int edat, rc1, rc2;
 
-> 
->> +#define NOT_PTE 4
->> +
->>  int kvm_s390_shadow_fault(struct kvm_vcpu *vcpu, struct gmap *shadow,
->> -			  unsigned long saddr);
->> +			  unsigned long saddr, unsigned long *pteptr);
->>  
->>  #endif /* __KVM_S390_GACCESS_H */
->> diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
->> index c5d0a58b2c29..7db022141db3 100644
->> --- a/arch/s390/kvm/vsie.c
->> +++ b/arch/s390/kvm/vsie.c
->> @@ -619,10 +619,10 @@ static int map_prefix(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
->>  	/* with mso/msl, the prefix lies at offset *mso* */
->>  	prefix += scb_s->mso;
->>  
->> -	rc = kvm_s390_shadow_fault(vcpu, vsie_page->gmap, prefix);
->> +	rc = kvm_s390_shadow_fault(vcpu, vsie_page->gmap, prefix, NULL);
->>  	if (!rc && (scb_s->ecb & ECB_TE))
->>  		rc = kvm_s390_shadow_fault(vcpu, vsie_page->gmap,
->> -					   prefix + PAGE_SIZE);
->> +					   prefix + PAGE_SIZE, NULL);
->>  	/*
->>  	 * We don't have to mprotect, we will be called for all unshadows.
->>  	 * SIE will detect if protection applies and trigger a validity.
->> @@ -913,7 +913,7 @@ static int handle_fault(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
->>  				    current->thread.gmap_addr, 1);
->>  
->>  	rc = kvm_s390_shadow_fault(vcpu, vsie_page->gmap,
->> -				   current->thread.gmap_addr);
->> +				   current->thread.gmap_addr, NULL);
->>  	if (rc > 0) {
->>  		rc = inject_fault(vcpu, rc,
->>  				  current->thread.gmap_addr,
->> @@ -935,7 +935,7 @@ static void handle_last_fault(struct kvm_vcpu *vcpu,
->>  {
->>  	if (vsie_page->fault_addr)
->>  		kvm_s390_shadow_fault(vcpu, vsie_page->gmap,
->> -				      vsie_page->fault_addr);
->> +				      vsie_page->fault_addr, NULL);
-> 
-> Ok
-> 
->>  	vsie_page->fault_addr = 0;
->>  }
->>  
->>
+Can use a src/dst prefix or suffix please?
+1/2 is confusing.
+
+> +	union ctlreg0 cr0;
+> +
+> +	cr0.val = vcpu->arch.sie_block->gcr[0];
+> +	edat = cr0.edat && test_kvm_facility(vcpu->kvm, 8);
+> +	if (psw_bits(scb_s->gpsw).eaba == PSW_BITS_AMODE_24BIT)
+> +		mask = 0xfff000;
+> +	else if (psw_bits(scb_s->gpsw).eaba == PSW_BITS_AMODE_31BIT)
+> +		mask = 0x7ffff000;
+> +
+> +	dest = vsie_get_register(vcpu, vsie_page, scb_s->ipb >> 16) & mask;
+> +	src = vsie_get_register(vcpu, vsie_page, scb_s->ipb >> 20) & mask;
+> +
+> +	rc1 = kvm_s390_shadow_fault(vcpu, vsie_page->gmap, dest, &pei1);
+> +	rc2 = kvm_s390_shadow_fault(vcpu, vsie_page->gmap, src, &pei2);
+> +	/*
+> +	 * Either everything went well, or something non-critical went wrong
+> +	 * e.g. beause of a race. In either case, simply retry.
+> +	 */
+> +	if (rc1 == -EAGAIN || rc2 == -EAGAIN || (!rc1 && !rc2)) {
+> +		retry_vsie_icpt(vsie_page);
+> +		return -EAGAIN;
+> +	}
+> +	/* Something more serious went wrong, propagate the error */
+> +	if (rc1 < 0)
+> +		return rc1;
+> +	if (rc2 < 0)
+> +		return rc2;
+> +
+> +	/* The only possible suppressing exception: just deliver it */
+> +	if (rc1 == PGM_TRANSLATION_SPEC || rc2 == PGM_TRANSLATION_SPEC) {
+> +		clear_vsie_icpt(vsie_page);
+> +		rc1 = kvm_s390_inject_program_int(vcpu, PGM_TRANSLATION_SPEC);
+> +		WARN_ON_ONCE(rc1);
+> +		return 1;
+> +	}
+> +
+> +	/*
+> +	 * Forward the PEI intercept to the guest if it was a page fault, or
+> +	 * also for segment and region table faults if EDAT applies.
+> +	 */
+> +	if (edat) {
+> +		rc1 = rc1 == PGM_ASCE_TYPE ? rc1 : 0;
+> +		rc2 = rc2 == PGM_ASCE_TYPE ? rc2 : 0;
+> +	}
+> +	if ((!rc1 || rc1 == PGM_PAGE_TRANSLATION) && (!rc2 || rc2 == PGM_PAGE_TRANSLATION)) {
+> +		pei_block[0] = pei1;
+> +		pei_block[1] = pei2;
+> +		return 1;
+> +	}
+> +
+> +	retry_vsie_icpt(vsie_page);
+> +
+> +	/*
+> +	 * The host has edat, and the guest does not, or it was an ASCE type
+> +	 * exception. The host needs to inject the appropriate DAT interrupts
+> +	 * into the guest.
+> +	 */
+> +	if (rc1)
+> +		return inject_fault(vcpu, rc1, dest, 1);
+> +	if (rc2)> +		return inject_fault(vcpu, rc2, src, 0);
+> +
+> +	/* This should never be reached */
+
+BUG()?
+
+> +	return 0;
+> +}
+> +
+>  /*
+>   * Run the vsie on a shadow scb and a shadow gmap, without any further
+>   * sanity checks, handling SIE faults.
+> @@ -1068,6 +1148,10 @@ static int do_vsie_run(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
+>  		if ((scb_s->ipa & 0xf000) != 0xf000)
+>  			scb_s->ipa += 0x1000;
+>  		break;
+> +	case ICPT_PARTEXEC:
+> +		if (scb_s->ipa == 0xb254)
+> +			rc = vsie_handle_mvpg(vcpu, vsie_page);
+> +		break;
+>  	}
+>  	return rc;
+>  }
 > 
 
