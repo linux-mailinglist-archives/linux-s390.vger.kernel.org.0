@@ -2,79 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7B8C315077
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Feb 2021 14:40:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 479C63150DF
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Feb 2021 14:53:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230285AbhBINj3 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Tue, 9 Feb 2021 08:39:29 -0500
-Received: from spam.auroraoh.com ([24.56.89.101]:48370 "EHLO
-        barracuda.auroraoh.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S230156AbhBINj2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Feb 2021 08:39:28 -0500
-X-Greylist: delayed 1082 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Feb 2021 08:39:27 EST
-X-ASG-Debug-ID: 1612876815-112c0d6a7999070001-YNCQAd
-Received: from COASRV-MAIL2.auroraoh.loc (coasrv-mail2.auroraoh.loc [10.3.1.15]) by barracuda.auroraoh.com with ESMTP id zokGzegzlSBvMO0K; Tue, 09 Feb 2021 08:20:15 -0500 (EST)
-X-Barracuda-Envelope-From: JanuskaD@auroraoh.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.3.1.15
-Received: from [172.20.10.5] (197.210.29.8) by COASRV-MAIL2.auroraoh.loc
- (10.3.1.15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 9 Feb 2021
- 02:47:50 -0500
-Content-Type: text/plain; charset="iso-8859-1"
-X-Barracuda-RBL-Trusted-Forwarder: 172.20.10.5
+        id S231636AbhBINwv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Feb 2021 08:52:51 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58560 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S231751AbhBINvb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Feb 2021 08:51:31 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 119DbjF8080507;
+        Tue, 9 Feb 2021 08:50:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=fWNH3/wURg9cls1XBO4/gYwHrbONTIGKlow+igCCR38=;
+ b=tPu9uaCs7iGCATiqQjqISv8XoeQxKW2PZwKAmv5cEwWhREv1dzjGNP82zbp0rZG4/W6R
+ 7fY6T281OubFh005715MttwJXercTZYCi2ywQbHGHfvnDBWs/byeiuQ597Qgy/n8DRYQ
+ 4Y4jdMdf040fKR0fD6fd6HNq4d/uCeBmBQlV2dNOHiFpcvud5L/avOLQ3O7vLBdIVWR3
+ DNTIWWGZE2Vw+R4zggw32vXEvZwIMCc4DhTP8lTi5Z7bJ46dhCUz+Lvy4KykBBm7fW3T
+ 6o8FaWNWX9I6TFud3D6MaTChysQ0qIpxgUr7IVkzW6iX05HGZnlUp8MLJu182S6KctW7 KA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 36ku3211bh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Feb 2021 08:50:46 -0500
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 119DaQOj075620;
+        Tue, 9 Feb 2021 08:50:46 -0500
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 36ku3211ap-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Feb 2021 08:50:46 -0500
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 1198Mn30025775;
+        Tue, 9 Feb 2021 13:50:44 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06fra.de.ibm.com with ESMTP id 36hjch1r7u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Feb 2021 13:50:44 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 119Dofec14483748
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Feb 2021 13:50:41 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2DF7DA4040;
+        Tue,  9 Feb 2021 13:50:41 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7936DA4051;
+        Tue,  9 Feb 2021 13:50:40 +0000 (GMT)
+Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  9 Feb 2021 13:50:40 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
+        pmorel@linux.ibm.com, imbrenda@linux.ibm.com
+Subject: [kvm-unit-tests PATCH 0/8] s390x: Cleanup exception register save/restore and implement backtrace
+Date:   Tue,  9 Feb 2021 08:49:17 -0500
+Message-Id: <20210209134925.22248-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: We are a registered Private Loan Investment Company in the United Kingdom,
- we also registered with the Turkish British Chamber of Commerce and Industry
- (TBCCI) we have operations in Europe and Asia.
-To:     Recipients <januskad@auroraoh.com>
-X-ASG-Orig-Subj: We are a registered Private Loan Investment Company in the United Kingdom,
- we also registered with the Turkish British Chamber of Commerce and Industry
- (TBCCI) we have operations in Europe and Asia.
-From:   <januskad@auroraoh.com>
-Date:   Tue, 9 Feb 2021 15:47:04 +0800
-Reply-To: <cfolimiited@gmail.com>
-X-Priority: 1 (High)
-X-Antivirus: Avast (VPS 210207-2, 02/07/2021), Outbound message
-X-Antivirus-Status: Clean
-Message-ID: <3ae8bf58-09dc-4259-ae2f-621d27a72c32@COASRV-MAIL2.auroraoh.loc>
-X-Originating-IP: [197.210.29.8]
-X-ClientProxiedBy: COASRV-MAIL3.auroraoh.loc (10.3.1.13) To
- COASRV-MAIL2.auroraoh.loc (10.3.1.15)
-X-Barracuda-Connect: coasrv-mail2.auroraoh.loc[10.3.1.15]
-X-Barracuda-Start-Time: 1612876815
-X-Barracuda-URL: https://10.3.1.12:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at auroraoh.com
-X-Barracuda-Scan-Msg-Size: 755
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Spam-Score: 1.61
-X-Barracuda-Spam-Status: No, SCORE=1.61 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=5.0 tests=BSF_SC0_SA609_NRN, BSF_SC0_SA912_RP_FR, BSF_SC0_SA_TO_FROM_ADDR_MATCH, NO_REAL_NAME
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.87861
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
-        0.00 NO_REAL_NAME           From: does not include a real name
-        0.01 BSF_SC0_SA912_RP_FR    Custom Rule BSF_SC0_SA912_RP_FR
-        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH Sender Address Matches Recipient
-                                   Address
-        1.10 BSF_SC0_SA609_NRN      Custom Rule SA609_NRN
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
+ definitions=2021-02-09_03:2021-02-09,2021-02-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 suspectscore=0 spamscore=0 priorityscore=1501 mlxscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 adultscore=0 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102090067
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-We are seeking for beneficiaries who source for fund to expand/relocating their business interest abroad. We are ready to fund projects outside Turkey and United Kingdom in the form of Soft Loan. We grant loans to both corporate and private entities at a low interest rate of 2% R.O.I per annul.
+Having two sets of macros for saving and restoring registers on
+exceptions doesn't seem optimal to me. Therefore this patch set
+removes the old macros that use the lowcore as storage in favor of the
+stack using ones. At the same time we move over to generated offsets
+instead of subtracting from the stack piece by piece. Changes to the
+stack struct are easier that way.
 
-We like to grant loan in the following sectors: oil/Gas, banking, real estate, stock speculation and mining, transportation, health sector and tobacco, Communication Services, Agriculture Forestry & Fishing, thus any sector. The terms are very flexible and interesting.
+Additionally let's add backtrace support and print the GRs on
+exception so we get a bit more information when something goes wrong.
 
-Please contact us for more details;
+Janosch Frank (8):
+  s390x: Fix fpc store address in RESTORE_REGS_STACK
+  s390x: Fully commit to stack save area for exceptions
+  RFC: s390x: Define STACK_FRAME_INT_SIZE macro
+  s390x: Introduce and use CALL_INT_HANDLER macro
+  s390x: Provide preliminary backtrace support
+  s390x: Print more information on program exceptions
+  s390x: Move diag308_load_reset to stack saving
+  s390x: Remove SAVE/RESTORE_stack
 
-
-Kind regards,
-
-Paul McCann
+ lib/s390x/asm-offsets.c   | 15 +++++--
+ lib/s390x/asm/arch_def.h  | 29 ++++++++++---
+ lib/s390x/asm/interrupt.h |  4 +-
+ lib/s390x/interrupt.c     | 43 +++++++++++++++---
+ lib/s390x/stack.c         | 20 ++++++---
+ s390x/Makefile            |  1 +
+ s390x/cpu.S               |  6 ++-
+ s390x/cstart64.S          | 25 +++--------
+ s390x/macros.S            | 91 +++++++++++++++++++--------------------
+ 9 files changed, 140 insertions(+), 94 deletions(-)
 
 -- 
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+2.25.1
 
