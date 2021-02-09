@@ -2,89 +2,84 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECCD3315232
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Feb 2021 15:57:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E932F31527C
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Feb 2021 16:17:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232343AbhBIO5R (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Feb 2021 09:57:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53726 "EHLO
+        id S232414AbhBIPQX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Feb 2021 10:16:23 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31607 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231923AbhBIO5H (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Feb 2021 09:57:07 -0500
+        by vger.kernel.org with ESMTP id S232401AbhBIPQX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Feb 2021 10:16:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612882540;
+        s=mimecast20190719; t=1612883696;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=WSsdPlcWLs4B7/MYVeVITkDmFpb6BsySsmx2wFDfjIg=;
-        b=GF/5NKgM0UjDFYNIWMgkcEApeW9x5x54f1RjtaPMuzoSz+FevPgl8wNPAIjtewMm/V3lPW
-        kRaX9mC7bWWOeJaAxFIfOjhJ6v38C5qfNluMdTP6x8FXDpDiZqRuDR0VndJbvGKDX5HPW3
-        fgqfRQzqaYqCBVypic8M/e2Hr3wB5kY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-s5aF0In4NkKRF-WIOdTynQ-1; Tue, 09 Feb 2021 09:55:39 -0500
-X-MC-Unique: s5aF0In4NkKRF-WIOdTynQ-1
-Received: by mail-wm1-f69.google.com with SMTP id n17so2787781wmk.3
-        for <linux-s390@vger.kernel.org>; Tue, 09 Feb 2021 06:55:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WSsdPlcWLs4B7/MYVeVITkDmFpb6BsySsmx2wFDfjIg=;
-        b=PcvQUcZl2DQaEqMPPExtGW4SrXeEwGfrbSwAM5lPvnxFR/LbRhKUNKwNE4QmPEtbVe
-         Z+PYKDziXYz2iy+MCXVKbT0/s2s1EpV4K4sNY84MJhaDpcMAsOzXaL2hygVcyOT/jKRI
-         2zf/qrvycwf89oZ7KGftYpykb0P0H3QFpmJiwdevaczTJ+XCO+NJurPF988pmjzaqFca
-         7h62Je9ocKKwLKTkpjiY/wzBa6gZu/I8Ej26fbLkZIXEXFOQBSn0XFxjkBovCAM8lLVb
-         60n+BHoXFDy9my/s3YBKEYdneijwKFJJHRENlvfDQte+73NiSimEBDB2sADCAFomxhor
-         icYQ==
-X-Gm-Message-State: AOAM530lBs902ev1fKNfRfkJfIRTggpnOkg/NxAG2kmUkVvJfPwfFj7S
-        hADMBWXXnhR/BTSTIv7MmJXLETFzm4xTXOLSnAsbQc0qtNIxjsInbUxGkqLTdypiGhmLZvGSbOw
-        KbC0kTf08pXYwQwbGnOd6rw==
-X-Received: by 2002:adf:eb82:: with SMTP id t2mr13792138wrn.231.1612882538031;
-        Tue, 09 Feb 2021 06:55:38 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzGiyD0i/pTC5CRicHdOTkBxICTMpZX9F+ZX+9eu4fC4Ozi+Yen5iR0i1cuW6uuuaqb68GylQ==
-X-Received: by 2002:adf:eb82:: with SMTP id t2mr13792098wrn.231.1612882537862;
-        Tue, 09 Feb 2021 06:55:37 -0800 (PST)
-Received: from redhat.com (bzq-79-180-2-31.red.bezeqint.net. [79.180.2.31])
-        by smtp.gmail.com with ESMTPSA id x15sm19731236wro.66.2021.02.09.06.55.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Feb 2021 06:55:37 -0800 (PST)
-Date:   Tue, 9 Feb 2021 09:55:32 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Adrian Catangiu <acatan@amazon.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        qemu-devel@nongnu.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, gregkh@linuxfoundation.org,
-        graf@amazon.com, rdunlap@infradead.org, arnd@arndb.de,
-        ebiederm@xmission.com, rppt@kernel.org, 0x7f454c46@gmail.com,
-        borntraeger@de.ibm.com, Jason@zx2c4.com, jannh@google.com,
-        w@1wt.eu, colmmacc@amazon.com, luto@kernel.org, tytso@mit.edu,
-        ebiggers@kernel.org, dwmw@amazon.co.uk, bonzini@gnu.org,
-        sblbir@amazon.com, raduweis@amazon.com, corbet@lwn.net,
-        mhocko@kernel.org, rafael@kernel.org, pavel@ucw.cz,
-        mpe@ellerman.id.au, areber@redhat.com, ovzxemul@gmail.com,
-        avagin@gmail.com, ptikhomirov@virtuozzo.com, gil@azul.com,
-        asmehra@redhat.com, dgunigun@redhat.com, vijaysun@ca.ibm.com,
-        oridgar@gmail.com, ghammer@redhat.com
-Subject: Re: [PATCH v5 2/2] drivers/virt: vmgenid: add vm generation id driver
-Message-ID: <20210209095350-mutt-send-email-mst@kernel.org>
-References: <1612200294-17561-1-git-send-email-acatan@amazon.com>
- <1612200294-17561-3-git-send-email-acatan@amazon.com>
+        bh=p3nl8khMJqHiquy1CLRZQYryAyuIGVAlN0rUYVos1sI=;
+        b=ZM6mcfjE6XKZ0Kt+Cw5ROCCAoongj0vtgI4u6Fiuf+RgQrs8DCYSINkAT3O9KJjdu2/QST
+        I92Fg4XpPk5a2YOSVy2mrTc1c9sDGzbVYaQpB2vb/Xc5ijIUlkCWJP0HuSnQDvI7itFhQ8
+        DZttpJR7fhnkRph/bXYDSdnqk7mQcq4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-403-N8mkZGdVMnWJgYLXU-Mr7g-1; Tue, 09 Feb 2021 10:14:53 -0500
+X-MC-Unique: N8mkZGdVMnWJgYLXU-Mr7g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F88B1005501;
+        Tue,  9 Feb 2021 15:14:52 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-114-56.ams2.redhat.com [10.36.114.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 296DD60C5C;
+        Tue,  9 Feb 2021 15:14:46 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH 1/8] s390x: Fix fpc store address in
+ RESTORE_REGS_STACK
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com, pmorel@linux.ibm.com,
+        imbrenda@linux.ibm.com
+References: <20210209134925.22248-1-frankja@linux.ibm.com>
+ <20210209134925.22248-2-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <eff04587-8499-b987-d4a8-a7a2e20fb63a@redhat.com>
+Date:   Tue, 9 Feb 2021 16:14:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1612200294-17561-3-git-send-email-acatan@amazon.com>
+In-Reply-To: <20210209134925.22248-2-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-> +The ``vmgenid`` driver uses ACPI events to be notified by hardware
-> +changes to the 128-bit Vm Gen Id UUID.
+On 09/02/2021 14.49, Janosch Frank wrote:
+> The efpc stores in bits 32-63 of a register and we store a full 8
+> bytes to have the stack 8 byte aligned. This means that the fpc is
+> stored at offset 4 but we load it from offset 0. Lets replace efpc
+> with stfpc and get rid of the stg to store at offset 0.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>   s390x/macros.S | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/s390x/macros.S b/s390x/macros.S
+> index 37a6a63e..e51a557a 100644
+> --- a/s390x/macros.S
+> +++ b/s390x/macros.S
+> @@ -54,8 +54,7 @@
+>   	.endr
+>   	/* Save fpc, but keep stack aligned on 64bits */
+>   	slgfi   %r15, 8
+> -	efpc	%r0
+> -	stg	%r0, 0(%r15)
+> +	stfpc	0(%r15)
+>   	.endm
 
-That's ok, problem is ACPI event processing is asynchronous.
-What we need is thus to flush out ACPI events whenever userspace
-does a read, otherwise the value it gets will be stale.
-
--- 
-MST
+Reviewed-by: Thomas Huth <thuth@redhat.com>
 
