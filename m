@@ -2,140 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5E8E314339
-	for <lists+linux-s390@lfdr.de>; Mon,  8 Feb 2021 23:52:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7B8C315077
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Feb 2021 14:40:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230161AbhBHWvs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 8 Feb 2021 17:51:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229729AbhBHWvn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 8 Feb 2021 17:51:43 -0500
-Received: from mail-oo1-xc2e.google.com (mail-oo1-xc2e.google.com [IPv6:2607:f8b0:4864:20::c2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F3F1C06178C
-        for <linux-s390@vger.kernel.org>; Mon,  8 Feb 2021 14:51:03 -0800 (PST)
-Received: by mail-oo1-xc2e.google.com with SMTP id x23so3846986oop.1
-        for <linux-s390@vger.kernel.org>; Mon, 08 Feb 2021 14:51:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=2jaIFVPMabgNRI/gSMsENX64xR0X2GpzOOyOdGUnNRo=;
-        b=pBScR02E5r0TkgIM7R/gTKUoLt7Z0j2l+KmGEUVvzVD6iJ+rV1NRqIGbxRSCpN/xF9
-         6ECzsWEtkMBYUHsLOW6EmRZvwcz50tmS4Z4kiMiTfHKdQVnDJR9wum99SFr67PJhCEhZ
-         LIAGh6+XAHdhQB9YQkWu+PZsyD1WTPyCGPQIOOzymGPNz3Zg/acuqdTbeBlHqgHqbB9X
-         QenXmEk9IGatt+KNlyRpsbxQe1sY+gcou4x4VQREJS7Wkxn/y9p8kt/wMxSfTAPAzsFj
-         ohqYM+FW7JqUugev+5lDjtz30gnXn9A1GT2uGo8yxHk2lR3kD335idp9Ai8G83c7Ni6B
-         LKbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=2jaIFVPMabgNRI/gSMsENX64xR0X2GpzOOyOdGUnNRo=;
-        b=cSgbZ6H7BEehTrXistJ2AIanuH+gDOjLXOiDp4ICi0erJLkvMJvyxVX8RMQ8j3KEOt
-         PhT89jTmFH/4/OSVU9MY2Uc+7hWYUMQN4ADt7Eq6o6JZMpm5GhYmXw1LUVY1y10XSS6e
-         O5L37pSLxvGb568X5FTPkFeGqUTel0FPOHFB/6VTXTrn6I7JXhkv6fOI8jf9KUvVRykj
-         HwsZPJocfgVs1yv719WL9Y9hCYpdtuxM6wXK4paLf+YVp+TVby3w4Z7wkvEoOkdH7/BK
-         HyHsD6UtUgsEKNpjhDfY3ECT2DZmHBC4vIxHQTPvhE4Roq60kYcs76SlrDLHDoqaQmWt
-         e9aA==
-X-Gm-Message-State: AOAM532Dcao0QExvsOpI9OKqdjWBr9MmQ3CHsgOI8gIjPqJGrUz86F4c
-        brCvzLNMLOhkxgez3mAUP8w9wQ==
-X-Google-Smtp-Source: ABdhPJwKMs+R/f6Grt4JROunZj+IRHTQeNwBZcyQQGNO0b5W18rmchqi31uaPJUE+MthD6a4Uan95Q==
-X-Received: by 2002:a4a:870c:: with SMTP id z12mr13898102ooh.15.1612824662639;
-        Mon, 08 Feb 2021 14:51:02 -0800 (PST)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id r25sm1079478ota.42.2021.02.08.14.50.59
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Mon, 08 Feb 2021 14:51:01 -0800 (PST)
-Date:   Mon, 8 Feb 2021 14:50:47 -0800 (PST)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Seth Forshee <seth.forshee@canonical.com>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-mm@kvack.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tmpfs: Disallow CONFIG_TMPFS_INODE64 on s390
-In-Reply-To: <20210205160551.cf57c4293ba5ccb8eb648c11@linux-foundation.org>
-Message-ID: <alpine.LSU.2.11.2102081446340.4656@eggly.anvils>
-References: <20210205230620.518245-1-seth.forshee@canonical.com> <20210205160551.cf57c4293ba5ccb8eb648c11@linux-foundation.org>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        id S230285AbhBINj3 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Tue, 9 Feb 2021 08:39:29 -0500
+Received: from spam.auroraoh.com ([24.56.89.101]:48370 "EHLO
+        barracuda.auroraoh.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S230156AbhBINj2 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Feb 2021 08:39:28 -0500
+X-Greylist: delayed 1082 seconds by postgrey-1.27 at vger.kernel.org; Tue, 09 Feb 2021 08:39:27 EST
+X-ASG-Debug-ID: 1612876815-112c0d6a7999070001-YNCQAd
+Received: from COASRV-MAIL2.auroraoh.loc (coasrv-mail2.auroraoh.loc [10.3.1.15]) by barracuda.auroraoh.com with ESMTP id zokGzegzlSBvMO0K; Tue, 09 Feb 2021 08:20:15 -0500 (EST)
+X-Barracuda-Envelope-From: JanuskaD@auroraoh.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.3.1.15
+Received: from [172.20.10.5] (197.210.29.8) by COASRV-MAIL2.auroraoh.loc
+ (10.3.1.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 9 Feb 2021
+ 02:47:50 -0500
+Content-Type: text/plain; charset="iso-8859-1"
+X-Barracuda-RBL-Trusted-Forwarder: 172.20.10.5
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: We are a registered Private Loan Investment Company in the United Kingdom,
+ we also registered with the Turkish British Chamber of Commerce and Industry
+ (TBCCI) we have operations in Europe and Asia.
+To:     Recipients <januskad@auroraoh.com>
+X-ASG-Orig-Subj: We are a registered Private Loan Investment Company in the United Kingdom,
+ we also registered with the Turkish British Chamber of Commerce and Industry
+ (TBCCI) we have operations in Europe and Asia.
+From:   <januskad@auroraoh.com>
+Date:   Tue, 9 Feb 2021 15:47:04 +0800
+Reply-To: <cfolimiited@gmail.com>
+X-Priority: 1 (High)
+X-Antivirus: Avast (VPS 210207-2, 02/07/2021), Outbound message
+X-Antivirus-Status: Clean
+Message-ID: <3ae8bf58-09dc-4259-ae2f-621d27a72c32@COASRV-MAIL2.auroraoh.loc>
+X-Originating-IP: [197.210.29.8]
+X-ClientProxiedBy: COASRV-MAIL3.auroraoh.loc (10.3.1.13) To
+ COASRV-MAIL2.auroraoh.loc (10.3.1.15)
+X-Barracuda-Connect: coasrv-mail2.auroraoh.loc[10.3.1.15]
+X-Barracuda-Start-Time: 1612876815
+X-Barracuda-URL: https://10.3.1.12:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at auroraoh.com
+X-Barracuda-Scan-Msg-Size: 755
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Spam-Score: 1.61
+X-Barracuda-Spam-Status: No, SCORE=1.61 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=5.0 tests=BSF_SC0_SA609_NRN, BSF_SC0_SA912_RP_FR, BSF_SC0_SA_TO_FROM_ADDR_MATCH, NO_REAL_NAME
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.87861
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
+        0.00 NO_REAL_NAME           From: does not include a real name
+        0.01 BSF_SC0_SA912_RP_FR    Custom Rule BSF_SC0_SA912_RP_FR
+        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH Sender Address Matches Recipient
+                                   Address
+        1.10 BSF_SC0_SA609_NRN      Custom Rule SA609_NRN
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 5 Feb 2021, Andrew Morton wrote:
-> On Fri,  5 Feb 2021 17:06:20 -0600 Seth Forshee <seth.forshee@canonical.com> wrote:
-> 
-> > This feature requires ino_t be 64-bits, which is true for every
-> > 64-bit architecture but s390, so prevent this option from being
-> > selected there.
-> > 
-> 
-> The previous patch nicely described the end-user impact of the bug. 
-> This is especially important when requesting a -stable backport.
-> 
-> Here's what I ended up with:
-> 
-> 
-> From: Seth Forshee <seth.forshee@canonical.com>
-> Subject: tmpfs: disallow CONFIG_TMPFS_INODE64 on s390
-> 
-> Currently there is an assumption in tmpfs that 64-bit architectures also
-> have a 64-bit ino_t.  This is not true on s390 which has a 32-bit ino_t. 
-> With CONFIG_TMPFS_INODE64=y tmpfs mounts will get 64-bit inode numbers and
-> display "inode64" in the mount options, but passing the "inode64" mount
-> option will fail.  This leads to the following behavior:
-> 
->  # mkdir mnt
->  # mount -t tmpfs nodev mnt
->  # mount -o remount,rw mnt
->  mount: /home/ubuntu/mnt: mount point not mounted or bad option.
-> 
-> As mount sees "inode64" in the mount options and thus passes it in the
-> options for the remount.
-> 
-> 
-> So prevent CONFIG_TMPFS_INODE64 from being selected on s390.
-> 
-> Link: https://lkml.kernel.org/r/20210205230620.518245-1-seth.forshee@canonical.com
-> Fixes: ea3271f7196c ("tmpfs: support 64-bit inums per-sb")
-> Signed-off-by: Seth Forshee <seth.forshee@canonical.com>
-> Cc: Chris Down <chris@chrisdown.name>
-> Cc: Hugh Dickins <hughd@google.com>
+We are seeking for beneficiaries who source for fund to expand/relocating their business interest abroad. We are ready to fund projects outside Turkey and United Kingdom in the form of Soft Loan. We grant loans to both corporate and private entities at a low interest rate of 2% R.O.I per annul.
 
-Thank you Seth: now that you've fixed Kirill's alpha observation too,
-Acked-by: Hugh Dickins <hughd@google.com>
+We like to grant loan in the following sectors: oil/Gas, banking, real estate, stock speculation and mining, transportation, health sector and tobacco, Communication Services, Agriculture Forestry & Fishing, thus any sector. The terms are very flexible and interesting.
 
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: <stable@vger.kernel.org>	[5.9+]
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> ---
-> 
->  fs/Kconfig |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- a/fs/Kconfig~tmpfs-disallow-config_tmpfs_inode64-on-s390
-> +++ a/fs/Kconfig
-> @@ -203,7 +203,7 @@ config TMPFS_XATTR
->  
->  config TMPFS_INODE64
->  	bool "Use 64-bit ino_t by default in tmpfs"
-> -	depends on TMPFS && 64BIT
-> +	depends on TMPFS && 64BIT && !S390
->  	default n
->  	help
->  	  tmpfs has historically used only inode numbers as wide as an unsigned
-> _
-> 
-> 
+Please contact us for more details;
+
+
+Kind regards,
+
+Paul McCann
+
+-- 
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
+
