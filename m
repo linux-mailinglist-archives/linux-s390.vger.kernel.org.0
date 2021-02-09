@@ -2,210 +2,76 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A11C4315303
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Feb 2021 16:44:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11F5631534B
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Feb 2021 16:59:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232458AbhBIPnx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Feb 2021 10:43:53 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60430 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S232317AbhBIPnu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Feb 2021 10:43:50 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 119FfbNZ182448;
-        Tue, 9 Feb 2021 10:43:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=F9OGyISqe9CC1ZvzmD3oaX3IvDLcb4vjDhU2tgH+Zck=;
- b=UxWZ7RrKwNaMAITtZ3SZ1qOSSoBUmBZkVDjFO40r9i3FjP0Hnhz4eczgczlH0AVD6QwY
- Pat/JIxynyEQwNsVBhP6Qt0+dO0NsYKD/b93kve0g83/DiP+EUlM3iz1xUQLuMMQoz+H
- mxtTdudii+yHWx3/x9XmveMGiarN5+aE2jCobzSACKww7k2rF3FPZICJ/tFb0wR0D6W0
- dmj1eqbqxMTOWBsNTJpBt3BCrYtyxLMh8P7TO8U7Pnx8KZ3CT/70PzvqHK+bdxLPKewa
- fBh49539knQ3DWx9/53p0DHX4+ob8u3/okA1yUCRYRH4nxk+W/Chmk6DesNwFyx8ASWS Aw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 36kw8r82hm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Feb 2021 10:43:09 -0500
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 119Ffn2O183926;
-        Tue, 9 Feb 2021 10:43:08 -0500
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 36kw8r82gu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Feb 2021 10:43:08 -0500
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 119Fc0cM018080;
-        Tue, 9 Feb 2021 15:43:07 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma01fra.de.ibm.com with ESMTP id 36hjr81tju-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Feb 2021 15:43:06 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 119Fh4Pa42926540
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Feb 2021 15:43:04 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E6A8AE04D;
-        Tue,  9 Feb 2021 15:43:04 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A9E9AAE056;
-        Tue,  9 Feb 2021 15:43:03 +0000 (GMT)
-Received: from ibm-vm.ibmuc.com (unknown [9.145.1.216])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  9 Feb 2021 15:43:03 +0000 (GMT)
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH v3 2/2] s390/kvm: VSIE: correctly handle MVPG when in VSIE
-Date:   Tue,  9 Feb 2021 16:43:02 +0100
-Message-Id: <20210209154302.1033165-3-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210209154302.1033165-1-imbrenda@linux.ibm.com>
-References: <20210209154302.1033165-1-imbrenda@linux.ibm.com>
+        id S232498AbhBIP6l (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Feb 2021 10:58:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:38326 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232491AbhBIP6j (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Feb 2021 10:58:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612886232;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6SqLbxCHV6DXwffz6T5lMoalH3C/d4xGQ0lUToQcwxQ=;
+        b=PCD5bqBPuCNIzctgm9gvvt37T1C8SAna4wvSp1TLAI++/HX+FUquSq1JddeLYpufPdu9k3
+        lUDXM9YNlVi9h8mSTXcY//oJa6e0Pmw5OAxoPE5CPJGG5AQWQGSoYCDxdc+NHt+PxD6AKw
+        zR4rulqKqcd5I64OiK2xOxAwcUNeCCM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-180-wk5rEMTkO-ePRDX8jgZZ_A-1; Tue, 09 Feb 2021 10:57:10 -0500
+X-MC-Unique: wk5rEMTkO-ePRDX8jgZZ_A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A158427CC;
+        Tue,  9 Feb 2021 15:57:09 +0000 (UTC)
+Received: from thuth.com (ovpn-114-56.ams2.redhat.com [10.36.114.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9330E5D736;
+        Tue,  9 Feb 2021 15:57:07 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     kvm@vger.kernel.org, Janosch Frank <frankja@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [kvm-unit-tests PATCH] Fix the length in the stsi check for the VM name
+Date:   Tue,  9 Feb 2021 16:57:05 +0100
+Message-Id: <20210209155705.67601-1-thuth@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
- definitions=2021-02-09_03:2021-02-09,2021-02-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 priorityscore=1501 adultscore=0 mlxlogscore=998 mlxscore=0
- clxscore=1015 impostorscore=0 suspectscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102090079
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Correctly handle the MVPG instruction when issued by a VSIE guest.
+sizeof(somepointer) results in the size of the pointer, i.e. 8 on a
+64-bit system, so the
 
-Fixes: a3508fbe9dc6d ("KVM: s390: vsie: initial support for nested virtualization")
-Cc: stable@vger.kernel.org
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+ memcmp(data->ext_names[0], vm_name_ext, sizeof(vm_name_ext))
+
+only compared the first 8 characters of the VM name here. Switch
+to a proper array to get the sizeof() right.
+
+Signed-off-by: Thomas Huth <thuth@redhat.com>
 ---
- arch/s390/kvm/vsie.c | 93 +++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 88 insertions(+), 5 deletions(-)
+ s390x/stsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index 7db022141db3..7dbb0d93c25f 100644
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -416,11 +416,6 @@ static void unshadow_scb(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
- 		memcpy((void *)((u64)scb_o + 0xc0),
- 		       (void *)((u64)scb_s + 0xc0), 0xf0 - 0xc0);
- 		break;
--	case ICPT_PARTEXEC:
--		/* MVPG only */
--		memcpy((void *)((u64)scb_o + 0xc0),
--		       (void *)((u64)scb_s + 0xc0), 0xd0 - 0xc0);
--		break;
- 	}
+diff --git a/s390x/stsi.c b/s390x/stsi.c
+index 4109b8d..87d4804 100644
+--- a/s390x/stsi.c
++++ b/s390x/stsi.c
+@@ -106,7 +106,7 @@ static void test_3_2_2(void)
+ 				 0x00, 0x03 };
+ 	/* EBCDIC for "KVM/" */
+ 	const uint8_t cpi_kvm[] = { 0xd2, 0xe5, 0xd4, 0x61 };
+-	const char *vm_name_ext = "kvm-unit-test";
++	const char vm_name_ext[] = "kvm-unit-test";
+ 	struct stsi_322 *data = (void *)pagebuf;
  
- 	if (scb_s->ihcpu != 0xffffU)
-@@ -982,6 +977,90 @@ static int handle_stfle(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
- 	return 0;
- }
- 
-+static u64 vsie_get_register(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page, u8 reg)
-+{
-+	reg &= 0xf;
-+	switch (reg) {
-+	case 15:
-+		return vsie_page->scb_s.gg15;
-+	case 14:
-+		return vsie_page->scb_s.gg14;
-+	default:
-+		return vcpu->run->s.regs.gprs[reg];
-+	}
-+}
-+
-+static int vsie_handle_mvpg(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
-+{
-+	struct kvm_s390_sie_block *scb_s = &vsie_page->scb_s;
-+	unsigned long pei_dest, pei_src, src, dest, mask = PAGE_MASK;
-+	u64 *pei_block = &vsie_page->scb_o->mcic;
-+	int edat, rc_dest, rc_src;
-+	union ctlreg0 cr0;
-+
-+	cr0.val = vcpu->arch.sie_block->gcr[0];
-+	edat = cr0.edat && test_kvm_facility(vcpu->kvm, 8);
-+	if (psw_bits(scb_s->gpsw).eaba == PSW_BITS_AMODE_24BIT)
-+		mask = 0xfff000;
-+	else if (psw_bits(scb_s->gpsw).eaba == PSW_BITS_AMODE_31BIT)
-+		mask = 0x7ffff000;
-+
-+	dest = vsie_get_register(vcpu, vsie_page, scb_s->ipb >> 16) & mask;
-+	src = vsie_get_register(vcpu, vsie_page, scb_s->ipb >> 20) & mask;
-+
-+	rc_dest = kvm_s390_shadow_fault(vcpu, vsie_page->gmap, dest, &pei_dest);
-+	rc_src = kvm_s390_shadow_fault(vcpu, vsie_page->gmap, src, &pei_src);
-+	/*
-+	 * Either everything went well, or something non-critical went wrong
-+	 * e.g. beause of a race. In either case, simply retry.
-+	 */
-+	if (rc_dest == -EAGAIN || rc_src == -EAGAIN || (!rc_dest && !rc_src)) {
-+		retry_vsie_icpt(vsie_page);
-+		return -EAGAIN;
-+	}
-+	/* Something more serious went wrong, propagate the error */
-+	if (rc_dest < 0)
-+		return rc_dest;
-+	if (rc_src < 0)
-+		return rc_src;
-+
-+	/* The only possible suppressing exception: just deliver it */
-+	if (rc_dest == PGM_TRANSLATION_SPEC || rc_src == PGM_TRANSLATION_SPEC) {
-+		clear_vsie_icpt(vsie_page);
-+		rc_dest = kvm_s390_inject_program_int(vcpu, PGM_TRANSLATION_SPEC);
-+		WARN_ON_ONCE(rc_dest);
-+		return 1;
-+	}
-+
-+	/*
-+	 * Forward the PEI intercept to the guest if it was a page fault, or
-+	 * also for segment and region table faults if EDAT applies.
-+	 */
-+	if (edat) {
-+		rc_dest = rc_dest == PGM_ASCE_TYPE ? rc_dest : 0;
-+		rc_src = rc_src == PGM_ASCE_TYPE ? rc_src : 0;
-+	} else {
-+		rc_dest = rc_dest != PGM_PAGE_TRANSLATION ? rc_dest : 0;
-+		rc_src = rc_src != PGM_PAGE_TRANSLATION ? rc_src : 0;
-+	}
-+	if (!rc_dest && !rc_src) {
-+		pei_block[0] = pei_dest;
-+		pei_block[1] = pei_src;
-+		return 1;
-+	}
-+
-+	retry_vsie_icpt(vsie_page);
-+
-+	/*
-+	 * The host has edat, and the guest does not, or it was an ASCE type
-+	 * exception. The host needs to inject the appropriate DAT interrupts
-+	 * into the guest.
-+	 */
-+	if (rc_dest)
-+		return inject_fault(vcpu, rc_dest, dest, 1);
-+	return inject_fault(vcpu, rc_src, src, 0);
-+}
-+
- /*
-  * Run the vsie on a shadow scb and a shadow gmap, without any further
-  * sanity checks, handling SIE faults.
-@@ -1068,6 +1147,10 @@ static int do_vsie_run(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
- 		if ((scb_s->ipa & 0xf000) != 0xf000)
- 			scb_s->ipa += 0x1000;
- 		break;
-+	case ICPT_PARTEXEC:
-+		if (scb_s->ipa == 0xb254)
-+			rc = vsie_handle_mvpg(vcpu, vsie_page);
-+		break;
- 	}
- 	return rc;
- }
+ 	report_prefix_push("3.2.2");
 -- 
-2.26.2
+2.27.0
 
