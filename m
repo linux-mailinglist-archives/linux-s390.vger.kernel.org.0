@@ -2,131 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCD503150E6
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Feb 2021 14:53:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93FD331515F
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Feb 2021 15:17:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231996AbhBINw6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Feb 2021 08:52:58 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38830 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231728AbhBINvf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Feb 2021 08:51:35 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 119DXa50041784;
-        Tue, 9 Feb 2021 08:50:54 -0500
+        id S231289AbhBIOQw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Feb 2021 09:16:52 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13650 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231248AbhBIOQu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Feb 2021 09:16:50 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 119ECRZ8073960;
+        Tue, 9 Feb 2021 09:16:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=1w2R0H+zZaPAxNLebxHCGdeAQtUfmwDXW3jtsS2J85w=;
- b=cWo/KBEXTA0rlbcJlVnCwqUJHRUVw2pMls/cO7P1IUw1bUVBNPPfpXo8ZFtZg/SUoMCJ
- 4upiVr2pemGTx4Fivew6GwZ1+uU1FsEM3XTP/qVxxo696sm49fS2/rdH9Ngo2PI6InRT
- kaPWG2UzvK3SMywmW3fhOn0sJuplrRqtv0LVnhl8Mi9YlO6v42VRx4/9x/nKvNoR2u44
- jq64rSvF4OZIwWrPeYhsi4vPmA5Lk51KiahMIMZ/gFtzYyEVN/Bl3bADvBku+kmoj3dA
- 3jj3NV9lpw+MwrQDrGymETi3RtFylBQgoG0gN2zqFdf4JYssoX27Ffn1h35kIZn512MH eg== 
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=1BLAQNPME1uNVq03V27AeKSvoxojAYsbwUoTYsbumY0=;
+ b=L1ejIMkyZYnX+JnTtmtLfRu0+JGldv5qL7MFazSDbuJH9J8mPqsSM5FhrZtzbSoPvmGD
+ lcH/dd6GBBi2UZRHTWp85leRRLSkmqL2m63DpnJAVal2KFW9wpWZoITHKvA3knY4ebUx
+ vNQeyrY79h9VMWoIAzFDFNi4ntN/vKnBE+Vq6k2tzYV29YVx3xglwtBN/S395t2fPWzK
+ ijzRRBUBLdlieZRKSVX4Scu1il2e+b7Ojk1FU/QWBZrbcGs1LwOO3uuT7b3XVBLdXw2u
+ Jw7d2KIY9g/B5GI+DWahgj+QOXjveEeLsCFbjRcy+NvO89OwVb16jGF6xmuFpkN1s0wS hg== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36ku3j1744-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36kuxxg2u9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Feb 2021 08:50:54 -0500
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 119DXfEq042497;
-        Tue, 9 Feb 2021 08:50:54 -0500
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36ku3j1731-1
+        Tue, 09 Feb 2021 09:16:07 -0500
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 119ED9q4075680;
+        Tue, 9 Feb 2021 09:16:06 -0500
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 36kuxxg2sy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Feb 2021 08:50:53 -0500
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 119DShbi011212;
-        Tue, 9 Feb 2021 13:50:51 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 36hqda36qt-1
+        Tue, 09 Feb 2021 09:16:06 -0500
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 119E8vAQ021664;
+        Tue, 9 Feb 2021 14:16:04 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 36hjr8bd7m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Feb 2021 13:50:51 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 119Domki28180792
+        Tue, 09 Feb 2021 14:16:03 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 119EFpvQ38142286
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Feb 2021 13:50:48 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 13F88A4053;
-        Tue,  9 Feb 2021 13:50:48 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5F307A4040;
-        Tue,  9 Feb 2021 13:50:47 +0000 (GMT)
+        Tue, 9 Feb 2021 14:15:51 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BCD464C040;
+        Tue,  9 Feb 2021 14:16:01 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 286BE4C050;
+        Tue,  9 Feb 2021 14:16:01 +0000 (GMT)
 Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  9 Feb 2021 13:50:47 +0000 (GMT)
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  9 Feb 2021 14:16:01 +0000 (GMT)
 From:   Janosch Frank <frankja@linux.ibm.com>
 To:     kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
-        pmorel@linux.ibm.com, imbrenda@linux.ibm.com
-Subject: [kvm-unit-tests PATCH 8/8] s390x: Remove SAVE/RESTORE_stack
-Date:   Tue,  9 Feb 2021 08:49:25 -0500
-Message-Id: <20210209134925.22248-9-frankja@linux.ibm.com>
+        imbrenda@linux.ibm.com
+Subject: [kvm-unit-tests PATCH] s390x: Workaround smp stop and store status race
+Date:   Tue,  9 Feb 2021 09:15:54 -0500
+Message-Id: <20210209141554.22554-1-frankja@linux.ibm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210209134925.22248-1-frankja@linux.ibm.com>
-References: <20210209134925.22248-1-frankja@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
  definitions=2021-02-09_03:2021-02-09,2021-02-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=813 spamscore=0 suspectscore=0 adultscore=0
- mlxscore=0 impostorscore=0 clxscore=1015 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102090068
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ bulkscore=0 impostorscore=0 lowpriorityscore=0 mlxlogscore=999
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102090068
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-There are no more users.
+KVM and QEMU handle a SIGP stop and store status in two steps:
+1) Stop the CPU by injecting a stop request
+2) Store when the CPU has left SIE because of the stop request
+
+The problem is that the SIGP order is already considered completed by
+KVM/QEMU when step 1 has been performed and not once both have
+completed. In addition we currently don't implement the busy CC so a
+kernel has no way of knowing that the store has finished other than
+checking the location for the store.
+
+This workaround is based on the fact that for a new SIE entry (via the
+added smp restart) a stop with the store status has to be finished
+first.
+
+Correct handling of this in KVM/QEMU will need some thought and time.
 
 Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
 ---
- s390x/macros.S | 29 -----------------------------
- 1 file changed, 29 deletions(-)
+ s390x/smp.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/s390x/macros.S b/s390x/macros.S
-index 1678c821..90a842d9 100644
---- a/s390x/macros.S
-+++ b/s390x/macros.S
-@@ -28,35 +28,6 @@
- 	lpswe	\old_psw
- 	.endm
+diff --git a/s390x/smp.c b/s390x/smp.c
+index b0ece491..32f284a2 100644
+--- a/s390x/smp.c
++++ b/s390x/smp.c
+@@ -102,12 +102,15 @@ static void test_stop_store_status(void)
+ 	lc->grs_sa[15] = 0;
+ 	smp_cpu_stop_store_status(1);
+ 	mb();
++	report(smp_cpu_stopped(1), "cpu stopped");
++	/* For the cpu to be started it should have finished storing */
++	smp_cpu_restart(1);
+ 	report(lc->prefix_sa == (uint32_t)(uintptr_t)cpu->lowcore, "prefix");
+ 	report(lc->grs_sa[15], "stack");
+-	report(smp_cpu_stopped(1), "cpu stopped");
+ 	report_prefix_pop();
  
--	.macro SAVE_REGS
--	/* save grs 0-15 */
--	stmg	%r0, %r15, GEN_LC_SW_INT_GRS
--	/* save crs 0-15 */
--	stctg	%c0, %c15, GEN_LC_SW_INT_CRS
--	/* load a cr0 that has the AFP control bit which enables all FPRs */
--	larl	%r1, initial_cr0
--	lctlg	%c0, %c0, 0(%r1)
--	/* save fprs 0-15 + fpc */
--	la	%r1, GEN_LC_SW_INT_FPRS
--	.irp i, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
--	std	\i, \i * 8(%r1)
--	.endr
--	stfpc	GEN_LC_SW_INT_FPC
--	.endm
--
--	.macro RESTORE_REGS
--	/* restore fprs 0-15 + fpc */
--	la	%r1, GEN_LC_SW_INT_FPRS
--	.irp i, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
--	ld	\i, \i * 8(%r1)
--	.endr
--	lfpc	GEN_LC_SW_INT_FPC
--	/* restore crs 0-15 */
--	lctlg	%c0, %c15, GEN_LC_SW_INT_CRS
--	/* restore grs 0-15 */
--	lmg	%r0, %r15, GEN_LC_SW_INT_GRS
--	.endm
--
- /* Save registers on the stack (r15), so we can have stacked interrupts. */
- 	.macro SAVE_REGS_STACK
- 	/* Allocate a full stack frame */
+ 	report_prefix_push("stopped");
++	smp_cpu_stop(1);
+ 	lc->prefix_sa = 0;
+ 	lc->grs_sa[15] = 0;
+ 	smp_cpu_stop_store_status(1);
 -- 
 2.25.1
 
