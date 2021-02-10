@@ -2,241 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A131031576C
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Feb 2021 21:06:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A157315FCB
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Feb 2021 08:01:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233850AbhBIUEt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Feb 2021 15:04:49 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48812 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233755AbhBITvf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Feb 2021 14:51:35 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 119JgP6q079175;
-        Tue, 9 Feb 2021 14:49:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=z8M8GC/vnud9WhkHtY6cAALZNKFHQBkh8OeJZYNyVZg=;
- b=IbfWBSL078+8bQhD9L+d6NIzboZExUvJJip+J5YhLwCUalsdSZnsnP744plJ41AnOkON
- F5agcLQdyMssTF4GvUcMSGEqn+MNOpCbWzDb8+6iHZEE4hroeWz9GHVw5hBJbYpVhjx3
- 3XketnJPCyFQVvgpi1q5GbCud9q9QwVSWEDGvgbM6pjJF5+OYTXLulO2JUs2gUeKJbeU
- yTXdHU9Ga62bMOFlT/Cz8C9IazSxDfly333HXRNArvUw6kYmRlMlgbsSdW8vviLcrSzz
- KMnIzbJQeSyu3ZZ4aFqs0Y+zLLDcMS7FRZ+I61uZZWyBtWztXPYPxd9fEIcXPlp6Jw+c 4g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36m0smr4r4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Feb 2021 14:49:01 -0500
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 119JgYvt079419;
-        Tue, 9 Feb 2021 14:49:01 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36m0smr4qy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Feb 2021 14:49:01 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 119JhFJI031990;
-        Tue, 9 Feb 2021 19:49:00 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma03wdc.us.ibm.com with ESMTP id 36hjr98x2n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Feb 2021 19:49:00 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 119Jn07A23331072
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Feb 2021 19:49:00 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1DAB9B2067;
-        Tue,  9 Feb 2021 19:49:00 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A502B205F;
-        Tue,  9 Feb 2021 19:48:59 +0000 (GMT)
-Received: from cpe-66-24-58-13.stny.res.rr.com.com (unknown [9.85.203.235])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  9 Feb 2021 19:48:59 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     stable@vger.kernel.org, borntraeger@de.ibm.com, cohuck@redhat.com,
-        kwankhede@nvidia.com, pbonzini@redhat.com,
-        alex.williamson@redhat.com, pasic@linux.vnet.ibm.com,
-        Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH 1/1] s390/vfio-ap: fix circular lockdep when setting/clearing crypto masks
-Date:   Tue,  9 Feb 2021 14:48:30 -0500
-Message-Id: <20210209194830.20271-2-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20210209194830.20271-1-akrowiak@linux.ibm.com>
-References: <20210209194830.20271-1-akrowiak@linux.ibm.com>
+        id S232212AbhBJHA4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 10 Feb 2021 02:00:56 -0500
+Received: from smht-115-229.dattaweb.com ([200.58.115.229]:44331 "EHLO
+        smht-115-229.dattaweb.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231841AbhBJHAx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 10 Feb 2021 02:00:53 -0500
+X-Greylist: delayed 1205 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Feb 2021 02:00:52 EST
+Received: from smarthost04-ded.dattaweb.com (localhost [127.0.0.1])
+        by smarthost04-ded.dattaweb.com (Postfix) with ESMTPS id 1A9D99353A0;
+        Wed, 10 Feb 2021 03:22:43 -0300 (-03)
+Received: from vps-1625202-x.dattaweb.com (vps-1625202-x.dattaweb.com [66.97.40.69])
+        by smarthost04-ded.dattaweb.com (Postfix) with ESMTPS id F23C3935399;
+        Wed, 10 Feb 2021 03:22:42 -0300 (-03)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=forumemprendedores.com; s=mail; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Subject:From:Reply-To:Sender:Message-ID:To:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=abKsANgvaIAft8JF1Kf6VDvnqZJXsRNCwGeaIdDP8mI=; b=qv0C0FrREdeknqEQPOqxf4Jcqd
+        +BzzMR6jQItBIv5q32xnPynQ7TRuoPtEXThvOUob39jouiSlWT0qsHHEFYzQKB5JPj7DCAJp4c0Mo
+        9cj7LpymBWdJHlbEvAk+TQaXda88Fly6ozmIC1WJKmHSX9RYXGPWrBtopkmCgzSw1Otk=;
+Received: from [105.96.16.85] (helo=User)
+        by vps-1625202-x.dattaweb.com with esmtpa (Exim 4.92.2)
+        (envelope-from <info@office.com>)
+        id 1l9ixR-0001i5-LH; Wed, 10 Feb 2021 03:26:38 -0300
+Reply-To: <pwilmshst@gmail.com>
+From:   "Jacquet Thierry Elysee Rene" <info@office.com>
+Subject: ATTENTION
+Date:   Wed, 10 Feb 2021 07:22:33 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
- definitions=2021-02-09_06:2021-02-09,2021-02-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- suspectscore=0 phishscore=0 adultscore=0 mlxscore=0 priorityscore=1501
- malwarescore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102090090
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+X-Spam-Score: 11.2
+X-Spam-Score-Int: 111
+X-Spam-Bar: +++++++++++
+X-Spam-Report: Action: no action
+ Symbol: ARC_NA(0.00)
+ Symbol: HAS_REPLYTO(0.00)
+ Symbol: RCVD_VIA_SMTP_AUTH(0.00)
+ Symbol: FROM_HAS_DN(0.00)
+ Symbol: FORGED_MUA_OUTLOOK(3.00)
+ Symbol: FREEMAIL_ENVRCPT(0.00)
+ Symbol: TAGGED_RCPT(0.00)
+ Symbol: FREEMAIL_REPLYTO(0.00)
+ Symbol: REPLYTO_DOM_NEQ_FROM_DOM(0.00)
+ Symbol: RCVD_HELO_USER(3.00)
+ Symbol: BAYES_SPAM(3.99)
+ Symbol: MIME_GOOD(-0.10)
+ Symbol: MISSING_MID(2.50)
+ Symbol: AUTHENTICATED_LOCAL_USER(-5.00)
+ Symbol: HAS_X_PRIO_THREE(0.00)
+ Symbol: SUBJ_ALL_CAPS(0.67)
+ Symbol: MISSING_TO(2.00)
+ Symbol: RCVD_COUNT_ONE(0.00)
+ Symbol: RCVD_NO_TLS_LAST(0.10)
+ Symbol: FROM_EQ_ENVFROM(0.00)
+ Symbol: R_NO_SPACE_IN_FROM(1.00)
+ Symbol: MIME_TRACE(0.00)
+ Symbol: ASN(0.00)
+ Message-ID: undef
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vps-1625202-x.dattaweb.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [502 502] / [502 502]
+X-AntiAbuse: Sender Address Domain - office.com
+Message-Id: <20210210062243.1A9D99353A0@smarthost04-ded.dattaweb.com>
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This patch fixes a circular locking dependency in the CI introduced by
-commit f21916ec4826 ("s390/vfio-ap: clean up vfio_ap resources when KVM
-pointer invalidated"). The lockdep only occurs when starting a Secure
-Execution guest. Crypto virtualization (vfio_ap) is not yet supported for
-SE guests; however, in order to avoid CI errors, this fix is being
-provided.
+Attention Sir,
 
-The circular lockdep was introduced when the masks in the guest's APCB
-were taken under the matrix_dev->lock. While the lock is definitely
-needed to protect the setting/unsetting of the KVM pointer, it is not
-necessarily critical for setting the masks, so this will not be done under
-protection of the matrix_dev->lock.
+I represent an investor seeking to invest  in any lucrative investment in your country, If you have a solid background and the idea of making good profit in real estate or in any  business, Please write to me for possible business cooperation.
 
-Fixes: f21916ec4826 ("s390/vfio-ap: clean up vfio_ap resources when KVM pointer invalidated")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c | 75 ++++++++++++++++++-------------
- 1 file changed, 45 insertions(+), 30 deletions(-)
+Email: pwilmshst@gmail.com
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 41fc2e4135fe..f4e19aa2acb9 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -322,6 +322,20 @@ static void vfio_ap_matrix_init(struct ap_config_info *info,
- 	matrix->adm_max = info->apxa ? info->Nd : 15;
- }
- 
-+static bool vfio_ap_mdev_has_crycb(struct ap_matrix_mdev *matrix_mdev)
-+{
-+	return (matrix_mdev->kvm && matrix_mdev->kvm->arch.crypto.crycbd);
-+}
-+
-+static void vfio_ap_mdev_commit_apcb(struct ap_matrix_mdev *matrix_mdev)
-+{
-+	if (vfio_ap_mdev_has_crycb(matrix_mdev))
-+		kvm_arch_crypto_set_masks(matrix_mdev->kvm,
-+					  matrix_mdev->matrix.apm,
-+					  matrix_mdev->matrix.aqm,
-+					  matrix_mdev->matrix.adm);
-+}
-+
- static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
- {
- 	struct ap_matrix_mdev *matrix_mdev;
-@@ -1028,7 +1042,9 @@ static const struct attribute_group *vfio_ap_mdev_attr_groups[] = {
-  * @kvm: reference to KVM instance
-  *
-  * Verifies no other mediated matrix device has @kvm and sets a reference to
-- * it in @matrix_mdev->kvm.
-+ * it in @matrix_mdev->kvm. The matrix_dev->lock must not be taken prior to
-+ * calling this function; doing so may result in a circular lock dependency
-+ * when the kvm->lock is taken to set masks in the guest's APCB.
-  *
-  * Return 0 if no other mediated matrix device has a reference to @kvm;
-  * otherwise, returns an -EPERM.
-@@ -1038,6 +1054,8 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
- {
- 	struct ap_matrix_mdev *m;
- 
-+	mutex_lock(&matrix_dev->lock);
-+
- 	list_for_each_entry(m, &matrix_dev->mdev_list, node) {
- 		if ((m != matrix_mdev) && (m->kvm == kvm))
- 			return -EPERM;
-@@ -1046,6 +1064,8 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
- 	matrix_mdev->kvm = kvm;
- 	kvm_get_kvm(kvm);
- 	kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
-+	mutex_unlock(&matrix_dev->lock);
-+	vfio_ap_mdev_commit_apcb(matrix_mdev);
- 
- 	return 0;
- }
-@@ -1079,13 +1099,27 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
- 	return NOTIFY_DONE;
- }
- 
-+/**
-+ * vfio_ap_mdev_unset_kvm
-+ *
-+ * @matrix_mdev: a matrix mediated device
-+ *
-+ * Clears the masks in the guest's APCB as well as the reference to KVM from
-+ * @matrix_mdev. The matrix_dev->lock must not be taken prior to calling this
-+ * function; doing so may result in a circular lock dependency when the
-+ * kvm->lock is taken to clear the masks in the guest's APCB.
-+ */
- static void vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
- {
--	kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
--	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
--	vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
--	kvm_put_kvm(matrix_mdev->kvm);
--	matrix_mdev->kvm = NULL;
-+	if (matrix_mdev->kvm) {
-+		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
-+		mutex_lock(&matrix_dev->lock);
-+		matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
-+		vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
-+		kvm_put_kvm(matrix_mdev->kvm);
-+		matrix_mdev->kvm = NULL;
-+		mutex_unlock(&matrix_dev->lock);
-+	}
- }
- 
- static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
-@@ -1098,32 +1132,15 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
- 		return NOTIFY_OK;
- 
- 	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
--	mutex_lock(&matrix_dev->lock);
--
--	if (!data) {
--		if (matrix_mdev->kvm)
--			vfio_ap_mdev_unset_kvm(matrix_mdev);
--		goto notify_done;
--	}
- 
--	ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
--	if (ret) {
--		notify_rc = NOTIFY_DONE;
--		goto notify_done;
--	}
-+	if (!data)
-+		vfio_ap_mdev_unset_kvm(matrix_mdev);
-+	else
-+		ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
- 
--	/* If there is no CRYCB pointer, then we can't copy the masks */
--	if (!matrix_mdev->kvm->arch.crypto.crycbd) {
-+	if (ret)
- 		notify_rc = NOTIFY_DONE;
--		goto notify_done;
--	}
--
--	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
--				  matrix_mdev->matrix.aqm,
--				  matrix_mdev->matrix.adm);
- 
--notify_done:
--	mutex_unlock(&matrix_dev->lock);
- 	return notify_rc;
- }
- 
-@@ -1257,10 +1274,8 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
- {
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
--	mutex_lock(&matrix_dev->lock);
- 	if (matrix_mdev->kvm)
- 		vfio_ap_mdev_unset_kvm(matrix_mdev);
--	mutex_unlock(&matrix_dev->lock);
- 
- 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
- 				 &matrix_mdev->iommu_notifier);
--- 
-2.21.1
-
+Regards,
+Jacquet Thierry Elysee Rene.
