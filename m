@@ -2,62 +2,60 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C45683269F2
-	for <lists+linux-s390@lfdr.de>; Fri, 26 Feb 2021 23:24:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CB6A326F5C
+	for <lists+linux-s390@lfdr.de>; Sat, 27 Feb 2021 23:36:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230060AbhBZWYi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 26 Feb 2021 17:24:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56052 "EHLO mail.kernel.org"
+        id S230235AbhB0WfK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 27 Feb 2021 17:35:10 -0500
+Received: from mail.jvpinto.com ([65.49.11.60]:42077 "EHLO mail.JVPinto.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229698AbhBZWYh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 26 Feb 2021 17:24:37 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 876D964EC4;
-        Fri, 26 Feb 2021 22:23:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614378236;
-        bh=Z/ta25Bvuqpt4AtDKMRNfw/LYqpsvn894k6przY8LRM=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=V+nizrsuH5p4VGalQSwOH8oaExNLdh47KZlbZHg9sNeHwNY27Ik2SbtlNO1LCZG3V
-         b5qdIBsiOF6DuzeHNlWzeTJMBxlaHrLv0j1olS8LgYeX1x84nKI9UcnjlRxbhhF65X
-         DH9FdjpL4ciRT6/FrvGXIAWj7g4zR8zPbPMc5rbNMEEl/GX01u9p47qTJ7vhQtQWbS
-         eOosTtHYF3SEM4uQ2Ih5AYWW2lQgH3+ok4OVLP3cllbY+fd3brb0TvicYYnk7SfPeR
-         jOaWZkQk85bbHyAk46Yih4jvYaoMzbETLF5Ov5SavSf7dQkQ7vm0mNdw1O6T8mZgCb
-         nM/YPyHp5oP9Q==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 7DEB1609D0;
-        Fri, 26 Feb 2021 22:23:56 +0000 (UTC)
-Subject: Re: [GIT PULL] s390 patches for the 5.12 merge window #2
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <your-ad-here.call-01614369728-ext-5933@work.hours>
-References: <your-ad-here.call-01614369728-ext-5933@work.hours>
-X-PR-Tracked-List-Id: <linux-s390.vger.kernel.org>
-X-PR-Tracked-Message-Id: <your-ad-here.call-01614369728-ext-5933@work.hours>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.12-2
-X-PR-Tracked-Commit-Id: cf6acb8bdb1d829b85a4daa2944bf9e71c93f4b9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e7270e47a09e83051da7b2bee71be00741860ec4
-Message-Id: <161437823650.23821.10428263879361138246.pr-tracker-bot@kernel.org>
-Date:   Fri, 26 Feb 2021 22:23:56 +0000
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        id S230001AbhB0We7 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 27 Feb 2021 17:34:59 -0500
+Received: from RW-EXC1.JVPinto.com (2002:ac20:10d::ac20:10d) by
+ RW-EXC1.JVPinto.com (2002:ac20:10d::ac20:10d) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Sat, 27 Feb 2021 14:33:46 -0800
+Received: from User (52.231.198.195) by RW-EXC1.JVPinto.com (172.32.1.13) with
+ Microsoft SMTP Server id 15.0.1497.2 via Frontend Transport; Sat, 27 Feb 2021
+ 14:33:32 -0800
+Reply-To: <ms.reem@yandex.com>
+From:   "Ms. Reem" <johnpinto@jvpinto.com>
+Subject: Hello okay
+Date:   Sat, 27 Feb 2021 22:33:46 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <837a988e66554c5d95b18ae85648d3d7@RW-EXC1.JVPinto.com>
+To:     Undisclosed recipients:;
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Fri, 26 Feb 2021 21:02:08 +0100:
+Hello,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.12-2
+My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
+and Petroleum" also "Minister of State for International Cooperation"
+in UAE. I write to you on behalf of my other "three (3) colleagues"
+who has approved me to solicit for your "partnership in claiming of
+{us$47=Million}" from a Financial Home in Cambodia on their behalf and
+for our "Mutual Benefits".
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e7270e47a09e83051da7b2bee71be00741860ec4
+The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
+deal with Cambodian/Vietnam Government within 2013/2014, however, we
+don't want our government to know about the fund. If this proposal
+interests you, let me know, by sending me an email and I will send to
+you detailed information on how this business would be successfully
+transacted. Be informed that nobody knows about the secret of this
+fund except us, and we know how to carry out the entire transaction.
+So I am compelled to ask, that you will stand on our behalf and
+receive this fund into any account that is solely controlled by you.
 
-Thank you!
+We will compensate you with 15% of the total amount involved as
+gratification for being our partner in this transaction. Reply to:
+ms.reem@yandex.com
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Regards,
+Ms. Reem.
