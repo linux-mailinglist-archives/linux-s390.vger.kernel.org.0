@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A37432B15B
-	for <lists+linux-s390@lfdr.de>; Wed,  3 Mar 2021 04:46:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42D3B32B16C
+	for <lists+linux-s390@lfdr.de>; Wed,  3 Mar 2021 04:46:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232860AbhCCCUH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Mar 2021 21:20:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49008 "EHLO mail.kernel.org"
+        id S234183AbhCCCVW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Mar 2021 21:21:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1349147AbhCBM3J (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 2 Mar 2021 07:29:09 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B65F764FCB;
-        Tue,  2 Mar 2021 11:59:32 +0000 (UTC)
+        id S1383891AbhCBMcr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 2 Mar 2021 07:32:47 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D70F964FC7;
+        Tue,  2 Mar 2021 11:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614686373;
-        bh=HAHCf/VyvL/BDirKz3srbwwm7Y/wDsom2wujpSsazBQ=;
+        s=k20201202; t=1614686385;
+        bh=X91BEpklofYjO4+lMYsjJCV7Ypwis/RBmob7/45dcQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SxNhDG3vFrESELPocy4WPZN6cFIFbifCnlvM4f0PZXLuaPP1M/bIZk2lp/X1vgcGS
-         wtMD5LiX4Wb27tCRYaAV0qcRZU+Bsx/s3S1DteROFLvMxgwtideR/SrXe2Xwb9RKbv
-         ZVHIiMJAotDmtveVSDKX9UUwcZCLAY54D0gFffW8RFlM923UkwrIsuL5X2ese2jmi8
-         hchle1TrDbA3lyyB0Di3KgUGPkqjx7/RVv6XBFk1fg1mnh/eAbLsDk0Ig/bCEy1TsS
-         jY8jjSgmfQUDEOlVs5Ao15uclyRqqx8XxsswPF6H4v3HMkjSkG04q3kuvSNNclByIG
-         54qmq2XO5kkNA==
+        b=MKbYEhvvtz1/v3XxzlQyEhUYrJvi+6e5NhhmbUFUI3eWbr+k+WpRvzlerXWoRm4zZ
+         eN5pZGAvZA+XehqohQrJ4TXashaVnri/Rp0lwF885FsBijq3VeetbotWUpSC9Np4BL
+         v7hdJlsAUHOZknXy1px2fMWOMybLF3L8QVOgBDOOY7FNmMC3ycrxRqhXycstzNarNF
+         lPXKLu1LMyghBPJHBCLYIrVeEEjYaOriRfwboAhrkXS6xN5wV5tTCHmqyJvhciENs6
+         8q5F1qPssu7TAZGKE4guboT6350VAY2PBBOiKHPm3eDgN6gyXLPoNdZqgfZrVUgKLb
+         RW7vhtA9izI9Q==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/10] s390/smp: __smp_rescan_cpus() - move cpumask away from stack
-Date:   Tue,  2 Mar 2021 06:59:20 -0500
-Message-Id: <20210302115921.63636-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 7/8] s390/smp: __smp_rescan_cpus() - move cpumask away from stack
+Date:   Tue,  2 Mar 2021 06:59:34 -0500
+Message-Id: <20210302115935.63777-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210302115921.63636-1-sashal@kernel.org>
-References: <20210302115921.63636-1-sashal@kernel.org>
+In-Reply-To: <20210302115935.63777-1-sashal@kernel.org>
+References: <20210302115935.63777-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,10 +58,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index cba8e56cd63d..54eb8fe95212 100644
+index f113fcd781d8..486f0d4f9aee 100644
 --- a/arch/s390/kernel/smp.c
 +++ b/arch/s390/kernel/smp.c
-@@ -727,7 +727,7 @@ static int smp_add_core(struct sclp_core_entry *core, cpumask_t *avail,
+@@ -738,7 +738,7 @@ static int smp_add_core(struct sclp_core_entry *core, cpumask_t *avail,
  static int __smp_rescan_cpus(struct sclp_core_info *info, bool early)
  {
  	struct sclp_core_entry *core;
