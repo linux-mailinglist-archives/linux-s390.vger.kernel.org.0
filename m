@@ -2,633 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 562DB32B186
-	for <lists+linux-s390@lfdr.de>; Wed,  3 Mar 2021 04:46:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35A5D32C28B
+	for <lists+linux-s390@lfdr.de>; Thu,  4 Mar 2021 01:04:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242293AbhCCCYm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Mar 2021 21:24:42 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15380 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1839950AbhCBUog (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Mar 2021 15:44:36 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 122KhK72167272;
-        Tue, 2 Mar 2021 15:43:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=YQu2W8R1Q1J6PRXTy55nWxlhdXWRfJuq3fJYBTeXFkY=;
- b=fjwP/lVTVeLiS3zNmu9LhAuZkppGbFF/2xPWpg7X6edJ1CWR98OMllU2g/vU2+dBa4Y/
- LDw+qNpuYOfi8AI1QP2WWobOI6TvAW7/jhNf89uhSQKXL6pHO01Z8Wh49+apZj0EcvgA
- GVAZ+laHqHDOXtXZWJwPj+GnxGwh5cHJkG0GrNV0VwZQ3EqtJr0a4IeuQsHKJ3RoG5up
- Ps+EkrQ+GMohqY9LwsoFWyTck1vScIfHm6xxn5gD0JzjOT3E6Ccdq+82XzMvk/Ux/mHW
- Nw8nAR5/nbhUwJ1Ot7/u4RJTfvO9JQodGR7JRmBC2bYPKP0S336HvmPSvzbfLw8d2aSR kQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 371vn481cc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Mar 2021 15:43:50 -0500
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 122KhX3K168844;
-        Tue, 2 Mar 2021 15:43:48 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 371vn4818j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Mar 2021 15:43:48 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 122KWxNH018053;
-        Tue, 2 Mar 2021 20:43:45 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma02wdc.us.ibm.com with ESMTP id 3711dwte19-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Mar 2021 20:43:43 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 122KhgPj29950378
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Mar 2021 20:43:42 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ADEB17805C;
-        Tue,  2 Mar 2021 20:43:42 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EDF8478060;
-        Tue,  2 Mar 2021 20:43:40 +0000 (GMT)
-Received: from cpe-66-24-58-13.stny.res.rr.com.com (unknown [9.85.150.254])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  2 Mar 2021 20:43:40 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     stable@vger.kernel.org, borntraeger@de.ibm.com, cohuck@redhat.com,
-        kwankhede@nvidia.com, pbonzini@redhat.com,
-        alex.williamson@redhat.com, pasic@linux.vnet.ibm.com,
-        Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v3 1/1] s390/vfio-ap: fix circular lockdep when setting/clearing crypto masks
-Date:   Tue,  2 Mar 2021 15:43:22 -0500
-Message-Id: <20210302204322.24441-2-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20210302204322.24441-1-akrowiak@linux.ibm.com>
-References: <20210302204322.24441-1-akrowiak@linux.ibm.com>
+        id S234966AbhCCW3g (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 3 Mar 2021 17:29:36 -0500
+Received: from mail-eopbgr80118.outbound.protection.outlook.com ([40.107.8.118]:20389
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1839533AbhCCIKf (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 3 Mar 2021 03:10:35 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oI4SAZ6yqWkwRRerAn9F118P/NjEVkUKDxI1eAMC8VVzkBnRg4ZMt/uy5mC+gpUbcKAIQtZpyYHzgRfeH1P/q6Q1X1Zb8f4jO9r3tmYljLaQrEPZxWU5PX+MzYH5m/9MQEF/3bxvUahXqej+mcde6Y6KKAmDznHsBd2e3ac758ZPmwMJy6BmnK49/c7H9rOBBMYJniv+7ds6Wfvd/22YX/vQKvowGZPZXYpukfKRTW7Xk8Kzac2PVCQKEwZHkAjySbuViv4EeaFsHMcCHFeEhkWx3Pw8+w/WwuEa3Fb52E6mr3iY9enpbpU0mNnrNesEsg6DUA39c1OmhLNXe9fA7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LE7uPPei3pDKYvFuD2and2YbYh4wb+vRfmPRdlXkWng=;
+ b=Jv1l66ZHYUqfLpnRhsQb4AopjOm5TkZs/+0h8HyVQohxqq0aOzREBIDjJpFZvqsGcquV1cYnU1BharvDgFUSDBzSO2s1UiYpD1o4SIiEC+Zjve+8bj3vX/KntvSPzPpEOmtojb3SsrmcmL+lTLUlcBYWvRBiTA1W3CtYRooN+Az1zo5+biJZ+U9VIwJYOMm59FgQOdRzdLAouG9MixFP0QBZzkHB9uuDpRH1xvikbBq/ZbLFh2ncx6oRx0fuBep++1zmOQ4L1KhXN3ZyJGFEsA1TLnVnZyxshgx3uXCPw+VMkHiuk6vs7B8Bg7pSVzU4JYeN7wA+j+qmzsJXnyaZGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LE7uPPei3pDKYvFuD2and2YbYh4wb+vRfmPRdlXkWng=;
+ b=YKVw0rmMIWw/Pea2mYQ2XQBC3jtBKFhJlCGQ6Pt4z+YknoJieh9N9iVI+ddWbtQVJoXZ+NLxuoB3QlObql6H5sQWv1C+DqlOZ30trgAHkxJ90GgxHozYowwwtDl7nyzBY0XUTxJgjmxNlZtflMKoR5FGUqDAGFrzemzmyXEt4SQ=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=prevas.dk;
+Received: from AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:3f::10)
+ by AM8PR10MB4193.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:1e7::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.19; Wed, 3 Mar
+ 2021 07:50:21 +0000
+Received: from AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::58b2:6a2a:b8f9:bc1a]) by AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::58b2:6a2a:b8f9:bc1a%3]) with mapi id 15.20.3912.017; Wed, 3 Mar 2021
+ 07:50:21 +0000
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-s390@vger.kernel.org, smatch@vger.kernel.org
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: smatch and copy_{to,from}_user return values
+Message-ID: <b57b4f40-d67c-d57c-c5b2-077b623ed4ed@prevas.dk>
+Date:   Wed, 3 Mar 2021 08:50:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [80.208.71.141]
+X-ClientProxiedBy: AM7PR04CA0009.eurprd04.prod.outlook.com
+ (2603:10a6:20b:110::19) To AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:3f::10)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-02_08:2021-03-01,2021-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 adultscore=0 spamscore=0 bulkscore=0 suspectscore=0
- impostorscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103020156
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.149] (80.208.71.141) by AM7PR04CA0009.eurprd04.prod.outlook.com (2603:10a6:20b:110::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.28 via Frontend Transport; Wed, 3 Mar 2021 07:50:20 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4639db7b-4449-4a12-fa67-08d8de18fecc
+X-MS-TrafficTypeDiagnostic: AM8PR10MB4193:
+X-Microsoft-Antispam-PRVS: <AM8PR10MB4193EDBA4D4948282D271BDE93989@AM8PR10MB4193.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lLS70v+aawb+Hx0w0Qaq0nlOvzlrsMAgFtrrVnwaUZ9WELAYbtkscTnlggK8SPAKiZ7F+tEtVsQDhzNMwt93huklw98+6Htiz4Keh/cOXv4OCvOCbj6YXWufPxRH7bA+3hBy/iRzP9eYPMTmDMAhTDMqNJRTj6oJlmPrtgkrE9aFojfBt/NnLNuXUjWk5G0XBzSOLkODvP87ijYL6Xnb6tqYyd90IIUQBn3tQFk8O4O+ICoyd1VQn7tJgclt+cE9i486Afwvcd4KeGaPp8a8EhG3kzVkDLdNKBftkZlw0/oBi0PYxC/XUXlrH8AFrZUSr4VFDtBKEl78Mk0dNJRu9LFcld0lExJHmONO9XeiZravRjj2hCxV4Fvm0v4hnpiNORdHud7brMGKUEef15Xmr9iUUuLrKz/54ws/wn0IBaqfMEBxdqyPIeUE/w1T3dNg4veUNk+B+k7fv/hA+0MG2DJY/8kN/c0CtA2LXihXP0OmwqSK/xT1h1WW5cf+CRGq1EEPcNDQdt3PIipGvX4Z34DsJSgXvDXpe4rB3sqNMxiaNv6mT8YDl6nzZveDR/tPJt9RYL9SLY+/Ts36EmAIB0ZNutif+qgZ7R7BkSyNe/U=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(366004)(52116002)(8676002)(31696002)(36756003)(6916009)(83380400001)(86362001)(4326008)(8936002)(498600001)(2906002)(2616005)(956004)(8976002)(66946007)(6486002)(16526019)(186003)(26005)(66476007)(16576012)(31686004)(5660300002)(66556008)(44832011)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: =?Windows-1252?Q?e1KNHyYmojZVKY2mFv1j7tNzx4Kc65YRv0P59c6SMJrGHgmLb2OV9nei?=
+ =?Windows-1252?Q?qdlUAdJ1QqNSEJA8E/sMydUNCJ8+GxY75WkORR58MAyvPfQ4s8XO1wZE?=
+ =?Windows-1252?Q?ZFS1S59yDXpzWkgYfm9zKW0ricsgd8goXbqwHL6NKC0g8sZVRsnVVVVw?=
+ =?Windows-1252?Q?8oUH2O6LPkZztbfgYaD7phTQ06uxzRAE9MHVTtCNK7LQgGTMZSyPAyr3?=
+ =?Windows-1252?Q?FLEoNO2lcvclmYBjSfmBRbaOcAsglpaWW3t7WhrbL+JIoadJb+9FItL8?=
+ =?Windows-1252?Q?TooDN+AnHWSLf1k7gzk25PDSTS4IsijHCRR2PIWpyLHbwGmtfNAMlNmS?=
+ =?Windows-1252?Q?LBVIX8MasyiCRS5ysiSbrbpkrQQbhAyCHrt5TbOxSUgAhiIdqQsI95TY?=
+ =?Windows-1252?Q?/mIAuwfIAG4WOCZeO0oxMwC04MvXpHSB1qBu+TSnOwOP1F1rC398AM+c?=
+ =?Windows-1252?Q?JUx9Dv4Td3K7cyYWFFSxRvl/i7lW7u7CmDZJMM/pTCu4obdIZdWnPD8n?=
+ =?Windows-1252?Q?KUpqgJKrYk+GWJestl0J4NxvU5/fXAaerURK3PBlmuXei/3ci0mqVnpf?=
+ =?Windows-1252?Q?4UbR5Vr3xbG3md6DozdC5c2dOI1sMp2dUEaKaXF06rYfWoTrPTr89vcN?=
+ =?Windows-1252?Q?5z6eSg9D8S6KNkmq0JqzBVv9SqKoCyAiQwl5JdkpGo4PpW0fBs6xSV+J?=
+ =?Windows-1252?Q?qo4wXiuzJFb5MQ9sGc55KV90nGiv/dZI6OIWcrpedrNpOeemSp0Z+zJc?=
+ =?Windows-1252?Q?/UfP1NXAh4egIht8oDs7vacWI4nHM1xlj1QgROrQXtVDeVTEnoNkFzb1?=
+ =?Windows-1252?Q?olnQTG9m+IcewEMKnouQ1ez8M1JjYU08gBLxmUvJrXcCrEfImCuMLHyH?=
+ =?Windows-1252?Q?ouklcsRFvKRxDy6yXjFJhm1Ynyn41qHjQPHN+cXtPXQUjPZtHO+6SS5r?=
+ =?Windows-1252?Q?2+Hj/fUSc4I2WSaFAp+LKyw9FBCEUuNWzKehYike3guTnMHYjEKg3KHp?=
+ =?Windows-1252?Q?eLEp/Beh3fhRkLRuTHN1qTi+T9sr3mh0M0O1SrW2obIJshRWAAZ/WIRv?=
+ =?Windows-1252?Q?CXJfjA41KAyY9l3sbjPEQs4Ww9vjkUvtmKYSK/u3gyb6nskh10AYWZPB?=
+ =?Windows-1252?Q?qHwja0sV85TjmcmxAsXlJb+CKWYzpmUKKGEFiY4NIBGAv4JO1GhdaCeC?=
+ =?Windows-1252?Q?U7vo9at4sgYHLwdRFNB8sAGH3ZCHQnOhSWIbSNzr9W3jaQa4QrDg48Uc?=
+ =?Windows-1252?Q?+ttgdsJhohNylpynbUzs77f6IrEIECvQUwKUHxv1AKEboYc1FXxQvneE?=
+ =?Windows-1252?Q?mGHAEi8G6cnz0GmePxlNgs9ek8nUJnUb4DwyNfgGP7XsfFFa+wUplOz2?=
+ =?Windows-1252?Q?xkmAvGAskljoIyX694YxzwxWTj7TImxaiHr5rigjrMJi/FLs0RhQt9Gq?=
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4639db7b-4449-4a12-fa67-08d8de18fecc
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2021 07:50:21.1321
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 77vjpWL6ILWQj3m1UM83BgfXbUsiEsymd8eTzcCqAfPH6uQrWxt5eWsnxVK0auhEaoNnBZ008qOc55EwNj5vuMStzqAzTcASl5UMUMabieQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR10MB4193
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This patch fixes a lockdep splat introduced by commit f21916ec4826
-("s390/vfio-ap: clean up vfio_ap resources when KVM pointer invalidated").
-The lockdep splat only occurs when starting a Secure Execution guest.
-Crypto virtualization (vfio_ap) is not yet supported for SE guests;
-however, in order to avoid this problem when support becomes available,
-this fix is being provided.
+Hi Dan
 
-The circular locking dependency was introduced when the setting of the
-masks in the guest's APCB was executed while holding the matrix_dev->lock.
-While the lock is definitely needed to protect the setting/unsetting of the
-matrix_mdev->kvm pointer, it is not necessarily critical for setting the
-masks; so, the matrix_dev->lock will be released while the masks are being
-set or cleared.
+If you look at vfio_ccw_mdev_ioctl() in drivers/s390/cio/vfio_ccw_ops.c,
+and vfio_ap_mdev_get_device_info() in drivers/s390/crypto/vfio_ap_ops.c,
+there are examples of functions that can both return -Esomething as well
+as may return the return value of a copy_{to,from}_user directly (i.e.,
+in case of error some positive number).
 
-Keep in mind, however, that another process that takes the matrix_dev->lock
-can get control while the masks in the guest's APCB are being set or
-cleared as a result of the driver being notified that the KVM pointer
-has been set or unset. This could result in invalid access to the
-matrix_mdev->kvm pointer by the intervening process. To avoid this
-scenario, two new fields are being added to the ap_matrix_mdev struct:
+[Those "return copy_to_user();" should probably all be changed to
+"return copy_to_user() ? -EFAULT : 0;" - cc'ing the s390 list in case
+the maintainers want to do that.]
 
-struct ap_matrix_mdev {
-	...
-	bool kvm_busy;
-	wait_queue_head_t wait_for_kvm;
-   ...
-};
+Can smatch detect such cases? I seem to recall it has some concept of
+tagging a function as "returning -Efoo or 0", so it would also need to
+know that copy_{to,from}_user does not return -Efoo. And it also needs
+to follow the control flow, so
 
-The functions that handle notification that the KVM pointer value has
-been set or cleared will set the kvm_busy flag to true until they are done
-processing at which time they will set it to false and wake up the tasks on
-the matrix_mdev->wait_for_kvm wait queue. Functions that require
-access to matrix_mdev->kvm will sleep on the wait queue until they are
-awakened at which time they can safely access the matrix_mdev->kvm
-field.
+ ret = copy_to_user();
+ if (ret)
+    return -EIO;
+ something_else;
+ return ret; /* this is 0 */
 
-Fixes: f21916ec4826 ("s390/vfio-ap: clean up vfio_ap resources when KVM pointer invalidated")
-Cc: stable@vger.kernel.org
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c     | 312 ++++++++++++++++++--------
- drivers/s390/crypto/vfio_ap_private.h |   2 +
- 2 files changed, 218 insertions(+), 96 deletions(-)
+doesn't trigger. And there's gonna be some false positives around signal
+frame setup, which do a lot of "err |= foo(); err |= bar()" where foo()
+report errors as -Exxx and bar can be a copy_to_user(), but in the end
+err is only checked against 0.
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 41fc2e4135fe..aaf642a21a9d 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -294,6 +294,19 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
- 	matrix_mdev = container_of(vcpu->kvm->arch.crypto.pqap_hook,
- 				   struct ap_matrix_mdev, pqap_hook);
- 
-+	/*
-+	 * If the KVM pointer is in the process of being set, wait until the
-+	 * process has completed.
-+	 */
-+	wait_event_cmd(matrix_mdev->wait_for_kvm,
-+		       matrix_mdev->kvm_busy == false,
-+		       mutex_unlock(&matrix_dev->lock),
-+		       mutex_lock(&matrix_dev->lock));
-+
-+	/* If the there is no guest using the mdev, there is nothing to do */
-+	if (!matrix_mdev->kvm)
-+		goto out_unlock;
-+
- 	q = vfio_ap_get_queue(matrix_mdev, apqn);
- 	if (!q)
- 		goto out_unlock;
-@@ -337,6 +350,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
- 
- 	matrix_mdev->mdev = mdev;
- 	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->matrix);
-+	init_waitqueue_head(&matrix_mdev->wait_for_kvm);
- 	mdev_set_drvdata(mdev, matrix_mdev);
- 	matrix_mdev->pqap_hook.hook = handle_pqap;
- 	matrix_mdev->pqap_hook.owner = THIS_MODULE;
-@@ -351,17 +365,23 @@ static int vfio_ap_mdev_remove(struct mdev_device *mdev)
- {
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
--	if (matrix_mdev->kvm)
-+	mutex_lock(&matrix_dev->lock);
-+
-+	/*
-+	 * If the KVM pointer is in flux or the guest is running, disallow
-+	 * un-assignment of control domain.
-+	 */
-+	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+		mutex_unlock(&matrix_dev->lock);
- 		return -EBUSY;
-+	}
- 
--	mutex_lock(&matrix_dev->lock);
- 	vfio_ap_mdev_reset_queues(mdev);
- 	list_del(&matrix_mdev->node);
--	mutex_unlock(&matrix_dev->lock);
--
- 	kfree(matrix_mdev);
- 	mdev_set_drvdata(mdev, NULL);
- 	atomic_inc(&matrix_dev->available_instances);
-+	mutex_unlock(&matrix_dev->lock);
- 
- 	return 0;
- }
-@@ -606,24 +626,31 @@ static ssize_t assign_adapter_store(struct device *dev,
- 	struct mdev_device *mdev = mdev_from_dev(dev);
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
--	/* If the guest is running, disallow assignment of adapter */
--	if (matrix_mdev->kvm)
--		return -EBUSY;
-+	mutex_lock(&matrix_dev->lock);
-+
-+	/*
-+	 * If the KVM pointer is in flux or the guest is running, disallow
-+	 * un-assignment of adapter
-+	 */
-+	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
- 
- 	ret = kstrtoul(buf, 0, &apid);
- 	if (ret)
--		return ret;
-+		goto done;
- 
--	if (apid > matrix_mdev->matrix.apm_max)
--		return -ENODEV;
-+	if (apid > matrix_mdev->matrix.apm_max) {
-+		ret = -ENODEV;
-+		goto done;
-+	}
- 
- 	/*
- 	 * Set the bit in the AP mask (APM) corresponding to the AP adapter
- 	 * number (APID). The bits in the mask, from most significant to least
- 	 * significant bit, correspond to APIDs 0-255.
- 	 */
--	mutex_lock(&matrix_dev->lock);
--
- 	ret = vfio_ap_mdev_verify_queues_reserved_for_apid(matrix_mdev, apid);
- 	if (ret)
- 		goto done;
-@@ -672,22 +699,31 @@ static ssize_t unassign_adapter_store(struct device *dev,
- 	struct mdev_device *mdev = mdev_from_dev(dev);
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
--	/* If the guest is running, disallow un-assignment of adapter */
--	if (matrix_mdev->kvm)
--		return -EBUSY;
-+	mutex_lock(&matrix_dev->lock);
-+
-+	/*
-+	 * If the KVM pointer is in flux or the guest is running, disallow
-+	 * un-assignment of adapter
-+	 */
-+	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
- 
- 	ret = kstrtoul(buf, 0, &apid);
- 	if (ret)
--		return ret;
-+		goto done;
- 
--	if (apid > matrix_mdev->matrix.apm_max)
--		return -ENODEV;
-+	if (apid > matrix_mdev->matrix.apm_max) {
-+		ret = -ENODEV;
-+		goto done;
-+	}
- 
--	mutex_lock(&matrix_dev->lock);
- 	clear_bit_inv((unsigned long)apid, matrix_mdev->matrix.apm);
-+	ret = count;
-+done:
- 	mutex_unlock(&matrix_dev->lock);
--
--	return count;
-+	return ret;
- }
- static DEVICE_ATTR_WO(unassign_adapter);
- 
-@@ -753,17 +789,24 @@ static ssize_t assign_domain_store(struct device *dev,
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 	unsigned long max_apqi = matrix_mdev->matrix.aqm_max;
- 
--	/* If the guest is running, disallow assignment of domain */
--	if (matrix_mdev->kvm)
--		return -EBUSY;
-+	mutex_lock(&matrix_dev->lock);
-+
-+	/*
-+	 * If the KVM pointer is in flux or the guest is running, disallow
-+	 * assignment of domain
-+	 */
-+	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
- 
- 	ret = kstrtoul(buf, 0, &apqi);
- 	if (ret)
--		return ret;
--	if (apqi > max_apqi)
--		return -ENODEV;
--
--	mutex_lock(&matrix_dev->lock);
-+		goto done;
-+	if (apqi > max_apqi) {
-+		ret = -ENODEV;
-+		goto done;
-+	}
- 
- 	ret = vfio_ap_mdev_verify_queues_reserved_for_apqi(matrix_mdev, apqi);
- 	if (ret)
-@@ -814,22 +857,32 @@ static ssize_t unassign_domain_store(struct device *dev,
- 	struct mdev_device *mdev = mdev_from_dev(dev);
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
--	/* If the guest is running, disallow un-assignment of domain */
--	if (matrix_mdev->kvm)
--		return -EBUSY;
-+	mutex_lock(&matrix_dev->lock);
-+
-+	/*
-+	 * If the KVM pointer is in flux or the guest is running, disallow
-+	 * un-assignment of domain
-+	 */
-+	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
- 
- 	ret = kstrtoul(buf, 0, &apqi);
- 	if (ret)
--		return ret;
-+		goto done;
- 
--	if (apqi > matrix_mdev->matrix.aqm_max)
--		return -ENODEV;
-+	if (apqi > matrix_mdev->matrix.aqm_max) {
-+		ret = -ENODEV;
-+		goto done;
-+	}
- 
--	mutex_lock(&matrix_dev->lock);
- 	clear_bit_inv((unsigned long)apqi, matrix_mdev->matrix.aqm);
--	mutex_unlock(&matrix_dev->lock);
-+	ret = count;
- 
--	return count;
-+done:
-+	mutex_unlock(&matrix_dev->lock);
-+	return ret;
- }
- static DEVICE_ATTR_WO(unassign_domain);
- 
-@@ -858,27 +911,36 @@ static ssize_t assign_control_domain_store(struct device *dev,
- 	struct mdev_device *mdev = mdev_from_dev(dev);
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
--	/* If the guest is running, disallow assignment of control domain */
--	if (matrix_mdev->kvm)
--		return -EBUSY;
-+	mutex_lock(&matrix_dev->lock);
-+
-+	/*
-+	 * If the KVM pointer is in flux or the guest is running, disallow
-+	 * assignment of control domain.
-+	 */
-+	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
- 
- 	ret = kstrtoul(buf, 0, &id);
- 	if (ret)
--		return ret;
-+		goto done;
- 
--	if (id > matrix_mdev->matrix.adm_max)
--		return -ENODEV;
-+	if (id > matrix_mdev->matrix.adm_max) {
-+		ret = -ENODEV;
-+		goto done;
-+	}
- 
- 	/* Set the bit in the ADM (bitmask) corresponding to the AP control
- 	 * domain number (id). The bits in the mask, from most significant to
- 	 * least significant, correspond to IDs 0 up to the one less than the
- 	 * number of control domains that can be assigned.
- 	 */
--	mutex_lock(&matrix_dev->lock);
- 	set_bit_inv(id, matrix_mdev->matrix.adm);
-+	ret = count;
-+done:
- 	mutex_unlock(&matrix_dev->lock);
--
--	return count;
-+	return ret;
- }
- static DEVICE_ATTR_WO(assign_control_domain);
- 
-@@ -908,21 +970,30 @@ static ssize_t unassign_control_domain_store(struct device *dev,
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 	unsigned long max_domid =  matrix_mdev->matrix.adm_max;
- 
--	/* If the guest is running, disallow un-assignment of control domain */
--	if (matrix_mdev->kvm)
--		return -EBUSY;
-+	mutex_lock(&matrix_dev->lock);
-+
-+	/*
-+	 * If the KVM pointer is in flux or the guest is running, disallow
-+	 * un-assignment of control domain.
-+	 */
-+	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+		ret = -EBUSY;
-+		goto done;
-+	}
- 
- 	ret = kstrtoul(buf, 0, &domid);
- 	if (ret)
--		return ret;
--	if (domid > max_domid)
--		return -ENODEV;
-+		goto done;
-+	if (domid > max_domid) {
-+		ret = -ENODEV;
-+		goto done;
-+	}
- 
--	mutex_lock(&matrix_dev->lock);
- 	clear_bit_inv(domid, matrix_mdev->matrix.adm);
-+	ret = count;
-+done:
- 	mutex_unlock(&matrix_dev->lock);
--
--	return count;
-+	return ret;
- }
- static DEVICE_ATTR_WO(unassign_control_domain);
- 
-@@ -1027,8 +1098,15 @@ static const struct attribute_group *vfio_ap_mdev_attr_groups[] = {
-  * @matrix_mdev: a mediated matrix device
-  * @kvm: reference to KVM instance
-  *
-- * Verifies no other mediated matrix device has @kvm and sets a reference to
-- * it in @matrix_mdev->kvm.
-+ * Sets all data for @matrix_mdev that are needed to manage AP resources
-+ * for the guest whose state is represented by @kvm.
-+ *
-+ * Note: The matrix_dev->lock must be taken prior to calling
-+ * this function; however, the lock will be temporarily released while the
-+ * guest's AP configuration is set to avoid a potential lockdep splat.
-+ * The kvm->lock is taken to set the guest's AP configuration which, under
-+ * certain circumstances, will result in a circular lock dependency if this is
-+ * done under the @matrix_mdev->lock.
-  *
-  * Return 0 if no other mediated matrix device has a reference to @kvm;
-  * otherwise, returns an -EPERM.
-@@ -1038,14 +1116,28 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
- {
- 	struct ap_matrix_mdev *m;
- 
--	list_for_each_entry(m, &matrix_dev->mdev_list, node) {
--		if ((m != matrix_mdev) && (m->kvm == kvm))
--			return -EPERM;
--	}
-+	if (kvm->arch.crypto.crycbd) {
-+		matrix_mdev->kvm_busy = true;
- 
--	matrix_mdev->kvm = kvm;
--	kvm_get_kvm(kvm);
--	kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
-+		list_for_each_entry(m, &matrix_dev->mdev_list, node) {
-+			if ((m != matrix_mdev) && (m->kvm == kvm)) {
-+				wake_up_all(&matrix_mdev->wait_for_kvm);
-+				return -EPERM;
-+			}
-+		}
-+
-+		kvm_get_kvm(kvm);
-+		mutex_unlock(&matrix_dev->lock);
-+		kvm_arch_crypto_set_masks(kvm,
-+					  matrix_mdev->matrix.apm,
-+					  matrix_mdev->matrix.aqm,
-+					  matrix_mdev->matrix.adm);
-+		mutex_lock(&matrix_dev->lock);
-+		kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
-+		matrix_mdev->kvm = kvm;
-+		matrix_mdev->kvm_busy = false;
-+		wake_up_all(&matrix_mdev->wait_for_kvm);
-+	}
- 
- 	return 0;
- }
-@@ -1079,51 +1171,65 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
- 	return NOTIFY_DONE;
- }
- 
-+/**
-+ * vfio_ap_mdev_unset_kvm
-+ *
-+ * @matrix_mdev: a matrix mediated device
-+ *
-+ * Performs clean-up of resources no longer needed by @matrix_mdev.
-+ *
-+ * Note: The matrix_dev->lock must be taken prior to calling
-+ * this function; however, the lock will be temporarily released while the
-+ * guest's AP configuration is cleared to avoid a potential lockdep splat.
-+ * The kvm->lock is taken to clear the guest's AP configuration which, under
-+ * certain circumstances, will result in a circular lock dependency if this is
-+ * done under the @matrix_mdev->lock.
-+ *
-+ */
- static void vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
- {
--	kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
--	matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
--	vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
--	kvm_put_kvm(matrix_mdev->kvm);
--	matrix_mdev->kvm = NULL;
-+	/*
-+	 * If the KVM pointer is in the process of being set, wait until the
-+	 * process has completed.
-+	 */
-+	wait_event_cmd(matrix_mdev->wait_for_kvm,
-+		       matrix_mdev->kvm_busy == false,
-+		       mutex_unlock(&matrix_dev->lock),
-+		       mutex_lock(&matrix_dev->lock));
-+
-+	if (matrix_mdev->kvm) {
-+		matrix_mdev->kvm_busy = true;
-+		mutex_unlock(&matrix_dev->lock);
-+		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
-+		mutex_lock(&matrix_dev->lock);
-+		vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
-+		matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
-+		kvm_put_kvm(matrix_mdev->kvm);
-+		matrix_mdev->kvm = NULL;
-+		matrix_mdev->kvm_busy = false;
-+		wake_up_all(&matrix_mdev->wait_for_kvm);
-+	}
- }
- 
- static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
- 				       unsigned long action, void *data)
- {
--	int ret, notify_rc = NOTIFY_OK;
-+	int notify_rc = NOTIFY_OK;
- 	struct ap_matrix_mdev *matrix_mdev;
- 
- 	if (action != VFIO_GROUP_NOTIFY_SET_KVM)
- 		return NOTIFY_OK;
- 
--	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
- 	mutex_lock(&matrix_dev->lock);
-+	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
- 
--	if (!data) {
--		if (matrix_mdev->kvm)
--			vfio_ap_mdev_unset_kvm(matrix_mdev);
--		goto notify_done;
--	}
--
--	ret = vfio_ap_mdev_set_kvm(matrix_mdev, data);
--	if (ret) {
--		notify_rc = NOTIFY_DONE;
--		goto notify_done;
--	}
--
--	/* If there is no CRYCB pointer, then we can't copy the masks */
--	if (!matrix_mdev->kvm->arch.crypto.crycbd) {
-+	if (!data)
-+		vfio_ap_mdev_unset_kvm(matrix_mdev);
-+	else if (vfio_ap_mdev_set_kvm(matrix_mdev, data))
- 		notify_rc = NOTIFY_DONE;
--		goto notify_done;
--	}
- 
--	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
--				  matrix_mdev->matrix.aqm,
--				  matrix_mdev->matrix.adm);
--
--notify_done:
- 	mutex_unlock(&matrix_dev->lock);
-+
- 	return notify_rc;
- }
- 
-@@ -1258,8 +1364,7 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
- 	mutex_lock(&matrix_dev->lock);
--	if (matrix_mdev->kvm)
--		vfio_ap_mdev_unset_kvm(matrix_mdev);
-+	vfio_ap_mdev_unset_kvm(matrix_mdev);
- 	mutex_unlock(&matrix_dev->lock);
- 
- 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
-@@ -1293,6 +1398,7 @@ static ssize_t vfio_ap_mdev_ioctl(struct mdev_device *mdev,
- 				    unsigned int cmd, unsigned long arg)
- {
- 	int ret;
-+	struct ap_matrix_mdev *matrix_mdev;
- 
- 	mutex_lock(&matrix_dev->lock);
- 	switch (cmd) {
-@@ -1300,7 +1406,21 @@ static ssize_t vfio_ap_mdev_ioctl(struct mdev_device *mdev,
- 		ret = vfio_ap_mdev_get_device_info(arg);
- 		break;
- 	case VFIO_DEVICE_RESET:
--		ret = vfio_ap_mdev_reset_queues(mdev);
-+		matrix_mdev = mdev_get_drvdata(mdev);
-+
-+		/*
-+		 * If the KVM pointer is in the process of being set, wait until
-+		 * the process has completed.
-+		 */
-+		wait_event_cmd(matrix_mdev->wait_for_kvm,
-+			       matrix_mdev->kvm_busy == false,
-+			       mutex_unlock(&matrix_dev->lock),
-+			       mutex_lock(&matrix_dev->lock));
-+
-+		if (matrix_mdev->kvm)
-+			ret = vfio_ap_mdev_reset_queues(mdev);
-+		else
-+			ret = -ENODEV;
- 		break;
- 	default:
- 		ret = -EOPNOTSUPP;
-diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index 28e9d9989768..f82a6396acae 100644
---- a/drivers/s390/crypto/vfio_ap_private.h
-+++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -83,6 +83,8 @@ struct ap_matrix_mdev {
- 	struct ap_matrix matrix;
- 	struct notifier_block group_notifier;
- 	struct notifier_block iommu_notifier;
-+	bool kvm_busy;
-+	wait_queue_head_t wait_for_kvm;
- 	struct kvm *kvm;
- 	struct kvm_s390_module_hook pqap_hook;
- 	struct mdev_device *mdev;
--- 
-2.21.3
-
+Rasmus
