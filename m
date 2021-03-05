@@ -2,123 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E504532E66F
-	for <lists+linux-s390@lfdr.de>; Fri,  5 Mar 2021 11:31:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFA3632EBB0
+	for <lists+linux-s390@lfdr.de>; Fri,  5 Mar 2021 13:55:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbhCEKa4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 5 Mar 2021 05:30:56 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57662 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229690AbhCEKa0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 5 Mar 2021 05:30:26 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 125ATGfM002168;
-        Fri, 5 Mar 2021 05:30:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=4UbJnKh/rNouiIUUWZr3ZpULnYtu8wIcqi44QhFm7VQ=;
- b=cIManWSHycp6SdCZ1FadOLerR/MlP2K2WmPMGZqOEPQdpBCRT4vz3I9I+BZ48RZqdqls
- H8Tn11W9vC3fxm4ZMQgLzsMtb2G0EAlutXhwOxq51CBEF0sLuBEAqUFKTUYOU2PpXmDJ
- zG0f0m45HbwfCDk2yOHlmV1qv3r1S/A2MxAwUMZC7dCcq+ZWpClqDJ5ZUn8as8t8GkRe
- horv+n3OlO8e/dTrmRHxkotO9wADDUBlw1PoBPJGhn66hPW9vqKwC6qXPoSwdiG/MET+
- HQqrwFkDzIwoA+luD+7jxK4loDdtcgL5JTyM9Qop/uQWqeJn5g24oslKGaaNrzS2jwrK 3w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 373jxdr13u-1
+        id S230052AbhCEMzG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 5 Mar 2021 07:55:06 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30460 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S230051AbhCEMyq (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 5 Mar 2021 07:54:46 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 125CnqUm083683;
+        Fri, 5 Mar 2021 07:54:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=uSyPRghV1O4VXYrW7rznI6rOz9jkzWXMhPKsmpJ0kKE=;
+ b=HqrLchpJSV3V2z3ckMkAmkCUBQQGcNATxNT8RcqxgnXHI8v6mN6kGQRJ2YxyXnt6rK3H
+ qMxcDnQeZYjCFR/avN+itd5ooQakBL5zQMrB/5m/ptv71b3XH3OXqY1HIxOibYsTVRND
+ G+zJMcZ4tLl1sze0isJuvnFVU5GT2ge/DsXILfzHFdnq2qKnyJHyWh+usBqOhEciZLFA
+ qgBy+F1OolbTCCVNwbK7oE1FtPjaWYvGi4zZAz+tDl+rHbqo0qls3tgpgkNSz7dnp8gI
+ y59meh4uQ7t31+xEVreM9W6FJvYqYBM3pFQIsjn8lKZS98GrPVKjztBe/nNj8ITnApEU Kw== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 373n0782e9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Mar 2021 05:30:24 -0500
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 125AUMqv012206;
-        Fri, 5 Mar 2021 05:30:23 -0500
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 373jxdr12e-1
+        Fri, 05 Mar 2021 07:54:44 -0500
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 125CcJ4n020539;
+        Fri, 5 Mar 2021 12:54:43 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 371162kruf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Mar 2021 05:30:22 -0500
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 125AREnQ002959;
-        Fri, 5 Mar 2021 10:30:20 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 37293fswbt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Mar 2021 10:30:20 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 125AUIdc37683680
+        Fri, 05 Mar 2021 12:54:43 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 125CseU148103878
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Mar 2021 10:30:18 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EE74CA406F;
-        Fri,  5 Mar 2021 10:30:17 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 94C70A4053;
-        Fri,  5 Mar 2021 10:30:17 +0000 (GMT)
-Received: from [9.171.51.82] (unknown [9.171.51.82])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Mar 2021 10:30:17 +0000 (GMT)
-Subject: Re: [PATCH] net: smc: fix error return code of smc_diag_dump_proto()
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20210305101351.14683-1-baijiaju1990@gmail.com>
-From:   Karsten Graul <kgraul@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-Message-ID: <d1d50e39-e496-1060-2c71-2338c0572c55@linux.ibm.com>
-Date:   Fri, 5 Mar 2021 11:30:20 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Fri, 5 Mar 2021 12:54:40 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 55105A4060;
+        Fri,  5 Mar 2021 12:54:40 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 405A3A405C;
+        Fri,  5 Mar 2021 12:54:40 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  5 Mar 2021 12:54:40 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id BF34FE047D; Fri,  5 Mar 2021 13:54:39 +0100 (CET)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 0/2] s390/dasd: driver unbind fixes
+Date:   Fri,  5 Mar 2021 13:54:37 +0100
+Message-Id: <20210305125439.568125-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20210305101351.14683-1-baijiaju1990@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-05_05:2021-03-03,2021-03-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- spamscore=0 clxscore=1011 bulkscore=0 mlxlogscore=999 malwarescore=0
- lowpriorityscore=0 adultscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103050048
+ definitions=2021-03-05_08:2021-03-03,2021-03-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ impostorscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501
+ adultscore=0 suspectscore=0 lowpriorityscore=0 phishscore=0 clxscore=1011
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103050063
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 05/03/2021 11:13, Jia-Ju Bai wrote:
-> When the list of head is empty, no error return code of
-> smc_diag_dump_proto() is assigned.
-> To fix this bug, rc is assigned with -ENOENT as error return code.
+Hi Jens,
 
-Your change would break smc_diag_dump().
-When there are no IPv4 sockets (SMCPROTO_SMC) in the list and -ENOENT 
-is returned then smc_diag_dump() will not try to dump any IPv6 sockets
-(SMCPROTO_SMC6). Returning zero is correct here.
+please apply the following patches that fix two issues that may happen
+during driver unbind.
 
-> 
-> Reported-by: TOTE Robot <oslab@tsinghua.edu.cn>
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> ---
->  net/smc/smc_diag.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
-> index c952986a6aca..a90889482842 100644
-> --- a/net/smc/smc_diag.c
-> +++ b/net/smc/smc_diag.c
-> @@ -201,8 +201,10 @@ static int smc_diag_dump_proto(struct proto *prot, struct sk_buff *skb,
->  
->  	read_lock(&prot->h.smc_hash->lock);
->  	head = &prot->h.smc_hash->ht;
-> -	if (hlist_empty(head))
-> +	if (hlist_empty(head)) {
-> +		rc = -ENOENT;
->  		goto out;
-> +	}
->  
->  	sk_for_each(sk, head) {
->  		if (!net_eq(sock_net(sk), net))
-> 
+Stefan Haberland (2):
+  s390/dasd: fix hanging DASD driver unbind
+  s390/dasd: fix hanging IO request during DASD driver unbind
+
+ drivers/s390/block/dasd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 -- 
-Karsten
+2.25.1
 
-(I'm a dude)
