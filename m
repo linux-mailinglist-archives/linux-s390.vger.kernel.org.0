@@ -2,119 +2,145 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14CBA332C98
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Mar 2021 17:53:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30038332F33
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Mar 2021 20:43:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230473AbhCIQw4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Mar 2021 11:52:56 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43882 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229799AbhCIQwc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Mar 2021 11:52:32 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 129GXhRO118720;
-        Tue, 9 Mar 2021 11:52:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=5T+Sq8LYiE/LvGRDzrvRmOF3q8OXC6+wA8m0VnDb+ww=;
- b=Ooby4WFjkK4FDDl9smrpEbw0mSdtEk+TdFNyr4gHBXxE5qvW4AA1ShjcDjvzSwBOfwV5
- iIrzoYdFu3AHEBXZsd5pQJYxxoymcaPoGH/iSM48SpA2pPEbIeBV4Kkvk4Ur/BJDLAZz
- Shn+8O020Z7bbxvMlbkqABMdwxxB9/6nZrkHaRSdwU0AahqYM4XkaHWN+1tTw9XW19jC
- 4hMg35d/J1mul6YP3AUkq1IM52lYu/B2BHePlq5c2Ug4o8dQRd4TnM9n8rF7tmJWAN0F
- OyDw2m3hU8Re7wzHryXNTwLGVVqN/3x7XsrGvO3w2SXOlU5qToKTNvL6ZFmLWJSKYvjI mw== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3762wrb00v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Mar 2021 11:52:30 -0500
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 129Gi5Mx013907;
-        Tue, 9 Mar 2021 16:52:28 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 3768urr70c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Mar 2021 16:52:28 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 129GqP3L42140102
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Mar 2021 16:52:25 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C570C5204E;
-        Tue,  9 Mar 2021 16:52:25 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7F23252050;
-        Tue,  9 Mar 2021 16:52:25 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
+        id S231387AbhCITnL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Mar 2021 14:43:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231243AbhCITmn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 9 Mar 2021 14:42:43 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AE34265228;
+        Tue,  9 Mar 2021 19:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615318963;
+        bh=ZhUp65qT2Edv35cPfVcgVPA1Vr3DqEzB5OQkhdx4Dz0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ArJFusyN7UERXhJENyeMvV7NnlyWuWh8BovqPV29pBUzaU0ioiO103V0S7dVRRO6X
+         4mcpPaZabsPcORzLRWpfQK2dw7Pda562qM5Mx7DBbXPH4xI69Bnmzg0Uq7wm/R4EKL
+         nT0sPxNqrzh2ZwfwMQONp6Xo28t8ezPf+N7ifGWq62S5gGV/WIJtMNc7vRdvGmmtov
+         mqFXp0247nSaQnaLBzjzO4LiwIHykdpcN2+ur7yS2Ezy9rPqgIxluRdZK41a7Otibs
+         Fh5cNfGZ/nJdSPnV8qVZlfQpFTNfVHlk62TIes7fQ/fTS1GTBOs+mF/CxH164s9f02
+         B7ST17bZQTRWQ==
+From:   Mark Brown <broonie@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Heiko Carstens <hca@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net 4/4] s390/qeth: fix notification for pending buffers during teardown
-Date:   Tue,  9 Mar 2021 17:52:21 +0100
-Message-Id: <20210309165221.1735641-5-jwi@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210309165221.1735641-1-jwi@linux.ibm.com>
-References: <20210309165221.1735641-1-jwi@linux.ibm.com>
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>, x86@kernel.org,
+        linux-s390@vger.kernel.org, live-patching@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: [PATCH] stacktrace: Move documentation for arch_stack_walk_reliable() to header
+Date:   Tue,  9 Mar 2021 19:41:25 +0000
+Message-Id: <20210309194125.652-1-broonie@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+X-Patch-Hashes: v=1; h=sha256; i=Kh6NyXsqh0zq94gMuzBCs8afziAecd1XZurszyuxEhw=; m=/jKBVe0RfPWMav8OjafUnXErqEkBoTiYB/rI2TxCriw=; p=nPcWpKdBDbrmbYT1hqEf1yR8qtxRXTJfKeEoIt+tgd4=; g=f1dfd626035b5ec1394ca2d18e3f85690f794e7e
+X-Patch-Sig: m=pgp; i=broonie@kernel.org; s=0xC3F436CA30F5D8EB; b=iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmBHz1sACgkQJNaLcl1Uh9Au4AgAghj XD7vbxyItKIAkn2Tx0Ks3t5LR/K2p5yRT3CgHpvU4Jshp/08F7etkVHNAZSRbuzatlr6xDMecPhB8 bHfClUAz9GqGQh6IYvJhflL+fSwscO2OJTeColxwFL25VVaRANnro+vqi++RiVCIBHP3zTtT94xRp XruEbwfVqOqfXbr1ZMn4kx3nM3IL2Ht//KrBEzG2c9oBRP5uK+e+GYZ7se4FYNtPTXpWnkFpXi4Pb Fv7qHPimm9tFXsRc0yo8YLKwtsT4afjkxr6E/HmbVXLct6VHTIRQo4CW8eA2/DeZACFQvh13449MS CKc38Y/DaR0fVU6imKby4FsdYt3Y+fQ==
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-09_13:2021-03-08,2021-03-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 bulkscore=0 adultscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 phishscore=0 clxscore=1015
- mlxlogscore=999 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103090081
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The cited commit reworked the state machine for pending TX buffers.
-In qeth_iqd_tx_complete() it turned PENDING into a transient state, and
-uses NEED_QAOB for buffers that get parked while waiting for their QAOB
-completion.
+Currently arch_stack_wallk_reliable() is documented with an identical
+comment in both x86 and S/390 implementations which is a bit redundant.
+Move this to the header and convert to kerneldoc while we're at it.
 
-But it missed to adjust the check in qeth_tx_complete_buf(). So if
-qeth_tx_complete_pending_bufs() is called during teardown to drain
-the parked TX buffers, we no longer raise a notification for af_iucv.
-
-Instead of updating the checked state, just move this code into
-qeth_tx_complete_pending_bufs() itself. This also gets rid of the
-special-case in the common TX completion path.
-
-Fixes: 8908f36d20d8 ("s390/qeth: fix af_iucv notification race")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: x86@kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: live-patching@vger.kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
 ---
- drivers/s390/net/qeth_core_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/s390/kernel/stacktrace.c |  6 ------
+ arch/x86/kernel/stacktrace.c  |  6 ------
+ include/linux/stacktrace.h    | 19 +++++++++++++++++++
+ 3 files changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index d0a56afec028..a814698387bc 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -1390,9 +1390,6 @@ static void qeth_tx_complete_buf(struct qeth_qdio_out_buffer *buf, bool error,
- 	struct qeth_qdio_out_q *queue = buf->q;
- 	struct sk_buff *skb;
+diff --git a/arch/s390/kernel/stacktrace.c b/arch/s390/kernel/stacktrace.c
+index 7f1266c24f6b..101477b3e263 100644
+--- a/arch/s390/kernel/stacktrace.c
++++ b/arch/s390/kernel/stacktrace.c
+@@ -24,12 +24,6 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 	}
+ }
  
--	if (atomic_read(&buf->state) == QETH_QDIO_BUF_PENDING)
--		qeth_notify_skbs(queue, buf, TX_NOTIFY_GENERALERROR);
--
- 	/* Empty buffer? */
- 	if (buf->next_element_to_fill == 0)
- 		return;
-@@ -1465,6 +1462,9 @@ static void qeth_tx_complete_pending_bufs(struct qeth_card *card,
- 			QETH_CARD_TEXT(card, 5, "fp");
- 			QETH_CARD_TEXT_(card, 5, "%lx", (long) buf);
+-/*
+- * This function returns an error if it detects any unreliable features of the
+- * stack.  Otherwise it guarantees that the stack trace is reliable.
+- *
+- * If the task is not 'current', the caller *must* ensure the task is inactive.
+- */
+ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 			     void *cookie, struct task_struct *task)
+ {
+diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+index 8627fda8d993..15b058eefc4e 100644
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -29,12 +29,6 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 	}
+ }
  
-+			if (drain)
-+				qeth_notify_skbs(queue, buf,
-+						 TX_NOTIFY_GENERALERROR);
- 			qeth_tx_complete_buf(buf, drain, 0);
+-/*
+- * This function returns an error if it detects any unreliable features of the
+- * stack.  Otherwise it guarantees that the stack trace is reliable.
+- *
+- * If the task is not 'current', the caller *must* ensure the task is inactive.
+- */
+ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 			     void *cookie, struct task_struct *task)
+ {
+diff --git a/include/linux/stacktrace.h b/include/linux/stacktrace.h
+index 50e2df30b0aa..9edecb494e9e 100644
+--- a/include/linux/stacktrace.h
++++ b/include/linux/stacktrace.h
+@@ -52,8 +52,27 @@ typedef bool (*stack_trace_consume_fn)(void *cookie, unsigned long addr);
+  */
+ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 		     struct task_struct *task, struct pt_regs *regs);
++
++/**
++ * arch_stack_walk_reliable - Architecture specific function to walk the
++ *			      stack reliably
++ *
++ * @consume_entry:	Callback which is invoked by the architecture code for
++ *			each entry.
++ * @cookie:		Caller supplied pointer which is handed back to
++ *			@consume_entry
++ * @task:		Pointer to a task struct, can be NULL
++ *
++ * This function returns an error if it detects any unreliable
++ * features of the stack. Otherwise it guarantees that the stack
++ * trace is reliable.
++ *
++ * If the task is not 'current', the caller *must* ensure the task is
++ * inactive and its stack is pinned.
++ */
+ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry, void *cookie,
+ 			     struct task_struct *task);
++
+ void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
+ 			  const struct pt_regs *regs);
  
- 			list_del(&buf->list_entry);
 -- 
-2.25.1
+2.20.1
 
