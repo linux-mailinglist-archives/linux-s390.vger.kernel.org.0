@@ -2,68 +2,214 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2346333FCB
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Mar 2021 15:02:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB48A334029
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Mar 2021 15:19:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232747AbhCJOBi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 10 Mar 2021 09:01:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230477AbhCJOBQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 10 Mar 2021 09:01:16 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D72D3C061760
-        for <linux-s390@vger.kernel.org>; Wed, 10 Mar 2021 06:01:15 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id c10so38827911ejx.9
-        for <linux-s390@vger.kernel.org>; Wed, 10 Mar 2021 06:01:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=5rh8dKjg0pKk0KNWl2xSO7nhxy+c296f7suB18dXI8U=;
-        b=NRys/JVgIifMs/VJcA3qxZwyt7VHc80TVQPtrFTbXgnYmg8X2NJt4edDx/oy8xJfnH
-         4kEmg4xqymUo4bKVUZW8evb4ZssZYn1ao9fRmO9Ck+QolrGB1zpVvCvr0duPidoqchwp
-         5FWub1ITyXlRu4HialhPIglQCOksUcjnUPeAoyujqqXO0Q6QGB6TQSyfy20nPZTjztiQ
-         FmRJPN3FkWLk5WgQ335YqhGCu2MsIivQcU3lNJinLxDDa0cSv/2C5ccHGH2/lL7Yw7pJ
-         gvMfL+h4VRj8so8S0SkRRWYiz6NWJ6piGdDnyePVglxIMevfIr8276fGtegf2ApQXI8q
-         OCmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=5rh8dKjg0pKk0KNWl2xSO7nhxy+c296f7suB18dXI8U=;
-        b=ijc8Xzpd6UvMG8ms2AUY8qBEucYds+LW/14nIEvEqLPa3gmiYTTEFa+GiRUAq2IouX
-         O4R3jNhfn/POA2c7WTsbj7CJTxHc0rWHx+dm8/6pQFDAUSNM5FIE37bDbzW9M3LKesx0
-         1JswDZSVQQst9XCc6J10YvyYk9iPRPPZ81LfdfUnd+O6T5MpfB1Uo2Gd9Gkde0tSGdr2
-         ycFUO0Iw/WuG3e22uWykOGKfu/WVEBKvyU/0gz7cla1RO82E+iirbQYQWc8Ny1Yddx3i
-         HrFIASNIQ0MnvvhweuHrY5/AMnyA9FT48Jf+i1Eyzb+STPmDQqN7b63WH8V3Q99hqwkM
-         0ZOQ==
-X-Gm-Message-State: AOAM533B754B3AfuKLMBgxhuuLWNF7bPz95iZq+783h2vgcR90MdQRxQ
-        ehRQFj35I/VUKESkJMoP/scW8q0puGdwPGno5Yg=
-X-Google-Smtp-Source: ABdhPJytB6NSUorcr8eD+98rcO1p2jWS4nnEquxcHuUcQVP4Yz7JOZD4wvG5FyttQxluaKz/5Hl+LY+4JZqDHnAyKfE=
-X-Received: by 2002:a17:906:959:: with SMTP id j25mr3813128ejd.553.1615384874534;
- Wed, 10 Mar 2021 06:01:14 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:ab4:92c3:0:0:0:0:0 with HTTP; Wed, 10 Mar 2021 06:01:13
- -0800 (PST)
-From:   JOHN UMAH <pastorjohnumnewaposchurch@gmail.com>
-Date:   Wed, 10 Mar 2021 14:01:13 +0000
-Message-ID: <CANw=0K6gD7r=Jz8gnsZbVAu7YRVEpo9uYzpqYSAnfTz2LtBBFg@mail.gmail.com>
-Subject: Caleb Leo Foundation,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        id S232747AbhCJOTR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 10 Mar 2021 09:19:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230373AbhCJOTK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 10 Mar 2021 09:19:10 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF53364FEF;
+        Wed, 10 Mar 2021 14:19:09 +0000 (UTC)
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <maz@kernel.org>)
+        id 1lJzg3-000mQq-PG; Wed, 10 Mar 2021 14:19:07 +0000
+Date:   Wed, 10 Mar 2021 14:19:06 +0000
+Message-ID: <878s6vxfad.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jing Zhang <jingzhangos@google.com>
+Cc:     KVM <kvm@vger.kernel.org>, KVM ARM <kvmarm@lists.cs.columbia.edu>,
+        Linux MIPS <linux-mips@vger.kernel.org>,
+        KVM PPC <kvm-ppc@vger.kernel.org>,
+        Linux S390 <linux-s390@vger.kernel.org>,
+        Linux kselftest <linux-kselftest@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Subject: Re: [RFC PATCH 1/4] KVM: stats: Separate statistics name strings from debugfs code
+In-Reply-To: <20210310003024.2026253-2-jingzhangos@google.com>
+References: <20210310003024.2026253-1-jingzhangos@google.com>
+        <20210310003024.2026253-2-jingzhangos@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: jingzhangos@google.com, kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org, linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org, pbonzini@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com, will@kernel.org, chenhuacai@kernel.org, aleksandar.qemu.devel@gmail.com, tsbogend@alpha.franken.de, paulus@ozlabs.org, borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com, imbrenda@linux.ibm.com, seanjc@google.com, vkuznets@redhat.com, jmattson@google.com, pshier@google.com, oupton@google.com, rientjes@google.com, eesposit@redhat.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Caleb Leo Foundation
-1501 K St NWWashington DC 20005
-United States of America
-You've received $ 1,300,000 from the Calab Leo Foundation course
-Humanitarian aid / poverty reduction program.
-In the case of claims for this gift, please fill in the following form;
+Hi Jing,
 
-Full name:
-Telephone number:
-State:
-Country:
-kindly respond for more details.
-in God We Trust.
+On Wed, 10 Mar 2021 00:30:21 +0000,
+Jing Zhang <jingzhangos@google.com> wrote:
+> 
+> Prepare the statistics name strings for supporting binary format
+> aggregated statistics data retrieval.
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Jing Zhang <jingzhangos@google.com>
+> ---
+>  arch/arm64/kvm/guest.c    |  47 ++++--
+>  arch/mips/kvm/mips.c      | 114 ++++++++++----
+>  arch/powerpc/kvm/book3s.c | 107 +++++++++----
+>  arch/powerpc/kvm/booke.c  |  84 +++++++---
+>  arch/s390/kvm/kvm-s390.c  | 320 ++++++++++++++++++++++++++------------
+>  arch/x86/kvm/x86.c        | 127 ++++++++++-----
+>  include/linux/kvm_host.h  |  31 +++-
+>  7 files changed, 589 insertions(+), 241 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+> index 9bbd30e62799..fb3aafe76b52 100644
+> --- a/arch/arm64/kvm/guest.c
+> +++ b/arch/arm64/kvm/guest.c
+> @@ -28,19 +28,42 @@
+>  
+>  #include "trace.h"
+>  
+> +const char kvm_vm_stat_strings[][KVM_STATS_NAME_LEN] = {
+> +	"remote_tlb_flush",
+> +};
+> +static_assert(sizeof(kvm_vm_stat_strings) ==
+> +		VM_STAT_COUNT * KVM_STATS_NAME_LEN);
+> +
+> +const char kvm_vcpu_stat_strings[][KVM_STATS_NAME_LEN] = {
+> +	"halt_successful_poll",
+> +	"halt_attempted_poll",
+> +	"halt_poll_success_ns",
+> +	"halt_poll_fail_ns",
+> +	"halt_poll_invalid",
+> +	"halt_wakeup",
+> +	"hvc_exit_stat",
+> +	"wfe_exit_stat",
+> +	"wfi_exit_stat",
+> +	"mmio_exit_user",
+> +	"mmio_exit_kernel",
+> +	"exits",
+> +};
+> +static_assert(sizeof(kvm_vcpu_stat_strings) ==
+> +		VCPU_STAT_COUNT * KVM_STATS_NAME_LEN);
+> +
+>  struct kvm_stats_debugfs_item debugfs_entries[] = {
+> -	VCPU_STAT("halt_successful_poll", halt_successful_poll),
+> -	VCPU_STAT("halt_attempted_poll", halt_attempted_poll),
+> -	VCPU_STAT("halt_poll_invalid", halt_poll_invalid),
+> -	VCPU_STAT("halt_wakeup", halt_wakeup),
+> -	VCPU_STAT("hvc_exit_stat", hvc_exit_stat),
+> -	VCPU_STAT("wfe_exit_stat", wfe_exit_stat),
+> -	VCPU_STAT("wfi_exit_stat", wfi_exit_stat),
+> -	VCPU_STAT("mmio_exit_user", mmio_exit_user),
+> -	VCPU_STAT("mmio_exit_kernel", mmio_exit_kernel),
+> -	VCPU_STAT("exits", exits),
+> -	VCPU_STAT("halt_poll_success_ns", halt_poll_success_ns),
+> -	VCPU_STAT("halt_poll_fail_ns", halt_poll_fail_ns),
+> +	VCPU_STAT(halt_successful_poll),
+> +	VCPU_STAT(halt_attempted_poll),
+> +	VCPU_STAT(halt_poll_invalid),
+> +	VCPU_STAT(halt_wakeup),
+> +	VCPU_STAT(hvc_exit_stat),
+> +	VCPU_STAT(wfe_exit_stat),
+> +	VCPU_STAT(wfi_exit_stat),
+> +	VCPU_STAT(mmio_exit_user),
+> +	VCPU_STAT(mmio_exit_kernel),
+> +	VCPU_STAT(exits),
+> +	VCPU_STAT(halt_poll_success_ns),
+> +	VCPU_STAT(halt_poll_fail_ns),
+
+So we now have two arrays that can easily deviate in their order,
+whilst we didn't have that risk before. What is the advantage of doing
+this? The commit message doesn't really say...
+
+[...]
+
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 1b65e7204344..1ea297458306 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -1162,6 +1162,18 @@ static inline bool kvm_is_error_gpa(struct kvm *kvm, gpa_t gpa)
+>  	return kvm_is_error_hva(hva);
+>  }
+>  
+> +#define VM_STAT_COUNT		(sizeof(struct kvm_vm_stat)/sizeof(ulong))
+> +#define VCPU_STAT_COUNT		(sizeof(struct kvm_vcpu_stat)/sizeof(u64))
+> +#define KVM_STATS_NAME_LEN	32
+> +
+> +/* Make sure it is synced with fields in struct kvm_vm_stat. */
+> +extern const char kvm_vm_stat_strings[][KVM_STATS_NAME_LEN];
+> +/* Make sure it is synced with fields in struct kvm_vcpu_stat. */
+> +extern const char kvm_vcpu_stat_strings[][KVM_STATS_NAME_LEN];
+> +
+> +#define VM_STAT_NAME(id)        (kvm_vm_stat_strings[id])
+> +#define VCPU_STAT_NAME(id)      (kvm_vcpu_stat_strings[id])
+> +
+>  enum kvm_stat_kind {
+>  	KVM_STAT_VM,
+>  	KVM_STAT_VCPU,
+> @@ -1182,10 +1194,21 @@ struct kvm_stats_debugfs_item {
+>  #define KVM_DBGFS_GET_MODE(dbgfs_item)                                         \
+>  	((dbgfs_item)->mode ? (dbgfs_item)->mode : 0644)
+>  
+> -#define VM_STAT(n, x, ...) 							\
+> -	{ n, offsetof(struct kvm, stat.x), KVM_STAT_VM, ## __VA_ARGS__ }
+> -#define VCPU_STAT(n, x, ...)							\
+> -	{ n, offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ## __VA_ARGS__ }
+> +#define VM_STAT(x, ...)                                                        \
+> +	{                                                                      \
+> +		VM_STAT_NAME(offsetof(struct kvm_vm_stat, x)/sizeof(ulong)),   \
+> +		offsetof(struct kvm, stat.x),                                  \
+> +		KVM_STAT_VM,                                                   \
+> +		## __VA_ARGS__                                                 \
+> +	}
+> +
+> +#define VCPU_STAT(x, ...)                                                      \
+> +	{                                                                      \
+> +		VCPU_STAT_NAME(offsetof(struct kvm_vcpu_stat, x)/sizeof(u64)), \
+> +		offsetof(struct kvm_vcpu, stat.x),                             \
+> +		KVM_STAT_VCPU,                                                 \
+> +		## __VA_ARGS__                                                 \
+> +	}
+
+Is there any reason why we want to keep kvm_vm_stat populated with
+ulong, while kvm_vcpu_stat is populated with u64? I have the feeling
+that this is a fairly pointless difference, and that some of the
+macros could be unified.
+
+Also, using names initialisers would help with the readability of the
+macros.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
