@@ -2,143 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0042339D5B
-	for <lists+linux-s390@lfdr.de>; Sat, 13 Mar 2021 10:36:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71B0B339FFE
+	for <lists+linux-s390@lfdr.de>; Sat, 13 Mar 2021 19:36:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233011AbhCMJf4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 13 Mar 2021 04:35:56 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:27700 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232431AbhCMJf3 (ORCPT
+        id S234336AbhCMSgS convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Sat, 13 Mar 2021 13:36:18 -0500
+Received: from smtp.econet.co.zw ([77.246.51.158]:65277 "EHLO
+        ironportDMZ.econet.co.zw" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S234286AbhCMSf6 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 13 Mar 2021 04:35:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1615628129;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GEXvJoFIMtu03gnrQoXoMyZklbH+XrN6f9pUvJEic0Q=;
-        b=IqKwB+G8k6cGJvIvuY229izFBrxVHACs5b+xyVTWxcvEKld4aw+XrRw6lk8D1z/W9Ka97n
-        ASOGyBN3lLae0zxFYjUNXPEWvPebkB/Ej4XaOk84DsMFbhmoL7JjPWV99+5C0PLmH/NlyZ
-        K9uNxCE1M7BIue1tEDUp0+AggD3fXKQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-y8Hg8QrPPDyeb-kliOaddQ-1; Sat, 13 Mar 2021 04:35:24 -0500
-X-MC-Unique: y8Hg8QrPPDyeb-kliOaddQ-1
-Received: by mail-wr1-f69.google.com with SMTP id y5so12367619wrp.2
-        for <linux-s390@vger.kernel.org>; Sat, 13 Mar 2021 01:35:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GEXvJoFIMtu03gnrQoXoMyZklbH+XrN6f9pUvJEic0Q=;
-        b=lhgEK8ybiRWy1+0tgCbBa0EmlgcE1nHclZFEqJ9TEiuTerhOIEIVTGj75/Be/pt0C+
-         7GbQPyN9PaN+zspB+njDybF5BL8aROisHfWaU0oopBWGJpZjaajTISlE9BwNTI5FdSJJ
-         KDusmEgaymJNPfrgSl58sH+TzzrSNiaO6jMbCLdrAdyOnMIjazGqUUzW7L9LBdIaCj9L
-         X02PLyXmRKyufbIy9IyQY4MT5TrU//si7+ePGguagt/l/lJG9//ktbLJK9s3i4eDk7Kj
-         YvcMpU1OJh5oDfVXgKQ2pSJi5VBrIwEjzO1+BwkcdnrDckOPPvV0J0p/4jhPlYfNh0i5
-         7Uuw==
-X-Gm-Message-State: AOAM530eplebm3sq4n/8liVJpNEp530BMard7LE4qCvvtzGlc8/MSOVs
-        BzpHg+zlvxCXc8EhWpZEilVLLhfoE89rRv+t5cFRX9vKqiznCrcc9wgiUrWIFFOr0pvX0YNYWXR
-        MKiDMlbtTdrKmBTyRw0/TXg==
-X-Received: by 2002:a1c:6a05:: with SMTP id f5mr17111378wmc.184.1615628123494;
-        Sat, 13 Mar 2021 01:35:23 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxZPtEFloConQy5tT04Uy7VF5TWLNu7KM1ZAXfW/KGrUv9L+W1l/kfjlKPOTxYm+VdwnnAdmg==
-X-Received: by 2002:a1c:6a05:: with SMTP id f5mr17111339wmc.184.1615628123265;
-        Sat, 13 Mar 2021 01:35:23 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:5e2c:eb9a:a8b6:fd3e? ([2001:b07:6468:f312:5e2c:eb9a:a8b6:fd3e])
-        by smtp.gmail.com with ESMTPSA id b17sm11575008wrt.17.2021.03.13.01.35.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Mar 2021 01:35:22 -0800 (PST)
-To:     Jing Zhang <jingzhangos@google.com>
-Cc:     KVM <kvm@vger.kernel.org>, KVM ARM <kvmarm@lists.cs.columbia.edu>,
-        Linux MIPS <linux-mips@vger.kernel.org>,
-        KVM PPC <kvm-ppc@vger.kernel.org>,
-        Linux S390 <linux-s390@vger.kernel.org>,
-        Linux kselftest <linux-kselftest@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Emanuele Giuseppe Esposito <eesposit@redhat.com>
-References: <20210310003024.2026253-1-jingzhangos@google.com>
- <20210310003024.2026253-4-jingzhangos@google.com>
- <bb03107c-a413-50da-e228-d338dd471fb3@redhat.com>
- <CAAdAUtjj52+cAhD4KUzAaqrMSJXHD0g=ecQNG-a92Mqn3BCxiQ@mail.gmail.com>
- <ac7462de-1531-5428-5dca-4e3dfb897000@redhat.com>
- <CAAdAUtjV67hx5BAd31-RG6tjgfZ6tdyu_yLhkbR0d-3qm59mMA@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH 3/4] KVM: stats: Add ioctl commands to pull statistics
- in binary format
-Message-ID: <01a4619a-b36c-c08e-ff6e-7f8bc4d32771@redhat.com>
-Date:   Sat, 13 Mar 2021 10:35:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        Sat, 13 Mar 2021 13:35:58 -0500
+X-Greylist: delayed 472 seconds by postgrey-1.27 at vger.kernel.org; Sat, 13 Mar 2021 13:35:46 EST
+IronPort-SDR: 2VH7uDjPUxuRF84kGIuoHHaISSCuqZi+ufUVCFmh+/0u/DCFCtj5VFDT1b4h9dNnVvA6flspH+
+ 3h9rw6M4gXRTOO/x00E/RP0IaZ5bJ/VFJjak29BaaBMRsZ8SomhBLF6NshxP1CgwykLJQtbFhT
+ f57yb5yFlreJnhCu99okX5fHlhFOs37BIGqeR55agFxRF7WOiDsNKvGtFuzjle44yqE/60PUcB
+ eSRuIQK9gCbtZaBXI6W4OKIxrnCmM+n1gcMJCNZUjbl9kcbsSMLo+94gqXFyBTYwkpasFfSfmL
+ xM0=
+IronPort-HdrOrdr: A9a23:z3onBKxoaNoCa6u/wVCbKrPwgr1zdoIgy1knxilNYDZSddGVkN
+ 3roe8S0gX6hC1UdHYrn92BP6foewK+ybde544NMbC+GDT3oWfAFuFfxKbr3jGIIUPD38FH06
+ MIScRDIfnRKXQ/ssrg+gm/FL8boeWv1Kyzn+/RwzNMYGhRGsddxjx0AAqaDUF6LTMubfFSKL
+ Om6tNDt36cfx0sA/iTPXUZQ/PF4+TCiZOOW29/Ozcc9AKMgTm0gYSULzGk2H4lIkpy6IZn1V
+ Lgmwz9opy5s/ehygLNvlWjiqh+qZ/EwttHCNfksLlwFhzcziKpYIhGfpHqhkFTnMifrG8wkN
+ /WowoxVv4DiU/sQg==
+X-IronPort-AV: E=Sophos;i="5.81,245,1610402400"; 
+   d="scan'208";a="3444522"
+Received: from unknown (HELO WVALE-MB-SVR-05.econetzw.local) ([192.168.101.173])
+  by ironportLAN.econet.co.zw with ESMTP; 13 Mar 2021 20:27:52 +0200
+Received: from WVALE-CAS-SVR-9.econetzw.local (192.168.101.184) by
+ WVALE-MB-SVR-05.econetzw.local (192.168.101.173) with Microsoft SMTP Server
+ (TLS) id 15.0.1473.3; Sat, 13 Mar 2021 20:27:48 +0200
+Received: from User (165.231.148.189) by WVALE-CAS-SVR-9.econetzw.local
+ (10.10.11.230) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
+ Transport; Sat, 13 Mar 2021 20:27:59 +0200
+Reply-To: <r19772744@daum.net>
+From:   "Reem E. A" <chawora@econet.co.zw>
+Subject: Re:
+Date:   Sat, 13 Mar 2021 18:27:46 -0800
 MIME-Version: 1.0
-In-Reply-To: <CAAdAUtjV67hx5BAd31-RG6tjgfZ6tdyu_yLhkbR0d-3qm59mMA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="Windows-1251"
+Content-Transfer-Encoding: 8BIT
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <96f8ff6fe77b4507830ab5cf78a93340@WVALE-CAS-SVR-9.econetzw.local>
+To:     Undisclosed recipients:;
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 12/03/21 23:27, Jing Zhang wrote:
->>>> 4 bytes flags (always zero)
-> Could you give some potential use for this flag?
+Hello,
 
-No idea, honestly.  It probably would signal the presence of more fields 
-after "offset of the first stat value".  In general it's better to leave 
-some room for extension.
+My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
+and Petroleum" also "Minister of State for International Cooperation"
+in UAE. I write to you on behalf of my other "three (2) colleagues"
+who has approved me to solicit for your "partnership in claiming of
+{us$47=Million}" from a Financial Home on their behalf and
+for our "Mutual Benefits".
 
->>>> 4 bytes number of statistics
->>>> 4 bytes offset of the first stat description
->>>> 4 bytes offset of the first stat value
->>>> stat descriptions:
->>>>     - 4 bytes for the type (for now always zero: uint64_t)
-> Potential use for this type? Should we move this outside descriptor? Since
-> all stats probably have the same size.
+The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
+deal with Turkish Government within 2013/2014, however, we
+don't want our government to know about the fund. If this proposal
+interests you, let me know, by sending me an email and I will send to
+you detailed information on how this business would be successfully
+transacted. Be informed that nobody knows about the secret of this
+fund except us, and we know how to carry out the entire transaction.
+So I am compelled to ask, that you will stand on our behalf and
+receive this fund into any account that is solely controlled by you.
 
-Yes, all stats should be 8 bytes.  But for example:
+We will compensate you with 15% of the total amount involved as
+gratification for being our partner in this transaction. Reply to:
+reem.alhashimi@yandex.com
 
-- 0 = uint64_t
+Regards,
+Ms. Reem.
+This mail was sent through Econet Wireless, a Global telecoms leader.
 
-- 1 = int64_t
+DISCLAIMER
 
-- 0x80000000 | n: enum with n different values, which are stored after 
-the name
+The information in this message is confidential and is legally privileged. It is intended solely for the addressee. Access to this message by anyone else is unauthorized. If received in error please accept our apologies and notify the sender immediately. You must also delete the original message from your machine. If you are not the intended recipient, any use, disclosure, copying, distribution or action taken in reliance of it, is prohibited and may be unlawful. The information, attachments, opinions or advice contained in this email are not the views or opinions of Econet Wireless, its subsidiaries or affiliates. Econet Wireless therefore accepts no liability for claims, losses, or damages arising from the inaccuracy, incorrectness, or lack of integrity of such information.
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/AgileBanner.png]
+WORK ISN'T A PLACE
+IT'S WHAT WE DO
+________________________________
 
->>>>     - 4 bytes for the flags (for now always zero)
-> Potential use for this flag?
 
-Looking back at Emanuele's statsfs, it could be:
 
-- bit 0: can be cleared (by writing eight zero bytes in the statistics' 
-offset)
 
-- bit 1: cumulative value (count of events, can only grow) vs. 
-instantaneous value (can go up or down)
 
-This is currently stored in the debugfs mode, so we can already use 
-these flags.
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/telephone.png]
 
-Paolo
 
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/email.png]
+
+<mailto:>
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/location.png]
+
+
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/website.png]
+
+www.econet.co.zw<https://www.econet.co.zw>
+
+
+[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/inspired.jpg]
