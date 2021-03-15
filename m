@@ -2,195 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D7E133BF86
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Mar 2021 16:15:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5A1833C30C
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Mar 2021 18:00:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231496AbhCOPNz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 15 Mar 2021 11:13:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63143 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S232518AbhCOPNn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 15 Mar 2021 11:13:43 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12FF4dC2170990;
-        Mon, 15 Mar 2021 11:13:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=pp1;
- bh=B5cWiCah1WTZhvLrevuetHghTSK2P2SVWdhapXHvan0=;
- b=cDPDZE/wkNPfg19MWshZ2QNJ1anCLR4ahqspUhAqP/8Vfay8IUdMjs2G6xaCfFvDzyzU
- 9rmuggxR6XIEE5MImZYsDCIdZwO2Sz+MwDvnezGNn9eqd8195kWAZkyB6KTHhHCMmtRO
- un+4oANFgPXynBR3EeC0i5wZU3D2Xuka1DieSMQyjHdp/iuqekH3IRA5+UEJEgSsYBtf
- wS/JwEziI2lhAhE9oIIFklWqCJgC4ZE06KzBc8T8qajM1U1V8arJ4BTY8Xl7DEQ5c66P
- Mezx+rSqL7HGZcoIN96ik1Lfi9B6VKl/DXjj9yDOhLOA9tsCethwXnx4ayi7raALqSvR qQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 37a95da7uk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Mar 2021 11:13:40 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 12FF5Zui175994;
-        Mon, 15 Mar 2021 11:13:39 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 37a95da7t7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Mar 2021 11:13:39 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12FFCPNE025440;
-        Mon, 15 Mar 2021 15:13:37 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma01fra.de.ibm.com with ESMTP id 378n1891sg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Mar 2021 15:13:37 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12FFDYlm38928716
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Mar 2021 15:13:34 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B5EB74C04A;
-        Mon, 15 Mar 2021 15:13:34 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 66E764C04E;
-        Mon, 15 Mar 2021 15:13:34 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Mar 2021 15:13:34 +0000 (GMT)
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Narendra K <narendra_k@dell.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH] s390/pci: expose a PCI device's UID as its index
-Date:   Mon, 15 Mar 2021 16:13:34 +0100
-Message-Id: <20210315151334.174802-1-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
+        id S234778AbhCOQ7q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 15 Mar 2021 12:59:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55830 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234782AbhCOQ7W (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 15 Mar 2021 12:59:22 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1990C061764
+        for <linux-s390@vger.kernel.org>; Mon, 15 Mar 2021 09:59:20 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id d3so57915123lfg.10
+        for <linux-s390@vger.kernel.org>; Mon, 15 Mar 2021 09:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=nn1W9Wc+k1CJYE8WxkSJGXK0N+qf/mcCb4Whw81sCBc=;
+        b=eLaM2VJC2VPxWCmJI4pRm7gIwsdtcXVX+gwqcmG5feM136k/MJaMOmGBB2kdOk6Af4
+         OdHMopIeKZg49h5cW6vGbxvuQTW/SkQ9HuA/ev1jJcl0AAurwCe0DNziSPl1EC93VQ1C
+         ZhL/pBGs4yClRQ+yNSuJ3e3yxg7nGxyN7EkaEc9UnMX6RUqxH4o2rsWq+1OyBGhsQ60t
+         mlr/pvPbTkbXwuQ72wwZySMbV7eKPbN/RoefzS3gvRqxUNqqkiwACUnwYhkfp8NF4XOV
+         usiuSlIdkRdT/XFr8JMUz5dBUV3A2ubIZJBv5AzJJikhHdudGeMH2zRoSMkB+ojxPFvS
+         VkOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=nn1W9Wc+k1CJYE8WxkSJGXK0N+qf/mcCb4Whw81sCBc=;
+        b=UBE5CeUX2N1v9IT1l3YFt5YvhfExPYgTaH6GZe7ruQHQ6zF7kdsG8IXkFQy8fB3/ax
+         vrsGi1WIls37lEYlA6p1RTuzrMQa+snOFHIoTx2w8jbXI5+K3G5F8Ubi/K8RPXuj2i5G
+         a7KpIYLY2otIE1BphxTOIIMvo76CQq9+Zet4eebyJ7kcug3/3DzQET0UP6HMn/yRgx97
+         OxnMdgoCwWZTETKW49ERcNLoMfoKZaahRT9699NwDNL+ODL58HQtuKlg8CstVSdexUU4
+         0xGjmbe/bLccT6RhAsnvXMgBdc3k7luZplYRbZevF3Zg/WggQ19fQfHTPhyoNT3icG1x
+         tb3Q==
+X-Gm-Message-State: AOAM532HmRTL1Ym1jN07f0DcGrG2haflnJHCO9D1gX0iqE0mogDA9dbP
+        V58d9qiUtXVP0wDjBDU7uzVhJYh891IQ3QWvXiI=
+X-Google-Smtp-Source: ABdhPJz7/gfpeD06O79Pnw07FE/mA8Ji4e09y71x9+hvfgu2S8MD9xmK2/Q/AOYN3ItI3qPG23+Pfv2arGi/0+HLTes=
+X-Received: by 2002:a05:6512:370f:: with SMTP id z15mr8619417lfr.562.1615827559310;
+ Mon, 15 Mar 2021 09:59:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-15_08:2021-03-15,2021-03-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 priorityscore=1501 phishscore=0 impostorscore=0
- clxscore=1015 adultscore=0 malwarescore=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103150109
+Received: by 2002:a05:651c:1382:0:0:0:0 with HTTP; Mon, 15 Mar 2021 09:59:18
+ -0700 (PDT)
+Reply-To: ezbtg22@gmail.com
+From:   "Mrs.Glenn" <mrganuserge@gmail.com>
+Date:   Mon, 15 Mar 2021 09:59:18 -0700
+Message-ID: <CA+Wfa7YG6kanV1cpekUWYP2FGpSSSKYxaq+gNSZdX+nSoPjTrA@mail.gmail.com>
+Subject: From Mrs.Glenn
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On s390 each PCI device has a user-defined ID (UID) exposed under
-/sys/bus/pci/devices/<dev>/uid. This ID was designed to serve as the PCI
-device's primary index and to match the device within Linux to the
-device configured in the hypervisor. To serve as a primary identifier
-the UID must be unique within the Linux instance, this is guaranteed by
-the platform if and only if the UID Uniqueness Checking flag is set
-within the CLP List PCI Functions response.
-
-In this the UID serves an analogous function as the SMBIOS instance
-number or ACPI index exposed as the "index" respectively "acpi_index"
-device attributes and used by e.g. systemd to set interface names. As
-s390 does not use and will likely never use ACPI nor SMBIOS there is no
-conflict and we can just expose the UID under the "index" attribute
-whenever UID Uniqueness Checking is active and get systemd's interface
-naming support for free.
-
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Acked-by: Viktor Mihajlovski <mihajlov@linux.ibm.com>
----
-Changes from RFC patch:
-- Use sysfs_emit() instead of sprintf() (Thanks Krzysztof Wilczyński!)
-
- Documentation/ABI/testing/sysfs-bus-pci | 11 +++++---
- arch/s390/pci/pci_sysfs.c               | 36 +++++++++++++++++++++++++
- 2 files changed, 43 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-index 25c9c39770c6..1241b6d11a52 100644
---- a/Documentation/ABI/testing/sysfs-bus-pci
-+++ b/Documentation/ABI/testing/sysfs-bus-pci
-@@ -195,10 +195,13 @@ What:		/sys/bus/pci/devices/.../index
- Date:		July 2010
- Contact:	Narendra K <narendra_k@dell.com>, linux-bugs@dell.com
- Description:
--		Reading this attribute will provide the firmware
--		given instance (SMBIOS type 41 device type instance) of the
--		PCI device. The attribute will be created only if the firmware
--		has given an instance number to the PCI device.
-+		Reading this attribute will provide the firmware given instance
-+		number of the PCI device.  Depending on the platform this can
-+		be for example the SMBIOS type 41 device type instance or the
-+		user-defined ID (UID) on s390. The attribute will be created
-+		only if the firmware has given an instance number to the PCI
-+		device and that number is guaranteed to uniquely identify the
-+		device in the system.
- Users:
- 		Userspace applications interested in knowing the
- 		firmware assigned device type instance of the PCI
-diff --git a/arch/s390/pci/pci_sysfs.c b/arch/s390/pci/pci_sysfs.c
-index 5c028bee91b9..c7107bd9dd93 100644
---- a/arch/s390/pci/pci_sysfs.c
-+++ b/arch/s390/pci/pci_sysfs.c
-@@ -131,6 +131,38 @@ static ssize_t report_error_write(struct file *filp, struct kobject *kobj,
- }
- static BIN_ATTR(report_error, S_IWUSR, NULL, report_error_write, PAGE_SIZE);
- 
-+#ifndef CONFIG_DMI
-+/* analogous to smbios index */
-+static ssize_t index_show(struct device *dev,
-+			  struct device_attribute *attr, char *buf)
-+{
-+	struct zpci_dev *zdev = to_zpci(to_pci_dev(dev));
-+	u32 index = ~0;
-+
-+	if (zpci_unique_uid)
-+		index = zdev->uid;
-+
-+	return sysfs_emit(buf, "%u\n", index);
-+}
-+static DEVICE_ATTR_RO(index);
-+
-+static umode_t zpci_unique_uids(struct kobject *kobj,
-+				struct attribute *attr, int n)
-+{
-+	return zpci_unique_uid ? attr->mode : 0;
-+}
-+
-+static struct attribute *zpci_ident_attrs[] = {
-+	&dev_attr_index.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group zpci_ident_attr_group = {
-+	.attrs = zpci_ident_attrs,
-+	.is_visible = zpci_unique_uids,
-+};
-+#endif
-+
- static struct bin_attribute *zpci_bin_attrs[] = {
- 	&bin_attr_util_string,
- 	&bin_attr_report_error,
-@@ -150,6 +182,7 @@ static struct attribute *zpci_dev_attrs[] = {
- 	&dev_attr_mio_enabled.attr,
- 	NULL,
- };
-+
- static struct attribute_group zpci_attr_group = {
- 	.attrs = zpci_dev_attrs,
- 	.bin_attrs = zpci_bin_attrs,
-@@ -170,5 +203,8 @@ static struct attribute_group pfip_attr_group = {
- const struct attribute_group *zpci_attr_groups[] = {
- 	&zpci_attr_group,
- 	&pfip_attr_group,
-+#ifndef CONFIG_DMI
-+	&zpci_ident_attr_group,
-+#endif
- 	NULL,
- };
 -- 
-2.25.1
+Dear Beloved,
 
+I am Mrs Elizabet Glenn from Israel. I am a missionary but right now
+in a hospital bed in Israel. I am 59 years and childless; my husband
+is dead. I was diagnosed with terminal cancer. And my doctor just
+predicted that I have but very limited time to live due to damages in
+my system and as a result of that I decided to dispose my 10.5 million
+US dollars to a God-fearing one for the continuation of charitable
+work. This is why I located you.My guess about you may not be accurate
+because I came across your contact at the humanitarian calendar event
+of the year but I believe in God who  divinely directed me to you for
+this solemn proposal of charitable work. I wholeheartedly wish to
+bequeath my fortune to you as a God-fearing person for the
+continuation of charitable work anywhere around the world.
+
+I shall be going in for a surgery operations soonest and desire this
+money to be transferred to you as I do not wish to leave this money in
+the bank because bankers might misuse it for their own interest after
+my death. As soon as I receive your quick reply assuring me that you
+will utilize the money as I instructed you for the benefit of the less
+privilege, I shall give you more details and also instruct my bank to
+release the money to you for the charity project. I hope you receive
+this mail in good health.
+
+Because I don t know what will be my situation in next minute,
+
+I am waiting for your reply.
+
+Yours sincerely,
+Mrs Elizabet Glenn.
