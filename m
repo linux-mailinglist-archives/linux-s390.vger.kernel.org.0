@@ -2,129 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4B4034691D
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Mar 2021 20:32:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 936CD346B82
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Mar 2021 22:59:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230138AbhCWTbk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 23 Mar 2021 15:31:40 -0400
-Received: from verein.lst.de ([213.95.11.211]:34028 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230406AbhCWTbH (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 23 Mar 2021 15:31:07 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 144AA68C7B; Tue, 23 Mar 2021 20:31:03 +0100 (CET)
-Date:   Tue, 23 Mar 2021 20:31:03 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     David Airlie <airlied@linux.ie>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        Eric Farman <farman@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
+        id S233782AbhCWV6x (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 23 Mar 2021 17:58:53 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18162 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233745AbhCWV6m (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 23 Mar 2021 17:58:42 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12NLXMps074109;
+        Tue, 23 Mar 2021 17:58:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=4LVjkSJOzytLD6tJY6/ZRad6GE00ydx04Yfw+LE5C78=;
+ b=SOzokrfjApCXTcZYsDSg6iBJzPpAf2L7VnN0/ePDR9DANpEpwrQe+4/ookCQudx4hbiy
+ 0HcP1CMGi0WjjIbSkIwsZsffNwkL3LHp3S8B8gygJthfcN2FbYmcu2tQ/y3YeE6GI91n
+ ZzCVQ5LeaX+f+mMMGr7sK280PYTfVOimgHlQCNBYic9OaRgHIzemH4L3jPrBeog6Joqi
+ 4Q4xwyOhfgq1P233cFfVyVJ2SpssutMYjEEe6/DSSZO/k8s0JHyzStlErqKZWSZO01ym
+ HOy/bLsI0W/4hi+dol6wGY6TPDK5n6Kj+KTaOTKg8o4f8KbMJzI1N+gukddeqgtghTP2 IA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 37fkx8r9g9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Mar 2021 17:58:25 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 12NLYVqU077008;
+        Tue, 23 Mar 2021 17:58:25 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 37fkx8r9fn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Mar 2021 17:58:25 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12NLwNpH001166;
+        Tue, 23 Mar 2021 21:58:23 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma06fra.de.ibm.com with ESMTP id 37d9a61y5x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 Mar 2021 21:58:22 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12NLwJqM36241892
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 Mar 2021 21:58:19 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C65024C044;
+        Tue, 23 Mar 2021 21:58:19 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 713904C040;
+        Tue, 23 Mar 2021 21:58:19 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Mar 2021 21:58:19 +0000 (GMT)
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Li Wang <liwang@redhat.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        kvm@vger.kernel.org, Kirti Wankhede <kwankhede@nvidia.com>,
-        linux-s390@vger.kernel.org,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Tarun Gupta <targupta@nvidia.com>
-Subject: Re: [PATCH 18/18] vfio/mdev: Correct the function signatures for
- the mdev_type_attributes
-Message-ID: <20210323193103.GP17735@lst.de>
-References: <0-v1-7dedf20b2b75+4f785-vfio2_jgg@nvidia.com> <18-v1-7dedf20b2b75+4f785-vfio2_jgg@nvidia.com>
+        Sven Schnelle <svens@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     ltp@lists.linux.it, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 0/3] s390 vdso fixes
+Date:   Tue, 23 Mar 2021 22:58:16 +0100
+Message-Id: <20210323215819.4161164-1-hca@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <YFmUrVOyX4q+8Dy9@osiris>
+References: <YFmUrVOyX4q+8Dy9@osiris>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18-v1-7dedf20b2b75+4f785-vfio2_jgg@nvidia.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-03-23_11:2021-03-23,2021-03-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=872
+ priorityscore=1501 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 adultscore=0 spamscore=0 malwarescore=0 clxscore=1011
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103230159
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Mar 23, 2021 at 02:55:35PM -0300, Jason Gunthorpe wrote:
-> The driver core standard is to pass in the properly typed object, the
-> properly typed attribute and the buffer data. It stems from the root
-> kobject method:
-> 
->   ssize_t (*show)(struct kobject *kobj, struct kobj_attribute *attr,..)
-> 
-> Each subclass of kobject should provide their own function with the same
-> signature but more specific types, eg struct device uses:
-> 
->   ssize_t (*show)(struct device *dev, struct device_attribute *attr,..)
-> 
-> In this case the existing signature is:
-> 
->   ssize_t (*show)(struct kobject *kobj, struct device *dev,..)
-> 
-> Where kobj is a 'struct mdev_type *' and dev is 'mdev_type->parent->dev'.
-> 
-> Change the mdev_type related sysfs attribute functions to:
-> 
->   ssize_t (*show)(struct mdev_type *mtype, struct mdev_type_attribute *attr,..)
-> 
-> In order to restore type safety and match the driver core standard
-> 
-> There are no current users of 'attr', but if it is ever needed it would be
-> hard to add in retroactively, so do it now.
-> 
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> ---
->  drivers/gpu/drm/i915/gvt/gvt.c    | 21 +++++++++++----------
->  drivers/s390/cio/vfio_ccw_ops.c   | 15 +++++++++------
->  drivers/s390/crypto/vfio_ap_ops.c | 12 +++++++-----
->  drivers/vfio/mdev/mdev_core.c     | 14 ++++++++++++--
->  drivers/vfio/mdev/mdev_sysfs.c    | 11 ++++++-----
->  include/linux/mdev.h              | 11 +++++++----
->  samples/vfio-mdev/mbochs.c        | 26 +++++++++++++++-----------
->  samples/vfio-mdev/mdpy.c          | 24 ++++++++++++++----------
->  samples/vfio-mdev/mtty.c          | 18 +++++++++---------
->  9 files changed, 90 insertions(+), 62 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/gvt/gvt.c b/drivers/gpu/drm/i915/gvt/gvt.c
-> index 4b47a18e9dfa0f..3703814a669b46 100644
-> --- a/drivers/gpu/drm/i915/gvt/gvt.c
-> +++ b/drivers/gpu/drm/i915/gvt/gvt.c
-> @@ -54,14 +54,15 @@ intel_gvt_find_vgpu_type(struct intel_gvt *gvt, unsigned int type_group_id)
->  	return &gvt->types[type_group_id];
->  }
->  
-> -static ssize_t available_instances_show(struct kobject *kobj,
-> -					struct device *dev, char *buf)
-> +static ssize_t available_instances_show(struct mdev_type *mtype,
-> +					struct mdev_type_attribute *attr,
-> +					char *buf)
->  {
->  	struct intel_vgpu_type *type;
->  	unsigned int num = 0;
-> -	void *gvt = kdev_to_i915(dev)->gvt;
-> +	void *gvt = kdev_to_i915(mtype_get_parent_dev(mtype))->gvt;
->  
-> -	type = intel_gvt_find_vgpu_type(gvt, mtype_get_type_group_id(kobj));
-> +	type = intel_gvt_find_vgpu_type(gvt, mtype_get_type_group_id(mtype));
+Li Wang reported that clock_gettime(CLOCK_MONOTONIC_RAW, ...) does not
+work correctly on s390 via vdso. Debugging this also revealed an
+unrelated bug (first patch).
 
-Somewhere in this series you should probably
-switch intel_gvt_find_vgpu_type to only get the mtype, as it can trivially
-deduct the gvt from it (which also seems to have lost its type somewhere..)
+The second patch fixes the problem: the tod clock steering parameters
+required by __arch_get_hw_counter() are only present within the first
+element of the _vdso_data array and not at all within the _timens_data
+array.
 
-Otherwise looks good:
+Instead of working around this simply provide an s390 specific vdso
+data page which contains the tod clock steering parameters.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+This allows also to remove ARCH_HAS_VDSO_DATA again.
+
+Heiko Carstens (3):
+  s390/vdso: fix tod clock steering
+  s390/vdso: fix arch_data access for __arch_get_hw_counter()
+  lib/vdso: remove struct arch_vdso_data from vdso data struct
+
+ arch/Kconfig                              |  3 ---
+ arch/s390/Kconfig                         |  1 -
+ arch/s390/include/asm/vdso.h              |  4 +++-
+ arch/s390/include/asm/vdso/data.h         | 13 ------------
+ arch/s390/include/asm/vdso/datapage.h     | 17 +++++++++++++++
+ arch/s390/include/asm/vdso/gettimeofday.h | 11 ++++++++--
+ arch/s390/kernel/time.c                   |  5 +++--
+ arch/s390/kernel/vdso.c                   | 25 ++++++++++++++++++++---
+ arch/s390/kernel/vdso64/vdso64.lds.S      |  3 ++-
+ include/vdso/datapage.h                   | 10 ---------
+ 10 files changed, 56 insertions(+), 36 deletions(-)
+ delete mode 100644 arch/s390/include/asm/vdso/data.h
+ create mode 100644 arch/s390/include/asm/vdso/datapage.h
+
+-- 
+2.25.1
+
