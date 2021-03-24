@@ -2,151 +2,176 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E809346B7F
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Mar 2021 22:59:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54320347145
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Mar 2021 06:54:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233755AbhCWV6t (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 23 Mar 2021 17:58:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4396 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233740AbhCWV6m (ORCPT
+        id S233111AbhCXFyG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 24 Mar 2021 01:54:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15902 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S233049AbhCXFxt (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 23 Mar 2021 17:58:42 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12NLXHVD073751;
-        Tue, 23 Mar 2021 17:58:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=EtbSF82nywAJvvjSOmKo9Y+Z6a20g9T57CWHIK7oBa4=;
- b=KanM9pBnWOq1d5/A6LtJoSEVTQ1B5aPKhBX5ozS63auMl4+N11bfuF2WVyV45+2Fbj9K
- boH3GMGLUrfYave98OB/yJq+NduV7/DMFqcFg1WqFpBA4w/IFdNGoWVb1pAotzoYR77w
- rmBHYHS6AoZi3HmnYh4fMiI8ZE2O5qqLbpugAaSAKm1uwECIi464ziFHdBwFfRn3mYhg
- df5Q2+MQgdAYMzUq0eVJUcvbByTp5aYrF541bo6PGZCFmP4gxJsYkFucQUA1fmTPZFqH
- sTrbU6Kqp+k0xgUnDpNDy/rGaSn7DZn1lDOlsTpJSocxHe2DLznM5YHzctG8Fj/sGZu7 2A== 
+        Wed, 24 Mar 2021 01:53:49 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12O5Ypor076741;
+        Wed, 24 Mar 2021 01:53:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=4+cSc96YcRxRzZ7aZ2mOQW5cMX3LRkurhBOyaSDT2a8=;
+ b=INObakLCcwp6nD4jUETDRf7zX6sNqbNyKA9D4k96B1SshCHKHLfhjT+lOP2sQ3rbnthF
+ 3G/m5iGqGKFPAAXQmBfOYT65CWitGvjcq4EGb5mjwM9MKvd4aOA3Qm2pL6nWgHecBRcN
+ Wsxs+v7ijxdRYBVT+6ZJ1qwPkj5aHKnk0YLJMt5Sj5sRNkJFJqrMaLwMo1e21m73T9n9
+ uA64dqdKK7a+tirnYkcVBtqP7M2HdcQxEa59DmNN9JS46IFl1eCuQjSayWJiEzxlpA12
+ uWfdv9p/MOJ0EWN2G42/lHpCJnM1Tkc5xgo4sUaMMOa/fUNgeC/i9Wm+LVGiqExaSTcc 9Q== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 37fkx8r9gk-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 37fsm0fedq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Mar 2021 17:58:26 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 12NLZx7D083405;
-        Tue, 23 Mar 2021 17:58:26 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 37fkx8r9fw-1
+        Wed, 24 Mar 2021 01:53:42 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 12O5baVx087499;
+        Wed, 24 Mar 2021 01:53:42 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 37fsm0feda-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Mar 2021 17:58:26 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12NLuqrn025345;
-        Tue, 23 Mar 2021 21:58:24 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 37d99rbr0h-1
+        Wed, 24 Mar 2021 01:53:42 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12O5r9Mm031490;
+        Wed, 24 Mar 2021 05:53:40 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma05fra.de.ibm.com with ESMTP id 37d9a6j33c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 Mar 2021 21:58:23 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12NLw3ST32768334
+        Wed, 24 Mar 2021 05:53:40 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12O5rbPF32178588
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Mar 2021 21:58:03 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0AE3D4C044;
-        Tue, 23 Mar 2021 21:58:21 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4AB24C04A;
-        Tue, 23 Mar 2021 21:58:20 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Mar 2021 21:58:20 +0000 (GMT)
+        Wed, 24 Mar 2021 05:53:37 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D72AA404D;
+        Wed, 24 Mar 2021 05:53:37 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ECD55A4053;
+        Wed, 24 Mar 2021 05:53:36 +0000 (GMT)
+Received: from osiris (unknown [9.171.26.18])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 24 Mar 2021 05:53:36 +0000 (GMT)
+Date:   Wed, 24 Mar 2021 06:53:35 +0100
 From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Li Wang <liwang@redhat.com>,
+To:     Heiko Carstens <hca@linux.ibm.com>
+Cc:     Li Wang <liwang@redhat.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sven Schnelle <svens@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Viresh Kumar <viresh.kumar@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     ltp@lists.linux.it, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 3/3] lib/vdso: remove struct arch_vdso_data from vdso data struct
-Date:   Tue, 23 Mar 2021 22:58:19 +0100
-Message-Id: <20210323215819.4161164-4-hca@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210323215819.4161164-1-hca@linux.ibm.com>
+        Thomas Gleixner <tglx@linutronix.de>, ltp@lists.linux.it,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 2/3] s390/vdso: fix arch_data access for
+ __arch_get_hw_counter()
+Message-ID: <YFrT3x7sa49EPYFx@osiris>
 References: <YFmUrVOyX4q+8Dy9@osiris>
  <20210323215819.4161164-1-hca@linux.ibm.com>
+ <20210323215819.4161164-3-hca@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210323215819.4161164-3-hca@linux.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-23_11:2021-03-23,2021-03-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- priorityscore=1501 impostorscore=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 adultscore=0 spamscore=0 malwarescore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103230159
+ definitions=2021-03-24_04:2021-03-23,2021-03-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1015 impostorscore=0 suspectscore=0
+ malwarescore=0 mlxscore=0 priorityscore=1501 bulkscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103240044
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Since commit d60d7de3e16d ("lib/vdso: Allow to add architecture-specific
-vdso data") it is possible to provide arch specific VDSO data.
+On Tue, Mar 23, 2021 at 10:58:18PM +0100, Heiko Carstens wrote:
+> Li Wang reported that clock_gettime(CLOCK_MONOTONIC_RAW, ...) returns
+> incorrect values when time is provided via vdso instead of system call:
+> 
+> vdso_ts_nsec = 4484351380985507, vdso_ts.tv_sec = 4484351, vdso_ts.tv_nsec = 380985507
+> sys_ts_nsec  = 1446923235377, sys_ts.tv_sec  = 1446, sys_ts.tv_nsec  = 923235377
+> 
+> Within the s390 specific vdso function __arch_get_hw_counter() tries
+> to read tod clock steering values from the arch_data member of the
+> passed in vdso_data structure.
+> However only the arch_data member of the first clock source base
+> (CS_HRES_COARSE) is initialized. For CS_RAW arch_data is not at all
+> initialized, which explains the incorrect returned values.
+> 
+> It is a bit odd to provide the required tod clock steering parameters
+> only within the first element of the _vdso_data array. However for
+> time namespaces even no member of the _timens_data array contains the
+> required data, which would make fixing __arch_get_hw_counter() quite
+> complicated.
+> 
+> Therefore simply add an s390 specific vdso data page which contains
+> the tod clock steering parameters. Everything else seems to be
+> unnecessary complex.
+> 
+> Reported-by: Li Wang <liwang@redhat.com>
+> Fixes: 1ba2d6c0fd4e ("s390/vdso: simplify __arch_get_hw_counter()")
+> Fixes: eeab78b05d20 ("s390/vdso: implement generic vdso time namespace support")
+> Link: https://lore.kernel.org/linux-s390/YFnxr1ZlMIOIqjfq@osiris
+> Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+> ---
+>  arch/s390/Kconfig                         |  1 -
+>  arch/s390/include/asm/vdso.h              |  4 +++-
+>  arch/s390/include/asm/vdso/data.h         | 13 ------------
+>  arch/s390/include/asm/vdso/datapage.h     | 17 +++++++++++++++
+>  arch/s390/include/asm/vdso/gettimeofday.h | 11 ++++++++--
+>  arch/s390/kernel/time.c                   |  6 +++---
+>  arch/s390/kernel/vdso.c                   | 25 ++++++++++++++++++++---
+>  arch/s390/kernel/vdso64/vdso64.lds.S      |  3 ++-
+>  8 files changed, 56 insertions(+), 24 deletions(-)
+>  delete mode 100644 arch/s390/include/asm/vdso/data.h
+>  create mode 100644 arch/s390/include/asm/vdso/datapage.h
 
-This was only added for s390, which doesn't make use this anymore.
-Therefore remove it again.
+FWIW, alternatively to this and the third patch we could also do the
+much shorter and simpler variant below. What I personally don't like
+is that data is duplicated.
+But on the other hand it is much shorter, and the more I think of it
+this seems to be the way to go.
+Opinions?
 
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
----
- arch/Kconfig            |  3 ---
- include/vdso/datapage.h | 10 ----------
- 2 files changed, 13 deletions(-)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index ecfd3520b676..35c7114f7ea3 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -1147,9 +1147,6 @@ config HAVE_SPARSE_SYSCALL_NR
- 	  entries at 4000, 5000 and 6000 locations. This option turns on syscall
- 	  related optimizations for a given architecture.
+diff --git a/arch/s390/kernel/time.c b/arch/s390/kernel/time.c
+index e37285a5101b..fa095ecf0349 100644
+--- a/arch/s390/kernel/time.c
++++ b/arch/s390/kernel/time.c
+@@ -80,10 +80,12 @@ void __init time_early_init(void)
+ {
+ 	struct ptff_qto qto;
+ 	struct ptff_qui qui;
++	int i;
  
--config ARCH_HAS_VDSO_DATA
--	bool
--
- config HAVE_STATIC_CALL
- 	bool
+ 	/* Initialize TOD steering parameters */
+ 	tod_steering_end = tod_clock_base.tod;
+-	vdso_data->arch_data.tod_steering_end = tod_steering_end;
++	for (i = 0; i < CS_BASES; i++)
++		vdso_data[i].arch_data.tod_steering_end = tod_steering_end;
  
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index 73eb622e7663..ee810cae4e1e 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -19,12 +19,6 @@
- #include <vdso/time32.h>
- #include <vdso/time64.h>
+ 	if (!test_facility(28))
+ 		return;
+@@ -366,6 +368,7 @@ static void clock_sync_global(unsigned long delta)
+ {
+ 	unsigned long now, adj;
+ 	struct ptff_qto qto;
++	int i;
  
--#ifdef CONFIG_ARCH_HAS_VDSO_DATA
--#include <asm/vdso/data.h>
--#else
--struct arch_vdso_data {};
--#endif
--
- #define VDSO_BASES	(CLOCK_TAI + 1)
- #define VDSO_HRES	(BIT(CLOCK_REALTIME)		| \
- 			 BIT(CLOCK_MONOTONIC)		| \
-@@ -70,8 +64,6 @@ struct vdso_timestamp {
-  * @tz_dsttime:		type of DST correction
-  * @hrtimer_res:	hrtimer resolution
-  * @__unused:		unused
-- * @arch_data:		architecture specific data (optional, defaults
-- *			to an empty struct)
-  *
-  * vdso_data will be accessed by 64 bit and compat code at the same time
-  * so we should be careful before modifying this structure.
-@@ -105,8 +97,6 @@ struct vdso_data {
- 	s32			tz_dsttime;
- 	u32			hrtimer_res;
- 	u32			__unused;
--
--	struct arch_vdso_data	arch_data;
- };
+ 	/* Fixup the monotonic sched clock. */
+ 	tod_clock_base.eitod += delta;
+@@ -381,8 +384,10 @@ static void clock_sync_global(unsigned long delta)
+ 		panic("TOD clock sync offset %li is too large to drift\n",
+ 		      tod_steering_delta);
+ 	tod_steering_end = now + (abs(tod_steering_delta) << 15);
+-	vdso_data->arch_data.tod_steering_end = tod_steering_end;
+-	vdso_data->arch_data.tod_steering_delta = tod_steering_delta;
++	for (i = 0; i < CS_BASES; i++) {
++		vdso_data[i].arch_data.tod_steering_end = tod_steering_end;
++		vdso_data[i].arch_data.tod_steering_delta = tod_steering_delta;
++	}
  
- /*
--- 
-2.25.1
-
+ 	/* Update LPAR offset. */
+ 	if (ptff_query(PTFF_QTO) && ptff(&qto, sizeof(qto), PTFF_QTO) == 0)
