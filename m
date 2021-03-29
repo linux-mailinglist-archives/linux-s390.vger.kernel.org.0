@@ -2,114 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B912134D029
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Mar 2021 14:36:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BCE434D748
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Mar 2021 20:34:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231146AbhC2Mfa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 29 Mar 2021 08:35:30 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36012 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231260AbhC2MfB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 29 Mar 2021 08:35:01 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12TCYlIo076619;
-        Mon, 29 Mar 2021 08:34:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=f0wLENhgCKs5NZ8Pb14N12AT2LvU2p9rw10BggHXs3U=;
- b=SYyKhEUvuaHdbL2L7l16h7G2o39Y7g19tABnnHcis48hiQXaPJ8UC5Nmr4jQbw3x5s7X
- 6Iq/xHUl1nL1h1ETFv9nGWJvu7jAv3XQy/60LWm3oi30E0FG4isXa+X4+93teJR098M+
- S9hN88VQMyGZMmTEG5KuhWpXShZPGyvGlL5IDlkQIsipr1J0cdVWnapCgxWQA+dVRXyW
- cauXwU/N+vP8XC+Uk8xe6p4nb//rgLmABN13XiKDKhVV2WitoKCFbIaSXf+eTkbyeJiE
- wH83CpIr7Q7yuhxQbuRpe4lQCrgu8OmoEgtxc8lSoQJpyzctOPwtjNUa3s6o5MCIs+FP Kw== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 37jhm4p693-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Mar 2021 08:34:56 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12TCNFe3012222;
-        Mon, 29 Mar 2021 12:34:54 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 37hvb89sus-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Mar 2021 12:34:53 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12TCYpIS41287960
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Mar 2021 12:34:51 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 16DF511C04A;
-        Mon, 29 Mar 2021 12:34:51 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D3CB611C050;
-        Mon, 29 Mar 2021 12:34:50 +0000 (GMT)
-Received: from oc6887364776.ibm.com (unknown [9.152.212.155])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 29 Mar 2021 12:34:50 +0000 (GMT)
-Subject: Re: [PATCH -next 1/2] s390/cio: use DEFINE_SPINLOCK() for spinlock
-To:     Shixin Liu <liushixin2@huawei.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210329094019.67044-1-liushixin2@huawei.com>
-From:   Vineeth Vijayan <vneethv@linux.ibm.com>
-Message-ID: <6f2f4aa6-de5a-118e-7380-3672129ee3e9@linux.ibm.com>
-Date:   Mon, 29 Mar 2021 14:34:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S231509AbhC2Sd5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 29 Mar 2021 14:33:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231486AbhC2Sdl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 29 Mar 2021 14:33:41 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0572C061574;
+        Mon, 29 Mar 2021 11:33:40 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id w11so4826776ply.6;
+        Mon, 29 Mar 2021 11:33:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=01YFv97u/1C+DtxnTXcB2+iBR0vlWHdf1wN2Z9wyQP0=;
+        b=R+RAYtH5b/2luX6Z/fzVxj5Pf7lBMY6Y0G4BaJZQK3CDPRKsc1tkqC1WxVZTIn4ymQ
+         BZ5D+tFIUymF0DdYXm237HMelyjQgMpgw5NfFzrBS9+zJrCGtmb4f3vlPIs+4xgiomeH
+         tgh+o444gXEiLs5179rBwEKwswafgrCbzbeplus/1ZHk7JmX/T5S4d4Q/302Na6I57ld
+         ltGVZ4sHgR/S7CTbJbx70pyXtGfHV/LVWzb+bNH6cGKnBUrpe7j9cPSPn3yQqLBxJPqi
+         xSa1URtLekNuX8WKwQaBi+Y9RYVQziPRFzd542Nwko7pvFDrDn1kysV+3Z6iQpZ1R92H
+         xBcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=01YFv97u/1C+DtxnTXcB2+iBR0vlWHdf1wN2Z9wyQP0=;
+        b=nFkhgvgBNFxVYnmZZcq5HOiGrAACR2gvdWjoZKaSEZX1zxpF4iN/uwTJ1zGhUiOsXO
+         9oU/kO2MIJlO89/b62TIT9EWahthzKQk7UlJx2PLI+4LE2Tnr2hm0izX7Z8ye0a0NAX+
+         elFVQhFPhbR+XlOSUu5NslqaXnOGw/VWngrXJOHe4nsBNq7jRgTnZ9v+q02S6ztLzlYU
+         uuQtjSe4iKRZgZGiSfOje3gFp9wJWs5+4wc6FHrpBZ5OZV8jzgotePHNRo9sPZFtD2aK
+         ul/wFx6SoGofG7BSkqDZbcYtLLABpfyj8yVGrKeBSw9txMEpzEptvna67icD0nkM2GEY
+         SDIQ==
+X-Gm-Message-State: AOAM5319xTOGp2p5DQH/tlc4IUqD+bRKyucDX6kd5Le7Kb4xFY2rkne3
+        5rG3Dc2+tstbA9S4oznrEFjsO/niIIo=
+X-Google-Smtp-Source: ABdhPJzqbTDMbRyAcrawqKDPJ/vLTMHWAlAj3tjICANCsgQBGOUdEwvo91OavTeI0XLhTjnUiBPlSw==
+X-Received: by 2002:a17:902:ed84:b029:e7:1f2b:1eb4 with SMTP id e4-20020a170902ed84b02900e71f2b1eb4mr18187086plj.74.1617042820542;
+        Mon, 29 Mar 2021 11:33:40 -0700 (PDT)
+Received: from localhost.localdomain (c-73-93-239-127.hsd1.ca.comcast.net. [73.93.239.127])
+        by smtp.gmail.com with ESMTPSA id x11sm1151158pjh.0.2021.03.29.11.33.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Mar 2021 11:33:39 -0700 (PDT)
+From:   Yang Shi <shy828301@gmail.com>
+To:     mgorman@suse.de, kirill.shutemov@linux.intel.com, ziy@nvidia.com,
+        mhocko@suse.com, ying.huang@intel.com, hughd@google.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        akpm@linux-foundation.org
+Cc:     shy828301@gmail.com, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/6] mm: thp: use generic THP migration for NUMA hinting fault
+Date:   Mon, 29 Mar 2021 11:33:06 -0700
+Message-Id: <20210329183312.178266-1-shy828301@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20210329094019.67044-1-liushixin2@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: gnkZjr6gY5aw3ajwjyHRxzheqhTprqGK
-X-Proofpoint-ORIG-GUID: gnkZjr6gY5aw3ajwjyHRxzheqhTprqGK
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-29_08:2021-03-26,2021-03-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- spamscore=0 lowpriorityscore=0 phishscore=0 impostorscore=0 suspectscore=0
- priorityscore=1501 mlxlogscore=999 malwarescore=0 bulkscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2103250000
- definitions=main-2103290097
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Thank you.
 
-Acked-by: Vineeth Vijayan <vneethv@linux.ibm.com>
+When the THP NUMA fault support was added THP migration was not supported yet.
+So the ad hoc THP migration was implemented in NUMA fault handling.  Since v4.14
+THP migration has been supported so it doesn't make too much sense to still keep
+another THP migration implementation rather than using the generic migration
+code.  It is definitely a maintenance burden to keep two THP migration
+implementation for different code paths and it is more error prone.  Using the
+generic THP migration implementation allows us remove the duplicate code and
+some hacks needed by the old ad hoc implementation.
 
-On 3/29/21 11:40 AM, Shixin Liu wrote:
-> spinlock can be initialized automatically with DEFINE_SPINLOCK()
-> rather than explicitly calling spin_lock_init().
-static spinlock
->
-> Signed-off-by: Shixin Liu <liushixin2@huawei.com>
-> ---
->   drivers/s390/cio/css.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-> index 253ab4e7a415..f01ef6325039 100644
-> --- a/drivers/s390/cio/css.c
-> +++ b/drivers/s390/cio/css.c
-> @@ -651,13 +651,12 @@ static void css_sch_todo(struct work_struct *work)
->   }
->   
->   static struct idset *slow_subchannel_set;
-> -static spinlock_t slow_subchannel_lock;
-> +static DEFINE_SPINLOCK(slow_subchannel_lock);
->   static wait_queue_head_t css_eval_wq;
->   static atomic_t css_eval_scheduled;
->   
->   static int __init slow_subchannel_init(void)
->   {
-> -	spin_lock_init(&slow_subchannel_lock);
->   	atomic_set(&css_eval_scheduled, 0);
->   	init_waitqueue_head(&css_eval_wq);
->   	slow_subchannel_set = idset_sch_new();
+A quick grep shows x86_64, PowerPC (book3s), ARM64 ans S390 support both THP
+and NUMA balancing.  The most of them support THP migration except for S390.
+Zi Yan tried to add THP migration support for S390 before but it was not
+accepted due to the design of S390 PMD.  For the discussion, please see:
+https://lkml.org/lkml/2018/4/27/953.
+
+I'm not expert on S390 so not sure if it is feasible to support THP migration
+for S390 or not.  If it is not feasible then the patchset may make THP NUMA
+balancing not be functional on S390.  Not sure if this is a show stopper although
+the patchset does simplify the code a lot.  Anyway it seems worth posting the
+series to the mailing list to get some feedback.
+
+Patch #1 ~ #3 are preparation and clean up patches.
+Patch #4 is the real meat.
+Patch #5 keep THP not split if migration is failed for NUMA hinting.
+Patch #6 removes a hack about page refcount.
+
+I saw there were some hacks about gup from git history, but I didn't figure out
+if they have been removed or not since I just found FOLL_NUMA code in the current
+gup implementation and they seems useful.
+
+
+Yang Shi (6):
+      mm: memory: add orig_pmd to struct vm_fault
+      mm: memory: make numa_migrate_prep() non-static
+      mm: migrate: teach migrate_misplaced_page() about THP
+      mm: thp: refactor NUMA fault handling
+      mm: migrate: don't split THP for misplaced NUMA page
+      mm: migrate: remove redundant page count check for THP
+
+ include/linux/huge_mm.h |   9 ++---
+ include/linux/migrate.h |  29 ++-------------
+ include/linux/mm.h      |   1 +
+ mm/huge_memory.c        | 141 +++++++++++++++++++---------------------------------------------------
+ mm/internal.h           |   3 ++
+ mm/memory.c             |  33 ++++++++---------
+ mm/migrate.c            | 190 ++++++++++++++---------------------------------------------------------------------------------
+ 7 files changed, 94 insertions(+), 312 deletions(-)
+
