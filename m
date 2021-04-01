@@ -2,91 +2,160 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B001B3519BF
-	for <lists+linux-s390@lfdr.de>; Thu,  1 Apr 2021 20:03:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D8E2351A45
+	for <lists+linux-s390@lfdr.de>; Thu,  1 Apr 2021 20:04:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234318AbhDAR4G (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Apr 2021 13:56:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35396 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235634AbhDARtM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Apr 2021 13:49:12 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 131DY5pf076011;
-        Thu, 1 Apr 2021 09:48:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=Mg2lDEAe6gklpkKFAHaPTHh7cIMcXDrfVTsmQ1dH3Ck=;
- b=DgGS7NEGDNxFLRUDeaVKVkZjWdFVD9tvCVSmFBXwT81r8CjJ8mkXvw1gG0dL1VzhQ59X
- SQMCAM54yGMUP7dMiqXmNmQNsfr6skgjWv0Z/SiJ7KOfRhuVNTUD6hK6to363P6lvK29
- 29xiOWfB4INW/mdqPRFlLR/Il29dWrzLLdJC5g4ihaMyVhQKTlrEa1B9dGqfkZWdFJ4o
- 8Zbp5ihkla2khpba9uVjUUFw76r5M/IEx3XAsObqk7uKf4hM94cdOrV1LO34GzF4n0uj
- ZAHc5FWham0Ln9DIrZIPRlQkMS2jkE7yY6HwI3q1x0pdbUu4mIkhkO3NrxA/pkiFhQup dQ== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 37n8r0cbdy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Apr 2021 09:48:03 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 131DgKIC016839;
-        Thu, 1 Apr 2021 13:48:00 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 37n28w89gq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Apr 2021 13:48:00 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 131DlcGv36504056
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Apr 2021 13:47:38 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 389A5A4060;
-        Thu,  1 Apr 2021 13:47:58 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CFE39A4054;
-        Thu,  1 Apr 2021 13:47:57 +0000 (GMT)
-Received: from [9.171.31.36] (unknown [9.171.31.36])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  1 Apr 2021 13:47:57 +0000 (GMT)
-Subject: Re: [PATCH] net: smc: Remove repeated struct declaration
-To:     Wan Jiabing <wanjiabing@vivo.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     kael_w@yeah.net
-References: <20210401084030.1002882-1-wanjiabing@vivo.com>
-From:   Karsten Graul <kgraul@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-Message-ID: <c46c4186-7d48-efa1-ec4f-03bcb1c7188e@linux.ibm.com>
-Date:   Thu, 1 Apr 2021 15:47:58 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        id S236869AbhDAR6x (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 1 Apr 2021 13:58:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39680 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236956AbhDAR4I (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Apr 2021 13:56:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617299768;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=CqTbGA2nnEQCoezWyE1Fpgf0IZLhERcQWs6PZNwBkg4=;
+        b=jFiEEP1ySKt+P33XvxoDDxTYKWJSCcrP6KcaK1ncFumMvSJSIyDlhkiDVVQ+YJJCh0b6B3
+        oW/crAi4Jc+xaGNTetGQrHI8f65REIM8SsY9AC5DQlEzKNenm8Y+DD4sjJrCOkJio4y0pa
+        DDAXlb8AGKCzQbZfOc2xwboeHxiSUaA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-450-PwIa3jVQOJCoHvlqWy6ukQ-1; Thu, 01 Apr 2021 09:55:06 -0400
+X-MC-Unique: PwIa3jVQOJCoHvlqWy6ukQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A55FC107B789;
+        Thu,  1 Apr 2021 13:55:02 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.35.206.58])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D0E15D6B1;
+        Thu,  1 Apr 2021 13:54:52 +0000 (UTC)
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        Ingo Molnar <mingo@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <seanjc@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org (open list),
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Will Deacon <will@kernel.org>,
+        kvmarm@lists.cs.columbia.edu (open list:KERNEL VIRTUAL MACHINE FOR
+        ARM64 (KVM/arm64)), Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Jim Mattson <jmattson@google.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org (open list:S390),
+        Heiko Carstens <hca@linux.ibm.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+        linux-arm-kernel@lists.infradead.org (moderated list:KERNEL VIRTUAL
+        MACHINE FOR ARM64 (KVM/arm64)), James Morse <james.morse@arm.com>
+Subject: [PATCH v2 0/9] KVM: my debug patch queue
+Date:   Thu,  1 Apr 2021 16:54:42 +0300
+Message-Id: <20210401135451.1004564-1-mlevitsk@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20210401084030.1002882-1-wanjiabing@vivo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: FKexRfPIxGpEh_yaWuXYovGDO14eBo-o
-X-Proofpoint-GUID: FKexRfPIxGpEh_yaWuXYovGDO14eBo-o
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-04-01_05:2021-03-31,2021-04-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 bulkscore=0 priorityscore=1501 phishscore=0 suspectscore=0
- mlxlogscore=946 clxscore=1011 lowpriorityscore=0 mlxscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2103310000 definitions=main-2104010094
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 01/04/2021 10:40, Wan Jiabing wrote:
-> struct smc_clc_msg_local is declared twice. One is declared at
-> 301st line. The blew one is not needed. Remove the duplicate.
-> 
-> Signed-off-by: Wan Jiabing <wanjiabing@vivo.com>
-> ---
->  net/smc/smc_core.h | 1 -
->  1 file changed, 1 deletion(-)
-> 
+Hi!=0D
+=0D
+I would like to publish two debug features which were needed for other stuf=
+f=0D
+I work on.=0D
+=0D
+One is the reworked lx-symbols script which now actually works on at least=
+=0D
+gdb 9.1 (gdb 9.2 was reported to fail to load the debug symbols from the ke=
+rnel=0D
+for some reason, not related to this patch) and upstream qemu.=0D
+=0D
+The other feature is the ability to trap all guest exceptions (on SVM for n=
+ow)=0D
+and see them in kvmtrace prior to potential merge to double/triple fault.=0D
+=0D
+This can be very useful and I already had to manually patch KVM a few=0D
+times for this.=0D
+I will, once time permits, implement this feature on Intel as well.=0D
+=0D
+V2:=0D
+=0D
+ * Some more refactoring and workarounds for lx-symbols script=0D
+=0D
+ * added KVM_GUESTDBG_BLOCKEVENTS flag to enable 'block interrupts on=0D
+   single step' together with KVM_CAP_SET_GUEST_DEBUG2 capability=0D
+   to indicate which guest debug flags are supported.=0D
+=0D
+   This is a replacement for unconditional block of interrupts on single=0D
+   step that was done in previous version of this patch set.=0D
+   Patches to qemu to use that feature will be sent soon.=0D
+=0D
+ * Reworked the the 'intercept all exceptions for debug' feature according=
+=0D
+   to the review feedback:=0D
+=0D
+   - renamed the parameter that enables the feature and=0D
+     moved it to common kvm module.=0D
+     (only SVM part is currently implemented though)=0D
+=0D
+   - disable the feature for SEV guests as was suggested during the review=
+=0D
+   - made the vmexit table const again, as was suggested in the review as w=
+ell.=0D
+=0D
+Best regards,=0D
+	Maxim Levitsky=0D
+=0D
+Maxim Levitsky (9):=0D
+  scripts/gdb: rework lx-symbols gdb script=0D
+  KVM: introduce KVM_CAP_SET_GUEST_DEBUG2=0D
+  KVM: x86: implement KVM_CAP_SET_GUEST_DEBUG2=0D
+  KVM: aarch64: implement KVM_CAP_SET_GUEST_DEBUG2=0D
+  KVM: s390x: implement KVM_CAP_SET_GUEST_DEBUG2=0D
+  KVM: x86: implement KVM_GUESTDBG_BLOCKEVENTS=0D
+  KVM: SVM: split svm_handle_invalid_exit=0D
+  KVM: x86: add force_intercept_exceptions_mask=0D
+  KVM: SVM: implement force_intercept_exceptions_mask=0D
+=0D
+ Documentation/virt/kvm/api.rst    |   4 +=0D
+ arch/arm64/include/asm/kvm_host.h |   4 +=0D
+ arch/arm64/kvm/arm.c              |   2 +=0D
+ arch/arm64/kvm/guest.c            |   5 -=0D
+ arch/s390/include/asm/kvm_host.h  |   4 +=0D
+ arch/s390/kvm/kvm-s390.c          |   3 +=0D
+ arch/x86/include/asm/kvm_host.h   |  12 ++=0D
+ arch/x86/include/uapi/asm/kvm.h   |   1 +=0D
+ arch/x86/kvm/svm/svm.c            |  87 +++++++++++--=0D
+ arch/x86/kvm/svm/svm.h            |   6 +-=0D
+ arch/x86/kvm/x86.c                |  14 ++-=0D
+ arch/x86/kvm/x86.h                |   2 +=0D
+ include/uapi/linux/kvm.h          |   1 +=0D
+ kernel/module.c                   |   8 +-=0D
+ scripts/gdb/linux/symbols.py      | 203 ++++++++++++++++++++----------=0D
+ 15 files changed, 272 insertions(+), 84 deletions(-)=0D
+=0D
+-- =0D
+2.26.2=0D
+=0D
 
-Acked-by: Karsten Graul <kgraul@linux.ibm.com>
