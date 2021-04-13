@@ -2,146 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B87035E646
-	for <lists+linux-s390@lfdr.de>; Tue, 13 Apr 2021 20:25:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8929B35E830
+	for <lists+linux-s390@lfdr.de>; Tue, 13 Apr 2021 23:24:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347652AbhDMSYj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 13 Apr 2021 14:24:39 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25954 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1347641AbhDMSYj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 13 Apr 2021 14:24:39 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13DI3MUR027164;
-        Tue, 13 Apr 2021 14:24:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=JknBCAuHiEO/f4AcObmnnjS/47X+qsGrgkJ/mGxwTF8=;
- b=go4s8ipcUgsOpjFfV2tth5dT8L3fZxT08Wb6PIxUc+gJLQqu2KlrvJKeM4QfmKP4mkH5
- SEl6fwN13CeC0XKEN4HcZAEcZoV4GZnpXxiNbg5mbwyFtvtFM2RHAwZQOJ6HUb0cL9Tj
- WD5ZtzRmxhJPi4z3JptJMSDLyp/Ob7RWznx3JLFAFnnQv3OTdUKYpCUonJ4MKHw3QwK2
- Gam5aQrUoCr/+cebQIVCiYyKOjd3JZ5LNbc6xHkgvH635rlrwGb+J3hV4NOo75TV6KjL
- wYoj8jwUVq9g5SLCq5u0Y42SEk1cpbw6iAW7VPMVQukAzP42+/5wjfVYFC4KvqZ/uXRP pg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 37w9gycv7v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Apr 2021 14:24:18 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 13DI4SQj031294;
-        Tue, 13 Apr 2021 14:24:18 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 37w9gycv6t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Apr 2021 14:24:18 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 13DIMqou006039;
-        Tue, 13 Apr 2021 18:24:16 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 37u39hjuj2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Apr 2021 18:24:16 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 13DIODVQ41877780
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Apr 2021 18:24:13 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EB5894204B;
-        Tue, 13 Apr 2021 18:24:12 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D640542047;
-        Tue, 13 Apr 2021 18:24:12 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 13 Apr 2021 18:24:12 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-        id 82637E0519; Tue, 13 Apr 2021 20:24:12 +0200 (CEST)
-From:   Eric Farman <farman@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
-Subject: [RFC PATCH v4 4/4] vfio-ccw: Reset FSM state to IDLE before io_mutex
-Date:   Tue, 13 Apr 2021 20:24:10 +0200
-Message-Id: <20210413182410.1396170-5-farman@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210413182410.1396170-1-farman@linux.ibm.com>
-References: <20210413182410.1396170-1-farman@linux.ibm.com>
+        id S230346AbhDMVY4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 13 Apr 2021 17:24:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232277AbhDMVYz (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 13 Apr 2021 17:24:55 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71398C061574;
+        Tue, 13 Apr 2021 14:24:29 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id j7so8947989plx.2;
+        Tue, 13 Apr 2021 14:24:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TjUgcmFgfVUvxEgmX1mTT6tYY/s/MxXmpJtENaIxR0Y=;
+        b=WHt03bHYh693At+HejleiJT5QnmfyIMK2f+Fr/QYvCch1IguEoJKhBNalXI7wTWcDJ
+         aj2guXQUN6nRHP5aqfoctgDCZRcU+9RCwIoaziahPsOXBLZf/XPQNBw0bAaPEAWO2PVG
+         36elbT/Ehn2HWNBDwpsTwHQfvWWyUkoGRYn/Zh8cwKZAe9BBGo1syrC8NpmvFT4/pkxr
+         MXWh+8fl0+1d15nluwkLe9XR+GnGyxwkeG1TEsFG6HEZ1OwF+ogITKKjeIAa37OE44tF
+         DSSx4zTujy+rU5Ee6laP+1H3wvLRqAqkThDA+u1QlR8fwVsmxE8dSbGUaZyljZkYQaiK
+         rjwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TjUgcmFgfVUvxEgmX1mTT6tYY/s/MxXmpJtENaIxR0Y=;
+        b=uQI5RSTOexVTJeRA9kkYr1sHh9CHlsNJLA9+gjRSFpjTdeh1iBvk2apdi8OPLmxfnb
+         0yKMEWkcjW/TncIrGOfZkw9yl6MLNmWz4hdIANaXWGWa4s4d2dLH4qZMXYJgvftTfLAM
+         jBHrnPfcLvgtYOKnV7+MJS0QsF8rtj9Dz4vMaPvuExduR+yZXtJAmWh1HsI+d8Fi1MmY
+         /QZJK7Qah+YzMcbuvEakXNBLTImH8YUO7vGbC53LxnZeAQt2AajlM6SjLuzEqZSAEMih
+         32XwFfn1m7gZMih1qZbC9sTKd3P919sDzcQ7xhba0KP9qzi9hg1bi+He4cIDg2/zNe8C
+         kzrA==
+X-Gm-Message-State: AOAM5328PXdfXHVfZyMdHpbJPoewS0DLZY/e1gKcs09/y8qC8i7hAhLG
+        durfDrVe4KP6inHmOBk+VVQ=
+X-Google-Smtp-Source: ABdhPJwG+h4Eaee+6xKwhiomhLOrGif7IjgvEYV2eR4WT8U78sOVrCpxXeFTL0gfL/O99D7EdyfIcg==
+X-Received: by 2002:a17:90a:5884:: with SMTP id j4mr2183180pji.33.1618349068996;
+        Tue, 13 Apr 2021 14:24:28 -0700 (PDT)
+Received: from localhost.localdomain (c-73-93-239-127.hsd1.ca.comcast.net. [73.93.239.127])
+        by smtp.gmail.com with ESMTPSA id fw24sm3069345pjb.21.2021.04.13.14.24.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Apr 2021 14:24:28 -0700 (PDT)
+From:   Yang Shi <shy828301@gmail.com>
+To:     mgorman@suse.de, kirill.shutemov@linux.intel.com, ziy@nvidia.com,
+        mhocko@suse.com, ying.huang@intel.com, hughd@google.com,
+        gerald.schaefer@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        akpm@linux-foundation.org
+Cc:     shy828301@gmail.com, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [v2 RFC PATCH 0/7] mm: thp: use generic THP migration for NUMA hinting fault
+Date:   Tue, 13 Apr 2021 14:24:09 -0700
+Message-Id: <20210413212416.3273-1-shy828301@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: YlwmDeBo9gQmTXRNlofM271f2TK-V-xw
-X-Proofpoint-ORIG-GUID: 2OE1hblWcxXqnE8M0ncBUCLeI8frrHrZ
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-04-13_12:2021-04-13,2021-04-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 impostorscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0
- suspectscore=0 clxscore=1015 bulkscore=0 adultscore=0 mlxlogscore=859
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104060000 definitions=main-2104130122
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Today, the stacked call to vfio_ccw_sch_io_todo() does three things:
 
-1) Update a solicited IRB with CP information, and release the CP
-if the interrupt was the end of a START operation.
-2) Copy the IRB data into the io_region, under the protection of
-the io_mutex
-3) Reset the vfio-ccw FSM state to IDLE to acknowledge that
-vfio-ccw can accept more work.
+Changelog:
+v1 --> v2:
+    * Adopted the suggestion from Gerald Schaefer to skip huge PMD for S390
+      for now.
+    * Used PageTransHuge to distinguish base page or THP instead of a new
+      parameter for migrate_misplaced_page() per Huang Ying.
+    * Restored PMD lazily to avoid unnecessary TLB shootdown per Huang Ying.
+    * Skipped shared THP.
+    * Updated counters correctly.
+    * Rebased to linux-next (next-20210412).
 
-The trouble is that step 3 is (A) invoked for both solicited and
-unsolicited interrupts, and (B) sitting after the mutex for step 2.
-This second piece becomes a problem if it processes an interrupt
-for a CLEAR SUBCHANNEL while another thread initiates a START,
-thus allowing the CP and FSM states to get out of sync. That is:
+When the THP NUMA fault support was added THP migration was not supported yet.
+So the ad hoc THP migration was implemented in NUMA fault handling.  Since v4.14
+THP migration has been supported so it doesn't make too much sense to still keep
+another THP migration implementation rather than using the generic migration
+code.  It is definitely a maintenance burden to keep two THP migration
+implementation for different code paths and it is more error prone.  Using the
+generic THP migration implementation allows us remove the duplicate code and
+some hacks needed by the old ad hoc implementation.
 
-	CPU 1				CPU 2
-	fsm_do_clear()
-	fsm_irq()
-					fsm_io_request()
-					fsm_io_helper()
-	vfio_ccw_sch_io_todo()
-					fsm_irq()
-					vfio_ccw_sch_io_todo()
+A quick grep shows x86_64, PowerPC (book3s), ARM64 ans S390 support both THP
+and NUMA balancing.  The most of them support THP migration except for S390.
+Zi Yan tried to add THP migration support for S390 before but it was not
+accepted due to the design of S390 PMD.  For the discussion, please see:
+https://lkml.org/lkml/2018/4/27/953.
 
-Let's move the reset of the FSM state to the point where the
-channel_program struct is cleaned up, which is only done for
-solicited interrupts anyway.
+Per the discussion with Gerald Schaefer in v1 it is acceptible to skip huge
+PMD for S390 for now.
 
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
----
- drivers/s390/cio/vfio_ccw_drv.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+I saw there were some hacks about gup from git history, but I didn't figure out
+if they have been removed or not since I just found FOLL_NUMA code in the current
+gup implementation and they seems useful.
 
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index 8c625b530035..e51318f23ca8 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -94,16 +94,15 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
- 		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
- 	if (scsw_is_solicited(&irb->scsw)) {
- 		cp_update_scsw(&private->cp, &irb->scsw);
--		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING)
-+		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING) {
- 			cp_free(&private->cp);
-+			private->state = VFIO_CCW_STATE_IDLE;
-+		}
- 	}
- 	mutex_lock(&private->io_mutex);
- 	memcpy(private->io_region->irb_area, irb, sizeof(*irb));
- 	mutex_unlock(&private->io_mutex);
- 
--	if (private->mdev && is_final)
--		private->state = VFIO_CCW_STATE_IDLE;
--
- 	if (private->io_trigger)
- 		eventfd_signal(private->io_trigger, 1);
- }
--- 
-2.25.1
+I'm trying to keep the behavior as consistent as possible between before and after.
+But there is still some minor disparity.  For example, file THP won't
+get migrated at all in old implementation due to the anon_vma check, but
+the new implementation doesn't need acquire anon_vma lock anymore, so
+file THP might get migrated.  Not sure if this behavior needs to be
+kept.
+
+Patch #1 ~ #2 are preparation patches.
+Patch #3 is the real meat.
+Patch #4 ~ #6 keep consistent counters and behaviors with before.
+Patch #7 skips change huge PMD to prot_none if thp migration is not supported.
+
+Yang Shi (7):
+      mm: memory: add orig_pmd to struct vm_fault
+      mm: memory: make numa_migrate_prep() non-static
+      mm: thp: refactor NUMA fault handling
+      mm: migrate: account THP NUMA migration counters correctly
+      mm: migrate: don't split THP for misplaced NUMA page
+      mm: migrate: check mapcount for THP instead of ref count
+      mm: thp: skip make PMD PROT_NONE if THP migration is not supported
+
+ include/linux/huge_mm.h |   9 ++---
+ include/linux/migrate.h |  23 -----------
+ include/linux/mm.h      |   3 ++
+ mm/huge_memory.c        | 156 +++++++++++++++++++++++++-----------------------------------------------
+ mm/internal.h           |  21 ++--------
+ mm/memory.c             |  31 +++++++--------
+ mm/migrate.c            | 204 +++++++++++++++++++++--------------------------------------------------------------------------
+ 7 files changed, 123 insertions(+), 324 deletions(-)
 
