@@ -2,94 +2,143 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF91735F8FA
-	for <lists+linux-s390@lfdr.de>; Wed, 14 Apr 2021 18:33:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0192435F97B
+	for <lists+linux-s390@lfdr.de>; Wed, 14 Apr 2021 19:10:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351716AbhDNQa6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 14 Apr 2021 12:30:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48506 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1351635AbhDNQa6 (ORCPT
+        id S233037AbhDNRIn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 14 Apr 2021 13:08:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37778 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233842AbhDNRIn (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 14 Apr 2021 12:30:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618417836;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TDqw7SuxPwDscOI0Q0fTDI3jnZfp7IWUGcUSEKD/yTc=;
-        b=hOvgyRBwHKlB6A2CQ50PNtHB59clf+aMy5KiSmGknqZsX1Ke3xbiGHX4/s0XvxpQtf069o
-        U4923A+AJ1WIcJ5LsYKKgRo4ibO7HMCX7yAeR5AvXqmJ1Ehw5pUJLGhOyr45i1dAW0Ldn6
-        60/RQtttSBVfXkUbWWOHF/JqRZq1JCs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-528-A7xWChHmOqmZb-HYnca-XQ-1; Wed, 14 Apr 2021 12:30:34 -0400
-X-MC-Unique: A7xWChHmOqmZb-HYnca-XQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CED8A8030CF;
-        Wed, 14 Apr 2021 16:30:32 +0000 (UTC)
-Received: from gondolin (ovpn-113-114.ams2.redhat.com [10.36.113.114])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F08C5C1B4;
-        Wed, 14 Apr 2021 16:30:31 +0000 (UTC)
-Date:   Wed, 14 Apr 2021 18:30:28 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [RFC PATCH v4 1/4] vfio-ccw: Check initialized flag in
- cp_init()
-Message-ID: <20210414183028.1285311e.cohuck@redhat.com>
-In-Reply-To: <20210413182410.1396170-2-farman@linux.ibm.com>
-References: <20210413182410.1396170-1-farman@linux.ibm.com>
-        <20210413182410.1396170-2-farman@linux.ibm.com>
-Organization: Red Hat GmbH
+        Wed, 14 Apr 2021 13:08:43 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13EH2VAE163422;
+        Wed, 14 Apr 2021 13:08:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding : sender;
+ s=pp1; bh=9wef7EhNu925iPa213WShIPG6W+5FDUpQoWXK5i75hk=;
+ b=kEXK5VX/QEwHji4LAACuWxf1eiNZjPexrnl9HAk9v6GVDWfN/lzCkWkCg/DcKIiHxIp0
+ xsF39hR1AW2/ghkqf5IRAxepJI+5BuhVlzUiTxCq/92leFr3W+NKfBWCLSuN772PnZGZ
+ sHImgtUyGMMHr0HBY44aPQk9mo36Pq3RroxQtQTI6xaIy8N6XyZtqP5BUI0Dk7Z9ibi+
+ eO0ISllX8vN41QZ9ufSrKikhFVYSTl3k551pblCSvXZE1dh2zwr1a8fWRd2J7NEJpIpn
+ hKQS0YFsvdZ9hdOe88DCWRMz93O/HlGpe+Cev/qm5U50OIMf+IEzX1vle4WdNzUZaFGc mQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 37x0n7qrge-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 14 Apr 2021 13:08:10 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 13EH2fo2164830;
+        Wed, 14 Apr 2021 13:08:10 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 37x0n7qrfj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 14 Apr 2021 13:08:10 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 13EH2YLc007946;
+        Wed, 14 Apr 2021 17:08:08 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 37u3n8ue40-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 14 Apr 2021 17:08:07 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 13EH84MD39387506
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 14 Apr 2021 17:08:05 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D4560A4D6D;
+        Wed, 14 Apr 2021 17:08:04 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6925A4D66;
+        Wed, 14 Apr 2021 17:08:04 +0000 (GMT)
+Received: from t480-pf1aa2c2.fritz.box (unknown [9.145.18.252])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 14 Apr 2021 17:08:04 +0000 (GMT)
+Received: from bblock by t480-pf1aa2c2.fritz.box with local (Exim 4.94)
+        (envelope-from <bblock@linux.ibm.com>)
+        id 1lWizk-002b2n-8Z; Wed, 14 Apr 2021 19:08:04 +0200
+From:   Benjamin Block <bblock@linux.ibm.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Benjamin Block <bblock@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Fedor Loshakov <loshakov@linux.ibm.com>,
+        Sumangala Bannur Subraya <bsuma@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Yevhen Viktorov <yevhen.viktorov@virginmedia.com>,
+        Qinglang Miao <miaoqinglang@huawei.com>,
+        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH 0/6] zfcp: cleanups and qdio code refactor for 5.13/5.14
+Date:   Wed, 14 Apr 2021 19:07:58 +0200
+Message-Id: <cover.1618417667.git.bblock@linux.ibm.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Organization: IBM Deutschland Research & Development GmbH, Vorsitz. AufsR. Gregor Pillen, Geschaeftsfuehrung Dirk Wittkopp, Sitz der Gesellschaft Boeblingen, Registergericht AmtsG Stuttgart, HRB 243294
+Content-Transfer-Encoding: 8bit
+Sender: Benjamin Block <bblock@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: QSqU1CXWoBh2PpTWm0c2lRMNizFeMCiF
+X-Proofpoint-ORIG-GUID: hEDcq9kCAQeJOfMkEJbvsmi_mdIOWacJ
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-04-14_10:2021-04-14,2021-04-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0 adultscore=0
+ priorityscore=1501 clxscore=1011 malwarescore=0 suspectscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104060000 definitions=main-2104140111
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 13 Apr 2021 20:24:07 +0200
-Eric Farman <farman@linux.ibm.com> wrote:
+Hello James, Martin,
 
-> We have a really nice flag in the channel_program struct that
-> indicates if it had been initialized by cp_init(), and use it
-> as a guard in the other cp accessor routines, but not for a
-> duplicate call into cp_init(). The possibility of this occurring
-> is low, because that flow is protected by the private->io_mutex
-> and FSM CP_PROCESSING state. But then why bother checking it
-> in (for example) cp_prefetch() then?
-> 
-> Let's just be consistent and check for that in cp_init() too.
-> 
-> Fixes: 71189f263f8a3 ("vfio-ccw: make it safe to access channel programs")
-> Signed-off-by: Eric Farman <farman@linux.ibm.com>
-> ---
->  drivers/s390/cio/vfio_ccw_cp.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-> index b9febc581b1f..8d1b2771c1aa 100644
-> --- a/drivers/s390/cio/vfio_ccw_cp.c
-> +++ b/drivers/s390/cio/vfio_ccw_cp.c
-> @@ -638,6 +638,10 @@ int cp_init(struct channel_program *cp, struct device *mdev, union orb *orb)
->  	static DEFINE_RATELIMIT_STATE(ratelimit_state, 5 * HZ, 1);
->  	int ret;
->  
-> +	/* this is an error in the caller */
-> +	if (cp->initialized)
-> +		return -EBUSY;
-> +
->  	/*
->  	 * We only support prefetching the channel program. We assume all channel
->  	 * programs executed by supported guests likewise support prefetching.
+I know I am pretty late; we have some patches queued that I didn't come
+around posting yet; its nothing world-changing, so if you don't want to
+pull them for 5.13 anymore, no worries.
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Most of these are cleanups, apart from the last patch from Julian. This
+lifts the handling of our outbound queue from the common QDIO layer
+(common for s390x, that is) to our driver. There is more details in the
+patch itself. We already did the same for the inbound queue handling
+some time ago.
+
+All of these have run successfully in our internal CI for a bit already
+(most for quite some time actually), and so far nothing came up. I also
+retested them today with our regression suite on top of 5.12.0-rc7. So
+I'm pretty confident this should work without problems.
+
+
+best regards,
+ - Benjamin
+
+
+Julian Wiedmann (4):
+  zfcp: remove unneeded INIT_LIST_HEAD() for FSF requests
+  zfcp: fix sysfs roll-back on error in zfcp_adapter_enqueue()
+  zfcp: clean up sysfs code for SFP diagnostics
+  scsi: zfcp: lift Request Queue tasklet & timer from qdio
+
+Qinglang Miao (1):
+  scsi: zfcp: move the position of put_device
+
+Yevhen Viktorov (1):
+  zfcp: fix indentation coding style issue
+
+ drivers/s390/scsi/zfcp_aux.c   | 28 +++++++++-----
+ drivers/s390/scsi/zfcp_def.h   |  6 +--
+ drivers/s390/scsi/zfcp_diag.c  | 42 ---------------------
+ drivers/s390/scsi/zfcp_diag.h  |  7 ----
+ drivers/s390/scsi/zfcp_ext.h   |  4 +-
+ drivers/s390/scsi/zfcp_fsf.c   |  1 -
+ drivers/s390/scsi/zfcp_qdio.c  | 68 ++++++++++++++++++++++++++++------
+ drivers/s390/scsi/zfcp_qdio.h  |  5 +++
+ drivers/s390/scsi/zfcp_sysfs.c | 14 +++++--
+ drivers/s390/scsi/zfcp_unit.c  |  4 +-
+ 10 files changed, 97 insertions(+), 82 deletions(-)
+
+-- 
+2.30.2
 
