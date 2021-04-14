@@ -2,297 +2,351 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58ADA35F973
-	for <lists+linux-s390@lfdr.de>; Wed, 14 Apr 2021 19:10:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89ED235F9A5
+	for <lists+linux-s390@lfdr.de>; Wed, 14 Apr 2021 19:20:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233686AbhDNRIk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 14 Apr 2021 13:08:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30396 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229696AbhDNRIf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 14 Apr 2021 13:08:35 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13EH2W3e163457;
-        Wed, 14 Apr 2021 13:08:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : sender; s=pp1;
- bh=yOJrBkWl8dH+/WJgO7owzCsSPIUt26nTH7Ddi5dliqI=;
- b=O7aP+k4ZkqQEiJUU8ODMt+sV7toGcjXz2CjrxmT+/Gv6p64w/fkDZG1bzz4vkp912wMz
- LG1z984PPNcamnNvJU+Q2xSjz9HvHs9SmRnCGTGjoZmmVo+RAiV8RwU+EROlTN0SDZ9E
- zR1JlrQi7+ys2EXE3YEUbOepzoUFaIbDi16AGggYbH7ZQwy9tUkxeGMxFfnRNFTzJTLF
- ophOs6YMLL8AaGKHYNU3U+2da7cH/G/uIKkZWrOQ7pRQGgizBxIoYno2DbrKfCQJ0gCV
- ob1/y/X+SZBYyJGUZHo0uPtSA3lqFHjmkNFSuwDpUPZVa05shXs2OUy0B5hgtmYfBwpc qg== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 37x0n7qrfm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 14 Apr 2021 13:08:10 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 13EH7DDF024868;
-        Wed, 14 Apr 2021 17:08:08 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04fra.de.ibm.com with ESMTP id 37u3n89ty8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 14 Apr 2021 17:08:07 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 13EH7ho035717560
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 14 Apr 2021 17:07:43 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 176E8AEBEB;
-        Wed, 14 Apr 2021 17:08:05 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EDD15AEBE1;
-        Wed, 14 Apr 2021 17:08:04 +0000 (GMT)
-Received: from t480-pf1aa2c2.fritz.box (unknown [9.145.18.252])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 14 Apr 2021 17:08:04 +0000 (GMT)
-Received: from bblock by t480-pf1aa2c2.fritz.box with local (Exim 4.94)
-        (envelope-from <bblock@linux.ibm.com>)
-        id 1lWizk-002b34-Fa; Wed, 14 Apr 2021 19:08:04 +0200
-From:   Benjamin Block <bblock@linux.ibm.com>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Fedor Loshakov <loshakov@linux.ibm.com>,
-        Sumangala Bannur Subraya <bsuma@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH 6/6] scsi: zfcp: lift Request Queue tasklet & timer from qdio
-Date:   Wed, 14 Apr 2021 19:08:04 +0200
-Message-Id: <018d3ddd029f8d6ac00cf4184880288c637c4fd1.1618417667.git.bblock@linux.ibm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <cover.1618417667.git.bblock@linux.ibm.com>
-References: <cover.1618417667.git.bblock@linux.ibm.com>
+        id S234107AbhDNRQU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 14 Apr 2021 13:16:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233618AbhDNRQR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 14 Apr 2021 13:16:17 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF741C061574;
+        Wed, 14 Apr 2021 10:15:54 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id r128so7432038lff.4;
+        Wed, 14 Apr 2021 10:15:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bJQXEAKrIHFWn1sudHV/OeQTpWST1/mB/y/Z+J+ibCY=;
+        b=eKXTqJfujAdVMW+kYIeXdTuOmOTty6jMqeNDA/7FXS4n/mt+fT1WyIGWgz7ORx2ZYl
+         RbcyFraRKhrqgeOwM8tZRqvdpK53Ti4Hw6FOLhSb2uvigldYJrRAjYIpDKfxT+7xx0E7
+         ScAodrdQFW9vrmhc138wQ+y/TJxXOBwdU08v2jx4qN24C4yNQt6OYY12HHCYWmIe/her
+         cfQxNfXSDajYAY+NRIdy/yjNmNNBOSUoMcQzIa6QBC2FT1rbKzyfX7BBdi6+HvMrMx3A
+         MqNAhnxjo3yIdAZ4H7UEpB1SWswjbriGyEctj1BxOEcst6RKRXf7qUpVkOIFrrqr3KWC
+         Q+IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bJQXEAKrIHFWn1sudHV/OeQTpWST1/mB/y/Z+J+ibCY=;
+        b=YR/QBZ2kg3me2dViC+qx4vTYW8UdN0ifdL88hJJJpzBZmhE0MQ1qkAt4EKk7LtGkqC
+         VdWwfqVwb/buG6PedNrrpUe2oaUepPtYcIwnBVgse8e7PPfU2wgqJ/mgzTSOiUskpwp3
+         Emaq0ilLewmLPBeUOonUn3Go4ay3AVvydCbxuvz1Hw+1yEJHboh0rDceGsyewUpEa+bz
+         QRc/kOrfwu6wa5HdsKUSUIkRWOOJApFif0v+6PoGv6H6//YSxViz3UvqzxAZbUw06rHh
+         HWTAVYJa1e86meD/NZPTEoVWe87X8G6YhmWhALo/A1CTTn/DJf8CpOrTDG0BKyUQylgx
+         dwCw==
+X-Gm-Message-State: AOAM532j+mzG77PpYD5Hp7i/GbnY2CMhQNc++SwB/rhi9CVqTNJVnd1Q
+        7Mg9WGu2AohvEH1GqEFJpad3QAt5WkSFzJgFcfA=
+X-Google-Smtp-Source: ABdhPJx1rAomw+Zvd4JKKgOb9hPHDz3M8W++z1hOKo+J4PQ50UXQ0NXfR1a2MDOhV7tNr65UeR2IxOWIJbJiNZeQVp8=
+X-Received: by 2002:a19:f007:: with SMTP id p7mr9338067lfc.597.1618420553361;
+ Wed, 14 Apr 2021 10:15:53 -0700 (PDT)
 MIME-Version: 1.0
-Organization: IBM Deutschland Research & Development GmbH, Vorsitz. AufsR. Gregor Pillen, Geschaeftsfuehrung Dirk Wittkopp, Sitz der Gesellschaft Boeblingen, Registergericht AmtsG Stuttgart, HRB 243294
-Content-Transfer-Encoding: 8bit
-Sender: Benjamin Block <bblock@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ZyeI5weRt17XQD0mjJlc-OvbrXme1kZd
-X-Proofpoint-ORIG-GUID: ZyeI5weRt17XQD0mjJlc-OvbrXme1kZd
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-04-14_10:2021-04-14,2021-04-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 mlxscore=0 bulkscore=0 adultscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104060000 definitions=main-2104140111
+References: <20210413212416.3273-1-shy828301@gmail.com> <20210413212416.3273-4-shy828301@gmail.com>
+ <87o8ehshzw.fsf@yhuang6-desk1.ccr.corp.intel.com>
+In-Reply-To: <87o8ehshzw.fsf@yhuang6-desk1.ccr.corp.intel.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Wed, 14 Apr 2021 10:15:41 -0700
+Message-ID: <CAHbLzkrWzhLL5DSS3a2SAnQz-Spjy3S-QyjFy3rkgqvOqCLqmA@mail.gmail.com>
+Subject: Re: [v2 PATCH 3/7] mm: thp: refactor NUMA fault handling
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Mel Gorman <mgorman@suse.de>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>, linux-s390@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+On Tue, Apr 13, 2021 at 7:44 PM Huang, Ying <ying.huang@intel.com> wrote:
+>
+> Yang Shi <shy828301@gmail.com> writes:
+>
+> > When the THP NUMA fault support was added THP migration was not supported yet.
+> > So the ad hoc THP migration was implemented in NUMA fault handling.  Since v4.14
+> > THP migration has been supported so it doesn't make too much sense to still keep
+> > another THP migration implementation rather than using the generic migration
+> > code.
+> >
+> > This patch reworked the NUMA fault handling to use generic migration implementation
+> > to migrate misplaced page.  There is no functional change.
+> >
+> > After the refactor the flow of NUMA fault handling looks just like its
+> > PTE counterpart:
+> >   Acquire ptl
+> >   Prepare for migration (elevate page refcount)
+> >   Release ptl
+> >   Isolate page from lru and elevate page refcount
+> >   Migrate the misplaced THP
+> >
+> > If migration is failed just restore the old normal PMD.
+> >
+> > In the old code anon_vma lock was needed to serialize THP migration
+> > against THP split, but since then the THP code has been reworked a lot,
+> > it seems anon_vma lock is not required anymore to avoid the race.
+> >
+> > The page refcount elevation when holding ptl should prevent from THP
+> > split.
+> >
+> > Use migrate_misplaced_page() for both base page and THP NUMA hinting
+> > fault and remove all the dead and duplicate code.
+> >
+> > Signed-off-by: Yang Shi <shy828301@gmail.com>
+> > ---
+> >  include/linux/migrate.h |  23 ------
+> >  mm/huge_memory.c        | 143 ++++++++++----------------------
+> >  mm/internal.h           |  18 ----
+> >  mm/migrate.c            | 177 ++++++++--------------------------------
+> >  4 files changed, 77 insertions(+), 284 deletions(-)
+> >
+> > diff --git a/include/linux/migrate.h b/include/linux/migrate.h
+> > index 4bb4e519e3f5..163d6f2b03d1 100644
+> > --- a/include/linux/migrate.h
+> > +++ b/include/linux/migrate.h
+> > @@ -95,14 +95,9 @@ static inline void __ClearPageMovable(struct page *page)
+> >  #endif
+> >
+> >  #ifdef CONFIG_NUMA_BALANCING
+> > -extern bool pmd_trans_migrating(pmd_t pmd);
+> >  extern int migrate_misplaced_page(struct page *page,
+> >                                 struct vm_area_struct *vma, int node);
+> >  #else
+> > -static inline bool pmd_trans_migrating(pmd_t pmd)
+> > -{
+> > -     return false;
+> > -}
+> >  static inline int migrate_misplaced_page(struct page *page,
+> >                                        struct vm_area_struct *vma, int node)
+> >  {
+> > @@ -110,24 +105,6 @@ static inline int migrate_misplaced_page(struct page *page,
+> >  }
+> >  #endif /* CONFIG_NUMA_BALANCING */
+> >
+> > -#if defined(CONFIG_NUMA_BALANCING) && defined(CONFIG_TRANSPARENT_HUGEPAGE)
+> > -extern int migrate_misplaced_transhuge_page(struct mm_struct *mm,
+> > -                     struct vm_area_struct *vma,
+> > -                     pmd_t *pmd, pmd_t entry,
+> > -                     unsigned long address,
+> > -                     struct page *page, int node);
+> > -#else
+> > -static inline int migrate_misplaced_transhuge_page(struct mm_struct *mm,
+> > -                     struct vm_area_struct *vma,
+> > -                     pmd_t *pmd, pmd_t entry,
+> > -                     unsigned long address,
+> > -                     struct page *page, int node)
+> > -{
+> > -     return -EAGAIN;
+> > -}
+> > -#endif /* CONFIG_NUMA_BALANCING && CONFIG_TRANSPARENT_HUGEPAGE*/
+> > -
+> > -
+> >  #ifdef CONFIG_MIGRATION
+> >
+> >  /*
+> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > index 35cac4aeaf68..94981907fd4c 100644
+> > --- a/mm/huge_memory.c
+> > +++ b/mm/huge_memory.c
+> > @@ -1418,93 +1418,21 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
+> >  {
+> >       struct vm_area_struct *vma = vmf->vma;
+> >       pmd_t pmd = vmf->orig_pmd;
+> > -     struct anon_vma *anon_vma = NULL;
+> > +     pmd_t oldpmd;
+>
+> nit: the usage of oldpmd and pmd in the function appears not very
+> consistent.  How about make oldpmd == vmf->orig_pmd always.  While make
+> pmd the changed one?
 
-The qdio layer currently provides its own infrastructure to scan for
-Request Queue completions & to report them to the device driver.
-This comes with several drawbacks - having an async tasklet & timer
-construct in qdio introduces additional lifetime complexity, and makes
-it harder to integrate them with the rest of the device driver. The
-timeouts are also currently hard-coded, and can't be tweaked without
-affecting other qdio drivers (ie. qeth).
+Thanks for the suggestion. Yes, it seemed neater. Will fix it in the
+next version.
 
-But due to recent enhancements to the qdio layer, zfcp can actually take
-full control of the Request Queue completion processing. It merely needs
-to opt-out from the qdio layer mechanisms by setting the scan_threshold
-to 0, and then use qdio_inspect_queue() to scan for completions.
-
-So re-implement the tasklet & timer mechanism in zfcp, while initially
-copying the scan conditions from qdio's handle_outbound() and
-qdio_outbound_tasklet(). One minor behavioural change is that
-zfcp_qdio_send() will unconditionally reduce the timeout to 1 HZ, rather
-than leaving it at 10 Hz if it was last armed by the tasklet. This just
-makes things more consistent. Also note that we can drop a lot of the
-accumulated cruft in qdio_outbound_tasklet(), as zfcp doesn't even use
-PCI interrupt requests any longer.
-
-This also slightly touches the Response Queue processing, as
-qdio_get_next_buffers() will no longer implicitly scan for Request Queue
-completions. So complete the migration to qdio_inspect_queue() here as
-well and make the tasklet_schedule() visible.
-
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
----
- drivers/s390/scsi/zfcp_qdio.c | 68 ++++++++++++++++++++++++++++-------
- drivers/s390/scsi/zfcp_qdio.h |  5 +++
- 2 files changed, 61 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/s390/scsi/zfcp_qdio.c b/drivers/s390/scsi/zfcp_qdio.c
-index 23ab16d65f2a..16a332d501e7 100644
---- a/drivers/s390/scsi/zfcp_qdio.c
-+++ b/drivers/s390/scsi/zfcp_qdio.c
-@@ -20,6 +20,9 @@ static bool enable_multibuffer = true;
- module_param_named(datarouter, enable_multibuffer, bool, 0400);
- MODULE_PARM_DESC(datarouter, "Enable hardware data router support (default on)");
- 
-+#define ZFCP_QDIO_REQUEST_RESCAN_MSECS	(MSEC_PER_SEC * 10)
-+#define ZFCP_QDIO_REQUEST_SCAN_MSECS	MSEC_PER_SEC
-+
- static void zfcp_qdio_handler_error(struct zfcp_qdio *qdio, char *dbftag,
- 				    unsigned int qdio_err)
- {
-@@ -70,15 +73,41 @@ static void zfcp_qdio_int_req(struct ccw_device *cdev, unsigned int qdio_err,
- 		zfcp_qdio_handler_error(qdio, "qdireq1", qdio_err);
- 		return;
- 	}
-+}
- 
--	/* cleanup all SBALs being program-owned now */
--	zfcp_qdio_zero_sbals(qdio->req_q, idx, count);
-+static void zfcp_qdio_request_tasklet(struct tasklet_struct *tasklet)
-+{
-+	struct zfcp_qdio *qdio = from_tasklet(qdio, tasklet, request_tasklet);
-+	struct ccw_device *cdev = qdio->adapter->ccw_device;
-+	unsigned int start, error;
-+	int completed;
- 
--	spin_lock_irq(&qdio->stat_lock);
--	zfcp_qdio_account(qdio);
--	spin_unlock_irq(&qdio->stat_lock);
--	atomic_add(count, &qdio->req_q_free);
--	wake_up(&qdio->req_q_wq);
-+	completed = qdio_inspect_queue(cdev, 0, false, &start, &error);
-+	if (completed > 0) {
-+		if (error) {
-+			zfcp_qdio_handler_error(qdio, "qdreqt1", error);
-+		} else {
-+			/* cleanup all SBALs being program-owned now */
-+			zfcp_qdio_zero_sbals(qdio->req_q, start, completed);
-+
-+			spin_lock_irq(&qdio->stat_lock);
-+			zfcp_qdio_account(qdio);
-+			spin_unlock_irq(&qdio->stat_lock);
-+			atomic_add(completed, &qdio->req_q_free);
-+			wake_up(&qdio->req_q_wq);
-+		}
-+	}
-+
-+	if (atomic_read(&qdio->req_q_free) < QDIO_MAX_BUFFERS_PER_Q)
-+		timer_reduce(&qdio->request_timer,
-+			     jiffies + msecs_to_jiffies(ZFCP_QDIO_REQUEST_RESCAN_MSECS));
-+}
-+
-+static void zfcp_qdio_request_timer(struct timer_list *timer)
-+{
-+	struct zfcp_qdio *qdio = from_timer(qdio, timer, request_timer);
-+
-+	tasklet_schedule(&qdio->request_tasklet);
- }
- 
- static void zfcp_qdio_int_resp(struct ccw_device *cdev, unsigned int qdio_err,
-@@ -139,8 +168,11 @@ static void zfcp_qdio_irq_tasklet(struct tasklet_struct *tasklet)
- 	unsigned int start, error;
- 	int completed;
- 
--	/* Check the Response Queue, and kick off the Request Queue tasklet: */
--	completed = qdio_get_next_buffers(cdev, 0, &start, &error);
-+	if (atomic_read(&qdio->req_q_free) < QDIO_MAX_BUFFERS_PER_Q)
-+		tasklet_schedule(&qdio->request_tasklet);
-+
-+	/* Check the Response Queue: */
-+	completed = qdio_inspect_queue(cdev, 0, true, &start, &error);
- 	if (completed < 0)
- 		return;
- 	if (completed > 0)
-@@ -286,7 +318,7 @@ int zfcp_qdio_send(struct zfcp_qdio *qdio, struct zfcp_qdio_req *q_req)
- 
- 	/*
- 	 * This should actually be a spin_lock_bh(stat_lock), to protect against
--	 * zfcp_qdio_int_req() in tasklet context.
-+	 * Request Queue completion processing in tasklet context.
- 	 * But we can't do so (and are safe), as we always get called with IRQs
- 	 * disabled by spin_lock_irq[save](req_q_lock).
- 	 */
-@@ -308,6 +340,12 @@ int zfcp_qdio_send(struct zfcp_qdio *qdio, struct zfcp_qdio_req *q_req)
- 		return retval;
- 	}
- 
-+	if (atomic_read(&qdio->req_q_free) <= 2 * ZFCP_QDIO_MAX_SBALS_PER_REQ)
-+		tasklet_schedule(&qdio->request_tasklet);
-+	else
-+		timer_reduce(&qdio->request_timer,
-+			     jiffies + msecs_to_jiffies(ZFCP_QDIO_REQUEST_SCAN_MSECS));
-+
- 	/* account for transferred buffers */
- 	qdio->req_q_idx += sbal_number;
- 	qdio->req_q_idx %= QDIO_MAX_BUFFERS_PER_Q;
-@@ -368,6 +406,8 @@ void zfcp_qdio_close(struct zfcp_qdio *qdio)
- 	wake_up(&qdio->req_q_wq);
- 
- 	tasklet_disable(&qdio->irq_tasklet);
-+	tasklet_disable(&qdio->request_tasklet);
-+	del_timer_sync(&qdio->request_timer);
- 	qdio_stop_irq(adapter->ccw_device);
- 	qdio_shutdown(adapter->ccw_device, QDIO_FLAG_CLEANUP_USING_CLEAR);
- 
-@@ -428,8 +468,6 @@ int zfcp_qdio_open(struct zfcp_qdio *qdio)
- 	init_data.int_parm = (unsigned long) qdio;
- 	init_data.input_sbal_addr_array = input_sbals;
- 	init_data.output_sbal_addr_array = output_sbals;
--	init_data.scan_threshold =
--		QDIO_MAX_BUFFERS_PER_Q - ZFCP_QDIO_MAX_SBALS_PER_REQ * 2;
- 
- 	if (qdio_establish(cdev, &init_data))
- 		goto failed_establish;
-@@ -471,6 +509,8 @@ int zfcp_qdio_open(struct zfcp_qdio *qdio)
- 	atomic_set(&qdio->req_q_free, QDIO_MAX_BUFFERS_PER_Q);
- 	atomic_or(ZFCP_STATUS_ADAPTER_QDIOUP, &qdio->adapter->status);
- 
-+	/* Enable processing for Request Queue completions: */
-+	tasklet_enable(&qdio->request_tasklet);
- 	/* Enable processing for QDIO interrupts: */
- 	tasklet_enable(&qdio->irq_tasklet);
- 	/* This results in a qdio_start_irq(): */
-@@ -494,6 +534,7 @@ void zfcp_qdio_destroy(struct zfcp_qdio *qdio)
- 		return;
- 
- 	tasklet_kill(&qdio->irq_tasklet);
-+	tasklet_kill(&qdio->request_tasklet);
- 
- 	if (qdio->adapter->ccw_device)
- 		qdio_free(qdio->adapter->ccw_device);
-@@ -520,8 +561,11 @@ int zfcp_qdio_setup(struct zfcp_adapter *adapter)
- 
- 	spin_lock_init(&qdio->req_q_lock);
- 	spin_lock_init(&qdio->stat_lock);
-+	timer_setup(&qdio->request_timer, zfcp_qdio_request_timer, 0);
- 	tasklet_setup(&qdio->irq_tasklet, zfcp_qdio_irq_tasklet);
-+	tasklet_setup(&qdio->request_tasklet, zfcp_qdio_request_tasklet);
- 	tasklet_disable(&qdio->irq_tasklet);
-+	tasklet_disable(&qdio->request_tasklet);
- 
- 	adapter->qdio = qdio;
- 	return 0;
-diff --git a/drivers/s390/scsi/zfcp_qdio.h b/drivers/s390/scsi/zfcp_qdio.h
-index 9c1f310db155..390706867df3 100644
---- a/drivers/s390/scsi/zfcp_qdio.h
-+++ b/drivers/s390/scsi/zfcp_qdio.h
-@@ -30,6 +30,9 @@
-  * @req_q_util: used for accounting
-  * @req_q_full: queue full incidents
-  * @req_q_wq: used to wait for SBAL availability
-+ * @irq_tasklet: used for QDIO interrupt processing
-+ * @request_tasklet: used for Request Queue completion processing
-+ * @request_timer: used to trigger the Request Queue completion processing
-  * @adapter: adapter used in conjunction with this qdio structure
-  * @max_sbale_per_sbal: qdio limit per sbal
-  * @max_sbale_per_req: qdio limit per request
-@@ -46,6 +49,8 @@ struct zfcp_qdio {
- 	atomic_t		req_q_full;
- 	wait_queue_head_t	req_q_wq;
- 	struct tasklet_struct	irq_tasklet;
-+	struct tasklet_struct	request_tasklet;
-+	struct timer_list	request_timer;
- 	struct zfcp_adapter	*adapter;
- 	u16			max_sbale_per_sbal;
- 	u16			max_sbale_per_req;
--- 
-2.30.2
-
+>
+> Best Regards,
+> Huang, Ying
+>
+> >       struct page *page;
+> >       unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
+> > -     int page_nid = NUMA_NO_NODE, this_nid = numa_node_id();
+> > +     int page_nid = NUMA_NO_NODE;
+> >       int target_nid, last_cpupid = -1;
+> > -     bool page_locked;
+> >       bool migrated = false;
+> > -     bool was_writable;
+> > +     bool was_writable = pmd_savedwrite(pmd);
+> >       int flags = 0;
+> >
+> >       vmf->ptl = pmd_lock(vma->vm_mm, vmf->pmd);
+> > -     if (unlikely(!pmd_same(pmd, *vmf->pmd)))
+> > -             goto out_unlock;
+> > -
+> > -     /*
+> > -      * If there are potential migrations, wait for completion and retry
+> > -      * without disrupting NUMA hinting information. Do not relock and
+> > -      * check_same as the page may no longer be mapped.
+> > -      */
+> > -     if (unlikely(pmd_trans_migrating(*vmf->pmd))) {
+> > -             page = pmd_page(*vmf->pmd);
+> > -             if (!get_page_unless_zero(page))
+> > -                     goto out_unlock;
+> > +     if (unlikely(!pmd_same(pmd, *vmf->pmd))) {
+> >               spin_unlock(vmf->ptl);
+> > -             put_and_wait_on_page_locked(page, TASK_UNINTERRUPTIBLE);
+> >               goto out;
+> >       }
+> >
+> > -     page = pmd_page(pmd);
+> > -     BUG_ON(is_huge_zero_page(page));
+> > -     page_nid = page_to_nid(page);
+> > -     last_cpupid = page_cpupid_last(page);
+> > -     count_vm_numa_event(NUMA_HINT_FAULTS);
+> > -     if (page_nid == this_nid) {
+> > -             count_vm_numa_event(NUMA_HINT_FAULTS_LOCAL);
+> > -             flags |= TNF_FAULT_LOCAL;
+> > -     }
+> > -
+> > -     /* See similar comment in do_numa_page for explanation */
+> > -     if (!pmd_savedwrite(pmd))
+> > -             flags |= TNF_NO_GROUP;
+> > -
+> > -     /*
+> > -      * Acquire the page lock to serialise THP migrations but avoid dropping
+> > -      * page_table_lock if at all possible
+> > -      */
+> > -     page_locked = trylock_page(page);
+> > -     target_nid = mpol_misplaced(page, vma, haddr);
+> > -     /* Migration could have started since the pmd_trans_migrating check */
+> > -     if (!page_locked) {
+> > -             page_nid = NUMA_NO_NODE;
+> > -             if (!get_page_unless_zero(page))
+> > -                     goto out_unlock;
+> > -             spin_unlock(vmf->ptl);
+> > -             put_and_wait_on_page_locked(page, TASK_UNINTERRUPTIBLE);
+> > -             goto out;
+> > -     } else if (target_nid == NUMA_NO_NODE) {
+> > -             /* There are no parallel migrations and page is in the right
+> > -              * node. Clear the numa hinting info in this pmd.
+> > -              */
+> > -             goto clear_pmdnuma;
+> > -     }
+> > -
+> > -     /*
+> > -      * Page is misplaced. Page lock serialises migrations. Acquire anon_vma
+> > -      * to serialises splits
+> > -      */
+> > -     get_page(page);
+> > -     spin_unlock(vmf->ptl);
+> > -     anon_vma = page_lock_anon_vma_read(page);
+> > -
+> > -     /* Confirm the PMD did not change while page_table_lock was released */
+> > -     spin_lock(vmf->ptl);
+> > -     if (unlikely(!pmd_same(pmd, *vmf->pmd))) {
+> > -             unlock_page(page);
+> > -             put_page(page);
+> > -             page_nid = NUMA_NO_NODE;
+> > -             goto out_unlock;
+> > -     }
+> > -
+> > -     /* Bail if we fail to protect against THP splits for any reason */
+> > -     if (unlikely(!anon_vma)) {
+> > -             put_page(page);
+> > -             page_nid = NUMA_NO_NODE;
+> > -             goto clear_pmdnuma;
+> > -     }
+> > -
+> >       /*
+> >        * Since we took the NUMA fault, we must have observed the !accessible
+> >        * bit. Make sure all other CPUs agree with that, to avoid them
+> > @@ -1531,43 +1459,60 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf)
+> >                                             haddr + HPAGE_PMD_SIZE);
+> >       }
+> >
+> > -     /*
+> > -      * Migrate the THP to the requested node, returns with page unlocked
+> > -      * and access rights restored.
+> > -      */
+> > +     oldpmd = pmd_modify(pmd, vma->vm_page_prot);
+> > +     page = vm_normal_page_pmd(vma, haddr, oldpmd);
+> > +     if (!page) {
+> > +             spin_unlock(vmf->ptl);
+> > +             goto out_map;
+> > +     }
+> > +
+> > +     /* See similar comment in do_numa_page for explanation */
+> > +     if (!was_writable)
+> > +             flags |= TNF_NO_GROUP;
+> > +
+> > +     page_nid = page_to_nid(page);
+> > +     last_cpupid = page_cpupid_last(page);
+> > +     target_nid = numa_migrate_prep(page, vma, haddr, page_nid,
+> > +                                    &flags);
+> > +
+> > +     if (target_nid == NUMA_NO_NODE) {
+> > +             put_page(page);
+> > +             goto out_map;
+> > +     }
+> > +
+> >       spin_unlock(vmf->ptl);
+> >
+> > -     migrated = migrate_misplaced_transhuge_page(vma->vm_mm, vma,
+> > -                             vmf->pmd, pmd, vmf->address, page, target_nid);
+> > +     migrated = migrate_misplaced_page(page, vma, target_nid);
+> >       if (migrated) {
+> >               flags |= TNF_MIGRATED;
+> >               page_nid = target_nid;
+> > -     } else
+> > +     } else {
+> >               flags |= TNF_MIGRATE_FAIL;
+> > +             vmf->ptl = pmd_lock(vma->vm_mm, vmf->pmd);
+> > +             if (unlikely(!pmd_same(pmd, *vmf->pmd))) {
+> > +                     spin_unlock(vmf->ptl);
+> > +                     goto out;
+> > +             }
+> > +             goto out_map;
+> > +     }
+> >
+> > -     goto out;
+> > -clear_pmdnuma:
+> > -     BUG_ON(!PageLocked(page));
+> > -     was_writable = pmd_savedwrite(pmd);
+> > +out:
+> > +     if (page_nid != NUMA_NO_NODE)
+> > +             task_numa_fault(last_cpupid, page_nid, HPAGE_PMD_NR,
+> > +                             flags);
+> > +
+> > +     return 0;
+> > +
+> > +out_map:
+> > +     /* Restore the PMD */
+> >       pmd = pmd_modify(pmd, vma->vm_page_prot);
+> >       pmd = pmd_mkyoung(pmd);
+> >       if (was_writable)
+> >               pmd = pmd_mkwrite(pmd);
+> >       set_pmd_at(vma->vm_mm, haddr, vmf->pmd, pmd);
+> >       update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
+> > -     unlock_page(page);
+> > -out_unlock:
+> >       spin_unlock(vmf->ptl);
+> > -
+> > -out:
+> > -     if (anon_vma)
+> > -             page_unlock_anon_vma_read(anon_vma);
+> > -
+> > -     if (page_nid != NUMA_NO_NODE)
+> > -             task_numa_fault(last_cpupid, page_nid, HPAGE_PMD_NR,
+> > -                             flags);
+> > -
+> > -     return 0;
+> > +     goto out;
+> >  }
+> >
+>
+> [snip]
