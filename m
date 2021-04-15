@@ -2,289 +2,179 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CA6D36098F
-	for <lists+linux-s390@lfdr.de>; Thu, 15 Apr 2021 14:37:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE4D5360AFC
+	for <lists+linux-s390@lfdr.de>; Thu, 15 Apr 2021 15:48:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232332AbhDOMhd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 15 Apr 2021 08:37:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38322 "EHLO
+        id S233201AbhDONtO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 15 Apr 2021 09:49:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26510 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S230260AbhDOMhc (ORCPT
+        by vger.kernel.org with ESMTP id S233144AbhDONtF (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 15 Apr 2021 08:37:32 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13FCXxUV152646;
-        Thu, 15 Apr 2021 08:37:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=d0itctMzBLcnqy3hAoT3WZvvdMlPZf4OOgZVRv6QQ0w=;
- b=a3p1i+G2crOwRnS2jiP0HBjXR33Zl0DOdIy4O8S4h7zasm9xMVE5euXg25m2yXYjkOWh
- hti1/VLG6BsVv+5wrP/XrJeQNDcZVNyg7YFn0smYlvLRwi6jMGiIWltqZynZveHR+N4X
- EXo5My6eRTr3QKIUlgvchl9tzwayeybghOnrPw1T3YAJZRnxxMHubXoQCpE2rt+ktmwY
- hNUpU9RRSXr3KVGL6hCZG6kw37loSxoD0UnxzQ6iMDgicGN601va3tNx8I3VcA7KPp6B
- 6jBRjGMmGIUSQ2gesAkz47cpvbFFFqenNka2WJhzpewd2wodGyEbmWzkIOC+V4OfNAHs NA== 
+        Thu, 15 Apr 2021 09:49:05 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13FDY7Yd109158;
+        Thu, 15 Apr 2021 09:48:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=4XUs2J5nxDFQAhXE28DZqgVklwaSKIa5W7nAxd0tXK0=;
+ b=ItC9XpqaYNjD6X5yPmx11rgO9b7B2GIMzWInYM/7PP5D27sRPDnfRoZqCMMK/Ui5SZfX
+ 5TF0dzAVh3zoZsTv9wZ9US1TCpAAgIkdsAQPcrb3UJyvknx6ByvUDjDa4haT6c3ZKgwe
+ Ja4wuvYDR2hnns1nwui6SqCdiGjzF1tLhN7MnfgeuM2Y0NPTQrDJfd2BPgL5q8jbLhOm
+ X1Aat5x8NdeiAu+H2MRzuxYoIJvczibvZFERRqXNrtV86wPorgyPV8gfW5HZzQSmZyWz
+ 9NICPnNyowkzL1JsnJj03oBlfTwetykho77XY8SUyltSqROtc9DG2jcC6BlDWFmuneSU Eg== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 37xbqk6xsa-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 37xbqb9c43-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Apr 2021 08:37:06 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 13FCY29R153869;
-        Thu, 15 Apr 2021 08:37:05 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 37xbqk6xrh-1
+        Thu, 15 Apr 2021 09:48:41 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 13FDYbj6110972;
+        Thu, 15 Apr 2021 09:48:41 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 37xbqb9c32-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Apr 2021 08:37:05 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 13FCWBQY002976;
-        Thu, 15 Apr 2021 12:37:04 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 37u3n8uvmn-1
+        Thu, 15 Apr 2021 09:48:41 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 13FDgCAD026940;
+        Thu, 15 Apr 2021 13:48:40 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma04wdc.us.ibm.com with ESMTP id 37wv832b39-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Apr 2021 12:37:03 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 13FCaddN30671210
+        Thu, 15 Apr 2021 13:48:40 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 13FDmduS32899420
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Apr 2021 12:36:39 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63188A405F;
-        Thu, 15 Apr 2021 12:37:01 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1BB71A4066;
-        Thu, 15 Apr 2021 12:37:01 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 15 Apr 2021 12:37:01 +0000 (GMT)
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH v2 2/2] asm-generic/io.h: Silence -Wnull-pointer-arithmetic warning on PCI_IOBASE
-Date:   Thu, 15 Apr 2021 14:37:00 +0200
-Message-Id: <20210415123700.3030728-3-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210415123700.3030728-1-schnelle@linux.ibm.com>
-References: <20210415123700.3030728-1-schnelle@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 15 Apr 2021 13:48:39 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87ED878060;
+        Thu, 15 Apr 2021 13:48:39 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7176278067;
+        Thu, 15 Apr 2021 13:48:38 +0000 (GMT)
+Received: from farman-thinkpad-t470p (unknown [9.160.103.97])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 15 Apr 2021 13:48:38 +0000 (GMT)
+Message-ID: <ac08eb1143b5d354b8bcaf9117178fbd91bc2af2.camel@linux.ibm.com>
+Subject: Re: [RFC PATCH v4 2/4] vfio-ccw: Check workqueue before doing START
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Date:   Thu, 15 Apr 2021 09:48:37 -0400
+In-Reply-To: <20210415125131.33065221.cohuck@redhat.com>
+References: <20210413182410.1396170-1-farman@linux.ibm.com>
+         <20210413182410.1396170-3-farman@linux.ibm.com>
+         <20210415125131.33065221.cohuck@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-14.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: UmDuanvdYNuPbojAaZkaWYTGbbjMHT-1
-X-Proofpoint-ORIG-GUID: quZWJ8VenqYngs18DpT62iEWgxkdwKdT
+X-Proofpoint-GUID: Kaj60_tReuVZla-QN9SLTmiQ2-QubT1D
+X-Proofpoint-ORIG-GUID: wUoGZZct7YKNSE-y4SSY2vco3eBEclED
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-04-15_04:2021-04-15,2021-04-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 spamscore=0 suspectscore=0 phishscore=0
- lowpriorityscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0
- impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104060000 definitions=main-2104150084
+ definitions=2021-04-15_05:2021-04-15,2021-04-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ suspectscore=0 phishscore=0 mlxscore=0 clxscore=1015 spamscore=0
+ impostorscore=0 malwarescore=0 priorityscore=1501 lowpriorityscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104060000 definitions=main-2104150090
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-When PCI_IOBASE is not defined, it is set to 0 such that it is ignored
-in calls to the readX/writeX primitives. This triggers clang's
--Wnull-pointer-arithmetic warning and will result in illegal accesses on
-platforms that do not support I/O ports if drivers do still attempt to
-access them.
+On Thu, 2021-04-15 at 12:51 +0200, Cornelia Huck wrote:
+> On Tue, 13 Apr 2021 20:24:08 +0200
+> Eric Farman <farman@linux.ibm.com> wrote:
+> 
+> > When an interrupt is received via the IRQ, the bulk of the work
+> > is stacked on a workqueue for later processing. Which means that
+> > a concurrent START or HALT/CLEAR operation (via the async_region)
+> > will race with this process and require some serialization.
+> > 
+> > Once we have all our locks acquired, let's just look to see if
+> > we're
+> > in a window where the process has been started from the IRQ, but
+> > not
+> > yet picked up by vfio-ccw to clean up an I/O. If there is, mark the
+> > request as BUSY so it can be redriven.
+> > 
+> > Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> > ---
+> >  drivers/s390/cio/vfio_ccw_fsm.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/drivers/s390/cio/vfio_ccw_fsm.c
+> > b/drivers/s390/cio/vfio_ccw_fsm.c
+> > index 23e61aa638e4..92d638f10b27 100644
+> > --- a/drivers/s390/cio/vfio_ccw_fsm.c
+> > +++ b/drivers/s390/cio/vfio_ccw_fsm.c
+> > @@ -28,6 +28,11 @@ static int fsm_io_helper(struct vfio_ccw_private
+> > *private)
+> >  
+> >  	spin_lock_irqsave(sch->lock, flags);
+> >  
+> > +	if (work_pending(&private->io_work)) {
+> > +		ret = -EBUSY;
+> > +		goto out;
+> > +	}
+> > +
+> >  	orb = cp_get_orb(&private->cp, (u32)(addr_t)sch, sch->lpm);
+> >  	if (!orb) {
+> >  		ret = -EIO;
+> 
+> I'm wondering what condition we can consider this situation
+> equivalent
+> to. I'd say that the virtual version of the subchannel is basically
+> status pending already, even though userspace may not have retrieved
+> that information yet; so probably cc 1?
 
-Make things explicit and silence the warning by letting inb() and
-friends fail with WARN_ONCE() and a 0xff... return in case PCI_IOBASE is
-not defined.
+Yes, I guess cc1 is a more natural fit, since there is status pending
+rather than an active start/halt/clear that would expect get the cc2.
 
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
----
-v1 -> v2:
-- Instead of working around the warning with a uintptr_t PCI_IOBASE make inb()
-  and friends explicitly WARN_ONCE() and return 0xff... (Arnd)
+> 
+> Following the code path further along, it seems we return -EBUSY both
+> for cc 1 and cc 2 conditions we receive from the device (i.e. they
+> are
+> not distinguishable from userspace). 
 
- include/asm-generic/io.h | 55 +++++++++++++++++++++++++++++++++++++---
- 1 file changed, 51 insertions(+), 4 deletions(-)
+Yeah. :/
 
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index c6af40ce03be..e6c549b678c4 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -440,10 +440,6 @@ static inline void writesq(volatile void __iomem *addr, const void *buffer,
- #endif
- #endif /* CONFIG_64BIT */
- 
--#ifndef PCI_IOBASE
--#define PCI_IOBASE ((void __iomem *)0)
--#endif
--
- #ifndef IO_SPACE_LIMIT
- #define IO_SPACE_LIMIT 0xffff
- #endif
-@@ -458,12 +454,17 @@ static inline void writesq(volatile void __iomem *addr, const void *buffer,
- #define _inb _inb
- static inline u8 _inb(unsigned long addr)
- {
-+#ifdef PCI_IOBASE
- 	u8 val;
- 
- 	__io_pbr();
- 	val = __raw_readb(PCI_IOBASE + addr);
- 	__io_par(val);
- 	return val;
-+#else
-+	WARN_ONCE(1, "No I/O port support\n");
-+	return ~0;
-+#endif
- }
- #endif
- 
-@@ -471,12 +472,17 @@ static inline u8 _inb(unsigned long addr)
- #define _inw _inw
- static inline u16 _inw(unsigned long addr)
- {
-+#ifdef PCI_IOBASE
- 	u16 val;
- 
- 	__io_pbr();
- 	val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
- 	__io_par(val);
- 	return val;
-+#else
-+	WARN_ONCE(1, "No I/O port support\n");
-+	return ~0;
-+#endif
- }
- #endif
- 
-@@ -484,12 +490,17 @@ static inline u16 _inw(unsigned long addr)
- #define _inl _inl
- static inline u32 _inl(unsigned long addr)
- {
-+#ifdef PCI_IOBASE
- 	u32 val;
- 
- 	__io_pbr();
- 	val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
- 	__io_par(val);
- 	return val;
-+#else
-+	WARN_ONCE(1, "No I/O port support\n");
-+	return ~0;
-+#endif
- }
- #endif
- 
-@@ -497,9 +508,13 @@ static inline u32 _inl(unsigned long addr)
- #define _outb _outb
- static inline void _outb(u8 value, unsigned long addr)
- {
-+#ifdef PCI_IOBASE
- 	__io_pbw();
- 	__raw_writeb(value, PCI_IOBASE + addr);
- 	__io_paw();
-+#else
-+	WARN_ONCE(1, "No I/O port support\n");
-+#endif
- }
- #endif
- 
-@@ -507,9 +522,13 @@ static inline void _outb(u8 value, unsigned long addr)
- #define _outw _outw
- static inline void _outw(u16 value, unsigned long addr)
- {
-+#ifdef PCI_IOBASE
- 	__io_pbw();
- 	__raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
- 	__io_paw();
-+#else
-+	WARN_ONCE(1, "No I/O port support\n");
-+#endif
- }
- #endif
- 
-@@ -517,9 +536,13 @@ static inline void _outw(u16 value, unsigned long addr)
- #define _outl _outl
- static inline void _outl(u32 value, unsigned long addr)
- {
-+#ifdef PCI_IOBASE
- 	__io_pbw();
- 	__raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
- 	__io_paw();
-+#else
-+	WARN_ONCE(1, "No I/O port support\n");
-+#endif
- }
- #endif
- 
-@@ -606,7 +629,11 @@ static inline void outl_p(u32 value, unsigned long addr)
- #define insb insb
- static inline void insb(unsigned long addr, void *buffer, unsigned int count)
- {
-+#ifdef PCI_IOBASE
- 	readsb(PCI_IOBASE + addr, buffer, count);
-+#else
-+	WARN_ONCE(1, "No I/O port support\n");
-+#endif
- }
- #endif
- 
-@@ -614,7 +641,11 @@ static inline void insb(unsigned long addr, void *buffer, unsigned int count)
- #define insw insw
- static inline void insw(unsigned long addr, void *buffer, unsigned int count)
- {
-+#ifdef PCI_IOBASE
- 	readsw(PCI_IOBASE + addr, buffer, count);
-+#else
-+	WARN_ONCE(1, "No I/O port support\n");
-+#endif
- }
- #endif
- 
-@@ -622,7 +653,11 @@ static inline void insw(unsigned long addr, void *buffer, unsigned int count)
- #define insl insl
- static inline void insl(unsigned long addr, void *buffer, unsigned int count)
- {
-+#ifdef PCI_IOBASE
- 	readsl(PCI_IOBASE + addr, buffer, count);
-+#else
-+	WARN_ONCE(1, "No I/O port support\n");
-+#endif
- }
- #endif
- 
-@@ -631,7 +666,11 @@ static inline void insl(unsigned long addr, void *buffer, unsigned int count)
- static inline void outsb(unsigned long addr, const void *buffer,
- 			 unsigned int count)
- {
-+#ifdef PCI_IOBASE
- 	writesb(PCI_IOBASE + addr, buffer, count);
-+#else
-+	WARN_ONCE(1, "No I/O port support\n");
-+#endif
- }
- #endif
- 
-@@ -640,7 +679,11 @@ static inline void outsb(unsigned long addr, const void *buffer,
- static inline void outsw(unsigned long addr, const void *buffer,
- 			 unsigned int count)
- {
-+#ifdef PCI_IOBASE
- 	writesw(PCI_IOBASE + addr, buffer, count);
-+#else
-+	WARN_ONCE(1, "No I/O port support\n");
-+#endif
- }
- #endif
- 
-@@ -649,7 +692,11 @@ static inline void outsw(unsigned long addr, const void *buffer,
- static inline void outsl(unsigned long addr, const void *buffer,
- 			 unsigned int count)
- {
-+#ifdef PCI_IOBASE
- 	writesl(PCI_IOBASE + addr, buffer, count);
-+#else
-+	WARN_ONCE(1, "No I/O port support\n");
-+#endif
- }
- #endif
- 
--- 
-2.25.1
+> I don't think we can change that,
+> as it is an existing API (QEMU maps -EBUSY to cc 2.) So this change
+> looks fine so far.
+> 
+> I'm wondering what we should do for hsch. We probably want to return
+> -EBUSY for a pending condition as well, if I read the PoP
+> correctly...
+
+Ah, yes...  I agree that to maintain parity with ssch and pops, the
+same cc1/-EBUSY would be applicable here. Will make that change in next
+version.
+
+> the only problem is that QEMU seems to match everything to 0; but
+> that
+> is arguably not the kernel's problem.
+> 
+> For clear, we obviously don't have busy conditions. Should we clean
+> up
+> any pending conditions?
+
+By doing anything other than issuing the csch to the subchannel?  I
+don't think so, that should be more than enough to get the css and
+vfio-ccw in sync with each other.
+
+> 
+> [It feels like we have discussed this before, but any information has
+> vanished from my cache :/]
+> 
+
+It has vanished from mine too, and looking over the old threads and
+notes doesn't page anything useful in, so here we are. Sorry. :(
+
+Eric
+
 
