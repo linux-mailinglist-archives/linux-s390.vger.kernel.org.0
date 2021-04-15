@@ -2,49 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A84FA3602B0
-	for <lists+linux-s390@lfdr.de>; Thu, 15 Apr 2021 08:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C8D836029D
+	for <lists+linux-s390@lfdr.de>; Thu, 15 Apr 2021 08:46:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230508AbhDOGwE convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Thu, 15 Apr 2021 02:52:04 -0400
-Received: from vsrv57620.customer.xenway.de ([95.129.54.190]:46286 "EHLO
-        vsrv57620.customer.xenway.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230090AbhDOGwD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 15 Apr 2021 02:52:03 -0400
-X-Greylist: delayed 1236 seconds by postgrey-1.27 at vger.kernel.org; Thu, 15 Apr 2021 02:51:58 EDT
-Received: from [193.56.28.106] (unknown [193.56.28.106])
-        by vsrv57620.customer.xenway.de (Postfix) with ESMTPA id 613C83097B5;
-        Thu, 15 Apr 2021 08:23:44 +0200 (CEST)
-Date:   Wed, 14 Apr 2021 23:24:19 -0700
-Mime-version: 1.0
-Subject: Compliments
-From:   Christopher Quinlan QC <cqukesq@gmail.com>
-To:     Undisclosed-Recipients:;
-Message-Id: <20210414232419.UVUVQACXIIXYKI@gmail.com>
-Reply-To: cqukesq@gmail.com
-Content-type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-transfer-encoding: 8BIT
+        id S229731AbhDOGq2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 15 Apr 2021 02:46:28 -0400
+Received: from mga11.intel.com ([192.55.52.93]:21856 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229503AbhDOGq2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 15 Apr 2021 02:46:28 -0400
+IronPort-SDR: qXA0Cy5Sxat0HlfJSXHh9gid2sfZE9wDO326BmQtwTQB+2Q+8CbzsinEgj5BrSrTPUQg8OT5b6
+ N9jAMKFK1F9g==
+X-IronPort-AV: E=McAfee;i="6200,9189,9954"; a="191609700"
+X-IronPort-AV: E=Sophos;i="5.82,223,1613462400"; 
+   d="scan'208";a="191609700"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2021 23:46:02 -0700
+IronPort-SDR: 1pfPbXhjlYYReGkPxq6HfP4+S3mzqWZg9G55ESeGOM9vhqkGCJ7BYRc35RiXXmWynnugSAJ6uM
+ atnC5MlIfazg==
+X-IronPort-AV: E=Sophos;i="5.82,223,1613462400"; 
+   d="scan'208";a="425061751"
+Received: from yhuang6-desk1.sh.intel.com (HELO yhuang6-desk1.ccr.corp.intel.com) ([10.239.13.1])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2021 23:45:58 -0700
+From:   "Huang, Ying" <ying.huang@intel.com>
+To:     "Zi Yan" <ziy@nvidia.com>
+Cc:     Yang Shi <shy828301@gmail.com>, <mgorman@suse.de>,
+        <kirill.shutemov@linux.intel.com>, <mhocko@suse.com>,
+        <hughd@google.com>, <gerald.schaefer@linux.ibm.com>,
+        <hca@linux.ibm.com>, <gor@linux.ibm.com>, <borntraeger@de.ibm.com>,
+        <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [v2 PATCH 6/7] mm: migrate: check mapcount for THP instead of
+ ref count
+References: <20210413212416.3273-1-shy828301@gmail.com>
+        <20210413212416.3273-7-shy828301@gmail.com>
+        <87k0p5sh7h.fsf@yhuang6-desk1.ccr.corp.intel.com>
+        <6297AD92-8D0E-4BEC-8E1F-5C5AC32FA128@nvidia.com>
+Date:   Thu, 15 Apr 2021 14:45:54 +0800
+In-Reply-To: <6297AD92-8D0E-4BEC-8E1F-5C5AC32FA128@nvidia.com> (Zi Yan's
+        message of "Wed, 14 Apr 2021 11:02:58 -0400")
+Message-ID: <87fszsoxjx.fsf@yhuang6-desk1.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ascii
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-My name is Christopher Quinlan QC I am a solicitor at law / investment adviser to your late relative. Your late relative left behind Cash deposit in capital and investment security account along with properties, I will like to discuss with you regarding making this claim since he is related to you going by the lineage, surname and country of origin.
+"Zi Yan" <ziy@nvidia.com> writes:
 
-Please get back to me on my private email cqukesq6@gmail.com for further details.
+> On 13 Apr 2021, at 23:00, Huang, Ying wrote:
+>
+>> Yang Shi <shy828301@gmail.com> writes:
+>>
+>>> The generic migration path will check refcount, so no need check refcount here.
+>>> But the old code actually prevents from migrating shared THP (mapped by multiple
+>>> processes), so bail out early if mapcount is > 1 to keep the behavior.
+>>
+>> What prevents us from migrating shared THP?  If no, why not just remove
+>> the old refcount checking?
+>
+> If two or more processes are in different NUMA nodes, a THP shared by them can be
+> migrated back and forth between NUMA nodes, which is quite costly. Unless we have
+> a better way of figuring out a good location for such pages to reduce the number
+> of migration, it might be better not to move them, right?
+>
 
-To facilitate the process of this transaction, urgently forward to me
-Your full names,
-Telephone and fax numbers,
-Address,
-Age,
-Marital status,
-Occupation
+Some mechanism has been provided in should_numa_migrate_memory() to
+identify the shared pages from the private pages.  Do you find it
+doesn't work well in some situations?
 
-I will be expecting to hear from you.
+The multiple threads in one process which run on different NUMA nodes
+may share pages too.  So it isn't a good solution to exclude pages
+shared by multiple processes.
 
-Regards
-
-Christopher Quinlan QC
-Private email cqukesq6@gmail.com
-
+Best Regards,
+Huang, Ying
