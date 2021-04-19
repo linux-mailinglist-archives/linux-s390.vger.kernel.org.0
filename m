@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A71E7364B74
-	for <lists+linux-s390@lfdr.de>; Mon, 19 Apr 2021 22:44:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A235F364BBE
+	for <lists+linux-s390@lfdr.de>; Mon, 19 Apr 2021 22:46:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242410AbhDSUof (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 19 Apr 2021 16:44:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54130 "EHLO mail.kernel.org"
+        id S242828AbhDSUqT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 19 Apr 2021 16:46:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242392AbhDSUod (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 19 Apr 2021 16:44:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0BA8961104;
-        Mon, 19 Apr 2021 20:44:01 +0000 (UTC)
+        id S239839AbhDSUpS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 19 Apr 2021 16:45:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0771F613C7;
+        Mon, 19 Apr 2021 20:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618865042;
-        bh=YlKAKyKIsnMUVvz5L53H8DTYTlwH5RuaUg2xCn3wFPw=;
+        s=k20201202; t=1618865076;
+        bh=/MryeiTXYPA/GZQ2I/xwcA7zqnRSNepmGJPr4dTkBoI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NnZq8bVvBfjMO7c1fxYtX6eS56lRfRlUAH6/TEmqYM3awiyZmlE2G4H86/qilchKh
-         rnMoLHCY33fxgMR2f2I0gCHPhAmAmGo1kiypTHDkz7+0o4SFmJRw01R2IInRflKoYz
-         HwCFvNlZjt3/cPl5+JF9oBZaYZuu7KC9Ao6y83tiVtZxf8CEjeaKhZdgEZoqokDaaL
-         9Mry1JhSG9FgqsdlBv8VuLSOBI1VoPf4/vYk05pfd90g4EbgfRli0f9Q8AQs4cTx40
-         EvcCkVilxNTZaXKMVsJE4YAsHFN2nvIRom8Bjdg9+Yv4yZpTwalHQatd8AQPhTmF+H
-         gzTJaHTYTFcpw==
+        b=ZnG555YWAM/wO2PedfqY9x/JPBwHqDWi7Xg7/Qla9tJzeqMkyr6mJS2yB3rsywBo+
+         3dJQ7FcLMdRUoGMNypumId7sZ1zQn5fRaDouq+rd48PEQwY610oug+oLgs4wwmJ44q
+         XHHGH/iRVJuMJp09P3HQFjur/Ko5/rGItQ5pB+GM1Wgcq3PIwxRj0Jri/Scc6tyYac
+         rGjUYzkZ1jvLGfkEFWiw24pW65lQQcl2APrdBdz/7YFWI0cnPcFjqxZb4JrVhE2+y/
+         kCpixGDXXvKPYbpFymI443wHpVphEkSkpfOqPKdrJMvMB3xPTeY4fmkECasstf9kqu
+         sTOwo0TVpb+dg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Vasily Gorbik <gor@linux.ibm.com>,
         Sven Schnelle <svens@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.11 13/23] s390/entry: save the caller of psw_idle
-Date:   Mon, 19 Apr 2021 16:43:32 -0400
-Message-Id: <20210419204343.6134-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 11/21] s390/entry: save the caller of psw_idle
+Date:   Mon, 19 Apr 2021 16:44:09 -0400
+Message-Id: <20210419204420.6375-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210419204343.6134-1-sashal@kernel.org>
-References: <20210419204343.6134-1-sashal@kernel.org>
+In-Reply-To: <20210419204420.6375-1-sashal@kernel.org>
+References: <20210419204420.6375-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -86,10 +86,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
-index f1ba197b10c0..f0a215cf010c 100644
+index 71203324ff42..81c458e996d9 100644
 --- a/arch/s390/kernel/entry.S
 +++ b/arch/s390/kernel/entry.S
-@@ -976,6 +976,7 @@ ENDPROC(ext_int_handler)
+@@ -994,6 +994,7 @@ ENDPROC(ext_int_handler)
   * Load idle PSW.
   */
  ENTRY(psw_idle)
