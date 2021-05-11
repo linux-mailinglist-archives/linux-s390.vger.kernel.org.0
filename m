@@ -2,161 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57CD137AEAD
-	for <lists+linux-s390@lfdr.de>; Tue, 11 May 2021 20:50:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0611537AFC3
+	for <lists+linux-s390@lfdr.de>; Tue, 11 May 2021 21:56:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231454AbhEKSvh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 May 2021 14:51:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:46932 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231824AbhEKSvh (ORCPT
+        id S229925AbhEKT5v (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 May 2021 15:57:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18964 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229934AbhEKT5u (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 11 May 2021 14:51:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620759030;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3sGuDkwY1rpAMVCQJVmhxPq9zjMod4hGpJJ6eXBTmJw=;
-        b=PMWoLHRK/uq3ae2wG3xTAHtRTS/nwPsmx+LcaWrSaKbdUoe9OAp9bvp0cXrwDcEnAQ39Qs
-        eXYfE/nO9U/NkfQiwZI30FDtlPwpBPsaSIW46pEoWsPqJdcPgFGFiT84Y1DQKIkkh1wrdL
-        +H2OHYB/VWpBZq+WoH3JVr1w4YzYW80=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-wJc_w8FvMFOfP0IN4Jn3vw-1; Tue, 11 May 2021 14:50:26 -0400
-X-MC-Unique: wJc_w8FvMFOfP0IN4Jn3vw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9BF5B8015DB;
-        Tue, 11 May 2021 18:50:24 +0000 (UTC)
-Received: from madcap2.tricolour.ca (unknown [10.3.128.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 525D42C14A;
-        Tue, 11 May 2021 18:50:13 +0000 (UTC)
-Date:   Tue, 11 May 2021 14:50:11 -0400
-From:   Richard Guy Briggs <rgb@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Paris <eparis@redhat.com>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [PATCH v3 1/3] audit: replace magic audit syscall class numbers
- with macros
-Message-ID: <20210511185011.GP3141668@madcap2.tricolour.ca>
-References: <cover.1619811762.git.rgb@redhat.com>
- <bda073f2a8b11000ef40cf8b965305409ee88f44.1619811762.git.rgb@redhat.com>
- <CAHC9VhShi4u26h5OsahveQDNxO_uZ+KgzGOYEp5W7w6foA-uKg@mail.gmail.com>
+        Tue, 11 May 2021 15:57:50 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14BJXsUb171564;
+        Tue, 11 May 2021 15:56:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=HjLYgEurXkONDxmN71vnc4qpFZfY+USpOrOsSejGVFk=;
+ b=cHSk9tjcMXy8eGuSBY9L4Ewr0Km1BXYbTBu8icA+m6/m39VMgxo0Ts14X4oigXelR8xW
+ u2oObhNS27XVWhYa3lR55CxddDXC6JGiWQKMVQP5Kk5iU8fd9fTOXImnloeCCHvQdKV8
+ eIjHqxO9QBVVDs4wCE5yYSOzySmWpSWBaJEFnPqZlMndstnRbUwn2mRLHfqrmXjrv7S7
+ RKoT5pZ6F4abOhfPo5OLx163bAYP6hGiC6IilcAidOcIiraimlHOghE9ufY74oBV6fcA
+ Y5gXeHLmu9FH0WozLobvF3A1I5TBXcswjb1DWNrk6GScnqiTTKSZsl4YVJyqYQeDawYu VQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38fw0r6by7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 May 2021 15:56:43 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 14BJXvLT171857;
+        Tue, 11 May 2021 15:56:43 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38fw0r6bxj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 May 2021 15:56:43 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 14BJmhsR021962;
+        Tue, 11 May 2021 19:56:41 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 38dj989u8b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 May 2021 19:56:40 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 14BJubpk33358290
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 May 2021 19:56:37 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B3CF5A4060;
+        Tue, 11 May 2021 19:56:37 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A0981A4054;
+        Tue, 11 May 2021 19:56:37 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 11 May 2021 19:56:37 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
+        id 5B3DFE0356; Tue, 11 May 2021 21:56:32 +0200 (CEST)
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
+Subject: [PATCH v6 0/3] vfio-ccw: Fix interrupt handling for HALT/CLEAR
+Date:   Tue, 11 May 2021 21:56:28 +0200
+Message-Id: <20210511195631.3995081-1-farman@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 28mf0-0GtL4HWlG2eekMsUiDquXYBYU_
+X-Proofpoint-GUID: uy3HdWRg9NQrlIE8qDE2thaZJegLT_23
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhShi4u26h5OsahveQDNxO_uZ+KgzGOYEp5W7w6foA-uKg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-05-11_04:2021-05-11,2021-05-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 suspectscore=0
+ spamscore=0 mlxlogscore=894 impostorscore=0 phishscore=0 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2105110130
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2021-05-10 21:23, Paul Moore wrote:
-> On Fri, Apr 30, 2021 at 4:36 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> >
-> > Replace audit syscall class magic numbers with macros.
-> >
-> > This required putting the macros into new header file
-> > include/linux/auditscm.h since the syscall macros were included for both 64
-> > bit and 32 bit in any compat code, causing redefinition warnings.
-> 
-> The ifndef/define didn't protect against redeclaration?  Huh.  Maybe
-> I'm not thinking about this correctly, or the arch specific code is
-> doing something wonky ...
+Hi Conny, Matt, Halil,
 
-I had a chat with Arnd about it in IRC upstream and started digging
-deeper and it got quite messy.  As seen from the cover letter, audit.h
-pulled in a chain of things which weren't entirely unreasonable given it
-was compiling compat support in with native support by default.  I
-suppose I could have defined _ASM_X86_UNISTD_64_H to prevent it from
-being added, but that would be ugly on a generated file, have caused a
-failure elsewhere and would need to be done for each compat file.  I
-thought of defining CONFIG_X86_32 in arch/x86/ia32/audit.c but that
-would cause other problems.  This was the cleanest solution.  Otherwise
-I leave them as magic numbers like in V1.
+Here's one (last?) update to my proposal for handling the collision
+between interrupts for START SUBCHANNEL and HALT/CLEAR SUBCHANNEL.
 
-> Regardless, assuming that it is necessary, I would prefer if we called
-> it auditsc.h instead of auditscm.h; the latter makes me think of
-> sockets and not syscalls.
-> 
-> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
-> > ---
-> >  MAINTAINERS                        |  1 +
-> >  arch/alpha/kernel/audit.c          |  8 ++++----
-> >  arch/ia64/kernel/audit.c           |  8 ++++----
-> >  arch/parisc/kernel/audit.c         |  8 ++++----
-> >  arch/parisc/kernel/compat_audit.c  |  9 +++++----
-> >  arch/powerpc/kernel/audit.c        | 10 +++++-----
-> >  arch/powerpc/kernel/compat_audit.c | 11 ++++++-----
-> >  arch/s390/kernel/audit.c           | 10 +++++-----
-> >  arch/s390/kernel/compat_audit.c    | 11 ++++++-----
-> >  arch/sparc/kernel/audit.c          | 10 +++++-----
-> >  arch/sparc/kernel/compat_audit.c   | 11 ++++++-----
-> >  arch/x86/ia32/audit.c              | 11 ++++++-----
-> >  arch/x86/kernel/audit_64.c         |  8 ++++----
-> >  include/linux/audit.h              |  1 +
-> >  include/linux/auditscm.h           | 23 +++++++++++++++++++++++
-> >  kernel/auditsc.c                   | 12 ++++++------
-> >  lib/audit.c                        | 10 +++++-----
-> >  lib/compat_audit.c                 | 11 ++++++-----
-> >  18 files changed, 102 insertions(+), 71 deletions(-)
-> >  create mode 100644 include/linux/auditscm.h
-> 
-> ...
-> 
-> > diff --git a/include/linux/auditscm.h b/include/linux/auditscm.h
-> > new file mode 100644
-> > index 000000000000..1c4f0ead5931
-> > --- /dev/null
-> > +++ b/include/linux/auditscm.h
-> > @@ -0,0 +1,23 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> > +/* auditscm.h -- Auditing support syscall macros
-> > + *
-> > + * Copyright 2021 Red Hat Inc., Durham, North Carolina.
-> > + * All Rights Reserved.
-> > + *
-> > + * Author: Richard Guy Briggs <rgb@redhat.com>
-> > + */
-> > +#ifndef _LINUX_AUDITSCM_H_
-> > +#define _LINUX_AUDITSCM_H_
-> > +
-> > +enum auditsc_class_t {
-> > +       AUDITSC_NATIVE = 0,
-> > +       AUDITSC_COMPAT,
-> > +       AUDITSC_OPEN,
-> > +       AUDITSC_OPENAT,
-> > +       AUDITSC_SOCKETCALL,
-> > +       AUDITSC_EXECVE,
-> > +
-> > +       AUDITSC_NVALS /* count */
-> > +};
-> > +
-> > +#endif
-> 
-> -- 
-> paul moore
-> www.paul-moore.com
-> 
+Only change here is to include Conny's suggestions on patch 3.
 
-- RGB
+Thanks,
+Eric
 
---
-Richard Guy Briggs <rgb@redhat.com>
-Sr. S/W Engineer, Kernel Security, Base Operating Systems
-Remote, Ottawa, Red Hat Canada
-IRC: rgb, SunRaycer
-Voice: +1.647.777.2635, Internal: (81) 32635
+Changelog:
+v5->v6:
+ - Add a block comment and rename variable in patch 3 [CH]
+ - Drop RFC tag [EF]
+
+v4->v5:
+ - Applied Conny's r-b to patches 1 and 3
+ - Dropped patch 2 and 4
+ - Use a "finished" flag in the interrupt completion path
+
+Previous versions:
+v5: https://lore.kernel.org/kvm/20210510205646.1845844-1-farman@linux.ibm.com/
+v4: https://lore.kernel.org/kvm/20210413182410.1396170-1-farman@linux.ibm.com/
+v3: https://lore.kernel.org/kvm/20200616195053.99253-1-farman@linux.ibm.com/
+v2: https://lore.kernel.org/kvm/20200513142934.28788-1-farman@linux.ibm.com/
+v1: https://lore.kernel.org/kvm/20200124145455.51181-1-farman@linux.ibm.com/
+
+Eric Farman (3):
+  vfio-ccw: Check initialized flag in cp_init()
+  vfio-ccw: Reset FSM state to IDLE inside FSM
+  vfio-ccw: Serialize FSM IDLE state with I/O completion
+
+ drivers/s390/cio/vfio_ccw_cp.c  |  4 ++++
+ drivers/s390/cio/vfio_ccw_drv.c | 12 ++++++++++--
+ drivers/s390/cio/vfio_ccw_fsm.c |  1 +
+ drivers/s390/cio/vfio_ccw_ops.c |  2 --
+ 4 files changed, 15 insertions(+), 4 deletions(-)
+
+-- 
+2.25.1
 
