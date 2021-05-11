@@ -2,186 +2,129 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A946437A9BD
-	for <lists+linux-s390@lfdr.de>; Tue, 11 May 2021 16:42:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5406D37AACF
+	for <lists+linux-s390@lfdr.de>; Tue, 11 May 2021 17:38:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231841AbhEKOnc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 May 2021 10:43:32 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:65252 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231681AbhEKOnb (ORCPT
+        id S231848AbhEKPjR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 May 2021 11:39:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:45384 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231835AbhEKPjP (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 11 May 2021 10:43:31 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14BEZLKM181915;
-        Tue, 11 May 2021 10:42:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=Pyje8jRIZ5YwHttqBQnmXopZr3LgujmVgjPacEuTfVo=;
- b=TnGz6gB/zu0r/b/b2q1loFEaB4hWAJNPXZ9h+JRjtsY3rx+tYTqJ44eycNpagvZnPcTy
- dPTqn7A6Bi0RWFKpEBifqqFk1EeuqqpMcK9ATkrg3qRHg7VVlUNn3ZJZJQV5iDESbdoO
- GTddLZycZUhwm0b1/7aoak2O7TXp14RG/cfWprsz1LSmKNCkbr1JZ8aq0crHGnQJJsd7
- y+6k1phlriFGnfdnhTWK87RBbCgOv/LO5uK+MmwKEEwcpvyGSNpnVQvY5hAZ53Phvz/f
- GWs7fmRzL132NVv7L3Bww05xHuuEpJ8oCPopARUGL6Iz6DiJZFhtrfIkgsNvZuBPw6bF vw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 38ftarbqp1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 May 2021 10:42:24 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 14BEaAsH186008;
-        Tue, 11 May 2021 10:42:24 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 38ftarbqmc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 May 2021 10:42:24 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 14BEduHg016600;
-        Tue, 11 May 2021 14:42:21 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 38dj989qud-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 11 May 2021 14:42:21 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 14BEfq7o19333504
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 May 2021 14:41:52 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B2E7C11C04A;
-        Tue, 11 May 2021 14:42:18 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1ADF911C04C;
-        Tue, 11 May 2021 14:42:18 +0000 (GMT)
-Received: from ibm-vm (unknown [9.145.13.244])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 11 May 2021 14:42:18 +0000 (GMT)
-Date:   Tue, 11 May 2021 16:42:02 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, david@redhat.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org, thuth@redhat.com
-Subject: Re: [kvm-unit-tests PATCH 3/4] s390x: cpumodel: FMT4 SCLP test
-Message-ID: <20210511164202.0049c1a0@ibm-vm>
-In-Reply-To: <20210510150015.11119-4-frankja@linux.ibm.com>
+        Tue, 11 May 2021 11:39:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1620747488;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lA3YA8wLy3fJ4pK+UdDswwsR291TTeUp7+xqxJEhVYY=;
+        b=QejC1jdoj7rk+w0HbzMcaA8qwETHKN+qOQsiz/X2L/UK70Tc5Ga0xRDZflkOelrmqPA4nd
+        JsWhF62ep5rpu9aF6kNl4/PdFxaAGi8ZEyDbueE42Qkut7+p9OKNc6eKh/PNX2QyqcHWCW
+        26F7XomfsMZrRX8Pa+YZ9HI8EHiRJ/c=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-310-a4QpbGwcM1ihCT_2gvF22w-1; Tue, 11 May 2021 11:38:07 -0400
+X-MC-Unique: a4QpbGwcM1ihCT_2gvF22w-1
+Received: by mail-ej1-f71.google.com with SMTP id z6-20020a17090665c6b02903700252d1ccso6095294ejn.10
+        for <linux-s390@vger.kernel.org>; Tue, 11 May 2021 08:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=lA3YA8wLy3fJ4pK+UdDswwsR291TTeUp7+xqxJEhVYY=;
+        b=YoqzWM9NDUaFacb/nxK7nPDZA6MgmQ1e+JrbWrkz/B0Yq2D1fgCDTNg07BblGs/4/B
+         /m7ZN/8fP0uFFEOiuchmDt4zqmFZKZJN1B8Ql9BdKFyrb7ekOvHjQSkspidBMfTljEXn
+         kLwmKrkOq+cDJvo0bq9E8GRz9aPczCg0MAR4gDT03oxyPpJ2utQqU93582Cj1f3NhW8g
+         6Uyma6AWxJoYFP+M+9c5tnYcYm6aDtLwHVllW8Son1tibUy/vFhGsht3T530S2lkjnfx
+         pnuT3LT2QwvVBX0+6euReG4KXRwE+z9Xvcz4FtmU7zPee8ohMmCFzPcxpjufV9tmW0a7
+         HVLw==
+X-Gm-Message-State: AOAM533YRt0165FK5yrH6dn4e5/eAlX0cGQh5q7haBa7RrKEz23N66e6
+        cBsLYDjwjN+7WI3+pipN26qMpE+Ux56eONItdtmRiqJPHZhHrKvc8anlRnyx5/UfYJ846fKxob3
+        kIlGD0/8qxZ9o+qagvxQsRw==
+X-Received: by 2002:a17:907:f81:: with SMTP id kb1mr32986019ejc.476.1620747485809;
+        Tue, 11 May 2021 08:38:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz+4xR4cq7DP1xS9MpVHR7xeg5rXqtoQ4ZWLRP0+lX+o33jqwD6v8lig6L4cWx0D+FfjDusqw==
+X-Received: by 2002:a17:907:f81:: with SMTP id kb1mr32985989ejc.476.1620747485534;
+        Tue, 11 May 2021 08:38:05 -0700 (PDT)
+Received: from [192.168.3.132] (p5b0c6329.dip0.t-ipconnect.de. [91.12.99.41])
+        by smtp.gmail.com with ESMTPSA id p2sm11700066ejo.108.2021.05.11.08.38.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 May 2021 08:38:05 -0700 (PDT)
+Subject: Re: [kvm-unit-tests PATCH 2/4] lib: s390x: sclp: Extend feature
+ probing
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        cohuck@redhat.com, linux-s390@vger.kernel.org, thuth@redhat.com
 References: <20210510150015.11119-1-frankja@linux.ibm.com>
-        <20210510150015.11119-4-frankja@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+ <20210510150015.11119-3-frankja@linux.ibm.com>
+ <b0db681f-bfe3-5cf3-53f8-651bba04a5c5@redhat.com>
+ <20210511164137.0bba2493@ibm-vm>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Message-ID: <2f0284e1-b1e0-39d6-1fe0-3be808be1849@redhat.com>
+Date:   Tue, 11 May 2021 17:38:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20210511164137.0bba2493@ibm-vm>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: T-7PZLuejSLZWEmt-m4WXRb9InlRnRF_
-X-Proofpoint-ORIG-GUID: 98pXpknhH_fPZ9mIf-5S2OWt9MYpqb51
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-05-11_02:2021-05-11,2021-05-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- impostorscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0 malwarescore=0
- suspectscore=0 spamscore=0 mlxscore=0 priorityscore=1501 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
- definitions=main-2105110110
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 10 May 2021 15:00:14 +0000
-Janosch Frank <frankja@linux.ibm.com> wrote:
-
-> SCLP is also part of the cpumodel, so we need to make sure that the
-> features indicated via read info / read cpu info are correct.
+On 11.05.21 16:41, Claudio Imbrenda wrote:
+> On Tue, 11 May 2021 13:43:36 +0200
+> David Hildenbrand <david@redhat.com> wrote:
 > 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-
-> ---
->  s390x/cpumodel.c | 59
-> +++++++++++++++++++++++++++++++++++++++++++++++- 1 file changed, 58
-> insertions(+), 1 deletion(-)
+>> On 10.05.21 17:00, Janosch Frank wrote:
+>>> Lets grab more of the feature bits from SCLP read info so we can use
+>>> them in the cpumodel tests.
+>>>
+>>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>>> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+>>> ---
+>>>    lib/s390x/sclp.c | 20 ++++++++++++++++++++
+>>>    lib/s390x/sclp.h | 38 +++++++++++++++++++++++++++++++++++---
+>>>    2 files changed, 55 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/lib/s390x/sclp.c b/lib/s390x/sclp.c
+>>> index f11c2035..f25cfdb2 100644
+>>> --- a/lib/s390x/sclp.c
+>>> +++ b/lib/s390x/sclp.c
+>>> @@ -129,6 +129,13 @@ CPUEntry *sclp_get_cpu_entries(void)
+>>>    	return (CPUEntry *)(_read_info + read_info->offset_cpu);
+>>>    }
+>>>    
+>>> +static bool sclp_feat_check(int byte, int mask)
+>>> +{
+>>> +	uint8_t *rib = (uint8_t *)read_info;
+>>> +
+>>> +	return !!(rib[byte] & mask);
+>>> +}
+>>
+>> Instead of a mask, I'd just check for bit (offset) numbers within the
+>> byte.
+>>
+>> static bool sclp_feat_check(int byte, int bit)
+>> {
+>> 	uint8_t *rib = (uint8_t *)read_info;
+>>
+>> 	return !!(rib[byte] & (0x80 >> bit));
+>> }
 > 
-> diff --git a/s390x/cpumodel.c b/s390x/cpumodel.c
-> index 4dd8b96f..619c3dc7 100644
-> --- a/s390x/cpumodel.c
-> +++ b/s390x/cpumodel.c
-> @@ -2,14 +2,69 @@
->  /*
->   * Test the known dependencies for facilities
->   *
-> - * Copyright 2019 IBM Corp.
-> + * Copyright 2019, 2021 IBM Corp.
->   *
->   * Authors:
->   *    Christian Borntraeger <borntraeger@de.ibm.com>
-> + *    Janosch Frank <frankja@linux.ibm.com>
->   */
->  
->  #include <asm/facility.h>
->  #include <vm.h>
-> +#include <sclp.h>
-> +#include <uv.h>
-> +#include <asm/uv.h>
-> +
-> +static void test_sclp_missing_sief2_implications(void)
-> +{
-> +	/* Virtualization related facilities */
-> +	report(!sclp_facilities.has_64bscao, "!64bscao");
-> +	report(!sclp_facilities.has_pfmfi, "!pfmfi");
-> +	report(!sclp_facilities.has_gsls, "!gsls");
-> +	report(!sclp_facilities.has_cmma, "!cmma");
-> +	report(!sclp_facilities.has_esca, "!esca");
-> +	report(!sclp_facilities.has_kss, "!kss");
-> +	report(!sclp_facilities.has_ibs, "!ibs");
-> +
-> +	/* Virtualization related facilities reported via CPU
-> entries */
-> +	report(!sclp_facilities.has_sigpif, "!sigpif");
-> +	report(!sclp_facilities.has_sief2, "!sief2");
-> +	report(!sclp_facilities.has_skeyi, "!skeyi");
-> +	report(!sclp_facilities.has_siif, "!siif");
-> +	report(!sclp_facilities.has_cei, "!cei");
-> +	report(!sclp_facilities.has_ib, "!ib");
-> +}
-> +
-> +static void test_sclp_features_fmt4(void)
-> +{
-> +	/*
-> +	 * STFLE facilities are handled by the Ultravisor but SCLP
-> +	 * facilities are advertised by the hypervisor.
-> +	 */
-> +	report_prefix_push("PV guest implies");
-> +
-> +	/* General facilities */
-> +	report(!sclp_facilities.has_diag318, "!diag318");
-> +
-> +	/*
-> +	 * Virtualization related facilities, all of which are
-> +	 * unavailable because there's no virtualization support in a
-> +	 * protected guest.
-> +	 */
-> +	test_sclp_missing_sief2_implications();
-> +
-> +	report_prefix_pop();
-> +}
-> +
-> +static void test_sclp_features(void)
-> +{
-> +	report_prefix_push("sclp");
-> +
-> +	if (uv_os_is_guest())
-> +		test_sclp_features_fmt4();
-> +
-> +	report_prefix_pop();
-> +}
->  
->  static struct {
->  	int facility;
-> @@ -60,6 +115,8 @@ int main(void)
->  	}
->  	report_prefix_pop();
->  
-> +	test_sclp_features();
-> +
->  	report_prefix_pop();
->  	return report_summary();
->  }
+> using a mask might be useful to check multiple facilities at the same
+> time, but in that case the check should be
+
+IMHO checking with a mask here multiple facilities will be very error 
+prone either way ... and we only have a single byte to check for.
+
+
+-- 
+Thanks,
+
+David / dhildenb
 
