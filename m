@@ -2,106 +2,149 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44C7D3880F8
-	for <lists+linux-s390@lfdr.de>; Tue, 18 May 2021 22:09:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBFE7388318
+	for <lists+linux-s390@lfdr.de>; Wed, 19 May 2021 01:27:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352093AbhERUKH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 18 May 2021 16:10:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352071AbhERUJ5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 18 May 2021 16:09:57 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2043DC061763;
-        Tue, 18 May 2021 13:08:33 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id v13so5725582ple.9;
-        Tue, 18 May 2021 13:08:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/vcL4h8Y/iDJ4PQ//oXXgHbE7D0ndwuNE52sYaiQ5uA=;
-        b=Rm/Otlj3gP5XkV3BLLxJkLQZNy2jj12x4U46YT0W9OzEwpis3BcOIrYA7TVCiGcBYd
-         Y/A52de9C1ucmsAiRKng/fYtrQYoCX40xawvO30vOcJUOan7Bv2m4ddeDNmr4hxw0Qq0
-         6jl+8hWGd+pTu+rgkD94iUuIYKjREOUB2cvP2M5h11Udgoyr7RPzlPbEi5XXf4WweaUf
-         ZpLLVOF0qWA1+HfY6ZP6JGee3F1z5RIbsZofK3zJeI+YbVgxyJb61AlXkNcywq7xNgtx
-         S8bSVLZUqAGKZLV9CHJpPhGdkhrgfZCRAoZ+R2kGYxTIKwp5+kZWKvxXdkwpQeMKM6cu
-         +FHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/vcL4h8Y/iDJ4PQ//oXXgHbE7D0ndwuNE52sYaiQ5uA=;
-        b=snS1imFqURXbtEa5SVXsZh718Vri6BNxqIQQhyAbqV+o+iOsdNiUrhn/7afxVvFPmw
-         qn7WSeaIkZG+CNKlGcChGO96lLNAGHOgd6Mp4YZjv7AN6aUq/ArtD7G475fQ4nXk4ziV
-         JpT954mnNCB7pIqHxAueizgGFWdjnUca16VXnqGnzdfAHf1AWQMxBPlW1F6q1T9OolMW
-         8hQ/aYue0aBHd4iWm8oJD5AUK67YtjImAsTUof2Zq19esSG2uD2oiCXmuJU/tfogwuSG
-         dgJMfz9IyUjUhHtxpRZzYQ5EoiUL+woHRXDFJjo9RoqpudW9Zi3CZZI3q1PJLM7kPBNv
-         o6Zg==
-X-Gm-Message-State: AOAM532yxA1PLeDO5wvLfYLFj5xPDglvGSiipzeR0RGUShfqD5de0SDV
-        De9d922tMWXhq6RAheDPl+E=
-X-Google-Smtp-Source: ABdhPJzHjDupKD9HBvIBLGRi6l5SuWQ81rgs7GzcOZnGf3LhF6AGiUZhf89yxQ3FkYWXt210nsqHGw==
-X-Received: by 2002:a17:902:8c91:b029:f3:b4da:4600 with SMTP id t17-20020a1709028c91b02900f3b4da4600mr3168651plo.30.1621368512990;
-        Tue, 18 May 2021 13:08:32 -0700 (PDT)
-Received: from localhost.localdomain (c-73-93-239-127.hsd1.ca.comcast.net. [73.93.239.127])
-        by smtp.gmail.com with ESMTPSA id r11sm13456600pgl.34.2021.05.18.13.08.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 May 2021 13:08:32 -0700 (PDT)
-From:   Yang Shi <shy828301@gmail.com>
-To:     mgorman@suse.de, kirill.shutemov@linux.intel.com, ziy@nvidia.com,
-        ying.huang@intel.com, mhocko@suse.com, hughd@google.com,
-        gerald.schaefer@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com,
-        akpm@linux-foundation.org
-Cc:     shy828301@gmail.com, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [v3 PATCH 7/7] mm: thp: skip make PMD PROT_NONE if THP migration is not supported
-Date:   Tue, 18 May 2021 13:08:01 -0700
-Message-Id: <20210518200801.7413-8-shy828301@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210518200801.7413-1-shy828301@gmail.com>
-References: <20210518200801.7413-1-shy828301@gmail.com>
+        id S238420AbhERX2s (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 May 2021 19:28:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6020 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230352AbhERX2o (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 18 May 2021 19:28:44 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14IN48ln032311;
+        Tue, 18 May 2021 19:27:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=szwMXhJStHqamyPt//Gt/3KQhxeXPJVI25+JNBO3flE=;
+ b=kh/vnmzzokZZYpplxeO+E9xFFRzY+9xs5Mw+qvwjyls/VVv545/sSgj7d8qeC747pGG/
+ eNxu7MDjVcPy7dK9b/lQ1dlpy/563cTwKHgpyNzUVbtPQpZW3rDs01cL/BMcfAi1j55T
+ P5IvfcmHpEtloVAJT7YS1xNxnSpt8R+OT18BHUUKk1tAlrb/AViVO24y/We0i6j+Vq9b
+ NCRh7fOmVWIQGpFyyhXKdavTL/MIS3QstoLnTM+1jy/ZdYB8G5VGO6zjmIh1TWiYk15a
+ 4WiXOCOXw8LwMeLpOKbIBwba0DGSAXfKMY/+TXAP6l0yQ/rEbvP4hoWEwJXiFCwhOhnx ug== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38mpp1rnma-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 May 2021 19:27:24 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 14IN5C75042566;
+        Tue, 18 May 2021 19:27:23 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38mpp1rnkt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 May 2021 19:27:23 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 14INODP9025658;
+        Tue, 18 May 2021 23:27:21 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03fra.de.ibm.com with ESMTP id 38j5x88y06-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 May 2021 23:27:21 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 14INRIu044433710
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 May 2021 23:27:18 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 15F73A4051;
+        Tue, 18 May 2021 23:27:18 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3315EA4040;
+        Tue, 18 May 2021 23:27:17 +0000 (GMT)
+Received: from li-e979b1cc-23ba-11b2-a85c-dfd230f6cf82 (unknown [9.171.17.64])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue, 18 May 2021 23:27:17 +0000 (GMT)
+Date:   Wed, 19 May 2021 01:27:09 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cohuck@redhat.com,
+        pasic@linux.vnet.ibm.com, jjherne@linux.ibm.com, jgg@nvidia.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        stable@vger.kernel.org, Tony Krowiak <akrowiak@stny.rr.com>
+Subject: Re: [PATCH v2] s390/vfio-ap: fix memory leak in mdev remove
+ callback
+Message-ID: <20210519012709.3bcc30e7.pasic@linux.ibm.com>
+In-Reply-To: <ca5f1c72-09a3-d270-44a0-bda54c554f67@de.ibm.com>
+References: <20210510214837.359717-1-akrowiak@linux.ibm.com>
+        <20210512203536.4209c29c.pasic@linux.ibm.com>
+        <4c156ab8-da49-4867-f29c-9712c2628d44@linux.ibm.com>
+        <20210513194541.58d1628a.pasic@linux.ibm.com>
+        <243086e2-08a0-71ed-eb7e-618a62b007e4@linux.ibm.com>
+        <20210514021500.60ad2a22.pasic@linux.ibm.com>
+        <594374f6-8cf6-4c22-0bac-3b224c55bbb6@linux.ibm.com>
+        <20210517211030.368ca64b.pasic@linux.ibm.com>
+        <966a60ad-bdde-68d0-ae2f-06121c6ad970@de.ibm.com>
+        <9ebd5fd8-b093-e5bc-e680-88fa7a9b085c@linux.ibm.com>
+        <494af62b-dc9a-ef2c-1869-d8f5ed239504@de.ibm.com>
+        <20210518173351.39646b45.pasic@linux.ibm.com>
+        <ca5f1c72-09a3-d270-44a0-bda54c554f67@de.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: WYWN-i9ftGId583qop22oN4cL01dFjk2
+X-Proofpoint-ORIG-GUID: fc4uHoZ8JOMCtgybKym1QvvLiAXexPjv
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-05-18_11:2021-05-18,2021-05-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ phishscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0 bulkscore=0
+ mlxlogscore=999 malwarescore=0 priorityscore=1501 mlxscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
+ definitions=main-2105180159
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-A quick grep shows x86_64, PowerPC (book3s), ARM64 and S390 support both
-NUMA balancing and THP.  But S390 doesn't support THP migration so NUMA
-balancing actually can't migrate any misplaced pages.
+On Tue, 18 May 2021 19:01:42 +0200
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-Skip make PMD PROT_NONE for such case otherwise CPU cycles may be wasted
-by pointless NUMA hinting faults on S390.
+> On 18.05.21 17:33, Halil Pasic wrote:
+> > On Tue, 18 May 2021 15:59:36 +0200
+> > Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+[..]
+> >>>>
+> >>>> Would it help, if the code in priv.c would read the hook once
+> >>>> and then only work on the copy? We could protect that with rcu
+> >>>> and do a synchronize rcu in vfio_ap_mdev_unset_kvm after
+> >>>> unsetting the pointer?  
+> > 
+> > Unfortunately just "the hook" is ambiguous in this context. We
+> > have kvm->arch.crypto.pqap_hook that is supposed to point to
+> > a struct kvm_s390_module_hook member of struct ap_matrix_mdev
+> > which is also called pqap_hook. And struct kvm_s390_module_hook
+> > has function pointer member named "hook".  
+> 
+> I was referring to the full struct.
+> >   
+> >>>
+> >>> I'll look into this.  
+> >>
+> >> I think it could work. in priv.c use rcu_readlock, save the
+> >> pointer, do the check and call, call rcu_read_unlock.
+> >> In vfio_ap use rcu_assign_pointer to set the pointer and
+> >> after setting it to zero call sychronize_rcu.  
+> > 
+> > In my opinion, we should make the accesses to the
+> > kvm->arch.crypto.pqap_hook pointer properly synchronized. I'm
+> > not sure if that is what you are proposing. How do we usually
+> > do synchronisation on the stuff that lives in kvm->arch?
+> >   
+> 
+> RCU is a method of synchronization. We  make sure that structure
+> pqap_hook is still valid as long as we are inside the rcu read
+> lock. So the idea is: clear pointer, wait until all old readers
+> have finished and the proceed with getting rid of the structure.
 
-Acked-by: Mel Gorman <mgorman@suse.de>
-Signed-off-by: Yang Shi <shy828301@gmail.com>
----
- mm/huge_memory.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Yes I know that RCU is a method of synchronization, but I'm not
+very familiar with it. I'm a little confused by "read the hook
+once and then work on a copy". I guess, I would have to read up
+on the RCU again to get clarity. I intend to brush up my RCU knowledge
+once the patch comes along. I would be glad to have your help when
+reviewing an RCU based solution for this.   
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index b8526b9b041a..fb984ef5a761 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1735,6 +1735,7 @@ bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
-  * Returns
-  *  - 0 if PMD could not be locked
-  *  - 1 if PMD was locked but protections unchanged and TLB flush unnecessary
-+ *      or if prot_numa but THP migration is not supported
-  *  - HPAGE_PMD_NR if protections changed and TLB flush necessary
-  */
- int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
-@@ -1749,6 +1750,9 @@ int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
- 	bool uffd_wp = cp_flags & MM_CP_UFFD_WP;
- 	bool uffd_wp_resolve = cp_flags & MM_CP_UFFD_WP_RESOLVE;
- 
-+	if (prot_numa && !thp_migration_supported())
-+		return 1;
-+
- 	ptl = __pmd_trans_huge_lock(pmd, vma);
- 	if (!ptl)
- 		return 0;
--- 
-2.26.2
-
+Regards,
+Halil
