@@ -2,28 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB589388413
-	for <lists+linux-s390@lfdr.de>; Wed, 19 May 2021 02:51:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A02193884DD
+	for <lists+linux-s390@lfdr.de>; Wed, 19 May 2021 04:42:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352909AbhESAwg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 18 May 2021 20:52:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53924 "EHLO
+        id S235593AbhESCl3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 May 2021 22:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352873AbhESAu6 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 18 May 2021 20:50:58 -0400
-Received: from zeniv-ca.linux.org.uk (zeniv-ca.linux.org.uk [IPv6:2607:5300:60:148a::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D89EAC061760;
-        Tue, 18 May 2021 17:49:39 -0700 (PDT)
-Received: from viro by zeniv-ca.linux.org.uk with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1ljAOU-00G4GG-Mm; Wed, 19 May 2021 00:49:02 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        with ESMTP id S237088AbhESCl0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 18 May 2021 22:41:26 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFC18C06175F
+        for <linux-s390@vger.kernel.org>; Tue, 18 May 2021 19:40:06 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id lz27so17636521ejb.11
+        for <linux-s390@vger.kernel.org>; Tue, 18 May 2021 19:40:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JtmNJLU/dhQ9ELu/k2h5VHa5Rzw2bCS2zmPu0hLax+8=;
+        b=BVvY6dfBpTLG0lCmqHmrDJcT+SrZNvl2aUJRRzUMfSXvRfy+O8EXPnnwQahXMdao6o
+         ADK4xqT8fNsbM2m33sQnw4i2uQ0JMU5+vr1tAi+7ZAg8S9HHsObzS/enEivmT4rgIsLZ
+         ILiKKP3sz7olT1g3KLaQqtWqIyrwYxRu/fSqs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JtmNJLU/dhQ9ELu/k2h5VHa5Rzw2bCS2zmPu0hLax+8=;
+        b=ojZXkWtfYdklKl7pV58dHMB5ar1w6rym8pv/RO8V+ipZ+3rkJS/cHy5IOCIBsLPUll
+         +87ThYnI2q6KZTzDySsIx2FdtKLTne1j3KM04Bd3nBPundEOs7UVoog+VoAFiiVlCU6v
+         dNaZqMTuoQT+apFUkaRQALMdzll+NeSf/Nejw3r0Qd2VCKOjMvrZMTNkyH91t6/l85Y5
+         k3GJuCaQuqVv2hhuBtoIfgDGS26fgQgdcEUxXO+38w/yp+m1kGk/2yY/pt5NOApS9dvE
+         2Yk+jhCDbwqM3ctMrp7zgzdzz1WQIeeTw4if9Qg4xX06ukfRuEWTEnFdUr3blmhukuja
+         MCFQ==
+X-Gm-Message-State: AOAM532D9gR/YB1FxrIivLraPc/1ITtQJmptiVvzaLTnBdYcuCAdYp0i
+        PQisa6o8sIDQpZf+nnbUeIUtSAbsmrteoach
+X-Google-Smtp-Source: ABdhPJyM2qBNCS1SvSoQyY0pxOJeAFnPIG11delOwwI9RhqJ+Nu5Bascl0SWcnSUivCWZYdpi7fDOA==
+X-Received: by 2002:a17:906:d922:: with SMTP id rn2mr7519161ejb.469.1621392005365;
+        Tue, 18 May 2021 19:40:05 -0700 (PDT)
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
+        by smtp.gmail.com with ESMTPSA id k21sm763910ejp.23.2021.05.18.19.40.05
+        for <linux-s390@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 May 2021 19:40:05 -0700 (PDT)
+Received: by mail-ed1-f50.google.com with SMTP id o5so4554144edc.5
+        for <linux-s390@vger.kernel.org>; Tue, 18 May 2021 19:40:05 -0700 (PDT)
+X-Received: by 2002:a05:651c:8f:: with SMTP id 15mr6863723ljq.220.1621391994583;
+ Tue, 18 May 2021 19:39:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210508122530.1971-1-justin.he@arm.com> <20210508122530.1971-2-justin.he@arm.com>
+ <CAHk-=wgSFUUWJKW1DXa67A0DXVzQ+OATwnC3FCwhqfTJZsvj1A@mail.gmail.com>
+ <YJbivrA4Awp4FXo8@zeniv-ca.linux.org.uk> <CAHk-=whZhNXiOGgw8mXG+PTpGvxnRG1v5_GjtjHpoYXd2Fn_Ow@mail.gmail.com>
+ <YJb9KFBO7MwJeDHz@zeniv-ca.linux.org.uk> <CAHk-=wjhrhkWbV_EY0gupi2ea7QHpGW=68x7g09j_Tns5ZnsLA@mail.gmail.com>
+ <CAHk-=wiOPkSm-01yZzamTvX2RPdJ0784+uWa0OMK-at+3XDd0g@mail.gmail.com>
+ <YJdIx6iiU9YwnQYz@zeniv-ca.linux.org.uk> <CAHk-=wih_O+0xG4QbLw-3XJ71Yh43_SFm3gp9swj8knzXoceZQ@mail.gmail.com>
+ <YKRfI29BBnC255Vp@zeniv-ca.linux.org.uk>
+In-Reply-To: <YKRfI29BBnC255Vp@zeniv-ca.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 18 May 2021 16:39:38 -1000
+X-Gmail-Original-Message-ID: <CAHk-=whJkHMtf4RYiE3PLTEo8fM_vU6BG43TNJLbHsGYPsSJfQ@mail.gmail.com>
+Message-ID: <CAHk-=whJkHMtf4RYiE3PLTEo8fM_vU6BG43TNJLbHsGYPsSJfQ@mail.gmail.com>
+Subject: Re: [PATCHSET] d_path cleanups
+To:     Al Viro <viro@zeniv.linux.org.uk>
 Cc:     Jia He <justin.he@arm.com>, Petr Mladek <pmladek@suse.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Sergey Senozhatsky <senozhatsky@chromium.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Jonathan Corbet <corbet@lwn.net>,
+        Al Viro <viro@ftp.linux.org.uk>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
@@ -37,75 +84,18 @@ Cc:     Jia He <justin.he@arm.com>, Petr Mladek <pmladek@suse.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-s390 <linux-s390@vger.kernel.org>,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: [PATCH 14/14] getcwd(2): clean up error handling
-Date:   Wed, 19 May 2021 00:49:01 +0000
-Message-Id: <20210519004901.3829541-14-viro@zeniv.linux.org.uk>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210519004901.3829541-1-viro@zeniv.linux.org.uk>
-References: <YKRfI29BBnC255Vp@zeniv-ca.linux.org.uk>
- <20210519004901.3829541-1-viro@zeniv.linux.org.uk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/d_path.c | 29 ++++++++++++-----------------
- 1 file changed, 12 insertions(+), 17 deletions(-)
+On Tue, May 18, 2021 at 2:44 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+>         Here's what I've got for carve-up of cleanups.
 
-diff --git a/fs/d_path.c b/fs/d_path.c
-index 8a9cd44f6689..23a53f7b5c71 100644
---- a/fs/d_path.c
-+++ b/fs/d_path.c
-@@ -390,9 +390,11 @@ SYSCALL_DEFINE2(getcwd, char __user *, buf, unsigned long, size)
- 	rcu_read_lock();
- 	get_fs_root_and_pwd_rcu(current->fs, &root, &pwd);
- 
--	error = -ENOENT;
--	if (!d_unlinked(pwd.dentry)) {
--		unsigned long len;
-+	if (unlikely(d_unlinked(pwd.dentry))) {
-+		rcu_read_unlock();
-+		error = -ENOENT;
-+	} else {
-+		unsigned len;
- 		DECLARE_BUFFER(b, page, PATH_MAX);
- 
- 		prepend(&b, "", 1);
-@@ -400,23 +402,16 @@ SYSCALL_DEFINE2(getcwd, char __user *, buf, unsigned long, size)
- 			prepend(&b, "(unreachable)", 13);
- 		rcu_read_unlock();
- 
--		if (b.len < 0) {
--			error = -ENAMETOOLONG;
--			goto out;
--		}
--
--		error = -ERANGE;
- 		len = PATH_MAX - b.len;
--		if (len <= size) {
-+		if (unlikely(len > PATH_MAX))
-+			error = -ENAMETOOLONG;
-+		else if (unlikely(len > size))
-+			error = -ERANGE;
-+		else if (copy_to_user(buf, b.buf, len))
-+			error = -EFAULT;
-+		else
- 			error = len;
--			if (copy_to_user(buf, b.buf, len))
--				error = -EFAULT;
--		}
--	} else {
--		rcu_read_unlock();
- 	}
--
--out:
- 	__putname(page);
- 	return error;
- }
--- 
-2.11.0
+Thanks, these all look logical to me.
 
+I only read through the individual patches, I didn't test or check the
+end result, but it all looked like good sane cleanups.
+
+              Linus
