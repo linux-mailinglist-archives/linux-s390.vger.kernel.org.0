@@ -2,94 +2,49 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B4A63888F4
-	for <lists+linux-s390@lfdr.de>; Wed, 19 May 2021 10:07:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC31938892D
+	for <lists+linux-s390@lfdr.de>; Wed, 19 May 2021 10:13:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235861AbhESIIc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 19 May 2021 04:08:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:28069 "EHLO mga01.intel.com"
+        id S236458AbhESIOi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 19 May 2021 04:14:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48350 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235683AbhESIIb (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 19 May 2021 04:08:31 -0400
-IronPort-SDR: COl2Nu6Dd9AE5Ne0QP0ESgfVUGHUOc3b2+3RPAqqw7Uk6rNIvfy0+lVz59tG4PeK5xcFkcocqi
- zK915tXQNlTw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9988"; a="221984080"
-X-IronPort-AV: E=Sophos;i="5.82,312,1613462400"; 
-   d="scan'208";a="221984080"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2021 01:07:12 -0700
-IronPort-SDR: +m6QThSTl14NxX0mj/VRdu4CnV61XHCXHOpwQDCABkD55XFK7ns2/d36Ij8WIWZh2o4cI7wOQs
- 2TGdrPwoRnXg==
-X-IronPort-AV: E=Sophos;i="5.82,312,1613462400"; 
-   d="scan'208";a="627525656"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2021 01:07:08 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ljHEO-00DAfC-Ef; Wed, 19 May 2021 11:07:04 +0300
-Date:   Wed, 19 May 2021 11:07:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jia He <justin.he@arm.com>, Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Eric Biggers <ebiggers@google.com>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 12/14] d_path: prepend_path(): lift the inner loop into a
- new helper
-Message-ID: <YKTHKNsX/cvYwbWj@smile.fi.intel.com>
-References: <YKRfI29BBnC255Vp@zeniv-ca.linux.org.uk>
- <20210519004901.3829541-1-viro@zeniv.linux.org.uk>
- <20210519004901.3829541-12-viro@zeniv.linux.org.uk>
+        id S231161AbhESIOf (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 19 May 2021 04:14:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B8148B14E;
+        Wed, 19 May 2021 08:13:15 +0000 (UTC)
+Date:   Wed, 19 May 2021 09:13:12 +0100
+From:   Mel Gorman <mgorman@suse.de>
+To:     Yang Shi <shy828301@gmail.com>
+Cc:     kirill.shutemov@linux.intel.com, ziy@nvidia.com,
+        ying.huang@intel.com, mhocko@suse.com, hughd@google.com,
+        gerald.schaefer@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [v3 PATCH 1/7] mm: memory: add orig_pmd to struct vm_fault
+Message-ID: <20210519081312.GC3672@suse.de>
+References: <20210518200801.7413-1-shy828301@gmail.com>
+ <20210518200801.7413-2-shy828301@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20210519004901.3829541-12-viro@zeniv.linux.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20210518200801.7413-2-shy828301@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, May 19, 2021 at 12:48:59AM +0000, Al Viro wrote:
-> ... and leave the rename_lock/mount_lock handling in prepend_path()
-> itself
+On Tue, May 18, 2021 at 01:07:55PM -0700, Yang Shi wrote:
+> Add orig_pmd to struct vm_fault so the "orig_pmd" parameter used by huge page
+> fault could be removed, just like its PTE counterpart does.
+> 
+> Signed-off-by: Yang Shi <shy828301@gmail.com>
 
-...
-
-> +			if (!IS_ERR_OR_NULL(mnt_ns) && !is_anon_ns(mnt_ns))
-> +				return 1;	// absolute root
-> +			else
-> +				return 2;	// detached or not attached yet
-
-Would it be slightly better to read
-
-			if (IS_ERR_OR_NULL(mnt_ns) || is_anon_ns(mnt_ns))
-				return 2;	// detached or not attached yet
-			else
-				return 1;	// absolute root
-
-?
-
-Oh, I have noticed that it's in the original piece of code (perhaps separate
-change if we ever need it?).
-
+Acked-by: Mel Gorman <mgorman@suse.de>
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Mel Gorman
+SUSE Labs
