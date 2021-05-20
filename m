@@ -2,77 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9D0F38A0B5
-	for <lists+linux-s390@lfdr.de>; Thu, 20 May 2021 11:20:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FC6138A34D
+	for <lists+linux-s390@lfdr.de>; Thu, 20 May 2021 11:50:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231470AbhETJV1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 20 May 2021 05:21:27 -0400
-Received: from mga01.intel.com ([192.55.52.88]:26865 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230458AbhETJV1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 20 May 2021 05:21:27 -0400
-IronPort-SDR: LW+HI2QSrRyZTkJt8quQWRUZkV69/XMC18ydqOxEqYXu7sFJqT7KJiotz6lDPHENAT5u+Mcbsw
- HTBUGfU/evWw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9989"; a="222265499"
-X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
-   d="scan'208";a="222265499"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 02:20:04 -0700
-IronPort-SDR: D9tFDRabU8LkRDjtkf+DxCKaIENTndI7pYZSuQu6DfX7cPNkp698kwjW15pbXtxjKQUQwNicQ+
- Ou8ZWaZUI04A==
-X-IronPort-AV: E=Sophos;i="5.82,313,1613462400"; 
-   d="scan'208";a="395631467"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2021 02:19:59 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ljeqS-00DRbU-2L; Thu, 20 May 2021 12:19:56 +0300
-Date:   Thu, 20 May 2021 12:19:56 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Justin He <Justin.He@arm.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Eric Biggers <ebiggers@google.com>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 08/14] d_path: make prepend_name() boolean
-Message-ID: <YKYpvFg3WQe7svpI@smile.fi.intel.com>
-References: <YKRfI29BBnC255Vp@zeniv-ca.linux.org.uk>
- <20210519004901.3829541-1-viro@zeniv.linux.org.uk>
- <20210519004901.3829541-8-viro@zeniv.linux.org.uk>
- <AM6PR08MB4376607691168C132AB2F558F72A9@AM6PR08MB4376.eurprd08.prod.outlook.com>
+        id S234144AbhETJvM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 20 May 2021 05:51:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30740 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234265AbhETJtL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 20 May 2021 05:49:11 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14K9XjdO088791;
+        Thu, 20 May 2021 05:47:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=ppwtvM3q03PSEpYkTapdLu0gB5ibyf+6YUjM7vCkYB8=;
+ b=TzS4tvERt0hBJEaflJAncGpj1kWFVDFnLSjyzyt1oRrmgi/8j8AFeKmoERhJfuoIkiQu
+ HFb/2kf1JNT/COmdlQW9iWv3EHww/uVHxMXT/SttEB7rw0kLgfFLdaKgKP6tmjST7L6y
+ iG3hki/fekmktpYsdHdVmPUH1ovzivwwgcR3IU4nwXwMeG1Tsa3d4MT6zMpe2C10D3EB
+ 2PnZh1WUIJ6l6Z7JlsVNZjxsKN/nqTbuMU/ot+ryJDqbZSrBcKv+v8LESUxklItstCri
+ WINBwClvlROGMh+9iXNdW2wJVQWub5aGsoIU6CXs9PqufCLSu1CJzctWM4FR59itHgGQ jw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38nn5qrh77-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 May 2021 05:47:49 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 14K9YD93090380;
+        Thu, 20 May 2021 05:47:49 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38nn5qrh6c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 May 2021 05:47:49 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 14K9jWKD013080;
+        Thu, 20 May 2021 09:47:47 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma05fra.de.ibm.com with ESMTP id 38m19srsrr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 May 2021 09:47:47 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 14K9lG1533423684
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 May 2021 09:47:16 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C0684203F;
+        Thu, 20 May 2021 09:47:44 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB6BC42042;
+        Thu, 20 May 2021 09:47:43 +0000 (GMT)
+Received: from linux01.pok.stglabs.ibm.com (unknown [9.114.17.81])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 20 May 2021 09:47:43 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
+        david@redhat.com, thuth@redhat.com, cohuck@redhat.com
+Subject: [kvm-unit-tests RFC 0/2] s390x: Add snippet support
+Date:   Thu, 20 May 2021 09:47:28 +0000
+Message-Id: <20210520094730.55759-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM6PR08MB4376607691168C132AB2F558F72A9@AM6PR08MB4376.eurprd08.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: NH-PkV8Q2EbS2qf2BUht74or0YaG2GEw
+X-Proofpoint-ORIG-GUID: 8uG9A7LqzQINvNFZ8HG2tfDuNqV0n0Gl
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-05-20_01:2021-05-20,2021-05-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 spamscore=0
+ bulkscore=0 mlxscore=0 adultscore=0 phishscore=0 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2105200071
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, May 20, 2021 at 09:12:34AM +0000, Justin He wrote:
+The SIE support allows us to run guests and test the hypervisor's
+(V)SIE implementation. However it requires that the guest instructions
+are binary which limits the complexity of the guest code.
 
-> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
+The snippet support provides a way to write guest code as ASM or C and
+simply memcpy it into guest memory. Some of the KVM-unit-test library
+can be re-used which further speeds up guest code development.
 
-Fix it.
+The included mvpg-sie test helped us to deliver the KVM mvpg fixes
+which Claudio posted a short while ago. In the future I'll post Secure
+Execution snippet support patches which was my initial goal with this
+series anyway.
+
+I heard you liked tests so I put tests inside tests so you can test
+while you test.
+
+Janosch Frank (2):
+  s390x: Add guest snippet support
+  s390x: mvpg: Add SIE mvpg test
+
+ .gitignore                      |   2 +
+ s390x/Makefile                  |  29 ++++++-
+ s390x/mvpg-sie.c                | 139 ++++++++++++++++++++++++++++++++
+ s390x/snippets/c/cstart.S       |  13 +++
+ s390x/snippets/c/flat.lds       |  51 ++++++++++++
+ s390x/snippets/c/mvpg-snippet.c |  33 ++++++++
+ s390x/unittests.cfg             |   3 +
+ 7 files changed, 267 insertions(+), 3 deletions(-)
+ create mode 100644 s390x/mvpg-sie.c
+ create mode 100644 s390x/snippets/c/cstart.S
+ create mode 100644 s390x/snippets/c/flat.lds
+ create mode 100644 s390x/snippets/c/mvpg-snippet.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.30.2
 
