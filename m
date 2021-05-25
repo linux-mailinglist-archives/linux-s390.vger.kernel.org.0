@@ -2,92 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4C4839009B
-	for <lists+linux-s390@lfdr.de>; Tue, 25 May 2021 14:12:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 373BB390156
+	for <lists+linux-s390@lfdr.de>; Tue, 25 May 2021 14:50:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232029AbhEYMOC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 May 2021 08:14:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54772 "EHLO
+        id S231847AbhEYMvo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 May 2021 08:51:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62176 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231865AbhEYMOC (ORCPT
+        by vger.kernel.org with ESMTP id S232720AbhEYMvo (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 May 2021 08:14:02 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14PC4w2M106064
-        for <linux-s390@vger.kernel.org>; Tue, 25 May 2021 08:12:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=qPg5Ds5cof+CuLUMsxyJktNs2ecbfIi1erMyfrL8Dfc=;
- b=NSBpeYcWSPaaWLbQ67CWm7Jf3vSXyvgUWpa1nYxHg1jFgJpCfpUjIT6h6T0apTtaSN4M
- 1nq3bdUtLiboD+FDPMMCUht4rA3UdukwEzprjcFKdiSWUyQ57I+McbqootR0IPrzt63S
- tFLXbgaFp+ATEDhAaas9DeESSXYZt/8gS2hrz0ELdZ2G/jmtwv4SutgGNy+P83ODFxW7
- 2Zu3FX6iGfe46yGh2twlM8TK9iF9lSGxRkLSo+jyAegokgIlWO34EOqZvKh+qTkahJfA
- Ao63VIEq2JV0PT5PBrKFMRv/Zxbn5rjQKvGOlmvni3ddi2A4tOhuKA5Zg7A8WvJHChFM Bg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 38rxvmc6mp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 25 May 2021 08:12:32 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 14PC55WX106804
-        for <linux-s390@vger.kernel.org>; Tue, 25 May 2021 08:12:31 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 38rxvmc6jc-1
+        Tue, 25 May 2021 08:51:44 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14PCWXfY193887;
+        Tue, 25 May 2021 08:50:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=PBPDJa98o1uT2u6YYcFdfkI3BZSF8FKie2IhBqL8O5A=;
+ b=tcUcOdfEWx/3Vl8kycr2+1vO1jeooBU3GpOpSnJCSdy57vLl1Yh2xlKGb9GQsadf/VOC
+ fzCstw1RSLHIdrMLfjzvEeZmMeuNbS4rkeKfjS5eMaMdpl3iNAZWotp8KR7yg36+FSJs
+ zXhMKaMZtlD4UgP/hZunjtZNq5+CT5ot5+RVMFp6xRYB/qR3AmING9oG47eNNlFHhcQw
+ DOlheFia7d35e9Irs0SEFw2E1yTOjVj4D5eXeTF2Zzwhs8cBCCWJ2ejI78WtbIMx4KeG
+ Ti3lCCLFYshnozt2QAOb3nR5QcvTbsEcEIRX5p5rKc4B4eVAVibdQ3dktCNUISWR+I2r RA== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38s12ysc0x-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 May 2021 08:12:31 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 14PBq1oY023865;
-        Tue, 25 May 2021 12:12:29 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 38ps7h9a6q-1
+        Tue, 25 May 2021 08:50:12 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 14PCmVcF015834;
+        Tue, 25 May 2021 12:50:10 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 38s1jn801q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 May 2021 12:12:29 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 14PCBv4T24838584
+        Tue, 25 May 2021 12:50:10 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 14PCo7rX11469278
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 May 2021 12:11:57 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B796C11C05E;
-        Tue, 25 May 2021 12:12:26 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B57A11C05C;
-        Tue, 25 May 2021 12:12:26 +0000 (GMT)
-Received: from localhost (unknown [9.171.17.66])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 25 May 2021 12:12:26 +0000 (GMT)
-Date:   Tue, 25 May 2021 14:12:25 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Alexander Egorenkov <egorenar@linux.ibm.com>
-Cc:     Fabrice Fontaine <fontaine.fabrice@gmail.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH] arch/s390: disable SSP when needed
-Message-ID: <your-ad-here.call-01621944745-ext-0740@work.hours>
-References: <20210510053133.1220167-1-fontaine.fabrice@gmail.com>
- <87y2c3nsku.fsf@oc8242746057.ibm.com>
+        Tue, 25 May 2021 12:50:07 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1972B4C04A;
+        Tue, 25 May 2021 12:50:07 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0F53F4C059;
+        Tue, 25 May 2021 12:50:07 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 25 May 2021 12:50:07 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 20191)
+        id AB39BE0407; Tue, 25 May 2021 14:50:06 +0200 (CEST)
+From:   Stefan Haberland <sth@linux.ibm.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [PATCH 0/1] s390/dasd: fix kernel panic due to missing discipline function
+Date:   Tue, 25 May 2021 14:50:05 +0200
+Message-Id: <20210525125006.157531-1-sth@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87y2c3nsku.fsf@oc8242746057.ibm.com>
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: A0pQ-odSPmOZo5X6DkoKRlNUOdm_6crs
-X-Proofpoint-ORIG-GUID: XElSD8AaY6SVefqraoKr8WEoKx5NCqNX
+X-Proofpoint-GUID: OO-9pRHaTNmCSSO6oCHg8_EFk_AOdmDE
+X-Proofpoint-ORIG-GUID: OO-9pRHaTNmCSSO6oCHg8_EFk_AOdmDE
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
  definitions=2021-05-25_06:2021-05-25,2021-05-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=672
- spamscore=0 phishscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- bulkscore=0 suspectscore=0 adultscore=0 clxscore=1011 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
- definitions=main-2105250074
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 suspectscore=0
+ clxscore=1015 mlxlogscore=764 phishscore=0 lowpriorityscore=0 bulkscore=0
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2105250077
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, May 25, 2021 at 10:08:49AM +0200, Alexander Egorenkov wrote:
-> Hi Fabrice,
-> 
-> the patch looks good to me.
-> Thank you.
-> 
-> Reviewed-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-> Tested-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+Hi Jens,
 
-Applied, thanks
+please apply the following patch that fixes a kernel panic in the DASD
+device driver.
+
+Stefan Haberland (1):
+  s390/dasd: add missing discipline function
+
+ drivers/s390/block/dasd_diag.c | 8 +++++++-
+ drivers/s390/block/dasd_fba.c  | 8 +++++++-
+ drivers/s390/block/dasd_int.h  | 1 -
+ 3 files changed, 14 insertions(+), 3 deletions(-)
+
+-- 
+2.25.1
+
