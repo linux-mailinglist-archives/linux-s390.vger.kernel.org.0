@@ -2,93 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B155738FC2C
-	for <lists+linux-s390@lfdr.de>; Tue, 25 May 2021 10:08:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56CE238FC4D
+	for <lists+linux-s390@lfdr.de>; Tue, 25 May 2021 10:11:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232131AbhEYIJl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 May 2021 04:09:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34662 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231946AbhEYIJI (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 May 2021 04:09:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1621929980; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=szeRdhgdMogyeTFchLFXMKvq8Aq37OBkprO//rw53jU=;
-        b=toZXb1uxWtXlHCyRMGIg5D0LZxjoX2nS6rz1AJIeeOyIbRs45sCf12RLJ/Ga50h9uXk0+F
-        +NgqygZiieR5AMy3waEdLJZ512o7Oq2S5T08wK1F0Q1QBa91Aojw52/Iz9MRyY4Jj7jEvW
-        SVl56puAWec8mMXVSstJG+lFTXircgk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1621929980;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=szeRdhgdMogyeTFchLFXMKvq8Aq37OBkprO//rw53jU=;
-        b=27fZmbkLpRaBUagGXPQ8fbO9hxJvE17Em7lgTXFTKGr4NXiJiqP7fw+dQNVPdZ3lUgzHBu
-        97HwAGXkIOTd7CCQ==
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id ACB6CAE92;
-        Tue, 25 May 2021 08:06:20 +0000 (UTC)
-Subject: Re: [PATCH 3/8] block: move bd_mutex to struct gendisk
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Song Liu <song@kernel.org>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-block@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20210525061301.2242282-1-hch@lst.de>
- <20210525061301.2242282-4-hch@lst.de>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <53b953d0-9ba3-3ad6-1004-e96e3141d121@suse.de>
-Date:   Tue, 25 May 2021 10:06:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        id S232022AbhEYIMc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 May 2021 04:12:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16880 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232255AbhEYIK1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 25 May 2021 04:10:27 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14P84HEE128628
+        for <linux-s390@vger.kernel.org>; Tue, 25 May 2021 04:08:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : cc :
+ subject : in-reply-to : in-reply-to : date : message-id : mime-version :
+ content-type; s=pp1; bh=vASpDwY11cpVNOitMOfCDh5Av5WBXVGqZiEWopTrAok=;
+ b=KPrz/Qx9sfnZgrtRyGAolfJXcp6QMm8f3J7kAcBmZ0lywX3riVf3+3uLKzgRT6i+Ihw6
+ 3sc4HjYw+wLGpfKArsV3YMyOywhTvFra9uPxgNMIr+UszjN4LuBz1/50zfVtmevo4+xS
+ RJEzNRSJfjREu+7f2WvBqk8rU9xvf4z6iDCI+iQks4SkIDlCBMR31RJrolxZMgxE2DMF
+ oxRCIwD5ST/XgzsESabL09HVbTnAVwx+VVH85cap+QDlfNOL59to4oDRN0RD6kCZcBn1
+ FMsDwic5sM5qWN7CmhbECYWtBaNBU5I8dVGUciaZeDTPbswDBheJjTORDCGUhafpPlHT jQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38rw7ggfsm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 25 May 2021 04:08:55 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 14P84ibh130775
+        for <linux-s390@vger.kernel.org>; Tue, 25 May 2021 04:08:55 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38rw7ggfrs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 May 2021 04:08:55 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 14P7v4t5028198;
+        Tue, 25 May 2021 08:08:53 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 38psk8960p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 May 2021 08:08:53 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 14P88L8U32964940
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 May 2021 08:08:21 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 535AC5204E;
+        Tue, 25 May 2021 08:08:50 +0000 (GMT)
+Received: from oc8242746057.ibm.com (unknown [9.171.79.73])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 23DD652052;
+        Tue, 25 May 2021 08:08:50 +0000 (GMT)
+From:   Alexander Egorenkov <egorenar@linux.ibm.com>
+To:     Fabrice Fontaine <fontaine.fabrice@gmail.com>
+Cc:     linux-s390@vger.kernel.org, fontaine.fabrice@gmail.com
+Subject: Re: [PATCH] arch/s390: disable SSP when needed
+In-Reply-To: <20210510053133.1220167-1-fontaine.fabrice@gmail.com> (message
+ from Fabrice Fontaine on Mon, 10 May 2021 07:31:33 +0200)
+In-Reply-To: 
+Date:   Tue, 25 May 2021 10:08:49 +0200
+Message-ID: <87y2c3nsku.fsf@oc8242746057.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20210525061301.2242282-4-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 9ttFpxLVNv6EVeCO2aLZ--mk7WjnGFLU
+X-Proofpoint-ORIG-GUID: uW5gMCcbSzoAbwPYg8vbaIHtX54xEam1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-05-25_05:2021-05-24,2021-05-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 clxscore=1015 adultscore=0 mlxlogscore=605
+ mlxscore=0 phishscore=0 priorityscore=1501 bulkscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2105250056
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 5/25/21 8:12 AM, Christoph Hellwig wrote:
-> Replace the per-block device bd_mutex with a per-gendisk open_mutex,
-> thus simplifying locking wherever we deal with partitions.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   Documentation/filesystems/locking.rst |  2 +-
->   block/genhd.c                         |  7 ++---
->   block/partitions/core.c               | 24 ++++++++---------
->   drivers/block/loop.c                  | 14 +++++-----
->   drivers/block/xen-blkfront.c          |  8 +++---
->   drivers/block/zram/zram_drv.c         | 18 ++++++-------
->   drivers/block/zram/zram_drv.h         |  2 +-
->   drivers/md/md.h                       |  6 ++---
->   drivers/s390/block/dasd_genhd.c       |  8 +++---
->   drivers/scsi/sd.c                     |  4 +--
->   fs/block_dev.c                        | 37 +++++++++++----------------
->   fs/btrfs/volumes.c                    |  2 +-
->   fs/super.c                            |  8 +++---
->   include/linux/blk_types.h             |  1 -
->   include/linux/genhd.h                 |  3 +++
->   15 files changed, 68 insertions(+), 76 deletions(-)
-> Reviewed-by: Hannes Reinecke <hare@suse.de>
+Hi Fabrice,
 
-Cheers,
+the patch looks good to me.
+Thank you.
 
-Hannes
--- 
-Dr. Hannes Reinecke                Kernel Storage Architect
-hare@suse.de                              +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+Reviewed-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+Tested-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+
+Regards
+Alex
