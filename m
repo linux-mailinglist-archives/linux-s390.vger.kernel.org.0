@@ -2,106 +2,139 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CE73391A57
-	for <lists+linux-s390@lfdr.de>; Wed, 26 May 2021 16:34:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E70C391AE2
+	for <lists+linux-s390@lfdr.de>; Wed, 26 May 2021 16:56:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234784AbhEZOgD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 26 May 2021 10:36:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58424 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234694AbhEZOgB (ORCPT
+        id S235214AbhEZO5b (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 26 May 2021 10:57:31 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11702 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S235077AbhEZO53 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 26 May 2021 10:36:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1622039669;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cqBPgPyUlAbZ7Kk+oGgbHiAKQDgT/aGEeIFiCp5+zq4=;
-        b=Z7JqM08OFktzokQsVJFJPz4qA/0FVcsIKa2K7nDkn+dKbmDctbQ+JCAppNnGZQ4xI+LOO7
-        LR47e+F1Dp0nWIIotkMq18nTt5uTZh99vZh6mho3IWmA6ZJMt62Fj6JdLnBYv7TS9ROywa
-        utL93K+A8xXIV8v6koCQc+ASqyfJeuw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-D2hxjXQtPpStZr2pCmQUGA-1; Wed, 26 May 2021 10:34:25 -0400
-X-MC-Unique: D2hxjXQtPpStZr2pCmQUGA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3911A107AD35;
-        Wed, 26 May 2021 14:34:24 +0000 (UTC)
-Received: from gondolin.fritz.box (ovpn-113-79.ams2.redhat.com [10.36.113.79])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C85BA1037F21;
-        Wed, 26 May 2021 14:34:22 +0000 (UTC)
-Date:   Wed, 26 May 2021 16:34:20 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-Subject: Re: [PATCH RFC 0/2] virtio-ccw: allow to disable legacy virtio
-Message-ID: <20210526163420.4620f342.cohuck@redhat.com>
-In-Reply-To: <20210304132715.1587211-1-cohuck@redhat.com>
-References: <20210304132715.1587211-1-cohuck@redhat.com>
-Organization: Red Hat GmbH
+        Wed, 26 May 2021 10:57:29 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14QEYD7g138443;
+        Wed, 26 May 2021 10:55:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=fZ/XWn2n2fJy0yY2iPtc8klpUSKaCGn1B4h736AIaW0=;
+ b=T0E+9WsGSO5iwPjMCzmeAFNgfAPlZfUXq4z29/DHBT4o47N1ZZEKfvvP1NaX0icvMcR4
+ HWgd6cb3+cPCHCK6SRPPCChwnkeEOdbMsbAxv4eeFZWpWcTxDxIXL2m0j2u5/HuYhs2b
+ 237Sx/IXMUiBtYjI3Dt0A3FMAx+t1h8PMLi3yg2a9Q4tgm7/L7f4TpjuYHkWLbGE6NFQ
+ Xfbut9PDGs9aa03XAsXBKhf16slOsWcIwTjNvZMGDFwPJSlqTZ89qd05m73s8WwbwhqK
+ cYwsnfsDlH27IzM0qcttoP0PASwvQBQhjV7+M6Jhx1sndRpNseBoNav+2mrGZZS4Cbd4 IQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 38sqtv1pqx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 May 2021 10:55:57 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 14QEY7ja137852;
+        Wed, 26 May 2021 10:55:56 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 38sqtv1pq5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 May 2021 10:55:56 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 14QEr2oP004171;
+        Wed, 26 May 2021 14:55:54 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03fra.de.ibm.com with ESMTP id 38s1ssrbnj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 May 2021 14:55:54 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 14QEtM1s19988950
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 May 2021 14:55:22 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4408AA40CC;
+        Wed, 26 May 2021 14:55:48 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B316AA408B;
+        Wed, 26 May 2021 14:55:47 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.145.174.11])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 26 May 2021 14:55:47 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     pbonzini@redhat.com
+Cc:     kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com,
+        linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
+        thuth@redhat.com
+Subject: [kvm-unit-tests GIT PULL 0/9] s390x update 2021-26-05
+Date:   Wed, 26 May 2021 16:55:30 +0200
+Message-Id: <20210526145539.52008-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.31.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: n4BFQQrYZYYLG3XQ-WiWX59sQXMPda4x
+X-Proofpoint-GUID: oQuH_dQEscI7NEbv-Zm69enHTl-HhIzY
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-05-26_09:2021-05-26,2021-05-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 malwarescore=0 suspectscore=0 impostorscore=0 phishscore=0
+ spamscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2105260098
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu,  4 Mar 2021 14:27:13 +0100
-Cornelia Huck <cohuck@redhat.com> wrote:
+Dear Paolo,
 
-Just found this old series sitting there... does anyone have an opinion
-on the general approach?
+please merge or pull the following changes:
+* SCLP feature probing
+* SCLP cpu model check
+* UV host tests
 
-> Unlike virtio-pci, virtio-ccw is currently always a transitional
-> driver (i.e. it always includes support for legacy devices.) The
-> differences between legacy and virtio-1+ virtio-ccw devices are not
-> that big (the most interesting things are in common virtio code
-> anyway.)
-> 
-> It might be beneficial to make support for legacy virtio generally
-> configurable, in case we want to remove it completely in a future
-> where we all have flying cars. As a prereq, we need to make it
-> configurable for virtio-ccw.
-> 
-> Patch 1 introduces a parameter; now that I look at it, it's probably
-> not that useful (not even for testing), so I'm inclined to drop it
-> again.
-> 
-> Patch 2 adds a new config symbol for generic legacy virtio support,
-> which currently does not do anything but being selected by the
-> legacy options for virtio-pci and virtio-ccw. A virtio-ccw driver
-> without legacy support will require a revision of 1 or higher to
-> be supported by the device.
-> 
-> A virtio-ccw driver with legacy turned off works well for me with
-> transitional devices and fails onlining gracefully for legacy devices
-> (max_revision=0 in QEMU).
-> 
-> (I also have some code that allows to make devices non-transitional
-> in QEMU, but I haven't yet found time to polish the patches.)
-> 
-> Cornelia Huck (2):
->   virtio/s390: add parameter for minimum revision
->   virtio/s390: make legacy support configurable
-> 
->  arch/s390/Kconfig                       |  11 ++
->  drivers/s390/virtio/Makefile            |   1 +
->  drivers/s390/virtio/virtio_ccw.c        | 179 ++++++++----------------
->  drivers/s390/virtio/virtio_ccw_common.h | 113 +++++++++++++++
->  drivers/s390/virtio/virtio_ccw_legacy.c | 138 ++++++++++++++++++
->  drivers/virtio/Kconfig                  |   8 ++
->  6 files changed, 330 insertions(+), 120 deletions(-)
->  create mode 100644 drivers/s390/virtio/virtio_ccw_common.h
->  create mode 100644 drivers/s390/virtio/virtio_ccw_legacy.c
-> 
-> 
-> base-commit: cf6acb8bdb1d829b85a4daa2944bf9e71c93f4b9
+MERGE:
+https://gitlab.com/kvm-unit-tests/kvm-unit-tests/-/merge_requests/9
+
+PIPELINE:
+https://gitlab.com/frankja/kvm-unit-tests/-/pipelines/309936640
+
+PULL:
+The following changes since commit 74ff0e9675ec6d9477f5e98ec7d5d50878fa7ebc:
+
+  Merge branch 'arm/queue' into 'master' (2021-05-18 11:07:08 +0000)
+
+are available in the Git repository at:
+
+  https://gitlab.com/frankja/kvm-unit-tests.git s390x-pull-2021-26-05
+
+for you to fetch changes up to 21f5f67675830e1c088539656cdc0f63bc18e4e0:
+
+  s390x: cpumodel: FMT2 and FMT4 SCLP test (2021-05-26 14:27:09 +0000)
+
+
+Janosch Frank (9):
+  s390x: uv-guest: Add invalid share location test
+  s390x: Add more Ultravisor command structure definitions
+  s390x: uv: Add UV lib
+  s390x: Test for share/unshare call support before using them
+  s390x: uv-guest: Test invalid commands
+  s390x: Add UV host test
+  s390x: sclp: Only fetch read info byte 134 if cpu entries are above it
+  lib: s390x: sclp: Extend feature probing
+  s390x: cpumodel: FMT2 and FMT4 SCLP test
+
+ lib/s390x/asm/uv.h    | 152 ++++++++++++-
+ lib/s390x/io.c        |   2 +
+ lib/s390x/malloc_io.c |   5 +-
+ lib/s390x/sclp.c      |  23 +-
+ lib/s390x/sclp.h      |  39 +++-
+ lib/s390x/uv.c        |  45 ++++
+ lib/s390x/uv.h        |  10 +
+ s390x/Makefile        |   2 +
+ s390x/cpumodel.c      |  71 ++++++-
+ s390x/uv-guest.c      |  60 +++++-
+ s390x/uv-host.c       | 480 ++++++++++++++++++++++++++++++++++++++++++
+ 11 files changed, 871 insertions(+), 18 deletions(-)
+ create mode 100644 lib/s390x/uv.c
+ create mode 100644 lib/s390x/uv.h
+ create mode 100644 s390x/uv-host.c
+
+-- 
+2.31.1
 
