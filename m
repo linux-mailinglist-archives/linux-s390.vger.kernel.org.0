@@ -2,168 +2,128 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DEA339875F
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Jun 2021 12:56:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 722B9398727
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Jun 2021 12:54:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232421AbhFBK5l (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Jun 2021 06:57:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232418AbhFBK4m (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 2 Jun 2021 06:56:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DBD8F613BF;
-        Wed,  2 Jun 2021 10:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622631298;
-        bh=ma/qPYp7mz82OJZAZmF/GEYKPcXEUWNTcgVQZOnLIC4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rwy3DGcMOCdGl1BLxWRESW8Uz2imlSdwuk91sxxsj/H9opw1w+6+yWIBsY4N81oU6
-         Jnm/dcGgHXHUrbIwZIAg5uD1itVHgEPuALDY/B3YSh5UQ/z761Id/aDmauneXVEDL5
-         69c1KFHepoBfEshBv03/Wr9rfvHp56Ll7H9UPRuHGRszGTWYUdMwU9muOky+tf/fjI
-         rlD/NKYRhruG6ApGfVr1GJKPRF3Riz2/M20IfBuWqadyMGaqb4S7f23z6QwqkgDbsF
-         Ia9IAP4UtPixyM4Di5Qpb+lKPFRKJRpfvFK/Xdp9lGmMHM4nam66sJNOVuGfstBtOZ
-         f6Ljf6ZpQcEcQ==
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Matt Turner <mattst88@gmail.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Vineet Gupta <vgupta@synopsys.com>, kexec@lists.infradead.org,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
-Subject: [PATCH 9/9] mm: replace CONFIG_FLAT_NODE_MEM_MAP with CONFIG_FLATMEM
-Date:   Wed,  2 Jun 2021 13:53:48 +0300
-Message-Id: <20210602105348.13387-10-rppt@kernel.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20210602105348.13387-1-rppt@kernel.org>
-References: <20210602105348.13387-1-rppt@kernel.org>
+        id S232305AbhFBK4g (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Jun 2021 06:56:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31048 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232068AbhFBK4G (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Jun 2021 06:56:06 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 152AX07O015501;
+        Wed, 2 Jun 2021 06:54:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=rrQmKGq7zPkkI9h7rd4kiOv62439d9gDRPCcKqHmypo=;
+ b=eRzP+BmPfJ7Z/WkjzCKTi2bNLL3SGX8tUxKI9FaLc9x8uEYt6dRp8zAwFS/gngB8Du5y
+ Y7cQBmOoh4Qm0at6cAEWCDEcz16mU1S/NcH+16lboFMo+73+xVJ2wDZ8IH+Jp1hJ0im2
+ adxMLFREnR79STOkQzgaKq9uyNbMh6XrBSa3EVBKr7mitEOtAQANshQwqbDeVTUTBFVg
+ 24i2JLNz+ieQHam3wk8SxtMojwDc89q1MNmuhVKDagfvBXaarGIS6xvyYNfreCA6eznv
+ wn6fOqXfw6fPVJMoGYFOmRpl/7kMgpj2lH+bwYWc/yyu4z1fMICfmDg73v0HSBAKh/I0 5w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38x5kr58xt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Jun 2021 06:54:23 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 152AXtWT017835;
+        Wed, 2 Jun 2021 06:54:23 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38x5kr58x7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Jun 2021 06:54:23 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 152AsIxU030435;
+        Wed, 2 Jun 2021 10:54:21 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 38ud88a8yp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Jun 2021 10:54:20 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 152AsI7m14746066
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Jun 2021 10:54:18 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AB57A11C04C;
+        Wed,  2 Jun 2021 10:54:18 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5FF4211C054;
+        Wed,  2 Jun 2021 10:54:18 +0000 (GMT)
+Received: from ibm-vm (unknown [9.145.2.225])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  2 Jun 2021 10:54:18 +0000 (GMT)
+Date:   Wed, 2 Jun 2021 12:54:16 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, thuth@redhat.com, cohuck@redhat.com
+Subject: Re: [kvm-unit-tests PATCH] s390x: sie: Only overwrite r3 if it
+ isn't needed anymore
+Message-ID: <20210602125416.392d0868@ibm-vm>
+In-Reply-To: <539ca61d-eaf8-f47f-c7ce-d5a520273517@redhat.com>
+References: <20210602094352.11647-1-frankja@linux.ibm.com>
+        <539ca61d-eaf8-f47f-c7ce-d5a520273517@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: h2jlIm8wGyAmHE2ud1SP51YpTM4tijJV
+X-Proofpoint-ORIG-GUID: clawCgMDBgmIyN3dO-YE4_1plLi_p1Kd
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-06-02_06:2021-06-02,2021-06-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 spamscore=0 priorityscore=1501 bulkscore=0 phishscore=0
+ mlxscore=0 clxscore=1015 adultscore=0 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2106020067
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+On Wed, 2 Jun 2021 11:47:12 +0200
+David Hildenbrand <david@redhat.com> wrote:
 
-After removal of the DISCONTIGMEM memory model the FLAT_NODE_MEM_MAP
-configuration option is equivalent to FLATMEM.
+> On 02.06.21 11:43, Janosch Frank wrote:
+> > The lmg overwrites r3 which we later use to reference the fprs and
+> > fpc. Let's do the lmg at the end where overwriting is fine.
+> > 
+> > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 
-Drop CONFIG_FLAT_NODE_MEM_MAP and use CONFIG_FLATMEM instead.
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- include/linux/mmzone.h | 4 ++--
- kernel/crash_core.c    | 2 +-
- mm/Kconfig             | 4 ----
- mm/page_alloc.c        | 6 +++---
- mm/page_ext.c          | 2 +-
- 5 files changed, 7 insertions(+), 11 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index ad42f440c704..2698cdbfbf75 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -775,7 +775,7 @@ typedef struct pglist_data {
- 	struct zonelist node_zonelists[MAX_ZONELISTS];
- 
- 	int nr_zones; /* number of populated zones in this node */
--#ifdef CONFIG_FLAT_NODE_MEM_MAP	/* means !SPARSEMEM */
-+#ifdef CONFIG_FLATMEM	/* means !SPARSEMEM */
- 	struct page *node_mem_map;
- #ifdef CONFIG_PAGE_EXTENSION
- 	struct page_ext *node_page_ext;
-@@ -865,7 +865,7 @@ typedef struct pglist_data {
- 
- #define node_present_pages(nid)	(NODE_DATA(nid)->node_present_pages)
- #define node_spanned_pages(nid)	(NODE_DATA(nid)->node_spanned_pages)
--#ifdef CONFIG_FLAT_NODE_MEM_MAP
-+#ifdef CONFIG_FLATMEM
- #define pgdat_page_nr(pgdat, pagenr)	((pgdat)->node_mem_map + (pagenr))
- #else
- #define pgdat_page_nr(pgdat, pagenr)	pfn_to_page((pgdat)->node_start_pfn + (pagenr))
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 53eb8bc6026d..2b8446ea7105 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -483,7 +483,7 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_OFFSET(page, compound_head);
- 	VMCOREINFO_OFFSET(pglist_data, node_zones);
- 	VMCOREINFO_OFFSET(pglist_data, nr_zones);
--#ifdef CONFIG_FLAT_NODE_MEM_MAP
-+#ifdef CONFIG_FLATMEM
- 	VMCOREINFO_OFFSET(pglist_data, node_mem_map);
- #endif
- 	VMCOREINFO_OFFSET(pglist_data, node_start_pfn);
-diff --git a/mm/Kconfig b/mm/Kconfig
-index bffe4bd859f3..ded98fb859ab 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -55,10 +55,6 @@ config FLATMEM
- 	def_bool y
- 	depends on !SPARSEMEM || FLATMEM_MANUAL
- 
--config FLAT_NODE_MEM_MAP
--	def_bool y
--	depends on !SPARSEMEM
--
- #
- # SPARSEMEM_EXTREME (which is the default) does some bootmem
- # allocations when sparse_init() is called.  If this cannot
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 8f08135d3eb4..f039736541eb 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6444,7 +6444,7 @@ static void __meminit zone_init_free_lists(struct zone *zone)
- 	}
- }
- 
--#if !defined(CONFIG_FLAT_NODE_MEM_MAP)
-+#if !defined(CONFIG_FLATMEM)
- /*
-  * Only struct pages that correspond to ranges defined by memblock.memory
-  * are zeroed and initialized by going through __init_single_page() during
-@@ -7241,7 +7241,7 @@ static void __init free_area_init_core(struct pglist_data *pgdat)
- 	}
- }
- 
--#ifdef CONFIG_FLAT_NODE_MEM_MAP
-+#ifdef CONFIG_FLATMEM
- static void __ref alloc_node_mem_map(struct pglist_data *pgdat)
- {
- 	unsigned long __maybe_unused start = 0;
-@@ -7289,7 +7289,7 @@ static void __ref alloc_node_mem_map(struct pglist_data *pgdat)
- }
- #else
- static void __ref alloc_node_mem_map(struct pglist_data *pgdat) { }
--#endif /* CONFIG_FLAT_NODE_MEM_MAP */
-+#endif /* CONFIG_FLATMEM */
- 
- #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
- static inline void pgdat_set_deferred_range(pg_data_t *pgdat)
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index df6f74aac8e1..293b2685fc48 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -191,7 +191,7 @@ void __init page_ext_init_flatmem(void)
- 	panic("Out of memory");
- }
- 
--#else /* CONFIG_FLAT_NODE_MEM_MAP */
-+#else /* CONFIG_FLATMEM */
- 
- struct page_ext *lookup_page_ext(const struct page *page)
- {
--- 
-2.28.0
+> > ---
+> > 
+> > Finding this took me longer than I'd like to admit. :)
+> > 
+> > ---
+> >   s390x/cpu.S | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/s390x/cpu.S b/s390x/cpu.S
+> > index e2ad56c8..82b5e25d 100644
+> > --- a/s390x/cpu.S
+> > +++ b/s390x/cpu.S
+> > @@ -81,11 +81,11 @@ sie64a:
+> >   	stg	%r3,__SF_SIE_SAVEAREA(%r15)	# save
+> > guest register save area 
+> >   	# Load guest's gprs, fprs and fpc
+> > -	lmg	%r0,%r13,SIE_SAVEAREA_GUEST_GRS(%r3)
+> >   	.irp i, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+> >   	ld	\i, \i * 8 + SIE_SAVEAREA_GUEST_FPRS(%r3)
+> >   	.endr
+> >   	lfpc	SIE_SAVEAREA_GUEST_FPC(%r3)
+> > +	lmg	%r0,%r13,SIE_SAVEAREA_GUEST_GRS(%r3)
+> >   
+> >   	# Move scb ptr into r14 for the sie instruction
+> >   	lg	%r14,__SF_SIE_CONTROL(%r15)
+> >   
+> 
+> Oh, that's nasty
+> 
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> 
 
