@@ -2,80 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F403139D8CA
-	for <lists+linux-s390@lfdr.de>; Mon,  7 Jun 2021 11:31:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63D5039D908
+	for <lists+linux-s390@lfdr.de>; Mon,  7 Jun 2021 11:47:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230291AbhFGJd0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 7 Jun 2021 05:33:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230242AbhFGJd0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Jun 2021 05:33:26 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E386EC061766;
-        Mon,  7 Jun 2021 02:31:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MlvkgxFcyawWgLbaD1anFAhejhA4mPswAd0WEOPLbd0=; b=cetr6/k8ZHIlURSNkBDEkxOd3
-        puNo+HwooQUeJn9AaPBl4regJ9NkcXwohGBb5OPUoX7XTTODh5d6IsuhC8Hnw3taLmVn0F8+4hF1o
-        ArioCmyKCJRUZ5c5W9Ct8Cw0Zpb4xNWdK87xHBWnc3daFNyrTg9aLL7A/E6TbbFPNgdTXMtoLpPh1
-        VNTboFgYQtPgYxGziLgboqSm+C9rc0zETM+h5ZE5kg+2kGPOkoZAIe8MZfd5JZNTDNazJFXr/S6Gm
-        YDi+dqX3d1L4b71QKMOqk7jvcXPp8QSgQdX3C28GtCjdiTWKtuBWWAYuFwAi7GnVSCXRZB8Zx7iVW
-        ALDutps2w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44784)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1lqBbS-0000Eu-Fv; Mon, 07 Jun 2021 10:31:26 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1lqBbN-0005oE-UB; Mon, 07 Jun 2021 10:31:21 +0100
-Date:   Mon, 7 Jun 2021 10:31:21 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        uclinux-h8-devel@lists.sourceforge.jp, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-csky@vger.kernel.org, linux-mm@kvack.org,
-        linux-m68k@lists.linux-m68k.org, openrisc@lists.librecores.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 00/15] init_mm: cleanup ARCH's text/data/brk setup code
-Message-ID: <20210607093121.GC22278@shell.armlinux.org.uk>
-References: <20210604070633.32363-1-wangkefeng.wang@huawei.com>
- <YL0+Jargm+y9aqx1@kernel.org>
- <481056ab-686e-9f42-3b8a-b31941f58af6@huawei.com>
- <006eb573-5a20-1ac7-6234-338d11346a08@csgroup.eu>
+        id S230215AbhFGJsy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 7 Jun 2021 05:48:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47397 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230200AbhFGJsx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Jun 2021 05:48:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623059222;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eDC5Gg9PMJ8D90yo3uH4QtVW+Fhvs8D9cIZIY9SdUQE=;
+        b=XYIhc6XeBIJLKF35g/Ay/dHq+mluOEbvwOM91hF5Q6LIFSoU8MnCgMQVytKv0WgIYfUhqe
+        6LZZQYWCs2s80/usTc1KFsWjMydBTs+SyEgwwl62HaYdmIh5JkXXoMYc3HzgZgaSde2hA7
+        ygxS7dQxfpcZk/YbNTAW0MjAw09cuU0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-138-Ba1rgVktP4WkxmD-VT_a-g-1; Mon, 07 Jun 2021 05:46:52 -0400
+X-MC-Unique: Ba1rgVktP4WkxmD-VT_a-g-1
+Received: by mail-wr1-f72.google.com with SMTP id m27-20020a056000025bb0290114d19822edso7607788wrz.21
+        for <linux-s390@vger.kernel.org>; Mon, 07 Jun 2021 02:46:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eDC5Gg9PMJ8D90yo3uH4QtVW+Fhvs8D9cIZIY9SdUQE=;
+        b=VBb8RsJyT5LWX2gezUxRnMe7FPV1Min6wGx671OrwU92DxdkcD8bSY+MNnkCTqeFrw
+         ZfJZopZv1zTT99xmj3yVDUniiL64CRhc536GWA4Ts8rMuzF9uOyMOyaYTkuQB8iF0dHp
+         s+Ugv0lnomWx0EWXq86hCI9BkT/RzfgFNEVU1lejFSaBCxfTos0LxaIRnD2PnQLOgEy7
+         Ph+MAMeYZucZeyF5VZviQJv3twt9vdKx0US3NrHjYFPul8lhu+4AAoIrZ0p505sRyHJ7
+         LWkGwfcM3hGpGb7m1dhUhKpbVvzECFeFUZiiWFa6nxLNg6aZevz4WoABufNkrnidkeTW
+         q1kA==
+X-Gm-Message-State: AOAM531FtRAnij7Hh4AJktvvMswdDWZRQvt36/34S8WMmO/4yhcmbrpS
+        K6n7wqeeYyY5n30Ixdwu4G1NrH1xfiyn/8MLc19j5juEcWeO1P5Tw8KIEm2zoBV6Xji3+of2x/V
+        gWbmuOTDnZ+YUxxzqU+EtIVZOqvun4zxVXDWtqgwX8yYR26E+S2XcWlX6+W8jndz9rb1NYQ==
+X-Received: by 2002:a5d:630f:: with SMTP id i15mr16045778wru.155.1623059210948;
+        Mon, 07 Jun 2021 02:46:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx7yUn1EBw8AQzKvxX7emcvlSe6/C0uAbBIg0m2i6ZiXMXtkO1i9hCVQynyYvhXd1llqIfeHg==
+X-Received: by 2002:a5d:630f:: with SMTP id i15mr16045761wru.155.1623059210694;
+        Mon, 07 Jun 2021 02:46:50 -0700 (PDT)
+Received: from thuth.remote.csb (pd957536e.dip0.t-ipconnect.de. [217.87.83.110])
+        by smtp.gmail.com with ESMTPSA id 32sm16773659wrs.5.2021.06.07.02.46.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jun 2021 02:46:50 -0700 (PDT)
+Subject: Re: [kvm-unit-tests PATCH 1/3] s390x: Don't run PV testcases under
+ tcg
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     david@redhat.com, cohuck@redhat.com, linux-s390@vger.kernel.org
+References: <20210318125015.45502-1-frankja@linux.ibm.com>
+ <20210318125015.45502-2-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <65c4318b-5319-48e2-5e81-b20a3de66e53@redhat.com>
+Date:   Mon, 7 Jun 2021 11:46:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <006eb573-5a20-1ac7-6234-338d11346a08@csgroup.eu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20210318125015.45502-2-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jun 07, 2021 at 07:48:54AM +0200, Christophe Leroy wrote:
-> Hi Kefeng,
+On 18/03/2021 13.50, Janosch Frank wrote:
+> The UV call facility is only available on hardware.
 > 
-> What you could do is to define a __weak function that architectures can
-> override and call that function from mm_init() as suggested by Mike,
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>   scripts/s390x/func.bash | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/scripts/s390x/func.bash b/scripts/s390x/func.bash
+> index b3912081..bf799a56 100644
+> --- a/scripts/s390x/func.bash
+> +++ b/scripts/s390x/func.bash
+> @@ -21,6 +21,9 @@ function arch_cmd_s390x()
+>   	"$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
+>   
+>   	# run PV test case
+> +	if [ "$ACCEL" = 'tcg' ]; then
+> +		return
+> +	fi
+>   	kernel=${kernel%.elf}.pv.bin
+>   	testname=${testname}_PV
+>   	if [ ! -f "${kernel}" ]; then
+> 
 
-The problem with weak functions is that they bloat the kernel. Each
-time a weak function is overriden, it becomes dead unreachable code
-within the kernel image.
+Reviewed-by: Thomas Huth <thuth@redhat.com>
 
-At some point we're probabily going to have to enable -ffunction-sections
-to (hopefully) allow the dead code to be discarded.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
