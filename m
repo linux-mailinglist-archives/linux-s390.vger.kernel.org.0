@@ -2,83 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4323F3A2980
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Jun 2021 12:40:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C72D73A2B4A
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Jun 2021 14:17:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbhFJKm3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Jun 2021 06:42:29 -0400
-Received: from mail.chalver.com.ec ([186.3.12.10]:12526 "EHLO
-        mail.chalver.com.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229770AbhFJKm2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Jun 2021 06:42:28 -0400
-Received: from mail.chalver.com.ec (localhost.localdomain [127.0.0.1])
-        by mail.chalver.com.ec (Postfix) with ESMTPS id 83C111F25BCC;
-        Thu, 10 Jun 2021 04:13:01 -0500 (ECT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.chalver.com.ec (Postfix) with ESMTP id 6DEDB1F25060;
-        Thu, 10 Jun 2021 03:08:27 -0500 (ECT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.chalver.com.ec 6DEDB1F25060
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chalver.com.ec;
-        s=E2A417BC-DDA7-11E6-85F6-38495636B764; t=1623312507;
-        bh=PxMh0SAMbBGlctefOH2OhvTlJNlHw25bONEEE7Ldp0I=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=1rOOmZxDTOWKzH41uHgpgAl8DX/8pg/Yg77YF+JCP2SnJYmA5Rc8Bes+cospLHkWP
-         eOEg4uoL0mmT5pkYbJy0yySUm/Mymp76xrZLUdBnXRh24x9z2AGTEvP8+H0CFxe6Em
-         kWdOWCp2uZo7oUp/dQGRYDTBV7zgpQX3yATdkrhdv/MWxADE7tpUaG2GIioIL6UgZ5
-         bZGtj3z30Fkzb6K0jUmV39lbaIOi3EaLeNkj/6/M7r6ihPJ8iusZ8+NDJ7AoqRUD5D
-         IOJH3CYTkubQz8eidzSekREr8F+0uTp20g5NcjjFi94OAcsFJcVS9MSZb+80BSJF+g
-         ZF7bwelMTyrtA==
-X-Virus-Scanned: amavisd-new at chalver.com.ec
-Received: from mail.chalver.com.ec ([127.0.0.1])
-        by localhost (mail.chalver.com.ec [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id UimoaPCSInwN; Thu, 10 Jun 2021 03:08:26 -0500 (ECT)
-Received: from cris-PC.wifi (unknown [105.9.120.116])
-        by mail.chalver.com.ec (Postfix) with ESMTPSA id 5592B1F250A3;
-        Thu, 10 Jun 2021 03:08:15 -0500 (ECT)
-Content-Type: text/plain; charset="utf-8"
+        id S230360AbhFJMT1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Jun 2021 08:19:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:43551 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230255AbhFJMT0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 10 Jun 2021 08:19:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623327450;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Uv0xs33ewLzq+ryxudIHULBGFCkV88+uHAen7THruNI=;
+        b=FAsBBbNjCcaMTi22JwkTiFRwVkiaKSQQDJNjEu9MFmvDFk85EGKP1zhMIFtGE4GeFCuloD
+        MrGjIukbFzaD26ieM6J23h1updP44IgdKqbqHgSiHiOA7UlDQ7Zlo+WwKuPTZuLCc083P1
+        IsIpy10fqAsGX+rloa4PlXzYfl6AAQo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-446-C_LD9CEhMAKT2zbl-a5lDw-1; Thu, 10 Jun 2021 08:17:25 -0400
+X-MC-Unique: C_LD9CEhMAKT2zbl-a5lDw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5EDAB8042B7;
+        Thu, 10 Jun 2021 12:17:24 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9EEFC18B42;
+        Thu, 10 Jun 2021 12:17:19 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     kvm@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Cc:     Laurent Vivier <lvivier@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-s390@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Subject: Re: [kvm-unit-tests PATCH v2 0/7] unify header guards
+Date:   Thu, 10 Jun 2021 08:17:19 -0400
+Message-Id: <162332742682.173232.8556399043091141939.b4-ty@redhat.com>
+In-Reply-To: <20210609143712.60933-1-cohuck@redhat.com>
+References: <20210609143712.60933-1-cohuck@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?q?Covid_19_Wohlt=C3=A4tigkeitsfonds?=
-To:     Recipients <mpaucar@chalver.com.ec>
-From:   ''Tayeb souami'' <mpaucar@chalver.com.ec>
-Date:   Thu, 10 Jun 2021 10:15:29 +0200
-Reply-To: Tayebsouam.spende@gmail.com
-Message-Id: <20210610080816.5592B1F250A3@mail.chalver.com.ec>
-X-Laboratorios-Chalver-MailScanner-Information: Please contact the ISP for more information
-X-Laboratorios-Chalver-MailScanner-ID: 5592B1F250A3.AFECA
-X-Laboratorios-Chalver-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Wed, 9 Jun 2021 16:37:05 +0200, Cornelia Huck wrote:
+> This is an extension of "s390x: unify header guards" to the rest
+> of kvm-unit-tests. I tried to choose a pattern that minimizes the
+> changes; most of them are for s390x and x86.
+> 
+> v1->v2:
+> - change the patterns and document them
+> - change other architectures and architecture-independent code as well
+> 
+> [...]
 
-Lieber Freund,
+Applied, thanks!
 
-Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der =
-Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zu=
-f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
-il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
-meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
-und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
-Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
- spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen, sehen Sie bitte meine Y=
-ou Tube Seite unten.
+[1/7] README.md: add guideline for header guards format
+      commit: 844669a9631d78a54b47f6667c9a2750b65d101c
+[2/7] lib: unify header guards
+      commit: 9f0ae3012430ed7072d04247fb674125c616a6b4
+[3/7] asm-generic: unify header guards
+      commit: 951e6299b30016bf04a343973296c4274e87f0e2
+[4/7] arm: unify header guards
+      commit: 16f52ec9a4763e62e35453497e4f077031abcbfb
+[5/7] powerpc: unify header guards
+      commit: 040ee6d9aee563b2b1f28e810c5e36fbbcc17bd9
+[6/7] s390x: unify header guards
+      commit: eb5a1bbab00619256b76177e7a88cfe05834b026
+[7/7] x86: unify header guards
+      commit: c865f654ffe4c5955038aaf74f702ba62f3eb014
 
-UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
+Best regards,
+-- 
+Paolo Bonzini <pbonzini@redhat.com>
 
-
-
-Das ist dein Spendencode: [TS530342018]
-
-
-
-Antworten Sie mit dem SPENDE-CODE an diese
-
-E-Mail:Tayebsouam.spende@gmail.com
-
-
-Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
-
-Gr=C3=BC=C3=9Fe
-Herr Tayeb Souami
