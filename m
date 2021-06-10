@@ -2,75 +2,83 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F1123A23F9
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Jun 2021 07:25:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4323F3A2980
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Jun 2021 12:40:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230077AbhFJF1J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Jun 2021 01:27:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229705AbhFJF1J (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Jun 2021 01:27:09 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14D5DC061574;
-        Wed,  9 Jun 2021 22:25:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0q4RCvc/9mzT3mQV4dTF1WnKIhRqdnIIYV31Jdhy1KQ=; b=WV2xiZA3cNN/xfc3Hy5VQQcra4
-        i/kUVdx5dj/vBw9CKf7eqA2UCMB3gebnUW1fhL0LTlnOkgyCrIjCV0gqFx9+usHQBS4yvbucRBoGg
-        JNC+75/rCUoVxOKlaov0NGbYIjSbwDxhx8FfXuvpM+5tXkSnW5TbXX7FSq+fqxim45alIaVx8m2JM
-        RtddiwUAZEG2sUILhPcMnydEMwqkqT+MOttywz2PULGGqe57UtiCPLWggiJ/PhST4eb0l8+EgJZyk
-        GEVQrc0al3ZUAifTo7iDYlWQpycpUgWOUYkaU4sqTxsRyDJEED2YCd2wUzo/0DR4zIMnpm3fuIuYg
-        1hxYTrng==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lrDBH-001GCn-Eh; Thu, 10 Jun 2021 05:24:46 +0000
-Date:   Thu, 10 Jun 2021 06:24:39 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        cohuck@redhat.com, david@redhat.com, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v2 1/2] mm/vmalloc: export __vmalloc_node_range
-Message-ID: <YMGiFya4JP9VuV0Y@infradead.org>
-References: <20210608180618.477766-1-imbrenda@linux.ibm.com>
- <20210608180618.477766-2-imbrenda@linux.ibm.com>
- <YMDlVdB8m62AhbB7@infradead.org>
- <20210609182809.7ae07aad@ibm-vm>
- <6bf6fb06-0930-8cae-3e2b-8cb3237a6197@de.ibm.com>
+        id S229778AbhFJKm3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Jun 2021 06:42:29 -0400
+Received: from mail.chalver.com.ec ([186.3.12.10]:12526 "EHLO
+        mail.chalver.com.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229770AbhFJKm2 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Jun 2021 06:42:28 -0400
+Received: from mail.chalver.com.ec (localhost.localdomain [127.0.0.1])
+        by mail.chalver.com.ec (Postfix) with ESMTPS id 83C111F25BCC;
+        Thu, 10 Jun 2021 04:13:01 -0500 (ECT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.chalver.com.ec (Postfix) with ESMTP id 6DEDB1F25060;
+        Thu, 10 Jun 2021 03:08:27 -0500 (ECT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.chalver.com.ec 6DEDB1F25060
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=chalver.com.ec;
+        s=E2A417BC-DDA7-11E6-85F6-38495636B764; t=1623312507;
+        bh=PxMh0SAMbBGlctefOH2OhvTlJNlHw25bONEEE7Ldp0I=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=1rOOmZxDTOWKzH41uHgpgAl8DX/8pg/Yg77YF+JCP2SnJYmA5Rc8Bes+cospLHkWP
+         eOEg4uoL0mmT5pkYbJy0yySUm/Mymp76xrZLUdBnXRh24x9z2AGTEvP8+H0CFxe6Em
+         kWdOWCp2uZo7oUp/dQGRYDTBV7zgpQX3yATdkrhdv/MWxADE7tpUaG2GIioIL6UgZ5
+         bZGtj3z30Fkzb6K0jUmV39lbaIOi3EaLeNkj/6/M7r6ihPJ8iusZ8+NDJ7AoqRUD5D
+         IOJH3CYTkubQz8eidzSekREr8F+0uTp20g5NcjjFi94OAcsFJcVS9MSZb+80BSJF+g
+         ZF7bwelMTyrtA==
+X-Virus-Scanned: amavisd-new at chalver.com.ec
+Received: from mail.chalver.com.ec ([127.0.0.1])
+        by localhost (mail.chalver.com.ec [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id UimoaPCSInwN; Thu, 10 Jun 2021 03:08:26 -0500 (ECT)
+Received: from cris-PC.wifi (unknown [105.9.120.116])
+        by mail.chalver.com.ec (Postfix) with ESMTPSA id 5592B1F250A3;
+        Thu, 10 Jun 2021 03:08:15 -0500 (ECT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6bf6fb06-0930-8cae-3e2b-8cb3237a6197@de.ibm.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Covid_19_Wohlt=C3=A4tigkeitsfonds?=
+To:     Recipients <mpaucar@chalver.com.ec>
+From:   ''Tayeb souami'' <mpaucar@chalver.com.ec>
+Date:   Thu, 10 Jun 2021 10:15:29 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20210610080816.5592B1F250A3@mail.chalver.com.ec>
+X-Laboratorios-Chalver-MailScanner-Information: Please contact the ISP for more information
+X-Laboratorios-Chalver-MailScanner-ID: 5592B1F250A3.AFECA
+X-Laboratorios-Chalver-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jun 09, 2021 at 07:47:43PM +0200, Christian Borntraeger wrote:
-> An alternative would be to provide a vmalloc_no_huge function in generic
-> code  (similar to  vmalloc_32) (or if preferred in s390 base architecture code)
-> Something like
-> 
-> void *vmalloc_no_huge(unsigned long size)
-> {
->         return __vmalloc_node_flags(size, NUMA_NO_NODE,VM_NO_HUGE_VMAP |
->                                 GFP_KERNEL | __GFP_ZERO);
-> }
-> EXPORT_SYMBOL(vmalloc_no_huge);
-> 
-> or a similar vzalloc variant.
 
-Exactly.  Given that this seems to be a weird pecularity of legacy s390
-interfaces I'd only export it for 390 for now, although for
-documentation purposes I'd probably still keep it in vmalloc.c.
+Lieber Freund,
+
+Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der =
+Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zu=
+f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
+il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
+meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
+und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
+Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
+ spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen, sehen Sie bitte meine Y=
+ou Tube Seite unten.
+
+UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
+
+
+
+Das ist dein Spendencode: [TS530342018]
+
+
+
+Antworten Sie mit dem SPENDE-CODE an diese
+
+E-Mail:Tayebsouam.spende@gmail.com
+
+
+Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
+
+Gr=C3=BC=C3=9Fe
+Herr Tayeb Souami
