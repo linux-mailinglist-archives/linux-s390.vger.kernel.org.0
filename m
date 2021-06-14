@@ -2,245 +2,210 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B61D23A6E5E
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Jun 2021 20:48:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52FD13A713B
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Jun 2021 23:22:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233639AbhFNSuK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Jun 2021 14:50:10 -0400
-Received: from mail-bn8nam11on2048.outbound.protection.outlook.com ([40.107.236.48]:57569
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233071AbhFNSuJ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 14 Jun 2021 14:50:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kcjgQYyy2IACCBcAnG9Nmf4XJ/8xaX4aWE+3rGG6ulomd0wy8s3/GsPcxqUHMj8phZP5bXtFOAjmmRTJnjR7ilXLTx1wtLy/TrByJU04YJk3YrcWjytsoZ9A0HWhP8IRYELOftirrBv+HhFxzPTkWayWQTVJWb9HVc8muB2zu1dSOIdJyP9Bt3eZ+R1AzvsRXypu90p30+UE+D9dRSdz+NiqWpEaZCkq7LAlRHhMNFTV1K+MKHYd8c3N5ywo4NUk8kZvKGbiKHvTigy/Oun9WlYZg5/C5U6R8KdKdiZlAv0CCUQBaNdYEyv1xP9GFPyboi5M8PBu9Q6FWy3JfF2RPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1lUtA7rG7IndFm1Q7eX+K2c1M6radf+0tc74Zcvy+7E=;
- b=ex3HKgF3nB9A6XEujCa//x4Bfo4stJENvqA1T36yboVO7KIhtzvPUyfUQN4l1Cd/YuM3gXoUjQ42GZLket2WGK+zL0pYN7HGy1/Yy4stvcBtlyj3VpO+8lBFJ4+WM/ptNINfa4y3MNBOjOoMe7h+P+HdEPZnyiP3p/Dk7PijKwyal1WDHKlO8dPL9ccOzhngYk5Q44+w46tZm2KApc3I/y/ccYOrFE6AG1es8kL6zQK/LXzN65rN2/6iph/LZYsK1b4LAKo8PtyOZxQPmYQBcxF/PeFVGs4seYfQy4u53Z86FXEjbRyO8lDidOvx4PHXIV2+VFdMB259rDKPxxhpjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=lwn.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1lUtA7rG7IndFm1Q7eX+K2c1M6radf+0tc74Zcvy+7E=;
- b=OTeJ2dFMemKYY8MeHc9QCTsT/ch24mbjuZQZ8A4C9qxCuBBtzH3C4oM+g60DYYn5Avy1QBT/+fMkWtUR0bNettwgAKA+N1yU7YTg0KMFfjVKVfUD6dJzVtyNhCaG+dmcz7zq2jlrgC+2iEscZcIMjvxcZIAzCB7s42DjpBRbE8aQsOtuUwkkF/sJGGmuLxFOmXcy3tNVAtMLzkBtKsTjwmmZu40g9qsgZl5RZrkT+UUuGcSN4Qahy27jrYZLlv7yCz7xQCf/PItvpSXK9cvhjODRQwlfSanT4wIWLI70/ZRyIF5jgw20t8VMrsAfTnkSS6/o468Hr95Cy+5RU38C+g==
-Received: from BN6PR22CA0034.namprd22.prod.outlook.com (2603:10b6:404:37::20)
- by SN6PR12MB4703.namprd12.prod.outlook.com (2603:10b6:805:ee::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.24; Mon, 14 Jun
- 2021 18:48:04 +0000
-Received: from BN8NAM11FT047.eop-nam11.prod.protection.outlook.com
- (2603:10b6:404:37:cafe::19) by BN6PR22CA0034.outlook.office365.com
- (2603:10b6:404:37::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.20 via Frontend
- Transport; Mon, 14 Jun 2021 18:48:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
- smtp.mailfrom=nvidia.com; lwn.net; dkim=none (message not signed)
- header.d=none;lwn.net; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- BN8NAM11FT047.mail.protection.outlook.com (10.13.177.220) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4219.21 via Frontend Transport; Mon, 14 Jun 2021 18:48:03 +0000
-Received: from [10.40.101.248] (172.20.187.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 14 Jun
- 2021 18:47:56 +0000
-Subject: Re: [PATCH 02/10] driver core: Better distinguish probe errors in
- really_probe
-To:     Christoph Hellwig <hch@lst.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Alex Williamson" <alex.williamson@redhat.com>
-CC:     David Airlie <airlied@linux.ie>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
+        id S235072AbhFNVZB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Jun 2021 17:25:01 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:39434 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234820AbhFNVZB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 14 Jun 2021 17:25:01 -0400
+Received: by mail-pg1-f202.google.com with SMTP id t28-20020a63461c0000b0290221e90ef795so7419745pga.6
+        for <linux-s390@vger.kernel.org>; Mon, 14 Jun 2021 14:22:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=SlycgcgP2oQfG/m1tsRJUCUu6HgyYclxJAGE9lbfI7I=;
+        b=J5OsUMD3R5is1cvWM/Tf1GSvgvYrw1ZTFA6WV9mLsYov03y0xK/HdMK6yCJsYckKRo
+         TtGE8n4Fxq4EYtG5ozUsMbV4AkLNWy6LWw1l/UrYBiYJu0fC4BCnkbAiprvyp67AI3ez
+         ++RPtlvVdFNIPeK0a8u7bdfuzu81cD4Qr5bFuVp+KHu3u+cD9+BzjSE+HCFtNuDlrUSs
+         4IlHyplTtL9gmtWN9jVHfwL72LuuWxHzrtkVsRISlOX67uSROjJCiF8xz508A4WqzgR2
+         QZih02YKtsk/ChyGZd7Eon8GpWthGvOj55UNC2eUCNQplIFeeOGWlfJrOndDtyOb0zWF
+         m4QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=SlycgcgP2oQfG/m1tsRJUCUu6HgyYclxJAGE9lbfI7I=;
+        b=DJfYytFX4KodY3zKHdzAdHnS19h7n7ExlxDLL+ejqyO3Zch6EZwzojJ0dggSIfB9OM
+         xDIr6ntidL01bpI+aQmDDcA4ig3v56MYlteFfvpKJpsWFSb68jsjgy8OTQnapARD/aCS
+         9KYoaTZW67ftEFFaLc6IhnZeF4xDnWk2cjmwMbffl0CsjQ1cV5JJSzB6A5GT8HLvxjV9
+         LQPJfLSRLzUgiRIhrZlWRbU5LPYdRmwpqAqm2qN12bZJAOpjPFKdd6K21BOy5OnUX/WY
+         dn1YDjWUDaJXoh+Ntcfvn5DYP0/LLitBIbvGZ33WnZkgiSvQ8BSsrXeDXnLvNFcXPNuC
+         yEsQ==
+X-Gm-Message-State: AOAM530N2kbBUGVntkeglr2xGn7jDHo2/QdSe9wfdv0K70LLbk46Jk6I
+        jFkiJvpJSDYoC3/aC6lVnAIq1WnHMdMjtPXCvg==
+X-Google-Smtp-Source: ABdhPJz2FI55sVryTZAxtgeRMOOpHWs/+X17g6DjdqznoExrtjOxluBZp09o2sArM1nsheTY/TttMFSWE8kjHPwfdA==
+X-Received: from jgzg.c.googlers.com ([fda3:e722:ac3:10:7f:e700:c0a8:1acf])
+ (user=jingzhangos job=sendgmr) by 2002:a17:902:7d8c:b029:105:2b81:3915 with
+ SMTP id a12-20020a1709027d8cb02901052b813915mr985196plm.71.1623705717928;
+ Mon, 14 Jun 2021 14:21:57 -0700 (PDT)
+Date:   Mon, 14 Jun 2021 21:21:50 +0000
+Message-Id: <20210614212155.1670777-1-jingzhangos@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.32.0.272.g935e593368-goog
+Subject: [PATCH v9 0/5] KVM statistics data fd-based binary interface
+From:   Jing Zhang <jingzhangos@google.com>
+To:     KVM <kvm@vger.kernel.org>, KVMARM <kvmarm@lists.cs.columbia.edu>,
+        LinuxMIPS <linux-mips@vger.kernel.org>,
+        KVMPPC <kvm-ppc@vger.kernel.org>,
+        LinuxS390 <linux-s390@vger.kernel.org>,
+        Linuxkselftest <linux-kselftest@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Mackerras <paulus@ozlabs.org>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
         Cornelia Huck <cohuck@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        <intel-gfx@lists.freedesktop.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>, Halil Pasic <pasic@linux.ibm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-References: <20210614150846.4111871-1-hch@lst.de>
- <20210614150846.4111871-3-hch@lst.de>
-X-Nvconfidentiality: public
-From:   Kirti Wankhede <kwankhede@nvidia.com>
-Message-ID: <8002c963-ce48-ecf8-a209-58195818a160@nvidia.com>
-Date:   Tue, 15 Jun 2021 00:17:53 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
-MIME-Version: 1.0
-In-Reply-To: <20210614150846.4111871-3-hch@lst.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.20.187.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7e4fb0ea-b64a-4fa1-de95-08d92f64f155
-X-MS-TrafficTypeDiagnostic: SN6PR12MB4703:
-X-Microsoft-Antispam-PRVS: <SN6PR12MB4703602F19E7BE3DC5DE804EDC319@SN6PR12MB4703.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1417;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pd9FPgaDis/th8MdjU5hiYAvIBou/c73tBP/EubbPPDBoPapALl/KSYcDtj4kPOTgES2+Gdb7jrrJSXxdhgUeSVu69JfuOElL0ZV2/0PYZye5cNt8kNvFjLOG1ZQONJRsg9xracqwuzjm32r7ULCd2dIu4BjO9CNJFB+4tqGxXJCe4XJ2d+mFNfz1Tnb47iPsarHwRm+NKDYQa+dooJjEtN4xAYhhowaqREZmeG4jmzsMACkBkwueIcADsZjuRMlTaw6tRJo7jXSbHq94tKt9S998lNbI8nBDoV6ZvOrZc5vSU9cYm/xukbBxWGkuxD/DXQ9yrspgkvi0c7bcvVgCv/FlLwEw7nRlpozUS8nOjsUllUTR0PLMR/4ucpQ86yQYpSbg9GIy0ToPO5zNUBzrPyP/A/hHM9zJhJLKRRS/dOa41zH34MV4TQmgJnMKUXusrOdEQYhd/8zPLqcYjoGrCbxCurmnx66rK/uW4xYvvcX1hXI0sdrQ+gemcnAdoytYNFpmDuR+ldplJsykiI12obi9ercJ3m3Kp8D8hbw+TJitoiZTFxv0qAKnNwSliHfiIg0xCStoFdTPGJSnXSc/Ot+qzbuj2B08oY1wFdaTV9jmXgSqBsps7/iK+WceGVNk92+Qc2J5adzly7ahSZBzneZYLt6HXLLtFyaluImzjmeMLzp0T4OTLycxUSIjYC4
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(376002)(136003)(346002)(396003)(39860400002)(46966006)(36840700001)(16526019)(110136005)(54906003)(8676002)(478600001)(186003)(36756003)(7636003)(2616005)(5660300002)(86362001)(356005)(83380400001)(31696002)(4326008)(70586007)(82740400003)(316002)(8936002)(2906002)(16576012)(31686004)(7416002)(426003)(26005)(53546011)(82310400003)(36860700001)(6666004)(336012)(70206006)(36906005)(47076005)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2021 18:48:03.9998
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e4fb0ea-b64a-4fa1-de95-08d92f64f155
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT047.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB4703
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+        David Matlack <dmatlack@google.com>,
+        Ricardo Koller <ricarkol@google.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Fuad Tabba <tabba@google.com>
+Cc:     Jing Zhang <jingzhangos@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+This patchset provides a file descriptor for every VM and VCPU to read
+KVM statistics data in binary format.
+It is meant to provide a lightweight, flexible, scalable and efficient
+lock-free solution for user space telemetry applications to pull the
+statistics data periodically for large scale systems. The pulling
+frequency could be as high as a few times per second.
+In this patchset, every statistics data are treated to have some
+attributes as below:
+  * architecture dependent or generic
+  * VM statistics data or VCPU statistics data
+  * type: cumulative, instantaneous, peak
+  * unit: none for simple counter, nanosecond, microsecond,
+    millisecond, second, Byte, KiByte, MiByte, GiByte. Clock Cycles
+Since no lock/synchronization is used, the consistency between all
+the statistics data is not guaranteed. That means not all statistics
+data are read out at the exact same time, since the statistics date
+are still being updated by KVM subsystems while they are read out.
+
+---
+
+* v8 -> v9
+  - Rebase to commit 8331a2bc0898
+    (KVM: X86: Introduce KVM_HC_MAP_GPA_RANGE hypercall)
+  - Reduce code duplication between binary and debugfs interface
+  - Add field "offset" in stats descriptor to let us define stats
+    descriptors in any order (not necessary in the order of stats
+    defined in vm/vcpu stats structures)
+  - Add static check to make sure the number of stats descriptors
+    is the same as the number of stats defined in vm/vcpu stats
+    structures
+  - Fix missing/mismatched stats descriptor definition caused by
+    rebase
+
+* v7 -> v8
+  - Rebase to kvm/queue, commit c1dc20e254b4 ("KVM: switch per-VM
+  stats to u64")
+  - Revise code to reflect the per-VM stats type from ulong to u64
+  - Addressed some other nits
+
+* v6 -> v7
+  - Improve file descriptor allocation function by Krish suggestion
+  - Use "generic stats" instead of "common stats" as Krish suggested
+  - Addressed some other nits from Krish and David Matlack
+
+* v5 -> v6
+  - Use designated initializers for STATS_DESC
+  - Change KVM_STATS_SCALE... to KVM_STATS_BASE...
+  - Use a common function for kvm_[vm|vcpu]_stats_read
+  - Fix some documentation errors/missings
+  - Use TEST_ASSERT in selftest
+  - Use a common function for [vm|vcpu]_stats_test in selftest
+
+* v4 -> v5
+  - Rebase to kvm/queue, commit a4345a7cecfb ("Merge tag
+    'kvmarm-fixes-5.13-1'")
+  - Change maximum stats name length to 48
+  - Replace VM_STATS_COMMON/VCPU_STATS_COMMON macros with stats
+    descriptor definition macros.
+  - Fixed some errors/warnings reported by checkpatch.pl
+
+* v3 -> v4
+  - Rebase to kvm/queue, commit 9f242010c3b4 ("KVM: avoid "deadlock"
+    between install_new_memslots and MMU notifier")
+  - Use C-stype comments in the whole patch
+  - Fix wrong count for x86 VCPU stats descriptors
+  - Fix KVM stats data size counting and validity check in selftest
+
+* v2 -> v3
+  - Rebase to kvm/queue, commit edf408f5257b ("KVM: avoid "deadlock"
+    between install_new_memslots and MMU notifier")
+  - Resolve some nitpicks about format
+
+* v1 -> v2
+  - Use ARRAY_SIZE to count the number of stats descriptors
+  - Fix missing `size` field initialization in macro STATS_DESC
+
+[1] https://lore.kernel.org/kvm/20210402224359.2297157-1-jingzhangos@google.com
+[2] https://lore.kernel.org/kvm/20210415151741.1607806-1-jingzhangos@google.com
+[3] https://lore.kernel.org/kvm/20210423181727.596466-1-jingzhangos@google.com
+[4] https://lore.kernel.org/kvm/20210429203740.1935629-1-jingzhangos@google.com
+[5] https://lore.kernel.org/kvm/20210517145314.157626-1-jingzhangos@google.com
+[6] https://lore.kernel.org/kvm/20210524151828.4113777-1-jingzhangos@google.com
+[7] https://lore.kernel.org/kvm/20210603211426.790093-1-jingzhangos@google.com
+[8] https://lore.kernel.org/kvm/20210611124624.1404010-1-jingzhangos@google.com
+
+---
+
+Jing Zhang (5):
+  KVM: stats: Separate generic stats from architecture specific ones
+  KVM: stats: Add fd-based API to read binary stats data
+  KVM: stats: Add documentation for statistics data binary interface
+  KVM: selftests: Add selftest for KVM statistics data binary interface
+  KVM: stats: Remove code duplication for binary and debugfs stats
+
+ Documentation/virt/kvm/api.rst                | 177 +++++++++++-
+ arch/arm64/include/asm/kvm_host.h             |   9 +-
+ arch/arm64/kvm/guest.c                        |  50 +++-
+ arch/mips/include/asm/kvm_host.h              |   9 +-
+ arch/mips/kvm/mips.c                          |  92 +++---
+ arch/powerpc/include/asm/kvm_host.h           |   9 +-
+ arch/powerpc/kvm/book3s.c                     |  93 ++++---
+ arch/powerpc/kvm/book3s_hv.c                  |  12 +-
+ arch/powerpc/kvm/book3s_pr.c                  |   2 +-
+ arch/powerpc/kvm/book3s_pr_papr.c             |   2 +-
+ arch/powerpc/kvm/booke.c                      |  78 ++++--
+ arch/s390/include/asm/kvm_host.h              |   9 +-
+ arch/s390/kvm/kvm-s390.c                      | 234 +++++++++-------
+ arch/x86/include/asm/kvm_host.h               |   9 +-
+ arch/x86/kvm/x86.c                            | 111 +++++---
+ include/linux/kvm_host.h                      | 178 +++++++++++-
+ include/linux/kvm_types.h                     |  12 +
+ include/uapi/linux/kvm.h                      |  48 ++++
+ tools/testing/selftests/kvm/.gitignore        |   1 +
+ tools/testing/selftests/kvm/Makefile          |   3 +
+ .../testing/selftests/kvm/include/kvm_util.h  |   3 +
+ .../selftests/kvm/kvm_binary_stats_test.c     | 225 +++++++++++++++
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  12 +
+ virt/kvm/kvm_main.c                           | 261 +++++++++++++++---
+ 24 files changed, 1293 insertions(+), 346 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/kvm_binary_stats_test.c
 
 
-On 6/14/2021 8:38 PM, Christoph Hellwig wrote:
-> really_probe tries to special case errors from ->probe, but due to all
-> other initialization added to the function over time now a lot of
-> internal errors hit that code path as well.  Untangle that by adding
-> a new probe_err local variable and apply the special casing only to
-> that.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   drivers/base/dd.c | 72 +++++++++++++++++++++++++++--------------------
->   1 file changed, 41 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 7477d3322b3a..999bc737a8f0 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -513,12 +513,42 @@ static ssize_t state_synced_show(struct device *dev,
->   }
->   static DEVICE_ATTR_RO(state_synced);
->   
-> +
-> +static int call_driver_probe(struct device *dev, struct device_driver *drv)
-> +{
-> +	int ret = 0;
-> +
-> +	if (dev->bus->probe)
-> +		ret = dev->bus->probe(dev);
-> +	else if (drv->probe)
-> +		ret = drv->probe(dev);
-> +
-> +	switch (ret) {
-> +	case -EPROBE_DEFER:
-> +		/* Driver requested deferred probing */
-> +		dev_dbg(dev, "Driver %s requests probe deferral\n", drv->name);
-> +		break;
-> +	case -ENODEV:
-> +	case -ENXIO:
-> +		pr_debug("%s: probe of %s rejects match %d\n",
-> +			 drv->name, dev_name(dev), ret);
-> +		break;
-> +	default:
-> +		/* driver matched but the probe failed */
-> +		pr_warn("%s: probe of %s failed with error %d\n",
-> +			drv->name, dev_name(dev), ret);
+base-commit: 8331a2bc089881d7fd2fc9a6658f39780817e4e0
+-- 
+2.32.0.272.g935e593368-goog
 
-There should be case 0, that is, success case before default case as below:
-+	case 0:
-+		/* Driver returned success */
-+		break;
-
-Otherwise even in case of success, above warning would mislead that 
-probe has failed.
-
-Thanks,
-Kirti
-
-> +		break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->   static int really_probe(struct device *dev, struct device_driver *drv)
->   {
-> -	int ret = -EPROBE_DEFER;
->   	int local_trigger_count = atomic_read(&deferred_trigger_count);
->   	bool test_remove = IS_ENABLED(CONFIG_DEBUG_TEST_DRIVER_REMOVE) &&
->   			   !drv->suppress_bind_attrs;
-> +	int ret = -EPROBE_DEFER, probe_ret = 0;
->   
->   	if (defer_all_probes) {
->   		/*
-> @@ -572,15 +602,15 @@ static int really_probe(struct device *dev, struct device_driver *drv)
->   			goto probe_failed;
->   	}
->   
-> -	if (dev->bus->probe) {
-> -		ret = dev->bus->probe(dev);
-> -		if (ret)
-> -			goto probe_failed;
-> -	} else if (drv->probe) {
-> -		ret = drv->probe(dev);
-> -		if (ret)
-> -			goto probe_failed;
-> -	}
-> +	probe_ret = call_driver_probe(dev, drv);
-> +	if (probe_ret) {
-> +		/*
-> +		 * Ignore errors returned by ->probe so that the next driver can
-> +		 * try its luck.
-> +		   */
-> +		ret = 0;
-> +		goto probe_failed;
-> +	}
->   
->   	if (device_add_groups(dev, drv->dev_groups)) {
->   		dev_err(dev, "device_add_groups() failed\n");
-> @@ -650,28 +680,8 @@ static int really_probe(struct device *dev, struct device_driver *drv)
->   		dev->pm_domain->dismiss(dev);
->   	pm_runtime_reinit(dev);
->   	dev_pm_set_driver_flags(dev, 0);
-> -
-> -	switch (ret) {
-> -	case -EPROBE_DEFER:
-> -		/* Driver requested deferred probing */
-> -		dev_dbg(dev, "Driver %s requests probe deferral\n", drv->name);
-> +	if (probe_ret == -EPROBE_DEFER)
->   		driver_deferred_probe_add_trigger(dev, local_trigger_count);
-> -		break;
-> -	case -ENODEV:
-> -	case -ENXIO:
-> -		pr_debug("%s: probe of %s rejects match %d\n",
-> -			 drv->name, dev_name(dev), ret);
-> -		break;
-> -	default:
-> -		/* driver matched but the probe failed */
-> -		pr_warn("%s: probe of %s failed with error %d\n",
-> -			drv->name, dev_name(dev), ret);
-> -	}
-> -	/*
-> -	 * Ignore errors returned by ->probe so that the next driver can try
-> -	 * its luck.
-> -	 */
-> -	ret = 0;
->   done:
->   	atomic_dec(&probe_count);
->   	wake_up_all(&probe_waitqueue);
-> 
