@@ -2,70 +2,107 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 83D093A7E0B
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Jun 2021 14:18:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7486E3A8031
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Jun 2021 15:34:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230352AbhFOMUy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Jun 2021 08:20:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230330AbhFOMUy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Jun 2021 08:20:54 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10226C06175F
-        for <linux-s390@vger.kernel.org>; Tue, 15 Jun 2021 05:18:50 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id c12so13136366pfl.3
-        for <linux-s390@vger.kernel.org>; Tue, 15 Jun 2021 05:18:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=BjaJWmLI4zeDm18Vg5X74JWuITkJZC2dhqIVbVw40Co=;
-        b=j/uLtBYQmNFLEeBv/HfEFw2GHGYufZmNAl7p+p9LYgkj5b0yjrlz/Rh8hw4my0HoRK
-         2yGncAkgsWaBdqWOYsKW7+27cGfp1FZB+3X7Fa6soZRmAEx7L3xg0S8FKAmw4TAMaZEq
-         WuKMl47jery2ywBNb+yjIGqd4IMGxW73AG20rXr/ndBS16itLKrgw6lAAriXvUlk4TEq
-         xEAqOlba2FPvUHTp1Xe+hieGQLmORGQ2sRPVh/so+GK+i+yw0nEPwR1L2/B6nqz84gT0
-         hwAlXJSmT7OBkOhp6g35nPuqO4QZLW8nydUVjuPd+jZZzuu6jwyU1WzGOb4N9UIlM8Ke
-         98yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=BjaJWmLI4zeDm18Vg5X74JWuITkJZC2dhqIVbVw40Co=;
-        b=cUf/Ii48SEjRJzzlzWhoCGE6Cc3td+wFsF1lWS7yAXPz7EoN/b+//oOr/Capqta1Lv
-         44LGYsk7/nm7Ba2f7i2kaSB/CZ+10z9I0iMREX3K7TDMSnahmtZY1TBYuYre84PLo5Kd
-         zPB+ae046BV9Q8XZ4LMQdXiVpne0qWfvR50Quu46dNH7W0GHKpEQ+zWXuuhrNn8fhYCg
-         qlvLo8pVVOVbiN2OKVERcsC6GJqSEYqt17BlxVFH+an8/NcTwldUhHZGc5V26jXlV2L5
-         4+4sxshsylVFyyZ0cQtCT2jdi+eNLbdaF3F4603RVOUguWUon5HLr4L1UaLrntI/oi6x
-         zFCA==
-X-Gm-Message-State: AOAM531z8JJm0fSeaA02cWdgSGXi9GWs44vGEFxcmRjd2jXsAdvBD6iY
-        AVaHpnGLcjXBx2+3eeCu0n7pGMvQNd2ba5x5UdU=
-X-Google-Smtp-Source: ABdhPJyRSx07sFbvfeA2d/Q/xBu4zdRDo/vYc/54P1ZKR6B0IUqx2gdasrs1cJto8yLWDEaF+yK/B9tdHbaNhxuKZDo=
-X-Received: by 2002:aa7:8d4a:0:b029:2e8:df53:cbd6 with SMTP id
- s10-20020aa78d4a0000b02902e8df53cbd6mr4152122pfe.13.1623759529448; Tue, 15
- Jun 2021 05:18:49 -0700 (PDT)
+        id S231421AbhFONgn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Jun 2021 09:36:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230410AbhFONgT (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 15 Jun 2021 09:36:19 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AF8716146D;
+        Tue, 15 Jun 2021 13:34:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623764049;
+        bh=REF7Zyu6cbgt3VHjuTrKDBWw8/fKKSkHr0brWCx1WDY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tkUy3EPUFEC5VTgPlUyI6q6kNVNwNuv+cujwgXgPktfMgwoXCN95LVYvlr2Cxj5lz
+         l7GoBU3O5grP+tSvw2b+HZzeV4cPkqgacG9kci2/x8y4ZXP/qpEimP9hJZ0eyIvDWb
+         e5t98f1pDJrHOs1eMmm+HNMbbYx0y9UmuOFThQFo+VSYEuyk0VmOVUs27m7Z1XOQ8N
+         OzmOPwdzQMYJWZIAF/rw5OQU4jmobLkJjH62eDzX9vHVkkrAFKFk73DgtornGy6rzc
+         Q89kw18R9QHxO9McqK/4MPLseixa1r/dEtCbz2OYQIwQJI29SS6qjzYQ0ZfHpVymek
+         F4bBAvgv4qHbg==
+Date:   Tue, 15 Jun 2021 16:34:05 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Jing Zhang <jingzhangos@google.com>, KVM <kvm@vger.kernel.org>,
+        KVMARM <kvmarm@lists.cs.columbia.edu>,
+        LinuxMIPS <linux-mips@vger.kernel.org>,
+        KVMPPC <kvm-ppc@vger.kernel.org>,
+        LinuxS390 <linux-s390@vger.kernel.org>,
+        Linuxkselftest <linux-kselftest@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+        David Matlack <dmatlack@google.com>,
+        Ricardo Koller <ricarkol@google.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Fuad Tabba <tabba@google.com>
+Subject: Re: [PATCH v9 0/5] KVM statistics data fd-based binary interface
+Message-ID: <YMisTWKdyNgPvdQV@unreal>
+References: <20210614212155.1670777-1-jingzhangos@google.com>
+ <YMg5xPbmK3myjIX8@unreal>
+ <15875c41-e1e7-3bf2-a85c-21384684d279@redhat.com>
+ <YMhcek2cIu3Oz5Ek@unreal>
+ <9df462c0-e0ea-8173-0705-369d6a81107c@redhat.com>
 MIME-Version: 1.0
-Sender: kennethglayswiss@gmail.com
-Received: by 2002:a17:90a:1bc9:0:0:0:0 with HTTP; Tue, 15 Jun 2021 05:18:48
- -0700 (PDT)
-From:   hauck man <hauckpristman@gmail.com>
-Date:   Tue, 15 Jun 2021 05:18:48 -0700
-X-Google-Sender-Auth: F8UGKQXzo38_B43pRy5YF_1k1qM
-Message-ID: <CAJjrk10aYazH--gmHdAsD+S1jXqrpHs_gmnY9NB7-nFa=6_Azw@mail.gmail.com>
-Subject: URGENT RESPONSE
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9df462c0-e0ea-8173-0705-369d6a81107c@redhat.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
--- 
+On Tue, Jun 15, 2021 at 01:03:34PM +0200, Paolo Bonzini wrote:
+> On 15/06/21 09:53, Leon Romanovsky wrote:
+> > > Sorry for my naive questions, but how does telemetry get statistics
+> > > for hypervisors? Why is KVM different from hypervisors or NIC's statistics
+> > > or any other high speed devices (RDMA) that generate tons of data?
+> > 
+> > So the answer to the question "why KVM is different" is that it doesn't
+> > have any stable identification except file descriptor. While hypervisors
+> > have stable names, NICs and RDMA devices have interface indexes etc.
+> > Did I get it right?
+> 
+> Right.
+> 
+> > And this was second part of my question, the first part was my attempt to
+> > get on answer why current statistics like process info (/proc/xxx/*), NICs
+> > (netlink) and RDMA (sysfs) are not using binary format.
+> 
+> NICs are using binary format (partly in struct ethtool_stats, partly in an
+> array of u64).  For KVM we decided to put the schema and the stats in the
+> same file (though you can use pread to get only the stats) to have a single
+> interface and avoid ioctls, unlike having both ETH_GSTRINGS and ETH_GSTATS.
+> 
+> I wouldn't say processes are using any specific format.  There's a mix of
+> "one value per file" (e.g. cpuset), human-readable tabular format (e.g.
+> limits, sched), human- and machine-readable tabular format (e.g. status),
+> and files that are ASCII but not human-readable (e.g. stat).
 
-Sir / Madam,
+I see, your explanation to Enrico cleared the mud.
 
-Hi Friend I am the auditing director of the International Finance Bank
-Plc bf I want to transfer an abandoned sum of 10.5 millions USD  to
-your account.50% will be for you.
-No risk involved. Contact me for more details.
-Kindly reply me back to my alternative email address (hauckpristman@gmail.com)
 Thanks
-Mr Huck Pristman.
+
+> 
+> Paolo
+> 
