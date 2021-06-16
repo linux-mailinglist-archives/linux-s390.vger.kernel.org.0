@@ -2,125 +2,83 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F3B93A9422
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Jun 2021 09:35:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5025B3A9B05
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Jun 2021 14:50:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231696AbhFPHhm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 16 Jun 2021 03:37:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57743 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231419AbhFPHhl (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 16 Jun 2021 03:37:41 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198])
-        by youngberry.canonical.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <dimitri.ledkov@canonical.com>)
-        id 1ltQ5H-0006NI-Ck
-        for linux-s390@vger.kernel.org; Wed, 16 Jun 2021 07:35:35 +0000
-Received: by mail-il1-f198.google.com with SMTP id b4-20020a920b040000b02901dc81bf7e72so1119977ilf.7
-        for <linux-s390@vger.kernel.org>; Wed, 16 Jun 2021 00:35:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zCv5taiiINLmRcYNh2cZYkv+GwtyeEEw74jPnQvzmFU=;
-        b=r02lBuxHW4hl6Ag1cdm+fBrwkQ/tgXg5RvopbMAdHxrSbCQfiBHig71Utxg3DkhkoH
-         dTJz69yPEvGMHj40QuiGwQjzHtODmzk5IsRyqmY3LcS9DA13G5fYiRGmZ7M00/QJljXl
-         Ygca7vBp7ZPL8+S+CqTP/lECh6OdB3eAoWmCN31Iotx206Cd3xC1nUH5FexQ2SQFAiED
-         qj421LTPmr5LL3eo2FZii0YB4ybE3hR3/U4Kola5ZXcvEhDeJUsc9T7BBYLIReC1IMT/
-         2ET47w4sHJQ/lHEa0YbaxBn6tT2RR9mp9OyqZW3AfOCvYnlfkt7ul4sh/eM23jFaM34h
-         TkQA==
-X-Gm-Message-State: AOAM532zg4DHvf+JVm5tEKiQUtMTjHrCwliTsk1zcgzYEQzr3EdREV5N
-        hStCIdAiBidF1TOS+N4vW1IaaU5k5R24bkbq4w+I2HTSyOQf1C31UULv949FdI3FGmdPV2bvBLt
-        q+DT7xjydF6FsJ2B4IUWN9CSQ/OSfw59n/KJvsRYr8qV6k6Kahrk2Ym0=
-X-Received: by 2002:a92:c56d:: with SMTP id b13mr2674029ilj.267.1623828934478;
-        Wed, 16 Jun 2021 00:35:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzB1U7wvq70SAIs/4TJahvYTzi6Pv8ottxiN303trgIWIeqOrOrGUa+AYp4lGxZ63sSiaLyusOLQ9YEYVWoDJ4=
-X-Received: by 2002:a92:c56d:: with SMTP id b13mr2674013ilj.267.1623828934257;
- Wed, 16 Jun 2021 00:35:34 -0700 (PDT)
+        id S232692AbhFPMwn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 16 Jun 2021 08:52:43 -0400
+Received: from mail.oss.com.pe ([161.132.100.45]:36530 "EHLO
+        mail.consorciolp.com.pe" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233032AbhFPMwn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 16 Jun 2021 08:52:43 -0400
+X-Greylist: delayed 14857 seconds by postgrey-1.27 at vger.kernel.org; Wed, 16 Jun 2021 08:52:43 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mail.consorciolp.com.pe (Postfix) with ESMTP id AF3BE34D65DAB;
+        Wed, 16 Jun 2021 02:08:33 -0500 (-05)
+Received: from mail.consorciolp.com.pe ([127.0.0.1])
+        by localhost (mail.consorciolp.com.pe [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 8J9C6lPaXaAX; Wed, 16 Jun 2021 02:08:33 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.consorciolp.com.pe (Postfix) with ESMTP id BD56B34D2A60A;
+        Wed, 16 Jun 2021 02:06:36 -0500 (-05)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.consorciolp.com.pe BD56B34D2A60A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oss.com.pe;
+        s=675A380C-4679-11E8-96E4-C0788CA36BC0; t=1623827196;
+        bh=7Y6RtNhSVAIVHdJEU2gHHWYvaP8LRgEAhMNj0EoKaAA=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=lItKX6uayPGuIhKXr+rRzNwq96XHHK5bj47UxLktda6Z+BJ0/oqBgfhiZa6ziqCgm
+         O4D7gu1h4HWyHbe5ZfQVAe/ZvVgk6JdbQIw91ZXX7TFuRQbJcGFoUo9DiAquO3lVHn
+         uFgPLlzLkw9ngpj2DhXGeM47BiSx+w0/6sWNL0vYWp8noKWkUiLHTEMP2SHGZtJlGQ
+         1p3F2ZTTdijipFUJpsQmFAFD3BsEV2tPBKSZw36VCtBGvc+4FPdsaol//J9//j/vf8
+         ntv7RO8FBRLQaP5vmPVCIqfZpnZcKh2xafGQeNMeLIwcr28bZzL1COxwAR42PLmWjF
+         M8CcCiBgCBiXA==
+X-Virus-Scanned: amavisd-new at consorciolp.com.pe
+Received: from mail.consorciolp.com.pe ([127.0.0.1])
+        by localhost (mail.consorciolp.com.pe [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id BR5Z15djsYcm; Wed, 16 Jun 2021 02:06:36 -0500 (-05)
+Received: from cris-PC.wifi (unknown [105.9.118.225])
+        by mail.consorciolp.com.pe (Postfix) with ESMTPSA id CD1F634C805EA;
+        Wed, 16 Jun 2021 02:04:34 -0500 (-05)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20210615114150.325080-1-dimitri.ledkov@canonical.com> <your-ad-here.call-01623799196-ext-1245@work.hours>
-In-Reply-To: <your-ad-here.call-01623799196-ext-1245@work.hours>
-From:   Dimitri John Ledkov <dimitri.ledkov@canonical.com>
-Date:   Wed, 16 Jun 2021 08:34:58 +0100
-Message-ID: <CADWks+bB2YsATLMaPvhtu6MoFsveKYd5cY6GxepeX7OZvto-Ew@mail.gmail.com>
-Subject: Re: [PATCH] s390/boot: add zstd support
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: spende von 2,000,000 euro
+To:     Recipients <sechegaray@oss.com.pe>
+From:   ''Tayeb souami'' <sechegaray@oss.com.pe>
+Date:   Wed, 16 Jun 2021 09:06:05 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20210616070434.CD1F634C805EA@mail.consorciolp.com.pe>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 12:20 AM Vasily Gorbik <gor@linux.ibm.com> wrote:
->
-> On Tue, Jun 15, 2021 at 12:41:50PM +0100, Dimitri John Ledkov wrote:
-> > Enable ztsd support in s390/boot, to enable booting with zstd
-> > compressed kernel when configured with CONFIG_KERNEL_ZSTD=y.
-> >
-> > BugLink: https://bugs.launchpad.net/bugs/1931725
-> > Signed-off-by: Dimitri John Ledkov <dimitri.ledkov@canonical.com>
-> > cc: Heiko Carstens <hca@linux.ibm.com>
-> > cc: Vasily Gorbik <gor@linux.ibm.com>
-> > cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> > cc: linux-s390@vger.kernel.org
-> > ---
-> >  arch/s390/Kconfig                        | 1 +
-> >  arch/s390/boot/compressed/Makefile       | 4 ++++
-> >  arch/s390/boot/compressed/decompressor.c | 4 ++++
-> >  3 files changed, 9 insertions(+)
->
-> Reviewing your patch I noticed that we use wrong condition to
-> define BOOT_HEAP_SIZE. So I made a tiny fix:
->
-> diff --git a/arch/s390/boot/compressed/decompressor.c b/arch/s390/boot/compressed/decompressor.c
-> index 3061b11c4d27..cf2571050c68 100644
-> --- a/arch/s390/boot/compressed/decompressor.c
-> +++ b/arch/s390/boot/compressed/decompressor.c
-> @@ -29,5 +29,5 @@ extern unsigned char _compressed_start[];
->  extern unsigned char _compressed_end[];
->
-> -#ifdef CONFIG_HAVE_KERNEL_BZIP2
-> +#ifdef CONFIG_KERNEL_BZIP2
->  #define BOOT_HEAP_SIZE 0x400000
->  #else
->
+Lieber Freund,
 
-Nice. I guess it means all kernels were always built with large
-HEAP_SIZE, and that's why my boot tests worked too.
+Ich bin Herr Tayeb Souami, New Jersey, Vereinigte Staaten von Amerika, der =
+Mega-Gewinner von $ 315million In Mega Millions Jackpot, spende ich an 5 zu=
+f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
+il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
+meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
+und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
+Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
+ spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen, sehen Sie bitte meine Y=
+ou Tube Seite unten.
 
-Note this bug is also present in arch/sh/boot/compressed/misc.c.
+UHR MICH HIER: https://www.youtube.com/watch?v=3DZ6ui8ZDQ6Ks
 
 
-> And applied your patch with the following changes:
-> Added to the commit message:
-> """
-> BOOT_HEAP_SIZE is defined to 0x30000 in this case. Actual decompressor
-> memory usage with allyesconfig is currently 0x26150.
-> """
->
 
-That's appropriate.
+Das ist dein Spendencode: [TS530342018]
 
-> diff --git a/arch/s390/boot/compressed/decompressor.c b/arch/s390/boot/compressed/decompressor.c
-> index cf2571050c68..37a4a8d33c6c 100644
-> --- a/arch/s390/boot/compressed/decompressor.c
-> +++ b/arch/s390/boot/compressed/decompressor.c
-> @@ -31,4 +31,6 @@ extern unsigned char _compressed_end[];
->  #ifdef CONFIG_KERNEL_BZIP2
->  #define BOOT_HEAP_SIZE 0x400000
-> +#elif CONFIG_KERNEL_ZSTD
-> +#define BOOT_HEAP_SIZE 0x30000
->  #else
->  #define BOOT_HEAP_SIZE 0x10000
->
-> I hope you are ok with that, thanks!
 
-Thank you!
 
--- 
-Regards,
+Antworten Sie mit dem SPENDE-CODE an diese
 
-Dimitri.
+E-Mail:Tayebsouam.spende@gmail.com
+
+
+Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
+
+Gr=C3=BC=C3=9Fe
+Herr Tayeb Souami
