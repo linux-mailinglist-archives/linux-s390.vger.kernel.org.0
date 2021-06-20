@@ -2,61 +2,59 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C10AB3ADAA4
-	for <lists+linux-s390@lfdr.de>; Sat, 19 Jun 2021 17:42:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CEC23ADDA6
+	for <lists+linux-s390@lfdr.de>; Sun, 20 Jun 2021 10:06:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234610AbhFSPoh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 19 Jun 2021 11:44:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230334AbhFSPoh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 19 Jun 2021 11:44:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 370D2610CC;
-        Sat, 19 Jun 2021 15:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624117346;
-        bh=UEx7JsLWs3YweEcAuCrV4l6miBkaGBw2fHoihfrxjNs=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=hC74k2FyQ+ckjlmxm9myrkf8d3gHHO4MvqQjbP+U8/KpNhJAU6gt6VZgrdCp8TQw0
-         UeMl5f1dhLP4HdoqlyQXtv1xUMvik6DmtaKAJxMnPSzJj5rXwRvCVTKV6L84tBTWQy
-         c+vS7Gs/54CxUscMXDRoo7W2t5xdgIHyJMhAuSVwwdxT9QuFUQUg9vfmtocJSA0lvX
-         lGp+UeOGKaZ9Efu4wVk1ZlPhAJnSfM5tpLomXb/Nkx8WKJ6CdLBD7xx8YnNTpNXDy9
-         l5LXbCFlEQvw4NUt7osZaLoCpY/xkoExxXPeuMldc7Po3j2XBV+O8ICnZn7jT8B9qn
-         O83qxpNh/lqyw==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 2505F60A0D;
-        Sat, 19 Jun 2021 15:42:26 +0000 (UTC)
-Subject: Re: [GIT PULL] s390 fixes for 5.13-rc7
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <your-ad-here.call-01624097356-ext-0352@work.hours>
-References: <your-ad-here.call-01624097356-ext-0352@work.hours>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <your-ad-here.call-01624097356-ext-0352@work.hours>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.13-4
-X-PR-Tracked-Commit-Id: e73a99f3287a740a07d6618e9470f4d6cb217da8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e14c779adebebe4b4aeeefb3cc09f376bec966c5
-Message-Id: <162411734609.28673.12097642456413544328.pr-tracker-bot@kernel.org>
-Date:   Sat, 19 Jun 2021 15:42:26 +0000
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        id S229750AbhFTIIL convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Sun, 20 Jun 2021 04:08:11 -0400
+Received: from 6-200-5-45.rpnnetprovedor.com.br ([45.5.200.6]:59466 "EHLO
+        srv01.rpnnetprovedor.com.br" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229759AbhFTIHx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 20 Jun 2021 04:07:53 -0400
+Received: from [84.38.130.143] (helo=IP-130-143.dataclub.eu)
+        by srv01.rpnnetprovedor.com.br with esmtpa (Exim 4.92.2)
+        (envelope-from <robertnellsona@citromail.hu>)
+        id 1lusSZ-0006CL-AY
+        for linux-s390@vger.kernel.org; Sun, 20 Jun 2021 05:05:39 -0300
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: CAN YOU INVEST WITH ME?...6
+To:     linux-s390@vger.kernel.org
+From:   "Mr.  Robert" <robertnellsona@citromail.hu>
+Date:   Sun, 20 Jun 2021 11:05:37 +0300
+Reply-To: robertnellsona@citromail.hu
+Message-Id: <E1lusSZ-0006CL-AY@srv01.rpnnetprovedor.com.br>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Sat, 19 Jun 2021 12:09:16 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.13-4
+ATTENTION; linux-s390@vger.kernel.org,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e14c779adebebe4b4aeeefb3cc09f376bec966c5
+IMPORTANT INVESTMENT INFORMATION
 
-Thank you!
+We have a good investment program going on now.
+We have $95m USD for Investment in your Country.
+We use this opportunity to invest you to join the investment program and you will never regret it.
+Please kindly invest with us and you will be receiving monthly income/return/profit every month.
+We can also give you Loan, 
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+We have: 
+
+1. Short Term Loan, 
+
+2. Medium Term Loan 
+
+3. and Long Term Loan, 
+
+There is no need of collateral security. We will use our company to sign agreement and guarantee on your behalf and our Lawyer will sign on your behalf.
+
+Reply for more detail.
+
+Thank you Sir.
+
+Robert Nellson.
+INVESTMENT MANAGER.
