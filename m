@@ -2,98 +2,53 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D49903B6A23
-	for <lists+linux-s390@lfdr.de>; Mon, 28 Jun 2021 23:20:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C4403B7299
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Jun 2021 14:53:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237877AbhF1VXX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 28 Jun 2021 17:23:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237598AbhF1VXU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 28 Jun 2021 17:23:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DB11C61D00;
-        Mon, 28 Jun 2021 21:20:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624915254;
-        bh=otDNswzrNoZlJxkieNYaRlw/bmg3oENY62X+0YIE9lc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZCTzQCE3Qp7CY7v7Dpv9PNRPaqk1h89wdULJEQx8mxIMA+acVVJSqBu0j1zYdeqf5
-         JmUA7wMUIiUnhCHCZs3Z8akou3sfWreyXzG5+Gy/p2SUltBtYOjzr2SmN+zvoNpDzw
-         TkJlGl/1yFfBgf+5Ib6igkf1Uii6SJ0oblt1bxNo2U7qkXnhdqsojSI86lglYBcVc1
-         o3lB66jLfZxhq5tht9jjgEE3OidoBzykBtalTbvLxnX+b19NdcunENuzCWaoeaBD/9
-         PTlUtzdTDo9vyGL3+P69B1Hz9unggE9XxpA05k8IimoyrZMyZLhq3SWPI0BplHW7hl
-         EU2wd8Wk4TPug==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Krowiak <akrowiak@linux.ibm.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.12 2/5] s390/vfio-ap: clean up mdev resources when remove callback invoked
-Date:   Mon, 28 Jun 2021 17:20:48 -0400
-Message-Id: <20210628212051.43265-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210628212051.43265-1-sashal@kernel.org>
-References: <20210628212051.43265-1-sashal@kernel.org>
+        id S233141AbhF2Mzn convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Tue, 29 Jun 2021 08:55:43 -0400
+Received: from [218.75.92.58] ([218.75.92.58]:65339 "EHLO WIN-VTPUBHNS72V"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232908AbhF2Mzm (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 29 Jun 2021 08:55:42 -0400
+Received: from [192.168.43.47] (Unknown [197.210.85.75])
+        by WIN-VTPUBHNS72V with ESMTPA
+        ; Thu, 24 Jun 2021 20:46:52 +0800
+Message-ID: <79609568-9801-474E-8400-B64109D588A6@WIN-VTPUBHNS72V>
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: URGENT ATTENTION
+To:     Recipients <wjjt@wjjt.cn>
+From:   "Andres Auchincloss" <wjjt@wjjt.cn>
+Date:   Thu, 24 Jun 2021 14:46:28 +0200
+Reply-To: andresauchincloss926@gmail.com
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Tony Krowiak <akrowiak@linux.ibm.com>
+Hi,
 
-[ Upstream commit 8c0795d2a0f50e2b131f5b2a8c2795939a94058e ]
+I will like to use this opportunity to wish you a productive time in 2021 and also confide in you to finalize this transaction of mutual benefits. It may seem strange to you, but it is real. This is a transaction that has no risk at all, due process shall be followed and it shall be carried out under the ambit of the financial laws. Being the Chief Financial Officer, BP Plc. I want to trust and put in your care Eighteen Million British Pounds Sterling, The funds were acquired from an over-invoiced payment from a past contract executed in one of my departments.
 
-The mdev remove callback for the vfio_ap device driver bails out with
--EBUSY if the mdev is in use by a KVM guest (i.e., the KVM pointer in the
-struct ap_matrix_mdev is not NULL). The intended purpose was
-to prevent the mdev from being removed while in use. There are two
-problems with this scenario:
+I can't successfully achieve this transaction without presenting you as foreign contractor who will provide a bank account to receive the funds.
 
-1. Returning a non-zero return code from the remove callback does not
-   prevent the removal of the mdev.
+Documentation for the claim of the funds will be legally processed and documented, so I will need your full cooperation on this matter for our mutual benefits. We will discuss details if you are interested to work with me to secure this funds. I will appreciate your prompt response in every bit of our communication. Stay Blessed and Stay Safe.
 
-2. The KVM pointer in the struct ap_matrix_mdev will always be NULL because
-   the remove callback will not get invoked until the mdev fd is closed.
-   When the mdev fd is closed, the mdev release callback is invoked and
-   clears the KVM pointer from the struct ap_matrix_mdev.
 
-Let's go ahead and remove the check for KVM in the remove callback and
-allow the cleanup of mdev resources to proceed.
 
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Link: https://lore.kernel.org/r/20210609224634.575156-2-akrowiak@linux.ibm.com
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/crypto/vfio_ap_ops.c | 10 ----------
- 1 file changed, 10 deletions(-)
+Best Regards
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 6946a7e26eff..ef5e792c665f 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -366,16 +366,6 @@ static int vfio_ap_mdev_remove(struct mdev_device *mdev)
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
- 	mutex_lock(&matrix_dev->lock);
--
--	/*
--	 * If the KVM pointer is in flux or the guest is running, disallow
--	 * un-assignment of control domain.
--	 */
--	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
--		mutex_unlock(&matrix_dev->lock);
--		return -EBUSY;
--	}
--
- 	vfio_ap_mdev_reset_queues(mdev);
- 	list_del(&matrix_mdev->node);
- 	kfree(matrix_mdev);
--- 
-2.30.2
+
+
+
+Tel: +1 (587) 770-0485
+Andres .B. Auchincloss
+Chief financial officerBP Petroleum p.l.c.
+
+
+
+
+                                  Copyright ©? 1996-2021
 
