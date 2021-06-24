@@ -2,62 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58D723B3465
-	for <lists+linux-s390@lfdr.de>; Thu, 24 Jun 2021 19:09:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F41C3B3715
+	for <lists+linux-s390@lfdr.de>; Thu, 24 Jun 2021 21:36:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232425AbhFXRLz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 24 Jun 2021 13:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52752 "EHLO
+        id S232729AbhFXTix (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 24 Jun 2021 15:38:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232395AbhFXRLw (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 24 Jun 2021 13:11:52 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2A8C061756
-        for <linux-s390@vger.kernel.org>; Thu, 24 Jun 2021 10:09:31 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id w71so5739205pfd.4
-        for <linux-s390@vger.kernel.org>; Thu, 24 Jun 2021 10:09:31 -0700 (PDT)
+        with ESMTP id S232684AbhFXTiw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 24 Jun 2021 15:38:52 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59F3FC06175F
+        for <linux-s390@vger.kernel.org>; Thu, 24 Jun 2021 12:36:31 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id d13so9245081ljg.12
+        for <linux-s390@vger.kernel.org>; Thu, 24 Jun 2021 12:36:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:in-reply-to:references:from:date:message-id
-         :subject:to;
-        bh=ANhbTggsY3NFhRZExKMwUmb3VzJqye8XLvWVXSvNBkQ=;
-        b=p95plxgcKdT8+TUJCmcKdAyJL6L8C+j3muAeTI6tbvEOMwKUFZvBH22Z3GEGxdnUZH
-         d9XkDasjcz/bUj2n1PkWxPPQL/Sxtf1a7ckN43IkWwU4a9v6DYeOi9Tg8DPYHl700hH/
-         xlmv54Ir2NUVB8zwaX1UsxTzP5GUW3mdywmszCeflzWKbXzDgkMNhx+qVsi3FklHnD5x
-         fSDWvxz3POXOJ/0yZM+F2G99rPMTFJK+bPA5TWYu0VJpvpEjmQwRSgXLB6dx+kXpC0Uz
-         JX+JhI0lSB7VkwJTdkbApCrUx6TGzp99N5mAm/d0lil4hmexz93RFAPSpMzmwkjNchKB
-         rXTQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DBxJ+5KzUAKH3jFhz3Iwj54r7FIMmamDMI5BPojMuJc=;
+        b=dYwgZ9h27ndDmBg/0m6WgW1LArwbOWa26M1LqVXc1zXOs48DVQSrbhzbUHQNug9tkZ
+         q3D/blHDOzdEPPo3bUbcejYyoWtIr90hLC1edUbfhTBynk7E/lW8P7SUK5oshAMiOmFX
+         FeRaN/eolsikGjmZPU9y6AUewwJAliXCcfTymEfHi6vZeTmBr6Za33JjUQEKoIma9MIH
+         60/9CviuXnS+3c4YVp9qGGcMQhNtn2lmtSgyFcUHq31vytlepnUZklgtNq/7dhZtrUUg
+         hpgep8ai+pEDiiw3BFbc+F7+MngfSWxqoXsDHvEwoPx91W+DP0I0ZSb+JRDZjl/qFqfB
+         BW4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:in-reply-to:references
-         :from:date:message-id:subject:to;
-        bh=ANhbTggsY3NFhRZExKMwUmb3VzJqye8XLvWVXSvNBkQ=;
-        b=TGCl5/YRBkmV48Itt1lekPudPAb0zL8u74p22hRvUx54PttRlJMbr/VF3QvQZHAXyS
-         yPnUofKvBhizK3Ae67fGX5tq/o2cqhHcw9vWPN+mlphYbDeQDmuKF+yvwJBMTArOo5ZG
-         OYzC6N/hWyWut4IavW0aPTtqs3Xyz53dP50oWHLhYxSWtEvmPbDIf3cBmvlfVLlqq2JK
-         VoROQ1FZahgNdNDv0Bul3mJdHklICSaF/8jM+6Kld61v+CaZo8ePDqiisUZmJVBAzuj1
-         LNPW4Lu1VdXMYjkEn2MFM6Wt9Pco99Jin9x06c4qDBeT5kS++ZHNwaD9vsx93l139xlF
-         UiAw==
-X-Gm-Message-State: AOAM533gRAGDX5sBMdkNQNMWXvFP1OK7wuQN0km1qq1yTpGunhZIbF2+
-        jzHWOCQr1psWS5/ffXPSP6nECuPTyZ3oP6UR/Wu/3GXAaujGUw==
-X-Google-Smtp-Source: ABdhPJzkYUuO368jts0QgMQyJe9SHzg0U698qd8KdfojEfYsXnHtwMfPGxVHmw7fwQ64+IhHRhAEJH5nusdeW4BWzcA=
-X-Received: by 2002:a05:6e02:524:: with SMTP id h4mr4098121ils.255.1624554560853;
- Thu, 24 Jun 2021 10:09:20 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DBxJ+5KzUAKH3jFhz3Iwj54r7FIMmamDMI5BPojMuJc=;
+        b=jAk4jdjHwCAW56WtpF9kwCI5qmO/IJMtoEVJsmwPagFugPMx9ly7MrFJZiOMJjb2qO
+         DCjfLx+MCx97TpMFpFMUOWi6jb0bJVn1kjRy3eo772EZQL15J5NijddIBwDsusJfQpqL
+         Slz2V+YVOCtvINb7KrdUnRLAoeFgt1KP7WTM9/Jg7Qt1TKxQ2Q+N8G4OP/tLAcbKouSd
+         sfYyi60k4MF/Dp0tJZIyLbOxh8taf4XDBgjvdZLPFVDGQHcTEL0qiDCtheOkpPJkMKef
+         bNvRyi0RZb3fMEF71AsWGT3KXc2vUg1NGK9wk3ghe0FKzmVwQZ1YShLPneD1HVN1eS+Z
+         hVhw==
+X-Gm-Message-State: AOAM531rkjIW7s9ttzhbMFNhgd1abcXw8XvtWl/lb8ZeY+x4Mf+PpNSr
+        Ei14O/k4DzpuN5rMTZgyNNqgcoF59ZXGirrxi8wqRA==
+X-Google-Smtp-Source: ABdhPJzoUDYNMlMYAnSTK9W/UbT/cdGV/rjMVbZjtFi2SSd63uN2ZxNPWm3CGKEFKMm5AO4RdSLIU6HwJ2an34Rr8QQ=
+X-Received: by 2002:a2e:92cc:: with SMTP id k12mr5168790ljh.116.1624563389245;
+ Thu, 24 Jun 2021 12:36:29 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a05:6638:3aa:0:0:0:0 with HTTP; Thu, 24 Jun 2021 10:09:20
- -0700 (PDT)
-Reply-To: tutywoolgar021@gmail.com
-In-Reply-To: <CADB47+4Wa3T59Vq_==GTXEfHrX5x-2vQFxaTBO0dTdyAweCVpw@mail.gmail.com>
-References: <CADB47+4Wa3T59Vq_==GTXEfHrX5x-2vQFxaTBO0dTdyAweCVpw@mail.gmail.com>
-From:   tuty woolgar <faridaamadoubas@gmail.com>
-Date:   Thu, 24 Jun 2021 17:09:20 +0000
-Message-ID: <CADB47+607zNBfYFb4bj0nUhuuYgAdwT=G_wJ9-EeV0ESHe56Jg@mail.gmail.com>
-Subject: greetings,
-To:     undisclosed-recipients:;
+References: <20210621231822.2848305-1-ndesaulniers@google.com> <162442894704.2888450.8087873021886781652.b4-ty@chromium.org>
+In-Reply-To: <162442894704.2888450.8087873021886781652.b4-ty@chromium.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 24 Jun 2021 12:36:18 -0700
+Message-ID: <CAKwvOdkC4E5AvyrWzzN4q3xjceHZG3xQSjO6tp6vGK5Yc204YA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] no_profile fn attr and Kconfig for GCOV+PGO
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-arm-kernel@lists.infradead.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        linux-kbuild@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Bill Wendling <wcw@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        johannes.berg@intel.com, clang-built-linux@googlegroups.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Martin Liska <mliska@suse.cz>,
+        linux-toolchains@vger.kernel.org, x86@kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Will Deacon <will@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-My greetings to you my friend i hope you are fine and good please respond
-back to me thanks,
+On Tue, Jun 22, 2021 at 11:17 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, 21 Jun 2021 16:18:19 -0700, Nick Desaulniers wrote:
+> > The kernel has been using noinstr for correctness to politely request
+> > that the compiler avoid adding various forms of instrumentation to
+> > certain functions.
+> >
+> > GCOV and PGO can both instrument functions, yet the function attribute
+> > to disable such instrumentation (no_profile_instrument_function) was not
+> > being used to suppress such implementation. Also, clang only just
+> > recently gained support for no_profile_instrument_function. GCC has
+> > supported that since 7.1+.
+> >
+> > [...]
+>
+> Applied to for-next/clang/features, thanks!
+>
+> [1/3] compiler_attributes.h: define __no_profile, add to noinstr
+>       https://git.kernel.org/kees/c/380d53c45ff2
+> [2/3] compiler_attributes.h: cleanups for GCC 4.9+
+>       https://git.kernel.org/kees/c/ae4d682dfd33
+> [3/3] Kconfig: add ARCH_WANTS_NO_INSTR+CC_HAS_NO_PROFILE_FN_ATTR, depend on for GCOV and PGO
+>       https://git.kernel.org/kees/c/51c2ee6d121c
+>
+> Note that I've tweaked the series slightly to move the PGO Kconfig change into
+> the PGO patch.
+
+Ok, LGTM.
+-- 
+Thanks,
+~Nick Desaulniers
