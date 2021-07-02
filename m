@@ -2,70 +2,61 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D20B3B98CC
-	for <lists+linux-s390@lfdr.de>; Fri,  2 Jul 2021 01:00:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2C733B9C57
+	for <lists+linux-s390@lfdr.de>; Fri,  2 Jul 2021 08:49:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234110AbhGAXCf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Jul 2021 19:02:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234126AbhGAXCf (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 1 Jul 2021 19:02:35 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id F07CF61410;
-        Thu,  1 Jul 2021 23:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625180404;
-        bh=yXQImC86OQF+PrYXvWynpoxiBI9gssliyF0Zjj81fQc=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=ktXTTzG33hcqFMyzbejm7XRsFst0F9WIfS3nGVtHekQCBvD8ipzgYgEsxyi8ZAwCF
-         PVetiyP6Iass724caciLE0pxdwBfO7019Tn6rBpcKHsCp2CW2zLCxi1t5Nrf4nvJWU
-         LfDr378vfN4uyS5oUA7RqYNiWwJYlmYjp3NUvH0A6YwL73PQbpHreu9lnesQKtGKZT
-         RtzJdwRlr7L+ocIX9GgifRIGrmMPN2zmEHDeGNV23YUzj4V+H2xOuMHkBKmVwnijPu
-         4zHoq7rr7ec7BK+4sVn8B6waw9eXd4bZDQ4M9W2kpp7XUO2HbaUNrio0wVnfKHesbl
-         btwI6+kKDEc/A==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id DFB5E60A38;
-        Thu,  1 Jul 2021 23:00:03 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        id S230103AbhGBGwL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 2 Jul 2021 02:52:11 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:9443 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230026AbhGBGwK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 2 Jul 2021 02:52:10 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GGQbS4ggVzZppL;
+        Fri,  2 Jul 2021 14:46:28 +0800 (CST)
+Received: from dggema764-chm.china.huawei.com (10.1.198.206) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Fri, 2 Jul 2021 14:49:36 +0800
+Received: from [10.174.185.179] (10.174.185.179) by
+ dggema764-chm.china.huawei.com (10.1.198.206) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Fri, 2 Jul 2021 14:49:35 +0800
+Subject: Re: [PATCH] KVM: selftests: do not require 64GB in
+ set_memory_region_test
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+CC:     Shuah Khan <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        <kvm@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        <vkuznets@redhat.com>, <wanghaibin.wang@huawei.com>
+References: <20210701160425.33666-1-borntraeger@de.ibm.com>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <93ff00d3-b369-e00e-f172-7cc5375a6485@huawei.com>
+Date:   Fri, 2 Jul 2021 14:49:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] s390: iucv: Avoid field over-reading memcpy()
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <162518040391.15463.2980710384893731430.git-patchwork-notify@kernel.org>
-Date:   Thu, 01 Jul 2021 23:00:03 +0000
-References: <20210701154407.3889397-1-kgraul@linux.ibm.com>
-In-Reply-To: <20210701154407.3889397-1-kgraul@linux.ibm.com>
-To:     Karsten Graul <kgraul@linux.ibm.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, hca@linux.ibm.com,
-        guvenc@linux.ibm.com, keescook@chromium.org, jwi@linux.ibm.com
+In-Reply-To: <20210701160425.33666-1-borntraeger@de.ibm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.185.179]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggema764-chm.china.huawei.com (10.1.198.206)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello:
+On 2021/7/2 0:04, Christian Borntraeger wrote:
+> Unless the user sets overcommit_memory or has plenty of swap, the latest
+> changes to the testcase will result in ENOMEM failures for hosts with
+> less than 64GB RAM. As we do not use much of the allocated memory, we
+> can use MAP_NORESERVE to avoid this error.
 
-This patch was applied to netdev/net.git (refs/heads/master):
+Had a go on arm64:
 
-On Thu,  1 Jul 2021 17:44:07 +0200 you wrote:
-> From: Kees Cook <keescook@chromium.org>
-> 
-> In preparation for FORTIFY_SOURCE performing compile-time and run-time
-> field bounds checking for memcpy(), memmove(), and memset(), avoid
-> intentionally reading across neighboring array fields.
-> 
-> Add a wrapping struct to serve as the memcpy() source so the compiler
-> can perform appropriate bounds checking, avoiding this future warning:
-> 
-> [...]
+Tested-by: Zenghui Yu <yuzenghui@huawei.com>
 
-Here is the summary with links:
-  - [net-next] s390: iucv: Avoid field over-reading memcpy()
-    https://git.kernel.org/netdev/net/c/5140aaa4604b
-
-You are awesome, thank you!
---
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Thanks,
+Zenghui
