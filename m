@@ -2,116 +2,74 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C72CA3BDAEC
-	for <lists+linux-s390@lfdr.de>; Tue,  6 Jul 2021 18:07:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93E813BDADC
+	for <lists+linux-s390@lfdr.de>; Tue,  6 Jul 2021 18:04:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229984AbhGFQKV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 6 Jul 2021 12:10:21 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39245 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229823AbhGFQKV (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 6 Jul 2021 12:10:21 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m0nL8-0007mS-BC; Tue, 06 Jul 2021 17:50:26 +0200
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m0nL6-0005Ss-Hp; Tue, 06 Jul 2021 17:50:24 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     kernel@pengutronix.de, Cornelia Huck <cohuck@redhat.com>,
+        id S229811AbhGFQHG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 6 Jul 2021 12:07:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35402 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229773AbhGFQHF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 6 Jul 2021 12:07:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1625587466;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZHH/oZBSEYzJ5dyIC9S2CdtpksJma2DfofpQno8gxZk=;
+        b=WbpPyt9CM5u5oO/zTUy41V1TxOPqmn/7QgyMHmDhhE12JCUrXHavGNjOP8KDPpknqRm+S1
+        rPuEfAdS+vabKnVpvXgAoamAwR+bfXbImJ2QVFuaNXosdIKJYcz8pFhqwiBzG9dfPSqIzf
+        CjscRVrL4RGD7+CoBp6+lvTwWn0/DCg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-399--MJiH0E0MAOlwYN5LIgkVA-1; Tue, 06 Jul 2021 12:04:25 -0400
+X-MC-Unique: -MJiH0E0MAOlwYN5LIgkVA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F4688018A7;
+        Tue,  6 Jul 2021 16:04:23 +0000 (UTC)
+Received: from localhost (ovpn-113-13.ams2.redhat.com [10.36.113.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F0C3360583;
+        Tue,  6 Jul 2021 16:04:22 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     kernel@pengutronix.de, Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
         linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/4] s390/scm: Make struct scm_driver::remove return void
-Date:   Tue,  6 Jul 2021 17:48:02 +0200
-Message-Id: <20210706154803.1631813-4-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 2/4] s390/ccwgroup: Drop if with an always false
+ condition
+In-Reply-To: <20210706154803.1631813-3-u.kleine-koenig@pengutronix.de>
+Organization: Red Hat GmbH
 References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
+ <20210706154803.1631813-3-u.kleine-koenig@pengutronix.de>
+User-Agent: Notmuch/0.32.1 (https://notmuchmail.org)
+Date:   Tue, 06 Jul 2021 18:04:21 +0200
+Message-ID: <87wnq3fmyi.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-s390@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The driver core ignores the return value of scmdev_remove()
-(because there is only little it can do when a device disappears).
+On Tue, Jul 06 2021, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>=
+ wrote:
 
-So make it impossible for future drivers to return an unused error code
-by changing the remove prototype to return void.
+> The driver core only calls a bus remove callback when there is a driver.
+> So dev->driver is never NULL and the check can safely be removed.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>  drivers/s390/cio/ccwgroup.c | 2 --
+>  1 file changed, 2 deletions(-)
 
-The real motivation for this change is the quest to make struct
-bus_type::remove return void, too.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- arch/s390/include/asm/eadm.h | 2 +-
- drivers/s390/block/scm_drv.c | 4 +---
- drivers/s390/cio/scm.c       | 5 ++++-
- 3 files changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/arch/s390/include/asm/eadm.h b/arch/s390/include/asm/eadm.h
-index bb63b2afdf6f..445fe4c8184a 100644
---- a/arch/s390/include/asm/eadm.h
-+++ b/arch/s390/include/asm/eadm.h
-@@ -105,7 +105,7 @@ enum scm_event {SCM_CHANGE, SCM_AVAIL};
- struct scm_driver {
- 	struct device_driver drv;
- 	int (*probe) (struct scm_device *scmdev);
--	int (*remove) (struct scm_device *scmdev);
-+	void (*remove) (struct scm_device *scmdev);
- 	void (*notify) (struct scm_device *scmdev, enum scm_event event);
- 	void (*handler) (struct scm_device *scmdev, void *data,
- 			blk_status_t error);
-diff --git a/drivers/s390/block/scm_drv.c b/drivers/s390/block/scm_drv.c
-index 3134fd6e058e..69a845eb8b1f 100644
---- a/drivers/s390/block/scm_drv.c
-+++ b/drivers/s390/block/scm_drv.c
-@@ -60,15 +60,13 @@ static int scm_probe(struct scm_device *scmdev)
- 	return ret;
- }
- 
--static int scm_remove(struct scm_device *scmdev)
-+static void scm_remove(struct scm_device *scmdev)
- {
- 	struct scm_blk_dev *bdev = dev_get_drvdata(&scmdev->dev);
- 
- 	scm_blk_dev_cleanup(bdev);
- 	dev_set_drvdata(&scmdev->dev, NULL);
- 	kfree(bdev);
--
--	return 0;
- }
- 
- static struct scm_driver scm_drv = {
-diff --git a/drivers/s390/cio/scm.c b/drivers/s390/cio/scm.c
-index 9f26d4310bb3..b31711307e5a 100644
---- a/drivers/s390/cio/scm.c
-+++ b/drivers/s390/cio/scm.c
-@@ -33,7 +33,10 @@ static int scmdev_remove(struct device *dev)
- 	struct scm_device *scmdev = to_scm_dev(dev);
- 	struct scm_driver *scmdrv = to_scm_drv(dev->driver);
- 
--	return scmdrv->remove ? scmdrv->remove(scmdev) : -ENODEV;
-+	if (scmdrv->remove)
-+		scmdrv->remove(scmdev);
-+
-+	return 0;
- }
- 
- static int scmdev_uevent(struct device *dev, struct kobj_uevent_env *env)
--- 
-2.30.2
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
