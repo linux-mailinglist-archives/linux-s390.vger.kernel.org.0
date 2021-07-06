@@ -2,42 +2,28 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF43B3BDAC9
-	for <lists+linux-s390@lfdr.de>; Tue,  6 Jul 2021 17:58:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9F5B3BDAEB
+	for <lists+linux-s390@lfdr.de>; Tue,  6 Jul 2021 18:07:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230109AbhGFQBL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 6 Jul 2021 12:01:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55501 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230108AbhGFQBK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 6 Jul 2021 12:01:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625587111;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CtgBxXlhJt8Wtll8aba26kDe6OF3hHBqz0hVb5nuD0E=;
-        b=OLIdZl0TeJcary8IgENEvtB5UrQsDveNLpkuP7ZzSeXCuOPbQEOvQJcr2jFvayXogCOUzR
-        ylnv2xmgx//jf0vUXIPYNPy0ZuMHx8Xrij3M/qUxyKnKPEQMs1m+0llXenLVGqr0xVFP51
-        SyCY5sk+jnzJySXH4nfQeWs9L+BDTxM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-161-3tmVkwYNON-NoZjdKr8Puw-1; Tue, 06 Jul 2021 11:58:30 -0400
-X-MC-Unique: 3tmVkwYNON-NoZjdKr8Puw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1302E362F8;
-        Tue,  6 Jul 2021 15:58:28 +0000 (UTC)
-Received: from localhost (ovpn-113-13.ams2.redhat.com [10.36.113.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9A55719D9D;
-        Tue,  6 Jul 2021 15:58:27 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     kernel@pengutronix.de, Vineeth Vijayan <vneethv@linux.ibm.com>,
+        id S229811AbhGFQKU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 6 Jul 2021 12:10:20 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54527 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229984AbhGFQKU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 6 Jul 2021 12:10:20 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m0nL8-0007mM-BN; Tue, 06 Jul 2021 17:50:26 +0200
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m0nL6-0005Sm-5I; Tue, 06 Jul 2021 17:50:24 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     kernel@pengutronix.de, Cornelia Huck <cohuck@redhat.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
         Peter Oberparleiter <oberpar@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
@@ -46,48 +32,171 @@ Cc:     kernel@pengutronix.de, Vineeth Vijayan <vneethv@linux.ibm.com>,
         Matthew Rosato <mjrosato@linux.ibm.com>,
         Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] s390/cio: Make struct css_driver::remove return
- void
-In-Reply-To: <20210706154803.1631813-2-u.kleine-koenig@pengutronix.de>
-Organization: Red Hat GmbH
+Subject: [PATCH v2 1/4] s390/cio: Make struct css_driver::remove return void
+Date:   Tue,  6 Jul 2021 17:48:00 +0200
+Message-Id: <20210706154803.1631813-2-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
 References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
- <20210706154803.1631813-2-u.kleine-koenig@pengutronix.de>
-User-Agent: Notmuch/0.32.1 (https://notmuchmail.org)
-Date:   Tue, 06 Jul 2021 17:58:25 +0200
-Message-ID: <87zguzfn8e.fsf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-s390@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jul 06 2021, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>=
- wrote:
+The driver core ignores the return value of css_remove()
+(because there is only little it can do when a device disappears) and
+there are no pci_epf_drivers with a remove callback.
 
-> The driver core ignores the return value of css_remove()
-> (because there is only little it can do when a device disappears) and
-> there are no pci_epf_drivers with a remove callback.
+So make it impossible for future drivers to return an unused error code
+by changing the remove prototype to return void.
 
-s/pci_epf/css/
+The real motivation for this change is the quest to make struct
+bus_type::remove return void, too.
 
->
-> So make it impossible for future drivers to return an unused error code
-> by changing the remove prototype to return void.
->
-> The real motivation for this change is the quest to make struct
-> bus_type::remove return void, too.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/s390/cio/chsc_sch.c     | 3 +--
->  drivers/s390/cio/css.c          | 7 ++++---
->  drivers/s390/cio/css.h          | 2 +-
->  drivers/s390/cio/device.c       | 5 ++---
->  drivers/s390/cio/eadm_sch.c     | 4 +---
->  drivers/s390/cio/vfio_ccw_drv.c | 3 +--
->  6 files changed, 10 insertions(+), 14 deletions(-)
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/s390/cio/chsc_sch.c     | 3 +--
+ drivers/s390/cio/css.c          | 7 ++++---
+ drivers/s390/cio/css.h          | 2 +-
+ drivers/s390/cio/device.c       | 5 ++---
+ drivers/s390/cio/eadm_sch.c     | 4 +---
+ drivers/s390/cio/vfio_ccw_drv.c | 3 +--
+ 6 files changed, 10 insertions(+), 14 deletions(-)
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+diff --git a/drivers/s390/cio/chsc_sch.c b/drivers/s390/cio/chsc_sch.c
+index c42405c620b5..684348d82f08 100644
+--- a/drivers/s390/cio/chsc_sch.c
++++ b/drivers/s390/cio/chsc_sch.c
+@@ -100,7 +100,7 @@ static int chsc_subchannel_probe(struct subchannel *sch)
+ 	return ret;
+ }
+ 
+-static int chsc_subchannel_remove(struct subchannel *sch)
++static void chsc_subchannel_remove(struct subchannel *sch)
+ {
+ 	struct chsc_private *private;
+ 
+@@ -112,7 +112,6 @@ static int chsc_subchannel_remove(struct subchannel *sch)
+ 		put_device(&sch->dev);
+ 	}
+ 	kfree(private);
+-	return 0;
+ }
+ 
+ static void chsc_subchannel_shutdown(struct subchannel *sch)
+diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
+index a974943c27da..092fd1ea5799 100644
+--- a/drivers/s390/cio/css.c
++++ b/drivers/s390/cio/css.c
+@@ -1374,12 +1374,13 @@ static int css_probe(struct device *dev)
+ static int css_remove(struct device *dev)
+ {
+ 	struct subchannel *sch;
+-	int ret;
+ 
+ 	sch = to_subchannel(dev);
+-	ret = sch->driver->remove ? sch->driver->remove(sch) : 0;
++	if (sch->driver->remove)
++		sch->driver->remove(sch);
+ 	sch->driver = NULL;
+-	return ret;
++
++	return 0;
+ }
+ 
+ static void css_shutdown(struct device *dev)
+diff --git a/drivers/s390/cio/css.h b/drivers/s390/cio/css.h
+index 2eddfc47f687..c98522cbe276 100644
+--- a/drivers/s390/cio/css.h
++++ b/drivers/s390/cio/css.h
+@@ -81,7 +81,7 @@ struct css_driver {
+ 	int (*chp_event)(struct subchannel *, struct chp_link *, int);
+ 	int (*sch_event)(struct subchannel *, int);
+ 	int (*probe)(struct subchannel *);
+-	int (*remove)(struct subchannel *);
++	void (*remove)(struct subchannel *);
+ 	void (*shutdown)(struct subchannel *);
+ 	int (*settle)(void);
+ };
+diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+index 84f659cafe76..cd5d2d4d8e46 100644
+--- a/drivers/s390/cio/device.c
++++ b/drivers/s390/cio/device.c
+@@ -137,7 +137,7 @@ static int ccw_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 
+ static void io_subchannel_irq(struct subchannel *);
+ static int io_subchannel_probe(struct subchannel *);
+-static int io_subchannel_remove(struct subchannel *);
++static void io_subchannel_remove(struct subchannel *);
+ static void io_subchannel_shutdown(struct subchannel *);
+ static int io_subchannel_sch_event(struct subchannel *, int);
+ static int io_subchannel_chp_event(struct subchannel *, struct chp_link *,
+@@ -1101,7 +1101,7 @@ static int io_subchannel_probe(struct subchannel *sch)
+ 	return 0;
+ }
+ 
+-static int io_subchannel_remove(struct subchannel *sch)
++static void io_subchannel_remove(struct subchannel *sch)
+ {
+ 	struct io_subchannel_private *io_priv = to_io_private(sch);
+ 	struct ccw_device *cdev;
+@@ -1120,7 +1120,6 @@ static int io_subchannel_remove(struct subchannel *sch)
+ 			  io_priv->dma_area, io_priv->dma_area_dma);
+ 	kfree(io_priv);
+ 	sysfs_remove_group(&sch->dev.kobj, &io_subchannel_attr_group);
+-	return 0;
+ }
+ 
+ static void io_subchannel_verify(struct subchannel *sch)
+diff --git a/drivers/s390/cio/eadm_sch.c b/drivers/s390/cio/eadm_sch.c
+index c8964e0a23e7..15bdae5981ca 100644
+--- a/drivers/s390/cio/eadm_sch.c
++++ b/drivers/s390/cio/eadm_sch.c
+@@ -282,7 +282,7 @@ static void eadm_quiesce(struct subchannel *sch)
+ 	spin_unlock_irq(sch->lock);
+ }
+ 
+-static int eadm_subchannel_remove(struct subchannel *sch)
++static void eadm_subchannel_remove(struct subchannel *sch)
+ {
+ 	struct eadm_private *private = get_eadm_private(sch);
+ 
+@@ -297,8 +297,6 @@ static int eadm_subchannel_remove(struct subchannel *sch)
+ 	spin_unlock_irq(sch->lock);
+ 
+ 	kfree(private);
+-
+-	return 0;
+ }
+ 
+ static void eadm_subchannel_shutdown(struct subchannel *sch)
+diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+index 9b61e9b131ad..76099bcb765b 100644
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -234,7 +234,7 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
+ 	return ret;
+ }
+ 
+-static int vfio_ccw_sch_remove(struct subchannel *sch)
++static void vfio_ccw_sch_remove(struct subchannel *sch)
+ {
+ 	struct vfio_ccw_private *private = dev_get_drvdata(&sch->dev);
+ 	struct vfio_ccw_crw *crw, *temp;
+@@ -257,7 +257,6 @@ static int vfio_ccw_sch_remove(struct subchannel *sch)
+ 	VFIO_CCW_MSG_EVENT(4, "unbound from subchannel %x.%x.%04x\n",
+ 			   sch->schid.cssid, sch->schid.ssid,
+ 			   sch->schid.sch_no);
+-	return 0;
+ }
+ 
+ static void vfio_ccw_sch_shutdown(struct subchannel *sch)
+-- 
+2.30.2
 
