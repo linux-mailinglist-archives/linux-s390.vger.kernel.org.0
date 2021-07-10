@@ -2,301 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C46C33C25D6
-	for <lists+linux-s390@lfdr.de>; Fri,  9 Jul 2021 16:22:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84AEC3C2D4B
+	for <lists+linux-s390@lfdr.de>; Sat, 10 Jul 2021 04:20:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231918AbhGIOZm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 9 Jul 2021 10:25:42 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7576 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229561AbhGIOZm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 9 Jul 2021 10:25:42 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 169EFJvY189128;
-        Fri, 9 Jul 2021 10:22:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=Td5OpM0huNaSZooLOaqoUK/0SC/3VJ1AE8pgMDfztek=;
- b=JmZ6lORwz93U5znoI0kfOaKVWO/DNNKysKEetY0EZZq9fGGsw6gf6bKCranblURWHVc1
- mm4PYYK/gyf5fmdyjYZWbURdGowfY/pAFiRrnVDlGMDzjEq12sqeMPsHsQJ9hdwUc+b3
- dpQyewT5wU2epO2zVvwIjoFDBd8TvXOw88z1yt8lSXtpoVDJMaGf6PQ6Xw2bavuKTNjg
- uya5NksV7luYSNMVu2c79u/D1HesfNoFZYIZv9W8QEgyRo/H7pF6MCJDnsnT/pKa/Hjt
- 025B0bEnZlFyguKSd31Toy4m67oYQ3MGk88M+JdzjrRIIJoWP6FTqCLrXKdtRWdxJrmy bw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 39pjhehddf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Jul 2021 10:22:58 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 169EFgvj190111;
-        Fri, 9 Jul 2021 10:22:57 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 39pjhehdcr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Jul 2021 10:22:57 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 169EHc3i007383;
-        Fri, 9 Jul 2021 14:22:55 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04fra.de.ibm.com with ESMTP id 39jfh8hf59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Jul 2021 14:22:55 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 169EKtQ435782946
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 9 Jul 2021 14:20:55 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5418FA405B;
-        Fri,  9 Jul 2021 14:22:51 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DE6D7A4057;
-        Fri,  9 Jul 2021 14:22:50 +0000 (GMT)
-Received: from li-7e0de7cc-2d9d-11b2-a85c-de26c016e5ad.ibm.com (unknown [9.171.8.8])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  9 Jul 2021 14:22:50 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH] s390x: Add specification exception test
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
-        Thomas Huth <thuth@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-References: <20210706115459.372749-1-scgl@linux.ibm.com>
- <87v95jet9d.fsf@redhat.com>
-From:   Janis Schoetterl-Glausch <scgl@linux.vnet.ibm.com>
-Message-ID: <e5a5fa4a-c5c4-e3f8-3229-9c8e70dffb45@linux.vnet.ibm.com>
-Date:   Fri, 9 Jul 2021 16:22:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        id S232897AbhGJCWY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 9 Jul 2021 22:22:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232144AbhGJCVw (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 9 Jul 2021 22:21:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 738D0613D3;
+        Sat, 10 Jul 2021 02:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625883548;
+        bh=3MUwAQubY3y/cjrHEdf/E+gF3nQg7X7Zdc8REz3JAnU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cOweqfaxmwqNtyHDeXJuHY/YsK13XnvRm9xqXWYtTHHu0kvT+a/4RoDkzGc310PSj
+         SjNoZvLaIDhm8Mrvs8G0ksO5DwzbRWlVlGMy8mJqy/Xcd5GurkyZaY5lUx6GyMij/9
+         qbVG6XOjWLFnlQQ4aaKPlTTsdSHY/J6p6Nc04coxSN5R2EDF8StTY9S8fwjjX4vQEO
+         yRCoeKMZV3sPDfYXgVozlcY9D3IER5akp5Nx6rfaegGkRxJpoY2yVzc2HdEDTodvkV
+         VcuB3zd3ZO8R8WbTajfmXRbksXQ727el6rMA5QYScoXAIjjJsHgrfuoLB/HyXdpxoJ
+         HhpXqeVKqrbEw==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Valentin Vidic <vvidic@valentin-vidic.from.hr>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.13 058/114] s390/sclp_vt220: fix console name to match device
+Date:   Fri,  9 Jul 2021 22:16:52 -0400
+Message-Id: <20210710021748.3167666-58-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210710021748.3167666-1-sashal@kernel.org>
+References: <20210710021748.3167666-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <87v95jet9d.fsf@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: z4bFkgCzfwK2JQQKNqKCiII8dZXEVWJy
-X-Proofpoint-GUID: YnNP0I0vONsWehfzmuh9hNbUgasgkqDh
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-07-09_09:2021-07-09,2021-07-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- adultscore=0 malwarescore=0 suspectscore=0 spamscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 clxscore=1015 phishscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
- definitions=main-2107090070
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 7/9/21 11:22 AM, Cornelia Huck wrote:
-> On Tue, Jul 06 2021, Janis Schoetterl-Glausch <scgl@linux.ibm.com> wrote:
-> 
->> Generate specification exceptions and check that they occur.
->> Also generate specification exceptions during a transaction,
->> which results in another interruption code.
->> With the iterations argument one can check if specification
->> exception interpretation occurs, e.g. by using a high value and
->> checking that the debugfs counters are substantially lower.
->> The argument is also useful for estimating the performance benefit
->> of interpretation.
->>
->> Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
->> ---
->>  s390x/Makefile           |   1 +
->>  lib/s390x/asm/arch_def.h |   1 +
->>  s390x/spec_ex.c          | 344 +++++++++++++++++++++++++++++++++++++++
->>  s390x/unittests.cfg      |   3 +
->>  4 files changed, 349 insertions(+)
->>  create mode 100644 s390x/spec_ex.c
-> 
-> (...)
-> 
->> +static void lpsw(uint64_t psw)
-> 
-> Maybe call this load_psw(), as you do a bit more than a simple lpsw?
+From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 
-[...]
+[ Upstream commit b7d91d230a119fdcc334d10c9889ce9c5e15118b ]
 
-> The indentation looks a bit funny here.
+Console name reported in /proc/consoles:
 
-[...]
+  ttyS1                -W- (EC p  )    4:65
 
-> Here as well.
+does not match the char device name:
 
-Ok, will fix.
-> 
->> +}
-> 
-> (...)
-> 
->> +#define report_info_if(cond, fmt, ...)			\
->> +	do {						\
->> +		if (cond) {				\
->> +			report_info(fmt, ##__VA_ARGS__);\
->> +		}					\
->> +	} while (0)
-> 
-> I'm wondering whether such a wrapper function could be generally useful.
-> 
+  crw--w----    1 root     root        4,  65 May 17 12:18 /dev/ttysclp0
 
-I've found 9 occurrences with:
-find . -type f \( -name "*.c" -o -name "*.h" \) -exec awk '/if\s*\(.*/{i=2;f=$0} /report_info/ && i>0{print FILENAME, NR-1 ":" f;r=4} r>1{print FILENAME, NR ":" $0;r--} r==1{print "--";r=0} {i--}' '{}' \;
+so debian-installer inside a QEMU s390x instance gets confused and fails
+to start with the following error:
 
-./lib/s390x/css_lib.c 177:      if (cc) {
-./lib/s390x/css_lib.c 178:              report_info("stsch: updating sch %08x failed with cc=%d",
-./lib/s390x/css_lib.c 179:                          schid, cc);
-./lib/s390x/css_lib.c 180:              return false;
---
-./lib/s390x/css_lib.c 183:      if (!(pmcw->flags & PMCW_ENABLE)) {
-./lib/s390x/css_lib.c 184:              report_info("stsch: sch %08x not enabled", schid);
-./lib/s390x/css_lib.c 185:              return false;
-./lib/s390x/css_lib.c 186:      }
---
-./lib/s390x/css_lib.c 207:      if (cc) {
-./lib/s390x/css_lib.c 208:              report_info("stsch: sch %08x failed with cc=%d", schid, cc);
-./lib/s390x/css_lib.c 209:              return cc;
-./lib/s390x/css_lib.c 210:      }
---
-./lib/s390x/css_lib.c 213:      if ((pmcw->flags & (PMCW_ISC_MASK | PMCW_ENABLE)) == flags) {
-./lib/s390x/css_lib.c 214:              report_info("stsch: sch %08x already enabled", schid);
-./lib/s390x/css_lib.c 215:              return 0;
-./lib/s390x/css_lib.c 216:      }
---
-./lib/s390x/css_lib.c 269:      if (cc) {
-./lib/s390x/css_lib.c 270:              report_info("stsch: sch %08x failed with cc=%d", schid, cc);
-./lib/s390x/css_lib.c 271:              return false;
-./lib/s390x/css_lib.c 272:      }
---
-./lib/s390x/css_lib.c 305:      if (cc) {
-./lib/s390x/css_lib.c 306:              report_info("stsch: updating sch %08x failed with cc=%d",
-./lib/s390x/css_lib.c 307:                          schid, cc);
-./lib/s390x/css_lib.c 308:              return false;
---
-./lib/s390x/css_lib.c 466:      if (irb.scsw.sch_stat & ~SCSW_SCHS_IL) {
-./lib/s390x/css_lib.c 467:              report_info("Unexpected Subch. status %02x", irb.scsw.sch_stat);
-./lib/s390x/css_lib.c 468:              ret = -1;
-./lib/s390x/css_lib.c 469:              goto end;
---
-./s390x/sclp.c 80:      if (res) {
-./s390x/sclp.c 81:              report_info("SCLP not ready (command %#x, address %p, cc %d)", cmd, addr, res);
-./s390x/sclp.c 82:              return false;
-./s390x/sclp.c 83:      }
---
-./s390x/sclp.c 86:      if (!((1ULL << pgm) & exp_pgm)) {
-./s390x/sclp.c 87:              report_info("First failure at addr %p, buf_len %d, cmd %#x, pgm code %d",
-./s390x/sclp.c 88:                              addr, buf_len, cmd, pgm);
-./s390x/sclp.c 89:              return false;
---
-./s390x/sclp.c 92:      if (exp_rc && exp_rc != h->response_code) {
-./s390x/sclp.c 93:              report_info("First failure at addr %p, buf_len %d, cmd %#x, resp code %#x",
-./s390x/sclp.c 94:                              addr, buf_len, cmd, h->response_code);
-./s390x/sclp.c 95:              return false;
---
-./s390x/css.c 105:      if (ret < 0) {
-./s390x/css.c 106:              report_info("no valid residual count");
-./s390x/css.c 107:      } else if (ret != 0) {
-./s390x/css.c 108:              len = sizeof(*senseid) - ret;
---
-./s390x/css.c 112:              } else if (ret && len)
-./s390x/css.c 113:                      report_info("transferred a shorter length: %d", len);
-./s390x/css.c 114:      }
-./s390x/css.c 115:
---
-./s390x/css.c 153:      if (css_test_general_feature(CSSC_EXTENDED_MEASUREMENT_BLOCK))
-./s390x/css.c 154:              report_info("Extended measurement block available");
-./s390x/css.c 155:
-./s390x/css.c 156:      /* bits 59-63 of MB address must be 0  if MBU is defined */
---
-./arm/psci.c 119:               } else if (cpu_on_ret[cpu] != PSCI_RET_ALREADY_ON) {
-./arm/psci.c 120:                       report_info("unexpected cpu_on return value: caller=CPU%d, ret=%d", cpu, cpu_on_ret[cpu]);
-./arm/psci.c 121:                       failed = true;
-./arm/psci.c 122:               }
---
-./arm/psci.c 125:       if (ret_success != 1) {
-./arm/psci.c 126:               report_info("got %d CPU_ON success", ret_success);
-./arm/psci.c 127:               failed = true;
-./arm/psci.c 128:       }
---
-./arm/pmu.c 236:        if (!supported && warn)
-./arm/pmu.c 237:                report_info("event 0x%x is not supported", n);
-./arm/pmu.c 238:        return supported;
-./arm/pmu.c 239:}
---
-./arm/cache.c 115:      if (dcache_clean)
-./arm/cache.c 116:              report_info("dcache clean to PoU required");
-./arm/cache.c 117:      if (icache_inval)
-./arm/cache.c 117:      if (icache_inval)
-./arm/cache.c 118:              report_info("icache invalidation to PoU required");
-./arm/cache.c 119:
-./arm/cache.c 120:      check_code_generation(dcache_clean, icache_inval);
---
-./arm/pl031.c 193:      if (!irq_triggered) {
-./arm/pl031.c 194:              report_info("  RTC RIS: %"PRIx32, readl(&pl031->ris));
-./arm/pl031.c 195:              report_info("  RTC MIS: %"PRIx32, readl(&pl031->mis));
-./arm/pl031.c 196:              report_info("  RTC IMSC: %"PRIx32, readl(&pl031->imsc));
---
-./arm/gic.c 84:                 if (i)
-./arm/gic.c 85:                         report_info("interrupts took more than %d ms", i * 100);
-./arm/gic.c 86:                 /* Wait for unexpected interrupts to fire */
-./arm/gic.c 87:                 mdelay(100);
---
-./arm/gic.c 115:                if (has_gicv2 && irq_sender[cpu] != sender) {
-./arm/gic.c 116:                        report_info("cpu%d received IPI from wrong sender %d",
-./arm/gic.c 117:                                        cpu, irq_sender[cpu]);
-./arm/gic.c 118:                        pass = false;
---
-./arm/gic.c 121:                if (irq_number[cpu] != irqnum) {
-./arm/gic.c 122:                        report_info("cpu%d received wrong irq %d",
-./arm/gic.c 123:                                        cpu, irq_number[cpu]);
-./arm/gic.c 124:                        pass = false;
---
-./arm/gic.c 128:        if (missing || extra || unexpected) {
-./arm/gic.c 129:                report_info("ACKS: missing=%d extra=%d unexpected=%d",
-./arm/gic.c 130:                                missing, extra, unexpected);
-./arm/gic.c 131:                pass = false;
---
-./arm/gic.c 142:                if (spurious[cpu])
-./arm/gic.c 143:                        report_info("WARN: cpu%d got %d spurious interrupts",
-./arm/gic.c 144:                                cpu, spurious[cpu]);
-./arm/gic.c 145:        }
---
-./arm/gic.c 194:                if (acked[i] != expected[i]) {
-./arm/gic.c 195:                        report_info("expected %d LPIs on PE #%d, %d observed",
-./arm/gic.c 196:                                    expected[i], i, acked[i]);
-./arm/gic.c 197:                        pass = false;
---
-./arm/gic.c 421:        if (!res)
-./arm/gic.c 422:                report_info("byte 1 of 0x%08"PRIx32" => 0x%02"PRIx32, pattern & mask, reg);
-./arm/gic.c 423:
-./arm/gic.c 424:        pattern = REPLACE_BYTE(pattern, 2, 0x1f);
---
-./arm/gic.c 429:        if (!res)
-./arm/gic.c 430:                report_info("writing 0x%02"PRIx32" into bytes 2 => 0x%08"PRIx32,
-./arm/gic.c 431:                            BYTE(pattern, 2), reg);
-./arm/gic.c 432:}
---
-./arm/gic.c 519:        if (reg != (pattern & cpu_mask))
-./arm/gic.c 520:                report_info("writing %08"PRIx32" reads back as %08"PRIx32,
-./arm/gic.c 521:                            pattern & cpu_mask, reg);
-./arm/gic.c 522:
---
-./x86/vmx_tests.c 4733: if (!(ctrl_cpu_rev[0].clr & CPU_NMI_WINDOW)) {
-./x86/vmx_tests.c 4734:         report_info("NMI-window exiting is not supported, skipping...");
-./x86/vmx_tests.c 4735:         goto done;
-./x86/vmx_tests.c 4736: }
---
-./x86/vmx_tests.c 4841:                 if (un_cache) {
-./x86/vmx_tests.c 4842:                         report_info("EPT paging structure memory-type is Un-cacheable\n");
-./x86/vmx_tests.c 4843:                         ctrl = true;
-./x86/vmx_tests.c 4844:                 } else {
---
-./x86/vmx_tests.c 4848:                 if (wr_bk) {
-./x86/vmx_tests.c 4849:                         report_info("EPT paging structure memory-type is Write-back\n");
-./x86/vmx_tests.c 4850:                         ctrl = true;
-./x86/vmx_tests.c 4851:                 } else {
---
-./x86/vmx_tests.c 4899: if (msr & EPT_CAP_AD_FLAG) {
-./x86/vmx_tests.c 4900:         report_info("Processor supports accessed and dirty flag");
-./x86/vmx_tests.c 4901:         eptp &= ~EPTP_AD_FLAG;
-./x86/vmx_tests.c 4902:         test_eptp_ad_bit(eptp, true);
---
+  steal-ctty: No such file or directory
+
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Link: https://lore.kernel.org/r/20210427194010.9330-1-vvidic@valentin-vidic.from.hr
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/kernel/setup.c       | 2 +-
+ drivers/s390/char/sclp_vt220.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+index 5aab59ad5688..248d134a0592 100644
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -165,7 +165,7 @@ static void __init set_preferred_console(void)
+ 	else if (CONSOLE_IS_3270)
+ 		add_preferred_console("tty3270", 0, NULL);
+ 	else if (CONSOLE_IS_VT220)
+-		add_preferred_console("ttyS", 1, NULL);
++		add_preferred_console("ttysclp", 0, NULL);
+ 	else if (CONSOLE_IS_HVC)
+ 		add_preferred_console("hvc", 0, NULL);
+ }
+diff --git a/drivers/s390/char/sclp_vt220.c b/drivers/s390/char/sclp_vt220.c
+index 7f4445b0f819..2f96c31e9b7b 100644
+--- a/drivers/s390/char/sclp_vt220.c
++++ b/drivers/s390/char/sclp_vt220.c
+@@ -35,8 +35,8 @@
+ #define SCLP_VT220_MINOR		65
+ #define SCLP_VT220_DRIVER_NAME		"sclp_vt220"
+ #define SCLP_VT220_DEVICE_NAME		"ttysclp"
+-#define SCLP_VT220_CONSOLE_NAME		"ttyS"
+-#define SCLP_VT220_CONSOLE_INDEX	1	/* console=ttyS1 */
++#define SCLP_VT220_CONSOLE_NAME		"ttysclp"
++#define SCLP_VT220_CONSOLE_INDEX	0	/* console=ttysclp0 */
+ 
+ /* Representation of a single write request */
+ struct sclp_vt220_request {
+-- 
+2.30.2
+
