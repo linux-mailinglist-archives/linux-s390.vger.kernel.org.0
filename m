@@ -2,38 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16DC13C2F13
-	for <lists+linux-s390@lfdr.de>; Sat, 10 Jul 2021 04:29:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F18843C302F
+	for <lists+linux-s390@lfdr.de>; Sat, 10 Jul 2021 04:47:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233584AbhGJCaU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 9 Jul 2021 22:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43326 "EHLO mail.kernel.org"
+        id S234409AbhGJCdj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 9 Jul 2021 22:33:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234481AbhGJC33 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 9 Jul 2021 22:29:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 77C506140A;
-        Sat, 10 Jul 2021 02:26:36 +0000 (UTC)
+        id S232833AbhGJCbt (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 9 Jul 2021 22:31:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 33ECE613F7;
+        Sat, 10 Jul 2021 02:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625883997;
-        bh=OU7RHW8RCJ20JtwD/Ek2scsCmITqJZlaW4FZJH/iKEk=;
+        s=k20201202; t=1625884070;
+        bh=5cpcAIYiiUrvrbp6zJ3Lo+6pZN1Wc1h5upkrtGZTPSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IxhP42UZEwEOIorVKwioIdrnDuOsqgIAwacENiIteebh99XerUg/uh23ZuN9ad7CZ
-         pBfM+8NhOwgak0JDPEwxghY1/vHU4YVLg9ACXE0YqyDwLB/uxEh6Yq4bVf9+YzqWeK
-         ImbFpRgcDtCqbqVN2v15nMVv0WHzs4LLG2ia9RvGhUtnJgY5r4SBGEE0EKrMl1otP8
-         mphxT8WX1QKHLHxPikFIWqT5LQjB8dP+ttsZVDfU/5+HgUZ+QfzZD7zjheVCH+Hbbz
-         SNjJ7nbhqSUiqC5EibM/n8DUzb5qqnXONcWk42oCdvuRDFG7qKzreaFZYV2CsXzQVr
-         IJUoQEbpNR9Qg==
+        b=gI/S4Re9914MwD2N9pH5TlAS4F7nhVS0aLvou4qvAcAJSzP5OoUec8S5kYP2XdXkY
+         S9WG+Pl08DGVFEL86wVSw1m4UuTe2NOtX5Wg9lTJRxi8zV0Jh0WZkGF030q2OVMTcA
+         vHTNA75YJbOTbVr5pXMQVbw1nm2d3vYvTDVbcL1lGJThz4epqjhZY4b87t1Kwynna6
+         f6R7VcrhucZ8kAe+jRjQfE7y+3PbycXp1ZessXhFqHuDwIzDDysdWG9zvdsgvuKQ7G
+         6y6p72Vf7VRsLp+VLXrPcCVUDcJHXlQPbj+s4Awuzg0FmixxQAaoacBgGNLGFEyAVY
+         EGiOqrcoVpK0g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
+Cc:     Valentin Vidic <vvidic@valentin-vidic.from.hr>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 72/93] s390/mem_detect: fix tprot() program check new psw handling
-Date:   Fri,  9 Jul 2021 22:24:06 -0400
-Message-Id: <20210710022428.3169839-72-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 31/63] s390/sclp_vt220: fix console name to match device
+Date:   Fri,  9 Jul 2021 22:26:37 -0400
+Message-Id: <20210710022709.3170675-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210710022428.3169839-1-sashal@kernel.org>
-References: <20210710022428.3169839-1-sashal@kernel.org>
+In-Reply-To: <20210710022709.3170675-1-sashal@kernel.org>
+References: <20210710022709.3170675-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -42,77 +43,61 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Heiko Carstens <hca@linux.ibm.com>
+From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 
-[ Upstream commit da9057576785aaab52e706e76c0475c85b77ec14 ]
+[ Upstream commit b7d91d230a119fdcc334d10c9889ce9c5e15118b ]
 
-The tprot() inline asm temporarily changes the program check new psw
-to redirect a potential program check on the diag instruction.
-Restoring of the program check new psw is done in C code behind the
-inline asm.
+Console name reported in /proc/consoles:
 
-This can be problematic, especially if the function is inlined, since
-the compiler can reorder instructions in such a way that a different
-instruction, which may result in a program check, might be executed
-before the program check new psw has been restored.
+  ttyS1                -W- (EC p  )    4:65
 
-To avoid such a scenario move restoring into the inline asm. For
-consistency reasons move also saving of the original program check new
-psw into the inline asm.
+does not match the char device name:
 
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+  crw--w----    1 root     root        4,  65 May 17 12:18 /dev/ttysclp0
+
+so debian-installer inside a QEMU s390x instance gets confused and fails
+to start with the following error:
+
+  steal-ctty: No such file or directory
+
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Link: https://lore.kernel.org/r/20210427194010.9330-1-vvidic@valentin-vidic.from.hr
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/boot/mem_detect.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ arch/s390/kernel/setup.c       | 2 +-
+ drivers/s390/char/sclp_vt220.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/boot/mem_detect.c b/arch/s390/boot/mem_detect.c
-index 032d68165216..85049541c191 100644
---- a/arch/s390/boot/mem_detect.c
-+++ b/arch/s390/boot/mem_detect.c
-@@ -115,24 +115,30 @@ static int diag260(void)
- 
- static int tprot(unsigned long addr)
- {
--	unsigned long pgm_addr;
-+	unsigned long reg1, reg2;
- 	int rc = -EFAULT;
--	psw_t old = S390_lowcore.program_new_psw;
-+	psw_t old;
- 
--	S390_lowcore.program_new_psw.mask = __extract_psw();
- 	asm volatile(
--		"	larl	%[pgm_addr],1f\n"
--		"	stg	%[pgm_addr],%[psw_pgm_addr]\n"
-+		"	mvc	0(16,%[psw_old]),0(%[psw_pgm])\n"
-+		"	epsw	%[reg1],%[reg2]\n"
-+		"	st	%[reg1],0(%[psw_pgm])\n"
-+		"	st	%[reg2],4(%[psw_pgm])\n"
-+		"	larl	%[reg1],1f\n"
-+		"	stg	%[reg1],8(%[psw_pgm])\n"
- 		"	tprot	0(%[addr]),0\n"
- 		"	ipm	%[rc]\n"
- 		"	srl	%[rc],28\n"
--		"1:\n"
--		: [pgm_addr] "=&d"(pgm_addr),
--		  [psw_pgm_addr] "=Q"(S390_lowcore.program_new_psw.addr),
--		  [rc] "+&d"(rc)
--		: [addr] "a"(addr)
-+		"1:	mvc	0(16,%[psw_pgm]),0(%[psw_old])\n"
-+		: [reg1] "=&d" (reg1),
-+		  [reg2] "=&a" (reg2),
-+		  [rc] "+&d" (rc),
-+		  "=Q" (S390_lowcore.program_new_psw.addr),
-+		  "=Q" (old)
-+		: [psw_old] "a" (&old),
-+		  [psw_pgm] "a" (&S390_lowcore.program_new_psw),
-+		  [addr] "a" (addr)
- 		: "cc", "memory");
--	S390_lowcore.program_new_psw = old;
- 	return rc;
+diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+index 3588f4c65a4d..f661f176966f 100644
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -162,7 +162,7 @@ static void __init set_preferred_console(void)
+ 	else if (CONSOLE_IS_3270)
+ 		add_preferred_console("tty3270", 0, NULL);
+ 	else if (CONSOLE_IS_VT220)
+-		add_preferred_console("ttyS", 1, NULL);
++		add_preferred_console("ttysclp", 0, NULL);
+ 	else if (CONSOLE_IS_HVC)
+ 		add_preferred_console("hvc", 0, NULL);
  }
+diff --git a/drivers/s390/char/sclp_vt220.c b/drivers/s390/char/sclp_vt220.c
+index 3f9a6ef650fa..3c2ed6d01387 100644
+--- a/drivers/s390/char/sclp_vt220.c
++++ b/drivers/s390/char/sclp_vt220.c
+@@ -35,8 +35,8 @@
+ #define SCLP_VT220_MINOR		65
+ #define SCLP_VT220_DRIVER_NAME		"sclp_vt220"
+ #define SCLP_VT220_DEVICE_NAME		"ttysclp"
+-#define SCLP_VT220_CONSOLE_NAME		"ttyS"
+-#define SCLP_VT220_CONSOLE_INDEX	1	/* console=ttyS1 */
++#define SCLP_VT220_CONSOLE_NAME		"ttysclp"
++#define SCLP_VT220_CONSOLE_INDEX	0	/* console=ttysclp0 */
  
+ /* Representation of a single write request */
+ struct sclp_vt220_request {
 -- 
 2.30.2
 
