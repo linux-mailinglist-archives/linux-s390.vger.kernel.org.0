@@ -2,62 +2,55 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AB2D63C3619
-	for <lists+linux-s390@lfdr.de>; Sat, 10 Jul 2021 20:34:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2CC63C3DD0
+	for <lists+linux-s390@lfdr.de>; Sun, 11 Jul 2021 18:07:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229614AbhGJShb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 10 Jul 2021 14:37:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229599AbhGJShb (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 10 Jul 2021 14:37:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 00EE361249;
-        Sat, 10 Jul 2021 18:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625942086;
-        bh=+Mz2skLLGiwNxVacEnEorDly00hw4a/Ye+Y/TM8N08Q=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=VF7XwWXwfHAALWP/H7Mhhn/KX3V69Q55GSkHkbSJrElZJpAMNF3sFcuAZATIcFuw7
-         0bDTwxpAGOt1jnCoAmHNLtsduGWmUPQfUQvuk0UyxMV7HwoIv+X4vCdf9+0GDrx8qv
-         /D4QDnTUVUM+/PelULlMNyAER8FNcApFxeBspTDJEs+ErCjcdrAbGc2RQ7nd8cd5PL
-         o7SZTZ8o9395V22a2FDB1zUcd/loOPUUqdqFgLj/xMjbLaIXOVjP+tGYdcydI2TJ2G
-         gPkifm3SrFjcds39BNVkZrUolCZ7BvcvSHXXqtu99SbKRBdZ1cH0Z2wHhdh26Ds2Wk
-         Brn5yFbVUwDLA==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id DF806609CD;
-        Sat, 10 Jul 2021 18:34:45 +0000 (UTC)
-Subject: Re: [GIT PULL] s390 patches for the 5.14 merge window #2
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <your-ad-here.call-01625925176-ext-2826@work.hours>
-References: <your-ad-here.call-01625925176-ext-2826@work.hours>
-X-PR-Tracked-List-Id: <linux-s390.vger.kernel.org>
-X-PR-Tracked-Message-Id: <your-ad-here.call-01625925176-ext-2826@work.hours>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.14-2
-X-PR-Tracked-Commit-Id: 6a942f5780545ebd11aca8b3ac4b163397962322
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e98e03d075537a14928661ebfbfcde34b0eced1a
-Message-Id: <162594208585.22528.16485351339073248775.pr-tracker-bot@kernel.org>
-Date:   Sat, 10 Jul 2021 18:34:45 +0000
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        id S229758AbhGKQJs convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Sun, 11 Jul 2021 12:09:48 -0400
+Received: from mail.07d05.mspz7.gob.ec ([186.46.59.139]:35596 "EHLO
+        mail.07d05.mspz7.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229660AbhGKQJs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 11 Jul 2021 12:09:48 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.07d05.mspz7.gob.ec (Postfix) with ESMTP id 5F77618460A5;
+        Sun, 11 Jul 2021 09:41:41 -0500 (-05)
+Received: from mail.07d05.mspz7.gob.ec ([127.0.0.1])
+        by localhost (mail.07d05.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 9T-4z5F0KjvM; Sun, 11 Jul 2021 09:41:41 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.07d05.mspz7.gob.ec (Postfix) with ESMTP id 1E5E118460D7;
+        Sun, 11 Jul 2021 09:41:41 -0500 (-05)
+X-Virus-Scanned: amavisd-new at 07d05.mspz7.gob.ec
+Received: from mail.07d05.mspz7.gob.ec ([127.0.0.1])
+        by localhost (mail.07d05.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id tuv7nPFaIeGr; Sun, 11 Jul 2021 09:41:41 -0500 (-05)
+Received: from cris-PC.wifi (unknown [105.9.79.139])
+        by mail.07d05.mspz7.gob.ec (Postfix) with ESMTPSA id 0BF0E18460A5;
+        Sun, 11 Jul 2021 09:41:31 -0500 (-05)
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: spende von 2,000,000 euro
+To:     Recipients <maria.coronel@07d05.mspz7.gob.ec>
+From:   ''Tayeb souami'' <maria.coronel@07d05.mspz7.gob.ec>
+Date:   Sun, 11 Jul 2021 16:41:17 +0200
+Reply-To: Tayebsouam.spende@gmail.com
+Message-Id: <20210711144132.0BF0E18460A5@mail.07d05.mspz7.gob.ec>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Sat, 10 Jul 2021 15:52:56 +0200:
+Hallo mein lieber Freund
+Mein Name ist Tayeb Souami aus New Jersey in Amerika und ich habe den America Lottery Jackpot von 315 Millionen Euro gewonnen. Ich habe mich entschlossen, die Summe von 2.000.000 Euro an fünf glückliche Personen zu spenden, und Sie wurden als einer der Begünstigten ausgewählt. Bitte klicken Sie auf diesen Link, um mehr über meinen Gewinn zu erfahren.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.14-2
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e98e03d075537a14928661ebfbfcde34b0eced1a
+UHR MICH HIER: https://www.youtube.com/watch?v=Z6ui8ZDQ6Ks
 
-Thank you!
+Bitte kontaktieren Sie mich über diese E-Mail:Tayebsouam.spende@gmail.com
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+
+Ich hoffe, Sie und Ihre Familie glücklich zu machen.
+
+Grüße
+Herr Tayeb Souami
