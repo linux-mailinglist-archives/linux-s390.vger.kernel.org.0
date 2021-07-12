@@ -2,55 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2CC63C3DD0
-	for <lists+linux-s390@lfdr.de>; Sun, 11 Jul 2021 18:07:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FEF73C475B
+	for <lists+linux-s390@lfdr.de>; Mon, 12 Jul 2021 12:27:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229758AbhGKQJs convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Sun, 11 Jul 2021 12:09:48 -0400
-Received: from mail.07d05.mspz7.gob.ec ([186.46.59.139]:35596 "EHLO
-        mail.07d05.mspz7.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229660AbhGKQJs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 11 Jul 2021 12:09:48 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.07d05.mspz7.gob.ec (Postfix) with ESMTP id 5F77618460A5;
-        Sun, 11 Jul 2021 09:41:41 -0500 (-05)
-Received: from mail.07d05.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.07d05.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 9T-4z5F0KjvM; Sun, 11 Jul 2021 09:41:41 -0500 (-05)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.07d05.mspz7.gob.ec (Postfix) with ESMTP id 1E5E118460D7;
-        Sun, 11 Jul 2021 09:41:41 -0500 (-05)
-X-Virus-Scanned: amavisd-new at 07d05.mspz7.gob.ec
-Received: from mail.07d05.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.07d05.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id tuv7nPFaIeGr; Sun, 11 Jul 2021 09:41:41 -0500 (-05)
-Received: from cris-PC.wifi (unknown [105.9.79.139])
-        by mail.07d05.mspz7.gob.ec (Postfix) with ESMTPSA id 0BF0E18460A5;
-        Sun, 11 Jul 2021 09:41:31 -0500 (-05)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S236619AbhGLGc1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 12 Jul 2021 02:32:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236290AbhGLG3z (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 12 Jul 2021 02:29:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AF08360FE3;
+        Mon, 12 Jul 2021 06:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1626071226;
+        bh=5TDp1Kdz9R/7LzYSeUsllTeJyhdmJpTqPoMmJdtdadg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0XxKWixRK4UQsxHcGNjC/+BCKsPAxFStXPjuwbwqh4dqy4lyzUVLO65rTEfDiN1VQ
+         CU3M/wAm/W/yF/69AodK8aE188tuZVRcgxeoOTRpTe3cRhizLv9dQIFFjATVni5nAe
+         kTyjEDp5a4DSfV7nY5UoH2mYugld9+wGavAzyCF0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 301/348] s390: appldata depends on PROC_SYSCTL
+Date:   Mon, 12 Jul 2021 08:11:25 +0200
+Message-Id: <20210712060743.544717627@linuxfoundation.org>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210712060659.886176320@linuxfoundation.org>
+References: <20210712060659.886176320@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: spende von 2,000,000 euro
-To:     Recipients <maria.coronel@07d05.mspz7.gob.ec>
-From:   ''Tayeb souami'' <maria.coronel@07d05.mspz7.gob.ec>
-Date:   Sun, 11 Jul 2021 16:41:17 +0200
-Reply-To: Tayebsouam.spende@gmail.com
-Message-Id: <20210711144132.0BF0E18460A5@mail.07d05.mspz7.gob.ec>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hallo mein lieber Freund
-Mein Name ist Tayeb Souami aus New Jersey in Amerika und ich habe den America Lottery Jackpot von 315 Millionen Euro gewonnen. Ich habe mich entschlossen, die Summe von 2.000.000 Euro an fünf glückliche Personen zu spenden, und Sie wurden als einer der Begünstigten ausgewählt. Bitte klicken Sie auf diesen Link, um mehr über meinen Gewinn zu erfahren.
+From: Randy Dunlap <rdunlap@infradead.org>
+
+[ Upstream commit 5d3516b3647621d5a1180672ea9e0817fb718ada ]
+
+APPLDATA_BASE should depend on PROC_SYSCTL instead of PROC_FS.
+Building with PROC_FS but not PROC_SYSCTL causes a build error,
+since appldata_base.c uses data and APIs from fs/proc/proc_sysctl.c.
+
+arch/s390/appldata/appldata_base.o: in function `appldata_generic_handler':
+appldata_base.c:(.text+0x192): undefined reference to `sysctl_vals'
+
+Fixes: c185b783b099 ("[S390] Remove config options.")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Link: https://lore.kernel.org/r/20210528002420.17634-1-rdunlap@infradead.org
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 43a81d0ad507..0023b78391f1 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -920,7 +920,7 @@ config CMM_IUCV
+ config APPLDATA_BASE
+ 	def_bool n
+ 	prompt "Linux - VM Monitor Stream, base infrastructure"
+-	depends on PROC_FS
++	depends on PROC_SYSCTL
+ 	help
+ 	  This provides a kernel interface for creating and updating z/VM APPLDATA
+ 	  monitor records. The monitor records are updated at certain time
+-- 
+2.30.2
 
 
-UHR MICH HIER: https://www.youtube.com/watch?v=Z6ui8ZDQ6Ks
 
-Bitte kontaktieren Sie mich über diese E-Mail:Tayebsouam.spende@gmail.com
-
-
-Ich hoffe, Sie und Ihre Familie glücklich zu machen.
-
-Grüße
-Herr Tayeb Souami
