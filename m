@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FDF63C910C
-	for <lists+linux-s390@lfdr.de>; Wed, 14 Jul 2021 22:03:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE6AD3C9110
+	for <lists+linux-s390@lfdr.de>; Wed, 14 Jul 2021 22:03:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240973AbhGNT5l (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 14 Jul 2021 15:57:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45124 "EHLO mail.kernel.org"
+        id S240681AbhGNT5q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 14 Jul 2021 15:57:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240375AbhGNTto (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 14 Jul 2021 15:49:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2AEEE61433;
-        Wed, 14 Jul 2021 19:45:10 +0000 (UTC)
+        id S240953AbhGNTuO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 14 Jul 2021 15:50:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ABA6861404;
+        Wed, 14 Jul 2021 19:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626291911;
-        bh=ExshhKc8xGRdXQOIpIjltfrrPGb0liSS2/ZOZLUn2Xo=;
+        s=k20201202; t=1626291982;
+        bh=f3eEHGE9LlZfIcJe7uTHu8yg6F7aNQaqF870lFKtniA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JtvWNiPJqXuuP6M7jhnAp7JTtUhTdyvRR1YeRSYb6pP3jyvu4b8MLGzDOTmzV1ri1
-         jw8jvSxG/EilkZwwxrc0OJ8oIQu2XcYCnkCQBs6oNDalnTgWPvYGJlRhX3lb4PothO
-         +GwhV8vvMvLH0fpzVZW1avH6AzUCEzmzo5mOv9/LJsn+CTqd+3rbHRfosbTdwrh4/+
-         JkjT0fXPoYox+j4FWDu/RaqKuK6qtw4/Q6urrNy5R3sdGpYL6EOWFZS78rqvT+foBF
-         ID0cumXlwGzHxzgwKGVdgnIJU0urO53xFHYKD27K1D4MyGyLVZ/5wfIsgz+Z0QPBm9
-         Tjco2tkRyQT/Q==
+        b=pzvkfkWSeH2WVbOn8VB70y8bxra1hwtddcA4n9kPKVWjIbz0evabzhePMDcI1igtd
+         tydfK/Gt+eYNIDy2obLh/l04uSEAq21eWznVo4t0kICSXjZ8oVMX56fp3XPF7Iz7nw
+         xvUPF55H2gWwHSi+WUgsS79zbKCtbtS04+PLH617BvH1Twvd8CZ5jzSkWl4T00SCyq
+         axqQ343EZhBujmhyOq7jIJjCOeXs7A3KhH/Q3cPJYNM2vlYXpHr2QxqwWnTi0U0wO9
+         hbQ7EUS5fYg5FShv5XCmVBvyCF2b3nptOo7Vnp6YedQXOXqimWRRZjYn4KQL4lQ8YI
+         BMOakVobhrdTQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Heiko Carstens <hca@linux.ibm.com>,
         Sven Schnelle <svens@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 87/88] s390: introduce proper type handling call_on_stack() macro
-Date:   Wed, 14 Jul 2021 15:43:02 -0400
-Message-Id: <20210714194303.54028-87-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 50/51] s390: introduce proper type handling call_on_stack() macro
+Date:   Wed, 14 Jul 2021 15:45:12 -0400
+Message-Id: <20210714194513.54827-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210714194303.54028-1-sashal@kernel.org>
-References: <20210714194303.54028-1-sashal@kernel.org>
+In-Reply-To: <20210714194513.54827-1-sashal@kernel.org>
+References: <20210714194513.54827-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -74,10 +74,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 97 insertions(+)
 
 diff --git a/arch/s390/include/asm/stacktrace.h b/arch/s390/include/asm/stacktrace.h
-index ee582896b6a3..90488b0c26f6 100644
+index 6836532f8d1a..e192681f83e1 100644
 --- a/arch/s390/include/asm/stacktrace.h
 +++ b/arch/s390/include/asm/stacktrace.h
-@@ -128,6 +128,103 @@ struct stack_frame {
+@@ -115,6 +115,103 @@ struct stack_frame {
  	r2;								\
  })
  
