@@ -2,333 +2,229 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EEE23C9270
-	for <lists+linux-s390@lfdr.de>; Wed, 14 Jul 2021 22:47:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D4293C94DF
+	for <lists+linux-s390@lfdr.de>; Thu, 15 Jul 2021 02:20:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231426AbhGNUum (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 14 Jul 2021 16:50:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230352AbhGNUul (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 14 Jul 2021 16:50:41 -0400
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB707C06175F;
-        Wed, 14 Jul 2021 13:47:49 -0700 (PDT)
-Received: by mail-il1-x136.google.com with SMTP id e2so2935945ilu.5;
-        Wed, 14 Jul 2021 13:47:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hvhFUaJpsKWtTEeD2+NVxurp5yWKuTzZW3b3jtSmo5Y=;
-        b=UUnwQaua/H8rwEJ46wBGu21VE3YZ4bJWf1X9TiXDo9vh0gjpsjTI69qTz8pUIOeQmZ
-         87sYgU7NQ2/IywPIyzuJgPagS9NB5ilUObP1yaPA/AaIMC2BENX2XW8OmvNHcjIZzcqQ
-         lCJKYYFk7pgPjzvPFxoMU8RBALA3Hs5cTmm/buog1pLIyQXWBKa5ks+NtYkm7Xs9p1/4
-         9bfr6Tuk3tiShJOZYSkFcJbqC1a6xfK4TJacBP5OeWgIBt7iJpXiEuB2Btyl4Pu/1mqs
-         QL/3W25VvEP2vW3CnG/H9MMRVuhf6MAjCdkOTJ68fiKoyj5Vp4y4pfExBy7Ej62pduDV
-         nCew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hvhFUaJpsKWtTEeD2+NVxurp5yWKuTzZW3b3jtSmo5Y=;
-        b=UovxUEIqcNVlFrKSnN2F6eUcHEyYlrcCQj0LEifdTr7udouVGuppmOOq5F3lE1qmeF
-         IGDAudpEo4LaGQCvNsxuXQJfejo13W4Cvoa8qw1mNVO0CNxZNoJLjrsCUsk5jouzl0sZ
-         vIl5DvrYG6pF9s8/ap+V67kYD45bkA9onRKZc5Yo9HZQ1V2xXA7/8+SSwLPUeooIwWCr
-         VUNw8Y+wk8sJ1KbNUV8skVdaQxxSipY0esYAEWPGTXj6jvvxkP73cg5Sy1ocZRVqb2Rh
-         FFYy0JO0wivBW/BPLm4FBSMB37Y7Xr/hPwwBx/VHlqtXwMhOIpqdD91AOHAu2sHougaD
-         cwuQ==
-X-Gm-Message-State: AOAM533BASkU180L7vOshtV+bxhepW7FJ5MFHfOVN/bky3qZYGyKr13T
-        58kD0N+4e6quVAeKMA+h6NPu61CijRnYCwXx6xw=
-X-Google-Smtp-Source: ABdhPJzWAUEodW2mYSrVgx/aVrQIoBL1nE+ROg1S3BgzAtNQwXY0vhRs5znC0NaRsIBHIP11yL7l0nkY7pQ1qsdr6E4=
-X-Received: by 2002:a92:a005:: with SMTP id e5mr7715143ili.22.1626295669171;
- Wed, 14 Jul 2021 13:47:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210712124052.26491-1-david@redhat.com> <20210712124052.26491-3-david@redhat.com>
-In-Reply-To: <20210712124052.26491-3-david@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Wed, 14 Jul 2021 22:47:38 +0200
-Message-ID: <CAM9Jb+hj8uGc0N16Guui9kaA6W46QHzAET44Zt8C7kRdRAXMOA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/4] mm/memory_hotplug: remove nid parameter from arch_remove_memory()
-To:     David Hildenbrand <david@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mike Rapoport <rppt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-acpi@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
+        id S234359AbhGOAXl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 14 Jul 2021 20:23:41 -0400
+Received: from mail-mw2nam10on2055.outbound.protection.outlook.com ([40.107.94.55]:36170
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233792AbhGOAXk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 14 Jul 2021 20:23:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PAx1kDeUCkBCTCF0BLdE4vmFpyJDr3o7r3dlxSnK14IT5IVInvaDFg/gFKVJWuY8C3D0m69sLf+KcPfKAC1lVVOWCEBAL7/wxb1fS8kgy+nfnv822F8hnPcdoaxu5lcG78GMbIQT0MR6YlYQFk0VSda/DFRG2wtBWBZn8I4FuOqFG5dr5f7zchlnwNXI/H7BSf6JN1mnNDC1m0iY6nkeAbgbWxZK6bvXa0TV9IEqtc9jirG07nu+e4Ii0jySzvy/7ruVHa2/VcVf/UQ/6qATVjfldl1Vx1n4mmKYkWSH7515ChfpJD7/mVeDLvEIzcrdPddUeAty90H8pLPlkRnA3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ASU8SluLHbYDckjCGRJ39CJ/NgVB29D9fWMR/Wyj/F0=;
+ b=cm0uY907JWK0o617ejnxJRU5ETkV32sqpcwiyKmQ0fcqhwimnkPnr1VhgtA7YHDGiZwCPhVpFrMh9YHbi7q3bkJyiPiocDpP35pI/rUi5E5eUKaKE4LkvYMmYnB8BXWWP2+mVkL2mX358aqZF0O3qk94SB2L2/ZR4PsdybNsjrh89CqVqHLVGjoWHgO/0VSdt45KaBpybx8vcBqOcH8cTVeMtb0Ev0IIDwq6guT1kf094kkbjqmFh0oIyovRQzdPoyLUutavL27XrmKWM+JPjUvuenQG9V1GYiOCUmq3WlVr3+I3XadTYQy+Vq3vQ4/PVQoyWr1PAeR4s6+4f0OzZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ASU8SluLHbYDckjCGRJ39CJ/NgVB29D9fWMR/Wyj/F0=;
+ b=Ahr8UeHQzzX8leToJw5T3cNpuyPQ0fD6Otixy3SoZXEZw4BjLS1qF5agKwy7Ok3SUE/K2sauYmIlClpKf9/jEdUlaFsykQUlCPoczxiC+CdVY6v7F4O1hwJRpIQvIXeGOk3/CFzHPYTe8Yzb49kxjxU5dC3xioKKWzdfy6cNKDY16ZJ6WpzXfNVUlQ4fMhWWeP7e0U2gJ9gS+NBO1Jv+Znlw3NEgNC0yVYf89KLMfzKmSjpi/yz9bO2JNNXPDX+hcSkfHrqQOZ0zqh2O0umClqpjv2LvXayBRM88+9mqS4NSWaSsREZUNq0kdV/vrJRUuZ+8lqIQUWLgU2nlL+0vMw==
+Authentication-Results: linux.ie; dkim=none (message not signed)
+ header.d=none;linux.ie; dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5334.namprd12.prod.outlook.com (2603:10b6:208:31d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.20; Thu, 15 Jul
+ 2021 00:20:44 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::d017:af2f:7049:5482]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::d017:af2f:7049:5482%5]) with mapi id 15.20.4331.021; Thu, 15 Jul 2021
+ 00:20:43 +0000
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     David Airlie <airlied@linux.ie>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jia He <justin.he@arm.com>, Joe Perches <joe@perches.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Michel Lespinasse <michel@lespinasse.org>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rich Felker <dalias@libc.org>,
-        Scott Cheloha <cheloha@linux.ibm.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Diana Craciun <diana.craciun@oss.nxp.com>,
+        dri-devel@lists.freedesktop.org,
+        Eric Auger <eric.auger@redhat.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Heiko Carstens <hca@linux.ibm.com>,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        kvm@vger.kernel.org, Kirti Wankhede <kwankhede@nvidia.com>,
+        linux-doc@vger.kernel.org, linux-s390@vger.kernel.org,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>, Christoph Hellwig <hch@lst.de>,
+        Leon Romanovsky <leonro@nvidia.com>,
+        Max Gurtovoy <mgurtovoy@nvidia.com>,
+        Yishai Hadas <yishaih@nvidia.com>
+Subject: [PATCH 00/13] Provide core infrastructure for managing open/release
+Date:   Wed, 14 Jul 2021 21:20:29 -0300
+Message-Id: <0-v1-eaf3ccbba33c+1add0-vfio_reflck_jgg@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: CH0PR04CA0063.namprd04.prod.outlook.com
+ (2603:10b6:610:74::8) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (206.223.160.26) by CH0PR04CA0063.namprd04.prod.outlook.com (2603:10b6:610:74::8) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.22 via Frontend Transport; Thu, 15 Jul 2021 00:20:43 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1m3p7K-002Ux4-9v; Wed, 14 Jul 2021 21:20:42 -0300
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 480d3ae4-daf0-47b6-c7b3-08d94726624c
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5334:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BL1PR12MB5334EB99BAB36A329179CDF7C2129@BL1PR12MB5334.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: R3Q39ngHddQrZcuV04pWkGj3HPLwqSCkwCpr7eFpHBUWhni964UdhvhCRav5gR6QO4RLeR2EWw7TtXi2vsXeConLhOh7bPouraF8tkzl5Kp0pwgZjnMQEPbWtHuAM7cgoPQjYNaI0Tqxn3pRKrDdRrV0bP3KoKvmdIVJ6e4YAO3PlDMMrIZf0UHNRzWWS5RJEx9e0PCRz9blCOpQCBiJFAq55Kkv4DdEeqSFtb+ew6JQb+TfA24471vgqaq5hYZG6Ko1yFm6q9mA0h6wAyZw8iqHQgAJRP7twTbU2hRGZWdSXr0YW5HhKDczyWNNpETRm7aeuC+wTQyrSVRDCs4q+gzx5euxB58MJKFZKnM7K92cUO2a53//UQfQ23j4SrbotkZcN75CP4M/KJM64CSCejbFH/ou5iwrk43IGvXc65U+wbPCAN9+Z7fuNpcRKtOQPTyi+yAJrrMinaTR4ivuam7i9aPK5jSVSFugGISbQdY1QMxcjl3LoWucPv7xFwAuzXU+ruQGEq2LrQG+7pgXPskMhskYUsKEmkGrcuPnJAzACSHIMrzRr8YFJEdYtZbGGSaQlbn30ktzD2+KJKhR5T1WttsLBKFYz7Xv5EW0+lli+1sm/++rWDl27J58hz6Ws62PFkqVNpqVKDx6trlsczgophlqKeoI4NUsasb9l28ggUkbFEoStrdhUu40m0VmOiqgkCoR24uIFH3W9K+RwNOsr3SllUBPA0JFek+zz3bc/yATCI0xW7ICPWFLKJQEwCyEiA2YhgbDanpaIbGjV6cYRz4uJYoqFg/mH7RntSo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(376002)(396003)(346002)(39860400002)(107886003)(86362001)(66556008)(66476007)(54906003)(5660300002)(36756003)(2906002)(26005)(6666004)(4326008)(7416002)(9746002)(426003)(9786002)(186003)(66946007)(110136005)(2616005)(316002)(7406005)(966005)(83380400001)(8936002)(38100700002)(921005)(8676002)(478600001)(4216001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qIt0p8B7FSNTZywUJ16dasQDmq6FNeNYYeSWKDXIfuLhgkjIqJ0xCgbGNJGe?=
+ =?us-ascii?Q?Jsjmgvtoq/47J2xmSMzExFF6HjSnVoWWCe3g3fqIDQfIjV2CWQs3A3fZhAQ9?=
+ =?us-ascii?Q?G03hDgCX0yDovgfl0ajRGrBX0dRgdPnRMp/lZXMwqbqLyHqEyyxhQpPreFIz?=
+ =?us-ascii?Q?48zhuUS69ha8Or90R+97GjyI1jciBXAq/5U0tqct0eRdKwG3838PzaPm2hcq?=
+ =?us-ascii?Q?ws+8AhoR+M6CWSD6xwUEMJ7HgL+h0+PKwNNscuB0TZT80iEBDiqKi1m3DsvV?=
+ =?us-ascii?Q?x5ptgKh19HBTVVl/ybWEumOyLHw6458Bu+oUEqV/WxNpjW0HVIA12n6jV1xs?=
+ =?us-ascii?Q?f2ieNAYSwgKqayMyBJ69wHcMwzFUfqvwpkoIeR4uykzKyOjDNx/YBzEO2ej9?=
+ =?us-ascii?Q?QsH8qLD6rocJoTU7Z22i1WX/yj/FyyiK3ruDwABnVHjOy051C2VRWrrpS4he?=
+ =?us-ascii?Q?rV06vbNvpsk9/zSYMnnHebu03jL3cseFGy63EusFbixdpjZFFbl72nm585f/?=
+ =?us-ascii?Q?INsuHwcUdRWuxU3TcHhla0hC4umLWnMNm21fNnR7oVU5IB8FrMwcrcRPHpvv?=
+ =?us-ascii?Q?HNtoIcUEROdIC2/Kv+Kqij2lq1D9YvQX6qU7lHDN/+Mo4iMlMWBWXgPFwRvD?=
+ =?us-ascii?Q?iN+cEloEV2gORWnq/wovRwEL4Zz0+4S2jwD2XRzTuafoMc3a2n+OEO0yZLal?=
+ =?us-ascii?Q?X5pLOs//yk1TTXFjGpiatCJJt02Y/VfKbD098CVNoQahfW/c5RQ9x7O9reaH?=
+ =?us-ascii?Q?S/tWpqsPybJeRAoOcnQgX4zQYemn3w7wOYsTAfQzXzWaHs7tS4qzXElfjQai?=
+ =?us-ascii?Q?Gf2kHBJldnT+AehmN/3E4eEOI/Ex2qvCeOhKKQ7AdSKzHM9VQA5SV1RVYltU?=
+ =?us-ascii?Q?tmWaVw7cP/vs+8v+fkC8U+U+mO4qYBrCR4Th440Vd3TONhpg7bzxb7/dkofX?=
+ =?us-ascii?Q?UD/RsaAJte8uMAxrigHtlyYaz4tber8Fra0MOUdyNvOTusN54U0psUUvNNPK?=
+ =?us-ascii?Q?76fcmXbRz9mt75lEuwSwS8nUPPY6CcznQDuM7lRa3ecpC0MjO8eZjNaGVAA+?=
+ =?us-ascii?Q?xA+NCWftGCKYuwROLduXxzF1x3ZUHG8uozJhfUEg5X7v6DwzkDayT/7Q0SDV?=
+ =?us-ascii?Q?NvbUUHCrVZzwooBBiarfH6/dhpiZGDfNzWiLWlxq1N9Gn4hdq6J2Xq5GMwyr?=
+ =?us-ascii?Q?k9jkE700Jprlx7YC83/cID1vQb7BJxxqrhritrZdNNzMu7cM72QSd7y6RccL?=
+ =?us-ascii?Q?7q6I03juOug4Z+5l/CQ0DY/ucSRtp8QCmF1ItqqBBhvpWuUs2/NS1R6b2qdm?=
+ =?us-ascii?Q?C8YaU80DkyIhp67LmngtJEkJ?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 480d3ae4-daf0-47b6-c7b3-08d94726624c
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2021 00:20:43.4368
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1hhsGIeiPMkDPUnbmkx6mMIxpdyR8rlBxfIHwmmce4YMDDOpH8RuSt7u6mE+UH1E
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5334
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-> The parameter is unused, let's remove it.
->
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-> Acked-by: Heiko Carstens <hca@linux.ibm.com> (s390)
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Laurent Dufour <ldufour@linux.ibm.com>
-> Cc: Sergei Trofimovich <slyfox@gentoo.org>
-> Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-> Cc: Michel Lespinasse <michel@lespinasse.org>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> Cc: Joe Perches <joe@perches.com>
-> Cc: Pierre Morel <pmorel@linux.ibm.com>
-> Cc: Jia He <justin.he@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  arch/arm64/mm/mmu.c            | 3 +--
->  arch/ia64/mm/init.c            | 3 +--
->  arch/powerpc/mm/mem.c          | 3 +--
->  arch/s390/mm/init.c            | 3 +--
->  arch/sh/mm/init.c              | 3 +--
->  arch/x86/mm/init_32.c          | 3 +--
->  arch/x86/mm/init_64.c          | 3 +--
->  include/linux/memory_hotplug.h | 3 +--
->  mm/memory_hotplug.c            | 4 ++--
->  mm/memremap.c                  | 5 +----
->  10 files changed, 11 insertions(+), 22 deletions(-)
->
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index d74586508448..af8ab553a268 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -1506,8 +1506,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
->         return ret;
->  }
->
-> -void arch_remove_memory(int nid, u64 start, u64 size,
-> -                       struct vmem_altmap *altmap)
-> +void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
->  {
->         unsigned long start_pfn = start >> PAGE_SHIFT;
->         unsigned long nr_pages = size >> PAGE_SHIFT;
-> diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
-> index 064a967a7b6e..5c6da8d83c1a 100644
-> --- a/arch/ia64/mm/init.c
-> +++ b/arch/ia64/mm/init.c
-> @@ -484,8 +484,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
->         return ret;
->  }
->
-> -void arch_remove_memory(int nid, u64 start, u64 size,
-> -                       struct vmem_altmap *altmap)
-> +void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
->  {
->         unsigned long start_pfn = start >> PAGE_SHIFT;
->         unsigned long nr_pages = size >> PAGE_SHIFT;
-> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> index ad198b439222..c3c4e31462ec 100644
-> --- a/arch/powerpc/mm/mem.c
-> +++ b/arch/powerpc/mm/mem.c
-> @@ -119,8 +119,7 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
->         return rc;
->  }
->
-> -void __ref arch_remove_memory(int nid, u64 start, u64 size,
-> -                             struct vmem_altmap *altmap)
-> +void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
->  {
->         unsigned long start_pfn = start >> PAGE_SHIFT;
->         unsigned long nr_pages = size >> PAGE_SHIFT;
-> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-> index 8ac710de1ab1..d85bd7f5d8dc 100644
-> --- a/arch/s390/mm/init.c
-> +++ b/arch/s390/mm/init.c
-> @@ -306,8 +306,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
->         return rc;
->  }
->
-> -void arch_remove_memory(int nid, u64 start, u64 size,
-> -                       struct vmem_altmap *altmap)
-> +void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
->  {
->         unsigned long start_pfn = start >> PAGE_SHIFT;
->         unsigned long nr_pages = size >> PAGE_SHIFT;
-> diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-> index ce26c7f8950a..506784702430 100644
-> --- a/arch/sh/mm/init.c
-> +++ b/arch/sh/mm/init.c
-> @@ -414,8 +414,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
->         return ret;
->  }
->
-> -void arch_remove_memory(int nid, u64 start, u64 size,
-> -                       struct vmem_altmap *altmap)
-> +void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
->  {
->         unsigned long start_pfn = PFN_DOWN(start);
->         unsigned long nr_pages = size >> PAGE_SHIFT;
-> diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-> index 74b78840182d..bd90b8fe81e4 100644
-> --- a/arch/x86/mm/init_32.c
-> +++ b/arch/x86/mm/init_32.c
-> @@ -801,8 +801,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
->         return __add_pages(nid, start_pfn, nr_pages, params);
->  }
->
-> -void arch_remove_memory(int nid, u64 start, u64 size,
-> -                       struct vmem_altmap *altmap)
-> +void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
->  {
->         unsigned long start_pfn = start >> PAGE_SHIFT;
->         unsigned long nr_pages = size >> PAGE_SHIFT;
-> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-> index ddeaba947eb3..a6e11763763f 100644
-> --- a/arch/x86/mm/init_64.c
-> +++ b/arch/x86/mm/init_64.c
-> @@ -1255,8 +1255,7 @@ kernel_physical_mapping_remove(unsigned long start, unsigned long end)
->         remove_pagetable(start, end, true, NULL);
->  }
->
-> -void __ref arch_remove_memory(int nid, u64 start, u64 size,
-> -                             struct vmem_altmap *altmap)
-> +void __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
->  {
->         unsigned long start_pfn = start >> PAGE_SHIFT;
->         unsigned long nr_pages = size >> PAGE_SHIFT;
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index d01b504ce06f..010a192298b5 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -130,8 +130,7 @@ static inline bool movable_node_is_enabled(void)
->         return movable_node_enabled;
->  }
->
-> -extern void arch_remove_memory(int nid, u64 start, u64 size,
-> -                              struct vmem_altmap *altmap);
-> +extern void arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap);
->  extern void __remove_pages(unsigned long start_pfn, unsigned long nr_pages,
->                            struct vmem_altmap *altmap);
->
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 93b3abaf9828..f2a9af3af184 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1106,7 +1106,7 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
->         /* create memory block devices after memory was added */
->         ret = create_memory_block_devices(start, size, mhp_altmap.alloc);
->         if (ret) {
-> -               arch_remove_memory(nid, start, size, NULL);
-> +               arch_remove_memory(start, size, NULL);
->                 goto error;
->         }
->
-> @@ -1892,7 +1892,7 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
->
->         mem_hotplug_begin();
->
-> -       arch_remove_memory(nid, start, size, altmap);
-> +       arch_remove_memory(start, size, altmap);
->
->         if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
->                 memblock_free(start, size);
-> diff --git a/mm/memremap.c b/mm/memremap.c
-> index 15a074ffb8d7..ed593bf87109 100644
-> --- a/mm/memremap.c
-> +++ b/mm/memremap.c
-> @@ -140,14 +140,11 @@ static void pageunmap_range(struct dev_pagemap *pgmap, int range_id)
->  {
->         struct range *range = &pgmap->ranges[range_id];
->         struct page *first_page;
-> -       int nid;
->
->         /* make sure to access a memmap that was actually initialized */
->         first_page = pfn_to_page(pfn_first(pgmap, range_id));
->
->         /* pages are dead and unused, undo the arch mapping */
-> -       nid = page_to_nid(first_page);
-> -
->         mem_hotplug_begin();
->         remove_pfn_range_from_zone(page_zone(first_page), PHYS_PFN(range->start),
->                                    PHYS_PFN(range_len(range)));
-> @@ -155,7 +152,7 @@ static void pageunmap_range(struct dev_pagemap *pgmap, int range_id)
->                 __remove_pages(PHYS_PFN(range->start),
->                                PHYS_PFN(range_len(range)), NULL);
->         } else {
-> -               arch_remove_memory(nid, range->start, range_len(range),
-> +               arch_remove_memory(range->start, range_len(range),
->                                 pgmap_altmap(pgmap));
->                 kasan_remove_zero_shadow(__va(range->start), range_len(range));
->         }
+Prologue:
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta@ionos.com>
+This is the first series of three to send the "mlx5_vfio_pci" driver that has
+been discussed on the list for a while now.
+ - Reorganize reflck to support splitting vfio_pci
+ - Split vfio_pci into vfio_pci/vfio_pci_core and provide infrastructure
+   for non-generic VFIO PCI drivers
+ - The new driver mlx5_vfio_pci that is a full implementation of
+   suspend/resume functionality for mlx5 devices.
+
+A preview of all the patches can be seen here:
+
+https://github.com/jgunthorpe/linux/commits/mlx5_vfio_pci
+
+===============
+
+This is in support of Max's series to split vfio-pci. For that to work the
+reflck concept embedded in vfio-pci needs to be sharable across all of the
+new VFIO PCI drivers which motivated re-examining how this is
+implemented.
+
+Another significant issue is how the VFIO PCI core includes code like:
+
+   if (pci_dev_driver(pdev) != &vfio_pci_driver)
+
+Which is not scalable if there are going to be multiple different driver
+types.
+
+This series takes the approach of moving the "reflck" mechanism into the
+core code as a "device set". Each vfio_device driver can specify how
+vfio_devices are grouped into the set using a key and the set comes along
+with a set-global mutex. The core code manages creating per-device set
+memory and associating it with each vfio_device.
+
+In turn this allows the core code to provide an open/close_device()
+operation that is called only for the first/last FD, and is called under
+the global device set lock.
+
+Review of all the drivers show that they are either already open coding
+the first/last semantic or are buggy and missing it. All drivers are
+migrated/fixed to the new open/close_device ops and the unused per-FD
+open()/release() ops are deleted.
+
+The special behavior of PCI around the bus/slot "reset group" is recast in
+terms of the device set which conslidates the reflck, eliminates two
+touches of pci_dev_driver(), and allows the reset mechanism to share
+across all VFIO PCI drivers. PCI is changed to acquire devices directly
+from the device set instead of trying to work backwards from the struct
+pci_device.
+
+Overall a few minor bugs are squashed and quite a bit of code is removed
+through consolidation.
+
+Jason Gunthorpe (11):
+  vfio/samples: Remove module get/put
+  vfio: Provide better generic support for open/release vfio_device_ops
+  vfio/samples: Delete useless open/close
+  vfio/fsl: Move to the device set infrastructure
+  vfio/platform: Use open_device() instead of open coding a refcnt
+    scheme
+  vfio/pci: Change vfio_pci_try_bus_reset() to use the dev_set
+  vfio/pci: Reorganize VFIO_DEVICE_PCI_HOT_RESET to use the device set
+  vfio/mbochs: Fix close when multiple device FDs are open
+  vfio/ap,ccw: Fix open/close when multiple device FDs are open
+  vfio/gvt: Fix open/close when multiple device FDs are open
+  vfio: Remove struct vfio_device_ops open/release
+
+Max Gurtovoy (1):
+  vfio: Introduce a vfio_uninit_group_dev() API call
+
+Yishai Hadas (1):
+  vfio/pci: Move to the device set infrastructure
+
+ Documentation/driver-api/vfio.rst             |   4 +-
+ drivers/gpu/drm/i915/gvt/kvmgt.c              |   8 +-
+ drivers/s390/cio/vfio_ccw_ops.c               |   8 +-
+ drivers/s390/crypto/vfio_ap_ops.c             |   8 +-
+ drivers/vfio/fsl-mc/vfio_fsl_mc.c             | 158 ++----
+ drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c        |   6 +-
+ drivers/vfio/fsl-mc/vfio_fsl_mc_private.h     |   7 -
+ drivers/vfio/mdev/vfio_mdev.c                 |  29 +-
+ drivers/vfio/pci/vfio_pci.c                   | 459 ++++++------------
+ drivers/vfio/pci/vfio_pci_private.h           |   7 -
+ drivers/vfio/platform/vfio_platform_common.c  |  86 ++--
+ drivers/vfio/platform/vfio_platform_private.h |   1 -
+ drivers/vfio/vfio.c                           | 149 +++++-
+ include/linux/mdev.h                          |   9 +-
+ include/linux/vfio.h                          |  26 +-
+ samples/vfio-mdev/mbochs.c                    |  16 +-
+ samples/vfio-mdev/mdpy.c                      |  40 +-
+ samples/vfio-mdev/mtty.c                      |  40 +-
+ 18 files changed, 439 insertions(+), 622 deletions(-)
+
+-- 
+2.32.0
+
