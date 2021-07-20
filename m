@@ -2,282 +2,408 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7FA63D00A4
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Jul 2021 19:43:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 820C73D0343
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Jul 2021 22:46:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232230AbhGTRCq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 20 Jul 2021 13:02:46 -0400
-Received: from mail-mw2nam10on2068.outbound.protection.outlook.com ([40.107.94.68]:52928
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229650AbhGTRCb (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 20 Jul 2021 13:02:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RqzL8x0UO/SmddpwBNvlFZB4dClbcImqAXHh86Y6ntJWNQtJJQIpPbQtHwshkSpshA/q20Ada1JbqeZWuXo2tIYPic8loP8MKWrXwwlfjX/RIxkg/U83H2W3mLENe24ncz/vagn9LzSQ+nkCp9+AYbIdgecTN6LSO0Ve22raE4rAv31EJHFkEi6jhdcJaGfJlHgtPcwFOjO82V1Bky2kP/qF27t0GtIiaWkEKVpi+HFHe99zyAorEXbx3Oa4Knlz4InHa2dgnKS8J5M8H9eDJYi6U4glRX4Cy1HSG/gMWTzSkf7x4EEiCD7/FuPR+JyeWjZELsyCuQZVvzYcZxtNKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eJA9j/OugUqagLXMaaKxFUld5m4KW50elCDaxK70ehs=;
- b=gyeaCnvKpz12QdrWcOHY48aYnM/ure9+Q8SLRMXMV/bzj2TMWEKCqDmLVd4qlBYMlCLvMCPgjyFAmBYZ7+leLQ+XM39wv+8qer/PWEFhDNQpPAI5sk28XLnZNBUBF0f++RXdeSCW9xMu6omVgW3VFamBw2LbSV+j+MGjfe6tWTvfUBx7Y9bsJOJe/+KKo1dmCvA79FA185Fk4S8kYSbENrQLZ4m+c9HALzgKaBXOGYDBt5UVFmKf9eXPzubFYRwqeFfuM3z+LVxY/mdPmHUTajZKccDEDwhC+zNenVzRs1xRKegghuSwj2ogJdmRdf5iSbrYUXomaworRtbiAea0cg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eJA9j/OugUqagLXMaaKxFUld5m4KW50elCDaxK70ehs=;
- b=AnwDS1ACvRDErN+oW/PzVI5Ef/ibK22ooahQ6bKXnBg3lrO6qpLtEykKXGzIL1FnzxOyXRUQ7NwX8ZyI4mIXZyZHksIK7IkNigC20bLri/K+Tqi4adcKmT+QBTb+DTta/GsB/E+lGdiG0AK6ta04uPAs4c1TVWeo6VsknFCBssa9VE0PClWDo8VdTn8njpD5BXaG9tn64ezY5z+9zZ+Ncgf4EEUbRNouupf88CMe/9hf3cWBYXlUfkocu4dOWMtEfn+e5pJGzEuZAewuzm79e5Qw+luv985LumogbjuQ8fCV8yvhAK8yCWpLYjD+RDPU/DhYkMvORjGLLGqh1vgspQ==
-Authentication-Results: linux.ie; dkim=none (message not signed)
- header.d=none;linux.ie; dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL1PR12MB5288.namprd12.prod.outlook.com (2603:10b6:208:314::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21; Tue, 20 Jul
- 2021 17:43:04 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::d017:af2f:7049:5482]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::d017:af2f:7049:5482%5]) with mapi id 15.20.4331.034; Tue, 20 Jul 2021
- 17:43:04 +0000
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     David Airlie <airlied@linux.ie>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
+        id S235536AbhGTUFj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 20 Jul 2021 16:05:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236897AbhGTTpQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 20 Jul 2021 15:45:16 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 56E9760BBB;
+        Tue, 20 Jul 2021 20:25:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626812753;
+        bh=l5xDkWzCR3urdpTjqmcMUpN6o09NewdpR8Jc68Liw0U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VBe4HBaGXZMGD0ZdODVsdKbrJ8SORqt3SuXaX37yK3AHshxYDbXGRQXluA6mx7jW3
+         pTBW48mt4sopqYvfTU+bZO/p3bIz4jENtO9uPBTi0SuDufiC+I7vrG7Ce/qo8tgdbL
+         Vv6L36N+yjTOuiDCZaFxIklqrdMuw+BZDERVBNSuKxTccmMm+0DpHaq2hVxlihY0dP
+         QgyoMfzVLFJnhH8igTsTFxC4OBQeb5IzLYxfferXAP0fHcTPB3F6Yr+8KbAgAJLPf2
+         a0unVf6CWv1kUs6z+N9Cr2G8gL44dgqsGt8dlJjFYXR6m7PEcLW13zfgVQ2ipy0CDg
+         OpoYDDMZUiahA==
+Date:   Tue, 20 Jul 2021 22:25:42 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel@pengutronix.de,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>, Alex Elder <elder@kernel.org>,
         Alex Williamson <alex.williamson@redhat.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Andy Gross <agross@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bodo Stroesser <bostroesser@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Chen-Yu Tsai <wens@csie.org>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Cornelia Huck <cohuck@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        dri-devel@lists.freedesktop.org,
-        Eric Auger <eric.auger@redhat.com>,
-        Eric Farman <farman@linux.ibm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Dexuan Cui <decui@microsoft.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Finn Thain <fthain@linux-m68k.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Frank Li <lznuaa@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geoff Levand <geoff@infradead.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Hans de Goede <hdegoede@redhat.com>,
         Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Heiko Carstens <hca@linux.ibm.com>,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        kvm@vger.kernel.org, Kirti Wankhede <kwankhede@nvidia.com>,
-        linux-doc@vger.kernel.org, linux-s390@vger.kernel.org,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>, Ira Weiny <ira.weiny@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Jason Wang <jasowang@redhat.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Joey Pabalan <jpabalanb@gmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Johannes Thumshirn <morbidrsa@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Juergen Gross <jgross@suse.com>,
+        Julien Grall <jgrall@amazon.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lee Jones <lee.jones@linaro.org>, Len Brown <lenb@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Manohar Vanga <manohar.vanga@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Michael Buesch <m@bues.ch>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
         Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Rich Felker <dalias@libc.org>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Samuel Holland <samuel@sholland.org>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thorsten Scherer <t.scherer@eckelmann.de>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Tom Rix <trix@redhat.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Zhi Wang <zhi.a.wang@intel.com>
-Cc:     "Raj, Ashok" <ashok.raj@intel.com>, Christoph Hellwig <hch@lst.de>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH v2 14/14] vfio: Remove struct vfio_device_ops open/release
-Date:   Tue, 20 Jul 2021 14:43:00 -0300
-Message-Id: <14-v2-b6a5582525c9+ff96-vfio_reflck_jgg@nvidia.com>
-In-Reply-To: <0-v2-b6a5582525c9+ff96-vfio_reflck_jgg@nvidia.com>
-References: 
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BL0PR05CA0020.namprd05.prod.outlook.com
- (2603:10b6:208:91::30) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
+        Vinod Koul <vkoul@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Wu Hao <hao.wu@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Yufen Yu <yuyufen@huawei.com>, alsa-devel@alsa-project.org,
+        dmaengine@vger.kernel.org, greybus-dev@lists.linaro.org,
+        industrypack-devel@lists.sourceforge.net, kvm@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-cxl@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-media@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-parisc@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-sunxi@lists.linux.dev,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, nvdimm@lists.linux.dev,
+        platform-driver-x86@vger.kernel.org, sparclinux@vger.kernel.org,
+        target-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org,
+        Johannes Thumshirn <jth@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v4 5/5] bus: Make remove callback return void
+Message-ID: <YPcxRgfZymtjJ4ih@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel@pengutronix.de,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>, Alex Elder <elder@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Andy Gross <agross@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bodo Stroesser <bostroesser@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Dexuan Cui <decui@microsoft.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Finn Thain <fthain@linux-m68k.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Frank Li <lznuaa@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Geoff Levand <geoff@infradead.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Hannes Reinecke <hare@suse.de>, Hans de Goede <hdegoede@redhat.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>,
+        Ira Weiny <ira.weiny@intel.com>, Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Jaroslav Kysela <perex@perex.cz>, Jason Wang <jasowang@redhat.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
+        Joey Pabalan <jpabalanb@gmail.com>, Johan Hovold <johan@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Johannes Thumshirn <morbidrsa@gmail.com>,
+        Jon Mason <jdmason@kudzu.us>, Juergen Gross <jgross@suse.com>,
+        Julien Grall <jgrall@amazon.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lee Jones <lee.jones@linaro.org>, Len Brown <lenb@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Manohar Vanga <manohar.vanga@gmail.com>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Michael Buesch <m@bues.ch>, Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Jamet <michael.jamet@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Moritz Fischer <mdf@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Rich Felker <dalias@libc.org>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Rob Herring <robh@kernel.org>, Russell King <linux@armlinux.org.uk>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Samuel Holland <samuel@sholland.org>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thorsten Scherer <t.scherer@eckelmann.de>,
+        Tomas Winkler <tomas.winkler@intel.com>, Tom Rix <trix@redhat.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Wu Hao <hao.wu@intel.com>, Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        YueHaibing <yuehaibing@huawei.com>, Yufen Yu <yuyufen@huawei.com>,
+        alsa-devel@alsa-project.org, dmaengine@vger.kernel.org,
+        greybus-dev@lists.linaro.org,
+        industrypack-devel@lists.sourceforge.net, kvm@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-cxl@vger.kernel.org, linux-fpga@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-i3c@lists.infradead.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-parisc@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-sunxi@lists.linux.dev, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        nvdimm@lists.linux.dev, platform-driver-x86@vger.kernel.org,
+        sparclinux@vger.kernel.org, target-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, Johannes Thumshirn <jth@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+References: <20210713193522.1770306-1-u.kleine-koenig@pengutronix.de>
+ <20210713193522.1770306-6-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.162.113.129) by BL0PR05CA0020.namprd05.prod.outlook.com (2603:10b6:208:91::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.13 via Frontend Transport; Tue, 20 Jul 2021 17:43:02 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1m5tll-0051FP-TU; Tue, 20 Jul 2021 14:43:01 -0300
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4842e168-0cc4-4db2-8f73-08d94ba5d2cc
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5288:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BL1PR12MB52885B84B9D0048E81AD32F5C2E29@BL1PR12MB5288.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pEtrm5ZlK/1uDeaYOjQYJN022DCvi1VSlKCYKAYHPQaHXJIkrKyY0X/ffFHb6N7ohyKMprydIfwGdONBDytKrmEZ+ySRHWL0Y2i7d7xV4nHfeYVcQO10F+uGCP9Rp3GIQ0+vvlBg0eT5UKHGd9j43/WYzKm2aQk/+PbKkEkrHINlI6ineU/L3Llxwc8BC+vhrfeoxZvLLQU+jNH45b0nt+4VDe/A7+G5KVsuiY93JnXhhcHSB+HOpuLUEzyzq1sjt7iQ8/am8efRdP9MUeGkykr/BrDoeFzaJWWpg0+fcThi0yKVLipkRby5H5nnLDkyaur43ucl1v7mbT3pu7idxg2Ey8YO5iA38eOvXAim52tEcmVY47pq/UgjCQDZOex5yXOEf+OBhy9LU4gEal2qOTNbLDMUK/NeLg01GgoKKiCE7AAdiYMWXvgcTkSRMOr2kT5/olfWPbi83E03edPp3ajF2m0lgnEqQr281KxyfQRDAHqFfXaAKG0wMutNG3vF7u5sEB7+FgBmKr3VCrknBOJ7kPcF5oH0nWzG94Jckl0LAsncb0UplONuGkQ7GWhyQB6Pe7GQoTqn/rsLgXhTHr0PdFIPuAcQsJDUMEvEZyrQWebFLhGSIFL3Vgkd8xyDBAfKWx+8OPYW7/b7vInEQQ3V17Rd6QyiCM+mv8mF06JBcMKmUDJNrfMEVWBNCUhe
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(376002)(366004)(39860400002)(346002)(66946007)(7416002)(7406005)(86362001)(2906002)(66476007)(54906003)(38100700002)(83380400001)(8936002)(316002)(110136005)(478600001)(36756003)(66556008)(186003)(26005)(5660300002)(8676002)(921005)(9786002)(9746002)(4326008)(426003)(2616005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?SPWhJwl+SG9TIhUuO3Y7abLy+0BRFwCudQ7LUOZbARpIdu+9UyM7VjzMA9hb?=
- =?us-ascii?Q?GJqHEUBbWs4iUeTf1HxW+/e2gsjWcl77v/v6QxMX49PdVNW7UA2vlHhjTJnV?=
- =?us-ascii?Q?/aoLhNYqsnEW3Lw+wSdFQsKUIq1eh5bIMrfdfEL4QS7EMqoU/s/zrMkvdBYv?=
- =?us-ascii?Q?64xkYMHcnfK3sQKh9Z2qgGLnZtWTai5giA1GKewosYYM6vJNgsgfnazc2fCk?=
- =?us-ascii?Q?6zmyYmTOCmdkPR8eN+sRUgv+pVRa8rPH54AmFnqD3YFAKoRI1eZqTMBo8Lq+?=
- =?us-ascii?Q?5Lqu3qnrpyDTTe9jiQgMSAWbogFB46qeu8F7H6vDEnkLnluYFJKuq5CpyC22?=
- =?us-ascii?Q?dGnH2lFgr0Z8L+v5soFJClGQddf3a7FxvutyjA1nwuZ8lF4W90qYtrhkR6l0?=
- =?us-ascii?Q?6Mg1Z5c2p9vvGWR7htHrsqt7mwULGhRldvG71Jr1nvisLtKESXXddyjZU5+i?=
- =?us-ascii?Q?IqS90JCLJr+WEAx5h0bd5dOwug1jnduDSFYF9HERKxwwimhIAdqBeR9VoF/y?=
- =?us-ascii?Q?ILWmvhuN4BHGhkmX+HZaT0XId07P3bBLoLtpVjDkbz5GcK/o7ahJ4SDs68jw?=
- =?us-ascii?Q?7nHsxhAW/q6ZMtrrlvVSSekQoN3vAxEma4tUNtfEgvJM5zvO1YmIhKj27iQ3?=
- =?us-ascii?Q?DkxYwDO1KVh3PrzrQCW3/D3LsQIgvmjakV7HPR32jzxlBkMKmvMg3DOCJVoX?=
- =?us-ascii?Q?Pod2CFB33qspb0I+ppEOs8LuhUSrOgP8XX7M+r5vNbt2hpCsaHytS1JZ6MIy?=
- =?us-ascii?Q?QGIg3Q5CIiRpkPHJnSk5z6LbkpYvL6qS82IVXfKMG/WDOEl+f6Sl/PAxXlKg?=
- =?us-ascii?Q?qJAx5xTQgJyCm91HuHicTYoWGVJAGtOUAvbAAYt0PYVz8t85l4K7cDJUtpRL?=
- =?us-ascii?Q?Bn9QOtM1qJVYitagWVRFWoli9mayeAlQQDy7Jxmk09RrDfk9VUKtKUQd13ZN?=
- =?us-ascii?Q?fxFdzzbZurmZ48aB+uEg7UHB42rAFvMPMFI4bfbCONGcIHWMFaRX56hy6Fe5?=
- =?us-ascii?Q?2oAeFNoX/XaR7EJakkXUGQuG0xGbyvVB5sjW7veNIEymGTsrmoHQnxOIEcZ/?=
- =?us-ascii?Q?BC6fOBBE0oD7kLFklbe2OQazwohHrIXwOXHx1348FEpcKByi058YFHSoRLSy?=
- =?us-ascii?Q?ktqsSmO/NEObsfYmtb+OF3N/J6GuJ3/M2+csPYx6lobN14ErcEXLBnF1Nrh4?=
- =?us-ascii?Q?rhWLtG/FHl6bgLY/Yc1MSuwmRFklkNUP2UOTMcrgr408nOZCuEVkXNUAFgWY?=
- =?us-ascii?Q?NGOuWl74WYzMkzcTb2RXm5DACIZ75SWYPZtSrnM/0qkn7n2rKcqQkUoWkUVH?=
- =?us-ascii?Q?ZzKMTHU33ul9AR6rZ4ZglFYT?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4842e168-0cc4-4db2-8f73-08d94ba5d2cc
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2021 17:43:03.0254
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 22pEo8/Y/WIs9Ap1P9GySkOW4gPGsyy4RblxVqQhDbHoA1WYnWj04Y/KOEeTw3lp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5288
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="o9Bjd73EPYzHYRI8"
+Content-Disposition: inline
+In-Reply-To: <20210713193522.1770306-6-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Nothing uses this anymore, delete it.
 
-Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
----
- drivers/vfio/mdev/vfio_mdev.c | 22 ----------------------
- drivers/vfio/vfio.c           | 14 +-------------
- include/linux/mdev.h          |  7 -------
- include/linux/vfio.h          |  4 ----
- 4 files changed, 1 insertion(+), 46 deletions(-)
+--o9Bjd73EPYzHYRI8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-index 725cd2fe675190..5174974e5fb5f9 100644
---- a/drivers/vfio/mdev/vfio_mdev.c
-+++ b/drivers/vfio/mdev/vfio_mdev.c
-@@ -37,26 +37,6 @@ static void vfio_mdev_close_device(struct vfio_device *core_vdev)
- 		parent->ops->close_device(mdev);
- }
- 
--static int vfio_mdev_open(struct vfio_device *core_vdev)
--{
--	struct mdev_device *mdev = to_mdev_device(core_vdev->dev);
--	struct mdev_parent *parent = mdev->type->parent;
--
--	if (unlikely(!parent->ops->open))
--		return -EINVAL;
--
--	return parent->ops->open(mdev);
--}
--
--static void vfio_mdev_release(struct vfio_device *core_vdev)
--{
--	struct mdev_device *mdev = to_mdev_device(core_vdev->dev);
--	struct mdev_parent *parent = mdev->type->parent;
--
--	if (likely(parent->ops->release))
--		parent->ops->release(mdev);
--}
--
- static long vfio_mdev_unlocked_ioctl(struct vfio_device *core_vdev,
- 				     unsigned int cmd, unsigned long arg)
- {
-@@ -122,8 +102,6 @@ static const struct vfio_device_ops vfio_mdev_dev_ops = {
- 	.name		= "vfio-mdev",
- 	.open_device	= vfio_mdev_open_device,
- 	.close_device	= vfio_mdev_close_device,
--	.open		= vfio_mdev_open,
--	.release	= vfio_mdev_release,
- 	.ioctl		= vfio_mdev_unlocked_ioctl,
- 	.read		= vfio_mdev_read,
- 	.write		= vfio_mdev_write,
-diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-index 7e352d68b1b01d..bf06ab2d536997 100644
---- a/drivers/vfio/vfio.c
-+++ b/drivers/vfio/vfio.c
-@@ -1477,19 +1477,13 @@ static int vfio_group_get_device_fd(struct vfio_group *group, char *buf)
- 	}
- 	mutex_unlock(&device->dev_set->lock);
- 
--	if (device->ops->open) {
--		ret = device->ops->open(device);
--		if (ret)
--			goto err_close_device;
--	}
--
- 	/*
- 	 * We can't use anon_inode_getfd() because we need to modify
- 	 * the f_mode flags directly to allow more than just ioctls
- 	 */
- 	fdno = ret = get_unused_fd_flags(O_CLOEXEC);
- 	if (ret < 0)
--		goto err_release;
-+		goto err_close_device;
- 
- 	filep = anon_inode_getfile("[vfio-device]", &vfio_device_fops,
- 				   device, O_RDWR);
-@@ -1516,9 +1510,6 @@ static int vfio_group_get_device_fd(struct vfio_group *group, char *buf)
- 
- err_fd:
- 	put_unused_fd(fdno);
--err_release:
--	if (device->ops->release)
--		device->ops->release(device);
- err_close_device:
- 	mutex_lock(&device->dev_set->lock);
- 	if (device->open_count == 1 && device->ops->close_device)
-@@ -1666,9 +1657,6 @@ static int vfio_device_fops_release(struct inode *inode, struct file *filep)
- {
- 	struct vfio_device *device = filep->private_data;
- 
--	if (device->ops->release)
--		device->ops->release(device);
--
- 	mutex_lock(&device->dev_set->lock);
- 	if (!--device->open_count && device->ops->close_device)
- 		device->ops->close_device(device);
-diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-index cb5b7ed1d7c30d..68427e8fadebd6 100644
---- a/include/linux/mdev.h
-+++ b/include/linux/mdev.h
-@@ -72,11 +72,6 @@ struct device *mtype_get_parent_dev(struct mdev_type *mtype);
-  *			@mdev: mdev_device device structure which is being
-  *			       destroyed
-  *			Returns integer: success (0) or error (< 0)
-- * @open:		Open mediated device.
-- *			@mdev: mediated device.
-- *			Returns integer: success (0) or error (< 0)
-- * @release:		release mediated device
-- *			@mdev: mediated device.
-  * @read:		Read emulation callback
-  *			@mdev: mediated device structure
-  *			@buf: read buffer
-@@ -113,8 +108,6 @@ struct mdev_parent_ops {
- 	int     (*remove)(struct mdev_device *mdev);
- 	int     (*open_device)(struct mdev_device *mdev);
- 	void    (*close_device)(struct mdev_device *mdev);
--	int     (*open)(struct mdev_device *mdev);
--	void    (*release)(struct mdev_device *mdev);
- 	ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
- 			size_t count, loff_t *ppos);
- 	ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index f0e6a72875e471..b53a9557884ada 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -46,8 +46,6 @@ struct vfio_device {
-  *
-  * @open_device: Called when the first file descriptor is opened for this device
-  * @close_device: Opposite of open_device
-- * @open: Called when userspace creates new file descriptor for device
-- * @release: Called when userspace releases file descriptor for device
-  * @read: Perform read(2) on device file descriptor
-  * @write: Perform write(2) on device file descriptor
-  * @ioctl: Perform ioctl(2) on device file descriptor, supporting VFIO_DEVICE_*
-@@ -62,8 +60,6 @@ struct vfio_device_ops {
- 	char	*name;
- 	int	(*open_device)(struct vfio_device *vdev);
- 	void	(*close_device)(struct vfio_device *vdev);
--	int	(*open)(struct vfio_device *vdev);
--	void	(*release)(struct vfio_device *vdev);
- 	ssize_t	(*read)(struct vfio_device *vdev, char __user *buf,
- 			size_t count, loff_t *ppos);
- 	ssize_t	(*write)(struct vfio_device *vdev, const char __user *buf,
--- 
-2.32.0
+On Tue, Jul 13, 2021 at 09:35:22PM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> The driver core ignores the return value of this callback because there
+> is only little it can do when a device disappears.
+>=20
+> This is the final bit of a long lasting cleanup quest where several
+> buses were converted to also return void from their remove callback.
+> Additionally some resource leaks were fixed that were caused by drivers
+> returning an error code in the expectation that the driver won't go
+> away.
+>=20
+> With struct bus_type::remove returning void it's prevented that newly
+> implemented buses return an ignored error code and so don't anticipate
+> wrong expectations for driver authors.
+>=20
+> Acked-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk> (For ARM, Am=
+ba and related parts)
+> Acked-by: Mark Brown <broonie@kernel.org>
+> Acked-by: Chen-Yu Tsai <wens@csie.org> (for sunxi-rsb)
+> Acked-by: Pali Roh=C3=A1r <pali@kernel.org>
+> Acked-by: Mauro Carvalho Chehab <mchehab@kernel.org> (for media)
+> Acked-by: Hans de Goede <hdegoede@redhat.com> (For drivers/platform)
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Acked-By: Vinod Koul <vkoul@kernel.org>
+> Acked-by: Juergen Gross <jgross@suse.com> (For xen)
+> Acked-by: Lee Jones <lee.jones@linaro.org> (For mfd)
+> Acked-by: Johannes Thumshirn <jth@kernel.org> (For mcb)
+> Acked-by: Johan Hovold <johan@kernel.org>
+> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org> (For slimb=
+us)
+> Acked-by: Kirti Wankhede <kwankhede@nvidia.com> (For vfio)
+> Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
+> Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com> (For ulpi and=
+ typec)
+> Acked-by: Samuel Iglesias Gons=C3=A1lvez <siglesias@igalia.com> (For ipac=
+k)
+> Reviewed-by: Tom Rix <trix@redhat.com> (For fpga)
+> Acked-by: Geoff Levand <geoff@infradead.org> (For ps3)
+> Acked-by: Yehezkel Bernat <YehezkelShB@gmail.com> (For thunderbolt)
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com> (For in=
+tel_th)
+> Acked-by: Dominik Brodowski <linux@dominikbrodowski.net> (For pcmcia)
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com> (For drivers/s390 and driv=
+ers/vfio)
+> Acked-by: Rafael J. Wysocki <rafael@kernel.org> (For ACPI)
+> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org> (rpmsg and apr)
+> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> (For =
+intel-ish-hid)
+> Acked-by: Dan Williams <dan.j.williams@intel.com> (For CXL, DAX, and NVDI=
+MM)
+> Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com> (For isa)
+> Acked-by: Stefan Richter <stefanr@s5r6.in-berlin.de> (For firewire)
+> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com> (For hid)
+> Acked-by: Thorsten Scherer <t.scherer@eckelmann.de> (For siox)
+> Acked-by: Sven Van Asbroeck <TheSven73@gmail.com> (For anybuss)
+> Acked-by: Ulf Hansson <ulf.hansson@linaro.org> (For MMC)
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 
+Acked-by: Wolfram Sang <wsa@kernel.org> # for I2C
+
+Thanks, Uwe!
+
+
+--o9Bjd73EPYzHYRI8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmD3MUIACgkQFA3kzBSg
+KbYzoQ//fHsReQ7gV79Uj6MfHENOZAAxSFMd8yIWNeX0Ug8crVQ2fzQgvlotUS1y
+62KPO9MFbi37+nfCWwl5uNEiDPwYjpB+jM/jfqJ849ngfiIQyUqCK7qr5b1FIWkp
+TuEV1Rx/wlpmxMEjKFAuo+/5OkXVwvpxQGiqBemOeTmOKjqITCpXEBkYqDqqI/MY
+lnzwpE8R30sf8IH/aThtb9dZBz+8y2mry6nVtSbMMmZ0VAYgwEPmuPLfa9CIhaCJ
+Oqe6Uf+sJs/emp0nfyZ5IDXvO8vE5kgPoy0l/smHEtejHLUkHBKf4MusKOzDdbax
+Uk48fnhKgbhxbVN0guT7IzWvRG+80hU4Ns9YPjmHYNXr4Wg03//hoAv4otMAAqXU
+Tjk9sEMBGHasqHZ0e1j3xTRhxQOwTJjzwVNhkrTX4HIZ/k0gXQK0ojBXxGvWeds2
+yQ7FUakyf1LQBmrLwssWSXbyp+W6tVodIUmnebSK1IpVd7YK4NZPf796yD44Ckzd
+XM4O5xTksxr5X+cEsNNLxhXFMohR/BOpLCj4R1+vpRNyMTHLIqfsI7GL+TJh+Mri
++kuq0TQgbTRlrIw/jfTcenYmXhQte4oeFQa3uVwGY2b+5kB/zRMTKThU0e2Vpd+8
+Kifz6u9a8LEGAMrLNXVd1B/uHQSOMYeeIzsuZ+BHqVxDsyNvJds=
+=zPVh
+-----END PGP SIGNATURE-----
+
+--o9Bjd73EPYzHYRI8--
