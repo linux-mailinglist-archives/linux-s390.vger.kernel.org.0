@@ -2,18 +2,18 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18FC73D3523
-	for <lists+linux-s390@lfdr.de>; Fri, 23 Jul 2021 09:18:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7E023D3526
+	for <lists+linux-s390@lfdr.de>; Fri, 23 Jul 2021 09:18:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230355AbhGWGhc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 23 Jul 2021 02:37:32 -0400
-Received: from verein.lst.de ([213.95.11.211]:37292 "EHLO verein.lst.de"
+        id S233194AbhGWGiC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 23 Jul 2021 02:38:02 -0400
+Received: from verein.lst.de ([213.95.11.211]:37307 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229560AbhGWGhb (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 23 Jul 2021 02:37:31 -0400
+        id S229560AbhGWGiC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 23 Jul 2021 02:38:02 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id F357567373; Fri, 23 Jul 2021 09:18:01 +0200 (CEST)
-Date:   Fri, 23 Jul 2021 09:18:01 +0200
+        id 09D2468AFE; Fri, 23 Jul 2021 09:18:34 +0200 (CEST)
+Date:   Fri, 23 Jul 2021 09:18:33 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jason Gunthorpe <jgg@nvidia.com>
 Cc:     David Airlie <airlied@linux.ie>,
@@ -48,13 +48,14 @@ Cc:     David Airlie <airlied@linux.ie>,
         Max Gurtovoy <mgurtovoy@nvidia.com>,
         Yishai Hadas <yishaih@nvidia.com>,
         Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: Re: [PATCH v2 01/14] vfio/samples: Remove module get/put
-Message-ID: <20210723071801.GA864@lst.de>
-References: <0-v2-b6a5582525c9+ff96-vfio_reflck_jgg@nvidia.com> <1-v2-b6a5582525c9+ff96-vfio_reflck_jgg@nvidia.com>
+Subject: Re: [PATCH v2 03/14] vfio: Introduce a vfio_uninit_group_dev() API
+ call
+Message-ID: <20210723071833.GB864@lst.de>
+References: <0-v2-b6a5582525c9+ff96-vfio_reflck_jgg@nvidia.com> <3-v2-b6a5582525c9+ff96-vfio_reflck_jgg@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1-v2-b6a5582525c9+ff96-vfio_reflck_jgg@nvidia.com>
+In-Reply-To: <3-v2-b6a5582525c9+ff96-vfio_reflck_jgg@nvidia.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
