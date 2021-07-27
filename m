@@ -2,112 +2,188 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26E3C3D7884
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Jul 2021 16:31:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B9DE3D78E8
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Jul 2021 16:50:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236537AbhG0Obb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 27 Jul 2021 10:31:31 -0400
-Received: from outbound-smtp17.blacknight.com ([46.22.139.234]:43445 "EHLO
-        outbound-smtp17.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232503AbhG0Obb (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 27 Jul 2021 10:31:31 -0400
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp17.blacknight.com (Postfix) with ESMTPS id 27B511C421E
-        for <linux-s390@vger.kernel.org>; Tue, 27 Jul 2021 15:31:30 +0100 (IST)
-Received: (qmail 27122 invoked from network); 27 Jul 2021 14:31:29 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.17.255])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 27 Jul 2021 14:31:29 -0000
-Date:   Tue, 27 Jul 2021 15:31:28 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>, bristot@redhat.com,
-        bsegall@google.com, dietmar.eggemann@arm.com, joshdon@google.com,
-        juri.lelli@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux@rasmusvillemoes.dk, mgorman@suse.de, mingo@kernel.org,
-        rostedt@goodmis.org, valentin.schneider@arm.com,
-        vincent.guittot@linaro.org
-Subject: Re: [PATCH 1/1] sched/fair: improve yield_to vs fairness
-Message-ID: <20210727143128.GA3809@techsingularity.net>
-References: <YIlXQ43b6+7sUl+f@hirez.programming.kicks-ass.net>
- <20210707123402.13999-1-borntraeger@de.ibm.com>
- <20210707123402.13999-2-borntraeger@de.ibm.com>
- <20210723093523.GX3809@techsingularity.net>
- <YQALDHw7Cr+vbeqN@hirez.programming.kicks-ass.net>
+        id S237187AbhG0Ou5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 27 Jul 2021 10:50:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236864AbhG0Ott (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 27 Jul 2021 10:49:49 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3559861AFD;
+        Tue, 27 Jul 2021 14:49:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627397359;
+        bh=Tjiwf4/hYWXFn9aUgPpl3D0HHZbelU5u+FTy8tvX/BA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Jm0Ghr4DY8S8DbJUMOgzNYNZ9TpUDawl2m4udsOCvZu6uErY0ceZK1ugOzDu5GYfU
+         FcpYwKuxA6AjAy3zyCgVACtAq/UWFPG3mNHsh8tFDA5zWzInxHIu8o0jJfWh5vuzLj
+         ++JkgaoWIL8JM41Ld9ZSmOyhjlGS5DRNjCGi0qceKIOC/UT+DuY98htxeqdY7x3FKV
+         40uaxkb5SA6kv5iFRlvbFCA5wazm8JgMVhL91/E5GnpKc2GEeZREYLyo0ppxHTqLHX
+         HXWc8AwqP3FWNXks7HkSQo4WKwHmUdrLF/lKZgKuXzZvtIgXac3yNPJy/etARITDNG
+         3IhheeU5vs0Kw==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Feng Tang <feng.tang@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH v5 0/6] compat: remove compat_alloc_user_space
+Date:   Tue, 27 Jul 2021 16:48:53 +0200
+Message-Id: <20210727144859.4150043-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <YQALDHw7Cr+vbeqN@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jul 27, 2021 at 03:33:00PM +0200, Peter Zijlstra wrote:
-> On Fri, Jul 23, 2021 at 10:35:23AM +0100, Mel Gorman wrote:
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 44c452072a1b..ddc0212d520f 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -4522,7 +4522,8 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr)
-> >  			se = second;
-> >  	}
-> >  
-> > -	if (cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left) < 1) {
-> > +	if (cfs_rq->next &&
-> > +	    (cfs_rq->skip == left || wakeup_preempt_entity(cfs_rq->next, left) < 1)) {
-> >  		/*
-> >  		 * Someone really wants this to run. If it's not unfair, run it.
-> >  		 */
-> 
-> With a little more context this function reads like:
-> 
-> 	se = left;
-> 
-> 	if (cfs_rq->skip && cfs_rq->skip == se) {
-> 		...
-> +		if (cfs_rq->next && (cfs_rq->skip == left || ...))
-> 
-> If '...' doesn't change @left (afaict it doesn't), then your change (+)
-> is equivalent to '&& true', or am I reading things wrong?
+From: Arnd Bergmann <arnd@arndb.de>
 
-You're not reading it wrong although the patch is clumsy and may introduce
-unfairness that gets incrementally worse if there was repeated yields to
-the same task. A second patch was posted that does
+Going through compat_alloc_user_space() to convert indirect system call
+arguments tends to add complexity compared to handling the native and
+compat logic in the same code.
 
--       if (cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left) < 1) {
-+       if (cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, se) < 1) {
+Out of the other remaining callers, the linux-media series went into
+v5.14, and the network ioctl handling is now fixed in net-next, so
+these are the last remaining users, and I now include the final
+patch to remove the definitions as well.
 
-i.e. if the skip hint picks a second alternative then next or last buddies
-should be compared to the second alternative and not "left". It doesn't
-help indicating that the skip hint is not obeyed because "second" failed
-the entity_before() or wakeup_preempt_entity() checks. I'm waiting on a
-trace to see which check dominates.
+Since these patches are now all that remains, it would be nice to
+merge it all through Andrew's Linux-mm tree, which is already based
+on top of linux-next.
 
-That said, I'm still undecided on how to approach this. None of the
-proposed patches on their own helps but the options are
+       Arnd
+---
 
-1. Strictly obey the next buddy if the skip hint is the same se as left
-   (first patch which I'm not very happy with even if it helped the
-   test case)
+Changes in v4:
 
-2. My second patch which compares next/last with "second" if the skip
-   hint skips "left". This may be a sensible starting point no matter
-   what
+- Rebase on top of net-next
+- Split up and improve the kexec patch based on Christoph's suggestions
+- Include final patch to remove compat_alloc_user_space
+- Cc compat architecture maintainers
 
-3. Relaxing how "second" is selected if next or last buddies are set
+Link: https://lore.kernel.org/lkml/20210720150950.3669610-1-arnd@kernel.org/
 
-4. vruntime tricks even if it punishes fairness for the task yielding
-   the CPU. The advantage of this approach is if there are multiple tasks
-   ahead of the task being yielded to then yield_to task will become
-   "left" very quickly regardless of any buddy-related hints.
+Changes in v3:
 
-I don't know what "3" would look like yet, it might be very fragile but
-lets see what the tracing says. Otherwise, testing 2+4 might be worthwhile
-to see if the combination helps Christian's test case when the cpu cgroup
-is involved.
+- fix whitespace as pointed out by Christoph Hellwig
+- minor build fixes
+- rebase to v5.13-rc1
+
+Link: https://lore.kernel.org/lkml/20210517203343.3941777-1-arnd@kernel.org/
+
+Changes in v2:
+
+- address review comments from Christoph Hellwig
+- split syscall removal into a separate patch
+- replace __X32_COND_SYSCALL() with individual macros for x32
+
+Link: https://lore.kernel.org/lkml/20201208150614.GA15765@infradead.org/
+
+Arnd Bergmann (6):
+  kexec: move locking into do_kexec_load
+  kexec: avoid compat_alloc_user_space
+  mm: simplify compat_sys_move_pages
+  mm: simplify compat numa syscalls
+  compat: remove some compat entry points
+  arch: remove compat_alloc_user_space
+
+ arch/arm64/include/asm/compat.h           |   5 -
+ arch/arm64/include/asm/uaccess.h          |  11 --
+ arch/arm64/include/asm/unistd32.h         |  10 +-
+ arch/arm64/lib/Makefile                   |   2 +-
+ arch/arm64/lib/copy_in_user.S             |  77 ---------
+ arch/mips/cavium-octeon/octeon-memcpy.S   |   2 -
+ arch/mips/include/asm/compat.h            |   8 -
+ arch/mips/include/asm/uaccess.h           |  26 ---
+ arch/mips/kernel/syscalls/syscall_n32.tbl |  10 +-
+ arch/mips/kernel/syscalls/syscall_o32.tbl |  10 +-
+ arch/mips/lib/memcpy.S                    |  11 --
+ arch/parisc/include/asm/compat.h          |   6 -
+ arch/parisc/include/asm/uaccess.h         |   2 -
+ arch/parisc/kernel/syscalls/syscall.tbl   |   8 +-
+ arch/parisc/lib/memcpy.c                  |   9 -
+ arch/powerpc/include/asm/compat.h         |  16 --
+ arch/powerpc/kernel/syscalls/syscall.tbl  |  10 +-
+ arch/s390/include/asm/compat.h            |  10 --
+ arch/s390/include/asm/uaccess.h           |   3 -
+ arch/s390/kernel/syscalls/syscall.tbl     |  10 +-
+ arch/s390/lib/uaccess.c                   |  63 -------
+ arch/sparc/include/asm/compat.h           |  19 ---
+ arch/sparc/kernel/process_64.c            |   2 +-
+ arch/sparc/kernel/signal32.c              |  12 +-
+ arch/sparc/kernel/signal_64.c             |   8 +-
+ arch/sparc/kernel/syscalls/syscall.tbl    |  10 +-
+ arch/x86/entry/syscalls/syscall_32.tbl    |   4 +-
+ arch/x86/entry/syscalls/syscall_64.tbl    |   2 +-
+ arch/x86/include/asm/compat.h             |  13 --
+ arch/x86/include/asm/uaccess_64.h         |   7 -
+ include/linux/compat.h                    |  39 +----
+ include/linux/uaccess.h                   |  10 --
+ include/uapi/asm-generic/unistd.h         |  10 +-
+ kernel/compat.c                           |  21 ---
+ kernel/kexec.c                            | 103 +++++-------
+ kernel/sys_ni.c                           |   5 -
+ mm/mempolicy.c                            | 196 +++++-----------------
+ mm/migrate.c                              |  50 +++---
+ 38 files changed, 175 insertions(+), 645 deletions(-)
+ delete mode 100644 arch/arm64/lib/copy_in_user.S
 
 -- 
-Mel Gorman
-SUSE Labs
+2.29.2
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: linux-api@vger.kernel.org
+Cc: linux-mm@kvack.org
