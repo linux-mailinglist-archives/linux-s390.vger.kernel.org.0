@@ -2,108 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E05353D9086
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Jul 2021 16:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E6E63D90BE
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Jul 2021 16:35:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236998AbhG1O1A (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Jul 2021 10:27:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52288 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236891AbhG1O0v (ORCPT
+        id S236837AbhG1Ofp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Jul 2021 10:35:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49499 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236667AbhG1Ofo (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 28 Jul 2021 10:26:51 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 16SENRXS002250;
-        Wed, 28 Jul 2021 10:26:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=TYoIRol9yl2qTCImcPN2bYvLHpbTGORySPpFzAkZxAQ=;
- b=FqOeSdm2qb7RKXeRnbwsDoET4nVW2ng5LU1nXa+eXptsRtrLP+Qsff6Jt++xVS0O06XU
- cy5IQdoTctGT5btUeD00EV/VdBRRPcDkkogW0UaxLYORyGfe9dBcV4uOjyW9EfJ5DT/p
- akAYkLSLSdVOAUkAc/BwOaiN4n7cf+pkT16gsZOqhVxIsDLJ1qtgP9eugpEAPOXTebTW
- 3CfVABcxpYUY9148LdrG2Ge/q8vxcNR7eDvHDJco9GC0hy9T7TJx3UOSpGfbHlDKReai
- DoL9iPzKdCN0NX/9AqTBDZ/g4wRrG8CWKU+NTOiAd3qXqonfYirl8ePkyEzmi+kq654u fQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3a38u4rbfx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jul 2021 10:26:48 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 16SEOSHx006078;
-        Wed, 28 Jul 2021 10:26:48 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3a38u4rbf4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jul 2021 10:26:48 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 16SEJ6Tl013456;
-        Wed, 28 Jul 2021 14:26:46 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 3a235m149j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jul 2021 14:26:46 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 16SEQhOn15729132
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Jul 2021 14:26:43 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 04CE6A4057;
-        Wed, 28 Jul 2021 14:26:43 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9978BA404D;
-        Wed, 28 Jul 2021 14:26:42 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.9.194])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 28 Jul 2021 14:26:42 +0000 (GMT)
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     cohuck@redhat.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        thuth@redhat.com, pasic@linux.ibm.com, david@redhat.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 13/13] KVM: s390: pv: add support for UV feature bits
-Date:   Wed, 28 Jul 2021 16:26:31 +0200
-Message-Id: <20210728142631.41860-14-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210728142631.41860-1-imbrenda@linux.ibm.com>
-References: <20210728142631.41860-1-imbrenda@linux.ibm.com>
+        Wed, 28 Jul 2021 10:35:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627482941;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ns4+hvb10pCv09UW5xpgn10rDpJ/aUkX8DQEOdyq8JY=;
+        b=IfaZdKaXnSgLTo5YAIGQ+ZNt1lreaUakh64ESLzCW7jKwnPPF1mVFqmV++JhUaSY160Mxd
+        AuuBIi0ZhQo3+waaoowvqsyBZ/rR5x6JjDR4adJ6TAoco0A5xD2YT73Z9nX76fd7alg8p3
+        26ZXVKgm6jtyl8V/J7IZH0NI0kcU7EE=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-M_3NmVKsPnuZMIStzAI0bg-1; Wed, 28 Jul 2021 10:35:40 -0400
+X-MC-Unique: M_3NmVKsPnuZMIStzAI0bg-1
+Received: by mail-wm1-f70.google.com with SMTP id 132-20020a1c018a0000b029025005348905so1006032wmb.7
+        for <linux-s390@vger.kernel.org>; Wed, 28 Jul 2021 07:35:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ns4+hvb10pCv09UW5xpgn10rDpJ/aUkX8DQEOdyq8JY=;
+        b=RJzWl244URiC0TjPNsz2vcl5cYCWwl4tGKVjZ/kiviELUTC0ssVpp11Q6XAds/dzYI
+         6suwzThNek0O33gYJwVbOl3Oszpk0Mkzyhes0MSfMSFJKPG6it4Awl5ZEiXbVfakmI7G
+         F/nAiywpJpMR/euStEuQwnXE2QRaVZUJTmBdXBYhxkfQpF7oUMF+vjgin9CFnrC84if4
+         XMgkOrxlcR81U/fA2k9TmxrMMhvj49dtnwANGMPds/l0KyfS4HTGiTBLYSB4cA9ztoT0
+         NIErkx63K/gJ9VpRpeTwb4a+jq7JTuSOFEo1OwI64gRZLSfGk+aSsWBJRXV8B1gkVrZO
+         3eSw==
+X-Gm-Message-State: AOAM532vgkDd+XihezV9TVg5Ws4owzuOtnS3SaJvToW6z41G1hXYaWVt
+        tDwOCDI152C4IHSNQ+76SiAKheMnrGQIfkj7ZCszO1Zp0wk+r1xPSPxlD8N+wve9qYKtYz06Jjt
+        t1A6ELfTRUUNVUxfUzOg4PA==
+X-Received: by 2002:a05:600c:206:: with SMTP id 6mr9915961wmi.137.1627482938593;
+        Wed, 28 Jul 2021 07:35:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxhTb5ddWwmkLn/CH3sMlITeGS1cEIPUQGu9uQ0XfoNZUun5nGZqs9ljS4qYZVOiACLgBqPBg==
+X-Received: by 2002:a05:600c:206:: with SMTP id 6mr9915951wmi.137.1627482938459;
+        Wed, 28 Jul 2021 07:35:38 -0700 (PDT)
+Received: from thuth.remote.csb (p5791d475.dip0.t-ipconnect.de. [87.145.212.117])
+        by smtp.gmail.com with ESMTPSA id y19sm6033618wma.21.2021.07.28.07.35.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Jul 2021 07:35:37 -0700 (PDT)
+Subject: Re: [kvm-unit-tests PATCH v2] s390x: Add SPDX and header comments for
+ s390x/* and lib/s390x/*
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com
+References: <20210728101328.51646-2-frankja@linux.ibm.com>
+ <20210728125643.80840-1-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <23050302-247b-11f6-249b-d9ead3a9bea3@redhat.com>
+Date:   Wed, 28 Jul 2021 16:35:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: oUFudTQnZfpem5G6vQuiy6nKeDOhS0xb
-X-Proofpoint-ORIG-GUID: ipl4nIVJcp0apeOATzuSjzh5cIJhxzdX
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-07-28_08:2021-07-27,2021-07-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 clxscore=1015 mlxscore=0 malwarescore=0
- mlxlogscore=999 spamscore=0 priorityscore=1501 adultscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2107140000 definitions=main-2107280079
+In-Reply-To: <20210728125643.80840-1-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Add support for Ultravisor feature bits, and take advantage of the
-functionality advertised to speed up the lazy destroy mechanism.
+On 28/07/2021 14.56, Janosch Frank wrote:
+> Seems like I missed adding them.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+> 
+> Dropped the sieve.c change.
+> 
+> ---
+>   lib/s390x/uv.c   |  9 +++++++++
+>   s390x/mvpg-sie.c |  9 +++++++++
+>   s390x/sie.c      | 10 ++++++++++
+>   3 files changed, 28 insertions(+)
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
----
- arch/s390/kernel/uv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-index f0af49b09a91..6ec3d7338ec8 100644
---- a/arch/s390/kernel/uv.c
-+++ b/arch/s390/kernel/uv.c
-@@ -290,7 +290,8 @@ static int make_secure_pte(pte_t *ptep, unsigned long addr,
- 
- static bool should_export_before_import(struct uv_cb_header *uvcb, struct mm_struct *mm)
- {
--	return uvcb->cmd != UVC_CMD_UNPIN_PAGE_SHARED &&
-+	return !test_bit_inv(BIT_UV_FEAT_MISC, &uv_info.uv_feature_indications) &&
-+		uvcb->cmd != UVC_CMD_UNPIN_PAGE_SHARED &&
- 		atomic_read(&mm->context.is_protected) > 1;
- }
- 
--- 
-2.31.1
+Reviewed-by: Thomas Huth <thuth@redhat.com>
 
