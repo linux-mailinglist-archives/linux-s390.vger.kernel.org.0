@@ -2,93 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 711503D8BD7
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Jul 2021 12:32:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45BB83D8BE0
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Jul 2021 12:33:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235955AbhG1Kcr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Jul 2021 06:32:47 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34230 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235919AbhG1Kcl (ORCPT
+        id S235785AbhG1KdP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Jul 2021 06:33:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:28727 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231984AbhG1KdP (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 28 Jul 2021 06:32:41 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 16SAAWDg119195;
-        Wed, 28 Jul 2021 06:32:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=eZY36jSfZpVBUBU+6AAmO44IoMnc3S3NIfvovVleXaA=;
- b=bTaafcEQ5BUJ8O647x8DrwJkiq+lIU/S6SP23yqFTGLTGR+i0LzGz6aEZcZVYytQZ5YR
- YoIfA8F1lJWY33GfBwUhwmYEyU5UEFWrnfPshx3qwOpwJpkFPkNksIlAhnDkC1KSpBRI
- BueacvDvcWGPbeGtS8ykhoL1vXCwxMSvF/fyen2CXCfxhsrDDN8Df8DU/fR40RyfYy1Z
- OTuR8hrRcTQ6dhSbxcKnBcTt8YWaVNcAGf9WmWC9yDseXPhw9e/nxLXzrkeUh/B+8zDM
- 41MI5MTvOQuEsZv9sWdnKQQckujESkrJWnwt2EedW4wRkNxtd5JCOB448rfBO3Y3CKRL wQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3a337c4jwp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jul 2021 06:32:39 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 16SAE04U136266;
-        Wed, 28 Jul 2021 06:32:39 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3a337c4juh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jul 2021 06:32:39 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 16SAWaxG010329;
-        Wed, 28 Jul 2021 10:32:36 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 3a235kgyxq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jul 2021 10:32:36 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 16SAWYlQ29753606
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Jul 2021 10:32:34 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F33ED11C074;
-        Wed, 28 Jul 2021 10:32:33 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A3D6011C06E;
-        Wed, 28 Jul 2021 10:32:33 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.9.194])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 28 Jul 2021 10:32:33 +0000 (GMT)
-Date:   Wed, 28 Jul 2021 12:32:21 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, david@redhat.com,
-        thuth@redhat.com, cohuck@redhat.com
+        Wed, 28 Jul 2021 06:33:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627468393;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IBnjip7bmZlo5iIFfE9USXwqXSxtKiL/lSH0+0EZMvE=;
+        b=TGYPqAzsAE4/NcRsgdiq9Z1xC5AmLmWEcPWs7ypDslhvTQfjzvqrHNHKzrBxDwa7vpkILp
+        GSjBstbxGWKm6PVmpHsD1yjmb0Y7eH5/aOmxJhVY6Yf7Al9sD/eVj+/WDEhR/V+pMopxPs
+        bnZY+2rWm5rgXhKgOKAeKpcXP/9Fotw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-602-hYKihuwpOI2GrF2E6YK5iw-1; Wed, 28 Jul 2021 06:33:12 -0400
+X-MC-Unique: hYKihuwpOI2GrF2E6YK5iw-1
+Received: by mail-wr1-f71.google.com with SMTP id o8-20020a5d4a880000b029013a10564614so763267wrq.15
+        for <linux-s390@vger.kernel.org>; Wed, 28 Jul 2021 03:33:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IBnjip7bmZlo5iIFfE9USXwqXSxtKiL/lSH0+0EZMvE=;
+        b=TjB1KzJl4eG637/6viAql5RV7kWPn59rV+o4jtulwAPsAN9cnQvu/sMyrL199WBa0R
+         QJYtbZFNKO1FGru8SucovUHevdfPhsoMTlejunvfRHA1LeWgPmaqIXy/2QdTKl5crKYR
+         6zo2388s/8dgLAWMbaGQzu3ICZ7nSWucIZIavVLk+iPy4eur+r7Y/phIsnJIRPR9opjt
+         vtiSQstxR8M+4kHIvXhDJVd7w4NxQMZTtaICXhp+GtOAy1A+hpqJNlVwoIrpC+xpzFjv
+         n+mv7sLOj7FSbB2/JBLSu7II8hU+onNNv1/gjB3AyDPX5NxjzyEmuDp4PgjMU2QE1l8c
+         Br5A==
+X-Gm-Message-State: AOAM532qM2fPv3D/2HQp5+vcWwxui8ZTS4mxpoRX8hfz3NSY7Ut+9eUI
+        kReYtqpHONI7M3hLVVEWxb8UPufTxCfbqXIDLYzyHaXlLHDEo9oSSqNNav9yFkbJMg7uRUfLGQv
+        0HK8UZMpYjoexlDGBxuSGJA==
+X-Received: by 2002:a05:6000:1201:: with SMTP id e1mr19621480wrx.379.1627468391104;
+        Wed, 28 Jul 2021 03:33:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzg+mRSLuRF0fKoIVNkZUaXxgdmcVCNiAJAjD+MCyNtOlp9tZSli5/Dg0H/oK/AX3nCaTBDpA==
+X-Received: by 2002:a05:6000:1201:: with SMTP id e1mr19621459wrx.379.1627468390926;
+        Wed, 28 Jul 2021 03:33:10 -0700 (PDT)
+Received: from thuth.remote.csb (p5791d475.dip0.t-ipconnect.de. [87.145.212.117])
+        by smtp.gmail.com with ESMTPSA id s3sm6128233wru.29.2021.07.28.03.33.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Jul 2021 03:33:10 -0700 (PDT)
 Subject: Re: [kvm-unit-tests PATCH 1/3] s390x: Add SPDX and header comments
  for s390x/* and lib/s390x/*
-Message-ID: <20210728123221.7ca90b35@p-imbrenda>
-In-Reply-To: <20210728101328.51646-2-frankja@linux.ibm.com>
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com
 References: <20210728101328.51646-1-frankja@linux.ibm.com>
-        <20210728101328.51646-2-frankja@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+ <20210728101328.51646-2-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <7e33e33f-63ef-c4d9-50d9-c1df150af1e6@redhat.com>
+Date:   Wed, 28 Jul 2021 12:33:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20210728101328.51646-2-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: AR81-lBdYeW23wcJqDlBOTAhuug74Rvy
-X-Proofpoint-GUID: dArJxAhnq3dv9HgEWxPfPO-I5sDlcppt
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-07-28_07:2021-07-27,2021-07-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 adultscore=0
- priorityscore=1501 mlxlogscore=999 bulkscore=0 malwarescore=0
- suspectscore=0 spamscore=0 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2107140000
- definitions=main-2107280054
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 28 Jul 2021 10:13:26 +0000
-Janosch Frank <frankja@linux.ibm.com> wrote:
-
+On 28/07/2021 12.13, Janosch Frank wrote:
 > Seems like I missed adding them.
 > 
 > The s390x/sieve.c one is a bit of a head scratcher since it came with
@@ -97,11 +82,11 @@ Janosch Frank <frankja@linux.ibm.com> wrote:
 > 
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 > ---
->  lib/s390x/uv.c   |  9 +++++++++
->  s390x/mvpg-sie.c |  9 +++++++++
->  s390x/sie.c      | 10 ++++++++++
->  x86/sieve.c      |  5 +++++
->  4 files changed, 33 insertions(+)
+>   lib/s390x/uv.c   |  9 +++++++++
+>   s390x/mvpg-sie.c |  9 +++++++++
+>   s390x/sie.c      | 10 ++++++++++
+>   x86/sieve.c      |  5 +++++
+>   4 files changed, 33 insertions(+)
 > 
 > diff --git a/lib/s390x/uv.c b/lib/s390x/uv.c
 > index 0d8c141c..fd9de944 100644
@@ -117,9 +102,9 @@ Janosch Frank <frankja@linux.ibm.com> wrote:
 > + * Authors:
 > + *    Janosch Frank <frankja@linux.ibm.com>
 > + */
->  #include <libcflat.h>
->  #include <bitops.h>
->  #include <alloc.h>
+>   #include <libcflat.h>
+>   #include <bitops.h>
+>   #include <alloc.h>
 > diff --git a/s390x/mvpg-sie.c b/s390x/mvpg-sie.c
 > index 9bcd15a2..5e70f591 100644
 > --- a/s390x/mvpg-sie.c
@@ -134,9 +119,9 @@ Janosch Frank <frankja@linux.ibm.com> wrote:
 > + * Authors:
 > + *    Janosch Frank <frankja@linux.ibm.com>
 > + */
->  #include <libcflat.h>
->  #include <asm/asm-offsets.h>
->  #include <asm-generic/barrier.h>
+>   #include <libcflat.h>
+>   #include <asm/asm-offsets.h>
+>   #include <asm-generic/barrier.h>
 > diff --git a/s390x/sie.c b/s390x/sie.c
 > index cfc746f3..134d3c4f 100644
 > --- a/s390x/sie.c
@@ -152,29 +137,22 @@ Janosch Frank <frankja@linux.ibm.com> wrote:
 > + * Authors:
 > + *    Janosch Frank <frankja@linux.ibm.com>
 > + */
->  #include <libcflat.h>
->  #include <asm/asm-offsets.h>
->  #include <asm/arch_def.h>
+>   #include <libcflat.h>
+>   #include <asm/asm-offsets.h>
+>   #include <asm/arch_def.h>
 > diff --git a/x86/sieve.c b/x86/sieve.c
 > index 8150f2d9..b89d5f80 100644
 > --- a/x86/sieve.c
 > +++ b/x86/sieve.c
 > @@ -1,3 +1,8 @@
 > +/* SPDX-License-Identifier: LGPL-2.0-only */
-
-do you really need to fix something in the x86 directory? (even though
-it is also used on other archs)
-
-maybe you can split out this as a separate patch, so s390x stuff is
-more self contained, and others can then discuss the sieve.c patch
-separately if needed?
-
 > +/*
 > + * Implementation of the sieve of Eratosthenes
-> + * Calculation and memory intensive workload for general stress
-> testing.
+> + * Calculation and memory intensive workload for general stress testing.
 > + */
->  #include "alloc.h"
->  #include "libcflat.h"
->  
+>   #include "alloc.h"
+>   #include "libcflat.h"
+>   
+
+Reviewed-by: Thomas Huth <thuth@redhat.com>
 
