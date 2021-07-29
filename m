@@ -2,160 +2,170 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 161C53DA34F
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Jul 2021 14:44:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AFA03DA457
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Jul 2021 15:30:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237264AbhG2Mod (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 29 Jul 2021 08:44:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237236AbhG2Moc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 29 Jul 2021 08:44:32 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF92FC061765
-        for <linux-s390@vger.kernel.org>; Thu, 29 Jul 2021 05:44:28 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id m11so3795707qtx.7
-        for <linux-s390@vger.kernel.org>; Thu, 29 Jul 2021 05:44:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=REukLMYHB9mfVFO1/bdDCKtlszA1rKroqNl1QPX1pLU=;
-        b=BDIdGkUehfGKUuxsy+fvkDkr2GBCODc7I8zNcJ8SRMTrosiAzd9wV8k4ho+9DmoVTN
-         ZgZpaPFz7rYUXgm3Bnd50vGzEYEK+sYhEMHsoUgf3j65MNdadi6mEO5UCXCGxYCi7qgX
-         WFQcsZIJ2Fu8s/P9vhc/OdXyMBvqwLC7WP0Iwa+/QtOk7YrcQNVx6G9CqL2RRUSlnYx+
-         k+NmAzUBe1pYR9aFm77nsezouOeWql6Zc5QqwXSsoTfMq7LS2fboyKrpB9zlkED9oWMI
-         qlKDmSAP2MAK0Brfbz6z46cmYAxkk12/imrm0s0s2JWDb0U311Dnmemk3PmuxKxEui7s
-         sudg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=REukLMYHB9mfVFO1/bdDCKtlszA1rKroqNl1QPX1pLU=;
-        b=kVdXW1yVfoYANDfL3bwR7w4nFV4GRBJz+NXsM/Z8CALFYmnkcSDXLnzOWMooxsl7e6
-         z4l2m0AmNVtJGAyjkMx6Cm9aGLPOGY4ofOYkwLinFXoMR7kDFcY8UYNDDlvCMShCIXXz
-         C/SOghrBL+XnMuq68xIF/YoILD5MId+TldTm1jyvwinto4lKTXLWsC4L/z7rUjY6AvjN
-         5yGrlUKnRWg1Bid6v0tOv3iH1sNeFDnuaBG5RaZtWjkjkcll65KnZnCD4iODPsXt9hK1
-         082umk0uCQQq16B1627Z1mnr/ToB2ZUzX+JoXyba1TQv6zwriASsW3Kl/cl5EfDMMJmm
-         pSMA==
-X-Gm-Message-State: AOAM532VqR/E5lw1RwrYHypMf/oYC4KNni+hhqs3q0xC0mJX1rOA08re
-        ddwaETpAF2cicCwveYE80US37IhwfHVTfLyE0BAU3Q==
-X-Google-Smtp-Source: ABdhPJx8p5Gioov6LW3dMuKZCxQ7H3nKyaoIEb0t3AIauct+JwrIEuRpWs9dp5K8G8EOr4CSz9yHAnha7BrG6YV+cpk=
-X-Received: by 2002:a05:622a:10d:: with SMTP id u13mr4063224qtw.369.1627562667841;
- Thu, 29 Jul 2021 05:44:27 -0700 (PDT)
+        id S237946AbhG2NaR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 29 Jul 2021 09:30:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46862 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S237906AbhG2N3U (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 29 Jul 2021 09:29:20 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 16TD4JLu118166;
+        Thu, 29 Jul 2021 09:29:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=hLi+1k3Q2pOofVD6JJ72KnRHLVvkzl1EJJ/kEUSRp6E=;
+ b=dtY5UjOe8+eHpAi8FY9nzRi5m8MnI8uwWlt9gpPYlX9UutblUmKSXb9G6NjQsDrpKKHj
+ vWYk+QlYwZas2r9FjUzOTUjVKmeriyBmplcvc+842+/FePY1ANWACJUONO3u2hOyW4Nv
+ v33PLVEtl24pXD4J72NMdRQLMJMr1UWu1DuUtCgnvy1nKilcvuM/GVSfnPVJMl75HdoI
+ 78JLTXPUx/AIOE1eEYdeCCTQBYRj89g6UYSdwIQcfvYXHQB1ZMFhNMFfU4X5TjaeFDVG
+ kB/VRPOlUBUDbb2m2HgE+gvV/682c4NjCl3W4NP/H/kTlfGUZi6w6f+7bNw/7uWcWPSA vg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3a3v5s2t2d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Jul 2021 09:29:16 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 16TD4Xru119820;
+        Thu, 29 Jul 2021 09:29:16 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3a3v5s2t1j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Jul 2021 09:29:16 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 16TDIw2R013339;
+        Thu, 29 Jul 2021 13:29:14 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 3a235m1qwy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Jul 2021 13:29:14 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 16TDQQDh33554826
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Jul 2021 13:26:26 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D8854A4068;
+        Thu, 29 Jul 2021 13:29:10 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B80DA4060;
+        Thu, 29 Jul 2021 13:29:10 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.1.151])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 29 Jul 2021 13:29:10 +0000 (GMT)
+Date:   Thu, 29 Jul 2021 14:52:04 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, cohuck@redhat.com, borntraeger@de.ibm.com,
+        thuth@redhat.com, pasic@linux.ibm.com, david@redhat.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/13] KVM: s390: pv: avoid stall notifications for
+ some UVCs
+Message-ID: <20210729145204.2d8c1430@p-imbrenda>
+In-Reply-To: <6bbeded3-ef94-6c83-f093-796d76b70792@linux.ibm.com>
+References: <20210728142631.41860-1-imbrenda@linux.ibm.com>
+        <20210728142631.41860-2-imbrenda@linux.ibm.com>
+        <6bbeded3-ef94-6c83-f093-796d76b70792@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20210728190254.3921642-1-hca@linux.ibm.com> <20210728190254.3921642-3-hca@linux.ibm.com>
-In-Reply-To: <20210728190254.3921642-3-hca@linux.ibm.com>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Thu, 29 Jul 2021 14:43:51 +0200
-Message-ID: <CAG_fn=VS_WFjL+qjm79Jvq5M0KaNScvX2vCw=aNxPx14Hffa0A@mail.gmail.com>
-Subject: Re: [PATCH 2/4] kfence: add function to mask address bits
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     Marco Elver <elver@google.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: gK13XRLPxf-tCKcnhGqyx5OsBHWFH6__
+X-Proofpoint-GUID: BhRXjfRSW6J1HrsUV3U88QBodu2a0cCS
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-07-29_10:2021-07-29,2021-07-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1015 bulkscore=0
+ priorityscore=1501 impostorscore=0 phishscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2107140000 definitions=main-2107290084
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 28, 2021 at 9:03 PM Heiko Carstens <hca@linux.ibm.com> wrote:
->
-> From: Sven Schnelle <svens@linux.ibm.com>
->
-> s390 only reports the page address during a translation fault.
-> To make the kfence unit tests pass, add a function that might
-> be implemented by architectures to mask out address bits.
->
-> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-> Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
-> ---
->  mm/kfence/kfence_test.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/kfence/kfence_test.c b/mm/kfence/kfence_test.c
-> index 942cbc16ad26..eb6307c199ea 100644
-> --- a/mm/kfence/kfence_test.c
-> +++ b/mm/kfence/kfence_test.c
-> @@ -23,8 +23,15 @@
->  #include <linux/tracepoint.h>
->  #include <trace/events/printk.h>
->
-> +#include <asm/kfence.h>
-> +
->  #include "kfence.h"
->
-> +/* May be overridden by <asm/kfence.h>. */
-> +#ifndef arch_kfence_test_address
-> +#define arch_kfence_test_address(addr) (addr)
-> +#endif
-> +
->  /* Report as observed from console. */
->  static struct {
->         spinlock_t lock;
-> @@ -82,6 +89,7 @@ static const char *get_access_type(const struct expect_=
-report *r)
->  /* Check observed report matches information in @r. */
->  static bool report_matches(const struct expect_report *r)
->  {
-> +       unsigned long addr =3D (unsigned long)r->addr;
->         bool ret =3D false;
->         unsigned long flags;
->         typeof(observed.lines) expect;
-> @@ -131,22 +139,25 @@ static bool report_matches(const struct expect_repo=
-rt *r)
->         switch (r->type) {
->         case KFENCE_ERROR_OOB:
->                 cur +=3D scnprintf(cur, end - cur, "Out-of-bounds %s at",=
- get_access_type(r));
-> +               addr =3D arch_kfence_test_address(addr);
+On Thu, 29 Jul 2021 11:58:39 +0200
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-Can we normalize addr once before (or after) this switch?
+> On 7/28/21 4:26 PM, Claudio Imbrenda wrote:
+> > Improve make_secure_pte to avoid stalls when the system is heavily
+> > overcommitted. This was especially problematic in
+> > kvm_s390_pv_unpack, because of the loop over all pages that needed
+> > unpacking.
+> > 
+> > Also fix kvm_s390_pv_init_vm to avoid stalls when the system is
+> > heavily overcommitted.  
+> 
+> Fixes tag?
 
->                 break;
->         case KFENCE_ERROR_UAF:
->                 cur +=3D scnprintf(cur, end - cur, "Use-after-free %s at"=
-, get_access_type(r));
-> +               addr =3D arch_kfence_test_address(addr);
->                 break;
->         case KFENCE_ERROR_CORRUPTION:
->                 cur +=3D scnprintf(cur, end - cur, "Corrupted memory at")=
-;
->                 break;
->         case KFENCE_ERROR_INVALID:
->                 cur +=3D scnprintf(cur, end - cur, "Invalid %s at", get_a=
-ccess_type(r));
-> +               addr =3D arch_kfence_test_address(addr);
->                 break;
->         case KFENCE_ERROR_INVALID_FREE:
->                 cur +=3D scnprintf(cur, end - cur, "Invalid free of");
->                 break;
->         }
+will be in the next version
+
+> > 
+> > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> > ---
+> >  arch/s390/kernel/uv.c | 11 ++++++++---
+> >  arch/s390/kvm/pv.c    |  2 +-
+> >  2 files changed, 9 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
+> > index aeb0a15bcbb7..fd0faa51c1bb 100644
+> > --- a/arch/s390/kernel/uv.c
+> > +++ b/arch/s390/kernel/uv.c
+> > @@ -196,11 +196,16 @@ static int make_secure_pte(pte_t *ptep,
+> > unsigned long addr, if (!page_ref_freeze(page, expected))
+> >  		return -EBUSY;
+> >  	set_bit(PG_arch_1, &page->flags);
+> > -	rc = uv_call(0, (u64)uvcb);
+> > +	rc = __uv_call(0, (u64)uvcb);  
+> 
+> We should exchange rc with cc since that's what we get back from
+> __uv_call(). Technically we always get a cc but for the other
+> functions it's only ever 0/1 which translates to success/error so rc
+> is ok.
+
+will be in the next version
+
+> >  	page_ref_unfreeze(page, expected);
+> > -	/* Return -ENXIO if the page was not mapped, -EINVAL
+> > otherwise */
+> > -	if (rc)
+> > +	/*
+> > +	 * Return -ENXIO if the page was not mapped, -EINVAL for
+> > other errors.
+> > +	 * If busy or partially completed, return -EAGAIN.
+> > +	 */
+> > +	if (rc == 1)
+> >  		rc = uvcb->rc == 0x10a ? -ENXIO : -EINVAL;
+> > +	else if (rc > 1)
+> > +		rc = -EAGAIN;
+> >  	return rc;  
+> 
+> Could you define the CCs in uv.h and check against the constants here
+> so it's easier to understand that the rc > 1 checks against a "UV was
+> busy please re-issue the call again" cc?
 >
-> -       cur +=3D scnprintf(cur, end - cur, " 0x%p", (void *)r->addr);
-> +       cur +=3D scnprintf(cur, end - cur, " 0x%p", (void *)addr);
->
->         spin_lock_irqsave(&observed.lock, flags);
->         if (!report_available())
-> --
-> 2.25.1
->
+> Maybe also make it explicit for cc 2 and 3 instead of cc > 1
 
+will be in the next version
 
---=20
-Alexander Potapenko
-Software Engineer
+> >  }
+> >  
+> > diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
+> > index c8841f476e91..e007df11a2fe 100644
+> > --- a/arch/s390/kvm/pv.c
+> > +++ b/arch/s390/kvm/pv.c
+> > @@ -196,7 +196,7 @@ int kvm_s390_pv_init_vm(struct kvm *kvm, u16
+> > *rc, u16 *rrc) uvcb.conf_base_stor_origin =
+> > (u64)kvm->arch.pv.stor_base; uvcb.conf_virt_stor_origin =
+> > (u64)kvm->arch.pv.stor_var; 
+> > -	cc = uv_call(0, (u64)&uvcb);
+> > +	cc = uv_call_sched(0, (u64)&uvcb);
+> >  	*rc = uvcb.header.rc;
+> >  	*rrc = uvcb.header.rrc;
+> >  	KVM_UV_EVENT(kvm, 3, "PROTVIRT CREATE VM: handle %llx len
+> > %llx rc %x rrc %x", 
+> 
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
-
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
