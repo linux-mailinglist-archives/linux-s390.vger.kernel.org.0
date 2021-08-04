@@ -2,153 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62C153DFEBA
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Aug 2021 12:02:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D8C43DFF2F
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Aug 2021 12:11:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237358AbhHDKCx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Aug 2021 06:02:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237347AbhHDKCw (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 4 Aug 2021 06:02:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E224061004;
-        Wed,  4 Aug 2021 10:02:34 +0000 (UTC)
-Date:   Wed, 4 Aug 2021 11:02:32 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Len Brown <lenb@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-mm@kvack.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v3] memblock: make memblock_find_in_range method private
-Message-ID: <20210804100231.GA4857@arm.com>
-References: <20210803064218.6611-1-rppt@kernel.org>
- <20210803180526.GD5786@arm.com>
- <YQmT+Z9QhcwI43GK@kernel.org>
+        id S237510AbhHDKK1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 4 Aug 2021 06:10:27 -0400
+Received: from ivanoab7.miniserver.com ([37.128.132.42]:56360 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237455AbhHDKKX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Aug 2021 06:10:23 -0400
+Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1mBDqd-0007cx-Mc; Wed, 04 Aug 2021 10:10:03 +0000
+Received: from jain.kot-begemot.co.uk ([192.168.3.3])
+        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1mBDqa-00016q-Pt; Wed, 04 Aug 2021 11:10:03 +0100
+Subject: Re: [PATCH 11/15] ubd: use bvec_virt
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Geoff Levand <geoff@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Song Liu <song@kernel.org>, Mike Snitzer <snitzer@redhat.com>,
+        Coly Li <colyli@suse.de>, Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        linux-um@lists.infradead.org, ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-raid@vger.kernel.org, linux-bcache@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+References: <20210804095634.460779-1-hch@lst.de>
+ <20210804095634.460779-12-hch@lst.de>
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Message-ID: <0abadeca-d0fc-26ad-088e-2b137a029957@cambridgegreys.com>
+Date:   Wed, 4 Aug 2021 11:10:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YQmT+Z9QhcwI43GK@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210804095634.460779-12-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -1.0
+X-Spam-Score: -1.0
+X-Clacks-Overhead: GNU Terry Pratchett
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Aug 03, 2021 at 10:07:37PM +0300, Mike Rapoport wrote:
-> On Tue, Aug 03, 2021 at 07:05:26PM +0100, Catalin Marinas wrote:
-> > On Tue, Aug 03, 2021 at 09:42:18AM +0300, Mike Rapoport wrote:
-> > > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > > index 8490ed2917ff..0bffd2d1854f 100644
-> > > --- a/arch/arm64/mm/init.c
-> > > +++ b/arch/arm64/mm/init.c
-> > > @@ -74,6 +74,7 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
-> > >  static void __init reserve_crashkernel(void)
-> > >  {
-> > >  	unsigned long long crash_base, crash_size;
-> > > +	unsigned long long crash_max = arm64_dma_phys_limit;
-> > >  	int ret;
-> > >  
-> > >  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> > > @@ -84,33 +85,18 @@ static void __init reserve_crashkernel(void)
-> > >  
-> > >  	crash_size = PAGE_ALIGN(crash_size);
-> > >  
-> > > -	if (crash_base == 0) {
-> > > -		/* Current arm64 boot protocol requires 2MB alignment */
-> > > -		crash_base = memblock_find_in_range(0, arm64_dma_phys_limit,
-> > > -				crash_size, SZ_2M);
-> > > -		if (crash_base == 0) {
-> > > -			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
-> > > -				crash_size);
-> > > -			return;
-> > > -		}
-> > > -	} else {
-> > > -		/* User specifies base address explicitly. */
-> > > -		if (!memblock_is_region_memory(crash_base, crash_size)) {
-> > > -			pr_warn("cannot reserve crashkernel: region is not memory\n");
-> > > -			return;
-> > > -		}
-> > > +	/* User specifies base address explicitly. */
-> > > +	if (crash_base)
-> > > +		crash_max = crash_base + crash_size;
-> > >  
-> > > -		if (memblock_is_region_reserved(crash_base, crash_size)) {
-> > > -			pr_warn("cannot reserve crashkernel: region overlaps reserved memory\n");
-> > > -			return;
-> > > -		}
-> > > -
-> > > -		if (!IS_ALIGNED(crash_base, SZ_2M)) {
-> > > -			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
-> > > -			return;
-> > > -		}
-> > > +	/* Current arm64 boot protocol requires 2MB alignment */
-> > > +	crash_base = memblock_phys_alloc_range(crash_size, SZ_2M,
-> > > +					       crash_base, crash_max);
-> > > +	if (!crash_base) {
-> > > +		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
-> > > +			crash_size);
-> > > +		return;
-> > >  	}
-> > > -	memblock_reserve(crash_base, crash_size);
-> > 
-> > We'll miss a bit on debug information provided to the user in case of a
-> > wrong crash_base/size option on the command line. Not sure we care much,
-> > though the alignment would probably be useful (maybe we document it
-> > somewhere).
-> 
-> It is already documented:
-> 
-> Documentation/admin-guide/kdump/kdump.rst:
->    On arm64, use "crashkernel=Y[@X]".  Note that the start address of
->    the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
 
-Thanks for the pointer.
 
-> > What I haven't checked is whether memblock_phys_alloc_range() aims to
-> > get a 2MB aligned end (size) as well. If crash_size is not 2MB aligned,
-> > crash_max wouldn't be either and the above could fail. We only care
-> > about the crash_base to be aligned but the memblock_phys_alloc_range()
-> > doc says that both the start and size would be aligned to this.
+On 04/08/2021 10:56, Christoph Hellwig wrote:
+> Use bvec_virt instead of open coding it.
 > 
-> The doc lies :)
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   arch/um/drivers/ubd_kern.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> memblock_phys_alloc_range() boils down to 
+> diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
+> index e497185dd393..cd9dc0556e91 100644
+> --- a/arch/um/drivers/ubd_kern.c
+> +++ b/arch/um/drivers/ubd_kern.c
+> @@ -1268,8 +1268,7 @@ static void ubd_map_req(struct ubd *dev, struct io_thread_req *io_req,
+>   		rq_for_each_segment(bvec, req, iter) {
+>   			BUG_ON(i >= io_req->desc_cnt);
+>   
+> -			io_req->io_desc[i].buffer =
+> -				page_address(bvec.bv_page) + bvec.bv_offset;
+> +			io_req->io_desc[i].buffer = bvec_virt(&bvec);
+>   			io_req->io_desc[i].length = bvec.bv_len;
+>   			i++;
+>   		}
 > 
-> 	for_each_free_mem_range_reverse(i, nid, flags, &this_start, &this_end,
-> 					NULL) {
-> 
-> 		/* clamp this_{start,end} to the user defined limits */
-> 
-> 		cand = round_down(this_end - size, align);
-> 		if (cand >= this_start)
-> 			return cand;
-> 	}
+Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
-Alright, it should work then. For arm64:
-
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+-- 
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
