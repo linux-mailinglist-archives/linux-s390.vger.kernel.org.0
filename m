@@ -2,216 +2,177 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C9F73E042B
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Aug 2021 17:28:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD8863E0480
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Aug 2021 17:41:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239060AbhHDP2N (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Aug 2021 11:28:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45665 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239018AbhHDP2M (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Aug 2021 11:28:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628090879;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LJgh9mjHO8ByFvPxq85k4fwtp10zme6S7oZHzHIV1/k=;
-        b=eNG3BYwDbwP/s2sUt8oDBsQ38UHLWNKLxv80NZRhoVpwVCrhGR34w0/hC5+fU+3ANxh61S
-        q9DoZ3z8qGg/gKlVlhQTun5953bdJFZxxzU7VDfxV7kFth8ojBALoTrPmN5pFJ6t1iDAIo
-        3w9C/R9dCQWV7i/2Bu06RXIy019rU5Y=
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com
- [209.85.167.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-2C__ZhZGMw22F4XbZOtVIw-1; Wed, 04 Aug 2021 11:27:58 -0400
-X-MC-Unique: 2C__ZhZGMw22F4XbZOtVIw-1
-Received: by mail-oi1-f197.google.com with SMTP id s17-20020a0568080b11b02901f424a672b7so1273684oij.18
-        for <linux-s390@vger.kernel.org>; Wed, 04 Aug 2021 08:27:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LJgh9mjHO8ByFvPxq85k4fwtp10zme6S7oZHzHIV1/k=;
-        b=PqmG8jzMvM9w0yGvZXoZ20qfPQKaUvLnFR82isShlP/PtAM77D6HVcuGeJPGYSYrnx
-         esk50lvhmilnlz2Z8av0ZS0gdZnbIVv4drImkmtP/oFjoCmeWa3+ytQ+vFOHj1CjAMV+
-         G4rs8R4tfk7KcJE9YX7c31LYSutP/jYCbEh6lTEp+SuWDAxRiLo9ajtJqiP+4cL6OSwf
-         EkLLX61WBQ+RDQO2DIQFAAlnMTs21JBOM82rAEtY2HjKjyws4lRI6D/gmmrtcLwQ9g4P
-         JIzGRwSd71COlaxLuOjTMMnMotNlWrNiEwOx5krONoN5Jfv07MBjPuksIcqKp2yoGbdX
-         FHbg==
-X-Gm-Message-State: AOAM530+F8z/+oYnXOQSz52OV/6EepIaMLPe8qs4cvM0m6kJ2szCUryE
-        vV1eKloBCDbgpUtNMmZ06kTTXC2uz+HdZ3Xfx9/1t6tI10xImx4cqHA/PQ+xMhwa5BABm5ixZls
-        2BLZFGaq5lcfTfYq8ckJ8mQ==
-X-Received: by 2002:a9d:44e:: with SMTP id 72mr223073otc.100.1628090877862;
-        Wed, 04 Aug 2021 08:27:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz+ELgNsvSXCAHgSepllsqtC2aa3OhQCzSV6th0yNQiae9HZ8gXcohMgtqXW3cYn9gOCEu4dQ==
-X-Received: by 2002:a9d:44e:: with SMTP id 72mr223040otc.100.1628090877509;
-        Wed, 04 Aug 2021 08:27:57 -0700 (PDT)
-Received: from redhat.com ([198.99.80.109])
-        by smtp.gmail.com with ESMTPSA id f3sm463961otc.49.2021.08.04.08.27.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Aug 2021 08:27:57 -0700 (PDT)
-Date:   Wed, 4 Aug 2021 09:27:54 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yishai Hadas <yishaih@nvidia.com>
-Cc:     <linux-pci@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <kvm@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        <linux-kbuild@vger.kernel.org>, <mgurtovoy@nvidia.com>,
-        <jgg@nvidia.com>, <maorg@nvidia.com>, <corbet@lwn.net>,
-        <michal.lkml@markovi.net>, <bhelgaas@google.com>,
-        <diana.craciun@oss.nxp.com>, <kwankhede@nvidia.com>,
-        <eric.auger@redhat.com>, <masahiroy@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>
-Subject: Re: [PATCH 00/12] Introduce vfio_pci_core subsystem
-Message-ID: <20210804092754.5f15b60e.alex.williamson@redhat.com>
-In-Reply-To: <4580c83e-f3b1-0f93-d3ea-dc9cbdf6178d@nvidia.com>
-References: <20210721161609.68223-1-yishaih@nvidia.com>
-        <4580c83e-f3b1-0f93-d3ea-dc9cbdf6178d@nvidia.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S239131AbhHDPlO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 4 Aug 2021 11:41:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2436 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S230361AbhHDPlO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Aug 2021 11:41:14 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 174FYOis193846;
+        Wed, 4 Aug 2021 11:41:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=QFfUJN4ET8VWY7yaS4y7s3d7yVgFJ3J+VHp39obfvis=;
+ b=OCSszvDyYFFgJVIxk8hb76tnMHqeZtaQMJ1QFowsu9VgIZkshCqNwSsammf5WQkeI0zT
+ A5hwLZ/mmA4O63WpRxmGgf5ECp9PCMayYT+7LEUUJ7VkmRJhIeJtrkiuLaXAqv7AfPhd
+ uihrhm0u7Z/y4Gy43qt9kJcyz3ce/UrzrDEdwujlfjEKQGe2K+S5moNJvJ5vcESpLJRD
+ +NVtPTBf3xssus4m3wkf3fMGnzaXwpZ7DItOQs9OCRL1FcCdsvfd8UD09wB9wF0xg1LM
+ cVqef2h7/LUvR24mzqRAmNdRxaHnoudMbdoYactaIh51TovgR1KVCRSPh3LxPOFHsqr8 8Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3a76d84yqw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Aug 2021 11:41:00 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 174FYNRj193571;
+        Wed, 4 Aug 2021 11:41:00 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3a76d84yq4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Aug 2021 11:41:00 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 174FYXBI001184;
+        Wed, 4 Aug 2021 15:40:58 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma02fra.de.ibm.com with ESMTP id 3a4x58rhgt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Aug 2021 15:40:58 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 174FerhS44433764
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Aug 2021 15:40:53 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 591624C063;
+        Wed,  4 Aug 2021 15:40:53 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA74A4C05A;
+        Wed,  4 Aug 2021 15:40:52 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.2.150])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Aug 2021 15:40:52 +0000 (GMT)
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     cohuck@redhat.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        thuth@redhat.com, pasic@linux.ibm.com, david@redhat.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ulrich.Weigand@de.ibm.com
+Subject: [PATCH v3 00/14] KVM: s390: pv: implement lazy destroy
+Date:   Wed,  4 Aug 2021 17:40:32 +0200
+Message-Id: <20210804154046.88552-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: LQ9Qs6KshTSbzNK-25DsHKQ2_hE6nP1i
+X-Proofpoint-GUID: KF7W9iXifi0jgCjpT-tEz3DcV9zmH2eD
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-08-04_03:2021-08-04,2021-08-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0
+ clxscore=1015 mlxlogscore=999 impostorscore=0 suspectscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2107140000 definitions=main-2108040089
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 4 Aug 2021 16:41:34 +0300
-Yishai Hadas <yishaih@nvidia.com> wrote:
+Previously, when a protected VM was rebooted or when it was shut down,
+its memory was made unprotected, and then the protected VM itself was
+destroyed. Looping over the whole address space can take some time,
+considering the overhead of the various Ultravisor Calls (UVCs). This
+means that a reboot or a shutdown would take a potentially long amount
+of time, depending on the amount of used memory.
 
-> On 7/21/2021 7:15 PM, Yishai Hadas wrote:
-> > Prologue:
-> >
-> > This is the second series of three to send the "mlx5_vfio_pci" driver
-> > that has been discussed on the list for a while now. It comes on top of
-> > the first series (i.e. Reorganize reflck to support splitting vfio_pci)
-> > that was sent already and pending merge [1].
-> >
-> >   - Split vfio_pci into vfio_pci/vfio_pci_core and provide infrastructure
-> >     for non-generic VFIO PCI drivers.
-> >   - The new driver mlx5_vfio_pci that is a full implementation of
-> >     suspend/resume functionality for mlx5 devices.
-> >
-> > A preview of all the patches can be seen here:
-> > https://github.com/jgunthorpe/linux/commits/mlx5_vfio_pci
-> >
-> > [1] https://lore.kernel.org/dri-devel/0-v2-b6a5582525c9+ff96-vfio_reflck_jgg@nvidia.com/T/#t
-> > =====================
-> >
-> >  From Max Gurtovoy:
-> > ====================
-> > This series splits the vfio_pci driver into two parts, a PCI driver and
-> > a subsystem driver that will also be library of code. The main PCI
-> > driver, vfio_pci.ko, will remain as before and it will use the library
-> > module vfio_pci_core.ko to help create the vfio_device.
-> >
-> > This series is intended to solve the issues that were raised in the
-> > previous attempts for extending vfio-pci for device specific
-> > functionality:
-> >
-> > 1. https://lore.kernel.org/kvm/20200518024202.13996-1-yan.y.zhao@intel.com
-> >     by Yan Zhao
-> > 2. https://lore.kernel.org/kvm/20210702095849.1610-1-shameerali.kolothum.thodi@huawei.com
-> >     by Longfang Liu
-> >
-> > Also to support proposed future changes to virtio and other common
-> > protocols to support migration:
-> >
-> > https://lists.oasis-open.org/archives/virtio-comment/202106/msg00044.html
-> >
-> > This subsystem framework will also ease adding new device specific
-> > functionality to VFIO devices in the future by allowing another module
-> > to provide the pci_driver that can setup a number of details before
-> > registering to the VFIO subsystem, such as injecting its own operations.
-> >
-> > This series also extends the "driver_override" mechanism. A flag is
-> > added for PCI drivers that will declare themselves as "driver_override"
-> > capable which sends their match table to the modules.alias file but
-> > otherwise leaves them outside of the normal driver core auto-binding
-> > world, like vfio_pci.
-> >
-> > In order to get the best match for "driver_override" drivers, one can
-> > create a userspace program to inspect the modules.alias, an example can
-> > be found at:
-> >
-> > https://github.com/maxgurtovoy/linux_tools/blob/main/vfio/bind_vfio_pci_driver.py
-> >
-> > Which finds the 'best match' according to a simple algorithm: "the
-> > driver with the fewest '*' matches wins."
-> >
-> > For example, the vfio-pci driver will match to any pci device. So it
-> > will have the maximal '*' matches.
-> >
-> > In case we are looking for a match to a mlx5 based device, we'll have a
-> > match to vfio-pci.ko and mlx5-vfio-pci.ko. We'll prefer mlx5-vfio-pci.ko
-> > since it will have less '*' matches (probably vendor and device IDs will
-> > match). This will work in the future for NVMe/Virtio devices that can
-> > match according to a class code or other criteria.
-> >
-> > Yishai
-> >
-> >
-> > Jason Gunthorpe (2):
-> >    vfio: Use select for eventfd
-> >    vfio: Use kconfig if XX/endif blocks instead of repeating 'depends on'
-> >
-> > Max Gurtovoy (9):
-> >    vfio/pci: Rename vfio_pci.c to vfio_pci_core.c
-> >    vfio/pci: Rename vfio_pci_private.h to vfio_pci_core.h
-> >    vfio/pci: Rename vfio_pci_device to vfio_pci_core_device
-> >    vfio/pci: Rename ops functions to fit core namings
-> >    vfio/pci: Include vfio header in vfio_pci_core.h
-> >    vfio/pci: Split the pci_driver code out of vfio_pci_core.c
-> >    vfio/pci: Move igd initialization to vfio_pci.c
-> >    PCI: Add a PCI_ID_F_VFIO_DRIVER_OVERRIDE flag to struct pci_device_id
-> >    vfio/pci: Introduce vfio_pci_core.ko
-> >
-> > Yishai Hadas (1):
-> >    vfio/pci: Move module parameters to vfio_pci.c
-> >
-> >   Documentation/PCI/pci.rst                     |    1 +
-> >   drivers/pci/pci-driver.c                      |   25 +-
-> >   drivers/vfio/Kconfig                          |   29 +-
-> >   drivers/vfio/fsl-mc/Kconfig                   |    3 +-
-> >   drivers/vfio/mdev/Kconfig                     |    1 -
-> >   drivers/vfio/pci/Kconfig                      |   39 +-
-> >   drivers/vfio/pci/Makefile                     |    8 +-
-> >   drivers/vfio/pci/vfio_pci.c                   | 2238 +----------------
-> >   drivers/vfio/pci/vfio_pci_config.c            |   70 +-
-> >   drivers/vfio/pci/vfio_pci_core.c              | 2138 ++++++++++++++++
-> >   drivers/vfio/pci/vfio_pci_igd.c               |   19 +-
-> >   drivers/vfio/pci/vfio_pci_intrs.c             |   42 +-
-> >   drivers/vfio/pci/vfio_pci_rdwr.c              |   18 +-
-> >   drivers/vfio/pci/vfio_pci_zdev.c              |    4 +-
-> >   drivers/vfio/platform/Kconfig                 |    6 +-
-> >   drivers/vfio/platform/reset/Kconfig           |    4 +-
-> >   include/linux/mod_devicetable.h               |    7 +
-> >   include/linux/pci.h                           |   27 +
-> >   .../linux/vfio_pci_core.h                     |   89 +-
-> >   scripts/mod/devicetable-offsets.c             |    1 +
-> >   scripts/mod/file2alias.c                      |    8 +-
-> >   21 files changed, 2496 insertions(+), 2281 deletions(-)
-> >   create mode 100644 drivers/vfio/pci/vfio_pci_core.c
-> >   rename drivers/vfio/pci/vfio_pci_private.h => include/linux/vfio_pci_core.h (56%)
-> >  
-> Hi Alex,
-> 
-> Based on the feedback that we got so far on this series, no functional 
-> changes are expected in V2.
-> 
-> It may include the below minor changes:
-> 
-> - Drop DRIVER_VERSION as it's useless and not required any more. 
-> (Patches #6, #12).
-> 
-> - Add the sequence of commands/algorithm that is required by userspace 
-> to discover the matching driver to the commit message of patch #9.
-> 
-> Do we need to wait for more feedback or that we are fine to send V2 ?
+This patchseries implements a deferred destroy mechanism for protected
+guests. When a protected guest is destroyed, its memory is cleared in
+background, allowing the guest to restart or terminate significantly
+faster than before.
 
- - Resolve Kconfig compatibility in patch 12
+There are 2 possibilities when a protected VM is torn down:
+* it still has an address space associated (reboot case)
+* it does not have an address space anymore (shutdown case)
 
-Patch 9 also depends on an ack from Bjorn, so whether you want to try
-to get his buy-in before or after that patch gets updated to clarify
-what it's trying to do and why, is up to you.  Thanks,
+For the reboot case, the reference count of the mm is increased, and
+then a background thread is started to clean up. Once the thread went
+through the whole address space, the protected VM is actually
+destroyed.
 
-Alex
+For the shutdown case, a list of pages to be destroyed is formed when
+the mm is torn down. Instead of just unmapping the pages when the
+address space is being torn down, they are also set aside. Later when
+KVM cleans up the VM, a thread is started to clean up the pages from
+the list.
+
+This means that the same address space can have memory belonging to
+more than one protected guest, although only one will be running, the
+others will in fact not even have any CPUs.
+
+When a guest is destroyed, its memory still counts towards its memory
+control group until it's actually freed (I tested this experimentally)
+
+When the system runs out of memory, if a guest has terminated and its
+memory is being cleaned asynchronously, the OOM killer will wait a
+little and then see if memory has been freed. This has the practical
+effect of slowing down memory allocations when the system is out of
+memory to give the cleanup thread time to cleanup and free memory, and
+avoid an actual OOM situation.
+
+v2->v3
+* added definitions for CC return codes for the UVC instruction
+* improved make_secure_pte:
+  - renamed rc to cc
+  - added comments to explain why returning -EAGAIN is ok
+* fixed kvm_s390_pv_replace_asce and kvm_s390_pv_remove_old_asce:
+  - renamed
+  - added locking
+  - moved to gmap.c
+* do proper error management in do_secure_storage_access instead of
+  trying again hoping to get a different exception
+* fix outdated patch descriptions
+
+v1->v2
+* rebased on a more recent kernel
+* improved/expanded some patch descriptions
+* improves/expanded some comments
+* added patch 1, which prevents stall notification when the system is
+  under heavy load.
+* rename some members of struct deferred_priv to improve readability
+* avoid an use-after-free bug of the struct mm in case of shutdown
+* add missing return when lazy destroy is disabled
+* add support for OOM notifier
+
+Claudio Imbrenda (14):
+  KVM: s390: pv: add macros for UVC CC values
+  KVM: s390: pv: avoid stall notifications for some UVCs
+  KVM: s390: pv: leak the ASCE page when destroy fails
+  KVM: s390: pv: properly handle page flags for protected guests
+  KVM: s390: pv: handle secure storage violations for protected guests
+  KVM: s390: pv: handle secure storage exceptions for normal guests
+  KVM: s390: pv: refactor s390_reset_acc
+  KVM: s390: pv: usage counter instead of flag
+  KVM: s390: pv: add export before import
+  KVM: s390: pv: lazy destroy for reboot
+  KVM: s390: pv: extend lazy destroy to handle shutdown
+  KVM: s390: pv: module parameter to fence lazy destroy
+  KVM: s390: pv: add OOM notifier for lazy destroy
+  KVM: s390: pv: avoid export before import if possible
+
+ arch/s390/include/asm/gmap.h        |   6 +-
+ arch/s390/include/asm/mmu.h         |   3 +
+ arch/s390/include/asm/mmu_context.h |   2 +
+ arch/s390/include/asm/pgtable.h     |  16 +-
+ arch/s390/include/asm/uv.h          |  31 +++-
+ arch/s390/kernel/uv.c               | 162 +++++++++++++++++++-
+ arch/s390/kvm/kvm-s390.c            |   6 +-
+ arch/s390/kvm/kvm-s390.h            |   2 +-
+ arch/s390/kvm/pv.c                  | 223 ++++++++++++++++++++++++++--
+ arch/s390/mm/fault.c                |  20 ++-
+ arch/s390/mm/gmap.c                 | 141 ++++++++++++++----
+ 11 files changed, 555 insertions(+), 57 deletions(-)
+
+-- 
+2.31.1
 
