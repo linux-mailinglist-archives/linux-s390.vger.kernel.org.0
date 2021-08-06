@@ -2,283 +2,171 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96FA23E20B2
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Aug 2021 03:19:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48B3B3E21B0
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Aug 2021 04:38:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243020AbhHFBTj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 5 Aug 2021 21:19:39 -0400
-Received: from mail-dm6nam10on2050.outbound.protection.outlook.com ([40.107.93.50]:23091
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S242966AbhHFBTe (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 5 Aug 2021 21:19:34 -0400
+        id S232808AbhHFCjL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 5 Aug 2021 22:39:11 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:32792 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229938AbhHFCjK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Aug 2021 22:39:10 -0400
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1762bApn026555;
+        Fri, 6 Aug 2021 02:38:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2021-07-09;
+ bh=lxe5Cm1S+VrVoP/j7wgprFlGF9L+RuNFvgHNCf2F8ak=;
+ b=wpwO0+WEvpTCBoixBRc+LQmJ1oLquhwSkNIP2tV9qsY+LY8VD42JLmwFq8+jmSTQPqfa
+ lwyLRw5UqyaIuC8Hk0grvtUtgXsiBzLJCcZ6TkSwAMaaF1pbxFdv+Bh4gR27jCbB3nuO
+ OXXn6+GZrlj/kMgQInFmmgNWzNhc6mb7B+Ucyd7nGfAa6B2oyMSTcnsaFiW+43rhYOJC
+ 6ua12Xx4fu2f6mFyE3oDfBXjfa1bGYS/l6OKXmTH08dSZoNK9BEY64DsSxCjbqNPQQDE
+ 7F+RNFszXa3hvugMt3luN/GpqYJhcE+fQ0aBVTfMmM2mzlY8RbWIZI5h41/CDkeN7hTA TQ== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2020-01-29;
+ bh=lxe5Cm1S+VrVoP/j7wgprFlGF9L+RuNFvgHNCf2F8ak=;
+ b=P6PdS3dSXhNmUDYbi06NJtU1h8uYfq9/zuEt2in+Ppx5YKhkplt/kzsqvmDbNGxyKnUu
+ tr3qtMKUIm7+Cg1te8Ho7y/gGfpKnWnX9jD0OJqMxKX51oeof0vuwvc7CPzoAqfj9/Xw
+ nObE2PxzTCswyf5Qq22i55yX3lMMZEFNseI/idnXNFW4rUWjWB4vW+iwng/etV9YNJul
+ H0iSp0R44hG+u0cNtRgu5y+a3T/XS68Zkled4xAdU8nNqCSjDpndGdctE3p+1/nm9y1P
+ 6zCN6gJnZZOXPJVDekHIVSy7Oc0YCeCVQFCBB3OWzaPM6hbr9eTibvIJhG7d43AXvHku Qg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3a7hxpnj7e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Aug 2021 02:38:18 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1762ZfOX163593;
+        Fri, 6 Aug 2021 02:38:17 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2108.outbound.protection.outlook.com [104.47.58.108])
+        by userp3030.oracle.com with ESMTP id 3a4un4x32e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 Aug 2021 02:38:17 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d6JAPy4BRxH4n2HT8xPt7fgfwXjNxBuJc+yzhx9fh25S5j4p9OldI+lt4EOwwFGCTrNhiuiIUAmKzCqx0lmKnMJ2sxPWjt5whZDBCCstQXo0ZLFpvchRW+tMZthv70SYuRCHjU7mg73dGaRkGpr7+bObGosc9TDohV1p0vxgmktlIAjguBp+dc26Y9cXtQ4eS0a7mwwV14K+p3rvAB6B0VkIG7/Oxb4FsdPArhPvf+o9VlHOJh/OsM4jc76Qeg65DS2h5Bbb588630dgbpV8zWiQ1vE3T9HNO4Om67BGeqho8mQ07fpXJB/jqHD3scRDvztBo+Ti03dIKxuqqgM6Fw==
+ b=d45Wsz6J2Qp9srdC51J2vmTF5rw610I1vP/UJp5hPeWgUoCDX6pOFJnWsLhszXFWyIkXtOjfskPcOvtTzgU7qiGo9Di2tHimI22fH87ScRsSn358PRH9mo0wM5Lyo7lZf10PMwKtVR04ypyGmTMZu4cdwTtgFjGYRZJaWk4THR9c5iSLm5Thfd4/PghKpNT0GVl5SEHjZ0xM8cu3o9F1eznRsyg3y0zWsxRGBHZnEx0wu/tIYqfJefQCsJitigjm6bJI+eVVrpvJUhUba+k9yprm+mcJHznAvICi5RJsNBRrJZbRxqzDeHF86nmbbuXG7wVwI2wLpYFHIr8uVU0w1g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=83SvNNMFxShsSJHbYYBvHzZmrJdQnCIO0bn6/ZQpYN4=;
- b=QDgllX/yd6kRx+GVyxsGg1LmFOyTxsI2Xq1aZeNYkQXtoANpexxh2ZeZjx7nwKPxpE0URlltl6VEWlPVdylrknDIt0KFoodQZUCOJaJdFU82jp6RHzHsxKMJwZGRbRNc9T5WDhMWZkUZUVBiuv+M9dPp7lxpScrg3d1f+PswvPQXaPkzrKbfOJF901pp7nWMvECppMWlPr+w6J/uVvCwY+SMXPdP52f8BEj16dZDMTIz2DxHZtua+P+YLZ9WVDMY7meXpTg39Y9BVKPS9xQX8LgKvhAPKc2Wd67IZ/Q0gGU067RG+KjXYt4JV6xtq9QoHS+YPBrU30xzoCD0DJXIaw==
+ bh=lxe5Cm1S+VrVoP/j7wgprFlGF9L+RuNFvgHNCf2F8ak=;
+ b=PL2bFGSwnD9QXLRgCF1HdNhdQVjJE6DUBN0HsYt81jgVYCO1EHqdS8S32hSsiRxkxTw7vpRA4oYmBUqYNk+aN2xLAprJWlF1zeD7z5vRwo0UIxPTj1aBYH3Cu0wU6e5TeugEwH3woa1YWjnyxOCb3NF9CZQnV78Rb4sZUF0h6HABIlvQsx257oFjCzqEze3XQajrFGm4dsf069isuTbsPEcLSW6mh6vFBnsEbZYWHOPOL/9qUP9/jA0vlCMmVhF+yZHnB1KvdR5yYRaA2r97Oa6fu5zXJlcK9FKhrTnLQbWN2qPaBcLG8VNGNk/zO3wiz1lPKLhnt31x7PjrmAi6hA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=83SvNNMFxShsSJHbYYBvHzZmrJdQnCIO0bn6/ZQpYN4=;
- b=O1naC78VubeI3zlLYrcjRQUXb3Zp0X9qLdJPYk6kCKgTU+3XBayhz694bGqFR1Bs+UFXoDKqsqkhWZQC+zB9B0Z3zuyksCrODo+uYlZKKCHYM+GOq1Zhkxnj7zPBS9eLT2Rsn0wEg+WV2v58QLH1dUzckoZgPCzmcOshffcoyVdfHaPl3QyAtjAKmBigVohHvaMmAxUI8djPzDGFreJnk6Qfb7uQGmO0JJvgydXqApXuMyOjd5v6PwUd5RAJaP3PmNbW/fSXseR4JDKyvCTKGTC/FbK61+iFrTTYfk8RQVG2IWechNXSpHcH8I1EFRgSUTxJRXA32bQcf8dF6+Cxbg==
-Authentication-Results: linux.ie; dkim=none (message not signed)
- header.d=none;linux.ie; dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
- by BL1PR12MB5206.namprd12.prod.outlook.com (2603:10b6:208:31c::5) with
+ bh=lxe5Cm1S+VrVoP/j7wgprFlGF9L+RuNFvgHNCf2F8ak=;
+ b=lm9GlDjuuZd8Pa0Zvqnjlcw+EeFydkj1l7wt65kpVbUkqbw9yJeo98EnXPbjAacnONFmwnzZ+CDWpiH/DP13DBJDDgmIdxt3pAQKj/SHGPcuUOr6xKSeQX+7ZGmS97KI6Wnx2RpdizO4hK+zQVTzD+FlUGOVHi7niXnKfpPg93M=
+Authentication-Results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=oracle.com;
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by PH0PR10MB5547.namprd10.prod.outlook.com (2603:10b6:510:da::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.21; Fri, 6 Aug
- 2021 01:19:15 +0000
-Received: from BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::1de1:52a9:cf66:f336]) by BL0PR12MB5506.namprd12.prod.outlook.com
- ([fe80::1de1:52a9:cf66:f336%7]) with mapi id 15.20.4394.018; Fri, 6 Aug 2021
- 01:19:15 +0000
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     David Airlie <airlied@linux.ie>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Diana Craciun <diana.craciun@oss.nxp.com>,
-        dri-devel@lists.freedesktop.org,
-        Eric Auger <eric.auger@redhat.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        kvm@vger.kernel.org, Kirti Wankhede <kwankhede@nvidia.com>,
-        linux-doc@vger.kernel.org, linux-s390@vger.kernel.org,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Zhi Wang <zhi.a.wang@intel.com>
-Cc:     "Raj, Ashok" <ashok.raj@intel.com>, Christoph Hellwig <hch@lst.de>,
-        Leon Romanovsky <leonro@nvidia.com>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH v4 14/14] vfio: Remove struct vfio_device_ops open/release
-Date:   Thu,  5 Aug 2021 22:19:10 -0300
-Message-Id: <14-v4-9ea22c5e6afb+1adf-vfio_reflck_jgg@nvidia.com>
-In-Reply-To: <0-v4-9ea22c5e6afb+1adf-vfio_reflck_jgg@nvidia.com>
-References: 
-Content-Transfer-Encoding: 8bit
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.16; Fri, 6 Aug
+ 2021 02:38:15 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::153e:22d1:d177:d4f1]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::153e:22d1:d177:d4f1%8]) with mapi id 15.20.4373.026; Fri, 6 Aug 2021
+ 02:38:15 +0000
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Geoff Levand <geoff@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Song Liu <song@kernel.org>, Mike Snitzer <snitzer@redhat.com>,
+        Coly Li <colyli@suse.de>, Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        linux-um@lists.infradead.org, ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-raid@vger.kernel.org, linux-bcache@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 01/15] bvec: add a bvec_virt helper
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1tuk3guwk.fsf@ca-mkp.ca.oracle.com>
+References: <20210804095634.460779-1-hch@lst.de>
+        <20210804095634.460779-2-hch@lst.de>
+Date:   Thu, 05 Aug 2021 22:38:11 -0400
+In-Reply-To: <20210804095634.460779-2-hch@lst.de> (Christoph Hellwig's message
+        of "Wed, 4 Aug 2021 11:56:20 +0200")
 Content-Type: text/plain
-X-ClientProxiedBy: BL0PR02CA0041.namprd02.prod.outlook.com
- (2603:10b6:207:3d::18) To BL0PR12MB5506.namprd12.prod.outlook.com
- (2603:10b6:208:1cb::22)
+X-ClientProxiedBy: SA9P223CA0025.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:806:26::30) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.162.113.129) by BL0PR02CA0041.namprd02.prod.outlook.com (2603:10b6:207:3d::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.21 via Frontend Transport; Fri, 6 Aug 2021 01:19:14 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mBoVz-00Dt7i-Gb; Thu, 05 Aug 2021 22:19:11 -0300
+Received: from ca-mkp.ca.oracle.com (138.3.200.58) by SA9P223CA0025.NAMP223.PROD.OUTLOOK.COM (2603:10b6:806:26::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.16 via Frontend Transport; Fri, 6 Aug 2021 02:38:14 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 45fecf0d-4cec-4ad0-8d8a-08d9587833f7
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5206:
+X-MS-Office365-Filtering-Correlation-Id: 37bc1a19-ab81-480a-98f8-08d958833dd1
+X-MS-TrafficTypeDiagnostic: PH0PR10MB5547:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BL1PR12MB52063831F7D330717414574DC2F39@BL1PR12MB5206.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Microsoft-Antispam-PRVS: <PH0PR10MB554779D0BA37A158A6A51D278EF39@PH0PR10MB5547.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dUTD5yBdQ/EXgEFgfcs1uxZfEUQJNQo5K6IYqCOVO+M175ggCAFFMzM5OCHVIWWb1WCgj8XBDWUgPs+zOe6AhKx9Qw7sOzYHClb6STJ5Cg8KVbM/NXw1vCBB/DeQ6aWxA6IigzibgnzSPbj1R0g3lRoALOHI2+NqGasLDgYJ92b+JzVueflZD7rF2kxjCTUxlwjg81XLkmC4QzJ/Rc8SzK2tY3PrSIabf/Pd2EFdlPIZPo1YMlHzx5glxaoO98owAIHyGRGvl8Mg2aP+zTD9nz+mIiWz1fxNFXIZKpXFGf1ITNHMjsShCjINy6yrbqWTrx8ZFNql+abhQxKKGipD4jSwWLnV/FLMcz8Rd/pcV6shiHY6pB6tKROReRJpZxeWmziopOCGjSQ0FJIdJ/GbA0iUQQNtLdgyTgwSBSFzH697aUf8I9yp3KyRPR1+AtNSM2CsuNFuMh8cZ9t49uINy43RXbZBcl/MoIrhFP4RrHDfhlF3u2VCYQNduyejkYV3Q2wWBDLajMt1mGGQgeDhxlZ/SBMsdogfv4IYxxOdGiFScx2lT5GEbvHwgikqiS2vLZyqN7LuvzolK4PGBzLHFMA9RhpxtLTcYywBYmbj6O0HnpND8Da8mnyJwcRGWFEJjD+keRSMaU6hOwN1aU+O86bX8d2XAvLlIK7eaWVmTZvGYKekoDThsu5D+LA/M4iu
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(9746002)(83380400001)(86362001)(9786002)(8936002)(426003)(2906002)(7416002)(38100700002)(7406005)(66946007)(921005)(8676002)(5660300002)(186003)(2616005)(26005)(36756003)(508600001)(66476007)(316002)(4326008)(66556008)(110136005)(54906003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: vEip2dgbKdqZ4Asg58kgknokPP0VL7s2MhAl/RcCcR3taRwndoxL7E712HIVgx9LdTrlNqQ0diDJszAe4rBXJk0aVwB4arw0ONCn5cC8IUL9sSK3UMCgZLnKV7lpO89eSju6eWWfvlJQEqK1lub3+ocK+KhN7n1FeZLZEUr/Jcml06d2lfKNyRuYie2qXchAtGxkZhaM3Oi14SiJEFPvo4x7wzO9tSPy2JWJ4buZKJzVDWs6k/UtiK4ZbNorEjE4noZAOk1OMRLJ+zfjo5YDXN3poq5pvQxuatHatDIDUCjIuU/B8F8712qa5z4b/W1TCyX8HP6DitEZqK4xOVUJPlbPduP4hcCTaQLOYSrt1f896Rj5NeitTldF/8Vf0KpemAdcgbbJc+zuiUHMkDpuVNPH0p1jqnVCy700lBRvG/zenHMOo8Y/ib7OAH18tWE+uzrMnDed1DQBDeOGAzCG6YtX5QQnCW6W2OLjQUjC+hagRWtuXZRIP2MCQf4IVU/O3a8AL6Eir5IPQ2n6tFbukGHagq3zIcXBS6AB9VAqCR3I9QG9gPILlANRxk6n72qdZlWr9fSHZ4u1CzIRT8N/5MfBcmQLhLXu9PfqFcxjgd4zqPPCkm9/ksZ9hBvEBaL4Fi9mamrnqQMjFrgduQP02LqQp0myyr5mWsUAHmHnJAk0ta8XMlLNoatxGvdoGcFhCZ1Zj3PBZrCUAwyyfV3Eeg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(39860400002)(396003)(136003)(346002)(186003)(55016002)(8936002)(2906002)(8676002)(7696005)(52116002)(36916002)(38350700002)(38100700002)(6916009)(478600001)(956004)(54906003)(66946007)(66556008)(5660300002)(6666004)(558084003)(316002)(26005)(7416002)(4326008)(66476007)(86362001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?4JN2mRiHTAQ2278J+lwwpnMHW79h8EBQak5V3KG55D13mcWkC6HaELv/c2Dx?=
- =?us-ascii?Q?7Wo0a2N30ol2r3ABO0vBgN2gtk+RfGf2u4msC5Y7gpQxvU6yR8WtWo3IsWm2?=
- =?us-ascii?Q?y3J6YX4q5lUhSuxedw0Rg0ohwQaGL2EbdlKR3/VnEEeXXgGWCqW5QWZLpXs5?=
- =?us-ascii?Q?V2mQhZ/W+eSYPhBvGYKSYwGm4Zni8IgBPud6d3aJY8nu1YJbXbPLqK1QNt6B?=
- =?us-ascii?Q?5VyKFIhK0+Osamr7QfTK8It81FPNYkZ+wnF/fLatp+2ZI8qRhkeZx2szrf5M?=
- =?us-ascii?Q?sHgh1oftIz8A/RbAxtDYGsMhPt8dJHyqz9/y8eFDakoakwY/a4EBxkA5dis/?=
- =?us-ascii?Q?sK73fJ+DP8CGA869Fcqtkm/RVZBfpzsW91kC3Ci7wPidwfyka0iwFYkXUdIC?=
- =?us-ascii?Q?4cJ43WHHHfYJuM+NfseIdHNEDU3XQepH8scZDlH4x87bK5oaJN/qdU/aX81+?=
- =?us-ascii?Q?glfMAoCjwgxtZVWjTb+3dflroXwG01pNLVQB8s1ozLh/yoPlBHt2cx/255hJ?=
- =?us-ascii?Q?GeNE90EgwFg96cpOChwlvZXw9mF8fWlx2EaFQ6lOoWL+qX4G7llMLWS45xXE?=
- =?us-ascii?Q?X0bIPQb5d2Ma7PHsvW85jbgdEb6pYESRhWazrwiCCsRejngUv3SFg7oPQfKf?=
- =?us-ascii?Q?SLOSvMSmbfyhM0g6geiRSKh/Wh+uLFijwE+o29TW4vT1j+bICpeAeSdxXE1X?=
- =?us-ascii?Q?mpPPEV8CX1xZXVAnHKNtwKKvNONqXXc4esOsFHaHxoEL7ZnPOKuVNKn1QJMd?=
- =?us-ascii?Q?NudkRfEaAh84cXu8rAs92yfkTYRD+cquckJkHxYptexYiJDf8unT0/88vd8d?=
- =?us-ascii?Q?P64OdeK7D6iN9v3Toq6FXpwqGWN5aJ3Q0tY2Z1XH7AelyUo77SiyqdCq1Iqp?=
- =?us-ascii?Q?Js3zSS6CHfPPNl9anbKSxkj2s8mmGZoApVnhe+AqCzQD5CUEzxyXH1nQHKIm?=
- =?us-ascii?Q?hv1Znj9dPG80IC4ud7iTgJi2E1vjiusP/Xfw7ljjjksVy7UNOdZXHelIismY?=
- =?us-ascii?Q?rRfEFJ6NcMng72AiFruTLA+tB9coatuWoH3MPXnAigkOAHxY+//TXEjzriZO?=
- =?us-ascii?Q?irgyQbd1YRH4er0nO2+9th285MCLSmhSIBlcshYI+bAUo4o+V72jEnjAzN7K?=
- =?us-ascii?Q?NOXOMjb8yj1MwlfbZ8aSbxM/U2JBefDESogCifREHUM0IMyeXMIizP9pjNxE?=
- =?us-ascii?Q?sqiZqlh08xpHcQhtk+QorULfTUa7cYL1KSvOEDzSjRD6Uii0kN4cLcWKpwN+?=
- =?us-ascii?Q?PVCjEwOqZZU5S4mo7fGvUSeRRuLf97EDxZJq0vNb1hDHzPA2La7MbsmEuaki?=
- =?us-ascii?Q?IiAirqgl4aBlO3ahOtSWjYSp?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45fecf0d-4cec-4ad0-8d8a-08d9587833f7
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?HwqZ6hDDLzRzX+a0nli8YIlaVQoXWqp5xHzf2aqWrJ3KUDo/c3Z+0fVLgg7q?=
+ =?us-ascii?Q?7vHOTmdJPFqcfAu2fpD5jg51HVvw9a2CQOE4HPRPrzJqt9wFVr2Q7AfOON03?=
+ =?us-ascii?Q?YjK8VkpbCU3nrWFAxYqJMeeczHdsl95+tbc6lUjSfzJLsrRgqJ6S79QciLgN?=
+ =?us-ascii?Q?OKmg6/3qGpwmh3po3B3GPmKHSZkdTri7jadDwiOIZW8W2AKxx5bT1PbVJg9T?=
+ =?us-ascii?Q?CRXExyff6w4rG4/Q8s3aDOCD3yPqZZ/pHPwSA5BENGHOcAPCR8AaLtwVKZOM?=
+ =?us-ascii?Q?0HieGiehG3YEC8QboF86m+C6W3zMCK4zw7tUnsWAZVD6COzDyDQ8GPMU2rmu?=
+ =?us-ascii?Q?+4dCsq6TY85PRALRHUy0G4pq3f0+6+KK+Gf8AgbYBLGj2jedtz3yTrJ17V4K?=
+ =?us-ascii?Q?+xIyoun+VMyc8DU2RN7AE68VhGJIXo6a1Mc/qCCrKBYKNX37EO4kIziP11TJ?=
+ =?us-ascii?Q?K7YosFfZMrIrMeEgRsW6AH1+vVoAd71uZ4GLxjT15quVWtU+Dy8zXjlmlf5E?=
+ =?us-ascii?Q?+UUs6BwDodJIUdHzgLnxhwZAzfuQLc7VlmxVHz560DEgHMMsl18ES9YbmEHm?=
+ =?us-ascii?Q?uMBPFez7qUHTpb8vVktdVE8eIEMDD7fJoVamg6W7nZYu2WnD0nTKEgskawiP?=
+ =?us-ascii?Q?44VtjlUdvSRJxI0xkALX3mcwT7VNqoU9jH+sVI53gCNABV9G35ncG5JRGHYk?=
+ =?us-ascii?Q?LePs+GQjGe3Y0EgbXR74UEP+YbwvRr8qDg6luS7kmAhCWX9wTK+q0O9JFl8P?=
+ =?us-ascii?Q?g/bG5T6HvWy3Aw5YfS7R5bv2SgZkH75vYPxPJGEDxE/7QQeL9RkLuU+IZZKu?=
+ =?us-ascii?Q?Z3eGJcTwzmcg/ESN7zKy92HK7TMl2ywgAHPgo5QPEz0Xo9LAAxqlr8I8Kj/O?=
+ =?us-ascii?Q?EAZ1Y75kVbZKBSzurNCd1+dAsguu3XljvDtv5fsX0pEIMG0TRidcagMxozhr?=
+ =?us-ascii?Q?3LunAsi5D8FM90Zmi/v/WG0sY+vtR1d0ytcFSRUXW2JzgWjhdoFlMVi7Njak?=
+ =?us-ascii?Q?jEt5/8Dh1kcTdKsnklc5hjUx+kVQVLPNw7DayUcGCrHsH9CGGiCYBrZcAJeS?=
+ =?us-ascii?Q?3yMTOPfEI4+yStNsR0FzMDKggjC9DbLWxPpF8JF4kk25L6J9c/g5Hnu3PPCh?=
+ =?us-ascii?Q?P66okeQP5QxJJAam1nuti5Gi8YgGf/w+uj9BU2/2tLhzpAdTwe76fr/Bav5T?=
+ =?us-ascii?Q?OLRaUkPqAigRs0g93Hyc1laafVT+gxEOTSamnJIYBBe7Uqs8sO0ImoK9GqYA?=
+ =?us-ascii?Q?2UWltULOiOy71dumNVEd29A/nPXVs55U7EVadKMVwxx0V70I8iV2AK5cVE5r?=
+ =?us-ascii?Q?8mcQOfVqXytTFulDz3EDUjnj?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 37bc1a19-ab81-480a-98f8-08d958833dd1
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2021 01:19:14.2430
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2021 02:38:15.1817
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jImWaXGRa791OI5M2OFGENALduXXMo27QRVTmRe/neYZSpAi8uz7l+7YaOyi8IvC
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5206
+X-MS-Exchange-CrossTenant-UserPrincipalName: iOpJtuq92ls4/s19y3U0YyIwZnm7Sz8XctOTqylByalLubpc2b21MWjny/0ph5WA1NsDPw4JOHzXCamm5VUf2qTmj7M7hjw9NY8Excl2LRs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5547
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10067 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
+ definitions=main-2108060013
+X-Proofpoint-GUID: wK_tIywM9icsTQkrrZ80TX8d8LC0f_PT
+X-Proofpoint-ORIG-GUID: wK_tIywM9icsTQkrrZ80TX8d8LC0f_PT
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Nothing uses this anymore, delete it.
 
-Signed-off-by: Yishai Hadas <yishaih@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
----
- drivers/vfio/mdev/vfio_mdev.c | 22 ----------------------
- drivers/vfio/vfio.c           | 14 +-------------
- include/linux/mdev.h          |  7 -------
- include/linux/vfio.h          |  4 ----
- 4 files changed, 1 insertion(+), 46 deletions(-)
+Christoph,
 
-diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-index e12196ffd48718..7a9883048216e7 100644
---- a/drivers/vfio/mdev/vfio_mdev.c
-+++ b/drivers/vfio/mdev/vfio_mdev.c
-@@ -37,26 +37,6 @@ static void vfio_mdev_close_device(struct vfio_device *core_vdev)
- 		parent->ops->close_device(mdev);
- }
- 
--static int vfio_mdev_open(struct vfio_device *core_vdev)
--{
--	struct mdev_device *mdev = to_mdev_device(core_vdev->dev);
--	struct mdev_parent *parent = mdev->type->parent;
--
--	if (unlikely(!parent->ops->open))
--		return 0;
--
--	return parent->ops->open(mdev);
--}
--
--static void vfio_mdev_release(struct vfio_device *core_vdev)
--{
--	struct mdev_device *mdev = to_mdev_device(core_vdev->dev);
--	struct mdev_parent *parent = mdev->type->parent;
--
--	if (likely(parent->ops->release))
--		parent->ops->release(mdev);
--}
--
- static long vfio_mdev_unlocked_ioctl(struct vfio_device *core_vdev,
- 				     unsigned int cmd, unsigned long arg)
- {
-@@ -122,8 +102,6 @@ static const struct vfio_device_ops vfio_mdev_dev_ops = {
- 	.name		= "vfio-mdev",
- 	.open_device	= vfio_mdev_open_device,
- 	.close_device	= vfio_mdev_close_device,
--	.open		= vfio_mdev_open,
--	.release	= vfio_mdev_release,
- 	.ioctl		= vfio_mdev_unlocked_ioctl,
- 	.read		= vfio_mdev_read,
- 	.write		= vfio_mdev_write,
-diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-index 9cc17768c42554..3c034fe14ccb03 100644
---- a/drivers/vfio/vfio.c
-+++ b/drivers/vfio/vfio.c
-@@ -1470,19 +1470,13 @@ static int vfio_group_get_device_fd(struct vfio_group *group, char *buf)
- 	}
- 	mutex_unlock(&device->dev_set->lock);
- 
--	if (device->ops->open) {
--		ret = device->ops->open(device);
--		if (ret)
--			goto err_close_device;
--	}
--
- 	/*
- 	 * We can't use anon_inode_getfd() because we need to modify
- 	 * the f_mode flags directly to allow more than just ioctls
- 	 */
- 	fdno = ret = get_unused_fd_flags(O_CLOEXEC);
- 	if (ret < 0)
--		goto err_release;
-+		goto err_close_device;
- 
- 	filep = anon_inode_getfile("[vfio-device]", &vfio_device_fops,
- 				   device, O_RDWR);
-@@ -1509,9 +1503,6 @@ static int vfio_group_get_device_fd(struct vfio_group *group, char *buf)
- 
- err_fd:
- 	put_unused_fd(fdno);
--err_release:
--	if (device->ops->release)
--		device->ops->release(device);
- err_close_device:
- 	mutex_lock(&device->dev_set->lock);
- 	if (device->open_count == 1 && device->ops->close_device)
-@@ -1659,9 +1650,6 @@ static int vfio_device_fops_release(struct inode *inode, struct file *filep)
- {
- 	struct vfio_device *device = filep->private_data;
- 
--	if (device->ops->release)
--		device->ops->release(device);
--
- 	mutex_lock(&device->dev_set->lock);
- 	if (!--device->open_count && device->ops->close_device)
- 		device->ops->close_device(device);
-diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-index cb5b7ed1d7c30d..68427e8fadebd6 100644
---- a/include/linux/mdev.h
-+++ b/include/linux/mdev.h
-@@ -72,11 +72,6 @@ struct device *mtype_get_parent_dev(struct mdev_type *mtype);
-  *			@mdev: mdev_device device structure which is being
-  *			       destroyed
-  *			Returns integer: success (0) or error (< 0)
-- * @open:		Open mediated device.
-- *			@mdev: mediated device.
-- *			Returns integer: success (0) or error (< 0)
-- * @release:		release mediated device
-- *			@mdev: mediated device.
-  * @read:		Read emulation callback
-  *			@mdev: mediated device structure
-  *			@buf: read buffer
-@@ -113,8 +108,6 @@ struct mdev_parent_ops {
- 	int     (*remove)(struct mdev_device *mdev);
- 	int     (*open_device)(struct mdev_device *mdev);
- 	void    (*close_device)(struct mdev_device *mdev);
--	int     (*open)(struct mdev_device *mdev);
--	void    (*release)(struct mdev_device *mdev);
- 	ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
- 			size_t count, loff_t *ppos);
- 	ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index f0e6a72875e471..b53a9557884ada 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -46,8 +46,6 @@ struct vfio_device {
-  *
-  * @open_device: Called when the first file descriptor is opened for this device
-  * @close_device: Opposite of open_device
-- * @open: Called when userspace creates new file descriptor for device
-- * @release: Called when userspace releases file descriptor for device
-  * @read: Perform read(2) on device file descriptor
-  * @write: Perform write(2) on device file descriptor
-  * @ioctl: Perform ioctl(2) on device file descriptor, supporting VFIO_DEVICE_*
-@@ -62,8 +60,6 @@ struct vfio_device_ops {
- 	char	*name;
- 	int	(*open_device)(struct vfio_device *vdev);
- 	void	(*close_device)(struct vfio_device *vdev);
--	int	(*open)(struct vfio_device *vdev);
--	void	(*release)(struct vfio_device *vdev);
- 	ssize_t	(*read)(struct vfio_device *vdev, char __user *buf,
- 			size_t count, loff_t *ppos);
- 	ssize_t	(*write)(struct vfio_device *vdev, const char __user *buf,
+> Add a helper to get the virtual address for a bvec.  This avoids that
+> all callers need to know about the page + offset representation.
+
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+
 -- 
-2.32.0
-
+Martin K. Petersen	Oracle Linux Engineering
