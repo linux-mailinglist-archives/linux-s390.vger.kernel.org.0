@@ -2,97 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16EAD3E48A9
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Aug 2021 17:25:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EBB53E495A
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Aug 2021 17:57:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235585AbhHIPZ3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Aug 2021 11:25:29 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45404 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S235588AbhHIPZ0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Aug 2021 11:25:26 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 179F4QlS184481;
-        Mon, 9 Aug 2021 11:25:05 -0400
+        id S235744AbhHIP5z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Aug 2021 11:57:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34458 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235642AbhHIP5w (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Aug 2021 11:57:52 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 179FrmBG142060;
+        Mon, 9 Aug 2021 11:57:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=92CSMFWIHVvbAZhW6mbS9BPDXlq2dgOMjfcK6Kplj80=;
- b=iQmO+PiwE34MfB6dEHltxjD0i/5OUr4jPOkayDM8HKCxyBGMRT33tZf4VSsvUvN3FE0k
- +gt8S4ywzapPad8dCEEn66mD8JSrLb5VJNYJ0l4u6aZRSHILqqZsqFSNflLej6+nnyGD
- mW6Py7+CK6YeoqXl3ramN89UXETz91WHGYKX4kaihyW4WQvxCMLeZOAi5n773+xiV/na
- /ZtMUfRrB8gbruc26hyphnKh6qYIYA5EvUdPu9LYwZeRHh3PX9lc1NFp813kWlbZWJyf
- ZfyP0yZ4Qp9DSnyaHxuFagnL7vVbx4EgCyvqCEy1evJFlJgxWAV7zE+jOllwj9+x+0sJ fg== 
+ bh=Ct2Ila10cJWPbMPU33amPEXJaz/mQhYJvriZAqQ4gMU=;
+ b=S0f0kkb2njr0R3CBfgCZMW3w86+TV3YbjY98gFXMdg/ro0F2wPk9FbmQVdTN7jvyqu67
+ OTP5OSoIWN+SdSzpg4AuNsOQCVeOuDhuYHUxmt7wCpWacubvEvPZmUZK2omeg9vizBm8
+ 3sPLoynO2KuSqmEzdwM6RN3V5/thQbg989I/84zHTyyY04QOC7N3JhhfsVeXym8dDviv
+ JdVpqv+d+AHqYRDh3CoR0ZoxuhmRRCz0nPae2iJIR9pFKsQtAAeD+yqEkfhzbm78ZTRX
+ A1h5s4y3F0UpJEC47Q8Ku1MO8zfMfSjSsllO8G6yu1eJ3cK319YjsYvasuWRNugIi+yk uQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3aa7n0burx-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3aam0m95am-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Aug 2021 11:25:05 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 179F4dWs185808;
-        Mon, 9 Aug 2021 11:25:04 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3aa7n0buqv-1
+        Mon, 09 Aug 2021 11:57:31 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 179Fuh0Y008825;
+        Mon, 9 Aug 2021 11:57:31 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3aam0m959s-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Aug 2021 11:25:04 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 179FCE3r030665;
-        Mon, 9 Aug 2021 15:25:03 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 3a9ht8uqws-1
+        Mon, 09 Aug 2021 11:57:31 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 179Fm4wf000891;
+        Mon, 9 Aug 2021 15:57:29 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 3a9hehc8yy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Aug 2021 15:25:02 +0000
+        Mon, 09 Aug 2021 15:57:29 +0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 179FOxRU47448464
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 179FsGcE56492364
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Aug 2021 15:24:59 GMT
+        Mon, 9 Aug 2021 15:54:16 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C18EAE0F6;
-        Mon,  9 Aug 2021 15:24:59 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id F3471AE05F;
+        Mon,  9 Aug 2021 15:57:25 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0DEE2AE0ED;
-        Mon,  9 Aug 2021 15:24:59 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 9B137AE058;
+        Mon,  9 Aug 2021 15:57:25 +0000 (GMT)
 Received: from oc3016276355.ibm.com (unknown [9.145.151.189])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Aug 2021 15:24:58 +0000 (GMT)
+        Mon,  9 Aug 2021 15:57:25 +0000 (GMT)
 Subject: Re: [kvm-unit-tests PATCH v1 3/4] s390x: topology: check the Perform
  Topology Function
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        thuth@redhat.com, kvm@vger.kernel.org, cohuck@redhat.com,
-        david@redhat.com
+To:     Janosch Frank <frankja@linux.ibm.com>, linux-s390@vger.kernel.org
+Cc:     thuth@redhat.com, kvm@vger.kernel.org, cohuck@redhat.com,
+        imbrenda@linux.ibm.com, david@redhat.com
 References: <1628498934-20735-1-git-send-email-pmorel@linux.ibm.com>
  <1628498934-20735-4-git-send-email-pmorel@linux.ibm.com>
- <20210809120306.6bd78354@p-imbrenda>
+ <9590216d-9cfd-0725-e77a-9bd13f8a2d60@linux.ibm.com>
 From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <0af6723f-f8b6-18cf-73ef-535cc818468b@linux.ibm.com>
-Date:   Mon, 9 Aug 2021 17:24:58 +0200
+Message-ID: <78450ffb-eff7-7525-41db-2f4e58b5411f@linux.ibm.com>
+Date:   Mon, 9 Aug 2021 17:57:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.12.0
 MIME-Version: 1.0
-In-Reply-To: <20210809120306.6bd78354@p-imbrenda>
+In-Reply-To: <9590216d-9cfd-0725-e77a-9bd13f8a2d60@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: eQGFMXCB-6nk3Y-3A4TVHNqQmXEIfNdq
-X-Proofpoint-ORIG-GUID: 6wYcjCt-0eU0VpOFcZGSTsTIoU7Ui0c9
+X-Proofpoint-GUID: -Z7fLa_e8iV7RglKyMCo5htaSKgc6n5m
+X-Proofpoint-ORIG-GUID: X4A_KDokJfhgVQToGR1zitaJNRFcsBKp
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
  definitions=2021-08-09_05:2021-08-06,2021-08-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- phishscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 malwarescore=0
- spamscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
- definitions=main-2108090111
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 bulkscore=0 adultscore=0
+ malwarescore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2107140000 definitions=main-2108090113
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 8/9/21 12:03 PM, Claudio Imbrenda wrote:
-> On Mon,  9 Aug 2021 10:48:53 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
+On 8/9/21 12:12 PM, Janosch Frank wrote:
+> On 8/9/21 10:48 AM, Pierre Morel wrote:
 >> We check the PTF instruction.
 >>
 >> - We do not expect to support vertical polarization.
@@ -105,9 +102,9 @@ On 8/9/21 12:03 PM, Claudio Imbrenda wrote:
 >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 >> ---
 >>   s390x/Makefile      |  1 +
->>   s390x/topology.c    | 87
->> +++++++++++++++++++++++++++++++++++++++++++++ s390x/unittests.cfg |
->> 3 ++ 3 files changed, 91 insertions(+)
+>>   s390x/topology.c    | 87 +++++++++++++++++++++++++++++++++++++++++++++
+>>   s390x/unittests.cfg |  3 ++
+>>   3 files changed, 91 insertions(+)
 >>   create mode 100644 s390x/topology.c
 >>
 >> diff --git a/s390x/Makefile b/s390x/Makefile
@@ -146,14 +143,27 @@ On 8/9/21 12:03 PM, Claudio Imbrenda wrote:
 >> +#include <smp.h>
 >> +#include <sclp.h>
 >> +
->> +static uint8_t pagebuf[PAGE_SIZE * 2]
->> __attribute__((aligned(PAGE_SIZE * 2))); +int machine_level;
+>> +static uint8_t pagebuf[PAGE_SIZE * 2] __attribute__((aligned(PAGE_SIZE * 2)));
+> 
+> We don't actually need that I made a mistake in stsi_get_fc().
+> I'll comment in the other patch.
+
+OK I saw.
+thx
+
+> 
+>> +int machine_level;
 >> +int mnest;
 >> +
 >> +#define PTF_HORIZONTAL	0
 >> +#define PTF_VERTICAL	1
->> +#define PTF_CHECK	2
->> +
+> 
+> PTF_REQ_*
+
+OK
+
+> 
+>> +#define PTF_CHECK	2> +
 >> +#define PTF_ERR_NO_REASON	0
 >> +#define PTF_ERR_ALRDY_POLARIZED	1
 >> +#define PTF_ERR_IN_PROGRESS	2
@@ -164,16 +174,6 @@ On 8/9/21 12:03 PM, Claudio Imbrenda wrote:
 >> +
 >> +	asm volatile(
 >> +		"       .insn   rre,0xb9a20000,%1,%1\n"
-> 
-> I know you copied this from the kernel, but the second argument is not
-> really there according to the PoP, so maybe it's better to have this
-> instead?
-> 
-> 	.insn   rre,0xb9a20000,%1,0\n
-
-OK, thanks.
-
-> 
 >> +		"       ipm     %0\n"
 >> +		"       srl     %0,28\n"
 >> +		: "=d" (cc), "+d" (fc)
@@ -198,8 +198,12 @@ OK, thanks.
 >> +	 * preceding PFT instruction.
 >> +	 */
 >> +	ptf(PTF_CHECK, &rc);
->> +	cc = ptf(PTF_CHECK, &rc);
->> +	report(cc == 0, "PTF check clear");
+>> +	cc = ptf(PTF_CHECK, &rc)> +	report(cc == 0, "PTF check clear");
+> 
+> Please leave a \n after a report for readability.
+OK
+
+> 
 >> +	cc = ptf(PTF_HORIZONTAL, &rc);
 >> +	report(cc == 2 && rc == PTF_ERR_ALRDY_POLARIZED,
 >> +	       "PTF horizontal already configured");
@@ -207,9 +211,24 @@ OK, thanks.
 >> +	report(cc == 2 && rc == PTF_ERR_NO_REASON,
 >> +	       "PTF vertical non possible");
 > 
-> *not possible
+> I've yet to look into your KVM/qemu code so I don't really understand
+> what you're testing here and why we can expect to get those results.
 
-Oh yes :)
+In KVM please ignore the stupid patch 3 commented by Heiko and that will 
+disappear.
+
+It changes nothing to the first two patches.
+
+OK, I will add some comments to explain what we await and why.
+
+> 
+> Maybe add a comment?
+> Also what will happen if we start this test under LPAR or z/VM, will it
+> fail?
+
+The last one may fail, PTF would succeed AFAIU under LPAR.
+For z/VM, no idea.
+
 
 > 
 >> +
@@ -220,12 +239,46 @@ Oh yes :)
 >> +{
 >> +	report_prefix_push("stsi");
 > 
-> should this really be "stsi" ?
+> Where did you copy that test from? :-)
 
-No, I think CPU-Topology should be better.
+:) yes cut and paste, I will change trhe prefix to "CPU Topology"
 
+> 
+>> +
+>> +	if (!test_facility(11)) {
+>> +		report_skip("Topology facility not present");
+>> +		goto end;
+>> +	}
+>> +
+>> +	report_info("Machine level %ld", stsi_get_fc(pagebuf));
+>> +
+>> +	test_ptf();
+>> +end:
+> 
+> report_prefix_pop is missing here
 
+Right.
+will add.
 
+> 
+>> +	return report_summary();
+>> +}
+>> diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
+>> index 9e1802fd..0f84d279 100644
+>> --- a/s390x/unittests.cfg
+>> +++ b/s390x/unittests.cfg
+>> @@ -109,3 +109,6 @@ file = edat.elf
+>>   
+>>   [mvpg-sie]
+>>   file = mvpg-sie.elf
+>> +
+>> +[topology]
+>> +file = topology.elf
+>>
+> 
+
+Thanks,
+Pierre
 
 -- 
 Pierre Morel
