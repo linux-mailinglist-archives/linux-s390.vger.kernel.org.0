@@ -2,112 +2,156 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C80A3E4776
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Aug 2021 16:23:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A9C23E48EF
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Aug 2021 17:35:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235048AbhHIOX5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Aug 2021 10:23:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20712 "EHLO
+        id S235482AbhHIPfn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Aug 2021 11:35:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61320 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234995AbhHIOX4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Aug 2021 10:23:56 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 179ELlZU125900;
-        Mon, 9 Aug 2021 10:23:36 -0400
+        by vger.kernel.org with ESMTP id S234708AbhHIPfm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Aug 2021 11:35:42 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 179FY4Rc075279;
+        Mon, 9 Aug 2021 11:35:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=ETvsuerive3vOMJVANgx3kPKEw8PHVLbEpE5ztWC/Bg=;
- b=ViQKK6Q+Df9vQohYn6WWcKqQHuIc+UC8O8mgy2LhVtG8h34XmOenvGAH18AwX4VP/dHq
- GAaFBaedLFe3ZQj5F+h4z1i7PrFyqgRQvpNi4R9NW3ojDEM0APBzspikUWRblKeyZydj
- YVEj9s22ZQ0zE28qn0OP9mgSq0brWQRCsmDtcyWF4yxVRfA4liz+U7bOxfHyJqQrAKJi
- Ao2hJkK4/i3XXUd4anPRoAFsJSADwnnI8D3sKl/K9JsxhoU56SwmeSSFa5E90LkO+p+6
- EaQ8riJm4cjgAbUGjpPuPU7mR7IxAbe/pWoA2OIpMkpLfoz7v09FlZ5/rK5J3NYelhbZ kQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3aax6c4spp-1
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=hwpA24QRrQlzhRUNEXBLbQJ7FfPUZL9C1vCAfLp04pE=;
+ b=YZqSovz5HZpMPAWThi+VH5jqcT24Z1N2g9Zy41tXxVPLLFC3FuapZHFTw9uFQZztfAHV
+ TWhSTmZK6miZiVPmafpmmTOXVhTyY+9cWrXTNZJE4fP04VMsaM7+H1poF2qQES4vdyDs
+ fkF8MTM28l0QREEDJ4stVRNSizSqKgaA8uw2sSOtxdhs5h1gtPVVVgIjFg2k/UEC+A6s
+ ERcmR28aem9wfVa/IxPa3BcFW6qntLcCFM4AwHZEqJSmrpDdOMEm3dBU8w+J9Zbi4y3s
+ rZUsXqGoSPy6ImuFHPxDs6YnC7B5dVN7SXUHmcUg+1VKGAacs+qZwAkDDUvrQ/1mQNFI EA== 
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3ab1j8ae59-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Aug 2021 10:23:36 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 179ELqRs126409;
-        Mon, 9 Aug 2021 10:23:35 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3aax6c4snr-1
+        Mon, 09 Aug 2021 11:35:14 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 179FXfR7021136;
+        Mon, 9 Aug 2021 15:35:13 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma02dal.us.ibm.com with ESMTP id 3a9htbuvn8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Aug 2021 10:23:35 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 179EIWkP021438;
-        Mon, 9 Aug 2021 14:23:33 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04fra.de.ibm.com with ESMTP id 3a9ht8knuh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Aug 2021 14:23:33 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 179ENTwN52625874
+        Mon, 09 Aug 2021 15:35:13 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 179FZC3l38338886
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Aug 2021 14:23:29 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70A83AE053;
-        Mon,  9 Aug 2021 14:23:29 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27044AE057;
-        Mon,  9 Aug 2021 14:23:29 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.151.189])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Aug 2021 14:23:29 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v1 1/4] s390x: lib: Add SCLP toplogy nested
- level
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        thuth@redhat.com, kvm@vger.kernel.org, cohuck@redhat.com,
-        david@redhat.com
-References: <1628498934-20735-1-git-send-email-pmorel@linux.ibm.com>
- <1628498934-20735-2-git-send-email-pmorel@linux.ibm.com>
- <20210809115345.3f0eb1c4@p-imbrenda>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Message-ID: <31fe25db-6df8-90dc-81f4-d37ad17add5e@linux.ibm.com>
-Date:   Mon, 9 Aug 2021 16:23:28 +0200
+        Mon, 9 Aug 2021 15:35:12 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA53C7E6B0;
+        Mon,  9 Aug 2021 15:12:54 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1DB8A7E6AD;
+        Mon,  9 Aug 2021 15:12:54 +0000 (GMT)
+Received: from cpe-172-100-181-211.stny.res.rr.com (unknown [9.160.182.229])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  9 Aug 2021 15:12:53 +0000 (GMT)
+Subject: Re: [PATCH] s390/crypto: fix all kernel-doc warnings in vfio_ap_ops.c
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        kbuild-all@lists.01.org
+Cc:     kernel test robot <lkp@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org
+References: <20210806050149.9614-1-rdunlap@infradead.org>
+ <d8f1b065-f7b2-a0f3-f87a-ffdd2f7f2781@linux.ibm.com>
+ <1ad57c8d-c0d1-88d9-bcce-3d3501455d8e@infradead.org>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <fd938029-7d87-4e65-bb2c-b78e9b0175e3@linux.ibm.com>
+Date:   Mon, 9 Aug 2021 11:12:53 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
-MIME-Version: 1.0
-In-Reply-To: <20210809115345.3f0eb1c4@p-imbrenda>
+ Thunderbird/78.11.0
+In-Reply-To: <1ad57c8d-c0d1-88d9-bcce-3d3501455d8e@infradead.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: PvNf45CegAiV9edjiBzBdMwBkr5Gmwpu
-X-Proofpoint-ORIG-GUID: dYLbuyPcDCe5-LoskeW3_c2PhKP6VvWb
+X-Proofpoint-GUID: J_k2VTnUT-tNXFNifIgL6PE91Otx9YWF
+X-Proofpoint-ORIG-GUID: J_k2VTnUT-tNXFNifIgL6PE91Otx9YWF
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-08-09_04:2021-08-06,2021-08-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 clxscore=1015 impostorscore=0 malwarescore=0
- spamscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=999 phishscore=0
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2107140000 definitions=main-2108090105
+ definitions=2021-08-09_05:2021-08-06,2021-08-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1011 impostorscore=0 suspectscore=0 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 adultscore=0 phishscore=0 mlxscore=0
+ spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2107140000 definitions=main-2108090113
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Thanks Randy.
 
-
-On 8/9/21 11:53 AM, Claudio Imbrenda wrote:
-> On Mon,  9 Aug 2021 10:48:51 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> The maximum CPU Topology nested level is available with the SCLP
->> READ_INFO command inside the byte at offset 15 of the ReadInfo
->> structure.
+On 8/6/21 9:38 PM, Randy Dunlap wrote:
+> On 8/6/21 6:26 AM, Tony Krowiak wrote:
+>> Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
 >>
->> Let's return this information to check the number of topology nested
->> information available with the STSI 15.1.x instruction.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> 
-> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+>> Pardon my ignorance, but this is the first I've seen of kernel-doc 
+>> warnings.
+>> Is there a flag I can set when I build to get kernel-doc warnings? Is 
+>> there a tool I can run?
+>> Where is the kernel-doc format documented? I'd like to avoid this in 
+>> the future.
+>
+> Hi,
+>
+> Here is the 0day bot report:
+> https://lore.kernel.org/lkml/202108010650.DLRzJOtm-lkp@intel.com/
+> (not sent to any of your group, sadly).
+>
+> kernel-doc format is documented in 
+> Documentation/doc-guide/kernel-doc.rst.
+>
+> The 0day bot lists the reproduction steps. It used clang but I used
+> gcc. Shouldn't matter in this case. The main point from the 0day bot
+> is that "this is a W=1 build".  Using W=1 causes checks for extra
+> C compiler warnings and also it causes checks for documentation build
+> errors/warnings.
+>
+> In your build environment, using "make W=1 ARCH=s390 allmodconfig all"
+> will produce lots of output (both compiler and kernel-doc output).
+> I suppose that is the expected way to do it.
+>
+> AFAIK there is no support for something like "make W=1 htmldocs"
+> to just check for kernel-doc errors/warnings in source files, so what
+> I do when I am targeting only one source file is something like what
+> is documented in the file referenced above:
+>
+> "Running the ``kernel-doc`` tool with increased verbosity and without 
+> actual
+> output generation may be used to verify proper formatting of the
+> documentation comments. For example::
+>
+>     scripts/kernel-doc -v -none drivers/foo/bar.c
+> "
+> and then I script that for ease of use.
+> Using the latter command reports lots more kernel-doc warnings than
+> the 0day bot reported, so I fixed all of them that it found.
+>
+>
+> HTH.
+>
+>
+>> On 8/6/21 1:01 AM, Randy Dunlap wrote:
+>>> The 0day bot reported some kernel-doc warnings in this file so clean up
+>>> all of the kernel-doc and use proper kernel-doc formatting.
+>>> There are no more kernel-doc errors or warnings reported in this file.
+>>>
+>>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>>> Reported-by: kernel test robot <lkp@intel.com>
+>>> Cc: Jason Gunthorpe <jgg@nvidia.com>
+>>> Cc: Tony Krowiak <akrowiak@linux.ibm.com>
+>>> Cc: Halil Pasic <pasic@linux.ibm.com>
+>>> Cc: Jason Herne <jjherne@linux.ibm.com>
+>>> Cc: Harald Freudenberger <freude@linux.ibm.com>
+>>> Cc: linux-s390@vger.kernel.org
+>>> ---
+>>>   drivers/s390/crypto/vfio_ap_ops.c |  116 ++++++++++++----------------
+>>>   1 file changed, 52 insertions(+), 64 deletions(-)
+>
+>
 
-Thanks,
-Pierre
-
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
