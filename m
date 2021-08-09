@@ -2,179 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A22743E419D
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Aug 2021 10:31:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D74D3E41CA
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Aug 2021 10:49:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233977AbhHIIcJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Aug 2021 04:32:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29222 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233933AbhHIIcI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Aug 2021 04:32:08 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 17985XYj175485;
-        Mon, 9 Aug 2021 04:31:36 -0400
+        id S234073AbhHIIt3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Aug 2021 04:49:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51856 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S234030AbhHIIt2 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Aug 2021 04:49:28 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1798dYKr019680;
+        Mon, 9 Aug 2021 04:49:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=qTjY1rFayv2T+Y+hRj2cvtakImgezdyMoLeCM9W868E=;
- b=WsS3chLhMK8yfhzjAYbML8D1usDzQyG3QqqXQet2QNfiKnd5jbIq/07o7pdKHSfnRL1L
- BBvK1c/6YjmF0RFJ2dstLhHQ6LOskHlME5mdp3qT8cTxMmKlD8ZBEL/V3bVeoQhYEVks
- fEEaVNskSM6LMIGT3qgjSh0k2sqGVfKIaB4xwifEwJeJ0VY7wn+RgTUY4TubV0ycELdC
- AmuUS/OKdYBnKDCZD79CNXqyLrY0DYuYiZAJd5jI85WbcF4w0Wb2pXGF9ZQS9W5Gmv6s
- Flbv0ubwjoKSkJ1ue+lhil1ySTYUza+29Op0saLoenDgqpMnDpGlUsTD9yX5dtfc7ta1 yw== 
+ : date : message-id : mime-version; s=pp1;
+ bh=P0ePVus6cr2Vttbo6o55rGCqiFf0cNA0uhesatFHGvg=;
+ b=TIp5ctsxQfiMyteNvyRqE4CUheMIovyVa/5BlWePtUHpjN3qFuk4gkYRUyBB14UK6h25
+ IUuQnHolvKIW6LvZWDLohj+n0NMtdcpBz7Mq3aVxDDgAS0EBGS+sBJc4pUSXKVS0s7qc
+ TH6/WLChQiydjDQnZlbxkmuK7oQFNziq/PNr0nQpK23dOXLp20z3poqUJZdOf/KA9ajX
+ HVOe/MNNI11ObZml+qjbSx/YGtRShFDrXfFaApPfDzXVrFFFHt0vwZ2WA/fsEA3KPFkz
+ I6Fu8gJHetVMR7FFu2H7FlXxz66Yz6nX5IkbUZQaj0mlLPtbH24lOSff15XTEU9aNEUD vg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3aa7n01224-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Aug 2021 04:49:02 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1798eJiD021439;
+        Mon, 9 Aug 2021 04:49:01 -0400
 Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3aa74j22wu-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3aa7n0121t-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Aug 2021 04:31:36 -0400
+        Mon, 09 Aug 2021 04:49:01 -0400
 Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1798SGNq023831;
-        Mon, 9 Aug 2021 08:31:34 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 3a9ht8umd0-1
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1798m8hI009034;
+        Mon, 9 Aug 2021 08:49:00 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 3a9ht8un4u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Aug 2021 08:31:34 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1798SOLW61604338
+        Mon, 09 Aug 2021 08:48:59 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1798muBx34472328
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Aug 2021 08:28:24 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B6E2A4053;
-        Mon,  9 Aug 2021 08:31:30 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9978AA405B;
-        Mon,  9 Aug 2021 08:31:29 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  9 Aug 2021 08:31:29 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH net-next 5/5] net/iucv: Replace deprecated CPU-hotplug functions.
-Date:   Mon,  9 Aug 2021 10:30:50 +0200
-Message-Id: <20210809083050.2328336-6-kgraul@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210809083050.2328336-1-kgraul@linux.ibm.com>
-References: <20210809083050.2328336-1-kgraul@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 9 Aug 2021 08:48:56 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 349A34204D;
+        Mon,  9 Aug 2021 08:48:56 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CEF7B4204B;
+        Mon,  9 Aug 2021 08:48:55 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.151.189])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  9 Aug 2021 08:48:55 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     linux-s390@vger.kernel.org
+Cc:     frankja@linux.ibm.com, thuth@redhat.com, kvm@vger.kernel.org,
+        cohuck@redhat.com, imbrenda@linux.ibm.com, david@redhat.com
+Subject: [kvm-unit-tests PATCH v1 0/4] S390x: CPU Topology Information
+Date:   Mon,  9 Aug 2021 10:48:50 +0200
+Message-Id: <1628498934-20735-1-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: nehYgYQLYL1x-APIZkzd4bHKa9kuZGYo
-X-Proofpoint-GUID: nehYgYQLYL1x-APIZkzd4bHKa9kuZGYo
+X-Proofpoint-GUID: rgVghRioj5_DAHytVVh1u1i8W9xFjNj0
+X-Proofpoint-ORIG-GUID: 941HX_St9Jr5QRpvCP_2Irs2wzn_15j5
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
  definitions=2021-08-09_01:2021-08-06,2021-08-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- spamscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0
- mlxscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 phishscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ phishscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 malwarescore=0
+ spamscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
- definitions=main-2108090065
+ definitions=main-2108090069
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+When facility 11 is available inside the S390x architecture, 2 new
+instructions are available: PTF and STSI with function code 15.
 
-The functions get_online_cpus() and put_online_cpus() have been
-deprecated during the CPU hotplug rework. They map directly to
-cpus_read_lock() and cpus_read_unlock().
+Let's check their availability in QEMU/KVM and their coherence
+with the CPU topology provided by the QEMU -smp parameter.
 
-Replace deprecated CPU-hotplug functions with the official version.
-The behavior remains unchanged.
+To run these tests successfully you will need the Linux and the QEMU
+patches:
+    https://lkml.org/lkml/2021/8/3/201
 
-Cc: Julian Wiedmann <jwi@linux.ibm.com>
-Cc: Karsten Graul <kgraul@linux.ibm.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-s390@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
----
- net/iucv/iucv.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+    https://lists.nongnu.org/archive/html/qemu-s390x/2021-07/msg00165.html
 
-diff --git a/net/iucv/iucv.c b/net/iucv/iucv.c
-index bebc7d09815d..f3343a8541a5 100644
---- a/net/iucv/iucv.c
-+++ b/net/iucv/iucv.c
-@@ -502,14 +502,14 @@ static void iucv_setmask_mp(void)
- {
- 	int cpu;
- 
--	get_online_cpus();
-+	cpus_read_lock();
- 	for_each_online_cpu(cpu)
- 		/* Enable all cpus with a declared buffer. */
- 		if (cpumask_test_cpu(cpu, &iucv_buffer_cpumask) &&
- 		    !cpumask_test_cpu(cpu, &iucv_irq_cpumask))
- 			smp_call_function_single(cpu, iucv_allow_cpu,
- 						 NULL, 1);
--	put_online_cpus();
-+	cpus_read_unlock();
- }
- 
- /**
-@@ -542,7 +542,7 @@ static int iucv_enable(void)
- 	size_t alloc_size;
- 	int cpu, rc;
- 
--	get_online_cpus();
-+	cpus_read_lock();
- 	rc = -ENOMEM;
- 	alloc_size = iucv_max_pathid * sizeof(struct iucv_path);
- 	iucv_path_table = kzalloc(alloc_size, GFP_KERNEL);
-@@ -555,12 +555,12 @@ static int iucv_enable(void)
- 	if (cpumask_empty(&iucv_buffer_cpumask))
- 		/* No cpu could declare an iucv buffer. */
- 		goto out;
--	put_online_cpus();
-+	cpus_read_unlock();
- 	return 0;
- out:
- 	kfree(iucv_path_table);
- 	iucv_path_table = NULL;
--	put_online_cpus();
-+	cpus_read_unlock();
- 	return rc;
- }
- 
-@@ -573,11 +573,11 @@ static int iucv_enable(void)
-  */
- static void iucv_disable(void)
- {
--	get_online_cpus();
-+	cpus_read_lock();
- 	on_each_cpu(iucv_retrieve_cpu, NULL, 1);
- 	kfree(iucv_path_table);
- 	iucv_path_table = NULL;
--	put_online_cpus();
-+	cpus_read_unlock();
- }
- 
- static int iucv_cpu_dead(unsigned int cpu)
-@@ -786,7 +786,7 @@ static int iucv_reboot_event(struct notifier_block *this,
- 	if (cpumask_empty(&iucv_irq_cpumask))
- 		return NOTIFY_DONE;
- 
--	get_online_cpus();
-+	cpus_read_lock();
- 	on_each_cpu_mask(&iucv_irq_cpumask, iucv_block_cpu, NULL, 1);
- 	preempt_disable();
- 	for (i = 0; i < iucv_max_pathid; i++) {
-@@ -794,7 +794,7 @@ static int iucv_reboot_event(struct notifier_block *this,
- 			iucv_sever_pathid(i, NULL);
- 	}
- 	preempt_enable();
--	put_online_cpus();
-+	cpus_read_unlock();
- 	iucv_disable();
- 	return NOTIFY_DONE;
- }
+Regards,
+Pierre
+
+Pierre Morel (4):
+  s390x: lib: Add SCLP toplogy nested level
+  s390x: lib: Move stsi_get_fc to library
+  s390x: topology: check the Perform Topology Function
+  s390x: Topology: checking Configuration Topology Information
+
+ lib/s390x/asm/arch_def.h |  16 +++
+ lib/s390x/sclp.c         |   6 +
+ lib/s390x/sclp.h         |   4 +-
+ s390x/Makefile           |   1 +
+ s390x/stsi.c             |  16 ---
+ s390x/topology.c         | 294 +++++++++++++++++++++++++++++++++++++++
+ s390x/unittests.cfg      |   4 +
+ 7 files changed, 324 insertions(+), 17 deletions(-)
+ create mode 100644 s390x/topology.c
+
 -- 
 2.25.1
 
