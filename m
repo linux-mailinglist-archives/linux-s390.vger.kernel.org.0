@@ -2,75 +2,143 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64E383EDFC1
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Aug 2021 00:16:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA5453EE0CF
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Aug 2021 02:21:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232067AbhHPWQo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 16 Aug 2021 18:16:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60528 "EHLO
+        id S234639AbhHQAVy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 16 Aug 2021 20:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231707AbhHPWQn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 16 Aug 2021 18:16:43 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E427C061764
-        for <linux-s390@vger.kernel.org>; Mon, 16 Aug 2021 15:16:11 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id q10so25704364wro.2
-        for <linux-s390@vger.kernel.org>; Mon, 16 Aug 2021 15:16:11 -0700 (PDT)
+        with ESMTP id S233010AbhHQAVy (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 16 Aug 2021 20:21:54 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B99EC0613C1
+        for <linux-s390@vger.kernel.org>; Mon, 16 Aug 2021 17:21:22 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id f3-20020a25cf030000b029055a2303fc2dso18601585ybg.11
+        for <linux-s390@vger.kernel.org>; Mon, 16 Aug 2021 17:21:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=wWtAqYR8JvxIa0zwXr2ovj+fsXm1zkW51a/xLPJVTUM=;
-        b=s3NVX8uluYeTQo1kGTOsYK1GSakGqKLTtQkQGsu6539GR+My1QNHqb2iu84tv6/+KF
-         J3TTaDmvWxtFMkqJ6+K+WOCzs+0bvkFNizD06kpR44FhFDwl/t4XKK1sYERabd7YcbOM
-         k3bQ9szeAbo8tti5XlT9gyGsvQ4D0Z+xQiNgePt/FT2VMhc8ToLFVlSoXtcyLrkRABtk
-         ZpGZxafhzDt/GYPJOJ2Z7qw2urfqXBPIaE1r+xoRm7f1lUJHS3GoJBit0FAJPV7iMKrz
-         ciz5douxl64dcRA26z8hSCmAAUoHSRVyoR01aiWfvy11nYHIrrLh0GVk3OPUd6P62p2W
-         MNNA==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=GevpZaQQXx6uJazNaaL+jipz4XqGAMmvjabHC4B/TIQ=;
+        b=MScZ8npAWuWl2n5WACKsqP8jI8+/lFmzfUiNk9uT7xhF6EzFjzIikN/4YhY3uTeZ2x
+         K8coom07pnPTFK3+tFw60liHvWz6Z7w5kbuUiwgu7/cSpVlWzAR+pnpPZqSkCkVSzLR3
+         tUNh36dKOSdq0S6zkfn4e6KjPFg2LJq97SrGIM8AiEmlF/j4TGZ3lnxHuJZnXZ+QAi6R
+         R6hprfvD6Js8ESDZZYcfEkIW+qnf70q3gcHsRHViGriHkuwWDMDDgNPNiz1zrClzNxI7
+         H2AWhD+4szOvfOVdzeOMaGyuEx/4GfP3AlsFPougYaSMIXQDQQYBtCXa4DbfQgBg+Aut
+         zc+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=wWtAqYR8JvxIa0zwXr2ovj+fsXm1zkW51a/xLPJVTUM=;
-        b=XxRYl6slg7k2V209MwGZHVvfe1J5lZdZJOVysYKPgv7vnICDEnuo1Xp+EL6EdC+rqg
-         jcNB2HdX7ZzS1zFme1RUb4aM2MH31jTHfK1pjy85Js6q+8HANQiUIAy2klF2awNf5AET
-         USKiRzx/73aDOIPBdq2ylTAPwGrxp83nrLnTzDTwjC1bL7SMQjKIKHnI254G9Sd4A/X0
-         7tcykBFYSIMu0jzYpgDZbRbY5CQed1Vp+aOD5+pag23wAct+Eh6+DH/72ToefWZj18h7
-         9pwSjooBa/NcHDp4lnbs3xhv9/Xcz8SgpP0uBU0A2x/4MAVH675YJ5jBfBeBSAgVYwxu
-         ripg==
-X-Gm-Message-State: AOAM530laW8ZnV4v0ni9wTKgoylmwKK5WoFGtmYtSNnPGRpHRR5XIzA6
-        Ve02hhzEkYtpdINY6hFbsCfT3b6jpGicIebmJmw=
-X-Google-Smtp-Source: ABdhPJx6GlFB3u0OFBinOs48tZqk/y5S4VEgeKivjD0p18lFjwAhY5rl8cMJ9ZUagYJb1veMJ0xlfOLTuiTUbun3Srk=
-X-Received: by 2002:adf:e6c4:: with SMTP id y4mr283145wrm.220.1629152170034;
- Mon, 16 Aug 2021 15:16:10 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:adf:dd8c:0:0:0:0:0 with HTTP; Mon, 16 Aug 2021 15:16:09
- -0700 (PDT)
-Reply-To: xiauchanyu88@gmail.com
-From:   Xiau <kaluzentus@gmail.com>
-Date:   Mon, 16 Aug 2021 17:16:09 -0500
-Message-ID: <CAHk5Hc4sP87ZVm7_JS=xNwGPhXVu3P2uUhsEr3cjCysLD+CUoQ@mail.gmail.com>
-Subject: =?UTF-8?B?U2Now7ZuZXIgVGFn?=
-To:     undisclosed-recipients:;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=GevpZaQQXx6uJazNaaL+jipz4XqGAMmvjabHC4B/TIQ=;
+        b=NNQr8wv12H4iuruM6gNwNF5xEnTO/jmXu6w7+nazwU2/yDFCvkQrdQfjr52VMz/xaI
+         WsrzXpZc4gsIlA9zjv2oJ15W+RcwnGeYh4d1eGId2ACSE/D76DmTmKGT4msgm14nrPg5
+         9xta2jC0td1rsxw74XszPeKXjwfaBkVGlwoOdT2hSsFqqt1w5QrfdypvjNOz3IHjMCkF
+         MRzxr8pp4ck5ZoSbKVCIB5iKK2F4awsr1A/V7LSOJdyqKHPKqBWQiy6wdv18RcFnXPZv
+         Mby/NlcIjjGF5qkAWgQjwzKtJZkRqaWwEQtinsQZW3EWyynbftANWIFFw0tXzzFCkdI0
+         CxVQ==
+X-Gm-Message-State: AOAM531m7bFLRFxpUhbGwIBwFGRkmthEMsM6ZtTRah+qgNOUCpF4yLH7
+        WPlU+diiZoUSinj5Z2zRr0MihFcIX0rqwHouFG4=
+X-Google-Smtp-Source: ABdhPJxL7VirAAAFQMCSntsswKKgERjdwzETy0eVm86bC90eEJ+t7AvAdwCfkOc72YkQySg3+82ZTFoLk2T9BRbqHBQ=
+X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:478:6e44:5cf7:fcde])
+ (user=ndesaulniers job=sendgmr) by 2002:a25:b845:: with SMTP id
+ b5mr888141ybm.343.1629159681391; Mon, 16 Aug 2021 17:21:21 -0700 (PDT)
+Date:   Mon, 16 Aug 2021 17:21:04 -0700
+In-Reply-To: <20210817002109.2736222-1-ndesaulniers@google.com>
+Message-Id: <20210817002109.2736222-3-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <20210817002109.2736222-1-ndesaulniers@google.com>
+X-Mailer: git-send-email 2.33.0.rc1.237.g0d66db33f3-goog
+Subject: [PATCH 2/7] s390: replace cc-option-yn uses with cc-option
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---=20
-Sch=C3=B6ner Tag,
+cc-option-yn can be replaced with cc-option. ie.
+Checking for support:
+ifeq ($(call cc-option-yn,$(FLAG)),y)
+becomes:
+ifneq ($(call cc-option,$(FLAG)),)
 
-Ich bin Xiu Chan Yu, Kredit- und Marketingdirektor von Chong Hing
-Bank, Hongkong, Chong Hing Bank Center, 24 Des Voeux Road Central,
-Hongkong. Ich habe einen Gesch=C3=A4ftsvorschlag f=C3=BCr 13.991.674 DOLLAR=
-S
+Checking for lack of support:
+ifeq ($(call cc-option-yn,$(FLAG)),n)
+becomes:
+ifeq ($(call cc-option,$(FLAG)),)
 
-Alle best=C3=A4tigbaren Dokumente zur Sicherung der Anspr=C3=BCche werden I=
-hnen
-ausgeh=C3=A4ndigt
-vor Ihrer Annahme und sobald ich Ihre R=C3=BCcksendung erhalten habe
-Unter der Voraussetzung.
+This allows us to pursue removing cc-option-yn.
 
-Gr=C3=BC=C3=9Fe
-Xiau Chan Yu
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ arch/s390/Makefile | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index 17dc4f1ac4fa..a3cf33ad009f 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -70,7 +70,7 @@ cflags-y += -Wa,-I$(srctree)/arch/$(ARCH)/include
+ #
+ cflags-$(CONFIG_FRAME_POINTER) += -fno-optimize-sibling-calls
+ 
+-ifeq ($(call cc-option-yn,-mpacked-stack -mbackchain -msoft-float),y)
++ifneq ($(call cc-option,-mpacked-stack -mbackchain -msoft-float),)
+ cflags-$(CONFIG_PACK_STACK)  += -mpacked-stack -D__PACK_STACK
+ aflags-$(CONFIG_PACK_STACK)  += -D__PACK_STACK
+ endif
+@@ -78,22 +78,22 @@ endif
+ KBUILD_AFLAGS_DECOMPRESSOR += $(aflags-y)
+ KBUILD_CFLAGS_DECOMPRESSOR += $(cflags-y)
+ 
+-ifeq ($(call cc-option-yn,-mstack-size=8192 -mstack-guard=128),y)
++ifneq ($(call cc-option,-mstack-size=8192 -mstack-guard=128),)
+ cflags-$(CONFIG_CHECK_STACK) += -mstack-size=$(STACK_SIZE)
+-ifneq ($(call cc-option-yn,-mstack-size=8192),y)
++ifeq ($(call cc-option,-mstack-size=8192),)
+ cflags-$(CONFIG_CHECK_STACK) += -mstack-guard=$(CONFIG_STACK_GUARD)
+ endif
+ endif
+ 
+ ifdef CONFIG_WARN_DYNAMIC_STACK
+-  ifeq ($(call cc-option-yn,-mwarn-dynamicstack),y)
++  ifneq ($(call cc-option,-mwarn-dynamicstack),)
+     KBUILD_CFLAGS += -mwarn-dynamicstack
+     KBUILD_CFLAGS_DECOMPRESSOR += -mwarn-dynamicstack
+   endif
+ endif
+ 
+ ifdef CONFIG_EXPOLINE
+-  ifeq ($(call cc-option-yn,$(CC_FLAGS_MARCH) -mindirect-branch=thunk),y)
++  ifneq ($(call cc-option,$(CC_FLAGS_MARCH) -mindirect-branch=thunk),)
+     CC_FLAGS_EXPOLINE := -mindirect-branch=thunk
+     CC_FLAGS_EXPOLINE += -mfunction-return=thunk
+     CC_FLAGS_EXPOLINE += -mindirect-branch-table
+@@ -104,10 +104,10 @@ ifdef CONFIG_EXPOLINE
+ endif
+ 
+ ifdef CONFIG_FUNCTION_TRACER
+-  ifeq ($(call cc-option-yn,-mfentry -mnop-mcount),n)
++  ifeq ($(call cc-option,-mfentry -mnop-mcount),)
+     # make use of hotpatch feature if the compiler supports it
+     cc_hotpatch	:= -mhotpatch=0,3
+-    ifeq ($(call cc-option-yn,$(cc_hotpatch)),y)
++    ifneq ($(call cc-option,$(cc_hotpatch)),)
+       CC_FLAGS_FTRACE := $(cc_hotpatch)
+       KBUILD_AFLAGS	+= -DCC_USING_HOTPATCH
+       KBUILD_CFLAGS	+= -DCC_USING_HOTPATCH
+-- 
+2.33.0.rc1.237.g0d66db33f3-goog
+
