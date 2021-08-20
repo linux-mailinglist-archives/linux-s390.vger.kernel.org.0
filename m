@@ -2,191 +2,221 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F3563F2B83
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Aug 2021 13:49:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 714283F2B9A
+	for <lists+linux-s390@lfdr.de>; Fri, 20 Aug 2021 13:58:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237830AbhHTLuP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 20 Aug 2021 07:50:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41788 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237633AbhHTLuO (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 20 Aug 2021 07:50:14 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 17KBYaev040532;
-        Fri, 20 Aug 2021 07:49:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=fjFlxc1cZ7kyLpUfI/9QuzhdKyGTWdauafcazmdaVNw=;
- b=B/aid60WcPOjPOMY06KcmVXyev9QpHXA0Et+bMSHBhXJB5m0HdR4rKPcZPNT4ahuoisJ
- H/Lecs1Ugj7AV9b7DSHlQ3HClzAk21c8jzCPuQT2o29dBi2iIwkBfopYiODOtkAEf+sZ
- A58GtzlCXsTY5ZhwUj0Z923BGmeOZbqc1a1UCSwzRVmqsvThMV4KG/uULaDre5Nyu51i
- O18H9nhamyXL4a0C6pYU6JuT8b7UNnU75HMtW6Svrd89WSWz3oPqs0dPdi1BLO1z+iU7
- dawmAgD95Pg3p+hAGoDh5l88h0MJvf9hNFwZOPlhtR5V/eigPPj/j1qY5F1hZ2eYLGPS tw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3ahkac8j67-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Aug 2021 07:49:36 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 17KBYqke041824;
-        Fri, 20 Aug 2021 07:49:36 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3ahkac8j59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Aug 2021 07:49:36 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 17KBhHfu008004;
-        Fri, 20 Aug 2021 11:49:34 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 3ae5f8hr7q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Aug 2021 11:49:34 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 17KBnVTE55705908
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Aug 2021 11:49:31 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A825DAE04D;
-        Fri, 20 Aug 2021 11:49:31 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F0B8AE056;
-        Fri, 20 Aug 2021 11:49:31 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.15.193])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Aug 2021 11:49:31 +0000 (GMT)
-Date:   Fri, 20 Aug 2021 13:49:23 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, david@redhat.com,
-        thuth@redhat.com, cohuck@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v2 3/3] lib: s390x: Control register
- constant cleanup
-Message-ID: <20210820134923.1c59f4ec@p-imbrenda>
-In-Reply-To: <20210820114000.166527-4-frankja@linux.ibm.com>
-References: <20210820114000.166527-1-frankja@linux.ibm.com>
-        <20210820114000.166527-4-frankja@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S238179AbhHTL6l (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 20 Aug 2021 07:58:41 -0400
+Received: from mail-eopbgr50067.outbound.protection.outlook.com ([40.107.5.67]:25139
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S238099AbhHTL6k (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 20 Aug 2021 07:58:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=migV8/gDcjzP8IO0/sL1Bpphv+hOTX1pkqQhKPyVaG0xW1/5/cNBJg51uETgFlETlDQiaYjgdotrMjTQ9/N/C8P5Tj3/z/H/WDDGpQBK+nw27LoMSyxmk2pk7g4fujmCd6SmXTnRE9NskmBD+ZPEPDl6vUY1wKmF1LlFk9/EiJZFKo21RrfGilzufaGX+KvrdcWItmLye7m95yzzylQFLelUlrj3XI7BGK3KGEYNJ7DSW7jUxASa8ba5Rs5mTvJcoeXBSFYw/vJCg12yvmzMDQs9aLakdyurJOdRBjWR//8gI8UFwEFc+YkGkiT/tKNTGXbP8t+YVjX9TmXqW/O8xg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B0VfFnOhJEXLxO3AAm/ssO+uF2DF2mIqQAZt9xvTrnE=;
+ b=EcTJsxETklyzzJ0R8uKCAX9jhhoCmd0EmUjbL6B2G/MWETHG9VVkWd4MSVvsGthpCkZvTmRET8dfKy7BN4i0z7JgCEimlBpQNrQ0Qf0nQ2gKcpIp0MbVpmxxZTkMgclMvG06Fr3cTFFOquMqJWb5QWC/QPipoqoR9LYFDDE/zt4osSSmHxx0RXZoCra2E/fLZSaokWOk4+YIghogswaUvLJOjtw+tkYfK+qJhpsfCApmi9ba2HfeofiFOaXSF06C4MDYX65KSoW2tiPKuJJBjw7sfUQ3Q/YqoUpcgkxf/+5ZRVjQ+je/9a2b/wsGXEppba76rV7xd1w3dmLP/Jg1Pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B0VfFnOhJEXLxO3AAm/ssO+uF2DF2mIqQAZt9xvTrnE=;
+ b=cByIaN8AfCBIyfvmxAwRyZRWi4ZhUMOywIZpn4TvLurk/+29O02/cHXGdCG63n6kQLP0zFmBy40MQFXvqxVr2BMtfDgvStFwg7NL8nh6zMgdI+Z/13F1xMzUj2NuqfbqGcQ/SGGmrIUQyXi8NQXZMGaeCZHhhhms0XZsX4Vij2I=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR04MB5136.eurprd04.prod.outlook.com (2603:10a6:803:55::19)
+ by VI1PR0402MB3839.eurprd04.prod.outlook.com (2603:10a6:803:21::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19; Fri, 20 Aug
+ 2021 11:58:00 +0000
+Received: from VI1PR04MB5136.eurprd04.prod.outlook.com
+ ([fe80::109:1995:3e6b:5bd0]) by VI1PR04MB5136.eurprd04.prod.outlook.com
+ ([fe80::109:1995:3e6b:5bd0%2]) with mapi id 15.20.4436.019; Fri, 20 Aug 2021
+ 11:57:59 +0000
+From:   Vladimir Oltean <vladimir.oltean@nxp.com>
+To:     netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Roopa Prabhu <roopa@nvidia.com>,
+        Nikolay Aleksandrov <nikolay@nvidia.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Vadym Kochan <vkochan@marvell.com>,
+        Taras Chornyi <tchornyi@marvell.com>,
+        Jiri Pirko <jiri@nvidia.com>, Ido Schimmel <idosch@nvidia.com>,
+        UNGLinuxDriver@microchip.com,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Marek Behun <kabel@blackhole.sk>,
+        DENG Qingfang <dqfext@gmail.com>,
+        Kurt Kanzenbach <kurt@linutronix.de>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Landen Chao <Landen.Chao@mediatek.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        George McCollister <george.mccollister@gmail.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Alexandra Winter <wintera@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Vlad Buslov <vladbu@nvidia.com>,
+        Jianbo Liu <jianbol@nvidia.com>,
+        Mark Bloch <mbloch@nvidia.com>, Roi Dayan <roid@nvidia.com>,
+        Tobias Waldekranz <tobias@waldekranz.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v3 net-next 0/7] Make SWITCHDEV_FDB_{ADD,DEL}_TO_DEVICE blocking
+Date:   Fri, 20 Aug 2021 14:57:39 +0300
+Message-Id: <20210820115746.3701811-1-vladimir.oltean@nxp.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR04CA0010.eurprd04.prod.outlook.com
+ (2603:10a6:208:122::23) To VI1PR04MB5136.eurprd04.prod.outlook.com
+ (2603:10a6:803:55::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 1oXtlDIIvTPTFAJ8j4ZEATzTmiQ-eMmC
-X-Proofpoint-ORIG-GUID: bPC4SMXVN8w15A2diAxrrMeLYweIphoV
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-08-20_03:2021-08-20,2021-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 spamscore=0 clxscore=1015 mlxlogscore=999 suspectscore=0
- impostorscore=0 priorityscore=1501 bulkscore=0 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2107140000 definitions=main-2108200062
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (188.25.144.60) by AM0PR04CA0010.eurprd04.prod.outlook.com (2603:10a6:208:122::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19 via Frontend Transport; Fri, 20 Aug 2021 11:57:56 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: af9c0f02-08eb-49f0-ad67-08d963d1c15f
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3839:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB3839B0B6481F0C358B7EE649E0C19@VI1PR0402MB3839.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uTs6FqY2QBknZLEU1BHKIiMFpeLTXyvVV5MyOj+r8nG8sWIrJJGfBrxjf0nuv2Hukioqwogi24aSpYPX0Tz6LfFU8Q9nFHuDwr1LRiQUlDd0IP9VOe9JE9+T6MAm4gt98kcbM4sbmlRDDiDRTPU74CTUbdtklCJFK9xdhgtqwRG8spI098CiQ01PK9ilFiL5xf/kG1tZr/LDYJiX0MFIUN/e/qkePqXeq6Q5OFWAbTF2irX018x+ftdmXRPm1KoJ5yoQaD7T13lb19XknOdvKM2vqArnyd+ECqr0MYerXwwX/JIfkprnWCqd2+u8Ab60HRH9PyRr8S9zfE14uo3mTcdEGmGqLI/GRisdSwrg59A1jMFVxy5L8sI9kN6SRwJspAM7/qdEnr/G9w+ALqWnUXK7QhajiNra3VWTFWx0sdUEYRt0NxZw3tQ09kviNK81db8HZltg6DO8fE5QJhXyhCu+a+cEhW5bBCKaC0p2U7pjxMC3xR+pjgo16yqrVzR2mFZqH8co8c5/ly3Ytktv7U/GVv8hKInx2Fr9JILa/jZioSmLrhQOTYYHrQbL9OjfqownpqiygjkBbTNlFghJQm+YT2UyeOYVkdNosmYLk73OoDs+b1QN6upFRAm+jE7ghHDjSKnWELGnjbXKfkwdtfO0+RvdeitrhRc3O7VxZDbNoDacM17xh94RbMZsbZe3UsNsIufCGHA7cl0OgYZq7ZpakVnuZRYjJ7TDuJXAV04M2rP59DqfNrGbRzoouATzH2kGEGNAwRAUay4an8aVbQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5136.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(366004)(346002)(376002)(39860400002)(8936002)(8676002)(26005)(6506007)(6486002)(38350700002)(38100700002)(5660300002)(66574015)(66476007)(66556008)(83380400001)(1076003)(6512007)(66946007)(52116002)(7416002)(7406005)(186003)(110136005)(36756003)(54906003)(478600001)(316002)(966005)(956004)(2616005)(44832011)(6666004)(2906002)(4326008)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8+BO1CtrXAspnGRcFSdS78nWyLbJZRAI1PF3pXox2Nks+cbXxMzQJLrPlJO4?=
+ =?us-ascii?Q?t0W3xRAups7G1OYHjAf8AEpZRy5Jhs/9Re58SqJUF8tZWtTh80JnJjo+pJCi?=
+ =?us-ascii?Q?sae3Mu1LXfmAlaYO1BeP9ujh8hQQkaRmCIQVQUoR+fieKyy0/Ef1na8Myv6i?=
+ =?us-ascii?Q?iR4ygyxsqRLCxXo7R+EZ4yqEezRtRAhc1JD1bWjk/ttJgazfjt1Wa7TKrWIo?=
+ =?us-ascii?Q?Z86GKUrPSW2ua4bh1lXKPzFUwV8OmuLN3F3jSJQdD+vYEWmtkGOA/o3R8mXu?=
+ =?us-ascii?Q?0Pf7vGLkmAxHGHVyEB5pa6VhH8U+ifbleFjktaU7PAvVmUoG7zCVpontodU3?=
+ =?us-ascii?Q?Wxsd8zGoKppM8E0rUB7nUXtji3giOx7f5x/QoMB5jplV+B9vkq4rOO/MFImG?=
+ =?us-ascii?Q?oLZELKDzkgoFJ9zm508JlsbKblWyTP9S+hoPHIW7otsu311MYKSQirpD7GYv?=
+ =?us-ascii?Q?SaHGTt0xQuWBvqX76T4Mga46/vQdMbpNEqRfjUfP2+J/w4KTYOiRk2CVLONC?=
+ =?us-ascii?Q?9gZBLuEdPRp9V1dh0j5trosa6mAGcjLucmA0m6jdoC20qOWSqVIJpX1c+Ov6?=
+ =?us-ascii?Q?+jzhAS0iHwQvu9ORU0I+F/nU+2RWmdkPTNPjI3hcVGptme70bvJxTZ5EtIDu?=
+ =?us-ascii?Q?zLRoCXtlhJPBaF40AN/yycgP3jU4LcoWg9aNEoW3ik9HDbtEFDrxXUFCG8FP?=
+ =?us-ascii?Q?2ehIPRcoL4BOriFC8pLdW2MvihRvEVH9IXXkYASlhA+yyvlPJvVHBUyrWk1B?=
+ =?us-ascii?Q?5qOvugPnnWIKgB5hq31Rf1KyHiBfaLtRdXceVtGSNBiAJ2vUG8obvQ4T6oE2?=
+ =?us-ascii?Q?lSJW7uJV4TEvbE0JXj3w1YuVK4XsM4N+ra2R4Q4dsNW6GRp1gj7El0vGGI8v?=
+ =?us-ascii?Q?vVieIMdWJrlC/eUCNqgnGOogzrOn+JpR710MfafCkRcemtT8AMR4b0+U8SeA?=
+ =?us-ascii?Q?v6zLaPWiucdZRQ2qxh0/Bs0gJAbA5/jjcqjhbTwY3FOvlJOsldx4QSGzB2yQ?=
+ =?us-ascii?Q?ut28k1cGf+PZoin8IOHDfY5o8OOpYdKT+kV8CvGcj+fGYVAPebWcqbn5t/e+?=
+ =?us-ascii?Q?LqQK68bnGGSAHWp94SEHbCscqBmkX+IRdKzpFbNa9fDoKD0ngjsOqGSUdDT4?=
+ =?us-ascii?Q?w6Ane1YtrWPZ6tLZoO0dtZ8xuAikXQhNYQVu0IPhNpds0AnSTjJZZ1CkcFhr?=
+ =?us-ascii?Q?EyH2K6jGztZkev9JbZ92kXLE6eeECuP9QiR8n0enj6A6deL/4ajlwsZXOg5C?=
+ =?us-ascii?Q?AVyI8uRCsq6quKuvbte+fDWKgs71DtsJVJI0XuW27b3cj29y80pNk2twKKuF?=
+ =?us-ascii?Q?EciN1+qnx1qeFObZok6BjdE3?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af9c0f02-08eb-49f0-ad67-08d963d1c15f
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5136.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2021 11:57:59.6081
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FhekU67jikgtjrmJWbxGuirewtCl4G44S24g14jVB33UX0HCtc3pXVQ11cu/E5N9Ryhnq1kgWn/InhviIlhilA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3839
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 20 Aug 2021 11:40:00 +0000
-Janosch Frank <frankja@linux.ibm.com> wrote:
+Problem statement:
 
-> We had bits and masks defined and don't necessarily need both.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Any time a driver needs to create a private association between a bridge
+upper interface and use that association within its
+SWITCHDEV_FDB_{ADD,DEL}_TO_DEVICE handler, we have an issue with FDB
+entries deleted by the bridge when the port leaves. The issue is that
+all switchdev drivers schedule a work item to have sleepable context,
+and that work item can be actually scheduled after the port has left the
+bridge, which means the association might have already been broken by
+the time the scheduled FDB work item attempts to use it.
 
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+The solution is to modify switchdev to use its embedded SWITCHDEV_F_DEFER
+mechanism to make the FDB notifiers emitted from the fastpath be
+scheduled in sleepable context. All drivers are converted to handle
+SWITCHDEV_FDB_{ADD,DEL}_TO_DEVICE from their blocking notifier block
+handler (or register a blocking switchdev notifier handler if they
+didn't have one). This solves the aforementioned problem because the
+bridge waits for the switchdev deferred work items to finish before a
+port leaves (del_nbp calls switchdev_deferred_process), whereas a work
+item privately scheduled by the driver will obviously not be waited upon
+by the bridge, leading to the possibility of having the race.
 
-> ---
->  lib/s390x/asm/arch_def.h | 28 ++++++++++++----------------
->  lib/s390x/smp.c          |  3 ++-
->  s390x/skrf.c             |  3 ++-
->  3 files changed, 16 insertions(+), 18 deletions(-)
-> 
-> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-> index ab5a9043..aa80d840 100644
-> --- a/lib/s390x/asm/arch_def.h
-> +++ b/lib/s390x/asm/arch_def.h
-> @@ -55,10 +55,18 @@ struct psw {
->  #define PSW_MASK_BA			0x0000000080000000UL
->  #define PSW_MASK_64			PSW_MASK_BA | PSW_MASK_EA;
->  
-> -#define CR0_EXTM_SCLP			0x0000000000000200UL
-> -#define CR0_EXTM_EXTC			0x0000000000002000UL
-> -#define CR0_EXTM_EMGC			0x0000000000004000UL
-> -#define CR0_EXTM_MASK			0x0000000000006200UL
-> +#define CTL0_LOW_ADDR_PROT		(63 - 35)
-> +#define CTL0_EDAT			(63 - 40)
-> +#define CTL0_IEP			(63 - 43)
-> +#define CTL0_AFP			(63 - 45)
-> +#define CTL0_VECTOR			(63 - 46)
-> +#define CTL0_EMERGENCY_SIGNAL		(63 - 49)
-> +#define CTL0_EXTERNAL_CALL		(63 - 50)
-> +#define CTL0_CLOCK_COMPARATOR		(63 - 52)
-> +#define CTL0_SERVICE_SIGNAL		(63 - 54)
-> +#define CR0_EXTM_MASK			0x0000000000006200UL /* Combined external masks */
-> +
-> +#define CTL2_GUARDED_STORAGE		(63 - 59)
->  
->  struct lowcore {
->  	uint8_t		pad_0x0000[0x0080 - 0x0000];	/* 0x0000 */
-> @@ -240,18 +248,6 @@ static inline uint64_t stctg(int cr)
->  	return value;
->  }
->  
-> -#define CTL0_LOW_ADDR_PROT	(63 - 35)
-> -#define CTL0_EDAT		(63 - 40)
-> -#define CTL0_IEP		(63 - 43)
-> -#define CTL0_AFP		(63 - 45)
-> -#define CTL0_VECTOR		(63 - 46)
-> -#define CTL0_EMERGENCY_SIGNAL	(63 - 49)
-> -#define CTL0_EXTERNAL_CALL	(63 - 50)
-> -#define CTL0_CLOCK_COMPARATOR	(63 - 52)
-> -#define CTL0_SERVICE_SIGNAL	(63 - 54)
-> -
-> -#define CTL2_GUARDED_STORAGE	(63 - 59)
-> -
->  static inline void ctl_set_bit(int cr, unsigned int bit)
->  {
->          uint64_t reg;
-> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
-> index 228fe667..da6d32f3 100644
-> --- a/lib/s390x/smp.c
-> +++ b/lib/s390x/smp.c
-> @@ -10,6 +10,7 @@
->   *  Janosch Frank <frankja@linux.ibm.com>
->   */
->  #include <libcflat.h>
-> +#include <bitops.h>
->  #include <asm/arch_def.h>
->  #include <asm/sigp.h>
->  #include <asm/page.h>
-> @@ -204,7 +205,7 @@ int smp_cpu_setup(uint16_t addr, struct psw psw)
->  	cpu->lowcore->sw_int_grs[15] = (uint64_t)cpu->stack + (PAGE_SIZE * 4);
->  	lc->restart_new_psw.mask = PSW_MASK_64;
->  	lc->restart_new_psw.addr = (uint64_t)smp_cpu_setup_state;
-> -	lc->sw_int_crs[0] = 0x0000000000040000UL;
-> +	lc->sw_int_crs[0] = BIT_ULL(CTL0_AFP);
->  
->  	/* Start processing */
->  	smp_cpu_restart_nolock(addr, NULL);
-> diff --git a/s390x/skrf.c b/s390x/skrf.c
-> index 9488c32b..8ca7588c 100644
-> --- a/s390x/skrf.c
-> +++ b/s390x/skrf.c
-> @@ -8,6 +8,7 @@
->   *  Janosch Frank <frankja@linux.ibm.com>
->   */
->  #include <libcflat.h>
-> +#include <bitops.h>
->  #include <asm/asm-offsets.h>
->  #include <asm-generic/barrier.h>
->  #include <asm/interrupt.h>
-> @@ -125,8 +126,8 @@ static void ecall_cleanup(void)
->  {
->  	struct lowcore *lc = (void *)0x0;
->  
-> -	lc->sw_int_crs[0] = 0x0000000000040000;
->  	lc->ext_new_psw.mask = PSW_MASK_64;
-> +	lc->sw_int_crs[0] = BIT_ULL(CTL0_AFP);
->  
->  	/*
->  	 * PGM old contains the ext new PSW, we need to clean it up,
+This is a dependency for the "DSA FDB isolation" posted here. It was
+split out of that series hence the numbering starts directly at v2.
+
+https://patchwork.kernel.org/project/netdevbpf/cover/20210818120150.892647-1-vladimir.oltean@nxp.com/
+
+Changes in v3:
+- make "addr" part of switchdev_fdb_notifier_info to avoid dangling
+  pointers not watched by RCU
+- mlx5 correction
+- build fixes in the S/390 qeth driver
+
+Vladimir Oltean (7):
+  net: bridge: move br_fdb_replay inside br_switchdev.c
+  net: switchdev: keep the MAC address by value in struct
+    switchdev_notifier_fdb_info
+  net: switchdev: move SWITCHDEV_FDB_{ADD,DEL}_TO_DEVICE to the blocking
+    notifier chain
+  net: bridge: switchdev: make br_fdb_replay offer sleepable context to
+    consumers
+  net: switchdev: drop the atomic notifier block from
+    switchdev_bridge_port_{,un}offload
+  net: switchdev: don't assume RCU context in
+    switchdev_handle_fdb_{add,del}_to_device
+  net: dsa: handle SWITCHDEV_FDB_{ADD,DEL}_TO_DEVICE synchronously
+
+ .../ethernet/freescale/dpaa2/dpaa2-switch.c   |  75 ++++------
+ .../marvell/prestera/prestera_switchdev.c     | 104 ++++++-------
+ .../mellanox/mlx5/core/en/rep/bridge.c        |  65 +++++++--
+ .../ethernet/mellanox/mlx5/core/esw/bridge.c  |   2 +-
+ .../ethernet/mellanox/mlxsw/spectrum_router.c |   4 +-
+ .../mellanox/mlxsw/spectrum_switchdev.c       |  62 ++++++--
+ .../microchip/sparx5/sparx5_mactable.c        |   2 +-
+ .../microchip/sparx5/sparx5_switchdev.c       |  72 ++++-----
+ drivers/net/ethernet/mscc/ocelot_net.c        |   3 -
+ drivers/net/ethernet/rocker/rocker_main.c     |  67 ++++-----
+ drivers/net/ethernet/rocker/rocker_ofdpa.c    |   6 +-
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c      |   4 +-
+ drivers/net/ethernet/ti/am65-cpsw-switchdev.c |  54 +++----
+ drivers/net/ethernet/ti/cpsw_new.c            |   4 +-
+ drivers/net/ethernet/ti/cpsw_switchdev.c      |  57 ++++----
+ drivers/s390/net/qeth_l2_main.c               |  26 ++--
+ include/net/switchdev.h                       |  33 ++++-
+ net/bridge/br.c                               |   5 +-
+ net/bridge/br_fdb.c                           |  54 -------
+ net/bridge/br_private.h                       |   6 -
+ net/bridge/br_switchdev.c                     | 128 +++++++++++++---
+ net/dsa/dsa.c                                 |  15 --
+ net/dsa/dsa_priv.h                            |  15 --
+ net/dsa/port.c                                |   3 -
+ net/dsa/slave.c                               | 138 ++++++------------
+ net/switchdev/switchdev.c                     |  61 +++++++-
+ 26 files changed, 550 insertions(+), 515 deletions(-)
+
+-- 
+2.25.1
 
