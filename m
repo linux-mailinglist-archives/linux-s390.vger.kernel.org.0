@@ -2,444 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A16733F52C9
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Aug 2021 23:21:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A87AD3F53C0
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Aug 2021 01:46:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232921AbhHWVV6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 23 Aug 2021 17:21:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7978 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232952AbhHWVVz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 23 Aug 2021 17:21:55 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 17NL2TFm034769;
-        Mon, 23 Aug 2021 17:21:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=345MxAZgMyfeAfgF2WdI6bk5ut8sLifSms1usLuw4fM=;
- b=IuRDoQGNtqzuQt6rxODBd79RZfwBw2GQepUhVu3joJYjTlJYTsK4IW3q5Ohhn0qFx4JZ
- rFMSxCOsiMUrOqzyno0FIMIPqhfoH9PsZYKv6OzIVyxjK4EgZ9T5jPpwaZUxdKWGGCLP
- 1oIxZXJ/yq1zecNht/mkeGro9KCzaS10KA2RX/JzppjK/Fg1xkWvI78ouBECPD0q0rC4
- d7jhQMcAr2VqHEAIaExru21xyBmCaz4tb7664FGWeiDgzucMQ/RJk6nEd+DBkcpurytV
- 7IcvFRMZhjeKlmDtbb7dBaOnf8/B8uYoIyMejw3pISxyCBwvSISqcMw+aQc/zHhGJ/d7 7g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3amffqx9c5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Aug 2021 17:21:11 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 17NL52om045181;
-        Mon, 23 Aug 2021 17:21:10 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3amffqx9bu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Aug 2021 17:21:10 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 17NLDIv3031326;
-        Mon, 23 Aug 2021 21:21:10 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma01wdc.us.ibm.com with ESMTP id 3ajs4bcsde-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 23 Aug 2021 21:21:10 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 17NLL96911010408
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Aug 2021 21:21:09 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ECD0ABE06A;
-        Mon, 23 Aug 2021 21:21:08 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2FBDABE069;
-        Mon, 23 Aug 2021 21:21:05 +0000 (GMT)
-Received: from cpe-172-100-181-211.stny.res.rr.com.com (unknown [9.160.182.229])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 23 Aug 2021 21:21:05 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, cohuck@redhat.com,
-        pasic@linux.vnet.ibm.com, jjherne@linux.ibm.com, jgg@nvidia.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        frankja@linux.ibm.com, david@redhat.com, imbrenda@linux.ibm.com,
-        hca@linux.ibm.com
-Subject: [PATCH v2 2/2] s390/vfio-ap: replace open coded locks for VFIO_GROUP_NOTIFY_SET_KVM notification
-Date:   Mon, 23 Aug 2021 17:20:47 -0400
-Message-Id: <20210823212047.1476436-3-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210823212047.1476436-1-akrowiak@linux.ibm.com>
-References: <20210823212047.1476436-1-akrowiak@linux.ibm.com>
+        id S233260AbhHWXr3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 Aug 2021 19:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233285AbhHWXrZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 23 Aug 2021 19:47:25 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEBC0C061764
+        for <linux-s390@vger.kernel.org>; Mon, 23 Aug 2021 16:46:41 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id s16so18754360ilo.9
+        for <linux-s390@vger.kernel.org>; Mon, 23 Aug 2021 16:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DoLC1EF3mIR0GlW76GBSt/BwmQNgwhehtB+DBCRZ1+A=;
+        b=ieObiuqzWjKenmS5fhA2KlEkngO02xDQilv8lvyC4D+Pum4HGeAM9YxrBJ5RPaEH5c
+         PGwcQsuTYK9YcMbFvagX/tRluioVmxc7JQ/E+ZVw74iOQ6LsUBKtpPK4jaP5BXHtEL4x
+         SmlfHvpixi+DllUCXuPzWjk6zA/bHNc5X7kKlPwDC7KYnYUitdlnuKoubqVwn2cV7gOG
+         ulU1tZsjuJop5z0MpLhwF91iwokwJU9Z3bomsD5Bk6Y7d8MArYcUfNpo8XIx8Hi+8Kxs
+         KqiQ43yho6JDD+dtIDSv50yTeg4macRVXUgyVaAuhZWmWsa290Q1RghpXqQhiy4RJxzC
+         WFEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DoLC1EF3mIR0GlW76GBSt/BwmQNgwhehtB+DBCRZ1+A=;
+        b=LGt74htrzQrC5YANBNM/s4eCdO2swlUHXS/zPQFWU2ekAQNcyKhMwcpes+x7W8fHe8
+         j9j/b8fqq80541BXDag22Qn3+FFIBgNECEberNhtogJMsUofw8gnoAXocnjTSOmTx1sv
+         5+HYR+6/Qe4vlSObwb5FgoUyI6vikIUbdxoZHzjrtOCr8Cq3kIuIEsgDnQbf6L5wVh/y
+         n0aGz/vFQ0Snh2l+cxKYeV2gdZt5XSxSXPLHtd8icCf/BBuGAuYx3jKC9lspvLbMEccU
+         lioI3eZe6VTGNDouOd0b26nATik11S0nJ8EIuJ8K4gN/YqOqHAH/gja4Z7/yCJSHkUOs
+         I56Q==
+X-Gm-Message-State: AOAM530Zvk/2PvE0oeEEPFFvZKDR06nMqd6qfK0Bf1RQ+eW9TnJvXV0L
+        54z6bJPyYpEPu/Xb0jmYovdhXAthlIUsAlMFyDWblA==
+X-Google-Smtp-Source: ABdhPJyUnfiO2iZsMzYl0bECsz2yA5wsBXuFbRA5eIkM+UStG915jCcxL3fRugWbjAHUfvQrnihJ/kDPcNr29FpWrqY=
+X-Received: by 2002:a05:6e02:524:: with SMTP id h4mr24801438ils.203.1629762401039;
+ Mon, 23 Aug 2021 16:46:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: L6lvtja12u0dZnsv1IRDVloai0Ao78d2
-X-Proofpoint-ORIG-GUID: uKtvr1ast_OlwG5bNz80EdT3MQLh3xbc
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-08-23_04:2021-08-23,2021-08-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- impostorscore=0 spamscore=0 priorityscore=1501 mlxscore=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2107140000 definitions=main-2108230144
+References: <20210820225002.310652-1-seanjc@google.com> <20210820225002.310652-6-seanjc@google.com>
+In-Reply-To: <20210820225002.310652-6-seanjc@google.com>
+From:   Ben Gardon <bgardon@google.com>
+Date:   Mon, 23 Aug 2021 16:46:30 -0700
+Message-ID: <CANgfPd_Vh52oWyMMcqL2iTVgcXQp3QDsM5MrAZxr=xe33rPMhg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] KVM: selftests: Remove __NR_userfaultfd syscall fallback
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-csky@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, kvm <kvm@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org, Peter Foley <pefoley@google.com>,
+        Shakeel Butt <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-It was pointed out during an unrelated patch review that locks should not
-be open coded - i.e., writing the algorithm of a standard lock in a
-function instead of using a lock from the standard library. The setting and
-testing of a busy flag and sleeping on a wait_event is the same thing
-a lock does. The open coded locks are invisible to lockdep, so potential
-locking problems are not detected.
+On Fri, Aug 20, 2021 at 3:50 PM Sean Christopherson <seanjc@google.com> wrote:
+>
+> Revert the __NR_userfaultfd syscall fallback added for KVM selftests now
+> that x86's unistd_{32,63}.h overrides are under uapi/ and thus not in
+> KVM sefltests' search path, i.e. now that KVM gets x86 syscall numbers
+> from the installed kernel headers.
+>
+> No functional change intended.
+>
+> Cc: Ben Gardon <bgardon@google.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-This patch removes the open coded locks used during
-VFIO_GROUP_NOTIFY_SET_KVM notification. The busy flag
-and wait queue were introduced to resolve a possible circular locking
-dependency reported by lockdep when starting a secure execution guest
-configured with AP adapters and domains. Reversing the order in which
-the kvm->lock mutex and matrix_dev->lock mutex are locked resolves the
-issue reported by lockdep, thus enabling the removal of the open coded
-locks.
+Reviewed-by: Ben Gardon <bgardon@google.com>
 
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-Acked-by: Halil Pasic <pasic@linux.ibm.com>
----
- arch/s390/kvm/kvm-s390.c              |  31 +++++-
- drivers/s390/crypto/vfio_ap_ops.c     | 132 ++++++++------------------
- drivers/s390/crypto/vfio_ap_private.h |   2 -
- 3 files changed, 67 insertions(+), 98 deletions(-)
-
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 5c4f559bcd60..efda0615741f 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -2559,12 +2559,26 @@ static void kvm_s390_set_crycb_format(struct kvm *kvm)
- 		kvm->arch.crypto.crycbd |= CRYCB_FORMAT1;
- }
- 
-+/*
-+ * kvm_arch_crypto_set_masks
-+ *
-+ * @kvm: pointer to the target guest's KVM struct containing the crypto masks
-+ *	 to be set.
-+ * @apm: the mask identifying the accessible AP adapters
-+ * @aqm: the mask identifying the accessible AP domains
-+ * @adm: the mask identifying the accessible AP control domains
-+ *
-+ * Set the masks that identify the adapters, domains and control domains to
-+ * which the KVM guest is granted access.
-+ *
-+ * Note: The kvm->lock mutex must be locked by the caller before invoking this
-+ *	 function.
-+ */
- void kvm_arch_crypto_set_masks(struct kvm *kvm, unsigned long *apm,
- 			       unsigned long *aqm, unsigned long *adm)
- {
- 	struct kvm_s390_crypto_cb *crycb = kvm->arch.crypto.crycb;
- 
--	mutex_lock(&kvm->lock);
- 	kvm_s390_vcpu_block_all(kvm);
- 
- 	switch (kvm->arch.crypto.crycbd & CRYCB_FORMAT_MASK) {
-@@ -2595,13 +2609,23 @@ void kvm_arch_crypto_set_masks(struct kvm *kvm, unsigned long *apm,
- 	/* recreate the shadow crycb for each vcpu */
- 	kvm_s390_sync_request_broadcast(kvm, KVM_REQ_VSIE_RESTART);
- 	kvm_s390_vcpu_unblock_all(kvm);
--	mutex_unlock(&kvm->lock);
- }
- EXPORT_SYMBOL_GPL(kvm_arch_crypto_set_masks);
- 
-+/*
-+ * kvm_arch_crypto_clear_masks
-+ *
-+ * @kvm: pointer to the target guest's KVM struct containing the crypto masks
-+ *	 to be cleared.
-+ *
-+ * Clear the masks that identify the adapters, domains and control domains to
-+ * which the KVM guest is granted access.
-+ *
-+ * Note: The kvm->lock mutex must be locked by the caller before invoking this
-+ *	 function.
-+ */
- void kvm_arch_crypto_clear_masks(struct kvm *kvm)
- {
--	mutex_lock(&kvm->lock);
- 	kvm_s390_vcpu_block_all(kvm);
- 
- 	memset(&kvm->arch.crypto.crycb->apcb0, 0,
-@@ -2613,7 +2637,6 @@ void kvm_arch_crypto_clear_masks(struct kvm *kvm)
- 	/* recreate the shadow crycb for each vcpu */
- 	kvm_s390_sync_request_broadcast(kvm, KVM_REQ_VSIE_RESTART);
- 	kvm_s390_vcpu_unblock_all(kvm);
--	mutex_unlock(&kvm->lock);
- }
- EXPORT_SYMBOL_GPL(kvm_arch_crypto_clear_masks);
- 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 439ca7768eb7..c46937de5758 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -294,15 +294,6 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
- 	matrix_mdev = container_of(vcpu->kvm->arch.crypto.pqap_hook,
- 				   struct ap_matrix_mdev, pqap_hook);
- 
--	/*
--	 * If the KVM pointer is in the process of being set, wait until the
--	 * process has completed.
--	 */
--	wait_event_cmd(matrix_mdev->wait_for_kvm,
--		       !matrix_mdev->kvm_busy,
--		       mutex_unlock(&matrix_dev->lock),
--		       mutex_lock(&matrix_dev->lock));
--
- 	/* If the there is no guest using the mdev, there is nothing to do */
- 	if (!matrix_mdev->kvm)
- 		goto out_unlock;
-@@ -350,7 +341,6 @@ static int vfio_ap_mdev_create(struct mdev_device *mdev)
- 
- 	matrix_mdev->mdev = mdev;
- 	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->matrix);
--	init_waitqueue_head(&matrix_mdev->wait_for_kvm);
- 	mdev_set_drvdata(mdev, matrix_mdev);
- 	matrix_mdev->pqap_hook = handle_pqap;
- 	mutex_lock(&matrix_dev->lock);
-@@ -619,11 +609,8 @@ static ssize_t assign_adapter_store(struct device *dev,
- 
- 	mutex_lock(&matrix_dev->lock);
- 
--	/*
--	 * If the KVM pointer is in flux or the guest is running, disallow
--	 * un-assignment of adapter
--	 */
--	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+	/* If the KVM guest is running, disallow assignment of adapter */
-+	if (matrix_mdev->kvm) {
- 		ret = -EBUSY;
- 		goto done;
- 	}
-@@ -692,11 +679,8 @@ static ssize_t unassign_adapter_store(struct device *dev,
- 
- 	mutex_lock(&matrix_dev->lock);
- 
--	/*
--	 * If the KVM pointer is in flux or the guest is running, disallow
--	 * un-assignment of adapter
--	 */
--	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+	/* If the KVM guest is running, disallow unassignment of adapter */
-+	if (matrix_mdev->kvm) {
- 		ret = -EBUSY;
- 		goto done;
- 	}
-@@ -782,11 +766,8 @@ static ssize_t assign_domain_store(struct device *dev,
- 
- 	mutex_lock(&matrix_dev->lock);
- 
--	/*
--	 * If the KVM pointer is in flux or the guest is running, disallow
--	 * assignment of domain
--	 */
--	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+	/* If the KVM guest is running, disallow assignment of domain */
-+	if (matrix_mdev->kvm) {
- 		ret = -EBUSY;
- 		goto done;
- 	}
-@@ -850,11 +831,8 @@ static ssize_t unassign_domain_store(struct device *dev,
- 
- 	mutex_lock(&matrix_dev->lock);
- 
--	/*
--	 * If the KVM pointer is in flux or the guest is running, disallow
--	 * un-assignment of domain
--	 */
--	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+	/* If the KVM guest is running, disallow unassignment of domain */
-+	if (matrix_mdev->kvm) {
- 		ret = -EBUSY;
- 		goto done;
- 	}
-@@ -904,11 +882,8 @@ static ssize_t assign_control_domain_store(struct device *dev,
- 
- 	mutex_lock(&matrix_dev->lock);
- 
--	/*
--	 * If the KVM pointer is in flux or the guest is running, disallow
--	 * assignment of control domain.
--	 */
--	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+	/* If the KVM guest is running, disallow assignment of control domain */
-+	if (matrix_mdev->kvm) {
- 		ret = -EBUSY;
- 		goto done;
- 	}
-@@ -963,11 +938,8 @@ static ssize_t unassign_control_domain_store(struct device *dev,
- 
- 	mutex_lock(&matrix_dev->lock);
- 
--	/*
--	 * If the KVM pointer is in flux or the guest is running, disallow
--	 * un-assignment of control domain.
--	 */
--	if (matrix_mdev->kvm_busy || matrix_mdev->kvm) {
-+	/* If a KVM guest is running, disallow unassignment of control domain */
-+	if (matrix_mdev->kvm) {
- 		ret = -EBUSY;
- 		goto done;
- 	}
-@@ -1108,28 +1080,30 @@ static int vfio_ap_mdev_set_kvm(struct ap_matrix_mdev *matrix_mdev,
- 	struct ap_matrix_mdev *m;
- 
- 	if (kvm->arch.crypto.crycbd) {
-+		down_write(&kvm->arch.crypto.pqap_hook_rwsem);
-+		kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
-+		up_write(&kvm->arch.crypto.pqap_hook_rwsem);
-+
-+		mutex_lock(&kvm->lock);
-+		mutex_lock(&matrix_dev->lock);
-+
- 		list_for_each_entry(m, &matrix_dev->mdev_list, node) {
--			if (m != matrix_mdev && m->kvm == kvm)
-+			if (m != matrix_mdev && m->kvm == kvm) {
-+				mutex_unlock(&kvm->lock);
-+				mutex_unlock(&matrix_dev->lock);
- 				return -EPERM;
-+			}
- 		}
- 
- 		kvm_get_kvm(kvm);
- 		matrix_mdev->kvm = kvm;
--		matrix_mdev->kvm_busy = true;
--		mutex_unlock(&matrix_dev->lock);
--
--		down_write(&matrix_mdev->kvm->arch.crypto.pqap_hook_rwsem);
--		kvm->arch.crypto.pqap_hook = &matrix_mdev->pqap_hook;
--		up_write(&matrix_mdev->kvm->arch.crypto.pqap_hook_rwsem);
--
- 		kvm_arch_crypto_set_masks(kvm,
- 					  matrix_mdev->matrix.apm,
- 					  matrix_mdev->matrix.aqm,
- 					  matrix_mdev->matrix.adm);
- 
--		mutex_lock(&matrix_dev->lock);
--		matrix_mdev->kvm_busy = false;
--		wake_up_all(&matrix_mdev->wait_for_kvm);
-+		mutex_unlock(&kvm->lock);
-+		mutex_unlock(&matrix_dev->lock);
- 	}
- 
- 	return 0;
-@@ -1179,35 +1153,24 @@ static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
-  * done under the @matrix_mdev->lock.
-  *
-  */
--static void vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev)
-+static void vfio_ap_mdev_unset_kvm(struct ap_matrix_mdev *matrix_mdev,
-+				   struct kvm *kvm)
- {
--	/*
--	 * If the KVM pointer is in the process of being set, wait until the
--	 * process has completed.
--	 */
--	wait_event_cmd(matrix_mdev->wait_for_kvm,
--		       !matrix_mdev->kvm_busy,
--		       mutex_unlock(&matrix_dev->lock),
--		       mutex_lock(&matrix_dev->lock));
--
--	if (matrix_mdev->kvm) {
--		matrix_mdev->kvm_busy = true;
--		mutex_unlock(&matrix_dev->lock);
--
--		if (matrix_mdev->kvm->arch.crypto.crycbd) {
--			down_write(&matrix_mdev->kvm->arch.crypto.pqap_hook_rwsem);
--			matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
--			up_write(&matrix_mdev->kvm->arch.crypto.pqap_hook_rwsem);
--
--			kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
--		}
-+	if (kvm && kvm->arch.crypto.crycbd) {
-+		down_write(&kvm->arch.crypto.pqap_hook_rwsem);
-+		kvm->arch.crypto.pqap_hook = NULL;
-+		up_write(&kvm->arch.crypto.pqap_hook_rwsem);
- 
-+		mutex_lock(&kvm->lock);
- 		mutex_lock(&matrix_dev->lock);
-+
-+		kvm_arch_crypto_clear_masks(kvm);
- 		vfio_ap_mdev_reset_queues(matrix_mdev->mdev);
--		kvm_put_kvm(matrix_mdev->kvm);
-+		kvm_put_kvm(kvm);
- 		matrix_mdev->kvm = NULL;
--		matrix_mdev->kvm_busy = false;
--		wake_up_all(&matrix_mdev->wait_for_kvm);
-+
-+		mutex_unlock(&kvm->lock);
-+		mutex_unlock(&matrix_dev->lock);
- 	}
- }
- 
-@@ -1220,16 +1183,13 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
- 	if (action != VFIO_GROUP_NOTIFY_SET_KVM)
- 		return NOTIFY_OK;
- 
--	mutex_lock(&matrix_dev->lock);
- 	matrix_mdev = container_of(nb, struct ap_matrix_mdev, group_notifier);
- 
- 	if (!data)
--		vfio_ap_mdev_unset_kvm(matrix_mdev);
-+		vfio_ap_mdev_unset_kvm(matrix_mdev, matrix_mdev->kvm);
- 	else if (vfio_ap_mdev_set_kvm(matrix_mdev, data))
- 		notify_rc = NOTIFY_DONE;
- 
--	mutex_unlock(&matrix_dev->lock);
--
- 	return notify_rc;
- }
- 
-@@ -1363,14 +1323,11 @@ static void vfio_ap_mdev_close_device(struct mdev_device *mdev)
- {
- 	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
- 
--	mutex_lock(&matrix_dev->lock);
--	vfio_ap_mdev_unset_kvm(matrix_mdev);
--	mutex_unlock(&matrix_dev->lock);
--
- 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
- 				 &matrix_mdev->iommu_notifier);
- 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
- 				 &matrix_mdev->group_notifier);
-+	vfio_ap_mdev_unset_kvm(matrix_mdev, matrix_mdev->kvm);
- 	module_put(THIS_MODULE);
- }
- 
-@@ -1412,15 +1369,6 @@ static ssize_t vfio_ap_mdev_ioctl(struct mdev_device *mdev,
- 			break;
- 		}
- 
--		/*
--		 * If the KVM pointer is in the process of being set, wait until
--		 * the process has completed.
--		 */
--		wait_event_cmd(matrix_mdev->wait_for_kvm,
--			       !matrix_mdev->kvm_busy,
--			       mutex_unlock(&matrix_dev->lock),
--			       mutex_lock(&matrix_dev->lock));
--
- 		ret = vfio_ap_mdev_reset_queues(mdev);
- 		break;
- 	default:
-diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index e12218e5a629..22d2e0ca3ae5 100644
---- a/drivers/s390/crypto/vfio_ap_private.h
-+++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -83,8 +83,6 @@ struct ap_matrix_mdev {
- 	struct ap_matrix matrix;
- 	struct notifier_block group_notifier;
- 	struct notifier_block iommu_notifier;
--	bool kvm_busy;
--	wait_queue_head_t wait_for_kvm;
- 	struct kvm *kvm;
- 	crypto_hook pqap_hook;
- 	struct mdev_device *mdev;
--- 
-2.31.1
-
+> ---
+>  tools/arch/x86/include/uapi/asm/unistd_64.h | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/tools/arch/x86/include/uapi/asm/unistd_64.h b/tools/arch/x86/include/uapi/asm/unistd_64.h
+> index 4205ed4158bf..cb52a3a8b8fc 100644
+> --- a/tools/arch/x86/include/uapi/asm/unistd_64.h
+> +++ b/tools/arch/x86/include/uapi/asm/unistd_64.h
+> @@ -1,7 +1,4 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef __NR_userfaultfd
+> -#define __NR_userfaultfd 282
+> -#endif
+>  #ifndef __NR_perf_event_open
+>  # define __NR_perf_event_open 298
+>  #endif
+> --
+> 2.33.0.rc2.250.ged5fa647cd-goog
+>
