@@ -2,89 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C89053F6E7C
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Aug 2021 06:38:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F7AA3F6E7F
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Aug 2021 06:38:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230268AbhHYEjS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 25 Aug 2021 00:39:18 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:54859 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbhHYEjS (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 25 Aug 2021 00:39:18 -0400
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 17P4cBxK014941;
-        Wed, 25 Aug 2021 13:38:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 17P4cBxK014941
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1629866292;
-        bh=185z9fBx84g4EeM7cWLgAxqs/o1lYgR8mgEZJhnnvEs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gBblxi6seNJfBudaLxQzOZmqz/OTwWLQL3IcPRbA8nDVPg9xEtjgc/Ehac30HM4FC
-         uLRTiQqrid58d0/ravMCKKMk991rH8FFZt6b73qx4wvTnidG8aTZEAtj68h75esyjs
-         fkm+GWqenrP0Tx+saqUu7L/lCNhtrbqTCPC6/76OKZ1NXIMfld2gpQ4db9C3c/EMFn
-         zHNBG7uBeZhQzDawqMNFG3l3bJ3a+LId0QdJEHl+ikeSqWAWLxEjeoo3I+e1Tina0h
-         UojoOxJrYNiUcmNpGm2HLl5u6F7uQQrC0p+623NJGBR9XpRHrm5AIEnGKA+Rb97kwW
-         rw78OrNJOQWnw==
-X-Nifty-SrcIP: [209.85.210.178]
-Received: by mail-pf1-f178.google.com with SMTP id 18so20211782pfh.9;
-        Tue, 24 Aug 2021 21:38:12 -0700 (PDT)
-X-Gm-Message-State: AOAM5302D7gtLQBSEPGYIhKG9rWPXw78VuMSt/UjFC+DQ7SsOldrPhZY
-        1HloRHaZhAbvrtXGF+pmJ4ypEG7QEibMJxILG3Y=
-X-Google-Smtp-Source: ABdhPJwcdJFuOrLNf7RmHq3OLHTTbvtGb+4Xh8aGyjWezKKziH+PtPzo7jkceRnU/VmUdPjuerTZAX28CQHZvIaKn48=
-X-Received: by 2002:aa7:98da:0:b029:3e0:8b98:df83 with SMTP id
- e26-20020aa798da0000b02903e08b98df83mr42751636pfm.63.1629866291328; Tue, 24
- Aug 2021 21:38:11 -0700 (PDT)
+        id S230150AbhHYEjj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 25 Aug 2021 00:39:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229500AbhHYEji (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 25 Aug 2021 00:39:38 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 619D9C061757
+        for <linux-s390@vger.kernel.org>; Tue, 24 Aug 2021 21:38:53 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id s3so41347154ljp.11
+        for <linux-s390@vger.kernel.org>; Tue, 24 Aug 2021 21:38:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=MhaWH0xm/odULRUgpRN30Lg5qdDn6Ee/GPJGPBWoxIc=;
+        b=PDAur6NVHHMm2PwQz9/TcZimOIWG3UkJs8osiQSAlECX0gSib04cnN4pFxOn+lzYnE
+         Y65JyAR7yvkGIL+vPorJwIRkMgsLdYqCwvVwFDXxLgGHuUUYC2oaummqi9a+2g3mX6S1
+         /e+hG4JRrOLYypEeMIZlILICqhFhc86GV0uL/HWKskrUoukzjFi+Y8xUxa0dvYUkuZUK
+         rT89BMf1sczGAKOXBKBh3OYq0NT1fviXht/2hQQaTh8De7ihcH6EyjF7wHfFlETk3IEw
+         PpDg6MCOIsvmMFmQtWzcY0l3ZW+J4ZF7fheHiIkO4HF4Dz2TkfOeJqm0WR/7ldoZfupo
+         KUxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=MhaWH0xm/odULRUgpRN30Lg5qdDn6Ee/GPJGPBWoxIc=;
+        b=jKQ/8tGRXGT2Eb9esulRNp+88ChzF2CKodVX5AvZeAUykPCsHyifbUMnu/vEpULarN
+         NK2utB6Y3VqIKSlrTl331LgXKFv8v5YwdHPx8B69Q0D0N56zuPqpIj1tQYbJqqXZ2pOE
+         kiUC85gcTMXV/0Ilsxy9OH+6VFO53prdTBb+iCAo7AARjMK7c2oLEsJQzKSGGI1E8Url
+         fmBuQcLXfo2CU5VORq0pYUp9NILKelx4iGLpmVgBoHFTCG46TnaZu9TJmA2sqeWnwzsw
+         L1U6jRtMafBBU/FOxEHBxKIe0vSWD8ctTIIu7o8i2kUtF62FMioTlaRWvvlgiAvY7wBM
+         IyKA==
+X-Gm-Message-State: AOAM533y+jY2ixA/hsUAM0KsrT0ezuDXyjAbdjINrc4URe+6L/WBOMsr
+        JHYUTz5YC4CULw57u76crn9JaZMzP40MtNNcXr0=
+X-Google-Smtp-Source: ABdhPJwJvfr3P9Taim/qocf5BqRt6jipDQjLqI4v6brQrWp2aCYgijuHFZuEcg/H/c6ZWDevXrHteyzF7+OwKWlqQdw=
+X-Received: by 2002:a2e:92c6:: with SMTP id k6mr33446054ljh.100.1629866331675;
+ Tue, 24 Aug 2021 21:38:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210817002109.2736222-1-ndesaulniers@google.com>
- <20210817002109.2736222-3-ndesaulniers@google.com> <YSPePKNwZ/znykqf@osiris>
-In-Reply-To: <YSPePKNwZ/znykqf@osiris>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 25 Aug 2021 13:37:34 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASupkuA=vY3NOUWW_mX1Mnp+NFeGAUxuFC=k-ADMFd35Q@mail.gmail.com>
-Message-ID: <CAK7LNASupkuA=vY3NOUWW_mX1Mnp+NFeGAUxuFC=k-ADMFd35Q@mail.gmail.com>
-Subject: Re: [PATCH 2/7] s390: replace cc-option-yn uses with cc-option
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>
+Received: by 2002:a05:6512:390e:0:0:0:0 with HTTP; Tue, 24 Aug 2021 21:38:51
+ -0700 (PDT)
+Reply-To: isabella.ferreira@yandex.com
+From:   "Isabella.Ferreira" <maryfury204@gmail.com>
+Date:   Wed, 25 Aug 2021 05:38:51 +0100
+Message-ID: <CAKLzTuBjQyBCpoMgJPnWLrHYknUMtaqs95QEx-=iAY+85wTn_g@mail.gmail.com>
+Subject: Greetings,
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Aug 24, 2021 at 2:43 AM Heiko Carstens <hca@linux.ibm.com> wrote:
->
-> On Mon, Aug 16, 2021 at 05:21:04PM -0700, Nick Desaulniers wrote:
-> > cc-option-yn can be replaced with cc-option. ie.
-> > Checking for support:
-> > ifeq ($(call cc-option-yn,$(FLAG)),y)
-> > becomes:
-> > ifneq ($(call cc-option,$(FLAG)),)
-> >
-> > Checking for lack of support:
-> > ifeq ($(call cc-option-yn,$(FLAG)),n)
-> > becomes:
-> > ifeq ($(call cc-option,$(FLAG)),)
-> >
-> > This allows us to pursue removing cc-option-yn.
-> >
-> > Cc: Heiko Carstens <hca@linux.ibm.com>
-> > Cc: Vasily Gorbik <gor@linux.ibm.com>
-> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> > Cc: linux-s390@vger.kernel.org
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > ---
-> >  arch/s390/Makefile | 14 +++++++-------
-> >  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Greetings,
 
-Applied to linux-kbuild.
+I wonder why you continue neglecting my emails. Please, acknowledge
+the receipt of this message in reference to the subject above as I
+intend to send to you the details of the mail. Sometimes, try to check
+your spam box because most of these correspondences fall out sometimes
+in SPAM folder.
 
-
--- 
-Best Regards
-Masahiro Yamada
+Best regards,
+Isabella
