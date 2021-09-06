@@ -2,35 +2,37 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B1A04013A4
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Sep 2021 03:28:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF7374013C7
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Sep 2021 03:28:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241097AbhIFB1l (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 5 Sep 2021 21:27:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39302 "EHLO mail.kernel.org"
+        id S241279AbhIFB2e (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 5 Sep 2021 21:28:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240482AbhIFBZj (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 5 Sep 2021 21:25:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7A11861158;
-        Mon,  6 Sep 2021 01:22:23 +0000 (UTC)
+        id S240122AbhIFB0f (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 5 Sep 2021 21:26:35 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A911D610F9;
+        Mon,  6 Sep 2021 01:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630891344;
-        bh=Cz1d3nehDoogkLHm8LYFCfX8k+Pf330baoN+ih7Qsh8=;
+        s=k20201202; t=1630891357;
+        bh=pRz0pcGrk0bI5tVenX8gEj6hCVq03V+Zw6XBu62Nmks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ATVQBtBY5wsVnNBnca0i/+bgx2l+EvhYbwfB6Uiefk9Q7yo0+sJHhCZW/hLxIu0qh
-         Emgy6q3DO23Uw1b66wVAr94NXxA5Hovdhz/tVj+WzLuYhzqBNCrLVJ0Ffbd6PB6WnC
-         jMoKJo/X/3RaI87b+9mLdT9fY0K/cdQ9+39VFgj95DhrwEcANk1xtEQ2me7CEvVCC8
-         5AXthXddR5bY/dNoI3Z+iLIjZ2hZbkj4ff3IHs6ww7oCF2qNW/XfxwfWYwnPoiWawG
-         3uteATvfNGtG13Af39DnM5hTrI5D2xKd9eSjugLHpBKGbxATwOfPtVqteP2GqZbVmn
-         gKw3qDzp5a3tw==
+        b=DonMKGc0nkUetX+41lgckbiT2RFDPKiLyw3wvAJSoWSiSKA0nlphszZN+Jv6Re+5w
+         GkUU3rbNmjTL/TqTXcrFFnkuFUep9EhCba4e7K3FlQfZx9DSS7E3mOiaouYo9+Um56
+         /MWQ7U11WhPBPdtr14vNoAOgZUg/ELhrE7F3u+9LNN68UoIo5bQlPvXMz7z8WcnIPM
+         /nH1mfCzNziJ4yHERGJ2JjxJBmzPC3j5LQLsWF2MUzVVNd3ItZOn4f/DgIhYS9m2Q7
+         7RSZ5IseUqQJ51hZ8nVC/N/s6qFC2tlQTmSyGZGt0rctP1ir0qvpcD0HfPyxezF/c6
+         ZUYA1Jx/gE84A==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harald Freudenberger <freude@linux.ibm.com>,
+Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 25/39] s390/zcrypt: fix wrong offset index for APKA master key valid state
-Date:   Sun,  5 Sep 2021 21:21:39 -0400
-Message-Id: <20210906012153.929962-25-sashal@kernel.org>
+        Heiko Carstens <hca@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, kasan-dev@googlegroups.com,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 35/39] s390/kasan: fix large PMD pages address alignment check
+Date:   Sun,  5 Sep 2021 21:21:49 -0400
+Message-Id: <20210906012153.929962-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210906012153.929962-1-sashal@kernel.org>
 References: <20210906012153.929962-1-sashal@kernel.org>
@@ -42,43 +44,84 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Alexander Gordeev <agordeev@linux.ibm.com>
 
-[ Upstream commit 8617bb74006252cb2286008afe7d6575a6425857 ]
+[ Upstream commit ddd63c85ef67ea9ea7282ad35eafb6568047126e ]
 
-Tests showed a mismatch between what the CCA tool reports about
-the APKA master key state and what's displayed by the zcrypt dd
-in sysfs. After some investigation, we found out that the
-documentation which was the source for the zcrypt dd implementation
-lacks the listing of 3 fields. So this patch now moves the
-evaluation of the APKA master key state to the correct offset.
+It is currently possible to initialize a large PMD page when
+the address is not aligned on page boundary.
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/crypto/zcrypt_ccamisc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/s390/mm/kasan_init.c | 41 +++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/s390/crypto/zcrypt_ccamisc.c b/drivers/s390/crypto/zcrypt_ccamisc.c
-index b1046811450f..ffab935ddd95 100644
---- a/drivers/s390/crypto/zcrypt_ccamisc.c
-+++ b/drivers/s390/crypto/zcrypt_ccamisc.c
-@@ -1715,10 +1715,10 @@ static int fetch_cca_info(u16 cardnr, u16 domain, struct cca_info *ci)
- 	rlen = vlen = PAGE_SIZE/2;
- 	rc = cca_query_crypto_facility(cardnr, domain, "STATICSB",
- 				       rarray, &rlen, varray, &vlen);
--	if (rc == 0 && rlen >= 10*8 && vlen >= 240) {
--		ci->new_apka_mk_state = (char) rarray[7*8];
--		ci->cur_apka_mk_state = (char) rarray[8*8];
--		ci->old_apka_mk_state = (char) rarray[9*8];
-+	if (rc == 0 && rlen >= 13*8 && vlen >= 240) {
-+		ci->new_apka_mk_state = (char) rarray[10*8];
-+		ci->cur_apka_mk_state = (char) rarray[11*8];
-+		ci->old_apka_mk_state = (char) rarray[12*8];
- 		if (ci->old_apka_mk_state == '2')
- 			memcpy(&ci->old_apka_mkvp, varray + 208, 8);
- 		if (ci->cur_apka_mk_state == '2')
+diff --git a/arch/s390/mm/kasan_init.c b/arch/s390/mm/kasan_init.c
+index 5646b39c728a..e9a9b7b616bc 100644
+--- a/arch/s390/mm/kasan_init.c
++++ b/arch/s390/mm/kasan_init.c
+@@ -108,6 +108,9 @@ static void __init kasan_early_vmemmap_populate(unsigned long address,
+ 		sgt_prot &= ~_SEGMENT_ENTRY_NOEXEC;
+ 	}
+ 
++	/*
++	 * The first 1MB of 1:1 mapping is mapped with 4KB pages
++	 */
+ 	while (address < end) {
+ 		pg_dir = pgd_offset_k(address);
+ 		if (pgd_none(*pg_dir)) {
+@@ -165,30 +168,26 @@ static void __init kasan_early_vmemmap_populate(unsigned long address,
+ 
+ 		pm_dir = pmd_offset(pu_dir, address);
+ 		if (pmd_none(*pm_dir)) {
+-			if (mode == POPULATE_ZERO_SHADOW &&
+-			    IS_ALIGNED(address, PMD_SIZE) &&
++			if (IS_ALIGNED(address, PMD_SIZE) &&
+ 			    end - address >= PMD_SIZE) {
+-				pmd_populate(&init_mm, pm_dir,
+-						kasan_early_shadow_pte);
+-				address = (address + PMD_SIZE) & PMD_MASK;
+-				continue;
+-			}
+-			/* the first megabyte of 1:1 is mapped with 4k pages */
+-			if (has_edat && address && end - address >= PMD_SIZE &&
+-			    mode != POPULATE_ZERO_SHADOW) {
+-				void *page;
+-
+-				if (mode == POPULATE_ONE2ONE) {
+-					page = (void *)address;
+-				} else {
+-					page = kasan_early_alloc_segment();
+-					memset(page, 0, _SEGMENT_SIZE);
++				if (mode == POPULATE_ZERO_SHADOW) {
++					pmd_populate(&init_mm, pm_dir, kasan_early_shadow_pte);
++					address = (address + PMD_SIZE) & PMD_MASK;
++					continue;
++				} else if (has_edat && address) {
++					void *page;
++
++					if (mode == POPULATE_ONE2ONE) {
++						page = (void *)address;
++					} else {
++						page = kasan_early_alloc_segment();
++						memset(page, 0, _SEGMENT_SIZE);
++					}
++					pmd_val(*pm_dir) = __pa(page) | sgt_prot;
++					address = (address + PMD_SIZE) & PMD_MASK;
++					continue;
+ 				}
+-				pmd_val(*pm_dir) = __pa(page) | sgt_prot;
+-				address = (address + PMD_SIZE) & PMD_MASK;
+-				continue;
+ 			}
+-
+ 			pt_dir = kasan_early_pte_alloc();
+ 			pmd_populate(&init_mm, pm_dir, pt_dir);
+ 		} else if (pmd_large(*pm_dir)) {
 -- 
 2.30.2
 
