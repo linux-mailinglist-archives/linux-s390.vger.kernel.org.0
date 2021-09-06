@@ -2,126 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A54E24019A5
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Sep 2021 12:19:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FD2C4019C2
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Sep 2021 12:28:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241838AbhIFKUP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 Sep 2021 06:20:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:54492 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232032AbhIFKUP (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 6 Sep 2021 06:20:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39725D6E;
-        Mon,  6 Sep 2021 03:19:10 -0700 (PDT)
-Received: from [192.168.0.110] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C89813F73D;
-        Mon,  6 Sep 2021 03:19:07 -0700 (PDT)
-Subject: Re: [kvm-unit-tests RFC PATCH 1/5] lib: arm: Print test exit status
- on exit if chr-testdev is not available
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     thuth@redhat.com, pbonzini@redhat.com, lvivier@redhat.com,
-        kvm-ppc@vger.kernel.org, david@redhat.com, frankja@linux.ibm.com,
-        cohuck@redhat.com, imbrenda@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, andre.przywara@arm.com,
-        maz@kernel.org, vivek.gautam@arm.com
-References: <20210702163122.96110-1-alexandru.elisei@arm.com>
- <20210702163122.96110-2-alexandru.elisei@arm.com>
- <20210712163647.oxntpjapur4z23sl@gator>
-From:   Alexandru Elisei <alexandru.elisei@arm.com>
-Message-ID: <7814beab-547e-98d9-9aa0-3b7e5afd803b@arm.com>
-Date:   Mon, 6 Sep 2021 11:20:31 +0100
+        id S231387AbhIFK3Z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 Sep 2021 06:29:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31756 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S242016AbhIFK3W (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Sep 2021 06:29:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1630924097;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=REmJl8s2nvMdTdbKRVVIcDfYVEbx2wjp9XTagCASYqs=;
+        b=M0Tzz4taVNiDQ7O9U0tpdW1QbeRJ9elAmkEpqslUOUXBdmGj3whd/+ybivfoD9GN1i2m4T
+        R5N7BcHNHfal9jq4A2i7oeL8XfzZ00iCopkW9hVuCjpWkVrzUftHACZQmahxOWuQhHKD1K
+        F5TqTn1xqMSPQBbP3rrsS+tIOWbMg7s=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-581-K9aDxLTZPl2nGM5YcQiOjA-1; Mon, 06 Sep 2021 06:28:16 -0400
+X-MC-Unique: K9aDxLTZPl2nGM5YcQiOjA-1
+Received: by mail-ed1-f71.google.com with SMTP id v13-20020a056402174d00b003c25d6b2f13so3489380edx.4
+        for <linux-s390@vger.kernel.org>; Mon, 06 Sep 2021 03:28:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=REmJl8s2nvMdTdbKRVVIcDfYVEbx2wjp9XTagCASYqs=;
+        b=lDHBpJ2ZdJwufwquV8XA2G3ujLwwKuST0kuOtUmhr2LNdOyIBjWijzin4D6SMVFPTG
+         6x3G53P+sF9pP4FtrxpJ7tqlz7tL6xDgoJLTHw9sxrEd/elGd3uj4sLGE/aT5dCHixZv
+         BG5dVLZUVQyM1IvnYfh7UKeQ+ZxQmo2ep2ggfoQYoOzvH7v3iEvRb8YmwNR6MYQiRE29
+         Jv5b9ItJ4pQyuTM8ir7GbgCLu76xe1UBnHKCv0NMST2gH91YyLumNXuMtgEglKRb4/bM
+         FkL8M2PMwZtGn9NhSw60f3TTFhPu88ztXjL+MPsyHL2DIErx7N2BfGFL01I5GdnXDM4v
+         i/pw==
+X-Gm-Message-State: AOAM531JhjZQaDtj+ws/BHBlE13Ytzy7/oS5gyblsHSuj0Mu6C/HUG+v
+        IW8CA2y1rkr3R0AWueYdd4MYd6etBwPTx4eZfz/BfFpCztIv9RETNtZawzhvcFLstyhDNfK3zB4
+        k/gQAJMhI98L15CpwM6sscQ==
+X-Received: by 2002:a17:906:1d19:: with SMTP id n25mr13007248ejh.11.1630924095430;
+        Mon, 06 Sep 2021 03:28:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz7T8yPC7CUEnqP8Q5KGyfYQsTy7fdIFm0w0WX7OHu/0lN1pf6u81fhziGWQVchhgc+jbFRRA==
+X-Received: by 2002:a17:906:1d19:: with SMTP id n25mr13007231ejh.11.1630924095200;
+        Mon, 06 Sep 2021 03:28:15 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c8dd:75d4:99ab:290a? ([2001:b07:6468:f312:c8dd:75d4:99ab:290a])
+        by smtp.gmail.com with ESMTPSA id h7sm4431526edr.4.2021.09.06.03.28.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Sep 2021 03:28:14 -0700 (PDT)
+Subject: Re: [PATCH 1/5] KVM: rseq: Update rseq when processing NOTIFY_RESUME
+ on xfer to KVM guest
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Sean Christopherson <seanjc@google.com>
+Cc:     "Russell King, ARM Linux" <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <hca@linux.ibm.com>, gor <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Oleg Nesterov <oleg@redhat.com>, rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        paulmck <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+        shuah <shuah@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-csky <linux-csky@vger.kernel.org>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        linux-kselftest <linux-kselftest@vger.kernel.org>,
+        Peter Foley <pefoley@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Ben Gardon <bgardon@google.com>
+References: <20210818001210.4073390-1-seanjc@google.com>
+ <20210818001210.4073390-2-seanjc@google.com>
+ <1673583543.19718.1629409152244.JavaMail.zimbra@efficios.com>
+ <YR7tzZ98XC6OV2vu@google.com>
+ <1872633041.20290.1629485463253.JavaMail.zimbra@efficios.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <425456d3-4772-2a1b-9cf3-a5b750b95c2e@redhat.com>
+Date:   Mon, 6 Sep 2021 12:28:12 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210712163647.oxntpjapur4z23sl@gator>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1872633041.20290.1629485463253.JavaMail.zimbra@efficios.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Drew,
+On 20/08/21 20:51, Mathieu Desnoyers wrote:
+>> Ah, or is it the case that rseq_cs is non-NULL if and only if userspace is in an
+>> rseq critical section, and because syscalls in critical sections are illegal, by
+>> definition clearing rseq_cs is a nop unless userspace is misbehaving.
+> Not quite, as I described above. But we want it to stay set so the CONFIG_DEBUG_RSEQ
+> code executed when returning from ioctl to userspace will be able to validate that
+> it is not nested within a rseq critical section.
+> 
+>> If that's true, what about explicitly checking that at NOTIFY_RESUME?  Or is it
+>> not worth the extra code to detect an error that will likely be caught anyways?
+> The error will indeed already be caught on return from ioctl to userspace, so I
+> don't see any added value in duplicating this check.
 
-Sorry for taking so long to reply, been busy with other things.
-
-On 7/12/21 5:36 PM, Andrew Jones wrote:
-> On Fri, Jul 02, 2021 at 05:31:18PM +0100, Alexandru Elisei wrote:
->> The arm64 tests can be run under kvmtool, which doesn't emulate a
->> chr-testdev device. In preparation for adding run script support for
->> kvmtool, print the test exit status so the scripts can pick it up and
->> correctly mark the test as pass or fail.
->>
->> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
->> ---
->>  lib/chr-testdev.h |  1 +
->>  lib/arm/io.c      | 10 +++++++++-
->>  lib/chr-testdev.c |  5 +++++
->>  3 files changed, 15 insertions(+), 1 deletion(-)
->>
->> diff --git a/lib/chr-testdev.h b/lib/chr-testdev.h
->> index ffd9a851aa9b..09b4b424670e 100644
->> --- a/lib/chr-testdev.h
->> +++ b/lib/chr-testdev.h
->> @@ -11,4 +11,5 @@
->>   */
->>  extern void chr_testdev_init(void);
->>  extern void chr_testdev_exit(int code);
->> +extern bool chr_testdev_available(void);
->>  #endif
->> diff --git a/lib/arm/io.c b/lib/arm/io.c
->> index 343e10822263..9e62b571a91b 100644
->> --- a/lib/arm/io.c
->> +++ b/lib/arm/io.c
->> @@ -125,7 +125,15 @@ extern void halt(int code);
->>  
->>  void exit(int code)
->>  {
->> -	chr_testdev_exit(code);
->> +	if (chr_testdev_available()) {
->> +		chr_testdev_exit(code);
-> chr_testdev_exit() already has a 'if !vcon goto out' in it, so you can
-> just call it unconditionally. No need for chr_testdev_available().
-
-I'm not sure what you mean. There has to be a way to check if chr-testdev is
-available, and if it's not present on the system, to print the EXIT: STATUS
-message, and vcon is static in chr-testdev.c.
-
-Are you suggesting that we move the message to chr_testdev_exit(code)?
+Sean, can you send a v2 (even for this patch only would be okay)?
 
 Thanks,
 
-Alex
+Paolo
 
->
->> +	} else {
->> +		/*
->> +		 * Print the test return code in the format used by chr-testdev
->> +		 * so the runner script can parse it.
->> +		 */
->> +		printf("\nEXIT: STATUS=%d\n", ((code) << 1) | 1);
->> +	}
->>  	psci_system_off();
->>  	halt(code);
->>  	__builtin_unreachable();
->> diff --git a/lib/chr-testdev.c b/lib/chr-testdev.c
->> index b3c641a833fe..301e73a6c064 100644
->> --- a/lib/chr-testdev.c
->> +++ b/lib/chr-testdev.c
->> @@ -68,3 +68,8 @@ void chr_testdev_init(void)
->>  	in_vq = vqs[0];
->>  	out_vq = vqs[1];
->>  }
->> +
->> +bool chr_testdev_available(void)
->> +{
->> +	return vcon != NULL;
->> +}
->> -- 
->> 2.32.0
->>
-> Thanks,
-> drew 
->
