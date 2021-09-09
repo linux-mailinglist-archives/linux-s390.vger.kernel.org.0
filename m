@@ -2,37 +2,37 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FB6140580E
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Sep 2021 15:56:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5AA2405616
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Sep 2021 15:36:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356103AbhIINpt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Sep 2021 09:45:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57766 "EHLO mail.kernel.org"
+        id S1356888AbhIINRy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Sep 2021 09:17:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1356440AbhIIMzM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 9 Sep 2021 08:55:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EB5EA613AD;
-        Thu,  9 Sep 2021 11:57:55 +0000 (UTC)
+        id S1357525AbhIINBk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 9 Sep 2021 09:01:40 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3BDAC63287;
+        Thu,  9 Sep 2021 11:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631188676;
-        bh=pPUTDhlbhoWxCecJxjTKaCYpbhlU/dyhrWccM8e4UF0=;
+        s=k20201202; t=1631188768;
+        bh=7Wns3l9gX+H590DCvppk6lTmRGB+Hss0HwLW9cHwN+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eD7POMwFN4HIg89gZDHyiowzixXPh36OyoQA0ciAQrfolpj06FtqgdzEc23Q3a/cs
-         xg9fWdgmv8Kzwrx60dPr5/bToSvfu2IiXvWwu86W26eas1usyzsiLPg9OPrms/Arlc
-         RD23mlplTKN4Ku/g28PsfBR7hTUxfqpQbXxz5SSJJ5hUcQ9np3ibaT1Xv7aFLcM5aK
-         zcs0vp0twUxLjxxiZ8ihUSEXO9fKCB/dBhU+DJPiwQ3U4BuWyPVkoVyTI8/A2qVaQj
-         igXi14bBRMU99Z2P5YnP7BFyooNf0rB9Mx4Jlh6Xly7VRSXTAEBgJQJGNnQrHqeH2f
-         2L+w02QlnKrqg==
+        b=LbjS3rNzN2YCMQ2j9j7OZ6HuKM4Mxw+8scrbcU9BnIY7+5SjrAhmTVAPv31XvZyIZ
+         ihCcN5ly3ng2GaxpuaBHi27qMTX1Bp9QAJkciB4yz9EoOwohf0nQ0PziiIhmDuRzQP
+         lU9FOyVBgOLJE4Up5NCGReVC1Us0VS9SH6D8rJXB58IuM5m/YSjJobW2yhmClAEyUB
+         IDl7jGo/lK0LQd3bPM/oLWMTGn4y51KHPC0FaNeOxGOeSI0+qn3qrNPL4TDsvXMQeE
+         yIMF7WCUzntccVJGXHT3dy160I2zB4jr9rUnPiojkjpiSNfkfmzVq/tHMMO0LyGhaM
+         Z3z5eCD4Fn0fA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Heiko Carstens <hca@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 24/74] s390/jump_label: print real address in a case of a jump label bug
-Date:   Thu,  9 Sep 2021 07:56:36 -0400
-Message-Id: <20210909115726.149004-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 22/59] s390/jump_label: print real address in a case of a jump label bug
+Date:   Thu,  9 Sep 2021 07:58:23 -0400
+Message-Id: <20210909115900.149795-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210909115726.149004-1-sashal@kernel.org>
-References: <20210909115726.149004-1-sashal@kernel.org>
+In-Reply-To: <20210909115900.149795-1-sashal@kernel.org>
+References: <20210909115900.149795-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,10 +56,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/s390/kernel/jump_label.c b/arch/s390/kernel/jump_label.c
-index 68f415e334a5..10009a0cdb37 100644
+index 43f8430fb67d..608b363cd35b 100644
 --- a/arch/s390/kernel/jump_label.c
 +++ b/arch/s390/kernel/jump_label.c
-@@ -41,7 +41,7 @@ static void jump_label_bug(struct jump_entry *entry, struct insn *expected,
+@@ -43,7 +43,7 @@ static void jump_label_bug(struct jump_entry *entry, struct insn *expected,
  	unsigned char *ipe = (unsigned char *)expected;
  	unsigned char *ipn = (unsigned char *)new;
  
