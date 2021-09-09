@@ -2,37 +2,37 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5AA2405616
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Sep 2021 15:36:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87C82405705
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Sep 2021 15:39:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356888AbhIINRy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Sep 2021 09:17:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43556 "EHLO mail.kernel.org"
+        id S1343998AbhIIN3G (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Sep 2021 09:29:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1357525AbhIINBk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 9 Sep 2021 09:01:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3BDAC63287;
-        Thu,  9 Sep 2021 11:59:28 +0000 (UTC)
+        id S1358419AbhIINHT (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 9 Sep 2021 09:07:19 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7B110632AF;
+        Thu,  9 Sep 2021 12:00:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631188768;
-        bh=7Wns3l9gX+H590DCvppk6lTmRGB+Hss0HwLW9cHwN+0=;
+        s=k20201202; t=1631188841;
+        bh=26DpxREAUW4RnhxRwr/LD/ekH0ARh3OLBDizhE3yZ2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LbjS3rNzN2YCMQ2j9j7OZ6HuKM4Mxw+8scrbcU9BnIY7+5SjrAhmTVAPv31XvZyIZ
-         ihCcN5ly3ng2GaxpuaBHi27qMTX1Bp9QAJkciB4yz9EoOwohf0nQ0PziiIhmDuRzQP
-         lU9FOyVBgOLJE4Up5NCGReVC1Us0VS9SH6D8rJXB58IuM5m/YSjJobW2yhmClAEyUB
-         IDl7jGo/lK0LQd3bPM/oLWMTGn4y51KHPC0FaNeOxGOeSI0+qn3qrNPL4TDsvXMQeE
-         yIMF7WCUzntccVJGXHT3dy160I2zB4jr9rUnPiojkjpiSNfkfmzVq/tHMMO0LyGhaM
-         Z3z5eCD4Fn0fA==
+        b=lJ8QtSjqw7zHSkszIYOPS5m/xVmimV7dRI9aQ8mpp8w63HdjtLQ3o98cS/HLOwwnH
+         rBZCogT3jRhRvI37qKfRCdXEmizJGtO2zFnPMJb5scF+0enZx9M8ry9GsDdHmbPP69
+         RCBd9+6uHKG3mweTPpMHu329bTj0I7yCXVC/y0L71JhiIbHprvuBg9y+yzgGcvnUm4
+         QhrEO/P29or7Wuu5gcG8CCKgew5yAcaWkl+pLFAFd/kCNsNOZz6XYBlddUlYtmimCt
+         vcrpQ5iWaO5DHp9Vd8o3UTE3VScj5KLLJVtFNGrzqe2YfwUv0+jApbrry25ndPBMRd
+         E42yKZNBCsz4g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Heiko Carstens <hca@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 22/59] s390/jump_label: print real address in a case of a jump label bug
-Date:   Thu,  9 Sep 2021 07:58:23 -0400
-Message-Id: <20210909115900.149795-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 20/48] s390/jump_label: print real address in a case of a jump label bug
+Date:   Thu,  9 Sep 2021 07:59:47 -0400
+Message-Id: <20210909120015.150411-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210909115900.149795-1-sashal@kernel.org>
-References: <20210909115900.149795-1-sashal@kernel.org>
+In-Reply-To: <20210909120015.150411-1-sashal@kernel.org>
+References: <20210909120015.150411-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -56,7 +56,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/s390/kernel/jump_label.c b/arch/s390/kernel/jump_label.c
-index 43f8430fb67d..608b363cd35b 100644
+index 083b05f5f5ab..cbc187706648 100644
 --- a/arch/s390/kernel/jump_label.c
 +++ b/arch/s390/kernel/jump_label.c
 @@ -43,7 +43,7 @@ static void jump_label_bug(struct jump_entry *entry, struct insn *expected,
