@@ -2,169 +2,72 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AF1740494E
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Sep 2021 13:31:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB319404A84
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Sep 2021 13:46:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235265AbhIILc4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Sep 2021 07:32:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:58934 "EHLO foss.arm.com"
+        id S237816AbhIILrB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Sep 2021 07:47:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234507AbhIILc4 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 9 Sep 2021 07:32:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53DD831B;
-        Thu,  9 Sep 2021 04:31:46 -0700 (PDT)
-Received: from [192.168.0.110] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 995063F73D;
-        Thu,  9 Sep 2021 04:31:43 -0700 (PDT)
-Subject: Re: [kvm-unit-tests RFC PATCH 3/5] run_tests.sh: Add kvmtool support
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     thuth@redhat.com, pbonzini@redhat.com, lvivier@redhat.com,
-        kvm-ppc@vger.kernel.org, david@redhat.com, frankja@linux.ibm.com,
-        cohuck@redhat.com, imbrenda@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, andre.przywara@arm.com,
-        maz@kernel.org, vivek.gautam@arm.com
-References: <20210702163122.96110-1-alexandru.elisei@arm.com>
- <20210702163122.96110-4-alexandru.elisei@arm.com>
- <20210907101730.trnsig2j4jmhinyu@gator>
- <587a5f8c-cf04-59ec-7e35-4ca6adf87862@arm.com>
- <20210908150912.3d57akqkfux4fahj@gator>
- <56289c06-04ec-1772-6e15-98d02780876d@arm.com>
- <20210908154943.z7d6bhww3pnbaftd@gator>
-From:   Alexandru Elisei <alexandru.elisei@arm.com>
-Message-ID: <58d25f89-ff19-2dbc-81bc-3224b8baa9fb@arm.com>
-Date:   Thu, 9 Sep 2021 12:33:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S235578AbhIILo6 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 9 Sep 2021 07:44:58 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 11D2E61222;
+        Thu,  9 Sep 2021 11:42:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1631187762;
+        bh=uwA0nUERC+utH2fpcqTViMZbqrZcqe6qSSC9TEOQ8Yg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CCWjJ8AZsrnIyQlzjF902hY7G6+VlBRlIscIJPNM+7ZomvNMyoMPENzxEMeCkoChN
+         LYARljc9bZJXL4nZlBXswEJKz09wsgbzNjJnksxmSdpaZ4zK3eMzUZlB8FdbZyyroT
+         D6Ag647B/xSQr7bPQARBKkBursePHQc4oxFfb/+1cBLVBC+8App7lzNjBiNXd51FRx
+         zI2WML3Xo/vp85htNY/rNAOjyqm48SHJ1iIVAYojHV3CzX8ZrictGXr5lTXsikW+Z1
+         ZiCvyAW9IPl50IHCY8hnS46i8khGl7WzBeGzK7WIHWTdk8LV/Hl8jQVQpI/Rl5ZxeV
+         A6VxMkJ0BPzJg==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.14 075/252] s390/jump_label: print real address in a case of a jump label bug
+Date:   Thu,  9 Sep 2021 07:38:09 -0400
+Message-Id: <20210909114106.141462-75-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210909114106.141462-1-sashal@kernel.org>
+References: <20210909114106.141462-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20210908154943.z7d6bhww3pnbaftd@gator>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Drew,
+From: Heiko Carstens <hca@linux.ibm.com>
 
-On 9/8/21 4:49 PM, Andrew Jones wrote:
-> On Wed, Sep 08, 2021 at 04:46:19PM +0100, Alexandru Elisei wrote:
->> Hi Drew,
->>
->> On 9/8/21 4:09 PM, Andrew Jones wrote:
->>> On Wed, Sep 08, 2021 at 03:33:19PM +0100, Alexandru Elisei wrote:
->>> ...
->>>>>> +fixup_kvmtool_opts()
->>>>>> +{
->>>>>> +    local opts=$1
->>>>>> +    local groups=$2
->>>>>> +    local gic
->>>>>> +    local gic_version
->>>>>> +
->>>>>> +    if find_word "pmu" $groups; then
->>>>>> +        opts+=" --pmu"
->>>>>> +    fi
->>>>>> +
->>>>>> +    if find_word "its" $groups; then
->>>>>> +        gic_version=3
->>>>>> +        gic="gicv3-its"
->>>>>> +    elif [[ "$opts" =~ -machine\ *gic-version=(2|3) ]]; then
->>>>>> +        gic_version="${BASH_REMATCH[1]}"
->>>>>> +        gic="gicv$gic_version"
->>>>>> +    fi
->>>>>> +
->>>>>> +    if [ -n "$gic" ]; then
->>>>>> +        opts=${opts/-machine gic-version=$gic_version/}
->>>>>> +        opts+=" --irqchip=$gic"
->>>>>> +    fi
->>>>>> +
->>>>>> +    opts=${opts/-append/--params}
->>>>>> +
->>>>>> +    echo "$opts"
->>>>>> +}
->>>>> Hmm, I don't think we want to write a QEMU parameter translator for
->>>>> all other VMMs, and all other VMM architectures, that we want to
->>>>> support. I think we should add new "extra_params" variables to the
->>>>> unittest configuration instead, e.g. "kvmtool_params", where the
->>>>> extra parameters can be listed correctly and explicitly. While at
->>>>> it, I would create an alias for "extra_params", which would be
->>>>> "qemu_params" allowing unittests that support more than one VMM
->>>>> to clearly show what's what.
->>>> I agree, this is a much better idea than a parameter translator. Using a dedicated
->>>> variable in unittests.cfg will make it easier for new tests to get support for all
->>>> VMMs (for example, writing a list of parameters in unittests.cfg should be easier
->>>> than digging through the scripts to figure exactly how and where to add a
->>>> translation for a new parameter), and it allow us to express parameters for other
->>>> VMMs which don't have a direct correspondent in qemu.
->>>>
->>>> By creating an alias, do you mean replacing extra_params with qemu_params in
->>>> arm/unittests.cfg? Or something else?
->>> Probably something like this
->>>
->>> diff --git a/scripts/common.bash b/scripts/common.bash
->>> index 7b983f7d6dd6..e5119ff216e5 100644
->>> --- a/scripts/common.bash
->>> +++ b/scripts/common.bash
->>> @@ -37,7 +37,12 @@ function for_each_unittest()
->>>                 elif [[ $line =~ ^smp\ *=\ *(.*)$ ]]; then
->>>                         smp=${BASH_REMATCH[1]}
->>>                 elif [[ $line =~ ^extra_params\ *=\ *(.*)$ ]]; then
->>> -                       opts=${BASH_REMATCH[1]}
->>> +               elif [[ $line =~ ^extra_params\ *=\ *(.*)$ ]]; then
->>> +                       qemu_opts=${BASH_REMATCH[1]}
->>> +               elif [[ $line =~ ^qemu_params\ *=\ *(.*)$ ]]; then
->>> +                       qemu_opts=${BASH_REMATCH[1]}
->>> +               elif [[ $line =~ ^kvmtool_params\ *=\ *(.*)$ ]]; then
->>> +                       kvmtool_opts=${BASH_REMATCH[1]}
->>>                 elif [[ $line =~ ^groups\ *=\ *(.*)$ ]]; then
->>>                         groups=${BASH_REMATCH[1]}
->>>                 elif [[ $line =~ ^arch\ *=\ *(.*)$ ]]; then
->>>
->>> and all other changes needed to support the s/opts/qemu_opts/ change
->>> should work. Also, an addition to the unittests.cfg documentation.
->> Got it, replace extra_opts with qemu_opts in the scripts.
->>
->> Yes, the documentation for unittests.cfg (at the top of the file) should
->> definitely be updated to document the new configuration option, kvmtool_params.
->>
->>> The above diff doesn't consider that a unittests.cfg file could have
->>> both an 'extra_params' and a 'qemu_params' field, but I'm not sure
->>> we care about that. Users should read the documentation and we
->>> should review changes to the committed unittests.cfg files to avoid
->>> that.
->> What do you feel about renaming extra_params -> qemu_params in unittests.cfg?
-> Yes, that's what I would expect the patch to do.
->
->> I'm
->> thinking it would make the usage clearer, improve consistency (we would have
->> qemu_params and kvmtool_params, instead of extra_params and kvmtool_params), and
->> remove any confusions regarding when they are used (I can see someone thinking
->> that extra_params are used all the time, and are appended to kvmtool_params when
->> --target=kvmtool). On the other hand, this could be problematic for people using
->> out-of-tree scripts that parse the unittest.cfg file for whatever reason (are
->> there people that do that?).
-> I'm not as worried about that as about people using out-of-tree
-> unittests.cfg files that will break when the 'extra_params' field
-> disappears. That's why I suggested to make 'extra_params' an alias.
+[ Upstream commit 5492886c14744d239e87f1b0b774b5a341e755cc ]
 
-I'm sorry, but I'm still having trouble parsing what alias means in this context.
-Do you mean keep extra_params for current tests, encourage qemu_params for new
-tests, document that they mean the same thing and going forward qemu_params should
-be used?
+In case of a jump label print the real address of the piece of code
+where a mismatch was detected. This is right before the system panics,
+so there is nothing revealed.
 
-Thanks,
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/kernel/jump_label.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Alex
+diff --git a/arch/s390/kernel/jump_label.c b/arch/s390/kernel/jump_label.c
+index ab584e8e3527..9156653b56f6 100644
+--- a/arch/s390/kernel/jump_label.c
++++ b/arch/s390/kernel/jump_label.c
+@@ -36,7 +36,7 @@ static void jump_label_bug(struct jump_entry *entry, struct insn *expected,
+ 	unsigned char *ipe = (unsigned char *)expected;
+ 	unsigned char *ipn = (unsigned char *)new;
+ 
+-	pr_emerg("Jump label code mismatch at %pS [%p]\n", ipc, ipc);
++	pr_emerg("Jump label code mismatch at %pS [%px]\n", ipc, ipc);
+ 	pr_emerg("Found:    %6ph\n", ipc);
+ 	pr_emerg("Expected: %6ph\n", ipe);
+ 	pr_emerg("New:      %6ph\n", ipn);
+-- 
+2.30.2
 
->
-> Thanks,
-> drew
->
->> Thanks,
->>
->> Alex
->>
->>> Thanks,
->>> drew
->>>
