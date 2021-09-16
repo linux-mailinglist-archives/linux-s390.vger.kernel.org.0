@@ -2,159 +2,150 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C952D40D531
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Sep 2021 10:59:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B1AB40D64A
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Sep 2021 11:34:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235020AbhIPJAn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Sep 2021 05:00:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:28012 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232335AbhIPJAm (ORCPT
+        id S236091AbhIPJfL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Sep 2021 05:35:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64924 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235542AbhIPJfH (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Sep 2021 05:00:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1631782761;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=t2Z/Tfws0/ZPIkBTJwi6vBLPKuMktwH7w8C6L94eoVM=;
-        b=Zlm7NHIoNZHJfmo97uyp8A+Leymoeqvpi3KHAw252NO+dU04+1FMz+2sP+BvCVx3e76/XT
-        2mXeiNxPKQHQDddOsA5bn1J03noKM8FvjGjxC/vcFtSayyFFG1zfCMyIQo7UmhtB74p/Mn
-        E3MrNvW+J7AxPwgt00StvcBLyx0dJ1Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-54-GlU6ZhEVPs-lOiN55UKk5A-1; Thu, 16 Sep 2021 04:59:19 -0400
-X-MC-Unique: GlU6ZhEVPs-lOiN55UKk5A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24861100CCC1;
-        Thu, 16 Sep 2021 08:59:18 +0000 (UTC)
-Received: from localhost (unknown [10.39.192.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B554960FDD;
-        Thu, 16 Sep 2021 08:59:17 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     bfu@redhat.com, Vineeth Vijayan <vneethv@linux.ibm.com>
-Subject: Re: [PATCH 1/1] virtio/s390: fix vritio-ccw device teardown
-In-Reply-To: <20210915215742.1793314-1-pasic@linux.ibm.com>
-Organization: Red Hat GmbH
-References: <20210915215742.1793314-1-pasic@linux.ibm.com>
-User-Agent: Notmuch/0.32.1 (https://notmuchmail.org)
-Date:   Thu, 16 Sep 2021 10:59:15 +0200
-Message-ID: <87pmt8hp5o.fsf@redhat.com>
+        Thu, 16 Sep 2021 05:35:07 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.0.43) with SMTP id 18G9GfDV006316;
+        Thu, 16 Sep 2021 05:33:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=r9OG6TSx7GqHi2jrRlhAwzVd7/0hn51XFl8RIG36ITo=;
+ b=Ro5EGIhIOjhdYpE0sbVP/1i9Ok+zkbME2sEQsfsnLuTaf5Q6hMFmoEw6W18GoKC14/no
+ BigbapGIoueCdBNqGtnWs0nNXUIuC8hu2R9HnPa/V/JfbMRLx0FZrGcm54RGSf96jtWn
+ BhQ6NdRdztA4lfoulAxyxFjdqJeg3l++8r+AnqvC28bkrK/KZTRC3d9gS0iXfSClQC7J
+ G0MZ2wyjsUmsDQhQGUkr1CaXa5CNYh2fY+nJay5ZRpykBbM6gdspXAUZOXQnwPMGz/e6
+ fwfx2ozsJEXdaCk3pKFGBCIkUhNQGiS+1sPtQd0y/THKUWs0dqgEFeI/RDa/eN+L0V8R 5g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3b3xguxtqv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Sep 2021 05:33:44 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 18G97NJZ024372;
+        Thu, 16 Sep 2021 05:33:43 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3b3xguxtq7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Sep 2021 05:33:43 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18G9Wttd012324;
+        Thu, 16 Sep 2021 09:33:41 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 3b0m3a05s1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Sep 2021 09:33:41 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18G9XbkV57540946
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Sep 2021 09:33:37 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5D69B42056;
+        Thu, 16 Sep 2021 09:33:37 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 027D04204C;
+        Thu, 16 Sep 2021 09:33:37 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Sep 2021 09:33:36 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linas Vepstas <linasvepstas@gmail.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-pci@vger.kernel.org, Matthew Rosato <mjrosato@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Subject: [PATCH v2 0/4] s390/pci: automatic error recovery
+Date:   Thu, 16 Sep 2021 11:33:32 +0200
+Message-Id: <20210916093336.2895602-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: a7llqadT7YQjRrQz2mjySxZ3-yR-t2il
+X-Proofpoint-ORIG-GUID: oEwaT8bDkHdyLlRCVyS9IOeYGRwKqmg8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.687,Hydra:6.0.235,FMLib:17.0.607.475
+ definitions=2020-10-13_15,2020-10-13_02,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ impostorscore=0 malwarescore=0 clxscore=1015 spamscore=0 mlxlogscore=806
+ adultscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109030001 definitions=main-2109160019
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Sep 15 2021, Halil Pasic <pasic@linux.ibm.com> wrote:
+Hello,
 
-> Since commit 48720ba56891 ("virtio/s390: use DMA memory for ccw I/O and
-> classic notifiers") we were supposed to make sure that
-> virtio_ccw_release_dev() completes before the ccw device, and the
-> attached dma pool are torn down, but unfortunately we did not.
-> Before that commit it used to be OK to delay cleaning up the memory
-> allocated by virtio-ccw indefinitely (which isn't really intuitive for
-> guys used to destruction happens in reverse construction order).
->
-> To accomplish this let us take a reference on the ccw device before we
-> allocate the dma_area and give it up after dma_area was freed.
->
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-> Fixes: 48720ba56891 ("virtio/s390: use DMA memory for ccw I/O and
-> classic notifiers")
-> Reported-by: bfu@redhat.com
-> ---
->
-> I'm not certain this is the only hot-unplug and teardonw related problem
-> with virtio-ccw.
->
-> Some things that are not perfectly clear to me:
-> * What would happen if we observed an hot-unplug while we are doing
->   wait_event() in ccw_io_helper()? Do we get stuck? I don't thin we
->   are guaranteed to receive an irq for a subchannel that is gone.
+This series implements automatic error recovery for PCI devices on s390
+following the scheme outlined at Documentation/PCI/pci-error-recovery.rst
+it applies on top of currenct v5.15-rc1.
 
-Hm. I think we may need to do a wake_up during remove handling.
+The patches are almost completely s390 specific except for one patch
+exporting existing functionality for use by arch/s390/pci/ code. Nevertheless
+I would appreciate any feedback. This is down from two common code changes in
+the first version of this series.
 
-> * cdev->online seems to be manipulated under cdev->ccwlock, but
->   in virtio_ccw_remove() we look at it to decide should we clean up
->   or not. What is the idea there? I guess we want to avoid doing
->   if nothing is there or twice. But I don't understand how stuff
->   interlocks.
+The outline of the patches is as follows:
 
-We only created the virtio device when we onlined the ccw device. Do you
-have a better idea how to check for that? (And yes, I'm not sure the
-locking is correct.)
+Patch 1 and 2 add s390 specific code implementing a reset mechanism that
+takes the PCI function out of the platform specific error state.
 
-> * Can virtio_ccw_remove() get called while !cdev->online and 
->   virtio_ccw_online() is running on a different cpu? If yes, what would
->   happen then?
+Patch 3 "PCI: Export pci_dev_lock()" is basically an extension to commit
+e3a9b1212b9d ("PCI: Export pci_dev_trylock() and pci_dev_unlock()") which
+already exported pci_dev_trylock(). In the final patch we make use of
+pci_dev_lock() to wait for any other exclusive uses of the pdev to be finished
+before starting recovery.
 
-All of the remove/online/... etc. callbacks are invoked via the ccw bus
-code. We have to trust that it gets it correct :) (Or have the common
-I/O layer maintainers double-check it.)
+Finally Patch 4 implements the recovery flow as part of the existing s390
+specific PCI availability and error event mechanism. Previously the error event
+handler only set pdev->error_state and required manual intervention to make the
+device usable again. Now we handle the case where firmware has already reset
+a PCI function after an error was encountered informing the OS that it should
+be ready to be used again. In that case if the driver supports error recovery
+we use it to transparently reset the device or simply take it out of the error
+state and then if possible let the driver resume operations.
 
->  
-> The main addresse of these questions is Conny ;).
->
-> An alternative to this approach would be to inc and dec the refcount
-> in ccw_device_dma_zalloc() and ccw_device_dma_free() respectively.
+Note that the same event is also issued by the hypervisor if the function was
+previously taken into a service mode for example for firmware upgrade via the
+hypervisor and is now ready to be used again.
 
-Yeah, I also thought about that. This would give us more get/put
-operations, but might be the safer option.
+Changes since v1:
+- Dropped the patch moving pci_dev_is_added(), we can rely on pdev->driver
+  being unset for a device that has already been removed or not yet
+  initialized. While I believe pci_dev_is_added() would still be a cleaner
+  check we need to check for a bound driver anyway and that is sufficient.
+- Adapted the hotplug_slot_ops::reset_slot() signature to current upstream
+  taking a bool instead of an int
+- Added a missing parameter documentation and reworded some comments
+- Reworded some debug/info messages
 
->
-> ---
->  drivers/s390/virtio/virtio_ccw.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-> index d35e7a3f7067..99141df3259b 100644
-> --- a/drivers/s390/virtio/virtio_ccw.c
-> +++ b/drivers/s390/virtio/virtio_ccw.c
-> @@ -1006,10 +1006,12 @@ static void virtio_ccw_release_dev(struct device *_d)
->  {
->  	struct virtio_device *dev = dev_to_virtio(_d);
->  	struct virtio_ccw_device *vcdev = to_vc_device(dev);
-> +	struct ccw_device *cdev = READ_ONCE(vcdev->cdev);
->  
->  	ccw_device_dma_free(vcdev->cdev, vcdev->dma_area,
->  			    sizeof(*vcdev->dma_area));
->  	kfree(vcdev);
-> +	put_device(&cdev->dev);
->  }
->  
->  static int irb_is_error(struct irb *irb)
-> @@ -1262,6 +1264,7 @@ static int virtio_ccw_online(struct ccw_device *cdev)
->  	struct virtio_ccw_device *vcdev;
->  	unsigned long flags;
->  
-> +	get_device(&cdev->dev);
->  	vcdev = kzalloc(sizeof(*vcdev), GFP_KERNEL);
->  	if (!vcdev) {
->  		dev_warn(&cdev->dev, "Could not get memory for virtio\n");
-> @@ -1315,6 +1318,7 @@ static int virtio_ccw_online(struct ccw_device *cdev)
->  				    sizeof(*vcdev->dma_area));
->  	}
->  	kfree(vcdev);
-> +	put_device(&cdev->dev);
->  	return ret;
->  }
->  
->
-> base-commit: 3ca706c189db861b2ca2019a0901b94050ca49d8
-> -- 
-> 2.25.1
+Thanks,
+Niklas Schnelle
+
+Niklas Schnelle (4):
+  s390/pci: refresh function handle in iomap
+  s390/pci: implement reset_slot for hotplug slot
+  PCI: Export pci_dev_lock()
+  s390/pci: implement minimal PCI error recovery
+
+ arch/s390/include/asm/pci.h        |   6 +-
+ arch/s390/pci/pci.c                | 143 +++++++++++++++++++++-
+ arch/s390/pci/pci_event.c          | 188 ++++++++++++++++++++++++++++-
+ arch/s390/pci/pci_insn.c           |   4 +-
+ arch/s390/pci/pci_irq.c            |   9 ++
+ drivers/pci/hotplug/s390_pci_hpc.c |  24 ++++
+ drivers/pci/pci.c                  |   3 +-
+ include/linux/pci.h                |   1 +
+ 8 files changed, 366 insertions(+), 12 deletions(-)
+
+-- 
+2.25.1
 
