@@ -2,142 +2,138 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C0A34197E0
-	for <lists+linux-s390@lfdr.de>; Mon, 27 Sep 2021 17:27:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3ECD419852
+	for <lists+linux-s390@lfdr.de>; Mon, 27 Sep 2021 17:59:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235166AbhI0P2r (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 Sep 2021 11:28:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58442 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235117AbhI0P2r (ORCPT
+        id S235276AbhI0QBE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 Sep 2021 12:01:04 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21064 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235119AbhI0QBB (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 27 Sep 2021 11:28:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632756429;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=L4NMWxT3cfbxRVFFnxXJnEGfN7af8pHyx3dvW9V5X/8=;
-        b=bHkVPvezixlbP2QVCdFHGW69kKeRn6Zafh8ck1eoS0qiFENaa8doTbaJNoLMSlLI5d2D5b
-        7iQihDt/0kJ1BGJhp60TgfzPiFIqV22AxH5ZgGitDMpkYKLH5tIa34FSZmKcw0nFivHHF7
-        k3p0acee3aCPONsHBe69gBMHkwJT9TM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-185-B31bVlGNMDe3hwHl89igDw-1; Mon, 27 Sep 2021 11:27:00 -0400
-X-MC-Unique: B31bVlGNMDe3hwHl89igDw-1
-Received: by mail-wr1-f72.google.com with SMTP id c8-20020adfef48000000b00160646ed62cso2629913wrp.18
-        for <linux-s390@vger.kernel.org>; Mon, 27 Sep 2021 08:27:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=L4NMWxT3cfbxRVFFnxXJnEGfN7af8pHyx3dvW9V5X/8=;
-        b=DMJDPbn83r30lPYQuj68vLrnAm0gHIDrMs+O6Yy7sPcZ6xCJRbpWC2bd4OablRB5Sg
-         oE22IgaiLbBLJ9fIKuvR+kxMZVwcX2+DpOvxgiyPIEvQG9NAltJQySJOkcm3uPBVcYFV
-         gskiKs+5sVpSmWp7bwVBeslHzY+qAEm6pSlbeFg5VmuC3XYOe7ViWXBz7J1Q0gN7erdk
-         Jn9Tnw2rUWFhBbmhFBsVYcs98mkLPigOKyogK6MI9EueoIvMpnvy5FJhY/iARvsR/2of
-         Ba9xbYqMg1dgygFKy0UVEXxR312OX2f3nNq1DLvcL8MOWSbCwaOQSWXahicZW90X9zbz
-         WtJg==
-X-Gm-Message-State: AOAM531Ru2P5wpNci7PfTiyiDRN1JezJOOtiAogVshVRk3wkNbA+qirt
-        D2ACKaxnv2Ezt2K4cxJe5JZ1QNpIN0BtUZkkXzJGsMSQ0fOEDZ98xTwiN+qgGm3s8yA4RaMHPPi
-        uPZbHcnWgbyv6okBxFDaDow==
-X-Received: by 2002:a05:600c:220e:: with SMTP id z14mr531309wml.84.1632756419164;
-        Mon, 27 Sep 2021 08:26:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJynSE4/E24J38JDzGwXrRxW5fcEgu/rr7EQCWyK0XK829+8JlB1tXqSvVH1kA6JoNxSkjvbdQ==
-X-Received: by 2002:a05:600c:220e:: with SMTP id z14mr531292wml.84.1632756419001;
-        Mon, 27 Sep 2021 08:26:59 -0700 (PDT)
-Received: from thuth.remote.csb (p549bb2bd.dip0.t-ipconnect.de. [84.155.178.189])
-        by smtp.gmail.com with ESMTPSA id c9sm15606090wmb.41.2021.09.27.08.26.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Sep 2021 08:26:58 -0700 (PDT)
-Subject: Re: [kvm-unit-tests PATCH 3/9] s390x: uv-host: Fence a destroy cpu
- test on z15
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     david@redhat.com, linux-s390@vger.kernel.org, seiden@linux.ibm.com,
-        imbrenda@linux.ibm.com
-References: <20210922071811.1913-1-frankja@linux.ibm.com>
- <20210922071811.1913-4-frankja@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <8035a911-4a76-50ed-cb07-edce48abdb9c@redhat.com>
-Date:   Mon, 27 Sep 2021 17:26:57 +0200
+        Mon, 27 Sep 2021 12:01:01 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18REKx5Q007041;
+        Mon, 27 Sep 2021 11:59:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=TSI1+pBdww/acHjoBgYoNmQQaxs1wAUJXY3RfJQrd7A=;
+ b=amt2qfUGwT+2E2zLcmDghUIyhxCQhkVnVF2EzL4oypVb4NdL0vPdMWUrjRFoPchzEduz
+ ngKwei3TB58D6lNH4GsHOsEXI+mC4A3mCuQVCID8knsPCBty9lCvPOVdPb1UZYZiiQJ6
+ QX2+t7HqkHleXlBgkATeiJmvRStSgS+0gar1QD+IbQqcz5HmzBKQga/m92RhH4E65ZW8
+ dkxVQCaPaB5uwyC3Yrs41BJRpKtbsNq9fN3iyNFpWJPJcM86rbpymCeF/lsbEG4fj706
+ /hoRrQLlvXdyHGV51UDuQXz+SeGC/Il5+80aV9VwgjU2ALnXZ+daQ3cKIh+eLGKIrBY7 sg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bagryr87u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Sep 2021 11:59:02 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 18RFx2Rf022917;
+        Mon, 27 Sep 2021 11:59:02 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bagryr871-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Sep 2021 11:59:02 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18RFvGDw021450;
+        Mon, 27 Sep 2021 15:58:59 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06fra.de.ibm.com with ESMTP id 3b9u1jnh00-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Sep 2021 15:58:59 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18RFwtWW39715262
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 Sep 2021 15:58:55 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B9F744C044;
+        Mon, 27 Sep 2021 15:58:55 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE30B4C052;
+        Mon, 27 Sep 2021 15:58:54 +0000 (GMT)
+Received: from li-43c5434c-23b8-11b2-a85c-c4958fb47a68.ibm.com (unknown [9.171.4.236])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 27 Sep 2021 15:58:54 +0000 (GMT)
+Subject: Re: [PATCH RESEND bpf] bpf, s390: Fix potential memory leak about
+ jit_data
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc:     Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+References: <1632726374-7154-1-git-send-email-yangtiezhu@loongson.cn>
+ <e9665315bc2f244d50d026863476e72e3d9b8067.camel@linux.ibm.com>
+ <c02febfc-03e6-848a-8fb0-5bd6802c1869@iogearbox.net>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Message-ID: <0cc48f4d-f6c0-ab11-64b0-bc219fbfe777@de.ibm.com>
+Date:   Mon, 27 Sep 2021 17:58:54 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <20210922071811.1913-4-frankja@linux.ibm.com>
+In-Reply-To: <c02febfc-03e6-848a-8fb0-5bd6802c1869@iogearbox.net>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 5dfteAHKWgX1N3leXmfyQCOEMZgLKMOz
+X-Proofpoint-GUID: Yf2UnylgHMRxoqLdR8DUKBXDi3U7i7tI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-09-27_06,2021-09-24_02,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ malwarescore=0 mlxlogscore=999 bulkscore=0 lowpriorityscore=0
+ suspectscore=0 clxscore=1011 priorityscore=1501 adultscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109230001 definitions=main-2109270106
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 22/09/2021 09.18, Janosch Frank wrote:
-> Firmware will not give us the expected return code on z15 so let's
-> fence it for the z15 machine generation.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->   lib/s390x/asm/arch_def.h | 14 ++++++++++++++
->   s390x/uv-host.c          | 11 +++++++----
->   2 files changed, 21 insertions(+), 4 deletions(-)
-> 
-> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-> index aa80d840..c8d2722a 100644
-> --- a/lib/s390x/asm/arch_def.h
-> +++ b/lib/s390x/asm/arch_def.h
-> @@ -219,6 +219,20 @@ static inline unsigned short stap(void)
->   	return cpu_address;
->   }
->   
-> +#define MACHINE_Z15A	0x8561
-> +#define MACHINE_Z15B	0x8562
-> +
-> +static inline uint16_t get_machine_id(void)
-> +{
-> +	uint64_t cpuid;
-> +
-> +	asm volatile("stidp %0" : "=Q" (cpuid));
-> +	cpuid = cpuid >> 16;
-> +	cpuid &= 0xffff;
-> +
-> +	return cpuid;
-> +}
-> +
->   static inline int tprot(unsigned long addr)
->   {
->   	int cc;
-> diff --git a/s390x/uv-host.c b/s390x/uv-host.c
-> index 66a11160..5e351120 100644
-> --- a/s390x/uv-host.c
-> +++ b/s390x/uv-host.c
-> @@ -111,6 +111,7 @@ static void test_config_destroy(void)
->   static void test_cpu_destroy(void)
->   {
->   	int rc;
-> +	uint16_t machineid = get_machine_id();
->   	struct uv_cb_nodata uvcb = {
->   		.header.len = sizeof(uvcb),
->   		.header.cmd = UVC_CMD_DESTROY_SEC_CPU,
-> @@ -125,10 +126,12 @@ static void test_cpu_destroy(void)
->   	       "hdr invalid length");
->   	uvcb.header.len += 8;
->   
-> -	uvcb.handle += 1;
-> -	rc = uv_call(0, (uint64_t)&uvcb);
-> -	report(rc == 1 && uvcb.header.rc == UVC_RC_INV_CHANDLE, "invalid handle");
-> -	uvcb.handle -= 1;
-> +	if (machineid != MACHINE_Z15A && machineid != MACHINE_Z15B) {
-> +		uvcb.handle += 1;
-> +		rc = uv_call(0, (uint64_t)&uvcb);
-> +		report(rc == 1 && uvcb.header.rc == UVC_RC_INV_CHANDLE, "invalid handle");
-> +		uvcb.handle -= 1;
-> +	}
 
-So this is a bug in the firmware? Any chance that it will still get fixed 
-for the z15? If so, would it make sense to turn this into a report_xfail() 
-instead?
 
-  Thomas
+Am 27.09.21 um 17:26 schrieb Daniel Borkmann:
+> On 9/27/21 1:33 PM, Ilya Leoshkevich wrote:
+>> On Mon, 2021-09-27 at 15:06 +0800, Tiezhu Yang wrote:
+>>> Make sure to free jit_data through kfree() in the error path.
+>>>
+>>> Fixes: 1c8f9b91c456 ("bpf: s390: add JIT support for multi-function
+>>> programs")
+>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>> ---
+>>>
+>>> RESEND due to the following reason:
+>>> [Can not connect to recipient's server because of unstable
+>>> network or firewall filter. rcpt handle timeout, last handle
+>>> info: Can not connect to vger.kernel.org]
+>>>
+>>>   arch/s390/net/bpf_jit_comp.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> Nice catch, thanks!
+>>
+>> Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+
+Makes sense.
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+
+> 
+> Given s390, I presume this would be routed to Linus via Heiko/Vasily?
+
+Yes, applied to the s390 tree.
+
+Interestingly enough b4 cannot find the patch email on lore.
+Looks like Tiezhu Yang has indeed connection issues with vger.
+CC Konstantin, in case he knows something.
 
