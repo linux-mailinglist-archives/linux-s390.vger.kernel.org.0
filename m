@@ -2,122 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BAA2541A974
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Sep 2021 09:16:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44C2941AAA4
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Sep 2021 10:33:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239182AbhI1HRl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 28 Sep 2021 03:17:41 -0400
-Received: from pegase2.c-s.fr ([93.17.235.10]:44487 "EHLO pegase2.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239142AbhI1HRk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 28 Sep 2021 03:17:40 -0400
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-        by localhost (Postfix) with ESMTP id 4HJW4w1csMz9sY4;
-        Tue, 28 Sep 2021 09:16:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-        by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dsEG85IsB9d9; Tue, 28 Sep 2021 09:16:00 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase2.c-s.fr (Postfix) with ESMTP id 4HJW4w0hDKz9sXy;
-        Tue, 28 Sep 2021 09:16:00 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 01A628B775;
-        Tue, 28 Sep 2021 09:16:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id YYYmKCpsbY4J; Tue, 28 Sep 2021 09:15:59 +0200 (CEST)
-Received: from PO20335.IDSI0.si.c-s.fr (unknown [192.168.203.48])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A26C08B763;
-        Tue, 28 Sep 2021 09:15:59 +0200 (CEST)
-Received: from PO20335.IDSI0.si.c-s.fr (localhost [127.0.0.1])
-        by PO20335.IDSI0.si.c-s.fr (8.16.1/8.16.1) with ESMTPS id 18S7FnZ51452321
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Tue, 28 Sep 2021 09:15:49 +0200
-Received: (from chleroy@localhost)
-        by PO20335.IDSI0.si.c-s.fr (8.16.1/8.16.1/Submit) id 18S7Fnpb1452320;
-        Tue, 28 Sep 2021 09:15:49 +0200
-X-Authentication-Warning: PO20335.IDSI0.si.c-s.fr: chleroy set sender to christophe.leroy@csgroup.eu using -f
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-To:     Andrew Morton <akpm@linux-foundation.org>, arnd@arndb.de
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arch@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Subject: [PATCH v2 4/4] s390: Use generic version of arch_is_kernel_initmem_freed()
-Date:   Tue, 28 Sep 2021 09:15:37 +0200
-Message-Id: <d4a15dc0e699e6a60858bff4d183a9b1aea90433.1632813331.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <ffa99e8e91e756b081427b27e408f275b7d43df7.1632813331.git.christophe.leroy@csgroup.eu>
-References: <ffa99e8e91e756b081427b27e408f275b7d43df7.1632813331.git.christophe.leroy@csgroup.eu>
+        id S239601AbhI1Iep (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 Sep 2021 04:34:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40582 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S239549AbhI1Ieo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 28 Sep 2021 04:34:44 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18S7ldmW020770;
+        Tue, 28 Sep 2021 04:33:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=QEXlZMIC6iM1yz4vT8O7ipT4CKWuXJp53oPJPNaf50E=;
+ b=pfSC0LW5sz1c/YbfXQU2pvQDh9XbiBfwOOJ0bq4D7+CTOyr1iX79zahWtWWCziM2T73J
+ GVuaTDscvq4QDJgcnw6JVVYRZPzoLr8vfe6ceJVRMzm2oL8BUh5lPTFOApV/GA2FbvDE
+ /0ycT8CjlOgkbfo7HBca9xuc/dfvo3vLI8A/wl0Ip5nGq1lTW9/tZ8k2Fl9Q4AT/F5wo
+ ilug3AskQF0fxFEhB74OYpufz7LTck4WZIon/YaGxoePSmQk6QfiI6xl0yGDamTTvTmt
+ le+gUMrCwJSIExv1kQVLV4ix+DjtXOcNYdlMxTqHcRBNxs9QsA4SdTqUSA9XGshIYEzZ ug== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bbxyfgx0b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Sep 2021 04:33:01 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18S8RqqU015125;
+        Tue, 28 Sep 2021 08:32:59 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 3b9ud9uj30-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Sep 2021 08:32:58 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18S8RrqM55640410
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Sep 2021 08:27:53 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C78E3AE067;
+        Tue, 28 Sep 2021 08:32:52 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 83D0EAE058;
+        Tue, 28 Sep 2021 08:32:52 +0000 (GMT)
+Received: from osiris (unknown [9.145.163.77])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 28 Sep 2021 08:32:52 +0000 (GMT)
+Date:   Tue, 28 Sep 2021 10:32:51 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH] s390/sclp_vt220: fix unused function warning
+Message-ID: <YVLTM38zdOZJKdmI@osiris>
+References: <20210927215647.11506-1-rdunlap@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210927215647.11506-1-rdunlap@infradead.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: -UkWfGIifByPnIyC8awmE9iUr5LCyyeR
+X-Proofpoint-ORIG-GUID: -UkWfGIifByPnIyC8awmE9iUr5LCyyeR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-09-28_04,2021-09-28_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 spamscore=0 clxscore=1015 lowpriorityscore=0
+ impostorscore=0 mlxscore=0 priorityscore=1501 adultscore=0 phishscore=0
+ bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109230001 definitions=main-2109280050
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Generic version of arch_is_kernel_initmem_freed() now does the same
-as s390 version.
+On Mon, Sep 27, 2021 at 02:56:47PM -0700, Randy Dunlap wrote:
+> When CONFIG_SCLP_VT220_TTY=y and CONFIG_SCLP_VT220_CONSOLE is not set:
+> 
+> ../drivers/s390/char/sclp_vt220.c:771:13: warning: '__sclp_vt220_flush_buffer' defined but not used [-Wunused-function]
+>   771 | static void __sclp_vt220_flush_buffer(void)
+> 
+> so move this function inside the #ifdef block where it is used.
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: linux-s390@vger.kernel.org
+> ---
+> Sorry, I can't determine what the Fixes: tag for this should be
+> (missing some git fu).
 
-Remove the s390 version.
+It's not worth spending time to figure this out.
 
-Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
-v2: No change
----
- arch/s390/include/asm/sections.h | 12 ------------
- arch/s390/mm/init.c              |  3 ---
- 2 files changed, 15 deletions(-)
-
-diff --git a/arch/s390/include/asm/sections.h b/arch/s390/include/asm/sections.h
-index 85881dd48022..3fecaa4e8b74 100644
---- a/arch/s390/include/asm/sections.h
-+++ b/arch/s390/include/asm/sections.h
-@@ -2,20 +2,8 @@
- #ifndef _S390_SECTIONS_H
- #define _S390_SECTIONS_H
- 
--#define arch_is_kernel_initmem_freed arch_is_kernel_initmem_freed
--
- #include <asm-generic/sections.h>
- 
--extern bool initmem_freed;
--
--static inline int arch_is_kernel_initmem_freed(unsigned long addr)
--{
--	if (!initmem_freed)
--		return 0;
--	return addr >= (unsigned long)__init_begin &&
--	       addr < (unsigned long)__init_end;
--}
--
- /*
-  * .boot.data section contains variables "shared" between the decompressor and
-  * the decompressed kernel. The decompressor will store values in them, and
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index a04faf49001a..8c6f258a6183 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -58,8 +58,6 @@ unsigned long empty_zero_page, zero_page_mask;
- EXPORT_SYMBOL(empty_zero_page);
- EXPORT_SYMBOL(zero_page_mask);
- 
--bool initmem_freed;
--
- static void __init setup_zero_pages(void)
- {
- 	unsigned int order;
-@@ -214,7 +212,6 @@ void __init mem_init(void)
- 
- void free_initmem(void)
- {
--	initmem_freed = true;
- 	__set_memory((unsigned long)_sinittext,
- 		     (unsigned long)(_einittext - _sinittext) >> PAGE_SHIFT,
- 		     SET_MEMORY_RW | SET_MEMORY_NX);
--- 
-2.31.1
-
+Applied, thanks!
