@@ -2,142 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E12C41D87B
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Sep 2021 13:13:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C741D41D8B1
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Sep 2021 13:26:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350330AbhI3LOL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Sep 2021 07:14:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49876 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1350299AbhI3LOL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Sep 2021 07:14:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633000348;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mamYV94DvaSHcTpxY1jybCBi3DFQDGd0SIaH6v4W57c=;
-        b=ePej418kHlo0VYsUXlCcCmVc+XsfGrewGGdYukXQBUEJyOr2xEN00DG3nSeTqyq6j7++yF
-        w4QEI5szjf9yX/02FIXQOVQH8hlwxcekrXqI7G3ed6ffqCF50K0raINjrj6RXXxq1bWJWU
-        Lb6F+mlFoFXWlRuo7RS4e+jF75qvlpE=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-311-RE49zKSKP-CWtyWsHRQb-w-1; Thu, 30 Sep 2021 07:12:27 -0400
-X-MC-Unique: RE49zKSKP-CWtyWsHRQb-w-1
-Received: by mail-ed1-f72.google.com with SMTP id j26-20020a508a9a000000b003da84aaa5c5so5874524edj.11
-        for <linux-s390@vger.kernel.org>; Thu, 30 Sep 2021 04:12:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mamYV94DvaSHcTpxY1jybCBi3DFQDGd0SIaH6v4W57c=;
-        b=I1gmSqBYAUn3nCGC9BlY0ZYirdC5AgRPYzTziajAujatBpk0Vsy8P5sH9SahJ1Uo5r
-         NIpbIiy/dne5vx/ET2OxMNy+meqICLt/6qN8v8/t4Mak2nTgPZjTt1QgJnjpVTk7tzTc
-         eTTnpUMI4HvHGRUtPOHgpclxQ9U96eScISqGYtwsTFgojmTSSohLeg20MOM/XnT7oB/D
-         ybEvnZ+Oy5Qsr9z4NjFuruNIuMsEBZCIRCK79IJqgjQMQ2aqTqIkoRFqDlhR+EiCZL4f
-         EfG8wEhllRzJWGOS7vMsXAvC8cjOSljd7/I/eIaYmcyK+BdNP/py4yD9V5Qmv4zSW4VL
-         HqRA==
-X-Gm-Message-State: AOAM531yB1iut2vFLwvYqM0wlWBvjog/KMzY/uRx+NojgD4CA0mdYO55
-        qDNCypHk3R+2kn+1NAcH/vkZYYSTcVeVZf4j8fWYC5hwgqvEZuvkBtAnuBOhHhu4g0JGG72m41n
-        4ExgLsXWdAMiSdZY0SQygFQ==
-X-Received: by 2002:a05:6402:b12:: with SMTP id bm18mr6097152edb.199.1633000345845;
-        Thu, 30 Sep 2021 04:12:25 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxtq8ej/t/V3JAgc3SlMjXpl9ktAa0aZIENmSOuBoeE8pGgLamCebSOneonGrTqyR1oxhTg6w==
-X-Received: by 2002:a05:6402:b12:: with SMTP id bm18mr6097132edb.199.1633000345651;
-        Thu, 30 Sep 2021 04:12:25 -0700 (PDT)
-Received: from redhat.com ([2.55.134.220])
-        by smtp.gmail.com with ESMTPSA id s17sm1300678edd.47.2021.09.30.04.12.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Sep 2021 04:12:24 -0700 (PDT)
-Date:   Thu, 30 Sep 2021 07:12:21 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        Xie Yongji <xieyongji@bytedance.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, markver@us.ibm.com,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [RFC PATCH 1/1] virtio: write back features before verify
-Message-ID: <20210930070444-mutt-send-email-mst@kernel.org>
-References: <20210930012049.3780865-1-pasic@linux.ibm.com>
+        id S1350469AbhI3L1f (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Sep 2021 07:27:35 -0400
+Received: from pegase2.c-s.fr ([93.17.235.10]:40245 "EHLO pegase2.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1350480AbhI3L1a (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 30 Sep 2021 07:27:30 -0400
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+        by localhost (Postfix) with ESMTP id 4HKrX61cK6z9sX8;
+        Thu, 30 Sep 2021 13:25:42 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+        by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id F5X513tfRdMv; Thu, 30 Sep 2021 13:25:42 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase2.c-s.fr (Postfix) with ESMTP id 4HKrX55Q1dz9sX3;
+        Thu, 30 Sep 2021 13:25:41 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A2DDC8B773;
+        Thu, 30 Sep 2021 13:25:41 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id SqMd7MWu2jJd; Thu, 30 Sep 2021 13:25:41 +0200 (CEST)
+Received: from PO20335.IDSI0.si.c-s.fr (unknown [192.168.203.149])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5E1DE8B763;
+        Thu, 30 Sep 2021 13:25:41 +0200 (CEST)
+Received: from PO20335.IDSI0.si.c-s.fr (localhost [127.0.0.1])
+        by PO20335.IDSI0.si.c-s.fr (8.16.1/8.16.1) with ESMTPS id 18UBO8dO1558818
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Thu, 30 Sep 2021 13:24:09 +0200
+Received: (from chleroy@localhost)
+        by PO20335.IDSI0.si.c-s.fr (8.16.1/8.16.1/Submit) id 18UBO7dr1558816;
+        Thu, 30 Sep 2021 13:24:07 +0200
+X-Authentication-Warning: PO20335.IDSI0.si.c-s.fr: chleroy set sender to christophe.leroy@csgroup.eu using -f
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+To:     Andrew Morton <akpm@linux-foundation.org>, arnd@arndb.de
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arch@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: [PATCH v3 1/4] mm: Create a new system state and fix core_kernel_text()
+Date:   Thu, 30 Sep 2021 13:23:43 +0200
+Message-Id: <9ecfdee7dd4d741d172cb93ff1d87f1c58127c9a.1633001016.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210930012049.3780865-1-pasic@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 03:20:49AM +0200, Halil Pasic wrote:
-> This patch fixes a regression introduced by commit 82e89ea077b9
-> ("virtio-blk: Add validation for block size in config space") and
-> enables similar checks in verify() on big endian platforms.
-> 
-> The problem with checking multi-byte config fields in the verify
-> callback, on big endian platforms, and with a possibly transitional
-> device is the following. The verify() callback is called between
-> config->get_features() and virtio_finalize_features(). That we have a
-> device that offered F_VERSION_1 then we have the following options
-> either the device is transitional, and then it has to present the legacy
-> interface, i.e. a big endian config space until F_VERSION_1 is
-> negotiated, or we have a non-transitional device, which makes
-> F_VERSION_1 mandatory, and only implements the non-legacy interface and
-> thus presents a little endian config space. Because at this point we
-> can't know if the device is transitional or non-transitional, we can't
-> know do we need to byte swap or not.
+core_kernel_text() considers that until system_state in at least
+SYSTEM_RUNNING, init memory is valid.
 
-Hmm which transport does this refer to?
-Distinguishing between legacy and modern drivers is transport
-specific.  PCI presents
-legacy and modern at separate addresses so distinguishing
-between these two should be no trouble.
-Channel i/o has versioning so same thing?
+But init memory is freed a few lines before setting SYSTEM_RUNNING,
+so we have a small period of time when core_kernel_text() is wrong.
 
-> The virtio spec explicitly states that the driver MAY read config
-> between reading and writing the features so saying that first accessing
-> the config before feature negotiation is done is not an option. The
-> specification ain't clear about setting the features multiple times
-> before FEATURES_OK, so I guess that should be fine.
-> 
-> I don't consider this patch super clean, but frankly I don't think we
-> have a ton of options. Another option that may or man not be cleaner,
-> but is also IMHO much uglier is to figure out whether the device is
-> transitional by rejecting _F_VERSION_1, then resetting it and proceeding
-> according tho what we have figured out, hoping that the characteristics
-> of the device didn't change.
+Create an intermediate system state called SYSTEM_FREEING_INIT that
+is set before starting freeing init memory, and use it in
+core_kernel_text() to report init memory invalid earlier.
 
-I am confused here. So is the problem at the device or at the driver level?
-I suspect it's actually the host that has the issue, not
-the guest?
+Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+v3: No change
+v2: New
+---
+ include/linux/kernel.h | 1 +
+ init/main.c            | 2 ++
+ kernel/extable.c       | 2 +-
+ 3 files changed, 4 insertions(+), 1 deletion(-)
 
-
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-> Fixes: 82e89ea077b9 ("virtio-blk: Add validation for block size in config space")
-> Reported-by: markver@us.ibm.com
-> ---
->  drivers/virtio/virtio.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> index 0a5b54034d4b..9dc3cfa17b1c 100644
-> --- a/drivers/virtio/virtio.c
-> +++ b/drivers/virtio/virtio.c
-> @@ -249,6 +249,10 @@ static int virtio_dev_probe(struct device *_d)
->  		if (device_features & (1ULL << i))
->  			__virtio_set_bit(dev, i);
->  
-> +	/* Write back features before validate to know endianness */
-> +	if (device_features & (1ULL << VIRTIO_F_VERSION_1))
-> +		dev->config->finalize_features(dev);
-> +
->  	if (drv->validate) {
->  		err = drv->validate(dev);
->  		if (err)
-> 
-> base-commit: 02d5e016800d082058b3d3b7c3ede136cdc6ddcb
-> -- 
-> 2.25.1
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 2776423a587e..471bc0593679 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -248,6 +248,7 @@ extern bool early_boot_irqs_disabled;
+ extern enum system_states {
+ 	SYSTEM_BOOTING,
+ 	SYSTEM_SCHEDULING,
++	SYSTEM_FREEING_INITMEM,
+ 	SYSTEM_RUNNING,
+ 	SYSTEM_HALT,
+ 	SYSTEM_POWER_OFF,
+diff --git a/init/main.c b/init/main.c
+index 3f7216934441..c457d393fdd4 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1505,6 +1505,8 @@ static int __ref kernel_init(void *unused)
+ 	kernel_init_freeable();
+ 	/* need to finish all async __init code before freeing the memory */
+ 	async_synchronize_full();
++
++	system_state = SYSTEM_FREEING_INITMEM;
+ 	kprobe_free_init_mem();
+ 	ftrace_free_init_mem();
+ 	kgdb_free_init_mem();
+diff --git a/kernel/extable.c b/kernel/extable.c
+index b0ea5eb0c3b4..290661f68e6b 100644
+--- a/kernel/extable.c
++++ b/kernel/extable.c
+@@ -76,7 +76,7 @@ int notrace core_kernel_text(unsigned long addr)
+ 	    addr < (unsigned long)_etext)
+ 		return 1;
+ 
+-	if (system_state < SYSTEM_RUNNING &&
++	if (system_state < SYSTEM_FREEING_INITMEM &&
+ 	    init_kernel_text(addr))
+ 		return 1;
+ 	return 0;
+-- 
+2.31.1
 
