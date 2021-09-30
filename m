@@ -2,170 +2,150 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98A3441DB6D
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Sep 2021 15:48:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 06A9F41DF3B
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Sep 2021 18:39:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349581AbhI3NuI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Sep 2021 09:50:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25068 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S234439AbhI3NuH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Sep 2021 09:50:07 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18UD3gFh008494;
-        Thu, 30 Sep 2021 09:47:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=ifFbtQrXFMPKpUqGD7Z7Xhv2STHF8prapnmKPedf4fQ=;
- b=DhA2DjDG0uzFsxbwU23RZzPxpkmUanamfI/lqtU2VhDqyoaG2vmTTvlbXMOnlMgZCC3N
- 2AcUnF2L7qXoD/FQx8ttKhPppdpWOd8hnEbHI2783AAofACUFIWd8q0C+4ZD2DPw8T+B
- wZTTk93g2KZs1sx2Gd52LJLay+TXabtsP6kmyaAdEr7ah50A4V/iHwVC3eqX0qvy7aTo
- lVLcKxwtxYXK5wjKGtFIfZ3YKZcLtjrPBeVDcNO76x2wOjiE65zkY/T+UYxpkWDf7XKn
- SMAa19fUmj0CO7vgj5qLb/ct8rW7/9TRmVIfWEtnhHZK8fGcndefklmo7q6pv5N/Z9ZG jw== 
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3bd9ssfb2h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Sep 2021 09:47:54 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 18UDbW9Q028722;
-        Thu, 30 Sep 2021 13:37:37 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma01fra.de.ibm.com with ESMTP id 3b9uda9bab-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Sep 2021 13:37:37 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 18UDbYlU62194094
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Sep 2021 13:37:34 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3992AA4065;
-        Thu, 30 Sep 2021 13:37:34 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7E8CFA405B;
-        Thu, 30 Sep 2021 13:37:33 +0000 (GMT)
-Received: from [9.171.46.1] (unknown [9.171.46.1])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Sep 2021 13:37:33 +0000 (GMT)
-Subject: Re: DPAA2 triggers, [PATCH] dma debug: report -EEXIST errors in
- add_dma_entry
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Jeremy Linton <jeremy.linton@arm.com>
-Cc:     Hamza Mahfooz <someguy@effective-light.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>
-References: <20210518125443.34148-1-someguy@effective-light.com>
- <fd67fbac-64bf-f0ea-01e1-5938ccfab9d0@arm.com>
- <20210914154504.z6vqxuh3byqwgfzx@skbuf>
-From:   Karsten Graul <kgraul@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-Message-ID: <185e7ee4-3749-4ccb-6d2e-da6bc8f30c04@linux.ibm.com>
-Date:   Thu, 30 Sep 2021 15:37:33 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S1352184AbhI3QlW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Sep 2021 12:41:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352189AbhI3QlV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Sep 2021 12:41:21 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1796CC061774
+        for <linux-s390@vger.kernel.org>; Thu, 30 Sep 2021 09:39:38 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id 20so4692050uaj.6
+        for <linux-s390@vger.kernel.org>; Thu, 30 Sep 2021 09:39:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=/T9drlD1s9vO6lHEMs4LJzmDo2MKXEHBXvFYaWoQWpk=;
+        b=o3SZ3/8xgB3svMq+UXE3vgW9sKtG91px1UYnaI00T4dLP05ECFH5EVSAWUR78xdR5n
+         ebHrIeHXVPRJa791OB2s/aZJdtzWdPaX5sbadOL24EflkgZ6O2rEvsBWvojGxJeeST6T
+         eb+k8lxZZa/bWNfHNPwQHvNUM1YEFh4fUMO861Pe8Wc6pfqqL72s+8eCO53Msweav+mv
+         XfoVjVScWXWc0hGgmBVMNFkqROc3jDhXxKvwZxz1ZkBwNJLCRx7xYOcAqQ0tzz+Q5cSM
+         PuhaOVDUO2vb8ybQ6jSikOKS/AFhEN/8Lz75PuCS5qgomh+uSMNWQBtsXYMKNbf3IvW6
+         pZbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=/T9drlD1s9vO6lHEMs4LJzmDo2MKXEHBXvFYaWoQWpk=;
+        b=58TuQWWzLIMViHScCL6PG9oJ76nTy5I4MNwSKgBTQ7vUXyQhYTpg7f23EnRYtGjKiF
+         c5RFLvnStkEKsOLgKKoCKtqkH4/KpIFT7fiv6zBvpKV89SIBFe/wTzviq2S6+EIp1f00
+         CQfL8XQi1jvVu9WHzDl6amEC/4JltVhBQ3RgVOkOJDbr/rh9ptt1UcznHzNfLl9mfHdm
+         9Mk7Ik7EqtExjsXXcg+8ANbROMvHBW3tUAMqU81bsX/ppYnH/YYWU+/qwL9YuK43KN1v
+         TCVm+XE4kChuFABgfRhrc0+36UkVYU/c0UNANDVrp/G9wZNJj7nNWKBbNOZZhejbCVCD
+         ttvA==
+X-Gm-Message-State: AOAM530vefHV7k5WRfx9lv1KXGeXV4KJUYJwCWhIYwIuMs3iyqShyLVZ
+        RPQvxOgeqNy+Ehq8XAAYJo4dvquF3XfKnCqr7A0=
+X-Google-Smtp-Source: ABdhPJx0AmgkV9cE7YZrAYTucsDxPOj7iGMkrooBstJ2APLp74YQnUFP0J0PcWONym4DRiNtFFvbKXZFoRlaXsy60JM=
+X-Received: by 2002:ab0:5602:: with SMTP id y2mr6724983uaa.120.1633019977032;
+ Thu, 30 Sep 2021 09:39:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210914154504.z6vqxuh3byqwgfzx@skbuf>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 3gt7taqy6SRFTXTkypA70uhi7pupShe5
-X-Proofpoint-ORIG-GUID: 3gt7taqy6SRFTXTkypA70uhi7pupShe5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
- definitions=2021-09-30_04,2021-09-30_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
- phishscore=0 impostorscore=0 priorityscore=1501 adultscore=0 bulkscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109230001 definitions=main-2109300085
+Received: by 2002:a59:ab2e:0:b0:22d:7f44:603a with HTTP; Thu, 30 Sep 2021
+ 09:39:36 -0700 (PDT)
+Reply-To: irenezakari24@gmail.com
+From:   Irene zakari <irenezakari88@gmail.com>
+Date:   Thu, 30 Sep 2021 09:39:36 -0700
+Message-ID: <CAFT8PFG_8981ivC4O1EnUpb=bxUAD3b8Ry0XqxnGDqbSoBpVzQ@mail.gmail.com>
+Subject: PLEASE I NEED YOUR HELP
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 14/09/2021 17:45, Ioana Ciornei wrote:
-> On Wed, Sep 08, 2021 at 10:33:26PM -0500, Jeremy Linton wrote:
->> +DPAA2, netdev maintainers
->> Hi,
->>
->> On 5/18/21 7:54 AM, Hamza Mahfooz wrote:
->>> Since, overlapping mappings are not supported by the DMA API we should
->>> report an error if active_cacheline_insert returns -EEXIST.
->>
->> It seems this patch found a victim. I was trying to run iperf3 on a
->> honeycomb (5.14.0, fedora 35) and the console is blasting this error message
->> at 100% cpu. So, I changed it to a WARN_ONCE() to get the call trace, which
->> is attached below.
->>
-> 
-> These frags are allocated by the stack, transformed into a scatterlist
-> by skb_to_sgvec and then DMA mapped with dma_map_sg. It was not the
-> dpaa2-eth's decision to use two fragments from the same page (that will
-> also end un in the same cacheline) in two different in-flight skbs.
-> 
-> Is this behavior normal?
-> 
+Hello   ..
 
-We see the same problem here and it started with 5.15-rc2 in our nightly CI runs.
-The CI has panic_on_warn enabled so we see the panic every day now.
+How do you do over there? I hope you are doing well?
 
-Its always the same pattern: module SMC calls dma_map_sg_attrs() which ends
-up in the EEXIST warning sooner or later.
+My name is Irene. (24 years), i am single, from Gambia, the only child
+of late Eng. Bernard Bakary Zakaria. the Director of Bajam Enterprise
+(Building Construction Company in The Gambia) also the CEO of Bernard
+Import and Export (GAMBIA).
 
-It would be better to revert this patch now and start to better understand the 
-checking logic for overlapping areas.
+As a matter of fact my mother died when i was barely 4 years old
+according to my late father and because of the type of love he had for
+my mother made him to remain UN-married till he left the ghost..
 
-Thank you.
+So after the death of my father as a result of assassinate, his brother (My
+Uncle) who is the purchasing and marketing sale manager of my late
+fathers company named (Mr. James Tokunbo Oriade Zakaria) wanted to
+convert all the properties and resources of my late father into his
+which i quarreled with him and it made him to lay his anger on me to
+the extent of hiring an assassins to kill me but to God be the glory i
+succeeded by making a way to Burkina faso for my dear life.
+Honestly i do live a fearful life even here in Burkina faso because of
+those Assassins coming after me .
 
+I would want to live and study in your country for my better future.
+because my father same blood brother wanted to force me into undecided
+marriage, just for me to leave my father home and went and live with
+another man I never know as he want to occupied all my father home
+and maybe to sold it as my father no longer alive, I'm the only child
+daughter my father born, '' but he don't know that i am not
+interesting in any of my father properties or early marriage for now,
+because i still have future to think about and to focus on my studies
+first as i was doing my first year in the University before the death
+of my father.
 
-The call trace for reference:
+Actually what I want to discuss with you is about my personal issue
+concern funds my late father deposited in a bank outside my country,
+worth $4.5 million united state dollars. i need your assistance to
+receive and invest this funds in your country.
 
-[  864.189864] DMA-API: mlx5_core 0662:00:00.0: cacheline tracking EEXIST, overlapping mappings aren't supported
-[  864.189883] WARNING: CPU: 0 PID: 33720 at kernel/dma/debug.c:570 add_dma_entry+0x208/0x2c8
-...
-[  864.190747] CPU: 0 PID: 33720 Comm: smcapp Not tainted 5.15.0-20210928.rc3.git0.a59bf04db7bb.300.fc34.s390x+debug #1
-[  864.190758] Hardware name: IBM 8561 T01 701 (z/VM 7.2.0)
-[  864.190766] Krnl PSW : 0704d00180000000 00000000fa6239fc (add_dma_entry+0x20c/0x2c8)
-[  864.190783]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:1 PM:0 RI:0 EA:3
-[  864.190795] Krnl GPRS: c0000000ffffbfff 0000000080000000 0000000000000061 0000000000000000
-[  864.190804]            0000000000000001 0000000000000001 0000000000000001 0000000000000001
-[  864.190813]            0700000000000001 000000000020ff00 00000000ffffffff 000000008137b300
-[  864.190822]            0000000020020100 0000000000000001 00000000fa6239f8 00000380074536f8
-[  864.190837] Krnl Code: 00000000fa6239ec: c020007a4964	larl	%r2,00000000fb56ccb4
-                          00000000fa6239f2: c0e5005ef2ff	brasl	%r14,00000000fb201ff0
-                         #00000000fa6239f8: af000000		mc	0,0
-                         >00000000fa6239fc: ecb60057007c	cgij	%r11,0,6,00000000fa623aaa
-                          00000000fa623a02: c01000866149	larl	%r1,00000000fb6efc94
-                          00000000fa623a08: e31010000012	lt	%r1,0(%r1)
-                          00000000fa623a0e: a774ff73		brc	7,00000000fa6238f4
-                          00000000fa623a12: c010008a9227	larl	%r1,00000000fb775e60
-[  864.202949] Call Trace:
-[  864.202959]  [<00000000fa6239fc>] add_dma_entry+0x20c/0x2c8 
-[  864.202971] ([<00000000fa6239f8>] add_dma_entry+0x208/0x2c8)
-[  864.202981]  [<00000000fa624988>] debug_dma_map_sg+0x140/0x160 
-[  864.202992]  [<00000000fa61eadc>] __dma_map_sg_attrs+0x9c/0xd8 
-[  864.203002]  [<00000000fa61eb3a>] dma_map_sg_attrs+0x22/0x40 
-[  864.203012]  [<000003ff80483bde>] smc_ib_buf_map_sg+0x5e/0x90 [smc] 
-[  864.203036]  [<000003ff80486b44>] smcr_buf_map_link.part.0+0x12c/0x1e8 [smc] 
-[  864.203053]  [<000003ff80486cb6>] _smcr_buf_map_lgr+0xb6/0xf8 [smc] 
-[  864.203071]  [<000003ff8048b91c>] smcr_buf_map_lgr+0x4c/0x90 [smc] 
-[  864.211496]  [<000003ff80490ac2>] smc_llc_cli_add_link+0x152/0x420 [smc] 
-[  864.211522]  [<000003ff8047acbc>] smcr_clnt_conf_first_link+0x124/0x1e0 [smc] 
-[  864.211537]  [<000003ff8047bfb2>] smc_connect_rdma+0x25a/0x2e8 [smc] 
-[  864.211551]  [<000003ff8047da4a>] __smc_connect+0x38a/0x650 [smc] 
-[  864.211566]  [<000003ff8047de70>] smc_connect+0x160/0x190 [smc] 
-[  864.211580]  [<00000000faf10c70>] __sys_connect+0x98/0xd0 
-[  864.211592]  [<00000000faf12e9a>] __do_sys_socketcall+0x16a/0x350 
-[  864.211603]  [<00000000fb216752>] __do_syscall+0x1c2/0x1f0 
-[  864.211616]  [<00000000fb229148>] system_call+0x78/0xa0 
+Please help me, I am sincere to you and I want to be member of your
+family as well if you wouldn't mind to accept me and lead me to better
+future in your country.
 
--- 
-Karsten
+All the documents the bank issue to my father during time of deposit
+is with me now.
+I already notify the bank on phone about the death of my father and
+they are surprise for the news and accept that my father is their good
+customer.
+I will be happy if this money can be invested in any business of your
+choice and it will be under your control till i finished my education,
+also I'm assuring you good relationship and I am ready to discuss the
+amount of money to give you from this money for your help.
+
+Therefore, I shall give you the bank contact and other necessary
+information in my next email if you will only promise me that you will
+not/never betray and disclosed this matter to anybody, because, this
+money is the only hope i have for survival on earth since I have lost
+my parents.
+
+Moreover I have the FUND PLACEMENT CERTIFICATE and the DEATH
+CERTIFICATE here with me, but before I give you further information, i
+will like to know your full data
+
+1. Full Name: ........................
+2. Address: ..................
+3. Nationality: ........... Sex................
+4. Age:........... Date of Birth:................
+5. Occupation:...................
+.....
+6. Phone: ........... Fax:.........................
+7. State of Origin: .......Country:..............
+8. Occupation:...................
+................
+9. Marital status........... E-mail address's: ............
+10. Scan copy of your ID card or Driving License/Photo:............
+DECLARATION:
+
+so that i will be fully sure that i am not trusting the wrong person.
+and it will also give me the mind to send you the bank contact for you
+to communicate with them for more verification about this money. and
+to know you more better.
+
+Meanwhile, you can reach me through my pastor,his name is Pastor Paul
+any time you call, tell him that you want to speak with me because
+right now i am living in the church here in Burkina faso and i don't
+want to stay here any longer,
+send for me to speak with you his phone number is this(+226 75213646)
+
+I will stop here and i will be waiting for your reply and feel free
+ask any thing you want to know about me.
+Please help me, I would be highly appreciated
+Have nice day.
+From Irene
