@@ -2,150 +2,146 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06A9F41DF3B
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Sep 2021 18:39:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A1A741E055
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Sep 2021 19:47:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352184AbhI3QlW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Sep 2021 12:41:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39022 "EHLO
+        id S1352830AbhI3RtF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Sep 2021 13:49:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352189AbhI3QlV (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Sep 2021 12:41:21 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1796CC061774
-        for <linux-s390@vger.kernel.org>; Thu, 30 Sep 2021 09:39:38 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id 20so4692050uaj.6
-        for <linux-s390@vger.kernel.org>; Thu, 30 Sep 2021 09:39:37 -0700 (PDT)
+        with ESMTP id S1352811AbhI3RtE (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Sep 2021 13:49:04 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A8AC06176C
+        for <linux-s390@vger.kernel.org>; Thu, 30 Sep 2021 10:47:22 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id on12-20020a17090b1d0c00b001997c60aa29so2227129pjb.1
+        for <linux-s390@vger.kernel.org>; Thu, 30 Sep 2021 10:47:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/T9drlD1s9vO6lHEMs4LJzmDo2MKXEHBXvFYaWoQWpk=;
-        b=o3SZ3/8xgB3svMq+UXE3vgW9sKtG91px1UYnaI00T4dLP05ECFH5EVSAWUR78xdR5n
-         ebHrIeHXVPRJa791OB2s/aZJdtzWdPaX5sbadOL24EflkgZ6O2rEvsBWvojGxJeeST6T
-         eb+k8lxZZa/bWNfHNPwQHvNUM1YEFh4fUMO861Pe8Wc6pfqqL72s+8eCO53Msweav+mv
-         XfoVjVScWXWc0hGgmBVMNFkqROc3jDhXxKvwZxz1ZkBwNJLCRx7xYOcAqQ0tzz+Q5cSM
-         PuhaOVDUO2vb8ybQ6jSikOKS/AFhEN/8Lz75PuCS5qgomh+uSMNWQBtsXYMKNbf3IvW6
-         pZbg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+IS0gEgo7hipR9gibsQw5KtPLx6dQXKFRc1+dywoXVA=;
+        b=m0rDM0cnK0yrtL29pL81MAGf7w2Yed+jc4KUJF0fL6YCvGOj2OOT/73pX0N1cuLGzf
+         ECJdJfF5q+Tu3Vs0H54vg8YCX4POSPt/jTDx97+sRolpUheG7qnd3LACShH3YDUGL+oL
+         edpJws/IQ1QQ+9i+FXscZHebVHzxRo9Z53ybE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/T9drlD1s9vO6lHEMs4LJzmDo2MKXEHBXvFYaWoQWpk=;
-        b=58TuQWWzLIMViHScCL6PG9oJ76nTy5I4MNwSKgBTQ7vUXyQhYTpg7f23EnRYtGjKiF
-         c5RFLvnStkEKsOLgKKoCKtqkH4/KpIFT7fiv6zBvpKV89SIBFe/wTzviq2S6+EIp1f00
-         CQfL8XQi1jvVu9WHzDl6amEC/4JltVhBQ3RgVOkOJDbr/rh9ptt1UcznHzNfLl9mfHdm
-         9Mk7Ik7EqtExjsXXcg+8ANbROMvHBW3tUAMqU81bsX/ppYnH/YYWU+/qwL9YuK43KN1v
-         TCVm+XE4kChuFABgfRhrc0+36UkVYU/c0UNANDVrp/G9wZNJj7nNWKBbNOZZhejbCVCD
-         ttvA==
-X-Gm-Message-State: AOAM530vefHV7k5WRfx9lv1KXGeXV4KJUYJwCWhIYwIuMs3iyqShyLVZ
-        RPQvxOgeqNy+Ehq8XAAYJo4dvquF3XfKnCqr7A0=
-X-Google-Smtp-Source: ABdhPJx0AmgkV9cE7YZrAYTucsDxPOj7iGMkrooBstJ2APLp74YQnUFP0J0PcWONym4DRiNtFFvbKXZFoRlaXsy60JM=
-X-Received: by 2002:ab0:5602:: with SMTP id y2mr6724983uaa.120.1633019977032;
- Thu, 30 Sep 2021 09:39:37 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+IS0gEgo7hipR9gibsQw5KtPLx6dQXKFRc1+dywoXVA=;
+        b=jfegGOW2mqVzALdc+dYDTWVdAPFdQZS9BOecVhhUFvpUCsaziwGS9g9zZxpcJ2PV13
+         jPj8JeJov8Pky1sSpWyvUaOMcnPfqafOknwN3oZZcuV4UC/N0ygvXeDdLVQhHD8rRdgZ
+         RuqXbAOJ6py+pFOreWgHfriCGmV/yGzoEd7A+vtvrwv5TwVjiDhDKGHmdRwqqERRBaxy
+         Hq7r/9i6rLIs9c5VpLQLGG9BoDFWGl/2TH+la8UIh63nrj0wNSoG0Lv3b9dLgaH77bnj
+         XeBS2H9FdE3MARXK0EgyOmt3e6g4DnIGX105zliuFc3h2ZVBjSlugs8sGxELt5/VUPxU
+         spQA==
+X-Gm-Message-State: AOAM5309VkTP0JzFWOzApcloXH/NJcIklajKawbr6FO0ipDLEPWJUgQM
+        9j/UUjENm0n4hFgeHHYIydzdXBdOl7P/1Q==
+X-Google-Smtp-Source: ABdhPJwKcuP6DGDrVJJap2YBfnw9gJ29cZ6T8aj/WEWFIltD4Sz9lDFqVeOwFghXxQzDWleVwS3vJg==
+X-Received: by 2002:a17:902:e74d:b0:13e:77cd:a300 with SMTP id p13-20020a170902e74d00b0013e77cda300mr2394421plf.80.1633024041447;
+        Thu, 30 Sep 2021 10:47:21 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x19sm3606048pfn.105.2021.09.30.10.47.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Sep 2021 10:47:20 -0700 (PDT)
+Date:   Thu, 30 Sep 2021 10:47:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Keith Packard <keithpac@amazon.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "open list:S390" <linux-s390@vger.kernel.org>
+Subject: Re: [RFC PATCH 4/8] powerpc: add CPU field to struct thread_info
+Message-ID: <202109301045.15DDDA0B@keescook>
+References: <20210914121036.3975026-1-ardb@kernel.org>
+ <20210914121036.3975026-5-ardb@kernel.org>
+ <CAMj1kXEojbQbNzCP39KT4EzFAyW3J1Tfm_stCZ+fGo8_SO90PA@mail.gmail.com>
+ <87ee99lii7.fsf@mpe.ellerman.id.au>
+ <87pmst1rn9.fsf@mpe.ellerman.id.au>
+ <CAMj1kXFXtbD3=L+QvCnwbyFr-qbWivZ0wRGT0N4LNxANPD8x4g@mail.gmail.com>
+ <878rzf0zmb.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Received: by 2002:a59:ab2e:0:b0:22d:7f44:603a with HTTP; Thu, 30 Sep 2021
- 09:39:36 -0700 (PDT)
-Reply-To: irenezakari24@gmail.com
-From:   Irene zakari <irenezakari88@gmail.com>
-Date:   Thu, 30 Sep 2021 09:39:36 -0700
-Message-ID: <CAFT8PFG_8981ivC4O1EnUpb=bxUAD3b8Ry0XqxnGDqbSoBpVzQ@mail.gmail.com>
-Subject: PLEASE I NEED YOUR HELP
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <878rzf0zmb.fsf@mpe.ellerman.id.au>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello   ..
+On Thu, Sep 30, 2021 at 08:46:04AM +1000, Michael Ellerman wrote:
+> Ard Biesheuvel <ardb@kernel.org> writes:
+> > On Tue, 28 Sept 2021 at 02:16, Michael Ellerman <mpe@ellerman.id.au> wrote:
+> >>
+> >> Michael Ellerman <mpe@ellerman.id.au> writes:
+> >> > Ard Biesheuvel <ardb@kernel.org> writes:
+> >> >> On Tue, 14 Sept 2021 at 14:11, Ard Biesheuvel <ardb@kernel.org> wrote:
+> >> >>>
+> >> >>> The CPU field will be moved back into thread_info even when
+> >> >>> THREAD_INFO_IN_TASK is enabled, so add it back to powerpc's definition
+> >> >>> of struct thread_info.
+> >> >>>
+> >> >>> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> >> >>
+> >> >> Michael,
+> >> >>
+> >> >> Do you have any objections or issues with this patch or the subsequent
+> >> >> ones cleaning up the task CPU kludge for ppc32? Christophe indicated
+> >> >> that he was happy with it.
+> >> >
+> >> > No objections, it looks good to me, thanks for cleaning up that horror :)
+> >> >
+> >> > It didn't apply cleanly to master so I haven't tested it at all, if you can point me at a
+> >> > git tree with the dependencies I'd be happy to run some tests over it.
+> >>
+> >> Actually I realised I can just drop the last patch.
+> >>
+> >> So that looks fine, passes my standard quick build & boot on qemu tests,
+> >> and builds with/without stack protector enabled.
+> >>
+> >
+> > Thanks.
+> >
+> > Do you have any opinion on how this series should be merged? Kees Cook
+> > is willing to take them via his cross-arch tree, or you could carry
+> > them if you prefer. Taking it via multiple trees at the same time is
+> > going to be tricky, or take two cycles, with I'd prefer to avoid.
+> 
+> I don't really mind. If Kees is happy to take it then that's OK by me.
+> 
+> If Kees put the series in a topic branch based off rc2 then I could
+> merge that, and avoid any conflicts.
 
-How do you do over there? I hope you are doing well?
+I've created:
 
-My name is Irene. (24 years), i am single, from Gambia, the only child
-of late Eng. Bernard Bakary Zakaria. the Director of Bajam Enterprise
-(Building Construction Company in The Gambia) also the CEO of Bernard
-Import and Export (GAMBIA).
+git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/thread_info/cpu
 
-As a matter of fact my mother died when i was barely 4 years old
-according to my late father and because of the type of love he had for
-my mother made him to remain UN-married till he left the ghost..
+it includes a --no-ff merge commit, which I'm not sure is desirable? Let
+me know if I should adjust this, or if Linus will yell about this if I
+send him a PR containing a merge commit? I'm not sure what's right here.
 
-So after the death of my father as a result of assassinate, his brother (My
-Uncle) who is the purchasing and marketing sale manager of my late
-fathers company named (Mr. James Tokunbo Oriade Zakaria) wanted to
-convert all the properties and resources of my late father into his
-which i quarreled with him and it made him to lay his anger on me to
-the extent of hiring an assassins to kill me but to God be the glory i
-succeeded by making a way to Burkina faso for my dear life.
-Honestly i do live a fearful life even here in Burkina faso because of
-those Assassins coming after me .
+Thanks!
 
-I would want to live and study in your country for my better future.
-because my father same blood brother wanted to force me into undecided
-marriage, just for me to leave my father home and went and live with
-another man I never know as he want to occupied all my father home
-and maybe to sold it as my father no longer alive, I'm the only child
-daughter my father born, '' but he don't know that i am not
-interesting in any of my father properties or early marriage for now,
-because i still have future to think about and to focus on my studies
-first as i was doing my first year in the University before the death
-of my father.
-
-Actually what I want to discuss with you is about my personal issue
-concern funds my late father deposited in a bank outside my country,
-worth $4.5 million united state dollars. i need your assistance to
-receive and invest this funds in your country.
-
-Please help me, I am sincere to you and I want to be member of your
-family as well if you wouldn't mind to accept me and lead me to better
-future in your country.
-
-All the documents the bank issue to my father during time of deposit
-is with me now.
-I already notify the bank on phone about the death of my father and
-they are surprise for the news and accept that my father is their good
-customer.
-I will be happy if this money can be invested in any business of your
-choice and it will be under your control till i finished my education,
-also I'm assuring you good relationship and I am ready to discuss the
-amount of money to give you from this money for your help.
-
-Therefore, I shall give you the bank contact and other necessary
-information in my next email if you will only promise me that you will
-not/never betray and disclosed this matter to anybody, because, this
-money is the only hope i have for survival on earth since I have lost
-my parents.
-
-Moreover I have the FUND PLACEMENT CERTIFICATE and the DEATH
-CERTIFICATE here with me, but before I give you further information, i
-will like to know your full data
-
-1. Full Name: ........................
-2. Address: ..................
-3. Nationality: ........... Sex................
-4. Age:........... Date of Birth:................
-5. Occupation:...................
-.....
-6. Phone: ........... Fax:.........................
-7. State of Origin: .......Country:..............
-8. Occupation:...................
-................
-9. Marital status........... E-mail address's: ............
-10. Scan copy of your ID card or Driving License/Photo:............
-DECLARATION:
-
-so that i will be fully sure that i am not trusting the wrong person.
-and it will also give me the mind to send you the bank contact for you
-to communicate with them for more verification about this money. and
-to know you more better.
-
-Meanwhile, you can reach me through my pastor,his name is Pastor Paul
-any time you call, tell him that you want to speak with me because
-right now i am living in the church here in Burkina faso and i don't
-want to stay here any longer,
-send for me to speak with you his phone number is this(+226 75213646)
-
-I will stop here and i will be waiting for your reply and feel free
-ask any thing you want to know about me.
-Please help me, I would be highly appreciated
-Have nice day.
-From Irene
+-- 
+Kees Cook
