@@ -2,242 +2,204 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C39F41F10E
-	for <lists+linux-s390@lfdr.de>; Fri,  1 Oct 2021 17:18:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65FF641F3AE
+	for <lists+linux-s390@lfdr.de>; Fri,  1 Oct 2021 19:53:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353502AbhJAPUj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 1 Oct 2021 11:20:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30023 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1354733AbhJAPUi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 1 Oct 2021 11:20:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633101533;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7C7nph0IhS1Fw7syhYok+wzYniobVwIXFwlQp7ZOwZk=;
-        b=gztiy45WWpOorqfZMBX0xmiZh3M1TEWxKgYl2B+qTLK6i0McE/reGJ3TNBm8h/mVfsaEIG
-        bJay0kuJvMw26Y4yz1kxzZM/TYY6mIir5L62fGvhyBHU8I6gT3hHI379oGctopTpjz63Z6
-        aKPaqfCt8ka6yhaDo6TWzCLKeVZCKvs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-523-gwn_3wreOuavPHbos-PwJQ-1; Fri, 01 Oct 2021 11:18:50 -0400
-X-MC-Unique: gwn_3wreOuavPHbos-PwJQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5FD2D81426E;
-        Fri,  1 Oct 2021 15:18:48 +0000 (UTC)
-Received: from localhost (unknown [10.39.192.75])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B975660936;
-        Fri,  1 Oct 2021 15:18:47 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Xie Yongji <xieyongji@bytedance.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, markver@us.ibm.com,
+        id S1355538AbhJARyn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 1 Oct 2021 13:54:43 -0400
+Received: from mail-mw2nam10on2087.outbound.protection.outlook.com ([40.107.94.87]:56769
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1355515AbhJARyl (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 1 Oct 2021 13:54:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jSPDmywVuYJZr3FNiP7FVDp/gJJtIuYLCPQxxPs4wh/GA/TIlytPzORKo/rgZ/89Xii9tg1xq0WEEnbgxBlCNz2mA5fOA6wcTgIX7FiHHmBpwdwyeKHXYfGvkkueptL2cQnHjKavpeCq5lL0zuLlyg05E4nbYGdBUy+0wE+chSrcDlMX/ewh85FAjPuT06y4FuMtnm6e1cmDuv2kcyMwuAcw5/8Rxd75/s62/S9peY1xYiEmdzKRtu1ykxab9G/I+6cFOZheBc9R3PnC6tWnx/V8ga8zDgfigjidNkRumLI5NcJ8B1LQgCNS1GMKAU7cH/fN9VlTBU47s/dBAbxg5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xkS9M/++Xop7frTxsR2JxiOoUcqYsdqH9YI7swRWdqQ=;
+ b=E0V61+7Q2cMR+BXPAz8TpDa8Cy+5j7+ucqmCfH3c5hlK6/UqIJa+4BRlFN/iz089kPYMKl+mcp29exwXNaYXtt4p8MJD6LWJwREzl3YDQdp/Xf9TU1NPZ4apAApk51YY/jxFpPWRgflZzodwVb2a0nHPKki1exyBU0ZGlrid8jHUbeMjYXysXNZ5L5ud5U8gm549VoFCA9duKrbmtGbw7tubv5wc0S6pW835o2mXHmXXl+VxyiRiBRUZWGEZMRx/9KCVwpjiHSOzyHAiTJAM69SOukdqaqmaViV68CrmfUHWcwIkm5PeUorPCnFUoaSaqltIbjA83xla7/NKo2p2Lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xkS9M/++Xop7frTxsR2JxiOoUcqYsdqH9YI7swRWdqQ=;
+ b=sHrr20nhK4zD+KOX0PTiemXHqY/tDR/SHxhOek9p4nZUFGA9CLi/JQvmPumTz46yoL+7UBpY4fKlozxvGHb3ceGVfhtflj6PkA0KABP+jZ9CXSOAQPCyQes3NVq1IO6kOv8KsGBdxuJ3Ec9YbicxP8orfz3qcYiOoWv1zVSuSzQ245acDbWfBA10n/LRwMa3geh3cJpA7OPVpMWNFo3GehZJwz75vJANVFZ+vxsJIMvBW3dSEf8FVhxjK7BqtQRmcIDypkNE5oImnxM+o7DWpfp3f4lyWPEwxareCClZ2gnddthT0HJirYdURPIDPNz2IU5SfVc6NIKHG4QshMhT5Q==
+Authentication-Results: linux.ie; dkim=none (message not signed)
+ header.d=none;linux.ie; dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com (2603:10b6:208:1cb::22)
+ by BL1PR12MB5126.namprd12.prod.outlook.com (2603:10b6:208:312::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.15; Fri, 1 Oct
+ 2021 17:52:53 +0000
+Received: from BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::e8af:232:915e:2f95]) by BL0PR12MB5506.namprd12.prod.outlook.com
+ ([fe80::e8af:232:915e:2f95%8]) with mapi id 15.20.4566.019; Fri, 1 Oct 2021
+ 17:52:53 +0000
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     David Airlie <airlied@linux.ie>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: [RFC PATCH 1/1] virtio: write back features before verify
-In-Reply-To: <20211001162213.18d7375e.pasic@linux.ibm.com>
-Organization: Red Hat GmbH
-References: <20210930012049.3780865-1-pasic@linux.ibm.com>
- <87r1d64dl4.fsf@redhat.com> <20210930130350.0cdc7c65.pasic@linux.ibm.com>
- <87ilyi47wn.fsf@redhat.com> <20211001162213.18d7375e.pasic@linux.ibm.com>
-User-Agent: Notmuch/0.32.1 (https://notmuchmail.org)
-Date:   Fri, 01 Oct 2021 17:18:46 +0200
-Message-ID: <87v92g3h9l.fsf@redhat.com>
-MIME-Version: 1.0
+        Cornelia Huck <cohuck@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        Eric Farman <farman@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        kvm@vger.kernel.org, Kirti Wankhede <kwankhede@nvidia.com>,
+        linux-doc@vger.kernel.org, linux-s390@vger.kernel.org,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v3 00/10] Move vfio_ccw to the new mdev API
+Date:   Fri,  1 Oct 2021 14:52:41 -0300
+Message-Id: <0-v3-57c1502c62fd+2190-ccw_mdev_jgg@nvidia.com>
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-ClientProxiedBy: BL1PR13CA0412.namprd13.prod.outlook.com
+ (2603:10b6:208:2c2::27) To BL0PR12MB5506.namprd12.prod.outlook.com
+ (2603:10b6:208:1cb::22)
+MIME-Version: 1.0
+Received: from mlx.ziepe.ca (142.162.113.129) by BL1PR13CA0412.namprd13.prod.outlook.com (2603:10b6:208:2c2::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.7 via Frontend Transport; Fri, 1 Oct 2021 17:52:52 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1mWMiJ-00988w-Vb; Fri, 01 Oct 2021 14:52:51 -0300
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: abe9ef51-7ac8-45f5-5e94-08d985044a8c
+X-MS-TrafficTypeDiagnostic: BL1PR12MB5126:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BL1PR12MB512600B27324961DB45A73ECC2AB9@BL1PR12MB5126.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2449;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gGhD6tjleUCuKuUJK2ssHsnXtYbIzhW7w2bSKyVMIBvdmfFecUMqYozl4TDr9yg2sO228HsVuYYQjnLShFQPaQ/gDQkqLqdBNYFMOIRv8ziep2Zz3RWL/Zf7QbOZbAXzT20lC2Fmx+JMWbSNU4APtahxDZCvqWj4JhABB0wup/RqQC+5O5v9tiKgI5k0QvvRz5WIOynrNxwStMhq8QeQ9yGrHS4VuI4b9s7/RlQ+IJ580LidZ9osv22+Wa+GVR9fs9sEnjfCMZhTcy1uZMgx1IcIpx2yT4cgptLOhzyR3LjLIvtH1GQ1ATrKcWXbc0v7xB+dmxodBTHLR4aZtryMDXYAQ8oy9AiUDldxVrmq4lXNzMcboTdh56pqwi7nFz+sfw9F5uYdgL0CizBUxsIEJ1EpJvSxf6r0Jv0lf2wrSWgImdWdpluFO1TMOI1YKTTWXHvLapcCS6rQxX+nyQ9f46L7rvUyjz1AR1NBrxjOmFh4vNujIZa2tZ3DJVWrsLZN17UwbXGvpzO5TDhnQsD+30wOghr8zsQBn6dPaX0+jGakloox56kkcqLJBneZIAAH9xNAROPBYPgf3QnLdS4yvmkKdCHd4UuzPqTuuOZD4fecwiCiN70deg+ZFqKYr/p/A+GybuRN10gsmBOvcBXZaeHaAiH8pryqEwyZemGTuHpORXZE4/9WSoi74S39Fx1kQ//QmDorEHIZRSLVjEOQFDyKAAWUlrMSbWsL8pP4iVfkZeXXLo/5/6UMFhVWwloQIwwbQNQuBnFbSen77pc8cFnUW0ZgV+CMmFxDGTASm1ljfb9nLgdiwC8u+Xywjyb27H8lxQFPw5/FqhOELAEp/g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB5506.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(508600001)(921005)(2616005)(26005)(83380400001)(6666004)(966005)(186003)(426003)(9746002)(2906002)(86362001)(9786002)(38100700002)(4326008)(36756003)(8676002)(66556008)(66946007)(110136005)(54906003)(316002)(7416002)(5660300002)(8936002)(66476007)(4216001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?v8XIDuMd3+7v7AHKg7shkWINe3L9MInQKw0Aj5HKzKVH7MeQncl1ZoGBl0gQ?=
+ =?us-ascii?Q?EFsT+iruYq1Ooa+LOQwwdhxgv6Woan6liRbgKGDa7DKw66etflzaItPWHVvz?=
+ =?us-ascii?Q?Ym6IsamCEwq6FXGulHUDVWEwPw0h0cxOsK4TqVWd4YMLvEaAu0b9Tpc0fLYd?=
+ =?us-ascii?Q?9vXPtURDz8WUNy+JXZspjCVchp6TXVBh0kO8pAC3QgtoGzhEUXJqwDn+s2pd?=
+ =?us-ascii?Q?gOS0d3kffC3J1TsFFH5GyVlzDgIkJMCAj0ESjx1Ru5LwbwiHouZXkK864tIG?=
+ =?us-ascii?Q?rBcxu2K0h8BBbe23V4eOL3fgnvXJOFkJ3qjU03KxKTpP1+Y7QOer/3L7wEBv?=
+ =?us-ascii?Q?SDSd+IuRrwM4Ao93zUesQDdFuuvba6fR+1QBVbcPgozcyL37VGZtwT6OGlL0?=
+ =?us-ascii?Q?a9gpUTAcWho97NoZ6DMBVt91bAXM9orSqBlBPkFRSB1E8aMXiWCi5y5ECNYP?=
+ =?us-ascii?Q?CZ3swQgiwkzsneSn/V3uF0gUGDzr5uS6YtN81/X+cKbgRaApCSCw+wGpxaPN?=
+ =?us-ascii?Q?UYgZPmzeUcHzhefCKA1o+jbUcTqS3xf31o0RKY3d2JsG/drXvmJwRdRvZVg9?=
+ =?us-ascii?Q?mVxiX9UltAGF1dZMgrjbrCxSOZt9NPUqfp8LnP32dXRY1JRVSEn1RAwakoDJ?=
+ =?us-ascii?Q?hD7w1UGlQHlOe/lRswZAB3JkHRB3CHWMTh1t7mXsVZa/3/nyzmZDuM9fn1En?=
+ =?us-ascii?Q?Mw/AB7KL67LEaHFA/EsSa//UnH6k+UaCPYV9+V1LvnJqHvl3Dux1Ejn/Z9CU?=
+ =?us-ascii?Q?L30oU6Twli77XNiq7EQsxYqxdAtOfv9YYaOd9DUmrmVbqev3tiRzlc53X0BC?=
+ =?us-ascii?Q?a49R4ReN+1Z093KGqy+loBmgBlGTe+7baX8TKtabLRshVmUorvulPpsHLdQV?=
+ =?us-ascii?Q?RmW2RxiZpXJvdSWrnRU+Iw0HKtDi2J4Z2niK0qFXS999fNONBeOWzFMjS2Hm?=
+ =?us-ascii?Q?y+Lp5SRQTdxR1Rx8bwV4iQrOr2uBud7jMS7xBe+Q1lwLCTeTlqyyJRvI2tOH?=
+ =?us-ascii?Q?MqQqXkYePLREmDesKTSHOQCNSUhOS24JqAagzOLxCF9z5nsXDYgNY7FXFg9n?=
+ =?us-ascii?Q?8zzseXw7NMVHL4FErHMkA1lwcIsmNrKtGT8PhXoxj5Q6XXFoKDUtZ9ZcCtcw?=
+ =?us-ascii?Q?/53sHjO5PCu71eOzSOCBXSLS9S33dHmy6e1ZNvLm7tqP3pJeQVBTYcVKHtDR?=
+ =?us-ascii?Q?c1d3SN3wdXU1eAV196fnjWo4DuPYUhn5v6s7/wf9HzuNw3gxbGLOawF6Wyn9?=
+ =?us-ascii?Q?ycj2rSZH/W4sECSGxw0q4+pclo8aAEh7qAqK4VVz4V9pHG6jn/rf0YLnuij1?=
+ =?us-ascii?Q?qrhvwGyGGj8BpGeN/ucHOVGG?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: abe9ef51-7ac8-45f5-5e94-08d985044a8c
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB5506.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Oct 2021 17:52:52.8892
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dF87A3ctNLysHMh0Ekv87sNRl7Farx5f76wQFDfT/M4/5JR0ZzV9C3eb8psPbZhd
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5126
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Oct 01 2021, Halil Pasic <pasic@linux.ibm.com> wrote:
+This addresses Cornelia's remark on the earlier patch that ccw has a
+confusing lifecycle. While it doesn't seem like the original attempt was
+functionally wrong, the result can be made better with a lot of further
+work.
 
-> On Thu, 30 Sep 2021 13:31:04 +0200
-> Cornelia Huck <cohuck@redhat.com> wrote:
->
->> On Thu, Sep 30 2021, Halil Pasic <pasic@linux.ibm.com> wrote:
->> 
->> > On Thu, 30 Sep 2021 11:28:23 +0200
->> > Cornelia Huck <cohuck@redhat.com> wrote:
->> >  
->> >> On Thu, Sep 30 2021, Halil Pasic <pasic@linux.ibm.com> wrote:
->> >> > @@ -249,6 +249,10 @@ static int virtio_dev_probe(struct device *_d)
->> >> >  		if (device_features & (1ULL << i))
->> >> >  			__virtio_set_bit(dev, i);
->> >> >  
->> >> > +	/* Write back features before validate to know endianness */
->> >> > +	if (device_features & (1ULL << VIRTIO_F_VERSION_1))
->> >> > +		dev->config->finalize_features(dev);    
->> >> 
->> >> This really looks like a mess :(
->> >> 
->> >> We end up calling ->finalize_features twice: once before ->validate, and
->> >> once after, that time with the complete song and dance. The first time,
->> >> we operate on one feature set; after validation, we operate on another,
->> >> and there might be interdependencies between the two (like a that a bit
->> >> is cleared because of another bit, which would not happen if validate
->> >> had a chance to clear that bit before).  
->> >
->> > Basically the second set is a subset of the first set.  
->> 
->> I don't think that's clear.
->
-> Validate can only remove features, or? So I guess after validate
-> is a subset of before validate.
+Reorganize the driver so that the mdev owns the private memory and
+controls the lifecycle, not the css_driver. The memory associated with the
+css_driver lifecycle is only the mdev_parent/mdev_type registration.
 
-I was thinking about (more-or-less hypothetical) interdependencies (see
-above). But that's not terribly important.
+Along the way we change when the sch is quiescent or not to be linked to
+the open/close_device lifetime of the vfio_device, which is sort of what
+it was tring to do already, just not completely.
 
->
->
->> 
->> >  
->> >> 
->> >> I'm not sure whether that is even a problem in the spec: while the
->> >> driver may read the config before finally accepting features  
->> >
->> > I'm not sure I'm following you. Let me please qoute the specification:
->> > """
->> > 4. Read device feature bits, and write the subset of feature bits
->> > understood by the OS and driver to the device. During this step the driver MAY read (but MUST NOT write) the device-specific configuration fields to check that it can support the device before accepting it. 
->> > 5. Set the FEATURES_OK status bit. The driver MUST NOT accept new feature bits after this step. 
->> > """
->> > https://docs.oasis-open.org/virtio/virtio/v1.1/cs01/virtio-v1.1-cs01.html#x1-930001  
->> 
->> Yes, exactly, it MAY read before accepting features. How does the device
->> know whether the config space is little-endian or not?
->> 
->
-> Well that is what we are talking about. One can try to infer things from
-> the spec. This reset dance I called ugly is probably the cleanest,
-> because the spec says that re-nego should work.
->
->> >  
->> >> , it does
->> >> not really make sense to do so before a feature bit as basic as
->> >> VERSION_1 which determines the endianness has been negotiated.   
->> >
->> > Are you suggesting that ->verify() should be after
->> > virtio_finalize_features()?  
->> 
->> No, that would defeat the entire purpose of verify. After
->> virtio_finalize_features(), we are done with feature negotiation.
->>
->
-> Exactly!
+The troublesome racey lifecycle of the css_driver callbacks is made clear
+with simple vfio_device refcounting so a callback is only delivered into a
+registered vfio_device and has obvious correctness.
 
-It seems we are in violent agreement :)
+Move the only per-css_driver state, the "available instance" counter, into
+the core code and share that logic with many of the other drivers. The
+value is kept in the mdev_type memory.
 
->  
->> > Wouldn't
->> > that mean that verify() can't reject feature bits? But that is the whole
->> > point of commit 82e89ea077b9 ("virtio-blk: Add validation for block size
->> > in config space"). Do you think that the commit in question is
->> > conceptually flawed? My understanding of the verify is, that it is supposed
->> > to fence features and feature bits we can't support, e.g. because of
->> > config space things, but I may be wrong.  
->> 
->> No, that commit is not really flawed on its own, I think the whole
->> procedure may be problematic.
->> 
->
-> I agree! But that regression really hurts us. Maybe the best band-aid is
-> to conditional-compile it (not compile the check if s390).
+This is on github: https://github.com/jgunthorpe/linux/commits/vfio_ccw
 
-It's probably most likely to hit on s390 (big-endian, and devices with a
-blocksize != 512 in common use); but I'd like to make that band-aid more
-generic than "exclude for s390". A hack for honouring VERSION_1 before
-negotiation has finished is probably better as a stop-gap before we
-manage to figure out how to deal with this properly.
+v3:
+ - Rebase to Christoph's group work & rc3; use
+   vfio_register_emulated_iommu_dev()
+ - Remove GFP_DMA
+ - Order mdev_unregister_driver() symmetrically with init
+ - Rework what is considered a BROKEN event in fsm_close()
+ - NOP both CCW_EVENT_OPEN/CLOSE
+ - Documentation updates
+ - Remane goto label to err_init vfio_ccw_mdev_probe()
+ - Fix NULL pointer deref in mdev_device_create()
+v2: https://lore.kernel.org/r/0-v2-7d3a384024cf+2060-ccw_mdev_jgg@nvidia.com
+ - Clean up the lifecycle in ccw with 7 new patches
+ - Rebase
+v1: https://lore.kernel.org/all/7-v2-7667f42c9bad+935-vfio3_jgg@nvidia.com
 
->
->> >
->> > The trouble is, feature bits are not negotiated one by one, but basically all
->> > at once. I suppose, I did the next best thing to first negotiating
->> > VERSION_1.  
->> 
->> We probably need to special-case VERSION_1 to move at least forward;
->> i.e. proceed as if we accepted it when reading the config space.
->> 
->> The problem is that we do not know what the device assumes when we read
->> the config space prior to setting FEATURES_OK. It may assume
->> little-endian if it offered VERSION_1, or it may not. The spec does not
->> really say what happens before feature negotiation has finished.
->> 
-> No it does not, but I hope, the implementations we care the most about do
-> little endian if VERSION_1 is set but FEATURES_OK is not yet done. A
-> transitional device would have to act upon a feature that is set,
-> because for legacy there is no FEATURES_OK. Where we can run into
-> trouble is minimum required feature set, e.g. mandatory features.
+Jason Gunthorpe (10):
+  vfio/ccw: Remove unneeded GFP_DMA
+  vfio/ccw: Use functions for alloc/free of the vfio_ccw_private
+  vfio/ccw: Pass vfio_ccw_private not mdev_device to various functions
+  vfio/ccw: Convert to use vfio_register_emulated_iommu_dev()
+  vfio/ccw: Make the FSM complete and synchronize it to the mdev
+  vfio/mdev: Consolidate all the device_api sysfs into the core code
+  vfio/mdev: Add mdev available instance checking to the core
+  vfio/ccw: Remove private->mdev
+  vfio: Export vfio_device_try_get()
+  vfio/ccw: Move the lifecycle of the struct vfio_ccw_private to the
+    mdev
 
-All ugly :(
+ .../driver-api/vfio-mediated-device.rst       |   8 +-
+ drivers/gpu/drm/i915/gvt/kvmgt.c              |   9 +-
+ drivers/s390/cio/vfio_ccw_drv.c               | 282 ++++++++----------
+ drivers/s390/cio/vfio_ccw_fsm.c               | 158 +++++++---
+ drivers/s390/cio/vfio_ccw_ops.c               | 240 +++++++--------
+ drivers/s390/cio/vfio_ccw_private.h           |  42 ++-
+ drivers/s390/crypto/vfio_ap_ops.c             |  41 +--
+ drivers/s390/crypto/vfio_ap_private.h         |   2 -
+ drivers/vfio/mdev/mdev_core.c                 |  13 +-
+ drivers/vfio/mdev/mdev_private.h              |   2 +
+ drivers/vfio/mdev/mdev_sysfs.c                |  64 +++-
+ drivers/vfio/vfio.c                           |   3 +-
+ include/linux/mdev.h                          |  13 +-
+ include/linux/vfio.h                          |   1 +
+ samples/vfio-mdev/mbochs.c                    |   9 +-
+ samples/vfio-mdev/mdpy.c                      |  31 +-
+ samples/vfio-mdev/mtty.c                      |  10 +-
+ 17 files changed, 482 insertions(+), 446 deletions(-)
 
->
-> I will do some testing.
->
->> >
->> >  
->> >> For
->> >> VERSION_1, we can probably go ahead and just assume that we will accept
->> >> it if offered, but what about other (future) bits?  
->> >
->> > I don't quite understand.  
->> 
->> There might be other bits in the future that change how the config space
->> works. We cannot assume that any of those bits will be accepted if
->> offered; i.e. we need a special hack for VERSION_1.
->
-> I tend to agree. What I didn't consider in this patch is that, setting
-> bits does not only set bits, but may also change the device in a way,
-> that clearing the bit would not change it back.
->
->> 
->> >
->> > Anyway, how do you think we should solve this problem?  
->> 
->> This is a mess. For starters, we need to think about if we should do
->> something in the spec, and if yes, what.. Then, we can probably think
->> about how to implement that properly.
->>
->
-> I agree.
->
->  
->> As we have an error right now that is basically a regression, we
->> probably need a band-aid to keep going. Not sure if your patch is the
->> right approach, maybe we really need to special-case VERSION_1 (the
->> "assume we accepted it" hack mentioned above.) This will likely fix the
->> reported problem (I assume that is s390x on QEMU); do we know about
->> other VMMs? Any other big-endian architectures?
->
-> I didn't quite get it. Would this hack take place in QEMU or in the guest
-> kernel?
 
-I'd say we need a hack here so that we assume little-endian config space
-if VERSION_1 has been offered; if your patch here works, I assume QEMU
-does what we expect (assmuming little-endian as well.) I'm mostly
-wondering what happens if you use a different VMM; can we expect it to
-work similar to QEMU? Even if it helps for s390, we should double-check
-what happens for other architectures.
-
->
->> 
->> Anyone have any better suggestions?
->> 
->
-> There is the conditional compile, as an option but I would not say it is
-> better.
-
-Yes, I agree.
-
-Anyone else have an idea? This is a nasty regression; we could revert the
-patch, which would remove the symptoms and give us some time, but that
-doesn't really feel right, I'd do that only as a last resort.
+base-commit: d9a0cd510c3383b61db6f70a84e0c3487f836a63
+-- 
+2.33.0
 
