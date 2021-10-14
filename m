@@ -2,127 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCC2642D9D7
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Oct 2021 15:10:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B087142D9FA
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Oct 2021 15:14:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230413AbhJNNMy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Oct 2021 09:12:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6926 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230010AbhJNNMx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 14 Oct 2021 09:12:53 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19ED9Gka021652;
-        Thu, 14 Oct 2021 09:10:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=WThqPwMP2OLhr33ez5Gp6Jyfx+8H4EiSb+D3oodMMf4=;
- b=rTaPoERli98kn3TRxuQ4AihNbZxJQ4zSb3mRqw6hNZjHLKN1ecmVEki7M9iq0JKxZU/e
- zm4OpS1IUGF1ZeU8nP9pmRhssIuOLn2ORGvlN2M9H0NUvqedwaI3ya9VtXBfSxRIPXjd
- 3uDTebB0i+DHkRTLKz4dQuD5aS3N/zuFWKyu9K2OL7LfksainLIW+W5532WK8qG+N2nt
- 8ouChVv0BHn5qO5kXM4a77DKAvXSS5JqO5NVVcnJ4AcGw4YbIJlEqSrtqglysjgcQYxb
- uuo5hy7xwyLWdGgYeBQe01jKNtWSKKjSm9ape4aeVMkpi5FLhT667AND2mgNqIn8N2OV qg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bnpf49rr2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Oct 2021 09:10:48 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19ECqJlj040792;
-        Thu, 14 Oct 2021 09:10:48 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3bnpf49rpx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Oct 2021 09:10:47 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19ED1WCV029176;
-        Thu, 14 Oct 2021 13:10:45 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 3bk2qa5et1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Oct 2021 13:10:45 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19EDAg2147317416
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Oct 2021 13:10:42 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41E4F42049;
-        Thu, 14 Oct 2021 13:10:42 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F346F4203F;
-        Thu, 14 Oct 2021 13:10:41 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.15.174])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Oct 2021 13:10:41 +0000 (GMT)
-Date:   Thu, 14 Oct 2021 15:10:14 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, david@redhat.com,
-        thuth@redhat.com, seiden@linux.ibm.com
-Subject: Re: [kvm-unit-tests PATCH v2 3/3] lib: s390x: Fix copyright message
-Message-ID: <20211014151014.583ad407@p-imbrenda>
-In-Reply-To: <20211014125107.2877-4-frankja@linux.ibm.com>
-References: <20211014125107.2877-1-frankja@linux.ibm.com>
-        <20211014125107.2877-4-frankja@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        id S230257AbhJNNQs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Oct 2021 09:16:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:29735 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230119AbhJNNQp (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 14 Oct 2021 09:16:45 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10136"; a="225130686"
+X-IronPort-AV: E=Sophos;i="5.85,372,1624345200"; 
+   d="scan'208";a="225130686"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2021 06:14:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,372,1624345200"; 
+   d="scan'208";a="442099713"
+Received: from irvmail001.ir.intel.com ([10.43.11.63])
+  by orsmga006.jf.intel.com with ESMTP; 14 Oct 2021 06:14:25 -0700
+Received: from alobakin-mobl.ger.corp.intel.com (kkowalew-MOBL2.ger.corp.intel.com [10.213.18.104])
+        by irvmail001.ir.intel.com (8.14.3/8.13.6/MailSET/Hub) with ESMTP id 19EDELjE025920;
+        Thu, 14 Oct 2021 14:14:21 +0100
+From:   Alexander Lobakin <alexandr.lobakin@intel.com>
+To:     Guangbin Huang <huangguangbin2@huawei.com>
+Cc:     Alexander Lobakin <alexandr.lobakin@intel.com>,
+        davem@davemloft.net, kuba@kernel.org, mkubecek@suse.cz,
+        andrew@lunn.ch, amitc@mellanox.com, idosch@idosch.org,
+        danieller@nvidia.com, jesse.brandeburg@intel.com,
+        anthony.l.nguyen@intel.com, jdike@addtoit.com, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, netanel@amazon.com,
+        akiyano@amazon.com, gtzalik@amazon.com, saeedb@amazon.com,
+        chris.snook@gmail.com, ulli.kroll@googlemail.com,
+        linus.walleij@linaro.org, jeroendb@google.com, csully@google.com,
+        awogbemila@google.com, jdmason@kudzu.us, rain.1986.08.12@gmail.com,
+        zyjzyj2000@gmail.com, kys@microsoft.com, haiyangz@microsoft.com,
+        mst@redhat.com, jasowang@redhat.com, doshir@vmware.com,
+        pv-drivers@vmware.com, jwi@linux.ibm.com, kgraul@linux.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, johannes@sipsolutions.net,
+        netdev@vger.kernel.org, lipeng321@huawei.com,
+        chenhao288@hisilicon.com, linux-s390@vger.kernel.org
+Subject: Re: [PATCH V4 net-next 0/6] ethtool: add support to set/get tx copybreak buf size and rx buf len
+Date:   Thu, 14 Oct 2021 15:14:20 +0200
+Message-Id: <20211014131420.23598-1-alexandr.lobakin@intel.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20211014113943.16231-1-huangguangbin2@huawei.com>
+References: <20211014113943.16231-1-huangguangbin2@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: rpW2vVlXDmNFnTyZ9WnB35ioK5Yndm0n
-X-Proofpoint-ORIG-GUID: 56hkh3IJcviI4E3RN62yUIgIqVzBeTio
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-10-14_07,2021-10-14_02,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 mlxscore=0
- phishscore=0 adultscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- spamscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2109230001 definitions=main-2110140084
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 14 Oct 2021 12:51:07 +0000
-Janosch Frank <frankja@linux.ibm.com> wrote:
+From: Guangbin Huang <huangguangbin2@huawei.com>
+Date: Thu, 14 Oct 2021 19:39:37 +0800
 
-> The comma makes no sense, so let's remove it.
+Hi there,
+
+> From: Hao Chen <chenhao288@hisilicon.com>
 > 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-
-> ---
->  lib/s390x/css.h  | 2 +-
->  lib/s390x/sclp.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> This series add support to set/get tx copybreak buf size and rx buf len via
+> ethtool and hns3 driver implements them.
 > 
-> diff --git a/lib/s390x/css.h b/lib/s390x/css.h
-> index d644971f..0db8a281 100644
-> --- a/lib/s390x/css.h
-> +++ b/lib/s390x/css.h
-> @@ -2,7 +2,7 @@
->  /*
->   * CSS definitions
->   *
-> - * Copyright IBM, Corp. 2020
-> + * Copyright IBM Corp. 2020
->   * Author: Pierre Morel <pmorel@linux.ibm.com>
->   */
->  
-> diff --git a/lib/s390x/sclp.h b/lib/s390x/sclp.h
-> index 28e526e2..61e9cf51 100644
-> --- a/lib/s390x/sclp.h
-> +++ b/lib/s390x/sclp.h
-> @@ -6,7 +6,7 @@
->   * Copyright (c) 2013 Alexander Graf <agraf@suse.de>
->   *
->   * and based on the file include/hw/s390x/sclp.h from QEMU
-> - * Copyright IBM, Corp. 2012
-> + * Copyright IBM Corp. 2012
->   * Author: Christian Borntraeger <borntraeger@de.ibm.com>
->   */
->  
+> Tx copybreak buf size is used for tx copybreak feature which for small size
+> packet or frag. Use ethtool --get-tunable command to get it, and ethtool
+> --set-tunable command to set it, examples are as follow:
+> 
+> 1. set tx spare buf size to 102400:
+> $ ethtool --set-tunable eth1 tx-buf-size 102400
+> 
+> 2. get tx spare buf size:
+> $ ethtool --get-tunable eth1 tx-buf-size
+> tx-buf-size: 102400
 
+Isn't that supposed to be changed on changing Tx copybreak value
+itsef?
+And what if I set Tx copybreak buf size value lower than Tx
+copybreak? I see no sanity checks for this.
+
+> Rx buf len is buffer length of each rx BD. Use ethtool -g command to get
+> it, and ethtool -G command to set it, examples are as follow:
+> 
+> 1. set rx buf len to 4096
+> $ ethtool -G eth1 rx-buf-len 4096
+> 
+> 2. get rx buf len
+> $ ethtool -g eth1
+> ...
+> RX Buf Len:     4096
+
+Isn't that supposed to be changed on changing MTU?
+And what if I set Rx buf len value lower than MTU? I see no checks
+as well.
+
+That means, do we _really_ need two new tunables?
+
+> Change log:
+> V3 -> V4
+> 1.Fix a few allmodconfig compile warning.
+> 2.Add more '=' synbol to ethtool-netlink.rst to refine format.
+> 3.Move definement of struct ethtool_ringparam_ext to include/linux/ethtool.h.
+> 4.Move related modify of rings_fill_reply() from patch 4/6 to patch 3/6.
+> 
+> V2 -> V3
+> 1.Remove documentation for tx copybreak buf size, there is description for
+> it in userspace ethtool.
+> 2.Move extending parameters for get/set_ringparam function from patch3/6
+> to patch 4/6.
+> 
+> V1 -> V2
+> 1.Add documentation for rx buf len and tx copybreak buf size.
+> 2.Extend structure ringparam_ext for extenal ring params.
+> 3.Change type of ETHTOOL_A_RINGS_RX_BUF_LEN from NLA_U32 to
+>   NLA_POLICY_MIN(NLA_U32, 1).
+> 4.Add supported_ring_params in ethtool_ops to indicate if support external
+>   params.
+> 
+
+[snip]
+
+Thanks,
+Al
