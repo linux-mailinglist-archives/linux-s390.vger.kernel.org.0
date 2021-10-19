@@ -2,158 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5577433DDF
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Oct 2021 19:54:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F9C7433DD4
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Oct 2021 19:54:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234891AbhJSR43 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 Oct 2021 13:56:29 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61454 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S234801AbhJSR40 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 19 Oct 2021 13:56:26 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19JGHhhl001976;
-        Tue, 19 Oct 2021 13:54:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=q/3DR9hWr4hjriuIEVzl47dAQxxL9n6DlZStTH7FA+4=;
- b=iUxgnPD4rjPIB9JzIGZqZwLhdtJ7AEQvC52wkAH2q65SvP9faeqYsvqz1wDr5FHeUlDT
- usYQ4UR4l+m8uM1Hrrkx3bCqCMnYjKSyg9Oq/KaYtEAgzo+praRj1Zeaz0ZhtWPov1rE
- EVW6UVNjDWMC7jB0vWuRp/XEMyE11OPoMzOWug080mv8BiaRXUTTczdFajOC4FqpnxZk
- Wtwt36SC64rCS6BXqVBIvooAWLCZvo33ED5iJkbULmo9Q8hDfNE2NEyfrGTnGpmygYmd
- y1XkPUJwS19tMHUQQ1GaJ5gzQMDGLyX1ULlZwBWSsLMTQ0I7VnEosYJWPhaSoWdaei+I Rg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3bt1draavr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Oct 2021 13:54:12 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19JGkmMJ011074;
-        Tue, 19 Oct 2021 13:54:12 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3bt1draav7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Oct 2021 13:54:12 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19JHrNHv006558;
-        Tue, 19 Oct 2021 17:54:10 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04fra.de.ibm.com with ESMTP id 3bqpcbjr8f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Oct 2021 17:54:10 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19JHs70P35520954
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Oct 2021 17:54:07 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E685EAE053;
-        Tue, 19 Oct 2021 17:54:06 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 73446AE045;
-        Tue, 19 Oct 2021 17:54:06 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 19 Oct 2021 17:54:06 +0000 (GMT)
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        id S233413AbhJSR4Y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 Oct 2021 13:56:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232148AbhJSR4X (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 Oct 2021 13:56:23 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC96EC06161C
+        for <linux-s390@vger.kernel.org>; Tue, 19 Oct 2021 10:54:10 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id c28so692472qtv.11
+        for <linux-s390@vger.kernel.org>; Tue, 19 Oct 2021 10:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=k4EO566ZbpDs//uEG0jbVR7BFdP1GfXfmKzfi4PdmWw=;
+        b=HB4JP5njikOn5AfAjstCyQb2U7X3CujnisIyXaASRNun6gILVZvON+Yk48mBRHPRQR
+         RY1+sRlgsr4BKrj236S0iTZsTOsNkkZjZ77O+6H/cvjckutVQZ3lo8RY8U232+LTDoYD
+         wrihaSgZz2EistaLinuluW7+Nf7Q1gmULkotO5by0ezt3trLunAM+NZd9jcsJb3f3Wi4
+         z9wh4z0QqPvbnullfeEX1bvb04TiS8B3jP4X5b6vkUqhm2JFdw/xlnQqiRMTT8tECovZ
+         H5OJfA5xdR7xDlsP6Q3ZnFWs3v7A5Erau3MMcunjF2p/JVcC2lBzQ800djcevSsut0s3
+         fsqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=k4EO566ZbpDs//uEG0jbVR7BFdP1GfXfmKzfi4PdmWw=;
+        b=1cjEbkkqEJuKfeZbMUlOoUL0vMOwfOzxr96s6Sx6vi7c39htOuAXPdJxdpkVaGe4OR
+         55DqHMLedTFJYZUV8jkbDBnu8q2LMpogysWTSmsJJetqj731bHbqwqfRTdTZwcehMIQR
+         mOoq8Gu3adh6u5VDBlqnV8mtDz3Qs5fX3dRIDl28u2h/udeKBRtFdfuvSLvqH74vgfsb
+         yrZEfqB0tjYFmU94/d4RpsG7PYV0n9nmalKUBfd7OHi+KYhrhtC1kvcY/ge2ZP/ow1Ov
+         YSRtZC9PkT9LrrOzndQAdEnBxUWyyFA5mLSNsbhc+PAm7We+1nnrRkXmkGJym+TfBiMg
+         qv5A==
+X-Gm-Message-State: AOAM533oxC4bxmSa5VU+Rv9U+FjXz9F69BX8VXmkbNsVcl1rAzwjuODx
+        /PSctKYn8XfVvRPL4GGTxhEQKQ==
+X-Google-Smtp-Source: ABdhPJz54D+TH75Ir6oqy79nFFUrYbmeO/WH3eSFZrTLNjPikl0roL2ySe8DOGvYpxXiO4sh+slelQ==
+X-Received: by 2002:ac8:74c7:: with SMTP id j7mr1578684qtr.118.1634666049948;
+        Tue, 19 Oct 2021 10:54:09 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-129.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.129])
+        by smtp.gmail.com with ESMTPSA id u189sm8144732qkh.14.2021.10.19.10.54.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Oct 2021 10:54:09 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1mctJQ-00GuaZ-PR; Tue, 19 Oct 2021 14:54:08 -0300
+Date:   Tue, 19 Oct 2021 14:54:08 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Joao Martins <joao.m.martins@oracle.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>, farman@linux.ibm.com,
-        kvm@vger.kernel.org
-Subject: [PATCH 3/3] KVM: s390: clear kicked_mask if not idle after set
-Date:   Tue, 19 Oct 2021 19:54:01 +0200
-Message-Id: <20211019175401.3757927-4-pasic@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211019175401.3757927-1-pasic@linux.ibm.com>
-References: <20211019175401.3757927-1-pasic@linux.ibm.com>
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alex Sierra <alex.sierra@amd.com>,
+        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: Re: can we finally kill off CONFIG_FS_DAX_LIMITED
+Message-ID: <20211019175408.GJ3686969@ziepe.ca>
+References: <e250feab-1873-c91d-5ea9-39ac6ef26458@oracle.com>
+ <CAPcyv4jYXPWmT2EzroTa7RDz1Z68Qz8Uj4MeheQHPbBXdfS4pA@mail.gmail.com>
+ <20210824202449.19d524b5@thinkpad>
+ <CAPcyv4iFeVDVPn6uc=aKsyUvkiu3-fK-N16iJVZQ3N8oT00hWA@mail.gmail.com>
+ <20211014230439.GA3592864@nvidia.com>
+ <5ca908e3-b4ad-dfef-d75f-75073d4165f7@oracle.com>
+ <20211018233045.GQ2744544@nvidia.com>
+ <CAPcyv4i=Rsv3nNTH9LTc2BwCoMyDU639vdd9kVEzZXvuSY+dWA@mail.gmail.com>
+ <20211019142032.GT2744544@nvidia.com>
+ <CAPcyv4jAQVSKB7rts5Mfu0JRtB-b1NGFgu03+8-ja8o11d1vQA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: rZtmK9zhXz0uxj3kfkvTk0v391lt4HVG
-X-Proofpoint-ORIG-GUID: TfSOrbrLVH_MZgr95rHj096R307ZfErf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-10-19_02,2021-10-19_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- adultscore=0 spamscore=0 suspectscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 mlxlogscore=810 phishscore=0 impostorscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109230001 definitions=main-2110190103
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jAQVSKB7rts5Mfu0JRtB-b1NGFgu03+8-ja8o11d1vQA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The idea behind kicked mask is that we should not re-kick a vcpu
-from __airqs_kick_single_vcpu() that is already in the middle of
-being kicked by the same function.
+On Tue, Oct 19, 2021 at 10:38:42AM -0700, Dan Williams wrote:
 
-If however the vcpu that was idle before when the idle_mask was
-examined, is not idle any more after the kicked_mask is set, that
-means that we don't need to kick, and that we need to clear the
-bit we just set because we may be beyond the point where it would
-get cleared in the wake-up process. Since the time window is short,
-this is probably more a theoretical than a practical thing: the race
-window is small.
+> > So we can just delete the detection of the page size and rely on the
+> > zap code to wipe out the entire level, not split it. Which is what we
+> > have today already.
+> 
+> As Joao points out, userspace wants to know the blast radius of the
+> unmap for historical reasons. I do think it's worth deprecating that
+> somehow... providing a better error management interface is part of
+> the DAX-reflink enabling.
 
-To get things harmonized let us also move the clear from vcpu_pre_run()
-to __unset_cpu_idle().
+OK, it makes sense.
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Fixes: 9f30f6216378 ("KVM: s390: add gib_alert_irq_handler()")
----
- arch/s390/kvm/interrupt.c | 7 ++++++-
- arch/s390/kvm/kvm-s390.c  | 2 --
- 2 files changed, 6 insertions(+), 3 deletions(-)
+I have a less invasive idea though - emulate what zap is doing:
 
-diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-index 2245f4b8d362..3c80a2237ef5 100644
---- a/arch/s390/kvm/interrupt.c
-+++ b/arch/s390/kvm/interrupt.c
-@@ -426,6 +426,7 @@ static void __unset_cpu_idle(struct kvm_vcpu *vcpu)
- {
- 	kvm_s390_clear_cpuflags(vcpu, CPUSTAT_WAIT);
- 	clear_bit(vcpu->vcpu_idx, vcpu->kvm->arch.idle_mask);
-+	clear_bit(vcpu->vcpu_idx, vcpu->kvm->arch.gisa_int.kicked_mask);
- }
- 
- static void __reset_intercept_indicators(struct kvm_vcpu *vcpu)
-@@ -3064,7 +3065,11 @@ static void __airqs_kick_single_vcpu(struct kvm *kvm, u8 deliverable_mask)
- 			/* lately kicked but not yet running */
- 			if (test_and_set_bit(vcpu_idx, gi->kicked_mask))
- 				return;
--			kvm_s390_vcpu_wakeup(vcpu);
-+			/* if meanwhile not idle: clear  and don't kick */
-+			if (test_bit(vcpu_idx, kvm->arch.idle_mask))
-+				kvm_s390_vcpu_wakeup(vcpu);
-+			else
-+				clear_bit(vcpu_idx, gi->kicked_mask);
- 			return;
- 		}
- 	}
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 1c97493d21e1..6b779ef9f5fb 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -4067,8 +4067,6 @@ static int vcpu_pre_run(struct kvm_vcpu *vcpu)
- 		kvm_s390_patch_guest_per_regs(vcpu);
- 	}
- 
--	clear_bit(vcpu->vcpu_idx, vcpu->kvm->arch.gisa_int.kicked_mask);
--
- 	vcpu->arch.sie_block->icptcode = 0;
- 	cpuflags = atomic_read(&vcpu->arch.sie_block->cpuflags);
- 	VCPU_EVENT(vcpu, 6, "entering sie flags %x", cpuflags);
--- 
-2.25.1
+      if (!pud_present(*pud))
+               return 0;
+      if (pud_leaf(*pud))
+             return PUD_SHIFT;
 
+      if (!pmd_present(*pud))
+               return 0;
+      if (pmd_leaf(*pud))
+             return PMD_SHIFT;
+      return PAGE_SHIFT;
+
+Which would return the "blast radius" of the unmap_mapping_range()
+when it rounds up to the left page level that contains the VA.
+
+Now it doesn't need the pte_devmap test..
+
+And when both DAX's learn to use compound_head this can be deleted.
+
+Jason
