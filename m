@@ -2,182 +2,111 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F34A2433D9F
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Oct 2021 19:38:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01FA9433DD6
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Oct 2021 19:54:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234663AbhJSRlF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 Oct 2021 13:41:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234746AbhJSRlF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 Oct 2021 13:41:05 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D342C06161C
-        for <linux-s390@vger.kernel.org>; Tue, 19 Oct 2021 10:38:52 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id kk10so521443pjb.1
-        for <linux-s390@vger.kernel.org>; Tue, 19 Oct 2021 10:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RsMDv8TIPEq0+LaeWIxdShx9z/dydzJnIX6quHt9R6Q=;
-        b=s8A5QWGcMjyRJK65mcAcZUNPhE3FgzjEkhyzWNoFOZKjRWtXcLPy+3Q94YkAHKuRB9
-         eBuGf9HEp0wKvm+4WO+duYxNyMnz2li6YBVJYcGOx0kfACMdsyQAGbli7KTWlA9YshSm
-         8KzgLyzDaUXjiBPIcISLnSa7g5t3TE6ekP9tSGfWHdtLb9+fVbQha1gMy9xTPL7kW1mn
-         iNKAZ7dkdU5BnIwkSJ2L6X+CA4aJejKaH/YlerIWQceABV2jPT34P3oit9tROvaJv5Ua
-         5OPClR1M5B2ZmQJsiVkzA1o+ZknhoZChDFp8OvjdA3Gd3PoTwpJwmeQ/8k2bVMZlu/q/
-         LGAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RsMDv8TIPEq0+LaeWIxdShx9z/dydzJnIX6quHt9R6Q=;
-        b=Nh3sdoQ/TQzkvWqSCrRAejlHi09oMj3geN6cx/Y2/l0OFcNrFAezFQ+ugtiFjMF6FS
-         HrCI7NihL2ahfloVj6IZT1js8NM5JdMkE3wN5QQb6V0WiTDW3XndCYEAs2WbHBSt02ya
-         YvCF11Lt7zmcfUtB0CGgIR/baVKrag6ccHtsDaJWt45fzv1DvdyDJVW14uMRT9SIZKFl
-         XyIJsEmb0Pv6TsPgtjjm6+rX2ItbP2IXsae5DtxkPVbqQsHvxYBjpb+Rmr+mtNWPVaEK
-         NZCh7mYixtuZH3wRD956Y/LPTEJy+9Ucs77nJUWzlRVsoVgwbO9ISjhHYLebQUYn1tSB
-         oGng==
-X-Gm-Message-State: AOAM533+Q4YIzpmkMmsJ7MzNs/1Z13vEE3eY1KDIqIPAGaMAZqlcqT9v
-        s1sjVsUCbj396HafyTLWL1rO/4LDdNH46yI2+qDqrg==
-X-Google-Smtp-Source: ABdhPJxUtc06lLaLs1F436CM8/A0H7B/JaCfNLeNOv/ulNBrP+vM3Kr8Oj1iEshG6bpmzwRvoZ0e9CSHkabM6Kcibsc=
-X-Received: by 2002:a17:902:b213:b0:13e:cd44:b4b5 with SMTP id
- t19-20020a170902b21300b0013ecd44b4b5mr34365056plr.18.1634665131843; Tue, 19
- Oct 2021 10:38:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210823214708.77979b3f@thinkpad> <CAPcyv4jijqrb1O5OOTd5ftQ2Q-5SVwNRM7XMQ+N3MAFxEfvxpA@mail.gmail.com>
- <e250feab-1873-c91d-5ea9-39ac6ef26458@oracle.com> <CAPcyv4jYXPWmT2EzroTa7RDz1Z68Qz8Uj4MeheQHPbBXdfS4pA@mail.gmail.com>
- <20210824202449.19d524b5@thinkpad> <CAPcyv4iFeVDVPn6uc=aKsyUvkiu3-fK-N16iJVZQ3N8oT00hWA@mail.gmail.com>
- <20211014230439.GA3592864@nvidia.com> <5ca908e3-b4ad-dfef-d75f-75073d4165f7@oracle.com>
- <20211018233045.GQ2744544@nvidia.com> <CAPcyv4i=Rsv3nNTH9LTc2BwCoMyDU639vdd9kVEzZXvuSY+dWA@mail.gmail.com>
- <20211019142032.GT2744544@nvidia.com>
-In-Reply-To: <20211019142032.GT2744544@nvidia.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 19 Oct 2021 10:38:42 -0700
-Message-ID: <CAPcyv4jAQVSKB7rts5Mfu0JRtB-b1NGFgu03+8-ja8o11d1vQA@mail.gmail.com>
-Subject: Re: can we finally kill off CONFIG_FS_DAX_LIMITED
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Joao Martins <joao.m.martins@oracle.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
+        id S234669AbhJSR4Z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 Oct 2021 13:56:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55594 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232148AbhJSR4Y (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 19 Oct 2021 13:56:24 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19JHFWjo027664;
+        Tue, 19 Oct 2021 13:54:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=6x4dyi/EIPpRIQpzoTnkc63vdwAapa/hL9676ISFiJ8=;
+ b=PDjnlubJIPaymDCbR6+7TMTXmzAdsJC2b0mL2uKhzeD3ryyM+8grcAZynegsGHLJ/hE2
+ ewNGavEP5c3DOEl6ynWetR67CFqg4vyWfFlY2Gm8oHoVOmVkFAQS3XJfePP//O52kTnv
+ izDMRO7pd7kP/nhJdUlICaysRazzKo7gIAPphdvKU4CdOIuq1WLmrfDhXve9uoIytRwR
+ eHtCVSSWFKCNf+dcUg7Rh2J8Z7pjSBvPIsGvFC2vCLjmqE6jw9u0+7HX7rEb+jYmewW9
+ 8Il/RbcsCs0ijjGxcrZxkxzVh90YLbAJ/9L7C4yGqHAjQQiGOJ6pUtzcVAUXM5xZNWbg dA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bsww7ra3v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Oct 2021 13:54:11 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19JHrxIX011547;
+        Tue, 19 Oct 2021 13:54:11 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3bsww7ra35-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Oct 2021 13:54:10 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19JHrSkv008940;
+        Tue, 19 Oct 2021 17:54:08 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03fra.de.ibm.com with ESMTP id 3bqpc9jrk6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Oct 2021 17:54:08 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19JHs5GB63766834
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Oct 2021 17:54:05 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2E555AE055;
+        Tue, 19 Oct 2021 17:54:05 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 989B1AE045;
+        Tue, 19 Oct 2021 17:54:04 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Oct 2021 17:54:04 +0000 (GMT)
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alex Sierra <alex.sierra@amd.com>,
-        "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>, farman@linux.ibm.com,
+        kvm@vger.kernel.org
+Subject: [PATCH 0/3] fixes for __airqs_kick_single_vcpu()  
+Date:   Tue, 19 Oct 2021 19:53:58 +0200
+Message-Id: <20211019175401.3757927-1-pasic@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: rq3h-2ZJOMLNh7ba_ZpUEwCkSQX4R7ba
+X-Proofpoint-ORIG-GUID: mIuaHLXt9Mk3QLeLwsYJc3r1-ljuNzvi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-10-19_02,2021-10-19_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ bulkscore=0 suspectscore=0 spamscore=0 adultscore=0 impostorscore=0
+ phishscore=0 clxscore=1015 mlxlogscore=967 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109230001 definitions=main-2110190103
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Oct 19, 2021 at 7:25 AM Jason Gunthorpe <jgg@nvidia.com> wrote:
->
-> On Mon, Oct 18, 2021 at 09:26:24PM -0700, Dan Williams wrote:
-> > On Mon, Oct 18, 2021 at 4:31 PM Jason Gunthorpe <jgg@nvidia.com> wrote:
-> > >
-> > > On Fri, Oct 15, 2021 at 01:22:41AM +0100, Joao Martins wrote:
-> > >
-> > > > dev_pagemap_mapping_shift() does a lookup to figure out
-> > > > which order is the page table entry represents. is_zone_device_page()
-> > > > is already used to gate usage of dev_pagemap_mapping_shift(). I think
-> > > > this might be an artifact of the same issue as 3) in which PMDs/PUDs
-> > > > are represented with base pages and hence you can't do what the rest
-> > > > of the world does with:
-> > >
-> > > This code is looks broken as written.
-> > >
-> > > vma_address() relies on certain properties that I maybe DAX (maybe
-> > > even only FSDAX?) sets on its ZONE_DEVICE pages, and
-> > > dev_pagemap_mapping_shift() does not handle the -EFAULT return. It
-> > > will crash if a memory failure hits any other kind of ZONE_DEVICE
-> > > area.
-> >
-> > That case is gated with a TODO in memory_failure_dev_pagemap(). I
-> > never got any response to queries about what to do about memory
-> > failure vs HMM.
->
-> Unfortunately neither Logan nor Felix noticed that TODO conditional
-> when adding new types..
->
-> But maybe it is dead code anyhow as it already has this:
->
->         cookie = dax_lock_page(page);
->         if (!cookie)
->                 goto out;
->
-> Right before? Doesn't that already always fail for anything that isn't
-> a DAX?
+The three fixes aren't closely related. The first one is the
+most imporant one. They can be picked separately. I deciced to send them
+out together so that if reviewers see: hey there is more broken, they
+can also see the fixes near by.
 
-Yes, I originally made that ordering mistake in:
+Halil Pasic (3):
+  KVM: s390: clear kicked_mask before sleeping again
+  KVM: s390: preserve deliverable_mask in __airqs_kick_single_vcpu
+  KVM: s390: clear kicked_mask if not idle after set
 
-6100e34b2526 mm, memory_failure: Teach memory_failure() about dev_pagemap pages
+ arch/s390/kvm/interrupt.c | 12 +++++++++---
+ arch/s390/kvm/kvm-s390.c  |  3 +--
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
-...however, if we complete the move away from page-less DAX it also
-allows for the locking to move from the xarray to lock_page(). I.e.
-dax_lock_page() is pinning the inode after the fact, but I suspect the
-inode should have been pinned when the mapping was established. Which
-raises a question for the reflink support whether it is pinning all
-involved inodes while the mapping is established?
 
->
-> > > I'm not sure the comment is correct anyhow:
-> > >
-> > >                 /*
-> > >                  * Unmap the largest mapping to avoid breaking up
-> > >                  * device-dax mappings which are constant size. The
-> > >                  * actual size of the mapping being torn down is
-> > >                  * communicated in siginfo, see kill_proc()
-> > >                  */
-> > >                 unmap_mapping_range(page->mapping, start, size, 0);
-> > >
-> > > Beacuse for non PageAnon unmap_mapping_range() does either
-> > > zap_huge_pud(), __split_huge_pmd(), or zap_huge_pmd().
-> > >
-> > > Despite it's name __split_huge_pmd() does not actually split, it will
-> > > call __split_huge_pmd_locked:
-> > >
-> > >         } else if (!(pmd_devmap(*pmd) || is_pmd_migration_entry(*pmd)))
-> > >                 goto out;
-> > >         __split_huge_pmd_locked(vma, pmd, range.start, freeze);
-> > >
-> > > Which does
-> > >         if (!vma_is_anonymous(vma)) {
-> > >                 old_pmd = pmdp_huge_clear_flush_notify(vma, haddr, pmd);
-> > >
-> > > Which is a zap, not split.
-> > >
-> > > So I wonder if there is a reason to use anything other than 4k here
-> > > for DAX?
-> > >
-> > > >       tk->size_shift = page_shift(compound_head(p));
-> > > >
-> > > > ... as page_shift() would just return PAGE_SHIFT (as compound_order() is 0).
-> > >
-> > > And what would be so wrong with memory failure doing this as a 4k
-> > > page?
-> >
-> > device-dax does not support misaligned mappings. It makes hard
-> > guarantees for applications that can not afford the page table
-> > allocation overhead of sub-1GB mappings.
->
-> memory-failure is the wrong layer to enforce this anyhow - if someday
-> unmap_mapping_range() did learn to break up the 1GB pages then we'd
-> want to put the condition to preserve device-dax mappings there, not
-> way up in memory-failure.
->
-> So we can just delete the detection of the page size and rely on the
-> zap code to wipe out the entire level, not split it. Which is what we
-> have today already.
+base-commit: 519d81956ee277b4419c723adfb154603c2565ba
+-- 
+2.25.1
 
-As Joao points out, userspace wants to know the blast radius of the
-unmap for historical reasons. I do think it's worth deprecating that
-somehow... providing a better error management interface is part of
-the DAX-reflink enabling.
