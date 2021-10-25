@@ -2,123 +2,71 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1510A439EE2
-	for <lists+linux-s390@lfdr.de>; Mon, 25 Oct 2021 21:02:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAA9C43A3E0
+	for <lists+linux-s390@lfdr.de>; Mon, 25 Oct 2021 22:04:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233699AbhJYTEp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 25 Oct 2021 15:04:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47238 "EHLO
+        id S237613AbhJYUHJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 25 Oct 2021 16:07:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233588AbhJYTEo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 25 Oct 2021 15:04:44 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC0D5C061745
-        for <linux-s390@vger.kernel.org>; Mon, 25 Oct 2021 12:02:21 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1mf5Dm-00010z-7d; Mon, 25 Oct 2021 21:01:22 +0200
-Received: from pengutronix.de (2a03-f580-87bc-d400-e094-d8e8-b5aa-4a00.ip6.dokom21.de [IPv6:2a03:f580:87bc:d400:e094:d8e8:b5aa:4a00])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        (Authenticated sender: mkl-all@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 2ED6D69DAD3;
-        Mon, 25 Oct 2021 19:01:16 +0000 (UTC)
-Date:   Mon, 25 Oct 2021 21:01:14 +0200
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Guangbin Huang <huangguangbin2@huawei.com>, davem@davemloft.net,
-        mkubecek@suse.cz, andrew@lunn.ch, amitc@mellanox.com,
-        idosch@idosch.org, danieller@nvidia.com,
-        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        netanel@amazon.com, akiyano@amazon.com, saeedb@amazon.com,
-        chris.snook@gmail.com, ulli.kroll@googlemail.com,
-        linus.walleij@linaro.org, jeroendb@google.com, csully@google.com,
-        awogbemila@google.com, jdmason@kudzu.us, rain.1986.08.12@gmail.com,
-        zyjzyj2000@gmail.com, kys@microsoft.com, haiyangz@microsoft.com,
-        mst@redhat.com, jasowang@redhat.com, doshir@vmware.com,
-        pv-drivers@vmware.com, jwi@linux.ibm.com, kgraul@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, johannes@sipsolutions.net,
-        netdev@vger.kernel.org, lipeng321@huawei.com,
-        chenhao288@hisilicon.com, linux-s390@vger.kernel.org
-Subject: Re: [PATCH V4 net-next 4/6] ethtool: extend ringparam setting uAPI
- with rx_buf_len
-Message-ID: <20211025190114.zbqgzsfiv7zav7aq@pengutronix.de>
-References: <20211014113943.16231-1-huangguangbin2@huawei.com>
- <20211014113943.16231-5-huangguangbin2@huawei.com>
- <20211025131149.ya42sw64vkh7zrcr@pengutronix.de>
- <20211025132718.5wtos3oxjhzjhymr@pengutronix.de>
- <20211025104505.43461b53@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        with ESMTP id S238517AbhJYUF0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 25 Oct 2021 16:05:26 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DA76C036D6A
+        for <linux-s390@vger.kernel.org>; Mon, 25 Oct 2021 12:25:53 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id u5so14199754ljo.8
+        for <linux-s390@vger.kernel.org>; Mon, 25 Oct 2021 12:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=PqsqwuX6OMouIXAqUYvmyQTrjv81GuBrjl9EO3GIabk=;
+        b=Tm2Jy0kv1ctNiZIOJRZ3xmrmXOLllGI4cDQHEAh2amCKoI+7MAQWkLpyddT5oWqL1M
+         AHN9fKWge0Jf3AysdJ1iH5uAsz/YS3KTErmc81gf7rfwvqB7mS2cmXluwo9IphaXl4F9
+         ev5ufUXg1U560jo0epbE2cBNPykGuhURI/tQdY6W8Hn8L6/tIToQXcQMvtBvKmxsRS3s
+         m8I+8A8u0dGB5gYGl8WLHL6VPOTaZmotQ/r97aN6asG/Uh+fUtE59eGI/j2R0kYWmenO
+         Tc8tnBoPJbZezJumKyfnYkntdoJrcU6dAdfyfZR0y9Q03FIT25P4imdNrQEcQFl5sqzt
+         Q+xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=PqsqwuX6OMouIXAqUYvmyQTrjv81GuBrjl9EO3GIabk=;
+        b=STMSdZgU18uvn3SQhrO5Lijwr4cPRskF3KRiLEOVcbe1L1Q+/QjaIxm7NcXTyprOEM
+         fkry7/ll7siPNvoF1wVh7nqMrsAUJKa9+Wf9qLh4uAnrIpBbQJQSnBHVewzrzy5wNpsw
+         fBMdQ/RuM0zHsriTvW5jE0wSAfWK8B6R/3rFtXHlEqyG5LesMZpZV5F5mXj/QLlWCeFh
+         BSqgEwF51BA+5jihlW4l0DdVyd496r5W9msdcewm+i3tBQ95Ou7FAcZwCn58WNa8kjEY
+         YSpEMyYtX70qAmd7apwK5t+vKqXQ5RnXuEnq4nBzIrOYsKeBSq8q5AlI77XbEIwf4FHF
+         mVWA==
+X-Gm-Message-State: AOAM532lU0tzpkAhzGT5BeYOXsFdIcCLH1z3zFCETUjq7udQtVc14Fla
+        Q60Jk/wBV4/AYjkbNIwMqTiDAwjmjfQcT7RhuFK5aADRIfM=
+X-Google-Smtp-Source: ABdhPJzZAzVCLBnERpFzTpyvKdmqaM0me3cWO0axA6xdR/xmnK0QfYsCtNC8W4X/M3P2EjxqgU4/OUJu6ILXNGiLNy4=
+X-Received: by 2002:a2e:b708:: with SMTP id j8mr20811155ljo.466.1635189952047;
+ Mon, 25 Oct 2021 12:25:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tsachftpl2w422kb"
-Content-Disposition: inline
-In-Reply-To: <20211025104505.43461b53@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-s390@vger.kernel.org
+Received: by 2002:ac2:4a67:0:0:0:0:0 with HTTP; Mon, 25 Oct 2021 12:25:51
+ -0700 (PDT)
+Reply-To: millermelodyann3@gmail.com
+From:   Miller Melody Ann <skaisha33@gmail.com>
+Date:   Mon, 25 Oct 2021 22:25:51 +0300
+Message-ID: <CA+o_noafq4vbO_MsWtqC8BSiNgh+zkWZ4KY0FLe66k3Z5OxA-w@mail.gmail.com>
+Subject: =?UTF-8?Q?Kann_ich_Ihnen_f=C3=BCr_eine_=C3=9Cberweisung_von_2=2E500=2E000=2C?=
+        =?UTF-8?Q?00_USD_vertrauen=3F?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
---tsachftpl2w422kb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 25.10.2021 10:45:05, Jakub Kicinski wrote:
-> > The approach Andrew suggested is two-fold. First introduce a "struct
-> > ethtool_kringparam" that's only used inside the kernel, as "struct
-> > ethtool_ringparam" is ABI. Then extend "struct ethtool_kringparam" as
-> > needed.
->=20
-> Indeed, there are different ways to extend the API for drivers,
-> I think it comes down to personal taste. I find the "inheritance"=20
-> models in C (kstruct usually contains the old struct as some "base")
-> awkward.
->=20
-> I don't think we have agreed-on best practice in the area.
-
-=46rom my point of view, if there already is an extension mainline:
-
-| https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=
-=3Df3ccfda19319
-
-I'm more in the flavor for modeling other extensions the same way. Would
-be more consistent to name the new struct "kernel_"ethtool_ringparam,
-following the coalescing example:
-
-| struct kernel_ethtool_ringparam {
-|        __u32   rx_buf_len;
-| };
-
-regards,
-Marc
-
 --=20
-Pengutronix e.K.                 | Marc Kleine-Budde           |
-Embedded Linux                   | https://www.pengutronix.de  |
-Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+Hallo
 
---tsachftpl2w422kb
-Content-Type: application/pgp-signature; name="signature.asc"
+Mein Name ist Miller Melody Ann, eine Angestellte der Wing Hang Bank
+hier in China, Hongkong. Kann ich Ihnen f=C3=BCr eine =C3=9Cberweisung von
+2.500.000,00 USD vertrauen? wenn ja Kontaktieren Sie mich per E-Mail:
+Millermelodyann3@gmail.com
 
------BEGIN PGP SIGNATURE-----
+Gr=C3=BC=C3=9Fe
 
-iQEzBAABCgAdFiEEK3kIWJt9yTYMP3ehqclaivrt76kFAmF2/vgACgkQqclaivrt
-76nIzAf/ew+QcoVunJ7n3YtQOE87/Pm9xz0d87FykWZTcmxFJ0h+HtzXuma7LYPh
-swmGDwvdCA6iGv3NG4lhsXHCNFaqaj+vERZnjNIJjbns8bJ8JmqzvYFABTE3LaPY
-i51d5d82npzuIEyrcWJuB52V8ZoA/n4gak7trEEe5q4mRy+86qjveIAoLju9vR9E
-QtFkd3CaXHrLwSaiTJE5vc4RgXkKwDgGB6elo6U2aXhc2DQuwrHKfJrxAOROVxuX
-pqH3usxLLMEfFLNp6+yL6g3AWDSeRc2zTMo404j1H1blNMqS5Cqd9QrxzvjALUtO
-wDAy/KhQcx7nJ1NSoq3MOFwrHCnwSg==
-=ZA5r
------END PGP SIGNATURE-----
-
---tsachftpl2w422kb--
+Miller Melodie Anna
