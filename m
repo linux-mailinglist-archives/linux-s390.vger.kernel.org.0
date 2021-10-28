@@ -2,149 +2,106 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B73943E2C9
-	for <lists+linux-s390@lfdr.de>; Thu, 28 Oct 2021 15:57:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39FD343E33C
+	for <lists+linux-s390@lfdr.de>; Thu, 28 Oct 2021 16:13:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230480AbhJ1N7V (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 28 Oct 2021 09:59:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30794 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S230421AbhJ1N7T (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 28 Oct 2021 09:59:19 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19SDHp67014934;
-        Thu, 28 Oct 2021 13:56:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=eSw5DGAZnx4YMYV5a7tcWTA9NrwkN8U9+kTSxgHxq6I=;
- b=IfX7qvWI+M+bw6emQIyZwF42OW9A/PHCEBEPSJJk+5XmItsUN7ZxVE0iQ5dyrHnT77Cl
- PZThh9D3S4AXvtdlTaFY2nI8BLdNHNUN+iMAaKcTM5Daw7WemjZfl/gQXU0o8WXhLgxR
- EFzsCESUhKtA/shbzqiyKRPIDEZUPvs4zuXkXK7mkc/UZqY8FgGI3HD3LYV/VMst+O9+
- nGE6PZGeSb9IFdACHNoiEcW56PCzy0yigAvJFe3dkiP/AKnJodWnYhHAcAT+kBF8besw
- j+qZ7tXK7BKbIGCcESxnmwJrZDqQILJoskIiZvX6S9EJPI+crk55P/jH3YT4EI6fPhbW ow== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3byvmf0uh0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Oct 2021 13:56:51 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 19SDI3xI015587;
-        Thu, 28 Oct 2021 13:56:50 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3byvmf0ugh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Oct 2021 13:56:50 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 19SDqBxh023546;
-        Thu, 28 Oct 2021 13:56:49 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06fra.de.ibm.com with ESMTP id 3bx4ej8d8a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 Oct 2021 13:56:49 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 19SDuj1V39190926
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Oct 2021 13:56:45 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AE5A4A4062;
-        Thu, 28 Oct 2021 13:56:45 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C63CA4054;
-        Thu, 28 Oct 2021 13:56:45 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 Oct 2021 13:56:45 +0000 (GMT)
-From:   Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] KVM: s390: gaccess: Cleanup access to guest frames
-Date:   Thu, 28 Oct 2021 15:55:56 +0200
-Message-Id: <20211028135556.1793063-4-scgl@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211028135556.1793063-1-scgl@linux.ibm.com>
-References: <20211028135556.1793063-1-scgl@linux.ibm.com>
+        id S231182AbhJ1OPq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 28 Oct 2021 10:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230401AbhJ1OPq (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 28 Oct 2021 10:15:46 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A119C061767
+        for <linux-s390@vger.kernel.org>; Thu, 28 Oct 2021 07:13:19 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 5so24763852edw.7
+        for <linux-s390@vger.kernel.org>; Thu, 28 Oct 2021 07:13:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=2HfodvIKsXmdxTtsXOvx0knfgEclU3IICQbU3Ulbeso=;
+        b=AxlRapfPYendyh+fP+pokIB+ry3X22Nm37GimJ0AKBb11iO5dWGizMLp78HALEUXk4
+         5FAPeUVpRwGjcTOVuKwWxCR2MyvHvIPneTVVvM4jfkMy1qGyfQcyQ8CbsIkQ0TgJxuY0
+         f9b+K98dwgFwGBnkl3SHdudosMM3xssdoz0ppmjfbeHoxEEv8j2C9ALZnS1zMOIGz1SL
+         lydnO4UoGLf4MpZrliUg/6zr+BpmEj0l5gh7AshzOBYdOWLVWdB/BuGRsYxvXJM3XW5h
+         yujhp0vNBQLqfH1EAwxlbuqyfJ5p6dCNZ5PqRwKYcsBhtYqdMZ0jg9QWzndD2y6XStTe
+         ZHbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=2HfodvIKsXmdxTtsXOvx0knfgEclU3IICQbU3Ulbeso=;
+        b=akQZTbilLO1VEuj5SpbRIi3el+kLzmFiaS2C5IAIEmRVP5wqKB+11zSLEAXR+IPcF5
+         MuyrJHdh1YuG0PStWpPKDdTaOKt3qLhdc3+ENoKni+4rNgMVT/PEPXQi6Ncg4VMOQNVs
+         qbVrWzi5AVe8AAtobAW9LsktuGuJRwRJ51k98heLFX1UaK7jGSg1rZJBgDS/U3Bd2RvZ
+         5I4D585/x2EkRNTYVEMc4wMzVoVsguwz/6e8gxpM89Qb8F1NbpGzpTyb52UhyjlUVAzM
+         /uZXMxgstXoFjh4CSnJhBz0Vi++JJhO38MU/XNdlVj1ezswifrExAZZ5/+IYvZTEM2+2
+         hdow==
+X-Gm-Message-State: AOAM532+eZ2XfIQeh8F7YjHKwONxRPiwQ8vruM97fuKYB/3g3vt6PL8x
+        fG4wPVYuhOro+YYbM+qHi9Xvc083uZvN/SUbrZQpyFJnAbOlDg==
+X-Google-Smtp-Source: ABdhPJx7xbYO3adfzEdDBvMW/w1USw7c2rkLDD2FkHY1ila44wcCYWIIbjglpZRlhGy45J2a59Uh6OCPYkKbn37zQy4=
+X-Received: by 2002:a17:906:c7c1:: with SMTP id dc1mr5908906ejb.6.1635430396601;
+ Thu, 28 Oct 2021 07:13:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: qog0TgVjU61hsGuI9_eh1PAaJnIAVCNt
-X-Proofpoint-ORIG-GUID: BhOw6vA-u1qmuwyxa9z5LR-ANZaUMlDo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-10-28_01,2021-10-26_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 spamscore=0 phishscore=0
- mlxscore=0 adultscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2110280075
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 28 Oct 2021 19:43:04 +0530
+Message-ID: <CA+G9fYu=0pViKt-9bZA91qaq1WgHBYA4=o1kHz6VMNp_3EBM1g@mail.gmail.com>
+Subject: s390: facility.h:98:22: error: implicit declaration of function
+ 'min_t' [-Werror=implicit-function-declaration]
+To:     linux-s390@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Introduce a helper function for guest frame access.
+Regression found on s390 gcc-11 built with defconfig
+Following build warnings / errors reported on linux next 20211028.
 
-Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
----
- arch/s390/kvm/gaccess.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+metadata:
+    git_describe: next-20211028
+    git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+    git_short_log: 503f375baa99 (\"Add linux-next specific files for 20211028\")
+    target_arch: s390
+    toolchain: gcc-11
 
-diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
-index f0848c37b003..9a633310b6fe 100644
---- a/arch/s390/kvm/gaccess.c
-+++ b/arch/s390/kvm/gaccess.c
-@@ -866,6 +866,20 @@ static int guest_range_to_gpas(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
- 	return 0;
- }
- 
-+static int access_guest_page(struct kvm *kvm, enum gacc_mode mode, gpa_t gpa,
-+			      void *data, unsigned int len)
-+{
-+	const unsigned int offset = offset_in_page(gpa);
-+	const gfn_t gfn = gpa_to_gfn(gpa);
-+	int rc;
-+
-+	if (mode == GACC_STORE)
-+		rc = kvm_write_guest_page(kvm, gfn, data, offset, len);
-+	else
-+		rc = kvm_read_guest_page(kvm, gfn, data, offset, len);
-+	return rc;
-+}
-+
- int access_guest(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar, void *data,
- 		 unsigned long len, enum gacc_mode mode)
- {
-@@ -896,10 +910,7 @@ int access_guest(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar, void *data,
- 	rc = guest_range_to_gpas(vcpu, ga, ar, gpas, len, asce, mode);
- 	for (idx = 0; idx < nr_pages && !rc; idx++) {
- 		fragment_len = min(PAGE_SIZE - offset_in_page(gpas[idx]), len);
--		if (mode == GACC_STORE)
--			rc = kvm_write_guest(vcpu->kvm, gpas[idx], data, fragment_len);
--		else
--			rc = kvm_read_guest(vcpu->kvm, gpas[idx], data, fragment_len);
-+		rc = access_guest_page(vcpu->kvm, mode, gpas[idx], data, fragment_len);
- 		len -= fragment_len;
- 		data += fragment_len;
- 	}
-@@ -920,10 +931,7 @@ int access_guest_real(struct kvm_vcpu *vcpu, unsigned long gra,
- 	while (len && !rc) {
- 		gpa = kvm_s390_real_to_abs(vcpu, gra);
- 		fragment_len = min(PAGE_SIZE - offset_in_page(gpa), len);
--		if (mode)
--			rc = write_guest_abs(vcpu, gpa, data, fragment_len);
--		else
--			rc = read_guest_abs(vcpu, gpa, data, fragment_len);
-+		rc = access_guest_page(vcpu->kvm, mode, gpa, data, fragment_len);
- 		len -= fragment_len;
- 		gra += fragment_len;
- 		data += fragment_len;
--- 
-2.25.1
+build error :
+--------------
+<stdin>:1559:2: warning: #warning syscall futex_waitv not implemented [-Wcpp]
+In file included from arch/s390/pci/pci_insn.c:12:
+arch/s390/include/asm/facility.h: In function '__stfle':
+arch/s390/include/asm/facility.h:98:22: error: implicit declaration of
+function 'min_t' [-Werror=implicit-function-declaration]
+   98 |                 nr = min_t(unsigned long, (nr + 1) * 8, size * 8);
+      |                      ^~~~~
+arch/s390/include/asm/facility.h:98:28: error: expected expression
+before 'unsigned'
+   98 |                 nr = min_t(unsigned long, (nr + 1) * 8, size * 8);
+      |                            ^~~~~~~~
+cc1: some warnings being treated as errors
 
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+build link:
+-----------
+https://builds.tuxbuild.com/208R0Wv3siu0646e0z4lUYcUQD3/build.log
+
+build config:
+-------------
+https://builds.tuxbuild.com/208R0Wv3siu0646e0z4lUYcUQD3/config
+
+# To install tuxmake on your system globally
+# sudo pip3 install -U tuxmake
+tuxmake --runtime podman --target-arch s390 --toolchain gcc-11
+--kconfig defconfig
+
+--
+Linaro LKFT
+https://lkft.linaro.org
