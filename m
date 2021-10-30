@@ -2,101 +2,72 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13BA8440913
-	for <lists+linux-s390@lfdr.de>; Sat, 30 Oct 2021 15:14:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40DE4440AD4
+	for <lists+linux-s390@lfdr.de>; Sat, 30 Oct 2021 19:59:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230063AbhJ3NRH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 30 Oct 2021 09:17:07 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:30884 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229758AbhJ3NRE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 30 Oct 2021 09:17:04 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HhKQQ4NrWzbnNd;
-        Sat, 30 Oct 2021 21:09:50 +0800 (CST)
-Received: from kwepemm600016.china.huawei.com (7.193.23.20) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Sat, 30 Oct 2021 21:14:31 +0800
-Received: from localhost.localdomain (10.67.165.24) by
- kwepemm600016.china.huawei.com (7.193.23.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Sat, 30 Oct 2021 21:14:30 +0800
-From:   Guangbin Huang <huangguangbin2@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <mkubecek@suse.cz>,
-        <andrew@lunn.ch>, <amitc@mellanox.com>, <idosch@idosch.org>,
-        <danieller@nvidia.com>, <jesse.brandeburg@intel.com>,
-        <anthony.l.nguyen@intel.com>, <jdike@addtoit.com>,
-        <richard@nod.at>, <anton.ivanov@cambridgegreys.com>,
-        <netanel@amazon.com>, <akiyano@amazon.com>, <gtzalik@amazon.com>,
-        <saeedb@amazon.com>, <chris.snook@gmail.com>,
-        <ulli.kroll@googlemail.com>, <linus.walleij@linaro.org>,
-        <jeroendb@google.com>, <csully@google.com>,
-        <awogbemila@google.com>, <jdmason@kudzu.us>,
-        <rain.1986.08.12@gmail.com>, <zyjzyj2000@gmail.com>,
-        <kys@microsoft.com>, <haiyangz@microsoft.com>, <mst@redhat.com>,
-        <jasowang@redhat.com>, <doshir@vmware.com>,
-        <pv-drivers@vmware.com>, <jwi@linux.ibm.com>,
-        <kgraul@linux.ibm.com>, <hca@linux.ibm.com>, <gor@linux.ibm.com>,
-        <johannes@sipsolutions.net>
-CC:     <netdev@vger.kernel.org>, <lipeng321@huawei.com>,
-        <chenhao288@hisilicon.com>, <huangguangbin2@huawei.com>,
-        <linux-s390@vger.kernel.org>
-Subject: [PATCH V5 net-next 6/6] net: hns3: remove the way to set tx spare buf via module parameter
-Date:   Sat, 30 Oct 2021 21:10:01 +0800
-Message-ID: <20211030131001.38739-7-huangguangbin2@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211030131001.38739-1-huangguangbin2@huawei.com>
+        id S229863AbhJ3SCZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 30 Oct 2021 14:02:25 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39544 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229474AbhJ3SCZ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 30 Oct 2021 14:02:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=gB+wpIJ8U1ArrgXfdajBIfT47rGQFWUIErmrElea+Qw=; b=KL/hEVst2i4Ix1e7CMe5k/UN/v
+        uIPBIXPwWfccsHWdUAIAMDxaDbc8X73PI40+Y5EK1w+8rs5C47LZJZ0h9U4Q2weAobmoLlOh+fObl
+        N51YmHkzeDOa9+IY08D6LY2SDVwGzvMJYaIOYgbbOGkMxC2js7JrmkmJkVkPPPR0AE4Y=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1mgsd5-00CBqy-JK; Sat, 30 Oct 2021 19:58:55 +0200
+Date:   Sat, 30 Oct 2021 19:58:55 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Guangbin Huang <huangguangbin2@huawei.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, mkubecek@suse.cz,
+        amitc@mellanox.com, idosch@idosch.org, danieller@nvidia.com,
+        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+        jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        netanel@amazon.com, akiyano@amazon.com, gtzalik@amazon.com,
+        saeedb@amazon.com, chris.snook@gmail.com,
+        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
+        jeroendb@google.com, csully@google.com, awogbemila@google.com,
+        jdmason@kudzu.us, rain.1986.08.12@gmail.com, zyjzyj2000@gmail.com,
+        kys@microsoft.com, haiyangz@microsoft.com, mst@redhat.com,
+        jasowang@redhat.com, doshir@vmware.com, pv-drivers@vmware.com,
+        jwi@linux.ibm.com, kgraul@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, johannes@sipsolutions.net,
+        netdev@vger.kernel.org, lipeng321@huawei.com,
+        chenhao288@hisilicon.com, linux-s390@vger.kernel.org
+Subject: Re: [PATCH V5 net-next 0/6] ethtool: add support to set/get tx
+ copybreak buf size and rx buf len
+Message-ID: <YX2H3yN2tJXKt+ai@lunn.ch>
 References: <20211030131001.38739-1-huangguangbin2@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.165.24]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600016.china.huawei.com (7.193.23.20)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211030131001.38739-1-huangguangbin2@huawei.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Hao Chen <chenhao288@hisilicon.com>
+> Rx buf len is buffer length of each rx BD. Use ethtool -g command to get
+> it, and ethtool -G command to set it, examples are as follow:
+> 
+> 1. set rx buf len to 4096
+> $ ethtool -G eth1 rx-buf-len 4096
+> 
+> 2. get rx buf len
+> $ ethtool -g eth1
+> ...
+> RX Buf Len:     4096
 
-The way to set tx spare buf via module parameter is not such
-convenient as the way to set it via ethtool.
+How does this interact with MTU? If i have an MTU of 1500, and i set
+the rx-buf-len to 1000, can i expect all frames to the discarded?
+Should the core return -EINVAL? Or do you think some hardware will
+simply allocate two buffers and scatter/gather over them? Which
+implies that drivers which cannot SG must check if the rx-buf-len is
+less than the MTU and return -EINVAL?
 
-So,remove the way to set tx spare buf via module parameter.
-
-Signed-off-by: Hao Chen <chenhao288@hisilicon.com>
-Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 076631d7727d..032547a2ad2f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -53,10 +53,6 @@ static int debug = -1;
- module_param(debug, int, 0);
- MODULE_PARM_DESC(debug, " Network interface message level setting");
- 
--static unsigned int tx_spare_buf_size;
--module_param(tx_spare_buf_size, uint, 0400);
--MODULE_PARM_DESC(tx_spare_buf_size, "Size used to allocate tx spare buffer");
--
- static unsigned int tx_sgl = 1;
- module_param(tx_sgl, uint, 0600);
- MODULE_PARM_DESC(tx_sgl, "Minimum number of frags when using dma_map_sg() to optimize the IOMMU mapping");
-@@ -1041,8 +1037,7 @@ static void hns3_init_tx_spare_buffer(struct hns3_enet_ring *ring)
- 	dma_addr_t dma;
- 	int order;
- 
--	alloc_size = tx_spare_buf_size ? tx_spare_buf_size :
--		     ring->tqp->handle->kinfo.tx_spare_buf_size;
-+	alloc_size = ring->tqp->handle->kinfo.tx_spare_buf_size;
- 	if (!alloc_size)
- 		return;
- 
--- 
-2.33.0
-
+     Andrew
