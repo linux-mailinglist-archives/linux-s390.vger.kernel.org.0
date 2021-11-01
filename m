@@ -2,57 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4832441023
-	for <lists+linux-s390@lfdr.de>; Sun, 31 Oct 2021 19:16:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F3DC44126E
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Nov 2021 04:42:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231126AbhJaSSj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 31 Oct 2021 14:18:39 -0400
-Received: from mailgate.kemenperin.go.id ([202.47.80.142]:51760 "EHLO
-        mailgate.kemenperin.go.id" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229853AbhJaSSh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 31 Oct 2021 14:18:37 -0400
-X-Greylist: delayed 1946 seconds by postgrey-1.27 at vger.kernel.org; Sun, 31 Oct 2021 14:18:25 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mailgate.kemenperin.go.id (Postfix) with ESMTP id 5C56C828694;
-        Mon,  1 Nov 2021 00:39:29 +0700 (WIB)
-Received: from mailgate.kemenperin.go.id ([127.0.0.1])
-        by localhost (mailgate.kemenperin.go.id [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Tuljp_J1Cdlq; Mon,  1 Nov 2021 00:39:28 +0700 (WIB)
-Received: from localhost (localhost [127.0.0.1])
-        by mailgate.kemenperin.go.id (Postfix) with ESMTP id ADDE58286A9;
-        Mon,  1 Nov 2021 00:39:19 +0700 (WIB)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mailgate.kemenperin.go.id ADDE58286A9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kemenperin.go.id;
-        s=3298A942-BBC6-11E3-B333-483736368EC2; t=1635701959;
-        bh=+tje3x5yIAM91gcZZJ8xoRjx6IuR+B3ePoXPCKu2mgI=;
-        h=Date:From:Message-ID:MIME-Version;
-        b=I9X5S/EXkVkRluX+ZSit7NFR+OW43BqhWaImhHOVukb3qOg4mxQL0FOzHiQQ0QWtu
-         KQa7Ki4CUyShQL6tKlHQ2sju9QbGIAAqzmfnY9543e4CcsCf3fTpzVOzH7DFyJ+n2N
-         pbIsYLFs1Y2zkQa1+kK/NYR2sChScl7lzgpXIyKs=
-X-Virus-Scanned: amavisd-new at kemenperin.go.id
-Received: from mailgate.kemenperin.go.id ([127.0.0.1])
-        by localhost (mailgate.kemenperin.go.id [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id yX4BRpdxBRqw; Mon,  1 Nov 2021 00:39:19 +0700 (WIB)
-Received: from mailgate.kemenperin.go.id (mailgate.kemenperin.go.id [10.1.0.89])
-        by mailgate.kemenperin.go.id (Postfix) with ESMTP id 047EB8286A0;
-        Mon,  1 Nov 2021 00:39:10 +0700 (WIB)
-Date:   Mon, 1 Nov 2021 00:39:09 +0700 (WIB)
-From:   Manuel Franco <silitonga@kemenperin.go.id>
-Reply-To: Manuel Franco <manuelfrancospende1@gmail.com>
-Message-ID: <1813105855.326067.1635701949890.JavaMail.zimbra@kemenperin.go.id>
-Subject: 2,000,000.00 Euro
+        id S230237AbhKADpE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 31 Oct 2021 23:45:04 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:15322 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230222AbhKADpD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 31 Oct 2021 23:45:03 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4HjJkg1mRcz90cS;
+        Mon,  1 Nov 2021 11:42:19 +0800 (CST)
+Received: from kwepemm600016.china.huawei.com (7.193.23.20) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Mon, 1 Nov 2021 11:42:19 +0800
+Received: from [10.67.102.67] (10.67.102.67) by kwepemm600016.china.huawei.com
+ (7.193.23.20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Mon, 1 Nov
+ 2021 11:42:18 +0800
+Subject: Re: [PATCH V5 net-next 0/6] ethtool: add support to set/get tx
+ copybreak buf size and rx buf len
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <davem@davemloft.net>, <kuba@kernel.org>, <mkubecek@suse.cz>,
+        <amitc@mellanox.com>, <idosch@idosch.org>, <danieller@nvidia.com>,
+        <jesse.brandeburg@intel.com>, <anthony.l.nguyen@intel.com>,
+        <jdike@addtoit.com>, <richard@nod.at>,
+        <anton.ivanov@cambridgegreys.com>, <netanel@amazon.com>,
+        <akiyano@amazon.com>, <gtzalik@amazon.com>, <saeedb@amazon.com>,
+        <chris.snook@gmail.com>, <ulli.kroll@googlemail.com>,
+        <linus.walleij@linaro.org>, <jeroendb@google.com>,
+        <csully@google.com>, <awogbemila@google.com>, <jdmason@kudzu.us>,
+        <rain.1986.08.12@gmail.com>, <zyjzyj2000@gmail.com>,
+        <kys@microsoft.com>, <haiyangz@microsoft.com>, <mst@redhat.com>,
+        <jasowang@redhat.com>, <doshir@vmware.com>,
+        <pv-drivers@vmware.com>, <jwi@linux.ibm.com>,
+        <kgraul@linux.ibm.com>, <hca@linux.ibm.com>, <gor@linux.ibm.com>,
+        <johannes@sipsolutions.net>, <netdev@vger.kernel.org>,
+        <lipeng321@huawei.com>, <chenhao288@hisilicon.com>,
+        <linux-s390@vger.kernel.org>
+References: <20211030131001.38739-1-huangguangbin2@huawei.com>
+ <YX2H3yN2tJXKt+ai@lunn.ch>
+From:   "huangguangbin (A)" <huangguangbin2@huawei.com>
+Message-ID: <f4937fea-4693-e534-38db-e8c64158ce55@huawei.com>
+Date:   Mon, 1 Nov 2021 11:42:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <YX2H3yN2tJXKt+ai@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.1.0.89]
-Thread-Index: Rc07z4zuj7w66chiYJCRC031ZEpyeA==
-Thread-Topic: 2,000,000.00 Euro
-To:     unlisted-recipients:; (no To-header on input)
+X-Originating-IP: [10.67.102.67]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600016.china.huawei.com (7.193.23.20)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
--- 
-You have a donation of 2,000,000.00 Euro.Get back to me now so we can proceed.
+On 2021/10/31 1:58, Andrew Lunn wrote:
+>> Rx buf len is buffer length of each rx BD. Use ethtool -g command to get
+>> it, and ethtool -G command to set it, examples are as follow:
+>>
+>> 1. set rx buf len to 4096
+>> $ ethtool -G eth1 rx-buf-len 4096
+>>
+>> 2. get rx buf len
+>> $ ethtool -g eth1
+>> ...
+>> RX Buf Len:     4096
+> 
+> How does this interact with MTU? If i have an MTU of 1500, and i set
+> the rx-buf-len to 1000, can i expect all frames to the discarded?
+> Should the core return -EINVAL? Or do you think some hardware will
+> simply allocate two buffers and scatter/gather over them? Which
+> implies that drivers which cannot SG must check if the rx-buf-len is
+> less than the MTU and return -EINVAL?
+> 
+>       Andrew
+> .
+> 
+Yes, hns3 driver supports scatter/gather for this situation, it's necessary
+for driver which cannot support SG to check if rx buf len is less than mtu.
