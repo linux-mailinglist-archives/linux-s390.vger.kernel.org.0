@@ -2,94 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C034A4431F4
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Nov 2021 16:42:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D959C44358E
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Nov 2021 19:27:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231674AbhKBPpc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Nov 2021 11:45:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46312 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234338AbhKBPpb (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Nov 2021 11:45:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635867776;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Hmf3Z3zJN3btWcgJZ06W3LVajlk/1vZ9TBv+pXreN/U=;
-        b=IMAUenSVX1WQHjZGDXOxEeTA51pvLjpuLfUGJO6wqMPqcC57YCL0nDKJaHfIeiYZPBiRs/
-        FvtHQUos1S5/KoHX2EF9nyUBh/EeP+TjjGmH/lk6NtAiDIZTnPKN/x69tkTwIVk45Nhm+w
-        +FnTGvRxaJu3OSBqXu/fnT1J7NooSao=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-453-VLURPoETOhih9IlRwqnyDQ-1; Tue, 02 Nov 2021 11:42:55 -0400
-X-MC-Unique: VLURPoETOhih9IlRwqnyDQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 221CE5074D;
-        Tue,  2 Nov 2021 15:42:54 +0000 (UTC)
-Received: from localhost (unknown [10.39.193.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BF84F60D30;
-        Tue,  2 Nov 2021 15:42:53 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Vineeth Vijayan <vneethv@linux.ibm.com>, linux-s390@vger.kernel.org
-Cc:     oberpar@linux.ibm.com, vneethv@linux.ibm.com
-Subject: Re: [PATCH] s390/cio: remove uevent suppress from cio driver
-In-Reply-To: <20211027085059.544736-2-vneethv@linux.ibm.com>
-Organization: Red Hat GmbH
-References: <20211027085059.544736-1-vneethv@linux.ibm.com>
- <20211027085059.544736-2-vneethv@linux.ibm.com>
-User-Agent: Notmuch/0.32.1 (https://notmuchmail.org)
-Date:   Tue, 02 Nov 2021 16:42:52 +0100
-Message-ID: <87ilxabm2r.fsf@redhat.com>
+        id S229792AbhKBS37 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Nov 2021 14:29:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229697AbhKBS37 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Nov 2021 14:29:59 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4B1C061714
+        for <linux-s390@vger.kernel.org>; Tue,  2 Nov 2021 11:27:24 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id g191-20020a1c9dc8000000b0032fbf912885so52154wme.4
+        for <linux-s390@vger.kernel.org>; Tue, 02 Nov 2021 11:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=aZ1qACKNp6s690RtJWkkxKsMw0YuJS6984cWR7xm12Q=;
+        b=XGDsh3Y8M5HGW5fPWPWhaVIf40yxG7yQkrnZQLSbGFylX6nfX8XwH1frolucTD0Pzq
+         9al8GmCdYni3XDiuEQUedTnXadLYjSESTNXgkX/pTkcbzAt4jjS30Qhf5L9OYsrRnnX4
+         wi+LsTuHzcC+pKqqnebog5Fx12FkraRwVB77vDAZQElUr4yzt+q1u7O+JIhodKo9kz//
+         lspPDFwgYc8nEVcEA5OjKOVzD3PgU2IiFIAbBL991g/L0SrdqD5K0Hsd0juzupcTXxN5
+         IWeFLpDSqeMPY5z9ImpXaSMbMXbq/ajZytX+Kvh0mRgHdTYiXvLKoCl8Wx8iRzwBLboG
+         EWdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=aZ1qACKNp6s690RtJWkkxKsMw0YuJS6984cWR7xm12Q=;
+        b=R6qWOfMoprDKsOKTKrVrGhwa4F2fhCxkduURGZd634iWSkolgl5Du3GfuXvES3e+kG
+         uBjxKIa5pnLOO2bbAO4JgX5ZcvXo+/qxgUL7vQT/R6IUpmFulT3d3gMaTt97pClWVjXc
+         6z3DyFY/eURdOIQsfUW1OKuEnjr/OVH9Nao88YA6V/BNofcQs7lJACJR22Uhy3rEsPb6
+         Nedr/iChIivJmw/ioLeKvZNTR1fQucyRIFhZMIG47MtgCZxmsGwU4B64NvKWEH6PJPD2
+         yBim4FZclPhcxLobo/ywDF+IRFHFqPwagQHxwGJN3nVJw4XIbFcbNY29hUMOHRxCZ94h
+         +Yog==
+X-Gm-Message-State: AOAM533n01Uv4Kdasmw72n964LL4MaY/a27RQQpJ7tB5lh3NJRisUUoo
+        3OSkv/V4IZTZQsSLOjtEkylQEUpGakfmarGqcnI=
+X-Google-Smtp-Source: ABdhPJyccNIpxNumEB2hYpMjiDsBL40OmKJFdFhgm4Xm3PHUxJRTafTlO2KGXUkDCTKuQBiKA9+EwxWy/tOnSa2euh8=
+X-Received: by 2002:a05:600c:430c:: with SMTP id p12mr9491478wme.127.1635877642725;
+ Tue, 02 Nov 2021 11:27:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Received: by 2002:a05:6000:18c7:0:0:0:0 with HTTP; Tue, 2 Nov 2021 11:27:22
+ -0700 (PDT)
+Reply-To: alimaanwari48@gmail.com
+From:   Alima Anwari <khuntamar5@gmail.com>
+Date:   Tue, 2 Nov 2021 19:27:22 +0100
+Message-ID: <CAOdLAAKFk3_zRyH-e9kCdWRy6mLTw2QHmMWAq3O1KyZ5KZmNyQ@mail.gmail.com>
+Subject: =?UTF-8?B?xLB5aSBnw7xubGVy?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Oct 27 2021, Vineeth Vijayan <vneethv@linux.ibm.com> wrote:
-
-> 'commit fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")'
-> introduced the uevent suppression of subchannels. Even though there
-> are reasons for wanting to delay the uevent, it also introduces
-> problems. As part of cleaning-up the css driver,this patch removes
-> the uevent-suppress logic. The ADD uevent will be generated when
-> there is a valid subchannel and not after finding the associated
-> device. Removing the uevent suppress logic also introduces a new BIND
-> uevent associated to the channel-subsystem.
-
-Hm, I'd probably put that a bit differently:
-
-commit fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
-introduced suppression of uevents for a subchannel until after it is
-clear that the subchannel would not be unregistered again
-immediately. This was done to avoid uevents being generated for I/O
-subchannels with no valid device, which can happen on LPAR.
-
-However, this also has some drawbacks: All subchannel drivers need to
-manually remove the uevent suppression and generate an ADD uevent as
-soon as they are sure that the subchannel will stay around. This misses
-out on all uevents that are not the initial ADD uevent that would be
-generated while uevents are suppressed; for example, all subchannels
-were missing the BIND uevent.
-
-As uevents being generated even for I/O subchannels without an
-operational device turned out to be not as bad as missing uevents and
-complicating the code flow, let's remove uevent suppression for
-subchannels.
-
->
-> Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
-> ---
->  drivers/s390/cio/chsc_sch.c     |  5 -----
->  drivers/s390/cio/css.c          | 19 -------------------
->  drivers/s390/cio/device.c       | 18 ------------------
->  drivers/s390/cio/eadm_sch.c     |  5 -----
->  drivers/s390/cio/vfio_ccw_drv.c |  5 -----
->  5 files changed, 52 deletions(-)
-
-Patch looks sane to me, but I'll have to rely on your testing :)
-
+--=20
+Merhaba sevgili arkada=C5=9F=C4=B1m, ben Afganistan'dan Alima Anwari, l=C3=
+=BCtfen cevap verin
+bana geri d=C3=B6n, seninle payla=C5=9Fmam gereken acil bir sorunum var. be=
+kliyor olaca=C4=9F=C4=B1m
+cevab=C4=B1n=C4=B1z i=C3=A7in.
+Te=C5=9Fekk=C3=BCrler.
+Kire=C3=A7.
