@@ -2,105 +2,236 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B7FF442A6A
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Nov 2021 10:30:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E61CE442F69
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Nov 2021 14:51:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229800AbhKBJcy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Nov 2021 05:32:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1964 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229770AbhKBJcx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Nov 2021 05:32:53 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1A28F9Nv005079;
-        Tue, 2 Nov 2021 09:30:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=IOQijjjE+9e7i9Ca6RdvxAoupGYFL+SD2p4SUDIWewo=;
- b=Qk3GKGdVZUon2AufuruH1ybXU57tlMUbbei/6Gci5Vw5K1YiHNBfgpJ/DH5OhiqAYGfa
- JCoIEDaOzQydMiKdFZCYYT70N+W0dSSZQiJB4T+XduSIn3eVN+ECArT/q6qOyzP1xSod
- vaFTxSwTwTCcULqMx+8SrzaE/wLReGU7tlWtGIwK0f/lBLrKlCX5NTZMz1pXpFZ8mLtP
- I3DtiQPguOzjuNaTUHmo9mlfWl/3peatqcCt2eGjqEosYeywPa4MPfMRpl+0XwIMB+yY
- KVYBWSnDfGcxgUxMI9+v96VX6sYb3MHEu5E2puiNmVgRjxxklWdFSvOGSPhJHtrKLPAe tQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3c2p6sxdhy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Nov 2021 09:30:17 +0000
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1A28udKX021804;
-        Tue, 2 Nov 2021 09:30:16 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3c2p6sxdgs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Nov 2021 09:30:16 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1A29DnJ6016565;
-        Tue, 2 Nov 2021 09:30:14 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma02fra.de.ibm.com with ESMTP id 3c0wp9rc3u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Nov 2021 09:30:14 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1A29UBik46924190
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Nov 2021 09:30:12 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D47D04C052;
-        Tue,  2 Nov 2021 09:30:11 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4AED94C059;
-        Tue,  2 Nov 2021 09:30:11 +0000 (GMT)
-Received: from [9.145.173.195] (unknown [9.145.173.195])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  2 Nov 2021 09:30:11 +0000 (GMT)
-Message-ID: <11f17a34-fd35-f2ec-3f20-dd0c34e55fde@linux.ibm.com>
-Date:   Tue, 2 Nov 2021 10:30:22 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Subject: Re: [PATCH net-next 3/3] net/smc: Introduce tracepoint for smcr link
- down
-Content-Language: en-US
-To:     Tony Lu <tonylu@linux.alibaba.com>
-Cc:     kuba@kernel.org, davem@davemloft.net, guwen@linux.alibaba.com,
-        dust.li@linux.alibaba.com, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
-References: <20211101073912.60410-1-tonylu@linux.alibaba.com>
- <20211101073912.60410-4-tonylu@linux.alibaba.com>
-From:   Karsten Graul <kgraul@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20211101073912.60410-4-tonylu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: O3mwP6vKG-gy8aVKpZa6lAjS58OpBU13
-X-Proofpoint-ORIG-GUID: Pijjz2RppCs8q1UHk5mK7z3ujNeulg16
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        id S229530AbhKBNx7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Nov 2021 09:53:59 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:15346 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231133AbhKBNx5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Nov 2021 09:53:57 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4HkBBG5244z90lg;
+        Tue,  2 Nov 2021 21:50:46 +0800 (CST)
+Received: from kwepemm600016.china.huawei.com (7.193.23.20) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Tue, 2 Nov 2021 21:50:38 +0800
+Received: from localhost.localdomain (10.67.165.24) by
+ kwepemm600016.china.huawei.com (7.193.23.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Tue, 2 Nov 2021 21:50:36 +0800
+From:   Guangbin Huang <huangguangbin2@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <mkubecek@suse.cz>,
+        <andrew@lunn.ch>, <amitc@mellanox.com>, <idosch@idosch.org>,
+        <danieller@nvidia.com>, <jesse.brandeburg@intel.com>,
+        <anthony.l.nguyen@intel.com>, <jdike@addtoit.com>,
+        <richard@nod.at>, <anton.ivanov@cambridgegreys.com>,
+        <netanel@amazon.com>, <akiyano@amazon.com>, <gtzalik@amazon.com>,
+        <saeedb@amazon.com>, <chris.snook@gmail.com>,
+        <ulli.kroll@googlemail.com>, <linus.walleij@linaro.org>,
+        <jeroendb@google.com>, <csully@google.com>,
+        <awogbemila@google.com>, <jdmason@kudzu.us>,
+        <rain.1986.08.12@gmail.com>, <zyjzyj2000@gmail.com>,
+        <kys@microsoft.com>, <haiyangz@microsoft.com>, <mst@redhat.com>,
+        <jasowang@redhat.com>, <doshir@vmware.com>,
+        <pv-drivers@vmware.com>, <jwi@linux.ibm.com>,
+        <kgraul@linux.ibm.com>, <hca@linux.ibm.com>, <gor@linux.ibm.com>,
+        <johannes@sipsolutions.net>
+CC:     <netdev@vger.kernel.org>, <lipeng321@huawei.com>,
+        <chenhao288@hisilicon.com>, <huangguangbin2@huawei.com>,
+        <linux-s390@vger.kernel.org>
+Subject: [PATCH V6 net-next 0/6] ethtool: add support to set/get tx copybreak buf size and rx buf len
+Date:   Tue, 2 Nov 2021 21:46:07 +0800
+Message-ID: <20211102134613.30367-1-huangguangbin2@huawei.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-02_06,2021-11-01_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- malwarescore=0 priorityscore=1501 lowpriorityscore=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 impostorscore=0 phishscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2111020054
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.165.24]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600016.china.huawei.com (7.193.23.20)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 01/11/2021 08:39, Tony Lu wrote:
-> +
-> +	    TP_printk("lnk=%p lgr=%p state=%d dev=%s location=%p",
-> +		      __entry->lnk, __entry->lgr,
-> +		      __entry->state, __get_str(name),
-> +		      __entry->location)
+From: Hao Chen <chenhao288@hisilicon.com>
 
-The location is printed as pointer (which might even be randomized?),
-is it possible to print the function name of the caller, as described
-here: https://stackoverflow.com/questions/4141324/function-caller-in-linux-kernel
+This series add support to set/get tx copybreak buf size and rx buf len via
+ethtool and hns3 driver implements them.
 
-  printk("Caller is %pS\n", __builtin_return_address(0));
+Tx copybreak buf size is used for tx copybreak feature which for small size
+packet or frag. Use ethtool --get-tunable command to get it, and ethtool
+--set-tunable command to set it, examples are as follow:
 
-Not sure if this is possible with the trace points, but it would be
-easier to use. You plan to use a dump to find out about the function caller?
+1. set tx spare buf size to 102400:
+$ ethtool --set-tunable eth1 tx-buf-size 102400
+
+2. get tx spare buf size:
+$ ethtool --get-tunable eth1 tx-buf-size
+tx-buf-size: 102400
+
+Rx buf len is buffer length of each rx BD. Use ethtool -g command to get
+it, and ethtool -G command to set it, examples are as follow:
+
+1. set rx buf len to 4096
+$ ethtool -G eth1 rx-buf-len 4096
+
+2. get rx buf len
+$ ethtool -g eth1
+...
+RX Buf Len:     4096
+
+
+Change log:
+V5 -> V6
+1.Fix compile error for divers/s390.
+
+V4 -> V5
+1.Change struct ethtool_ringparam_ext to kernel_ethtool_ringparam.
+2.change "__u32 rx_buf_len" to "u32 rx_buf_len".
+
+V3 -> V4
+1.Fix a few allmodconfig compile warning.
+2.Add more '=' synbol to ethtool-netlink.rst to refine format.
+3.Move definement of struct ethtool_ringparam_ext to include/linux/ethtool.h.
+4.Move related modify of rings_fill_reply() from patch 4/6 to patch 3/6.
+
+V2 -> V3
+1.Remove documentation for tx copybreak buf size, there is description for
+it in userspace ethtool.
+2.Move extending parameters for get/set_ringparam function from patch3/6
+to patch 4/6.
+
+V1 -> V2
+1.Add documentation for rx buf len and tx copybreak buf size.
+2.Extend structure ringparam_ext for extenal ring params.
+3.Change type of ETHTOOL_A_RINGS_RX_BUF_LEN from NLA_U32 to
+  NLA_POLICY_MIN(NLA_U32, 1).
+4.Add supported_ring_params in ethtool_ops to indicate if support external
+  params.
+
+
+Hao Chen (6):
+  ethtool: add support to set/get tx copybreak buf size via ethtool
+  net: hns3: add support to set/get tx copybreak buf size via ethtool
+    for hns3 driver
+  ethtool: add support to set/get rx buf len via ethtool
+  ethtool: extend ringparam setting/getting API with rx_buf_len
+  net: hns3: add support to set/get rx buf len via ethtool for hns3
+    driver
+  net: hns3: remove the way to set tx spare buf via module parameter
+
+ Documentation/networking/ethtool-netlink.rst  |  10 +-
+ arch/um/drivers/vector_kern.c                 |   4 +-
+ drivers/net/can/c_can/c_can_ethtool.c         |   4 +-
+ drivers/net/ethernet/3com/typhoon.c           |   4 +-
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c |   8 +-
+ drivers/net/ethernet/amd/pcnet32.c            |   8 +-
+ drivers/net/ethernet/amd/xgbe/xgbe-ethtool.c  |  11 +-
+ .../ethernet/aquantia/atlantic/aq_ethtool.c   |   8 +-
+ drivers/net/ethernet/atheros/atlx/atl1.c      |   8 +-
+ drivers/net/ethernet/broadcom/b44.c           |   8 +-
+ drivers/net/ethernet/broadcom/bcm63xx_enet.c  |  25 ++--
+ drivers/net/ethernet/broadcom/bnx2.c          |   8 +-
+ .../ethernet/broadcom/bnx2x/bnx2x_ethtool.c   |   8 +-
+ .../net/ethernet/broadcom/bnxt/bnxt_ethtool.c |   8 +-
+ drivers/net/ethernet/broadcom/tg3.c           |  10 +-
+ .../net/ethernet/brocade/bna/bnad_ethtool.c   |   8 +-
+ drivers/net/ethernet/cadence/macb_main.c      |   8 +-
+ .../ethernet/cavium/liquidio/lio_ethtool.c    |  11 +-
+ .../ethernet/cavium/thunder/nicvf_ethtool.c   |   8 +-
+ drivers/net/ethernet/chelsio/cxgb/cxgb2.c     |   8 +-
+ .../net/ethernet/chelsio/cxgb3/cxgb3_main.c   |   8 +-
+ .../ethernet/chelsio/cxgb4/cxgb4_ethtool.c    |   8 +-
+ .../ethernet/chelsio/cxgb4vf/cxgb4vf_main.c   |   8 +-
+ .../net/ethernet/cisco/enic/enic_ethtool.c    |   8 +-
+ drivers/net/ethernet/cortina/gemini.c         |   8 +-
+ .../net/ethernet/emulex/benet/be_ethtool.c    |   4 +-
+ drivers/net/ethernet/ethoc.c                  |   8 +-
+ drivers/net/ethernet/faraday/ftgmac100.c      |  14 ++-
+ .../ethernet/freescale/enetc/enetc_ethtool.c  |   4 +-
+ .../net/ethernet/freescale/gianfar_ethtool.c  |   8 +-
+ .../net/ethernet/freescale/ucc_geth_ethtool.c |   8 +-
+ drivers/net/ethernet/google/gve/gve_ethtool.c |   4 +-
+ .../net/ethernet/hisilicon/hns/hns_ethtool.c  |   6 +-
+ .../net/ethernet/hisilicon/hns3/hns3_enet.c   |  11 +-
+ .../net/ethernet/hisilicon/hns3/hns3_enet.h   |   2 +
+ .../ethernet/hisilicon/hns3/hns3_ethtool.c    | 116 ++++++++++++++++--
+ .../net/ethernet/huawei/hinic/hinic_ethtool.c |   8 +-
+ drivers/net/ethernet/ibm/emac/core.c          |   7 +-
+ drivers/net/ethernet/ibm/ibmvnic.c            |   8 +-
+ drivers/net/ethernet/intel/e100.c             |   8 +-
+ .../net/ethernet/intel/e1000/e1000_ethtool.c  |   8 +-
+ drivers/net/ethernet/intel/e1000e/ethtool.c   |   8 +-
+ .../net/ethernet/intel/fm10k/fm10k_ethtool.c  |   8 +-
+ .../net/ethernet/intel/i40e/i40e_ethtool.c    |   8 +-
+ .../net/ethernet/intel/iavf/iavf_ethtool.c    |  12 +-
+ drivers/net/ethernet/intel/ice/ice_ethtool.c  |   8 +-
+ drivers/net/ethernet/intel/igb/igb_ethtool.c  |   8 +-
+ drivers/net/ethernet/intel/igbvf/ethtool.c    |   8 +-
+ drivers/net/ethernet/intel/igc/igc_ethtool.c  |  14 ++-
+ .../net/ethernet/intel/ixgb/ixgb_ethtool.c    |   8 +-
+ .../net/ethernet/intel/ixgbe/ixgbe_ethtool.c  |   8 +-
+ drivers/net/ethernet/intel/ixgbevf/ethtool.c  |   8 +-
+ drivers/net/ethernet/marvell/mv643xx_eth.c    |   8 +-
+ drivers/net/ethernet/marvell/mvneta.c         |  14 ++-
+ .../net/ethernet/marvell/mvpp2/mvpp2_main.c   |  14 ++-
+ .../marvell/octeontx2/nic/otx2_ethtool.c      |   8 +-
+ drivers/net/ethernet/marvell/skge.c           |   8 +-
+ drivers/net/ethernet/marvell/sky2.c           |   8 +-
+ .../net/ethernet/mellanox/mlx4/en_ethtool.c   |   8 +-
+ .../ethernet/mellanox/mlx5/core/en_ethtool.c  |   8 +-
+ .../net/ethernet/mellanox/mlx5/core/en_rep.c  |  14 ++-
+ .../mellanox/mlx5/core/ipoib/ethtool.c        |   8 +-
+ .../mellanox/mlxbf_gige/mlxbf_gige_ethtool.c  |   7 +-
+ drivers/net/ethernet/micrel/ksz884x.c         |   6 +-
+ .../net/ethernet/myricom/myri10ge/myri10ge.c  |   4 +-
+ drivers/net/ethernet/neterion/s2io.c          |   7 +-
+ .../ethernet/netronome/nfp/nfp_net_ethtool.c  |   8 +-
+ drivers/net/ethernet/nvidia/forcedeth.c       |  10 +-
+ .../oki-semi/pch_gbe/pch_gbe_ethtool.c        |  12 +-
+ .../net/ethernet/pasemi/pasemi_mac_ethtool.c  |   4 +-
+ .../ethernet/pensando/ionic/ionic_ethtool.c   |   8 +-
+ .../qlogic/netxen/netxen_nic_ethtool.c        |   8 +-
+ .../net/ethernet/qlogic/qede/qede_ethtool.c   |   8 +-
+ .../ethernet/qlogic/qlcnic/qlcnic_ethtool.c   |   8 +-
+ .../net/ethernet/qualcomm/emac/emac-ethtool.c |   8 +-
+ drivers/net/ethernet/qualcomm/qca_debug.c     |   8 +-
+ drivers/net/ethernet/realtek/8139cp.c         |   4 +-
+ drivers/net/ethernet/realtek/r8169_main.c     |   4 +-
+ drivers/net/ethernet/renesas/ravb_main.c      |   8 +-
+ drivers/net/ethernet/renesas/sh_eth.c         |   8 +-
+ drivers/net/ethernet/sfc/ef100_ethtool.c      |   7 +-
+ drivers/net/ethernet/sfc/ethtool.c            |  14 ++-
+ drivers/net/ethernet/sfc/falcon/ethtool.c     |  14 ++-
+ .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |   8 +-
+ drivers/net/ethernet/tehuti/tehuti.c          |  12 +-
+ drivers/net/ethernet/ti/am65-cpsw-ethtool.c   |   7 +-
+ drivers/net/ethernet/ti/cpmac.c               |   8 +-
+ drivers/net/ethernet/ti/cpsw_ethtool.c        |   8 +-
+ drivers/net/ethernet/ti/cpsw_priv.h           |   8 +-
+ .../net/ethernet/toshiba/spider_net_ethtool.c |   4 +-
+ drivers/net/ethernet/xilinx/ll_temac_main.c   |  14 ++-
+ .../net/ethernet/xilinx/xilinx_axienet_main.c |  14 ++-
+ drivers/net/hyperv/netvsc_drv.c               |   8 +-
+ drivers/net/netdevsim/ethtool.c               |   8 +-
+ drivers/net/usb/r8152.c                       |   8 +-
+ drivers/net/virtio_net.c                      |   4 +-
+ drivers/net/vmxnet3/vmxnet3_ethtool.c         |  10 +-
+ drivers/s390/net/qeth_ethtool.c               |   4 +-
+ include/linux/ethtool.h                       |  26 +++-
+ include/uapi/linux/ethtool.h                  |   1 +
+ include/uapi/linux/ethtool_netlink.h          |   1 +
+ net/ethtool/common.c                          |   1 +
+ net/ethtool/ioctl.c                           |  11 +-
+ net/ethtool/netlink.h                         |   2 +-
+ net/ethtool/rings.c                           |  32 ++++-
+ net/mac80211/ethtool.c                        |   8 +-
+ 106 files changed, 772 insertions(+), 235 deletions(-)
+
+-- 
+2.33.0
+
