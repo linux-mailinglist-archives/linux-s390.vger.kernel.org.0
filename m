@@ -2,99 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F74744AF78
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Nov 2021 15:29:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D350B44B102
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Nov 2021 17:17:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238475AbhKIOcW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Nov 2021 09:32:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232237AbhKIOcV (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Nov 2021 09:32:21 -0500
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60741C061764
-        for <linux-s390@vger.kernel.org>; Tue,  9 Nov 2021 06:29:35 -0800 (PST)
-Received: by mail-lj1-x244.google.com with SMTP id z8so13844889ljz.9
-        for <linux-s390@vger.kernel.org>; Tue, 09 Nov 2021 06:29:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=rf85IIrYDoX56EbvJwzXLS38sc5yj7QH4axMImYh7js=;
-        b=Cl1F7BIRkfNckadZgg8sxx0p7NWDJXvcmauP7Q8OAGfeFQGMxUWHpciZagVVJ0F+s6
-         28G1L1KA5+tsr2I7Fh4Wq/CTs5ccwN0HyNNV5q8MAYP/w/kRbo21lU+R53mvV1tQlbgQ
-         fbU27Wdlp6bn0iObcuYJIVhnyLpop5a+/olxIhIVhalAQ20tSAKezjFQfpQTB5eca1u7
-         K00hN72yMnVyBRdHWZK2zhWl4JcGF0AcoLD0eu5LY5YyusyxuVquo/aGsDmGIyUKDwOB
-         R/+jVxzhZtqU9HCTRIJ7wod+lzhwnnlbsAaYq7KgMzf7yXxR6eG3sH7VU/PS0Gz3mVhI
-         9Bvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=rf85IIrYDoX56EbvJwzXLS38sc5yj7QH4axMImYh7js=;
-        b=34IPog4oJNlJhY8xNT+zrARXOvpo1WZOYEuPFK7cMbLKtR4+YUHRNDHui0tv/1XWkj
-         0JTXNM8zj1arXKVU5/d7XiJuPev9wVHWKohrb7Hp8OIBR0xmB0qI3qWOJCivs859GpOe
-         j+LDES2dXHsBfwkaBiN854127Jd6nKG4B8gTnl5HRNdoKRWfyaaX8wqLjYXlT7BXl1Sc
-         I8VBbPyhk+YQgISd6XkMX1gJqBgglHhD30LbOIWNNKqSvCl1Jwarc6nx576FZRw+Oa7u
-         P50BYKGGUny0O5cQCQpDjeIl1iSLb9V7avPWnBoA7KYruJrO6geXG3VMDrk3kCmsttiS
-         x5fQ==
-X-Gm-Message-State: AOAM532ViLu+i9kIHbesRt9EKdr7lGANR5ucIAtz6MJ7+oSVKe4CJOvR
-        QDq9gFYGYagBYip1qCS/qYwPCGBUqD0LXJIeBfI=
-X-Google-Smtp-Source: ABdhPJx7rG2GMqACcQRQ2BCoAiwDsJRPtxxBIgIMTYVXjCzH9lG7OWRMIGiX2Lv3kAGNbk+a7EYhyIry5lPUtiOig64=
-X-Received: by 2002:a05:651c:158a:: with SMTP id h10mr7948956ljq.57.1636468173300;
- Tue, 09 Nov 2021 06:29:33 -0800 (PST)
+        id S239499AbhKIQUi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Nov 2021 11:20:38 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24826 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238397AbhKIQUi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Nov 2021 11:20:38 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1A9EhfFo017617;
+        Tue, 9 Nov 2021 16:17:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=3BhKIdkkjzzQwMO5VpHYb6yx8DHSvDdQyMMyui674o4=;
+ b=lMbNibKu/3IxC14QWmorNhUf+XXW9mfYQwc1iDlfuDYKz/cKv+n2gnrxRq0x/JDG6p7R
+ WsIn925RtIVtdRU1fkfuK7Q05LTxBBcNuUiWygjFBI8qk15f1D5loKaAuXzSP7G2f5K9
+ RWo1QPxvgGsinETvFb3t61+vTiJCDZ9Hg1xxcgIhCfvflNSP/xIO819dlEsPl5aCdAIG
+ EdvWuqH1QrPj2vemtqdKecGfjsszZz4MCW4PZOJiSJa0LJcsdtGHknCAv3y4JfpKDU+Q
+ VuPBq9EC+0t3V61DVPXqJi+x5SRAAqdD7AtOQsQvGtDlh/A7RsV29rIoLGlzymyHTcnD sg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3c7u0j2q5s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Nov 2021 16:17:48 +0000
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1A9EhmKp017727;
+        Tue, 9 Nov 2021 16:17:48 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3c7u0j2q5c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Nov 2021 16:17:48 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1A9G1sDa029826;
+        Tue, 9 Nov 2021 16:17:46 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 3c5hbaa2xm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Nov 2021 16:17:46 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1A9GHiqZ63635928
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Nov 2021 16:17:44 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1D1DE11C050;
+        Tue,  9 Nov 2021 16:17:44 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ACB5B11C04C;
+        Tue,  9 Nov 2021 16:17:43 +0000 (GMT)
+Received: from [9.145.144.3] (unknown [9.145.144.3])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  9 Nov 2021 16:17:43 +0000 (GMT)
+Message-ID: <ed52790a-3e39-6e2e-8cfc-4a4ca1970f99@linux.ibm.com>
+Date:   Tue, 9 Nov 2021 17:17:43 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH net-next] net/smc: Print function name in smcr_link_down
+ tracepoint
+Content-Language: en-US
+To:     Tony Lu <tonylu@linux.alibaba.com>
+Cc:     kuba@kernel.org, davem@davemloft.net, guwen@linux.alibaba.com,
+        netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+References: <20211103124836.63180-1-tonylu@linux.alibaba.com>
+From:   Karsten Graul <kgraul@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20211103124836.63180-1-tonylu@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 4mdB0oDZjM2ekn-MChV7NfzTkTlwfoqP
+X-Proofpoint-ORIG-GUID: mF2N1x_tQ3ZvMwqojgBy1QavotxG_9id
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Received: by 2002:ab3:6594:0:0:0:0:0 with HTTP; Tue, 9 Nov 2021 06:29:32 -0800 (PST)
-Reply-To: mr.sawadogomichel1@gmail.com
-From:   "Mr.Sawadogo Michel" <wwendykipa@gmail.com>
-Date:   Tue, 9 Nov 2021 06:29:32 -0800
-Message-ID: <CAGtbzE9cNme48nUYGsgRyF837OnEsHp9Ma7-+rATp8fVE5PCQQ@mail.gmail.com>
-Subject: Hello Dear Friend
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-09_03,2021-11-08_02,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ spamscore=0 bulkscore=0 impostorscore=0 malwarescore=0 mlxlogscore=928
+ clxscore=1015 adultscore=0 priorityscore=1501 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2111090093
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Dear Friend,
+On 03/11/2021 13:48, Tony Lu wrote:
+> This makes the output of smcr_link_down tracepoint easier to use and
+> understand without additional translating function's pointer address.
+> 
+> It prints the function name with offset:
+> 
+>   <idle>-0       [000] ..s.    69.087164: smcr_link_down: lnk=00000000dab41cdc lgr=000000007d5d8e24 state=0 rc=1 dev=mlx5_0 location=smc_wr_tx_tasklet_fn+0x5ef/0x6f0 [smc]
+> 
+> Link: https://lore.kernel.org/netdev/11f17a34-fd35-f2ec-3f20-dd0c34e55fde@linux.ibm.com/
+> Signed-off-by: Tony Lu <tonylu@linux.alibaba.com>
+> Reviewed-by: Wen Gu <guwen@linux.alibaba.com>
 
-My name is Mr.Sawadogo Michel. I have decided to seek a confidential
-co-operation  with you in the execution of the deal described
-here-under for our both  mutual benefit and I hope you will keep it a
-top secret because of the nature  of the transaction, During the
-course of our bank year auditing, I discovered  an unclaimed/abandoned
-fund, sum total of {US$19.3 Million United State  Dollars} in the bank
-account that belongs to a Saudi Arabia businessman Who unfortunately
-lost his life and entire family in a Motor Accident.
+Acked-by: Karsten Graul <kgraul@linux.ibm.com>
 
-Now our bank has been waiting for any of the relatives to come-up for
-the claim but nobody has done that. I personally has been unsuccessful
-in locating any of the relatives, now, I sincerely seek your consent
-to present you as the next of kin / Will Beneficiary to the deceased
-so that the proceeds of this account valued at {US$19.3 Million United
-State Dollars} can be paid to you, which we will share in these
-percentages ratio, 60% to me and 40% to you. All I request is your
-utmost sincere co-operation; trust and maximum confidentiality to
-achieve this project successfully. I have carefully mapped out the
-moralities for execution of this transaction under a legitimate
-arrangement to protect you from any breach of the law both in your
-country and here in Burkina Faso when the fund is being transferred to
-your bank account.
-
-I will have to provide all the relevant document that will be
-requested to indicate that you are the rightful beneficiary of this
-legacy and our bank will release the fund to you without any further
-delay, upon your consideration and acceptance of this offer, please
-send me the following information as stated below so we can proceed
-and get this fund transferred to your designated bank account
-immediately.
-
--Your Full Name:
--Your Contact Address:
--Your direct Mobile telephone Number:
--Your Date of Birth:
--Your occupation:
-
-I await your swift response and re-assurance.
-
-Best regards,
-Mr.Sawadogo Michel.
