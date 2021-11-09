@@ -2,82 +2,99 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35E5C44A91E
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Nov 2021 09:34:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F74744AF78
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Nov 2021 15:29:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244307AbhKIIhi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Nov 2021 03:37:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60044 "EHLO
+        id S238475AbhKIOcW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Nov 2021 09:32:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244215AbhKIIgx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Nov 2021 03:36:53 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4602EC061767;
-        Tue,  9 Nov 2021 00:34:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=Sy1y0UiMgxAYvlwmHMq+D5FA8YC6nzMpWW5stnnL7mE=; b=gpT3QABXYlkVO9cfQiVD4lTzsW
-        wpEmY4Z/eRxbkXYSg+JxoHSV++jJ3mKJHMfrn55KL2mcGq383JeE2GT0n04CgdH5G/vt20HeQQaO9
-        ha8NRcqJ+6vlyLr/9gPdQntTqO6D0qCC+EcTk3/BEguhqZKKy15SmdCTvO76lOOWte1YinTMjYCfi
-        /KdwmZypZoj4wrR5V//D1uQ5lhEQb0sJEsg0xrWwJmOJ7q4ZVu8d8geqMTHzf2XXvKP3vPNMuL8Pr
-        VipJXXXtONrtI41oW3trXzSqrHSuGOwLqYKEYfzEe5AM49EB/C47xpIkPi9qt5n1Z11n3latDwOG8
-        X+sUDJ5Q==;
-Received: from [2001:4bb8:19a:7ee7:fb46:2fe1:8652:d9d4] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mkMZu-000sFi-W7; Tue, 09 Nov 2021 08:34:04 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Mike Snitzer <snitzer@redhat.com>, Ira Weiny <ira.weiny@intel.com>,
-        dm-devel@redhat.com, linux-xfs@vger.kernel.org,
-        nvdimm@lists.linux.dev, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH 29/29] fsdax: don't require CONFIG_BLOCK
-Date:   Tue,  9 Nov 2021 09:33:09 +0100
-Message-Id: <20211109083309.584081-30-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211109083309.584081-1-hch@lst.de>
-References: <20211109083309.584081-1-hch@lst.de>
+        with ESMTP id S232237AbhKIOcV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Nov 2021 09:32:21 -0500
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60741C061764
+        for <linux-s390@vger.kernel.org>; Tue,  9 Nov 2021 06:29:35 -0800 (PST)
+Received: by mail-lj1-x244.google.com with SMTP id z8so13844889ljz.9
+        for <linux-s390@vger.kernel.org>; Tue, 09 Nov 2021 06:29:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=rf85IIrYDoX56EbvJwzXLS38sc5yj7QH4axMImYh7js=;
+        b=Cl1F7BIRkfNckadZgg8sxx0p7NWDJXvcmauP7Q8OAGfeFQGMxUWHpciZagVVJ0F+s6
+         28G1L1KA5+tsr2I7Fh4Wq/CTs5ccwN0HyNNV5q8MAYP/w/kRbo21lU+R53mvV1tQlbgQ
+         fbU27Wdlp6bn0iObcuYJIVhnyLpop5a+/olxIhIVhalAQ20tSAKezjFQfpQTB5eca1u7
+         K00hN72yMnVyBRdHWZK2zhWl4JcGF0AcoLD0eu5LY5YyusyxuVquo/aGsDmGIyUKDwOB
+         R/+jVxzhZtqU9HCTRIJ7wod+lzhwnnlbsAaYq7KgMzf7yXxR6eG3sH7VU/PS0Gz3mVhI
+         9Bvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=rf85IIrYDoX56EbvJwzXLS38sc5yj7QH4axMImYh7js=;
+        b=34IPog4oJNlJhY8xNT+zrARXOvpo1WZOYEuPFK7cMbLKtR4+YUHRNDHui0tv/1XWkj
+         0JTXNM8zj1arXKVU5/d7XiJuPev9wVHWKohrb7Hp8OIBR0xmB0qI3qWOJCivs859GpOe
+         j+LDES2dXHsBfwkaBiN854127Jd6nKG4B8gTnl5HRNdoKRWfyaaX8wqLjYXlT7BXl1Sc
+         I8VBbPyhk+YQgISd6XkMX1gJqBgglHhD30LbOIWNNKqSvCl1Jwarc6nx576FZRw+Oa7u
+         P50BYKGGUny0O5cQCQpDjeIl1iSLb9V7avPWnBoA7KYruJrO6geXG3VMDrk3kCmsttiS
+         x5fQ==
+X-Gm-Message-State: AOAM532ViLu+i9kIHbesRt9EKdr7lGANR5ucIAtz6MJ7+oSVKe4CJOvR
+        QDq9gFYGYagBYip1qCS/qYwPCGBUqD0LXJIeBfI=
+X-Google-Smtp-Source: ABdhPJx7rG2GMqACcQRQ2BCoAiwDsJRPtxxBIgIMTYVXjCzH9lG7OWRMIGiX2Lv3kAGNbk+a7EYhyIry5lPUtiOig64=
+X-Received: by 2002:a05:651c:158a:: with SMTP id h10mr7948956ljq.57.1636468173300;
+ Tue, 09 Nov 2021 06:29:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Received: by 2002:ab3:6594:0:0:0:0:0 with HTTP; Tue, 9 Nov 2021 06:29:32 -0800 (PST)
+Reply-To: mr.sawadogomichel1@gmail.com
+From:   "Mr.Sawadogo Michel" <wwendykipa@gmail.com>
+Date:   Tue, 9 Nov 2021 06:29:32 -0800
+Message-ID: <CAGtbzE9cNme48nUYGsgRyF837OnEsHp9Ma7-+rATp8fVE5PCQQ@mail.gmail.com>
+Subject: Hello Dear Friend
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The file system DAX code now does not require the block code.  So allow
-building a kernel with fuse DAX but not block layer.
+Hello Dear Friend,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+My name is Mr.Sawadogo Michel. I have decided to seek a confidential
+co-operation  with you in the execution of the deal described
+here-under for our both  mutual benefit and I hope you will keep it a
+top secret because of the nature  of the transaction, During the
+course of our bank year auditing, I discovered  an unclaimed/abandoned
+fund, sum total of {US$19.3 Million United State  Dollars} in the bank
+account that belongs to a Saudi Arabia businessman Who unfortunately
+lost his life and entire family in a Motor Accident.
 
-diff --git a/fs/Kconfig b/fs/Kconfig
-index 6d608330a096e..7a2b11c0b8036 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -42,6 +42,8 @@ source "fs/nilfs2/Kconfig"
- source "fs/f2fs/Kconfig"
- source "fs/zonefs/Kconfig"
- 
-+endif # BLOCK
-+
- config FS_DAX
- 	bool "File system based Direct Access (DAX) support"
- 	depends on MMU
-@@ -89,8 +91,6 @@ config FS_DAX_PMD
- config FS_DAX_LIMITED
- 	bool
- 
--endif # BLOCK
--
- # Posix ACL utility routines
- #
- # Note: Posix ACLs can be implemented without these helpers.  Never use
--- 
-2.30.2
+Now our bank has been waiting for any of the relatives to come-up for
+the claim but nobody has done that. I personally has been unsuccessful
+in locating any of the relatives, now, I sincerely seek your consent
+to present you as the next of kin / Will Beneficiary to the deceased
+so that the proceeds of this account valued at {US$19.3 Million United
+State Dollars} can be paid to you, which we will share in these
+percentages ratio, 60% to me and 40% to you. All I request is your
+utmost sincere co-operation; trust and maximum confidentiality to
+achieve this project successfully. I have carefully mapped out the
+moralities for execution of this transaction under a legitimate
+arrangement to protect you from any breach of the law both in your
+country and here in Burkina Faso when the fund is being transferred to
+your bank account.
 
+I will have to provide all the relevant document that will be
+requested to indicate that you are the rightful beneficiary of this
+legacy and our bank will release the fund to you without any further
+delay, upon your consideration and acceptance of this offer, please
+send me the following information as stated below so we can proceed
+and get this fund transferred to your designated bank account
+immediately.
+
+-Your Full Name:
+-Your Contact Address:
+-Your direct Mobile telephone Number:
+-Your Date of Birth:
+-Your occupation:
+
+I await your swift response and re-assurance.
+
+Best regards,
+Mr.Sawadogo Michel.
