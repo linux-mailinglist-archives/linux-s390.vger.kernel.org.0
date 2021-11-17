@@ -2,112 +2,139 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3A4B454E0A
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Nov 2021 20:40:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9429A45502E
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Nov 2021 23:14:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239684AbhKQTnC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 17 Nov 2021 14:43:02 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11440 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S232482AbhKQTnA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 17 Nov 2021 14:43:00 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AHIfXwq017422;
-        Wed, 17 Nov 2021 19:39:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=GG0zw38m8UAMNZHTD8EcEiXU/BujDBluyOZnVM89dsA=;
- b=eA+ii5YvcFd2K9VagMUo+4tERr0KCMLnI5si1Lyfdpbia9dEosgi5LwpB4YEvki6aFyt
- lT7qAj/rc1qwwaH036tRh9Q/j5YcZCv3ysEFmezWwtRFWRBZOQCBwI7+ptO6wVYtYVXX
- XIjukA2j5Oc+vZCpV23dZJGqDjWuazl6Ars32Fn7CdtuqMUbqlbKQ4rTLpUH/kUhL7/r
- LKFLZneM2wYFFBn8Rx5r2dXZoWkzZX3LqwchOlgsEs6pAbVhml5IfCdHby95SzDb7kOz
- FHME8YnsS18QlG/uzvFP9cNCueIi5BdAv6qabE8GNrGMgiTT0/TnnPmfQxS7AEdu7q3s Cw== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cd781h47w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Nov 2021 19:39:56 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AHJWtlL022503;
-        Wed, 17 Nov 2021 19:39:55 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04fra.de.ibm.com with ESMTP id 3ca50ckwe7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 17 Nov 2021 19:39:54 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AHJdq3u66584916
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Nov 2021 19:39:52 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 825EBAE045;
-        Wed, 17 Nov 2021 19:39:52 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 37B1AAE053;
-        Wed, 17 Nov 2021 19:39:52 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 17 Nov 2021 19:39:52 +0000 (GMT)
-From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-To:     Faiyaz Mohammed <faiyazm@codeaurora.org>
-Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [RFC PATCH 1/1] mm/slub: fix endless "No data" printing for alloc/free_traces attribute
-Date:   Wed, 17 Nov 2021 20:39:32 +0100
-Message-Id: <20211117193932.4049412-2-gerald.schaefer@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211117193932.4049412-1-gerald.schaefer@linux.ibm.com>
-References: <20211117193932.4049412-1-gerald.schaefer@linux.ibm.com>
+        id S241081AbhKQWRf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Nov 2021 17:17:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231929AbhKQWRe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 17 Nov 2021 17:17:34 -0500
+X-Greylist: delayed 3878 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 17 Nov 2021 14:14:35 PST
+Received: from twosheds.infradead.org (unknown [IPv6:2001:8b0:10b:1:aaa1:59ff:fe2f:55f7])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D2EC061570;
+        Wed, 17 Nov 2021 14:14:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=twosheds.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Cc:To:From:Subject:Date:References:In-Reply-To:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=PY24mY1Y2geRmk7LjuGhOiKBHR3iZW7SC/NuUGtVeMM=; b=fInAvRfbXmsj2mRaAOMhBYLcLy
+        rNV3j1Ejy+5tp8+gefj0Ci1K8wUw/TqCwo4phGfDDq1OEX+zE3T5+9J+WUu8XZ68WvfujlJMgRUdq
+        fxcgLANbQ0bA5uHCFb8tfnVZy19nrvr3qujLNM1CEy+eRbFuppcsu+2Gu1haaPtMH2OZeBT48dIJ+
+        MgZ7cnFoCPvFUVHKjy+wj1KRDU0pwv46XKxGiQF5msM9UIjM+UBm/pQusxMLzB2JKBaHEMNFaf1cY
+        EwEp9WOb3Jf2IfUCshGJH9Upz2d6mUreD3M3e/7okHzoEyb/daAOFczuRJZBRtYk6sazwxlVM7FPi
+        Qu9mdBIA==;
+Received: from localhost ([127.0.0.1] helo=twosheds.infradead.org)
+        by twosheds.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mnSBT-00FV0l-BJ; Wed, 17 Nov 2021 21:09:35 +0000
+Received: from 2001:8b0:10b:1:d129:67c1:5868:c3aa
+        (SquirrelMail authenticated user dwmw2)
+        by twosheds.infradead.org with HTTP;
+        Wed, 17 Nov 2021 21:09:35 -0000
+Message-ID: <85d9fec17f32c3eb9e100e56b91af050.squirrel@twosheds.infradead.org>
+In-Reply-To: <20211117174003.297096-9-dwmw2@infradead.org>
+References: <20211117174003.297096-1-dwmw2@infradead.org>
+    <20211117174003.297096-9-dwmw2@infradead.org>
+Date:   Wed, 17 Nov 2021 21:09:35 -0000
+Subject: Re: [PATCH v3 08/12] KVM: Propagate vcpu explicitly to
+ mark_page_dirty_in_slot()
+From:   "David Woodhouse" <dwmw2@infradead.org>
+To:     "David Woodhouse" <dwmw2@infradead.org>
+Cc:     "Paolo Bonzini" <pbonzini@redhat.com>, "kvm" <kvm@vger.kernel.org>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+        "Joao Martins" <joao.m.martins@oracle.com>,
+        "jmattson @ google . com" <jmattson@google.com>,
+        "wanpengli @ tencent . com" <wanpengli@tencent.com>,
+        "seanjc @ google . com" <seanjc@google.com>,
+        "vkuznets @ redhat . com" <vkuznets@redhat.com>,
+        "mtosatti @ redhat . com" <mtosatti@redhat.com>,
+        "joro @ 8bytes . org" <joro@8bytes.org>, karahmed@amazon.com,
+        "Marc Zyngier" <maz@kernel.org>,
+        "James Morse" <james.morse@arm.com>,
+        "Alexandru Elisei" <alexandru.elisei@arm.com>,
+        "Suzuki K Poulose" <suzuki.poulose@arm.com>,
+        "Catalin Marinas" <catalin.marinas@arm.com>,
+        "Will Deacon" <will@kernel.org>,
+        "Huacai Chen" <chenhuacai@kernel.org>,
+        "Aleksandar Markovic" <aleksandar.qemu.devel@gmail.com>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        "Anup Patel" <anup.patel@wdc.com>,
+        "Christian Borntraeger" <borntraeger@de.ibm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        "linux-arm-kernel" <linux-arm-kernel@lists.infradead.org>,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        kvm-riscv@lists.infradead.org, linux-s390@vger.kernel.org
+User-Agent: SquirrelMail/1.4.23 [SVN]-5.fc33.20190710
 MIME-Version: 1.0
+Content-Type: text/plain;charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yvRbY4G85Vivysos-VQD-eKrumQh25x6
-X-Proofpoint-ORIG-GUID: yvRbY4G85Vivysos-VQD-eKrumQh25x6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-17_06,2021-11-17_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- bulkscore=0 clxscore=1015 impostorscore=0 suspectscore=0 phishscore=0
- mlxlogscore=787 mlxscore=0 lowpriorityscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2111170084
+X-Priority: 3 (Normal)
+Importance: Normal
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by twosheds.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Reading from alloc/free_traces attribute in /sys/kernel/debug/slab/ results
-in an endless sequence of "No data". This is because slab_debugfs_start()
-does not check for a "past end of file" condition and return NULL.
 
-Fix it by adding such a check and return NULL.
 
-Fixes: 64dd68497be7 ("mm: slub: move sysfs slab alloc/free interfaces to debugfs")
-Cc: <stable@vger.kernel.org> # v5.14+
-Reported-by: Steffen Maier <maier@linux.ibm.com>
-Signed-off-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
----
- mm/slub.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> From: David Woodhouse <dwmw@amazon.co.uk>
+>
+> The kvm_dirty_ring_get() function uses kvm_get_running_vcpu() to work out
+> which dirty ring to use, but there are some use cases where that doesn't
+> work.
+>
+> There's one in setting the Xen shared info page, introduced in commit
+> 629b5348841a ("KVM: x86/xen: update wallclock region") and reported by
+> "butt3rflyh4ck" <butterflyhuangxx@gmail.com> in
+> https://lore.kernel.org/kvm/CAFcO6XOmoS7EacN_n6v4Txk7xL7iqRa2gABg3F7E3Naf5uG94g@mail.gmail.com/
+>
+> There's also about to be another one when the newly-reintroduced
+> gfn_to_pfn_cache needs to mark a page as dirty from the MMU notifier
+> which invalidates the mapping. In that case, we will *know* the vcpu
+> that can be 'blamed' for dirtying the page, and we just need to be
+> able to pass it in as an explicit argument when doing so.
+>
+> This patch preemptively resolves the second issue, and paves the way
+> for resolving the first. A complete fix for the first issue will need
+> us to switch the Xen shinfo to be owned by a particular vCPU, which
+> will happen in a separate patch.
+>
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 
-diff --git a/mm/slub.c b/mm/slub.c
-index f7368bfffb7a..336609671bc2 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -6115,6 +6115,11 @@ static void *slab_debugfs_next(struct seq_file *seq, void *v, loff_t *ppos)
- 
- static void *slab_debugfs_start(struct seq_file *seq, loff_t *ppos)
- {
-+	struct loc_track *t = seq->private;
-+
-+	if (*ppos > t->count)
-+		return NULL;
-+
- 	return ppos;
- }
- 
+
+
+> --- a/virt/kvm/dirty_ring.c
+> +++ b/virt/kvm/dirty_ring.c
+> @@ -36,12 +36,16 @@ static bool kvm_dirty_ring_full(struct kvm_dirty_ring
+> *ring)
+>  	return kvm_dirty_ring_used(ring) >= ring->size;
+>  }
+>
+> -struct kvm_dirty_ring *kvm_dirty_ring_get(struct kvm *kvm)
+> +struct kvm_dirty_ring *kvm_dirty_ring_get(struct kvm *kvm, struct
+> kvm_vcpu *vcpu)
+>  {
+> -	struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
+> +	struct kvm_vcpu *running_vcpu = kvm_get_running_vcpu();
+>
+> +	WARN_ON_ONCE(vcpu && vcpu != running_vcpu);
+>  	WARN_ON_ONCE(vcpu->kvm != kvm);
+
+Ah, that one needs to be changed to check running_vcpu instead. Or this
+needs to go first:
+
+I think I prefer making the vCPU a required argument. If anyone's going to
+pull a vCPU pointer out of their posterior, let the caller do it.
+
+> +	if (!vcpu)
+> +		vcpu = running_vcpu;
+> +
+>  	return &vcpu->dirty_ring;
+>  }
+>
+
 -- 
-2.25.1
+dwmw2
 
