@@ -2,101 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74F87453E1C
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Nov 2021 03:00:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3563A453FCD
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Nov 2021 06:03:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232676AbhKQCDN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 Nov 2021 21:03:13 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:31876 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbhKQCDM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 Nov 2021 21:03:12 -0500
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Hv5bp5K5jzcbPH;
-        Wed, 17 Nov 2021 09:55:18 +0800 (CST)
-Received: from kwepemm600016.china.huawei.com (7.193.23.20) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Wed, 17 Nov 2021 10:00:05 +0800
-Received: from localhost.localdomain (10.67.165.24) by
- kwepemm600016.china.huawei.com (7.193.23.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.15; Wed, 17 Nov 2021 10:00:04 +0800
-From:   Guangbin Huang <huangguangbin2@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <mkubecek@suse.cz>,
-        <andrew@lunn.ch>, <amitc@mellanox.com>, <idosch@idosch.org>,
-        <danieller@nvidia.com>, <jesse.brandeburg@intel.com>,
-        <anthony.l.nguyen@intel.com>, <jdike@addtoit.com>,
-        <richard@nod.at>, <anton.ivanov@cambridgegreys.com>,
-        <netanel@amazon.com>, <akiyano@amazon.com>, <gtzalik@amazon.com>,
-        <saeedb@amazon.com>, <chris.snook@gmail.com>,
-        <ulli.kroll@googlemail.com>, <linus.walleij@linaro.org>,
-        <jeroendb@google.com>, <csully@google.com>,
-        <awogbemila@google.com>, <jdmason@kudzu.us>,
-        <rain.1986.08.12@gmail.com>, <zyjzyj2000@gmail.com>,
-        <kys@microsoft.com>, <haiyangz@microsoft.com>, <mst@redhat.com>,
-        <jasowang@redhat.com>, <doshir@vmware.com>,
-        <pv-drivers@vmware.com>, <jwi@linux.ibm.com>,
-        <kgraul@linux.ibm.com>, <hca@linux.ibm.com>, <gor@linux.ibm.com>,
-        <johannes@sipsolutions.net>
-CC:     <netdev@vger.kernel.org>, <lipeng321@huawei.com>,
-        <chenhao288@hisilicon.com>, <huangguangbin2@huawei.com>,
-        <linux-s390@vger.kernel.org>
-Subject: [RESEND PATCH V6 net-next 6/6] net: hns3: remove the way to set tx spare buf via module parameter
-Date:   Wed, 17 Nov 2021 09:55:26 +0800
-Message-ID: <20211117015526.27593-7-huangguangbin2@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211117015526.27593-1-huangguangbin2@huawei.com>
-References: <20211117015526.27593-1-huangguangbin2@huawei.com>
+        id S229578AbhKQFFa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Nov 2021 00:05:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229436AbhKQFF3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 17 Nov 2021 00:05:29 -0500
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA76CC061570
+        for <linux-s390@vger.kernel.org>; Tue, 16 Nov 2021 21:02:31 -0800 (PST)
+Received: by mail-wr1-x42c.google.com with SMTP id r8so2064236wra.7
+        for <linux-s390@vger.kernel.org>; Tue, 16 Nov 2021 21:02:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZAvRwiJtBRjHFRCmWgOSCR5R03A+VkMxLTTMBvp3xOo=;
+        b=GAwv8KZH7QoSza11mCj056EEnvOqtVaHQFo/kLuYCRBcZU1JH4Hq/2IL1WzjLJ6BpO
+         Nspwyqrh2//HnesmXMmgpT2dZaCtkaHvEExt4dD4V8EQnuyZF+ehE8jy7/PvfzY8JdpP
+         0oGbTDm155zcUW1iLeK7i2p1k6raVw3QOSIA6J7rnYNA5AxfcOGjmvcCOUoO6TMEzWvz
+         D4zo4ka6/BC+duGUr0a17+RCW1EAJNMFHgye3vZLTjLqu8b5jtlzjqGuKQk1i7OpS4/n
+         /rdHVIm/M6FEt/fJTzKVImD5IX7YnjqN1HZhnolIKr/hvnjL0wwKpRKq2TkiIrTQEBox
+         cQHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZAvRwiJtBRjHFRCmWgOSCR5R03A+VkMxLTTMBvp3xOo=;
+        b=nkMxCGYWTKBKZfj2kQgL8P0Z3BhugJGTZ3ZbYmfF0yOs6+/gAohFlV7M6eBymCSHyD
+         8CYQ8ZA8t4ERcnIsSCr4eqiRdzTVnChkKkEjw4XCmPfETIFcEVQvpviuGIgLG8AGhKOX
+         2ykIC0RTv4qiuCKciZORV13rhbB/ihZNrWfKt8HPex42+kEU2bFMIA6TNBw0YMkrZzJd
+         /QEPuQMOq1VgFS5IeM3HtjDlkAv561ihEzxz0oDzcINwMx5CU70jw93+zw19AyWMYhLh
+         vu2RzUgGQP6GtkTtMTyaoj8b3mWzE9RVSkRFVjEMIscnnBlJlXErSgVogiRHsHuWJJMB
+         AQvg==
+X-Gm-Message-State: AOAM530bjgE60qOJWuJoI0y2f6KXr7XxhBqYLoyRLuklaTQl+IxhauWu
+        VyeDoBzQj+4EF/y7XQUcomroDdYFpS64+feSVErCZA==
+X-Google-Smtp-Source: ABdhPJzjrfWofPzOBZxD2tEv76Kk7EIV+O42lYkqHli/gBWm8/qTI2cfDKQ7RNWGfhhww3GxDwccPcYXM1XKn0e14eE=
+X-Received: by 2002:a5d:4846:: with SMTP id n6mr15849576wrs.249.1637125350274;
+ Tue, 16 Nov 2021 21:02:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.165.24]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600016.china.huawei.com (7.193.23.20)
-X-CFilter-Loop: Reflected
+References: <20211116163443.88707-1-vkuznets@redhat.com> <20211116163443.88707-5-vkuznets@redhat.com>
+In-Reply-To: <20211116163443.88707-5-vkuznets@redhat.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 17 Nov 2021 10:32:18 +0530
+Message-ID: <CAAhSdy3VTfXmt4ub9SWwFQWwcqCS07WkwXdh6ObOcoZSp5oY=Q@mail.gmail.com>
+Subject: Re: [PATCH v2 4/6] KVM: RISC-V: Cap KVM_CAP_NR_VCPUS by KVM_CAP_MAX_VCPUS
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     KVM General <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Eduardo Habkost <ehabkost@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Andrew Jones <drjones@redhat.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm-ppc@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-mips@vger.kernel.org, kvm-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Hao Chen <chenhao288@hisilicon.com>
+On Tue, Nov 16, 2021 at 10:05 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> It doesn't make sense to return the recommended maximum number of
+> vCPUs which exceeds the maximum possible number of vCPUs.
+>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-The way to set tx spare buf via module parameter is not such
-convenient as the way to set it via ethtool.
+Looks good to me.
 
-So,remove the way to set tx spare buf via module parameter.
+For KVM RISC-V:
+Acked-by: Anup Patel <anup.patel@wdc.com>
+Reviewed-by: Anup Patel <anup.patel@wdc.com>
 
-Signed-off-by: Hao Chen <chenhao288@hisilicon.com>
-Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Thanks,
+Anup
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 031d73006a8e..3aba97504525 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -53,10 +53,6 @@ static int debug = -1;
- module_param(debug, int, 0);
- MODULE_PARM_DESC(debug, " Network interface message level setting");
- 
--static unsigned int tx_spare_buf_size;
--module_param(tx_spare_buf_size, uint, 0400);
--MODULE_PARM_DESC(tx_spare_buf_size, "Size used to allocate tx spare buffer");
--
- static unsigned int tx_sgl = 1;
- module_param(tx_sgl, uint, 0600);
- MODULE_PARM_DESC(tx_sgl, "Minimum number of frags when using dma_map_sg() to optimize the IOMMU mapping");
-@@ -1041,8 +1037,7 @@ static void hns3_init_tx_spare_buffer(struct hns3_enet_ring *ring)
- 	dma_addr_t dma;
- 	int order;
- 
--	alloc_size = tx_spare_buf_size ? tx_spare_buf_size :
--		     ring->tqp->handle->kinfo.tx_spare_buf_size;
-+	alloc_size = ring->tqp->handle->kinfo.tx_spare_buf_size;
- 	if (!alloc_size)
- 		return;
- 
--- 
-2.33.0
-
+> ---
+>  arch/riscv/kvm/vm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
+> index 26399df15b63..fb18af34a4b5 100644
+> --- a/arch/riscv/kvm/vm.c
+> +++ b/arch/riscv/kvm/vm.c
+> @@ -74,7 +74,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>                 r = 1;
+>                 break;
+>         case KVM_CAP_NR_VCPUS:
+> -               r = num_online_cpus();
+> +               r = min_t(unsigned int, num_online_cpus(), KVM_MAX_VCPUS);
+>                 break;
+>         case KVM_CAP_MAX_VCPUS:
+>                 r = KVM_MAX_VCPUS;
+> --
+> 2.33.1
+>
