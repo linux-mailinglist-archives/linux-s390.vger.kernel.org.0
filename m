@@ -2,112 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3563A453FCD
-	for <lists+linux-s390@lfdr.de>; Wed, 17 Nov 2021 06:03:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90595454081
+	for <lists+linux-s390@lfdr.de>; Wed, 17 Nov 2021 06:55:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229578AbhKQFFa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 17 Nov 2021 00:05:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40024 "EHLO
+        id S232082AbhKQF6A (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 17 Nov 2021 00:58:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbhKQFF3 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 17 Nov 2021 00:05:29 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA76CC061570
-        for <linux-s390@vger.kernel.org>; Tue, 16 Nov 2021 21:02:31 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id r8so2064236wra.7
-        for <linux-s390@vger.kernel.org>; Tue, 16 Nov 2021 21:02:31 -0800 (PST)
+        with ESMTP id S233302AbhKQF57 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 17 Nov 2021 00:57:59 -0500
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94D6AC0613B9
+        for <linux-s390@vger.kernel.org>; Tue, 16 Nov 2021 21:55:01 -0800 (PST)
+Received: by mail-pl1-x643.google.com with SMTP id m24so1173280pls.10
+        for <linux-s390@vger.kernel.org>; Tue, 16 Nov 2021 21:55:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZAvRwiJtBRjHFRCmWgOSCR5R03A+VkMxLTTMBvp3xOo=;
-        b=GAwv8KZH7QoSza11mCj056EEnvOqtVaHQFo/kLuYCRBcZU1JH4Hq/2IL1WzjLJ6BpO
-         Nspwyqrh2//HnesmXMmgpT2dZaCtkaHvEExt4dD4V8EQnuyZF+ehE8jy7/PvfzY8JdpP
-         0oGbTDm155zcUW1iLeK7i2p1k6raVw3QOSIA6J7rnYNA5AxfcOGjmvcCOUoO6TMEzWvz
-         D4zo4ka6/BC+duGUr0a17+RCW1EAJNMFHgye3vZLTjLqu8b5jtlzjqGuKQk1i7OpS4/n
-         /rdHVIm/M6FEt/fJTzKVImD5IX7YnjqN1HZhnolIKr/hvnjL0wwKpRKq2TkiIrTQEBox
-         cQHQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=WfrXUgSFI8fX3poHZCXyurnfnlLvKC2xRaygUoraNRE=;
+        b=kEgrFcoh5ZGGZ5YXMMER2rUeoznQSWHL01uGj1IOG/46InerXy3Q9z+uSzUHHrODY1
+         19I1XmagMCm3MBo1Boxp7nfTszjvAgMsceP5ghLu29qKeOstSed5THfghkK+qfHGa8n/
+         pWRZZycVPga8gA5KaXk60mQo/gG9auGTTm7BbNZphAtKW2eEpp4Zo+xnmhacS6RFNbWh
+         YCGDc3YdjqMszZ0kRXri+87J9yKtFAic8fcoCGL9YALNHpFfJshikpCQ0rlZ2RKNgKSA
+         NCxN/0eThojNjbJLDTw4S5K0lMmasHDGda6QoQieSqkVLqj0E1mUkvOgEhCiPU7Bopc7
+         pI3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZAvRwiJtBRjHFRCmWgOSCR5R03A+VkMxLTTMBvp3xOo=;
-        b=nkMxCGYWTKBKZfj2kQgL8P0Z3BhugJGTZ3ZbYmfF0yOs6+/gAohFlV7M6eBymCSHyD
-         8CYQ8ZA8t4ERcnIsSCr4eqiRdzTVnChkKkEjw4XCmPfETIFcEVQvpviuGIgLG8AGhKOX
-         2ykIC0RTv4qiuCKciZORV13rhbB/ihZNrWfKt8HPex42+kEU2bFMIA6TNBw0YMkrZzJd
-         /QEPuQMOq1VgFS5IeM3HtjDlkAv561ihEzxz0oDzcINwMx5CU70jw93+zw19AyWMYhLh
-         vu2RzUgGQP6GtkTtMTyaoj8b3mWzE9RVSkRFVjEMIscnnBlJlXErSgVogiRHsHuWJJMB
-         AQvg==
-X-Gm-Message-State: AOAM530bjgE60qOJWuJoI0y2f6KXr7XxhBqYLoyRLuklaTQl+IxhauWu
-        VyeDoBzQj+4EF/y7XQUcomroDdYFpS64+feSVErCZA==
-X-Google-Smtp-Source: ABdhPJzjrfWofPzOBZxD2tEv76Kk7EIV+O42lYkqHli/gBWm8/qTI2cfDKQ7RNWGfhhww3GxDwccPcYXM1XKn0e14eE=
-X-Received: by 2002:a5d:4846:: with SMTP id n6mr15849576wrs.249.1637125350274;
- Tue, 16 Nov 2021 21:02:30 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=WfrXUgSFI8fX3poHZCXyurnfnlLvKC2xRaygUoraNRE=;
+        b=5cQbhr6RFGh4CKDAiQadaIDtLGODsjY/2s5IbwHOMPf+aHn0Cr5x4nNV1NTY72cs87
+         MiMHQktlj9cV2YodHwWp9nEkOHTMaWNeP3Cn8rboVfYndOgYDizZpanaiaMLVzhsLyFe
+         0QSkZVcUi36oy/0mzK2qAC2Ru0pElvC/8YC/E4lof65ZZbuM6ViWBNf89CMszwC5YcPg
+         SgQcaL3FO/u7AqT0eESxRoV8QWVKBTcyOYDAETja3Z00l/i/seARBDN5eFk46dGMqXXH
+         RB2bSFyGl0LEChJ6Y4AAy77HjFxtUXM0G/pONrXKx5heo93/y+mufYR/+c0fSz35RZKK
+         7gSA==
+X-Gm-Message-State: AOAM530CUAx7oxuBkGGD5JkUPq7d5cwwKD6QQvY/dVdY63eXeI5i7SH9
+        5dBwVd5zU/XAU6rBfAlwnwVHnW9gfCBhyQZeGsA=
+X-Google-Smtp-Source: ABdhPJzsjs1I6WnJQgnSkKYx9hhTghYk54GwM4oxioc3yezNwwCaI0j+slysNaS45sY9kWyB1mVeTmB1iLMezuI3cKk=
+X-Received: by 2002:a17:90b:20d:: with SMTP id fy13mr6490869pjb.47.1637128500907;
+ Tue, 16 Nov 2021 21:55:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20211116163443.88707-1-vkuznets@redhat.com> <20211116163443.88707-5-vkuznets@redhat.com>
-In-Reply-To: <20211116163443.88707-5-vkuznets@redhat.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 17 Nov 2021 10:32:18 +0530
-Message-ID: <CAAhSdy3VTfXmt4ub9SWwFQWwcqCS07WkwXdh6ObOcoZSp5oY=Q@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] KVM: RISC-V: Cap KVM_CAP_NR_VCPUS by KVM_CAP_MAX_VCPUS
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     KVM General <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Eduardo Habkost <ehabkost@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Andrew Jones <drjones@redhat.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm-ppc@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-mips@vger.kernel.org, kvm-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Received: by 2002:a17:90a:1b64:0:0:0:0 with HTTP; Tue, 16 Nov 2021 21:55:00
+ -0800 (PST)
+Reply-To: inforiaantim@planetmail.net
+From:   Riaan Samson <tawandajean@gmail.com>
+Date:   Wed, 17 Nov 2021 07:55:00 +0200
+Message-ID: <CAGZCLcg79+L7=da7mbebLjxnC-ahDTX8mjTvhttpqxGWUN2vpQ@mail.gmail.com>
+Subject: Inquiry
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Nov 16, 2021 at 10:05 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> It doesn't make sense to return the recommended maximum number of
-> vCPUs which exceeds the maximum possible number of vCPUs.
->
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Hello,
 
-Looks good to me.
+It is my pleasure to contact you discreetly as to discuss a mutually
+beneficial business; I will want to have your trust and to go into
+partnership investment with you which must be built on confidentiality
+between us.
 
-For KVM RISC-V:
-Acked-by: Anup Patel <anup.patel@wdc.com>
-Reviewed-by: Anup Patel <anup.patel@wdc.com>
+I am the Contract Award Director of with a South African Government
+Department; my office is in charge of awarding contracts to
+international contractors, building and handling of government
+contract throughout the country.
 
-Thanks,
-Anup
+I am in the position to transfer the sum of US$17M of which I have
+written a memo informing the Government that this fund belongs to a
+Contractor waiting to be paid his contract sum; I want to transfer and
+invest this fund into your company as an investment fund from South
+Africa to your country.
 
-> ---
->  arch/riscv/kvm/vm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
-> index 26399df15b63..fb18af34a4b5 100644
-> --- a/arch/riscv/kvm/vm.c
-> +++ b/arch/riscv/kvm/vm.c
-> @@ -74,7 +74,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->                 r = 1;
->                 break;
->         case KVM_CAP_NR_VCPUS:
-> -               r = num_online_cpus();
-> +               r = min_t(unsigned int, num_online_cpus(), KVM_MAX_VCPUS);
->                 break;
->         case KVM_CAP_MAX_VCPUS:
->                 r = KVM_MAX_VCPUS;
-> --
-> 2.33.1
->
+The fund will be shared on the ratio of 60-40%; 40% for you on the
+assistance rendered. Please note that this fund will not be
+investigated or recalled in the near feature as all document to move
+this fund to your account will be legally obtained. You are to send me
+your company's name and address with your banking details where you
+want the fund to be transferred to.
+
+As soon as you agree to my proposition, I will send you my number to
+reach me. I want you to keep this private to yourself. Be assured that
+this is a legitimate fund and will be transferred legitimately.
+
+Thanks for your anticipated cooperation.
+
+Yours
+
+Mr. Riaan Tim Samson
+
+Note: Reply me through my private/secure email: inforiaantim@planetmail.net
