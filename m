@@ -2,128 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B311F456027
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Nov 2021 17:06:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B833045629D
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Nov 2021 19:40:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232975AbhKRQJh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 18 Nov 2021 11:09:37 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16836 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232973AbhKRQJd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 18 Nov 2021 11:09:33 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AIFIV2N005279;
-        Thu, 18 Nov 2021 16:06:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=F6HckeyXeZaZHMsQFsGgNpilOsihzSfaR3LRKMf7ErY=;
- b=XjnXFAGkhIy5qBqVi/Fb8YuOU7kjl2haWQxvHUr+iq0WlOuQSEk9O3GhBgpp+gc0fwtk
- 5Z0IW2jTZASkl2OH8kqy5wgSVR7yKC1FOslEE/kmMCAZyvneLsv1zk7asFdBCWopFzsY
- rTdaR+ObdLMHuw3P3B/s9JbqSdl9Z5/RFprE23LwvXAeHhilKtXJNT15rNF1a4PhwTDR
- 5qlXRQ319ROIHDJSs1oK/rNQCTSiL+rSwRsPyJjZS3QYUKV9NskVPiM5yVPzZS7v9FeU
- oT+LsM8bqHuYANkeDqr24l5hTP8yeEoLKd/dseGI9k4P2t0pc/BZNkgPy88RYixIFcRu Jw== 
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3cds8n9gev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Nov 2021 16:06:32 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AIG29iN029864;
-        Thu, 18 Nov 2021 16:06:30 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma01fra.de.ibm.com with ESMTP id 3ca50aduu0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Nov 2021 16:06:29 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AIFxPwD34472292
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Nov 2021 15:59:25 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4575AE064;
-        Thu, 18 Nov 2021 16:06:25 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E428AE057;
-        Thu, 18 Nov 2021 16:06:25 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 18 Nov 2021 16:06:25 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 6/6] s390/lcs: add braces around empty function body
-Date:   Thu, 18 Nov 2021 17:06:07 +0100
-Message-Id: <20211118160607.2245947-7-kgraul@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211118160607.2245947-1-kgraul@linux.ibm.com>
-References: <20211118160607.2245947-1-kgraul@linux.ibm.com>
+        id S231504AbhKRSnw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 18 Nov 2021 13:43:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46082 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229846AbhKRSnw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 18 Nov 2021 13:43:52 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22359C061574
+        for <linux-s390@vger.kernel.org>; Thu, 18 Nov 2021 10:40:52 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id m24so6009196pls.10
+        for <linux-s390@vger.kernel.org>; Thu, 18 Nov 2021 10:40:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=grrMnij3a2kLK2nD9/+zi8H0lxQV5j7EQVRD7AIwS2E=;
+        b=DnjI9osT+moWRQdwwunhhgYe2YGuzWKrQy5JwjvEJNUqQcpvnb0WoX5Pei6uXI5OdC
+         7eGLhv3YIzk62P6sC5D7JBPnUohj6O7s664U/+jqNIv857J2ijyYc9lxkutY0si+1Jso
+         ztfH/9rMsVdRRal+62dCEzvALKr3rtl5XahGBeHA8m4ynGczBHkUGlN7RYWuUfQGcFke
+         WSfMnan0Kg6M9yWEVCFKWFu1Oy/he0ioyfZD1myK/YDRWIUpBN/5hc73yoNPRxPOyT9C
+         VLzYMyPNfdN9orn15Wn6MlOWGc4Qs8aD/O0pRMiPP4mF4KE17PRSHz5sCFRZguQ3AWZA
+         KcTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=grrMnij3a2kLK2nD9/+zi8H0lxQV5j7EQVRD7AIwS2E=;
+        b=dnEAus4WlV4A2lmC9BpTitDbxCkEVcXTT9D5VUrefis88TvjeTgcmmhv6SLMn93Wki
+         ginqRMaIgqJzb2Fv54wrGxVj9ZDELxGs3gYGbk21CsWpC1kpoR2a9u0XUp3HDWkcqZl2
+         7gmXeGRTLL0WDo+NpGsC6uiURmQcw2vox7fOnHXG93uqraHTKMiOaRa1didcJTvgr8RT
+         Hog6ge4WUogwob7miLdGq00FPR5+qseFpc+AaRvqjmyqWHKhOUogTD+xvsW1ncbPIpj5
+         0zdJ+kjvdkc41HFl29SUH+tOxZtUzC9C8LXfnxjg0dfCYS4IonOXQklT612/iCJ8Emr3
+         RdKg==
+X-Gm-Message-State: AOAM530Pw51fk3pwoCB4h6t8gobg9XNgh0N3OmIBvEkoMpd/B0+PBWx9
+        bFsmKSPEC+mfupp2HQzB/m+oGw==
+X-Google-Smtp-Source: ABdhPJxTT+sS2hBA2CisuiyQO1bWgOM4L3odX2TF09Y4yJcQHjhUg5+FNsR41T/1dQnqfraxxzIiPQ==
+X-Received: by 2002:a17:90a:af94:: with SMTP id w20mr12506911pjq.223.1637260851435;
+        Thu, 18 Nov 2021 10:40:51 -0800 (PST)
+Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
+        by smtp.gmail.com with ESMTPSA id a12sm8600266pjq.16.2021.11.18.10.40.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Nov 2021 10:40:50 -0800 (PST)
+Date:   Thu, 18 Nov 2021 18:40:47 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     David Woodhouse <dwmw2@infradead.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm <kvm@vger.kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        "jmattson @ google . com" <jmattson@google.com>,
+        "wanpengli @ tencent . com" <wanpengli@tencent.com>,
+        "vkuznets @ redhat . com" <vkuznets@redhat.com>,
+        "mtosatti @ redhat . com" <mtosatti@redhat.com>,
+        "joro @ 8bytes . org" <joro@8bytes.org>, karahmed@amazon.com,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        kvm-riscv@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v3 08/12] KVM: Propagate vcpu explicitly to
+ mark_page_dirty_in_slot()
+Message-ID: <YZaeL5YztL3p1nLM@google.com>
+References: <20211117174003.297096-1-dwmw2@infradead.org>
+ <20211117174003.297096-9-dwmw2@infradead.org>
+ <85d9fec17f32c3eb9e100e56b91af050.squirrel@twosheds.infradead.org>
+ <4c48546b-eb4a-dff7-cc38-5df54f73f5d4@redhat.com>
+ <20b5952e76c54a3a5dfe5a898e3b835404ac6fb1.camel@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: LoWeeUYIG5wYdww2hPX4xPzC2Z3yKgPF
-X-Proofpoint-ORIG-GUID: LoWeeUYIG5wYdww2hPX4xPzC2Z3yKgPF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-18_12,2021-11-17_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501
- spamscore=0 suspectscore=0 mlxscore=0 adultscore=0 impostorscore=0
- phishscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2110150000 definitions=main-2111180089
+In-Reply-To: <20b5952e76c54a3a5dfe5a898e3b835404ac6fb1.camel@infradead.org>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Heiko Carstens <hca@linux.ibm.com>
+On Thu, Nov 18, 2021, David Woodhouse wrote:
+> That leaves the one in TDP MMU handle_changed_spte_dirty_log() which
+> AFAICT can trigger the same crash seen by butt3rflyh4ck — can't that
+> happen from a thread where kvm_get_running_vcpu() is NULL too? For that
+> one I'm not sure.
 
-Fix allmodconfig + W=1 compile breakage:
+I think could be trigger in the TDP MMU via kvm_mmu_notifier_release()
+-> kvm_mmu_zap_all(), e.g. if the userspace VMM exits while dirty logging is
+enabled.  That should be easy to (dis)prove via a selftest.
 
-drivers/s390/net/lcs.c: In function ‘lcs_get_frames_cb’:
-drivers/s390/net/lcs.c:1823:25: error: suggest braces around empty body in an ‘else’ statement [-Werror=empty-body]
- 1823 |                         ; // FIXME: error message ?
-      |                         ^
+And for the record :-)
 
-Acked-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
----
- drivers/s390/net/lcs.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+On Mon, Dec 02, 2019 at 12:10:36PM -0800, Sean Christopherson wrote:
+> IMO, adding kvm_get_running_vcpu() is a hack that is just asking for future
+> abuse and the vcpu/vm/as_id interactions in mark_page_dirty_in_ring()
+> look extremely fragile.
 
-diff --git a/drivers/s390/net/lcs.c b/drivers/s390/net/lcs.c
-index 2a6479740600..a61d38a1b4ed 100644
---- a/drivers/s390/net/lcs.c
-+++ b/drivers/s390/net/lcs.c
-@@ -1808,19 +1808,20 @@ lcs_get_frames_cb(struct lcs_channel *channel, struct lcs_buffer *buffer)
- 			return;
- 		}
- 		/* What kind of frame is it? */
--		if (lcs_hdr->type == LCS_FRAME_TYPE_CONTROL)
-+		if (lcs_hdr->type == LCS_FRAME_TYPE_CONTROL) {
- 			/* Control frame. */
- 			lcs_get_control(card, (struct lcs_cmd *) lcs_hdr);
--		else if (lcs_hdr->type == LCS_FRAME_TYPE_ENET ||
--			 lcs_hdr->type == LCS_FRAME_TYPE_TR ||
--			 lcs_hdr->type == LCS_FRAME_TYPE_FDDI)
-+		} else if (lcs_hdr->type == LCS_FRAME_TYPE_ENET ||
-+			   lcs_hdr->type == LCS_FRAME_TYPE_TR ||
-+			   lcs_hdr->type == LCS_FRAME_TYPE_FDDI) {
- 			/* Normal network packet. */
- 			lcs_get_skb(card, (char *)(lcs_hdr + 1),
- 				    lcs_hdr->offset - offset -
- 				    sizeof(struct lcs_header));
--		else
-+		} else {
- 			/* Unknown frame type. */
- 			; // FIXME: error message ?
-+		}
- 		/* Proceed to next frame. */
- 		offset = lcs_hdr->offset;
- 		lcs_hdr->offset = LCS_ILLEGAL_OFFSET;
--- 
-2.25.1
-
+On 03/12/19 20:01, Sean Christopherson wrote:
+> In case it was clear, I strongly dislike adding kvm_get_running_vcpu().
+> IMO, it's a unnecessary hack.  The proper change to ensure a valid vCPU is
+> seen by mark_page_dirty_in_ring() when there is a current vCPU is to
+> plumb the vCPU down through the various call stacks.
