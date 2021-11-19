@@ -2,98 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E32E6456836
-	for <lists+linux-s390@lfdr.de>; Fri, 19 Nov 2021 03:35:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36EA5456919
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Nov 2021 05:23:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234030AbhKSCiw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 18 Nov 2021 21:38:52 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:23766 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231217AbhKSCiw (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 18 Nov 2021 21:38:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1637289351;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fvEXdVSQ33CYfJdfTY3g6zxywCtQTaTt9SO8R6Pches=;
-        b=NThtaWTyzy9ATWseeNmFiaLpbKPl/NDPZJ5EDXxNKa2Wh2MHqAfCTobCBtYGBlVR4XY6ga
-        9Cj+TCI20rcWRz2WpkId+cKibu7H4Yn6XnkOon8sMZ5xokjpHxUpHZ+5tS0XI3LOuz8UMH
-        d6feFm1TcMSqS10pjrSBlRJgQ8KVGic=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-473-2xHzU_kSMDGKuKU8EZrWyg-1; Thu, 18 Nov 2021 21:35:48 -0500
-X-MC-Unique: 2xHzU_kSMDGKuKU8EZrWyg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B43E18125C6;
-        Fri, 19 Nov 2021 02:35:46 +0000 (UTC)
-Received: from localhost (ovpn-12-90.pek2.redhat.com [10.72.12.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E53CC100763D;
-        Fri, 19 Nov 2021 02:35:33 +0000 (UTC)
-Date:   Fri, 19 Nov 2021 10:35:31 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
-        kbuild-all@lists.01.org, linux-s390@vger.kernel.org,
-        kexec@lists.infradead.org, prudo@redhat.com
-Subject: Re: [PATCH v2 2/2] s390/kexec: fix kmemleak
-Message-ID: <20211119023531.GB12774@MiWiFi-R3L-srv>
-References: <20211116032557.14075-2-bhe@redhat.com>
- <202111180539.e7kmpOSP-lkp@intel.com>
- <20211118071327.GF21646@MiWiFi-R3L-srv>
- <YZYUi9XMyjtpGmAQ@osiris>
+        id S231583AbhKSE0g (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 18 Nov 2021 23:26:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232536AbhKSE02 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 18 Nov 2021 23:26:28 -0500
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8804DC06173E
+        for <linux-s390@vger.kernel.org>; Thu, 18 Nov 2021 20:23:27 -0800 (PST)
+Received: by mail-io1-xd41.google.com with SMTP id z26so11171629iod.10
+        for <linux-s390@vger.kernel.org>; Thu, 18 Nov 2021 20:23:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=eTS1GK69RCI4oJxzikNG+dG1kEXvzkq40C70DiSwh3g=;
+        b=cQL4g+H2gJMJP3xWFQe/KzoyGqIo0AawlIVz6HOmgj7H+oswWn1JndJ03Ybadqh/iG
+         GFezuribER5iOwOrdhcpaLRDpEBug17B9goO8697VSiSH7/hueTiocUUiYuEl0npDX+N
+         7dyH4NYh7rX0U9rKSBeHM3T0tr/VTmzWLqZb6dR+9h3OxCcYEbSP6A9trr03z0AdHvvI
+         ahSumHf41Gk0/WiflEL2tp00pjSmNcuzmCnCLHtvda8y92IYt7+31MLaTkWsbzEryIp/
+         PD6PRbns5nLepTYC8LZKXr6gjYxNXB3IFy8QgwmShmHo9WUyNgKaHeXs5AvuxibzX411
+         sWzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=eTS1GK69RCI4oJxzikNG+dG1kEXvzkq40C70DiSwh3g=;
+        b=2Z7ebSvjRHBtYU4uPU5vQucINnQAMKhuGtYfqAt2fNrOI+Si0nzypkwJd3pnTSw4v3
+         Z1asRboP99kmEFbGQeN+hwYZ4X4qKqH8VVfSaV8tkICrIYYGcoGM2QChmPN5zzSl5Ff+
+         +bHsqmdl+juuu65tck8hOZpAnXAjbaGmnt2kVP+fKtwvALVP0tBGqX2NXUtQg54IM49Q
+         3GEeN9viTm2aGB3k3sDekJzWfWMue6E2UPL7m1PAKFd6IQc8Fy6TJX6xJOzOx8kB7QAY
+         ujESFAhkNfROAOwXX/iVSxrTAV0IaHVdWo0y1845WdbRgMkANNUqP5RfGD0ko6zDfJ86
+         Gk5g==
+X-Gm-Message-State: AOAM531o1ftBbzkXZnDenntwNGu+FWAg5R6OfpTMlI1Z59rOcth9LEn/
+        nOxXdDeffvJU5uF6Dt7awanIg75hdafHRGUs9ok=
+X-Google-Smtp-Source: ABdhPJyoJdpS7Kf9B+KrNKG19mDCqtighLiNuAqL2cgDQj7eZ+/CBh/r4yLZu32slWVXs7TOdIJDzf3XHUtHh6UYg8Y=
+X-Received: by 2002:a05:6602:164a:: with SMTP id y10mr3074210iow.123.1637295806431;
+ Thu, 18 Nov 2021 20:23:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YZYUi9XMyjtpGmAQ@osiris>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Received: by 2002:a05:6602:2f03:0:0:0:0 with HTTP; Thu, 18 Nov 2021 20:23:25
+ -0800 (PST)
+Reply-To: anthonyrrobson@gmail.com
+From:   "Mr. Anthony Robson" <abcudday@gmail.com>
+Date:   Thu, 18 Nov 2021 20:23:25 -0800
+Message-ID: <CADXsGJFbR1Q52ZiBs8f3ijChf5RKGDYxHiXANAhCVcHdcbSS1A@mail.gmail.com>
+Subject: I look forward to hearing from you SOONEST!
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 11/18/21 at 09:53am, Heiko Carstens wrote:
-> On Thu, Nov 18, 2021 at 03:13:27PM +0800, Baoquan He wrote:
-> > On 11/18/21 at 05:46am, kernel test robot wrote:
-> > >    arch/s390/kernel/machine_kexec_file.c: In function 'arch_kimage_file_post_load_cleanup':
-> > > >> arch/s390/kernel/machine_kexec_file.c:332:9: error: implicit declaration of function 'kvfree'; did you mean 'vfree'? [-Werror=implicit-function-declaration]
-> > >      332 |         kvfree(image->arch.ipl_buf);
-> > >          |         ^~~~~~
-> > >          |         vfree
-> > 
-> > OK, kvfree is not wrong, seems vfree is more appropriate since it's
-> > clear the ipl_buf is allocated with zvalloc() in ipl_report_finish().
-> > 
-> > Hi Heiko,
-> > 
-> > Could you help modify the code in your tree or append below patch to
-> > mute the lkp complaint? Sorry for the inconvenience.
-> ...
-> >  arch/s390/kernel/machine_kexec_file.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-> > index 7f51837e9bc2..351a7ff69a43 100644
-> > --- a/arch/s390/kernel/machine_kexec_file.c
-> > +++ b/arch/s390/kernel/machine_kexec_file.c
-> > @@ -329,7 +329,7 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-> >  
-> >  int arch_kimage_file_post_load_cleanup(struct kimage *image)
-> >  {
-> > -	kvfree(image->arch.ipl_buf);
-> > +	vfree(image->arch.ipl_buf);
-> 
-> The problem reported above indicates that slab.h was not
-> included. With your patch, while it fixes the problem for this
-> particular configuration, this requires vmalloc.h to be included.
+Hello Friend,
 
-Indeed, thanks.
+Below is the email i sent to you.
 
-> 
-> I'll merge your patch and add the missing include as well.
-> 
+I am so sorry for sending you this unsolicited and unexpected email.
 
+I actually got your contact from your country website and i decided to
+contact you directly about this business venture.
+
+I am contacting you in good faith and this business investment
+proposal will be of mutual benefit for us. I have a business proposal
+in huge sum amount of US$800,000 000 00 (Eight Hundred  Million United
+state dollars only} to be transferred to any safe account with your
+assistance.
+
+Contact me back via my email if you are interested in this business
+investment proposal and if you can be trusted for further briefing and
+details.
+I look forward to hearing from you SOONEST!
+
+Kind Regards.
+Mr. Anthony Robson.
