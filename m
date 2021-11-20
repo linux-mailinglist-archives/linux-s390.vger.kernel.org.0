@@ -2,303 +2,68 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33D15457CEF
-	for <lists+linux-s390@lfdr.de>; Sat, 20 Nov 2021 11:28:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3608A457E1A
+	for <lists+linux-s390@lfdr.de>; Sat, 20 Nov 2021 13:34:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236411AbhKTKbp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 20 Nov 2021 05:31:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43136 "EHLO
+        id S237566AbhKTMhP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 20 Nov 2021 07:37:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230203AbhKTKbj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 20 Nov 2021 05:31:39 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 069FAC061757;
-        Sat, 20 Nov 2021 02:28:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=mkQSxNiO24zNj6PGwmIB/b9M7//rpOKLCivjYBWhmLk=; b=Xq+TKkth6UGodwC73698VUUlg7
-        XaF+tHM0Nlbri4MMM3zhIHH4iVFBGizeCvqtcoCTQjtzolu8/j4b0EWXksiWfweSzwKvWn2qeCmQ8
-        tVv0OxDJf6neQTb9+hvnu3mcxe2Xogw6e3lQogSWyUfXCk7Ow9LPwJVMA14SPu4RQT5RN5MjWabv6
-        8mVy1AKQKTVA9kPyTEi8VcCTAFcPULt6mEEScYsRuzttf3QmjQCpmmUyZ514KUlPKpUplHlYkbjCg
-        P9d28LBw8RTMs+QDZjKa4yh6FtrIihxtdYWEFXzLLdCaRdUZ3K2eKqbNvmD8msBDBbqMzka4kfJnt
-        3nqfee8Q==;
-Received: from i7.infradead.org ([2001:8b0:10b:1:21e:67ff:fecb:7a92])
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1moNbR-00H55z-IH; Sat, 20 Nov 2021 10:28:13 +0000
-Received: from dwoodhou by i7.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1moNbR-0002KZ-4L; Sat, 20 Nov 2021 10:28:13 +0000
-From:   David Woodhouse <dwmw2@infradead.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm <kvm@vger.kernel.org>
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        "jmattson @ google . com" <jmattson@google.com>,
-        "wanpengli @ tencent . com" <wanpengli@tencent.com>,
-        "seanjc @ google . com" <seanjc@google.com>,
-        "vkuznets @ redhat . com" <vkuznets@redhat.com>,
-        "mtosatti @ redhat . com" <mtosatti@redhat.com>,
-        "joro @ 8bytes . org" <joro@8bytes.org>, karahmed@amazon.com,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Aleksandar Markovic <aleksandar.qemu.devel@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Anup Patel <anup.patel@wdc.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm-riscv@lists.infradead.org, linux-s390@vger.kernel.org
-Subject: [PATCH v4 11/11] KVM: x86: First attempt at converting nested virtual APIC page to gpc
-Date:   Sat, 20 Nov 2021 10:28:10 +0000
-Message-Id: <20211120102810.8858-12-dwmw2@infradead.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211120102810.8858-1-dwmw2@infradead.org>
-References: <20211120102810.8858-1-dwmw2@infradead.org>
+        with ESMTP id S237305AbhKTMhP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 20 Nov 2021 07:37:15 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8423C06174A
+        for <linux-s390@vger.kernel.org>; Sat, 20 Nov 2021 04:34:11 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id d27so23101549wrb.6
+        for <linux-s390@vger.kernel.org>; Sat, 20 Nov 2021 04:34:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=w2dLnl5hsLVKZTBAdcVFnDnMtM7+guW1LU+8LG4nir0=;
+        b=SfgrxszVAhIUhPhcltLFYjTgn8qP3dMZiJeatgbs4CMgmp9wHWdKySGpbmjZiqoH7W
+         QqnrA/Luw9RwpQ1sEm3NtAfjUcqrGetfb8MfoniTr/cGOaiUwRnkidKPhG9sJ7Q/ylYg
+         QnhEodclXSg4eKTsXOltnuxbA/MwWdnZgkftZR1xKb9zIdKYIc0J42PA8vFSkmI+Pio1
+         q3vjTpDwjEWKfMMN8Sbyp7O03J26GokdX3bZLF48yRrnVNwstZt61tqobKO1Fh8ulFWA
+         aNFykCu5v2789Xcka6PIGqzYhBcz0Z+Q6K1o0AmOGgc73aPZfDHtbPxq7hOoUe19n+wo
+         avYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=w2dLnl5hsLVKZTBAdcVFnDnMtM7+guW1LU+8LG4nir0=;
+        b=DsgOBYRqRdA8lvsSqASo98ykbMVJy/7qNLhmXkppAgUCMa0b4mry7tZgKWQpLCTyAp
+         202bpvTYA7ZtVsvB7T1U9rvgL61nYZn4hH3x7By2Zk4/PFirQ8mhabxhM7bGeHc8vH1H
+         I3JNcRbOcFjh3nhJW1Hflz3f9tmtDIUziXHNgLIXHSJQ3/xwFl1w0EyHh+amBZQBOsr4
+         eKNy7M1L9JqbtDIB9JxdoZXF2PGJ92s+vljcHgVY4BnBy540xS/1p61T/fZfiVFc2H+q
+         5qeleY4OFvm2lL3ryZCttqmE5Gd1mMQs5wKJrHgN3n8cVOSylpLLI10edCfSNjYRrg08
+         deQA==
+X-Gm-Message-State: AOAM531T4DGRlEO9cUirSnBUImeqLTuNsIZNyhLFQ7SxNU1OTiYw5qMR
+        oWl71JS6I7QOLlQHybTXne39VyjB3DwM7nKln8BIZE6UeWTa0Q==
+X-Google-Smtp-Source: ABdhPJwNeYCRmVDovPQVSwxxibNU3kfyr0SfgKTRhpGgm92tt3xvJBu3f86ir8VvjZwVO3Ztzl/nnM56CXXB2xWuEHE=
+X-Received: by 2002:a05:6000:18ad:: with SMTP id b13mr17285116wri.195.1637411639427;
+ Sat, 20 Nov 2021 04:33:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: David Woodhouse <dwmw2@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
+Received: by 2002:adf:f989:0:0:0:0:0 with HTTP; Sat, 20 Nov 2021 04:33:58
+ -0800 (PST)
+Reply-To: mitchellvivian01@gamil.com
+From:   Mitchell Vivian <duplanmartine36@gmail.com>
+Date:   Sat, 20 Nov 2021 12:33:58 +0000
+Message-ID: <CAO-XXH5uGE2Yd4cjnLYeWr_OADiBftpJAikaRx5eamVu8xQgPw@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: David Woodhouse <dwmw@amazon.co.uk>
+Hello
 
-This is what evolved during the discussion at
-https://lore.kernel.org/kvm/960E233F-EC0B-4FB5-BA2E-C8D2CCB38B12@infradead.org/T/#m11d75fcfe2da357ec1dabba0d0e3abb91fd13665
+My name is Miss Vivian Mitchell. I want to donate my fund $ 4.5
+million USD to you on a charity name to help the poor People.
 
-As discussed, an alternative approach might be to augment
-kvm_arch_memslots_updated() to raise KVM_REQ_GET_NESTED_STATE_PAGES to
-each vCPU (and make that req only do anything on a given vCPU if that
-vCPU is actually in L2 guest mode).
+As soon as I read from you I will give you more details on how to
+achieve this goal and get this fund transferred into your bank
+account.
 
-That would mean the reload gets actively triggered even on memslot
-changes rather than only on MMU notifiers as is the case now. It could
-*potentially* mean we can drop the new 'check_guest_maps' function.
-
-The 'check_guest_maps' function could be a lot simpler than it is,
-though. It only really needs to get kvm->memslots->generation, then
-check each gpc->generation against that, and each gpc->valid.
-
-Also I suspect we *shouldn't* destroy the virtual_apic_cache in
-nested_vmx_vmexit(). We can just leave it there for next time the
-vCPU enters guest mode. If it happens to get invalidated in the
-meantime, that's fine and we'll refresh it on the way back in.
-We probably *would* want to actively do something on memslot changes
-in that case though, to ensure that even if the vCPU isn't in guest
-mode any more, we *release* the cached page.
-
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
----
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/vmx/nested.c       | 50 ++++++++++++++++++++++++++++-----
- arch/x86/kvm/vmx/vmx.c          | 12 +++++---
- arch/x86/kvm/vmx/vmx.h          |  2 +-
- arch/x86/kvm/x86.c              | 10 +++++++
- 5 files changed, 63 insertions(+), 12 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 6ea2446ab851..24f6f3e2de47 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1511,6 +1511,7 @@ struct kvm_x86_nested_ops {
- 	int (*enable_evmcs)(struct kvm_vcpu *vcpu,
- 			    uint16_t *vmcs_version);
- 	uint16_t (*get_evmcs_version)(struct kvm_vcpu *vcpu);
-+	void (*check_guest_maps)(struct kvm_vcpu *vcpu);
- };
- 
- struct kvm_x86_init_ops {
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 1e2f66951566..01bfabcfbbce 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -309,7 +309,7 @@ static void free_nested(struct kvm_vcpu *vcpu)
- 		kvm_release_page_clean(vmx->nested.apic_access_page);
- 		vmx->nested.apic_access_page = NULL;
- 	}
--	kvm_vcpu_unmap(vcpu, &vmx->nested.virtual_apic_map, true);
-+	kvm_gfn_to_pfn_cache_destroy(vcpu->kvm, &vmx->nested.virtual_apic_cache);
- 	kvm_vcpu_unmap(vcpu, &vmx->nested.pi_desc_map, true);
- 	vmx->nested.pi_desc = NULL;
- 
-@@ -3179,10 +3179,12 @@ static bool nested_get_vmcs12_pages(struct kvm_vcpu *vcpu)
- 	}
- 
- 	if (nested_cpu_has(vmcs12, CPU_BASED_TPR_SHADOW)) {
--		map = &vmx->nested.virtual_apic_map;
-+		struct gfn_to_pfn_cache *gpc = &vmx->nested.virtual_apic_cache;
- 
--		if (!kvm_vcpu_map(vcpu, gpa_to_gfn(vmcs12->virtual_apic_page_addr), map)) {
--			vmcs_write64(VIRTUAL_APIC_PAGE_ADDR, pfn_to_hpa(map->pfn));
-+ 		if (!kvm_gfn_to_pfn_cache_init(vcpu->kvm, gpc, vcpu, true, true,
-+					       vmcs12->virtual_apic_page_addr,
-+					       PAGE_SIZE, true)) {
-+			vmcs_write64(VIRTUAL_APIC_PAGE_ADDR, pfn_to_hpa(gpc->pfn));
- 		} else if (nested_cpu_has(vmcs12, CPU_BASED_CR8_LOAD_EXITING) &&
- 		           nested_cpu_has(vmcs12, CPU_BASED_CR8_STORE_EXITING) &&
- 			   !nested_cpu_has2(vmcs12, SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES)) {
-@@ -3207,6 +3209,9 @@ static bool nested_get_vmcs12_pages(struct kvm_vcpu *vcpu)
- 	if (nested_cpu_has_posted_intr(vmcs12)) {
- 		map = &vmx->nested.pi_desc_map;
- 
-+		if (kvm_vcpu_mapped(map))
-+			kvm_vcpu_unmap(vcpu, map, true);
-+
- 		if (!kvm_vcpu_map(vcpu, gpa_to_gfn(vmcs12->posted_intr_desc_addr), map)) {
- 			vmx->nested.pi_desc =
- 				(struct pi_desc *)(((void *)map->hva) +
-@@ -3251,6 +3256,29 @@ static bool vmx_get_nested_state_pages(struct kvm_vcpu *vcpu)
- 	return true;
- }
- 
-+static void nested_vmx_check_guest_maps(struct kvm_vcpu *vcpu)
-+{
-+	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
-+	struct gfn_to_pfn_cache *gpc;
-+
-+	int valid;
-+
-+	if (nested_cpu_has_posted_intr(vmcs12)) {
-+		gpc = &vmx->nested.virtual_apic_cache;
-+
-+		read_lock(&gpc->lock);
-+		valid = kvm_gfn_to_pfn_cache_check(vcpu->kvm, gpc,
-+						   vmcs12->virtual_apic_page_addr,
-+						   PAGE_SIZE);
-+		read_unlock(&gpc->lock);
-+		if (!valid) {
-+			kvm_make_request(KVM_REQ_GET_NESTED_STATE_PAGES, vcpu);
-+			return;
-+		}
-+	}
-+}
-+
- static int nested_vmx_write_pml_buffer(struct kvm_vcpu *vcpu, gpa_t gpa)
- {
- 	struct vmcs12 *vmcs12;
-@@ -3749,9 +3777,15 @@ static int vmx_complete_nested_posted_interrupt(struct kvm_vcpu *vcpu)
- 
- 	max_irr = find_last_bit((unsigned long *)vmx->nested.pi_desc->pir, 256);
- 	if (max_irr != 256) {
--		vapic_page = vmx->nested.virtual_apic_map.hva;
--		if (!vapic_page)
-+		struct gfn_to_pfn_cache *gpc = &vmx->nested.virtual_apic_cache;
-+
-+		read_lock(&gpc->lock);
-+		if (!kvm_gfn_to_pfn_cache_check(vcpu->kvm, gpc, gpc->gpa, PAGE_SIZE)) {
-+			read_unlock(&gpc->lock);
- 			goto mmio_needed;
-+		}
-+
-+		vapic_page = gpc->khva;
- 
- 		__kvm_apic_update_irr(vmx->nested.pi_desc->pir,
- 			vapic_page, &max_irr);
-@@ -3761,6 +3795,7 @@ static int vmx_complete_nested_posted_interrupt(struct kvm_vcpu *vcpu)
- 			status |= (u8)max_irr;
- 			vmcs_write16(GUEST_INTR_STATUS, status);
- 		}
-+		read_unlock(&gpc->lock);
- 	}
- 
- 	nested_mark_vmcs12_pages_dirty(vcpu);
-@@ -4581,7 +4616,7 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 vm_exit_reason,
- 		kvm_release_page_clean(vmx->nested.apic_access_page);
- 		vmx->nested.apic_access_page = NULL;
- 	}
--	kvm_vcpu_unmap(vcpu, &vmx->nested.virtual_apic_map, true);
-+	kvm_gfn_to_pfn_cache_unmap(vcpu->kvm, &vmx->nested.virtual_apic_cache);
- 	kvm_vcpu_unmap(vcpu, &vmx->nested.pi_desc_map, true);
- 	vmx->nested.pi_desc = NULL;
- 
-@@ -6756,4 +6791,5 @@ struct kvm_x86_nested_ops vmx_nested_ops = {
- 	.write_log_dirty = nested_vmx_write_pml_buffer,
- 	.enable_evmcs = nested_enable_evmcs,
- 	.get_evmcs_version = nested_get_evmcs_version,
-+	.check_guest_maps = nested_vmx_check_guest_maps,
- };
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index ba66c171d951..6c61faef86d3 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -3839,19 +3839,23 @@ void pt_update_intercept_for_msr(struct kvm_vcpu *vcpu)
- static bool vmx_guest_apic_has_interrupt(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
--	void *vapic_page;
-+	struct gfn_to_pfn_cache *gpc = &vmx->nested.virtual_apic_cache;
- 	u32 vppr;
- 	int rvi;
- 
- 	if (WARN_ON_ONCE(!is_guest_mode(vcpu)) ||
- 		!nested_cpu_has_vid(get_vmcs12(vcpu)) ||
--		WARN_ON_ONCE(!vmx->nested.virtual_apic_map.gfn))
-+		WARN_ON_ONCE(gpc->gpa == GPA_INVALID))
- 		return false;
- 
- 	rvi = vmx_get_rvi();
- 
--	vapic_page = vmx->nested.virtual_apic_map.hva;
--	vppr = *((u32 *)(vapic_page + APIC_PROCPRI));
-+	read_lock(&gpc->lock);
-+	if (!kvm_gfn_to_pfn_cache_check(vcpu->kvm, gpc, gpc->gpa, PAGE_SIZE))
-+		vppr = *((u32 *)(gpc->khva + APIC_PROCPRI));
-+	else
-+		vppr = 0xff;
-+	read_unlock(&gpc->lock);
- 
- 	return ((rvi & 0xf0) > (vppr & 0xf0));
- }
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 4df2ac24ffc1..8364e7fc92a0 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -195,7 +195,7 @@ struct nested_vmx {
- 	 * pointers, so we must keep them pinned while L2 runs.
- 	 */
- 	struct page *apic_access_page;
--	struct kvm_host_map virtual_apic_map;
-+	struct gfn_to_pfn_cache virtual_apic_cache;
- 	struct kvm_host_map pi_desc_map;
- 
- 	struct kvm_host_map msr_bitmap_map;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index fa56c590d8db..01d20db5b1f4 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9739,6 +9739,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 
- 		if (kvm_check_request(KVM_REQ_UPDATE_CPU_DIRTY_LOGGING, vcpu))
- 			static_call(kvm_x86_update_cpu_dirty_logging)(vcpu);
-+		if (kvm_check_request(KVM_REQ_GPC_INVALIDATE, vcpu))
-+			; /* Nothing to do. It just wanted to wake us */
- 	}
- 
- 	if (kvm_check_request(KVM_REQ_EVENT, vcpu) || req_int_win ||
-@@ -9785,6 +9787,14 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 	local_irq_disable();
- 	vcpu->mode = IN_GUEST_MODE;
- 
-+	/*
-+	 * If the guest requires direct access to mapped L1 pages, check
-+	 * the caches are valid. Will raise KVM_REQ_GET_NESTED_STATE_PAGES
-+	 * to go and revalidate them, if necessary.
-+	 */
-+	if (is_guest_mode(vcpu) && kvm_x86_ops.nested_ops->check_guest_maps)
-+		kvm_x86_ops.nested_ops->check_guest_maps(vcpu);
-+
- 	srcu_read_unlock(&vcpu->kvm->srcu, vcpu->srcu_idx);
- 
- 	/*
--- 
-2.31.1
-
+Thanks have a nice day,
+Miss.vivian
