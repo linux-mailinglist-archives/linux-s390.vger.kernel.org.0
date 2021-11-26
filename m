@@ -2,27 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A31E745E610
-	for <lists+linux-s390@lfdr.de>; Fri, 26 Nov 2021 04:01:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CC4545E647
+	for <lists+linux-s390@lfdr.de>; Fri, 26 Nov 2021 04:01:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358920AbhKZCr0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 25 Nov 2021 21:47:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50878 "EHLO mail.kernel.org"
+        id S245223AbhKZCud (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 25 Nov 2021 21:50:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1358935AbhKZCpY (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 25 Nov 2021 21:45:24 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 55025611CE;
-        Fri, 26 Nov 2021 02:36:19 +0000 (UTC)
+        id S1352559AbhKZCqM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 25 Nov 2021 21:46:12 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DE4096135F;
+        Fri, 26 Nov 2021 02:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637894180;
-        bh=xBmPETsaEPOuUqJAowCSale7u9Cfc/HvP3pZY4w8xYo=;
+        s=k20201202; t=1637894206;
+        bh=j1J/Be+AtqWEmIy3RZBDchghsQ1lLnJrU1m/FQSV4oc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0uVRu2hvqCeZAfd/xNjWCmCVOYx1LJawNPkv89YAH8OS4sMhOSZGxCOoEARUcH6D
-         ETcO+9E4QwmK5FUxwhxCRfJJnmeqcKLGLPhtPeyqIVK6iv7KcLY7+70uktXsB6XG6Q
-         NONtIpVkuGTsJqvV6Npj6L+30J8Koy2lG00qcLgv4/tLzGEFqqnBiUsGeczQD2FF2z
-         ql2zGWxlCHAutY7rdmY34puYMYknUUNsyyhh3fTDmHgaQJeBCxOP45n3fdXTWHLR6Y
-         PEcMmkD4DFRxHWPvPLK2QKIsGV3F5qrLcORxSXNP1tOcZIPGfHmHojHGtltylnzAcM
-         +tL4BwZaewBUw==
+        b=gmDxnkfnHL86ysdKnkyBVstgUh0X8gioWlcPiVM3Od0rbpWOD6P4k1jHGMv6SEheU
+         S2sZSJeOEcoyzR6ozqKi1xV4Kjl348hK6ak5ftoxvzZmcoAjYA2HG2KaW/LM+BYmnn
+         Rg0i4FuAhu6fpsfFz33XziZV2QEk2eynom/0uYCK54XmmSTZg4gGLMOaiPolC9FMh+
+         MaPWi4OtM8cYEhlL0Zztn0dX+reLT5KDikrUqo7ztEo6w/TZQOnGWW9F3fRH+8tiKT
+         C5Tb3iF//Aux3qm60b5eUoNy+VlfOTkDr7hQpUfYatKYz/pqp1JY+zh6O1L1qoFcg9
+         4uGlmRCSXbjZw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Vasily Gorbik <gor@linux.ibm.com>,
@@ -30,12 +30,12 @@ Cc:     Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, borntraeger@linux.ibm.com,
         agordeev@linux.ibm.com, svens@linux.ibm.com,
         egorenar@linux.ibm.com, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 05/12] s390/setup: avoid using memblock_enforce_memory_limit
-Date:   Thu, 25 Nov 2021 21:36:01 -0500
-Message-Id: <20211126023611.443098-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 3/8] s390/setup: avoid using memblock_enforce_memory_limit
+Date:   Thu, 25 Nov 2021 21:36:35 -0500
+Message-Id: <20211126023640.443271-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211126023611.443098-1-sashal@kernel.org>
-References: <20211126023611.443098-1-sashal@kernel.org>
+In-Reply-To: <20211126023640.443271-1-sashal@kernel.org>
+References: <20211126023640.443271-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -79,10 +79,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 deletions(-)
 
 diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index ceaee215e2436..e9ef093eb6767 100644
+index 9939879f5f253..2f3b7802d8b87 100644
 --- a/arch/s390/kernel/setup.c
 +++ b/arch/s390/kernel/setup.c
-@@ -706,9 +706,6 @@ static void __init setup_memory(void)
+@@ -693,9 +693,6 @@ static void __init setup_memory(void)
  		storage_key_init_range(reg->base, reg->base + reg->size);
  	}
  	psw_set_key(PAGE_DEFAULT_KEY);
