@@ -2,59 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CF2B45E543
-	for <lists+linux-s390@lfdr.de>; Fri, 26 Nov 2021 03:39:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A31E745E610
+	for <lists+linux-s390@lfdr.de>; Fri, 26 Nov 2021 04:01:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245108AbhKZClR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 25 Nov 2021 21:41:17 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:54941 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1357966AbhKZCjQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 25 Nov 2021 21:39:16 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=tonylu@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UyKa2w-_1637894161;
-Received: from localhost(mailfrom:tonylu@linux.alibaba.com fp:SMTPD_---0UyKa2w-_1637894161)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 26 Nov 2021 10:36:02 +0800
-Date:   Fri, 26 Nov 2021 10:36:01 +0800
-From:   Tony Lu <tonylu@linux.alibaba.com>
-To:     Karsten Graul <kgraul@linux.ibm.com>
-Cc:     kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net v2] net/smc: Don't call clcsock shutdown twice when
- smc shutdown
-Message-ID: <YaBIEUO0eOUNqf0b@TonyMac-Alibaba>
-Reply-To: Tony Lu <tonylu@linux.alibaba.com>
-References: <20211125132431.23264-1-tonylu@linux.alibaba.com>
- <1a7b27ec-22fc-f1b0-6b7c-4a61c072ff38@linux.ibm.com>
+        id S1358920AbhKZCr0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 25 Nov 2021 21:47:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1358935AbhKZCpY (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 25 Nov 2021 21:45:24 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 55025611CE;
+        Fri, 26 Nov 2021 02:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637894180;
+        bh=xBmPETsaEPOuUqJAowCSale7u9Cfc/HvP3pZY4w8xYo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=i0uVRu2hvqCeZAfd/xNjWCmCVOYx1LJawNPkv89YAH8OS4sMhOSZGxCOoEARUcH6D
+         ETcO+9E4QwmK5FUxwhxCRfJJnmeqcKLGLPhtPeyqIVK6iv7KcLY7+70uktXsB6XG6Q
+         NONtIpVkuGTsJqvV6Npj6L+30J8Koy2lG00qcLgv4/tLzGEFqqnBiUsGeczQD2FF2z
+         ql2zGWxlCHAutY7rdmY34puYMYknUUNsyyhh3fTDmHgaQJeBCxOP45n3fdXTWHLR6Y
+         PEcMmkD4DFRxHWPvPLK2QKIsGV3F5qrLcORxSXNP1tOcZIPGfHmHojHGtltylnzAcM
+         +tL4BwZaewBUw==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, borntraeger@linux.ibm.com,
+        agordeev@linux.ibm.com, svens@linux.ibm.com,
+        egorenar@linux.ibm.com, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/12] s390/setup: avoid using memblock_enforce_memory_limit
+Date:   Thu, 25 Nov 2021 21:36:01 -0500
+Message-Id: <20211126023611.443098-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20211126023611.443098-1-sashal@kernel.org>
+References: <20211126023611.443098-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1a7b27ec-22fc-f1b0-6b7c-4a61c072ff38@linux.ibm.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Nov 25, 2021 at 03:51:06PM +0100, Karsten Graul wrote:
-> On 25/11/2021 14:24, Tony Lu wrote:
-> > @@ -2398,7 +2400,12 @@ static int smc_shutdown(struct socket *sock, int how)
-> >  	}
-> >  	switch (how) {
-> >  	case SHUT_RDWR:		/* shutdown in both directions */
-> > +		old_state = sk->sk_state;
-> >  		rc = smc_close_active(smc);
-> > +		if (old_state == SMC_ACTIVE &&
-> > +		    sk->sk_state == SMC_PEERCLOSEWAIT1)
-> > +			do_shutdown = false;
-> > +
-> >  		break;
-> 
-> Please send a v3 without the extra empty line before the break statement,
-> and then the patch is fine with me.
-> 
-> Thank you!
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-I will fix it, and send it out soon.
+[ Upstream commit 5dbc4cb4667457b0c53bcd7bff11500b3c362975 ]
 
-Thanks,
-Tony Lu
+There is a difference in how architectures treat "mem=" option. For some
+that is an amount of online memory, for s390 and x86 this is the limiting
+max address. Some memblock api like memblock_enforce_memory_limit()
+take limit argument and explicitly treat it as the size of online memory,
+and use __find_max_addr to convert it to an actual max address. Current
+s390 usage:
+
+memblock_enforce_memory_limit(memblock_end_of_DRAM());
+
+yields different results depending on presence of memory holes (offline
+memory blocks in between online memory). If there are no memory holes
+limit == max_addr in memblock_enforce_memory_limit() and it does trim
+online memory and reserved memory regions. With memory holes present it
+actually does nothing.
+
+Since we already use memblock_remove() explicitly to trim online memory
+regions to potential limit (think mem=, kdump, addressing limits, etc.)
+drop the usage of memblock_enforce_memory_limit() altogether. Trimming
+reserved regions should not be required, since we now use
+memblock_set_current_limit() to limit allocations and any explicit memory
+reservations above the limit is an actual problem we should not hide.
+
+Reviewed-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/kernel/setup.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+index ceaee215e2436..e9ef093eb6767 100644
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -706,9 +706,6 @@ static void __init setup_memory(void)
+ 		storage_key_init_range(reg->base, reg->base + reg->size);
+ 	}
+ 	psw_set_key(PAGE_DEFAULT_KEY);
+-
+-	/* Only cosmetics */
+-	memblock_enforce_memory_limit(memblock_end_of_DRAM());
+ }
+ 
+ /*
+-- 
+2.33.0
+
