@@ -2,73 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE15846151B
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Nov 2021 13:31:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA5DB46187A
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Nov 2021 15:28:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348345AbhK2Met (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 29 Nov 2021 07:34:49 -0500
-Received: from no-data ([111.160.120.54]:56313 "HELO 23.128.96.18"
-        rhost-flags-OK-FAIL-FAIL-FAIL) by vger.kernel.org with SMTP
-        id S236408AbhK2Mcp (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 29 Nov 2021 07:32:45 -0500
-X-Greylist: delayed 17613 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Nov 2021 07:32:42 EST
-Received: from [178.88.101.204] by 23.128.96.18 with ESMTP id 23100309; Mon, 29 Nov 2021 11:27:27 -0100
-Message-ID: <h-i--tb4dc$84-$h-n4@8luckq0z2>
-From:    =?ISO-8859-1?Q?=20=22=C8=AB=BF=B5=C8=C6=B4=EB=B8=AE=22?= 
-         <hgds2142ajh@hanmail.net>
-Reply-To:  =?ISO-8859-1?Q?=20=22=C8=AB=BF=B5=C8=C6=B4=EB=B8=AE=22?= 
-           <hgds2142ajh@hanmail.net>
-To:     linux-nilfs@vger.kernel.org
-Subject:  =?ISO-8859-1?Q?=20=B1=B8=C0=CE/=B1=B8=C1=F7=C1=DF=C0=CC=BD=C3=B6?= =?ISO-8859-1?Q?=F3=B8?=
-        =?ISO-8859-1?Q?=E9?=  =?ISO-8859-1?Q?=20=B9=DD=B5=E5=BD=C3?=  =?ISO-8859-1?Q?=20=B9=E6=B9=AE=C7?=
-        =?ISO-8859-1?Q?=D8=BC=AD?=  =?ISO-8859-1?Q?=20=C8=AE=C0=CE=C7=D8=BA=B8=BC=BC=BF=E4.?= sna n 
-Date:   Mon, 29 Nov 2021 11:27:27 -0100
-X-Mailer: Microsoft Outlook Express 5.50.4133.2400
+        id S1378310AbhK2Obv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 29 Nov 2021 09:31:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348983AbhK2O3L (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 29 Nov 2021 09:29:11 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAAEEC0048D8;
+        Mon, 29 Nov 2021 05:04:45 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1638191084;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SrMx0EikLor0m9R8RMLCsVyJFUvZ7DWG9Nt3FfGUjHw=;
+        b=Z5w7/WyffNWkPpVy2OwqkWVdnch2IT/5obz3VzycGQuRvXEK+12h3jDmVBGCq36Z9VreAI
+        JkirRTFU2cf9EKwPVMGPoO6yKJO0iKAi3l0aAJfgQXDjIypVGvr8EQsZyWoPztdjN3AWR2
+        JEhcakuIYe/1waQNlHLU5WkmdTtbVrIPo0U5bcLxCa5QHza++5ccIYlzf/i1crGIC56f2a
+        vxfdI6Q3oY8ziLmra6HLeBWIemaiUiSSnje2qAYh0n1/IJu573hE55d3ZXxhfVQoXelytq
+        DV7UDSkDtPhOgMXRXxvGyPfBqqoEix6Na23ZzxT136Ay7DPkAiwi0eaLHmPA+A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1638191084;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SrMx0EikLor0m9R8RMLCsVyJFUvZ7DWG9Nt3FfGUjHw=;
+        b=uFEsq4VQIKwpP4IPvBxJj7CH5oO01savZVSv+qKxq28D2EkgSK+FTImT6+XanOuO6wpsZf
+        XOQtUeHRkXGYnuBQ==
+To:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
+Subject: Re: [patch 14/32] s390/pci: Rework MSI descriptor walk
+In-Reply-To: <22589eefb62ac6f99f576082a65e7987a6761329.camel@linux.ibm.com>
+References: <20211126230957.239391799@linutronix.de>
+ <20211126232735.130164978@linutronix.de>
+ <22589eefb62ac6f99f576082a65e7987a6761329.camel@linux.ibm.com>
+Date:   Mon, 29 Nov 2021 14:04:43 +0100
+Message-ID: <87fsrfdses.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-        boundary="_B5D_DECAABC44A_BA_"
-X-Priority: 3
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Niklas,
 
---_B5D_DECAABC44A_BA_
-Content-Type: text/plain;
-Content-Transfer-Encoding: quoted-printable
+On Mon, Nov 29 2021 at 11:31, Niklas Schnelle wrote:
+> On Sat, 2021-11-27 at 02:23 +0100, Thomas Gleixner wrote:
+>
+> while the change looks good to me I ran into some trouble trying to
+> test it. I tried with the git repository you linked in the cover
+> letter:
+> git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git msi-v1-part-3
+>
+> But with that I get the following linker error on s390:
+>
+> s390x-11.2.0-ld: drivers/pci/msi/legacy.o: in function `pci_msi_legacy_setup_msi_irqs':
+> /home/nschnelle/mainline/drivers/pci/msi/legacy.c:72: undefined reference to `msi_device_populate_sysfs'
+> s390x-11.2.0-ld: drivers/pci/msi/legacy.o: in function `pci_msi_legacy_teardown_msi_irqs':
+> /home/nschnelle/mainline/drivers/pci/msi/legacy.c:78: undefined reference to `msi_device_destroy_sysfs'
+> make: *** [Makefile:1161: vmlinux] Error 1
 
-<p>=BE=C8=B3=E7=C7=CF=BC=BC=BF=E4. =C8=B8=BF=F8=B4=D4=B5=E9~~~!!
-   <div>=B0=A8=B1=E2,=C4=DA=B7=CE=B3=AA
-=C1=B6=BD=C9=C7=CF=BD=C3=B0=ED=BF=E4=
-,</div>
-   <div>=C0=A5=BC=AD=C7=CE=C7=CF=B4=D9 =B1=B8=C0=CE/=B1=B8=C1=F7=BF=A1 =B0=
-=FC=C7=D1 =C1=C1=C0=BA =C1=A4=BA=B8=B0=A1 =C0=D6=BE=EE
-=B0=F8=C0=AF=C7=D5=B4=
-=CF=B4=D9.</div>
-   <div>
-      <br />=C1=F7=C1=BE/=C6=C4=C6=AE/=BA=D0=B7=F9=BA=B0=B7=CE
-=C6=C4=C6=AE=
-=C5=B8=C0=D3,=BE=CB=B9=D9,=C1=A4=C1=F7=BF=F8 =B1=B8=C0=CE
-=B1=B8=C1=F7=C0=CC=
- =B0=A1=B4=C9=C7=D1
-   </div>
-   <div>=BE=E0 300=BF=A9=B0=B3 =BB=E7=C0=CC=C6=AE =C0=FC=BF=EB
-=BE=EE=C7=C3=
-=B8=AE=C4=C9=C0=CC=BC=C7=C0=D4=B4=CF=B4=D9.</div>
-   <div>
-      <br />=B4=A9=B1=BA=B0=A1 =B9=AB=BE=F9=C0=BB =C3=A3=B5=E7=C1=F6
-=B9=DD=
-=B5=E5=BD=C3 "=C0=E2=B9=EA=B5=E5 =C0=FC=BF=EB=BE=DB"=BF=A1=B4=C2 =C0=D6=B4=
-=D9=B0=ED =C0=DA=BD=C5=C7=D5=B4=CF=B4=D9.
-   </div>
-   <div>=B2=C0 =C7=D1=B9=F8 =B9=E6=B9=AE=C7=D8=BA=B8=BC=BC=BF=E4.</div>
-   <div>=B9=E6=B9=AE=C7=CF=B1=E2&gt;&gt;&gt; <a href=3D"https://soo.gd/TvW=
-c" target=3D"_blank">https://soo.gd/TvWc</a></div>
-   </p>
-cb jnkdjnph
- 
- 
-cxndm bk mrxzyjft
+Yes, that got reported before and I fixed it locally already.
 
---_B5D_DECAABC44A_BA_--
+> This is caused by a misspelling of CONFIG_PCI_MSI_ARCH_FALLBACKS
+> (missing the final S) in kernel/irq/msi.c. With that fixed everything
+> builds and MSI IRQs work fine. So with that fixed you have my
+>
+> Acked-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> Tested-by: Niklas Schnelle <schnelle@linux.ibm.com>
 
+Thanks for testing and dealing with my ineptness.
+
+       tglx
