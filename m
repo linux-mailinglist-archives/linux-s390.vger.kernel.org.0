@@ -2,85 +2,73 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 18143461397
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Nov 2021 12:10:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE15846151B
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Nov 2021 13:31:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235018AbhK2LNa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 29 Nov 2021 06:13:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232834AbhK2LLa (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 29 Nov 2021 06:11:30 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB544C08E9BB;
-        Mon, 29 Nov 2021 02:22:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=Uz5Lg9VfLJD3I0hYm9puMXvJxrIX6Nb7rdZ5ItT8lkU=; b=dRs0CbQLL5JDushgx3p30SscdV
-        SzcgxX8giadEKFgDO9L0d/L7N0Gx4MHKRHjkcBCXa/OK/zGSK9MQ5zw3+hahgxEuDbIsfVUGDfjpg
-        5PLKF3ZweGAabGbimeK03wT25Qfflu/PFI/bH1UCQJpA2qKtvwICMvEQX70DjR88QDj5+Ylx5DUeA
-        AuJWsAxaXqLjN01rVYBkA/BLChMw3LKN7osfUWW7Un1/PuObbGFNv87DuXxkEMg7yrEjntAgPa3Dl
-        Na9Nd4ru0hm2NQwUxjG0pEH+Tf3zGR41CePK0rcoL1arJX8BFFWtiaNqBj52iTFx2qpqI6hxqIN4y
-        zld5QI0Q==;
-Received: from [2001:4bb8:184:4a23:724a:c057:c7bf:4643] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mrdo4-0073aO-0q; Mon, 29 Nov 2021 10:22:45 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Mike Snitzer <snitzer@redhat.com>, Ira Weiny <ira.weiny@intel.com>,
-        dm-devel@redhat.com, linux-xfs@vger.kernel.org,
-        nvdimm@lists.linux.dev, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        "Darrick J . Wong" <djwong@kernel.org>
-Subject: [PATCH 29/29] fsdax: don't require CONFIG_BLOCK
-Date:   Mon, 29 Nov 2021 11:22:03 +0100
-Message-Id: <20211129102203.2243509-30-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211129102203.2243509-1-hch@lst.de>
-References: <20211129102203.2243509-1-hch@lst.de>
+        id S1348345AbhK2Met (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 29 Nov 2021 07:34:49 -0500
+Received: from no-data ([111.160.120.54]:56313 "HELO 23.128.96.18"
+        rhost-flags-OK-FAIL-FAIL-FAIL) by vger.kernel.org with SMTP
+        id S236408AbhK2Mcp (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 29 Nov 2021 07:32:45 -0500
+X-Greylist: delayed 17613 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Nov 2021 07:32:42 EST
+Received: from [178.88.101.204] by 23.128.96.18 with ESMTP id 23100309; Mon, 29 Nov 2021 11:27:27 -0100
+Message-ID: <h-i--tb4dc$84-$h-n4@8luckq0z2>
+From:    =?ISO-8859-1?Q?=20=22=C8=AB=BF=B5=C8=C6=B4=EB=B8=AE=22?= 
+         <hgds2142ajh@hanmail.net>
+Reply-To:  =?ISO-8859-1?Q?=20=22=C8=AB=BF=B5=C8=C6=B4=EB=B8=AE=22?= 
+           <hgds2142ajh@hanmail.net>
+To:     linux-nilfs@vger.kernel.org
+Subject:  =?ISO-8859-1?Q?=20=B1=B8=C0=CE/=B1=B8=C1=F7=C1=DF=C0=CC=BD=C3=B6?= =?ISO-8859-1?Q?=F3=B8?=
+        =?ISO-8859-1?Q?=E9?=  =?ISO-8859-1?Q?=20=B9=DD=B5=E5=BD=C3?=  =?ISO-8859-1?Q?=20=B9=E6=B9=AE=C7?=
+        =?ISO-8859-1?Q?=D8=BC=AD?=  =?ISO-8859-1?Q?=20=C8=AE=C0=CE=C7=D8=BA=B8=BC=BC=BF=E4.?= sna n 
+Date:   Mon, 29 Nov 2021 11:27:27 -0100
+X-Mailer: Microsoft Outlook Express 5.50.4133.2400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/alternative;
+        boundary="_B5D_DECAABC44A_BA_"
+X-Priority: 3
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The file system DAX code now does not require the block code.  So allow
-building a kernel with fuse DAX but not block layer.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--_B5D_DECAABC44A_BA_
+Content-Type: text/plain;
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/fs/Kconfig b/fs/Kconfig
-index 6d608330a096e..7a2b11c0b8036 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -42,6 +42,8 @@ source "fs/nilfs2/Kconfig"
- source "fs/f2fs/Kconfig"
- source "fs/zonefs/Kconfig"
+<p>=BE=C8=B3=E7=C7=CF=BC=BC=BF=E4. =C8=B8=BF=F8=B4=D4=B5=E9~~~!!
+   <div>=B0=A8=B1=E2,=C4=DA=B7=CE=B3=AA
+=C1=B6=BD=C9=C7=CF=BD=C3=B0=ED=BF=E4=
+,</div>
+   <div>=C0=A5=BC=AD=C7=CE=C7=CF=B4=D9 =B1=B8=C0=CE/=B1=B8=C1=F7=BF=A1 =B0=
+=FC=C7=D1 =C1=C1=C0=BA =C1=A4=BA=B8=B0=A1 =C0=D6=BE=EE
+=B0=F8=C0=AF=C7=D5=B4=
+=CF=B4=D9.</div>
+   <div>
+      <br />=C1=F7=C1=BE/=C6=C4=C6=AE/=BA=D0=B7=F9=BA=B0=B7=CE
+=C6=C4=C6=AE=
+=C5=B8=C0=D3,=BE=CB=B9=D9,=C1=A4=C1=F7=BF=F8 =B1=B8=C0=CE
+=B1=B8=C1=F7=C0=CC=
+ =B0=A1=B4=C9=C7=D1
+   </div>
+   <div>=BE=E0 300=BF=A9=B0=B3 =BB=E7=C0=CC=C6=AE =C0=FC=BF=EB
+=BE=EE=C7=C3=
+=B8=AE=C4=C9=C0=CC=BC=C7=C0=D4=B4=CF=B4=D9.</div>
+   <div>
+      <br />=B4=A9=B1=BA=B0=A1 =B9=AB=BE=F9=C0=BB =C3=A3=B5=E7=C1=F6
+=B9=DD=
+=B5=E5=BD=C3 "=C0=E2=B9=EA=B5=E5 =C0=FC=BF=EB=BE=DB"=BF=A1=B4=C2 =C0=D6=B4=
+=D9=B0=ED =C0=DA=BD=C5=C7=D5=B4=CF=B4=D9.
+   </div>
+   <div>=B2=C0 =C7=D1=B9=F8 =B9=E6=B9=AE=C7=D8=BA=B8=BC=BC=BF=E4.</div>
+   <div>=B9=E6=B9=AE=C7=CF=B1=E2&gt;&gt;&gt; <a href=3D"https://soo.gd/TvW=
+c" target=3D"_blank">https://soo.gd/TvWc</a></div>
+   </p>
+cb jnkdjnph
  
-+endif # BLOCK
-+
- config FS_DAX
- 	bool "File system based Direct Access (DAX) support"
- 	depends on MMU
-@@ -89,8 +91,6 @@ config FS_DAX_PMD
- config FS_DAX_LIMITED
- 	bool
  
--endif # BLOCK
--
- # Posix ACL utility routines
- #
- # Note: Posix ACLs can be implemented without these helpers.  Never use
--- 
-2.30.2
+cxndm bk mrxzyjft
+
+--_B5D_DECAABC44A_BA_--
 
