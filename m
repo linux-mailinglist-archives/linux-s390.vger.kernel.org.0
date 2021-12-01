@@ -2,141 +2,77 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6790464B6F
-	for <lists+linux-s390@lfdr.de>; Wed,  1 Dec 2021 11:16:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AAE5464CC2
+	for <lists+linux-s390@lfdr.de>; Wed,  1 Dec 2021 12:34:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348542AbhLAKUO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 1 Dec 2021 05:20:14 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39622 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232413AbhLAKUO (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Dec 2021 05:20:14 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638353809;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wbiMD6K2khcbAApwZxiyDtRNkrqwDaQ0eoVHy6k+DAE=;
-        b=DQUYrHcJWTXltulp1feZwgRWzO09qEXPzvxuFWK/F/3vV+hE7s8CvVv6RqfJklXeAyAD0H
-        hXnqwh3YlJY3/KlsOG6lNhqsiSkRSaQo109zXU8Ncji5c2Mnmi+NDUCeV5vck2olRwXun2
-        HlwLphiG6uDz/ms4mXztbEY8g8Uq4diKY7gqfozy+jiG3TEWSq0lOlzMCzXfp/v3aU0NW2
-        tqKUStD1xTEwlY3c0rCYvZSspZ7m4XoWnyinjMBzlicvdmaWcHxr9zGGVseTAHlpQUJ/xS
-        nZaskQBDuO+Vx1r7kgboo6bwhFWWXtWR6Qt9J9qr/PFiXQk6HzJiXwtK5YvgUA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638353809;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wbiMD6K2khcbAApwZxiyDtRNkrqwDaQ0eoVHy6k+DAE=;
-        b=UinCQtLZesRyTqT4YgZIT5MQ5x/D3n9gdny+zdaLwIM15OXm6LTqjUB6YeI2mys6irMEFC
-        QZPVYEsXsxomKLCA==
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>, x86@kernel.org,
-        Joerg Roedel <jroedel@suse.de>,
-        iommu@lists.linux-foundation.org
-Subject: Re: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
-In-Reply-To: <20211201001748.GF4670@nvidia.com>
-References: <20211126230957.239391799@linutronix.de>
- <20211126232735.547996838@linutronix.de>
- <7daba0e2-73a3-4980-c3a5-a71f6b597b22@deltatee.com> <874k7ueldt.ffs@tglx>
- <6ba084d6-2b26-7c86-4526-8fcd3d921dfd@deltatee.com> <87ilwacwp8.ffs@tglx>
- <d6f13729-1b83-fa7d-3f0d-98d4e3f7a2aa@deltatee.com> <87v909bf2k.ffs@tglx>
- <20211130202800.GE4670@nvidia.com> <87o861banv.ffs@tglx>
- <20211201001748.GF4670@nvidia.com>
-Date:   Wed, 01 Dec 2021 11:16:47 +0100
-Message-ID: <87mtlkaauo.ffs@tglx>
+        id S1348612AbhLALhc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 1 Dec 2021 06:37:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346330AbhLALhY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Dec 2021 06:37:24 -0500
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B752C0613E0
+        for <linux-s390@vger.kernel.org>; Wed,  1 Dec 2021 03:34:00 -0800 (PST)
+Received: by mail-ua1-x92e.google.com with SMTP id l24so48290147uak.2
+        for <linux-s390@vger.kernel.org>; Wed, 01 Dec 2021 03:34:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=l4J9Z+m4hmgZbWtQHlC70w1zjUmiI7wjClCwm6dHAnY=;
+        b=nKE9e+4jEQRb21OhoYPSbxPLfJ2IuSmNXU0U6wmcP4ykCacrWpdbtE0jjuz/hSLLGi
+         3CHjeG+lFmWzoULwCsmlhVFgDEk5dLFaYb51pw7bXGjZ9H8t0j91dP9aL17MRQYkMPZK
+         Snvty/Yp8/ZrWZr2EuFXHqBxUdbU8X39ik45viERJ1Dn7qW8BPCFp2vlafV2okU0kn5j
+         QPTIDY8QJSy8zAVbK10d6+AY0lky+mrQRAAg0uS1DacQStzD/dQtt/uBz/RlGIdZCai/
+         BHep24kmiLdl1nvBvHYMFonu8NoJvJlErv7lbZlg2+2c277BpkzmDA4WwPZoxzlIf0Mh
+         Af5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=l4J9Z+m4hmgZbWtQHlC70w1zjUmiI7wjClCwm6dHAnY=;
+        b=pubqYkYPALiFmNBvcKwJm34pQ7rWNRbkAxQj9SlTSu9XljWQZ2Wao0EHUpWGQlxdDi
+         U0CjAnFIM5lFv2U4LT+BYsKSVPA7iHeOR6+hXouJ8HqQErFQZnBoP6WEewI1rFR50Oaj
+         o2y6DOegJDbZGg/jutG0i+XuCGv9pT+sjUdMeM86KJVnDzUvB2+02gVWOfTadXTSiFGs
+         SenypDYDNzd0QuObeHExWBiZYeWgDZib7KLGVXTszP54jiCrcF/6JTDXH8k76gUp3+zI
+         Ylu6dqxXPJm+5Y6Tbde6T6HDgaCUd5XL88lagVdMirw2WZid8VbDoM8OAEVMQyYl/A6z
+         T9AA==
+X-Gm-Message-State: AOAM5327SZH9bKU38MT8STY9lGR2xUeT9AwiXQeU5u6C0wE/UN6qa/vC
+        l8XapIRy2hROnJ9xKhdtIKIyAAWP7gVlEd0Va+w=
+X-Google-Smtp-Source: ABdhPJwK+H50pzFgfv5CJPfAwBzUdMqIKHh+Ckkuju2lG2knVlJrzqINPiiwPjc/Uz6xuSJez7Fkn5YZPcfa5CPpvro=
+X-Received: by 2002:a67:ef4d:: with SMTP id k13mr6266305vsr.4.1638358439020;
+ Wed, 01 Dec 2021 03:33:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+Sender: unitednationawardwinner@gmail.com
+Received: by 2002:ab0:6c55:0:0:0:0:0 with HTTP; Wed, 1 Dec 2021 03:33:58 -0800 (PST)
+From:   "Mrs. Orgil Baatar" <mrs.orgilbaatar21@gmail.com>
+Date:   Wed, 1 Dec 2021 03:33:58 -0800
+X-Google-Sender-Auth: uTQ_nfkzXaWGWaTWp1BSFqK3Ucs
+Message-ID: <CAJ4dHaSrD-X=xpfKNZV-hXSiMV6mNYrgy5vWCNkKm6iu5RQStg@mail.gmail.com>
+Subject: Your long awaited part payment of $2.5.000.00Usd
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Jason,
+Attention: Beneficiary, Your long awaited part payment of
+$2.5.000.00Usd (TWO MILLION FIVE Hundred Thousand United State
+Dollars) is ready for immediate release to you, and it was
+electronically credited into an ATM Visa Card for easy delivery.
 
-CC+ IOMMU folks
+Your new Payment Reference No.- 6363836,
+Pin Code No: 1787
+Your Certificate of Merit Payment No: 05872,
 
-On Tue, Nov 30 2021 at 20:17, Jason Gunthorpe wrote:
-> On Tue, Nov 30, 2021 at 10:23:16PM +0100, Thomas Gleixner wrote:
->> The real problem is where to store the MSI descriptors because the PCI
->> device has its own real PCI/MSI-X interrupts which means it still shares
->> the storage space.
->
-> Er.. I never realized that just looking at the patches :|
->
-> That is relevant to all real "IMS" users. IDXD escaped this because
-> it, IMHO, wrongly used the mdev with the IRQ layer. The mdev is purely
-> a messy artifact of VFIO, it should not be required to make the IRQ
-> layers work.
+Your Names: |
+Address: |
 
-> I don't think it makes sense that the msi_desc would point to a mdev,
-> the iommu layer consumes the msi_desc_to_dev(), it really should point
-> to the physical device that originates the message with a proper
-> iommu ops/data/etc.
+Person to Contact:MR KELLY HALL the Director of the International
+Audit unit ATM Payment Center,
 
-Looking at the device slices as subdevices with their own struct device
-makes a lot of sense from the conceptual level. That makes is pretty
-much obvious to manage the MSIs of those devices at this level like we
-do for any other device.
+Email: uba-bf@e-ubabf.com
+TELEPHONE: +226 64865611 You can whatsApp the bank
 
-Whether mdev is the right encapsulation for these subdevices is an
-orthogonal problem.
-
-I surely agree that msi_desc::dev is an interesting question, but we
-already have this disconnect of msi_desc::dev and DMA today due to DMA
-aliasing. I haven't looked at that in detail yet, but of course the
-alias handling is substantially different accross the various IOMMU
-implementations.
-
-Though I fear there is also a use case for MSI-X and IMS tied to the
-same device. That network card you are talking about might end up using
-MSI-X for a control block and then IMS for the actual network queues
-when it is used as physical function device as a whole, but that's
-conceptually a different case.
-
->> I'm currently tending to partition the index space in the xarray:
->> 
->>  0x00000000 - 0x0000ffff          PCI/MSI-X
->>  0x00010000 - 0x0001ffff          NTB
->
-> It is OK, with some xarray work it can be range allocating & reserving
-> so that the msi_domain_alloc_irqs() flows can carve out chunks of the
-> number space..
->
-> Another view is the msi_domain_alloc_irqs() flows should have their
-> own xarrays..
-
-Yes, I was thinking about that as well. The trivial way would be:
-
-    struct xarray     store[MSI_MAX_STORES];
-
-and then have a store index for each allocation domain. With the
-proposed encapsulation of the xarray handling that's definitely
-feasible. Whether that buys much is a different question. Let me think
-about it some more.
-
->> which is feasible now with the range modifications and way simpler to do
->> with xarray than with the linked list.
->
-> Indeed!
-
-I'm glad you like the approach.
-
-Thanks,
-
-        tglx
-
-
+Regards.
+Mrs ORGIL BAATAR
