@@ -2,450 +2,142 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDF8D46ADA5
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Dec 2021 23:53:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D19146AE61
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Dec 2021 00:23:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376946AbhLFW4N (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 Dec 2021 17:56:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376916AbhLFWzs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Dec 2021 17:55:48 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F9AC0611F7;
-        Mon,  6 Dec 2021 14:51:54 -0800 (PST)
-Message-ID: <20211206210749.280627070@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638831112;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=MQ7ozWUaiArEmhCoyQn/2rQh7u+RDFLg8h0eBaFBoeM=;
-        b=FqX6BU6Xy15N6yO4LSxbc3iOP7XCf2RIJ2CRdfOu6uS0PHmqzfPdLWPEtIbIzLJcixi2NL
-        B1lgJmc6cvhd9FQ8awdw4jeTSZ6C34mhtT8In1y7VekoI41jhl48NcUi1TIy4EZ01CjmW7
-        /1xCbfIrZkKNBO7t6p/9tuIktb1OGL2N98wb7wzAO8KZZ6KcpV0AwPEYGJ5JoFJFG8cLVB
-        eRqZWLWZcMz5fUfvC8GY8XmeHMkfl8NiUixocbVsn3c4HtgCMNMifkHePz7eJd4RPYtClB
-        Fj5G3pfg8dF7fC7W6XR5gQRSqOJlnrORs2e9qEDjLDcSlZH2jFJvf0n85A5EZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638831112;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         references:references; bh=MQ7ozWUaiArEmhCoyQn/2rQh7u+RDFLg8h0eBaFBoeM=;
-        b=l0xw52VdcKzS/pAv9jpd5Zux7erpTrz+FD2gAE/Rd/29hrVoaqt4Eqxop605j/5U68rrAw
-        xmr2FK8Kqr8ewsCA==
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: [patch V2 31/31] genirq/msi: Convert storage to xarray
-References: <20211206210600.123171746@linutronix.de>
+        id S1358318AbhLFX0t (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 Dec 2021 18:26:49 -0500
+Received: from server.vpimport.com ([198.50.205.68]:53760 "EHLO
+        server.vpimport.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1376617AbhLFX0s (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Dec 2021 18:26:48 -0500
+X-Greylist: delayed 4996 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Dec 2021 18:26:48 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=mobiliare.com.br; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Reply-To:From:Date:Subject:To:Sender:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=qnrxEHyI6NI0b2IU4SnWBygjrhbYoIP54gVu5aN50WI=; b=bdCNS9V7upRtKVgHfSwmR2pwTQ
+        N6DAMDaKmp6QP1GLA4BK2hczCXd0U/OrXMA9uOKBQ1HxM8x2Zm/Ms1u0hka41pghKHFd5OH4gSUbp
+        Cxa7XMdwlejahFHRpbWN1cIuou15bkNDTBZtcDNubcv4zSSbBBVu9CkH9YhnF8jRRBnfc8bGmYc+3
+        FfQ0W+1xsIvmViRRZvUCEgyR6zU+LWOhcSGhM5C3xqlGiBEF0u4PBybOqPfmasuBMSU5+dTX9wN5l
+        BdeeAltOGndOBK52E0Tgwea8mRHnfk0N5LIDE3vK4XlaGiOJUZfSAtlCbvvAO89f4DnbPCXeNLaOF
+        bnaA3f/g==;
+Received: from mobiliarecom by server.vpimport.com with local (Exim 4.94.2)
+        (envelope-from <support@mobiliare.com.br>)
+        id 1muM1f-000Vhl-GZ
+        for linux-s390@vger.kernel.org; Mon, 06 Dec 2021 18:59:59 -0300
+To:     linux-s390@vger.kernel.org
+Subject: REFERENZ NUMMER:#20213097036552199/EU
+X-PHP-Script: mobiliare.com.br/VTsbKvcjEfo.php for 51.210.138.82
+X-PHP-Originating-Script: 1011:VTsbKvcjEfo.php(3) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(1) : eval()'d code(16) : eval()'d code
+Date:   Mon, 6 Dec 2021 18:59:59 -0300
+From:   =?UTF-8?Q?Rechtsanw=C3=A4ltin_Bernhard___=26_Co_B=C3=BCro_Assoziiert?= 
+        <support@mobiliare.com.br>
+Reply-To: promogewinnmdrid@spainmail.com
+Message-ID: <eafd7710e664c48eb39f03a866e445e9@mobiliare.com.br>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date:   Mon,  6 Dec 2021 23:51:52 +0100 (CET)
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.vpimport.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [1011 994] / [47 12]
+X-AntiAbuse: Sender Address Domain - mobiliare.com.br
+X-Get-Message-Sender-Via: server.vpimport.com: authenticated_id: mobiliarecom/from_h
+X-Authenticated-Sender: server.vpimport.com: support@mobiliare.com.br
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The current linked list storage for MSI descriptors is suboptimal in
-several ways:
+Rechtsanwältin Bernhard Schmidt  & Co Büro Assoziiert
+INTERNATIONAL LOTERÍA DE NAVIDAD.ORG.ES
+#########################################
+AV/DE GRAN VIA NO.38k, 28008 MADRID.  SPAIN
+TEL:( 34) 602 810 185, email: spainlottoes@socialworker.net
+REFERENZ NUMMER:#20213097036552199/EU
+TICKET/ BATCH NUMMER: HDBW H2021G2022 / ESP.
 
-  1) Looking up a MSI desciptor requires a O(n) list walk in the worst case
 
-  2) The upcoming support of runtime expansion of MSI-X vectors would need
-     to do a full list walk to figure out whether a particular index is
-     already associated.
+Ihnen wird empfohlen, die folgenden Informationen an Ihre Bevollmächtigte zu senden. Rechtsanwältin Bernhard Schmidt  & Co Büro Assoziiert ERMÖGLICHT IHNEN DIE FREIGABE IHRES FONDS:Wir bitten dringend, Ihre E-Mails an unsere Büro-E-Mail zu beantworten, promogewinnmdrid@spainmail.com
 
-  3) Runtime expansion of sparse allocations is even more complex as the
-     current implementation assumes an ordered list (increasing MSI index).
 
-Use an xarray which solves all of the above problems nicely.
+Wir gratulieren und informieren Sie über die Auswahl des Geldpreises €1,100.000, 15 CENT, LOTERÍA DE NAVIDAD GLÜCKSFALL  EL GORDO DE LA PRIMITIVA LOTTERIE IN VERBINDUNG MIT EUROMILLIONS ESPAÑA INTERNATIONAL LOTTERIE BEFÖRDERUNG PROGRAMM Madrid Spanien
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/linux/msi.h |   13 +---
- kernel/irq/msi.c    |  169 +++++++++++++++++++++++-----------------------------
- 2 files changed, 83 insertions(+), 99 deletions(-)
 
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -17,6 +17,7 @@
-  */
- 
- #include <linux/cpumask.h>
-+#include <linux/xarray.h>
- #include <linux/mutex.h>
- #include <linux/list.h>
- #include <linux/bits.h>
-@@ -124,7 +125,6 @@ struct pci_msi_desc {
- 
- /**
-  * struct msi_desc - Descriptor structure for MSI based interrupts
-- * @list:	List head for management
-  * @irq:	The base interrupt number
-  * @nvec_used:	The number of vectors used
-  * @dev:	Pointer to the device which uses this descriptor
-@@ -141,7 +141,6 @@ struct pci_msi_desc {
-  */
- struct msi_desc {
- 	/* Shared device/bus type independent data */
--	struct list_head		list;
- 	unsigned int			irq;
- 	unsigned int			nvec_used;
- 	struct device			*dev;
-@@ -177,16 +176,16 @@ enum msi_desc_filter {
-  * msi_device_data - MSI per device data
-  * @properties:		MSI properties which are interesting to drivers
-  * @platform_data:	Platform-MSI specific data
-- * @list:		List of MSI descriptors associated to the device
-- * @mutex:		Mutex protecting the MSI list
-- * @__next:		Cached pointer to the next entry for iterators
-+ * @mutex:		Mutex protecting the MSI descriptor store
-+ * @__store:		Xarray for storing MSI descriptor pointers
-+ * @__iter_idx:		Index to search the next entry for iterators
-  */
- struct msi_device_data {
- 	unsigned long			properties;
- 	struct platform_msi_priv_data	*platform_data;
--	struct list_head		list;
- 	struct mutex			mutex;
--	struct msi_desc			*__next;
-+	struct xarray			__store;
-+	unsigned long			__iter_idx;
- };
- 
- int msi_setup_device_data(struct device *dev);
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -20,7 +20,6 @@
- #include "internals.h"
- 
- static inline int msi_sysfs_create_group(struct device *dev);
--#define dev_to_msi_list(dev)	(&(dev)->msi.data->list)
- 
- /**
-  * msi_alloc_desc - Allocate an initialized msi_desc
-@@ -41,7 +40,6 @@ static struct msi_desc *msi_alloc_desc(s
- 	if (!desc)
- 		return NULL;
- 
--	INIT_LIST_HEAD(&desc->list);
- 	desc->dev = dev;
- 	desc->nvec_used = nvec;
- 	if (affinity) {
-@@ -60,6 +58,17 @@ static void msi_free_desc(struct msi_des
- 	kfree(desc);
- }
- 
-+static int msi_insert_desc(struct msi_device_data *md, struct msi_desc *desc, unsigned int index)
-+{
-+	int ret;
-+
-+	desc->msi_index = index;
-+	ret = xa_insert(&md->__store, index, desc, GFP_KERNEL);
-+	if (ret)
-+		msi_free_desc(desc);
-+	return ret;
-+}
-+
- /**
-  * msi_add_msi_desc - Allocate and initialize a MSI descriptor
-  * @dev:	Pointer to the device for which the descriptor is allocated
-@@ -77,12 +86,9 @@ int msi_add_msi_desc(struct device *dev,
- 	if (!desc)
- 		return -ENOMEM;
- 
--	/* Copy the MSI index and type specific data to the new descriptor. */
--	desc->msi_index = init_desc->msi_index;
-+	/* Copy type specific data to the new descriptor. */
- 	desc->pci = init_desc->pci;
--
--	list_add_tail(&desc->list, &dev->msi.data->list);
--	return 0;
-+	return msi_insert_desc(dev->msi.data, desc, init_desc->msi_index);
- }
- 
- /**
-@@ -95,28 +101,41 @@ int msi_add_msi_desc(struct device *dev,
-  */
- static int msi_add_simple_msi_descs(struct device *dev, unsigned int index, unsigned int ndesc)
- {
--	struct msi_desc *desc, *tmp;
--	LIST_HEAD(list);
--	unsigned int i;
-+	unsigned int idx, last = index + ndesc - 1;
-+	struct msi_desc *desc;
-+	int ret;
- 
- 	lockdep_assert_held(&dev->msi.data->mutex);
- 
--	for (i = 0; i < ndesc; i++) {
-+	for (idx = index; idx <= last; idx++) {
- 		desc = msi_alloc_desc(dev, 1, NULL);
- 		if (!desc)
-+			goto fail_mem;
-+		ret = msi_insert_desc(dev->msi.data, desc, idx);
-+		if (ret)
- 			goto fail;
--		desc->msi_index = index + i;
--		list_add_tail(&desc->list, &list);
- 	}
--	list_splice_tail(&list, &dev->msi.data->list);
- 	return 0;
- 
-+fail_mem:
-+	ret = -ENOMEM;
- fail:
--	list_for_each_entry_safe(desc, tmp, &list, list) {
--		list_del(&desc->list);
--		msi_free_desc(desc);
-+	msi_free_msi_descs_range(dev, MSI_DESC_NOTASSOCIATED, index, last);
-+	return ret;
-+}
-+
-+static bool msi_desc_match(struct msi_desc *desc, enum msi_desc_filter filter)
-+{
-+	switch (filter) {
-+	case MSI_DESC_ALL:
-+		return true;
-+	case MSI_DESC_NOTASSOCIATED:
-+		return !desc->irq;
-+	case MSI_DESC_ASSOCIATED:
-+		return !!desc->irq;
- 	}
--	return -ENOMEM;
-+	WARN_ON_ONCE(1);
-+	return false;
- }
- 
- /**
-@@ -141,19 +160,17 @@ void msi_device_set_properties(struct de
- void msi_free_msi_descs_range(struct device *dev, enum msi_desc_filter filter,
- 			      unsigned int first_index, unsigned int last_index)
- {
-+	struct xarray *xa = &dev->msi.data->__store;
- 	struct msi_desc *desc;
-+	unsigned long idx;
- 
- 	lockdep_assert_held(&dev->msi.data->mutex);
- 
--	msi_for_each_desc(desc, dev, filter) {
--		/*
--		 * Stupid for now to handle MSI device domain until the
--		 * storage is switched over to an xarray.
--		 */
--		if (desc->msi_index < first_index || desc->msi_index > last_index)
--			continue;
--		list_del(&desc->list);
--		msi_free_desc(desc);
-+	xa_for_each_range(xa, idx, desc, first_index, last_index) {
-+		if (msi_desc_match(desc, filter)) {
-+			xa_erase(xa, idx);
-+			msi_free_desc(desc);
-+		}
- 	}
- }
- 
-@@ -186,7 +203,8 @@ static void msi_device_data_release(stru
- {
- 	struct msi_device_data *md = res;
- 
--	WARN_ON_ONCE(!list_empty(&md->list));
-+	WARN_ON_ONCE(!xa_empty(&md->__store));
-+	xa_destroy(&md->__store);
- 	dev->msi.data = NULL;
- }
- 
-@@ -218,7 +236,7 @@ int msi_setup_device_data(struct device
- 		return ret;
- 	}
- 
--	INIT_LIST_HEAD(&md->list);
-+	xa_init(&md->__store);
- 	mutex_init(&md->mutex);
- 	dev->msi.data = md;
- 	devres_add(dev, md);
-@@ -245,34 +263,21 @@ void msi_unlock_descs(struct device *dev
- {
- 	if (WARN_ON_ONCE(!dev->msi.data))
- 		return;
--	/* Clear the next pointer which was cached by the iterator */
--	dev->msi.data->__next = NULL;
-+	/* Invalidate the index wich was cached by the iterator */
-+	dev->msi.data->__iter_idx = MSI_MAX_INDEX;
- 	mutex_unlock(&dev->msi.data->mutex);
- }
- EXPORT_SYMBOL_GPL(msi_unlock_descs);
- 
--static bool msi_desc_match(struct msi_desc *desc, enum msi_desc_filter filter)
--{
--	switch (filter) {
--	case MSI_DESC_ALL:
--		return true;
--	case MSI_DESC_NOTASSOCIATED:
--		return !desc->irq;
--	case MSI_DESC_ASSOCIATED:
--		return !!desc->irq;
--	}
--	WARN_ON_ONCE(1);
--	return false;
--}
--
--static struct msi_desc *msi_find_first_desc(struct device *dev, enum msi_desc_filter filter)
-+static struct msi_desc *msi_find_desc(struct msi_device_data *md, enum msi_desc_filter filter)
- {
- 	struct msi_desc *desc;
- 
--	list_for_each_entry(desc, dev_to_msi_list(dev), list) {
-+	xa_for_each_start(&md->__store, md->__iter_idx, desc, md->__iter_idx) {
- 		if (msi_desc_match(desc, filter))
- 			return desc;
- 	}
-+	md->__iter_idx = MSI_MAX_INDEX;
- 	return NULL;
- }
- 
-@@ -289,37 +294,24 @@ static struct msi_desc *msi_find_first_d
-  */
- struct msi_desc *msi_first_desc(struct device *dev, enum msi_desc_filter filter)
- {
--	struct msi_desc *desc;
-+	struct msi_device_data *md = dev->msi.data;
- 
--	if (WARN_ON_ONCE(!dev->msi.data))
-+	if (WARN_ON_ONCE(!md))
- 		return NULL;
- 
--	lockdep_assert_held(&dev->msi.data->mutex);
-+	lockdep_assert_held(&md->mutex);
- 
--	desc = msi_find_first_desc(dev, filter);
--	dev->msi.data->__next = desc ? list_next_entry(desc, list) : NULL;
--	return desc;
-+	md->__iter_idx = 0;
-+	return msi_find_desc(md, filter);
- }
- EXPORT_SYMBOL_GPL(msi_first_desc);
- 
--static struct msi_desc *__msi_next_desc(struct device *dev, enum msi_desc_filter filter,
--					struct msi_desc *from)
--{
--	struct msi_desc *desc = from;
--
--	list_for_each_entry_from(desc, dev_to_msi_list(dev), list) {
--		if (msi_desc_match(desc, filter))
--			return desc;
--	}
--	return NULL;
--}
--
- /**
-  * msi_next_desc - Get the next MSI descriptor of a device
-  * @dev:	Device to operate on
-  *
-  * The first invocation of msi_next_desc() has to be preceeded by a
-- * successful incovation of __msi_first_desc(). Consecutive invocations are
-+ * successful invocation of __msi_first_desc(). Consecutive invocations are
-  * only valid if the previous one was successful. All these operations have
-  * to be done within the same MSI mutex held region.
-  *
-@@ -328,20 +320,18 @@ static struct msi_desc *__msi_next_desc(
-  */
- struct msi_desc *msi_next_desc(struct device *dev, enum msi_desc_filter filter)
- {
--	struct msi_device_data *data = dev->msi.data;
--	struct msi_desc *desc;
-+	struct msi_device_data *md = dev->msi.data;
- 
--	if (WARN_ON_ONCE(!data))
-+	if (WARN_ON_ONCE(!md))
- 		return NULL;
- 
--	lockdep_assert_held(&data->mutex);
-+	lockdep_assert_held(&md->mutex);
- 
--	if (!data->__next)
-+	if (md->__iter_idx >= (unsigned long)MSI_MAX_INDEX)
- 		return NULL;
- 
--	desc = __msi_next_desc(dev, filter, data->__next);
--	dev->msi.data->__next = desc ? list_next_entry(desc, list) : NULL;
--	return desc;
-+	md->__iter_idx++;
-+	return msi_find_desc(md, filter);
- }
- EXPORT_SYMBOL_GPL(msi_next_desc);
- 
-@@ -364,21 +354,18 @@ unsigned int msi_get_virq(struct device
- 	pcimsi = msi_device_has_property(dev, MSI_PROP_PCI_MSI);
- 
- 	msi_lock_descs(dev);
--	msi_for_each_desc(desc, dev, MSI_DESC_ASSOCIATED) {
--		/* PCI-MSI has only one descriptor for multiple interrupts. */
--		if (pcimsi) {
--			if (index < desc->nvec_used)
--				ret = desc->irq + index;
--			break;
--		}
--
-+	desc = xa_load(&dev->msi.data->__store, pcimsi ? 0 : index);
-+	if (desc && desc->irq) {
- 		/*
-+		 * PCI-MSI has only one descriptor for multiple interrupts.
- 		 * PCI-MSIX and platform MSI use a descriptor per
- 		 * interrupt.
- 		 */
--		if (desc->msi_index == index) {
-+		if (pcimsi) {
-+			if (index < desc->nvec_used)
-+				ret = desc->irq + index;
-+		} else {
- 			ret = desc->irq;
--			break;
- 		}
- 	}
- 	msi_unlock_descs(dev);
-@@ -759,16 +746,13 @@ int msi_domain_populate_irqs(struct irq_
- 	int ret, virq;
- 
- 	msi_lock_descs(dev);
--	for (virq = virq_base; virq < virq_base + nvec; virq++) {
--		desc = msi_alloc_desc(dev, 1, NULL);
--		if (!desc) {
--			ret = -ENOMEM;
--			goto fail;
--		}
-+	ret = msi_add_simple_msi_descs(dev, virq_base, nvec);
-+	if (ret)
-+		goto unlock;
- 
--		desc->msi_index = virq;
-+	for (virq = virq_base; virq < virq_base + nvec; virq++) {
-+		desc = xa_load(&dev->msi.data->__store, virq);
- 		desc->irq = virq;
--		list_add_tail(&desc->list, &dev->msi.data->list);
- 
- 		ops->set_desc(arg, desc);
- 		ret = irq_domain_alloc_irqs_hierarchy(domain, virq, 1, arg);
-@@ -784,6 +768,7 @@ int msi_domain_populate_irqs(struct irq_
- 	for (--virq; virq >= virq_base; virq--)
- 		irq_domain_free_irqs_common(domain, virq, 1);
- 	msi_free_msi_descs_range(dev, MSI_DESC_ALL, virq_base, virq_base + nvec - 1);
-+unlock:
- 	msi_unlock_descs(dev);
- 	return ret;
- }
+Aufmerksamkeit: Gewinner,
+
+
+Wir möchten Sie informieren, dass das Büro des nicht Beanspruchten Preisgeldes in Spanien,unsere Anwaltskanzlei ernannt hat, als gesetzliche Berater zu handeln, in der Verarbeitung und der Zahlung eines Preisgeldes, das auf Ihrem Namen gutgeschrieben wurde, und nun seit über zwei Jahren nicht beansprucht wurde.
+
+
+Der Gesamtbetrag der ihnen zusteht beträgt momentan €1,100.000, 15, cent.
+Der Gesamtbetrag der ihnen zusteht beträgt momentan  €1,100.000,15 , cent, EINE MILLION HUNDERTTAUSENDFÜNFZEHNHUNDERTFÜNFZIG, Das ursprüngliche Preisgeld bertug €991.000, EUROS. NEUNHUNDERTEINUNDNEUNZIGTAUSEND EURO Diese Summe wurde fuer nun mehr als zwei Jahre,Gewinnbringend  angelegt,daher die aufstockung auf die oben genannte Gesamtsumme.Entsprechend dem Büros des nicht Beanspruchten  Preisgeldes,wurde dieses Geld als nicht beanspruchten Gewinn einer Lotterie Firma bei ihnen zum verwalten niedergelegt und  in ihrem namen versichert. Nach Ansicht der Lotterie Firma wurde ihnen das Geld nach einer Weihnachts Förderung Lotterie  zugesprochen.
+
+
+Die Kupons wurden von einer Investmentgesellschaft gekauft.Nach Ansicht der Lotterie Firma wurden sie damals Angeschrieben um Sie über dieses Geld zu informieren es hat sich aber leider bis zum Ablauf  der  gesetzten  Frist  keiner gemeldet um den Gewinn zu Beanspruchen. Dieses war der Grund weshalb das Geld zum verwalten niedergelegt wurde. Gemab des Spanischen Gesetzes muss der inhaber alle zwei Jahre ueber seinen vorhanden Gewinn informiert werden.Sollte dass Geld wieder nicht beansprucht werden,.wird der Gewinn abermals ueber eine Investierung gesellschaft fur eine weitere Periode von zwei Jahren angelegt werden.Wir sind daher, durch das Buro des nicht Beanspruchten Preisgelds beauftragt worden sie anzuschreiben.Dies ist eine Notifikation für das Beanspruchen dieses Gelds.
+
+
+Wir möchten sie darauf hinweisen, dass die Lotteriegesellschaft überprüfen und bestätigen wird ob ihre Identität  übereinstimmt bevor ihnen ihr Geld ausbezahlt wird.Wir werden sie beraten wie sie ihren Anspruch geltend machen.Bitte  setzen sie sich dafuer mit unserer Deutsch Spanisch oder Englisch Sprachigen Rechtsanwalt in Verbindung Rechtsanwältin:  Bernhard Schmidt  & Co  Büro Assoziiert TEL( 34) 602 810 185 &Email, promogewinnmdrid@spainmail.com ) Ihre Antwort sollte an diese E-MAIL-Adresse gerichtet, (promogewinn@spainmail.com)ist zustaendig fuer  Auszahlungen ins Ausland und wird ihnen in dieser sache zur seite stehen. Der Anspruch sollte vor den 31 August 2021 geltend  gemacht werden,da sonst dass Geld wieder angelegt werden wuerde.Wir freuen uns, von Ihnen zu hören, während wir Ihnen  unsere Rechtshilfe Versichern.
+
+
+Nachdem Sie die von Ihnen geforderten Daten bereitgestellt haben, können Sie davon ausgehen, dass Sie innerhalb weniger  Stunden direkt von diesem Büro erfahren werden. Bis dahin müssen wir Ihre Informationen verarbeitet und Ihre Fonds Akte für  die Zustellung vorbereitet haben, um Verzögerungen zu vermeiden.
+
+
+Wir gehen davon aus, dass Sie die erläuternden Anweisungen und Anweisungen für den Erhalt Ihrer Prämien (€1,100.000,15,Cent) verstehen, die Ihnen von der spanischen , LOTERÍA DE NAVIDAD GLÜCKSFALL  Euro Millones /El Gordo de la Primitiva International lotterie Madrid Spain legal zugesprochen werden.
+
+
+HINWEIS: Um unnötige Verzögerungen zu vermeiden, wenn es eine Änderung Ihrer Adresse oder Komplikationen geben, informieren Sie Ihren Agenten so schnell wie möglich, Ihr Agent wird 10% des Premium Preises bezahlt, da die Provision NACH Dem, was Sie Ihr Geld auf Ihr kostenpflichtiges Konto erhalten haben. Das Zahlungsbearbeitung Formular ist mit einer Fotokopie Ihres Ausweises auszufüllen und zur Überprüfung per Faxnummer zu senden: & E-Mail: Wir bitten dringend, Ihre E-Mails an unsere Büro-E-Mail zu beantworten, promogewinnmdrid@spainmail.com
+
+
+Mit Freundlichen Grüßen
+Justice Anna Hernandes Sr
+
+
+ANMELDEFORMULAR FÜR DEN GEWINNANSPRUCH Vom 31. August bis 22. DEZEMBER  2021
+Hinweis bitte geben Sie die folgenden Informationen, wie unten gefordert,  e mail: promogewinnmdrid@spainmail.com,es zurück in mein Büro sofort für uns in der Lage zu sein die Legalisierung Prozess Ihrer  Persönliche investiertes Preisgeld zu vervollständigen, und das Geld wird Ihnen von Zentralbank spain Int  ausgezahlt.  Alle Prozess Überprüfung durch unsere Kanzlei ist für Sie kostenlos, weil unsere Kosten werden von der internationalen  Lotto Kommission am Ende des Prozesses zu zahlen, wenn Sie Ihr Geld erhalten.Wenn Sie nicht die erforderlichen  Informationen vor der Zeit gegeben hat, können ist Anwaltskanzlei nicht haftbar gemacht werden, wenn Ihr Geld reinvestiert  wurde.
+
+
+Ein Bestätigungsschreiben wird Ihnen gefaxt werden sofort wenn wir komplette Überprüfung der Informationen die Sie uns zur  Verfügung stellen habe, Ich werde die Investmentbank unverzüglich über die von Ihnen angegebene Informationen zu kommen,  bevor sie werden mit Ihnen Kontakt aufnehmen für die ausZahlung von Ihrem Geld . Ihre Daten werden vertraulich gehalten  nach der Europäischen Union Datenschutzrecht.
+
+
+"Antworten Sie nicht auf die Absenderadresse oder die Quell-E-Mail-Adresse, es wird über den Computer gesendet virtuelle  Hilfe für die Antwort wird  nicht meine menschliche sondern Computer" Daher müssen Sie die Treuhänder über Telefon und E- Mail-Adresse oben" (ACHTUNG Wir (bitten Sie, auf diese E-Mail-Adresse zu antworten, (promogewinnmdrid@spainmail.com)
+
+
+REF.NR:………………………………STAPELN Sie NR:…………………………
+Vorname:……………………Vor-NACHNAME…………………………………
+GEBURTSDATUM:……………………………BERUF:……………………………
+STRASSE:………………………………………PLZ/ORT…………………………
+ADRESSE:……………………………………………………………………………
+TELEFON:(___)……………………HANDY:(__)………………FAX (__)………
+EMAIL:…………………………………………………………Nationalitit:………………
+
+
+HINWEIS: BANKVERBINDUNG IST NUR ERFORDERLICH, WENN SIE BESCHLIEßEN, IHREN GEWINN ZU ERHALTEN PER ÜBERWEISUNG
+Nachdem Sie die von Ihnen geforderten Daten bereitgestellt haben, können Sie davon ausgehen, dass Sie innerhalb weniger  Stunden direkt von diesem Büro erfahren werden. Bis dahin müssen wir Ihre Informationen verarbeitet und Ihre Fonds Akte für  die Zustellung vorbereitet haben, um Verzögerungen zu vermeiden. Wir gehen davon aus, dass Sie die erklärenden Anweisungen  und Anweisungen zum Einholen und Einholen Ihrer Auszeichnungen (€1,100,000.15 cent) verstehen, die Ihnen vom spanischen Euro Millones /el Gordo de La Primitiva International Madrid legal zugesprochen wurden
+
+
+Bitte befolgen Sie die folgenden Anweisungen, damit wir Ihre Sofortüberweisung beeinflussen können, wir haben zwei Optionen der Auszahlungszahlung (EFT Banküberweisung & Bank zertifizierter Scheck und Vorausbezahlt  Meister Karte Lastschrift
+geldautomat-Karte), die direkt an Ihre Adresse per DHL oder einem beliebigen Bestellkurierdienst ausgestellt und gesendet werden können, geben Sie unten Ihre bevorzugte Option an. Banküberweisung dauert 48 bis 72 Arbeitsstunden, während die Lieferung von Debitkarten 5 bis 6 Werktage dauert. Bemühen Sie sich, Ihre Zahlungsreferenznummer sehr vertraulich zu behandeln. Geben Sie Folgendes für Ihre jeweiligen
+
+
+Zahlungsoptionen an.) ZAHLUNGSOPTION: (A) BESTÄTIGTER SCHECK (BEZAHLEN Sie ÜBERTRAGUNG EIN
+
+
+BETRÄGE GEWONNEN: ……………………………………………………
+NAME DER BANK:……………………………………………………………
+KONTONUMMER:…………………………SWIFT-CODE:…………………
+ADRESSE DER BANK …………………………………………………………
+GEB-DATUM:…………Unterschrift …………(Erst bei hmeAbna)
+
+
+Rechtsanwältin  Bernhard Schmidt  & Co Büro Assoziiert  Asociados, Abogados, Fiscal Y Accesorios horario de consultas Lunes.bis Samstag De. 09 - 16.30 Uhr  654280 / MLA & (Seien Sie informiert, dass Ihr Vertreter 10% des Preises als Provision erhält, wenn Sie Ihr Geld auf Ihrem  angegebenen Konto erhalten haben) Mitglied des Consejo de Constitucional de España, (ACHTUNG Wir bitten Sie, auf diese E-Mail-Adresse zu antworten (promogewinnmdrid@spainmail.com) BÜRO-KONTOINFORMATIONEN-Sekretär NAME JULIA, IBAN: ES57 2100 3819 9120 0001 0490,BIC: CAIXESBBXXX, ADRESSE: AVENIDA MA 15, 29400 ROUNDA MADRID-SPANIEN
+COPYRIGHT 2020.LOTERIA SPANIEN. Alle Rechte vorbehalten. NUTZUNGSBEDINGUNGEN HANDELSPOLITIK DATENSCHUTZ VON BESCHWERDEN
+
+Diese E-Mail ist für den vorgesehenen Empfänger bestimmt und enthält Informationen, die vertraulich sein können. Wenn Sie nicht der beabsichtigte Empfänger Sind, benachrichtigen Sie bitte den Absender per E-Mail und löschen Sie diese E-Mail aus Ihrem Posteingang. Jede unbefugte Nutzung oder Verbreitung dieser E-Mail, ganz oder teilweise, ist strengstens untersagt und kann rechtswidrig sein. Alle in dieser E-Mail enthaltenen Preisangebote sind nur indikativ und führen zu keiner rechtlich bindenden oder durchsetzbaren Verpflichtung. Sofern nicht ausdrücklich als beabsichtigter E-Vertrag bezeichnet, stellt diese E-Mail kein Vertragsangebot, keine Vertragsänderung oder eine Annahme eines Vertragsangebots dar.
+WWW.GORDO/ EUROMILLIONS ESPAÑA  Sitz der Gesellschaft: Torre Europa Paseo de la Barcelona 15. Planta 16 28006 • Madrid Spanien)
 
