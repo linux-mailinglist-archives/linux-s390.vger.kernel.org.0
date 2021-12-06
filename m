@@ -2,117 +2,159 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6B7E46A30B
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Dec 2021 18:33:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C18FC46A4B4
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Dec 2021 19:35:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236887AbhLFRhO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 Dec 2021 12:37:14 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:20022 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S243019AbhLFRhN (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Dec 2021 12:37:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638812024;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=K4ercJW+nnO3nVFWXdpcqDrsk6DzFn5IXLVSmNB1y5U=;
-        b=bZLu0BNXBi+5B3/IcJpsH0dCTNgSSM/4JJopszar4b+d9rEdCPWQ1nPDJhYkENPsznqSZW
-        m26Dt7AQbJVFjhECKcKiFItN0Fzhkb9Qy0iOFpD8bq2YLpCR0dER5fq6va6SASl4PMWhux
-        0AnkL/sOGby7ZHDYIoT9aPNJqWATR1o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-1-7fyedwPTNIqigZ3OufbXaA-1; Mon, 06 Dec 2021 12:33:41 -0500
-X-MC-Unique: 7fyedwPTNIqigZ3OufbXaA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03F5B81EE61;
-        Mon,  6 Dec 2021 17:33:40 +0000 (UTC)
-Received: from rhtmp (unknown [10.39.194.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 02C4860C13;
-        Mon,  6 Dec 2021 17:33:38 +0000 (UTC)
-Date:   Mon, 6 Dec 2021 18:33:37 +0100
-From:   Philipp Rudo <prudo@redhat.com>
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, egorenar@linux.ibm.com, ltao@redhat.com
-Subject: Re: [PATCH] s390/kexec_file: fix error handling when applying
- relocations
-Message-ID: <20211206183337.0aaf7d4c@rhtmp>
-In-Reply-To: <Ya5Ex8WPeyiPwXl+@osiris>
-References: <20211206112047.4746-1-prudo@redhat.com>
-        <Ya5Ex8WPeyiPwXl+@osiris>
-Organization: Red Hat inc.
+        id S243050AbhLFSit (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 Dec 2021 13:38:49 -0500
+Received: from mail-dm6nam08hn2221.outbound.protection.outlook.com ([52.100.161.221]:5408
+        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S242707AbhLFSis (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 6 Dec 2021 13:38:48 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MZYnAu2DyowkQS4S3430yzdSEHJ1flpS9JNU96dIC57eDHrlh1XSsXvpQmOqXXyNHwifLh3am8SXoAHmg4VSDhI8r6YtshIkBB1C9HrMFzWi+V3ZMraZyL+XSPHMTaZhV8K5V2Jg5qHW8hlR2BF+ov2SmmAYbMkRthJOalBa7HsFLYAFoTCB823L9BIsxxLL1/twTXnQcwmzGIAa0Mu7Tw+efZdELGv+wpBLt1zBNr7pQQnMOqlS+gsARmDr58Ja7AXS1BsmSOLVlGQX3SdikTXsyCntDRgvUc07n7/1eeEanlXuU9l9+s6WtZAZO2Qfqcciye7HXpRqOaCtkvDbyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NTkULZ5UHExQp4+lt+mjKcEqTWLs4cv4821EJcQtSYE=;
+ b=JxmYZ6EzzpCulb0zT0OW/G5vkUGDEcT7YDWi7taait1nzcvqr1F8H0LFYVkFpnLhFX2ZnrmsF7+3lFWP4sU8/K0Jju76UTlNq5GeMr/OH/+1DkB7Ele/eTzVo0gWOK5LWi1RARuajYgyG2qiHoSx6ojSrO7DqSC6lRsQx+YwGK7qt3b7DkSEOiIhiUlPm2t/oIcEmaokWVGkMmfcwgCXr+RJFAM9l88JWSWPKj0HbgoiRikxT+gQ9pMWitKAhbhly5+EJQrfzcUO8o2da39tDA4xWEEK+cZLCMLcwD2NhnaynLH4oRWyHQqJ7e6mcS1LTtW9R+5OmXQl4lLdVo2ntg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 146.201.107.145) smtp.rcpttodomain=shell.opensde.net
+ smtp.mailfrom=msn.com; dmarc=fail (p=none sp=quarantine pct=100) action=none
+ header.from=msn.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fsu.onmicrosoft.com;
+ s=selector2-fsu-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NTkULZ5UHExQp4+lt+mjKcEqTWLs4cv4821EJcQtSYE=;
+ b=dqLLDUrRdwShvKSVk2AMHp4JuAAFcCpDG/n/Z5oHKDtFLScwO/nWTYvFSkb7xmPbM6ArO1M8lv3serc7AXqgtFPoYTZHu6J6RaOCNOZWmm2PpfsGasWaMzu2J2CpEi7z8ACQZgZ5pTn6THFZ/f3Wn8wZNMPixrVpXih25T0ReKQ=
+Received: from BN6PR2001CA0012.namprd20.prod.outlook.com
+ (2603:10b6:404:b4::22) by SJ0P220MB0590.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:305::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.20; Mon, 6 Dec
+ 2021 18:35:07 +0000
+Received: from BN8NAM04FT027.eop-NAM04.prod.protection.outlook.com
+ (2603:10b6:404:b4:cafe::b3) by BN6PR2001CA0012.outlook.office365.com
+ (2603:10b6:404:b4::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.14 via Frontend
+ Transport; Mon, 6 Dec 2021 18:35:07 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 146.201.107.145) smtp.mailfrom=msn.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=msn.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ msn.com discourages use of 146.201.107.145 as permitted sender)
+Received: from mailrelay03.its.fsu.edu (146.201.107.145) by
+ BN8NAM04FT027.mail.protection.outlook.com (10.13.161.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4755.13 via Frontend Transport; Mon, 6 Dec 2021 18:35:07 +0000
+Received: from [10.0.0.200] (ani.stat.fsu.edu [128.186.4.119])
+        by mailrelay03.its.fsu.edu (Postfix) with ESMTP id F352A9518E;
+        Mon,  6 Dec 2021 13:34:31 -0500 (EST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Re: From Fred!
+To:     Recipients <fred128@msn.com>
+From:   "Fred Gamba." <fred128@msn.com>
+Date:   Mon, 06 Dec 2021 19:33:49 +0100
+Reply-To: fred_gamba@yahoo.co.jp
+Message-ID: <7d40b34e-c45d-49b8-bce5-6ac54ad02288@BN8NAM04FT027.eop-NAM04.prod.protection.outlook.com>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 044870af-929b-487c-7a3e-08d9b8e720b3
+X-MS-TrafficTypeDiagnostic: SJ0P220MB0590:EE_
+X-Microsoft-Antispam-PRVS: <SJ0P220MB0590CC20E05A9390E2D91580EB6D9@SJ0P220MB0590.NAMP220.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Forefront-Antispam-Report: CIP:146.201.107.145;CTRY:US;LANG:en;SCL:5;SRV:;IPV:CAL;SFV:SPM;H:mailrelay03.its.fsu.edu;PTR:mailrelay03.its.fsu.edu;CAT:OSPM;SFS:(4636009)(84050400002)(46966006)(40470700001)(7596003)(2906002)(86362001)(356005)(336012)(2860700004)(82202003)(9686003)(40460700001)(8936002)(70586007)(6266002)(508600001)(7116003)(82310400004)(31696002)(5660300002)(70206006)(7416002)(47076005)(26005)(8676002)(6862004)(7366002)(6666004)(83380400001)(7406005)(956004)(786003)(316002)(31686004)(6200100001)(35950700001)(3480700007)(480584002);DIR:OUT;SFP:1501;
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?UzlJZjVnSHdWSnFEYVFvcnpwYjA1VHRpRlJ4NzdpOWUxVXQvWnEveUFWUVhS?=
+ =?utf-8?B?Z3JjZ1dWaitQdytLUDZOaG54MHhpMXM0U0V2NldQVlNlbGxzZHhWT1psSmJy?=
+ =?utf-8?B?M3VqRHpNUzdVcHVoMjNCSmNhTXRvT01VMURyWGRBZHBwbm1OR0JzakpBdU1L?=
+ =?utf-8?B?dkxPTG1hQVUrUmNyUHA1b1lYbFZRZWNvSXdhVlFiMUtsMmtlSFJEczF6Uysw?=
+ =?utf-8?B?TEM3OGlmUGdPTDZ0MjVaeFc3ZFVGMkt3UnN2K3cyU2NkWDZEMmJBMVlHMWt0?=
+ =?utf-8?B?VlFjQzE4d2M4Q0xSd2JXSFYzWWhzZnQ3VjZ3OTN0SytINC9LQjZqaWdtWkdK?=
+ =?utf-8?B?cW1pdzk3Q2taVXlmVmhVa2MrQm9Zcm8xUzhxYzR4REVJQzJqZWFESHRiYWJB?=
+ =?utf-8?B?dlZBTkhXSnBqbFpQT3F1elE1Z2paMUFWTFFTdlhQdCtTNFNjcUxmM0tUQ3NV?=
+ =?utf-8?B?T2lmTndDY2plNitQNlFsclo4dWE5WFhwa3IvNDhiUmVNVU9HbEJ4Z05WUytn?=
+ =?utf-8?B?SEFDMEVscnlQNDRZL3hkS0UxVE1lcmhQQTNvTnR1SGkrRXhFdEJtUFM3QWUx?=
+ =?utf-8?B?K1c3VUVUTnVQYlh6VEFkcGNQQ2RXcFB1QnhEOXdGb3ZwY3B5U2NtUzNDdnFt?=
+ =?utf-8?B?VFFoMElMSHVxUUxyTGJacDhuVGUraklkVDc3cGFiVVE4TkNyQ0VIeGNyRkVM?=
+ =?utf-8?B?QTMvOGM3SG5Vb1E3cmFSVjBQS0x0dzY0SW9uTGoyeVFUbi9QK2JFYm5Oci9n?=
+ =?utf-8?B?a0J6TGV4c040VEdGdU54SGhjVzFISW5uQVIzaXNySXlwaUdtL3krdnJLOEVz?=
+ =?utf-8?B?UWNnZ21Od0lyUklKZzBIekJGVzJkanp1NzJjTDNsWE5lM3VLUTJEMWhSK3Nq?=
+ =?utf-8?B?RGFJTU05cDQydm5vUEpQTzQ4NXpJaUN0eDhWUlBiYW5vRnVtODMvWDZZMFd3?=
+ =?utf-8?B?c3Bsc0tPdHpEeFRHT2dnNVR5Rjhsa2xCaDdTM0dLOUY1dEQ2am8xN0JlUytw?=
+ =?utf-8?B?NS9tZXFjRWl3LzQvN2VGYkZrN3dRdzNSVlNpbzFYK2RWSVE2NDBNUy94eUJh?=
+ =?utf-8?B?aHUvK2VaSzhpZHlWREtaN0d4Q1MzOThpVTdzc2NvTEl3M0pIUW1ZWE5DQjVl?=
+ =?utf-8?B?aEpBcXlMZWNTOXNQYkFhSlRQNGQ5NVc2b1lGVzFqZ2hVdnFyTWRmZkJSeTVF?=
+ =?utf-8?B?YnFYcmFGZVhxcHdMNmg1YWdEMVNLQVZpa1BQZHNwbkl6dk8xVFcvUnM1bEhp?=
+ =?utf-8?B?cjlIcFJuWVpOTnRERnJvRnpTRldtUTFBdlJKaE11K1ZRM3FwaXNmbUZpTTAy?=
+ =?utf-8?B?bHU3QnNXRitOTHZVMkowQkRKZk54QUJFWEcvV0JwQlQ3QWltbDlBcEx2enpB?=
+ =?utf-8?B?bkRNQTNDVXNOKy9XdjErODNJSzRhU05WTjI3MEp6eGZoeHdkQlpuL093TTdy?=
+ =?utf-8?Q?/Q1cOTOu?=
+X-OriginatorOrg: fsu.edu
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2021 18:35:07.4287
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 044870af-929b-487c-7a3e-08d9b8e720b3
+X-MS-Exchange-CrossTenant-Id: a36450eb-db06-42a7-8d1b-026719f701e3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a36450eb-db06-42a7-8d1b-026719f701e3;Ip=[146.201.107.145];Helo=[mailrelay03.its.fsu.edu]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM04FT027.eop-NAM04.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0P220MB0590
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Heiko,
+Hello,
 
-On Mon, 6 Dec 2021 18:13:43 +0100
-Heiko Carstens <hca@linux.ibm.com> wrote:
+I decided to write you this proposal in good faith, believing that you will=
+ not betray me. I have been in search of someone with the same last name of=
+ our late customer and close friend of mine (Mr. Richard), heence I contact=
+ed you Because both of you bear the same surname and coincidentally from th=
+e same country, and I was pushed to contact you and see how best we can ass=
+ist each other. Meanwhile I am Mr. Fred Gamba, a reputable banker here in A=
+ccra Ghana.
 
-> On Mon, Dec 06, 2021 at 12:20:47PM +0100, Philipp Rudo wrote:
-> > arch_kexec_apply_relocations_add currently ignores all errors returned
-> > by arch_kexec_do_relocs. This means that every unknown relocation is
-> > silently skipped causing unpredictable behavior while the relocated code
-> > runs. Fix this by checking for errors and fail kexec_file_load if an
-> > unknown relocation type is encountered.
-> > 
-> > The problem was found after gcc changed its behavior and used
-> > R_390_PLT32DBL relocations for brasl instruction and relied on ld to
-> > resolve the relocations in the final link in case direct calls are
-> > possible. As the purgatory code is only linked partially (option -r)
-> > ld didn't resolve the relocations leaving them for arch_kexec_do_relocs.
-> > But arch_kexec_do_relocs doesn't know how to handle R_390_PLT32DBL
-> > relocations so they were silently skipped. This ultimately caused an
-> > endless loop in the purgatory as the brasl instructions kept branching
-> > to itself.
-> > 
-> > Fixes: 71406883fd35 ("s390/kexec_file: Add kexec_file_load system call")
-> > Reported-by: Tao Liu <ltao@redhat.com>
-> > Signed-off-by: Philipp Rudo <prudo@redhat.com>
-> > ---
-> >  arch/s390/kernel/machine_kexec_file.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-> > index 9975ad200d74..0e1d646207dc 100644
-> > --- a/arch/s390/kernel/machine_kexec_file.c
-> > +++ b/arch/s390/kernel/machine_kexec_file.c
-> > @@ -292,6 +292,7 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-> >  {
-> >  	Elf_Rela *relas;
-> >  	int i, r_type;
-> > +	int ret;
-> >  
-> >  	relas = (void *)pi->ehdr + relsec->sh_offset;
-> >  
-> > @@ -326,7 +327,9 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-> >  		addr = section->sh_addr + relas[i].r_offset;
-> >  
-> >  		r_type = ELF64_R_TYPE(relas[i].r_info);
-> > -		arch_kexec_do_relocs(r_type, loc, val, addr);
-> > +		ret = arch_kexec_do_relocs(r_type, loc, val, addr);
-> > +		if (ret)
-> > +			return -EINVAL;  
-> 
-> I'd prefer if this would return -ENOEXEC, just to be consistent with
-> x86. And _maybe_ it would also make sense to print an error message,
-> including the failing relocation type?
+On the 15 January 2009, the young millionaire (Mr. Richard) a citizen of yo=
+ur country and Crude Oil dealer made a fixed deposit with my bank for 60 ca=
+lendar months, valued at US $ 6,500,000.00 (Six Million, Five Hundred Thous=
+and US Dollars) and The mature date for this deposit contract was on 15th o=
+f January, 2015. But sadly he was among the death victims in the 03 March 2=
+011, Earthquake disaster in Japan that killed over 20,000 people including =
+him. Because he was in Japan on a business trip and that was how he met his=
+ end.
 
-sure, I'll update the return value to -ENOEXEC.
+My bank management is yet to know about his death, but I knew about it beca=
+use he was my friend and I am his Account Relationship Officer, and he did =
+not mention any Next of Kin / Heir when the account was opened, because he =
+was not married and no children. Last week my Bank Management reminded me a=
+gain requested that Mr. Richard should give instructions on what to do abou=
+t his funds, if to renew the contract or not.
 
-About the error message, I didn't add it on purpose as none of the
-other error cases print one. For consistency I would add one for those
-cases as well. Any objections?
+I know this will happen and that is why I have been looking for a means to =
+handle the situation, because if my Bank Directors happens to know that he =
+is dead and do not have any Heir, they will take the funds for their person=
+al use, That is why I am seeking your co-operation to present you as the Ne=
+xt of Kin / Heir to the account, since you bear same last name with the dec=
+eased customer.
 
-Thanks
-Philipp
+There is no risk involved; the transaction will be executed under a legitim=
+ate arrangement that will protect you from any breach of law okay. So It's =
+better that we claim the money, than allowing the Bank Directors to take it=
+, they are rich already. I am not a greedy person, so I am suggesting we sh=
+are the funds in this ratio, 50% 50, ie equal.
 
+Let me know your mind on this and please do treat this information highly c=
+onfidential.
+
+I will review further information to you as soon as I receive your
+positive response.
+
+Have a nice day and I anticipating your communication.
+
+With Regards,
+Fred Gamba.
