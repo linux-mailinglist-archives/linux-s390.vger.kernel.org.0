@@ -2,82 +2,69 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9190A46BB96
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Dec 2021 13:46:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A19A846BBFC
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Dec 2021 13:58:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236532AbhLGMtv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Dec 2021 07:49:51 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52754 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235679AbhLGMtu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Dec 2021 07:49:50 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1638881179;
+        id S231678AbhLGNBf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Dec 2021 08:01:35 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:46095 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236706AbhLGNBe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Dec 2021 08:01:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1638881883;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QKzQcfpFrakF1gaQnErus44+ZE9ndLllCgtGuvnr0lo=;
-        b=zkOUIyV/MINXrUxqZ9LTk6Hht+Xmk8q0kbB/5Y19WuZGmYCp1YnKcRHA/Ud2ZzNf0tBhD1
-        5ewm51F2t/LbVeitPsQv0NzSQYvxBgYBwS2c0MPgw3mJzPZAZ6q2GBlz1ILLKxM7NY+q56
-        y6FO2Jf6F60qKB/xuNibwDIcpP0cREBO9k1rd9lF2bKMpcZfrjSZUCAv611PzYSfI9kaYD
-        ozerFcwa3CJXVTsQElTER2+/qf7c08a86zn5ZozkKNQ9QsA7UC2wyWhtESX00QKpP6+lNz
-        FelqwJ4Bd7vCMzYyeRjT3d7rSGV/Gz0CUgOyfaKzjKzk1KOF0aTbcueGSTp9SQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1638881179;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QKzQcfpFrakF1gaQnErus44+ZE9ndLllCgtGuvnr0lo=;
-        b=yZ3GrlUbR1OmCFoNBVL41nwID0yawuJjFK0MUow1uzlkJmWNC0fYtNtLkZbCEAFV92VP56
-        kQjuYi/bhsZdtdDA==
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: Re: [patch V2 29/31] genirq/msi: Add abuse prevention comment to
- msi header
-In-Reply-To: <Ya8Zj+bADtKEISSP@kroah.com>
-References: <20211206210600.123171746@linutronix.de>
- <20211206210749.170847844@linutronix.de> <Ya8Zj+bADtKEISSP@kroah.com>
-Date:   Tue, 07 Dec 2021 13:46:18 +0100
-Message-ID: <87lf0w37mt.ffs@tglx>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=F7IUN5dNHNGa66F/DHngfKMKHByGUtfTF2KZxIjGTME=;
+        b=AANZ4jevFKNgAxQeVI3dzsN52g789FDCyhY/3ZYVxSRC6awYEsox7biKYDhO/RUxxU0kr3
+        iuM48+E65RxMzijKFC3xaHggNqriobNvRKfK+7Wd1QgH+F8Q/cXX6BRq7HXmzcmEZabK/u
+        jalR9yJGW1PIb26M06k6jX4ZCwjjOy4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-449-pewo1wNwP7SJOc-JJph9GA-1; Tue, 07 Dec 2021 07:58:00 -0500
+X-MC-Unique: pewo1wNwP7SJOc-JJph9GA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 468D785C86D;
+        Tue,  7 Dec 2021 12:57:59 +0000 (UTC)
+Received: from workhorse.redhat.com (unknown [10.39.192.196])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 20FAF5D6BA;
+        Tue,  7 Dec 2021 12:57:57 +0000 (UTC)
+From:   Philipp Rudo <prudo@redhat.com>
+To:     linux-s390@vger.kernel.org
+Cc:     hca@linux.ibm.com, egorenar@linux.ibm.com, ltao@redhat.com
+Subject: [PATCH v2 0/2] s390/kexec_file: improve error handling and messages
+Date:   Tue,  7 Dec 2021 13:57:47 +0100
+Message-Id: <20211207125749.6998-1-prudo@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Dec 07 2021 at 09:21, Greg Kroah-Hartman wrote:
-> On Mon, Dec 06, 2021 at 11:51:49PM +0100, Thomas Gleixner wrote:
->>  #include <linux/cpumask.h>
->>  #include <linux/mutex.h>
->>  #include <linux/list.h>
->> 
-> Ah, to be young and idealistic and hope that kernel developers read
-> comments in header files :)
+Hi everybody,
 
-Hope dies last.
+here is v2 of the patch I sent yesterday.
 
-> You might want to add this to the driver-api kernel doc build?
+Thanks
+Philipp
 
-When I do the next round of refactoring, I'm going to move the functions
-which are available for drivers into a separate header file.
+v2:
+	- EINVAL -> ENOEXEC
+	- print error message when encountering an unknown relocation
+	- new patch to print error messages for all error cases in the function
 
-Thanks,
+Philipp Rudo (2):
+  s390/kexec_file: print some more error messages
+  s390/kexec_file: fix error handling when applying relocations
 
-        tglx
+ arch/s390/kernel/machine_kexec_file.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
+
+-- 
+2.31.1
+
