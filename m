@@ -2,66 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0833B46B2C9
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Dec 2021 07:18:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF71646B59A
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Dec 2021 09:21:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229846AbhLGGV2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Dec 2021 01:21:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232778AbhLGGV2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Dec 2021 01:21:28 -0500
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA4CC061354
-        for <linux-s390@vger.kernel.org>; Mon,  6 Dec 2021 22:17:58 -0800 (PST)
-Received: by mail-lf1-x12c.google.com with SMTP id u3so31101883lfl.2
-        for <linux-s390@vger.kernel.org>; Mon, 06 Dec 2021 22:17:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=1Br/N6WhyVMlujnGsxiPG2oa5QW+rtf7KlXAbdHBbwA=;
-        b=F4sLAUK8E8fX02ljaqMKjxU0gXtbL7/RGiWivTo+FW35gyZCEsJrtoE4HkWpwmUcmd
-         TdJ+c0+ifv74cgxQPwUnuy1e/lJTzaqjOGbc/9n5XigPNsGsV5oIFtLCjs/c5VyjUs6p
-         qgMQgYLAzl+bNn8KfbCxFaHqB1kQFKvkOALol5fzsLH15rswmgT1DkctIKvVxWb4wdDy
-         EMwWUr3c4okwkvZgKbwx2XDXiwMnyNqgOQlgAxzZ0o4ynDHS+8L3TALGY87JJTpjNQAr
-         nkbHz1n5BoY+OalyrRWO7jvzLT1k0wtm8ns17zADtNSzpzIKJ0+6/75dVon49u7tlpYD
-         UsPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=1Br/N6WhyVMlujnGsxiPG2oa5QW+rtf7KlXAbdHBbwA=;
-        b=mL47l/zYRhJ2WP/R+sdwRV760DVeGEMMcAZ71bBpuNXsQGLZlD2+5K3gWlbsMWUNvH
-         pc/I2SJlfA0Htr5P9FAasbuUAjKIjBbDAeiX9QpczcouOZA0Ggt18TiotdNu5TO1zH5n
-         Hajanrpw6IKct/H3ulP3zxP8/5hOc6Tw8eZJdBeBlw6GtDqxCPyex8W1/5/JKa1Xrr/d
-         ner//DKPB2zEFqaKQG2LdqxqC5LZEicDiyVoBpErBwfcon9Jp0xVJpWm9fg+sGfMzuor
-         Klsqg2g52qsiCgVz4z7zVjpWDrT97z8oC92Fd8tFrUwYMj4xvxI21f3QbKVUj8YtCFoy
-         32gA==
-X-Gm-Message-State: AOAM531+isPRgdsToels+03ILCk93NjI3jJ/+bQW7YpE6QCS/8xkdhCs
-        oA/Iw5mtK67uU67dbCAuN6/KWYW4SC9XdgJDK9A=
-X-Google-Smtp-Source: ABdhPJxlDAeQploZ49375zjiccb5Gycy6J6lq65pkuVk1X1do+YIichJ8FooPWAEtGE1SF4KbQ0wZeuwWKGhoSBsH1Q=
-X-Received: by 2002:a19:4884:: with SMTP id v126mr38858171lfa.178.1638857876257;
- Mon, 06 Dec 2021 22:17:56 -0800 (PST)
+        id S232373AbhLGIZL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Dec 2021 03:25:11 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:50724 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230021AbhLGIZL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Dec 2021 03:25:11 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 12C73CE19FA;
+        Tue,  7 Dec 2021 08:21:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81803C341C1;
+        Tue,  7 Dec 2021 08:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1638865298;
+        bh=81ezBwi4Gw0OWv//xVC704QCQgMXAEKmUfhLMAXppUw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TH/YlLooPpA9/mTXfGh27VFDaRdFSa+QDNfFyBbpv2TI9gDuVVtgDUvWY1cEHZ1rw
+         d7NMMCdgS2zwfOsO2TgrsfOv17Gvprfvs8AAsKoH3ogS+Y6KSf6urrDcjPRlGlksm6
+         2hRfNjvRT3+8vBz3JNDvM7STpvhCM+Qz+yAn683U=
+Date:   Tue, 7 Dec 2021 09:21:35 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Marc Zygnier <maz@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Megha Dey <megha.dey@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
+        Cedric Le Goater <clg@kaod.org>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
+Subject: Re: [patch V2 29/31] genirq/msi: Add abuse prevention comment to msi
+ header
+Message-ID: <Ya8Zj+bADtKEISSP@kroah.com>
+References: <20211206210600.123171746@linutronix.de>
+ <20211206210749.170847844@linutronix.de>
 MIME-Version: 1.0
-Received: by 2002:ab3:559a:0:0:0:0:0 with HTTP; Mon, 6 Dec 2021 22:17:55 -0800 (PST)
-Reply-To: mrsbillchantallawrence58@gmail.com
-From:   mrsbillchantal <mrs.heleenmusa@gmail.com>
-Date:   Mon, 6 Dec 2021 22:17:55 -0800
-Message-ID: <CANDAtNPeSS5t2WkYAL6a5P6=kcuHNo4qptarZHK8OmLkpjfRSA@mail.gmail.com>
-Subject: dear frinds incase my connession is not good
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211206210749.170847844@linutronix.de>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-hello....
+On Mon, Dec 06, 2021 at 11:51:49PM +0100, Thomas Gleixner wrote:
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  include/linux/msi.h |   14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -2,6 +2,20 @@
+>  #ifndef LINUX_MSI_H
+>  #define LINUX_MSI_H
+>  
+> +/*
+> + * This header file contains MSI data structures and functions which are
+> + * only relevant for:
+> + *	- Interrupt core code
+> + *	- PCI/MSI core code
+> + *	- MSI interrupt domain implementations
+> + *	- IOMMU, low level VFIO, NTB and other justified exceptions
+> + *	  dealing with low level MSI details.
+> + *
+> + * Regular device drivers have no business with any of these functions and
+> + * especially storing MSI descriptor pointers in random code is considered
+> + * abuse. The only function which is relevant for drivers is msi_get_virq().
+> + */
+> +
+>  #include <linux/cpumask.h>
+>  #include <linux/mutex.h>
+>  #include <linux/list.h>
+> 
 
-You have been compensated with the sum of 5.5 million dollars in this
-united nation the payment will be issue into atm visa card and send to
-you from the santander bank we need your address and your  Whatsapp
-this my email.ID (  mrsbillchantallawrence58@gmail.com)  contact  me
+Ah, to be young and idealistic and hope that kernel developers read
+comments in header files :)
 
-Thanks my
+You might want to add this to the driver-api kernel doc build?
 
-mrs chantal
+Anyway, looks good to me:
+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
