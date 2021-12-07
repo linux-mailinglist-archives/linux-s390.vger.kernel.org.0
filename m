@@ -2,98 +2,99 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF71646B59A
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Dec 2021 09:21:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4A4146B697
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Dec 2021 10:05:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232373AbhLGIZL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Dec 2021 03:25:11 -0500
-Received: from sin.source.kernel.org ([145.40.73.55]:50724 "EHLO
-        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230021AbhLGIZL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Dec 2021 03:25:11 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 12C73CE19FA;
-        Tue,  7 Dec 2021 08:21:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81803C341C1;
-        Tue,  7 Dec 2021 08:21:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1638865298;
-        bh=81ezBwi4Gw0OWv//xVC704QCQgMXAEKmUfhLMAXppUw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TH/YlLooPpA9/mTXfGh27VFDaRdFSa+QDNfFyBbpv2TI9gDuVVtgDUvWY1cEHZ1rw
-         d7NMMCdgS2zwfOsO2TgrsfOv17Gvprfvs8AAsKoH3ogS+Y6KSf6urrDcjPRlGlksm6
-         2hRfNjvRT3+8vBz3JNDvM7STpvhCM+Qz+yAn683U=
-Date:   Tue, 7 Dec 2021 09:21:35 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: Re: [patch V2 29/31] genirq/msi: Add abuse prevention comment to msi
- header
-Message-ID: <Ya8Zj+bADtKEISSP@kroah.com>
-References: <20211206210600.123171746@linutronix.de>
- <20211206210749.170847844@linutronix.de>
+        id S233443AbhLGJI5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Dec 2021 04:08:57 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7254 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S233444AbhLGJIx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Dec 2021 04:08:53 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1B77GgwY021919;
+        Tue, 7 Dec 2021 09:05:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=w95JY3a0CWtzfwtZh6Iq4UdGzJ9F26M9G2wG6rW1RXw=;
+ b=LH0PiMZl0hIeG+oshQ1UyAKdeVtomZhHJzt3yt/mjLV2aT0FSX+oYhV7vsGqwWNp63cs
+ ebu4H0yEdGND09G4LToe9dPDATykvCSz9HSGYRYHuJ13XnmMrnbn4P+L5QIs5vNYMJ1V
+ 7BPVzS9DEJ3OuF+Dndp3Ozf2ciEcFBWu3lXzANJmivb5R0GMz+NsiIA1O2GuJbD+pzO/
+ W4PzjU2azROAFPKObiXwIXoKE3lpjCRju2EGrNzrrcpYNLiszAqdf02Vbvz3fHPlUsBr
+ LxFc3ZJNl9eYnWPgjvaqh+6R80BUurSFh3RnYEVOAEVZoFBMMZ5R7Y/0B9KrWgqj4bHZ FA== 
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3ct334t3mf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Dec 2021 09:05:13 +0000
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1B793k61007461;
+        Tue, 7 Dec 2021 09:05:12 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma05fra.de.ibm.com with ESMTP id 3cqyy9beer-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Dec 2021 09:05:12 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1B7958Vx12779802
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Dec 2021 09:05:08 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CE5124204F;
+        Tue,  7 Dec 2021 09:05:08 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BCD9642049;
+        Tue,  7 Dec 2021 09:05:08 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  7 Dec 2021 09:05:08 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55271)
+        id 6F651E0792; Tue,  7 Dec 2021 10:05:08 +0100 (CET)
+From:   Alexandra Winter <wintera@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        Alexandra Winter <wintera@linux.ibm.com>
+Subject: [PATCH net-next 0/5] s390/net: updates 2021-12-06
+Date:   Tue,  7 Dec 2021 10:04:47 +0100
+Message-Id: <20211207090452.1155688-1-wintera@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211206210749.170847844@linutronix.de>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ZCMfmYfnS8mq6sEXDlmFqzteq3aA1C4g
+X-Proofpoint-ORIG-GUID: ZCMfmYfnS8mq6sEXDlmFqzteq3aA1C4g
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2021-12-07_03,2021-12-06_02,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 mlxlogscore=999 impostorscore=0 clxscore=1011
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2112070054
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Dec 06, 2021 at 11:51:49PM +0100, Thomas Gleixner wrote:
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  include/linux/msi.h |   14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -2,6 +2,20 @@
->  #ifndef LINUX_MSI_H
->  #define LINUX_MSI_H
->  
-> +/*
-> + * This header file contains MSI data structures and functions which are
-> + * only relevant for:
-> + *	- Interrupt core code
-> + *	- PCI/MSI core code
-> + *	- MSI interrupt domain implementations
-> + *	- IOMMU, low level VFIO, NTB and other justified exceptions
-> + *	  dealing with low level MSI details.
-> + *
-> + * Regular device drivers have no business with any of these functions and
-> + * especially storing MSI descriptor pointers in random code is considered
-> + * abuse. The only function which is relevant for drivers is msi_get_virq().
-> + */
-> +
->  #include <linux/cpumask.h>
->  #include <linux/mutex.h>
->  #include <linux/list.h>
-> 
+Please apply the following patches to netdev's net-next tree.
 
-Ah, to be young and idealistic and hope that kernel developers read
-comments in header files :)
+This brings some maintenance improvements and removes some
+unnecessary code checks.
 
-You might want to add this to the driver-api kernel doc build?
+Julian Wiedmann (5):
+  s390/qeth: simplify qeth_receive_skb()
+  s390/qeth: split up L2 netdev_ops
+  s390/qeth: don't offer .ndo_bridge_* ops for OSA devices
+  s390/qeth: fine-tune .ndo_select_queue()
+  s390/qeth: remove check for packing mode in
+    qeth_check_outbound_queue()
 
-Anyway, looks good to me:
+ drivers/s390/net/qeth_core.h      |  4 +--
+ drivers/s390/net/qeth_core_main.c | 54 +++++++++++++++----------------
+ drivers/s390/net/qeth_l2_main.c   | 52 ++++++++++++++++++-----------
+ drivers/s390/net/qeth_l3_main.c   | 13 +-------
+ 4 files changed, 62 insertions(+), 61 deletions(-)
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+-- 
+2.32.0
+
