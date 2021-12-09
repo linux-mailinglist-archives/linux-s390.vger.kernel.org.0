@@ -2,131 +2,155 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3843B46E2A2
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Dec 2021 07:38:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D917146E34A
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Dec 2021 08:38:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233215AbhLIGmU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Dec 2021 01:42:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233208AbhLIGmU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Dec 2021 01:42:20 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 571FCC061746;
-        Wed,  8 Dec 2021 22:38:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=ouNiv2rrKa9k8QRwbohahE8DrswboT5nHLE2typSANU=; b=N7Rsz6p6yt49RTrhwjWPSlhceD
-        CALFi9S5eAp1bh236cOyKU8rTo3i9jM0Ve/65KnR7XyWCSozmquN1bNVDtfmGmbwJP2yH6h0GCbS7
-        yQDwr9YDSUqRlAuXlee/lzt5Rki0HjojpUSkLQVkrFwVgj/B7pr6Ul1Ju7cdbWRe25k/i9bCL71kc
-        CrSPLQwg91Sok6ItP+daavYVhqBKZ+cqG3qs2Xi5SfzJgfcuPbNIzXp0hJKw4bz1ndQM7ykVSg47z
-        1Fh133uaXd+HQEyu6Xe83YWZwtNGAdulTN089HddpxlBD1XQzIk2ner0wPishkUQppK8mKpuTxdUg
-        TWY3Sgag==;
-Received: from [2001:4bb8:180:a1c8:2d0e:135:af53:41f8] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mvD4d-0096hv-8z; Thu, 09 Dec 2021 06:38:36 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>
-Cc:     Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@infradead.org>, dm-devel@redhat.com,
-        nvdimm@lists.linux.dev, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH 5/5] dax: always use _copy_mc_to_iter in dax_copy_to_iter
-Date:   Thu,  9 Dec 2021 07:38:28 +0100
-Message-Id: <20211209063828.18944-6-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211209063828.18944-1-hch@lst.de>
-References: <20211209063828.18944-1-hch@lst.de>
-MIME-Version: 1.0
+        id S233891AbhLIHl6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Dec 2021 02:41:58 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51236 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229787AbhLIHl6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Dec 2021 02:41:58 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1B97Rk2H004140
+        for <linux-s390@vger.kernel.org>; Thu, 9 Dec 2021 07:38:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=K18KTvTYgMLK0QaoPEVXxMRVcNS+gHcgGj2Ze+jmHkM=;
+ b=cfcPUVsAxOTRDFPKpESLs9fJv4YS8UMv6GLqJKu1qMbzebTn6Rwlta6enzbnax7ZmVo5
+ hsiD5f7bBQWTn8ruwPV0YkLpi2WCBgB0LgXDewNdT1vkhDclfaN+ibgyeVXJ7YxDmVoQ
+ ljYLhcav3Yb4jQGbIL12fulFBmoovjLIgTmPLHGeqfq+FgbqjsY394Cc5QfZYv1Gc8vA
+ 5sT4C6GdDcswOJ9MI3dcAnqYxRlClxa4kKGz4yTa/YdsxyTc+/0QyviHDtal7sUcztUu
+ ozQkiv332XKLFSRfjcHePEk+yO8U6mwm4GYU8hhYtir6ZlECTFbk11LzBp2fNNdLJD62 tw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cudeb06k9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 09 Dec 2021 07:38:25 +0000
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1B97atbt037841
+        for <linux-s390@vger.kernel.org>; Thu, 9 Dec 2021 07:38:24 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cudeb06jn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Dec 2021 07:38:24 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1B97WDUY012584;
+        Thu, 9 Dec 2021 07:38:22 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03fra.de.ibm.com with ESMTP id 3cqyy9vehm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 09 Dec 2021 07:38:22 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1B97cJgM27066776
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Dec 2021 07:38:19 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A65314C046;
+        Thu,  9 Dec 2021 07:38:19 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 677284C059;
+        Thu,  9 Dec 2021 07:38:19 +0000 (GMT)
+Received: from oc8242746057.ibm.com.com (unknown [9.171.4.115])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  9 Dec 2021 07:38:19 +0000 (GMT)
+From:   Alexander Egorenkov <egorenar@linux.ibm.com>
+To:     ltao@redhat.com, prudo@redhat.com
+Cc:     hca@linux.ibm.com, linux-s390@vger.kernel.org
+Subject: [PATCH v2 1/1] s390/kexec: handle R_390_PLT32DBL rela in arch_kexec_apply_relocations_add()
+Date:   Thu,  9 Dec 2021 08:38:17 +0100
+Message-Id: <20211209073817.82196-1-egorenar@linux.ibm.com>
+X-Mailer: git-send-email 2.31.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: arnc0c-bs_y40agDJ5ovu4IhQlNihPpr
+X-Proofpoint-GUID: 6lfgjIUw8Zj0lPS-PxRxEGytyoj2WfUf
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2021-12-09_03,2021-12-08_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ malwarescore=0 suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501
+ lowpriorityscore=0 adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
+ definitions=main-2112090039
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-While using the MC-safe copy routines is rather pointless on a virtual device
-like virtiofs, it also isn't harmful at all.  So just use _copy_mc_to_iter
-unconditionally to simplify the code.
+Starting with gcc 11.3, the C compiler will generate PLT-relative function
+calls even if they are local and do not require it. Later on during linking,
+the linker will replace all PLT-relative calls to local functions with
+PC-relative ones. Unfortunately, the purgatory code of kexec/kdump is
+not being linked as a regular executable or shared library would have been,
+and therefore, all PLT-relative addresses remain in the generated purgatory
+object code unresolved. This leads to the situation where the purgatory
+code is being executed during kdump with all PLT-relative addresses
+unresolved. And this results in endless loops within the purgatory code.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Furthermore, the clang C compiler has always behaved like described above
+and this commit should fix kdump for kernels built with the latter.
+
+Because the purgatory code is no regular executable or shared library,
+contains only calls to local functions and has no PLT, all R_390_PLT32DBL
+relocation entries can be resolved just like a R_390_PC32DBL one.
+
+* https://refspecs.linuxfoundation.org/ELF/zSeries/lzsabi0_zSeries/x1633.html#AEN1699
+
+Relocation entries of purgatory code generated with gcc 11.3
+------------------------------------------------------------
+
+$ readelf -r linux/arch/s390/purgatory/purgatory.o
+
+Relocation section '.rela.text' at offset 0x370 contains 5 entries:
+  Offset          Info           Type           Sym. Value    Sym. Name + Addend
+00000000005c  000c00000013 R_390_PC32DBL     0000000000000000 purgatory_sha_regions + 2
+00000000007a  000d00000014 R_390_PLT32DBL    0000000000000000 sha256_update + 2
+00000000008c  000e00000014 R_390_PLT32DBL    0000000000000000 sha256_final + 2
+000000000092  000800000013 R_390_PC32DBL     0000000000000000 .LC0 + 2
+0000000000a0  000f00000014 R_390_PLT32DBL    0000000000000000 memcmp + 2
+
+Relocation entries of purgatory code generated with gcc 11.2
+------------------------------------------------------------
+
+$ readelf -r linux/arch/s390/purgatory/purgatory.o
+
+Relocation section '.rela.text' at offset 0x368 contains 5 entries:
+  Offset          Info           Type           Sym. Value    Sym. Name + Addend
+00000000005c  000c00000013 R_390_PC32DBL     0000000000000000 purgatory_sha_regions + 2
+00000000007a  000d00000013 R_390_PC32DBL     0000000000000000 sha256_update + 2
+00000000008c  000e00000013 R_390_PC32DBL     0000000000000000 sha256_final + 2
+000000000092  000800000013 R_390_PC32DBL     0000000000000000 .LC0 + 2
+0000000000a0  000f00000013 R_390_PC32DBL     0000000000000000 memcmp + 2
+
+Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+Reported-by: Tao Liu <ltao@redhat.com>
+Suggested-by: Philipp Rudo <prudo@redhat.com>
 ---
- drivers/dax/super.c | 10 ----------
- fs/fuse/virtio_fs.c |  1 -
- include/linux/dax.h |  1 -
- 3 files changed, 12 deletions(-)
+Changes since v1:
+=================
+* Alternative version of the fix but this time in arch_kexec_apply_relocations_add()
+  in order not to force every user of arch_kexec_do_relocs() to handle R_390_PC32DBL
+  and avoid breaking other users with unexpected bhavior 
 
-diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-index ff676a07480c8..fe783234ca669 100644
---- a/drivers/dax/super.c
-+++ b/drivers/dax/super.c
-@@ -107,8 +107,6 @@ enum dax_device_flags {
- 	DAXDEV_SYNC,
- 	/* do not use uncached operations to write data */
- 	DAXDEV_CACHED,
--	/* do not use mcsafe operations to read data */
--	DAXDEV_NOMCSAFE,
- };
+ arch/s390/kernel/machine_kexec_file.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
+index 876cdd3c994e..8f43575a4dd3 100644
+--- a/arch/s390/kernel/machine_kexec_file.c
++++ b/arch/s390/kernel/machine_kexec_file.c
+@@ -348,6 +348,10 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+ 		addr = section->sh_addr + relas[i].r_offset;
  
- /**
-@@ -171,8 +169,6 @@ size_t dax_copy_to_iter(struct dax_device *dax_dev, pgoff_t pgoff, void *addr,
- 	 * via access_ok() in vfs_red, so use the 'no check' version to bypass
- 	 * the HARDENED_USERCOPY overhead.
- 	 */
--	if (test_bit(DAXDEV_NOMCSAFE, &dax_dev->flags))
--		return _copy_to_iter(addr, bytes, i);
- 	return _copy_mc_to_iter(addr, bytes, i);
- }
- 
-@@ -242,12 +238,6 @@ void set_dax_cached(struct dax_device *dax_dev)
- }
- EXPORT_SYMBOL_GPL(set_dax_cached);
- 
--void set_dax_nomcsafe(struct dax_device *dax_dev)
--{
--	set_bit(DAXDEV_NOMCSAFE, &dax_dev->flags);
--}
--EXPORT_SYMBOL_GPL(set_dax_nomcsafe);
--
- bool dax_alive(struct dax_device *dax_dev)
- {
- 	lockdep_assert_held(&dax_srcu);
-diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index 754319ce2a29b..d9c20b148ac19 100644
---- a/fs/fuse/virtio_fs.c
-+++ b/fs/fuse/virtio_fs.c
-@@ -838,7 +838,6 @@ static int virtio_fs_setup_dax(struct virtio_device *vdev, struct virtio_fs *fs)
- 	if (IS_ERR(fs->dax_dev))
- 		return PTR_ERR(fs->dax_dev);
- 	set_dax_cached(fs->dax_dev);
--	set_dax_nomcsafe(fs->dax_dev);
- 	return devm_add_action_or_reset(&vdev->dev, virtio_fs_cleanup_dax,
- 					fs->dax_dev);
- }
-diff --git a/include/linux/dax.h b/include/linux/dax.h
-index d22cbf03d37d2..d267331bc37e7 100644
---- a/include/linux/dax.h
-+++ b/include/linux/dax.h
-@@ -90,7 +90,6 @@ static inline bool daxdev_mapping_supported(struct vm_area_struct *vma,
- #endif
- 
- void set_dax_cached(struct dax_device *dax_dev);
--void set_dax_nomcsafe(struct dax_device *dax_dev);
- 
- struct writeback_control;
- #if defined(CONFIG_BLOCK) && defined(CONFIG_FS_DAX)
+ 		r_type = ELF64_R_TYPE(relas[i].r_info);
++
++		if (r_type == R_390_PLT32DBL)
++			r_type = R_390_PC32DBL;
++
+ 		ret = arch_kexec_do_relocs(r_type, loc, val, addr);
+ 		if (ret) {
+ 			pr_err("Unknown rela relocation: %d\n", r_type);
 -- 
-2.30.2
+2.31.1
 
