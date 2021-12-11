@@ -2,94 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48D094713E1
-	for <lists+linux-s390@lfdr.de>; Sat, 11 Dec 2021 14:04:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0DAC47170A
+	for <lists+linux-s390@lfdr.de>; Sat, 11 Dec 2021 22:59:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230100AbhLKNE4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 11 Dec 2021 08:04:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50978 "EHLO
+        id S231693AbhLKV6c (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 11 Dec 2021 16:58:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbhLKNEz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 11 Dec 2021 08:04:55 -0500
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DA6FC061714;
-        Sat, 11 Dec 2021 05:04:55 -0800 (PST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1639227892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=38/Db3j/tuzM5sMDcn0hVrQ9Hr7pHpt39b3WTf8tlcA=;
-        b=w841xfDqQZN7kBkSecqzjfET5cCxoIWD7sohONld+A4/fywu7mxU8knTNNpYTU3LyTeN5W
-        hRtH4deK3c+Nl6TRFf1ldQT0ovJkupvJfeiLMq5eEpHFYVIlxHcmxXieqT4Q7V9M6AJtpp
-        jtACmPkh4As7iKGiv/EBYxFsPKsv6DfltP4wu30n2Qs63WKtqIIyJ9Y+cuOqwUm8276eg4
-        DHcUAFEiCyFxPO1tRV8LSK84iuPIt1TVLHTvA5g3sgHalhsTOehFHHumjihCQ31gZhZ/+b
-        j/id5XPT9RY+Ol5wMfbOBjmT+T07o6Vcog6FXDxt9dob/IYPDHFTpWDou4an2w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1639227892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=38/Db3j/tuzM5sMDcn0hVrQ9Hr7pHpt39b3WTf8tlcA=;
-        b=F0rZXep58tnqWpssbFXotjfPeO0xx74comw8vNO4zW0sw2COD634KbX4OYtb7JqA/Is+XK
-        Lek77MbqCrvMUzAA==
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     "Jiang, Dave" <dave.jiang@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "x86@kernel.org" <x86@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: RE: [patch 21/32] NTB/msi: Convert to msi_on_each_desc()
-In-Reply-To: <BN9PR11MB527625E8A9BB854F3C0D19AE8C729@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <f4cc305b-a329-6d27-9fca-b74ebc9fa0c1@intel.com>
- <878rx480fk.ffs@tglx>
- <BN9PR11MB52765F2EF8420C60FD5945D18C709@BN9PR11MB5276.namprd11.prod.outlook.com>
- <87sfv2yy19.ffs@tglx> <20211209162129.GS6385@nvidia.com>
- <878rwtzfh1.ffs@tglx> <20211209205835.GZ6385@nvidia.com>
- <8735n1zaz3.ffs@tglx> <87sfv1xq3b.ffs@tglx>
- <BN9PR11MB527619B099061B3814EB40408C719@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20211210123938.GF6385@nvidia.com> <87fsr0xp31.ffs@tglx>
- <BN9PR11MB527625E8A9BB854F3C0D19AE8C729@BN9PR11MB5276.namprd11.prod.outlook.com>
-Date:   Sat, 11 Dec 2021 14:04:52 +0100
-Message-ID: <875yrvwavf.ffs@tglx>
+        with ESMTP id S231700AbhLKV6a (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 11 Dec 2021 16:58:30 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 462F6C061371
+        for <linux-s390@vger.kernel.org>; Sat, 11 Dec 2021 13:58:30 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id c4so20794908wrd.9
+        for <linux-s390@vger.kernel.org>; Sat, 11 Dec 2021 13:58:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=hD0jfu1MWy/UXBkBYsVvOAZPApZLyir6gKavdc4BceI=;
+        b=SOBkDHN1upt351fJGA10IENq8Lskn6OtfiA/mtFXWwbxNo6rK0VqMIikUbNdR10QL9
+         NEz57nH7+DwD4ui2QjR5G0PDUg/x30DeYlpAViKmfLpj6c8owgTXHIRe2HlXrWJIYspc
+         p1qexb7VgQzyxOs2U317jKWC2PVt5FsJQNP/qzuU8HlodfKZxoIrg2Y5u0+UlgiuF7n+
+         KF6xHlFhNhhV0WZH+n1XpQNFkro1//sIniT/eC7+Qq7omDixZHJ42uWefxucVRQsgqoP
+         MP9jAyQEdDJw2KiXunMshfyB4wcDGfWvxehuLHSr6op0i/Er4qRI4zT2OKxsbV2QjSnP
+         PYpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=hD0jfu1MWy/UXBkBYsVvOAZPApZLyir6gKavdc4BceI=;
+        b=zN0gKXhA99DhlKWQ6O7itjlp6vucbie1KA07NXhiXrUztNaLAPy2fX/SXGl8yU0STE
+         fUTus7Jgw5ovk2icDEvTrEYs27E0+WVKCX3mjQyCHupE2SWwMFrUeKwrPC0LYAZRsKOk
+         x9UK3CySnlapUvj/Kj/I3bIql9FP5C2aNz7Tk0xS2d3aoxvrmBWkQZmIzQ2h/nsvn0ex
+         HIPgBFR93KZ4tyCSAkSQPyvtxaQaO/7GHBMNpjdfMLDmNEYGDbKpgcs56Md8h8eFRbw9
+         12lpK9sDMuBiHseQ+IcMkdAAxQFqWiq7/VsFrga9prviuH0tBwM06zhdam7zT36szO96
+         VXsQ==
+X-Gm-Message-State: AOAM532+Ie3fIwmyvBpLxyuH4QSwLluFDUeSWkwh06MXMSOeoKksYZlw
+        F9JU5p8GPqDJ10fZdj/Kd+bTCQ3tWW9GUVoB+GPcxpfJQnDA34uXc54=
+X-Google-Smtp-Source: ABdhPJxTVLquc00JfCv8xmVg6F+Df36Ax6F8m8eI1vWHtjjPBaUzu2dvtxl/29t2QJINStCFpJhLct20UqzajIEroTA=
+X-Received: by 2002:a17:907:6da2:: with SMTP id sb34mr33325880ejc.509.1639259897490;
+ Sat, 11 Dec 2021 13:58:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+Reply-To: martinafrancis022@gmail.com
+Sender: rebeccaalhajidangombe@gmail.com
+Received: by 2002:a17:907:94d3:0:0:0:0 with HTTP; Sat, 11 Dec 2021 13:58:16
+ -0800 (PST)
+From:   Martina Francis <martinafrancis61@gmail.com>
+Date:   Sat, 11 Dec 2021 13:58:16 -0800
+X-Google-Sender-Auth: QI6h_ccu4Os7HpLN5lf7FmNkMqQ
+Message-ID: <CANadOMYJBdKak2aObykULF4gdU88=OTR03g+XDqpCofMfFracg@mail.gmail.com>
+Subject: Bom Dia meu querido
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Kevin,
+--=20
+Bom Dia meu querido,
+Como vai voc=C3=AA hoje, meu nome =C3=A9 Dona Martina Francis, uma vi=C3=BA=
+va doente.
+Eu tenho um fundo de doa=C3=A7=C3=A3o de ($ 2.700.000,00 USD) MILH=C3=95ES =
+que quero
+doar atrav=C3=A9s de voc=C3=AA para ajudar os =C3=B3rf=C3=A3os, vi=C3=BAvas=
+, deficientes
+f=C3=ADsicos e casas de caridade.
 
-On Sat, Dec 11 2021 at 07:44, Kevin Tian wrote:
->> From: Thomas Gleixner <tglx@linutronix.de>
->> On Fri, Dec 10 2021 at 08:39, Jason Gunthorpe wrote:
->> > It is clever, we don't have an vIOMMU that supplies vIR today, so by
->> > definition all guests are excluded and only bare metal works.
->> 
->> Dammit. Now you spilled the beans. :)
->
-> Unfortunately we do have that today. Qemu supports IR for
-> both AMD and Intel vIOMMU.
+Por favor, volte para mim imediatamente ap=C3=B3s ler esta mensagem para
+obter mais detalhes sobre esta agenda humanit=C3=A1ria.
 
-can you point me to the code?
+Deus te aben=C3=A7oe enquanto espero sua resposta.
+Sua irm=C3=A3.
 
-All I can find is drivers/iommu/virtio-iommu.c but I can't find anything
-vIR related there.
-
-Thanks,
-
-        tglx
+Sra. Martina Francis.
