@@ -2,179 +2,157 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5542E471EE9
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Dec 2021 01:06:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E090C471F08
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Dec 2021 01:47:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230266AbhLMAGu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 12 Dec 2021 19:06:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230206AbhLMAGt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 12 Dec 2021 19:06:49 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91BC3C06173F;
-        Sun, 12 Dec 2021 16:06:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=2kcPCntTwKjxs8BtewFrXF8P1gkqleQIfk0SKAzJAwk=; b=mQr3499WyGyralX215DywFDBfN
-        iQSkBf+sr90e/77C2c0q0fb9vvADZHRZMveeQpFhgTFZQTDWUGYu8jlYSMa7n0kiWzstjXXkUdJXS
-        4j4tjRdYEyBRsNbQKaqREi0DhKcg6GOrQcRqqetBFgm3AtA4X6qxSADhtEp64L3VqVpN7GL9S2bBV
-        6ezTmSaRKOb6VaQy8teoC4kM10ozXsVrU05lFxZgT0SthYJMFYAekNsYej9Qsl/NKWFSBK3JE97Me
-        ksIE5s4bwM5vecpn0ZuFlqnSeWnZJ+JfjfFYxFzPx1D7gUikZQ6hjEJzg9XEcz/ladWf95trcOTjl
-        uLsIRGJg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mwYrW-00CIuK-Ag; Mon, 13 Dec 2021 00:06:38 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-        Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        linux-kernel@vger.kernel.org,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH 3/3] vmcore: Convert read_from_oldmem() to take an iov_iter
-Date:   Mon, 13 Dec 2021 00:06:36 +0000
-Message-Id: <20211213000636.2932569-4-willy@infradead.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211213000636.2932569-1-willy@infradead.org>
-References: <20211213000636.2932569-1-willy@infradead.org>
+        id S230437AbhLMAr5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 12 Dec 2021 19:47:57 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20292 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229540AbhLMAr4 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 12 Dec 2021 19:47:56 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BCLvUvs016229;
+        Mon, 13 Dec 2021 00:47:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=zOt3Vw1U7V5T99tnwjAB0hqFcNcT+qcheJmHQjaOsDc=;
+ b=F8/JJF/CMQkwYdXH2gOkspH9BGznTIlmEjk2tbDT3cNiGruZxPmgEZscKF4w97q2zlVS
+ /iOWD8O48zgbDaTfQlAXVBOTmN6PffuB72Cd592G3Xs/tJNjARJIsLnWGpTQkt3ifdr9
+ 0qbdA3btRtclEt+RGPuEpfGFhbhMOuImS7Jz8/32qQnP0g2arS52oD97X1ML2/+bDGCI
+ uqj4AKPrGwlwBNwJt7NDpIgwuv8PtKv5d+9/sktwcP4ZTcQV0XY9rfguTnrhc2eV5Lm7
+ 2sB/XNmMJiQu3O2mrxoN9jlk4lcx9Qu3GD/wRICTU2STJiO0rn2TfFstVmlEsuMlct4l 4Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cwsf0sxxb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Dec 2021 00:47:02 +0000
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1BD0h65K010409;
+        Mon, 13 Dec 2021 00:47:02 GMT
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3cwsf0sxx0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Dec 2021 00:47:01 +0000
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1BD0hleo005625;
+        Mon, 13 Dec 2021 00:47:00 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma01dal.us.ibm.com with ESMTP id 3cvkm9rffq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Dec 2021 00:47:00 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1BD0kwtg25887224
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Dec 2021 00:46:58 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F1EDE124054;
+        Mon, 13 Dec 2021 00:46:57 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 14392124055;
+        Mon, 13 Dec 2021 00:46:54 +0000 (GMT)
+Received: from [9.211.121.29] (unknown [9.211.121.29])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 13 Dec 2021 00:46:53 +0000 (GMT)
+Message-ID: <17153a1c-86c6-6ffd-35d6-5329829661df@linux.vnet.ibm.com>
+Date:   Sun, 12 Dec 2021 19:46:53 -0500
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v2 2/6] powerpc/kexec_file: Add KEXEC_SIG support.
+Content-Language: en-US
+To:     Michal Suchanek <msuchanek@suse.de>, keyrings@vger.kernel.org
+Cc:     kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Rob Herring <robh@kernel.org>, linux-s390@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Frank van der Linden <fllinden@amazon.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Daniel Axtens <dja@axtens.net>, buendgen@de.ibm.com,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Baoquan He <bhe@redhat.com>, linux-crypto@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+References: <cover.1637862358.git.msuchanek@suse.de>
+ <8b30a3c6a4e845eb77f276298424811897efdebf.1637862358.git.msuchanek@suse.de>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+In-Reply-To: <8b30a3c6a4e845eb77f276298424811897efdebf.1637862358.git.msuchanek@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: YD7rJlLgYd2Udqtt5LalPdJn3WE0YgaV
+X-Proofpoint-ORIG-GUID: gG1gdafl-3bV4bqCZbyCCQ71PQZVX-ez
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2021-12-12_10,2021-12-10_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 spamscore=0 priorityscore=1501 bulkscore=0
+ phishscore=0 mlxlogscore=999 impostorscore=0 clxscore=1015 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2112130001
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Remove the read_from_oldmem() wrapper introduced earlier and convert
-all the remaining callers to pass an iov_iter.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- arch/x86/kernel/crash_dump_64.c |  7 +++++-
- fs/proc/vmcore.c                | 40 +++++++++++++--------------------
- include/linux/crash_dump.h      | 10 ++++-----
- 3 files changed, 25 insertions(+), 32 deletions(-)
+On 11/25/21 13:02, Michal Suchanek wrote:
+> Copy the code from s390x
+>
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+>   arch/powerpc/Kconfig        | 11 +++++++++++
+>   arch/powerpc/kexec/elf_64.c | 36 ++++++++++++++++++++++++++++++++++++
+>   2 files changed, 47 insertions(+)
+>
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index ac0c515552fd..ecc1227a77f1 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -561,6 +561,17 @@ config KEXEC_FILE
+>   config ARCH_HAS_KEXEC_PURGATORY
+>   	def_bool KEXEC_FILE
+>
+> +config KEXEC_SIG
+> +	bool "Verify kernel signature during kexec_file_load() syscall"
+> +	depends on KEXEC_FILE && MODULE_SIG_FORMAT
+> +	help
+> +	  This option makes kernel signature verification mandatory for
+> +	  the kexec_file_load() syscall.
+> +
 
-diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
-index 8d91e5f2e14d..991e09b80852 100644
---- a/arch/x86/kernel/crash_dump_64.c
-+++ b/arch/x86/kernel/crash_dump_64.c
-@@ -68,6 +68,11 @@ ssize_t copy_oldmem_page_encrypted(struct iov_iter *iter, unsigned long pfn,
- 
- ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0,
-+	struct kvec kvec = { .iov_base = buf, .iov_len = count };
-+	struct iov_iter iter;
-+
-+	iov_iter_kvec(&iter, READ, &kvec, 1, count);
-+
-+	return read_from_oldmem(&iter, count, ppos,
- 				cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
- }
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 443cbaf16ec8..986474f02a02 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -132,7 +132,7 @@ static int open_vmcore(struct inode *inode, struct file *file)
- }
- 
- /* Reads a page from the oldmem device from given offset. */
--ssize_t read_from_oldmem_iter(struct iov_iter *iter, size_t count,
-+ssize_t read_from_oldmem(struct iov_iter *iter, size_t count,
- 			 u64 *ppos, bool encrypted)
- {
- 	unsigned long pfn, offset;
-@@ -180,27 +180,6 @@ ssize_t read_from_oldmem_iter(struct iov_iter *iter, size_t count,
- 	return read;
- }
- 
--ssize_t read_from_oldmem(char *buf, size_t count,
--			 u64 *ppos, int userbuf,
--			 bool encrypted)
--{
--	struct iov_iter iter;
--	struct iovec iov;
--	struct kvec kvec;
--
--	if (userbuf) {
--		iov.iov_base = (__force void __user *)buf;
--		iov.iov_len = count;
--		iov_iter_init(&iter, READ, &iov, 1, count);
--	} else {
--		kvec.iov_base = buf;
--		kvec.iov_len = count;
--		iov_iter_kvec(&iter, READ, &kvec, 1, count);
--	}
--
--	return read_from_oldmem_iter(&iter, count, ppos, encrypted);
--}
--
- /*
-  * Architectures may override this function to allocate ELF header in 2nd kernel
-  */
-@@ -220,7 +199,12 @@ void __weak elfcorehdr_free(unsigned long long addr)
-  */
- ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, false);
-+	struct kvec kvec = { .iov_base = buf, .iov_len = count };
-+	struct iov_iter iter;
-+
-+	iov_iter_kvec(&iter, READ, &kvec, 1, count);
-+
-+	return read_from_oldmem(&iter, count, ppos, false);
- }
- 
- /*
-@@ -228,7 +212,13 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-  */
- ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, cc_platform_has(CC_ATTR_MEM_ENCRYPT));
-+	struct kvec kvec = { .iov_base = buf, .iov_len = count };
-+	struct iov_iter iter;
-+
-+	iov_iter_kvec(&iter, READ, &kvec, 1, count);
-+
-+	return read_from_oldmem(&iter, count, ppos,
-+			cc_platform_has(CC_ATTR_MEM_ENCRYPT));
- }
- 
- /*
-@@ -405,7 +395,7 @@ static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
- 					    m->offset + m->size - *fpos,
- 					    iter->count);
- 			start = m->paddr + *fpos - m->offset;
--			tmp = read_from_oldmem_iter(iter, tsz, &start,
-+			tmp = read_from_oldmem(iter, tsz, &start,
- 					cc_platform_has(CC_ATTR_MEM_ENCRYPT));
- 			if (tmp < 0)
- 				return tmp;
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index a1cf7d5c03c7..0f3a656293b0 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -134,13 +134,11 @@ static inline int vmcore_add_device_dump(struct vmcoredd_data *data)
- #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
- 
- #ifdef CONFIG_PROC_VMCORE
--ssize_t read_from_oldmem(char *buf, size_t count,
--			 u64 *ppos, int userbuf,
--			 bool encrypted);
-+ssize_t read_from_oldmem(struct iov_iter *iter, size_t count,
-+			 u64 *ppos, bool encrypted);
- #else
--static inline ssize_t read_from_oldmem(char *buf, size_t count,
--				       u64 *ppos, int userbuf,
--				       bool encrypted)
-+static inline ssize_t read_from_oldmem(struct iov_iter *iter, size_t count,
-+				       u64 *ppos, bool encrypted)
- {
- 	return -EOPNOTSUPP;
- }
--- 
-2.33.0
+Resending my last response as looks like it didn't go through mailing 
+list because of some wrong formatting. My apologies to those who are 
+receiving it twice.
+
+Since powerpc also supports IMA_ARCH_POLICY for kernel image signature 
+verification, please include the following:
+
+"An alternative implementation for the powerpc arch is IMA_ARCH_POLICY. 
+It verifies the appended kernel image signature and additionally 
+includes both the signed and unsigned file hashes in the IMA measurement 
+list, extends the IMA PCR in the TPM, and prevents blacklisted binary 
+kernel images from being kexec'd."
+
+Thanks & Regards,
+
+     - Nayna
 
