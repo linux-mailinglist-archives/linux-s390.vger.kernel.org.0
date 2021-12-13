@@ -2,128 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D01994730BE
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Dec 2021 16:45:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41BD347314D
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Dec 2021 17:11:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237071AbhLMPpL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 13 Dec 2021 10:45:11 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52212 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S234484AbhLMPpK (ORCPT
+        id S240483AbhLMQLP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 13 Dec 2021 11:11:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:32574 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236838AbhLMQLO (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 13 Dec 2021 10:45:10 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BDEvQOV017736;
-        Mon, 13 Dec 2021 15:45:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=k/TuME2AJGqJsBHTZ2Rb+3YeCtineC0vq6GNn0aKE8Y=;
- b=TpkVnzz12XYRPqWnvJXYzU805DMGf1Ygk2HCGAVklWhdc5du6+QH0OdGq2GZlE05aB2n
- MIZRNvn2YLZB5szjvI0KGvGhztK1D0auab85KYR5ni8GVxKotvm2s2s7HfSxyJxZTP71
- 0j9ktduE6x+eml5jobhIVa3moTmrq+uRFxgilTR/fla9/7xzvTwqiMrbSPHCkQHPNmhf
- q+xV8RzKnGjg8w2UUwccWIfaamjjS4b721ctiGyYdI83XEAcKOF52SJbQrposqlfo8NY
- Q0JmLmngRL/s5uOH7kMkqYiGZP2kGV43Uoyz2I6Yg99TkU3+kMuWha2acFm0mIX8jQlV kA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cx8d4h6q4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Dec 2021 15:45:10 +0000
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1BDEwnRw023469;
-        Mon, 13 Dec 2021 15:45:09 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cx8d4h6p9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Dec 2021 15:45:09 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1BDFiWkW001673;
-        Mon, 13 Dec 2021 15:45:07 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 3cvkma6fet-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Dec 2021 15:45:07 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1BDFj3rp44761536
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Dec 2021 15:45:03 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D060511C058;
-        Mon, 13 Dec 2021 15:45:03 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B14B11C05E;
-        Mon, 13 Dec 2021 15:45:03 +0000 (GMT)
-Received: from [9.171.24.181] (unknown [9.171.24.181])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 13 Dec 2021 15:45:03 +0000 (GMT)
-Message-ID: <1b2903fa-7b83-418d-8fa6-9bdf9ad19640@linux.ibm.com>
-Date:   Mon, 13 Dec 2021 16:46:07 +0100
+        Mon, 13 Dec 2021 11:11:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639411873;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kxYrzFZ5aQZcKiNKGplZGCKDDpbz86OviVlYCbHfgJI=;
+        b=dnSl93OrH9B0gxCc9yU3sv5pTZJN03almxo8hGcXoQ8hiZMBMgVRXmpyZeoqioU38Yc8T1
+        fUTFN5qyGGIfljzMF+bP0efeU7gHl/s8bibIWx7udg0yduVb7mCG4BULv2PMHScpNR1w4W
+        nIkaS2uSGIT2i4jQ5MeaFpX9h67QStg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-598-M7kOco1jPqi7Bew0bBlfBw-1; Mon, 13 Dec 2021 11:11:10 -0500
+X-MC-Unique: M7kOco1jPqi7Bew0bBlfBw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C996185EE69;
+        Mon, 13 Dec 2021 16:11:08 +0000 (UTC)
+Received: from localhost (unknown [10.39.193.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6A106ADCB;
+        Mon, 13 Dec 2021 16:11:08 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Harald Freudenberger <freude@linux.ibm.com>,
+        Thomas Huth <thuth@redhat.com>, linux-s390@vger.kernel.org,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [RFC PATCH] s390: vfio-ap: Register the vfio_ap module for the
+ "ap" parent bus
+In-Reply-To: <8512bb0a-a34a-09b0-65f3-781f3d092364@linux.ibm.com>
+Organization: Red Hat GmbH
+References: <20211201141110.94636-1-thuth@redhat.com>
+ <8512bb0a-a34a-09b0-65f3-781f3d092364@linux.ibm.com>
+User-Agent: Notmuch/0.34 (https://notmuchmail.org)
+Date:   Mon, 13 Dec 2021 17:11:06 +0100
+Message-ID: <87k0g8scx1.fsf@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH v5 1/1] s390x: KVM: accept STSI for CPU topology
- information
-Content-Language: en-US
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, cohuck@redhat.com,
-        david@redhat.com, thuth@redhat.com, gor@linux.ibm.com
-References: <20211122131443.66632-1-pmorel@linux.ibm.com>
- <20211122131443.66632-2-pmorel@linux.ibm.com>
- <20211209133616.650491fd@p-imbrenda> <YbImqX/NEus71tZ1@osiris>
- <fbc46b35-10af-2c7e-6e47-e4987070ad83@linux.ibm.com>
- <YbdlDFLjZzpC6RRd@osiris>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-In-Reply-To: <YbdlDFLjZzpC6RRd@osiris>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 4D2Z7C5qDideuvog92lsq0xClxYEDLjc
-X-Proofpoint-ORIG-GUID: OW728l3AKLNzJEcC8le5Ufmenxx2dXzv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2021-12-13_07,2021-12-13_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 spamscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=904
- malwarescore=0 bulkscore=0 impostorscore=0 clxscore=1015 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2112130099
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Mon, Dec 13 2021, Harald Freudenberger <freude@linux.ibm.com> wrote:
 
-
-On 12/13/21 16:21, Heiko Carstens wrote:
-> On Mon, Dec 13, 2021 at 03:26:58PM +0100, Pierre Morel wrote:
->>> Why is this assumption necessary? The statement that Linux runs only
->>> with horizontal polarization is not true.
->>>
+> On 01.12.21 15:11, Thomas Huth wrote:
+>> The crypto devices that we can use with the vfio_ap module are sitting
+>> on the "ap" bus, not on the "vfio_ap" bus that the module defines
+>> itself. With this change, the vfio_ap module now gets automatically
+>> loaded if a supported crypto adapter is available in the host.
 >>
->> Right, I will rephrase this as:
+>> Signed-off-by: Thomas Huth <thuth@redhat.com>
+>> ---
+>>  Note: Marked as "RFC" since I'm not 100% sure about it ...
+>>        please review carefully!
 >>
->> "Polarization change is not taken into account, QEMU intercepts queries for
->> polarization change (PTF) and only provides horizontal polarization
->> indication to Guest's Linux."
+>>  drivers/s390/crypto/vfio_ap_drv.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> @Heiko, I did not find any usage of the polarization in the kernel other
->> than an indication in the sysfs. Is there currently other use of the
->> polarization that I did not see?
-> 
-> You can change polarization by writing to /sys/devices/system/cpu/dispatching.
-> 
-> Or alternativel use the chcpu tool to change polarization. There is
-> however no real support for vertical polarization implemented in the
-> kernel. Therefore changing to vertical polarization is _not_
-> recommended, since it will most likely have negative performance
-> impacts on your Linux system.
-> However the interface is still there for experimental purposes.
-> 
+>> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfi=
+o_ap_drv.c
+>> index 4d2556bc7fe5..5580e40608a4 100644
+>> --- a/drivers/s390/crypto/vfio_ap_drv.c
+>> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+>> @@ -39,7 +39,7 @@ static struct ap_device_id ap_queue_ids[] =3D {
+>>  	{ /* end of sibling */ },
+>>  };
+>>=20=20
+>> -MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
+>> +MODULE_DEVICE_TABLE(ap, ap_queue_ids);
+>>=20=20
+>>  /**
+>>   * vfio_ap_queue_dev_probe:
+> I had a chance to check this now.
+> First I have to apologize about the dispute with vfio devices appearing o=
+n the ap bus.
+> That's not the case with this patch. As Connie states the MODULE_DEVICE_T=
+ABLE() does not
+> change the parent of a device and vfio_ap_drv is a driver for ap devices =
+and thus
+> belongs to the ap bus anyway.
+> So what's left is that with this change the vfio_ap kernel module is auto=
+matically loaded
+> when an ap device type 10-13 is recognized by the ap bus. So the intentio=
+n of the patch
+> is fulfilled.
+> Yet another kernel module which may occupy memory but will never get used=
+ by most customers.
+> This may not be a problem but I had a glance at the list of kernel module=
+s loaded on my
+> LPAR with and without the patch and the difference is:
+> ...
+> kvm=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 512000=C2=A0 1 vfio_ap
+> vfio_ap=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 28672=C2=A0 0
+> ...
+> So the vfio_ap module has a dependency to the biggest kernel module ever =
+- kvm.
+> Do I need to say something more?
+>
+> If this dependency is removed then I would not hesitate to accept this pa=
+tch. However
+> this is up to Tony as he is the maintainer of the vfio ap device driver.
 
-Thanks, so I guess that not reflecting polarization changes to the guest 
-topology will be OK for the moment.
-Of course, I will change the wrong comment.
+I don't think you can drop the kvm reference, as the code in vfio-ap
+obviously depends on it...
 
--- 
-Pierre Morel
-IBM Lab Boeblingen
+One possibility is simply blocking autoload of the module in userspace by
+default, and only allow it to be loaded automatically when e.g. qemu-kvm
+is installed on the system. This is obviously something that needs to be
+decided by the distros.
+
+(kvm might actually be autoloaded already, so autoloading vfio-ap would
+not really make it worse.)
+
