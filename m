@@ -2,127 +2,85 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D2E4477026
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Dec 2021 12:26:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 107DA4770B7
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Dec 2021 12:42:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236661AbhLPL0F (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Dec 2021 06:26:05 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61576 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S236647AbhLPL0C (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Dec 2021 06:26:02 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BGAfm37005116;
-        Thu, 16 Dec 2021 11:26:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=qhejk9Xe+Hy4NuzX0gEZGgDr2UCHbSBZ3zggci4eepc=;
- b=QQ7OpSFP/PNrkIENKMKSPUToZHUihKKEyPlG6nG4if2OR/fAAngY4ABkwHOZTkDP0Xhw
- WwDW/O5pQelKGPAN+P7Zl68BpwSbWPL2dPoM4EhugYUCkyvPyPAPfo2LQyFXTMqhvq+B
- JLQQoukPZ65UAWWUlxXRwON63sAaWF3BFpPNIUxHTspdrwNPTJ4c1sUU9aTWcfqfuMJF
- 4STfR9OG4dKQ4qfSQLYNTsUAXVMSoYRN3k1bTZxP60nrQWZmTPX4mIkT8wYa8IxjuOYg
- 6+sUBTEiDqhKY8wcJfNlt+cRhqZHH1kEJ8ndFokDRxuSGK4hfg4qPDPf8LVFS79KqH+X HA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cye125n57-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Dec 2021 11:26:01 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1BGAtRbL013908;
-        Thu, 16 Dec 2021 11:26:01 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3cye125n4q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Dec 2021 11:26:01 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1BGBBjcd024404;
-        Thu, 16 Dec 2021 11:25:59 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 3cy7qw678q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Dec 2021 11:25:59 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1BGBPtIo33685958
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Dec 2021 11:25:55 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B6CEE4C058;
-        Thu, 16 Dec 2021 11:25:55 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3025B4C05A;
-        Thu, 16 Dec 2021 11:25:55 +0000 (GMT)
-Received: from li-e979b1cc-23ba-11b2-a85c-dfd230f6cf82 (unknown [9.171.42.46])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Thu, 16 Dec 2021 11:25:55 +0000 (GMT)
-Date:   Thu, 16 Dec 2021 12:25:52 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Thomas Huth <thuth@redhat.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Jason Herne <jjherne@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Subject: Re: [RFC PATCH] s390: vfio-ap: Register the vfio_ap module for the
- "ap" parent bus
-Message-ID: <20211216122552.0ee1b998.pasic@linux.ibm.com>
-In-Reply-To: <87r1acrfzi.fsf@redhat.com>
-References: <20211201141110.94636-1-thuth@redhat.com>
-        <8512bb0a-a34a-09b0-65f3-781f3d092364@linux.ibm.com>
-        <87k0g8scx1.fsf@redhat.com>
-        <1eb9ca5c-b1bb-b768-64ee-e4a1b31bb171@linux.ibm.com>
-        <6aaf6c60-a258-29e3-fcec-82c77d3945a4@redhat.com>
-        <87tufaqbex.fsf@redhat.com>
-        <20211216000229.7a284661.pasic@linux.ibm.com>
-        <87r1acrfzi.fsf@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: tav5ChsLlnpMwU0_PgLPU6mkSst4IlK_
-X-Proofpoint-ORIG-GUID: jBoMzwEckF-4xLMVg4DDRuy6qhbRpKVw
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        id S233647AbhLPLmv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Dec 2021 06:42:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233676AbhLPLmm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Dec 2021 06:42:42 -0500
+Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DA7AC061373
+        for <linux-s390@vger.kernel.org>; Thu, 16 Dec 2021 03:42:40 -0800 (PST)
+Received: by mail-io1-xd2a.google.com with SMTP id 14so34623269ioe.2
+        for <linux-s390@vger.kernel.org>; Thu, 16 Dec 2021 03:42:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=xre5um49Rnqa1tZMCD58Cd6UlD4MleswKAp3tzt2gjo=;
+        b=XAiY5JQCbKhUV3kfV68NxknTY8076aQ+jZiIG+NNSnrj8SbWsLA5ZyVis9Hv7MDsX5
+         Wp1aJ8rEmDfQ1U3vhA+W5Q6fUW0sQxhqwaHiosPbQFbyYijHt4Icvm/T0vEK5/kKmBc+
+         QqELCOAj0es+5TzRQyWwGBhwQGehjbOewfhMN3/S4hQw7QoR6Y3+tDzh1TbUcqm1TT9t
+         NYT2/qpfB6ahTcpnyVYoBu/0br0EmuZ66fyA68h0ieuZcBkGcxPgfheRqd2GHCJMPyzP
+         6QgpFUXd/uCVTtz1/hZUUGudKd9Q0ZImcSJeB1tjd8lIsCPvJkt1eKVnbTcB60Kk9v0/
+         CoRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=xre5um49Rnqa1tZMCD58Cd6UlD4MleswKAp3tzt2gjo=;
+        b=Lhkz3jZ87IeUPjQw7k4CtVwhKaPpOX84uQNtasu6mcuGg8hjQdZe9hMQfKKKWieaSf
+         cT1BmNu9m5M5rUrTnpZbVcgDw6fbtJmuGueHh+5cPQCxqljKfs6SabLfL22rhuM/qtMj
+         3pKvI/WlAJqvg7QUBeEybjRxJ3btnvqaGuL9CU7gXfk+iJOSJAGa3ycu/l9KBkDQULIe
+         +JdkHWjeH3E0t0ua3SGUGz6sQovuwOP4gfsETOuLIFr0Nuji5SlUT3ClcXnsUEDpjuI5
+         7niEE1hS7suAmIB3yqpo/ok7XKtoIIuMT4CRccpgL9MvHe8L4uUavywegM4R/RcVGiIZ
+         X36g==
+X-Gm-Message-State: AOAM533lHfl6mhgT2+Rdf8knImjTotkdSgTDN+OhphFFiW5z+EaxeA2I
+        VXvmmJTlts520PBqJQ+MouN3wI1tLhx8BdroJa5iy1nJ6RA=
+X-Google-Smtp-Source: ABdhPJxzAaV5DauAecsJzqBWmheSvDxk3ghiLfb6YRovClVg4kL4yUlGwYUFAnV+1q8jYrfo3AT6l8iJutzsg/2jTPA=
+X-Received: by 2002:a05:622a:1d4:: with SMTP id t20mr16497208qtw.84.1639654948506;
+ Thu, 16 Dec 2021 03:42:28 -0800 (PST)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2021-12-16_04,2021-12-16_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 impostorscore=0 spamscore=0 clxscore=1015
- adultscore=0 mlxscore=0 lowpriorityscore=0 phishscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2112160063
+Received: by 2002:a05:622a:199c:0:0:0:0 with HTTP; Thu, 16 Dec 2021 03:42:28
+ -0800 (PST)
+Reply-To: selviasantiago1@gmail.com
+From:   Selvia Santiago <mariamatinez119@gmail.com>
+Date:   Thu, 16 Dec 2021 11:42:28 +0000
+Message-ID: <CAONDhKOtxcgjB1YEPd0RXNOVbbQ8k-9k32v_cdFxEKFzk62kJg@mail.gmail.com>
+Subject: Urgent
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 16 Dec 2021 11:39:13 +0100
-Cornelia Huck <cohuck@redhat.com> wrote:
+-- 
+Urgent
 
-> > Also what does vfio-pci do? As far as I can tell vfio-pci does not
-> > participate in module auto loading just because there are pci devices.
-> > The have some smart override I don't quite understand:
-> > https://patchwork.ozlabs.org/project/linux-pci/patch/20210826103912.128972-11-yishaih@nvidia.com/
-> > Before, I don't think they had a MODULE_DEVICE_TABLE:
-> > https://elixir.bootlin.com/linux/v5.8.18/source/drivers/vfio/pci/vfio_pci.c  
-> 
-> I don't think it makes sense to look at pci for inspiration here; they
-> have a myriad of different device types, while ap only has a few (and
-> probably not that many different ones on a given system), and css only
-> has one that really matters.
+I am Mrs. Selvia Santiago from Abidjan, Cote D'Ivoire, I am a widow
+suffering from long time illness (Cancer), there is funds I inherited
+from my late loving husband Mr. Santiago Carlos, the sum of (US$2.7
+Million Dollars) which he deposited in bank before his death, I need a
+honest and Faithful person that can use these funds for humanity work.
 
-I really don't understand how they having a myraid of different device
-types is relevant here. Are they not taking care of that by using
-PCI_ANY_ID anyway? Can you please explain?
+I took this decision because I don't have any child that will inherit
+this money and I don't want a situation where this money will be used
+in an ungodly way. That is why I am taking this decision, and my
+doctor has confirmed to me that I have less than two weeks to live,
+having known my condition I decided to donate this fund to a charity
+or individual that will utilize this money to assist the poor and the
+needy in accordance to my instructions.
 
-Please have another look at the commit message of 
-cc6711b0bf36 ("PCI / VFIO: Add 'override_only' support for VFIO PCI sub system").
-They generate alias(es) that catch every PCI device (via PCI_ANY_ID), but
-in a way that precludes auto-loading and enables a generic 'override'
-algorithm.
+I want you to use 70% of this funds for orphanages, school, church,
+widows, propagating the word and other humanity works,The remaining
+30% should be yours for your efforts as the new beneficiary.
 
-Regards,
-Halil
+Please if you would be able to use these funds for humanity work
+kindly reply me. As soon as I have received your response, I will give
+you further directives on how you are to go about the claims of the
+said funds.
+
+Remain blessed.
+Mrs Selvia Santiago.
