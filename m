@@ -2,114 +2,85 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6291B47EDFE
-	for <lists+linux-s390@lfdr.de>; Fri, 24 Dec 2021 10:48:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF8F547F1D8
+	for <lists+linux-s390@lfdr.de>; Sat, 25 Dec 2021 05:55:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352322AbhLXJsY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 24 Dec 2021 04:48:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47340 "EHLO
+        id S229658AbhLYEyz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 24 Dec 2021 23:54:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241582AbhLXJsX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 24 Dec 2021 04:48:23 -0500
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B436C061401
-        for <linux-s390@vger.kernel.org>; Fri, 24 Dec 2021 01:48:23 -0800 (PST)
-Received: by mail-qt1-x844.google.com with SMTP id z9so7225142qtj.9
-        for <linux-s390@vger.kernel.org>; Fri, 24 Dec 2021 01:48:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=DA2RfWm5BfTc8dY4tRUxJejPvziWb2AgHmDwtjqgqi8=;
-        b=C5q/mHWRgb2APqDruL/ApPdmB4lvChGRYugTbWKnfvrKxxGxBl3I53D+FnUAnFFKUB
-         YrGqBkW/FCQB9MP7wKBMOyXRXgsDTLGBOZYK0bTEPHvh+zhHlKk1SjR360xq4HU/4eNQ
-         DEC8vX16Ui23H90HKppBIYznNzS6aSenlfY82Uf/2YfoTp3vnaE8lBMd37f314LICUYG
-         zx192tUdnD1sb6Fq5fqhVBEYNCy4OyVrUnAlRcDV0A5UIL/ND9UhYd6nOn5oYGQUszkw
-         YWYXHzPUk1GiWBHVWN/gL6gdKlkdENU2fWvhfo/yUSenj+tD5yOJcMK7TI8tCDiilTKq
-         GpWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=DA2RfWm5BfTc8dY4tRUxJejPvziWb2AgHmDwtjqgqi8=;
-        b=pbwpFtlmaaJ4kSlOVgyz43t2B+pP2DNCMN/RuBGfYqheQQJktha/oHL0Dnvn1DzGp9
-         4Yx1Q3D0jT8JIN+8MdqigRcdsZJZ6ZNbu+au8aslR/m9+5YN9IxoaG8QRURWCw6+CSL5
-         wwzqRciPJ+oIM85YVmN0XUp0xZ1yqAyOJAdMHcRo46DVR02a/GLs5YnPyb8vU9SYt/ZA
-         fnrd+peRNzCJ7dzx4ERZCLgPP/D/LDUNsd0cKyqPvG80ar9+Yj87onciZvqJeXY2x+Zx
-         lADib+idTjS//DmQng8d6W8leP+6rUFC4PnRv+0BNMAp5nVX9AGpPeVDvhASpdKAKOP4
-         T3OQ==
-X-Gm-Message-State: AOAM533PW8cn1EnA9xjNixPS4tnhQrAXqLbtK56uer4A3Sk76bFYNe84
-        wMvNmFlqkQH9XVYFLOjpU6FsvVJk1/6T9v8rjKA=
-X-Google-Smtp-Source: ABdhPJw02X0MQAyduLoLe4Wg/rQ+MFUaawPblP9xrq7UukH3Pjx3S8GNm9jzN8Intn58lN4vE4Y5sZEQ9QrjWGGdpQI=
-X-Received: by 2002:a05:622a:134f:: with SMTP id w15mr4898687qtk.561.1640339302619;
- Fri, 24 Dec 2021 01:48:22 -0800 (PST)
+        with ESMTP id S229559AbhLYEyy (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 24 Dec 2021 23:54:54 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A01DC061401;
+        Fri, 24 Dec 2021 20:54:54 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D1C25B80AEA;
+        Sat, 25 Dec 2021 04:54:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35F98C36AE9;
+        Sat, 25 Dec 2021 04:54:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640408091;
+        bh=G9+BUfbfli+fFvrXVVfvrmWFJpu5MjiXo507Oal3Bt8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YkAkjARgZSI77tGg5SS/eW84LcQsMnmxJXKtRnBn3C+HhYHzBTtnAN55uGhwb1Aiy
+         RfUTJxyb8ffODA0hvpJy3jM+Gi2/GO2cTqjm9z1BWjanVrRikV7S9BF7IhuwAJN21U
+         qlV0g9cYW+hxQzZxqex4poh25/7gNpmWvcriZoy5ELI9Qy7ny7+vfqvODLzUgRr0+K
+         3Na/XcnfQ05N5Ug86oHkbjJvlo0vPNGyO1SqEsuHjrAH8AvSt3f+qr51geHq00JpuW
+         Dscy/FyBKDXPFmaqHpf4oAF5FjiQxZW0cTnsX3zgThhQ4a5qTIcRJX3lpXN7c3ERoW
+         ecDiiSTt//6Zg==
+From:   guoren@kernel.org
+To:     guoren@kernel.org, will@kernel.org, tglx@linutronix.de,
+        benh@kernel.crashing.org, arnd@arndb.de, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        christophe.leroy@csgroup.eu
+Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.or,
+        linuxppc-dev@lists.ozlabs.org, inux-parisc@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        x86@kernel.org, Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH V2 0/8] sched: Remove unused TASK_SIZE_OF
+Date:   Sat, 25 Dec 2021 12:54:22 +0800
+Message-Id: <20211225045430.2868608-1-guoren@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Received: by 2002:ad4:5c62:0:0:0:0:0 with HTTP; Fri, 24 Dec 2021 01:48:22
- -0800 (PST)
-Reply-To: williamsreneta2019@gmail.com
-From:   MISS WILLIAMS <info.turvateealfastar@gmail.com>
-Date:   Fri, 24 Dec 2021 01:48:22 -0800
-Message-ID: <CAM-qQYb=XRCQ348mnUh1mvzGuGV+t1_Hj4pAGA+UD99bQuuyZg@mail.gmail.com>
-Subject: Greetings Dearest One,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Greetings Dearest One,
+From: Guo Ren <guoren@linux.alibaba.com>
 
-How are you today, together with your family?Hope fine.I would like to
-use this opportunity to introduce myself to you. I am Miss Reneta
-Williams, From Benin Republic, West Africa. And my late parents are
-Mr. and Mrs. Dikko Williams; my father was a highly reputable business
-magnet who operated in Benin Republic during his days.
+This macro isn't used in Linux, now. Delete in include/linux/sched.h
+and arch's include/asm. This would confuse people who are
+implementing the COMPAT feature for architecture.
 
-I am writing this mail to you with tears and sorrow from my heart.
-With due respect trust and humanity, I know this mail will come to you
-as a surprise since we haven't known or come across each other before,
-considering the fact that I sourced your email contact through the
-Internet in search of trusted person who can be trusted and will
-assist me.
+Changes in v2:
+ - Add Arnd's comment in main patch
+ - Optimize coding convention with Christophe's advise
 
-It is sad to say that he passed away mysteriously in France during one
-of his business trips abroad. Though his sudden death was linked or
-rather suspected to have been masterminded by an uncle of his who
-traveled with him at that time. But God knows the truth! My mother
-died when I was just 6yrs old, and since then my father took me so
-special.
+Guo Ren (8):
+  sched: Remove unused TASK_SIZE_OF
+  sched: x86: Remove unused TASK_SIZE_OF
+  sched: sparc: Remove unused TASK_SIZE_OF
+  sched: powerpc: Remove unused TASK_SIZE_OF
+  sched: s390: Remove unused TASK_SIZE_OF
+  sched: parisc: Remove unused TASK_SIZE_OF
+  sched: arm64: Remove unused TASK_SIZE_OF
+  sched: mips: Remove unused TASK_SIZE_OF
 
-Before his death, he called me and informed me that he has the sum of
-Eighteen Million Five Hundred , United State Dollar
-(USD$18.500,000.00) left in fixed deposit account in one of the
-leading banks in Africa. He further told me that he deposited the
-money in my name, and also gave me all the necessary but legal
-documents to this fund with the bank.
+ arch/arm64/include/asm/processor.h      | 2 --
+ arch/mips/include/asm/processor.h       | 3 ---
+ arch/parisc/include/asm/processor.h     | 3 +--
+ arch/powerpc/include/asm/task_size_64.h | 6 +-----
+ arch/s390/include/asm/processor.h       | 3 +--
+ arch/sparc/include/asm/processor_64.h   | 3 ---
+ arch/x86/include/asm/page_64_types.h    | 2 --
+ include/linux/sched.h                   | 4 ----
+ 8 files changed, 3 insertions(+), 23 deletions(-)
 
-I am 21 years old and a university undergraduate and really don't know
-what to do. Now I want an account overseas where I can transfer this
-funds and after the transaction I will come and reside permanently in
-your country till such a time that it will be convenient for me to
-return back home if I so desire.
+-- 
+2.25.1
 
-The death of my father actually brought sorrow to my life. I also want
-to invest the fund under your care because I am ignorant of business
-world. I am in a sincere desire of your humble assistance in this
-regards. Your suggestions and ideas will be highly regarded.
-
-Now permit me to ask these few questions:
-
-1. Can you honestly help me from your heart?
-
-2. Can I completely trust you?
-
-3. What percentage of the total amount in question will be good for
-you after the money is in your account?
-
-Please, consider this and get back to me as soon as
-possible.Immediately and confirm your willingness on this my
-email(williamsreneta2019@gmail.com), here is one of my Picture and
-also i will inform you more details involved in this matter.
-
-Regards,
-
-Miss Reneta Williams.
