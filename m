@@ -2,48 +2,48 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BA6E482B0A
-	for <lists+linux-s390@lfdr.de>; Sun,  2 Jan 2022 13:20:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DD54482BE6
+	for <lists+linux-s390@lfdr.de>; Sun,  2 Jan 2022 17:20:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232020AbiABMUP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 2 Jan 2022 07:20:15 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:58630 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231372AbiABMUM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 2 Jan 2022 07:20:12 -0500
+        id S233381AbiABQUQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 2 Jan 2022 11:20:16 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:49604 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233341AbiABQUM (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 2 Jan 2022 11:20:12 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8BA5260E8D;
-        Sun,  2 Jan 2022 12:20:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EF75DC36AF3;
-        Sun,  2 Jan 2022 12:20:10 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 33226B80DB7;
+        Sun,  2 Jan 2022 16:20:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E35BBC36AF4;
+        Sun,  2 Jan 2022 16:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641126011;
-        bh=42FSGjo7bJM1OjCIYk/N8hVFrdzTHFcqqtbCqSNyMKQ=;
+        s=k20201202; t=1641140409;
+        bh=LFPdMZ/ubkBr7uyX7kzJTw9/g6V5SxfeW4zWOrPcKtQ=;
         h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=ABIXLREgYWx51dQFBEgiJrFLoZhJSfsd7pNeiGb3QYuRNsmCIfDxg5jP6A1UR8S+C
-         lBMHIFD3hK6zmQhVr8EBVtRXsvzPaPzqBsi2lIhkD7A0M7mDUZn0Jq/rDibPxGm6Qi
-         Mo8PN1shPHTzRGSdla00H0R1f8KoY07cH8T3RotgeMd+nwXOtEdT/0xFFgM0jUraBr
-         /mSuGMDz5bd1tSoCu6P8cbIOLfTsYmplig0hm7UAqp0kIiAmR2o7tiNzkxXX17U+Ev
-         BNy9axaR/rpI4tXW8761WmFmpvhJf1il+keh/8fIVpoIfDhyOfDzmkD4NNdzQYth8Q
-         5AVxsCfwpNF9w==
+        b=WhCpS7G4XljrfoNL661wOzFC6fBsG/coHBx5jx9bb/gTWY51/TdVMqFTrrKOP8Iwp
+         Hl9unTquyszscFUcTwgJZySQBI02aBpsY9qC0UKCMTLM+NAtd/jxKQfPnevzkDVypY
+         fCJkOoUEQ9XDPrRBg6hF9IFrXydAdooxO+J33QtCUszPU/uKF6Sl6ktJrlNJIc6jDN
+         msEqv4tW5XpVe/vMwqZPR+5Es5qMD1YfLKfF+o6VUzAxKCMnuGQdkOLTrdp1WDkH50
+         ILyjzj5oC5OP8gW3z06ZKAdp7kZtsSSkIqE9YBa9QsYVYJqvrfqLxO+apte97LBKB8
+         /Nq2tiYTxulBA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DBA8CC395EC;
-        Sun,  2 Jan 2022 12:20:10 +0000 (UTC)
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C8526C395EB;
+        Sun,  2 Jan 2022 16:20:09 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net/smc: Introduce TCP ULP support
+Subject: Re: [PATCH net] net/smc: add comments for smc_link_{usable|sendable}
 From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <164112601089.23508.11527183235467128811.git-patchwork-notify@kernel.org>
-Date:   Sun, 02 Jan 2022 12:20:10 +0000
-References: <20211228134435.41774-1-tonylu@linux.alibaba.com>
-In-Reply-To: <20211228134435.41774-1-tonylu@linux.alibaba.com>
-To:     Tony Lu <tonylu@linux.alibaba.com>
-Cc:     kgraul@linux.ibm.com, kuba@kernel.org, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-rdma@vger.kernel.org
+Message-Id: <164114040981.20715.13036176120282476805.git-patchwork-notify@kernel.org>
+Date:   Sun, 02 Jan 2022 16:20:09 +0000
+References: <20211231060853.8106-1-dust.li@linux.alibaba.com>
+In-Reply-To: <20211231060853.8106-1-dust.li@linux.alibaba.com>
+To:     Dust Li <dust.li@linux.alibaba.com>
+Cc:     kgraul@linux.ibm.com, davem@davemloft.net, kuba@kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        guwen@linux.alibaba.com, tonylu@linux.alibaba.com
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
@@ -53,19 +53,19 @@ Hello:
 This patch was applied to netdev/net-next.git (master)
 by David S. Miller <davem@davemloft.net>:
 
-On Tue, 28 Dec 2021 21:44:36 +0800 you wrote:
-> This implements TCP ULP for SMC, helps applications to replace TCP with
-> SMC protocol in place. And we use it to implement transparent
-> replacement.
+On Fri, 31 Dec 2021 14:08:53 +0800 you wrote:
+> Add comments for both smc_link_sendable() and smc_link_usable()
+> to help better distinguish and use them.
 > 
-> This replaces original TCP sockets with SMC, reuse TCP as clcsock when
-> calling setsockopt with TCP_ULP option, and without any overhead.
+> No function changes.
+> 
+> Signed-off-by: Dust Li <dust.li@linux.alibaba.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next] net/smc: Introduce TCP ULP support
-    https://git.kernel.org/netdev/net-next/c/d7cd421da9da
+  - [net] net/smc: add comments for smc_link_{usable|sendable}
+    https://git.kernel.org/netdev/net-next/c/1f52a9380ff1
 
 You are awesome, thank you!
 -- 
