@@ -2,218 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A3AE48952A
-	for <lists+linux-s390@lfdr.de>; Mon, 10 Jan 2022 10:27:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CCDE48956F
+	for <lists+linux-s390@lfdr.de>; Mon, 10 Jan 2022 10:38:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238188AbiAJJ1E (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 10 Jan 2022 04:27:04 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:45362 "EHLO
+        id S243013AbiAJJig (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 10 Jan 2022 04:38:36 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:58163 "EHLO
         out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238234AbiAJJ1D (ORCPT
+        by vger.kernel.org with ESMTP id S243064AbiAJJif (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 10 Jan 2022 04:27:03 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0V1QvNC4_1641806784;
-Received: from e02h04404.eu6sqa(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0V1QvNC4_1641806784)
+        Mon, 10 Jan 2022 04:38:35 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0V1PG-vG_1641807505;
+Received: from e02h04404.eu6sqa(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0V1PG-vG_1641807505)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 10 Jan 2022 17:27:01 +0800
+          Mon, 10 Jan 2022 17:38:33 +0800
 From:   Wen Gu <guwen@linux.alibaba.com>
 To:     kgraul@linux.ibm.com, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH net 3/3] net/smc: Resolve the race between SMC-R link access and clear
-Date:   Mon, 10 Jan 2022 17:26:24 +0800
-Message-Id: <1641806784-93141-4-git-send-email-guwen@linux.alibaba.com>
+Subject: [PATCH net] net/smc: Avoid setting clcsock options after clcsock released
+Date:   Mon, 10 Jan 2022 17:38:25 +0800
+Message-Id: <1641807505-54454-1-git-send-email-guwen@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1641806784-93141-1-git-send-email-guwen@linux.alibaba.com>
-References: <1641806784-93141-1-git-send-email-guwen@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-We encountered some crashes caused by the race between smc-r
-link access and link clear that triggered by abnormal link
-group termination, such as port error.
+We encountered a crash in smc_setsockopt() and it is caused by
+accessing smc->clcsock after clcsock was released.
 
-Here is an example of this kind of crashes:
-
- BUG: kernel NULL pointer dereference, address: 0000000000000000
- Workqueue: smc_hs_wq smc_listen_work [smc]
- RIP: 0010:smc_llc_flow_initiate+0x44/0x190 [smc]
+ BUG: kernel NULL pointer dereference, address: 0000000000000020
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 0 P4D 0
+ Oops: 0000 [#1] PREEMPT SMP PTI
+ CPU: 1 PID: 50309 Comm: nginx Kdump: loaded Tainted: G E     5.16.0-rc4+ #53
+ RIP: 0010:smc_setsockopt+0x59/0x280 [smc]
  Call Trace:
   <TASK>
-  ? __smc_buf_create+0x75a/0x950 [smc]
-  smcr_lgr_reg_rmbs+0x2a/0xbf [smc]
-  smc_listen_work+0xf72/0x1230 [smc]
-  ? process_one_work+0x25c/0x600
-  process_one_work+0x25c/0x600
-  worker_thread+0x4f/0x3a0
-  ? process_one_work+0x600/0x600
-  kthread+0x15d/0x1a0
-  ? set_kthread_struct+0x40/0x40
-  ret_from_fork+0x1f/0x30
+  __sys_setsockopt+0xfc/0x190
+  __x64_sys_setsockopt+0x20/0x30
+  do_syscall_64+0x34/0x90
+  entry_SYSCALL_64_after_hwframe+0x44/0xae
+ RIP: 0033:0x7f16ba83918e
   </TASK>
 
-smc_listen_work()                     __smc_lgr_terminate()
----------------------------------------------------------------
-                                    | smc_lgr_free()
-                                    |  |- smcr_link_clear()
-                                    |      |- memset(lnk, 0)
-smc_listen_rdma_reg()               |
- |- smcr_lgr_reg_rmbs()             |
-     |- smc_llc_flow_initiate()     |
-         |- access lnk->lgr (panic) |
-
-These crashes are similarly caused by clearing SMC-R link
-resources when some functions is still accessing to them. So
-this patch tries to fix the issue by introducing reference
-count of smc-r links and ensuring that the sensitive resources
-of links are not cleared until reference count is zero.
-
-The operation to the SMC-R link reference count can be concluded
-as follows:
-
-object          [hold or initialized as 1]         [put]
---------------------------------------------------------------------
-links           smcr_link_init()                   smcr_link_clear()
-connections     smcr_lgr_conn_assign_link()        smc_conn_free()
-
-Through this way, the clear of SMC-R links is later than the
-free of all the smc connections above it, thus avoiding the
-unsafe reference to SMC-R links.
+This patch tries to fix it by holding clcsock_release_lock and
+checking whether clcsock has already been released. In case that
+a crash of the same reason happens in smc_getsockopt(), this patch
+also checkes smc->clcsock in smc_getsockopt().
 
 Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
 ---
- net/smc/smc_core.c | 39 +++++++++++++++++++++++++++++++++------
- net/smc/smc_core.h |  4 ++++
- 2 files changed, 37 insertions(+), 6 deletions(-)
+ net/smc/af_smc.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index c27a7d5..ddb088a 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -155,6 +155,7 @@ static int smcr_lgr_conn_assign_link(struct smc_connection *conn, bool first)
- 	if (!conn->lnk)
- 		return SMC_CLC_DECL_NOACTLINK;
- 	atomic_inc(&conn->lnk->conn_cnt);
-+	smcr_link_hold(conn->lnk); /* link_put in smc_conn_free() */
- 	return 0;
- }
- 
-@@ -746,6 +747,8 @@ int smcr_link_init(struct smc_link_group *lgr, struct smc_link *lnk,
+diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+index 1c9289f..af423f4 100644
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -2441,6 +2441,11 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
+ 	/* generic setsockopts reaching us here always apply to the
+ 	 * CLC socket
+ 	 */
++	mutex_lock(&smc->clcsock_release_lock);
++	if (!smc->clcsock) {
++		mutex_unlock(&smc->clcsock_release_lock);
++		return -EBADF;
++	}
+ 	if (unlikely(!smc->clcsock->ops->setsockopt))
+ 		rc = -EOPNOTSUPP;
+ 	else
+@@ -2450,6 +2455,7 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
+ 		sk->sk_err = smc->clcsock->sk->sk_err;
+ 		sk_error_report(sk);
  	}
- 	get_device(&lnk->smcibdev->ibdev->dev);
- 	atomic_inc(&lnk->smcibdev->lnk_cnt);
-+	refcount_set(&lnk->refcnt, 1); /* link refcnt is set to 1 */
-+	lnk->clearing = 0;
- 	lnk->path_mtu = lnk->smcibdev->pattr[lnk->ibport - 1].active_mtu;
- 	lnk->link_id = smcr_next_link_id(lgr);
- 	lnk->lgr = lgr;
-@@ -994,8 +997,12 @@ void smc_switch_link_and_count(struct smc_connection *conn,
- 			       struct smc_link *to_lnk)
++	mutex_unlock(&smc->clcsock_release_lock);
+ 
+ 	if (optlen < sizeof(int))
+ 		return -EINVAL;
+@@ -2509,13 +2515,21 @@ static int smc_getsockopt(struct socket *sock, int level, int optname,
+ 			  char __user *optval, int __user *optlen)
  {
- 	atomic_dec(&conn->lnk->conn_cnt);
-+	/* put old link, hold in smcr_lgr_conn_assign_link() */
-+	smcr_link_put(conn->lnk);
- 	conn->lnk = to_lnk;
- 	atomic_inc(&conn->lnk->conn_cnt);
-+	/* hold new link, put in smc_conn_free() */
-+	smcr_link_hold(conn->lnk);
+ 	struct smc_sock *smc;
++	int rc;
+ 
+ 	smc = smc_sk(sock->sk);
++	mutex_lock(&smc->clcsock_release_lock);
++	if (!smc->clcsock) {
++		mutex_unlock(&smc->clcsock_release_lock);
++		return -EBADF;
++	}
+ 	/* socket options apply to the CLC socket */
+ 	if (unlikely(!smc->clcsock->ops->getsockopt))
+ 		return -EOPNOTSUPP;
+-	return smc->clcsock->ops->getsockopt(smc->clcsock, level, optname,
++	rc = smc->clcsock->ops->getsockopt(smc->clcsock, level, optname,
+ 					     optval, optlen);
++	mutex_unlock(&smc->clcsock_release_lock);
++	return rc;
  }
  
- struct smc_link *smc_switch_conns(struct smc_link_group *lgr,
-@@ -1127,7 +1134,7 @@ void smc_conn_free(struct smc_connection *conn)
- 		 * link group, or has already been freed.
- 		 *
- 		 * Check to ensure that the refcnt of link group
--		 * won't be put incorrectly.
-+		 * or link won't be put incorrectly.
- 		 */
- 		return;
- 
-@@ -1155,6 +1162,8 @@ void smc_conn_free(struct smc_connection *conn)
- 	if (!lgr->conns_num)
- 		smc_lgr_schedule_free_work(lgr);
- lgr_put:
-+	if (!lgr->is_smcd)
-+		smcr_link_put(conn->lnk); /* link_hold in smcr_lgr_conn_assign_link() */
- 	smc_lgr_put(lgr); /* lgr_hold in smc_lgr_register_conn() */
- }
- 
-@@ -1211,13 +1220,23 @@ static void smcr_rtoken_clear_link(struct smc_link *lnk)
- 	}
- }
- 
-+static void __smcr_link_clear(struct smc_link *lnk)
-+{
-+	smc_wr_free_link_mem(lnk);
-+	smc_lgr_put(lnk->lgr);	/* lgr_hold in smcr_link_init() */
-+	memset(lnk, 0, sizeof(struct smc_link));
-+	lnk->state = SMC_LNK_UNUSED;
-+}
-+
- /* must be called under lgr->llc_conf_mutex lock */
- void smcr_link_clear(struct smc_link *lnk, bool log)
- {
- 	struct smc_ib_device *smcibdev;
- 
--	if (!lnk->lgr || lnk->state == SMC_LNK_UNUSED)
-+	if (lnk->clearing || !lnk->lgr ||
-+	    lnk->state == SMC_LNK_UNUSED)
- 		return;
-+	lnk->clearing = 1;
- 	lnk->peer_qpn = 0;
- 	smc_llc_link_clear(lnk, log);
- 	smcr_buf_unmap_lgr(lnk);
-@@ -1226,15 +1245,23 @@ void smcr_link_clear(struct smc_link *lnk, bool log)
- 	smc_wr_free_link(lnk);
- 	smc_ib_destroy_queue_pair(lnk);
- 	smc_ib_dealloc_protection_domain(lnk);
--	smc_wr_free_link_mem(lnk);
--	smc_lgr_put(lnk->lgr); /* lgr_hold in smcr_link_init() */
- 	smc_ibdev_cnt_dec(lnk);
- 	put_device(&lnk->smcibdev->ibdev->dev);
- 	smcibdev = lnk->smcibdev;
--	memset(lnk, 0, sizeof(struct smc_link));
--	lnk->state = SMC_LNK_UNUSED;
- 	if (!atomic_dec_return(&smcibdev->lnk_cnt))
- 		wake_up(&smcibdev->lnks_deleted);
-+	smcr_link_put(lnk); /* theoretically last link_put */
-+}
-+
-+void smcr_link_hold(struct smc_link *lnk)
-+{
-+	refcount_inc(&lnk->refcnt);
-+}
-+
-+void smcr_link_put(struct smc_link *lnk)
-+{
-+	if (refcount_dec_and_test(&lnk->refcnt))
-+		__smcr_link_clear(lnk);
- }
- 
- static void smcr_buf_free(struct smc_link_group *lgr, bool is_rmb,
-diff --git a/net/smc/smc_core.h b/net/smc/smc_core.h
-index 630298b..cbf0fc1 100644
---- a/net/smc/smc_core.h
-+++ b/net/smc/smc_core.h
-@@ -137,6 +137,8 @@ struct smc_link {
- 	u8			peer_link_uid[SMC_LGR_ID_SIZE]; /* peer uid */
- 	u8			link_idx;	/* index in lgr link array */
- 	u8			link_is_asym;	/* is link asymmetric? */
-+	u8			clearing : 1;	/* link is being cleared */
-+	refcount_t		refcnt;		/* link reference count */
- 	struct smc_link_group	*lgr;		/* parent link group */
- 	struct work_struct	link_down_wrk;	/* wrk to bring link down */
- 	char			ibname[IB_DEVICE_NAME_MAX]; /* ib device name */
-@@ -509,6 +511,8 @@ void smc_rtoken_set2(struct smc_link_group *lgr, int rtok_idx, int link_id,
- int smcr_link_init(struct smc_link_group *lgr, struct smc_link *lnk,
- 		   u8 link_idx, struct smc_init_info *ini);
- void smcr_link_clear(struct smc_link *lnk, bool log);
-+void smcr_link_hold(struct smc_link *lnk);
-+void smcr_link_put(struct smc_link *lnk);
- void smc_switch_link_and_count(struct smc_connection *conn,
- 			       struct smc_link *to_lnk);
- int smcr_buf_map_lgr(struct smc_link *lnk);
+ static int smc_ioctl(struct socket *sock, unsigned int cmd,
 -- 
 1.8.3.1
 
