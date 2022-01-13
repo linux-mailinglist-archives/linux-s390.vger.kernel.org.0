@@ -2,299 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03BA848D760
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Jan 2022 13:21:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63FF848D717
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Jan 2022 13:06:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234442AbiAMMVG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Jan 2022 07:21:06 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44358 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231790AbiAMMVG (ORCPT
+        id S232476AbiAMMG1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Jan 2022 07:06:27 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58236 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S231705AbiAMMG0 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 13 Jan 2022 07:21:06 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20DARP2a006979;
-        Thu, 13 Jan 2022 12:21:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=Ie9dV0H000Lgx2ctKCFMhLNOBS5hHII4vJIHy304OcU=;
- b=UZDRCmjuMlhMa/NdWFus8Xzd7cImw+Laigs3DH0CsEm4fmVIQ+c/81D3yTF4hAnFnN+U
- MBXdq1Zb15V8MV4qyn4dhJoAOtyPlHDRpNtu/4BQs45awvGID+K3kRGAfo3dkRbxFa2w
- gmOsNVL01ZVk3njwyJm+F05SuCBkR3UCQmZQNqdyGDNBW7OMMXGu39gOUXIEqUkMegwc
- EPHBr2smkx+jUwUz4Iy43DlxxaE2qngMsyPmzrBF2HSk6yDVIG3HAzIabUuM9kDkJCQe
- RrsJ2WKXZnWGDa1vp95HkMwKEOyjOIlkxXbRwv4VwFcqVo++TnBps/Y0LIoNjqbk/YJQ NQ== 
+        Thu, 13 Jan 2022 07:06:26 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20DBSDD4016832;
+        Thu, 13 Jan 2022 12:06:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=EFtsyeAfsTzzfYSWbF3pit3u+MKCLgwDllpn85f81R0=;
+ b=n7IgqPGP0TDq85lNNynqQgB1P+UM5ZacwO+YBvjELUfilwhasNo/1r73sOphU3kB/lfw
+ kmzSf79nn5bamLVUcrl0sGXANrFEluEhKHu7kQyafNdeMmUs8AxB75XcsCahUmSJTxU6
+ 1APNGGddCDuv3o8LE/wxu+SWz3kfUtq+wj+/rN0QHZT5M/jvm7xKPOtmvZUWJnQcl7ol
+ HmKgPESY56tGLHYOp+pmooLqmSkQodQqR3jcG++iIaGteAeN9thKqq92sgSnXSCFYnqE
+ g24e55RX0epJV9XDlMvouiRSwmp182RfsMO6E0btWOyhV1TtSdd9Okus+i0QeCtZqUcE mA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3djjbja0hk-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3djk81gnrr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jan 2022 12:21:05 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 20DCEOR9022192;
-        Thu, 13 Jan 2022 12:21:05 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3djjbja0gw-1
+        Thu, 13 Jan 2022 12:06:16 +0000
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 20DBU02X019625;
+        Thu, 13 Jan 2022 12:06:16 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3djk81gnrb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jan 2022 12:21:05 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 20DCCH4G024139;
-        Thu, 13 Jan 2022 12:21:03 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma06ams.nl.ibm.com with ESMTP id 3df1vjmbje-1
+        Thu, 13 Jan 2022 12:06:16 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 20DC2HL1007193;
+        Thu, 13 Jan 2022 12:06:14 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 3df28a42xk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 13 Jan 2022 12:21:02 +0000
+        Thu, 13 Jan 2022 12:06:14 +0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 20DCBsOZ45613358
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 20DC6BQY41746874
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Jan 2022 12:11:54 GMT
+        Thu, 13 Jan 2022 12:06:11 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C655EA4051;
-        Thu, 13 Jan 2022 12:20:59 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 2D867A406B;
+        Thu, 13 Jan 2022 12:06:11 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 263AAA4055;
-        Thu, 13 Jan 2022 12:20:59 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.8.156])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 13 Jan 2022 12:20:59 +0000 (GMT)
-Date:   Thu, 13 Jan 2022 08:56:48 +0100
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-Cc:     Thomas Huth <thuth@redhat.com>,
+        by IMSVA (Postfix) with ESMTP id 21AB6A405B;
+        Thu, 13 Jan 2022 12:06:11 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 13 Jan 2022 12:06:11 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 857EFE03A3; Thu, 13 Jan 2022 13:06:10 +0100 (CET)
+From:   Christian Borntraeger <borntraeger@linux.ibm.com>
+To:     dwmw2@infradead.org
+Cc:     butterflyhuangxx@gmail.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        seanjc@google.com, Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests PATCH v4 1/2] s390x: Add specification
- exception test
-Message-ID: <20220113085648.7cf81084@p-imbrenda>
-In-Reply-To: <20220111163901.1263736-2-scgl@linux.ibm.com>
-References: <20220111163901.1263736-1-scgl@linux.ibm.com>
-        <20220111163901.1263736-2-scgl@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        David Hildenbrand <david@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: Re: KVM: Warn if mark_page_dirty() is called without an active vCPU
+Date:   Thu, 13 Jan 2022 13:06:09 +0100
+Message-Id: <20220113120609.736701-1-borntraeger@linux.ibm.com>
+X-Mailer: git-send-email 2.33.1
+In-Reply-To: <e8f40b8765f2feefb653d8a67e487818f66581aa.camel@infradead.org>
+References: <e8f40b8765f2feefb653d8a67e487818f66581aa.camel@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: u9wO9Gj0eZfqam_pp-oJg3zhpS1jGpqt
-X-Proofpoint-GUID: 8ayI-VUkr7TfRr557LTcrg5ilzaNS6Wj
+X-Proofpoint-GUID: nd-OLcRjum13P0XnqeaPh7PLB8yz2KSK
+X-Proofpoint-ORIG-GUID: 8Tr4RSrypsmJQ4MKNPYLJTUBF4w-RnY1
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
  definitions=2022-01-13_04,2022-01-13_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- adultscore=0 clxscore=1015 mlxscore=0 lowpriorityscore=0
- priorityscore=1501 spamscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 impostorscore=0 malwarescore=0 mlxlogscore=637 bulkscore=0
+ spamscore=0 lowpriorityscore=0 mlxscore=0 clxscore=1011 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2110150000 definitions=main-2201130073
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 11 Jan 2022 17:39:00 +0100
-Janis Schoetterl-Glausch <scgl@linux.ibm.com> wrote:
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-> Generate specification exceptions and check that they occur.
-> 
-> Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-> ---
->  s390x/Makefile      |   1 +
->  s390x/spec_ex.c     | 154 ++++++++++++++++++++++++++++++++++++++++++++
->  s390x/unittests.cfg |   3 +
->  3 files changed, 158 insertions(+)
->  create mode 100644 s390x/spec_ex.c
-> 
-> diff --git a/s390x/Makefile b/s390x/Makefile
-> index 1e567c1..5635c08 100644
-> --- a/s390x/Makefile
-> +++ b/s390x/Makefile
-> @@ -25,6 +25,7 @@ tests += $(TEST_DIR)/uv-host.elf
->  tests += $(TEST_DIR)/edat.elf
->  tests += $(TEST_DIR)/mvpg-sie.elf
->  tests += $(TEST_DIR)/spec_ex-sie.elf
-> +tests += $(TEST_DIR)/spec_ex.elf
->  tests += $(TEST_DIR)/firq.elf
->  
->  tests_binary = $(patsubst %.elf,%.bin,$(tests))
-> diff --git a/s390x/spec_ex.c b/s390x/spec_ex.c
-> new file mode 100644
-> index 0000000..a9f9f31
-> --- /dev/null
-> +++ b/s390x/spec_ex.c
-> @@ -0,0 +1,154 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright IBM Corp. 2021
-> + *
-> + * Specification exception test.
-> + * Tests that specification exceptions occur when expected.
-> + *
-> + * Can be extended by adding triggers to spec_ex_triggers, see comments below.
-> + */
-> +#include <stdlib.h>
-> +#include <libcflat.h>
-> +#include <asm/interrupt.h>
-> +
-> +static struct lowcore *lc = (struct lowcore *) 0;
-> +
-> +static bool invalid_psw_expected;
-> +static struct psw expected_psw;
-> +static struct psw invalid_psw;
-> +static struct psw fixup_psw;
-> +
-> +/* The standard program exception handler cannot deal with invalid old PSWs,
-> + * especially not invalid instruction addresses, as in that case one cannot
-> + * find the instruction following the faulting one from the old PSW.
-> + * The PSW to return to is set by load_psw.
-> + */
-> +static void fixup_invalid_psw(void)
-> +{
-> +	// signal occurrence of invalid psw fixup
-> +	invalid_psw_expected = false;
-> +	invalid_psw = lc->pgm_old_psw;
-> +	lc->pgm_old_psw = fixup_psw;
-> +}
-> +
-> +/* Load possibly invalid psw, but setup fixup_psw before,
-> + * so that *fixup_invalid_psw() can bring us back onto the right track.
+Quick heads-up.
+The new warnon triggers on s390. Here we write to the guest from an
+irqfd worker. Since we do not use dirty_ring yet this might be an over-indication.
+Still have to look into that.
 
-is the * just a typo?
-
-> + * Also acts as compiler barrier, -> none required in expect/check_invalid_psw
-> + */
-> +static void load_psw(struct psw psw)
-> +{
-> +	uint64_t scratch;
-> +
-> +	fixup_psw.mask = extract_psw_mask();
-> +	asm volatile ( "larl	%[scratch],nop%=\n"
-> +		"	stg	%[scratch],%[addr]\n"
-> +		"	lpswe	%[psw]\n"
-> +		"nop%=:	nop\n"
-> +		: [scratch] "=&r"(scratch),
-> +		  [addr] "=&T"(fixup_psw.addr)
-> +		: [psw] "Q"(psw)
-> +		: "cc", "memory"
-> +	);
-> +}
-> +
-> +static void expect_invalid_psw(struct psw psw)
-> +{
-> +	expected_psw = psw;
-> +	invalid_psw_expected = true;
-> +}
-> +
-> +static int check_invalid_psw(void)
-> +{
-> +	// toggled to signal occurrence of invalid psw fixup
-
-please use /* */ style of comments also for single line comments
-
-> +	if (!invalid_psw_expected) {
-> +		if (expected_psw.mask == invalid_psw.mask &&
-> +		    expected_psw.addr == invalid_psw.addr)
-> +			return 0;
-> +		report_fail("Wrong invalid PSW");
-> +	} else {
-> +		report_fail("Expected exception due to invalid PSW");
-> +	}
-> +	return 1;
-> +}
-> +
-> +static int psw_bit_12_is_1(void)
-> +{
-> +	struct psw invalid = { .mask = 0x0008000000000000, .addr = 0x00000000deadbeee};
-> +
-> +	expect_invalid_psw(invalid);
-> +	load_psw(expected_psw);
-> +	return check_invalid_psw();
-> +}
-> +
-> +static int bad_alignment(void)
-> +{
-> +	uint32_t words[5] __attribute__((aligned(16)));
-> +	uint32_t (*bad_aligned)[4] = (uint32_t (*)[4])&words[1];
-> +
-> +	asm volatile ("lpq %%r6,%[bad]"
-> +		      : : [bad] "T"(*bad_aligned)
-> +		      : "%r6", "%r7"
-> +	);
-> +	return 0;
-> +}
-> +
-> +static int not_even(void)
-> +{
-> +	uint64_t quad[2] __attribute__((aligned(16))) = {0};
-> +
-> +	asm volatile (".insn	rxy,0xe3000000008f,%%r7,%[quad]" //lpq %%r7,%[quad]
-> +		      : : [quad] "T"(quad)
-> +		      : "%r7", "%r8"
-> +	);
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Harness for specification exception testing.
-> + * func only triggers exception, reporting is taken care of automatically.
-> + */
-> +struct spec_ex_trigger {
-> +	const char *name;
-> +	int (*func)(void);
-> +	void (*fixup)(void);
-> +};
-> +
-> +/* List of all tests to execute */
-> +static const struct spec_ex_trigger spec_ex_triggers[] = {
-> +	{ "psw_bit_12_is_1", &psw_bit_12_is_1, &fixup_invalid_psw },
-> +	{ "bad_alignment", &bad_alignment, NULL },
-> +	{ "not_even", &not_even, NULL },
-> +	{ NULL, NULL, NULL },
-> +};
-> +
-> +static void test_spec_ex(const struct spec_ex_trigger *trigger)
-> +{
-> +	uint16_t expected_pgm = PGM_INT_CODE_SPECIFICATION;
-> +	uint16_t pgm;
-> +	int rc;
-> +
-> +	expect_pgm_int();
-> +	register_pgm_cleanup_func(trigger->fixup);
-> +	rc = trigger->func();
-> +	register_pgm_cleanup_func(NULL);
-> +	if (rc)
-> +		return;
-
-why do you exit early in case of failure? (moreover, your are not even
-reporting the failure)
-
-> +	pgm = clear_pgm_int();
-> +	report(pgm == expected_pgm, "Program interrupt: expected(%d) == received(%d)",
-> +	       expected_pgm, pgm);
-> +}
-> +
-> +int main(int argc, char **argv)
-> +{
-> +	unsigned int i;
-> +
-> +	report_prefix_push("specification exception");
-> +	for (i = 0; spec_ex_triggers[i].name; i++) {
-> +		report_prefix_push(spec_ex_triggers[i].name);
-> +		test_spec_ex(&spec_ex_triggers[i]);
-> +		report_prefix_pop();
-> +	}
-> +	report_prefix_pop();
-> +
-> +	return report_summary();
-> +}
-> diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
-> index 054560c..26510cf 100644
-> --- a/s390x/unittests.cfg
-> +++ b/s390x/unittests.cfg
-> @@ -113,6 +113,9 @@ file = mvpg-sie.elf
->  [spec_ex-sie]
->  file = spec_ex-sie.elf
->  
-> +[spec_ex]
-> +file = spec_ex.elf
-> +
->  [firq-linear-cpu-ids]
->  file = firq.elf
->  timeout = 20
-
+[ 1801.980777] WARNING: CPU: 12 PID: 117600 at arch/s390/kvm/../../../virt/kvm/kvm_main.c:3166 mark_page_dirty_in_slot+0xa0/0xb0 [kvm]
+[ 1801.980839] Modules linked in: xt_CHECKSUM(E) xt_MASQUERADE(E) xt_conntrack(E) ipt_REJECT(E) xt_tcpudp(E) nft_compat(E) nf_nat_tftp(E) nft_objref(E) vhost_vsock(E) vmw_vsock_virtio_transport_common(E) vsock(E) vhost(E) vhost_iotlb(E) nf_conntrack_tftp(E) crc32_generic(E) algif_hash(E) af_alg(E) paes_s390(E) dm_crypt(E) encrypted_keys(E) loop(E) lcs(E) ctcm(E) fsm(E) kvm(E) nft_fib_inet(E) nft_fib_ipv4(E) nft_fib_ipv6(E) nft_fib(E) nft_reject_inet(E) nf_reject_ipv4(E) nf_reject_ipv6(E) nft_reject(E) nft_ct(E) nft_chain_nat(E) nf_nat(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) ip_set(E) nf_tables(E) nfnetlink(E) sunrpc(E) dm_service_time(E) dm_multipath(E) scsi_dh_rdac(E) scsi_dh_emc(E) scsi_dh_alua(E) zfcp(E) scsi_transport_fc(E) ism(E) smc(E) ib_core(E) eadm_sch(E) vfio_ccw(E) mdev(E) vfio_iommu_type1(E) vfio(E) sch_fq_codel(E) configfs(E) ip_tables(E) x_tables(E) ghash_s39 [...truncated...]
+[ 1801.980915]  sha1_s390(E) sha_common(E) pkey(E) zcrypt(E) rng_core(E) autofs4(E) [last unloaded: vfio_ap]
+[ 1801.980931] CPU: 12 PID: 117600 Comm: kworker/12:0 Tainted: G            E     5.17.0-20220113.rc0.git0.32ce2abb03cf.300.fc35.s390x+next #1
+[ 1801.980935] Hardware name: IBM 2964 NC9 712 (LPAR)
+[ 1801.980938] Workqueue: events irqfd_inject [kvm]
+[ 1801.980959] Krnl PSW : 0704e00180000000 000003ff805f0f5c (mark_page_dirty_in_slot+0xa4/0xb0 [kvm])
+[ 1801.980981]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
+[ 1801.980985] Krnl GPRS: 000003ff298e9040 000000017754a660 0000000000000000 0000000000000000
+[ 1801.980988]            000000003fefcc36 ffffffffffffff68 0000000000000000 0000000177871500
+[ 1801.980990]            00000001d1918000 000000003fefcc36 00000001d1918000 0000000000000000
+[ 1801.980993]            00000001375b0000 00000001d191a838 000003ff805f0ee6 0000038000babb48
+[ 1801.981003] Krnl Code: 000003ff805f0f4c: eb9ff0a00004	lmg	%r9,%r15,160(%r15)
+                          000003ff805f0f52: c0f400018c61	brcl	15,000003ff80622814
+                         #000003ff805f0f58: af000000		mc	0,0
+                         >000003ff805f0f5c: eb9ff0a00004	lmg	%r9,%r15,160(%r15)
+                          000003ff805f0f62: c0f400018c59	brcl	15,000003ff80622814
+                          000003ff805f0f68: c004ffe37b10	brcl	0,000003ff80260588
+                          000003ff805f0f6e: ec360033007c	cgij	%r3,0,6,000003ff805f0fd4
+                          000003ff805f0f74: e31020100012	lt	%r1,16(%r2)
+[ 1801.981057] Call Trace:
+[ 1801.981060]  [<000003ff805f0f5c>] mark_page_dirty_in_slot+0xa4/0xb0 [kvm]
+[ 1801.981083]  [<000003ff8060e9fe>] adapter_indicators_set+0xde/0x268 [kvm]
+[ 1801.981104]  [<000003ff80613c24>] set_adapter_int+0x64/0xd8 [kvm]
+[ 1801.981124]  [<000003ff805fb9aa>] kvm_set_irq+0xc2/0x130 [kvm]
+[ 1801.981144]  [<000003ff805f8d86>] irqfd_inject+0x76/0xa0 [kvm]
+[ 1801.981164]  [<0000000175e56906>] process_one_work+0x1fe/0x470
+[ 1801.981173]  [<0000000175e570a4>] worker_thread+0x64/0x498
+[ 1801.981176]  [<0000000175e5ef2c>] kthread+0x10c/0x110
+[ 1801.981180]  [<0000000175de73c8>] __ret_from_fork+0x40/0x58
+[ 1801.981185]  [<000000017698440a>] ret_from_fork+0xa/0x40
