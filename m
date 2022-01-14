@@ -2,82 +2,184 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 086FD48E07E
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Jan 2022 23:41:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ADC8848E3F1
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Jan 2022 06:48:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238055AbiAMWlz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Jan 2022 17:41:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238043AbiAMWly (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 13 Jan 2022 17:41:54 -0500
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1F2C06174E
-        for <linux-s390@vger.kernel.org>; Thu, 13 Jan 2022 14:41:53 -0800 (PST)
-Received: by mail-pg1-x541.google.com with SMTP id x20so1168257pgk.1
-        for <linux-s390@vger.kernel.org>; Thu, 13 Jan 2022 14:41:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=YbEI3Q/NEjCtDTVCV1jkA7nYNYBH/Wfa2wk3IkVyJko=;
-        b=OZP/QoKN8ru5XovrHZZEtRGAPOqy8yRZtZX0efEKVWs/Q7f6+2JX3Mloojh5SZ/AxH
-         cPAHMJhJrLRzzoPYh5n9fG2/pMOrYfS/PU2zx88sTYLTj0Dv1cVWivcA/TNU5IJgRtzI
-         yyO22l7H4XiZ577o8zD4nj2E5AestX9VYls3ntwqOHZNPl0OsU/EptDmXh66odxZFNCy
-         EIQC+hO6HyVDK/x5ziZcfqIxZJTlgvB+YGNZLq+4zSXQW5IZ9FoHkF7Eb5K19JwK6tqA
-         L1pbJiPTkM7B36B6kKA792uSFGR69D9KVeYMTQ95Fzk4WvuXfGt3UHBLmZ7aOqdAe8eh
-         8P+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=YbEI3Q/NEjCtDTVCV1jkA7nYNYBH/Wfa2wk3IkVyJko=;
-        b=CsWMh2VU8R51GR3D8C6od1LU5TkwEwJm/DO4pmo19q/x6qY3npaojMpjv8/t0rg+jm
-         5sca6YAM0yGW/Q+WMl0WZ5BpogTutF91Sblc0OJ0uXGkKW78kJscdJY2Z8rJ4PlQUGa2
-         CPry6lJrtgfMyj4XRLXh47jiyXWd657QJ831w1QUreSmDhCEk0wnmBFdSQKXtr7FYLf6
-         tFTiyVo1IEYjbwAam8a+UtErpS2NuEzf+rGHk3lChX0sb+elCiQ2pw7rTw+ukvbcyhgY
-         Tu4QYJl5ygZwg6YWIpmJPXQEH2w/U61cpyhhuB3buYDmjQDuLwvO8rHT1fuKOf6iNFyH
-         2HBg==
-X-Gm-Message-State: AOAM531/PeKDvAtTqT7arSFUqDVIYBtxg5piXkWALx4fG6SXyO0JBLvt
-        egerPaupIV59Ioo7ZHSeIHmqFUmpgIMWdnFIC20=
-X-Google-Smtp-Source: ABdhPJwo/BFuE/MyrXvV4Wc2jiueqzTZxw+feN+I2rvhYn2V6MZ0AjtfVc00EmStBrmKGTDtifrnIaK8zXPI0L+vd18=
-X-Received: by 2002:a63:4507:: with SMTP id s7mr5556975pga.252.1642113712456;
- Thu, 13 Jan 2022 14:41:52 -0800 (PST)
+        id S233185AbiANFs4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Jan 2022 00:48:56 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:47024 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231322AbiANFs4 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 14 Jan 2022 00:48:56 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=tonylu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0V1nD.LV_1642139333;
+Received: from localhost(mailfrom:tonylu@linux.alibaba.com fp:SMTPD_---0V1nD.LV_1642139333)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 14 Jan 2022 13:48:54 +0800
+From:   Tony Lu <tonylu@linux.alibaba.com>
+To:     kgraul@linux.ibm.com
+Cc:     kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [RFC PATCH net-next 0/6] net/smc: Spread workload over multiple cores
+Date:   Fri, 14 Jan 2022 13:48:46 +0800
+Message-Id: <20220114054852.38058-1-tonylu@linux.alibaba.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:f38c:0:0:0:0 with HTTP; Thu, 13 Jan 2022 14:41:52
- -0800 (PST)
-Reply-To: mchristophdaniel@gmail.com
-From:   Marcus Galois <marcus.galois@gmail.com>
-Date:   Thu, 13 Jan 2022 23:41:52 +0100
-Message-ID: <CANqBaXVSfOGLj7J26QWPsx3dwN0Cxmg71Yc9hV9b7yv0f0E1qQ@mail.gmail.com>
-Subject: Good News Finally.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello friend.
+Currently, SMC creates one CQ per IB device, and shares this cq among
+all the QPs of links. Meanwhile, this CQ is always binded to the first
+completion vector, the IRQ affinity of this vector binds to some CPU
+core. 
 
-You might find it so difficult to remember me, though it is indeed a
-very long time, I am much delighted to contact you again after a long
-period of time, I remember you despite circumstances that made things
-not worked out as we projected then. I want to inform you that the
-transaction we're doing together then finally worked out and I decided
-to contact you and to let you know because of your tremendous effort
-to make things work out then.
+┌────────┐    ┌──────────────┐   ┌──────────────┐
+│ SMC IB │    ├────┐         │   │              │
+│ DEVICE │ ┌─▶│ QP │ SMC LINK├──▶│SMC Link Group│
+│   ┌────┤ │  ├────┘         │   │              │
+│   │ CQ ├─┘  └──────────────┘   └──────────────┘
+│   │    ├─┐  ┌──────────────┐   ┌──────────────┐
+│   └────┤ │  ├────┐         │   │              │
+│        │ └─▶│ QP │ SMC LINK├──▶│SMC Link Group│
+│        │    ├────┘         │   │              │
+└────────┘    └──────────────┘   └──────────────┘
 
-Meanwhile I must inform you that I'm presently in Caribbean Island for
-numerous business negotiation with some partners. with my sincere
-heart i have decided to compensate you with USD$900,000 for your
-dedication then on our transaction, you tried so much that period and
-I appreciated your effort. I wrote a cheque/check on your name, as
-soon as you receive it, you let me know.
+In this model, when connections execeeds SMC_RMBS_PER_LGR_MAX, it will
+create multiple link groups and corresponding QPs. All the connections
+share limited QPs and one CQ (both recv and send sides). Generally, one
+completion vector binds to a fixed CPU core, it will limit the
+performance by single core, and large-scale scenes, such as multiple
+threads and lots of connections.
 
-Contact my secretary now on his email: mchristophdaniel@gmail.com
-Name: Mr. Christoph Daniel
+Running nginx and wrk test with 8 threads and 800 connections on 8 cores
+host, the softirq of CPU 0 is limited the scalability:
 
-You are to forward to him your Name........ Address.......,Phone
-number......for shipment/dispatch of the cheque/Check to you
+04:18:54 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+04:18:55 PM  all    5.81    0.00   19.42    0.00    2.94   10.21    0.00    0.00    0.00   61.63
+04:18:55 PM    0    0.00    0.00    0.00    0.00   16.80   82.78    0.00    0.00    0.00    0.41
+<snip>
 
-Regards,
-Mr. Marcus Galois
+Nowadays, RDMA devices have more than one completion vectors, such as
+mlx5 has 8, eRDMA has 4 completion vector by default. This unlocks the
+limitation of single vector and single CPU core.
+
+To enhance scalability and take advantage of multi-core resources, we
+can spread CQs to different CPU cores, and introduce more flexible
+mapping. Here comes up a new model, the main different is that creating
+multiple CQs per IB device, which the max number of CQs is limited by
+ibdev's ability (num_comp_vectors). In the scenen of multiple linkgroups,
+the link group's QP can bind to the least used CQ, and CQs are binded
+to different completion vector and CPU cores. So that we can spread
+the softirq (tasklet of wr tx/rx) handler to different cores.
+
+                        ┌──────────────┐   ┌──────────────┐
+┌────────┐  ┌───────┐   ├────┐         │   │              │
+│        ├─▶│ CQ 0  ├──▶│ QP │ SMC LINK├──▶│SMC Link Group│
+│        │  └───────┘   ├────┘         │   │              │
+│ SMC IB │  ┌───────┐   └──────────────┘   └──────────────┘
+│ DEVICE ├─▶│ CQ 1  │─┐                                    
+│        │  └───────┘ │ ┌──────────────┐   ┌──────────────┐
+│        │  ┌───────┐ │ ├────┐         │   │              │
+│        ├─▶│ CQ n  │ └▶│ QP │ SMC LINK├──▶│SMC Link Group│
+└────────┘  └───────┘   ├────┘         │   │              │
+                        └──────────────┘   └──────────────┘
+
+After sperad one CQ (4 linkgroups) to four CPU cores, the softirq load
+spreads to different cores:
+
+04:26:25 PM  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+04:26:26 PM  all   10.70    0.00   35.80    0.00    7.64   26.62    0.00    0.00    0.00   19.24
+04:26:26 PM    0    0.00    0.00    0.00    0.00   16.33   50.00    0.00    0.00    0.00   33.67
+04:26:26 PM    1    0.00    0.00    0.00    0.00   15.46   69.07    0.00    0.00    0.00   15.46
+04:26:26 PM    2    0.00    0.00    0.00    0.00   13.13   39.39    0.00    0.00    0.00   47.47
+04:26:26 PM    3    0.00    0.00    0.00    0.00   13.27   55.10    0.00    0.00    0.00   31.63
+<snip>
+
+Here is the benchmark with this patch (prototype of new model):
+
+Test environment:
+- CPU Intel Xeon Platinum 8 core, mem 32 GiB, nic Mellanox CX4.
+- nginx + wrk HTTP benchmark.
+- nginx: disable access_log, increase keepalive_timeout and
+  keepalive_requests, long-live connection.
+- wrk: 8 threads and 100, 200, 400 connections.
+
+Benchmark result:
+
+Conns/QPS         100        200        400
+w/o patch   338502.49  359216.66  398167.16
+w/  patch   677247.40  694193.70  812502.69
+Ratio        +100.07%    +93.25%   +104.06%
+
+This prototype patches show nealy 1x increasement of QPS.
+
+The benchmarkes of 100, 200, 400 connections use 1, 1, 2 link groups.
+When link group is one, it spreads send/recv to two cores. Once more
+than one link groups, it would spread to more cores.
+
+If the application's connections is no more than link group's limitation
+(SMC_RMBS_PER_LGR_MAX, 255), and CPU resources is restricted. This patch
+introduces a tunable way to reduce the hard limitation of link group
+connections number. It reduces the restriction of less CQs (cores) and
+less competition, such as link-level CDC slots. It depends on the scenes
+of applications, so this patch provides a userspace knob, users can
+choose to share link groups for saving resources, or create more link
+groups for less limitation.
+
+Patch 1-4 introduce multiple CQs support.
+- Patch 1 spreads CQ to two cores, it works for less connections.
+- Patch 2, 3, 4 introduce multiple CQs support, involves a new medium
+  to tie link and ibdev, and load balancing between different completion
+  vectors and CQs.
+- the policy of spreading CQs is still thinking and testing to get
+  highest performance, such as splitting recv/send CQs, or joining them
+  together, or bind recv/recv (send/send) CQ to same vector and so on.
+  Glad to hear your advice.
+
+Patch 5 is a medium for userspace control knob.
+- mainly provide two knobs to adjust the buffer size of smc socket. We
+  found that too little buffers would let smc wait for buffer for a long
+  time, and limit the performance.
+- introduce a sysctl framework, just for tuning, netlink also does work.
+  Because sysctl is easy to compose as patch and no need userspace example.
+  I am glad to wait for your advice about the control panel for
+  userspace.
+
+Patch 6 introduces a tunable knob to decrease the per link group
+connections' number, which would increase parallel performance as
+mentioned previous.
+
+These patches are still improving, I am very glad to hear your advice.
+
+Thank you.
+
+Tony Lu (6):
+  net/smc: Spread CQs to differents completion vectors
+  net/smc: Prepare for multiple CQs per IB devices
+  net/smc: Introduce smc_ib_cq to bind link and cq
+  net/smc: Multiple CQs per IB devices
+  net/smc: Unbind buffer size from clcsock and make it tunable
+  net/smc: Introduce tunable linkgroup max connections
+
+ Documentation/networking/smc-sysctl.rst |  20 +++
+ include/net/netns/smc.h                 |   6 +
+ net/smc/Makefile                        |   2 +-
+ net/smc/af_smc.c                        |  18 ++-
+ net/smc/smc_core.c                      |   2 +-
+ net/smc/smc_core.h                      |   2 +
+ net/smc/smc_ib.c                        | 178 ++++++++++++++++++++----
+ net/smc/smc_ib.h                        |  17 ++-
+ net/smc/smc_sysctl.c                    |  92 ++++++++++++
+ net/smc/smc_sysctl.h                    |  22 +++
+ net/smc/smc_wr.c                        |  42 +++---
+ 11 files changed, 350 insertions(+), 51 deletions(-)
+ create mode 100644 Documentation/networking/smc-sysctl.rst
+ create mode 100644 net/smc/smc_sysctl.c
+ create mode 100644 net/smc/smc_sysctl.h
+
+-- 
+2.32.0.3.g01195cf9f
+
