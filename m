@@ -2,74 +2,43 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 999BA48F9BD
-	for <lists+linux-s390@lfdr.de>; Sun, 16 Jan 2022 00:00:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29C1048FA49
+	for <lists+linux-s390@lfdr.de>; Sun, 16 Jan 2022 03:09:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233871AbiAOXAM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 15 Jan 2022 18:00:12 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:52730 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231483AbiAOXAL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 15 Jan 2022 18:00:11 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5CA99B80C83;
-        Sat, 15 Jan 2022 23:00:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 29539C36AEF;
-        Sat, 15 Jan 2022 23:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642287609;
-        bh=yKSa1yO06cC7xDb44AAOZz+o9oAW/joqyx8YUk6xLCg=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=ZH6ARvIoQlMGAyMsJZD7PVYUVBRKeNyPp+m40WTbyQY11VqVQmw6g5D6QmWCxJtGa
-         uvHcUDGbbIRzz4vs7cAYyQGlluIpuyzEoTbjilHYNMpdJcUcFYyR9GWyV+H2cgTZ5/
-         mXphCW2atzxue60BYFsXeOth3L/L3ttbvgirZr1aG/TISMIm04RoF1jphK4PWYSq2F
-         HEUAtgSAoCk5D6E7aQttGmBzA4LHywdgXOql7D4+5/ecuS0acx/nWKJR3hOlkl8FP+
-         HrNIzfDZLEDX33wItMstP83vK6xgBZd8hez0F8RKvoCLL1DsbrMzZD2NpZXJs84aiR
-         0VwJMltSGJY+w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1196DF6079A;
-        Sat, 15 Jan 2022 23:00:09 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        id S234115AbiAPCI0 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Sat, 15 Jan 2022 21:08:26 -0500
+Received: from ec2-13-115-114-132.ap-northeast-1.compute.amazonaws.com ([13.115.114.132]:56262
+        "EHLO mail.gunma-suigai-risk.jp" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230366AbiAPCI0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 15 Jan 2022 21:08:26 -0500
+Received: from Unknown (unknown [222.124.135.123])
+        by mail.gunma-suigai-risk.jp (Postfix) with ESMTPA id 8BFAC23EB412;
+        Sat, 15 Jan 2022 22:17:30 +0000 (UTC)
+Message-ID: <343187D4DF0B25E63A3F76CACE898060@emvyde>
+Reply-To: "Fredrik Elvebakk" <fcresswell9@gmail.com>
+From:   "Fredrik Elvebakk" <investment@dnb.no>
+Subject: Re:
+Date:   Sat, 15 Jan 2022 14:15:53 -0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] net/smc: Remove unused function declaration
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <164228760906.1385.6668664437675144815.git-patchwork-notify@kernel.org>
-Date:   Sat, 15 Jan 2022 23:00:09 +0000
-References: <1642167345-77338-1-git-send-email-guwen@linux.alibaba.com>
-In-Reply-To: <1642167345-77338-1-git-send-email-guwen@linux.alibaba.com>
-To:     Wen Gu <guwen@linux.alibaba.com>
-Cc:     kgraul@linux.ibm.com, davem@davemloft.net, kuba@kernel.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Content-Type: text/plain;
+        format=flowed;
+        charset="windows-1251";
+        reply-type=original
+Content-Transfer-Encoding: 8BIT
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Windows Live Mail 15.4.3538.513
+X-MimeOLE: Produced By Microsoft MimeOLE V15.4.3538.513
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello:
+Hello
 
-This patch was applied to netdev/net.git (master)
-by David S. Miller <davem@davemloft.net>:
+Kindly get back to me for an important 
+discussion
 
-On Fri, 14 Jan 2022 21:35:45 +0800 you wrote:
-> The declaration of smc_wr_tx_dismiss_slots() is unused.
-> So remove it.
-> 
-> Fixes: 349d43127dac ("net/smc: fix kernel panic caused by race of smc_sock")
-> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
-> ---
->  net/smc/smc_wr.h | 4 ----
->  1 file changed, 4 deletions(-)
-
-Here is the summary with links:
-  - [net] net/smc: Remove unused function declaration
-    https://git.kernel.org/netdev/net/c/9404bc1e58e4
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Best regards
+Fredrik Elvebakk
