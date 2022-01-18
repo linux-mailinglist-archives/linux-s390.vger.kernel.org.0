@@ -2,225 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 071A1492538
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Jan 2022 12:52:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 600B3492630
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Jan 2022 13:56:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236705AbiARLvj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 18 Jan 2022 06:51:39 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13636 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S230274AbiARLvj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 18 Jan 2022 06:51:39 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20IBSUXq030316;
-        Tue, 18 Jan 2022 11:51:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=I9K5XHxLDOsibcZ5rl4plOW1p+JxRz8GMdd1sVVC/r8=;
- b=SPt7cTrBliVh55gduecSqJnx5AjZn8FTfO/5/zE7bPSt94DNx0gLROpbCOipZXw5V+dA
- 6XrVNqeUuedlAb7RTTZ6rO3WGhBKxJ7wKjtdcEfasa9dqhKHGP0E1fWRBRTBvmm9gvjN
- rFipqbBge7KQoyShs7414yxhFbv0pcVRHnvN/uORY4f6ovimtSRd0RkhG2uUfzhWTIJ/
- +67GozLERgS0YXcrllu/RNtaUXLZO9wzZRIgpKzI5dVkVxlDiloRg0iwo8zHnPuJE5G4
- RB0pewCmW8CXThGqtO2PGYIFGlh5z5tL1uioQN8+IHhYAJl0vGuoJv1dJ0KDOfrBBhhG Qw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3dnt4dkqjx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Jan 2022 11:51:38 +0000
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 20IBoSNs007311;
-        Tue, 18 Jan 2022 11:51:37 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3dnt4dkqjd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Jan 2022 11:51:37 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 20IBmqMZ015970;
-        Tue, 18 Jan 2022 11:51:36 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 3dknw92f0k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Jan 2022 11:51:35 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 20IBgA2I33882408
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jan 2022 11:42:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34A7CAE045;
-        Tue, 18 Jan 2022 11:51:27 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE2D8AE04D;
-        Tue, 18 Jan 2022 11:51:26 +0000 (GMT)
-Received: from [9.171.19.84] (unknown [9.171.19.84])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 18 Jan 2022 11:51:26 +0000 (GMT)
-Message-ID: <2bd8dd31-0c08-a03b-33b3-67d7adc78726@linux.ibm.com>
-Date:   Tue, 18 Jan 2022 12:51:26 +0100
+        id S241121AbiARM4c (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 Jan 2022 07:56:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241134AbiARM4b (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 18 Jan 2022 07:56:31 -0500
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC370C061749
+        for <linux-s390@vger.kernel.org>; Tue, 18 Jan 2022 04:56:30 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id q141-20020a1ca793000000b00347b48dfb53so7283120wme.0
+        for <linux-s390@vger.kernel.org>; Tue, 18 Jan 2022 04:56:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=kt7BSYvG+rr2bLEECwLOEMCvBVZotJIk44/4XcKD9H0=;
+        b=qVnMKKFkDFfregDqIMLKYbf/6Rfv7ZYgGOembxhYq270XML2HKFtTQgZWIe4suSlTH
+         9ZzqBt5SMc2HUATvpaoydj6CpAH75hfC5DF+qG4KwifTo4DrFaHm4c8fs1QJQm7jolVG
+         Yz4zXdaQM20LOthQjIWFNEHmWnNyurUbd97AZ4ibUQhIkLNbnMtMag6Xrg6QZ8gZZqDm
+         AhE1vYxascg6oV2aYaMhw3KgbAVODS8uHXaxJLKE26GX1yPfuLfQGBvcHdmtP8IdG3mL
+         tZhPduIc/yXpUOsnqZjXTAJXBz08l+EgG80HPIwCF9codvQmj8aBOWuUqBF+k09ulJ3k
+         hb2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=kt7BSYvG+rr2bLEECwLOEMCvBVZotJIk44/4XcKD9H0=;
+        b=BJkxgp8PNhXa3PiQD4wVm5PNgV9PeAkwmnvr45SC2Yh4KUoWVlRyCLrswyRDCBg62x
+         9VONBo8aIi1YSgolT4f+D8vFctP7mHmfgPrN+mn/wH2St0UeRVLuoUDH6ZV2tj3Wg2w3
+         CPoCaATBGaDG4MssLJaRKo+RGneBM9ANLgRI6PIjYdhOfJaLpTc1OqjfCqqT7lB+FSG+
+         4GNClS/RQ+0K/EzQ0p49WbUNt5DqXovKABN2LDVFhJYPZI7wVz19jkcZjj18p/zEttbs
+         EdhaNV/IZ4YfZu8DJxv0OTKArPbvd7i9wBsaVaJCSfFF7D0K3vTx+WV74qgSVIpcYtFF
+         2XMQ==
+X-Gm-Message-State: AOAM533hrijwso+rAP5WxcRf9OwmDsFU3ZRTIZdde1ccNqPrPZ3U6wC8
+        FviujOGVI+7bxU0UQar1JmDhwCOME6qRVL5Fn48=
+X-Google-Smtp-Source: ABdhPJxGKt76Lg3GTqSnJwaq8ce07osyp5P35JeSOcN9tb1VXjOIJO04UXEDjKYPd9tAaf1+CAAgchajeREZcdHreE4=
+X-Received: by 2002:a05:6000:1b0e:: with SMTP id f14mr24751578wrz.100.1642510589314;
+ Tue, 18 Jan 2022 04:56:29 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [RFC PATCH v1 05/10] KVM: s390: Add optional storage key checking
- to MEMOP IOCTL
-Content-Language: en-US
-To:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220118095210.1651483-1-scgl@linux.ibm.com>
- <20220118095210.1651483-6-scgl@linux.ibm.com>
-From:   Christian Borntraeger <borntraeger@linux.ibm.com>
-In-Reply-To: <20220118095210.1651483-6-scgl@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 2m9v-qkGO2dcM6m5Gq5rJf8PC8IKuIKa
-X-Proofpoint-GUID: nT_KZZE9z1DpFYdkyx0gDhu0rarlProb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-01-18_03,2022-01-18_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 bulkscore=0 adultscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2201180070
+Received: by 2002:adf:e18f:0:0:0:0:0 with HTTP; Tue, 18 Jan 2022 04:56:28
+ -0800 (PST)
+Reply-To: mohsheikhalhamed@gmail.com
+From:   bratikox <bratikox@gmail.com>
+Date:   Tue, 18 Jan 2022 13:56:28 +0100
+Message-ID: <CAFuXTSxdo5QqN-cWu1zvOLDOxST9c2oW0BX-ZHL4Uwk2Qh45dA@mail.gmail.com>
+Subject: Salam Alaikum /ADIA LOAN OFFER
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Salam Alaikum,
+
+We are a United Arab Emirates based investment company known as Abu
+Dhabi Investment Authority working on expanding its portfolio globally
+and financing projects.
+
+We are offering Corporate and Personal Loan at 3.5% Interest Rate for
+a duration of 5 to 10 years.
+
+Please get back to us on Email: mohsheikhalhamed@gmail.com ,if you are
+interested for further embellishment.
+
+We also pay 2% commission to brokers who introduce project owners for
+finance or other opportunities.
 
 
-Am 18.01.22 um 10:52 schrieb Janis Schoetterl-Glausch:
-> User space needs a mechanism to perform key checked accesses when
-> emulating instructions.
-> 
-> The key can be passed as an additional argument via the flags field.
-> As reserved flags need to be 0, and key 0 matches all storage keys,
-> by default no key checking is performed, as before.
-> Having an additional argument is flexible, as user space can
-> pass the guest PSW's key, in order to make an access the same way the
-> CPU would, or pass another key if necessary.
-> 
-> Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-> Acked-by: Janosch Frank <frankja@linux.ibm.com>
-> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> ---
->   arch/s390/kvm/kvm-s390.c | 21 ++++++++++++++-------
->   include/uapi/linux/kvm.h |  1 +
->   2 files changed, 15 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 38b304e81c57..c4acdb025ff1 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -32,6 +32,7 @@
->   #include <linux/sched/signal.h>
->   #include <linux/string.h>
->   #include <linux/pgtable.h>
-> +#include <linux/bitfield.h>
->   
->   #include <asm/asm-offsets.h>
->   #include <asm/lowcore.h>
-> @@ -4727,9 +4728,11 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *vcpu,
->   {
->   	void __user *uaddr = (void __user *)mop->buf;
->   	void *tmpbuf = NULL;
-> +	char access_key = 0;
->   	int r = 0;
->   	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
-> -				    | KVM_S390_MEMOP_F_CHECK_ONLY;
-> +				    | KVM_S390_MEMOP_F_CHECK_ONLY
-> +				    | KVM_S390_MEMOP_F_SKEYS_ACC;
-
-I think it would be better to just have a flag here (single bit) to check the key and
-then embed the key value in the payload.
-
-         union {
-                 __u8 ar;        /* the access register number */
-                 __u32 sida_offset; /* offset into the sida */
-                 __u8 reserved[32]; /* should be set to 0 */
-         };
-
-There are cases when we need both, AR and key so maybe an unname struct is the easiest.
-
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 1daa45268de2..e8fa1f82d472 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -562,7 +562,10 @@ struct kvm_s390_mem_op {
-         __u32 op;               /* type of operation */
-         __u64 buf;              /* buffer in userspace */
-         union {
--               __u8 ar;        /* the access register number */
-+               struct {
-+                       __u8 ar;        /* the access register number */
-+                       __u8 key;       /* effective storage key */
-+               };
-                 __u32 sida_offset; /* offset into the sida */
-                 __u8 reserved[32]; /* should be set to 0 */
-         };
-
-(or acc instead of key)
-
-
->   
->   	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS || !mop->size)
->   		return -EINVAL;
-> @@ -4746,14 +4749,17 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *vcpu,
->   			return -ENOMEM;
->   	}
->   
-> +	access_key = FIELD_GET(KVM_S390_MEMOP_F_SKEYS_ACC, mop->flags);
-> +
->   	switch (mop->op) {
->   	case KVM_S390_MEMOP_LOGICAL_READ:
->   		if (mop->flags & KVM_S390_MEMOP_F_CHECK_ONLY) {
-> -			r = check_gva_range(vcpu, mop->gaddr, mop->ar,
-> -					    mop->size, GACC_FETCH, 0);
-> +			r = check_gva_range(vcpu, mop->gaddr, mop->ar, mop->size,
-> +					    GACC_FETCH, access_key);
->   			break;
->   		}
-> -		r = read_guest(vcpu, mop->gaddr, mop->ar, tmpbuf, mop->size);
-> +		r = read_guest_with_key(vcpu, mop->gaddr, mop->ar, tmpbuf,
-> +					mop->size, access_key);
->   		if (r == 0) {
->   			if (copy_to_user(uaddr, tmpbuf, mop->size))
->   				r = -EFAULT;
-> @@ -4761,15 +4767,16 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *vcpu,
->   		break;
->   	case KVM_S390_MEMOP_LOGICAL_WRITE:
->   		if (mop->flags & KVM_S390_MEMOP_F_CHECK_ONLY) {
-> -			r = check_gva_range(vcpu, mop->gaddr, mop->ar,
-> -					    mop->size, GACC_STORE, 0);
-> +			r = check_gva_range(vcpu, mop->gaddr, mop->ar, mop->size,
-> +					    GACC_STORE, access_key);
->   			break;
->   		}
->   		if (copy_from_user(tmpbuf, uaddr, mop->size)) {
->   			r = -EFAULT;
->   			break;
->   		}
-> -		r = write_guest(vcpu, mop->gaddr, mop->ar, tmpbuf, mop->size);
-> +		r = write_guest_with_key(vcpu, mop->gaddr, mop->ar, tmpbuf,
-> +					 mop->size, access_key);
->   		break;
->   	}
->   
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 1daa45268de2..e3f450b2f346 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -575,6 +575,7 @@ struct kvm_s390_mem_op {
->   /* flags for kvm_s390_mem_op->flags */
->   #define KVM_S390_MEMOP_F_CHECK_ONLY		(1ULL << 0)
->   #define KVM_S390_MEMOP_F_INJECT_EXCEPTION	(1ULL << 1)
-> +#define KVM_S390_MEMOP_F_SKEYS_ACC		0x0f00ULL
->   
->   /* for KVM_INTERRUPT */
->   struct kvm_interrupt {
+ Yours truly,
+ Hamed Mohammad
+ (Personal Assistant)
+ Abu Dhabi Investment Authority
+ 211 Corniche, P.O Box 3600
+ Abu Dhabi,United Arab Emirates
