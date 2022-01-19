@@ -2,78 +2,73 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7843493182
-	for <lists+linux-s390@lfdr.de>; Wed, 19 Jan 2022 01:00:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2BDA4933A3
+	for <lists+linux-s390@lfdr.de>; Wed, 19 Jan 2022 04:31:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350220AbiASAAR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 18 Jan 2022 19:00:17 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38722 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238129AbiASAAR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 18 Jan 2022 19:00:17 -0500
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1642550414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GJoRNYCC0qaPQvmOXkM+nCsiL5/VV0xKtAJ9Mq0RcS0=;
-        b=a9MMj8QkoBwPjJ9s10Nj5dcTSEk5744AcGkY+mIqMyhSCNoNM/Icm0kXybWpkbKJFQighH
-        1X9AZdGGKDLG3+SXqsfjv3JU9dRsBhgMjiZAZM0AF1fjiNoc/kyGj1WDfc13cCOD1x5fM6
-        DWSEKg44FhgPmXAqIs3WIgSBCgxKc4pq7CN7jLxDnudGUV+EF6aJnCe5DaLVzCN42mwLal
-        ceQwErmCYN5iHW/wBdHkoTdvHTRAkVF0oCvKcxs9zruKkcZH+DR26Tu171bTrPE0yo9FHi
-        4rwrLMfSKfXYBCD5gQy/e3+J5TmjTVIfxiIu8I3nLvdQFvwghW7JJWPQwhCnjQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1642550414;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GJoRNYCC0qaPQvmOXkM+nCsiL5/VV0xKtAJ9Mq0RcS0=;
-        b=m3IN+KU7X9XD5oXfHjNVtst6/jOc72hQesIDxbDqdrCWfpXMC6egl9W2w2q0aW8wkvWOLE
-        kL3K2AGDiz3SUfAA==
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Marc Zygnier <maz@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Megha Dey <megha.dey@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Cedric Le Goater <clg@kaod.org>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com
-Subject: Re: [patch] genirq/msi: Populate sysfs entry only once
-In-Reply-To: <1d5711be-c26d-d57b-10db-1b45d279515d@socionext.com>
-References: <20211206210600.123171746@linutronix.de>
- <20211206210749.224917330@linutronix.de> <87leznqx2a.ffs@tglx>
- <1d5711be-c26d-d57b-10db-1b45d279515d@socionext.com>
-Date:   Wed, 19 Jan 2022 00:59:58 +0100
-Message-ID: <87a6fsa935.ffs@tglx>
+        id S1345294AbiASDbk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 Jan 2022 22:31:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240019AbiASDbj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 18 Jan 2022 22:31:39 -0500
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7397DC061574
+        for <linux-s390@vger.kernel.org>; Tue, 18 Jan 2022 19:31:39 -0800 (PST)
+Received: by mail-io1-xd33.google.com with SMTP id i82so1203030ioa.8
+        for <linux-s390@vger.kernel.org>; Tue, 18 Jan 2022 19:31:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=jB76yKEGKGt49q3IU4WC4IhfgdXpnbv6+RjPiyHTGok=;
+        b=EkNOEDTp8zQwpYgKn52dSbPTe2s9msYaO3Hm/RgPvc0GutBFdslfcNJvGvGiZIh4Fh
+         oGge9Fiy+s6OnRQWWLU7KxlX4Er/ZxGJeyT3B97iEfIMxYywtxBzmyZNZ9OU0cFkOMJy
+         tvttmmk+2PXQ+34R5dxsk2tIipGKEs6G9rNykttJRLr1WGbd6MU8S74lPGgfc2p1uvBx
+         7nz1zE5OpcgYktBVuwHkSRtcnKbSzb29iRuhbYBcm1QbrLoL0e7rv0cSpF60pczxnmwI
+         g9gjDEdx7jywfhB1EoiS6iwM+e+wxoJ0NeO0XgIPLPvawc8JxfhyehtyrDk++Rtaj0Ug
+         SW5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=jB76yKEGKGt49q3IU4WC4IhfgdXpnbv6+RjPiyHTGok=;
+        b=TqPpPaSlQKonRjyg8GBvVNToP7IDcY77dMW1PS8HDtrnIAlycN3ePNMk3nLvNU69By
+         ImoU+PFZv5S2rFmbU3DFfWZ5FlyQZJPpJkLzqE5RGPAqZ+8USHxtal7B7IqYeqzTO6VE
+         vY8wgHyXkdi8S86RN7GWO0+uzM52y4IT7O05Nc4qLDQv6VwApjOVUG5vm1JeSppv4Rnt
+         1CB5+sRSiybMlGnh4zvPQrWPENZGkARyEsFgnKRr3CCBSQqIh6p2MFtmQLUapuSXrIE1
+         LdBE4ZVF9kK211P9brYbG/uJV8138ligbobT0hG62fCxBpI1QGR5Is840vP72D4eBgoO
+         toyQ==
+X-Gm-Message-State: AOAM531lt3SLl0LNeXAZRcsUD+vzxxcWhYOEbfor+LM9sgqfNdTvcvTN
+        ijBrK4QXLKFCxni5gwQSEyzTW2CN6Jbp4wiUiNk=
+X-Google-Smtp-Source: ABdhPJwoWdhwKd0L7QI0kCOoM7dV9Xl/cPYb7fvrjwVRiqCVQNOqfZV89pfcDpR0u4jrj7qwLlIquTeAeS8jIDrmbbY=
+X-Received: by 2002:a5d:97c3:: with SMTP id k3mr14166990ios.191.1642563098895;
+ Tue, 18 Jan 2022 19:31:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+Received: by 2002:a4f:a84:0:0:0:0:0 with HTTP; Tue, 18 Jan 2022 19:31:38 -0800 (PST)
+Reply-To: xiauchanyu@gmail.com
+From:   Mrs Xiau Chan Yu <yunussaibrahim9@gmail.com>
+Date:   Tue, 18 Jan 2022 19:31:38 -0800
+Message-ID: <CAMOddMEfmCHs_9G5mpjw1oknk66tNAnNF-dBT15Fp3CR8pAv0Q@mail.gmail.com>
+Subject: =?UTF-8?B?U2Now7ZuZW4gVGFn?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Kunihiko,
+--=20
+Sch=C3=B6ner Tag,
 
-On Wed, Jan 12 2022 at 09:05, Kunihiko Hayashi wrote:
-> Is this fix the same as below?
-> https://marc.info/?l=linux-kernel&m=164061119923119&w=2
+Ich bin Xiu Chan Yu, Kredit- und Marketingdirektor von Chong Hing
+Bank, Hongkong, Chong Hing Bank Center, 24 Des Voeux Road Central,
+Hongkong. Ich habe einen Gesch=C3=A4ftsvorschlag f=C3=BCr 13.991.674 EURO
 
-pretty much the same, but I missed that patch. I was off for 2+ weeks
-and on return Boris poked me about this issue and I fixed it. Then I
-went ahead and marked all vacation mail read as I always do :)
+Alle best=C3=A4tigbaren Dokumente zur Sicherung der Anspr=C3=BCche werden I=
+hnen
+ausgeh=C3=A4ndigt
+vor Ihrer Annahme und sobald ich Ihre R=C3=BCcksendung erhalten habe
+Unter der Voraussetzung.
 
-So sorry for not noticing that patch.
-
-Thanks,
-
-        Thomas
+Gr=C3=BC=C3=9Fe
+Xiau Chan Yu
