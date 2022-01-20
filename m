@@ -2,114 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30180494BDC
-	for <lists+linux-s390@lfdr.de>; Thu, 20 Jan 2022 11:38:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18829494D3F
+	for <lists+linux-s390@lfdr.de>; Thu, 20 Jan 2022 12:42:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242470AbiATKih (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 20 Jan 2022 05:38:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:22887 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1376326AbiATKif (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 20 Jan 2022 05:38:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1642675114;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sFpN3f0uduDA3tQ7l5sXIVy8xoN2m2qwc3s/2ZpwE2I=;
-        b=CBWQbPJOD0nY8gsyaGhlSbLLEZ458+TdTU0e1WBVhpuI2tlT4GV4IcSEXYgbT4yrMBylmb
-        JJr4GGUANc6xfq/29dXXryRIM+h7sVZIJ/HWXlkClPOGfE8SPKo4/VqlXdxKu1qMU9p2VR
-        1FI99IIVAfOp0DpQmmnaRlZ9dy4W4cM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-81-u9dQgkaeMIK0p8DY-3jULw-1; Thu, 20 Jan 2022 05:38:32 -0500
-X-MC-Unique: u9dQgkaeMIK0p8DY-3jULw-1
-Received: by mail-wm1-f72.google.com with SMTP id o3-20020a05600c4fc300b0034aee9534bdso2579117wmq.2
-        for <linux-s390@vger.kernel.org>; Thu, 20 Jan 2022 02:38:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=sFpN3f0uduDA3tQ7l5sXIVy8xoN2m2qwc3s/2ZpwE2I=;
-        b=w62tTMI2XOzVulenYtPWx+tuQ9btnjSrh/U4qcFKg7hQmXTQyOjUHUDOZcgrLs2IpT
-         BwqWzbsG1si2whBYUXVSIGKNqth61sVlgnEibyoIs0ETOrCjqaQl3ZLa/3B7HqVtvtpI
-         NSEso8059B/g8TBTky3yZLCeNS+vJG7rcjiwvKlQv1+8RB6fv43zDGlA/l3UFY0XNlyz
-         TKh3amrV0vUZpILBew8ROHifBCixvsEgYSTsloXXASMyemqDJeWa0o+Tj8ZmAlZovCaW
-         bBUwtGHGGwqJBcEC/3mlAmtxtK6DU4WbQOgVRIagtlOAuw8OahurZWuVLxOeDus9ZUlG
-         oyNA==
-X-Gm-Message-State: AOAM531EDxFQ/vub7roC91MHO01lqT9GRHKoyKz2U8qXjHTSjhDqWvKF
-        kDpiDGwaAf7BdGlVQSPzHm9FwbnMU0I6iw71XNzTfNra5dQKXXNNT7fJY7A1IxSYdfWTkO6ZKR/
-        6pTFksj3oZFI9ZQEHrwVABQ==
-X-Received: by 2002:a05:6000:152:: with SMTP id r18mr3963431wrx.598.1642675111368;
-        Thu, 20 Jan 2022 02:38:31 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzfvIX06o0KrIvdE4knevl3OSMRO8haaYDO1DIVACVjH75Q5KDVwCs2c7eUgWYh9T6sdMZ1nw==
-X-Received: by 2002:a05:6000:152:: with SMTP id r18mr3963404wrx.598.1642675111135;
-        Thu, 20 Jan 2022 02:38:31 -0800 (PST)
-Received: from [10.33.192.183] (nat-pool-str-t.redhat.com. [149.14.88.106])
-        by smtp.gmail.com with ESMTPSA id n10sm1005966wrf.96.2022.01.20.02.38.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jan 2022 02:38:30 -0800 (PST)
-Message-ID: <069c72b6-457f-65c7-652e-e6eca7235fca@redhat.com>
-Date:   Thu, 20 Jan 2022 11:38:29 +0100
+        id S231866AbiATLlx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 20 Jan 2022 06:41:53 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:49665 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231848AbiATLlx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 20 Jan 2022 06:41:53 -0500
+Received: from mail-lf1-f44.google.com ([209.85.167.44]) by
+ mrelayeu.kundenserver.de (mreue109 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1M5fUy-1nDGhp1Zu6-007BIW; Thu, 20 Jan 2022 12:41:51 +0100
+Received: by mail-lf1-f44.google.com with SMTP id y15so12271320lfa.9;
+        Thu, 20 Jan 2022 03:41:51 -0800 (PST)
+X-Gm-Message-State: AOAM530tvyQ5T4JV3gkrqe9AhUSyTnugciTj7DiHbp+8zbWWFJ9J3QcL
+        04n5wA1NFJmsAlHDfi7PJrwtL9MMOo2yncro9VY=
+X-Google-Smtp-Source: ABdhPJym7KyRCSRXKMerVMcQ/VMRiOiyKpoCP7tEcDc9DhkSEEWwSJxd9o5Jl5QZLGZ5wnpG9DwFk+lKhhVFjaoKItk=
+X-Received: by 2002:a5d:6488:: with SMTP id o8mr12004975wri.219.1642671600998;
+ Thu, 20 Jan 2022 01:40:00 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [RFC PATCH v1 06/10] KVM: s390: Add vm IOCTL for key checked
- guest absolute memory access
-Content-Language: en-US
-To:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220118095210.1651483-1-scgl@linux.ibm.com>
- <20220118095210.1651483-7-scgl@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-In-Reply-To: <20220118095210.1651483-7-scgl@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20220120073911.99857-16-guoren@kernel.org>
+In-Reply-To: <20220120073911.99857-16-guoren@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 20 Jan 2022 10:39:45 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0Mr2m2dVoVss59cN-9X7GVBD29VQLo3m4xswRznk_WUQ@mail.gmail.com>
+Message-ID: <CAK8P3a0Mr2m2dVoVss59cN-9X7GVBD29VQLo3m4xswRznk_WUQ@mail.gmail.com>
+Subject: Re: [PATCH V3 15/17] riscv: compat: Add UXL_32 support in start_thread
+To:     Guo Ren <guoren@kernel.org>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>, Arnd Bergmann <arnd@arndb.de>,
+        Anup Patel <anup@brainfault.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        liush <liush@allwinnertech.com>, Wei Fu <wefu@redhat.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Wang Junqiang <wangjunqiang@iscas.ac.cn>,
+        Christoph Hellwig <hch@lst.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-csky@vger.kernel.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        inux-parisc@vger.kernel.org,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Guo Ren <guoren@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Jnd6tXvVheyrbbh+xeAuIttBPYzIGn2pO6Pyy8MGiT7g0+tHTYg
+ ppNX/NZb5qBasQ62aCGAhwBL+KVQ3j55clV2VBrd3V7EfaWg99achBw8Fs+nw6eqKCj6sb6
+ Z0pBdcJ/OTLz+hwGXxFN1cZNSxla+WitNBAupt4x22wcNWGOv8qfEZ4LylMsFF/ugnh80Q3
+ sybg53kul8jJBGqrQl8jw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uopUgF9nUW8=:DzrAYNFvXtQnHD9gAQ62SZ
+ KDQrMUgKEJ3r8Gloo19zs/kHAS8ArUSOCjvLzo4kYqAuWXzoh/Qx+2OfOPZFggQVX62C/6tfq
+ 7jC82Yjx+G9qjLVSo+fwksf/4XEDFPhPZsFU+tL9jgVx8xis2uS/FcvbD8hzRT15vBDzTi21j
+ upGJyywC5RUB/z+gn/vOPmqym2BVQm7QhhFTEl9DoTiGYtum/7jjbP6le9v4ikC5aVqRRVIk8
+ iqraqxSSHe69jfpKd7nwgXEEpJMLKq/vdF41u+Kr66X2Hj3VTpL/xvviv8SaYv+Iw04jpN4zw
+ jKzSWeRQB7XPN2pjaWFV/WAhYJLmt/bwejY35v3exoNGsqxTbHpYc8hSddymWqU06GNQcKDha
+ vNwH5Bz3QZC39Jv3bJd9PKYkT4c6DAlL1baTUfx7K2QH5+myoymmVXjRvBVDYAwFfYW5/Rg4V
+ jbkQrGdilj4ccMATwBjp0XQagMyUByj5fmSBAlDUqaFwsYjJopR49yDUeJlpS4gXH8IBdjCMA
+ nuxKrt9QVVDtgcHpVfY/F52nnHFqQfxvAdiRnFvlC7+PN40rAWmX1OofCeVBhUD8fQdf6kV4f
+ lrA3353o+P/rXCYAjEESSUp+hHv7UUmaQsxjZaxjh6UaV6YsdFPrfwHcm1T4b8TY4GXakTmoP
+ zQFQ52g6g+0KJMG2nCqOAZX1beilt8MCDzbHiMig81k7PrPWRrMFhyACyyIftYGqX++ssRNNG
+ mWQpi7C3vm1O57Zt6PYmGEpUpDxqNX6uhsZMpYYb7+31boN3Z5ShNN7Cw5COmJd0y7lSoIH8n
+ xHDVo/1L7a2oS1wf3nqZH9s3QIvxFTp9rUS+xs2mz7VhLn9U2GzyWnuQnWjH6Yow+qFgoD7
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 18/01/2022 10.52, Janis Schoetterl-Glausch wrote:
-> Channel I/O honors storage keys and is performed on absolute memory.
-> For I/O emulation user space therefore needs to be able to do key
-> checked accesses.
-> The vm IOCTL supports read/write accesses, as well as checking
-> if an access would succeed.
-...
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index e3f450b2f346..dd04170287fd 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -572,6 +572,8 @@ struct kvm_s390_mem_op {
->   #define KVM_S390_MEMOP_LOGICAL_WRITE	1
->   #define KVM_S390_MEMOP_SIDA_READ	2
->   #define KVM_S390_MEMOP_SIDA_WRITE	3
-> +#define KVM_S390_MEMOP_ABSOLUTE_READ	4
-> +#define KVM_S390_MEMOP_ABSOLUTE_WRITE	5
-
-Not quite sure about this - maybe it is, but at least I'd like to see this 
-discussed: Do we really want to re-use the same ioctl layout for both, the 
-VM and the VCPU file handles? Where the userspace developer has to know that 
-the *_ABSOLUTE_* ops only work with VM handles, and the others only work 
-with the VCPU handles? A CPU can also address absolute memory, so why not 
-adding the *_ABSOLUTE_* ops there, too? And if we'd do that, wouldn't it be 
-sufficient to have the VCPU ioctls only - or do you want to call these 
-ioctls from spots in QEMU where you do not have a VCPU handle available? 
-(I/O instructions are triggered from a CPU, so I'd assume that you should 
-have a VCPU handle around?)
-
-  Thomas
+On Thu, Jan 20, 2022 at 8:39 AM <guoren@kernel.org> wrote:
+> +
+> +#ifdef CONFIG_COMPAT
+> +       if (is_compat_task())
+> +               regs->status |= SR_UXL_32;
+> +#endif
 
 
+You should not need that #ifdef, as the is_compat_task() definition is
+meant to drop the code at compile time, unless the SR_UXL_32
+definition is not visible here.
+
+         Arnd
