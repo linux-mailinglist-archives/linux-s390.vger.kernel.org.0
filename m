@@ -2,33 +2,33 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CA6A494B9F
-	for <lists+linux-s390@lfdr.de>; Thu, 20 Jan 2022 11:26:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD397494BD1
+	for <lists+linux-s390@lfdr.de>; Thu, 20 Jan 2022 11:34:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359845AbiATK0i (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 20 Jan 2022 05:26:38 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:44115 "EHLO
+        id S242138AbiATKe0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 20 Jan 2022 05:34:26 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:39841 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359849AbiATK0b (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 20 Jan 2022 05:26:31 -0500
-Received: from mail-lf1-f48.google.com ([209.85.167.48]) by
- mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1MDQqk-1n3JeX0LO2-00AXcO; Thu, 20 Jan 2022 11:26:27 +0100
-Received: by mail-lf1-f48.google.com with SMTP id y15so11517075lfa.9;
-        Thu, 20 Jan 2022 02:26:26 -0800 (PST)
-X-Gm-Message-State: AOAM532xDvuVhYMxLbcdtQvp1d215j2HzuUlfURZ/QSlKIUEAP93LuhQ
-        lJwQvU/b2Qy7BZzYhvoUfCXyYvnAagNvyxJqJA8=
-X-Google-Smtp-Source: ABdhPJzWEQOVmrSCBjLkthqjYvCekql2pWig3E9/sv1NmQbjWn/17+5wGi2Yo7L626/g8+PxrkZBITeqW35NrwNIykU=
-X-Received: by 2002:adf:e193:: with SMTP id az19mr26654977wrb.407.1642671389935;
- Thu, 20 Jan 2022 01:36:29 -0800 (PST)
+        with ESMTP id S234927AbiATKeX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 20 Jan 2022 05:34:23 -0500
+Received: from mail-wm1-f53.google.com ([209.85.128.53]) by
+ mrelayeu.kundenserver.de (mreue106 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1M3UEW-1nB2jf1J34-000aYh; Thu, 20 Jan 2022 11:34:21 +0100
+Received: by mail-wm1-f53.google.com with SMTP id q141-20020a1ca793000000b00347b48dfb53so12714962wme.0;
+        Thu, 20 Jan 2022 02:34:21 -0800 (PST)
+X-Gm-Message-State: AOAM532mmwt4WDlPeYfxPfmVVWoGR6VohFudIl8oMshBEnKsEHLabE64
+        fddo/O528bZajEpSKh5xNaMt27PNXKxNgnM4XwI=
+X-Google-Smtp-Source: ABdhPJxEAFXYVk6DktXv3061JPbB7MqrKutmOAXqbVu5eyk6Pz36dhnH8dbuNkOxd7GlFiEfJn/5TzSKv0rhSZwiTMY=
+X-Received: by 2002:a7b:ce96:: with SMTP id q22mr8113766wmj.82.1642671479094;
+ Thu, 20 Jan 2022 01:37:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20220120073911.99857-11-guoren@kernel.org>
-In-Reply-To: <20220120073911.99857-11-guoren@kernel.org>
+References: <20220120073911.99857-14-guoren@kernel.org>
+In-Reply-To: <20220120073911.99857-14-guoren@kernel.org>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 20 Jan 2022 10:36:13 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2HaeFGdOr4Rm_ZcEP0rjh2Mo53=-ZRnEPtFfnmzfeE6g@mail.gmail.com>
-Message-ID: <CAK8P3a2HaeFGdOr4Rm_ZcEP0rjh2Mo53=-ZRnEPtFfnmzfeE6g@mail.gmail.com>
-Subject: Re: [PATCH V3 10/17] riscv: compat: Add elf.h implementation
+Date:   Thu, 20 Jan 2022 10:37:43 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a03-3QTC-vxmnbouK7wBd8iunPGZpX0-Jf6ntS1DY0E=w@mail.gmail.com>
+Message-ID: <CAK8P3a03-3QTC-vxmnbouK7wBd8iunPGZpX0-Jf6ntS1DY0E=w@mail.gmail.com>
+Subject: Re: [PATCH V3 13/17] riscv: compat: signal: Add rt_frame implementation
 To:     Guo Ren <guoren@kernel.org>
 Cc:     Palmer Dabbelt <palmer@dabbelt.com>, Arnd Bergmann <arnd@arndb.de>,
         Anup Patel <anup@brainfault.org>,
@@ -50,53 +50,41 @@ Cc:     Palmer Dabbelt <palmer@dabbelt.com>, Arnd Bergmann <arnd@arndb.de>,
         "the arch/x86 maintainers" <x86@kernel.org>,
         Guo Ren <guoren@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:WdJOJl6YzyOdYWVXjRix9lYlHeJZIv5iJHrmuIVaDqLFDQ1EiIK
- 8+AmjN/KKi39Y40ytr6lStCUPCk86RSetD7Ky3Ku8gyGxI7YopXEt67RLk4AX8/csNLQdYO
- +nH6rV1G3fN6/PaqLe5OLSandGt6MRuf141GUaLa/4skCLaq3vNWJR7zzbwREBG2EE+IYfX
- Thlr52eI5vQmDhLO/Mm6Q==
+X-Provags-ID: V03:K1:maXbNfNUf4coYMldaGrFVEumiNLwf3mNjO8XH1NNRoQtd2zeNdf
+ gJEKLqKMfYWyqs6qTQw//UbtBSSV7qnDMo4ZyuQD84WhLaDnkmEwjBajkAQ4pB7qq2o0a3R
+ +22Xsievc4CmTwghx28LxQOByrgKHl80yDKUA/B1bqK2dqdxv8c4iCHGcnVEngTzHZSLqLW
+ npYIW6C29QfRyI0RmBDuA==
 X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DnKiGbdM/8k=:DRqsKQ77GSg8KHbAgZc+SZ
- xYFxbfQqvCJspxrhWKsImyHPbulWQ4yZGeFgNNDZPNAcqNwBeIVOsy8KeBSR0QH/SwYJlb9ii
- ESwmuJSK5zLXC1cQypxj0W3S0lLsI5G5gZ99wENyaucJ4Cfe5Akz7pMW2AEHOI1byUVo++Q/S
- CIZjmKRY3oRSr+WtDxHPUgBeYIlSPgXIrvw2OOtz5lX6j3NL3uCBIkd2Hl+qCy7KJZum1HCiZ
- Wg5JLB/sDb5WYTCvshUT6/XvYXOZ08D16dYT25wu9IwdXR7Bau53RuKgguLaUFA0his6viv+A
- sOqoAx6UItWZZmvXrbsjfN8wVn0AeDJWJFvKRM79c5qUUJIx9/qPIlG+OYgHYdQRh8HcK7abp
- mm2Fo37LlXhk00Yfy/ecOV2Pd822p9D2QRpW6qG/FPQYZBkj1qBtx57hbqQ0xlig9Ck5U0T0h
- fvrhs4eFoZYO31eLzGXikMSUynq8ughF25dkceX2E7MRNLLkk9nbEd/QDV+d1YBB6DtudThgk
- /EhVobqFKFRM1Xmvh6YJyIYXARdNpR4ZJHdd0EwzVvR/yDMZrmI1bnAsDUsRscqApZ/UKGs1v
- VmEbwroWt6mHxQZrnv6yDCnPK1woeryJHv+/xjBSQjGbd94n96FcKvSHQe02fXKqh5PFcWRLT
- boGJLwfdkLOCMjAh2BSDZ7iK8hENyuf64lkT/qjV/zpXa3s86RJZGgJVn5jh1azZVsderb2hf
- vLduqGkL47xCAqUnEaB2m1E5k4VdvTKbibkPZ5T8scins26WZzDDYRpBM822r5YKwxZzz4MAv
- c+Bba5wIaPsJ6+ldV1uC9zYkY4F4/Fp75wYGi2Vf99HStHbLdhzaUhsGXtUf6l1AtNBNwlA
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5eelWh45nRQ=:AMM50bWtIrqXR/xRnTg739
+ oGEH6ShLu3ymDZw+hsNqhPbKWVHQNfN/3jsM7tWA0iDBQ1y1xtekBTK0+aXoQ/VBWEBdmyEPJ
+ qyv4Ve/9RE+GqfZomw4fOrm8KTGD9xhwvK9VMGudqtjJSOZK4uiTo30XZTu0EG2IA8j0YHFyr
+ 0uxBgeOaSGDtgAw45cc9K+qNzaQ8ib8VEf3wZLcs9IKyZTg8rTwhOrM9biEV/LgK/kFvSlMnd
+ rs9MRvxF5IsE+cw7rvT13frPZuWKwSgZOlxNarR4UDADuAHHndwfIRY2D/dqkCpnrYA4zTn8a
+ ZqPNAeBjWgMB0zjSj+RS+Mk5vqae59Y1ZklhScn9tn47CsOSkcuhvVZT7fwguPnacB6fGOpd6
+ CD1P3r7RBqU4v1+pJZOKmrHm8R/J5YjZ8ofgRJ0qaKenTATdefw3yhyjRJzXH51Zt4EtYRbAa
+ 2sF1uUkto7mgVq/71+FsAoNtxyY8QdPkQVzJAn814eVPzXCExvgQkutB53i6RcNS/iPJy+Dac
+ rK7k8YgLXzNMUL3GQei2uh09d4O4tW6Qq2tbr8GUlOZj6Ts/ZlDv70b5Umfw94iQAEB3T0Lzl
+ ZrwZ10uZR4K4wA3JzBBILU0gjA7XNdaMgTIQLJh1BoSfMlinYRGJ5OPUymdIN8/oUQhxcfER5
+ apKGnaHiBU66x3JTNDT/QrJT3BABEeZvJ54m0K1ciYAjHC46PoeYWsChBKaKnXgyt43uT+OQr
+ YetzrTAzjjsVrRr2FhV4LSBP07YLx4v84Qsp1bIv6ZPA9QqCfI1TFcFbNY/QkQaw/eXMpTgNb
+ nfiUfWvLadhY0FJAgIBxgkQwBMNAFnVXFfi4PedWKF5OUlaTI8Pc9eYGapjDiLnBOxhOAC3
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On Thu, Jan 20, 2022 at 8:39 AM <guoren@kernel.org> wrote:
+>
 > From: Guo Ren <guoren@linux.alibaba.com>
 >
-> Implement necessary type and macro for compat elf. See the code
-> comment for detail.
+> Implement compat_setup_rt_frame for sigcontext save & restore. The
+> main process is the same with signal, but the rv32 pt_regs' size
+> is different from rv64's, so we needs convert them.
 >
 > Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> Signed-off-by: Guo Ren <guoren@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+I hope someone else can properly review this part, it's not my area
+but it looks complex enough that it could bring subtle bugs.
 
-> +
-> +/*
-> + * FIXME: not sure SET_PERSONALITY for compat process is right!
-> + */
-> +#define SET_PERSONALITY(ex)                                    \
-> +do {    if ((ex).e_ident[EI_CLASS] == ELFCLASS32)              \
-> +               set_thread_flag(TIF_32BIT);                     \
-> +       else                                                    \
-> +               clear_thread_flag(TIF_32BIT);                   \
-> +       if (personality(current->personality) != PER_LINUX32)   \
-> +               set_personality(PER_LINUX |                     \
-> +                       (current->personality & (~PER_MASK)));  \
-> +} while (0)
-> +
-
-The implementation looks good to me now,  you can remove that comment above it.
-
-        Arnd
+       Arnd
