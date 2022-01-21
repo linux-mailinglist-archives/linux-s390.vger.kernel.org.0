@@ -2,125 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDC114960B1
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Jan 2022 15:26:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68D9B4961BF
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Jan 2022 16:09:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381011AbiAUO0b (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 21 Jan 2022 09:26:31 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32776 "EHLO
+        id S1381495AbiAUPJn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Jan 2022 10:09:43 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52154 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1381028AbiAUO0M (ORCPT
+        by vger.kernel.org with ESMTP id S1381494AbiAUPJk (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 21 Jan 2022 09:26:12 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20LDZxnN030038;
-        Fri, 21 Jan 2022 14:26:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=lsebu3yywD9GXAKMlk2Xl0HzAG5hoaXOsUFjDfEzK3Q=;
- b=a0mT4g4u4SjEAKHSRhxwyGiN5wWO427PD+MgDaGy0yDlacNTWLQMJxswnSJJ8jpwNGbM
- RkTgUtMQWlkC5b4ijEM8ypE/sIesKXCxhniGjtGhFg7DUeiQueEjhtvsAQgZIQRGYT/r
- 0rVjiT65w3awX/C+YVXDAGgTFyJ8oCkrQUya9+Hhek/nYGTRx2hhzA77SlMTznARptN5
- E7J1nF8dCGzY+VkQ+xwEMxNfWGZIxsnT4Qp3XaaTAOm9y4yJIn/rmjrd5czwC8uwPu9F
- 7pp+KWt90wDaB4YL1o2GKr2FqVMfuI5VgcP33bFG5EucyFceqvnFDg6fdbjMbo6gZ115 aw== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3dqt27wuqc-1
+        Fri, 21 Jan 2022 10:09:40 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20LEoLog023872;
+        Fri, 21 Jan 2022 15:09:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=c7rXY1TSNcHxXEv5JmLygCrMShQiFHdi1tHZ2WEj558=;
+ b=danntO0e5g5Mk/SB3GPZEY74wBXIN3d8IY36tPFKpIwhP7ozU+Is6Ex6xErNokoimtNB
+ WDMwVydfXG9qDsIXJhyYiTswTe3n93QYNEMYx8Zn2WXZXNZw8wXNNczBw2QLij66xe68
+ P7D09z3JY7ywu9X4OCsaGGnt3HG3yY7Z2kvL8ApQQITayB0Lv0RnMfb1RdOOZhbJ/YAv
+ HZj2BtDN+1P7b5x2p+h3dhIPAYRA6Vk5U66mWKHHfWsaRzEpBjiX/Y5X0mmADvMe7IRZ
+ 0c9sEVvWPSk3M3myX4ExfLz4qnx1XsJCyokEYZjrf3YCkyxoT3VSxifzQVtBx1t4E60d HQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3dqx1x9vpd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Jan 2022 14:26:11 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 20LE8ZDm001893;
-        Fri, 21 Jan 2022 14:26:09 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma05fra.de.ibm.com with ESMTP id 3dqjepn9pp-1
+        Fri, 21 Jan 2022 15:09:38 +0000
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 20LEou9f027184;
+        Fri, 21 Jan 2022 15:09:38 GMT
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3dqx1x9vns-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 21 Jan 2022 14:26:09 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 20LEQ6lJ32833992
+        Fri, 21 Jan 2022 15:09:37 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 20LF2O85032358;
+        Fri, 21 Jan 2022 15:09:35 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma02fra.de.ibm.com with ESMTP id 3dqjr55g1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Jan 2022 15:09:35 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 20LF9WXH37814538
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jan 2022 14:26:06 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF80DAE055;
-        Fri, 21 Jan 2022 14:26:05 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A0DEAAE04D;
-        Fri, 21 Jan 2022 14:26:05 +0000 (GMT)
-Received: from osiris (unknown [9.145.74.142])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 21 Jan 2022 14:26:05 +0000 (GMT)
-Date:   Fri, 21 Jan 2022 15:26:04 +0100
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-Cc:     Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Nico Boehr <nrb@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 01/10] s390/uaccess: Add storage key checked
- access to user memory
-Message-ID: <YerCfDceDszqbdHU@osiris>
-References: <20220118095210.1651483-2-scgl@linux.ibm.com>
- <YefeakONMN4PLlml@osiris>
- <422595a5-b24b-8760-ff0e-112322142de7@linux.ibm.com>
- <YegQCTqEsiFTUZ2R@osiris>
- <dbfec527-b995-e382-dafa-c3459e1e45ed@linux.ibm.com>
- <YelcCEuVbIg9ND90@osiris>
- <YemnprCIEjjGFeTn@osiris>
- <b6896b1a-d529-1504-091c-d41287c01dc8@linux.ibm.com>
- <YeqTP6WDbZzEJUbJ@osiris>
- <13a03972-0020-b8e7-2fc0-def8a164eb10@linux.ibm.com>
+        Fri, 21 Jan 2022 15:09:32 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 280D14203F;
+        Fri, 21 Jan 2022 15:09:32 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DFCA74204C;
+        Fri, 21 Jan 2022 15:09:31 +0000 (GMT)
+Received: from t46lp57.lnxne.boe (unknown [9.152.108.100])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Jan 2022 15:09:31 +0000 (GMT)
+From:   Nico Boehr <nrb@linux.ibm.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     frankja@linux.ibm.com, imbrenda@linux.ibm.com, thuth@redhat.com,
+        david@redhat.com
+Subject: [PATCH kvm-unit-tests v1 0/8] s390x: Extend instruction interception tests
+Date:   Fri, 21 Jan 2022 16:09:23 +0100
+Message-Id: <20220121150931.371720-1-nrb@linux.ibm.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <13a03972-0020-b8e7-2fc0-def8a164eb10@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: F8E0q23zV84nP37URidlBGxChnAmGMRc
-X-Proofpoint-GUID: F8E0q23zV84nP37URidlBGxChnAmGMRc
+X-Proofpoint-GUID: EHGrLtOGi0VKYwBIg4rsgIL4N_au0Qfb
+X-Proofpoint-ORIG-GUID: CiJ0jsGGHTUx1Gkr6HTwJRt6_lL0O9N8
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
  definitions=2022-01-21_06,2022-01-21_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- spamscore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0
- adultscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=815
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2201210095
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 phishscore=0 impostorscore=0 mlxlogscore=733
+ clxscore=1015 spamscore=0 malwarescore=0 priorityscore=1501 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2201110000 definitions=main-2201210102
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Jan 21, 2022 at 02:46:02PM +0100, Janis Schoetterl-Glausch wrote:
-> >> +static inline __must_check unsigned long
-> >> +_copy_from_user_key(void *to, const void __user *from, unsigned long n, u8 key)
-> > 
-> > Make key unsigned long, add support for INLINE_COPY_TO_USER, and maybe
-> > add a wrapper, so this works on all architectures, e.g. if
-> > raw_copy_to_user_key() is not defined, then fall back to
-> > raw_copy_to_user() and ignore the key parameter.
-> > 
-> 
-> Since we only need the double underscore variants, even if we're going to be more
-> general than we need to be, we can restrict ourselves to those, can't we?
+This series extends the instruction interception tests for s390x.
 
-I don't think that works with INLINE_COPY_TO_USER. The reason for the
-single underline variants is being able to have an out-line-implementation
-in lib/usercopy.c, isn't it?
+For most instructions, there is already coverage in existing tests, but they are
+not covering some failure cases, e.g. bad alignment. In this case, the existing
+tests were extended.
 
-> I don't understand your comment about the wrapper. You'd want an error on misuse,
-> that is, if you try to use a _with_key function if the functionality is not defined, no?
+SCK was not under test anywhere yet, hence a new test file was added.
 
-No. My intention was that it should simply work/compile by default for
-architectures which do not support a key mechanism:
+The EPSW test gets it's own file, too, because it requires a I/O device, more
+details in the respective commit. 
 
-something like
+The EPSW test must be fenced when running in non-QEMU. For this, we need
+vm_is_kvm() from Pierre's patchset 
+"[kvm-unit-tests PATCH v3 0/4] S390x: CPU Topology Information" 
+(Message-Id: <20220110133755.22238-3-pmorel@linux.ibm.com>)
 
-#ifndef raw_copy_to_user_key
-static inline unsigned long raw_copy_to_user_key(..., unsigned long key)
-{
-	return raw_copy_to_user(...);
-}
-#endif
+Nico Boehr (8):
+  s390x: Add more tests for MSCH
+  s390x: Add test for PFMF low-address protection
+  s390x: Add sck tests
+  s390x: Add tests for STCRW
+  s390x: Add more tests for SSCH
+  s390x: Add more tests for STSCH
+  s390x: Add tests for TSCH
+  s390x: Add EPSW test
 
-Again, this is just a proposal and might be turned down by common code
-guys. Just trying to come up with something which could also work on other
-architectures, and which does not cause pain because architectures don't
-really need it.
+ lib/s390x/css.h     |  17 +++
+ lib/s390x/css_lib.c |  60 ++++++++++
+ s390x/Makefile      |   2 +
+ s390x/css.c         | 276 ++++++++++++++++++++++++++++++++++++++++++++
+ s390x/epsw.c        | 104 +++++++++++++++++
+ s390x/pfmf.c        |  29 +++++
+ s390x/sck.c         | 127 ++++++++++++++++++++
+ s390x/unittests.cfg |   7 ++
+ 8 files changed, 622 insertions(+)
+ create mode 100644 s390x/epsw.c
+ create mode 100644 s390x/sck.c
+
+-- 
+2.31.1
+
