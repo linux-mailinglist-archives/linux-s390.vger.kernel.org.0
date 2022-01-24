@@ -2,90 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F185497E3B
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Jan 2022 12:49:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3F17497E8B
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Jan 2022 13:10:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237544AbiAXLtF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Jan 2022 06:49:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55262 "EHLO
+        id S238294AbiAXMKQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Jan 2022 07:10:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237515AbiAXLtF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Jan 2022 06:49:05 -0500
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D640AC06173B
-        for <linux-s390@vger.kernel.org>; Mon, 24 Jan 2022 03:49:04 -0800 (PST)
-Received: by mail-io1-xd2f.google.com with SMTP id i62so3425376ioa.1
-        for <linux-s390@vger.kernel.org>; Mon, 24 Jan 2022 03:49:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=xC+JDCse3UyB043ArA3V9R5jTH6Jy+S/PKKv9q2IH0s=;
-        b=aGGDNXOoZbLy3Zi0WrxLjeMIccEHVLNK1FsLe/Ji1guHa0rkn5+88jRTNnkUZWpFxK
-         Ys2dT/P8ctdilbvzOSzkD/MdRwkn+spgUJZLtj6Xv1/pVRxDRxO4AxRagltoDPTHVZNh
-         LzUyd79iAWfW7eatDmpk0LO79bgH/8yxT5tAN/6ekwcPizSlWELx3P9pfdF+MukQaw6j
-         4xPQX0sZabvCdb5V4Kr2W7XHfts9ns+DBpO/P7mxncf9Piwgs0Ipb6cLDZu5tlLiaUgZ
-         EVc1Mmpd4622WRR+C0NesPICZb9B8NR+5igNpKVeR5DTKagUx7C7LOJ6rI6HnaaN3SEr
-         bNhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=xC+JDCse3UyB043ArA3V9R5jTH6Jy+S/PKKv9q2IH0s=;
-        b=QZOMnJP7MWbVB52xwJ0LL1gYa+1uf49hKTqOXtVQzwAT/u599vdDVbW0iE95Y2yNK4
-         9jYYoxd98fPQErE38FC5EMiL11i8O/PPFZEDw+rBdT1Tt3xZD+QclJDAZgZ6JHz9Juxm
-         IRicPqPszL0qh/KHgUUFD7Hm0mQfA3ZfClRWzu/Hk4gD9j9JT9BEV6COXS3b7jABONL8
-         AYuvGq9LyVRAcWKTs9KD2PcUfrx9PB20K3VB0l39FuqAQBjg6GkxadNwzXw4QZ+QrGlv
-         ZXLZYWmHTpO+TwOL0JtdEmLa+q7yONiSFsktA8sXC1PeYFm+fiLN4C5AQMp7DS6OhgNJ
-         dcZA==
-X-Gm-Message-State: AOAM5327IjLtY8YcjVDYPEWplSwTF9R6b3W9LCYZM1It2z6/iDxxUgjV
-        S9D6nF1ppsYLVMf1Kx3C08W+JSsdNAmgZ9sUlQ8=
-X-Google-Smtp-Source: ABdhPJwFCDN6zU6q61GVl7y5WqVXzLfAZcViQJ7RnWAy+qvuEKGmW2u/fMFSv/zjfVWn1aH90Ub0LlTYA3YfU9uRhvg=
-X-Received: by 2002:a02:a810:: with SMTP id f16mr6350780jaj.55.1643024943562;
- Mon, 24 Jan 2022 03:49:03 -0800 (PST)
+        with ESMTP id S238278AbiAXMKN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Jan 2022 07:10:13 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C113C06173B;
+        Mon, 24 Jan 2022 04:10:13 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 38D72B80F91;
+        Mon, 24 Jan 2022 12:10:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E0ACAC340EB;
+        Mon, 24 Jan 2022 12:10:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643026210;
+        bh=IfvTnE0SElEHHi2ltg3BcoNG0+vnUbVnatoPsazTfrA=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=ZLj8jiXKiBJXx4rz5XwFYC7F2XjUZnGHfOJboWp8mjLqhmW+yZQD2itVrdnb1VIft
+         GLVgY46o0Dbbn16NiSQTZDOtYXLvfTl4mRvhnEYve2lkrO5A6wUomuuA24A2RoeKd1
+         knerznu2BY2pSImVwzTmYwOgRrz+vPrC6/wNAZs7wttp3q7XJmUK6lNRkgqiSAJkYN
+         SN2ldaD2kxs8bUffx/pGX/6MHRAca7Nc2jjiTKmEWfBjeu50AdkX4FboYaQ0CQsL/O
+         aguooll5IwUjpo613xGDw/Qjzaq8PSzh8tP1s6p5GkgS4K9p4KnEU4MbCPQSrszpWo
+         lxEejI2Tu2KMw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C3CDFC395DF;
+        Mon, 24 Jan 2022 12:10:10 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Received: by 2002:a05:6638:1454:0:0:0:0 with HTTP; Mon, 24 Jan 2022 03:49:03
- -0800 (PST)
-Reply-To: imorourafiatou0@gmail.com
-From:   "Mrs. Susan Dansuki" <fabianmichaelm@gmail.com>
-Date:   Mon, 24 Jan 2022 03:49:03 -0800
-Message-ID: <CAJhk2Cip+yL_-DR3Dwq=U7pMvCqA_qqGJQ1Ak+0sJE0XtcvOuw@mail.gmail.com>
-Subject: Re: COVID-19 RELIEF FUND WORTH $1,500,000.00 USD
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2] net/smc: Transitional solution for clcsock race issue
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <164302621079.19022.3641686752810483922.git-patchwork-notify@kernel.org>
+Date:   Mon, 24 Jan 2022 12:10:10 +0000
+References: <1642844589-23022-1-git-send-email-guwen@linux.alibaba.com>
+In-Reply-To: <1642844589-23022-1-git-send-email-guwen@linux.alibaba.com>
+To:     Wen Gu <guwen@linux.alibaba.com>
+Cc:     kgraul@linux.ibm.com, davem@davemloft.net, kuba@kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hello:
+
+This patch was applied to netdev/net.git (master)
+by David S. Miller <davem@davemloft.net>:
+
+On Sat, 22 Jan 2022 17:43:09 +0800 you wrote:
+> We encountered a crash in smc_setsockopt() and it is caused by
+> accessing smc->clcsock after clcsock was released.
+> 
+>  BUG: kernel NULL pointer dereference, address: 0000000000000020
+>  #PF: supervisor read access in kernel mode
+>  #PF: error_code(0x0000) - not-present page
+>  PGD 0 P4D 0
+>  Oops: 0000 [#1] PREEMPT SMP PTI
+>  CPU: 1 PID: 50309 Comm: nginx Kdump: loaded Tainted: G E     5.16.0-rc4+ #53
+>  RIP: 0010:smc_setsockopt+0x59/0x280 [smc]
+>  Call Trace:
+>   <TASK>
+>   __sys_setsockopt+0xfc/0x190
+>   __x64_sys_setsockopt+0x20/0x30
+>   do_syscall_64+0x34/0x90
+>   entry_SYSCALL_64_after_hwframe+0x44/0xae
+>  RIP: 0033:0x7f16ba83918e
+>   </TASK>
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,v2] net/smc: Transitional solution for clcsock race issue
+    https://git.kernel.org/netdev/net/c/c0bf3d8a943b
+
+You are awesome, thank you!
 -- 
-Attention:  beneficiary,
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-In line with the directive of the United Nations organization on their
-fight to cushion the bad effect of Covid-19 around the world. We wish
-to bring you the good news of hope. The United Nations organization
-department for disaster management in conjunction with IMF, World Bank
-is giving out Covid-19 stimulus package worth $1,500,000.00 USD, and
-you are among the lucky beneficiary selected to receive this stimulus
-package.
 
-Therefore, on receipt of this email, you should count yourself as the
-lucky individual. Your email address was chosen online while searching
-at random. Kindly contact our grants manager (Mr. Robert Taiwo) at
-your earliest convenience, with the contacts details listed below,to
-claim your stimulus package worth $1,500,000.00 USD.
-
-Name: Mr.Robert TAIWO
-Email:  (  mr.roberttaiwo74@gmail.com )
-Telephone/WhatsApp : (+229) 96548388
-
-Please confirm the following information to him as soon as possible.
-
-1. Full Name :
-2. Address :
-3. Nationality :
-4. Direct Telephone #:
-
-Congratulations once again.
-
-Yours Sincerely
-Mrs. Susan Dansuki.
-Director of the Centers for Disease Control and Prevention.
