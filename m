@@ -2,90 +2,84 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BE6C4A51BE
-	for <lists+linux-s390@lfdr.de>; Mon, 31 Jan 2022 22:41:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD1E54A5239
+	for <lists+linux-s390@lfdr.de>; Mon, 31 Jan 2022 23:19:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381250AbiAaVlK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 31 Jan 2022 16:41:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381261AbiAaVjE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 31 Jan 2022 16:39:04 -0500
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C58AC061776
-        for <linux-s390@vger.kernel.org>; Mon, 31 Jan 2022 13:38:21 -0800 (PST)
-Received: by mail-oi1-x242.google.com with SMTP id r27so7224444oiw.4
-        for <linux-s390@vger.kernel.org>; Mon, 31 Jan 2022 13:38:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=RcCyF58LaRxi/j1nHAT0ApLeXmQ9s66f3iMVqhPacvY=;
-        b=dEuqzCa7Zlz6s4mRGbRbRWXXanD59qsT+xmKk7tBbCVL8shmNgt9pnuL3r3GZQALql
-         Y63DqHUGCnZO0yzAtzp7ZNS2CuC8pMKUMaMtNqE3s9gB45FDt9/C7CdeYDqwmv7HZJbj
-         h6fZit5aG7dGp8FvXKTscfcGshyIKAGZl/Y4NFvWe+GDkg5MDDBzPsbgzyvzZ7B1mfX4
-         ltlQ0tRJrdsWlCdvxMPpvS+PhwNDM1Zp7MYHnfnHzWMTP4bbhrhxbQSB0Xw9LPR0gSp/
-         L2Vas/DZH4ZiZyplfhihUfOHaOD2GjtH1tg3ZI6lVgxDcwRnl8d4U3qCI5tj+07J/ZXk
-         SzvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=RcCyF58LaRxi/j1nHAT0ApLeXmQ9s66f3iMVqhPacvY=;
-        b=BK+wn9juilI31UnkfqBba0qM/tPa2LANYN7/33E4u2TJLzMhVLzOlR1+9TGhiZSMGt
-         ekIDpbHbV7RrOnDupsIJK8xlIzCh0OhMqHbMcqJEd55t4All2X1sOw83nLmogyk9J66l
-         NjPjhAuag7+ulz1MugDKyWHKxuMVB/Prqcru7Rtme9DmQyairTcppVL240icC6bewm+/
-         Vtjq3bRDgmD6SmSFkV9fka+lTCc6xZ69aW4sI6qu7BZdLTF2QpF2XU4lh8gtHr1ZEV5h
-         shrddE9J0k/YaM5BxZjSJaGqe7gZ94WvSy2cEC5TTetusHVaUZvwSF91QpMSKtZqrLde
-         FAKA==
-X-Gm-Message-State: AOAM530qQFuu7ITpVNWBYXDLh2V9dKr3GCmZXRuyQLWXhq+HCa0qSCfU
-        MY67pTWt6KdPRnK4e3VpyVKKKoM14aXvF4YqOMuPJ07qiLmoeQ==
-X-Google-Smtp-Source: ABdhPJzjG4nHBnpm1YeRsvfpKVsM6nmNJIeFJaztEJrNHMe+iyJctx1iGavTAT23A2IhS4j6LtYbunRiUquAn1xj08o=
-X-Received: by 2002:a54:4490:: with SMTP id v16mr14818764oiv.157.1643665089421;
- Mon, 31 Jan 2022 13:38:09 -0800 (PST)
+        id S232431AbiAaWTx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 31 Jan 2022 17:19:53 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:44207 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232213AbiAaWTx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 31 Jan 2022 17:19:53 -0500
+Received: from mail-ot1-f47.google.com ([209.85.210.47]) by
+ mrelayeu.kundenserver.de (mreue107 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1M8QFi-1nAHJO2u12-004S46; Mon, 31 Jan 2022 23:19:50 +0100
+Received: by mail-ot1-f47.google.com with SMTP id g15-20020a9d6b0f000000b005a062b0dc12so14447815otp.4;
+        Mon, 31 Jan 2022 14:19:49 -0800 (PST)
+X-Gm-Message-State: AOAM5300s7H3HiZT7/ALZlbQL4+XMBMcpcRCqxXse+CMwLgyREt7CTVh
+        ReWIzABKLRLNgXPntwPlS7C6QAO1JxlT/LE6Q+o=
+X-Google-Smtp-Source: ABdhPJzNvIQa/ifQ4mpIl/LfU521F5G6KLcdIXkWgKV/jA7MRG2n/k6e84fLlMfFqeGk7bXCvjxkFnVtwxdt/dBnQNc=
+X-Received: by 2002:a9d:654f:: with SMTP id q15mr12902241otl.119.1643667588784;
+ Mon, 31 Jan 2022 14:19:48 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a4a:c30d:0:0:0:0:0 with HTTP; Mon, 31 Jan 2022 13:38:09
- -0800 (PST)
-Reply-To: westerunion909@gmail.com
-From:   "Antonia Lloyd." <anthonylloydatmxxx04@gmail.com>
-Date:   Mon, 31 Jan 2022 13:38:09 -0800
-Message-ID: <CAExPwBBpihjV-rv_-+hYqb1WD3wpSWx81B_Q3ES15U3TXSPsyw@mail.gmail.com>
-Subject: Dear Email ID Owner.(USD$4000 IMF COMPENSATION FUND TO PICK UP TODAY).
-To:     undisclosed-recipients:;
+References: <20220131064933.3780271-1-hch@lst.de>
+In-Reply-To: <20220131064933.3780271-1-hch@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 31 Jan 2022 23:19:32 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1YzdC1ev0FP-Pe0YyjsY+H3dNWErPGtB=zfcs3kVmkyw@mail.gmail.com>
+Message-ID: <CAK8P3a1YzdC1ev0FP-Pe0YyjsY+H3dNWErPGtB=zfcs3kVmkyw@mail.gmail.com>
+Subject: Re: consolidate the compat fcntl definitions v2
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Oz3mvogPccg/7xXrnVYc1t/5reQ5uLC3I9ySHFqCfH22nktDZk2
+ GiO2dxDqCqyaYLIVwvk51XQiOo3ffvYcODm+qVyNbWffBolCk5kBCIdNwuJYUoz/U0M04P7
+ YHPXOhWvKBhmn7zB1/uVYYlbhSUZG2fW6bmi32+wpXkhigUNfqpwvyzTmUcex77PxItycdN
+ hIkWF+6OjrEKXlrkvjnAw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aSNwj6GN85Q=:6u43FVFakJeCUyjujdXZAJ
+ nH1Eb1BCXn0p06iSS1ZrO055xSbokdvwGcAVA5hsWPMSsXvKy87UdhVhRzrdb9Uqf8TSfGHWg
+ m/rTBm4dsO9IxFqzCZBXGSz1a8FeujW//AujuH47pp41pjzE/CXFAukbGKA2gMs1idFSIbP4N
+ YUuRhRON1JoIpyXjxfwSoBqeBH6Iw/7yHika7VEJf8kTLTt288ET8b+Y/3/dHdqYLqTJIpiby
+ u+GSgygb0FARlJqqStxb7IbhwpPBW/F28dNddp/A5ETdLGn2UeGS5ILnDIEZpFwh3D5sYa3vw
+ KvkxeMQD5RHL0RU6ABF3VwKCNoh+HbLQ1shYXxgqr/vVkCzEcEDvbMps/iCVjzlB1av/EiLMO
+ 3bZ7FjR4cmvVVEGsCy3pkZJodILX2o5u3fFzoRb3sUZHXtl0KrRCE5Y1KpSjEQ6yhhXBZpdI8
+ wopTxBWbnQoinQjtRjMcROObLew2B4rJ6dBqJ7uAPiKXBPp031Kv0jbqAphCyfpS0pgEROnJr
+ X70gzHhsnbhgAENY3wlEN5xEOuwVOU0PPuTptiZATzOYBUagezvXWz1RAYR+5/RMRhpQ2OJrA
+ W1kH50NLO2Ar7eKx23ya8N8jQDQgb3PUHIOYVOeD1YQAl870H1Mosoh94GYKTaeieLlnKv0fj
+ uurqEyb9ilCd/OB27VlNBel/Xj8IJKutEccZMwF+6plyO69uWSiaMhkEs9Zxhfskzk/E=
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Dear Email ID Owner.
+On Mon, Jan 31, 2022 at 7:49 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Hi all,
+>
+> currenty the compat fcnt definitions are duplicate for all compat
+> architectures, and the native fcntl64 definitions aren't even usable
+> from userspace due to a bogus CONFIG_64BIT ifdef.  This series tries
+> to sort out all that.
+>
+> Changes since v1:
+>  - only make the F*64 defines uapi visible for 32-bit architectures
 
-The IMF is compensating all the email address that was funds as one of
-the ward win Victims and your email address and your name is among the
-listed one of approved to pay the sum of $3.6 million U.S Dollars. We
-have concluded to effect your own payment through Western Union Money
-Transfer for easy pick-up of those funds in good condition,$4000 twice
-daily,till the $3.6 million is completely transferred to you.We now
-need your information where we will be sending the funds,such
-as;Receiver name(Your full Name)address and phone number.Contact
-Western Union agent with this Email: ( westerunion995@gmail.com  ) for
-your payment fund.
+Looks all good to me,
 
-Ms.Maria Zatto
-E-mail:westerunion995@gmail.com
-Telephone: +229 682 97 169
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-Contact Ms.Maria,immediately you get this mail through western union
-email address above to enable her speed-up.your payment and release
-the $4000 dollars MTCN today for you to pick up the payment OK.
+I think it would be best to merge this through the risc-v tree along
+with the coming compat support
+that depends on it. Alternatively, I can put it into my asm-generic
+tree for 5.18.
 
-You are expected to provide us with the details as prescribed below to
-enable safe and easy release of your funds today.
-
-(1)Your Full name:
-(2)Your Phone number:
-(3)Your Country:
-(4)Your Age:
-
-Thank you,
-Dr.Antonia Lloyd.
-Contact Dir.Western Union Money Transfer,
-Cotonou-Benin Republic.
+         Arnd
