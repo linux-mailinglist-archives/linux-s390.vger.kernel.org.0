@@ -2,383 +2,236 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FDB54A8A40
-	for <lists+linux-s390@lfdr.de>; Thu,  3 Feb 2022 18:38:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 405D54A8D81
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Feb 2022 21:31:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352928AbiBCRiM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 3 Feb 2022 12:38:12 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48806 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1352920AbiBCRiL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Feb 2022 12:38:11 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 213GcsMd016931;
-        Thu, 3 Feb 2022 17:38:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=5oZx6YFpn3eKxZhOkd0TDEEJ4+ZH15Mpmh+5emYAjdk=;
- b=dm6td5QNoDak1HaQ2raFqPQD83BeHGtfMqaTPRV8VLsslxX8FtvwxkiYBMwzass5vzPL
- wncX3HH+F2vD4h5du2XHlIR+7LkY9tyt9IvgdAqKDwtPUHw5/JqoGbChKl1vXwud7L6H
- 6cxyBnnN8yyZW5cjJR3SdiHJVyAc3KkNqVZi/EppwPxEbGr0Ob4vUrCsQwLqCFd+VTl4
- +3FYbQL6qVi9jwXbvDM0SkZbAuPmK66umS6X+G/X3Amf1hcUwRWZ1TcnUfRuy5a0nZ0m
- 81S7UARqYk6pdngfTf/lrSn1TMe3aruYD/yWwbtI0olLE8RFo56M02cP3kdagbMHh+uy xA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3dywrrtk6v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Feb 2022 17:38:10 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 213HXcu7028136;
-        Thu, 3 Feb 2022 17:38:10 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3dywrrtk61-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Feb 2022 17:38:10 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 213HX9g9002061;
-        Thu, 3 Feb 2022 17:38:08 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04fra.de.ibm.com with ESMTP id 3dvw79xn65-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Feb 2022 17:38:08 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 213Hc4JW39649786
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Feb 2022 17:38:04 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C4CE5A406D;
-        Thu,  3 Feb 2022 17:38:04 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 614ABA4051;
-        Thu,  3 Feb 2022 17:38:04 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.1.135])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  3 Feb 2022 17:38:04 +0000 (GMT)
-Date:   Thu, 3 Feb 2022 18:37:51 +0100
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Steffen Eiden <seiden@linux.ibm.com>
-Cc:     Thomas Huth <thuth@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
+        id S1354169AbiBCUbK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 3 Feb 2022 15:31:10 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:33742 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239266AbiBCUat (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Feb 2022 15:30:49 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 770F8B835A6;
+        Thu,  3 Feb 2022 20:30:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535E0C340F2;
+        Thu,  3 Feb 2022 20:30:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643920247;
+        bh=5CgUbtEjWetjccIjMGSrNUZ2M+3dIRfWytZnM1eefAw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qZpNriAo6r/m8ICebt94eaUNYn1HMXd/EYqkrEEpOvK1gwdqOfyo6VUwU17SaujBW
+         2TgVcTn6pJnHkwJIzuXM/5/psbYYYBhbIgOB03Li9TFzpkyUUTvymvkFKcnKM5C5Ei
+         4m4SxD3h5vwWQk0kASOr5//aXGzHFtnEVC05uxoYT0+aSwEQl4KCeWHhSJrzA4tWTp
+         l0fuoYa+a9p7bQ+xWsAIGVBNnyznuDrSQuMwMkgn/SJTCJCiqDPPG0huCZ4W2uJFnd
+         8WmlPPDyyc78THCS1vNbBvN1dWbcgtnbzxRdBZR1QY3MNOVPG2au4+Z2kL0xYsLIzK
+         uZ8m+6AzqwWaQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, svens@linux.ibm.com,
         linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests PATCH v2 4/4] s390x: uv-guest: Add attestation
- tests
-Message-ID: <20220203183751.21c402ac@p-imbrenda>
-In-Reply-To: <20220203091935.2716-5-seiden@linux.ibm.com>
-References: <20220203091935.2716-1-seiden@linux.ibm.com>
-        <20220203091935.2716-5-seiden@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+Subject: [PATCH AUTOSEL 5.16 23/52] s390/module: test loading modules with a lot of relocations
+Date:   Thu,  3 Feb 2022 15:29:17 -0500
+Message-Id: <20220203202947.2304-23-sashal@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220203202947.2304-1-sashal@kernel.org>
+References: <20220203202947.2304-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: yk3GWL8KXi0c1oLhrhwhD215qW2SoSGT
-X-Proofpoint-GUID: aje3MBsa-f1dyQ6i9DoF9jap7kdV09NB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-02-03_06,2022-02-03_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- clxscore=1015 impostorscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
- priorityscore=1501 mlxlogscore=999 suspectscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2202030106
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu,  3 Feb 2022 09:19:35 +0000
-Steffen Eiden <seiden@linux.ibm.com> wrote:
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-> Adds several tests to verify correct error paths of attestation.
-> 
-> Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
-> ---
->  lib/s390x/asm/uv.h |   5 +-
->  s390x/uv-guest.c   | 174 ++++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 177 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/s390x/asm/uv.h b/lib/s390x/asm/uv.h
-> index 7afbcffd..7fe55052 100644
-> --- a/lib/s390x/asm/uv.h
-> +++ b/lib/s390x/asm/uv.h
-> @@ -108,7 +108,10 @@ struct uv_cb_qui {
->  	u8  reserved88[158 - 136];	/* 0x0088 */
->  	uint16_t max_guest_cpus;	/* 0x009e */
->  	u64 uv_feature_indications;	/* 0x00a0 */
-> -	u8  reserveda8[200 - 168];	/* 0x00a8 */
-> +	u8  reserveda8[224 - 168];	/* 0x00a8 */
+[ Upstream commit 90c5318795eefa09a9f9aef8d18a904e24962b5c ]
 
-please use uint*_t types everywhere. as you notice, we are already
-inconsistent, so let's just use the new ones for all new code
+Add a test in order to prevent regressions.
 
-> +	u64 supported_att_hdr_versions;	/* 0x00e0 */
-> +	u64 supported_paf;		/* 0x00e8 */
-> +	u8  reservedf0[256 - 240];	/* 0x00f0 */
->  }  __attribute__((packed))  __attribute__((aligned(8)));
->  
->  struct uv_cb_cgc {
-> diff --git a/s390x/uv-guest.c b/s390x/uv-guest.c
-> index 97ae4687..3fca9d21 100644
-> --- a/s390x/uv-guest.c
-> +++ b/s390x/uv-guest.c
-> @@ -2,10 +2,11 @@
->  /*
->   * Guest Ultravisor Call tests
->   *
-> - * Copyright (c) 2020 IBM Corp
-> + * Copyright IBM Corp. 2020, 2022
->   *
->   * Authors:
->   *  Janosch Frank <frankja@linux.ibm.com>
-> + *  Steffen Eiden <seiden@linux.ibm.com>
->   */
->  
->  #include <libcflat.h>
-> @@ -53,6 +54,15 @@ static void test_priv(void)
->  	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
->  	report_prefix_pop();
->  
-> +	report_prefix_push("attest");
-> +	uvcb.cmd = UVC_CMD_ATTESTATION;
-> +	uvcb.len = sizeof(struct uv_cb_attest);
-> +	expect_pgm_int();
-> +	enter_pstate();
-> +	uv_call_once(0, (u64)&uvcb);
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/Kconfig                    | 15 +++++++++
+ arch/s390/lib/Makefile               |  3 ++
+ arch/s390/lib/test_modules.c         | 35 +++++++++++++++++++
+ arch/s390/lib/test_modules.h         | 50 ++++++++++++++++++++++++++++
+ arch/s390/lib/test_modules_helpers.c | 13 ++++++++
+ 5 files changed, 116 insertions(+)
+ create mode 100644 arch/s390/lib/test_modules.c
+ create mode 100644 arch/s390/lib/test_modules.h
+ create mode 100644 arch/s390/lib/test_modules_helpers.c
 
-please use uint*_t types :)
-
-> +	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
-> +	report_prefix_pop();
-> +
->  	report_prefix_pop();
->  }
->  
-> @@ -111,7 +121,168 @@ static void test_sharing(void)
->  	cc = uv_call(0, (u64)&uvcb);
->  	report(cc == 0 && uvcb.header.rc == UVC_RC_EXECUTED, "unshare");
->  	report_prefix_pop();
-> +}
-> +
-> +#define ARCB_VERSION_1 0x0100
-> +#define ARCB_HMAC_SHA512 1
-> +/* arcb with one key slot and no nonce */
-> +struct uv_arcb_v1 {
-> +	uint64_t	reserved0;		/* 0x0000 */
-> +	uint32_t	req_ver;		/* 0x0008 */
-> +	uint32_t	req_len;		/* 0x000c */
-> +	uint8_t		iv[12];			/*
-> 0x0010 */
-> +	uint32_t	reserved1c;		/* 0x001c */
-> +	uint8_t		reserved20[7];		/*
-> 0x0020 */
-> +	uint8_t		nks;			/* 0x0027
-> */
-> +	uint32_t	reserved28;		/* 0x0028 */
-> +	uint32_t	sea;			/* 0x002c */
-> +	uint64_t	plaint_att_flags;	/* 0x0030 */
-> +	uint32_t	meas_alg_id;		/* 0x0038 */
-> +	uint32_t	reserved3c;		/* 0x003c */
-> +	uint8_t		cpk[160];		/* 0x0040 */
-> +	uint8_t		key_slot[80];		/*
-> 0x00e0 */
-> +	uint8_t		meas_key[64];		/*
-> 0x0130 */
-> +	uint8_t		tag[16];		/* 0x0170 */
-> +} __attribute__((packed));
-> +
-> +static void test_attest_v1(u64 supported_paf)
-> +{
-> +	struct uv_cb_attest uvcb = {
-> +		.header.cmd = UVC_CMD_ATTESTATION,
-> +		.header.len = sizeof(uvcb),
-> +	};
-> +	struct uv_arcb_v1 *arcb = (void *)page;
-> +	uint64_t measurement = page + sizeof(*arcb);
-> +	size_t measurement_size = 64;
-> +	uint64_t additional = measurement + measurement_size;
-> +	size_t additional_size = 32;
-
-I wonder it it would be easier to create a struct with an embedded
-struct uv_arcb_v1 to represent the measurement and the additional data.
-that way you won't need to do all these hacky calculations and magic
-numbers, you could just do something like 
-
-measurement = (uint64_t)&arcb_extended.measurement;
-
-which, while longer, is probably easier to understand.
-
-and the sizes maybe could become #defines
-
-> +	uint64_t plaint_att_flags = 1ULL << 61;
-> +	int cc;
-> +
-> +	memset((void *) page, 0, PAGE_SIZE);
-
-please no extra space between the ) and the p
-
-> +
-> +	/* create a minimal arcb/uvcb such that FW has everything to start unsealing the request. */
-> +	arcb->req_ver = ARCB_VERSION_1;
-> +	arcb->req_len = sizeof(*arcb);
-> +	arcb->nks = 1;
-> +	arcb->sea = sizeof(arcb->meas_key);
-> +	arcb->plaint_att_flags = plaint_att_flags;
-> +	arcb->meas_alg_id = ARCB_HMAC_SHA512;
-> +	uvcb.arcb_addr = page;
-> +	uvcb.measurement_address = measurement;
-> +	uvcb.measurement_length = measurement_size;
-> +	uvcb.add_data_address = additional;
-> +	uvcb.add_data_length = additional_size;
-
-are you using those variables somewhere else? could you just assign
-directly to the uvcb instead?
-
-> +
-> +	uvcb.continuation_token = 0xff;
-> +	cc = uv_call(0, (u64)&uvcb);
-
-please use uint*_t types everywhere
-
-> +	report(cc == 1 && uvcb.header.rc == 0x0101, "invalid continuation token");
-> +	uvcb.continuation_token = 0;
-> +
-> +	uvcb.user_data_length = sizeof(uvcb.user_data) + 1;
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x0102, "invalid user data size");
-> +	uvcb.user_data_length = 0;
-> +
-> +	uvcb.arcb_addr = 0;
-
-is 0 really not a valid address?
-
-and what about an address outside memory?
-
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x0103, "invalid address arcb");
-> +	uvcb.arcb_addr = page;
-> +
-> +	/* 0104 - 0105 need an unseal-able request */
-> +
-> +	/* version 0000 is an illegal version number */
-> +	arcb->req_ver = 0x0000;
-
-just 0 is ok
-
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x0106, "unsupported version");
-> +	arcb->req_ver = ARCB_VERSION_1;
-> +
-> +	arcb->req_len += 1;
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x0107, "invalid arcb size 1");
-> +	arcb->req_len -= 1;
-> +	arcb->nks = 2;
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x0107, "invalid arcb size 2");
-
-you say invalid arcb size, but you are changing the number of nks. I
-think I understand why, but maybe it's better to add a comment to
-explain what you are doing.
-
-> +	arcb->nks = 1;
-> +
-> +	arcb->nks = 0;
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x0108, "invalid num key slots");
-> +	arcb->nks = 1;
-> +
-> +	/* possible valid size (when using nonce). However, req_len too small to host a nonce */
-> +	arcb->sea = 80;
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x0109, "invalid encrypted size 1");
-> +	arcb->sea = 17;
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x0109, "invalid encrypted size 2");
-> +	arcb->sea = 64;
-> +
-> +	arcb->plaint_att_flags = supported_paf ^ ((u64) -1);
-
-so you are trying to flip the lower 32 bits?
-why not just supported_paf ^ ~0 ?
-
-although a more readable form would probably be
-supported_paf ^ GENMASK_ULL(31, 0)
-
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x010a, "invalid flag");
-> +	arcb->plaint_att_flags = plaint_att_flags;
-> +
-> +	/* reserved value */
-> +	arcb->meas_alg_id = 0;
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x010b, "invalid measurement algorithm");
-> +	arcb->meas_alg_id = ARCB_HMAC_SHA512;
-> +
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x010c, "unable unseal");
->  
-> +	uvcb.measurement_length = 0;
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x010d, "invalid measurement size");
-> +	uvcb.measurement_length = measurement_size;
-> +
-> +	uvcb.add_data_length = 0;
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc == 1 && uvcb.header.rc == 0x010e, "invalid additional size");
-> +	uvcb.add_data_length = additional_size;
-> +}
-> +
-> +static void test_attest(void)
-> +{
-> +	struct uv_cb_attest uvcb = {
-> +		.header.cmd = UVC_CMD_ATTESTATION,
-> +		.header.len = sizeof(uvcb),
-> +	};
-> +	const struct uv_cb_qui *uvcb_qui = uv_get_query_data();
-> +	int cc;
-> +
-> +	report_prefix_push("attest");
-> +
-> +	if (!uv_query_test_call(BIT_UVC_CMD_ATTESTATION)) {
-> +		report_skip("Attestation not supported.");
-> +		goto done;
-> +	}
-> +
-> +	/* Verify that the uv supports at least one header version */
-> +	report(uvcb_qui->supported_att_hdr_versions, "has hdr support");
-> +
-> +	memset((void *) page, 0, PAGE_SIZE);
-
-please no extra space between ) and p
-
-> +
-> +	uvcb.header.len -= 1;
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc && uvcb.header.rc == UVC_RC_INV_LEN, "invalid uvcb size 1");
-> +	uvcb.header.len += 1;
-> +
-> +	uvcb.header.len += 1;
-> +	cc = uv_call(0, (u64)&uvcb);
-> +	report(cc && uvcb.header.rc == UVC_RC_INV_LEN, "invalid uvcb size 2");
-> +	uvcb.header.len -= 1;
-> +
-> +	report_prefix_push("v1");
-> +	if (test_bit_inv(0, &uvcb_qui->supported_att_hdr_versions))
-> +		test_attest_v1(uvcb_qui->supported_paf);
-> +	else
-> +		report_skip("Attestation version 1 not supported");
-> +	report_prefix_pop();
-> +done:
->  	report_prefix_pop();
->  }
->  
-> @@ -179,6 +350,7 @@ int main(void)
->  	test_invalid();
->  	test_query();
->  	test_sharing();
-> +	test_attest();
->  	free_page((void *)page);
->  done:
->  	report_prefix_pop();
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 2a5bb4f29cfed..0344c68f3ffde 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -947,6 +947,9 @@ config S390_GUEST
+ 
+ endmenu
+ 
++config S390_MODULES_SANITY_TEST_HELPERS
++	def_bool n
++
+ menu "Selftests"
+ 
+ config S390_UNWIND_SELFTEST
+@@ -973,4 +976,16 @@ config S390_KPROBES_SANITY_TEST
+ 
+ 	  Say N if you are unsure.
+ 
++config S390_MODULES_SANITY_TEST
++	def_tristate n
++	depends on KUNIT
++	default KUNIT_ALL_TESTS
++	prompt "Enable s390 specific modules tests"
++	select S390_MODULES_SANITY_TEST_HELPERS
++	help
++	  This option enables an s390 specific modules test. This option is
++	  not useful for distributions or general kernels, but only for
++	  kernel developers working on architecture code.
++
++	  Say N if you are unsure.
+ endmenu
+diff --git a/arch/s390/lib/Makefile b/arch/s390/lib/Makefile
+index 707cd4622c132..69feb8ed3312d 100644
+--- a/arch/s390/lib/Makefile
++++ b/arch/s390/lib/Makefile
+@@ -17,4 +17,7 @@ KASAN_SANITIZE_uaccess.o := n
+ obj-$(CONFIG_S390_UNWIND_SELFTEST) += test_unwind.o
+ CFLAGS_test_unwind.o += -fno-optimize-sibling-calls
+ 
++obj-$(CONFIG_S390_MODULES_SANITY_TEST) += test_modules.o
++obj-$(CONFIG_S390_MODULES_SANITY_TEST_HELPERS) += test_modules_helpers.o
++
+ lib-$(CONFIG_FUNCTION_ERROR_INJECTION) += error-inject.o
+diff --git a/arch/s390/lib/test_modules.c b/arch/s390/lib/test_modules.c
+new file mode 100644
+index 0000000000000..d056baa8fbb0c
+--- /dev/null
++++ b/arch/s390/lib/test_modules.c
+@@ -0,0 +1,35 @@
++// SPDX-License-Identifier: GPL-2.0+
++
++#include <kunit/test.h>
++#include <linux/module.h>
++
++#include "test_modules.h"
++
++#define DECLARE_RETURN(i) int test_modules_return_ ## i(void)
++REPEAT_10000(DECLARE_RETURN);
++
++/*
++ * Test that modules with many relocations are loaded properly.
++ */
++static void test_modules_many_vmlinux_relocs(struct kunit *test)
++{
++	int result = 0;
++
++#define CALL_RETURN(i) result += test_modules_return_ ## i()
++	REPEAT_10000(CALL_RETURN);
++	KUNIT_ASSERT_EQ(test, result, 49995000);
++}
++
++static struct kunit_case modules_testcases[] = {
++	KUNIT_CASE(test_modules_many_vmlinux_relocs),
++	{}
++};
++
++static struct kunit_suite modules_test_suite = {
++	.name = "modules_test_s390",
++	.test_cases = modules_testcases,
++};
++
++kunit_test_suites(&modules_test_suite);
++
++MODULE_LICENSE("GPL");
+diff --git a/arch/s390/lib/test_modules.h b/arch/s390/lib/test_modules.h
+new file mode 100644
+index 0000000000000..43b5e4b4af3e4
+--- /dev/null
++++ b/arch/s390/lib/test_modules.h
+@@ -0,0 +1,50 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++#ifndef TEST_MODULES_H
++#define TEST_MODULES_H
++
++#define __REPEAT_10000_3(f, x) \
++	f(x ## 0); \
++	f(x ## 1); \
++	f(x ## 2); \
++	f(x ## 3); \
++	f(x ## 4); \
++	f(x ## 5); \
++	f(x ## 6); \
++	f(x ## 7); \
++	f(x ## 8); \
++	f(x ## 9)
++#define __REPEAT_10000_2(f, x) \
++	__REPEAT_10000_3(f, x ## 0); \
++	__REPEAT_10000_3(f, x ## 1); \
++	__REPEAT_10000_3(f, x ## 2); \
++	__REPEAT_10000_3(f, x ## 3); \
++	__REPEAT_10000_3(f, x ## 4); \
++	__REPEAT_10000_3(f, x ## 5); \
++	__REPEAT_10000_3(f, x ## 6); \
++	__REPEAT_10000_3(f, x ## 7); \
++	__REPEAT_10000_3(f, x ## 8); \
++	__REPEAT_10000_3(f, x ## 9)
++#define __REPEAT_10000_1(f, x) \
++	__REPEAT_10000_2(f, x ## 0); \
++	__REPEAT_10000_2(f, x ## 1); \
++	__REPEAT_10000_2(f, x ## 2); \
++	__REPEAT_10000_2(f, x ## 3); \
++	__REPEAT_10000_2(f, x ## 4); \
++	__REPEAT_10000_2(f, x ## 5); \
++	__REPEAT_10000_2(f, x ## 6); \
++	__REPEAT_10000_2(f, x ## 7); \
++	__REPEAT_10000_2(f, x ## 8); \
++	__REPEAT_10000_2(f, x ## 9)
++#define REPEAT_10000(f) \
++	__REPEAT_10000_1(f, 0); \
++	__REPEAT_10000_1(f, 1); \
++	__REPEAT_10000_1(f, 2); \
++	__REPEAT_10000_1(f, 3); \
++	__REPEAT_10000_1(f, 4); \
++	__REPEAT_10000_1(f, 5); \
++	__REPEAT_10000_1(f, 6); \
++	__REPEAT_10000_1(f, 7); \
++	__REPEAT_10000_1(f, 8); \
++	__REPEAT_10000_1(f, 9)
++
++#endif
+diff --git a/arch/s390/lib/test_modules_helpers.c b/arch/s390/lib/test_modules_helpers.c
+new file mode 100644
+index 0000000000000..1670349a03eba
+--- /dev/null
++++ b/arch/s390/lib/test_modules_helpers.c
+@@ -0,0 +1,13 @@
++// SPDX-License-Identifier: GPL-2.0+
++
++#include <linux/export.h>
++
++#include "test_modules.h"
++
++#define DEFINE_RETURN(i) \
++	int test_modules_return_ ## i(void) \
++	{ \
++		return 1 ## i - 10000; \
++	} \
++	EXPORT_SYMBOL_GPL(test_modules_return_ ## i)
++REPEAT_10000(DEFINE_RETURN);
+-- 
+2.34.1
 
