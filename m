@@ -2,176 +2,383 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD51F4A8A44
-	for <lists+linux-s390@lfdr.de>; Thu,  3 Feb 2022 18:38:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FDB54A8A40
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Feb 2022 18:38:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233512AbiBCRiS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 3 Feb 2022 12:38:18 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12790 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1352920AbiBCRiS (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Feb 2022 12:38:18 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 213GhUKC006797;
-        Thu, 3 Feb 2022 17:38:18 GMT
+        id S1352928AbiBCRiM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 3 Feb 2022 12:38:12 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48806 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1352920AbiBCRiL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Feb 2022 12:38:11 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 213GcsMd016931;
+        Thu, 3 Feb 2022 17:38:11 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
  subject : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=pp1;
- bh=UH8KPZHWVL/SjLef9PLK9/+V9aDWQdeyPcNJOCWgfas=;
- b=HWjdkOZ5Hop3y2XlWFHrw7f0uuJd+9XTqTTMHzwK4wbh2r3Xrtlf9rHUmN0GANslA/uS
- bjevYXbO1ISXaM1UN0afUn3LaFk+Ew52ABzM+DukECD26imJG2OU91SY9cYvv2dDTZfW
- AjAE0WULsA6hozuHPtMQ2C1/8h7axnESWQkhNKng0ykDBdvtVekvyaaaARD0PMMlkMrk
- XirhKR+tyshreF5vzHC10g86JbxctFK9x0BlovfNOoiaZd7q3HcBWUIDtvF1O6FOIMc3
- iPCxKYU0w4md1VcynMLGwC0FVDOGctVTIdj9bGkSQVkYod7MOtvcxZlcjHVspcL2wOTN qQ== 
+ bh=5oZx6YFpn3eKxZhOkd0TDEEJ4+ZH15Mpmh+5emYAjdk=;
+ b=dm6td5QNoDak1HaQ2raFqPQD83BeHGtfMqaTPRV8VLsslxX8FtvwxkiYBMwzass5vzPL
+ wncX3HH+F2vD4h5du2XHlIR+7LkY9tyt9IvgdAqKDwtPUHw5/JqoGbChKl1vXwud7L6H
+ 6cxyBnnN8yyZW5cjJR3SdiHJVyAc3KkNqVZi/EppwPxEbGr0Ob4vUrCsQwLqCFd+VTl4
+ +3FYbQL6qVi9jwXbvDM0SkZbAuPmK66umS6X+G/X3Amf1hcUwRWZ1TcnUfRuy5a0nZ0m
+ 81S7UARqYk6pdngfTf/lrSn1TMe3aruYD/yWwbtI0olLE8RFo56M02cP3kdagbMHh+uy xA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3dyygrg8h5-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3dywrrtk6v-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Feb 2022 17:38:17 +0000
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 213HH5XP024209;
-        Thu, 3 Feb 2022 17:38:17 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3dyygrg8gr-1
+        Thu, 03 Feb 2022 17:38:10 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 213HXcu7028136;
+        Thu, 3 Feb 2022 17:38:10 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3dywrrtk61-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Feb 2022 17:38:17 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 213HXBlF017941;
-        Thu, 3 Feb 2022 17:38:15 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 3dvw79xpf5-1
+        Thu, 03 Feb 2022 17:38:10 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 213HX9g9002061;
+        Thu, 3 Feb 2022 17:38:08 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 3dvw79xn65-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Feb 2022 17:38:14 +0000
+        Thu, 03 Feb 2022 17:38:08 +0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 213HSF7q48628168
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 213Hc4JW39649786
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Feb 2022 17:28:15 GMT
+        Thu, 3 Feb 2022 17:38:04 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C3BFA4057;
-        Thu,  3 Feb 2022 17:38:09 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C4CE5A406D;
+        Thu,  3 Feb 2022 17:38:04 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B1285A404D;
-        Thu,  3 Feb 2022 17:38:08 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 614ABA4051;
+        Thu,  3 Feb 2022 17:38:04 +0000 (GMT)
 Received: from p-imbrenda (unknown [9.145.1.135])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  3 Feb 2022 17:38:08 +0000 (GMT)
-Date:   Thu, 3 Feb 2022 17:37:39 +0100
+        Thu,  3 Feb 2022 17:38:04 +0000 (GMT)
+Date:   Thu, 3 Feb 2022 18:37:51 +0100
 From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
 To:     Steffen Eiden <seiden@linux.ibm.com>
 Cc:     Thomas Huth <thuth@redhat.com>,
         Janosch Frank <frankja@linux.ibm.com>,
         David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
         linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests PATCH v2 1/4] s390x: uv-host: Add attestation
- test
-Message-ID: <20220203173739.2b3b7d1e@p-imbrenda>
-In-Reply-To: <20220203091935.2716-2-seiden@linux.ibm.com>
+Subject: Re: [kvm-unit-tests PATCH v2 4/4] s390x: uv-guest: Add attestation
+ tests
+Message-ID: <20220203183751.21c402ac@p-imbrenda>
+In-Reply-To: <20220203091935.2716-5-seiden@linux.ibm.com>
 References: <20220203091935.2716-1-seiden@linux.ibm.com>
- <20220203091935.2716-2-seiden@linux.ibm.com>
+        <20220203091935.2716-5-seiden@linux.ibm.com>
 Organization: IBM
 X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: B8dpBd6y6Pim16T_jK08sZQR9FkLAvV_
-X-Proofpoint-GUID: aRAk8IHmC-a4MMutM0eOL9aR0HxODuxS
+X-Proofpoint-ORIG-GUID: yk3GWL8KXi0c1oLhrhwhD215qW2SoSGT
+X-Proofpoint-GUID: aje3MBsa-f1dyQ6i9DoF9jap7kdV09NB
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
  definitions=2022-02-03_06,2022-02-03_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 spamscore=0 malwarescore=0 suspectscore=0 bulkscore=0
- mlxscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ clxscore=1015 impostorscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 mlxlogscore=999 suspectscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2201110000 definitions=main-2202030106
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu,  3 Feb 2022 09:19:32 +0000
+On Thu,  3 Feb 2022 09:19:35 +0000
 Steffen Eiden <seiden@linux.ibm.com> wrote:
 
-> Adds an invalid command test for attestation in the uv-host.
+> Adds several tests to verify correct error paths of attestation.
 > 
 > Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
-> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
->
 > ---
->  lib/s390x/asm/uv.h | 23 ++++++++++++++++++++++-
->  s390x/uv-host.c    |  1 +
->  2 files changed, 23 insertions(+), 1 deletion(-)
+>  lib/s390x/asm/uv.h |   5 +-
+>  s390x/uv-guest.c   | 174 ++++++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 177 insertions(+), 2 deletions(-)
 > 
 > diff --git a/lib/s390x/asm/uv.h b/lib/s390x/asm/uv.h
-> index 97c90e81..7afbcffd 100644
+> index 7afbcffd..7fe55052 100644
 > --- a/lib/s390x/asm/uv.h
 > +++ b/lib/s390x/asm/uv.h
-> @@ -1,7 +1,7 @@
+> @@ -108,7 +108,10 @@ struct uv_cb_qui {
+>  	u8  reserved88[158 - 136];	/* 0x0088 */
+>  	uint16_t max_guest_cpus;	/* 0x009e */
+>  	u64 uv_feature_indications;	/* 0x00a0 */
+> -	u8  reserveda8[200 - 168];	/* 0x00a8 */
+> +	u8  reserveda8[224 - 168];	/* 0x00a8 */
+
+please use uint*_t types everywhere. as you notice, we are already
+inconsistent, so let's just use the new ones for all new code
+
+> +	u64 supported_att_hdr_versions;	/* 0x00e0 */
+> +	u64 supported_paf;		/* 0x00e8 */
+> +	u8  reservedf0[256 - 240];	/* 0x00f0 */
+>  }  __attribute__((packed))  __attribute__((aligned(8)));
+>  
+>  struct uv_cb_cgc {
+> diff --git a/s390x/uv-guest.c b/s390x/uv-guest.c
+> index 97ae4687..3fca9d21 100644
+> --- a/s390x/uv-guest.c
+> +++ b/s390x/uv-guest.c
+> @@ -2,10 +2,11 @@
 >  /*
->   * s390x Ultravisor related definitions
+>   * Guest Ultravisor Call tests
 >   *
 > - * Copyright (c) 2020 IBM Corp
 > + * Copyright IBM Corp. 2020, 2022
 >   *
 >   * Authors:
 >   *  Janosch Frank <frankja@linux.ibm.com>
-> @@ -47,6 +47,7 @@
->  #define UVC_CMD_UNPIN_PAGE_SHARED	0x0342
->  #define UVC_CMD_SET_SHARED_ACCESS	0x1000
->  #define UVC_CMD_REMOVE_SHARED_ACCESS	0x1001
-> +#define UVC_CMD_ATTESTATION		0x1020
+> + *  Steffen Eiden <seiden@linux.ibm.com>
+>   */
 >  
->  /* Bits in installed uv calls */
->  enum uv_cmds_inst {
-> @@ -71,6 +72,7 @@ enum uv_cmds_inst {
->  	BIT_UVC_CMD_UNSHARE_ALL = 20,
->  	BIT_UVC_CMD_PIN_PAGE_SHARED = 21,
->  	BIT_UVC_CMD_UNPIN_PAGE_SHARED = 22,
-> +	BIT_UVC_CMD_ATTESTATION = 28,
->  };
+>  #include <libcflat.h>
+> @@ -53,6 +54,15 @@ static void test_priv(void)
+>  	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
+>  	report_prefix_pop();
 >  
->  struct uv_cb_header {
-> @@ -178,6 +180,25 @@ struct uv_cb_cfs {
->  	u64 paddr;
->  }  __attribute__((packed))  __attribute__((aligned(8)));
->  
-> +/* Retrieve Attestation Measurement */
-> +struct uv_cb_attest {
-> +	struct uv_cb_header header;	/* 0x0000 */
-> +	u64 reserved08[2];		/* 0x0008 */
-> +	u64 arcb_addr;			/* 0x0018 */
-> +	u64 continuation_token;		/* 0x0020 */
-> +	u8  reserved28[6];		/* 0x0028 */
-> +	u16 user_data_length;		/* 0x002e */
-> +	u8  user_data[256];		/* 0x0030 */
-> +	u32 reserved130[3];		/* 0x0130 */
-> +	u32 measurement_length;		/* 0x013c */
-> +	u64 measurement_address;	/* 0x0140 */
-> +	u8 config_uid[16];		/* 0x0148 */
-> +	u32 reserved158;		/* 0x0158 */
-> +	u32 add_data_length;		/* 0x015c */
-> +	u64 add_data_address;		/* 0x0160 */
-> +	u64 reserved168[4];		/* 0x0168 */
+> +	report_prefix_push("attest");
+> +	uvcb.cmd = UVC_CMD_ATTESTATION;
+> +	uvcb.len = sizeof(struct uv_cb_attest);
+> +	expect_pgm_int();
+> +	enter_pstate();
+> +	uv_call_once(0, (u64)&uvcb);
 
-please use uint*_t types!
+please use uint*_t types :)
 
-with that fixed: 
-
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-
-> +}  __attribute__((packed))  __attribute__((aligned(8)));
+> +	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
+> +	report_prefix_pop();
 > +
->  /* Set Secure Config Parameter */
->  struct uv_cb_ssc {
->  	struct uv_cb_header header;
-> diff --git a/s390x/uv-host.c b/s390x/uv-host.c
-> index 92a41069..946f031e 100644
-> --- a/s390x/uv-host.c
-> +++ b/s390x/uv-host.c
-> @@ -418,6 +418,7 @@ static struct cmd_list invalid_cmds[] = {
->  	{ "bogus", 0x4242, sizeof(struct uv_cb_header), -1},
->  	{ "share", UVC_CMD_SET_SHARED_ACCESS, sizeof(struct uv_cb_share), BIT_UVC_CMD_SET_SHARED_ACCESS },
->  	{ "unshare", UVC_CMD_REMOVE_SHARED_ACCESS, sizeof(struct uv_cb_share), BIT_UVC_CMD_REMOVE_SHARED_ACCESS },
-> +	{ "attest", UVC_CMD_ATTESTATION, sizeof(struct uv_cb_attest), BIT_UVC_CMD_ATTESTATION },
->  	{ NULL, 0, 0 },
->  };
+>  	report_prefix_pop();
+>  }
 >  
+> @@ -111,7 +121,168 @@ static void test_sharing(void)
+>  	cc = uv_call(0, (u64)&uvcb);
+>  	report(cc == 0 && uvcb.header.rc == UVC_RC_EXECUTED, "unshare");
+>  	report_prefix_pop();
+> +}
+> +
+> +#define ARCB_VERSION_1 0x0100
+> +#define ARCB_HMAC_SHA512 1
+> +/* arcb with one key slot and no nonce */
+> +struct uv_arcb_v1 {
+> +	uint64_t	reserved0;		/* 0x0000 */
+> +	uint32_t	req_ver;		/* 0x0008 */
+> +	uint32_t	req_len;		/* 0x000c */
+> +	uint8_t		iv[12];			/*
+> 0x0010 */
+> +	uint32_t	reserved1c;		/* 0x001c */
+> +	uint8_t		reserved20[7];		/*
+> 0x0020 */
+> +	uint8_t		nks;			/* 0x0027
+> */
+> +	uint32_t	reserved28;		/* 0x0028 */
+> +	uint32_t	sea;			/* 0x002c */
+> +	uint64_t	plaint_att_flags;	/* 0x0030 */
+> +	uint32_t	meas_alg_id;		/* 0x0038 */
+> +	uint32_t	reserved3c;		/* 0x003c */
+> +	uint8_t		cpk[160];		/* 0x0040 */
+> +	uint8_t		key_slot[80];		/*
+> 0x00e0 */
+> +	uint8_t		meas_key[64];		/*
+> 0x0130 */
+> +	uint8_t		tag[16];		/* 0x0170 */
+> +} __attribute__((packed));
+> +
+> +static void test_attest_v1(u64 supported_paf)
+> +{
+> +	struct uv_cb_attest uvcb = {
+> +		.header.cmd = UVC_CMD_ATTESTATION,
+> +		.header.len = sizeof(uvcb),
+> +	};
+> +	struct uv_arcb_v1 *arcb = (void *)page;
+> +	uint64_t measurement = page + sizeof(*arcb);
+> +	size_t measurement_size = 64;
+> +	uint64_t additional = measurement + measurement_size;
+> +	size_t additional_size = 32;
+
+I wonder it it would be easier to create a struct with an embedded
+struct uv_arcb_v1 to represent the measurement and the additional data.
+that way you won't need to do all these hacky calculations and magic
+numbers, you could just do something like 
+
+measurement = (uint64_t)&arcb_extended.measurement;
+
+which, while longer, is probably easier to understand.
+
+and the sizes maybe could become #defines
+
+> +	uint64_t plaint_att_flags = 1ULL << 61;
+> +	int cc;
+> +
+> +	memset((void *) page, 0, PAGE_SIZE);
+
+please no extra space between the ) and the p
+
+> +
+> +	/* create a minimal arcb/uvcb such that FW has everything to start unsealing the request. */
+> +	arcb->req_ver = ARCB_VERSION_1;
+> +	arcb->req_len = sizeof(*arcb);
+> +	arcb->nks = 1;
+> +	arcb->sea = sizeof(arcb->meas_key);
+> +	arcb->plaint_att_flags = plaint_att_flags;
+> +	arcb->meas_alg_id = ARCB_HMAC_SHA512;
+> +	uvcb.arcb_addr = page;
+> +	uvcb.measurement_address = measurement;
+> +	uvcb.measurement_length = measurement_size;
+> +	uvcb.add_data_address = additional;
+> +	uvcb.add_data_length = additional_size;
+
+are you using those variables somewhere else? could you just assign
+directly to the uvcb instead?
+
+> +
+> +	uvcb.continuation_token = 0xff;
+> +	cc = uv_call(0, (u64)&uvcb);
+
+please use uint*_t types everywhere
+
+> +	report(cc == 1 && uvcb.header.rc == 0x0101, "invalid continuation token");
+> +	uvcb.continuation_token = 0;
+> +
+> +	uvcb.user_data_length = sizeof(uvcb.user_data) + 1;
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x0102, "invalid user data size");
+> +	uvcb.user_data_length = 0;
+> +
+> +	uvcb.arcb_addr = 0;
+
+is 0 really not a valid address?
+
+and what about an address outside memory?
+
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x0103, "invalid address arcb");
+> +	uvcb.arcb_addr = page;
+> +
+> +	/* 0104 - 0105 need an unseal-able request */
+> +
+> +	/* version 0000 is an illegal version number */
+> +	arcb->req_ver = 0x0000;
+
+just 0 is ok
+
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x0106, "unsupported version");
+> +	arcb->req_ver = ARCB_VERSION_1;
+> +
+> +	arcb->req_len += 1;
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x0107, "invalid arcb size 1");
+> +	arcb->req_len -= 1;
+> +	arcb->nks = 2;
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x0107, "invalid arcb size 2");
+
+you say invalid arcb size, but you are changing the number of nks. I
+think I understand why, but maybe it's better to add a comment to
+explain what you are doing.
+
+> +	arcb->nks = 1;
+> +
+> +	arcb->nks = 0;
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x0108, "invalid num key slots");
+> +	arcb->nks = 1;
+> +
+> +	/* possible valid size (when using nonce). However, req_len too small to host a nonce */
+> +	arcb->sea = 80;
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x0109, "invalid encrypted size 1");
+> +	arcb->sea = 17;
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x0109, "invalid encrypted size 2");
+> +	arcb->sea = 64;
+> +
+> +	arcb->plaint_att_flags = supported_paf ^ ((u64) -1);
+
+so you are trying to flip the lower 32 bits?
+why not just supported_paf ^ ~0 ?
+
+although a more readable form would probably be
+supported_paf ^ GENMASK_ULL(31, 0)
+
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x010a, "invalid flag");
+> +	arcb->plaint_att_flags = plaint_att_flags;
+> +
+> +	/* reserved value */
+> +	arcb->meas_alg_id = 0;
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x010b, "invalid measurement algorithm");
+> +	arcb->meas_alg_id = ARCB_HMAC_SHA512;
+> +
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x010c, "unable unseal");
+>  
+> +	uvcb.measurement_length = 0;
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x010d, "invalid measurement size");
+> +	uvcb.measurement_length = measurement_size;
+> +
+> +	uvcb.add_data_length = 0;
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc == 1 && uvcb.header.rc == 0x010e, "invalid additional size");
+> +	uvcb.add_data_length = additional_size;
+> +}
+> +
+> +static void test_attest(void)
+> +{
+> +	struct uv_cb_attest uvcb = {
+> +		.header.cmd = UVC_CMD_ATTESTATION,
+> +		.header.len = sizeof(uvcb),
+> +	};
+> +	const struct uv_cb_qui *uvcb_qui = uv_get_query_data();
+> +	int cc;
+> +
+> +	report_prefix_push("attest");
+> +
+> +	if (!uv_query_test_call(BIT_UVC_CMD_ATTESTATION)) {
+> +		report_skip("Attestation not supported.");
+> +		goto done;
+> +	}
+> +
+> +	/* Verify that the uv supports at least one header version */
+> +	report(uvcb_qui->supported_att_hdr_versions, "has hdr support");
+> +
+> +	memset((void *) page, 0, PAGE_SIZE);
+
+please no extra space between ) and p
+
+> +
+> +	uvcb.header.len -= 1;
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc && uvcb.header.rc == UVC_RC_INV_LEN, "invalid uvcb size 1");
+> +	uvcb.header.len += 1;
+> +
+> +	uvcb.header.len += 1;
+> +	cc = uv_call(0, (u64)&uvcb);
+> +	report(cc && uvcb.header.rc == UVC_RC_INV_LEN, "invalid uvcb size 2");
+> +	uvcb.header.len -= 1;
+> +
+> +	report_prefix_push("v1");
+> +	if (test_bit_inv(0, &uvcb_qui->supported_att_hdr_versions))
+> +		test_attest_v1(uvcb_qui->supported_paf);
+> +	else
+> +		report_skip("Attestation version 1 not supported");
+> +	report_prefix_pop();
+> +done:
+>  	report_prefix_pop();
+>  }
+>  
+> @@ -179,6 +350,7 @@ int main(void)
+>  	test_invalid();
+>  	test_query();
+>  	test_sharing();
+> +	test_attest();
+>  	free_page((void *)page);
+>  done:
+>  	report_prefix_pop();
 
