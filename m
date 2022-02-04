@@ -2,108 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB06F4A9C5D
-	for <lists+linux-s390@lfdr.de>; Fri,  4 Feb 2022 16:55:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D28374A9DC0
+	for <lists+linux-s390@lfdr.de>; Fri,  4 Feb 2022 18:38:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376337AbiBDPy2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 4 Feb 2022 10:54:28 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3024 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1376368AbiBDPyH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 4 Feb 2022 10:54:07 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 214FgL5j003793;
-        Fri, 4 Feb 2022 15:54:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=2oWzQ/SNcNYt0kngd9Dogpe/jWJDppi3iZBxylArBcE=;
- b=OvbF+6I+cgZ6qEwRZUnBXZbxUttOUO/y5bthicFO+659gTYl845vF+Eve6Xf1X6YL7e4
- jw4Pns0n3jLYa4Qa7pGeT8AQBOOTL00J7AoDe+WqstjC7lJRLCsvfvJ3xsHJ0dLpt5Fq
- Kur2XH5Kbz+BEZcjb5Ru1JzqoodelZdwTy+FWtWQ0qXngkMjev5F7sDtYsxrZhMLXBnF
- +Oacx6GhzKnjDJ0KAb2h7CbUgIEAkZhm4SJE17BPwJdMM4mcNGNP6w4EQKSBOqCpeaxW
- Bcongn2b0JKqYH/wb/Khp589fkg6aMwIGnn1Sdy7UIdfbFwxdV8WFvPleGvyVB59muNN zQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3e0w6tkerj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Feb 2022 15:54:07 +0000
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 214DDhTh019583;
-        Fri, 4 Feb 2022 15:54:07 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3e0w6tker0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Feb 2022 15:54:06 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 214FlWMW024761;
-        Fri, 4 Feb 2022 15:54:04 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 3e0r10eb1e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Feb 2022 15:54:04 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 214Fs1gq32113126
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 4 Feb 2022 15:54:01 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5216EAE051;
-        Fri,  4 Feb 2022 15:54:01 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BADD4AE063;
-        Fri,  4 Feb 2022 15:54:00 +0000 (GMT)
-Received: from p-imbrenda.bredband2.com (unknown [9.145.8.50])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  4 Feb 2022 15:54:00 +0000 (GMT)
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, frankja@linux.ibm.com, thuth@redhat.com,
-        pasic@linux.ibm.com, david@redhat.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, scgl@linux.ibm.com
-Subject: [PATCH v7 17/17] KVM: s390: pv: avoid export before import if possible
-Date:   Fri,  4 Feb 2022 16:53:49 +0100
-Message-Id: <20220204155349.63238-18-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220204155349.63238-1-imbrenda@linux.ibm.com>
-References: <20220204155349.63238-1-imbrenda@linux.ibm.com>
+        id S1376965AbiBDRiE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 4 Feb 2022 12:38:04 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:43025 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1376952AbiBDRhs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 4 Feb 2022 12:37:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643996267;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         references:references; bh=meBYTrvQY3Vzaw6ouSwzbarO8+EcbkWn/cKrybubalA=;
+        b=UMzIIorG5XRIf3Ngj/HGBA8gAJZfOqJVvyYkhPyTajSi0Gy5fAFAndRYBskXwNJpdbCwKe
+        W0ReziBI7WFPG6YEXLUh4kTteMrpnrgwOshyo5+oNPZq9hLT+EJ43vv66Du0KOMFHkzHgR
+        aLCZFB4OkLDNTo5qlBVVx7Aar5HTbLk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-6-qPJobStOO-ivGJ3dYYyzrw-1; Fri, 04 Feb 2022 12:37:44 -0500
+X-MC-Unique: qPJobStOO-ivGJ3dYYyzrw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E6AC801B2D;
+        Fri,  4 Feb 2022 17:37:43 +0000 (UTC)
+Received: from fuller.cnet (ovpn-112-3.gru2.redhat.com [10.97.112.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F8927DE50;
+        Fri,  4 Feb 2022 17:37:08 +0000 (UTC)
+Received: by fuller.cnet (Postfix, from userid 1000)
+        id 722D2416D5C7; Fri,  4 Feb 2022 14:36:46 -0300 (-03)
+Message-ID: <20220204173554.491925589@fedora.localdomain>
+User-Agent: quilt/0.66
+Date:   Fri, 04 Feb 2022 14:35:38 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Nitesh Lal <nilal@redhat.com>,
+        Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alex Belits <abelits@belits.com>, Peter Xu <peterx@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Oscar Shiang <oscar0225@livemail.tw>,
+        linux-s390@vger.kernel.org, Marcelo Tosatti <mtosatti@redhat.com>
+Subject: [patch v11 01/13] s390: add support for TIF_TASK_ISOL
+References: <20220204173537.429902988@fedora.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: mOPZkG-Re3_PytrS3NAIRvUEAng0lN4i
-X-Proofpoint-ORIG-GUID: ZKwOj84RHjXKRh5NJMEVHM3aXJ7M9Aur
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-02-04_07,2022-02-03_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- mlxlogscore=999 lowpriorityscore=0 mlxscore=0 clxscore=1015 malwarescore=0
- bulkscore=0 spamscore=0 priorityscore=1501 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2201110000
- definitions=main-2202040088
+Content-Type: text/plain; charset=UTF-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-If the appropriate UV feature bit is set, there is no need to perform
-an export before import.
+Add TIF_TASK_ISOL handling for s390.
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
----
- arch/s390/kernel/uv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
 
-diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-index e358b8bd864b..43393568f844 100644
---- a/arch/s390/kernel/uv.c
-+++ b/arch/s390/kernel/uv.c
-@@ -236,7 +236,8 @@ static int make_secure_pte(pte_t *ptep, unsigned long addr,
+Index: linux-2.6/arch/s390/include/asm/thread_info.h
+===================================================================
+--- linux-2.6.orig/arch/s390/include/asm/thread_info.h
++++ linux-2.6/arch/s390/include/asm/thread_info.h
+@@ -73,6 +73,7 @@ void arch_setup_new_exec(void);
+ #define TIF_ISOLATE_BP		8	/* Run process with isolated BP */
+ #define TIF_ISOLATE_BP_GUEST	9	/* Run KVM guests with isolated BP */
+ #define TIF_PER_TRAP		10	/* Need to handle PER trap on exit to usermode */
++#define TIF_TASK_ISOL		11	/* task isolation work pending */
  
- static bool should_export_before_import(struct uv_cb_header *uvcb, struct mm_struct *mm)
- {
--	return uvcb->cmd != UVC_CMD_UNPIN_PAGE_SHARED &&
-+	return !test_bit_inv(BIT_UV_FEAT_MISC, &uv_info.uv_feature_indications) &&
-+		uvcb->cmd != UVC_CMD_UNPIN_PAGE_SHARED &&
- 		atomic_read(&mm->context.protected_count) > 1;
- }
+ #define TIF_31BIT		16	/* 32bit process */
+ #define TIF_MEMDIE		17	/* is terminating due to OOM killer */
+@@ -97,6 +98,7 @@ void arch_setup_new_exec(void);
+ #define _TIF_ISOLATE_BP		BIT(TIF_ISOLATE_BP)
+ #define _TIF_ISOLATE_BP_GUEST	BIT(TIF_ISOLATE_BP_GUEST)
+ #define _TIF_PER_TRAP		BIT(TIF_PER_TRAP)
++#define _TIF_TASK_ISOL		BIT(TIF_TASK_ISOL)
  
--- 
-2.34.1
+ #define _TIF_31BIT		BIT(TIF_31BIT)
+ #define _TIF_SINGLE_STEP	BIT(TIF_SINGLE_STEP)
+
 
