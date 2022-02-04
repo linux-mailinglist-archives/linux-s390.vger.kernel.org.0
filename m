@@ -2,113 +2,237 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D21714AA21B
-	for <lists+linux-s390@lfdr.de>; Fri,  4 Feb 2022 22:19:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91D274AA23C
+	for <lists+linux-s390@lfdr.de>; Fri,  4 Feb 2022 22:22:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241693AbiBDVSD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 4 Feb 2022 16:18:03 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61692 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244092AbiBDVQr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 4 Feb 2022 16:16:47 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 214IGOd6028429;
-        Fri, 4 Feb 2022 21:16:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=yeoBPLQAylIMFufLgBsfkVzGHAJfiDsHxuQ1N+MmstE=;
- b=LacBLyky1yrdBBz8X+L6NS3meAV5WY8YsvApV1AK6WUYt9pWwiAKJ7aFa7fns3tJ4g2A
- c63TrKKMYvmLXBfE1CPVBoMQwEOsFSMGRwwgMlmZHsDCfZn2zQy3RrA2QPLLUvT/ddvQ
- WjZ8LoRhNWpa2W8i/goeFPpKJGhlhvQA7QL8oyNhacEDozBZ5IXXi7IMQaniDqAFZJrK
- lCYR7E0SitU29RdiQjYZdbhP8QpQaMQ1spxsoIYc9cWSay6dGJ1MN9baMhkDN/Qc8ZSS
- PkVbmPTbTue8ssx05fy0vWyZYYnBbgRCJtVv1S39meingD0iamYznd/q0cngzebMlW0w fA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3e0qx470w4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Feb 2022 21:16:47 +0000
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 214LG02S000394;
-        Fri, 4 Feb 2022 21:16:46 GMT
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3e0qx470us-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Feb 2022 21:16:46 +0000
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 214LDEYk029537;
-        Fri, 4 Feb 2022 21:16:45 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04wdc.us.ibm.com with ESMTP id 3e0r0vavbn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Feb 2022 21:16:45 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 214LGhE311403940
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 4 Feb 2022 21:16:43 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4C96B136065;
-        Fri,  4 Feb 2022 21:16:43 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3799B13604F;
-        Fri,  4 Feb 2022 21:16:41 +0000 (GMT)
-Received: from li-c92d2ccc-254b-11b2-a85c-a700b5bfb098.ibm.com.com (unknown [9.211.82.52])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri,  4 Feb 2022 21:16:41 +0000 (GMT)
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-To:     linux-s390@vger.kernel.org
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        schnelle@linux.ibm.com, farman@linux.ibm.com, pmorel@linux.ibm.com,
-        borntraeger@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, imbrenda@linux.ibm.com,
-        vneethv@linux.ibm.com, oberpar@linux.ibm.com, freude@linux.ibm.com,
-        thuth@redhat.com, pasic@linux.ibm.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH v3 30/30] MAINTAINERS: additional files related kvm s390 pci passthrough
-Date:   Fri,  4 Feb 2022 16:15:36 -0500
-Message-Id: <20220204211536.321475-31-mjrosato@linux.ibm.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20220204211536.321475-1-mjrosato@linux.ibm.com>
-References: <20220204211536.321475-1-mjrosato@linux.ibm.com>
+        id S241753AbiBDVWy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 4 Feb 2022 16:22:54 -0500
+Received: from mga06.intel.com ([134.134.136.31]:52428 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234384AbiBDVWx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 4 Feb 2022 16:22:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644009773; x=1675545773;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Q0sBxlENUk9O0bMBfazY3nvfd6WM4GRtxdNNT+RMwcU=;
+  b=DM415larZZi97GY1cyAVZE+wBk0mlLka6MLxR+13jZJ1grlme3jb+fpc
+   PS00F+vbOBoMsJEYY5fgnpwQKE3TKxb2nXOhIrfu8xCLdg+Csm4pNT5x9
+   qFnKDdi1w4IU+kvN3TaqJucCf8JI6jHQs/TJP3N9RH0+pyyfIe53HpqgR
+   qhQbBZwpWNByYlNUlwGO5Zmkv4geZ8JIFQGrztgTzW1L+SyHUTM/Q44bA
+   hjWPMAFjEGgYGMvbjNYisVfQ8KZxoCIk/TG1E6SLgwT4ThR99jKuhlXx9
+   nozsWpmF6bFsnBsQY0KYnl+2Hji+6YJ2Dn6KKBqWpfHiYLeYiVM+W8Zwx
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10248"; a="309190138"
+X-IronPort-AV: E=Sophos;i="5.88,343,1635231600"; 
+   d="scan'208";a="309190138"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2022 13:22:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,343,1635231600"; 
+   d="scan'208";a="498596555"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 04 Feb 2022 13:22:49 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nG62b-000YCb-2j; Fri, 04 Feb 2022 21:22:49 +0000
+Date:   Sat, 5 Feb 2022 05:22:44 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, thuth@redhat.com,
+        pasic@linux.ibm.com, david@redhat.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, scgl@linux.ibm.com
+Subject: Re: [PATCH v7 10/17] KVM: s390: pv: add mmu_notifier
+Message-ID: <202202050525.5A9HirW8-lkp@intel.com>
+References: <20220204155349.63238-11-imbrenda@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: RPT6B_-v7dqIMpR5oz7ERx1qMWuK9te-
-X-Proofpoint-GUID: iz4MJ6VoawHyuYZ4noK-qxfZD0ybiVKO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-02-04_07,2022-02-03_01,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=984
- lowpriorityscore=0 phishscore=0 clxscore=1015 impostorscore=0 adultscore=0
- mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2202040117
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220204155349.63238-11-imbrenda@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Add entries from the s390 kvm subdirectory related to pci passthrough.
+Hi Claudio,
 
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+I love your patch! Yet something to improve:
+
+[auto build test ERROR on kvm/queue]
+[also build test ERROR on v5.17-rc2 next-20220204]
+[cannot apply to kvms390/next s390/features]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/0day-ci/linux/commits/Claudio-Imbrenda/KVM-s390-pv-implement-lazy-destroy-for-reboot/20220204-235609
+base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git queue
+config: s390-randconfig-r044-20220131 (https://download.01.org/0day-ci/archive/20220205/202202050525.5A9HirW8-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project a73e4ce6a59b01f0e37037761c1e6889d539d233)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install s390 cross compiling tool for clang build
+        # apt-get install binutils-s390x-linux-gnu
+        # https://github.com/0day-ci/linux/commit/9ee65f25ad996d38f6935360c99a89e72024174b
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Claudio-Imbrenda/KVM-s390-pv-implement-lazy-destroy-for-reboot/20220204-235609
+        git checkout 9ee65f25ad996d38f6935360c99a89e72024174b
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash arch/s390/kvm/
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/s390/kvm/pv.c:9:
+   In file included from include/linux/kvm_host.h:41:
+   In file included from include/linux/kvm_para.h:5:
+   In file included from include/uapi/linux/kvm_para.h:37:
+   In file included from arch/s390/include/asm/kvm_para.h:25:
+   In file included from arch/s390/include/asm/diag.h:12:
+   In file included from include/linux/if_ether.h:19:
+   In file included from include/linux/skbuff.h:31:
+   In file included from include/linux/dma-mapping.h:10:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:75:
+   include/asm-generic/io.h:464:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           val = __raw_readb(PCI_IOBASE + addr);
+                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:477:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+                                                           ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
+   #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
+                                                             ^
+   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
+   #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+                                                        ^
+   In file included from arch/s390/kvm/pv.c:9:
+   In file included from include/linux/kvm_host.h:41:
+   In file included from include/linux/kvm_para.h:5:
+   In file included from include/uapi/linux/kvm_para.h:37:
+   In file included from arch/s390/include/asm/kvm_para.h:25:
+   In file included from arch/s390/include/asm/diag.h:12:
+   In file included from include/linux/if_ether.h:19:
+   In file included from include/linux/skbuff.h:31:
+   In file included from include/linux/dma-mapping.h:10:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:75:
+   include/asm-generic/io.h:490:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+                                                           ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
+   #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
+                                                             ^
+   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
+   #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
+                                                        ^
+   In file included from arch/s390/kvm/pv.c:9:
+   In file included from include/linux/kvm_host.h:41:
+   In file included from include/linux/kvm_para.h:5:
+   In file included from include/uapi/linux/kvm_para.h:37:
+   In file included from arch/s390/include/asm/kvm_para.h:25:
+   In file included from arch/s390/include/asm/diag.h:12:
+   In file included from include/linux/if_ether.h:19:
+   In file included from include/linux/skbuff.h:31:
+   In file included from include/linux/dma-mapping.h:10:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:75:
+   include/asm-generic/io.h:501:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           __raw_writeb(value, PCI_IOBASE + addr);
+                               ~~~~~~~~~~ ^
+   include/asm-generic/io.h:511:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+                                                         ~~~~~~~~~~ ^
+   include/asm-generic/io.h:521:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+                                                         ~~~~~~~~~~ ^
+   include/asm-generic/io.h:609:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           readsb(PCI_IOBASE + addr, buffer, count);
+                  ~~~~~~~~~~ ^
+   include/asm-generic/io.h:617:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           readsw(PCI_IOBASE + addr, buffer, count);
+                  ~~~~~~~~~~ ^
+   include/asm-generic/io.h:625:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           readsl(PCI_IOBASE + addr, buffer, count);
+                  ~~~~~~~~~~ ^
+   include/asm-generic/io.h:634:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           writesb(PCI_IOBASE + addr, buffer, count);
+                   ~~~~~~~~~~ ^
+   include/asm-generic/io.h:643:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           writesw(PCI_IOBASE + addr, buffer, count);
+                   ~~~~~~~~~~ ^
+   include/asm-generic/io.h:652:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           writesl(PCI_IOBASE + addr, buffer, count);
+                   ~~~~~~~~~~ ^
+>> arch/s390/kvm/pv.c:255:3: error: implicit declaration of function 'mmu_notifier_register' [-Werror,-Wimplicit-function-declaration]
+                   mmu_notifier_register(&kvm->arch.pv.mmu_notifier, kvm->mm);
+                   ^
+   arch/s390/kvm/pv.c:255:3: note: did you mean 'mmu_notifier_release'?
+   include/linux/mmu_notifier.h:679:20: note: 'mmu_notifier_release' declared here
+   static inline void mmu_notifier_release(struct mm_struct *mm)
+                      ^
+   12 warnings and 1 error generated.
+
+
+vim +/mmu_notifier_register +255 arch/s390/kvm/pv.c
+
+   210	
+   211	int kvm_s390_pv_init_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
+   212	{
+   213		struct uv_cb_cgc uvcb = {
+   214			.header.cmd = UVC_CMD_CREATE_SEC_CONF,
+   215			.header.len = sizeof(uvcb)
+   216		};
+   217		int cc, ret;
+   218		u16 dummy;
+   219	
+   220		ret = kvm_s390_pv_alloc_vm(kvm);
+   221		if (ret)
+   222			return ret;
+   223	
+   224		/* Inputs */
+   225		uvcb.guest_stor_origin = 0; /* MSO is 0 for KVM */
+   226		uvcb.guest_stor_len = kvm->arch.pv.guest_len;
+   227		uvcb.guest_asce = kvm->arch.gmap->asce;
+   228		uvcb.guest_sca = (unsigned long)kvm->arch.sca;
+   229		uvcb.conf_base_stor_origin = (u64)kvm->arch.pv.stor_base;
+   230		uvcb.conf_virt_stor_origin = (u64)kvm->arch.pv.stor_var;
+   231	
+   232		cc = uv_call_sched(0, (u64)&uvcb);
+   233		*rc = uvcb.header.rc;
+   234		*rrc = uvcb.header.rrc;
+   235		KVM_UV_EVENT(kvm, 3, "PROTVIRT CREATE VM: handle %llx len %llx rc %x rrc %x",
+   236			     uvcb.guest_handle, uvcb.guest_stor_len, *rc, *rrc);
+   237	
+   238		/* Outputs */
+   239		kvm->arch.pv.handle = uvcb.guest_handle;
+   240	
+   241		atomic_inc(&kvm->mm->context.protected_count);
+   242		if (cc) {
+   243			if (uvcb.header.rc & UVC_RC_NEED_DESTROY) {
+   244				kvm_s390_pv_deinit_vm(kvm, &dummy, &dummy);
+   245			} else {
+   246				atomic_dec(&kvm->mm->context.protected_count);
+   247				kvm_s390_pv_dealloc_vm(kvm);
+   248			}
+   249			return -EIO;
+   250		}
+   251		kvm->arch.gmap->guest_handle = uvcb.guest_handle;
+   252		/* Add the notifier only once. No races because we hold kvm->lock */
+   253		if (kvm->arch.pv.mmu_notifier.ops != &kvm_s390_pv_mmu_notifier_ops) {
+   254			kvm->arch.pv.mmu_notifier.ops = &kvm_s390_pv_mmu_notifier_ops;
+ > 255			mmu_notifier_register(&kvm->arch.pv.mmu_notifier, kvm->mm);
+   256		}
+   257		return 0;
+   258	}
+   259	
+
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bb83dcbcb619..2762295ad85e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16900,6 +16900,8 @@ M:	Eric Farman <farman@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- L:	kvm@vger.kernel.org
- S:	Supported
-+F:	arch/s390/include/asm/kvm_pci.h
-+F:	arch/s390/kvm/pci*
- F:	drivers/vfio/pci/vfio_pci_zdev.c
- F:	include/uapi/linux/vfio_zdev.h
- 
--- 
-2.27.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
