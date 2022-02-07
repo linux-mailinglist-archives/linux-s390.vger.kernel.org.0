@@ -2,53 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 051F44AC0C8
-	for <lists+linux-s390@lfdr.de>; Mon,  7 Feb 2022 15:15:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39E9B4AC22B
+	for <lists+linux-s390@lfdr.de>; Mon,  7 Feb 2022 15:58:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230299AbiBGOO5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 7 Feb 2022 09:14:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42666 "EHLO
+        id S1347993AbiBGO6A (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 7 Feb 2022 09:58:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1388570AbiBGNtd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Feb 2022 08:49:33 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A176C0401C0;
-        Mon,  7 Feb 2022 05:49:33 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B433461258;
-        Mon,  7 Feb 2022 13:49:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EEECC004E1;
-        Mon,  7 Feb 2022 13:49:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644241772;
-        bh=VjD//5GmX4HtgK0McMZ2+tZ69u0OKe5K4PhsuFpSLoM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jeqOzkD6gN0mxsHe/uCY5WZ3Wrr4+7QvGlSVPEQsAKbMeSMB9kgBLWH6UsBY2REh5
-         eLlFK/85/wc2qS9COKn11IC4Xz4V89cOtXEgQ5ao1GZ11GDqpGqSP5gYjzmQRx4LlK
-         d+pq6hkMlnWcQA3RjCa+JEE09Fofy/+c80nUZ0p6FMIIJVq7FQu27MTki4npopWZMx
-         LIHZHI/hZMS1TtAYe6ynbGel99OR27kQZKI8AXevbOSPxDP5/m4TautOU5dhqWDotF
-         xT8V1Ma4WzXm7q5HomLvjddsBzW4oHvbHHH7LXRrKfMVY2H+pSammx/l1pnFwSwykW
-         l3JMtwngGeeEw==
-Date:   Mon, 7 Feb 2022 15:49:26 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Tony Lu <tonylu@linux.alibaba.com>
-Cc:     kgraul@linux.ibm.com, kuba@kernel.org, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        RDMA mailing list <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH net-next] net/smc: Allocate pages of SMC-R on ibdev NUMA
- node
-Message-ID: <YgEjZonizb1Ugg2b@unreal>
-References: <20220130190259.94593-1-tonylu@linux.alibaba.com>
- <YfeN1BfPqhVz8mvy@unreal>
- <YgDtnk8g7y5oRKXB@TonyMac-Alibaba>
+        with ESMTP id S1441837AbiBGOd1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Feb 2022 09:33:27 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9DCAC0401C1;
+        Mon,  7 Feb 2022 06:33:26 -0800 (PST)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 217DnQIs003511;
+        Mon, 7 Feb 2022 14:33:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=aCZXhcVXSPv1P9tobnQfMHdpYQnynrNHE8D3Hvg84Ro=;
+ b=g3HAMExKodEqeYA8+lS83FmnojJ+UJSRrEQAw7jOPxg2B2sKuzdRV/xrpHilZJ7BNUzT
+ egz22dE3KNQjC0j2L3AqGH8Bhgnq0ywC6ni1IcriwNhbNVjKBC/qLBOhEQrmBBCsOV8Z
+ RdYovBpqsp8hDsYiwGMZWatvYH4zkOy9FtPps4CDR2k1lqCBttxoZR7bfIMWm3Ag9U58
+ L2XhoxY8VSP7YCw7JniWFqUDByKdYyv2Yxaxf8dkXWgsfciVA4RaoWY2QUeV8mSiCj+o
+ 33xOXaWrG7gamLYUShgkWuWf7ejYoDlWre2nAfoEg37fJ2EpcJ/E2lXX25ww7co3HdzV EQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3e22qep77g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Feb 2022 14:33:26 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 217ETKgb007027;
+        Mon, 7 Feb 2022 14:33:26 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3e22qep76g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Feb 2022 14:33:25 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 217EW9kw000827;
+        Mon, 7 Feb 2022 14:33:23 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03fra.de.ibm.com with ESMTP id 3e1gv94w08-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Feb 2022 14:33:23 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 217EXHt923921000
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 7 Feb 2022 14:33:17 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58FFB52057;
+        Mon,  7 Feb 2022 14:33:17 +0000 (GMT)
+Received: from osiris (unknown [9.145.87.217])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id E60A452050;
+        Mon,  7 Feb 2022 14:33:16 +0000 (GMT)
+Date:   Mon, 7 Feb 2022 15:33:15 +0100
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org,
+        borntraeger@de.ibm.com, thuth@redhat.com, pasic@linux.ibm.com,
+        david@redhat.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, scgl@linux.ibm.com
+Subject: Re: [PATCH v7 01/17] KVM: s390: pv: leak the topmost page table when
+ destroy fails
+Message-ID: <YgEtq1i3K3ZkPpEX@osiris>
+References: <20220204155349.63238-1-imbrenda@linux.ibm.com>
+ <20220204155349.63238-2-imbrenda@linux.ibm.com>
+ <0939aac3-9427-ed04-17e4-3c1e4195d509@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YgDtnk8g7y5oRKXB@TonyMac-Alibaba>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <0939aac3-9427-ed04-17e4-3c1e4195d509@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 9ET2utHlInBuupsodJsb4ISe87Ns56WD
+X-Proofpoint-GUID: fC4jLNtkByYpueAS_0s5-3sGam0RN0AG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-02-07_05,2022-02-07_02,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ adultscore=0 malwarescore=0 clxscore=1011 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 priorityscore=1501 spamscore=0
+ mlxlogscore=991 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2201110000 definitions=main-2202070093
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,49 +91,11 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Feb 07, 2022 at 05:59:58PM +0800, Tony Lu wrote:
-> On Mon, Jan 31, 2022 at 09:20:52AM +0200, Leon Romanovsky wrote:
-> > On Mon, Jan 31, 2022 at 03:03:00AM +0800, Tony Lu wrote:
-> > > Currently, pages are allocated in the process context, for its NUMA node
-> > > isn't equal to ibdev's, which is not the best policy for performance.
-> > > 
-> > > Applications will generally perform best when the processes are
-> > > accessing memory on the same NUMA node. When numa_balancing enabled
-> > > (which is enabled by most of OS distributions), it moves tasks closer to
-> > > the memory of sndbuf or rmb and ibdev, meanwhile, the IRQs of ibdev bind
-> > > to the same node usually. This reduces the latency when accessing remote
-> > > memory.
-> > 
-> > It is very subjective per-specific test. I would expect that
-> > application will control NUMA memory policies (set_mempolicy(), ...)
-> > by itself without kernel setting NUMA node.
-> > 
-> > Various *_alloc_node() APIs are applicable for in-kernel allocations
-> > where user can't control memory policy.
-> > 
-> > I don't know SMC-R enough, but if I judge from your description, this
-> > allocation is controlled by the application.
+> > +	asce = (gmap->asce & ~PAGE_MASK) | __pa(table);
 > 
-> The original design of SMC doesn't handle the memory allocation of
-> different NUMA node, and the application can't control the NUMA policy
-> in SMC.
-> 
-> It allocates memory according to the NUMA node based on the process
-> context, which is determined by the scheduler. If application process
-> runs on NUMA node 0, SMC allocates on node 0 and so on, it all depends
-> on the scheduler. If RDMA device is attached to node 1, the process runs
-> on node 0, it allocates memory on node 0.
-> 
-> This patch tries to allocate memory on the same NUMA node of RDMA
-> device. Applications can't know the current node of RDMA device. The
-> scheduler knows the node of memory, and can let applications run on the
-> same node of memory and RDMA device.
+> Please add a comment:
+> Set the new table origin while preserving ASCE control bits like table type
+> and length.
 
-I don't know, everything explained above is controlled through memory
-policy, where application needs to run on same node as ibdev.
-
-Thanks
-
-> 
-> Thanks,
-> Tony Lu
+And while touching this anyway, please make use of _ASCE_ORIGIN
+instead of PAGE_MASK.
