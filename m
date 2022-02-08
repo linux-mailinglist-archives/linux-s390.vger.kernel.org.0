@@ -2,72 +2,72 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 828684AD68B
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Feb 2022 12:27:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B5CAE4AD8E6
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Feb 2022 14:16:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243117AbiBHL0t (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Feb 2022 06:26:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46766 "EHLO
+        id S1349789AbiBHNQG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Feb 2022 08:16:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232734AbiBHJug (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Feb 2022 04:50:36 -0500
+        with ESMTP id S1357117AbiBHMbl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Feb 2022 07:31:41 -0500
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B518DC03FEC0;
-        Tue,  8 Feb 2022 01:50:34 -0800 (PST)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 2187AnVY025367;
-        Tue, 8 Feb 2022 09:50:34 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3918C03FEC0;
+        Tue,  8 Feb 2022 04:31:40 -0800 (PST)
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 218Ai6w9022675;
+        Tue, 8 Feb 2022 12:31:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=bvBPatwKzWC6UPWT0saj5Bx5S7Zm4GijtmNgr01Gu+w=;
- b=bOinkWdr0iRLCZNiy3P0TeP9KcXjnoCD5+sHS09GFwMNlVx49w/8QH4018RSEe5DzvDN
- bK1f6OuahwIM7s8tfS/1l5uDe56eNK9+4Wz2tsJAZhn86I4EBWcff3zY1HOREhbSyMsI
- wk/bawwQjghhpT2xIwPQnETBgEukD40c4MC+DhJw7QqtpGcT9uyLSP7mO7DUfxZfARNL
- tcrvbxbG0nXVPU1HFp34gMP3ZmoDEC5GI7D9uO6+1tgoeWEhqTQWAydG6VWrUfmfeYVG
- zi1Ug/YuDinYaoeT1azUbPfbXMH6/teXvPhmr4T3sOifn+N3FG2nTYBeKNJfAcQ3B1uK 7g== 
+ bh=iHGDuqNrQb/kRbRUe0TWSWq6jEICOEqQwIoViDebqck=;
+ b=f6IEJ/GTr0qEsGQGhbbWyaBxfRIEB0JL8UNe3Qg9FoXof9AFS7BybXiluGNOHYTNQdej
+ IIJZgmhLDBSk/068VZDZqDsovuHFGQjWI7oCjiF9B91Xd4TMO/9suRQsLrpNJdn9ZZYq
+ OBtjqRKMfrE8xviVQ+Nu0LhHX6XVw9p9JhufwxACor39KTQLLiYlCEeKtGyvmohlnzM9
+ 7wdMv8aEo/m9T2r50Q2tJZe3B2fqEzrBbFx5c2EKzcSDUVACP9B4xccifYaX41/T1xdV
+ fVnGx1HBGohMrCyKDhA+abfMdStvRZYH0MpDXc+vb8yqUTmPB4wq9OWr85I2u6xdIprR EA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3e22trd08e-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3e22stygx3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Feb 2022 09:50:34 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 2189i44p027111;
-        Tue, 8 Feb 2022 09:50:33 GMT
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3e22trd076-1
+        Tue, 08 Feb 2022 12:31:39 +0000
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 218CL7ra018851;
+        Tue, 8 Feb 2022 12:31:38 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3e22stygwe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Feb 2022 09:50:33 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2189j9an003440;
-        Tue, 8 Feb 2022 09:50:28 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 3e1gva36ks-1
+        Tue, 08 Feb 2022 12:31:38 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 218CORre001480;
+        Tue, 8 Feb 2022 12:31:36 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03fra.de.ibm.com with ESMTP id 3e1gv9cduv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Feb 2022 09:50:28 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2189eK3g49873392
+        Tue, 08 Feb 2022 12:31:36 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 218CVXFj35127628
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Feb 2022 09:40:20 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED06F42056;
-        Tue,  8 Feb 2022 09:50:24 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 57B8842049;
-        Tue,  8 Feb 2022 09:50:24 +0000 (GMT)
-Received: from [9.145.150.231] (unknown [9.145.150.231])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  8 Feb 2022 09:50:24 +0000 (GMT)
-Message-ID: <f61b1d7e-37bb-6072-a855-e7fc9ed72dfb@linux.ibm.com>
-Date:   Tue, 8 Feb 2022 10:50:23 +0100
+        Tue, 8 Feb 2022 12:31:33 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 158ACA4060;
+        Tue,  8 Feb 2022 12:31:33 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5FFF9A405F;
+        Tue,  8 Feb 2022 12:31:32 +0000 (GMT)
+Received: from [9.171.40.184] (unknown [9.171.40.184])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  8 Feb 2022 12:31:32 +0000 (GMT)
+Message-ID: <8c02d3c5-03a2-19a3-ff64-6646d09ae9ff@linux.ibm.com>
+Date:   Tue, 8 Feb 2022 13:31:32 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH v2 09/11] KVM: s390: Add capability for storage key
- extension of MEM_OP IOCTL
+Subject: Re: [PATCH v2 01/11] s390/uaccess: Add copy_from/to_user_key
+ functions
 Content-Language: en-US
 To:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
+        Heiko Carstens <hca@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
 Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
         David Hildenbrand <david@redhat.com>,
@@ -77,22 +77,22 @@ Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
         Sven Schnelle <svens@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>
 References: <20220207165930.1608621-1-scgl@linux.ibm.com>
- <20220207165930.1608621-10-scgl@linux.ibm.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-In-Reply-To: <20220207165930.1608621-10-scgl@linux.ibm.com>
+ <20220207165930.1608621-2-scgl@linux.ibm.com>
+From:   Christian Borntraeger <borntraeger@linux.ibm.com>
+In-Reply-To: <20220207165930.1608621-2-scgl@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 5nqXMOn9Czai8q5P-LBtZGn6ua4G3OoO
-X-Proofpoint-GUID: IhxVdyjuoACnrXZ5D1cEB6OGbHYWI6fy
+X-Proofpoint-GUID: QKAzx1T5hTdutKRWzUom9QQZhuYttAw0
+X-Proofpoint-ORIG-GUID: NdMYv_WSMw__yFM0N47MTROjQ7rQDNqj
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-02-08_02,2022-02-07_02,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- impostorscore=0 phishscore=0 suspectscore=0 malwarescore=0 mlxscore=0
- spamscore=0 priorityscore=1501 clxscore=1015 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2202080054
+ definitions=2022-02-08_03,2022-02-07_02,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 priorityscore=1501 malwarescore=0 phishscore=0
+ suspectscore=0 adultscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2201110000 definitions=main-2202080073
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
         RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -103,42 +103,237 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2/7/22 17:59, Janis Schoetterl-Glausch wrote:
-> Availability of the KVM_CAP_S390_MEM_OP_EXTENSION capability signals that:
-> * The vcpu MEM_OP IOCTL supports storage key checking.
-> * The vm MEM_OP IOCTL exists.
-
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-
+Am 07.02.22 um 17:59 schrieb Janis Schoetterl-Glausch:
+> Add copy_from/to_user_key functions, which perform storage key checking.
+> These functions can be used by KVM for emulating instructions that need
+> to be key checked.
+> These functions differ from their non _key counterparts in
+> include/linux/uaccess.h only in the additional key argument and must be
+> kept in sync with those.
+> 
+> Since the existing uaccess implementation on s390 makes use of move
+> instructions that support having an additional access key supplied,
+> we can implement raw_copy_from/to_user_key by enhancing the
+> existing implementation.
 > 
 > Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-> ---
->   arch/s390/kvm/kvm-s390.c | 1 +
->   include/uapi/linux/kvm.h | 1 +
->   2 files changed, 2 insertions(+)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index befb30923c0e..4a502cac068c 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -565,6 +565,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->   	case KVM_CAP_S390_VCPU_RESETS:
->   	case KVM_CAP_SET_GUEST_DEBUG:
->   	case KVM_CAP_S390_DIAG318:
-> +	case KVM_CAP_S390_MEM_OP_EXTENSION:
->   		r = 1;
->   		break;
->   	case KVM_CAP_SET_GUEST_DEBUG2:
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index ea81132a1cb1..50ce814267b3 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1140,6 +1140,7 @@ struct kvm_ppc_resize_hpt {
->   #define KVM_CAP_VM_GPA_BITS 207
->   #define KVM_CAP_XSAVE2 208
->   #define KVM_CAP_SYS_ATTRIBUTES 209
-> +#define KVM_CAP_S390_MEM_OP_EXTENSION 210
->   
->   #ifdef KVM_CAP_IRQ_ROUTING
->   
 
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+
+> ---
+>   arch/s390/include/asm/uaccess.h | 22 +++++++++
+>   arch/s390/lib/uaccess.c         | 81 +++++++++++++++++++++++++--------
+>   2 files changed, 85 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
+> index d74e26b48604..ba1bcb91af95 100644
+> --- a/arch/s390/include/asm/uaccess.h
+> +++ b/arch/s390/include/asm/uaccess.h
+> @@ -44,6 +44,28 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
+>   #define INLINE_COPY_TO_USER
+>   #endif
+>   
+> +unsigned long __must_check
+> +_copy_from_user_key(void *to, const void __user *from, unsigned long n, unsigned long key);
+> +
+> +static __always_inline unsigned long __must_check
+> +copy_from_user_key(void *to, const void __user *from, unsigned long n, unsigned long key)
+> +{
+> +	if (likely(check_copy_size(to, n, false)))
+> +		n = _copy_from_user_key(to, from, n, key);
+> +	return n;
+> +}
+> +
+> +unsigned long __must_check
+> +_copy_to_user_key(void __user *to, const void *from, unsigned long n, unsigned long key);
+> +
+> +static __always_inline unsigned long __must_check
+> +copy_to_user_key(void __user *to, const void *from, unsigned long n, unsigned long key)
+> +{
+> +	if (likely(check_copy_size(from, n, true)))
+> +		n = _copy_to_user_key(to, from, n, key);
+> +	return n;
+> +}
+> +
+>   int __put_user_bad(void) __attribute__((noreturn));
+>   int __get_user_bad(void) __attribute__((noreturn));
+>   
+> diff --git a/arch/s390/lib/uaccess.c b/arch/s390/lib/uaccess.c
+> index 8a5d21461889..b709239feb5d 100644
+> --- a/arch/s390/lib/uaccess.c
+> +++ b/arch/s390/lib/uaccess.c
+> @@ -59,11 +59,13 @@ static inline int copy_with_mvcos(void)
+>   #endif
+>   
+>   static inline unsigned long copy_from_user_mvcos(void *x, const void __user *ptr,
+> -						 unsigned long size)
+> +						 unsigned long size, unsigned long key)
+>   {
+>   	unsigned long tmp1, tmp2;
+>   	union oac spec = {
+> +		.oac2.key = key,
+>   		.oac2.as = PSW_BITS_AS_SECONDARY,
+> +		.oac2.k = 1,
+>   		.oac2.a = 1,
+>   	};
+>   
+> @@ -94,19 +96,19 @@ static inline unsigned long copy_from_user_mvcos(void *x, const void __user *ptr
+>   }
+>   
+>   static inline unsigned long copy_from_user_mvcp(void *x, const void __user *ptr,
+> -						unsigned long size)
+> +						unsigned long size, unsigned long key)
+>   {
+>   	unsigned long tmp1, tmp2;
+>   
+>   	tmp1 = -256UL;
+>   	asm volatile(
+>   		"   sacf  0\n"
+> -		"0: mvcp  0(%0,%2),0(%1),%3\n"
+> +		"0: mvcp  0(%0,%2),0(%1),%[key]\n"
+>   		"7: jz    5f\n"
+>   		"1: algr  %0,%3\n"
+>   		"   la    %1,256(%1)\n"
+>   		"   la    %2,256(%2)\n"
+> -		"2: mvcp  0(%0,%2),0(%1),%3\n"
+> +		"2: mvcp  0(%0,%2),0(%1),%[key]\n"
+>   		"8: jnz   1b\n"
+>   		"   j     5f\n"
+>   		"3: la    %4,255(%1)\n"	/* %4 = ptr + 255 */
+> @@ -115,7 +117,7 @@ static inline unsigned long copy_from_user_mvcp(void *x, const void __user *ptr,
+>   		"   slgr  %4,%1\n"
+>   		"   clgr  %0,%4\n"	/* copy crosses next page boundary? */
+>   		"   jnh   6f\n"
+> -		"4: mvcp  0(%4,%2),0(%1),%3\n"
+> +		"4: mvcp  0(%4,%2),0(%1),%[key]\n"
+>   		"9: slgr  %0,%4\n"
+>   		"   j     6f\n"
+>   		"5: slgr  %0,%0\n"
+> @@ -123,24 +125,49 @@ static inline unsigned long copy_from_user_mvcp(void *x, const void __user *ptr,
+>   		EX_TABLE(0b,3b) EX_TABLE(2b,3b) EX_TABLE(4b,6b)
+>   		EX_TABLE(7b,3b) EX_TABLE(8b,3b) EX_TABLE(9b,6b)
+>   		: "+a" (size), "+a" (ptr), "+a" (x), "+a" (tmp1), "=a" (tmp2)
+> -		: : "cc", "memory");
+> +		: [key] "d" (key << 4)
+> +		: "cc", "memory");
+>   	return size;
+>   }
+>   
+> -unsigned long raw_copy_from_user(void *to, const void __user *from, unsigned long n)
+> +static unsigned long raw_copy_from_user_key(void *to, const void __user *from,
+> +					    unsigned long n, unsigned long key)
+>   {
+>   	if (copy_with_mvcos())
+> -		return copy_from_user_mvcos(to, from, n);
+> -	return copy_from_user_mvcp(to, from, n);
+> +		return copy_from_user_mvcos(to, from, n, key);
+> +	return copy_from_user_mvcp(to, from, n, key);
+> +}
+> +
+> +unsigned long raw_copy_from_user(void *to, const void __user *from, unsigned long n)
+> +{
+> +	return raw_copy_from_user_key(to, from, n, 0);
+>   }
+>   EXPORT_SYMBOL(raw_copy_from_user);
+>   
+> +unsigned long _copy_from_user_key(void *to, const void __user *from,
+> +				  unsigned long n, unsigned long key)
+> +{
+> +	unsigned long res = n;
+> +
+> +	might_fault();
+> +	if (!should_fail_usercopy()) {
+> +		instrument_copy_from_user(to, from, n);
+> +		res = raw_copy_from_user_key(to, from, n, key);
+> +	}
+> +	if (unlikely(res))
+> +		memset(to + (n - res), 0, res);
+> +	return res;
+> +}
+> +EXPORT_SYMBOL(_copy_from_user_key);
+> +
+>   static inline unsigned long copy_to_user_mvcos(void __user *ptr, const void *x,
+> -					       unsigned long size)
+> +					       unsigned long size, unsigned long key)
+>   {
+>   	unsigned long tmp1, tmp2;
+>   	union oac spec = {
+> +		.oac1.key = key,
+>   		.oac1.as = PSW_BITS_AS_SECONDARY,
+> +		.oac1.k = 1,
+>   		.oac1.a = 1,
+>   	};
+>   
+> @@ -171,19 +198,19 @@ static inline unsigned long copy_to_user_mvcos(void __user *ptr, const void *x,
+>   }
+>   
+>   static inline unsigned long copy_to_user_mvcs(void __user *ptr, const void *x,
+> -					      unsigned long size)
+> +					      unsigned long size, unsigned long key)
+>   {
+>   	unsigned long tmp1, tmp2;
+>   
+>   	tmp1 = -256UL;
+>   	asm volatile(
+>   		"   sacf  0\n"
+> -		"0: mvcs  0(%0,%1),0(%2),%3\n"
+> +		"0: mvcs  0(%0,%1),0(%2),%[key]\n"
+>   		"7: jz    5f\n"
+>   		"1: algr  %0,%3\n"
+>   		"   la    %1,256(%1)\n"
+>   		"   la    %2,256(%2)\n"
+> -		"2: mvcs  0(%0,%1),0(%2),%3\n"
+> +		"2: mvcs  0(%0,%1),0(%2),%[key]\n"
+>   		"8: jnz   1b\n"
+>   		"   j     5f\n"
+>   		"3: la    %4,255(%1)\n" /* %4 = ptr + 255 */
+> @@ -192,7 +219,7 @@ static inline unsigned long copy_to_user_mvcs(void __user *ptr, const void *x,
+>   		"   slgr  %4,%1\n"
+>   		"   clgr  %0,%4\n"	/* copy crosses next page boundary? */
+>   		"   jnh   6f\n"
+> -		"4: mvcs  0(%4,%1),0(%2),%3\n"
+> +		"4: mvcs  0(%4,%1),0(%2),%[key]\n"
+>   		"9: slgr  %0,%4\n"
+>   		"   j     6f\n"
+>   		"5: slgr  %0,%0\n"
+> @@ -200,18 +227,36 @@ static inline unsigned long copy_to_user_mvcs(void __user *ptr, const void *x,
+>   		EX_TABLE(0b,3b) EX_TABLE(2b,3b) EX_TABLE(4b,6b)
+>   		EX_TABLE(7b,3b) EX_TABLE(8b,3b) EX_TABLE(9b,6b)
+>   		: "+a" (size), "+a" (ptr), "+a" (x), "+a" (tmp1), "=a" (tmp2)
+> -		: : "cc", "memory");
+> +		: [key] "d" (key << 4)
+> +		: "cc", "memory");
+>   	return size;
+>   }
+>   
+> -unsigned long raw_copy_to_user(void __user *to, const void *from, unsigned long n)
+> +static unsigned long raw_copy_to_user_key(void __user *to, const void *from,
+> +					  unsigned long n, unsigned long key)
+>   {
+>   	if (copy_with_mvcos())
+> -		return copy_to_user_mvcos(to, from, n);
+> -	return copy_to_user_mvcs(to, from, n);
+> +		return copy_to_user_mvcos(to, from, n, key);
+> +	return copy_to_user_mvcs(to, from, n, key);
+> +}
+> +
+> +unsigned long raw_copy_to_user(void __user *to, const void *from, unsigned long n)
+> +{
+> +	return raw_copy_to_user_key(to, from, n, 0);
+>   }
+>   EXPORT_SYMBOL(raw_copy_to_user);
+>   
+> +unsigned long _copy_to_user_key(void __user *to, const void *from,
+> +				unsigned long n, unsigned long key)
+> +{
+> +	might_fault();
+> +	if (should_fail_usercopy())
+> +		return n;
+> +	instrument_copy_to_user(to, from, n);
+> +	return raw_copy_to_user_key(to, from, n, key);
+> +}
+> +EXPORT_SYMBOL(_copy_to_user_key);
+> +
+>   static inline unsigned long clear_user_mvcos(void __user *to, unsigned long size)
+>   {
+>   	unsigned long tmp1, tmp2;
