@@ -1,150 +1,104 @@
 Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE2054AE3B5
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Feb 2022 23:24:17 +0100 (CET)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.lfdr.de (Postfix) with ESMTP id 1AE0E4AE8FA
+	for <lists+linux-s390@lfdr.de>; Wed,  9 Feb 2022 06:16:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1386716AbiBHWXS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Feb 2022 17:23:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42566 "EHLO
+        id S232752AbiBIFQd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 9 Feb 2022 00:16:33 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:42376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1386973AbiBHViJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Feb 2022 16:38:09 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FBE9C0612B8;
-        Tue,  8 Feb 2022 13:38:07 -0800 (PST)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 218KLPU4008129;
-        Tue, 8 Feb 2022 21:38:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=+vZEbJf2/F/HXJS/xb959JWBMnW+q6kEGUI0pVRvbIU=;
- b=EBPlj+Fi0Suqi9+RuiXia3bLWlMJlGNVTeMW/DMnmzR5X9r3IYTnuP+x6CXdQ9ssyt+W
- yf5Q4+zHV8G8zRPtGPTglyAfbu1pNNHmWH98aQzzbxUFSSjvrMGTa84afJ9oEOBdeKQ5
- ECWuBKtiHv421EO44qS9+40YPLNPCEgm4I4gl0Ke9oJbIjqp9G37cJVof9drXnwb/6xH
- VJt5NGh3wshXL6WlBo5PLjT/fRZocc0jxKdrRg/8KgVF761Y59QIFnUTPWABSZMESSdW
- YR2Imvnrve2L0VwOrAv6zvNtMNgkDhoQNSrt4AZS5koAFdRvhVSzbQxhy8xc1x8dmZdW aQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3e3tst2bdk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Feb 2022 21:38:05 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 218KTMtH022850;
-        Tue, 8 Feb 2022 21:38:04 GMT
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3e3tst2bd9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Feb 2022 21:38:04 +0000
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 218LbhfF001267;
-        Tue, 8 Feb 2022 21:38:03 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03wdc.us.ibm.com with ESMTP id 3e1gvb4whj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Feb 2022 21:38:03 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 218Lc1dY26018302
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Feb 2022 21:38:01 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB373AE05C;
-        Tue,  8 Feb 2022 21:38:01 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93103AE063;
-        Tue,  8 Feb 2022 21:37:56 +0000 (GMT)
-Received: from [9.211.136.120] (unknown [9.211.136.120])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  8 Feb 2022 21:37:56 +0000 (GMT)
-Message-ID: <920cf807-efcd-319b-560a-ed3a1c6fdc85@linux.ibm.com>
-Date:   Tue, 8 Feb 2022 16:37:55 -0500
+        with ESMTP id S1377857AbiBIEn3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 8 Feb 2022 23:43:29 -0500
+Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E4CEC061577;
+        Tue,  8 Feb 2022 20:43:27 -0800 (PST)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4JtnLt20kgz4xcp;
+        Wed,  9 Feb 2022 15:43:17 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1644381801;
+        bh=h1IrtofJGjl9dOe2iPaZfbAAnbqY/viWBgGDEdVXQKk=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=X4BI56kfUn4imVm/I1LyMZe7f9s76Evbv0Pjn7HGfFFK68KUGaoCPH04q/DPmVU9g
+         wR4AbQ/owkq/8kQKt0JOU1uOB+WagWSG+QKJIV7XEnJTJKHhDsign/9EnXKGREu9LK
+         sVbaWMzAYonS1AI1YnbRd/ekzycbGZFh2GxEaCv7HdATX0qxEWn6/9yo6zI5z+ThBf
+         qQNmyglbl+FwhdR/8QyKUyZtPKN+6fK5Fi+e9xdsGsINyiETC8A4Vxoz9lcnCcyeuM
+         lrxTnV9IQhCQyG7h2V2xQJmSWs+HKYmIU+sBC2hGE8wYyYkl6AWMsv2I0fSlvW1rKx
+         y/TGj1iyy/dTg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Michal Suchanek <msuchanek@suse.de>, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     Michal Suchanek <msuchanek@suse.de>, kexec@lists.infradead.org,
+        Philipp Rudo <prudo@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna <nayna@linux.vnet.ibm.com>, Rob Herring <robh@kernel.org>,
+        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        David Howells <dhowells@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Frank van der Linden <fllinden@amazon.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Daniel Axtens <dja@axtens.net>, buendgen@de.ibm.com,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Baoquan He <bhe@redhat.com>,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v5 2/6] powerpc/kexec_file: Add KEXEC_SIG support.
+In-Reply-To: <d95f7c6865bcad5ee37dcbec240e79aa742f5e1d.1641900831.git.msuchanek@suse.de>
+References: <cover.1641900831.git.msuchanek@suse.de>
+ <d95f7c6865bcad5ee37dcbec240e79aa742f5e1d.1641900831.git.msuchanek@suse.de>
+Date:   Wed, 09 Feb 2022 15:43:17 +1100
+Message-ID: <87sfsslkey.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3 24/30] vfio-pci/zdev: wire up group notifier
-Content-Language: en-US
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        linux-s390@vger.kernel.org, cohuck@redhat.com,
-        schnelle@linux.ibm.com, farman@linux.ibm.com, pmorel@linux.ibm.com,
-        borntraeger@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, imbrenda@linux.ibm.com,
-        vneethv@linux.ibm.com, oberpar@linux.ibm.com, freude@linux.ibm.com,
-        thuth@redhat.com, pasic@linux.ibm.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220204211536.321475-1-mjrosato@linux.ibm.com>
- <20220204211536.321475-25-mjrosato@linux.ibm.com>
- <20220208104319.4861fb22.alex.williamson@redhat.com>
- <20220208185141.GH4160@nvidia.com>
- <20220208122624.43ad52ef.alex.williamson@redhat.com>
- <438d8b1e-e149-35f1-a8c9-ed338eb97430@linux.ibm.com>
- <20220208204041.GK4160@nvidia.com>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-In-Reply-To: <20220208204041.GK4160@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: gBoIvL9YXflJpi2SsFc-is9hNyMZmx3G
-X-Proofpoint-GUID: LR1RpkiMXSJ2erWaWvdY7NsRIHuLJu0_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-02-08_06,2022-02-07_02,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- malwarescore=0 lowpriorityscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2202080125
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2/8/22 3:40 PM, Jason Gunthorpe wrote:
-> On Tue, Feb 08, 2022 at 03:33:58PM -0500, Matthew Rosato wrote:
-> 
->>> Is the purpose of IOAT to associate the device to a set of KVM page
->>> tables?  That seems like a container or future iommufd operation.  I
->>
->> Yes, here we are establishing a relationship with the DMA table in the guest
->> so that once mappings are established guest PCI operations (handled via
->> special instructions in s390) don't need to go through the host but can be
->> directly handled by firmware (so, effectively guest can keep running on its
->> vcpu vs breaking out).
-> 
-> Oh, well, certainly sounds like a NAK on that - anything to do with
-> the DMA translation of a PCI device must go through the iommu layer,
-> not here.
-> 
-> Lets not repeat the iommu subsytem bypass mess power made please.
-> 
->> It's more that non-KVM userspace doesn't care about what these ioctls are
->> doing...  The enabling of 'interp, aif, ioat' is only pertinent when there
->> is a KVM userspace, specifically because the information being shared /
->> actions being performed as a result are only relevant to properly enabling
->> zPCI features when the zPCI device is being passed through to a VM
->> guest.
-> 
-> Then why are they KVM ioctls?
+Michal Suchanek <msuchanek@suse.de> writes:
+> Copy the code from s390x
+>
+> Both powerpc and s390x use appended signature format (as opposed to EFI
+> based patforms using PE format).
+>
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+> v3: - Philipp Rudo <prudo@redhat.com>: Update the comit message with
+>       explanation why the s390 code is usable on powerpc.
+>     - Include correct header for mod_check_sig
+>     - Nayna <nayna@linux.vnet.ibm.com>: Mention additional IMA features
+>       in kconfig text
+> ---
+>  arch/powerpc/Kconfig        | 16 ++++++++++++++++
+>  arch/powerpc/kexec/elf_64.c | 36 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 52 insertions(+)
 
-Well, the primary reason I ended up here was that I need to ensure the 
-the operation is only performed when guest X owns host zPCI device Y. 
-The vfio-pci device ioctl had the benefit of acting on device 
-granularity + also already being aware of the host PCI (and thus zPCI) 
-device association -- so I already know exactly what hostdev is being 
-referenced for the operation.  All that was needed was the KVM notifier 
-to ensure the vfio device was associated to a KVM guest.
+I haven't tested this on powerpc, but assuming you have Michal this
+looks OK to me.
 
-I think moving over to a KVM ioctl is doable; I might still need to rely 
-on VFIO_GROUP_NOTIFY_SET_KVM though, not sure yet.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
-Based on prior comments in this thread I'm assuming Alex shares that 
-view too (don't use vfio device ioctl for something only being used for 
-VM passthrough) so I'll start looking at using KVM ioctls instead.
-
+cheers
