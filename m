@@ -2,155 +2,198 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB1264B675E
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Feb 2022 10:19:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4FA54B6794
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Feb 2022 10:30:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234445AbiBOJTt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Feb 2022 04:19:49 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55930 "EHLO
+        id S235892AbiBOJbC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Feb 2022 04:31:02 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231371AbiBOJTs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Feb 2022 04:19:48 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315752CCA7;
-        Tue, 15 Feb 2022 01:19:39 -0800 (PST)
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 21F8IX4m022469;
-        Tue, 15 Feb 2022 09:19:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : from : to : cc : references : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=uC5XYw6ejz93NnnrjYQXR31cZYiOKzP4B+EfZHcbpJs=;
- b=bTSoXD4wlj2+Py+FyKdSqQoiRV/Kt/ba3b23g1qF+Kyb2DlPuA77m2hgpUk+ADVf4uKp
- fbidkRSANZTj2Kpu4+q/1Gwuy3NWpEQlztXJpf8zhy9F3jIRPUAsKflu8lAmI3I1PgHU
- DE/6n0S0VOhj3wzReHy3ozpIltFrLK/4fTWzA2bKiPAWZNacVTG2HWS5+SRYGho/sQv9
- qF9kOSKmt7olEwO+8KrdDekkfSXqg0FPJbzJQzvsP7rUSeItJo4m9vclF8Hz1o4Ot8BD
- udD0u7egbVdFfOmbyXW8BJPBcZ+ZQDkXv6SBQXuiXlH2znTK7K5w5ST/Dit11SipBaJr KA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3e85y44q21-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Feb 2022 09:19:38 +0000
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 21F8WXYe020994;
-        Tue, 15 Feb 2022 09:19:37 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3e85y44q1h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Feb 2022 09:19:37 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 21F9IHsq010437;
-        Tue, 15 Feb 2022 09:19:36 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 3e64h9vwh9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Feb 2022 09:19:36 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 21F9JWwE46924126
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Feb 2022 09:19:32 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D2428A405F;
-        Tue, 15 Feb 2022 09:19:32 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D237A4054;
-        Tue, 15 Feb 2022 09:19:32 +0000 (GMT)
-Received: from [9.171.31.140] (unknown [9.171.31.140])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 15 Feb 2022 09:19:32 +0000 (GMT)
-Message-ID: <72d2bb5a-c0aa-6136-0900-58a0474334d9@linux.ibm.com>
-Date:   Tue, 15 Feb 2022 10:21:45 +0100
+        with ESMTP id S235887AbiBOJbB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Feb 2022 04:31:01 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CEBA79ADAE
+        for <linux-s390@vger.kernel.org>; Tue, 15 Feb 2022 01:30:50 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-156-02Gu5ovtPiqtLOI9bz8ReQ-1; Tue, 15 Feb 2022 09:30:48 +0000
+X-MC-Unique: 02Gu5ovtPiqtLOI9bz8ReQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.28; Tue, 15 Feb 2022 09:30:41 +0000
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.028; Tue, 15 Feb 2022 09:30:41 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Ard Biesheuvel' <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>, Rich Felker <dalias@libc.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        "Linux Memory Management List" <linux-mm@kvack.org>,
+        Guo Ren <guoren@kernel.org>,
+        "open list:SPARC + UltraSPARC (sparc/sparc64)" 
+        <sparclinux@vger.kernel.org>,
+        "linux-hexagon@vger.kernel.org" <linux-hexagon@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        "Christoph Hellwig" <hch@lst.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:S390" <linux-s390@vger.kernel.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Helge Deller <deller@gmx.de>, X86 ML <x86@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>, Arnd Bergmann <arnd@arndb.de>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        alpha <linux-alpha@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        "open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        "openrisc@lists.librecores.org" <openrisc@lists.librecores.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        "Stafford Horne" <shorne@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "monstr@monstr.eu" <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:PARISC ARCHITECTURE" <linux-parisc@vger.kernel.org>,
+        Nick Hu <nickhu@andestech.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Richard Weinberger <richard@nod.at>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: RE: [PATCH 08/14] arm64: simplify access_ok()
+Thread-Topic: [PATCH 08/14] arm64: simplify access_ok()
+Thread-Index: AQHYIkSmToLbzZrgTk+lOdewxMJ8XqyUT0bw
+Date:   Tue, 15 Feb 2022 09:30:41 +0000
+Message-ID: <153bb1887f484ed79ce8224845a4b2ea@AcuMS.aculab.com>
+References: <20220214163452.1568807-1-arnd@kernel.org>
+ <20220214163452.1568807-9-arnd@kernel.org>
+ <CAMj1kXHixUFjV=4m3tzfGz7AiRWc-VczymbKuZq7dyZZNuLKxQ@mail.gmail.com>
+In-Reply-To: <CAMj1kXHixUFjV=4m3tzfGz7AiRWc-VczymbKuZq7dyZZNuLKxQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [kvm-unit-tests PATCH v4 3/4] s390x: topology: Check the Perform
- Topology Function
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     Nico Boehr <nrb@linux.ibm.com>, linux-s390@vger.kernel.org
-Cc:     frankja@linux.ibm.com, thuth@redhat.com, kvm@vger.kernel.org,
-        cohuck@redhat.com, imbrenda@linux.ibm.com, david@redhat.com
-References: <20220208132709.48291-1-pmorel@linux.ibm.com>
- <20220208132709.48291-4-pmorel@linux.ibm.com>
- <8dd704d23f8a14907ed2a7f28ec3ac52685ab96c.camel@linux.ibm.com>
- <c2dfd5c7-2602-e780-1f2b-402bff3c7c00@linux.ibm.com>
-In-Reply-To: <c2dfd5c7-2602-e780-1f2b-402bff3c7c00@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ZpGNKDpeLSco7mZuGn266mwc2gEzM2EM
-X-Proofpoint-GUID: GvsfwB1ZsLjqMF3bKhi4WxdYNM3BBYEl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2022-02-15_03,2022-02-14_04,2021-12-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
- phishscore=0 bulkscore=0 adultscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 mlxlogscore=999 impostorscore=0 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2202150052
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+RnJvbTogQXJkIEJpZXNoZXV2ZWwNCj4gU2VudDogMTUgRmVicnVhcnkgMjAyMiAwODoxOA0KPiAN
+Cj4gT24gTW9uLCAxNCBGZWIgMjAyMiBhdCAxNzozNywgQXJuZCBCZXJnbWFubiA8YXJuZEBrZXJu
+ZWwub3JnPiB3cm90ZToNCj4gPg0KPiA+IEZyb206IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIu
+ZGU+DQo+ID4NCj4gPiBhcm02NCBoYXMgYW4gaW5saW5lIGFzbSBpbXBsZW1lbnRhdGlvbiBvZiBh
+Y2Nlc3Nfb2soKSB0aGF0IGlzIGRlcml2ZWQgZnJvbQ0KPiA+IHRoZSAzMi1iaXQgYXJtIHZlcnNp
+b24gYW5kIG9wdGltaXplZCBmb3IgdGhlIGNhc2UgdGhhdCBib3RoIHRoZSBsaW1pdCBhbmQNCj4g
+PiB0aGUgc2l6ZSBhcmUgdmFyaWFibGUuIFdpdGggc2V0X2ZzKCkgZ29uZSwgdGhlIGxpbWl0IGlz
+IGFsd2F5cyBjb25zdGFudCwNCj4gPiBhbmQgdGhlIHNpemUgdXN1YWxseSBpcyBhcyB3ZWxsLCBz
+byBqdXN0IHVzaW5nIHRoZSBkZWZhdWx0IGltcGxlbWVudGF0aW9uDQo+ID4gcmVkdWNlcyB0aGUg
+Y2hlY2sgaW50byBhIGNvbXBhcmlzb24gYWdhaW5zdCBhIGNvbnN0YW50IHRoYXQgY2FuIGJlDQo+
+ID4gc2NoZWR1bGVkIGJ5IHRoZSBjb21waWxlci4NCj4gPg0KPiA+IE9uIGEgZGVmY29uZmlnIGJ1
+aWxkLCB0aGlzIHNhdmVzIG92ZXIgMjhLQiBvZiAudGV4dC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYt
+Ynk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+DQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJt
+NjQvaW5jbHVkZS9hc20vdWFjY2Vzcy5oIHwgMjggKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAyMyBkZWxldGlvbnMoLSkN
+Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaCBi
+L2FyY2gvYXJtNjQvaW5jbHVkZS9hc20vdWFjY2Vzcy5oDQo+ID4gaW5kZXggMzU3ZjdiZDljOTgx
+Li5lOGRjZTBjYzVlYWEgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS91
+YWNjZXNzLmgNCj4gPiArKysgYi9hcmNoL2FybTY0L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaA0KPiA+
+IEBAIC0yNiw2ICsyNiw4IEBADQo+ID4gICNpbmNsdWRlIDxhc20vbWVtb3J5Lmg+DQo+ID4gICNp
+bmNsdWRlIDxhc20vZXh0YWJsZS5oPg0KPiA+DQo+ID4gK3N0YXRpYyBpbmxpbmUgaW50IF9fYWNj
+ZXNzX29rKGNvbnN0IHZvaWQgX191c2VyICpwdHIsIHVuc2lnbmVkIGxvbmcgc2l6ZSk7DQo+ID4g
+Kw0KPiA+ICAvKg0KPiA+ICAgKiBUZXN0IHdoZXRoZXIgYSBibG9jayBvZiBtZW1vcnkgaXMgYSB2
+YWxpZCB1c2VyIHNwYWNlIGFkZHJlc3MuDQo+ID4gICAqIFJldHVybnMgMSBpZiB0aGUgcmFuZ2Ug
+aXMgdmFsaWQsIDAgb3RoZXJ3aXNlLg0KPiA+IEBAIC0zMywxMCArMzUsOCBAQA0KPiA+ICAgKiBU
+aGlzIGlzIGVxdWl2YWxlbnQgdG8gdGhlIGZvbGxvd2luZyB0ZXN0Og0KPiA+ICAgKiAodTY1KWFk
+ZHIgKyAodTY1KXNpemUgPD0gKHU2NSlUQVNLX1NJWkVfTUFYDQo+ID4gICAqLw0KPiA+IC1zdGF0
+aWMgaW5saW5lIHVuc2lnbmVkIGxvbmcgX19hY2Nlc3Nfb2soY29uc3Qgdm9pZCBfX3VzZXIgKmFk
+ZHIsIHVuc2lnbmVkIGxvbmcgc2l6ZSkNCj4gPiArc3RhdGljIGlubGluZSBpbnQgYWNjZXNzX29r
+KGNvbnN0IHZvaWQgX191c2VyICphZGRyLCB1bnNpZ25lZCBsb25nIHNpemUpDQo+ID4gIHsNCj4g
+PiAtICAgICAgIHVuc2lnbmVkIGxvbmcgcmV0LCBsaW1pdCA9IFRBU0tfU0laRV9NQVggLSAxOw0K
+PiA+IC0NCj4gPiAgICAgICAgIC8qDQo+ID4gICAgICAgICAgKiBBc3luY2hyb25vdXMgSS9PIHJ1
+bm5pbmcgaW4gYSBrZXJuZWwgdGhyZWFkIGRvZXMgbm90IGhhdmUgdGhlDQo+ID4gICAgICAgICAg
+KiBUSUZfVEFHR0VEX0FERFIgZmxhZyBvZiB0aGUgcHJvY2VzcyBvd25pbmcgdGhlIG1tLCBzbyBh
+bHdheXMgdW50YWcNCj4gPiBAQCAtNDYsMjcgKzQ2LDkgQEAgc3RhdGljIGlubGluZSB1bnNpZ25l
+ZCBsb25nIF9fYWNjZXNzX29rKGNvbnN0IHZvaWQgX191c2VyICphZGRyLCB1bnNpZ25lZCBsb25n
+IHMNCj4gPiAgICAgICAgICAgICAoY3VycmVudC0+ZmxhZ3MgJiBQRl9LVEhSRUFEIHx8IHRlc3Rf
+dGhyZWFkX2ZsYWcoVElGX1RBR0dFRF9BRERSKSkpDQo+ID4gICAgICAgICAgICAgICAgIGFkZHIg
+PSB1bnRhZ2dlZF9hZGRyKGFkZHIpOw0KPiA+DQo+ID4gLSAgICAgICBfX2Noa191c2VyX3B0cihh
+ZGRyKTsNCj4gPiAtICAgICAgIGFzbSB2b2xhdGlsZSgNCj4gPiAtICAgICAgIC8vIEEgKyBCIDw9
+IEMgKyAxIGZvciBhbGwgQSxCLEMsIGluIGZvdXIgZWFzeSBzdGVwczoNCj4gPiAtICAgICAgIC8v
+IDE6IFggPSBBICsgQjsgWCcgPSBYICUgMl42NA0KPiA+IC0gICAgICAgIiAgICAgICBhZGRzICAg
+ICUwLCAlMywgJTJcbiINCj4gPiAtICAgICAgIC8vIDI6IFNldCBDID0gMCBpZiBYID4gMl42NCwg
+dG8gZ3VhcmFudGVlIFgnID4gQyBpbiBzdGVwIDQNCj4gPiAtICAgICAgICIgICAgICAgY3NlbCAg
+ICAlMSwgeHpyLCAlMSwgaGlcbiINCj4gPiAtICAgICAgIC8vIDM6IFNldCBYJyA9IH4wIGlmIFgg
+Pj0gMl42NC4gRm9yIFggPT0gMl42NCwgdGhpcyBkZWNyZW1lbnRzIFgnDQo+ID4gLSAgICAgICAv
+LyAgICB0byBjb21wZW5zYXRlIGZvciB0aGUgY2FycnkgZmxhZyBiZWluZyBzZXQgaW4gc3RlcCA0
+LiBGb3INCj4gPiAtICAgICAgIC8vICAgIFggPiAyXjY0LCBYJyBtZXJlbHkgaGFzIHRvIHJlbWFp
+biBub256ZXJvLCB3aGljaCBpdCBkb2VzLg0KPiA+IC0gICAgICAgIiAgICAgICBjc2ludiAgICUw
+LCAlMCwgeHpyLCBjY1xuIg0KPiA+IC0gICAgICAgLy8gNDogRm9yIFggPCAyXjY0LCB0aGlzIGdp
+dmVzIHVzIFgnIC0gQyAtIDEgPD0gMCwgd2hlcmUgdGhlIC0xDQo+ID4gLSAgICAgICAvLyAgICBj
+b21lcyBmcm9tIHRoZSBjYXJyeSBpbiBiZWluZyBjbGVhci4gT3RoZXJ3aXNlLCB3ZSBhcmUNCj4g
+PiAtICAgICAgIC8vICAgIHRlc3RpbmcgWCcgLSBDID09IDAsIHN1YmplY3QgdG8gdGhlIHByZXZp
+b3VzIGFkanVzdG1lbnRzLg0KPiA+IC0gICAgICAgIiAgICAgICBzYmNzICAgIHh6ciwgJTAsICUx
+XG4iDQo+ID4gLSAgICAgICAiICAgICAgIGNzZXQgICAgJTAsIGxzXG4iDQo+ID4gLSAgICAgICA6
+ICI9JnIiIChyZXQpLCAiK3IiIChsaW1pdCkgOiAiSXIiIChzaXplKSwgIjAiIChhZGRyKSA6ICJj
+YyIpOw0KPiA+IC0NCj4gPiAtICAgICAgIHJldHVybiByZXQ7DQo+ID4gKyAgICAgICByZXR1cm4g
+bGlrZWx5KF9fYWNjZXNzX29rKGFkZHIsIHNpemUpKTsNCj4gPiAgfQ0KPiA+IC0jZGVmaW5lIF9f
+YWNjZXNzX29rIF9fYWNjZXNzX29rDQo+ID4gKyNkZWZpbmUgYWNjZXNzX29rIGFjY2Vzc19vaw0K
+PiA+DQo+ID4gICNpbmNsdWRlIDxhc20tZ2VuZXJpYy9hY2Nlc3Nfb2suaD4NCj4gPg0KPiA+IC0t
+DQo+ID4gMi4yOS4yDQo+ID4NCj4gDQo+IFdpdGggc2V0X2ZzKCkgb3V0IG9mIHRoZSBwaWN0dXJl
+LCB3b3VsZG4ndCBpdCBiZSBzdWZmaWNpZW50IHRvIGNoZWNrDQo+IHRoYXQgYml0ICM1NSBpcyBj
+bGVhcj8gKHRoZSBiaXQgdGhhdCBzZWxlY3RzIGJldHdlZW4gVFRCUjAgYW5kIFRUQlIxKQ0KPiBU
+aGF0IHdvdWxkIGFsc28gcmVtb3ZlIHRoZSBuZWVkIHRvIHN0cmlwIHRoZSB0YWcgZnJvbSB0aGUg
+YWRkcmVzcy4NCj4gDQo+IFNvbWV0aGluZyBsaWtlDQo+IA0KPiAgICAgYXNtIGdvdG8oInRibnog
+ICUwLCAjNTUsICUyICAgICBcbiINCj4gICAgICAgICAgICAgICJ0Ym56ICAlMSwgIzU1LCAlMiAg
+ICAgXG4iDQo+ICAgICAgICAgICAgICA6OiAiciIoYWRkciksICJyIihhZGRyICsgc2l6ZSAtIDEp
+IDo6IG5vdG9rKTsNCj4gICAgIHJldHVybiAxOw0KPiBub3RvazoNCj4gICAgIHJldHVybiAwOw0K
+PiANCj4gd2l0aCBhbiBhZGRpdGlvbmFsIHNhbml0eSBjaGVjayBvbiB0aGUgc2l6ZSB3aGljaCB0
+aGUgY29tcGlsZXIgY291bGQNCj4gZWxpbWluYXRlIGZvciBjb21waWxlLXRpbWUgY29uc3RhbnQg
+dmFsdWVzLg0KDQpJcyB0aGVyZSBhcmUgcmVhc29uIG5vdCB0byBqdXN0IHVzZToNCglzaXplIDwg
+MXUgPDwgNDggJiYgISgoYWRkciB8IChhZGRyICsgc2l6ZSAtIDEpKSAmIDF1IDw8IDU1KQ0KDQoo
+VGhlIC0xIGNhbiBiZSByZW1vdmVkIGlmIHRoZSBsYXN0IHVzZXIgcGFnZSBpcyBuZXZlciBtYXBw
+ZWQpDQoNClVnZywgaXMgYXJtNjQgYWRkcmVzc2luZyBhcyBob3JyaWQgYXMgaXQgbG9va3MgLSB3
+aXRoIHRoZSAna2VybmVsJw0KYml0IGluIHRoZSBtaWRkbGUgb2YgdGhlIHZpcnR1YWwgYWRkcmVz
+cyBzcGFjZT8NCkl0IHNlZW1zIHRvIGJlOg0KCTx6ZXJvOjQ+PHRhZzo0PjxrZXJuZWw6MT48aWdu
+b3JlZDo3PjxhZGRyZXNzOjQ4Pg0KQWx0aG91Z2ggSSBmb3VuZCBzb21lIHJlZmVyZW5jZXMgdG8g
+NDQgYml0IFZBIGFuZCB0byBjb2RlIHVzaW5nIHRoZQ0KJ2lnbm9yZWQnIGJpdHMgYXMgdGFncyAt
+IHJlbHlpbmcgb24gdGhlIGhhcmR3YXJlIGlnbm9yaW5nIHRoZW0uDQpUaGVyZSBtaWdodCBiZSBz
+b21lIGZlYXR1cmUgdGhhdCB1c2VzIHRoZSB0b3AgNCBiaXRzIGFzIHdlbGwuDQoNCkFub3RoZXIg
+b3B0aW9uIGlzIGFzc3VtaW5nIHRoYXQgYWNjZXNzZXMgYXJlICdyZWFzb25hYmx5IHNlcXVlbnRp
+YWwnLA0KcmVtb3ZpbmcgdGhlIGxlbmd0aCBjaGVjayBhbmQgZW5zdXJpbmcgdGhlcmUgaXMgYW4g
+dW5tYXBwZWQgcGFnZQ0KYmV0d2VlbiB2YWxpZCB1c2VyIGFuZCBrZXJuZWwgYWRkcmVzc2VzLg0K
+VGhhdCBwcm9iYWJseSByZXF1aXJlcyBhbmQgdW5tYXBwZWQgcGFnZSBhdCB0aGUgYm90dG9tIG9m
+IGtlcm5lbCBzcGFjZQ0Kd2hpY2ggbWF5IG5vdCBiZSBhY2hpZXZhYmxlLg0KDQoJRGF2aWQNCg0K
+LQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0s
+IE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdh
+bGVzKQ0K
 
-
-On 2/15/22 09:50, Pierre Morel wrote:
-> 
-> 
-> On 2/9/22 12:37, Nico Boehr wrote:
->> On Tue, 2022-02-08 at 14:27 +0100, Pierre Morel wrote:
->>> We check the PTF instruction.
->>
->> You could test some very basic things as well:
->>
->> - you get a privileged pgm int in problem state,
->> - reserved bits in first operand cause specification pgm int,
->> - reserved FC values result in a specification pgm int,
->> - second operand is ignored.
-> 
-> Which second operand?
-
-Sorry got it
-> 
->>
->>>
->>> - We do not expect to support vertical polarization.
->>>
->>> - We do not expect the Modified Topology Change Report to be
->> [...]
->>
->> Forgive me if I'm missing something, but why _Modified_ Topology Change
->> Report?
->>
->>> diff --git a/s390x/topology.c b/s390x/topology.c
->>> new file mode 100644
->>> index 00000000..a1f9ce51
->>> --- /dev/null
->>> +++ b/s390x/topology.c
->>
->> [...]
->>
->>> +static int ptf(unsigned long fc, unsigned long *rc)
->>> +{
->>> +       int cc;
->>> +
->>> +       asm volatile(
->>> +               "       .insn   rre,0xb9a20000,%1,0\n"
->>> +               "       ipm     %0\n"
->>> +               "       srl     %0,28\n"
->>> +               : "=d" (cc), "+d" (fc)
->>> +               : "d" (fc)
->>
->> Why list fc here again?
->>
->>
-> 
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
