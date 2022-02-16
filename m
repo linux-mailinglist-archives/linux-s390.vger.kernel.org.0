@@ -2,87 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 343504B915D
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Feb 2022 20:38:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CF954B9371
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Feb 2022 23:01:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236785AbiBPTiu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 16 Feb 2022 14:38:50 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35798 "EHLO
+        id S236135AbiBPWBu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 16 Feb 2022 17:01:50 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234415AbiBPTir (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 16 Feb 2022 14:38:47 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D327C24BE;
-        Wed, 16 Feb 2022 11:38:35 -0800 (PST)
+        with ESMTP id S232881AbiBPWBs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 16 Feb 2022 17:01:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D467193CC;
+        Wed, 16 Feb 2022 14:01:35 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D5614B81ED9;
-        Wed, 16 Feb 2022 19:38:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A69C004E1;
-        Wed, 16 Feb 2022 19:38:29 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0702961B32;
+        Wed, 16 Feb 2022 22:01:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70BC6C340ED;
+        Wed, 16 Feb 2022 22:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645040312;
-        bh=YUNeMwnffWU/vzA+11lFMuMWe0+JjFTHVyeqME5xzxw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RvhRgyEjawXUAql0FqCTCcTpqR6GYBvsqNC9EZPqI5ZukTe3YMkyAiJ+1YKBf+Rlr
-         sxewfhO7AtNd8GwQy/RQGGJ/AXgX1LgrWMnZTpDKZCiIl4MoI0X8P3b4yUkf4X3JeP
-         l7bOM+By1/829q8HEUDp0joAEckiMlN1bSJeEtmm9DT0v1cg0aKN9haMO+KRTEXTKx
-         BIawC1huC6S2hOqZ/gswPro0qF/Bzg0858Vu6QjTMbuvQTz7D1gR8uQt+HV6mEdhmv
-         BV4TgmRvjAQDxRzfAaigAGsmsMmR8Yj0ESiy1ZrH3LP0qLNGtaqg4OazRGKQ9Qu6L7
-         d13KOv1rLre5w==
-Date:   Wed, 16 Feb 2022 13:46:09 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        linux-alpha@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        coresight@lists.linaro.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        "open list:TARGET SUBSYSTEM" <linux-scsi@vger.kernel.org>,
-        target-devel@vger.kernel.org, mpi3mr-linuxdrv.pdl@broadcom.com,
-        linux-staging@lists.linux.dev,
-        linux-rpi-kernel@lists.infradead.org, sparmaintainer@unisys.com,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        greybus-dev@lists.linaro.org, linux-i3c@lists.infradead.org,
-        linux-rdma@vger.kernel.org,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-perf-users@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] treewide: Replace zero-length arrays with
- flexible-array members
-Message-ID: <20220216194609.GA903947@embeddedor>
-References: <20220215174743.GA878920@embeddedor>
- <202202151016.C0471D6E@keescook>
- <20220215192110.GA883653@embeddedor>
- <Ygv8wY75hNqS7zO6@unreal>
- <20220215193221.GA884407@embeddedor>
- <CAJZ5v0jpAnQk+Hub6ue6t712RW+W0YBjb_gAcZZbUeuYMGv7mg@mail.gmail.com>
+        s=k20201202; t=1645048894;
+        bh=3GAgFKFSz4rrd4LtvDFKA/i0kbB+vNidxSnLES7CC90=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PmqZtAPQ8jm+06IO3B2Rv5fRROrQMNnQvWotR0srStYZ55QvmYnwNkxoJHkIp+2JO
+         AVqNKyYOz3jKBBKy2IQjZi6kElAZ5xZKm4cstzsUcFi8OJbCDtXinwC+lBAG0Kspfv
+         j4KEB/+z/qg5rsxzJPFnhxgZkp3vlZ87N7BmFP/KZojtrFxuhABgfVyssK+XTy50tx
+         yIjZNZrmpv+d/GmxXVJtlcCXljyt9V2jjwg+cZzJg9AE7+KH14sNrO2oqwgGkshdJQ
+         dwh+m0ZaItgHQ691RkIYXHtH9hK3sSviXzH3Xv6AyuPQdc48pm/GIV1nZ7hn73HjQ7
+         oD/Q5Rjdb1ORw==
+Received: by mail-wm1-f42.google.com with SMTP id m126-20020a1ca384000000b0037bb8e379feso4730824wme.5;
+        Wed, 16 Feb 2022 14:01:34 -0800 (PST)
+X-Gm-Message-State: AOAM531n5ZuqBO0v2piYou9nTuk7/+tLzxlMfLOxCmM2nW9BKme/XiWA
+        L7l4hmYXz/ji72wkDL7gM+XIQlyiabFdSQ+uvVs=
+X-Google-Smtp-Source: ABdhPJyTINkf1ZMgp+ijDiSYfGY6PCVSFYe6JpwLrHI4jPiDeP7SC/Zo0zGySiauKL0SyOBYxrfLHIczbDoJsvG/Low=
+X-Received: by 2002:a05:600c:1d27:b0:37c:74bb:2b4d with SMTP id
+ l39-20020a05600c1d2700b0037c74bb2b4dmr3428429wms.82.1645048892813; Wed, 16
+ Feb 2022 14:01:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jpAnQk+Hub6ue6t712RW+W0YBjb_gAcZZbUeuYMGv7mg@mail.gmail.com>
+References: <20220216131332.1489939-1-arnd@kernel.org> <20220216131332.1489939-16-arnd@kernel.org>
+ <Yg1D08+olCSGmnYU@ravnborg.org> <Yg1FRZcrhlh5C//V@ravnborg.org>
+In-Reply-To: <Yg1FRZcrhlh5C//V@ravnborg.org>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Wed, 16 Feb 2022 23:01:16 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1kV=0G9WYkdjYCiBu=fuT1fbPGHVD9cgHX3ht6J3MFEw@mail.gmail.com>
+Message-ID: <CAK8P3a1kV=0G9WYkdjYCiBu=fuT1fbPGHVD9cgHX3ht6J3MFEw@mail.gmail.com>
+Subject: Re: [PATCH v2 15/18] sparc64: remove CONFIG_SET_FS support
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Rich Felker <dalias@libc.org>,
+        David Miller <davem@davemloft.net>,
+        Richard Weinberger <richard@nod.at>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "open list:SYNOPSYS ARC ARCHITECTURE" 
+        <linux-snps-arc@lists.infradead.org>, linux-csky@vger.kernel.org,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Openrisc <openrisc@lists.librecores.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -93,16 +109,25 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 08:05:47PM +0100, Rafael J. Wysocki wrote:
-> On Tue, Feb 15, 2022 at 8:24 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
-> 
-> Can you also send the ACPI patch separately, please?
-> 
-> We would like to route it through the upstream ACPICA code base.
+On Wed, Feb 16, 2022 at 7:41 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+> On Wed, Feb 16, 2022 at 07:34:59PM +0100, Sam Ravnborg wrote:
 
-Yeah; no problem.
+> >
+> > I think you somehow missed the Kconfig change, and also the related
+> > sparc32 change which continue to have set_fs() after this patch.
 
-Thanks
---
-Gustavo
+Right, thanks for pointing out the issue.
+
+> I now notice the sparc32 bits are in the last patch.
+> To avoid breaking bisect-ability on sparc64 I think you need to merge
+> the sparc32 changes with this patch, unless the sparc64 changes can
+> coexist with CONFIG_SET_FS continue to be set.
+
+I originally had them in the reverse order and broke bisectability during my
+rebase. The end result is still fine, but now I need to move the 'select
+SET_FS' from CONFIG_SPARC to CONFIG_SPARC32 in this patch
+and then remove it again from there in the last step.
+
+I've done that in my local copy now.
+
+         Arnd
