@@ -2,109 +2,63 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8360F4BFD1F
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Feb 2022 16:37:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D34864BFDE4
+	for <lists+linux-s390@lfdr.de>; Tue, 22 Feb 2022 16:59:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231618AbiBVPhP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Feb 2022 10:37:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45118 "EHLO
+        id S232817AbiBVP7f (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Feb 2022 10:59:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233700AbiBVPgs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Feb 2022 10:36:48 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16D92164D13;
-        Tue, 22 Feb 2022 07:36:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=zCMW1Q+QCPXYuvBuEGOZUQKFwE9OwdLFtYhltvQ29K4=; b=UivVJu0xfBlRElPO98LGgBvic3
-        FgFkBA8tXOAwbzm4ASFviz4SOlLZ2Xk5ojd8aBpgvcYaCCrlUt0AmrI5QXz9BLb9cU7dErlkZgnz3
-        IzVqfHy80xQHgtYs4YtsJIktFe5xVp6loPXsAhY+LqtEtDSPdoKeEjZiqWlkk7Equu3WmJaFkQpSY
-        nCZa1Oyt2hQQICm8D2KgV+1H1RPCuXGZ7ggZgJ+BM2gIRjfpfUXSW4OsSGdg/5dox+XsD7+FHqwZ8
-        loSXrmeHFqVxP2h0pkLAiL/0DZ/bH24KlkPtKONU0U65lHnthcy9X8oVbBAOSQMLGRq8tZSF7/H/x
-        UnbZJ7Dg==;
-Received: from [2001:4bb8:198:f8fc:c22a:ebfc:be8d:63c2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nMXCe-00AH73-Qo; Tue, 22 Feb 2022 15:35:49 +0000
+        with ESMTP id S231403AbiBVP7e (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Feb 2022 10:59:34 -0500
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 524B95FF3;
+        Tue, 22 Feb 2022 07:59:09 -0800 (PST)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 6721B68AFE; Tue, 22 Feb 2022 16:59:04 +0100 (CET)
+Date:   Tue, 22 Feb 2022 16:59:04 +0100
 From:   Christoph Hellwig <hch@lst.de>
-To:     iommu@lists.linux-foundation.org
-Cc:     x86@kernel.org, Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 11/11] x86: remove cruft from <asm/dma-mapping.h>
-Date:   Tue, 22 Feb 2022 16:35:14 +0100
-Message-Id: <20220222153514.593231-12-hch@lst.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220222153514.593231-1-hch@lst.de>
-References: <20220222153514.593231-1-hch@lst.de>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, cl@linux.com,
+        42.hyeyoo@gmail.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, vbabka@suse.cz, David.Laight@aculab.com,
+        david@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net,
+        linux-crypto@vger.kernel.org, steffen.klassert@secunet.com,
+        netdev@vger.kernel.org, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, linux-s390@vger.kernel.org, michael@walle.cc,
+        linux-i2c@vger.kernel.org, wsa@kernel.org
+Subject: Re: [PATCH 1/2] dma-mapping: check dma_mask for streaming mapping
+ allocs
+Message-ID: <20220222155904.GA13323@lst.de>
+References: <20220219005221.634-1-bhe@redhat.com> <20220219005221.634-22-bhe@redhat.com> <20220219071730.GG26711@lst.de> <20220220084044.GC93179@MiWiFi-R3L-srv> <20220222084530.GA6210@lst.de> <YhSpaGfiQV8Nmxr+@MiWiFi-R3L-srv> <20220222131120.GB10093@lst.de> <YhToFzlSufrliUsi@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YhToFzlSufrliUsi@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-<asm/dma-mapping.h> gets pulled in by all drivers using the DMA API.
-Remove x86 internal variables and unnecessary includes from it.
+On Tue, Feb 22, 2022 at 09:41:43PM +0800, Baoquan He wrote:
+> For newly added streaming mapping APIs, the internal core function
+> __dma_alloc_pages() should check dev->dma_mask, but not
+> ev->coherent_dma_mask which is for coherent mapping.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/x86/include/asm/dma-mapping.h | 11 -----------
- arch/x86/include/asm/iommu.h       |  2 ++
- 2 files changed, 2 insertions(+), 11 deletions(-)
+No, this is wrong.  dev->coherent_dma_mask is and should be used here.
 
-diff --git a/arch/x86/include/asm/dma-mapping.h b/arch/x86/include/asm/dma-mapping.h
-index 256fd8115223d..1c66708e30623 100644
---- a/arch/x86/include/asm/dma-mapping.h
-+++ b/arch/x86/include/asm/dma-mapping.h
-@@ -2,17 +2,6 @@
- #ifndef _ASM_X86_DMA_MAPPING_H
- #define _ASM_X86_DMA_MAPPING_H
- 
--/*
-- * IOMMU interface. See Documentation/core-api/dma-api-howto.rst and
-- * Documentation/core-api/dma-api.rst for documentation.
-- */
--
--#include <linux/scatterlist.h>
--#include <asm/io.h>
--
--extern int iommu_merge;
--extern int panic_on_overflow;
--
- extern const struct dma_map_ops *dma_ops;
- 
- static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
-diff --git a/arch/x86/include/asm/iommu.h b/arch/x86/include/asm/iommu.h
-index dba89ed40d38d..0bef44d30a278 100644
---- a/arch/x86/include/asm/iommu.h
-+++ b/arch/x86/include/asm/iommu.h
-@@ -8,6 +8,8 @@
- 
- extern int force_iommu, no_iommu;
- extern int iommu_detected;
-+extern int iommu_merge;
-+extern int panic_on_overflow;
- 
- #ifdef CONFIG_SWIOTLB
- extern bool x86_swiotlb_enable;
--- 
-2.30.2
+>
+> 
+> Meanwhile, just filter out gfp flags if they are any of
+> __GFP_DMA, __GFP_DMA32 and __GFP_HIGHMEM, but not fail it. This change
+> makes it  consistent with coherent mapping allocs.
 
+This is wrong as well.  We want to eventually fail dma_alloc_coherent
+for these, too.  It just needs more work.
