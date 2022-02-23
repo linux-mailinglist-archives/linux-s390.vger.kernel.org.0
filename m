@@ -2,286 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAB3B4C0FC1
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Feb 2022 11:03:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BFC44C1027
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Feb 2022 11:20:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236964AbiBWKD1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 23 Feb 2022 05:03:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56914 "EHLO
+        id S239576AbiBWKUh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 23 Feb 2022 05:20:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239453AbiBWKD0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 23 Feb 2022 05:03:26 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C04048A339;
-        Wed, 23 Feb 2022 02:02:58 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id q23so3935531wra.2;
-        Wed, 23 Feb 2022 02:02:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SqAxPQEsa3A4xyob3zluFv3tjziMIdKJYPYJeW3AAL8=;
-        b=MBhdzcrVPaltuC7QO4FnB3SnkoeVXpFvLTouDASO7IzH2peZCz9lBAMGqOWde8Qh8D
-         kDOHiVkykGHwJ9ODUCowoUI5o8pHBoXYYTm8ATT3j0JUyxrqlLHIERCZnrLli6QX00Ow
-         ARevI9oTrw6Ql0amtIF96nKDvBQ9IRAHmr1mVVGh8IVL6kL5UvvSlCTqbxzYnSEZvw58
-         nc82P9ORs3OhQEn60SVYMaBi5QPQPP2fM2POKJutuOt+Y6q+71UeevbRXTpV3xLjaYIf
-         8XeNS0KGWZbwj0GuBmUdHJ/zi9K2C3BiL7MgnFzPYxm5wMxePOyJmfELVNujZYFKUQLE
-         R4Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SqAxPQEsa3A4xyob3zluFv3tjziMIdKJYPYJeW3AAL8=;
-        b=ScmgGOwBvYXoVL39h/ShGnowRZTiOaJY0SwKnxsgOv9b5BbevCrE27kVqxJfIjDj39
-         CMdbXeqrHbXPqjtq2jhcAJd40aRNIXnSUvCs99GefckcDMzyZ6KfzDAMpehh7jJBaLzb
-         /7JXwIHN3qjYqMtVbZzmSwAcv3+hqfPgzzSvHgRbnMKpH34oTh4EyMzXX2ufX9tBkq9O
-         egP31AaZ6bE0LIyIu8EinBkk3wm5jN0ru/VHEaraVZo9jbKW3gUhQ1hqhp2Ik+VH/Bi9
-         y5ghCztTJMdFQXQuXUn5a8NY4UzLAp18fiXC9f8Px2zGxfYREAzYUrqoIomNZ5fvB9WQ
-         Sj2g==
-X-Gm-Message-State: AOAM531G+XWC+70xuJYtzo6TGHQn8+ecdT2QvQcbw8FfrXHJr4dpZxjT
-        Qix7PZUtGjtvZ3/ZI0e11mjzKTxs9q4=
-X-Google-Smtp-Source: ABdhPJyen0Gk7YkQnDQ//DA3TU+euR7cTv4E1ji+jT3VElJm06SuRDFWQiJ5DQuVZ8gyfFYvc+vmfg==
-X-Received: by 2002:a5d:47cc:0:b0:1e8:50e2:94cd with SMTP id o12-20020a5d47cc000000b001e850e294cdmr22222983wrc.34.1645610577241;
-        Wed, 23 Feb 2022 02:02:57 -0800 (PST)
-Received: from localhost.localdomain (host-79-27-0-81.retail.telecomitalia.it. [79.27.0.81])
-        by smtp.gmail.com with ESMTPSA id f14sm5856887wmq.3.2022.02.23.02.02.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 02:02:56 -0800 (PST)
-From:   "Fabio M. De Francesco" <fmdefrancesco@gmail.com>
-To:     Karsten Graul <kgraul@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tony Lu <tonylu@linux.alibaba.com>
-Cc:     "Fabio M. De Francesco" <fmdefrancesco@gmail.com>,
-        syzbot+4f322a6d84e991c38775@syzkaller.appspotmail.com
-Subject: [PATCH] net/smc: Use a mutex for locking "struct smc_pnettable"
-Date:   Wed, 23 Feb 2022 11:02:52 +0100
-Message-Id: <20220223100252.22562-1-fmdefrancesco@gmail.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
+        with ESMTP id S238528AbiBWKUg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 23 Feb 2022 05:20:36 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E0F8BF55;
+        Wed, 23 Feb 2022 02:20:09 -0800 (PST)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 21N7YIQq026124;
+        Wed, 23 Feb 2022 10:20:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=C/YqzREGFV2dxpR9EfxjVdzy7DZE7BzT9HTOz7UG/fk=;
+ b=lWVfuGjOnU2MqEyU5kYW5qDR9NRx1ybpzOOxVSUFF3SmQnNUX1+UqeF+MpMWOraPDuub
+ 9mG82XaysgihnMB6xyfoBf7hUwvnRzfcJBJs0kmdvSiIZOTrc4qn5+3oY1NVVne9t0ig
+ dNSC61S2CJEqGmx9h1TnxPZsnN+TrDiHEJ6Cd+SCyaYc3Fj8gPL0I2upJihEejnTR5zY
+ gWQc7hBRZsFs53YL2bco2nhhGTQQt0kLITklQgrNed4J8W4ZejwiDxovSg2iSk3o+2Ib
+ g3/VxhIJ8BoCq94aQ+o7X2L9ixSun6W5RI3ERJOzSNMc4mAhIKepUn3qFPGVehKa4DYq Aw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3edct6y5a5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 23 Feb 2022 10:20:09 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 21NAD7Wn025330;
+        Wed, 23 Feb 2022 10:20:08 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3edct6y59m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 23 Feb 2022 10:20:08 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 21NABjqV009326;
+        Wed, 23 Feb 2022 10:20:06 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 3ear6990bn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 23 Feb 2022 10:20:06 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 21NAK3QK53281162
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 23 Feb 2022 10:20:03 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0378A52069;
+        Wed, 23 Feb 2022 10:20:03 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B43D652057;
+        Wed, 23 Feb 2022 10:20:02 +0000 (GMT)
+From:   Michael Mueller <mimu@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
+        david@redhat.com, borntraeger@linux.ibm.com, pasic@linux.ibm.com,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: [PATCH v4 0/2] KVM: s390: make use of ultravisor AIV support
+Date:   Wed, 23 Feb 2022 11:19:58 +0100
+Message-Id: <20220223102000.3733712-1-mimu@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 0vNTTfEy4fptvzLeHn1p0iQax0FLkV06
+X-Proofpoint-GUID: GuYXuArfpVpqlQVfgfPEXtQHm9E7KChk
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-02-23_03,2022-02-23_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 phishscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 adultscore=0 malwarescore=0 mlxscore=0 mlxlogscore=402
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2201110000 definitions=main-2202230055
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-smc_pnetid_by_table_ib() uses read_lock() and then it calls smc_pnet_apply_ib()
-which, in turn, calls mutex_lock(&smc_ib_devices.mutex).
+This patch enables the ultravisor adapter interruption vitualization
+support.
 
-read_lock() disables preemption. Therefore, the code acquires a mutex while in
-atomic context and it leads to a SAC bug.
+Changes in v4:
+- All vcpus are pulled out of SIE and disbled before the control
+  blocks are changed to disable/enable the gisa and re-enabled
+  afterwards instead of taking the vcpu specific lock.
 
-Fix this bug by replacing the rwlock with a mutex.
+Changes in v3:
+- cache and test GISA descriptor only once in kvm_s390_gisa_enable()
+- modified some comments
+- removed some whitespace issues
 
-Reported-and-tested-by: syzbot+4f322a6d84e991c38775@syzkaller.appspotmail.com
-Fixes: 64e28b52c7a6 ("net/smc: add pnet table namespace support")
-Confirmed-by: Tony Lu <tonylu@linux.alibaba.com>
-Signed-off-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
----
- net/smc/smc_pnet.c | 42 +++++++++++++++++++++---------------------
- net/smc/smc_pnet.h |  2 +-
- 2 files changed, 22 insertions(+), 22 deletions(-)
+Changes in v2:
+- moved GISA disable into "put CPUs in PV mode" routine
+- moved GISA enable into "pull CPUs out of PV mode" routine 
 
-diff --git a/net/smc/smc_pnet.c b/net/smc/smc_pnet.c
-index 0599246c0376..29f0a559d884 100644
---- a/net/smc/smc_pnet.c
-+++ b/net/smc/smc_pnet.c
-@@ -113,7 +113,7 @@ static int smc_pnet_remove_by_pnetid(struct net *net, char *pnet_name)
- 	pnettable = &sn->pnettable;
- 
- 	/* remove table entry */
--	write_lock(&pnettable->lock);
-+	mutex_lock(&pnettable->lock);
- 	list_for_each_entry_safe(pnetelem, tmp_pe, &pnettable->pnetlist,
- 				 list) {
- 		if (!pnet_name ||
-@@ -131,7 +131,7 @@ static int smc_pnet_remove_by_pnetid(struct net *net, char *pnet_name)
- 			rc = 0;
- 		}
- 	}
--	write_unlock(&pnettable->lock);
-+	mutex_unlock(&pnettable->lock);
- 
- 	/* if this is not the initial namespace, stop here */
- 	if (net != &init_net)
-@@ -192,7 +192,7 @@ static int smc_pnet_add_by_ndev(struct net_device *ndev)
- 	sn = net_generic(net, smc_net_id);
- 	pnettable = &sn->pnettable;
- 
--	write_lock(&pnettable->lock);
-+	mutex_lock(&pnettable->lock);
- 	list_for_each_entry_safe(pnetelem, tmp_pe, &pnettable->pnetlist, list) {
- 		if (pnetelem->type == SMC_PNET_ETH && !pnetelem->ndev &&
- 		    !strncmp(pnetelem->eth_name, ndev->name, IFNAMSIZ)) {
-@@ -206,7 +206,7 @@ static int smc_pnet_add_by_ndev(struct net_device *ndev)
- 			break;
- 		}
- 	}
--	write_unlock(&pnettable->lock);
-+	mutex_unlock(&pnettable->lock);
- 	return rc;
- }
- 
-@@ -224,7 +224,7 @@ static int smc_pnet_remove_by_ndev(struct net_device *ndev)
- 	sn = net_generic(net, smc_net_id);
- 	pnettable = &sn->pnettable;
- 
--	write_lock(&pnettable->lock);
-+	mutex_lock(&pnettable->lock);
- 	list_for_each_entry_safe(pnetelem, tmp_pe, &pnettable->pnetlist, list) {
- 		if (pnetelem->type == SMC_PNET_ETH && pnetelem->ndev == ndev) {
- 			dev_put_track(pnetelem->ndev, &pnetelem->dev_tracker);
-@@ -237,7 +237,7 @@ static int smc_pnet_remove_by_ndev(struct net_device *ndev)
- 			break;
- 		}
- 	}
--	write_unlock(&pnettable->lock);
-+	mutex_unlock(&pnettable->lock);
- 	return rc;
- }
- 
-@@ -370,7 +370,7 @@ static int smc_pnet_add_eth(struct smc_pnettable *pnettable, struct net *net,
- 	strncpy(new_pe->eth_name, eth_name, IFNAMSIZ);
- 	rc = -EEXIST;
- 	new_netdev = true;
--	write_lock(&pnettable->lock);
-+	mutex_lock(&pnettable->lock);
- 	list_for_each_entry(tmp_pe, &pnettable->pnetlist, list) {
- 		if (tmp_pe->type == SMC_PNET_ETH &&
- 		    !strncmp(tmp_pe->eth_name, eth_name, IFNAMSIZ)) {
-@@ -385,9 +385,9 @@ static int smc_pnet_add_eth(struct smc_pnettable *pnettable, struct net *net,
- 					     GFP_ATOMIC);
- 		}
- 		list_add_tail(&new_pe->list, &pnettable->pnetlist);
--		write_unlock(&pnettable->lock);
-+		mutex_unlock(&pnettable->lock);
- 	} else {
--		write_unlock(&pnettable->lock);
-+		mutex_unlock(&pnettable->lock);
- 		kfree(new_pe);
- 		goto out_put;
- 	}
-@@ -448,7 +448,7 @@ static int smc_pnet_add_ib(struct smc_pnettable *pnettable, char *ib_name,
- 	new_pe->ib_port = ib_port;
- 
- 	new_ibdev = true;
--	write_lock(&pnettable->lock);
-+	mutex_lock(&pnettable->lock);
- 	list_for_each_entry(tmp_pe, &pnettable->pnetlist, list) {
- 		if (tmp_pe->type == SMC_PNET_IB &&
- 		    !strncmp(tmp_pe->ib_name, ib_name, IB_DEVICE_NAME_MAX)) {
-@@ -458,9 +458,9 @@ static int smc_pnet_add_ib(struct smc_pnettable *pnettable, char *ib_name,
- 	}
- 	if (new_ibdev) {
- 		list_add_tail(&new_pe->list, &pnettable->pnetlist);
--		write_unlock(&pnettable->lock);
-+		mutex_unlock(&pnettable->lock);
- 	} else {
--		write_unlock(&pnettable->lock);
-+		mutex_unlock(&pnettable->lock);
- 		kfree(new_pe);
- 	}
- 	return (new_ibdev) ? 0 : -EEXIST;
-@@ -605,7 +605,7 @@ static int _smc_pnet_dump(struct net *net, struct sk_buff *skb, u32 portid,
- 	pnettable = &sn->pnettable;
- 
- 	/* dump pnettable entries */
--	read_lock(&pnettable->lock);
-+	mutex_lock(&pnettable->lock);
- 	list_for_each_entry(pnetelem, &pnettable->pnetlist, list) {
- 		if (pnetid && !smc_pnet_match(pnetelem->pnet_name, pnetid))
- 			continue;
-@@ -620,7 +620,7 @@ static int _smc_pnet_dump(struct net *net, struct sk_buff *skb, u32 portid,
- 			break;
- 		}
- 	}
--	read_unlock(&pnettable->lock);
-+	mutex_unlock(&pnettable->lock);
- 	return idx;
- }
- 
-@@ -864,7 +864,7 @@ int smc_pnet_net_init(struct net *net)
- 	struct smc_pnetids_ndev *pnetids_ndev = &sn->pnetids_ndev;
- 
- 	INIT_LIST_HEAD(&pnettable->pnetlist);
--	rwlock_init(&pnettable->lock);
-+	mutex_init(&pnettable->lock);
- 	INIT_LIST_HEAD(&pnetids_ndev->list);
- 	rwlock_init(&pnetids_ndev->lock);
- 
-@@ -944,7 +944,7 @@ static int smc_pnet_find_ndev_pnetid_by_table(struct net_device *ndev,
- 	sn = net_generic(net, smc_net_id);
- 	pnettable = &sn->pnettable;
- 
--	read_lock(&pnettable->lock);
-+	mutex_lock(&pnettable->lock);
- 	list_for_each_entry(pnetelem, &pnettable->pnetlist, list) {
- 		if (pnetelem->type == SMC_PNET_ETH && ndev == pnetelem->ndev) {
- 			/* get pnetid of netdev device */
-@@ -953,7 +953,7 @@ static int smc_pnet_find_ndev_pnetid_by_table(struct net_device *ndev,
- 			break;
- 		}
- 	}
--	read_unlock(&pnettable->lock);
-+	mutex_unlock(&pnettable->lock);
- 	return rc;
- }
- 
-@@ -1156,7 +1156,7 @@ int smc_pnetid_by_table_ib(struct smc_ib_device *smcibdev, u8 ib_port)
- 	sn = net_generic(&init_net, smc_net_id);
- 	pnettable = &sn->pnettable;
- 
--	read_lock(&pnettable->lock);
-+	mutex_lock(&pnettable->lock);
- 	list_for_each_entry(tmp_pe, &pnettable->pnetlist, list) {
- 		if (tmp_pe->type == SMC_PNET_IB &&
- 		    !strncmp(tmp_pe->ib_name, ib_name, IB_DEVICE_NAME_MAX) &&
-@@ -1166,7 +1166,7 @@ int smc_pnetid_by_table_ib(struct smc_ib_device *smcibdev, u8 ib_port)
- 			break;
- 		}
- 	}
--	read_unlock(&pnettable->lock);
-+	mutex_unlock(&pnettable->lock);
- 
- 	return rc;
- }
-@@ -1185,7 +1185,7 @@ int smc_pnetid_by_table_smcd(struct smcd_dev *smcddev)
- 	sn = net_generic(&init_net, smc_net_id);
- 	pnettable = &sn->pnettable;
- 
--	read_lock(&pnettable->lock);
-+	mutex_lock(&pnettable->lock);
- 	list_for_each_entry(tmp_pe, &pnettable->pnetlist, list) {
- 		if (tmp_pe->type == SMC_PNET_IB &&
- 		    !strncmp(tmp_pe->ib_name, ib_name, IB_DEVICE_NAME_MAX)) {
-@@ -1194,7 +1194,7 @@ int smc_pnetid_by_table_smcd(struct smcd_dev *smcddev)
- 			break;
- 		}
- 	}
--	read_unlock(&pnettable->lock);
-+	mutex_unlock(&pnettable->lock);
- 
- 	return rc;
- }
-diff --git a/net/smc/smc_pnet.h b/net/smc/smc_pnet.h
-index 14039272f7e4..80a88eea4949 100644
---- a/net/smc/smc_pnet.h
-+++ b/net/smc/smc_pnet.h
-@@ -29,7 +29,7 @@ struct smc_link_group;
-  * @pnetlist: List of PNETIDs
-  */
- struct smc_pnettable {
--	rwlock_t lock;
-+	struct mutex lock;
- 	struct list_head pnetlist;
- };
- 
+[1] https://lore.kernel.org/lkml/ae7c65d8-f632-a7f4-926a-50b9660673a1@linux.ibm.com/T/#mcb67699bf458ba7482f6b7529afe589d1dbb5930
+[2] https://lore.kernel.org/all/20220208165310.3905815-1-mimu@linux.ibm.com/
+[3] https://lore.kernel.org/all/20220209152217.1793281-2-mimu@linux.ibm.com/
+
+Michael Mueller (2):
+  KVM: s390: pv: pull all vcpus out of SIE before converting to/from pv
+    vcpu
+  KVM: s390: pv: make use of ultravisor AIV support
+
+ arch/s390/include/asm/uv.h |  1 +
+ arch/s390/kvm/interrupt.c  | 54 +++++++++++++++++++++++++++++++++-----
+ arch/s390/kvm/kvm-s390.c   | 19 +++++++++-----
+ arch/s390/kvm/kvm-s390.h   | 11 ++++++++
+ 4 files changed, 72 insertions(+), 13 deletions(-)
+
 -- 
-2.34.1
+2.32.0
 
