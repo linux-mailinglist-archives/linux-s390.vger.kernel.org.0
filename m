@@ -2,122 +2,174 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6828E4C1B46
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Feb 2022 19:57:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 245F84C1BA1
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Feb 2022 20:14:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233050AbiBWS55 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 23 Feb 2022 13:57:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44362 "EHLO
+        id S244248AbiBWTOs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 23 Feb 2022 14:14:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237010AbiBWS54 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 23 Feb 2022 13:57:56 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0849B29837;
-        Wed, 23 Feb 2022 10:57:27 -0800 (PST)
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 21NHIZKu026532;
-        Wed, 23 Feb 2022 18:57:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=Mkh4dUQ5Ypka5egNRySemcws707R37tGQCEWyl/L/zM=;
- b=eQXGj3VOoZ15h1E8r+fcln3UCiifoo1uw6GBdVDQBXtV+ZoNvSwgiLQcMFfib/Z8fLAZ
- 8aogfG3DYchVsFuvoi/tW8e23dtikyzfCZsCBENigP0Zs39FGnNNBrwBo+SvklcyePwf
- VTBMSropWUSz37zYT/JqWtZMKsg23r8SdaHuhhjv9U3i4U9Y39oe4HvxJ1zdz/CuS96K
- BDm48If2FyRE+G1Ese/0CT/9pBORlZrV9Eoy5l8axI5s0+0wz1LIhyX8pmuoLhnLBeiv
- a9To0Zxj9Tt1uDWnGJ7O0DMjUvjucdaJqILeFzSHMibCrBCOjFuJgOCrQsw1p/W4DxR3 GA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3ede6t15eh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 23 Feb 2022 18:57:24 +0000
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 21NICCkm029389;
-        Wed, 23 Feb 2022 18:57:24 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3ede6t15dr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 23 Feb 2022 18:57:23 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 21NIul4I026635;
-        Wed, 23 Feb 2022 18:57:21 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma02fra.de.ibm.com with ESMTP id 3ear69ajcq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 23 Feb 2022 18:57:21 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 21NIvHbI30998894
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Feb 2022 18:57:17 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF7B6AE053;
-        Wed, 23 Feb 2022 18:57:17 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 55042AE04D;
-        Wed, 23 Feb 2022 18:57:17 +0000 (GMT)
-Received: from [9.171.51.229] (unknown [9.171.51.229])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 23 Feb 2022 18:57:17 +0000 (GMT)
-Message-ID: <bc3252a3-5a84-63d4-dfc5-009f602a5bec@linux.ibm.com>
-Date:   Wed, 23 Feb 2022 19:57:31 +0100
+        with ESMTP id S244197AbiBWTOq (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 23 Feb 2022 14:14:46 -0500
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F784403EE
+        for <linux-s390@vger.kernel.org>; Wed, 23 Feb 2022 11:14:04 -0800 (PST)
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 38FFB3FCA5
+        for <linux-s390@vger.kernel.org>; Wed, 23 Feb 2022 19:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1645643630;
+        bh=7G3yQO1ggdyvs1MDXGTTghLlHGfX3RftlATUX++IZLE=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=luY9iMPs+zOgPUjc3lGcYqRFqe/kgDKBuG377FSaA9DlxUgwVbV7Yy+XbcK6QQtI0
+         ZFKpIQcXY0dlasZg/pvWgJ3lsZ8LQqjNqmR0hJqJFhVcDeFnsPppA+aF3vo43WPIsQ
+         0/5EWrpyHUF14zyXBFi+OC5pjPvyUR+tBAe+qLgpoHmWcL9Zwx2IdLAdfceRgNLEQS
+         RDG1Y8KyFH7RsEN2nxJfSzykeEmlkKajXwcVplgljJoUwaNBc8wi7sJWxGaag+qAwX
+         c7Px+aVNCLCDGNHDbioyNISpASkWrnUBKYDKOhjAjb/RN2QP0/qmlkudGQvjw/o2vg
+         yGX9bKM6r3HZA==
+Received: by mail-ej1-f69.google.com with SMTP id qa30-20020a170907869e00b006cee5e080easo7439083ejc.3
+        for <linux-s390@vger.kernel.org>; Wed, 23 Feb 2022 11:13:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7G3yQO1ggdyvs1MDXGTTghLlHGfX3RftlATUX++IZLE=;
+        b=QrmQ4SVlULmc4MNwdO0ul4qLmEBxfPyUumAq3RhkFzn0JY3RF9sh/yIM4ODTh1mqh+
+         iA+HP5OsnzDNHCpcfGTRzxu/pgAi9qc0BSC1dqKZMKxXyDvTsjaHAgm1AQUeGMXiyQ5c
+         cUAQgmIg10Sp0J9bdsmY+i5kKw2PZPOVUtv+XP3y0NvWQcDsxd1vea3ENuRWsz9csHbo
+         tZaHLB8T0M8qy6OFkwxRzSYRMbquUCbL/3npAbHnpdOdECfcdI7cS3wtWKi0GNsqVabS
+         ep3sk7f9o9Pw2LyMWeE5zDwko9UZGN729F5e5FJTAr/ZABAEyyiYB6e5OEzOeFsPENqD
+         D7bA==
+X-Gm-Message-State: AOAM531DmVjaWCjvjKE5Ts2oCVOrPaWR/eQ/KNbWFexd45MyH1Vt0j5f
+        AmkThoJxuH6jbQywxroUCRnFp3DGT4U20bQistX/Q4wMD9jsHmEFI83P9rp53yajnWMFq6TAsWH
+        K+RJnk/fe6QF1CwgXWCna6TSUSz2fPrrY4dynAek=
+X-Received: by 2002:a17:907:3e1d:b0:6d1:cb2e:a5f7 with SMTP id hp29-20020a1709073e1d00b006d1cb2ea5f7mr912422ejc.34.1645643627838;
+        Wed, 23 Feb 2022 11:13:47 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzGBRIhr5hXOOi9m1HuHlbXHVVNJ7NbK5fFuNrM/4KQXFCcM1cXqPM7bQRPgfLpUUwT4AX8Nw==
+X-Received: by 2002:a17:907:3e1d:b0:6d1:cb2e:a5f7 with SMTP id hp29-20020a1709073e1d00b006d1cb2ea5f7mr912389ejc.34.1645643627533;
+        Wed, 23 Feb 2022 11:13:47 -0800 (PST)
+Received: from localhost.localdomain (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
+        by smtp.gmail.com with ESMTPSA id q5sm212611ejc.115.2022.02.23.11.13.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Feb 2022 11:13:47 -0800 (PST)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andy Gross <agross@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Subject: [PATCH v2 00/11] Fix broken usage of driver_override (and kfree of static memory)
+Date:   Wed, 23 Feb 2022 20:12:59 +0100
+Message-Id: <20220223191310.347669-1-krzysztof.kozlowski@canonical.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH] net/smc: Add autocork support
-Content-Language: en-US
-To:     dust.li@linux.alibaba.com,
-        Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc:     Stefan Raspl <raspl@linux.ibm.com>,
-        Tony Lu <tonylu@linux.alibaba.com>, kuba@kernel.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
-References: <20220216034903.20173-1-dust.li@linux.alibaba.com>
- <68e9534b-7ff5-5a65-9017-124dbae0c74b@linux.ibm.com>
- <20220216152721.GB39286@linux.alibaba.com>
- <454b5efd-e611-2dfb-e462-e7ceaee0da4d@linux.ibm.com>
- <20220217132200.GA5443@linux.alibaba.com> <Yg6Q2kIDJrhvNVz7@linux.ibm.com>
- <20220218073327.GB5443@linux.alibaba.com>
- <d4ce4674-3ced-da34-a8a4-30d74cbe24bb@linux.ibm.com>
- <20220218234232.GC5443@linux.alibaba.com>
-From:   Karsten Graul <kgraul@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20220218234232.GC5443@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Fyp25lHlfm8BvSD9vJu8XFm7wJujfm-B
-X-Proofpoint-ORIG-GUID: LAyXRrWZ9CuE87Jh0JCKLx0hV-ApzYV_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-02-23_09,2022-02-23_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 phishscore=0 impostorscore=0 mlxlogscore=999
- clxscore=1015 mlxscore=0 malwarescore=0 adultscore=0 suspectscore=0
- spamscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2201110000 definitions=main-2202230106
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 19/02/2022 00:42, dust.li wrote:
-> On Fri, Feb 18, 2022 at 05:03:56PM +0100, Karsten Graul wrote:
->> Right now for me it looks like there is no way to use netlink for container runtime
->> configuration, which is a pity.
->> We continue our discussions about this in the team, and also here on the list.
-> 
-> Many thanks for your time on this topic !
+Hi,
 
-We checked more specs (like Container Network Interface (CNI) Specification) 
-but all we found uses sysctl at the end. There is lot of infrastructure 
-to use sysctls in a container environment.
+This is a continuation of my old patchset from 2019. [1]
+Back then, few drivers set driver_override wrong. I fixed Exynos
+in a different way after discussions. QCOM NGD was not fixed
+and a new user appeared - IMX SCU.
 
-Establishing netlink-like controls for containers is by far out of our scope, and
-would take a long time until it would be available in the popular projects.
+It seems "char *" in driver_override looks too consty, so we
+tend to make a mistake of storing there string literals.
 
-So at the moment I see no alternative to an additional sysctl interface in the 
-SMC module that provides controls which are useful in container environments.
+Changes of latest since v1 (not the old 2019 solution):
+=======================================================
+https://lore.kernel.org/all/708eabb1-7b35-d525-d4c3-451d4a3de84f@rasmusvillemoes.dk/
+1. Add helper for setting driver_override.
+2. Use the helper.
+
+Dependencies (and stable):
+==========================
+1. All patches, including last three fixes, depend on first patch
+   introducing the helper.
+2. The last three commits - fixes - are probably not backportable
+   directly, because of this dependency. I don't know how to express
+   it here, since stable-kernel-rules.rst mentions only commits as
+   possible dependencies.
+
+[1] https://lore.kernel.org/all/1550484960-2392-3-git-send-email-krzk@kernel.org/
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (11):
+  driver: platform: add and use helper for safer setting of
+    driver_override
+  amba: use helper for safer setting of driver_override
+  fsl-mc: use helper for safer setting of driver_override
+  hv: vmbus: use helper for safer setting of driver_override
+  pci: use helper for safer setting of driver_override
+  s390: cio: use helper for safer setting of driver_override
+  spi: use helper for safer setting of driver_override
+  vdpa: use helper for safer setting of driver_override
+  clk: imx: scu: fix kfree() of static memory on setting driver_override
+  slimbus: qcom-ngd: fix kfree() of static memory on setting
+    driver_override
+  rpmsg: fix kfree() of static memory on setting driver_override
+
+ drivers/amba/bus.c              | 24 +++---------------
+ drivers/base/driver.c           | 44 +++++++++++++++++++++++++++++++++
+ drivers/base/platform.c         | 24 +++---------------
+ drivers/bus/fsl-mc/fsl-mc-bus.c | 22 +++--------------
+ drivers/clk/imx/clk-scu.c       |  7 +++++-
+ drivers/hv/vmbus_drv.c          | 24 +++---------------
+ drivers/pci/pci-sysfs.c         | 24 +++---------------
+ drivers/rpmsg/rpmsg_internal.h  | 13 ++++++++--
+ drivers/rpmsg/rpmsg_ns.c        | 14 +++++++++--
+ drivers/s390/cio/css.c          | 24 +++---------------
+ drivers/slimbus/qcom-ngd-ctrl.c | 12 ++++++++-
+ drivers/spi/spi.c               | 20 +++------------
+ drivers/vdpa/vdpa.c             | 25 +++----------------
+ include/linux/device/driver.h   |  1 +
+ include/linux/platform_device.h |  6 ++++-
+ include/linux/spi/spi.h         |  2 +-
+ 16 files changed, 123 insertions(+), 163 deletions(-)
+
+-- 
+2.32.0
+
