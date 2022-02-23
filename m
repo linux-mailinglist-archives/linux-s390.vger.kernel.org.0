@@ -2,87 +2,247 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A12B4C0626
-	for <lists+linux-s390@lfdr.de>; Wed, 23 Feb 2022 01:30:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5247F4C0705
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Feb 2022 02:43:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232650AbiBWAal (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Feb 2022 19:30:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35820 "EHLO
+        id S236625AbiBWBnT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Feb 2022 20:43:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232272AbiBWAak (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Feb 2022 19:30:40 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 971F055BE4;
-        Tue, 22 Feb 2022 16:30:14 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id A4F9ACE1990;
-        Wed, 23 Feb 2022 00:30:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DB88AC340EB;
-        Wed, 23 Feb 2022 00:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645576210;
-        bh=hLuXvhXfxzEk2dGr9uq59d1zVuMNbtQEpeGCRaPMEAg=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=SDo/clCpGfI2Lw5OyioNU+xnmVasFb8UQ1OE/3XPn3ho5TQYRbf7cCkHlIx6r32TW
-         0TH1FS/MmgAAKeACRtCre+xRXyM1QaRBsJfmRKGDcIEHn3Yi60xvkjRx23Q0FHhKL9
-         rycKxgYU67M4GI6QmkKV5mLWlghF4bw6BT8hhjuSZdO7WcSZ/k/oRygviuDHpMGA20
-         Ru0Bn1BJuTFE7cNp1r3TEbIHpWbUP+OIRySVUJY3LNdNtAdNJPIda51uSV4HVHfS3E
-         iCS941W2DW/0BLjtnd15aMLioylcBigPBvkGZ6+YMTNE70LZceSPE5GssTJw7wgmXf
-         kJA1oV1n1ljQw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C089CEAC081;
-        Wed, 23 Feb 2022 00:30:10 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        with ESMTP id S236621AbiBWBnQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Feb 2022 20:43:16 -0500
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B05506EA
+        for <linux-s390@vger.kernel.org>; Tue, 22 Feb 2022 17:42:48 -0800 (PST)
+Received: by mail-pf1-x429.google.com with SMTP id i21so13849919pfd.13
+        for <linux-s390@vger.kernel.org>; Tue, 22 Feb 2022 17:42:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0IocTnUQr6FP+/17h4w0x+BM2h/3A2/lnyC/88qg3Bs=;
+        b=R13J0wSyZZPNTQom3AZJOiGLek2zrP20pPQ688zl+tgug5wUJZShU6lCFD37V5/kJp
+         JeO7jYxVmvhVcvGj1n5KL9Q5leNxho2H+q5Pxlt52gy6+FNyGIRUndYqBBW1rkixsrQn
+         peDHM5f+J+9B99sOO5g+TpAf3ONqTdfm/N6vCqEZV2Svnqg/nAqf9vdSl+i+daj3vc1U
+         C8XKnTn6BCH4cMwE9k/lY4QUmhsRFQAVjx+L8JdBqx9yHXc+QtTINrhhuO49G4QEA3UA
+         Q/dlrczvS2rvMkquPSkn8hn19cg8tRetRtHaz1nW+sYspoWvvZRKxQo1qzIsn7yCtIBK
+         sqJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=0IocTnUQr6FP+/17h4w0x+BM2h/3A2/lnyC/88qg3Bs=;
+        b=5PCbEyh839zF2eH3w4s3B/FABgBOqXwPLoPaneTCUhpTPt1k3fWV0x4bWNrfkgyS65
+         u4uyMwj4rOxAyMvsP7pyQpXPt7joC5NHWi+QrJ7hxB4tkNDyYS5/ja7c5+z7+q88yXLj
+         VS6OA51GuyEWTv0+ncELtiJcSFf82LhmoS6PTrI3IWZLoAHJg8UpBpXBp2uNSiKlI14j
+         gwCQsHjhGdoUVKV2vasenrLClcbukeZMq3msQpYIzKi9Q6eQ/imvl3IIXRo8EXjECzmP
+         83LfUbyPcoFRrH4cuRRPIj7W5mURj269Jwa/4SYNU8WfsViQ2J1tM0HWwHkFaYzsYE65
+         74Dw==
+X-Gm-Message-State: AOAM531d3sMEAcWxPxusqtsjXKrWsLf8OZr34Lw8pAxppUAXicQuDIqY
+        FLSNjRTOoBupT+scuSfVg+hrCQ==
+X-Google-Smtp-Source: ABdhPJylGwlZ4pkklwCsJ/CgsKStHPUR8auG8o6qbIGMxI7Is7rM/BdMqQ7WDy6q2rxlHdpl/ppf/Q==
+X-Received: by 2002:a62:7c56:0:b0:4f0:f268:ec03 with SMTP id x83-20020a627c56000000b004f0f268ec03mr20977269pfc.8.1645580567591;
+        Tue, 22 Feb 2022 17:42:47 -0800 (PST)
+Received: from localhost ([12.3.194.138])
+        by smtp.gmail.com with ESMTPSA id j12sm21551414pgf.63.2022.02.22.17.42.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Feb 2022 17:42:47 -0800 (PST)
+Date:   Tue, 22 Feb 2022 17:42:47 -0800 (PST)
+X-Google-Original-Date: Tue, 22 Feb 2022 15:21:36 PST (-0800)
+Subject:     Re: [PATCH V5 09/21] riscv: compat: Add basic compat data type implementation
+In-Reply-To: <20220201150545.1512822-10-guoren@kernel.org>
+CC:     guoren@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        anup@brainfault.org, Greg KH <gregkh@linuxfoundation.org>,
+        liush@allwinnertech.com, wefu@redhat.com, drew@beagleboard.org,
+        wangjunqiang@iscas.ac.cn, Christoph Hellwig <hch@lst.de>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        x86@kernel.org, guoren@linux.alibaba.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     guoren@kernel.org
+Message-ID: <mhng-c74f1c06-0caa-4a71-82fa-7cf58a1ac0ca@palmer-ri-x1c9>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/2] s390/net: updates 2022-02-21
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <164557621078.11578.8543243178652229719.git-patchwork-notify@kernel.org>
-Date:   Wed, 23 Feb 2022 00:30:10 +0000
-References: <20220221145633.3869621-1-wintera@linux.ibm.com>
-In-Reply-To: <20220221145633.3869621-1-wintera@linux.ibm.com>
-To:     Alexandra Winter <wintera@linux.ibm.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, hca@linux.ibm.com,
-        agordeev@linux.ibm.com
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello:
+On Tue, 01 Feb 2022 07:05:33 PST (-0800), guoren@kernel.org wrote:
+> From: Guo Ren <guoren@linux.alibaba.com>
+>
+> Implement riscv asm/compat.h for struct compat_xxx,
+> is_compat_task, compat_user_regset, regset convert.
+>
+> The rv64 compat.h has inherited most of the structs
+> from the generic one.
+>
+> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+> Signed-off-by: Guo Ren <guoren@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> ---
+>  arch/riscv/include/asm/compat.h      | 129 +++++++++++++++++++++++++++
+>  arch/riscv/include/asm/thread_info.h |   1 +
+>  2 files changed, 130 insertions(+)
+>  create mode 100644 arch/riscv/include/asm/compat.h
+>
+> diff --git a/arch/riscv/include/asm/compat.h b/arch/riscv/include/asm/compat.h
+> new file mode 100644
+> index 000000000000..2ac955b51148
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/compat.h
+> @@ -0,0 +1,129 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef __ASM_COMPAT_H
+> +#define __ASM_COMPAT_H
+> +
+> +#define COMPAT_UTS_MACHINE	"riscv\0\0"
+> +
+> +/*
+> + * Architecture specific compatibility types
+> + */
+> +#include <linux/types.h>
+> +#include <linux/sched.h>
+> +#include <linux/sched/task_stack.h>
+> +#include <asm-generic/compat.h>
+> +
+> +static inline int is_compat_task(void)
+> +{
+> +	return test_thread_flag(TIF_32BIT);
+> +}
+> +
+> +struct compat_user_regs_struct {
+> +	compat_ulong_t pc;
+> +	compat_ulong_t ra;
+> +	compat_ulong_t sp;
+> +	compat_ulong_t gp;
+> +	compat_ulong_t tp;
+> +	compat_ulong_t t0;
+> +	compat_ulong_t t1;
+> +	compat_ulong_t t2;
+> +	compat_ulong_t s0;
+> +	compat_ulong_t s1;
+> +	compat_ulong_t a0;
+> +	compat_ulong_t a1;
+> +	compat_ulong_t a2;
+> +	compat_ulong_t a3;
+> +	compat_ulong_t a4;
+> +	compat_ulong_t a5;
+> +	compat_ulong_t a6;
+> +	compat_ulong_t a7;
+> +	compat_ulong_t s2;
+> +	compat_ulong_t s3;
+> +	compat_ulong_t s4;
+> +	compat_ulong_t s5;
+> +	compat_ulong_t s6;
+> +	compat_ulong_t s7;
+> +	compat_ulong_t s8;
+> +	compat_ulong_t s9;
+> +	compat_ulong_t s10;
+> +	compat_ulong_t s11;
+> +	compat_ulong_t t3;
+> +	compat_ulong_t t4;
+> +	compat_ulong_t t5;
+> +	compat_ulong_t t6;
+> +};
+> +
+> +static inline void regs_to_cregs(struct compat_user_regs_struct *cregs,
+> +				 struct pt_regs *regs)
+> +{
+> +	cregs->pc	= (compat_ulong_t) regs->epc;
+> +	cregs->ra	= (compat_ulong_t) regs->ra;
+> +	cregs->sp	= (compat_ulong_t) regs->sp;
+> +	cregs->gp	= (compat_ulong_t) regs->gp;
+> +	cregs->tp	= (compat_ulong_t) regs->tp;
+> +	cregs->t0	= (compat_ulong_t) regs->t0;
+> +	cregs->t1	= (compat_ulong_t) regs->t1;
+> +	cregs->t2	= (compat_ulong_t) regs->t2;
+> +	cregs->s0	= (compat_ulong_t) regs->s0;
+> +	cregs->s1	= (compat_ulong_t) regs->s1;
+> +	cregs->a0	= (compat_ulong_t) regs->a0;
+> +	cregs->a1	= (compat_ulong_t) regs->a1;
+> +	cregs->a2	= (compat_ulong_t) regs->a2;
+> +	cregs->a3	= (compat_ulong_t) regs->a3;
+> +	cregs->a4	= (compat_ulong_t) regs->a4;
+> +	cregs->a5	= (compat_ulong_t) regs->a5;
+> +	cregs->a6	= (compat_ulong_t) regs->a6;
+> +	cregs->a7	= (compat_ulong_t) regs->a7;
+> +	cregs->s2	= (compat_ulong_t) regs->s2;
+> +	cregs->s3	= (compat_ulong_t) regs->s3;
+> +	cregs->s4	= (compat_ulong_t) regs->s4;
+> +	cregs->s5	= (compat_ulong_t) regs->s5;
+> +	cregs->s6	= (compat_ulong_t) regs->s6;
+> +	cregs->s7	= (compat_ulong_t) regs->s7;
+> +	cregs->s8	= (compat_ulong_t) regs->s8;
+> +	cregs->s9	= (compat_ulong_t) regs->s9;
+> +	cregs->s10	= (compat_ulong_t) regs->s10;
+> +	cregs->s11	= (compat_ulong_t) regs->s11;
+> +	cregs->t3	= (compat_ulong_t) regs->t3;
+> +	cregs->t4	= (compat_ulong_t) regs->t4;
+> +	cregs->t5	= (compat_ulong_t) regs->t5;
+> +	cregs->t6	= (compat_ulong_t) regs->t6;
+> +};
+> +
+> +static inline void cregs_to_regs(struct compat_user_regs_struct *cregs,
+> +				 struct pt_regs *regs)
+> +{
+> +	regs->epc	= (unsigned long) cregs->pc;
+> +	regs->ra	= (unsigned long) cregs->ra;
+> +	regs->sp	= (unsigned long) cregs->sp;
+> +	regs->gp	= (unsigned long) cregs->gp;
+> +	regs->tp	= (unsigned long) cregs->tp;
+> +	regs->t0	= (unsigned long) cregs->t0;
+> +	regs->t1	= (unsigned long) cregs->t1;
+> +	regs->t2	= (unsigned long) cregs->t2;
+> +	regs->s0	= (unsigned long) cregs->s0;
+> +	regs->s1	= (unsigned long) cregs->s1;
+> +	regs->a0	= (unsigned long) cregs->a0;
+> +	regs->a1	= (unsigned long) cregs->a1;
+> +	regs->a2	= (unsigned long) cregs->a2;
+> +	regs->a3	= (unsigned long) cregs->a3;
+> +	regs->a4	= (unsigned long) cregs->a4;
+> +	regs->a5	= (unsigned long) cregs->a5;
+> +	regs->a6	= (unsigned long) cregs->a6;
+> +	regs->a7	= (unsigned long) cregs->a7;
+> +	regs->s2	= (unsigned long) cregs->s2;
+> +	regs->s3	= (unsigned long) cregs->s3;
+> +	regs->s4	= (unsigned long) cregs->s4;
+> +	regs->s5	= (unsigned long) cregs->s5;
+> +	regs->s6	= (unsigned long) cregs->s6;
+> +	regs->s7	= (unsigned long) cregs->s7;
+> +	regs->s8	= (unsigned long) cregs->s8;
+> +	regs->s9	= (unsigned long) cregs->s9;
+> +	regs->s10	= (unsigned long) cregs->s10;
+> +	regs->s11	= (unsigned long) cregs->s11;
+> +	regs->t3	= (unsigned long) cregs->t3;
+> +	regs->t4	= (unsigned long) cregs->t4;
+> +	regs->t5	= (unsigned long) cregs->t5;
+> +	regs->t6	= (unsigned long) cregs->t6;
+> +};
+> +
+> +#endif /* __ASM_COMPAT_H */
+> diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
+> index 60da0dcacf14..9392e35c689d 100644
+> --- a/arch/riscv/include/asm/thread_info.h
+> +++ b/arch/riscv/include/asm/thread_info.h
+> @@ -91,6 +91,7 @@ struct thread_info {
+>  #define TIF_SECCOMP		8	/* syscall secure computing */
+>  #define TIF_NOTIFY_SIGNAL	9	/* signal notifications exist */
+>  #define TIF_UPROBE		10	/* uprobe breakpoint or singlestep */
+> +#define TIF_32BIT		11	/* 32bit process */
 
-This series was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+Presumably that's just meant for 32-bit processes on rv64?  Probably 
+best to have the comment say that explicitly.
 
-On Mon, 21 Feb 2022 15:56:31 +0100 you wrote:
-> Hello Dave & Jakub,
-> 
-> please apply the following patches to netdev's net-next tree.
-> 
-> Just cleanup. No functional changes, as currently virt=phys in s390.
-> 
-> Thank you
-> Alexandra
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,1/2] s390/iucv: sort out physical vs virtual pointers usage
-    https://git.kernel.org/netdev/net-next/c/ab847d03a5e4
-  - [net-next,2/2] s390/net: sort out physical vs virtual pointers usage
-    https://git.kernel.org/netdev/net-next/c/1bb7e8dff896
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+>  #define _TIF_SYSCALL_TRACE	(1 << TIF_SYSCALL_TRACE)
+>  #define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
