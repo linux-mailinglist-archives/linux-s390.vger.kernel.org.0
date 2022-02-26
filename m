@@ -2,108 +2,118 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 280E24C521E
-	for <lists+linux-s390@lfdr.de>; Sat, 26 Feb 2022 00:42:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EFA94C5380
+	for <lists+linux-s390@lfdr.de>; Sat, 26 Feb 2022 04:11:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231373AbiBYXmu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 25 Feb 2022 18:42:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37284 "EHLO
+        id S229687AbiBZDM0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 25 Feb 2022 22:12:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230190AbiBYXmt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 25 Feb 2022 18:42:49 -0500
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DABC81F038B;
-        Fri, 25 Feb 2022 15:42:15 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R441e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=dust.li@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0V5Uzc0U_1645832532;
-Received: from localhost(mailfrom:dust.li@linux.alibaba.com fp:SMTPD_---0V5Uzc0U_1645832532)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 26 Feb 2022 07:42:12 +0800
-Date:   Sat, 26 Feb 2022 07:42:11 +0800
-From:   "dust.li" <dust.li@linux.alibaba.com>
-To:     Karsten Graul <kgraul@linux.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc:     Stefan Raspl <raspl@linux.ibm.com>,
-        Tony Lu <tonylu@linux.alibaba.com>, kuba@kernel.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH] net/smc: Add autocork support
-Message-ID: <20220225234211.GA5282@linux.alibaba.com>
-Reply-To: dust.li@linux.alibaba.com
-References: <20220216152721.GB39286@linux.alibaba.com>
- <454b5efd-e611-2dfb-e462-e7ceaee0da4d@linux.ibm.com>
- <20220217132200.GA5443@linux.alibaba.com>
- <Yg6Q2kIDJrhvNVz7@linux.ibm.com>
- <20220218073327.GB5443@linux.alibaba.com>
- <d4ce4674-3ced-da34-a8a4-30d74cbe24bb@linux.ibm.com>
- <20220218234232.GC5443@linux.alibaba.com>
- <bc3252a3-5a84-63d4-dfc5-009f602a5bec@linux.ibm.com>
- <20220224020253.GF5443@linux.alibaba.com>
- <f2afb775-a156-2c32-a49a-225545dc2bf7@linux.ibm.com>
+        with ESMTP id S229659AbiBZDMZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 25 Feb 2022 22:12:25 -0500
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496732671EC
+        for <linux-s390@vger.kernel.org>; Fri, 25 Feb 2022 19:11:52 -0800 (PST)
+Received: by mail-wm1-x341.google.com with SMTP id n25-20020a05600c3b9900b00380f41e51e6so2773912wms.2
+        for <linux-s390@vger.kernel.org>; Fri, 25 Feb 2022 19:11:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=1WmTiruYcLYjgfCVpwaSh4JcERuBX8rKufTgiQZnbQI=;
+        b=BoqVQHt6JQ5I7JtsAWqwrjbfn676fu98HobhqaiOHHD1sRoS3hA18X7nI2SVy+M+WP
+         hiQUZBOE1sHRErmv1tEiQgtvwDoSPWc2P+uqdMjbYpGHNNEINDkfj4G2VamoWPNLKTw6
+         ZrNp6QT4hGAT0hNGeBULSBRpBQSRcwFg/T1ZZQ1hF7jxfMOtOYzuKwjq3CUHRJGlU3KT
+         r3KpAH2NXK7xHdO1cea/fmOErT5J0DQcPK+IyqcROjigOp+ArFXI3mxvmSS8yBbYZMET
+         v+5ACRSXLz3MqwJ/vfTxFpnh0vNqOGsLuQyv3QV8cPn1BmjQMKnXpdk96B7Z61AsZ13v
+         vAog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to:content-transfer-encoding;
+        bh=1WmTiruYcLYjgfCVpwaSh4JcERuBX8rKufTgiQZnbQI=;
+        b=bnzb3sXWBZJnUJUK8hQReFJXoMapFpEvX0sW3KOCXG/7Ok1JTqHjQJTr3XDDixZ+KN
+         JMqrjyoD8G3Fm4ZZxMxKZ7X+F4GaHmdxaJUZKv5qSHkqYlQe4DN45UZ1QYCeWlrphFtk
+         5CSGdMWouOfnAiEClMYxbBqrmfzp1l20xbkOSrouHQcUXUzFfTI6Y/6/P735ERSQnXEF
+         6NyYHdFsMJ49rNdi6NhF6UH5DXPcENfU0xd7qxK36qt7pm4s4sNkhuRuUzFrYM3W9JoF
+         hJo20YrMBUhEQXFGJ1bvSzF9eqdJPxwVEInIy4Z2Rihzty14pc9pKE1/J1ASi4RcuFbh
+         t7Aw==
+X-Gm-Message-State: AOAM531wknTg2G53KQzk+MfnbsAhmf+opH5KdxS61XV6Wrtj/Of34jNA
+        4UVmOHqGnrhs4M5blKpK078Iw21e3nnDeud7Lns=
+X-Google-Smtp-Source: ABdhPJynBaHqyA9yHQVDtUXwYZu1XZSnKSikSc2o1MJUOrZ2kl3jzS0+YiR6UJwkMky63l/7BUQbuGZeFCU8Z4g9pcs=
+X-Received: by 2002:a05:600c:a4b:b0:37b:ea2b:5583 with SMTP id
+ c11-20020a05600c0a4b00b0037bea2b5583mr5104668wmq.139.1645845110032; Fri, 25
+ Feb 2022 19:11:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f2afb775-a156-2c32-a49a-225545dc2bf7@linux.ibm.com>
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Sender: ag2439229@gmail.com
+Received: by 2002:adf:c793:0:0:0:0:0 with HTTP; Fri, 25 Feb 2022 19:11:49
+ -0800 (PST)
+From:   aisha gaddafi <madamisha00@gmail.com>
+Date:   Sat, 26 Feb 2022 04:11:49 +0100
+X-Google-Sender-Auth: PBXvlLd4xQgHcAfA8zzlHoyNdQA
+Message-ID: <CALz623FZ2SReVUMHC8AK13M9qK+f=gw4ko=n_dTUbaef5=g40w@mail.gmail.com>
+Subject: I want to invest in your country
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=6.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLY,LOTS_OF_MONEY,MILLION_HUNDRED,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_MONEY,URG_BIZ autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:341 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [ag2439229[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [ag2439229[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 MILLION_HUNDRED BODY: Million "One to Nine" Hundred
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  0.6 URG_BIZ Contains urgent matter
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  1.0 FREEMAIL_REPLY From and body contain different freemails
+        *  3.5 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Feb 25, 2022 at 07:10:40PM +0100, Karsten Graul wrote:
->On 24/02/2022 03:02, dust.li wrote:
->> On Wed, Feb 23, 2022 at 07:57:31PM +0100, Karsten Graul wrote:
->>> On 19/02/2022 00:42, dust.li wrote:
->>>> On Fri, Feb 18, 2022 at 05:03:56PM +0100, Karsten Graul wrote:
->>>>> Right now for me it looks like there is no way to use netlink for container runtime
->>>>> configuration, which is a pity.
->>>>> We continue our discussions about this in the team, and also here on the list.
->>>>
->>>> Many thanks for your time on this topic !
->>>
->>> We checked more specs (like Container Network Interface (CNI) Specification) 
->>> but all we found uses sysctl at the end. There is lot of infrastructure 
->>> to use sysctls in a container environment.
->>>
->>> Establishing netlink-like controls for containers is by far out of our scope, and
->>> would take a long time until it would be available in the popular projects.
->>>
->>> So at the moment I see no alternative to an additional sysctl interface in the 
->>> SMC module that provides controls which are useful in container environments.
->> 
->> Got it, I will add sysctl interface and a switch with this function.
->> 
->> Thank again !
->
->Can you explain again why this auto_cork needs a switch to disable it?
->My understanding is that this auto_cork makes always sense and is triggered
->when there are not enough resources.
+--=20
+Greetings Sir/Madam.
 
-My initial intention to provide a switch is to be like TCP to let user
-to disable it. For user cases like debug and workaround bugs if it is
-associated with auto cork, or compare performance like I did (But this
-should not be a real world case in production environment).
-
-But after Stefan suggested that we make the auto corked size turnable,
-I realized that we can only need one sysctl switch: which tunes the auto
-corked bytes size. Disable auto cork can be archived by setting this to 0.
-
-Something like this bellow:
-static bool smc_should_autocork(struct smc_sock *smc)
-{
-        struct smc_connection *conn = &smc->conn;
-        int corking_size;
-
-        corking_size = min(sock_net(&smc->sk)->smc.sysctl_autocorking_size,
-                           conn->sndbuf_desc->len >> 1);
-
-        if (atomic_read(&conn->cdc_pend_tx_wr) == 0 ||
-            smc_tx_prepared_sends(conn) > corking_size)
-                return false;
-        return true;
-}
-
-Thanks.
+I want to invest in your country
+May i use this medium to open a mutual communication with you, and
+seeking your acceptance towards investing in your country under your
+management as my partner, My name is Aisha Gaddafi , i am a Widow and
+single Mother with three Children, the only biological Daughter of
+late Libyan President (Late Colonel Muammar Gaddafi) and presently i
+am under political asylum protection by the  Government of this
+nation.
+I have funds worth =E2=80=9CTwenty Seven Million Five Hundred Thousand Unit=
+ed
+State Dollars=E2=80=9D -$27.500.000.00 US Dollars which i want to entrust o=
+n
+you for investment project in your country. If you are willing to
+handle this project on my behalf, kindly reply urgent to enable me
+provide you more details to start the transfer process.
+I shall appreciate your urgent response through my email address
+below: madamgadafiaisha@gmail.com
+Thanks
+Yours Truly Aisha
