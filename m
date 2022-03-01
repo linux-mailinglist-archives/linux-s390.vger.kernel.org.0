@@ -2,174 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BACCD4C8910
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Mar 2022 11:14:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 17E674C89B8
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Mar 2022 11:53:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232359AbiCAKPC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Mar 2022 05:15:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43840 "EHLO
+        id S234385AbiCAKyM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Mar 2022 05:54:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229944AbiCAKPB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Mar 2022 05:15:01 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E23508CDB1;
-        Tue,  1 Mar 2022 02:14:20 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 60EC16168B;
-        Tue,  1 Mar 2022 10:14:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07DF8C340EE;
-        Tue,  1 Mar 2022 10:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646129659;
-        bh=0ApaxExizHW9c7rec5pm0t6p9PGpcfEeEp2/dee59tM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NmL7A99DvkAswGQH4saINvmJktA9R5Od1PI53ms90OYKRgQ2Va1gr8Yn2lQjkyrp5
-         CP2QrQcfbUAcBlFDXqEfuP/UyAfut5kvxvmgDuhCAlx/LW9oXJ9dU5PEcROeSbtXwf
-         KzuUJaBURBJ4k5+TUvJQZFpJsknkiSTylydlhJhVxQTfHxP1Grf8EflDzPF/Gfo+KH
-         w0yS+b5O7S7O362m/VCnQRGK37RGILKa91BUsBLxv1u9kIh7GMMD63MTmoNRdoeRbt
-         yP3SvbPXTdlYzF+MXA0L/lhvw7nDg3nry1sqYqJGcRTdqlxPRyUtSIFfj0yNvHGUe6
-         0hgCf9zBM8szA==
-Date:   Tue, 1 Mar 2022 12:14:15 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Dust Li <dust.li@linux.alibaba.com>
-Cc:     Karsten Graul <kgraul@linux.ibm.com>,
-        Tony Lu <tonylu@linux.alibaba.com>,
-        Guangguan Wang <guangguan.wang@linux.alibaba.com>,
-        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net-next 6/7] net/smc: don't req_notify until all CQEs
- drained
-Message-ID: <Yh3x93sPCS+w/Eth@unreal>
-References: <20220301094402.14992-1-dust.li@linux.alibaba.com>
- <20220301094402.14992-7-dust.li@linux.alibaba.com>
+        with ESMTP id S232098AbiCAKyL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Mar 2022 05:54:11 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6253726578;
+        Tue,  1 Mar 2022 02:53:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=FLoPcwp8W110QTyBUFSAYe56vwqhsB+0w1jgowBLDrQ=; b=x4Ls4LGXlw3mqit2JgZ989HyZb
+        T5qpKmQGteCGW5NyuTbuloRJzt7HhHDSWBkn6XMthvcPktTNRGiMhEjm3jNCxNFXallKVQH7jYfkV
+        yMP1NQbMBXexGqNGRQAxlptnMjCU6iBaEsSYx496tSDH97RR6D0tylDgXaeXfMovaKcRHhD1mlnuz
+        OQ2BdFcAyA097bBGDwCVXhJV6sp+r3vCa43JaFB+f/7FaiduK6PaxwT2gDQredky9tC0CHGWz/iGt
+        MF2HppH9e3IKlAYjXSzy/Ts9RTiST6h6Fjh5rDDovAP92KH/7Uv2VhH/n7QVymPp/mWYAgqqJl+PH
+        rhUuKZnQ==;
+Received: from [2.53.44.23] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nP083-00GCvx-8y; Tue, 01 Mar 2022 10:53:16 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     iommu@lists.linux-foundation.org
+Cc:     x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
+Subject: cleanup swiotlb initialization v4
+Date:   Tue,  1 Mar 2022 12:52:59 +0200
+Message-Id: <20220301105311.885699-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220301094402.14992-7-dust.li@linux.alibaba.com>
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Mar 01, 2022 at 05:44:01PM +0800, Dust Li wrote:
-> When we are handling softirq workload, enable hardirq may
-> again interrupt the current routine of softirq, and then
-> try to raise softirq again. This only wastes CPU cycles
-> and won't have any real gain.
-> 
-> Since IB_CQ_REPORT_MISSED_EVENTS already make sure if
-> ib_req_notify_cq() returns 0, it is safe to wait for the
-> next event, with no need to poll the CQ again in this case.
-> 
-> This patch disables hardirq during the processing of softirq,
-> and re-arm the CQ after softirq is done. Somehow like NAPI.
-> 
-> Co-developed-by: Guangguan Wang <guangguan.wang@linux.alibaba.com>
-> Signed-off-by: Guangguan Wang <guangguan.wang@linux.alibaba.com>
-> Signed-off-by: Dust Li <dust.li@linux.alibaba.com>
-> ---
->  net/smc/smc_wr.c | 49 +++++++++++++++++++++++++++---------------------
->  1 file changed, 28 insertions(+), 21 deletions(-)
-> 
-> diff --git a/net/smc/smc_wr.c b/net/smc/smc_wr.c
-> index 24be1d03fef9..34d616406d51 100644
-> --- a/net/smc/smc_wr.c
-> +++ b/net/smc/smc_wr.c
-> @@ -137,25 +137,28 @@ static void smc_wr_tx_tasklet_fn(struct tasklet_struct *t)
->  {
->  	struct smc_ib_device *dev = from_tasklet(dev, t, send_tasklet);
->  	struct ib_wc wc[SMC_WR_MAX_POLL_CQE];
-> -	int i = 0, rc;
-> -	int polled = 0;
-> +	int i, rc;
->  
->  again:
-> -	polled++;
->  	do {
->  		memset(&wc, 0, sizeof(wc));
->  		rc = ib_poll_cq(dev->roce_cq_send, SMC_WR_MAX_POLL_CQE, wc);
-> -		if (polled == 1) {
-> -			ib_req_notify_cq(dev->roce_cq_send,
-> -					 IB_CQ_NEXT_COMP |
-> -					 IB_CQ_REPORT_MISSED_EVENTS);
-> -		}
-> -		if (!rc)
-> -			break;
->  		for (i = 0; i < rc; i++)
->  			smc_wr_tx_process_cqe(&wc[i]);
-> +		if (rc < SMC_WR_MAX_POLL_CQE)
-> +			/* If < SMC_WR_MAX_POLL_CQE, the CQ should have been
-> +			 * drained, no need to poll again. --Guangguan Wang
+Hi all,
 
-1. Please remove "--Guangguan Wang".
-2. We already discussed that. SMC should be changed to use RDMA CQ pool API
-drivers/infiniband/core/cq.c. 
-ib_poll_handler() has much better implementation (tracing, IRQ rescheduling,
-proper error handling) than this SMC variant.
+this series tries to clean up the swiotlb initialization, including
+that of swiotlb-xen.  To get there is also removes the x86 iommu table
+infrastructure that massively obsfucates the initialization path.
 
-Thanks
+Git tree:
 
-> +			 */
-> +			break;
->  	} while (rc > 0);
-> -	if (polled == 1)
-> +
-> +	/* IB_CQ_REPORT_MISSED_EVENTS make sure if ib_req_notify_cq() returns
-> +	 * 0, it is safe to wait for the next event.
-> +	 * Else we must poll the CQ again to make sure we won't miss any event
-> +	 */
-> +	if (ib_req_notify_cq(dev->roce_cq_send,
-> +			     IB_CQ_NEXT_COMP |
-> +			     IB_CQ_REPORT_MISSED_EVENTS))
->  		goto again;
->  }
->  
-> @@ -478,24 +481,28 @@ static void smc_wr_rx_tasklet_fn(struct tasklet_struct *t)
->  {
->  	struct smc_ib_device *dev = from_tasklet(dev, t, recv_tasklet);
->  	struct ib_wc wc[SMC_WR_MAX_POLL_CQE];
-> -	int polled = 0;
->  	int rc;
->  
->  again:
-> -	polled++;
->  	do {
->  		memset(&wc, 0, sizeof(wc));
->  		rc = ib_poll_cq(dev->roce_cq_recv, SMC_WR_MAX_POLL_CQE, wc);
-> -		if (polled == 1) {
-> -			ib_req_notify_cq(dev->roce_cq_recv,
-> -					 IB_CQ_SOLICITED_MASK
-> -					 | IB_CQ_REPORT_MISSED_EVENTS);
-> -		}
-> -		if (!rc)
-> +		if (rc > 0)
-> +			smc_wr_rx_process_cqes(&wc[0], rc);
-> +		if (rc < SMC_WR_MAX_POLL_CQE)
-> +			/* If < SMC_WR_MAX_POLL_CQE, the CQ should have been
-> +			 * drained, no need to poll again. --Guangguan Wang
-> +			 */
->  			break;
-> -		smc_wr_rx_process_cqes(&wc[0], rc);
->  	} while (rc > 0);
-> -	if (polled == 1)
-> +
-> +	/* IB_CQ_REPORT_MISSED_EVENTS make sure if ib_req_notify_cq() returns
-> +	 * 0, it is safe to wait for the next event.
-> +	 * Else we must poll the CQ again to make sure we won't miss any event
-> +	 */
-> +	if (ib_req_notify_cq(dev->roce_cq_recv,
-> +			     IB_CQ_SOLICITED_MASK |
-> +			     IB_CQ_REPORT_MISSED_EVENTS))
->  		goto again;
->  }
->  
-> -- 
-> 2.19.1.3.ge56e4f7
-> 
+    git://git.infradead.org/users/hch/misc.git swiotlb-init-cleanup
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/swiotlb-init-cleanup
+
+Changes since v3:
+ - fix a compilation issue on some powerpc configfs
+ - fix and cleanup how forced bounce buffering is enabled for
+   guest memory encryption
+
+Changes since v2:
+ - make ppc_swiotlb_flags actually work again
+ - also force enable swiotlb for guest encrypted memory to cater
+   to hyperv which doesn't set the host encrypted memory flag
+
+Changes since v1:
+ - skip IOMMU initialization on Xen PV kernels
+ - various small whitespace / typo fixes
+
+Diffstat:
