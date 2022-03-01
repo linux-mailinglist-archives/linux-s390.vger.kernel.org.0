@@ -2,143 +2,154 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1FAA4C870C
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Mar 2022 09:49:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1EC04C8849
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Mar 2022 10:44:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233413AbiCAIuX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Mar 2022 03:50:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43914 "EHLO
+        id S233724AbiCAJou (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Mar 2022 04:44:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233505AbiCAIuW (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Mar 2022 03:50:22 -0500
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5BE28931C
-        for <linux-s390@vger.kernel.org>; Tue,  1 Mar 2022 00:49:40 -0800 (PST)
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 2994F3FCAE
-        for <linux-s390@vger.kernel.org>; Tue,  1 Mar 2022 08:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1646124579;
-        bh=i5oNvJtWT2nQMVMnHuzSOVOeJhkbSN882hqbqowwmW8=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=jebjNoKtCS7jmesdrzmRvtboDgQ506vp1BdQaR6s9FLPQaFYlkkuGcD+L6TAICE2c
-         90WL26IpLvhIkAuXEyxKJhkU/0j71bjbFo/wOIujFvN5AztHqdF576349u7f3Yzvi7
-         3HEb7+VRii6+ApCHCw/BtRD407/Yj5r5j43AcuZLpAeudfnc1ugQ6speUVWol32XFo
-         pDO/k9rxP1QRt1bI0R0UsxNy9ymKz4X/zk93EzAGYzgM5UD0s51pnjlvid+TzsaR5Q
-         4yP4VyokNRyviXu1YzfAgALpVrvi6cqe5Qm4oxwy5EnaDYz9q5oLWHLcpAeGPhWft0
-         bnll7kj54xBxA==
-Received: by mail-ej1-f72.google.com with SMTP id k16-20020a17090632d000b006ae1cdb0f07so6484702ejk.16
-        for <linux-s390@vger.kernel.org>; Tue, 01 Mar 2022 00:49:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=i5oNvJtWT2nQMVMnHuzSOVOeJhkbSN882hqbqowwmW8=;
-        b=oKugpodLrcmH+xZFrh5M6y9/0B0KBkMqng3pe5FXfSLzuuezvt3SMiaxZVNBEeIZf5
-         To1K+T1LK73lE9PnZOTWWf/KpnBK60BkG5II6laLah/XbyaUg12pTla5pEeIFVw+N24d
-         sTeQd+6YEeZoep7mgZ50WaZRs4jWo4AxRpR5ZrD2V4ZWluWLPN5lCBBDGd7L97XM0NZM
-         ABabrjCOsn9TGj1+iD8LzlZXwrZ0qrittji4ire+jNx3vZRWZY7AXRdwj3mbzt3x2aWf
-         AapQqMin1It+JYVtzmXm+wtU+qmMWwQm6rOOhu8bJxqUNaK6tNFZbrRyfumGAkUxLflU
-         cbaw==
-X-Gm-Message-State: AOAM5300USbcIsLQZF4p1A2+M4xm3qsZoMWc31OhufDP4hY/s3ydrOL0
-        FMkc0fKPCkqmIqRK9M+4pB6/nVwEl3akhXH+MPnl/SyDMBGqXHNXdDATj8sc7gSgPilY8ovMQR8
-        KZw6vfQwEoB+z3srU8nary9c/flR2UIzbPnDoLUA=
-X-Received: by 2002:aa7:db47:0:b0:413:7649:c2bb with SMTP id n7-20020aa7db47000000b004137649c2bbmr18696641edt.123.1646124577530;
-        Tue, 01 Mar 2022 00:49:37 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz0Ji57X8BPtLBdo02/7Aw5hrJyfazNqZcwT3ns08IlVBGD/uW7vhmHoqEKLaS5kqGFV7Hlhw==
-X-Received: by 2002:aa7:db47:0:b0:413:7649:c2bb with SMTP id n7-20020aa7db47000000b004137649c2bbmr18696608edt.123.1646124577357;
-        Tue, 01 Mar 2022 00:49:37 -0800 (PST)
-Received: from [192.168.0.136] (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
-        by smtp.gmail.com with ESMTPSA id y14-20020a50eb8e000000b00410a2e7798dsm6893213edr.38.2022.03.01.00.49.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Mar 2022 00:49:36 -0800 (PST)
-Message-ID: <40d9b2ad-2f8a-42c8-54cf-b22e24d78538@canonical.com>
-Date:   Tue, 1 Mar 2022 09:49:35 +0100
+        with ESMTP id S232969AbiCAJot (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Mar 2022 04:44:49 -0500
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506543A188;
+        Tue,  1 Mar 2022 01:44:06 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=dust.li@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0V5wm1JI_1646127843;
+Received: from localhost(mailfrom:dust.li@linux.alibaba.com fp:SMTPD_---0V5wm1JI_1646127843)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 01 Mar 2022 17:44:03 +0800
+From:   Dust Li <dust.li@linux.alibaba.com>
+To:     Karsten Graul <kgraul@linux.ibm.com>,
+        Tony Lu <tonylu@linux.alibaba.com>,
+        Guangguan Wang <guangguan.wang@linux.alibaba.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: [PATCH net-next 0/7] net/smc: some datapath performance optimizations
+Date:   Tue,  1 Mar 2022 17:43:55 +0800
+Message-Id: <20220301094402.14992-1-dust.li@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.3.ge56e4f7
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3 01/11] driver: platform: Add helper for safer setting
- of driver_override
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-References: <20220228200326.GA516164@bhelgaas>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220228200326.GA516164@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 28/02/2022 21:03, Bjorn Helgaas wrote:
-> On Sun, Feb 27, 2022 at 02:52:04PM +0100, Krzysztof Kozlowski wrote:
->> Several core drivers and buses expect that driver_override is a
->> dynamically allocated memory thus later they can kfree() it.
-> 
->> +int driver_set_override(struct device *dev, const char **override,
->> +			const char *s, size_t len)
->> +{
->> +	const char *new, *old;
->> +	char *cp;
->> +
->> +	if (!dev || !override || !s)
->> +		return -EINVAL;
->> +
->> +	/* We need to keep extra room for a newline */
-> 
-> It would help a lot to extend this comment with a hint about where the
-> room for a newline is needed.  It was confusing even before, but it's
-> much more so now that the check is in a completely different file than
-> the "show" functions that need the space.
-> 
+Hi:
 
-Indeed, this needs explanation.
+This series tries to improve the performance of SMC in datapath.
+
+- patch #1, add sysctl interface to support tuning the behaviour of
+  SMC in container environment.
+
+- patch #2/#3, add autocorking support which is very efficient for small
+  messages without trade-off for latency.
+
+- patch #4, send directly on setting TCP_NODELAY, without wake up the
+  TX worker, this make it consistent with clearing TCP_CORK.
+
+- patch #5, this correct the setting of RMB window update limit, so
+  we don't send CDC messages to update peer's RMB window too frequently
+  in some cases.
+
+- patch #6, implemented something like NAPI in SMC, decrease the number
+  of hardirq when busy.
+
+- patch #7, this moves TX work doing in the BH to the user context when
+  sock_lock is hold by user.
 
 
-Best regards,
-Krzysztof
+With this patchset applied, we can get a good performance gain:
+- qperf tcp_bw test has shown a great improvement. Other benchmarks like
+  'netperf TCP_STREAM' or 'sockperf throughput' has similar result.
+- In my testing environment, running qperf tcp_bw and tcp_lat, SMC behaves
+  better then TCP in most all message size.
+
+Here are some test results with the following testing command:
+client: smc_run taskset -c 1 qperf smc-server -oo msg_size:1:64K:*2 \
+		-t 30 -vu tcp_{bw|lat}
+server: smc_run taskset -c 1 qperf
+
+==== Bandwidth ====
+ MsgSize        Origin SMC              TCP                SMC with patches
+       1         0.578 MB/s      2.392 MB/s(313.57%)      2.561 MB/s(342.83%)
+       2         1.159 MB/s      4.780 MB/s(312.53%)      5.162 MB/s(345.46%)
+       4         2.283 MB/s     10.266 MB/s(349.77%)     10.122 MB/s(343.46%)
+       8         4.668 MB/s     19.040 MB/s(307.86%)     20.521 MB/s(339.59%)
+      16         9.147 MB/s     38.904 MB/s(325.31%)     40.823 MB/s(346.29%)
+      32        18.369 MB/s     79.587 MB/s(333.25%)     80.535 MB/s(338.42%)
+      64        36.562 MB/s    148.668 MB/s(306.61%)    158.170 MB/s(332.60%)
+     128        72.961 MB/s    274.913 MB/s(276.80%)    316.217 MB/s(333.41%)
+     256       144.705 MB/s    512.059 MB/s(253.86%)    626.019 MB/s(332.62%)
+     512       288.873 MB/s    884.977 MB/s(206.35%)   1221.596 MB/s(322.88%)
+    1024       574.180 MB/s   1337.736 MB/s(132.98%)   2203.156 MB/s(283.70%)
+    2048      1095.192 MB/s   1865.952 MB/s( 70.38%)   3036.448 MB/s(177.25%)
+    4096      2066.157 MB/s   2380.337 MB/s( 15.21%)   3834.271 MB/s( 85.58%)
+    8192      3717.198 MB/s   2733.073 MB/s(-26.47%)   4904.910 MB/s( 31.95%)
+   16384      4742.221 MB/s   2958.693 MB/s(-37.61%)   5220.272 MB/s( 10.08%)
+   32768      5349.550 MB/s   3061.285 MB/s(-42.77%)   5321.865 MB/s( -0.52%)
+   65536      5162.919 MB/s   3731.408 MB/s(-27.73%)   5245.021 MB/s(  1.59%)
+==== Latency ====
+ MsgSize        Origin SMC              TCP                SMC with patches
+       1        10.540 us     11.938 us( 13.26%)         10.356 us( -1.75%)
+       2        10.996 us     11.992 us(  9.06%)         10.073 us( -8.39%)
+       4        10.229 us     11.687 us( 14.25%)          9.996 us( -2.28%)
+       8        10.203 us     11.653 us( 14.21%)         10.063 us( -1.37%)
+      16        10.530 us     11.313 us(  7.44%)         10.013 us( -4.91%)
+      32        10.241 us     11.586 us( 13.13%)         10.081 us( -1.56%)
+      64        10.693 us     11.652 us(  8.97%)          9.986 us( -6.61%)
+     128        10.597 us     11.579 us(  9.27%)         10.262 us( -3.16%)
+     256        10.409 us     11.957 us( 14.87%)         10.148 us( -2.51%)
+     512        11.088 us     12.505 us( 12.78%)         10.206 us( -7.95%)
+    1024        11.240 us     12.255 us(  9.03%)         10.631 us( -5.42%)
+    2048        11.485 us     16.970 us( 47.76%)         10.981 us( -4.39%)
+    4096        12.077 us     13.948 us( 15.49%)         11.847 us( -1.90%)
+    8192        13.683 us     16.693 us( 22.00%)         13.336 us( -2.54%)
+   16384        16.470 us     23.615 us( 43.38%)         16.519 us(  0.30%)
+   32768        22.540 us     40.966 us( 81.75%)         22.452 us( -0.39%)
+   65536        34.192 us     73.003 us(113.51%)         33.916 us( -0.81%)
+
+------------
+Test environment notes:
+1. Testing is run on 2 VMs within the same physical host
+2. The NIC is ConnectX-4Lx, using SRIOV, and passing through 2 VFs to the
+   2 VMs respectively.
+3. To decrease jitter, VM's vCPU are binded to each physical CPU, and those
+   physical CPUs are all isolated using boot parameter `isolcpus=xxx`
+4. The queue number are set to 1, and interrupt from the queue is binded to
+   CPU0 in the guest
+
+
+Dust Li (7):
+  net/smc: add sysctl interface for SMC
+  net/smc: add autocorking support
+  net/smc: add sysctl for autocorking
+  net/smc: send directly on setting TCP_NODELAY
+  net/smc: correct settings of RMB window update limit
+  net/smc: don't req_notify until all CQEs drained
+  net/smc: don't send in the BH context if sock_owned_by_user
+
+ Documentation/networking/smc-sysctl.rst |  23 +++++
+ include/net/netns/smc.h                 |   4 +
+ net/smc/Makefile                        |   2 +-
+ net/smc/af_smc.c                        |  30 ++++++-
+ net/smc/smc.h                           |   6 ++
+ net/smc/smc_cdc.c                       |  24 ++++--
+ net/smc/smc_core.c                      |   2 +-
+ net/smc/smc_sysctl.c                    |  80 ++++++++++++++++++
+ net/smc/smc_sysctl.h                    |  32 +++++++
+ net/smc/smc_tx.c                        | 107 +++++++++++++++++++++---
+ net/smc/smc_wr.c                        |  49 ++++++-----
+ 11 files changed, 317 insertions(+), 42 deletions(-)
+ create mode 100644 Documentation/networking/smc-sysctl.rst
+ create mode 100644 net/smc/smc_sysctl.c
+ create mode 100644 net/smc/smc_sysctl.h
+
+-- 
+2.19.1.3.ge56e4f7
+
