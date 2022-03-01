@@ -2,70 +2,57 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4A9C4C9D98
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Mar 2022 06:49:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5EE74C9EA3
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Mar 2022 08:53:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233570AbiCBFt4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Mar 2022 00:49:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57944 "EHLO
+        id S239911AbiCBHxm convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Wed, 2 Mar 2022 02:53:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232934AbiCBFt4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Mar 2022 00:49:56 -0500
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3604B0C69;
-        Tue,  1 Mar 2022 21:49:12 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=tonylu@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0V60zap9_1646200149;
-Received: from localhost(mailfrom:tonylu@linux.alibaba.com fp:SMTPD_---0V60zap9_1646200149)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 02 Mar 2022 13:49:10 +0800
-Date:   Wed, 2 Mar 2022 13:49:08 +0800
-From:   Tony Lu <tonylu@linux.alibaba.com>
-To:     Dust Li <dust.li@linux.alibaba.com>
-Cc:     Karsten Graul <kgraul@linux.ibm.com>, davem@davemloft.net,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net-next] net/smc: fix compile warning for smc_sysctl
-Message-ID: <Yh8FVOQZ+nPN50D+@TonyMac-Alibaba>
-Reply-To: Tony Lu <tonylu@linux.alibaba.com>
-References: <20220302034312.31168-1-dust.li@linux.alibaba.com>
+        with ESMTP id S233208AbiCBHxl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Mar 2022 02:53:41 -0500
+Received: from exmail.wanlianyida.cn (unknown [120.133.63.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED9911B7A9
+        for <linux-s390@vger.kernel.org>; Tue,  1 Mar 2022 23:52:57 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by exmail.wanlianyida.cn (Postfix) with ESMTP id 1E85C67C0D4E
+        for <linux-s390@vger.kernel.org>; Tue,  1 Mar 2022 10:15:20 +0800 (CST)
+Received: from exmail.wanlianyida.cn ([127.0.0.1])
+        by localhost (exmail.wanlianyida.cn [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id pDX43dWeAWaY for <linux-s390@vger.kernel.org>;
+        Tue,  1 Mar 2022 10:15:19 +0800 (CST)
+Received: from localhost (localhost [127.0.0.1])
+        by exmail.wanlianyida.cn (Postfix) with ESMTP id 8B88066A895A
+        for <linux-s390@vger.kernel.org>; Tue,  1 Mar 2022 08:38:14 +0800 (CST)
+X-Virus-Scanned: amavisd-new at exmail.wanlianyida.cn
+Received: from exmail.wanlianyida.cn ([127.0.0.1])
+        by localhost (exmail.wanlianyida.cn [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 5gb5Q-kWTLS3 for <linux-s390@vger.kernel.org>;
+        Tue,  1 Mar 2022 08:38:14 +0800 (CST)
+Received: from [212.193.30.241] (unknown [212.193.30.241])
+        by exmail.wanlianyida.cn (Postfix) with ESMTPSA id A8921693E880
+        for <linux-s390@vger.kernel.org>; Tue,  1 Mar 2022 08:10:25 +0800 (CST)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220302034312.31168-1-dust.li@linux.alibaba.com>
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: 
+To:     linux-s390@vger.kernel.org
+From:   globalcharity@outreach.com
+Date:   Tue, 01 Mar 2022 01:10:23 +0100
+Reply-To: info@multi-pcooperative.com
+Message-Id: <20220301001026.A8921693E880@exmail.wanlianyida.cn>
+X-Spam-Status: No, score=4.4 required=5.0 tests=BAYES_50,BODY_EMPTY,
+        LOTS_OF_MONEY,RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_L3,
+        RCVD_IN_VALIDITY_RPBL,RDNS_NONE,SPF_HELO_NONE,SPF_SOFTFAIL,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Mar 02, 2022 at 11:43:12AM +0800, Dust Li wrote:
-> Fix build:
-> 
->    In file included from net/smc/smc_sysctl.c:17:
-> >> net/smc/smc_sysctl.h:23:5: warning: no previous prototype \
-> 	for function 'smc_sysctl_init' [-Wmissing-prototypes]
->    int smc_sysctl_init(void)
->        ^
-> 
-> and
-> 
-> >> WARNING: modpost: vmlinux.o(.text+0x12ced2d): Section mismatch \
-> in reference from the function smc_sysctl_exit() to the variable
-> .init.data:smc_sysctl_ops
-> The function smc_sysctl_exit() references
-> the variable __initdata smc_sysctl_ops.
-> This is often because smc_sysctl_exit lacks a __initdata
-> annotation or the annotation of smc_sysctl_ops is wrong.
-> 
-> Fixes: 462791bbfa35 ("net/smc: add sysctl interface for SMC")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Dust Li <dust.li@linux.alibaba.com>
-
-Thanks for the fixing.
-
-Reviewed-by: Tony Lu <tonylu@linux.alibaba.com>
+Your e-mail linux-s390@vger.kernel.org was selected. You have been granted a donation of $820,000.00 from
+Lyda Hill charity project. Contact us for more details.
+Thank you.
