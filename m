@@ -2,102 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92DE14C9179
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Mar 2022 18:28:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F266E4C9362
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Mar 2022 19:38:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235961AbiCAR3J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Mar 2022 12:29:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44392 "EHLO
+        id S235652AbiCASjA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Mar 2022 13:39:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231172AbiCAR3I (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Mar 2022 12:29:08 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B6F021BF
-        for <linux-s390@vger.kernel.org>; Tue,  1 Mar 2022 09:28:27 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id c18-20020a7bc852000000b003806ce86c6dso1664487wml.5
-        for <linux-s390@vger.kernel.org>; Tue, 01 Mar 2022 09:28:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=Y86hBfPWj9E4aTo+XMBrAu6Y5p4SQMawkPD4Q/SuKPY=;
-        b=ifR445Ptk0kZIwyK/iR5LauUeexT4h+Xm5fWIS9UfHsJTwIXI+TBUH0b1B1nklV58Q
-         e3posB9tDmWAuXNqOByYa8OEIeuEgFpyIkDoWKkxe1RAiCnFE6ZEzQVCpMvS62fGzNFV
-         nWcw5JV2lmoD9jxvmDMFuNVsgy/NwYWUQ6a0I1zB2e5jSr3/JFEIp9xW/NRIDhtT+/y6
-         uvAB7/5ZICC2qcmaHb2EAlpVYU+L8My5syB7aELi6iajmzjea09g2vNncJq3GY6hv/nP
-         g2d17hu4ZYUIRYCXpyuRUhAY/Kr9r3k7MyrtDEVfLOZZZFWPJ239r6w7DpTzLNolCHHw
-         A62A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=Y86hBfPWj9E4aTo+XMBrAu6Y5p4SQMawkPD4Q/SuKPY=;
-        b=3wngFEV/oDvKsR+Hnq2IGCcJy41NoN6i/wE7oSrAT1Q62fSqM4GYSR2ydjUdQanyP+
-         N41TpTLTfKW9gGNNYxkbRtAenwSOkrTmZb2PpR65SjSzKBZdOID7CzgtawwU5+WsAwMa
-         5jBcD0O0oFCByCz80TNVqM7KXEsAD21M1GulKZEtJvehhT52WtA1TEj4SYrZd0N2l3q6
-         CkAmnBd52KNvHaFESn1QwEUzhU96RF2WFP3eX4diYO7r5lgKzHbZ4/IsUDp5f8sdq1r4
-         Y395/uuswwfzuNkRKLyEyVTA9VenendfAzmJmsSV3aP9WSz0aDscV2hLJ0VsDWSdRjjB
-         1nlA==
-X-Gm-Message-State: AOAM532KzOnQtIfRdJPL7JFhg2+Aeaf2MO7UevWISGO/o8FmoQWsrVNh
-        MieEq9QkYhpnmM51kSQKByJyPw==
-X-Google-Smtp-Source: ABdhPJyP4zzjkBPeDrhk1IU4HHA4Z4mVRSeyWw7DiZ4BmjKx+FbF6/CkwhxttMvqrC0XO+mqNoqKvQ==
-X-Received: by 2002:a05:600c:a4b:b0:37b:ea2b:5583 with SMTP id c11-20020a05600c0a4b00b0037bea2b5583mr18173339wmq.139.1646155705687;
-        Tue, 01 Mar 2022 09:28:25 -0800 (PST)
-Received: from [192.168.86.34] (cpc90716-aztw32-2-0-cust825.18-1.cable.virginm.net. [86.26.103.58])
-        by smtp.googlemail.com with ESMTPSA id c4-20020adfed84000000b001e5b8d5b8dasm20457807wro.36.2022.03.01.09.28.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Mar 2022 09:28:24 -0800 (PST)
-Message-ID: <5f481315-021c-39d6-8c6c-91918851ab13@linaro.org>
-Date:   Tue, 1 Mar 2022 17:28:22 +0000
+        with ESMTP id S237000AbiCASi6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Mar 2022 13:38:58 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49B8A36E07;
+        Tue,  1 Mar 2022 10:38:16 -0800 (PST)
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 221Hg2I0022688;
+        Tue, 1 Mar 2022 18:38:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=vv//N4II9hD10oM0jtbVJL3G0F/p5Xd+VTz9zzm9cJM=;
+ b=SRQzJvP6NLa7N1X0g5Rwgr1dOzkZ60HWi89YH1YspyqJqbrSoNDscn2jw2DtA7RzhUA7
+ NTrxXhaFXuYgbdxwsVxjEHeRvU/AUCQWNUIt0dGV66enivqQsCQnHH/GdGjfe0poC+Ji
+ d0lENnHYBuS4/CUuASydPrIVaZgjq/8VniFvxFs0A6cstCEoueuxKHp/BMghb7af8WUN
+ kATuZCF9ykqsQGr/HiCYdXbKE+VdQV0pcihiqQip5XeWHD2nFJ9M8c5ABxmaq8ijX6xO
+ x/T2c6JziUeQkfn+kZrggeJkk5ZbKqJ/4UAiiTliQqsHkALAszcdPEfRCCiMx2jcChs6 GQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3ehr421ab5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Mar 2022 18:38:15 +0000
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 221IRGjb018860;
+        Tue, 1 Mar 2022 18:38:15 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3ehr421aae-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Mar 2022 18:38:15 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 221IRkiA004362;
+        Tue, 1 Mar 2022 18:38:13 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 3efbu9cgfm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Mar 2022 18:38:13 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 221Ic4Ao53805564
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Mar 2022 18:38:04 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B05B64C040;
+        Tue,  1 Mar 2022 18:38:04 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F2404C044;
+        Tue,  1 Mar 2022 18:38:04 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.5.37])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  1 Mar 2022 18:38:04 +0000 (GMT)
+Date:   Tue, 1 Mar 2022 18:32:36 +0100
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@linux.ibm.com
+Subject: Re: [PATCH 3/9] KVM: s390: pv: Add query interface
+Message-ID: <20220301183236.742e749b@p-imbrenda>
+In-Reply-To: <b2fd362a-eefa-8fa7-1016-55bedd3fa6ee@redhat.com>
+References: <20220223092007.3163-1-frankja@linux.ibm.com>
+        <20220223092007.3163-4-frankja@linux.ibm.com>
+        <b2fd362a-eefa-8fa7-1016-55bedd3fa6ee@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v3 10/11] slimbus: qcom-ngd: Fix kfree() of static memory
- on setting driver_override
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stuart Yoder <stuyoder@gmail.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Andy Gross <agross@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>, stable@vger.kernel.org
-References: <20220227135214.145599-1-krzysztof.kozlowski@canonical.com>
- <20220227135329.145862-4-krzysztof.kozlowski@canonical.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <20220227135329.145862-4-krzysztof.kozlowski@canonical.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: C7NAi_3PHdS0D7PnWkce9ylhNr3ZzBfM
+X-Proofpoint-GUID: 7JjnqGIsTkbVlPMLhrAr-YJHdkCxrtDK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-03-01_07,2022-02-26_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ clxscore=1015 adultscore=0 phishscore=0 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2201110000 definitions=main-2203010093
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -106,55 +95,139 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Wed, 23 Feb 2022 12:30:36 +0100
+Thomas Huth <thuth@redhat.com> wrote:
 
+> On 23/02/2022 10.20, Janosch Frank wrote:
+> > Some of the query information is already available via sysfs but
+> > having a IOCTL makes the information easier to retrieve.
 
-On 27/02/2022 13:53, Krzysztof Kozlowski wrote:
-> The driver_override field from platform driver should not be initialized
-> from static memory (string literal) because the core later kfree() it,
-> for example when driver_override is set via sysfs.
+why not exporting this via sysfs too?
+
+something like a sysfs file called "query_ultravisor_information_raw"
+
+that way you don't even have a problem with sizes
+
+> > 
+> > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> > ---
+> >   arch/s390/kvm/kvm-s390.c | 47 ++++++++++++++++++++++++++++++++++++++++
+> >   include/uapi/linux/kvm.h | 23 ++++++++++++++++++++
+> >   2 files changed, 70 insertions(+)
+> > 
+> > diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> > index faa85397b6fb..837f898ad2ff 100644
+> > --- a/arch/s390/kvm/kvm-s390.c
+> > +++ b/arch/s390/kvm/kvm-s390.c
+> > @@ -2217,6 +2217,34 @@ static int kvm_s390_cpus_to_pv(struct kvm *kvm, u16 *rc, u16 *rrc)
+> >   	return r;
+> >   }
+> >   
+> > +static int kvm_s390_handle_pv_info(struct kvm_s390_pv_info *info)
+> > +{
+> > +	u32 len;
+> > +
+> > +	switch (info->header.id) {
+> > +	case KVM_PV_INFO_VM: {
+> > +		len =  sizeof(info->header) + sizeof(info->vm);
+> > +
+> > +		if (info->header.len < len)
+> > +			return -EINVAL;
+> > +
+> > +		memcpy(info->vm.inst_calls_list,
+> > +		       uv_info.inst_calls_list,
+> > +		       sizeof(uv_info.inst_calls_list));
+> > +
+> > +		/* It's max cpuidm not max cpus so it's off by one */
+> > +		info->vm.max_cpus = uv_info.max_guest_cpu_id + 1;
+> > +		info->vm.max_guests = uv_info.max_num_sec_conf;
+> > +		info->vm.max_guest_addr = uv_info.max_sec_stor_addr;
+> > +		info->vm.feature_indication = uv_info.uv_feature_indications;
+> > +
+> > +		return 0;
+> > +	}
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> > +
+> >   static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
+> >   {
+> >   	int r = 0;
+> > @@ -2353,6 +2381,25 @@ static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
+> >   			     cmd->rc, cmd->rrc);
+> >   		break;
+> >   	}
+> > +	case KVM_PV_INFO: {
+> > +		struct kvm_s390_pv_info info = {};
+> > +
+> > +		if (copy_from_user(&info, argp, sizeof(info.header)))
+> > +			return -EFAULT;
+> > +
+> > +		if (info.header.len < sizeof(info.header))
+> > +			return -EINVAL;
+> > +
+> > +		r = kvm_s390_handle_pv_info(&info);
+> > +		if (r)
+> > +			return r;
+> > +
+> > +		r = copy_to_user(argp, &info, sizeof(info));  
 > 
-> Use dedicated helper to set driver_override properly.
+> sizeof(info) is currently OK ... but this might break if somebody later 
+> extends the kvm_s390_pv_info struct, I guess? ==> Maybe also better use 
+> sizeof(info->header) + sizeof(info->vm) here, too? Or let 
+> kvm_s390_handle_pv_info() return the amount of bytes that should be copied here?
 > 
-> Fixes: 917809e2280b ("slimbus: ngd: Add qcom SLIMBus NGD driver")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-
-LGTM,
-
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
-> ---
->   drivers/slimbus/qcom-ngd-ctrl.c | 13 ++++++++++++-
->   1 file changed, 12 insertions(+), 1 deletion(-)
+>   Thomas
 > 
-> diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
-> index 7040293c2ee8..e5d9fdb81eb0 100644
-> --- a/drivers/slimbus/qcom-ngd-ctrl.c
-> +++ b/drivers/slimbus/qcom-ngd-ctrl.c
-> @@ -1434,6 +1434,7 @@ static int of_qcom_slim_ngd_register(struct device *parent,
->   	const struct of_device_id *match;
->   	struct device_node *node;
->   	u32 id;
-> +	int ret;
->   
->   	match = of_match_node(qcom_slim_ngd_dt_match, parent->of_node);
->   	data = match->data;
-> @@ -1455,7 +1456,17 @@ static int of_qcom_slim_ngd_register(struct device *parent,
->   		}
->   		ngd->id = id;
->   		ngd->pdev->dev.parent = parent;
-> -		ngd->pdev->driver_override = QCOM_SLIM_NGD_DRV_NAME;
-> +
-> +		ret = driver_set_override(&ngd->pdev->dev,
-> +					  &ngd->pdev->driver_override,
-> +					  QCOM_SLIM_NGD_DRV_NAME,
-> +					  strlen(QCOM_SLIM_NGD_DRV_NAME));
-> +		if (ret) {
-> +			platform_device_put(ngd->pdev);
-> +			kfree(ngd);
-> +			of_node_put(node);
-> +			return ret;
-> +		}
->   		ngd->pdev->dev.of_node = node;
->   		ctrl->ngd = ngd;
->   
+> 
+> > +		if (r)
+> > +			return -EFAULT;
+> > +		return 0;
+> > +	}
+> >   	default:
+> >   		r = -ENOTTY;
+> >   	}
+> > diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> > index dbc550bbd9fa..96fceb204a92 100644
+> > --- a/include/uapi/linux/kvm.h
+> > +++ b/include/uapi/linux/kvm.h
+> > @@ -1642,6 +1642,28 @@ struct kvm_s390_pv_unp {
+> >   	__u64 tweak;
+> >   };
+> >   
+> > +enum pv_cmd_info_id {
+> > +	KVM_PV_INFO_VM,
+> > +};
+> > +
+> > +struct kvm_s390_pv_info_vm {
+> > +	__u64 inst_calls_list[4];
+> > +	__u64 max_cpus;
+> > +	__u64 max_guests;
+> > +	__u64 max_guest_addr;
+> > +	__u64 feature_indication;
+> > +};
+> > +
+> > +struct kvm_s390_pv_info_header {
+> > +	__u32 id;
+> > +	__u32 len;
+> > +};
+> > +
+> > +struct kvm_s390_pv_info {
+> > +	struct kvm_s390_pv_info_header header;
+> > +	struct kvm_s390_pv_info_vm vm;
+> > +};
+> > +
+> >   enum pv_cmd_id {
+> >   	KVM_PV_ENABLE,
+> >   	KVM_PV_DISABLE,
+> > @@ -1650,6 +1672,7 @@ enum pv_cmd_id {
+> >   	KVM_PV_VERIFY,
+> >   	KVM_PV_PREP_RESET,
+> >   	KVM_PV_UNSHARE_ALL,
+> > +	KVM_PV_INFO,
+> >   };
+> >   
+> >   struct kvm_pv_cmd {  
+> 
+
