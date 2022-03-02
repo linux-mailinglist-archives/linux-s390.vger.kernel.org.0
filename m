@@ -2,75 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71E5D4CA5F0
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Mar 2022 14:25:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1045A4CA63E
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Mar 2022 14:45:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242197AbiCBN0J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Mar 2022 08:26:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59946 "EHLO
+        id S242329AbiCBNqH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Mar 2022 08:46:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242180AbiCBN0B (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Mar 2022 08:26:01 -0500
-Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE6222DE7;
-        Wed,  2 Mar 2022 05:25:17 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0V631sQn_1646227514;
-Received: from localhost(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0V631sQn_1646227514)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 02 Mar 2022 21:25:15 +0800
-From:   "D. Wythe" <alibuda@linux.alibaba.com>
-To:     kgraul@linux.ibm.com
-Cc:     kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: [PATCH net v3 2/2] net/smc: fix unexpected SMC_CLC_DECL_ERR_REGRMB error cause by server
-Date:   Wed,  2 Mar 2022 21:25:12 +0800
-Message-Id: <a495b3c6d6cb8002a7a0e73da9b83720b9819e3a.1646227183.git.alibuda@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1646227183.git.alibuda@linux.alibaba.com>
-References: <cover.1646227183.git.alibuda@linux.alibaba.com>
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S236210AbiCBNqH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Mar 2022 08:46:07 -0500
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E6D625C84A;
+        Wed,  2 Mar 2022 05:45:23 -0800 (PST)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 6DD9192009C; Wed,  2 Mar 2022 14:45:22 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 6929692009B;
+        Wed,  2 Mar 2022 13:45:22 +0000 (GMT)
+Date:   Wed, 2 Mar 2022 13:45:22 +0000 (GMT)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     Icenowy Zheng <icenowy@aosc.io>
+cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] parport_pc: Also enable driver for PCI systems
+In-Reply-To: <8e799cadb1104714f998fe74e40b3cb052c9c1ed.camel@aosc.io>
+Message-ID: <alpine.DEB.2.21.2203021337430.58475@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2202141955550.34636@angie.orcam.me.uk> <8e799cadb1104714f998fe74e40b3cb052c9c1ed.camel@aosc.io>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: "D. Wythe" <alibuda@linux.alibaba.com>
+On Wed, 2 Mar 2022, Icenowy Zheng wrote:
 
-The problem of SMC_CLC_DECL_ERR_REGRMB on the server is very clear.
-Based on the fact that whether a new SMC connection can be accepted or
-not depends on not only the limit of conn nums, but also the available
-entries of rtoken. Since the rtoken release is trigger by peer, while
-the conn nums is decrease by local, tons of thing can happen in this
-time difference.
+> > The only PCI platforms that actually can't make use of PC-style
+> > parallel 
+> > port hardware are those newer PCIe systems that have no support for
+> > I/O 
+> > cycles in the host bridge, required by such parallel ports.  Notably,
+> > this includes the s390 arch, which has port I/O accessors that cause 
+> > compilation warnings (promoted to errors with `-Werror'), and there
+> > are 
+> > other cases such as the POWER9 PHB4 device, though this one has
+> > variable 
+> > port I/O accessors that depend on the particular system.  Also it is
+> > not 
+> > clear whether the serial port side of devices enabled by
+> > PARPORT_SERIAL 
+> > uses port I/O or MMIO.  Finally Super I/O solutions are always either
+> > ISA or platform devices.
+> 
+> Just spot this patch in linux-riscv mailing list, I think there's a
+> pending patchset that tries to add a HAS_IOPORT Kconfig option, which
+> can be used in this situation.
 
-This only thing that needs to be mentioned is that now all connection
-creations are completely protected by smc_server_lgr_pending lock, it's
-enough to check only the available entries in rtokens_used_mask.
+ Thanks for your input.
 
-Fixes: cd6851f30386 ("smc: remote memory buffers (RMBs)")
-Signed-off-by: D. Wythe <alibuda@linux.alibaba.com>
----
- net/smc/smc_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ That has been actually discussed already with a conclusion that more work 
+is required to have HAS_IOPORT supported, see the thread starting from: 
+<https://lore.kernel.org/lkml/CAMuHMdW-utcFzCZTgqONjxs=U662nF0=aBQu7Zi7FBQouwiA3g@mail.gmail.com/>. 
+(there's a reference to the HAS_IOPORT patchset there as well).  Once that 
+has been sorted configuration conditions for the parport driver can be 
+updated accordingly.  For the time being the !S390 qualification should 
+do.
 
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index f8c9675..be7d704 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -1864,7 +1864,8 @@ int smc_conn_create(struct smc_sock *smc, struct smc_init_info *ini)
- 		    (ini->smcd_version == SMC_V2 ||
- 		     lgr->vlan_id == ini->vlan_id) &&
- 		    (role == SMC_CLNT || ini->is_smcd ||
--		     lgr->conns_num < SMC_RMBS_PER_LGR_MAX)) {
-+		    (lgr->conns_num < SMC_RMBS_PER_LGR_MAX &&
-+		      !bitmap_full(lgr->rtokens_used_mask, SMC_RMBS_PER_LGR_MAX)))) {
- 			/* link group found */
- 			ini->first_contact_local = 0;
- 			conn->lgr = lgr;
--- 
-1.8.3.1
-
+  Maciej
