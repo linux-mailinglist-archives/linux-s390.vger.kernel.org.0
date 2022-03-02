@@ -2,232 +2,198 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 440AC4CA501
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Mar 2022 13:42:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 940394CA5B8
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Mar 2022 14:17:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240996AbiCBMml (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Mar 2022 07:42:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46186 "EHLO
+        id S242116AbiCBNRL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Mar 2022 08:17:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238642AbiCBMmk (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Mar 2022 07:42:40 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CEAA73045;
-        Wed,  2 Mar 2022 04:41:57 -0800 (PST)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 222AIHUg003459;
-        Wed, 2 Mar 2022 12:41:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : to : cc : references : from : subject : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=j11LOEfAbvM6kmd46EEE+Z62P+2rjl6afIvhldeQHgo=;
- b=tHF3WVmNB/1XnYJfrkeqYVP1YcpJPZudzXmmBBy/zxJLuEZtnHK8PxsJHsTfJ8rneDFL
- Vbv74DXlG8oO8PFMtZLQ8fXaKif6l/qRmbu5pee+DHfmjgBXtFavO7HFuaVejHMopXpu
- WgwyRgCyN2WuXD4k/do1T/NCeJdg/IZTqvlqM7rszddso/F91s7lsqUWSmRoXR82f8uo
- 18R9cEaA3MFAhSljXw7bJnIpIkw+q9OMV8W+H8e6GIcao9uaYt0cFlms0zJOHxsWXr/0
- uKH6qL4Zcl6vTNv1yXjEHnlICFzfPI+XRgQGELEeI6KvpJDlcRsv2yE8EkIoVZK9IeHK ew== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3ej6q9m0xt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Mar 2022 12:41:56 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 222CdE69024003;
-        Wed, 2 Mar 2022 12:41:56 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3ej6q9m0x6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Mar 2022 12:41:56 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 222CWn2M010610;
-        Wed, 2 Mar 2022 12:41:54 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma03ams.nl.ibm.com with ESMTP id 3efbu9eq78-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Mar 2022 12:41:54 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 222CfnTX50397692
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Mar 2022 12:41:49 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A016952052;
-        Wed,  2 Mar 2022 12:41:49 +0000 (GMT)
-Received: from [9.145.51.38] (unknown [9.145.51.38])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5AA6E52050;
-        Wed,  2 Mar 2022 12:41:49 +0000 (GMT)
-Message-ID: <97e0d095-d839-ff74-dbc7-a10c84ded071@linux.ibm.com>
-Date:   Wed, 2 Mar 2022 13:41:48 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
+        with ESMTP id S242112AbiCBNRJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Mar 2022 08:17:09 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0910C4297;
+        Wed,  2 Mar 2022 05:16:19 -0800 (PST)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 222CTDQM017661;
+        Wed, 2 Mar 2022 13:15:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=+H8jEbxRAjH5LJGh19NFnoJv1mnvS0Fd8stoMxTA0w0=;
+ b=sGVPTxIXrSbagJ6ynSSDe816afmmTUjiMiZbnKewSSIpJkSoge6xG7EHhHCPgSidbgpG
+ vy9fLOYAgrIbJlZ3WThbY1UyLw86tr1NTwwQLU/Q6GjO/6jXhqTH2Kk2QEAWSPWZc7pr
+ DYAxABYfQCSLm9dGK5z+vOyKao+ColXnRe/UK1m7SVW5y1IwfBa1C8uzi4ohVaRmNQaD
+ CEMNz8tJ1tpqvReQOy1MQbD8DBrk5UIw68/+c+i2mQOYkO0EcMh83nN2Ka2Joys2rDmU
+ IsHaqAW1Z4liia9hOoIRI8ScirCJ9XYd5PcFmZUhfN8u0pPRmKUUgno+cCLigFz2k/yB GQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3eh15anmgj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Mar 2022 13:15:14 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 222Cq3wi138590;
+        Wed, 2 Mar 2022 13:15:13 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2102.outbound.protection.outlook.com [104.47.58.102])
+        by userp3030.oracle.com with ESMTP id 3ef9b0vcbr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Mar 2022 13:15:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kgHvmPUaOKjmTgFDRNyH2JK/nxIxKkD4elHWKwQzktzYLmilMNAijcf33DQQKQboEe07+iBVmL1MGbCLbJZlx3aZXjtbwmFKEoACvzg8YbahcPIE7FxRitBNV+KiWD34U7mYc5clIeXbd9rWfC8ESwhp9s9lbwKIrf8Y6OJ6IRXs566pG2Lsm5mhhsSCpLnEhUTD5vE/5IHLNdArFBlxN097/VAVLhnsR7wqfanCDgr8hU1dlCaZfeJIgOn06RHOqqoct/IJ89PUSA+7xbHF5NIgjdRJU3eyJzapVGbiI9ZIWp3almvhuQy5CTVIPO7S0IhGeFwMYTlKkaaCd0TcNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+H8jEbxRAjH5LJGh19NFnoJv1mnvS0Fd8stoMxTA0w0=;
+ b=YamrgLVX9B/qDq9QzF6II8wlZNthJKbW5iq53COtqYiKrf0HrhczdS3GUOwEHGNuw1wuUXG09BDIRYnB+Rx+5/RfiVASEFCd0JFbNPnPDJtHTEkZzT9fdnQHIUKTA86ouTSqUS7MxVFXQrpCMcUOLCujcX/uKEAbYbZ8fNrtZpUAzVKBXSmcCZNzPoqZelLCVA6se8VX7b0y8Y95bZz+ycb3+82QmPMqtQoTtOdrAI39CoABSuXcfLpcDBW9Ojbiovsz5qyACOrqLkmrWEscr+0V2slJMTUWMb/1R1gdfDs89mwQYFyJO4WY74wYO5ARLaztGM8UpRhz0zvBwWYMJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+H8jEbxRAjH5LJGh19NFnoJv1mnvS0Fd8stoMxTA0w0=;
+ b=xWpNRvFCMKQ+b7r+RN5bpz74Dv63CfBbIf5apoeBrlba9WYOtJvPEmZt911JQ/HoMTtAaZamyB/xb5VID0ghzq7PaGjs4cx1ivaDw6RjirQaH8PPg6U1qBuygmIv0TK/8eMScWB9rcnmB4/nQAEbGkhtkaGRvmlhTgOQwjmHveE=
+Received: from BLAPR10MB5009.namprd10.prod.outlook.com (2603:10b6:208:321::10)
+ by SJ0PR10MB5533.namprd10.prod.outlook.com (2603:10b6:a03:3f7::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Wed, 2 Mar
+ 2022 13:15:10 +0000
+Received: from BLAPR10MB5009.namprd10.prod.outlook.com
+ ([fe80::6d20:6694:a16:56f7]) by BLAPR10MB5009.namprd10.prod.outlook.com
+ ([fe80::6d20:6694:a16:56f7%3]) with mapi id 15.20.5038.015; Wed, 2 Mar 2022
+ 13:15:10 +0000
+Message-ID: <ca748512-12bb-7d75-13f1-8d5ec9703e26@oracle.com>
+Date:   Wed, 2 Mar 2022 08:15:03 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.6.1
+Subject: Re: [PATCH 11/12] swiotlb: merge swiotlb-xen initialization into
+ swiotlb
 Content-Language: en-US
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, david@redhat.com,
-        borntraeger@linux.ibm.com
-References: <20220223092007.3163-1-frankja@linux.ibm.com>
- <20220223092007.3163-4-frankja@linux.ibm.com>
- <20220302130425.0bfa0c2e@p-imbrenda>
-From:   Janosch Frank <frankja@linux.ibm.com>
-Subject: Re: [PATCH 3/9] KVM: s390: pv: Add query interface
-In-Reply-To: <20220302130425.0bfa0c2e@p-imbrenda>
+To:     Stefano Stabellini <sstabellini@kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org, x86@kernel.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
+References: <20220301105311.885699-1-hch@lst.de>
+ <20220301105311.885699-12-hch@lst.de>
+ <alpine.DEB.2.22.394.2203011720150.3261@ubuntu-linux-20-04-desktop>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+In-Reply-To: <alpine.DEB.2.22.394.2203011720150.3261@ubuntu-linux-20-04-desktop>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: S5-oYgZtSOSnNxTojNUFIqUnUPT3Nhbo
-X-Proofpoint-GUID: EwSkhF_Hv5M66iZmGfnyqOwLkyQw64Yv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-03-02_06,2022-02-26_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 clxscore=1015 bulkscore=0 spamscore=0
- adultscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2203020054
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-ClientProxiedBy: BY5PR03CA0004.namprd03.prod.outlook.com
+ (2603:10b6:a03:1e0::14) To BLAPR10MB5009.namprd10.prod.outlook.com
+ (2603:10b6:208:321::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 57f1c317-ff3a-4cac-829f-08d9fc4eadcf
+X-MS-TrafficTypeDiagnostic: SJ0PR10MB5533:EE_
+X-Microsoft-Antispam-PRVS: <SJ0PR10MB55333F6B5F5D9371D60982E78A039@SJ0PR10MB5533.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4KJwB9SxCqeLlNQ1Y5kvptorXPIyjzEcwrSw5cMQq4WMGQJNjONg5U4YwqywH3QNElFsQyzE9fDKUvmAFN9eU9jHUA09tJ03eaOHSVl8fLNVzzvhsHDfrk+Xz3sR1h+HGXY7EGF2FS/kILknpvbJavcAcm0nh1qQPE2x/vR/bK8/JlJTPfmDN5FA41H1UBElCjyklbo47P9mqTmvsf2/hZHdelU/U54wobNjybfIYwGOg2BTmP6L9TbRgk6lVBA6cPciiQURffcd0BfHVUIjRwl0TVykSnQ4SKortEMCHF/zt20qc4HUImJQmHhESafU7+m22MUWi3xdzmE2lu9tAl2rtsd6qEPf/JOdO537yBgqeImvORAOz4c0wP23wFtJID/9GR7oGbEPpmDba0G8ulotrUaFlaxvbU4CP8zoOsS74WsUfxYZL1xtNV8g3T4WcXEDz7Fd7MinctXAi8zLZMT5dKQlub7eZoUyqeqXiQJJN+XoVJWG/9zXONQEi544F4OJQFgRtrrckNdgSMcmM+kQH9vSb819Vxw7Q3I86ljT3ZBGezuYvE0zIKvjGdCCLp4CDtBVuy2wRH01e19ig5eQmgH8JHco5Kow6kb6x2+dS6lIJcK1yq6SDCA6crwtD5RnEKTQ9gC+c33149RAVdmASQLiimsze/lwtVAUzn4GUOah0nDN9AoH2Aj5iEt9pVIAB1qD8mkLf39IQt/CioRbyUd9Gf9FVpiCD272Ipk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5009.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(26005)(186003)(110136005)(6512007)(53546011)(2906002)(6506007)(2616005)(86362001)(38100700002)(31696002)(54906003)(6666004)(44832011)(4744005)(4326008)(5660300002)(31686004)(8936002)(508600001)(36756003)(6486002)(66556008)(66946007)(66476007)(316002)(7416002)(8676002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Vk03Vk5LOC9NN29RTmV1SStZYWVzYlVVWlhEQ2loT1ZKQmhJZzRRYW42SlUr?=
+ =?utf-8?B?elAzemVjcjJrMS9qN3ZwQ0o1bzhKTUM3a0hoVDZHL0x2c25yQ3g0cXFxeVhl?=
+ =?utf-8?B?c0NSWHlrTkh6NUY2MWNmSFlKOEtqSUNuMENzcnA3QkdlYi9ydjJpazk1SGxW?=
+ =?utf-8?B?dlFKQkYxUW9jRmVhMU9CRHlVaXQ4MG9hZ2pVbWZwQjdNTERBTWNzSTFkbjVX?=
+ =?utf-8?B?bk1rTTZBOEwrb01HUjhWUThTUC9SMjVJalNXblFWUmZzSlBpbHZJVnpLNHFM?=
+ =?utf-8?B?bWJpWkVYNnl1Mkp0cmozUlBrQUhlQnNjTFFrMXJzZHo0ZU1BSkhCTVpjTGFN?=
+ =?utf-8?B?ZFZRN25QaGFWZGVTeG5vVjJ4TVc4dmtyR0d2eXdLTXd6TDRtNHliN0dwbFBG?=
+ =?utf-8?B?d2pKTnczRlQrV0NRMSt1Q1dySjI3SzZMK21pOUJVUG5SL1IrVkc4NCtmdFBC?=
+ =?utf-8?B?TnBsMzFqZFh5K25xTUx0RW9NSmhrK1N2RDh0L282a2VNYzdYWnJtZFA2RzJL?=
+ =?utf-8?B?K2hFWklHZURBMEdhMkVuWEw0ZFFyMUhqL2JRMzcwNzY2SlJ5VnBDcG5QeC9x?=
+ =?utf-8?B?ZjFnRmY0dWUzZ0RmRk5XTUhnTW1yNWh3RERvUUw2TWRQc0NuaTFFdTJnclYz?=
+ =?utf-8?B?Slo5WXNreWFaa1ZHM3RjOE5WWEFreVJMRzI5NTNlQTZRTEhISElMSEdRWnBa?=
+ =?utf-8?B?dG9kN1NtcVVqaDJOUFcwNXVNS1pXOVZrTC9SZjBuMVJXVjBtMXZ2Nm5GcFZa?=
+ =?utf-8?B?Z3RSb24zSTYzbm1UcjFWcW9wWlpxVWx6b3lxbUhvdE1SVkIxNnpjU29PS25D?=
+ =?utf-8?B?d0VKdmlEOWRCTitQbVRXZ3FMTGxNQTZPTlJFOU10RndzelFnV011UStBbTJ6?=
+ =?utf-8?B?bHErWEh6VlZMUFJRWnV2QnBwc2pJTmZsWHNLdWxiNUFuV2w4UHZxQkFIOEpS?=
+ =?utf-8?B?aW1WODBsd1pGRis2bUd1R1RZTy95b2hrUktmais2eUNXS3BpSUh0aW5MWkFK?=
+ =?utf-8?B?K0svR2xpMzNvdTN0RnVFdDE4bFRSNXpPTDdUODlDVXBaaGdFaWV5aXdPTWVE?=
+ =?utf-8?B?Vkk4NzlsdG5PU05MVnN1T2pnZnJJaU1QeVFYT01DTTBBT3hqQW5KaWpQQ0pX?=
+ =?utf-8?B?M2kyNzczdEk0QTVIK0pkK25JZnp5Tjc1QWo4SHhQeU93QnFLR3kyQVpqN3Uv?=
+ =?utf-8?B?N1RQbTluYWVXcWhLK0JEWHo0UStoSmtOdTJlMnFkM01sbDAwdFYxSFdVQTRo?=
+ =?utf-8?B?MkcreEFJbFZmNjRUdWhRTVFyTjA3aFR3Z1FkZ3dRcDh3L2VyUlRUZ2ZFYWtv?=
+ =?utf-8?B?RmxiRU02bTRPMzI0V2R0RVorU0VhOGVZY1E1K2twWXlIdTFXeFZ5RFowbEZm?=
+ =?utf-8?B?dTZnUC9XTFdHUUNBbTdEaUowYmJzSXBEZ20vSWVHdnhqWWIyOFZ5WFZFeDhs?=
+ =?utf-8?B?NXFueXdWUGdkRzFxblRjK01nb3FOYnl0K0VMVGpUYkVRclNrM29zc3Y4eE16?=
+ =?utf-8?B?YjNJKzBxTTZQa2ZDMWlyMEVzejVqaEhuQTBBVnVVZ0VVdmJJdXJqTmwvem9P?=
+ =?utf-8?B?Wk83YVl2QmJYZk9YTVZWY2NlV0l0YThCd09Wb1ZYVlR5MjhaRytKcWlnUDNF?=
+ =?utf-8?B?eHAyays0TC9TVm1Pa2FUdTZMaXNJS2FSSnhpYmFrbjlzaWNlQjVPWkoxdEto?=
+ =?utf-8?B?b0RSRElHRnBCTlRydURXamJ0TTZzajI4OGRrc0FySStPVnRMUEtRdkRNVUIv?=
+ =?utf-8?B?OWQvK1ZnNDRFVXEwdy9vRFFIb04xeU9RS2YrZUVZRWNSSFZSN1h4RVdHamli?=
+ =?utf-8?B?cUkwQkxaeGUxT0g4Y3NyNDM2RkJsYTdHbEZ0d3lXUkgySkdMRC94YzhRT1A1?=
+ =?utf-8?B?YWNuVHRTbWhOcjdIUmExckxtdnlIUmpZTmJGWTdjYnJVR3czMGp5ZE9qdlgw?=
+ =?utf-8?B?YTV2d0EybXA2MWhTbHFlMDhvWCtOR1ZaV29tN2NuRXo3LzBlYUsvams5dUU0?=
+ =?utf-8?B?Y3hUblIxeDN0cGlKaW9XY3ZUd0VNZmh3NTRoMUJkY29tTHZPTzNsbEh3OUpM?=
+ =?utf-8?B?MUtERHBla3ZnNjdlWit0K0VzSjJUM3NUNkpwTndXVXA0K3ArNVdESWFnU1BW?=
+ =?utf-8?B?Z1J0T0QvQll0OXFNa091cWo5cmkwQlFCaHBrYTVBSWlvZXZ0UldodnNtMlB5?=
+ =?utf-8?B?bm16bUorTE9zbWxjOEpjYWdGWTZSUm5yc25nK2dnUHEyb2lpMGN1RGdqUUdT?=
+ =?utf-8?B?SEdyWHl2Y2NqN0kyT0U3T1lKcXFRPT0=?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57f1c317-ff3a-4cac-829f-08d9fc4eadcf
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5009.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Mar 2022 13:15:10.5529
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: i9IIOBKc6c6QhVKe/5bkfbkaWQSPhPm6GmdCCxj3k9wSiUgOSXNzz6y0YmKoKAg4JLcdXQJpLOfjRQSt7BY9UBTEuprmMHXnOSm3nRiKsCA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5533
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10273 signatures=685966
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 malwarescore=0
+ mlxscore=0 phishscore=0 suspectscore=0 adultscore=0 mlxlogscore=939
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2201110000
+ definitions=main-2203020056
+X-Proofpoint-ORIG-GUID: G0FxjF5OpEILlkZGoBX3aG3B-oBasDld
+X-Proofpoint-GUID: G0FxjF5OpEILlkZGoBX3aG3B-oBasDld
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 3/2/22 13:04, Claudio Imbrenda wrote:
-> On Wed, 23 Feb 2022 09:20:01 +0000
-> Janosch Frank <frankja@linux.ibm.com> wrote:
-> 
->> Some of the query information is already available via sysfs but
->> having a IOCTL makes the information easier to retrieve.
+
+
+On 3/1/22 9:55 PM, Stefano Stabellini wrote:
+> On Tue, 1 Mar 2022, Christoph Hellwig wrote:
+>> Allow to pass a remap argument to the swiotlb initialization functions
+>> to handle the Xen/x86 remap case.  ARM/ARM64 never did any remapping
+>> from xen_swiotlb_fixup, so we don't even need that quirk.
 >>
->> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->> ---
->>   arch/s390/kvm/kvm-s390.c | 47 ++++++++++++++++++++++++++++++++++++++++
->>   include/uapi/linux/kvm.h | 23 ++++++++++++++++++++
->>   2 files changed, 70 insertions(+)
->>
->> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->> index faa85397b6fb..837f898ad2ff 100644
->> --- a/arch/s390/kvm/kvm-s390.c
->> +++ b/arch/s390/kvm/kvm-s390.c
->> @@ -2217,6 +2217,34 @@ static int kvm_s390_cpus_to_pv(struct kvm *kvm, u16 *rc, u16 *rrc)
->>   	return r;
->>   }
->>   
->> +static int kvm_s390_handle_pv_info(struct kvm_s390_pv_info *info)
->> +{
->> +	u32 len;
->> +
->> +	switch (info->header.id) {
->> +	case KVM_PV_INFO_VM: {
->> +		len =  sizeof(info->header) + sizeof(info->vm);
->> +
->> +		if (info->header.len < len)
->> +			return -EINVAL;
+
+> Aside from that the rest looks OK. Also, you can add my:
 > 
-> so if userspace gives a smaller buffer, we fail?
-> this means that if the struct grows in the future, existing software
-> will break?
-
-I've already answered this.
-If we extend the struct, we can make this the lower bound and store a 
-maximum of info->header.len or the length of the extended struct.
-
-I.e. it would work like the QUI 0x100 rc.
-Or we can add a new IOCTL which gives the KVM_PV_INFO_VM + new values.
+> Tested-by: Stefano Stabellini <sstabellini@kernel.org>
 
 
-The more interesting question is how we indicate more data and new IOCTL 
-commands. Do we always bind them to a capability? Should we add a query 
-in front of the KVM_PV_INFO_VM call which tells us the available calls?
+Not for me, I fail to boot with
 
-> 
->> +
->> +		memcpy(info->vm.inst_calls_list,
->> +		       uv_info.inst_calls_list,
->> +		       sizeof(uv_info.inst_calls_list));
->> +
->> +		/* It's max cpuidm not max cpus so it's off by one */
->> +		info->vm.max_cpus = uv_info.max_guest_cpu_id + 1;
->> +		info->vm.max_guests = uv_info.max_num_sec_conf;
->> +		info->vm.max_guest_addr = uv_info.max_sec_stor_addr;
->> +		info->vm.feature_indication = uv_info.uv_feature_indications;
->> +
->> +		return 0;
->> +	}
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +}
->> +
->>   static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
->>   {
->>   	int r = 0;
->> @@ -2353,6 +2381,25 @@ static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
->>   			     cmd->rc, cmd->rrc);
->>   		break;
->>   	}
->> +	case KVM_PV_INFO: {
->> +		struct kvm_s390_pv_info info = {};
->> +
->> +		if (copy_from_user(&info, argp, sizeof(info.header)))
->> +			return -EFAULT;
->> +
->> +		if (info.header.len < sizeof(info.header))
->> +			return -EINVAL;
->> +
->> +		r = kvm_s390_handle_pv_info(&info);
->> +		if (r)
->> +			return r;
->> +
->> +		r = copy_to_user(argp, &info, sizeof(info));
->> +
->> +		if (r)
->> +			return -EFAULT;
->> +		return 0;
->> +	}
->>   	default:
->>   		r = -ENOTTY;
->>   	}
->> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
->> index dbc550bbd9fa..96fceb204a92 100644
->> --- a/include/uapi/linux/kvm.h
->> +++ b/include/uapi/linux/kvm.h
->> @@ -1642,6 +1642,28 @@ struct kvm_s390_pv_unp {
->>   	__u64 tweak;
->>   };
->>   
->> +enum pv_cmd_info_id {
->> +	KVM_PV_INFO_VM,
->> +};
->> +
->> +struct kvm_s390_pv_info_vm {
->> +	__u64 inst_calls_list[4];
->> +	__u64 max_cpus;
->> +	__u64 max_guests;
->> +	__u64 max_guest_addr;
->> +	__u64 feature_indication;
->> +};
->> +
->> +struct kvm_s390_pv_info_header {
->> +	__u32 id;
->> +	__u32 len;
->> +};
->> +
->> +struct kvm_s390_pv_info {
->> +	struct kvm_s390_pv_info_header header;
->> +	struct kvm_s390_pv_info_vm vm;
->> +};
->> +
->>   enum pv_cmd_id {
->>   	KVM_PV_ENABLE,
->>   	KVM_PV_DISABLE,
->> @@ -1650,6 +1672,7 @@ enum pv_cmd_id {
->>   	KVM_PV_VERIFY,
->>   	KVM_PV_PREP_RESET,
->>   	KVM_PV_UNSHARE_ALL,
->> +	KVM_PV_INFO,
->>   };
->>   
->>   struct kvm_pv_cmd {
-> 
+[   52.202000] bnxt_en 0000:31:00.0: swiotlb buffer is full (sz: 256 bytes), total 0 (slots), used 0 (slots)
 
+(this is iscsi root so I need the NIC).
+
+
+I bisected it to "x86: remove the IOMMU table infrastructure" but haven't actually looked at the code yet.
+
+
+-boris
