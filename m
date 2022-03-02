@@ -2,82 +2,56 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8AD24C9E9F
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Mar 2022 08:51:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C09C4C9EEB
+	for <lists+linux-s390@lfdr.de>; Wed,  2 Mar 2022 09:07:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239876AbiCBHwg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Mar 2022 02:52:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55586 "EHLO
+        id S230072AbiCBIIh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 2 Mar 2022 03:08:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233208AbiCBHwg (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Mar 2022 02:52:36 -0500
-Received: from out30-54.freemail.mail.aliyun.com (out30-54.freemail.mail.aliyun.com [115.124.30.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 951651C133;
-        Tue,  1 Mar 2022 23:51:49 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0V61jDA6_1646207506;
-Received: from localhost(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0V61jDA6_1646207506)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 02 Mar 2022 15:51:47 +0800
-Date:   Wed, 2 Mar 2022 15:51:46 +0800
-From:   "D. Wythe" <alibuda@linux.alibaba.com>
-To:     Wen Gu <guwen@linux.alibaba.com>
-Cc:     kgraul@linux.ibm.com, kuba@kernel.org, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net] net/smc: fix unexpected SMC_CLC_DECL_ERR_REGRMB error
-Message-ID: <20220302075146.GA29189@e02h04389.eu6sqa>
-Reply-To: "D. Wythe" <alibuda@linux.alibaba.com>
-References: <1646140644-121649-1-git-send-email-alibuda@linux.alibaba.com>
- <82bd43af-1d90-4395-b868-4a045bf4a47b@linux.alibaba.com>
+        with ESMTP id S240011AbiCBIIg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Mar 2022 03:08:36 -0500
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79FCF4EF7B;
+        Wed,  2 Mar 2022 00:07:52 -0800 (PST)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id F380B68AFE; Wed,  2 Mar 2022 09:07:46 +0100 (CET)
+Date:   Wed, 2 Mar 2022 09:07:46 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>, iommu@lists.linux-foundation.org,
+        x86@kernel.org, Anshuman Khandual <anshuman.khandual@arm.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 07/11] x86: remove the IOMMU table infrastructure
+Message-ID: <20220302080746.GA23075@lst.de>
+References: <20220227143055.335596-1-hch@lst.de> <20220227143055.335596-8-hch@lst.de> <Yh5j5q5n/GyU0/1n@0xbeefdead.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=gb2312
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <82bd43af-1d90-4395-b868-4a045bf4a47b@linux.alibaba.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <Yh5j5q5n/GyU0/1n@0xbeefdead.lan>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Mar 02, 2022 at 03:28:32PM +0800, Wen Gu wrote:
-> 
-> 
-> ÔÚ 2022/3/1 ÏÂÎç9:17, D. Wythe Ð´µÀ:
-> >From: "D. Wythe" <alibuda@linux.alibaba.com>
-> >
-> >Remove connections from link group is not synchronous with handling
-> >SMC_LLC_DELETE_RKEY, which means that even the number of connections is
-> >less that SMC_RMBS_PER_LGR_MAX, it does not mean that the connection can
-> >register rtoken successfully later, in other words, the rtoken entry may
-> >have not been released. This will cause an unexpected
-> >SMC_CLC_DECL_ERR_REGRMB to be reported, and then ths smc connection have
-> >to fallback to TCP.
-> >
-> 
-> 
-> IMHO, if there are SMC_RMBS_PER_LGR_MAX connections in the link group now,
-> one of them is being removed and here comes a new connection at this moment,
-> then:
-> 
-> (1) without this patch, the new connection will be added into the old link group
->     but fallback if the removing connection has not finished unregistering its rmb.
-> 
-> (2) with this patch, a new link group will be created and the new connection
->     will be added into the new link group.
-> 
-> I am wondering if (1) should be considered as a issue, or just a bydesign?
-> If it is a issue, I think this patch works, Thanks!
+On Tue, Mar 01, 2022 at 01:20:22PM -0500, Konrad Rzeszutek Wilk wrote:
+> I think you also need to check for IBM Calgary?
 
-
-We should always be willing to improve the success rate of the SMC 
-connection, creating a new group is not a side effect of this patch, it 
-actually dues to the state bewteen connections that can not achieve 
-clock synchronization. In fact, it can happen in any times.
-
-Thanks.
+The IBM Calgary IOMMU support is long gone.
