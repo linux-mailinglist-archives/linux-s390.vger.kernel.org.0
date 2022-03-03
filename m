@@ -2,90 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F56F4CC789
-	for <lists+linux-s390@lfdr.de>; Thu,  3 Mar 2022 22:04:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B44D14CC972
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Mar 2022 23:49:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235156AbiCCVFV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 3 Mar 2022 16:05:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45086 "EHLO
+        id S235758AbiCCWuV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 3 Mar 2022 17:50:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236412AbiCCVFU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Mar 2022 16:05:20 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F71986D7;
-        Thu,  3 Mar 2022 13:04:33 -0800 (PST)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 223KZU8t020313;
-        Thu, 3 Mar 2022 21:04:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=3ZH8MdghW/0bZQm9UWePe5VZGRdVrWK2R6PL6sAdecU=;
- b=sZpVKdlrbn11lDqG6xUG1Ac7jYqnBj+QuwrFAifrEsM4ExZ234LJ1XBtZwEDVi64bCNC
- valo4i7D9JyEHywoq4TPObw0lntq5lW/zfhA3AaStLkL//7k6Auy304tA8lKsvtvep8w
- kWOrmzx1UbnqwXQDrfSv1xyrIaVj8OX5dwfgn/NPbR74Jb64Fxy9ha4Jl8yP5PXX2xXz
- OzTzIq1v5PFvD4NVHb/6y6ayb4tXX3GTu/4iySCCrdDb0h1x4Aoz/Oob8S7DY7UeGyAP
- XELjLvy7Armhs4xTnkulv6f/UdkCqN+psmQk/tVq2mzsBjiqZKYv228MPUorxkU+JIcg cg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3ek4uk8fm9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Mar 2022 21:04:32 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 223KgPrK020374;
-        Thu, 3 Mar 2022 21:04:32 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3ek4uk8fkp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Mar 2022 21:04:32 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 223L2wVR007966;
-        Thu, 3 Mar 2022 21:04:30 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03fra.de.ibm.com with ESMTP id 3ek4k40231-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 03 Mar 2022 21:04:30 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 223KrSgf50266610
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 3 Mar 2022 20:53:28 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2B20542049;
-        Thu,  3 Mar 2022 21:04:27 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1763142041;
-        Thu,  3 Mar 2022 21:04:27 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  3 Mar 2022 21:04:27 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-        id 89BE4E048E; Thu,  3 Mar 2022 22:04:26 +0100 (CET)
-From:   Eric Farman <farman@linux.ibm.com>
-To:     Thomas Huth <thuth@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
-Subject: [PATCH kvm-unit-tests v1 6/6] lib: s390x: smp: Convert remaining smp_sigp to _retry
-Date:   Thu,  3 Mar 2022 22:04:25 +0100
-Message-Id: <20220303210425.1693486-7-farman@linux.ibm.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220303210425.1693486-1-farman@linux.ibm.com>
-References: <20220303210425.1693486-1-farman@linux.ibm.com>
+        with ESMTP id S233243AbiCCWuU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Mar 2022 17:50:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFFEBF5413;
+        Thu,  3 Mar 2022 14:49:33 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EF3B7B826F4;
+        Thu,  3 Mar 2022 22:49:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF27C004E1;
+        Thu,  3 Mar 2022 22:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646347770;
+        bh=8T7CokGxWBKJfPW1pG0VCMscny/1l39AXb6Fw4feFiI=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=mDE8XGmJRPXC3FhUExxfC/Tg8r8q5kqje46aVpKcSpgATjCrTOmm8dyL5+N0ARFUl
+         igEkDLka8/5AR112e4UmftTK6LTw6MIVEq72/1WbVxD/BN6jvq1CQNSmYNX2eOZkoM
+         C7Y6r4k/M1DH2K4tAUOZ5dfMEE8n9On9bbDAQYejM/m/pVednlfOiQ+0ILLxk+xuq6
+         0Hivc3idTv5Og15E95hL8KOwRNZ6gfWfd8YTyoWKgbowpFGJ7UwyLwEnr/Ub/zQ8kx
+         OW2VcyhCSn0JN1ypiUZLYah5Kofhllw9xygmCFN3oPTfqf6bSdXRFiDe95KnoglrOU
+         yMQm9xneH86Yg==
+Date:   Thu, 3 Mar 2022 14:49:29 -0800 (PST)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@ubuntu-linux-20-04-desktop
+To:     Christoph Hellwig <hch@lst.de>
+cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        iommu@lists.linux-foundation.org, x86@kernel.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, tboot-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 11/12] swiotlb: merge swiotlb-xen initialization into
+ swiotlb
+In-Reply-To: <20220303105931.GA15137@lst.de>
+Message-ID: <alpine.DEB.2.22.394.2203031447120.3261@ubuntu-linux-20-04-desktop>
+References: <20220301105311.885699-1-hch@lst.de> <20220301105311.885699-12-hch@lst.de> <alpine.DEB.2.22.394.2203011720150.3261@ubuntu-linux-20-04-desktop> <20220302081500.GB23075@lst.de> <alpine.DEB.2.22.394.2203021709470.3261@ubuntu-linux-20-04-desktop>
+ <20220303105931.GA15137@lst.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: BoWTKvWYIczb_Vagb8cEPQc_c4Biz-oL
-X-Proofpoint-ORIG-GUID: fr8QLmWkab7E53jue4vTnF47G35AfNXH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-03-03_09,2022-02-26_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
- impostorscore=0 mlxscore=0 clxscore=1011 phishscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2203030095
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -94,44 +71,16 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-A SIGP SENSE is used to determine if a CPU is stopped or operating,
-and thus has a vested interest in ensuring it received a CC0 or CC1,
-instead of a CC2 (BUSY). But, any order could receive a CC2 response,
-and is probably ill-equipped to respond to it.
+On Thu, 3 Mar 2022, Christoph Hellwig wrote:
+> On Wed, Mar 02, 2022 at 05:25:10PM -0800, Stefano Stabellini wrote:
+> > Thinking more about it we actually need to drop the xen_initial_domain()
+> > check otherwise some cases won't be functional (Dom0 not 1:1 mapped, or
+> > DomU 1:1 mapped).
+> 
+> Hmm, but that would be the case even before this series, right?
 
-In practice, the order is likely to only encounter this when racing
-with a SIGP STOP (AND STORE STATUS) or SIGP RESTART order, which are
-unlikely. But, since it's not impossible, let's convert the library
-calls that issue a SIGP to loop on CC2 so the callers do not need
-to react to that possible outcome.
+Before this series we only have the xen_swiotlb_detect() check in
+xen_mm_init, we don't have a second xen_initial_domain() check.
 
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
----
- lib/s390x/smp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
-index 85b046a5..2e476264 100644
---- a/lib/s390x/smp.c
-+++ b/lib/s390x/smp.c
-@@ -85,7 +85,7 @@ bool smp_cpu_stopped(uint16_t idx)
- 
- bool smp_sense_running_status(uint16_t idx)
- {
--	if (smp_sigp(idx, SIGP_SENSE_RUNNING, 0, NULL) != SIGP_CC_STATUS_STORED)
-+	if (smp_sigp_retry(idx, SIGP_SENSE_RUNNING, 0, NULL) != SIGP_CC_STATUS_STORED)
- 		return true;
- 	/* Status stored condition code is equivalent to cpu not running. */
- 	return false;
-@@ -169,7 +169,7 @@ static int smp_cpu_restart_nolock(uint16_t idx, struct psw *psw)
- 	 * running after the restart.
- 	 */
- 	smp_cpu_stop_nolock(idx, false);
--	rc = smp_sigp(idx, SIGP_RESTART, 0, NULL);
-+	rc = smp_sigp_retry(idx, SIGP_RESTART, 0, NULL);
- 	if (rc)
- 		return rc;
- 	/*
--- 
-2.32.0
-
+The issue is that this series is adding one more xen_initial_domain()
+check in xen_mm_init.
