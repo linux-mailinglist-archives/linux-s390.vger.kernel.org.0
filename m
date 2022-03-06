@@ -2,76 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EB544CE6B9
-	for <lists+linux-s390@lfdr.de>; Sat,  5 Mar 2022 21:14:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33BD24CE9B6
+	for <lists+linux-s390@lfdr.de>; Sun,  6 Mar 2022 07:51:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232303AbiCEUOu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 5 Mar 2022 15:14:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48468 "EHLO
+        id S232548AbiCFGwE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 6 Mar 2022 01:52:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232043AbiCEUOt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 5 Mar 2022 15:14:49 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF76150B15;
-        Sat,  5 Mar 2022 12:13:57 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 182CDCE09EA;
-        Sat,  5 Mar 2022 20:13:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5412AC340EC;
-        Sat,  5 Mar 2022 20:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646511234;
-        bh=iy1cqsoOPXz4Qol71NxLMoDntWZr90U/+2tLasdsbtA=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=CB5y6bcB4tofV++kMy9Zj+UA4D9CQ1KrsFw4AtOTqpIY8FXE+Ba5xb46tbrHk5B/X
-         bA+B46He/1/yJ5ysr2CBMf6WF+iSWCZtJfOxOcwzwXMcCZatyA2/ig3wjR/5UKWDoR
-         Lw+BWls3lwTG2X9Hc6wowGLnK5hcvM4tqitxnBCVkpoMdMMWIg46qYD5mKCOzYGBTe
-         fX99oIDCyXfBPwxzFOIGoIoaTFK3xKpUQdfyOlg0JxxHT/2wRlp5EKE02efpaMz/hV
-         SVYRY6HsDohrBTAAscKuI1I1O4d7rqQ5kvdDcpXvMKxkWCuq0ILHMHvojsxSBgi/X6
-         ASOTACJ0u1rdA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 420CEE7BB18;
-        Sat,  5 Mar 2022 20:13:54 +0000 (UTC)
-Subject: Re: [GIT PULL] s390 updates for 5.17-rc7
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <your-ad-here.call-01646480222-ext-8975@work.hours>
-References: <your-ad-here.call-01646480222-ext-8975@work.hours>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <your-ad-here.call-01646480222-ext-8975@work.hours>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.17-5
-X-PR-Tracked-Commit-Id: c194dad21025dfd043210912653baab823bdff67
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f9026e19a44d965793d25e7a02b0d6c1bcafd8f5
-Message-Id: <164651123426.11603.13575761014802884057.pr-tracker-bot@kernel.org>
-Date:   Sat, 05 Mar 2022 20:13:54 +0000
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S233076AbiCFGv5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 6 Mar 2022 01:51:57 -0500
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 617EA70865
+        for <linux-s390@vger.kernel.org>; Sat,  5 Mar 2022 22:51:01 -0800 (PST)
+Received: by mail-ed1-x532.google.com with SMTP id w4so13290762edc.7
+        for <linux-s390@vger.kernel.org>; Sat, 05 Mar 2022 22:51:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=VaaSLAJ+hgNGNq49WyPsh3ndDLo+mnrYcswrOHpJSv8=;
+        b=KDgAx1nMZI4VA0728iAuqALj69hyn7X0WLLUiz2m+OH09NDtWJqkn0K0IjhaqXccDL
+         nYA9IS56U+BvEYDp5ZuYOTDJ28DkbGQXOo4nCoFRXwOq8btCUGBKve+nLdvXGAtQGfZd
+         8/3HmQyIohZytZNIAaZ2YSJ+VGfF2cuAbX+92kqJIy7dPjcCYPV+qxcIVHj5OJkNioe8
+         RnnPJV63I7FofbcYlKCR7cawwHR+Gyj/OksLFoNh7LOBENUnMHRRrWfgS+R5N0DbQgRd
+         FM7OvtlHYW5haJ9bCovh/xFv8pj40s/F/HFWyLhlvxnDTkjGlvvz7xTkeBicCtgptiHh
+         fIkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=VaaSLAJ+hgNGNq49WyPsh3ndDLo+mnrYcswrOHpJSv8=;
+        b=MDQ/n4+KtBgmWALUdIGWR1KcxJ3YvjLEQk7imKqsildp8WxCbZykdxMTKGpgK0ky2z
+         jjy2oS5HY/C5yN5y3RCx82S9yhF6A0figTzVpD+6NHZTELDoUyyn7qM811sfrWdgtblH
+         zKQM1VpFnu9uPy+d45IBwH8whulBdt7FWugY0ZfLQ/yXJnyCDim0URYnBrKhkPIP0kqy
+         t2OWqOLgYfxlsMx60uzZDa3BQ1BpwKO0fGVOf1WPaEUO91kb1WBFAkUEaJryDS0Hrfrz
+         46IrjihX4gUAdcpavbzunsQy3lqCXPMBpCBvKCXzF/fZsWY0/DBRGTuBy5yzSYzfXR3h
+         9qOQ==
+X-Gm-Message-State: AOAM5303cwsCSJ51ZZFaT9SitbwL7BMrvJ9GcNbk4C+MHF4TWninkzdb
+        dsZy9yHsfSZL1j84v13nbtp8EmTqzVl8ZvjfxI2hAlaQuX4=
+X-Google-Smtp-Source: ABdhPJzq04i8VJyC6uwySEx5tzgrtxCg/XL0hqdBTWFWm66/zQAuy3m2ubrZV75jrYUP9jvmG0PdhfRUhLuebg8/B7w=
+X-Received: by 2002:a2e:94c7:0:b0:247:de4e:e9bc with SMTP id
+ r7-20020a2e94c7000000b00247de4ee9bcmr2397951ljh.397.1646549448778; Sat, 05
+ Mar 2022 22:50:48 -0800 (PST)
+MIME-Version: 1.0
+Reply-To: mrs.susanelwoodhara17@gmail.com
+Sender: mrs.arawyann@gmail.com
+Received: by 2002:ab3:7d89:0:0:0:0:0 with HTTP; Sat, 5 Mar 2022 22:50:48 -0800 (PST)
+From:   Mrs Susan Elwood Hara <mrs.susanelwoodhara17@gmail.com>
+Date:   Sun, 6 Mar 2022 06:50:48 +0000
+X-Google-Sender-Auth: NOWRSnt_sskMD3s295a30bcHvEs
+Message-ID: <CACppo47TD9J4Sy+vaJu1wXHqd88WqFwMNn6OdkY1khwXu3TuFw@mail.gmail.com>
+Subject: GOD BLESS YOU AS YOU REPLY URGENTLY
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        SUBJ_ALL_CAPS,T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Sat, 5 Mar 2022 12:37:02 +0100:
+GOD BLESS YOU AS YOU REPLY URGENTLY
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.17-5
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f9026e19a44d965793d25e7a02b0d6c1bcafd8f5
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+ Hello Dear,
+Greetings, I am contacting you regarding an important information i
+have for you please reply to confirm your email address and for more
+details Thanks
+Regards
+Mrs Susan Elwood Hara.
