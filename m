@@ -2,90 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10CCE4D02FF
-	for <lists+linux-s390@lfdr.de>; Mon,  7 Mar 2022 16:34:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A2334D04FB
+	for <lists+linux-s390@lfdr.de>; Mon,  7 Mar 2022 18:10:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243812AbiCGPfi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 7 Mar 2022 10:35:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52022 "EHLO
+        id S238000AbiCGRLf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 7 Mar 2022 12:11:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241144AbiCGPfi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Mar 2022 10:35:38 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C275C373;
-        Mon,  7 Mar 2022 07:34:43 -0800 (PST)
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 227E4f57015222;
-        Mon, 7 Mar 2022 15:34:43 GMT
+        with ESMTP id S235574AbiCGRLe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Mar 2022 12:11:34 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD2C48301E;
+        Mon,  7 Mar 2022 09:10:39 -0800 (PST)
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 227FIcK1006300;
+        Mon, 7 Mar 2022 17:10:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
  subject : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=pp1;
- bh=s+0avoJIzULOPCG3lYkqugOagxGw2rl/SlAcv3Acxxc=;
- b=Z8YtPEQmPXfPNWRw9KWf5IK7JzVnoO7tW/d22SmaIdruPQ5jD24CF9LprEHEj6JRDOLm
- AzTv1tgHw+GbsniDXMLQgP1DAlO+PAwfirO+fh1zsWE0xeVW3m7d8xE6kujZ3fFEGosJ
- m7LyVIMDdTtFmx60Q7U2AkHbLRkcQ2hySKFQTODFVS5Icu1nQAINBxb8HPTOWnRSJnNB
- dA1Xi4DyeV/LvpfGgbeqH2W8koKEU4m0mnoXXA/0wGcZsWHi6SmVt4KQvQbOA2+OcmN1
- o+2gA8PwAMDYhVcB6QmBljC2u06O1aKT0FBP/ciVCbgGrFiasAg+dnK9FxgkirYgxRRR kw== 
+ bh=nPp+FBrbOyhOFp4k8E3F3lZ4Ca6JUG3oR4oBk3awDZw=;
+ b=EGoWmJK5IFUI05HF97e/PHdWkRw9oPCfRNVC0DiF83UHObYk/hmWr4csMz4albrY9U++
+ gdEDYgEq94s0ZQ6h64IaC9z3b2OMd97Lji4hP8mD+2IJ8qausl5t8A3SAFyarNkyB/7u
+ zQS+PYqVAFpUIoOJdxQrxn19wlWTz6OhFNILPI59FUWRdZLs7Bz7W1xDLCjrCm461RuX
+ /Ugw8dXC+Q1B5hj8rZ5lUyKzHSkceFBMT7rgnTmURn2gLOFsdOkU+Guyul7BGoI6WIxx
+ gRgAT21cRoSVMm6TWoy4D6NC5Cr9RWPI+cHd5QB3mxdzfXaC6wjXI+ovXoeKp5MEcp/d oA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3ene0ph0sy-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3end6g43rd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Mar 2022 15:34:42 +0000
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 227EvCQm028835;
-        Mon, 7 Mar 2022 15:34:42 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3ene0ph0sg-1
+        Mon, 07 Mar 2022 17:10:37 +0000
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 227GVUGU001674;
+        Mon, 7 Mar 2022 17:10:37 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3end6g43qq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Mar 2022 15:34:42 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 227FIamN007286;
-        Mon, 7 Mar 2022 15:34:40 GMT
+        Mon, 07 Mar 2022 17:10:36 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 227H35JE017003;
+        Mon, 7 Mar 2022 17:10:34 GMT
 Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06ams.nl.ibm.com with ESMTP id 3eky4hw2xx-1
+        by ppma04fra.de.ibm.com with ESMTP id 3ekyg94gt0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Mar 2022 15:34:40 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 227FYb3S54198576
+        Mon, 07 Mar 2022 17:10:34 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 227HAVrV43647318
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Mar 2022 15:34:37 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A0FE8A405C;
-        Mon,  7 Mar 2022 15:34:37 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 45C7CA4054;
-        Mon,  7 Mar 2022 15:34:37 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.10.106])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Mar 2022 15:34:37 +0000 (GMT)
-Date:   Mon, 7 Mar 2022 16:31:53 +0100
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Thomas Huth <thuth@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH kvm-unit-tests v1 5/6] s390x: smp: Create and use a
- non-waiting CPU restart
-Message-ID: <20220307163153.76e64175@p-imbrenda>
-In-Reply-To: <20220303210425.1693486-6-farman@linux.ibm.com>
-References: <20220303210425.1693486-1-farman@linux.ibm.com>
-        <20220303210425.1693486-6-farman@linux.ibm.com>
+        Mon, 7 Mar 2022 17:10:31 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 062564C040;
+        Mon,  7 Mar 2022 17:10:31 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5E58F4C044;
+        Mon,  7 Mar 2022 17:10:30 +0000 (GMT)
+Received: from li-e979b1cc-23ba-11b2-a85c-dfd230f6cf82 (unknown [9.171.73.209])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon,  7 Mar 2022 17:10:30 +0000 (GMT)
+Date:   Mon, 7 Mar 2022 18:10:27 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     jjherne@linux.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com, fiuczy@linux.ibm.com,
+        Halil Pasic <pasic@linux.ibm.com>
+Subject: Re: [PATCH v18 08/18] s390/vfio-ap: allow assignment of unavailable
+ AP queues to mdev device
+Message-ID: <20220307181027.29c821b6.pasic@linux.ibm.com>
+In-Reply-To: <151241e6-3099-4be2-da54-1f0e5cb3a705@linux.ibm.com>
+References: <20220215005040.52697-1-akrowiak@linux.ibm.com>
+        <20220215005040.52697-9-akrowiak@linux.ibm.com>
+        <97681738-50a1-976d-9f0f-be326eab7202@linux.ibm.com>
+        <9ac3908e-06da-6276-d1df-94898918fc5b@linux.ibm.com>
+        <20220307142711.5af33ece.pasic@linux.ibm.com>
+        <151241e6-3099-4be2-da54-1f0e5cb3a705@linux.ibm.com>
 Organization: IBM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: OAc2TF37blX8qz7wSrOb6L1PXbi1aeOr
-X-Proofpoint-GUID: FR7DzWnnA2_K0QGI4mXEEskyx0YF8jp6
+X-Proofpoint-ORIG-GUID: 8ESeYzpXOab-qYbc1klVDE9pxrJgcCK7
+X-Proofpoint-GUID: q3QEZXEdGxdwolAbq1CXYupZ3dbEbiBr
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-03-07_05,2022-03-04_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 mlxlogscore=999 adultscore=0 mlxscore=0
- lowpriorityscore=0 suspectscore=0 bulkscore=0 spamscore=0 phishscore=0
- malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2202240000 definitions=main-2203070090
+ definitions=2022-03-07_08,2022-03-04_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 lowpriorityscore=0
+ spamscore=0 suspectscore=0 clxscore=1015 malwarescore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2203070093
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -96,117 +102,83 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu,  3 Mar 2022 22:04:24 +0100
-Eric Farman <farman@linux.ibm.com> wrote:
+On Mon, 7 Mar 2022 09:10:29 -0500
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> The kvm-unit-tests infrastructure for a CPU restart waits for the
-> SIGP RESTART to complete. In order to test the restart itself,
-> create a variation that does not wait, and test the state of the
-> CPU directly.
+> On 3/7/22 08:27, Halil Pasic wrote:
+> > On Mon, 7 Mar 2022 07:31:21 -0500
+> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> >  
+> >> On 3/3/22 10:39, Jason J. Herne wrote:  
+> >>> On 2/14/22 19:50, Tony Krowiak wrote:  
+> >>>>    /**
+> >>>> - * vfio_ap_mdev_verify_no_sharing - verifies that the AP matrix is
+> >>>> not configured
+> >>>> + * vfio_ap_mdev_verify_no_sharing - verify APQNs are not shared by
+> >>>> matrix mdevs
+> >>>>     *
+> >>>> - * @matrix_mdev: the mediated matrix device
+> >>>> + * @mdev_apm: mask indicating the APIDs of the APQNs to be verified
+> >>>> + * @mdev_aqm: mask indicating the APQIs of the APQNs to be verified
+> >>>>     *
+> >>>> - * Verifies that the APQNs derived from the cross product of the AP
+> >>>> adapter IDs
+> >>>> - * and AP queue indexes comprising the AP matrix are not configured
+> >>>> for another
+> >>>> + * Verifies that each APQN derived from the Cartesian product of a
+> >>>> bitmap of
+> >>>> + * AP adapter IDs and AP queue indexes is not configured for any matrix
+> >>>>     * mediated device. AP queue sharing is not allowed.
+> >>>>     *
+> >>>> - * Return: 0 if the APQNs are not shared; otherwise returns
+> >>>> -EADDRINUSE.
+> >>>> + * Return: 0 if the APQNs are not shared; otherwise return -EADDRINUSE.
+> >>>>     */
+> >>>> -static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev
+> >>>> *matrix_mdev)
+> >>>> +static int vfio_ap_mdev_verify_no_sharing(unsigned long *mdev_apm,
+> >>>> +                      unsigned long *mdev_aqm)
+> >>>>    {
+> >>>> -    struct ap_matrix_mdev *lstdev;
+> >>>> +    struct ap_matrix_mdev *matrix_mdev;
+> >>>>        DECLARE_BITMAP(apm, AP_DEVICES);
+> >>>>        DECLARE_BITMAP(aqm, AP_DOMAINS);
+> >>>>    -    list_for_each_entry(lstdev, &matrix_dev->mdev_list, node) {
+> >>>> -        if (matrix_mdev == lstdev)
+> >>>> +    list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
+> >>>> +        /*
+> >>>> +         * If the input apm and aqm belong to the matrix_mdev's matrix,  
+> > How about:
+> >
+> > s/belong to the matrix_mdev's matrix/are fields of the matrix_mdev
+> > object/  
 > 
-> While here, add some better report prefixes/messages, to clarify
-> which condition is being examined (similar to test_stop_store_status()).
+> This is the comment I wrote:
 > 
-> Signed-off-by: Eric Farman <farman@linux.ibm.com>
-> ---
->  lib/s390x/smp.c | 22 ++++++++++++++++++++++
->  lib/s390x/smp.h |  1 +
->  s390x/smp.c     | 18 +++++++++++++++---
->  3 files changed, 38 insertions(+), 3 deletions(-)
+>          /*
+>           * Comparing an mdev's newly updated apm/aqm with itself would
+>           * result in a false positive when verifying whether any APQNs
+>           * are shared; so, if the input apm and aqm belong to the
+>           * matrix_mdev's matrix, then move on to the next one.
+>           */
 > 
-> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
-> index 84e536e8..85b046a5 100644
-> --- a/lib/s390x/smp.c
-> +++ b/lib/s390x/smp.c
-> @@ -192,6 +192,28 @@ int smp_cpu_restart(uint16_t idx)
->  	return rc;
->  }
->  
-> +/*
-> + * Functionally equivalent to smp_cpu_restart(), but without the
-> + * elements that wait/serialize matters here in the test.
-> + * Used to see if KVM itself is serialized correctly.
-> + */
-> +int smp_cpu_restart_nowait(uint16_t idx)
-> +{
-> +	spin_lock(&lock);
-> +
-> +	/* Don't suppress a CC2 with sigp_retry() */
-> +	if (smp_sigp(idx, SIGP_RESTART, 0, NULL)) {
-> +		spin_unlock(&lock);
-> +		return -1;
-> +	}
-> +
-> +	cpus[idx].active = true;
-> +
-> +	spin_unlock(&lock);
-> +
-> +	return 0;
-> +}
-> +
->  int smp_cpu_start(uint16_t idx, struct psw psw)
->  {
->  	int rc;
-> diff --git a/lib/s390x/smp.h b/lib/s390x/smp.h
-> index bae03dfd..24a0e2e0 100644
-> --- a/lib/s390x/smp.h
-> +++ b/lib/s390x/smp.h
-> @@ -42,6 +42,7 @@ uint16_t smp_cpu_addr(uint16_t idx);
->  bool smp_cpu_stopped(uint16_t idx);
->  bool smp_sense_running_status(uint16_t idx);
->  int smp_cpu_restart(uint16_t idx);
-> +int smp_cpu_restart_nowait(uint16_t idx);
->  int smp_cpu_start(uint16_t idx, struct psw psw);
->  int smp_cpu_stop(uint16_t idx);
->  int smp_cpu_stop_nowait(uint16_t idx);
-> diff --git a/s390x/smp.c b/s390x/smp.c
-> index 11c2c673..03160b80 100644
-> --- a/s390x/smp.c
-> +++ b/s390x/smp.c
-> @@ -55,23 +55,35 @@ static void test_restart(void)
->  	struct cpu *cpu = smp_cpu_from_idx(1);
->  	struct lowcore *lc = cpu->lowcore;
->  
-> +	report_prefix_push("restart");
-> +	report_prefix_push("stopped");
-> +
->  	lc->restart_new_psw.mask = extract_psw_mask();
->  	lc->restart_new_psw.addr = (unsigned long)test_func;
->  
->  	/* Make sure cpu is stopped */
->  	smp_cpu_stop(1);
->  	set_flag(0);
-> -	smp_cpu_restart(1);
-> +	smp_cpu_restart_nowait(1);
-> +	report(!smp_cpu_stopped(1), "cpu started");
+> However, I'd be happy to change it to whatever either of you want.
 
-can this check ^ race?
-we are using the flag to check if the CPU actually restarts, right?
+What ain't obvious for the comment is that "belong to" actually means
+composition and not association. In other words, there there is no
+pointer/indirection involved, a pointer that would tell us what matrix
+does belong to what matrix_mdev, but rather the matrix is just a part
+of the matrix_mdev object.
 
->  	wait_for_flag();
-> +	report_pass("test flag");
-> +
-> +	report_prefix_pop();
-> +	report_prefix_push("running");
->  
->  	/*
->  	 * Wait until cpu 1 has set the flag because it executed the
->  	 * restart function.
->  	 */
->  	set_flag(0);
-> -	smp_cpu_restart(1);
-> +	smp_cpu_restart_nowait(1);
-> +	report(!smp_cpu_stopped(1), "cpu started");
+I don't like 'false positive' either, and whether the apm/aqm is
+newly updated or not is also redundant and confusing in my opinion. When
+we check because of inuse there is not updated whatever. IMHO the old
+message was better than this one.
 
-same here
+Just my opinion, if you two agree, that this is the way to go, I'm fine
+with that.
 
->  	wait_for_flag();
-> -	report_pass("restart while running");
-> +	report_pass("test flag");
-> +
-> +	report_prefix_pop();
-> +	report_prefix_pop();
->  }
->  
->  static void test_stop(void)
+Regards,
+Halil
+
 
