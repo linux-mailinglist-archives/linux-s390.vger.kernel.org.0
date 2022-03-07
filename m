@@ -2,110 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6FE54CF187
-	for <lists+linux-s390@lfdr.de>; Mon,  7 Mar 2022 07:03:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C7304CFD67
+	for <lists+linux-s390@lfdr.de>; Mon,  7 Mar 2022 12:50:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235440AbiCGGDw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 7 Mar 2022 01:03:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38068 "EHLO
+        id S232029AbiCGLvM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 7 Mar 2022 06:51:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234713AbiCGGDv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Mar 2022 01:03:51 -0500
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C87BF33EA5
-        for <linux-s390@vger.kernel.org>; Sun,  6 Mar 2022 22:02:57 -0800 (PST)
-Received: by mail-yb1-xb2f.google.com with SMTP id u10so9016785ybd.9
-        for <linux-s390@vger.kernel.org>; Sun, 06 Mar 2022 22:02:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=7Im1JG6q3q15hqSa7NWQHVGGERLfnPf1iBbuaSTqgJQ=;
-        b=c1bDG9VxRM0GGNj757DrmXHfFRpAS5nkQXMs+Oj4aPTCkzXBOFbj1k5qasjuP7b7w1
-         npZK8ypTFGHQkM192ZbB3h70SclmR/FmMnE+o2NAlsAka1vqxjsPQeWInjwcch4TWwgd
-         4QVOYWL8dQqZPl+i4iCJaqArfPnnv+jExWbuY3eVqEjcJc1aSHg3Lcx3lIOQXDek7wFm
-         t7MzZLz82GBobHT7mDif3bTdRhxbaDoNrhirZ+qnUTn6EuqEMnP6dAqdpJ1F4dkR6Svp
-         iHP0XtJsVxroeHH+7LQk43FT7RNNVvr+5ATFXMTuMadcULQyJpXd23Q2U4Bv/EiS3fq5
-         idng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=7Im1JG6q3q15hqSa7NWQHVGGERLfnPf1iBbuaSTqgJQ=;
-        b=wOhwkDcOp8KV9QfgHCRfFpoxIJO88R958P0C8WxtHHPwU2jeToDxLqI7zoDEh/lY0w
-         gD7VIhAM2KJHHelSP/q8EqDZZzqukBVF1kjOs/wJh67QFFi7N+71G8QSKOw0wJMM+ucI
-         yCPN63ODHTb6xPVarrQJZfaKJXJdgvC6t+BZICsHl0b6mEZDqMVwoekA9JahncdW50LI
-         suoZ0zpcvpZPiFclO7HwhNIouar9aD/9L7harbsg2DWDuCS+WNl+J5TwN/7jZEb4gxLr
-         ZJQXTTMVQBiLfHtAVk36huA5sSJursKu4pkRdk326xPE3MClVLztKyJePyxfZihSJDvb
-         lyoA==
-X-Gm-Message-State: AOAM5332PNjWeAmkn2xW80OPcn8d6sNfLVmQ+im+ld4HYTf8Njcb3u2K
-        OoYWAa+fGXggQHL0fTnDpJ7wvrBBUjzRK6aiCy0=
-X-Google-Smtp-Source: ABdhPJyAe5UnFIIefjeCQ7lyCJoaXg9dQlqs5YWp+6bozjLqI+f6cKyL2Z06ocEcRIxz94VzK8QoOBCTKjhmSTrR4+c=
-X-Received: by 2002:a25:dfd3:0:b0:629:24ff:eab0 with SMTP id
- w202-20020a25dfd3000000b0062924ffeab0mr5097816ybg.613.1646632976811; Sun, 06
- Mar 2022 22:02:56 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a05:6918:b986:b0:a4:b698:78d9 with HTTP; Sun, 6 Mar 2022
- 22:02:56 -0800 (PST)
-Reply-To: markwillima00@gmail.com
-From:   Mark <markpeterdavid@gmail.com>
-Date:   Sun, 6 Mar 2022 22:02:56 -0800
-Message-ID: <CAC_St2-sdO6bqD=Ek0iLO-xK1-wW3yNcMoWDU3W-5iJ1Rf4Gsg@mail.gmail.com>
-Subject: Re: Greetings!
-To:     undisclosed-recipients:;
+        with ESMTP id S236012AbiCGLvL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Mar 2022 06:51:11 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5769A6E56D;
+        Mon,  7 Mar 2022 03:50:17 -0800 (PST)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 2279JQRI006405;
+        Mon, 7 Mar 2022 11:50:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=oKEMv2z309kPYq/UfCEEfeRDL0hWg3BtlKMnGnMfaQA=;
+ b=Z/40spes6Db++DJvSxbzh+LVs3mkde3VQabo6HoQUl8nTN5pV0GeKQJAcb34I74Y21Q+
+ NEn21mWCPryibIDKSveysWMGuPhu/MD8dfxtmij50pAOeCgcR8b9ESfU4iI9SiTpEBHy
+ dw3vA3YkDkYXH6ZktRuOoe7DpfgkIWWqo+eF7X9k3+wQXUxsknKGD9n4sQv1Xo0yOCc4
+ lKsYomeADN+a4BlDX0Z6PDCfKyzvvy5LObGkEZ/DI62XXhEcUGSFQvmwJFeyp39okHTs
+ Cb7YsiH9Ly9sZhie/NwyM94PielgRuNSQSpa41jynXorRe71ZWeMY2uxYDnUT77pXmZ6 Rw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3enfaptru9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Mar 2022 11:50:16 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 227BkA38019824;
+        Mon, 7 Mar 2022 11:50:16 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3enfaptrtp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Mar 2022 11:50:16 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 227BksPi009430;
+        Mon, 7 Mar 2022 11:50:14 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma06ams.nl.ibm.com with ESMTP id 3eky4hvjqs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Mar 2022 11:50:14 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 227Bd4Ko44892640
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 7 Mar 2022 11:39:04 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF6244203F;
+        Mon,  7 Mar 2022 11:50:10 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9213142041;
+        Mon,  7 Mar 2022 11:50:10 +0000 (GMT)
+Received: from li-ca45c2cc-336f-11b2-a85c-c6e71de567f1.ibm.com (unknown [9.171.55.208])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  7 Mar 2022 11:50:10 +0000 (GMT)
+Message-ID: <77ac96f703c777b8b4a4c4785a3f35cac9eab9c4.camel@linux.ibm.com>
+Subject: Re: [PATCH kvm-unit-tests v1 1/6] lib: s390x: smp: Retry SIGP SENSE
+ on CC2
+From:   Nico Boehr <nrb@linux.ibm.com>
+To:     Eric Farman <farman@linux.ibm.com>, Thomas Huth <thuth@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Date:   Mon, 07 Mar 2022 12:50:10 +0100
+In-Reply-To: <20220303210425.1693486-2-farman@linux.ibm.com>
+References: <20220303210425.1693486-1-farman@linux.ibm.com>
+         <20220303210425.1693486-2-farman@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.4 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:b2f listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5002]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [markwillima00[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [markpeterdavid[at]gmail.com]
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.6 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: uOLHCC-XP7dK84QAEBKIo6BN8sruggm5
+X-Proofpoint-GUID: R1xKmvtHhPAUjl3rVrjjANqeB60YIrYn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-03-07_04,2022-03-04_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 adultscore=0 phishscore=0 malwarescore=0 clxscore=1015
+ mlxlogscore=999 impostorscore=0 spamscore=0 bulkscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2203070066
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello,
-Good day,
+On Thu, 2022-03-03 at 22:04 +0100, Eric Farman wrote:
+> The routine smp_cpu_stopped() issues a SIGP SENSE, and returns true
+> if it received a CC1 (STATUS STORED) with the STOPPED or CHECK STOP
+> bits enabled. Otherwise, it returns false.
+> 
+> This is misleading, because a CC2 (BUSY) merely indicates that the
+> order code could not be processed, not that the CPU is operating.
+> It could be operating but in the process of being stopped.
+> 
+> Convert the invocation of the SIGP SENSE to retry when a CC2 is
+> received, so we get a more definitive answer.
+> 
+> Signed-off-by: Eric Farman <farman@linux.ibm.com>
 
-The HSBC Bank is a financial institution in United Kingdom. We
-promotes long-term,sustainable and broad-based economic growth in
-developing and emerging countries by providing financial support like
-loans and investment to large, small and
-medium-sized companies (SMEs) as well as fast-growing enterprises
-which in turn helps to create secure and permanent jobs and reduce
-poverty.
+Reviewed-by: Nico Boehr <nrb@linux.ibm.com>
 
-If you need fund to promotes your business, project(Project Funding),
-Loan, planning, budgeting and expansion of your business(s) , do not
-hesitate to indicate your interest as we are here to serve you better
-by granting your request.
-
-
-Thank you
-Mr:Mark
