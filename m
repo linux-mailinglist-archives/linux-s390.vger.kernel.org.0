@@ -2,68 +2,81 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDB0E4D4440
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Mar 2022 11:06:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D2C14D44AF
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Mar 2022 11:32:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241099AbiCJKH2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Mar 2022 05:07:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50396 "EHLO
+        id S241271AbiCJKdo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Mar 2022 05:33:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240199AbiCJKH1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Mar 2022 05:07:27 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B56D13D927;
-        Thu, 10 Mar 2022 02:06:26 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id B9609CE2315;
-        Thu, 10 Mar 2022 10:06:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0EC5C340F5;
-        Thu, 10 Mar 2022 10:06:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646906782;
-        bh=vhFXTfR/hHQwooRMbLLv+htbY75oKp351jSwOX6ruus=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ud5l1qsbXJFf8gH+uYExyTYvIz8T6lX3+I9F5nGWuFeMgL1BlC5il7yZEy9Pq1jLQ
-         nDKmXAUT8gXbXi7oDJgboC3xxlHkuln8v/mLbeLLvO5uzw1gOunhZv4JbH5021WNIq
-         g97xqb1Uy9C9vWkGU2U0nDJcwD4VhE57HPj+c0rni/Qbq6cKLTZjLabYQFXW2nTNqo
-         8lrRQU9ez/ZlWCmyK17bvCLl3ffRET3rsX96uJX97ksR2RYMBCIxo/8ori2WEd59/O
-         OL7rioB5cgwtNpFV23tgpV2bB+46QAVVqSLDqlSOgSatoXmUK8z4m/gLlECpItSWkp
-         utWcxHO1iuYVA==
-Received: by mail-vs1-f45.google.com with SMTP id u124so5296398vsb.10;
-        Thu, 10 Mar 2022 02:06:22 -0800 (PST)
-X-Gm-Message-State: AOAM532QD1kKYLDdvA4GHDy2hm7znWX/9hnVc1cpRVvKSPOETZHJeKXp
-        nwdsJp7XvVV2j+17Df/4zyK3MTXkXvtjt1L+U1U=
-X-Google-Smtp-Source: ABdhPJxmgtCny+YtcJg2sILVIeyOg6uUfrGYFkSlV5X2IRbm6w3wA9qxxW2buYTHGP3tmE/NAGGje/tSIZYaB3Wi5MY=
-X-Received: by 2002:a67:fc17:0:b0:320:b039:afc0 with SMTP id
- o23-20020a67fc17000000b00320b039afc0mr2196611vsq.2.1646906781754; Thu, 10 Mar
- 2022 02:06:21 -0800 (PST)
+        with ESMTP id S241346AbiCJKdK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Mar 2022 05:33:10 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADF5B13DE3C;
+        Thu, 10 Mar 2022 02:32:08 -0800 (PST)
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22AAAUGN006884;
+        Thu, 10 Mar 2022 10:32:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=DXUdP8NwVimv+WcahV3eSTEuOXikQinrV3NMrEdwEyg=;
+ b=E49zUNbhbophVE7q5f8Xz6P2CB0sp3nzHjz+wNZnzlb79Yhnj6QL8D9z9vgYJ0LuDvln
+ yKpSK2fUTSDLfWCS3V4QqskcgBz35J1GpaW/y3w1l1qkIsElKjSaiMgaNm7FioBjDRAE
+ ohe6LtzFwjEV8iH6OZkBlB+fK1tECvzhi8TnbvRVNhkMp2IbbcAqDuDyH/kUwiWmbRLK
+ dyXxxSBJQKq9wyVD0XrPuEuj2vL9tPCx11BTmwBgBXynOvDGdMsa2r0tSIsP01DDPi+I
+ TcSDD1kdwStUZT2WFb7c4Jl3U2BVDU6oci7D+Bxy9+5jnxlD6H+WEk/TKsfqqakBuwGk mg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3enww8rm5x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Mar 2022 10:32:07 +0000
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 22AACRSO018429;
+        Thu, 10 Mar 2022 10:32:07 GMT
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3enww8rm0k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Mar 2022 10:32:07 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 22AAJrbY019993;
+        Thu, 10 Mar 2022 10:31:47 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma02fra.de.ibm.com with ESMTP id 3ekyg92jgy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 10 Mar 2022 10:31:47 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 22AAViPD52167144
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Mar 2022 10:31:44 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 254595204F;
+        Thu, 10 Mar 2022 10:31:44 +0000 (GMT)
+Received: from linux6.. (unknown [9.114.12.104])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 8942A5204E;
+        Thu, 10 Mar 2022 10:31:43 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
+        david@redhat.com, borntraeger@linux.ibm.com
+Subject: [PATCH v2 0/9] kvm: s390: Add PV dump support
+Date:   Thu, 10 Mar 2022 10:31:03 +0000
+Message-Id: <20220310103112.2156-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-References: <20220227162831.674483-1-guoren@kernel.org> <20220227162831.674483-15-guoren@kernel.org>
-In-Reply-To: <20220227162831.674483-15-guoren@kernel.org>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Thu, 10 Mar 2022 18:06:10 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTQLWZbh_yZJMXAsWbjRfkeQMpdsuo5fQcFRYZbKQyGKaA@mail.gmail.com>
-Message-ID: <CAJF2gTQLWZbh_yZJMXAsWbjRfkeQMpdsuo5fQcFRYZbKQyGKaA@mail.gmail.com>
-Subject: Re: [PATCH V7 14/20] riscv: compat: Add elf.h implementation
-To:     Guo Ren <guoren@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
-        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-csky@vger.kernel.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Guo Ren <guoren@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: tn8MmkAEHnX3eH2SCWa_bkLKnkI7XCWt
+X-Proofpoint-GUID: OkL9q8fWwCY7Ly__v2_EehD5t6S3eTLi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-03-10_03,2022-03-09_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 adultscore=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 impostorscore=0 spamscore=0
+ mlxlogscore=504 phishscore=0 mlxscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2203100056
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -72,164 +85,57 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Palmer & Arnd
+Sometimes dumping inside of a VM fails, is unavailable or doesn't
+yield the required data. For these occasions we dump the VM from the
+outside, writing memory and cpu data to a file.
 
-Seems we need a more strict check to distinguish ELFCLASS32/64 RISC in
-elf for the elf_check_arch & compat_elf_check_arch. SET_PERSONALITY is
-not enough.
+Up to now PV guests only supported dumping from the inside of the
+guest through dumpers like KDUMP. A PV guest can be dumped from the
+hypervisor but the data will be stale and / or encrypted.
 
-diff --git a/arch/riscv/include/asm/elf.h b/arch/riscv/include/asm/elf.h
-index d87d3bcc758d..2fcd854fb516 100644
---- a/arch/riscv/include/asm/elf.h
-+++ b/arch/riscv/include/asm/elf.h
-@@ -33,7 +33,8 @@
- /*
-  * This is used to ensure we don't load something for the wrong architecture.
-  */
--#define elf_check_arch(x) ((x)->e_machine == EM_RISCV)
-+#define elf_check_arch(x) (((x)->e_machine == EM_RISCV) && \
-+                          ((x)->e_ident[EI_CLASS] == ELF_CLASS))
+To get the actual state of the PV VM we need the help of the
+Ultravisor who safeguards the VM state. New UV calls have been added
+to initialize the dump, dump storage state data, dump cpu data and
+complete the dump process.
 
- /*
-  * Use the same code with elf_check_arch, because elf32_hdr &
-diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-index 8caa5f48d0a1..f46016e96235 100644
---- a/arch/riscv/kernel/process.c
-+++ b/arch/riscv/kernel/process.c
-@@ -88,7 +88,9 @@ static bool compat_mode_supported __read_mostly;
 
- bool compat_elf_check_arch(Elf32_Ehdr *hdr)
- {
--       return compat_mode_supported && hdr->e_machine == EM_RISCV;
-+       return compat_mode_supported &&
-+              hdr->e_machine == EM_RISCV &&
-+              hdr->e_ident[EI_CLASS] == ELFCLASS32;
- }
+Notes:
+I chose not to document the dump data provided by the Ultravisor since
+KVM doesn't interprete it in any way. We're currently searching for a
+location and enough cycles to make it available to all.
 
- static int __init compat_mode_detect(void)
+v2:
+	* Added vcpu SIE blocking to avoid validities
+	* Moved the KVM CAP to patch #7
+	* Renamed len to len_max and introduced len_written for extendability
+	* Added Rev-bys
 
-On Mon, Feb 28, 2022 at 12:30 AM <guoren@kernel.org> wrote:
->
-> From: Guo Ren <guoren@linux.alibaba.com>
->
-> Implement necessary type and macro for compat elf. See the code
-> comment for detail.
->
-> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-> Signed-off-by: Guo Ren <guoren@kernel.org>
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/riscv/include/asm/elf.h | 46 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 45 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/include/asm/elf.h b/arch/riscv/include/asm/elf.h
-> index f53c40026c7a..aee40040917b 100644
-> --- a/arch/riscv/include/asm/elf.h
-> +++ b/arch/riscv/include/asm/elf.h
-> @@ -8,6 +8,8 @@
->  #ifndef _ASM_RISCV_ELF_H
->  #define _ASM_RISCV_ELF_H
->
-> +#include <uapi/linux/elf.h>
-> +#include <linux/compat.h>
->  #include <uapi/asm/elf.h>
->  #include <asm/auxvec.h>
->  #include <asm/byteorder.h>
-> @@ -18,11 +20,13 @@
->   */
->  #define ELF_ARCH       EM_RISCV
->
-> +#ifndef ELF_CLASS
->  #ifdef CONFIG_64BIT
->  #define ELF_CLASS      ELFCLASS64
->  #else
->  #define ELF_CLASS      ELFCLASS32
->  #endif
-> +#endif
->
->  #define ELF_DATA       ELFDATA2LSB
->
-> @@ -31,6 +35,13 @@
->   */
->  #define elf_check_arch(x) ((x)->e_machine == EM_RISCV)
->
-> +/*
-> + * Use the same code with elf_check_arch, because elf32_hdr &
-> + * elf64_hdr e_machine's offset are different. The checker is
-> + * a little bit simple compare to other architectures.
-> + */
-> +#define compat_elf_check_arch(x) ((x)->e_machine == EM_RISCV)
-> +
->  #define CORE_DUMP_USE_REGSET
->  #define ELF_EXEC_PAGESIZE      (PAGE_SIZE)
->
-> @@ -43,8 +54,14 @@
->  #define ELF_ET_DYN_BASE                ((TASK_SIZE / 3) * 2)
->
->  #ifdef CONFIG_64BIT
-> +#ifdef CONFIG_COMPAT
-> +#define STACK_RND_MASK         (test_thread_flag(TIF_32BIT) ? \
-> +                                0x7ff >> (PAGE_SHIFT - 12) : \
-> +                                0x3ffff >> (PAGE_SHIFT - 12))
-> +#else
->  #define STACK_RND_MASK         (0x3ffff >> (PAGE_SHIFT - 12))
->  #endif
-> +#endif
->  /*
->   * This yields a mask that user programs can use to figure out what
->   * instruction set this CPU supports.  This could be done in user space,
-> @@ -60,11 +77,19 @@ extern unsigned long elf_hwcap;
->   */
->  #define ELF_PLATFORM   (NULL)
->
-> +#define COMPAT_ELF_PLATFORM    (NULL)
-> +
->  #ifdef CONFIG_MMU
->  #define ARCH_DLINFO                                            \
->  do {                                                           \
-> +       /*                                                      \
-> +        * Note that we add ulong after elf_addr_t because      \
-> +        * casting current->mm->context.vdso triggers a cast    \
-> +        * warning of cast from pointer to integer for          \
-> +        * COMPAT ELFCLASS32.                                   \
-> +        */                                                     \
->         NEW_AUX_ENT(AT_SYSINFO_EHDR,                            \
-> -               (elf_addr_t)current->mm->context.vdso);         \
-> +               (elf_addr_t)(ulong)current->mm->context.vdso);  \
->         NEW_AUX_ENT(AT_L1I_CACHESIZE,                           \
->                 get_cache_size(1, CACHE_TYPE_INST));            \
->         NEW_AUX_ENT(AT_L1I_CACHEGEOMETRY,                       \
-> @@ -90,4 +115,23 @@ do {                                                        \
->                 *(struct user_regs_struct *)regs;       \
->  } while (0);
->
-> +#ifdef CONFIG_COMPAT
-> +
-> +#define SET_PERSONALITY(ex)                                    \
-> +do {    if ((ex).e_ident[EI_CLASS] == ELFCLASS32)              \
-> +               set_thread_flag(TIF_32BIT);                     \
-> +       else                                                    \
-> +               clear_thread_flag(TIF_32BIT);                   \
-> +       if (personality(current->personality) != PER_LINUX32)   \
-> +               set_personality(PER_LINUX |                     \
-> +                       (current->personality & (~PER_MASK)));  \
-> +} while (0)
-> +
-> +#define COMPAT_ELF_ET_DYN_BASE         ((TASK_SIZE_32 / 3) * 2)
-> +
-> +/* rv32 registers */
-> +typedef compat_ulong_t                 compat_elf_greg_t;
-> +typedef compat_elf_greg_t              compat_elf_gregset_t[ELF_NGREG];
-> +
-> +#endif /* CONFIG_COMPAT */
->  #endif /* _ASM_RISCV_ELF_H */
-> --
-> 2.25.1
->
+Janosch Frank (9):
+  s390x: Add SE hdr query information
+  s390: uv: Add dump fields to query
+  KVM: s390: pv: Add query interface
+  KVM: s390: pv: Add dump support definitions
+  KVM: s390: pv: Add query dump information
+  kvm: s390: Add configuration dump functionality
+  kvm: s390: Add CPU dump functionality
+  Documentation: virt: Protected virtual machine dumps
+  Documentation/virt/kvm/api.rst: Add protvirt dump/info api
+    descriptions
 
+ Documentation/virt/kvm/api.rst          | 150 +++++++++++-
+ Documentation/virt/kvm/index.rst        |   1 +
+ Documentation/virt/kvm/s390-pv-dump.rst |  60 +++++
+ arch/s390/boot/uv.c                     |   4 +
+ arch/s390/include/asm/kvm_host.h        |   1 +
+ arch/s390/include/asm/uv.h              |  45 +++-
+ arch/s390/kernel/uv.c                   |  53 +++++
+ arch/s390/kvm/kvm-s390.c                | 297 ++++++++++++++++++++++++
+ arch/s390/kvm/kvm-s390.h                |   3 +
+ arch/s390/kvm/pv.c                      | 131 +++++++++++
+ include/uapi/linux/kvm.h                |  55 +++++
+ 11 files changed, 797 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/virt/kvm/s390-pv-dump.rst
 
 -- 
-Best Regards
- Guo Ren
+2.32.0
 
-ML: https://lore.kernel.org/linux-csky/
