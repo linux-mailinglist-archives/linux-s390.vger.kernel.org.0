@@ -2,90 +2,100 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD4214D67F1
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Mar 2022 18:45:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 008574D6953
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Mar 2022 21:19:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234964AbiCKRqe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 11 Mar 2022 12:46:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55726 "EHLO
+        id S1351173AbiCKUUK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 11 Mar 2022 15:20:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350871AbiCKRqd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 11 Mar 2022 12:46:33 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BF7C1255B0;
-        Fri, 11 Mar 2022 09:45:30 -0800 (PST)
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22BFmhgi020965;
-        Fri, 11 Mar 2022 17:45:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=FWB2Lt5dedQx/dMoHwE2pqnrUKCcWJjYrC3scYSx+NE=;
- b=SpXH2c81qCfI5oLVdZsjuihagGba2ni0EqufETB6AlSou6y8xpEqYE0c/A4jozU0yVZJ
- eYCUOiIjBREyfeJZ+D/SFEpXeSjuKhvb7QCN6/wYLnpV8gbktdw44YLNIQZ8YL6J+jz5
- x+Z17pYa1ZfRPSWtjTPADsN9Ni99Au0k6f4fyuydgMZ+iLrPw26cKuEdGqSCehTi3qng
- DN5UNv+CiiHy4aMtXJGXkGgWSed2TdAxcRSIZ1BwQJzZkelZc3/wccy4Q7Djnqpmixnu
- kKV6gbSx/ZBex+tLZoKmy4tkaHMD8HXPqg9wYxY/5AX2r8GqEJIpNL+vyiFqKF29ZwpM wA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3eqs92bw9p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Mar 2022 17:45:29 +0000
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 22BGbw2k023064;
-        Fri, 11 Mar 2022 17:45:29 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3eqs92bw95-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Mar 2022 17:45:29 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 22BHhtMb003380;
-        Fri, 11 Mar 2022 17:45:27 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma01fra.de.ibm.com with ESMTP id 3ekyg8nc92-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Mar 2022 17:45:27 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 22BHjOpS22544744
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Mar 2022 17:45:24 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93E4A11C052;
-        Fri, 11 Mar 2022 17:45:23 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41B5D11C04A;
-        Fri, 11 Mar 2022 17:45:23 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.10.106])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 11 Mar 2022 17:45:23 +0000 (GMT)
-Date:   Fri, 11 Mar 2022 18:44:50 +0100
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, david@redhat.com,
-        borntraeger@linux.ibm.com
-Subject: Re: [PATCH v2 5/9] KVM: s390: pv: Add query dump information
-Message-ID: <20220311184450.51cc9ace@p-imbrenda>
-In-Reply-To: <20220310103112.2156-6-frankja@linux.ibm.com>
-References: <20220310103112.2156-1-frankja@linux.ibm.com>
-        <20220310103112.2156-6-frankja@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+        with ESMTP id S1351178AbiCKUUJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 11 Mar 2022 15:20:09 -0500
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 842B21AC288
+        for <linux-s390@vger.kernel.org>; Fri, 11 Mar 2022 12:19:04 -0800 (PST)
+Received: by mail-oi1-x232.google.com with SMTP id w2so2538512oie.2
+        for <linux-s390@vger.kernel.org>; Fri, 11 Mar 2022 12:19:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=byy3khpUB/C66OcuZpBogrh1vBdJYZWOahv4ARsAqeU=;
+        b=JsI+MgGwcNWNo5mFTmDhFQFX43IPSGP8AHmpadTTq1/jegWXkSYGxRbyYSNd2GGAfZ
+         QJL9ePsqy1+pQCjIkYOKeRZF/4ou56BLTl43xcIPQgKVuLYTvOOSpWVMBXvPzi3iVcEE
+         M9OokvdpojzL0W3mpYKQGxN00uuF3MValP5LkZwv7tBK8MbHNCEdcUSp8EyQgNvmdObM
+         dV8uEHfL0A+kbdg4/kBwvllnMdB0q6LY78GBq99WSqCsQB+n/5bFK7oLoh//RzZWPskK
+         DuBKl43ZqA2bbLdc1tjjtMkwJymKeQrW5rKztLf0fnJNsCRRE5EUHhDiGz2DbwyIRrvz
+         mrcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=byy3khpUB/C66OcuZpBogrh1vBdJYZWOahv4ARsAqeU=;
+        b=mmTXcLc1ZcMTbgb4yfZrRr+X6trtP53PCHDZWXP1DvOM4t1iJYWiGG4PM1G3xHJlrX
+         xy7DPcNIb0YmkHQgytLcvmLyBlAMhCNGO3JS0vG0IAVrqguuIA8gKu10lUTqmtGwOcUB
+         4cS/shnpQUbkFQbujT7smLzvHqRCba4JBdc/oMKvPXBeF36V3DMAX1Xs8mM9o82vXN54
+         g0YGzSUz8PjyJN3G9MtbY+wCmBwTYQOzBGNJH9mNVF78G39foOwWSkOWDFyEfZMN/q2r
+         4yAX7kFHt0BcGSMWUWNNMyLZtluFyokj+MC908vJcgVt8D8oc5wt3U+dvK/w5ndCUsHi
+         xnlA==
+X-Gm-Message-State: AOAM532CLJd8hiCHgPdHzwcu/gOsGANIIKaLAOexBXFyS/GGCSawW0GN
+        qaURbPVjnMBo2kRIVAlDIufSfA==
+X-Google-Smtp-Source: ABdhPJwiCKmAYCnvMQUHkha6DRmgbP0TH7H+cC730Evh2nxJN9gacFfI6shVehimGVsKyYdMWq24uQ==
+X-Received: by 2002:a05:6808:1406:b0:2d9:a01a:4bcb with SMTP id w6-20020a056808140600b002d9a01a4bcbmr7858798oiv.242.1647029943809;
+        Fri, 11 Mar 2022 12:19:03 -0800 (PST)
+Received: from builder.lan ([2600:1700:a0:3dc8:3697:f6ff:fe85:aac9])
+        by smtp.gmail.com with ESMTPSA id r41-20020a056870582900b000d6cbaf589esm3887680oap.40.2022.03.11.12.19.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Mar 2022 12:19:02 -0800 (PST)
+Date:   Fri, 11 Mar 2022 14:19:00 -0600
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stuart Yoder <stuyoder@gmail.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andy Gross <agross@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v3 11/11] rpmsg: Fix kfree() of static memory on setting
+ driver_override
+Message-ID: <YiuutCsuf4j192cJ@builder.lan>
+References: <20220227135214.145599-1-krzysztof.kozlowski@canonical.com>
+ <20220227135329.145862-5-krzysztof.kozlowski@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: anBpojp5oreilRyvlSr7EzpspybOfSOk
-X-Proofpoint-ORIG-GUID: 8zRDZvsi2I4jtk-J1vbO-4OA3ucjvyIn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-03-11_07,2022-03-11_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 adultscore=0 clxscore=1015 mlxlogscore=999 spamscore=0
- mlxscore=0 impostorscore=0 phishscore=0 malwarescore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2203110085
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220227135329.145862-5-krzysztof.kozlowski@canonical.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -93,75 +103,124 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 10 Mar 2022 10:31:08 +0000
-Janosch Frank <frankja@linux.ibm.com> wrote:
+On Sun 27 Feb 07:53 CST 2022, Krzysztof Kozlowski wrote:
 
-> The dump API requires userspace to provide buffers into which we will
-> store data. The dump information added in this patch tells userspace
-> how big those buffers need to be.
-
-it seems this has the same issue as the other patch.
-
-if userspace gives a smaller buffer, as much data as possible should be
-written into it
-
+> The driver_override field from platform driver should not be initialized
+> from static memory (string literal) because the core later kfree() it,
+> for example when driver_override is set via sysfs.
 > 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> Use dedicated helper to set driver_override properly.
+> 
+> Fixes: 950a7388f02b ("rpmsg: Turn name service into a stand alone driver")
+> Fixes: c0cdc19f84a4 ("rpmsg: Driver for user space endpoint interface")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
 > ---
->  arch/s390/kvm/kvm-s390.c | 11 +++++++++++
->  include/uapi/linux/kvm.h | 12 +++++++++++-
->  2 files changed, 22 insertions(+), 1 deletion(-)
+>  drivers/rpmsg/rpmsg_core.c     |  3 ++-
+>  drivers/rpmsg/rpmsg_internal.h | 13 +++++++++++--
+>  drivers/rpmsg/rpmsg_ns.c       | 14 ++++++++++++--
+>  include/linux/rpmsg.h          |  6 ++++--
+>  4 files changed, 29 insertions(+), 7 deletions(-)
 > 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 67e1e445681f..c388d08b9626 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -2255,6 +2255,17 @@ static ssize_t kvm_s390_handle_pv_info(struct kvm_s390_pv_info *info)
->  
->  		return len;
->  	}
-> +	case KVM_PV_INFO_DUMP: {
-> +		len =  sizeof(info->header) + sizeof(info->dump);
+> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+> index d9e612f4f0f2..6e2bf2742973 100644
+> --- a/drivers/rpmsg/rpmsg_core.c
+> +++ b/drivers/rpmsg/rpmsg_core.c
+> @@ -397,7 +397,8 @@ field##_store(struct device *dev, struct device_attribute *attr,	\
+>  	      const char *buf, size_t sz)				\
+>  {									\
+>  	struct rpmsg_device *rpdev = to_rpmsg_device(dev);		\
+> -	char *new, *old;						\
+> +	const char *old;						\
+> +	char *new;							\
+>  									\
+>  	new = kstrndup(buf, sz, GFP_KERNEL);				\
+>  	if (!new)							\
+> diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
+> index b1245d3ed7c6..31345d6e9a7e 100644
+> --- a/drivers/rpmsg/rpmsg_internal.h
+> +++ b/drivers/rpmsg/rpmsg_internal.h
+> @@ -92,10 +92,19 @@ int rpmsg_release_channel(struct rpmsg_device *rpdev,
+>   */
+>  static inline int rpmsg_chrdev_register_device(struct rpmsg_device *rpdev)
+>  {
+> +	int ret;
 > +
-> +		if (info->header.len_max < len)
-> +			return -EINVAL;
+>  	strcpy(rpdev->id.name, "rpmsg_chrdev");
+> -	rpdev->driver_override = "rpmsg_chrdev";
+> +	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
+> +				  "rpmsg_chrdev", strlen("rpmsg_chrdev"));
+> +	if (ret)
+> +		return ret;
 > +
-> +		info->dump.dump_cpu_buffer_len = uv_info.guest_cpu_stor_len;
-> +		info->dump.dump_config_mem_buffer_per_1m = uv_info.conf_dump_storage_state_len;
-> +		info->dump.dump_config_finalize_len = uv_info.conf_dump_finalize_len;
-> +		return len;
-> +	}
->  	default:
->  		return -EINVAL;
->  	}
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 21f19863c417..eed2ae8397ae 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1645,6 +1645,13 @@ struct kvm_s390_pv_unp {
+> +	ret = rpmsg_register_device(rpdev);
+> +	if (ret)
+> +		kfree(rpdev->driver_override);
 >  
->  enum pv_cmd_info_id {
->  	KVM_PV_INFO_VM,
-> +	KVM_PV_INFO_DUMP,
-> +};
+> -	return rpmsg_register_device(rpdev);
+> +	return ret;
+>  }
+>  
+>  #endif
+> diff --git a/drivers/rpmsg/rpmsg_ns.c b/drivers/rpmsg/rpmsg_ns.c
+> index 762ff1ae279f..95a51543f5ad 100644
+> --- a/drivers/rpmsg/rpmsg_ns.c
+> +++ b/drivers/rpmsg/rpmsg_ns.c
+> @@ -20,12 +20,22 @@
+>   */
+>  int rpmsg_ns_register_device(struct rpmsg_device *rpdev)
+>  {
+> +	int ret;
 > +
-> +struct kvm_s390_pv_info_dump {
-> +	__u64 dump_cpu_buffer_len;
-> +	__u64 dump_config_mem_buffer_per_1m;
-> +	__u64 dump_config_finalize_len;
->  };
+>  	strcpy(rpdev->id.name, "rpmsg_ns");
+> -	rpdev->driver_override = "rpmsg_ns";
+> +	ret = driver_set_override(&rpdev->dev, &rpdev->driver_override,
+> +				  "rpmsg_ns", strlen("rpmsg_ns"));
+> +	if (ret)
+> +		return ret;
+> +
+>  	rpdev->src = RPMSG_NS_ADDR;
+>  	rpdev->dst = RPMSG_NS_ADDR;
 >  
->  struct kvm_s390_pv_info_vm {
-> @@ -1664,7 +1671,10 @@ struct kvm_s390_pv_info_header {
+> -	return rpmsg_register_device(rpdev);
+> +	ret = rpmsg_register_device(rpdev);
+> +	if (ret)
+> +		kfree(rpdev->driver_override);
+> +
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL(rpmsg_ns_register_device);
 >  
->  struct kvm_s390_pv_info {
->  	struct kvm_s390_pv_info_header header;
-> -	struct kvm_s390_pv_info_vm vm;
-> +	union {
-> +		struct kvm_s390_pv_info_dump dump;
-> +		struct kvm_s390_pv_info_vm vm;
-> +	};
->  };
->  
->  enum pv_cmd_id {
-
+> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+> index 02fa9116cd60..20c8cd1cde21 100644
+> --- a/include/linux/rpmsg.h
+> +++ b/include/linux/rpmsg.h
+> @@ -41,7 +41,9 @@ struct rpmsg_channel_info {
+>   * rpmsg_device - device that belong to the rpmsg bus
+>   * @dev: the device struct
+>   * @id: device id (used to match between rpmsg drivers and devices)
+> - * @driver_override: driver name to force a match
+> + * @driver_override: driver name to force a match; do not set directly,
+> + *                   because core frees it; use driver_set_override() to
+> + *                   set or clear it.
+>   * @src: local address
+>   * @dst: destination address
+>   * @ept: the rpmsg endpoint of this channel
+> @@ -51,7 +53,7 @@ struct rpmsg_channel_info {
+>  struct rpmsg_device {
+>  	struct device dev;
+>  	struct rpmsg_device_id id;
+> -	char *driver_override;
+> +	const char *driver_override;
+>  	u32 src;
+>  	u32 dst;
+>  	struct rpmsg_endpoint *ept;
+> -- 
+> 2.32.0
+> 
