@@ -2,128 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B0034DAB89
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Mar 2022 08:08:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62C414DABF5
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Mar 2022 08:44:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354612AbiCPHI7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 16 Mar 2022 03:08:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55854 "EHLO
+        id S1354269AbiCPHpR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 16 Mar 2022 03:45:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354285AbiCPHHe (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 16 Mar 2022 03:07:34 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0D127CD4;
-        Wed, 16 Mar 2022 00:05:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 05368CE1D38;
-        Wed, 16 Mar 2022 07:05:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D03B3C340F2;
-        Wed, 16 Mar 2022 07:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647414325;
-        bh=qyoPYJlSA6NEig6jnwlt/QYfSWiYQ9maXb6WEkmPDVA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JIDcpiyYJGUG0u1uBju5PqK5t9M2mPYNatynjN0Mv5NqHVzP2HQEfvwkvepJ1eMla
-         lipxIQuXxrUrwGQy+P12VKgy/HG8qmRmlXKH/+sdG5/TnC4qKfeyeIxsGR+5xgliN3
-         XJEOAcpVeh9dPEEXypx+oaEiFkbKOvlbAsW+aff2lx976+56uP4Qfqs2fKMTCJrcNK
-         GK7/mXelJLLIDZNpWb3Bx4q5VlhLdMLQurplQ0PA3sk2WAdqUdMULGsg5qucMreHuj
-         3XuyRm7ks8Zc0ee6nsctIa1LxX4BEA/wJ3945l11HpcWRMoPwwQn4QztJS7nyI/XpV
-         8xhP4p6q/rBXg==
-From:   guoren@kernel.org
-To:     guoren@kernel.org, palmer@dabbelt.com, arnd@arndb.de,
-        anup@brainfault.org, gregkh@linuxfoundation.org, hch@lst.de
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        x86@kernel.org, heiko@sntech.de, Guo Ren <guoren@linux.alibaba.com>
-Subject: [PATCH V8 20/20] riscv: compat: Add COMPAT Kbuild skeletal support
-Date:   Wed, 16 Mar 2022 15:03:17 +0800
-Message-Id: <20220316070317.1864279-21-guoren@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220316070317.1864279-1-guoren@kernel.org>
-References: <20220316070317.1864279-1-guoren@kernel.org>
+        with ESMTP id S1354280AbiCPHpQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 16 Mar 2022 03:45:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ADB0A5F8E8
+        for <linux-s390@vger.kernel.org>; Wed, 16 Mar 2022 00:44:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1647416641;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mam8w85mLQbLuV3GPQ8EDdLw0BD02xApA60diEvmkn4=;
+        b=TVRIhh2BszB8A6+/L+ObBJwK1gTU3gx61zmRpVLnpgBpS+R809QXKdX1A4xj5vZpVmVzDK
+        RNXrwRC0VobicZqeoL20IIKopCq2gHltjlJ4ljuJgKTtpmnMK/AMoLjH0Ka8uBn0SK6se2
+        tJG9M1YmBa3MhmEvBhnuhVVoi/b92gE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-358-4PSA8FDgNXeG4IN1GItXBA-1; Wed, 16 Mar 2022 03:43:59 -0400
+X-MC-Unique: 4PSA8FDgNXeG4IN1GItXBA-1
+Received: by mail-wr1-f69.google.com with SMTP id 9-20020adf8009000000b00203d6cb4c60so262234wrk.3
+        for <linux-s390@vger.kernel.org>; Wed, 16 Mar 2022 00:43:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mam8w85mLQbLuV3GPQ8EDdLw0BD02xApA60diEvmkn4=;
+        b=aWEhdnCh/kECeuOJoYJkNNPUQ0Zch4wbPWGwEO5tUhZGJx00q1nRfRIKhdqUzVLPD9
+         dTGBAlW1zZw8mpkYsd09hBlhwDlkHy9E2zP0/yVU3GuHBaDpbbboHK6Yz+dpo23waTeN
+         /rMCdW6WJLRMMsAueH9b+5dstPbGcbCtpcYszKgZYhB5ZhUA/myXRrfpUD4b0NvXC/ES
+         CTcr+quM3b+MreRrQoLk0gQy8ewrBy1Cnyt5gyRkQmRIBlUf1+/4pEMlSJrLqrAwQjL9
+         v21t/VKhKB96VygotnW4pNaeGJkF71/oy3Kw+6VukqxtWPuHbQQUZBKBAsZqmtIHJxWz
+         XTaA==
+X-Gm-Message-State: AOAM5310xZmzD+SwPS/FoQkVArpUgr+aI5RLuohlUkLXUXbNWXlQxr+S
+        tAiFHzVm1XZmmOCPM8Gi41vHilWa69U141tOyAsD6ghZptzxkTdGOfjPp1Kkivam+OkHXEhl0zI
+        V4a823fE2LNsv6wZD0VC94w==
+X-Received: by 2002:a05:6000:3c3:b0:203:6976:6942 with SMTP id b3-20020a05600003c300b0020369766942mr22674969wrg.584.1647416638727;
+        Wed, 16 Mar 2022 00:43:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwiO62Yr0EsUOjjzC1evZxOKsDkUVAOuXWop4OtVqEPPMKVE+73MXHoDL8nCf5FamNh4qQ6+g==
+X-Received: by 2002:a05:6000:3c3:b0:203:6976:6942 with SMTP id b3-20020a05600003c300b0020369766942mr22674955wrg.584.1647416638514;
+        Wed, 16 Mar 2022 00:43:58 -0700 (PDT)
+Received: from gator (cst2-173-70.cust.vodafone.cz. [31.30.173.70])
+        by smtp.gmail.com with ESMTPSA id u7-20020a5d6da7000000b00203d9d1875bsm984282wrs.73.2022.03.16.00.43.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Mar 2022 00:43:58 -0700 (PDT)
+Date:   Wed, 16 Mar 2022 08:43:56 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Bill Wendling <morbo@google.com>
+Cc:     kvm@vger.kernel.org, Nikos Nikoleris <nikos.nikoleris@arm.com>,
+        lvivier@redhat.com, thuth@redhat.com, frankja@linux.ibm.com,
+        imbrenda@linux.ibm.com, david@redhat.com, pbonzini@redhat.com,
+        kvmarm@lists.cs.columbia.edu, kvm-ppc@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [kvm-unit-tests PATCH] libfdt: use logical "or" instead of
+ bitwise "or" with boolean operands
+Message-ID: <20220316074356.n7e5lzrmnal2dcgu@gator>
+References: <20220316060214.2200695-1-morbo@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220316060214.2200695-1-morbo@google.com>
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+On Tue, Mar 15, 2022 at 11:02:14PM -0700, Bill Wendling wrote:
+> Clang warns about using a bitwise '|' with boolean operands. This seems
+> to be due to a small typo.
+> 
+>   lib/libfdt/fdt_rw.c:438:6: warning: use of bitwise '|' with boolean operands [-Werror,-Wbitwise-instead-of-logical]
+>           if (can_assume(LIBFDT_ORDER) |
+> 
+> Using '||' removes this warnings.
+> 
+> Signed-off-by: Bill Wendling <morbo@google.com>
+> ---
+>  lib/libfdt/fdt_rw.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/lib/libfdt/fdt_rw.c b/lib/libfdt/fdt_rw.c
+> index 13854253ff86..3320e5559cac 100644
+> --- a/lib/libfdt/fdt_rw.c
+> +++ b/lib/libfdt/fdt_rw.c
+> @@ -435,7 +435,7 @@ int fdt_open_into(const void *fdt, void *buf, int bufsize)
+>  			return struct_size;
+>  	}
+>  
+> -	if (can_assume(LIBFDT_ORDER) |
+> +	if (can_assume(LIBFDT_ORDER) ||
+>  	    !fdt_blocks_misordered_(fdt, mem_rsv_size, struct_size)) {
+>  		/* no further work necessary */
+>  		err = fdt_move(fdt, buf, bufsize);
+> -- 
+> 2.35.1.723.g4982287a31-goog
+>
 
-Adds initial skeletal COMPAT Kbuild (Running 32bit U-mode on
-64bit S-mode) support.
- - Setup kconfig & dummy functions for compiling.
- - Implement compat_start_thread by the way.
+This is fixed in libfdt upstream with commit 7be250b4 ("libfdt:
+Correct condition for reordering blocks"), which is in v1.6.1.
+We can either take this patch as a backport of 7be250b4 or we
+can rebase all of our libfdt to v1.6.1. Based on the number of
+fixes in v1.6.1, which appear to be mostly for compiling with
+later compilers, I'm in favor of rebasing.
 
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
-Signed-off-by: Guo Ren <guoren@kernel.org>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Tested-by: Heiko Stuebner <heiko@sntech.de>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
----
- arch/riscv/Kconfig | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Actually, we can also use this opportunity to [re]visit the
+idea of changing libfdt to a git submodule. I'd like to hear
+opinions on that.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 5adcbd9b5e88..6f11df8c189f 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -73,6 +73,7 @@ config RISCV
- 	select HAVE_ARCH_KGDB if !XIP_KERNEL
- 	select HAVE_ARCH_KGDB_QXFER_PKT
- 	select HAVE_ARCH_MMAP_RND_BITS if MMU
-+	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
- 	select HAVE_ARCH_SECCOMP_FILTER
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if 64BIT && MMU
-@@ -123,12 +124,18 @@ config ARCH_MMAP_RND_BITS_MIN
- 	default 18 if 64BIT
- 	default 8
- 
-+config ARCH_MMAP_RND_COMPAT_BITS_MIN
-+	default 8
-+
- # max bits determined by the following formula:
- #  VA_BITS - PAGE_SHIFT - 3
- config ARCH_MMAP_RND_BITS_MAX
- 	default 24 if 64BIT # SV39 based
- 	default 17
- 
-+config ARCH_MMAP_RND_COMPAT_BITS_MAX
-+	default 17
-+
- # set if we run in machine mode, cleared if we run in supervisor mode
- config RISCV_M_MODE
- 	bool
-@@ -406,6 +413,18 @@ config CRASH_DUMP
- 
- 	  For more details see Documentation/admin-guide/kdump/kdump.rst
- 
-+config COMPAT
-+	bool "Kernel support for 32-bit U-mode"
-+	default 64BIT
-+	depends on 64BIT && MMU
-+	help
-+	  This option enables support for a 32-bit U-mode running under a 64-bit
-+	  kernel at S-mode. riscv32-specific components such as system calls,
-+	  the user helper functions (vdso), signal rt_frame functions and the
-+	  ptrace interface are handled appropriately by the kernel.
-+
-+	  If you want to execute 32-bit userspace applications, say Y.
-+
- endmenu
- 
- menu "Boot options"
--- 
-2.25.1
+Thanks,
+drew
 
