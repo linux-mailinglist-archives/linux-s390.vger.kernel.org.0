@@ -2,207 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 046D04DE791
-	for <lists+linux-s390@lfdr.de>; Sat, 19 Mar 2022 12:17:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3A4C4DE7B6
+	for <lists+linux-s390@lfdr.de>; Sat, 19 Mar 2022 12:43:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236984AbiCSLSo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 19 Mar 2022 07:18:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58960 "EHLO
+        id S234956AbiCSLpM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 19 Mar 2022 07:45:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242769AbiCSLSn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 19 Mar 2022 07:18:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5657F2C3DDD
-        for <linux-s390@vger.kernel.org>; Sat, 19 Mar 2022 04:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1647688642;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h01om2OJNg7UN6xR5wRvwatJof/v6Qj0aJDQ8nw06cE=;
-        b=EqQK3mjvMALifaDE4O5hPUmLxr5k7qOqzDeogrbUnf6ytlzB+PGAU9eyybDXrayzFZx4Fm
-        O8hQbl8mtQhw4j/Mcmv5pGVYcARJtyrN/4DfDxKIRWVyU0Hynk9IZC1xkl+JyMgMefny/s
-        AMPLgzBBAhMD0d0sy+6Dc46SpbeZSFY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-608-LHmq5N2oOBiU_yb3oaMjVw-1; Sat, 19 Mar 2022 07:17:20 -0400
-X-MC-Unique: LHmq5N2oOBiU_yb3oaMjVw-1
-Received: by mail-wm1-f70.google.com with SMTP id c126-20020a1c3584000000b00380dee8a62cso4035305wma.8
-        for <linux-s390@vger.kernel.org>; Sat, 19 Mar 2022 04:17:20 -0700 (PDT)
+        with ESMTP id S231818AbiCSLpL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 19 Mar 2022 07:45:11 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5816C19ABC5
+        for <linux-s390@vger.kernel.org>; Sat, 19 Mar 2022 04:43:50 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id q14so979770ljc.12
+        for <linux-s390@vger.kernel.org>; Sat, 19 Mar 2022 04:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=6d5jMCrauedgyT6F3RzrXl4yXsf77OwIiAgFmSDNs60=;
+        b=eXkeff/6OdBjThX8Fcz1P128sV6vm7YeydbjJB/Tn1SPquh8ef9UCPvp2tJF2CXxcC
+         i/sJY0LADOqDJdgGMvp4UhTU3C+aQJN45/9b8/SZmkSJ33DYbScGpqdbBlG68J0o11zT
+         wt57BRcLc5jEZaD4D8r2RI5ez2vZjAH/dSZwSoMKD3ItYsr+qGpLyKQrN42JRaIf2j2i
+         7i2zk32MZUisnrOW+H+embP95kfHCHZ76qU/dmC+8QQMTCUpXzMvVYWZQD34GJLjHlv4
+         A5MOBj7BUkLcZXQUAAvgsRhqDoe4nToH5Vu3O8cnv1J820/W4dRmaZ5ixL6hUNdoBiPE
+         4wIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent
-         :content-language:to:cc:references:from:organization:subject
-         :in-reply-to:content-transfer-encoding;
-        bh=h01om2OJNg7UN6xR5wRvwatJof/v6Qj0aJDQ8nw06cE=;
-        b=rUGEmhXOnGRBLFa1S4EvCWC/kCAEaBbVqvLolq5zljHJhf3RPPBw3uEsd+mbR7R1sS
-         +i38HZ6KTvkszYv1TUa43tEpkoEY0tL0T9Ps6bpjP1xL5xC0z5W66nlR8IClI7sI1B/o
-         lCp93Sb4mVfW8nQu5ex2B9VBAvVvgLtPuGiCI7Yy61HpfNICPpbK24jobrKm8xPP7t3Y
-         GNK0EkgaGkcYr5Jc4W7LJnEuS2aIu9Z1JiMsrtZBigS5DuGnHI6crJ6zxwMe2PISG2Jg
-         gFwNxSxkQLr8hye0y+LKB4eR48Iw5eojPFTbUPSFbWHi0ebk0zAmKdrvuHwjC0ilK51v
-         1e5w==
-X-Gm-Message-State: AOAM5330LVuwCINUDb+2oblePDp2w8Nx8VI2erkRrPUWkcLWXAwZP99k
-        FQMwWwULAebc4O+A0wH+3kcxgxN0lXLCxdZOUVAk1HQC0JnvWI9dJe8w2m8kzijK+7nDB98WW6+
-        lLS3rSDSmi+duxQvg56Q5+Q==
-X-Received: by 2002:a05:600c:3785:b0:38c:9b55:a477 with SMTP id o5-20020a05600c378500b0038c9b55a477mr214091wmr.164.1647688639515;
-        Sat, 19 Mar 2022 04:17:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwXQYHzmUknpl8dPLzijazZTS08+rGUI4YNRhcnL/au2TdAywuFEvKBekLN0RmMcXEBv9O0Qg==
-X-Received: by 2002:a05:600c:3785:b0:38c:9b55:a477 with SMTP id o5-20020a05600c378500b0038c9b55a477mr214049wmr.164.1647688639186;
-        Sat, 19 Mar 2022 04:17:19 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f24:9200:124e:f0bf:6f8c:cbd8? (p200300d82f249200124ef0bf6f8ccbd8.dip0.t-ipconnect.de. [2003:d8:2f24:9200:124e:f0bf:6f8c:cbd8])
-        by smtp.gmail.com with ESMTPSA id n15-20020a05600c4f8f00b003842f011bc5sm12433837wmq.2.2022.03.19.04.17.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 19 Mar 2022 04:17:18 -0700 (PDT)
-Message-ID: <74fdfa8c-abaa-ea48-4b82-6f0023548ead@redhat.com>
-Date:   Sat, 19 Mar 2022 12:17:16 +0100
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=6d5jMCrauedgyT6F3RzrXl4yXsf77OwIiAgFmSDNs60=;
+        b=TvIZlta79pXu3RvXidaAywgzH5peO2UaspLbsqqAC4fsiXJOA1yY8XumwXvmDQEgVY
+         HLBHyCwSvjcrfi8fpWmLQQ6BQ+/hPCuuF7LHkGYnhv3vJ0hdBUflv3MhPjfrGlKrKcv1
+         M/PxTOXDb4Qa6XQ3bZtaDPAfQ+biRY68b3u7i0vEWYDLr92Oz7nUztSU4GVDOFU5eiAT
+         VFR8PCk4raW53ZRt+5o8GWFC3/lmRkeeUjqFiTwB2e3iFkNvRS4++HLSzvT3AFwBFzA+
+         yMOfRrk7mncknl782XffBXUNoVOQ+mhddpyX2Twcq+hXhuLPOG/jPBEOKr3JMKJbUI+P
+         m8aQ==
+X-Gm-Message-State: AOAM53384Rz09sXnkehwNzFMiojA+3XTPLwm0uweameMIpRJnfMEptxB
+        PRweHoXWeEeim7AsdRqMsEd6o8McGtngxGRf4wc=
+X-Google-Smtp-Source: ABdhPJzQZHHvM/G2AWoEtFOdzDr2vRoS/sTeANqVHKjUU5IoPOtHnqgGusKRUUYZQUyZCZgZSj88NSgSkLhPHtQC614=
+X-Received: by 2002:a05:651c:11ca:b0:247:f32e:10ba with SMTP id
+ z10-20020a05651c11ca00b00247f32e10bamr9277550ljo.208.1647690228458; Sat, 19
+ Mar 2022 04:43:48 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Content-Language: en-US
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Yang Shi <shy828301@gmail.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Nadav Amit <namit@vmware.com>, Rik van Riel <riel@surriel.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Donald Dutile <ddutile@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>, Jan Kara <jack@suse.cz>,
-        Liang Zhang <zhangliang5@huawei.com>,
-        Pedro Gomes <pedrodemargomes@gmail.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, linux-mm@kvack.org,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-References: <20220315141837.137118-1-david@redhat.com>
- <20220318234850.GD11336@nvidia.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH v1 0/7] mm: COW fixes part 3: reliable GUP R/W FOLL_GET of
- anonymous pages
-In-Reply-To: <20220318234850.GD11336@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Sender: izedfrank333@gmail.com
+Received: by 2002:a05:6512:108f:0:0:0:0 with HTTP; Sat, 19 Mar 2022 04:43:47
+ -0700 (PDT)
+From:   Aisha Al-Qaddafi <aisha.gdaff21@gmail.com>
+Date:   Sat, 19 Mar 2022 04:43:47 -0700
+X-Google-Sender-Auth: MPDokt2zr0PoH63rywdpg01Z6Gs
+Message-ID: <CAFNE3FhXyv9PQd5UHVSRSC8zoYua+7ALDcVYB+dxAuEwppTzgw@mail.gmail.com>
+Subject: Your Urgent Reply Will Be Appreciated
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=7.4 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,LOTS_OF_MONEY,MILLION_HUNDRED,MILLION_USD,MONEY_FRAUD_5,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_MONEY,URG_BIZ autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:22d listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5866]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [izedfrank333[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [izedfrank333[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 MILLION_HUNDRED BODY: Million "One to Nine" Hundred
+        *  0.0 MILLION_USD BODY: Talks about millions of dollars
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.6 URG_BIZ Contains urgent matter
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  2.8 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+        *  3.0 MONEY_FRAUD_5 Lots of money and many fraud phrases
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 19.03.22 00:48, Jason Gunthorpe wrote:
-> On Tue, Mar 15, 2022 at 03:18:30PM +0100, David Hildenbrand wrote:
->> This is just the natural follow-up of part 2, that will also further
->> reduce "wrong COW" on the swapin path, for example, when we cannot remove
->> a page from the swapcache due to concurrent writeback, or if we have two
->> threads faulting on the same swapped-out page. Fixing O_DIRECT is just a
->> nice side-product :)
-
-Hi Jason,
-
-thanks or the review!
-
-> 
-> I know I would benefit alot from a description of the swap specific
-> issue a bit more. Most of this message talks about clear_refs which I
-> do understand a bit better.
-
-Patch #1 contains some additional information. In general, it's the same
-issue as with any other mechanism that could get the page mapped R/O
-while there is a FOLL_GET | FOLL_WRITE reference to it --  for example,
-DMA to that page as happens with our O_DIRECT reproducer.
-
-Part 2 essentially fixed the other cases (i.e., clear_refs), but the
-remaining swapout+refault from swapcache case is handled in this series.
-
-> 
-> Is this talking about what happens after a page gets swapped back in?
-> eg the exclusive bit is missing when the page is recreated?
-
-Right, try_to_unmap() was the last remaining case where we'd have lost
-the exclusivity information -- it wasn't required for reliable GUP pins
-in part 2.
-
-Here is what happens without PG_anon_exclusive:
-
-1. The application uses parts of an anonymous base page for direct I/O,
-let's assume the first 512 bytes of page.
-
-fd = open(filename, O_DIRECT| ...);
-pread(fd, page, 512, 0);
-
-O_DIRECT will take a FOLL_GET|FOLL_WRITE reference on the page
-
-2. Reclaim kicks in and wants to swapout the page -- mm/vmscan.c
-
-shrink_page_list() first adds the page to the swapcache and then unmaps
-it via try_to_unmap().
-
-After the page was successfully unmapped, pageout() will start
-triggering writeback but will realize that there are additional
-references on the page (via is_page_cache_freeable()) and fail.
-
-3. The application uses unrelated parts of the page for other purposes
-while the DMA is not completed, e.g., doing a a simple
-
-page[4095]++;
-
-The read access will fault in the page readable from the swap cache in
-do_swap_page(). The write access will trigger our COW fault handler. As
-we have an additional reference on the page, we will create a copy and
-map it into out page table. At this point, the page table and the GUP
-reference are out of sync.
-
-4. O_DIRECT completes
-
-The read targets the page that is no longer referenced in the page
-tables. For the application, it looks like the read() never happened, as
-we lost our DMA read to our page.
-
-
-With PG_anon_exclusive from series part 2, we don't remember exclusivity
-information in try_to_unmap() yet. do_swap_page() cannot restore it as
-it has to assume the page is possibly shared.
-
-With this series, we remember exclusivity information in try_to_unmap()
-in the SWP PTE. do_swap_page() can restore it. Consequently, our COW
-fault handler won't create a wrong copy and we won't go out of sync
-between GUP and the page mapped into the page table.
-
-
-Hope that helps!
-
--- 
-Thanks,
-
-David / dhildenb
-
+I came across your e-mail contact prior a private search while in need
+of your assistance. I am Aisha Al-Qaddafi, the only biological
+Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
+single Mother and a Widow with three Children.
+I have investment funds worth Twenty Seven Million Five Hundred
+Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
+investment Manager/Partner because of my current refugee status,
+however, I am interested in you for investment project assistance in
+your country, may be from there, we can build business relationship in
+the nearest future.
+I am willing to negotiate investment/business profit sharing ratio
+with you base on the future investment earning profits.
+If you are willing to handle this project on my behalf kindly reply
+urgent to enable me provide you more information about the investment
+funds
