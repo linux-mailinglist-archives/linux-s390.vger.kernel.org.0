@@ -2,110 +2,105 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3A4C4DE7B6
-	for <lists+linux-s390@lfdr.de>; Sat, 19 Mar 2022 12:43:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8C2E4DEAAB
+	for <lists+linux-s390@lfdr.de>; Sat, 19 Mar 2022 21:35:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234956AbiCSLpM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 19 Mar 2022 07:45:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37746 "EHLO
+        id S240379AbiCSUhO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 19 Mar 2022 16:37:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231818AbiCSLpL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 19 Mar 2022 07:45:11 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5816C19ABC5
-        for <linux-s390@vger.kernel.org>; Sat, 19 Mar 2022 04:43:50 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id q14so979770ljc.12
-        for <linux-s390@vger.kernel.org>; Sat, 19 Mar 2022 04:43:50 -0700 (PDT)
+        with ESMTP id S235693AbiCSUhO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 19 Mar 2022 16:37:14 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A9018F236;
+        Sat, 19 Mar 2022 13:35:52 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id w25so13862646edi.11;
+        Sat, 19 Mar 2022 13:35:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=6d5jMCrauedgyT6F3RzrXl4yXsf77OwIiAgFmSDNs60=;
-        b=eXkeff/6OdBjThX8Fcz1P128sV6vm7YeydbjJB/Tn1SPquh8ef9UCPvp2tJF2CXxcC
-         i/sJY0LADOqDJdgGMvp4UhTU3C+aQJN45/9b8/SZmkSJ33DYbScGpqdbBlG68J0o11zT
-         wt57BRcLc5jEZaD4D8r2RI5ez2vZjAH/dSZwSoMKD3ItYsr+qGpLyKQrN42JRaIf2j2i
-         7i2zk32MZUisnrOW+H+embP95kfHCHZ76qU/dmC+8QQMTCUpXzMvVYWZQD34GJLjHlv4
-         A5MOBj7BUkLcZXQUAAvgsRhqDoe4nToH5Vu3O8cnv1J820/W4dRmaZ5ixL6hUNdoBiPE
-         4wIQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eOMRj1XVqYhfRtL+8zbvkj9G0h1ouLrO0mIz9DEaP/E=;
+        b=TvlksU+FJkEucyu3UgBU4m6nfRwZuyAMLjIXpohgdKCofMKVS5LvjF+bIXTrJPsLOc
+         y8WCJxgDdmHw042HSGqEjFEqFTfZSIpJg4L5KqLEbsz9vEWSQxkTP+HvIRYiw1E6j2aq
+         FbApQMa9hSO0zP9vyO+wxG+9Zmmsve/z+y771TUIaqj8tgxEQ3mmRRFdOAhGLtvwkpjQ
+         /56SP3xmKbhVSOr0RnviOc7WYySYYxcAfnZt/fW8LDu0Ex7ROsb3tt/zDYAkAKq8HHus
+         tuFd7/Sd/Ia2cX1CPA9c4c7rhIHKU4R4hgccO177OPNN9+dCDmLfEBt06H1WHQk44rQt
+         TE6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=6d5jMCrauedgyT6F3RzrXl4yXsf77OwIiAgFmSDNs60=;
-        b=TvIZlta79pXu3RvXidaAywgzH5peO2UaspLbsqqAC4fsiXJOA1yY8XumwXvmDQEgVY
-         HLBHyCwSvjcrfi8fpWmLQQ6BQ+/hPCuuF7LHkGYnhv3vJ0hdBUflv3MhPjfrGlKrKcv1
-         M/PxTOXDb4Qa6XQ3bZtaDPAfQ+biRY68b3u7i0vEWYDLr92Oz7nUztSU4GVDOFU5eiAT
-         VFR8PCk4raW53ZRt+5o8GWFC3/lmRkeeUjqFiTwB2e3iFkNvRS4++HLSzvT3AFwBFzA+
-         yMOfRrk7mncknl782XffBXUNoVOQ+mhddpyX2Twcq+hXhuLPOG/jPBEOKr3JMKJbUI+P
-         m8aQ==
-X-Gm-Message-State: AOAM53384Rz09sXnkehwNzFMiojA+3XTPLwm0uweameMIpRJnfMEptxB
-        PRweHoXWeEeim7AsdRqMsEd6o8McGtngxGRf4wc=
-X-Google-Smtp-Source: ABdhPJzQZHHvM/G2AWoEtFOdzDr2vRoS/sTeANqVHKjUU5IoPOtHnqgGusKRUUYZQUyZCZgZSj88NSgSkLhPHtQC614=
-X-Received: by 2002:a05:651c:11ca:b0:247:f32e:10ba with SMTP id
- z10-20020a05651c11ca00b00247f32e10bamr9277550ljo.208.1647690228458; Sat, 19
- Mar 2022 04:43:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eOMRj1XVqYhfRtL+8zbvkj9G0h1ouLrO0mIz9DEaP/E=;
+        b=d08IVXJ+QUxKe2QVFIXPdEtNugsHjrrP+fdckCfD5V07SjqqjsRdILjst/wthMX8/U
+         SWO31/mov5NkeQsukys1EEFa/WOnx1lsMKpX3WiCMfM/Ale4oqbnHZwjUFTxgJX3S1QW
+         cWos9NrH6M+yUDZI9FUm09hjM4KY64mcjxviBzgJNq+ZfCE8eseF9nv/d19Dx5m88LEE
+         Lwjdt7vgE6l/0PrN2MkBxWRY/Xy/y6kyBHISMiidcLD+ZJGVo2Brb4pX6cv0jOAmCdSj
+         U9kHXeOvPtb9Fk/t9ZUJ9+btetJoAlwsu9iQDdCLIR1Xvd8212JmCYdyRAzF2DHe241L
+         bsHA==
+X-Gm-Message-State: AOAM533lt9QUJhu2yvaH8gxLh5JU+SUx4ehIeARik7UnisNSKanGm0H/
+        zUr96WTyA3avL7kpGuCsloY=
+X-Google-Smtp-Source: ABdhPJxEpg9Gmkt07PqFpEehx1FIoR0dX7G45r78ie8gajWqaZ8/PF49pd6BwbUiE9b82V1TUIChfg==
+X-Received: by 2002:a05:6402:2794:b0:419:2ed8:f36e with SMTP id b20-20020a056402279400b004192ed8f36emr856674ede.44.1647722151064;
+        Sat, 19 Mar 2022 13:35:51 -0700 (PDT)
+Received: from localhost.localdomain (i130160.upc-i.chello.nl. [62.195.130.160])
+        by smtp.googlemail.com with ESMTPSA id m24-20020a170906161800b006d420027b63sm5181902ejd.18.2022.03.19.13.35.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Mar 2022 13:35:50 -0700 (PDT)
+From:   Jakob Koschel <jakobkoschel@gmail.com>
+To:     Harald Freudenberger <freude@linux.ibm.com>
+Cc:     Jakob Koschel <jakobkoschel@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        "Brian Johannesmeyer" <bjohannesmeyer@gmail.com>,
+        Cristiano Giuffrida <c.giuffrida@vu.nl>,
+        "Bos, H.J." <h.j.bos@vu.nl>
+Subject: [PATCH] s390/zcrypt: fix using the correct variable for sizeof()
+Date:   Sat, 19 Mar 2022 21:35:28 +0100
+Message-Id: <20220319203528.2552869-1-jakobkoschel@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Sender: izedfrank333@gmail.com
-Received: by 2002:a05:6512:108f:0:0:0:0 with HTTP; Sat, 19 Mar 2022 04:43:47
- -0700 (PDT)
-From:   Aisha Al-Qaddafi <aisha.gdaff21@gmail.com>
-Date:   Sat, 19 Mar 2022 04:43:47 -0700
-X-Google-Sender-Auth: MPDokt2zr0PoH63rywdpg01Z6Gs
-Message-ID: <CAFNE3FhXyv9PQd5UHVSRSC8zoYua+7ALDcVYB+dxAuEwppTzgw@mail.gmail.com>
-Subject: Your Urgent Reply Will Be Appreciated
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.4 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,LOTS_OF_MONEY,MILLION_HUNDRED,MILLION_USD,MONEY_FRAUD_5,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_MONEY,URG_BIZ autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:22d listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5866]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [izedfrank333[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [izedfrank333[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 MILLION_HUNDRED BODY: Million "One to Nine" Hundred
-        *  0.0 MILLION_USD BODY: Talks about millions of dollars
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.6 URG_BIZ Contains urgent matter
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  2.8 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-        *  3.0 MONEY_FRAUD_5 Lots of money and many fraud phrases
-X-Spam-Level: *******
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-I came across your e-mail contact prior a private search while in need
-of your assistance. I am Aisha Al-Qaddafi, the only biological
-Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
-single Mother and a Widow with three Children.
-I have investment funds worth Twenty Seven Million Five Hundred
-Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
-investment Manager/Partner because of my current refugee status,
-however, I am interested in you for investment project assistance in
-your country, may be from there, we can build business relationship in
-the nearest future.
-I am willing to negotiate investment/business profit sharing ratio
-with you base on the future investment earning profits.
-If you are willing to handle this project on my behalf kindly reply
-urgent to enable me provide you more information about the investment
-funds
+While the original code is valid, it is not the obvious choice for the
+sizeof() call and in preparation to limit the scope of the list iterator
+variable the sizeof should be changed to the size of the variable
+being allocated.
+
+Signed-off-by: Jakob Koschel <jakobkoschel@gmail.com>
+---
+ drivers/s390/crypto/zcrypt_card.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/s390/crypto/zcrypt_card.c b/drivers/s390/crypto/zcrypt_card.c
+index 3e259befd30a..fcbd537530e8 100644
+--- a/drivers/s390/crypto/zcrypt_card.c
++++ b/drivers/s390/crypto/zcrypt_card.c
+@@ -90,7 +90,7 @@ static ssize_t online_store(struct device *dev,
+ 	list_for_each_entry(zq, &zc->zqueues, list)
+ 		maxzqs++;
+ 	if (maxzqs > 0)
+-		zq_uelist = kcalloc(maxzqs + 1, sizeof(zq), GFP_ATOMIC);
++		zq_uelist = kcalloc(maxzqs + 1, sizeof(*zq_uelist), GFP_ATOMIC);
+ 	list_for_each_entry(zq, &zc->zqueues, list)
+ 		if (zcrypt_queue_force_online(zq, online))
+ 			if (zq_uelist) {
+
+base-commit: 34e047aa16c0123bbae8e2f6df33e5ecc1f56601
+--
+2.25.1
+
