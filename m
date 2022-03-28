@@ -2,88 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FC4C4E8FA8
-	for <lists+linux-s390@lfdr.de>; Mon, 28 Mar 2022 10:02:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DFA24E8FDF
+	for <lists+linux-s390@lfdr.de>; Mon, 28 Mar 2022 10:14:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235541AbiC1IDe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 28 Mar 2022 04:03:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57096 "EHLO
+        id S239198AbiC1IQa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 28 Mar 2022 04:16:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239093AbiC1IDb (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 28 Mar 2022 04:03:31 -0400
+        with ESMTP id S239184AbiC1IQ3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 28 Mar 2022 04:16:29 -0400
 Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29A2952E7B;
-        Mon, 28 Mar 2022 01:01:50 -0700 (PDT)
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22S7vvnm028925;
-        Mon, 28 Mar 2022 08:01:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=Zs6dBemfH8IrRviMQDnRmbcJfN9uyMeIJp6pMbJ7Ayw=;
- b=ar0ny7IMuWQWwfhJGU69UpC2xMZiaaUdqkfY1+As/ijrzyCpZQ/Y+iMYbvSmnx/Htz2c
- E564nRuALc8Oa7GpqCRzTTn/tE3CwLEvSwnJDaAItY8yciR3ll0Qgthxwjq6ExrqBr8x
- EpeYZqezfq2RKxXunEFQ9Z3YzXWQQX5L2EhhGgTVKHvVyce9t8clcrrwGhP1qSTk5I+t
- osWKSxrqobLrfX8ye6eInc0JGEp9TP+ikGl/3JDvJbTlORBDHfB9oyQwA5gCuMtwgHU+
- 3v537a0g2x9h7HZ4MvahuoEHFXv4Rv5d6EyF8GKm7H25LF/LsoiO8v+1ve4aTJACzLZZ Aw== 
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76E7713D49;
+        Mon, 28 Mar 2022 01:14:48 -0700 (PDT)
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22S7BHIX030140;
+        Mon, 28 Mar 2022 08:14:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=/6fqljDLo66D/QnPQ+CevPQegWYTq0n+psUMxtgm+pA=;
+ b=hp44cF9R8b/vyuRFLfnxU9oA911azijr17ci/R8bqIvevygfAsVv2Oj1C0EPJbWkK6qs
+ jAfAmOQbD1e3lYEyb+xztI3E84DJavFzpPQu/Ynubdebk+x0w0t3DnfOUGTNDg8iSy6K
+ ryqKhgDE6JBVEsfdQZTgQLBrdK2x+DHzPM2HGpuswMoqU/doKY5XOaS/TfZtKfO4O1pK
+ 9sxkDlTXE+IunxdNfbf4UZnRzvnyMPVWmKQ0KyjEPDAVAxR4zCpu67IXOprkEhoGeZ+z
+ F9WTiRIAVgNaKqZKVF/87xOgR/VY60F1/fr4wmyXUmjEbgJV11pfTvB0ioxdMpHotk1i ag== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3f393gg2y8-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3f2c8j4ww5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Mar 2022 08:01:49 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 22S80eNL008174;
-        Mon, 28 Mar 2022 08:01:48 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3f393gg2xu-1
+        Mon, 28 Mar 2022 08:14:31 +0000
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 22S7w6dU012050;
+        Mon, 28 Mar 2022 08:14:31 GMT
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3f2c8j4wvj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Mar 2022 08:01:48 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 22S7rVXj026618;
-        Mon, 28 Mar 2022 08:01:46 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma02fra.de.ibm.com with ESMTP id 3f1tf8twnp-1
+        Mon, 28 Mar 2022 08:14:30 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 22S8DVpJ007374;
+        Mon, 28 Mar 2022 08:14:29 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma01fra.de.ibm.com with ESMTP id 3f1tf8jx76-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Mar 2022 08:01:46 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 22S81hVr44499230
+        Mon, 28 Mar 2022 08:14:29 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 22S82VaY44695860
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Mar 2022 08:01:43 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D04B52050;
-        Mon, 28 Mar 2022 08:01:43 +0000 (GMT)
-Received: from li-ca45c2cc-336f-11b2-a85c-c6e71de567f1.ibm.com (unknown [9.171.50.198])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 18E275204F;
-        Mon, 28 Mar 2022 08:01:43 +0000 (GMT)
-Message-ID: <477b6fc8a6fa036dfaed951e69c6de279bc5c05b.camel@linux.ibm.com>
-Subject: Re: [kvm-unit-tests PATCH v2 3/9] s390x: gs: move to new header file
-From:   Nico Boehr <nrb@linux.ibm.com>
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Cc:     Heiko Carstens <hca@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com,
-        farman@linux.ibm.com
-Date:   Mon, 28 Mar 2022 10:01:42 +0200
-In-Reply-To: <20220325173825.2df90f51@p-imbrenda>
-References: <20220323170325.220848-1-nrb@linux.ibm.com>
-         <20220323170325.220848-4-nrb@linux.ibm.com> <YjytK7iW7ucw/Gwj@osiris>
-         <a2870c6b-6b2a-0a81-435e-ec0f472697c6@linux.ibm.com>
-         <20220325153048.48306e40@p-imbrenda>
-         <34d7549b-40c0-a010-3a05-2adbe5f9c41d@linux.ibm.com>
-         <20220325173825.2df90f51@p-imbrenda>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 28 Mar 2022 08:02:31 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91594A4053;
+        Mon, 28 Mar 2022 08:14:25 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7AC6BA4040;
+        Mon, 28 Mar 2022 08:14:25 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 28 Mar 2022 08:14:25 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55271)
+        id 2FAA2E1FFE; Mon, 28 Mar 2022 10:14:25 +0200 (CEST)
+From:   Alexandra Winter <wintera@linux.ibm.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Alexandra Winter <wintera@linux.ibm.com>
+Subject: [PATCH net-next 0/1] veth: Support bonding events
+Date:   Mon, 28 Mar 2022 10:14:16 +0200
+Message-Id: <20220328081417.1427666-1-wintera@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Ws-sd20zB1btYzunF9SQ25gpaSXYzHyZ
-X-Proofpoint-ORIG-GUID: Pm1cePHkuhISnPnKAP8oHc_mLpb8B8k_
+X-Proofpoint-ORIG-GUID: tMvRc4urkMauDHxdDFCImmplfl2-rgI8
+X-Proofpoint-GUID: JXIw4A-TnEXQDyWnuMu34rKtyoV8l0dk
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
  definitions=2022-03-28_02,2022-03-28_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- impostorscore=0 mlxscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
- clxscore=1015 mlxlogscore=999 priorityscore=1501 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 spamscore=0 clxscore=1011
+ mlxlogscore=884 impostorscore=0 mlxscore=0 phishscore=0 priorityscore=1501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2202240000 definitions=main-2203280046
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
@@ -95,20 +101,38 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 2022-03-25 at 17:38 +0100, Claudio Imbrenda wrote:
-> > Do we need load_guarded() in this new header?
-> > The load/store_gscb() functions have potential to be shared across
-> > tests 
-> > but the lg doesn't need to be executed, no?
-> > 
-> > We could opt to leave it in gs.c instead
-> 
-> yes, probably a better idea. I'd still add the comment, though :)
-> 
-> shall I just fix this up when picking?
+In case virtual instances are attached to an external network via veth
+and a bridge, the interface to the external network can be a bond
+interface. Bonding drivers generate specific events during failover
+that trigger switch updates.  When a veth device is attached to a
+bridge with a bond interface, we want external switches to learn about
+the veth devices as well.
 
-I like the suggestion by Janosch.
+Without this patch we have seen cases where recovery after bond
+failover took an unacceptable amount of time (depending on timeout
+settings in the network).
 
-Since I will sent the ADTL STATUS test (patch 4) in a seperate series
-anyways, I think it makes more sense if I include the patch there and
-you don't pick patches 3 and 4 from this series.
+Due to the symmetric nature of veth special care is required to avoid
+endless notification loops. Therefore we only notify from a veth
+bridgeport to a peer that is not a bridgeport.
+
+References:
+Same handling as for macvlan:
+4c9912556867 ("macvlan: Support bonding events"
+and vlan:
+4aa5dee4d999 ("net: convert resend IGMP to notifier event")
+
+Alternatives:
+Propagate notifier events to all ports of a bridge. IIUC, this was
+rejected in https://www.spinics.net/lists/netdev/msg717292.html
+It also seems difficult to avoid re-bouncing the notifier.
+
+Alexandra Winter (1):
+  veth: Support bonding events
+
+ drivers/net/veth.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+
+-- 
+2.32.0
+
