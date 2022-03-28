@@ -2,51 +2,83 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C1244EA226
-	for <lists+linux-s390@lfdr.de>; Mon, 28 Mar 2022 22:59:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE0074EA346
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Mar 2022 00:51:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230310AbiC1VBN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 28 Mar 2022 17:01:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38796 "EHLO
+        id S230028AbiC1Wn4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 28 Mar 2022 18:43:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbiC1VBM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 28 Mar 2022 17:01:12 -0400
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB496E4C4
-        for <linux-s390@vger.kernel.org>; Mon, 28 Mar 2022 13:59:27 -0700 (PDT)
-Received: by mail-io1-f72.google.com with SMTP id y3-20020a056602178300b00645d25c30c1so11142467iox.6
-        for <linux-s390@vger.kernel.org>; Mon, 28 Mar 2022 13:59:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=8b0H5vvD2VnHQ7WB0PvUTrDqYnbmClQRRtRxaJNMcQs=;
-        b=1cNRm8aafuieOCRRExo8xK9Twk89ycopL7jXZwszrA+j2iP3oOzjLqxUv9r0MGyFOt
-         nIU4CfeGnZ9yy3nR4PD6Ox0YJkMi0OWV3kVJHDqgCXNUw5AqhATaYo8tn+VemwzzckHw
-         s2jvaOtbdwBSfrUYh1YcnFimEbwpuVzlZYQ2RNvH4ajyqOMBOnTzhtEio0d8GKwNS7A9
-         KW0PdPORLeP/nwW9A+JusH9Az/KK4w0Vbg6DD9Zd3URh+fq9Wnjl6s1MUh0uWSsUa03P
-         oH2Yf0VSA+aezLoIe9tcu7z3dBJfgzBWHSjmxllCexf1embx/SG5yxv6P+l+0F7OcSAO
-         NSJA==
-X-Gm-Message-State: AOAM530QNDPc+gc+6CPz3X/sdhhRYSa6qKrv51KlnFktZixl7VrEUBBg
-        xUTFEoV8qgvGM/M9sRPSOe2wHLpNVuXYp69hq6ai9VdMbFzA
-X-Google-Smtp-Source: ABdhPJx3jL1kXv2KYtl8WquCdr03cvCiSymt2HZ053TYRUZs1f+gPVc9KaFGmbepBUcZjRQBQfb5ljUX/ZJKj+1WbA98/z4Docc9
+        with ESMTP id S230017AbiC1Wnz (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 28 Mar 2022 18:43:55 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9299C3E0E1;
+        Mon, 28 Mar 2022 15:42:14 -0700 (PDT)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22SIoBSJ022626;
+        Mon, 28 Mar 2022 21:44:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pp1; bh=NnyKKtxu4F/uRqTniTyXZXQEPsrsBOiKJquWbfplKjU=;
+ b=UgJPFOZOqqrh5V3eC37/2lYWrF20vzq8imS+3r8KNdMzDCAtnxpZ4mLyclvc1dE+qTS/
+ u4F0g6S2V/g688teMV4y3IUrrbv8Epfdj/Mz9K8OfQ1zvBMKIAfZQYnVjdgH5j3dMgMx
+ hnqdK8yp6bbC70ouEdejO56PIZaSGGazw5UHk9dShfLOZtCfb2xZHzNNKkBecheCB1TY
+ PF1YzQqPjdnGyDz6+mxb8Dtt0mKb3TIYvKzQSnzNu9P0JdPoR8afG5x2gcNG/G73Su0J
+ 90YGP6Zyd8oehcCjiMyCwrpkv8X2/G/MEyeN0KMoFjJlN4AurX2m3eLzIcB0s3DVTdOQ Fw== 
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3f3j6pumfn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Mar 2022 21:44:33 +0000
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 22SLhVBJ027436;
+        Mon, 28 Mar 2022 21:44:32 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma05fra.de.ibm.com with ESMTP id 3f1tf8v1q7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Mar 2022 21:44:32 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 22SLiS6q32965062
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Mar 2022 21:44:28 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9BA02A4051;
+        Mon, 28 Mar 2022 21:44:28 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 473E8A404D;
+        Mon, 28 Mar 2022 21:44:28 +0000 (GMT)
+Received: from localhost (unknown [9.171.75.40])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 28 Mar 2022 21:44:28 +0000 (GMT)
+Date:   Mon, 28 Mar 2022 23:44:26 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-next@vger.kernel.org,
+        llvm@lists.linux.dev
+Subject: Re: s390 defconfig fails to build after
+ 4afeb670710efa5cd5ed8b1d9f2d22d6ce332bcc
+Message-ID: <your-ad-here.call-01648503866-ext-8764@work.hours>
+References: <YkH/rRikE2CilpqU@dev-arch.thelio-3990X>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <YkH/rRikE2CilpqU@dev-arch.thelio-3990X>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 53qM4UR7Q3VuN8sDrnYgv1aTgYu-X5lx
+X-Proofpoint-ORIG-GUID: 53qM4UR7Q3VuN8sDrnYgv1aTgYu-X5lx
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1585:b0:2c2:5b2c:e3e5 with SMTP id
- m5-20020a056e02158500b002c25b2ce3e5mr6883558ilu.76.1648501166487; Mon, 28 Mar
- 2022 13:59:26 -0700 (PDT)
-Date:   Mon, 28 Mar 2022 13:59:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000070bc9405db4d96b8@google.com>
-Subject: [syzbot] memory leak in smc_create (2)
-From:   syzbot <syzbot+6e29a053eb165bd50de5@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kgraul@linux.ibm.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, pabeni@redhat.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_00,FROM_LOCAL_HEX,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-03-28_10,2022-03-28_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=756
+ mlxscore=0 malwarescore=0 clxscore=1011 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 impostorscore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2203280116
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,974 +86,32 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello,
+On Mon, Mar 28, 2022 at 11:34:21AM -0700, Nathan Chancellor wrote:
+> Hi all,
+> 
+> Apologies if this has been reported or fixed already, I did not see a
+> report when searching lore.kernel.org and it is reproducible as of
+> commit 7dcfe50f58d2 ("s390/pci: rename get_zdev_by_bus() to
+> zdev_from_bus()") in s390/linux.git.
+> 
+> Our continuous integration noticed a build failure on next-20220328 in
+> arch/s390/kernel/entry.S, which does not appear to be compiler specific,
+> as I can reproduce this with GCC easily:
+> 
+> https://builds.tuxbuild.com/2716QwFVG9408TJ43vkEc7trVCI/build.log
+> 
+> $ make -skj"$(nproc)" ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- defconfig arch/s390/kernel/entry.o
+> arch/s390/kernel/entry.S: Assembler messages:
+> arch/s390/kernel/entry.S:335: Error: Unrecognized opcode: `jgnop'
+> arch/s390/kernel/entry.S:493: Error: Unrecognized opcode: `jgnop'
+> arch/s390/kernel/entry.S:494: Error: Unrecognized opcode: `jgnop'
 
-syzbot found the following issue on:
+Thank you for reporting this!
 
-HEAD commit:    ed4643521e6a Merge tag 'arm-dt-5.18' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14d17b99700000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8414405fa34d7154
-dashboard link: https://syzkaller.appspot.com/bug?extid=6e29a053eb165bd50de5
-compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16431151700000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15f44cdb700000
+jgnop mnemonic has been introduced with binutils commit
+b10b530a4566 ("IBM Z: Add support for HLASM extended mnemonics")
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6e29a053eb165bd50de5@syzkaller.appspotmail.com
+and is part of binutils-2_36 and newer.
 
-BUG: memory leak
-unreferenced object 0xffff8881158a5840 (size 1504):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 40.640s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888114575d80 (size 32):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 40.640s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d880 (size 1504):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 39.860s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888115827920 (size 32):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 39.860s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d280 (size 1504):
-  comm "syz-executor131", pid 3753, jiffies 4294957955 (age 39.860s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff8881158a5840 (size 1504):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 40.700s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888114575d80 (size 32):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 40.700s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d880 (size 1504):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 39.920s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888115827920 (size 32):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 39.920s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d280 (size 1504):
-  comm "syz-executor131", pid 3753, jiffies 4294957955 (age 39.920s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff8881158a5840 (size 1504):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 40.770s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888114575d80 (size 32):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 40.770s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d880 (size 1504):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 39.990s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888115827920 (size 32):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 39.990s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d280 (size 1504):
-  comm "syz-executor131", pid 3753, jiffies 4294957955 (age 39.990s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff8881158a5840 (size 1504):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 40.830s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888114575d80 (size 32):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 40.830s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d880 (size 1504):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 40.050s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888115827920 (size 32):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 40.050s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d280 (size 1504):
-  comm "syz-executor131", pid 3753, jiffies 4294957955 (age 40.050s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff8881158a5840 (size 1504):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 40.890s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888114575d80 (size 32):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 40.890s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d880 (size 1504):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 40.110s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888115827920 (size 32):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 40.110s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d280 (size 1504):
-  comm "syz-executor131", pid 3753, jiffies 4294957955 (age 40.110s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff8881158a5840 (size 1504):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 40.960s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888114575d80 (size 32):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 40.960s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d880 (size 1504):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 40.180s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888115827920 (size 32):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 40.180s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d280 (size 1504):
-  comm "syz-executor131", pid 3753, jiffies 4294957955 (age 40.180s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff8881158a5840 (size 1504):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 41.020s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888114575d80 (size 32):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 41.020s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d880 (size 1504):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 40.250s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888115827920 (size 32):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 40.250s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d280 (size 1504):
-  comm "syz-executor131", pid 3753, jiffies 4294957955 (age 40.250s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff8881158a5840 (size 1504):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 41.090s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888114575d80 (size 32):
-  comm "syz-executor131", pid 3746, jiffies 4294957877 (age 41.090s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d880 (size 1504):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 40.310s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff888115827920 (size 32):
-  comm "syz-executor131", pid 3754, jiffies 4294957955 (age 40.310s)
-  hex dump (first 32 bytes):
-    b0 2e 04 40 81 88 ff ff 00 00 00 00 00 00 00 00  ...@............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff821fb4e3>] kmalloc include/linux/slab.h:581 [inline]
-    [<ffffffff821fb4e3>] kzalloc include/linux/slab.h:714 [inline]
-    [<ffffffff821fb4e3>] apparmor_sk_alloc_security+0x53/0xd0 security/apparmor/lsm.c:792
-    [<ffffffff821c1091>] security_sk_alloc+0x31/0x70 security/security.c:2279
-    [<ffffffff837cc0f5>] sk_prot_alloc+0x95/0x1b0 net/core/sock.c:1926
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff88811569d280 (size 1504):
-  comm "syz-executor131", pid 3753, jiffies 4294957955 (age 40.310s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    2b 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  +..@............
-  backtrace:
-    [<ffffffff837cc09e>] sk_prot_alloc+0x3e/0x1b0 net/core/sock.c:1917
-    [<ffffffff837cfcf2>] sk_alloc+0x32/0x2e0 net/core/sock.c:1976
-    [<ffffffff84173e61>] smc_sock_alloc+0x51/0x1a0 net/smc/af_smc.c:246
-    [<ffffffff84174e89>] __smc_create net/smc/af_smc.c:2879 [inline]
-    [<ffffffff84174e89>] smc_create+0x89/0x180 net/smc/af_smc.c:2910
-    [<ffffffff837c49cb>] __sock_create+0x1ab/0x2b0 net/socket.c:1468
-    [<ffffffff837c794f>] sock_create net/socket.c:1519 [inline]
-    [<ffffffff837c794f>] __sys_socket+0x6f/0x140 net/socket.c:1561
-    [<ffffffff837c7a3a>] __do_sys_socket net/socket.c:1570 [inline]
-    [<ffffffff837c7a3a>] __se_sys_socket net/socket.c:1568 [inline]
-    [<ffffffff837c7a3a>] __x64_sys_socket+0x1a/0x20 net/socket.c:1568
-    [<ffffffff844f9695>] do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-    [<ffffffff844f9695>] do_syscall_64+0x35/0xb0 arch/x86/entry/common.c:80
-    [<ffffffff84600068>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+I fixed it by using old "brcl 0,0" alternative here:
+https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features&id=faf79934e65aff90284725518a5ec3c2241c65ae
