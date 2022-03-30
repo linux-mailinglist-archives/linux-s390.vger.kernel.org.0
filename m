@@ -2,298 +2,144 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 08D8B4EBFBC
-	for <lists+linux-s390@lfdr.de>; Wed, 30 Mar 2022 13:25:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15A024EC428
+	for <lists+linux-s390@lfdr.de>; Wed, 30 Mar 2022 14:33:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343607AbiC3L1P (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 30 Mar 2022 07:27:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58204 "EHLO
+        id S234484AbiC3Mf3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 30 Mar 2022 08:35:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245499AbiC3L1N (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 30 Mar 2022 07:27:13 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D1B915AAD6
-        for <linux-s390@vger.kernel.org>; Wed, 30 Mar 2022 04:25:28 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id o10so40890514ejd.1
-        for <linux-s390@vger.kernel.org>; Wed, 30 Mar 2022 04:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=PPMzFSUsmZj0Sw9cDuMbS4vCZ0/cq7NTSquYK/7lYUA=;
-        b=KV0T4WV0zv3kjIURANeXt73a+XnUfpJrZA3O4mvEf7Nczk5+eTzJ1hhEGpn6kzzYc3
-         gxVgmwxfxC4G8ju7VLLckK04cWsu5LZaFpabwxlSwZc9Yhlu8ElSldv3XgqA8psJZtd8
-         +TxcqHr9X7e38vXsvfFmmuBcu8zWrasUZepIVmkrmIJZjJoPQtGKydjDHS+4yGul3RpJ
-         guZLrOCcAzYZvyEZbE0IEnc/jS4BKYPSN0Ifb9AjYRVQ6Bj8lgz1IHcw0nrIy8DaOi7k
-         RsE5l/nc69iZ0yj9coJVzt41cQeEpJVpOqKJLiZCt5JOolfz4KonzZTwP/JyLqbCPg3J
-         oU/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=PPMzFSUsmZj0Sw9cDuMbS4vCZ0/cq7NTSquYK/7lYUA=;
-        b=U+7k4xiGKtXrx9quXsyrEA04cZ3DGf8n8HOTzYfvXwJ70Vd0MlRAbGkf4Ze7Ch1JOl
-         LbMuzDvf7faQqTE8camDCnLeR/qzEIOtV5Ymzv8upU2HwQJgHIMGNDnGFUwZiuFcYKOD
-         M2obPAPntO4NhBAULPaH4Hq1t44sDaA6p9zqZRkELVQxJN1kglBmjm3YTk+fnM4jMXGs
-         l5O8yWG8BgTVlYWULfznjryOFf5c9hXEUHv/roGI0if1/kHE2LIVeHtaJx/FxdOx6tO2
-         bIpTOpJx+Po9s/e1hls2CS4vI3H5xPU9MvAuihvZGLUZV+tNXIPYoJbAkPrs7tYIQNG0
-         xM/g==
-X-Gm-Message-State: AOAM530gMytJCx1xQHWFvMi321JnjwQhL59uy4BrCuE9oTtLGA1PGk/Q
-        VX4iZAYTkTed33XZhBuSWJ8EOQ==
-X-Google-Smtp-Source: ABdhPJwCnLlK+yP2PAyRFV0ypasgb4FiVRsfWRmzPqQ1GJL2f9UPnvecId0KfsZwBl3g/P+tQXfMtA==
-X-Received: by 2002:a17:906:dc8d:b0:6db:572b:df24 with SMTP id cs13-20020a170906dc8d00b006db572bdf24mr39984628ejc.193.1648639526591;
-        Wed, 30 Mar 2022 04:25:26 -0700 (PDT)
-Received: from [192.168.0.111] (87-243-81-1.ip.btc-net.bg. [87.243.81.1])
-        by smtp.gmail.com with ESMTPSA id eu24-20020a170907299800b006e0c2509eb6sm5664346ejc.35.2022.03.30.04.25.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Mar 2022 04:25:26 -0700 (PDT)
-Message-ID: <7f0bb43d-9943-2f0a-f4c2-3d4c0e55e69d@blackwall.org>
-Date:   Wed, 30 Mar 2022 14:25:24 +0300
+        with ESMTP id S1344644AbiC3MfT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 30 Mar 2022 08:35:19 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB2667DE18;
+        Wed, 30 Mar 2022 05:21:00 -0700 (PDT)
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22UB6pdE009916;
+        Wed, 30 Mar 2022 12:20:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=dCcUDpRwUTtW2St/Zxwt0vR7E223ZaXO52Uej7mNbB0=;
+ b=GNIxuDT9dnzKGgOdu5J08Nzl3iA6R5nwRv7v8oPU7+clcTH+X44Aj8dQc2qKfKMC2hQL
+ IZacUoTNaOWeY3VbsO8VnuKFMcCttEisXhzOpq1GpL3x//uTpFCD1q9eT0gPARYe6ZQZ
+ QWMIwvjnduqMinvoVkfHUXNrxotJQ2PQdbRxD+JPFtRuWqA3M4f+l5jNgT3AIZ8CF+8e
+ gwBtZ28ykzeNxOHsmg5G9plAbtKwPtpxFaLU5+zd/CrEydGcrOta0vhSUrUjp/+epW9S
+ UEkFrZ4UafctnZNUkW7KzSO7M7KIIiYwh74woqdHLA1pI+uza/mRvs3z547ZQsYuk/r4 OQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3f40t8w2fa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 30 Mar 2022 12:20:37 +0000
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 22UB6n6a014739;
+        Wed, 30 Mar 2022 12:20:37 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3f40t8w2ed-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 30 Mar 2022 12:20:36 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 22UBx6J6021922;
+        Wed, 30 Mar 2022 12:20:34 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04fra.de.ibm.com with ESMTP id 3f1tf8y9af-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 30 Mar 2022 12:20:34 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 22UC8VHd36241708
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Mar 2022 12:08:31 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C1D9942045;
+        Wed, 30 Mar 2022 12:20:30 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B3C442042;
+        Wed, 30 Mar 2022 12:20:30 +0000 (GMT)
+Received: from linux6.. (unknown [9.114.12.104])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 30 Mar 2022 12:20:30 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, imbrenda@linux.ibm.com,
+        david@redhat.com, borntraeger@linux.ibm.com
+Subject: [PATCH v3 0/9] kvm: s390: Add PV dump support
+Date:   Wed, 30 Mar 2022 12:19:43 +0000
+Message-Id: <20220330121952.105725-1-frankja@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Subject: Re: [PATCH net-next v2] veth: Support bonding events
-Content-Language: en-US
-To:     Alexandra Winter <wintera@linux.ibm.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Roopa Prabhu <roopa@nvidia.com>,
-        bridge@lists.linux-foundation.org,
-        Ido Schimmel <idosch@nvidia.com>, Jiri Pirko <jiri@nvidia.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>
-References: <20220329114052.237572-1-wintera@linux.ibm.com>
- <20220329175421.4a6325d9@kernel.org>
- <d2e45c4a-ed34-10d3-58cd-01b1c19bd004@blackwall.org>
- <c1ec0612-063b-dbfa-e10a-986786178c93@linux.ibm.com>
-From:   Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <c1ec0612-063b-dbfa-e10a-986786178c93@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 3nN6pkCtkcEboUynhcQHMrUUpuFx-7PL
+X-Proofpoint-GUID: WI10TKiU8rgDc9OistnJEwmrGZhls1PQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-03-30_04,2022-03-30_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ clxscore=1015 impostorscore=0 phishscore=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 spamscore=0 mlxlogscore=520 adultscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2203300062
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 30/03/2022 14:14, Alexandra Winter wrote:
-> 
-> 
-> On 30.03.22 12:23, Nikolay Aleksandrov wrote:
->> On 30/03/2022 03:54, Jakub Kicinski wrote:
->>> Dropping the BPF people from CC and adding Hangbin, bridge and
->>> bond/team. Please exercise some judgment when sending patches.
-> Thank you. 
-> I did  'scripts/get_maintainer.pl drivers/net/veth.c'
-> but was a bit surprised about the outcome.
-> 
->>>
->>> On Tue, 29 Mar 2022 13:40:52 +0200 Alexandra Winter wrote:
->>>> Bonding drivers generate specific events during failover that trigger
->>>> switch updates.  When a veth device is attached to a bridge with a
->>>> bond interface, we want external switches to learn about the veth
->>>> devices as well.
->>>>
->>>> Example:
->>>>
->>>> 	| veth_a2   |  veth_b2  |  veth_c2 |
->>>> 	------o-----------o----------o------
->>>> 	       \	  |	    /
->>>> 		o	  o	   o
->>>> 	      veth_a1  veth_b1  veth_c1
->>>> 	      -------------------------
->>>> 	      |        bridge         |
->>>> 	      -------------------------
->>>> 			bond0
->>>> 			/  \
->>>> 		     eth0  eth1
->>>>
->>>> In case of failover from eth0 to eth1, the netdev_notifier needs to be
->>>> propagated, so e.g. veth_a2 can re-announce its MAC address to the
->>>> external hardware attached to eth1.
->>>>
->>>> Without this patch we have seen cases where recovery after bond failover
->>>> took an unacceptable amount of time (depending on timeout settings in the
->>>> network).
->>>>
->>>> Due to the symmetric nature of veth special care is required to avoid
->>>> endless notification loops. Therefore we only notify from a veth
->>>> bridgeport to a peer that is not a bridgeport.
->>>>
->>>> References:
->>>> Same handling as for macvlan:
->>>> commit 4c9912556867 ("macvlan: Support bonding events")
->>>> and vlan:
->>>> commit 4aa5dee4d999 ("net: convert resend IGMP to notifier event")
->>>>
->>>> Alternatives:
->>>> Propagate notifier events to all ports of a bridge. IIUC, this was
->>>> rejected in https://www.spinics.net/lists/netdev/msg717292.html
->>>
->>> My (likely flawed) reading of Nik's argument was that (1) he was
->>> concerned about GARP storms; (2) he didn't want the GARP to be
->>> broadcast to all ports, just the bond that originated the request.
->>>
->>
->> Yes, that would be ideal. Trying to avoid unnecessary bcasts, that is
->> especially important for large setups with lots of devices.
-> 
-> One way to target the bond that originated the request, would be if the
-> bridge itself would do GARPs/RARPS/..,  on this bond port for all MACs
-> that are in its FDB. What do you think about that?
-> 
+Sometimes dumping inside of a VM fails, is unavailable or doesn't
+yield the required data. For these occasions we dump the VM from the
+outside, writing memory and cpu data to a file.
 
-That's a hack and you can already do it easily in user-space, you don't need
-anything special in the bridge. It is also very specific, and it should only
-happen in certain situations (e.g. a/b flap) which the bridge doesn't really
-know about, but user-space does because it can see the notifications and
-can see the bond mode.
+Up to now PV guests only supported dumping from the inside of the
+guest through dumpers like KDUMP. A PV guest can be dumped from the
+hypervisor but the data will be stale and / or encrypted.
 
->>
->>> I'm not sure I follow (1), as Hangbin said the event is rare, plus 
->>> GARP only comes from interfaces that have an IP addr, which IIUC
->>> most bridge ports will not have.
->>>
->>
->> Indeed, such setups are not the most common ones.
->>
->>> This patch in no way addresses (2). But then, again, if we put 
->>> a macvlan on top of a bridge master it will shotgun its GARPS all 
->>> the same. So it's not like veth would be special in that regard.
->>>
->>> Nik, what am I missing?
->>>
->>
->> If we're talking about macvlan -> bridge -> bond then the bond flap's
->> notify peers shouldn't reach the macvlan. Generally broadcast traffic
->> is quite expensive for the bridge, I have patches that improve on the
->> technical side (consider ports only for the same bcast domain), but you also
->> wouldn't want unnecessary bcast packets being sent around. :)
->> There are setups with tens of bond devices and propagating that to all would be
->> very expensive, but most of all unnecessary. It would also hurt setups with
->> a lot of vlan devices on the bridge. There are setups with hundreds of vlans
->> and hundreds of macvlans on top, propagating it up would send it to all of
->> them and that wouldn't scale at all, these mostly have IP addresses too.
->>
->> Perhaps we can enable propagation on a per-port or per-bridge basis, then we
->> can avoid these walks. That is, make it opt-in.
->>
->>>> It also seems difficult to avoid re-bouncing the notifier.
->>>
->>> syzbot will make short work of this patch, I think the potential
->>> for infinite loops has to be addressed somehow. IIUC this is the 
->>> first instance of forwarding those notifiers to a peer rather
->>> than within a upper <> lower device hierarchy which is a DAG.
-> 
-> My concern was about the Hangbin's alternative proposal to notify all
-> bridge ports. I hope in my porposal I was able to avoid infinite loops.
-> >>>
->>>> Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
->>>> --- 
->>>>  drivers/net/veth.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++
->>>>  1 file changed, 53 insertions(+)
->>>>
->>>> diff --git a/drivers/net/veth.c b/drivers/net/veth.c
->>>> index d29fb9759cc9..74b074453197 100644
->>>> --- a/drivers/net/veth.c
->>>> +++ b/drivers/net/veth.c
->>>> @@ -1579,6 +1579,57 @@ static void veth_setup(struct net_device *dev)
->>>>  	dev->mpls_features = NETIF_F_HW_CSUM | NETIF_F_GSO_SOFTWARE;
->>>>  }
->>>>  
->>>> +static bool netif_is_veth(const struct net_device *dev)
->>>> +{
->>>> +	return (dev->netdev_ops == &veth_netdev_ops);
->>>
->>> brackets unnecessary 
->>>
->>>> +}
->>>> +
->>>> +static void veth_notify_peer(unsigned long event, const struct net_device *dev)
->>>> +{
->>>> +	struct net_device *peer;
->>>> +	struct veth_priv *priv;
->>>> +
->>>> +	priv = netdev_priv(dev);
->>>> +	peer = rtnl_dereference(priv->peer);
->>>> +	/* avoid re-bounce between 2 bridges */
->>>> +	if (!netif_is_bridge_port(peer))
->>>> +		call_netdevice_notifiers(event, peer);
->>>> +}
->>>> +
->>>> +/* Called under rtnl_lock */
->>>> +static int veth_device_event(struct notifier_block *unused,
->>>> +			     unsigned long event, void *ptr)
->>>> +{
->>>> +	struct net_device *dev, *lower;
->>>> +	struct list_head *iter;
->>>> +
->>>> +	dev = netdev_notifier_info_to_dev(ptr);
->>>> +
->>>> +	switch (event) {
->>>> +	case NETDEV_NOTIFY_PEERS:
->>>> +	case NETDEV_BONDING_FAILOVER:
->>>> +	case NETDEV_RESEND_IGMP:
->>>> +		/* propagate to peer of a bridge attached veth */
->>>> +		if (netif_is_bridge_master(dev)) {
->>>
->>> Having veth sift thru bridge ports seems strange.
->>> In fact it could be beneficial to filter the event based on
->>> port state (whether it's forwarding, vlan etc). But looking
->>> at details of port state outside the bridge would be even stranger.
->>>
->>>> +			iter = &dev->adj_list.lower;
->>>> +			lower = netdev_next_lower_dev_rcu(dev, &iter);
->>>> +			while (lower) {
->>>> +				if (netif_is_veth(lower))
->>>> +					veth_notify_peer(event, lower);
->>>> +				lower = netdev_next_lower_dev_rcu(dev, &iter);
->>>
->>> let's add netdev_for_each_lower_dev_rcu() rather than open-coding
->>>
->>>> +			}
->>>> +		}
->>>> +		break;
->>>> +	default:
->>>> +		break;
->>>> +	}
->>>> +	return NOTIFY_DONE;
->>>> +}
->>>> +
->>>> +static struct notifier_block veth_notifier_block __read_mostly = {
->>>> +		.notifier_call  = veth_device_event,
->>>
->>> extra tab here
->>>
->>>> +};
->>>> +
->>>>  /*
->>>>   * netlink interface
->>>>   */
->>>> @@ -1824,12 +1875,14 @@ static struct rtnl_link_ops veth_link_ops = {
->>>>  
->>>>  static __init int veth_init(void)
->>>>  {
->>>> +	register_netdevice_notifier(&veth_notifier_block);
->>>
->>> this can fail
->>>
->>>>  	return rtnl_link_register(&veth_link_ops);
->>>>  }
->>>>  
->>>>  static __exit void veth_exit(void)
->>>>  {
->>>>  	rtnl_link_unregister(&veth_link_ops);
->>>> +	unregister_netdevice_notifier(&veth_notifier_block);
->>>>  }
->>>>  
->>>>  module_init(veth_init);
->>>
->>
+To get the actual state of the PV VM we need the help of the
+Ultravisor who safeguards the VM state. New UV calls have been added
+to initialize the dump, dump storage state data, dump cpu data and
+complete the dump process.
+
+I chose not to document the dump data provided by the Ultravisor since
+KVM doesn't interprete it in any way. We're currently searching for a
+location and enough cycles to make it available to all.
+
+v3:
+	* Added Rev-by
+	* Renamed the query function's len variables to len_min
+
+v2:
+	* Added vcpu SIE blocking to avoid validities
+	* Moved the KVM CAP to patch #7
+	* Renamed len to len_max and introduced len_written for extendability
+	* Added Rev-bys
+
+Janosch Frank (9):
+  s390: pv: Add SE hdr query information
+  s390: uv: Add dump fields to query
+  KVM: s390: pv: Add query interface
+  KVM: s390: pv: Add dump support definitions
+  KVM: s390: pv: Add query dump information
+  kvm: s390: Add configuration dump functionality
+  kvm: s390: Add CPU dump functionality
+  Documentation: virt: Protected virtual machine dumps
+  Documentation/virt/kvm/api.rst: Add protvirt dump/info api
+    descriptions
+
+ Documentation/virt/kvm/api.rst          | 150 +++++++++++-
+ Documentation/virt/kvm/index.rst        |   1 +
+ Documentation/virt/kvm/s390-pv-dump.rst |  60 +++++
+ arch/s390/boot/uv.c                     |   4 +
+ arch/s390/include/asm/kvm_host.h        |   1 +
+ arch/s390/include/asm/uv.h              |  45 +++-
+ arch/s390/kernel/uv.c                   |  53 ++++
+ arch/s390/kvm/kvm-s390.c                | 308 ++++++++++++++++++++++++
+ arch/s390/kvm/kvm-s390.h                |   3 +
+ arch/s390/kvm/pv.c                      | 131 ++++++++++
+ include/uapi/linux/kvm.h                |  55 +++++
+ 11 files changed, 808 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/virt/kvm/s390-pv-dump.rst
+
+-- 
+2.32.0
 
