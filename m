@@ -2,113 +2,179 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5F1E4ECC08
-	for <lists+linux-s390@lfdr.de>; Wed, 30 Mar 2022 20:25:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AB584ECD20
+	for <lists+linux-s390@lfdr.de>; Wed, 30 Mar 2022 21:18:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350235AbiC3S0u (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 30 Mar 2022 14:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59948 "EHLO
+        id S1350658AbiC3TSl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 30 Mar 2022 15:18:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350570AbiC3S01 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 30 Mar 2022 14:26:27 -0400
-Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9507E49FA8
-        for <linux-s390@vger.kernel.org>; Wed, 30 Mar 2022 11:23:49 -0700 (PDT)
-Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-d6ca46da48so22867619fac.12
-        for <linux-s390@vger.kernel.org>; Wed, 30 Mar 2022 11:23:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=6PnxJaVdYHTfEoSreao3ANO+XeqxY/p/4dxKSObIH1I=;
-        b=U1oUia1Thamt6Z7oWm6PGNKOk9RXK6Jv76DGrI1cLcYRcY5/d1Tt5qepQRdZm6lsyq
-         RBa/xpJM28ShOu5ibphzafHjPKptRC4OMeOVco0xYKihrCNFhnaGQOBDSvUdgHWgE3gf
-         cWTbx+dPO2nv/wujOZrrbxfJpePUzp7QZ1RCloUPxJhGXTvBKUziPieC1LSkK8oSaB+t
-         E85QJNBGnQK8HE8wei7Zq5jQSpeI5JY8kzofCGcJSUHLIHQXWsBy6ta+brl9WPLZzyWA
-         2jPBZlOFyxLxFI8awBJCcZtcLmSyu35IRMr8cJ72zb2pokIUUqe6EUB9pKUwVKwbq4my
-         ou5A==
+        with ESMTP id S1351117AbiC3TSP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 30 Mar 2022 15:18:15 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D6A4606FB
+        for <linux-s390@vger.kernel.org>; Wed, 30 Mar 2022 12:16:09 -0700 (PDT)
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 3E4D93F329
+        for <linux-s390@vger.kernel.org>; Wed, 30 Mar 2022 19:16:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1648667761;
+        bh=e5dkA3qH+uuDiLClm1Oo80cVgcvwun8I0S6yuR2jxQk=;
+        h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+         Content-Type:Date:Message-ID;
+        b=iQ7W6OMgZtu6n1x/COyYQIbMLN+F7uc4lcz4Lz1vibHByGCxltMxn5OoDyUAjhrQX
+         4V9rhblz2IHwsOqjth5i0ncyjwLH/YXGpccWgZKi7OmtrOTjDuigWQ9MI1YpUCd1LC
+         iuVme6tPje+eHkpGIKzVtLtoGcsFUHNfjGe67gUSZMYh9JZrR0Pxgpka3q5VYSIYF4
+         kfDDuqSy2env8GEPreJHqMsLAfiu21jm8Ye2a2HFS40r5YPc2vGuIl+gjy7oLZ45zW
+         g9bOKykv2LJCEpjgieSXp6opvf+wRbSn5TIgYWtQ0RumnJPCUtPgY2WS+ch7Yi81DW
+         pqB3hBI65PwzA==
+Received: by mail-pf1-f198.google.com with SMTP id u67-20020a627946000000b004fa6338bd77so12493800pfc.10
+        for <linux-s390@vger.kernel.org>; Wed, 30 Mar 2022 12:16:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=6PnxJaVdYHTfEoSreao3ANO+XeqxY/p/4dxKSObIH1I=;
-        b=SuqWUU6lw9UQJ4aijmQCYa1zHwtypVB7czNqjdbQ3d7I8M+I8yywqLenbiLtJLCxWg
-         pLQAs5dQ+ZKmb6PHFwcZ6eg53AEPzOM4+QhsOAZgJua8YB/3uGb3K31l60Ot2ELSHKlz
-         ZqjBXIh87iOBAvMdRIX/hxCmJRNGaLCRcLNBAkJceIiEFORijCwHOctu/gHtZI3Qgp/i
-         XkO7ujcpRAW/hzpVX3rVIt2fRFk50sRmF7cHVskAHuk9ZU2cNfNkqnp4iveif72uYNbv
-         4uid3XRGS2Do3JComDtxcB0XdbiCizJTE9QQZGKQDI9LAs8fxKNqEesU0DJyHOdJjYd6
-         eVwQ==
-X-Gm-Message-State: AOAM531VsOTUXThddotOWde3xL4swJ+xCySh5QETWg7DK7t9WsgpQ9hE
-        4n2qQUWXY2Zz96qhY8VAV2Jwuo+OqbZ9G5uDDW7ZRiHsycwT
-X-Google-Smtp-Source: ABdhPJzkTl+tJbylc9dRvis6ZhULbTl7j4ynIkLgm4b/Lu4YSrf6PCWjehKBvofPJCmWKHUKJGD0xbE01MjL0VC50Jo=
-X-Received: by 2002:a17:90b:3143:b0:1c7:5cee:3948 with SMTP id
- ip3-20020a17090b314300b001c75cee3948mr852445pjb.140.1648664618224; Wed, 30
- Mar 2022 11:23:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references
+         :comments:mime-version:content-id:content-transfer-encoding:date
+         :message-id;
+        bh=e5dkA3qH+uuDiLClm1Oo80cVgcvwun8I0S6yuR2jxQk=;
+        b=tFuaBUHQWbfTx7bnywJyPn407Db6PiWCkyc6FR0ttx30MuS+Z7vpdLVO+QvdJ4334Y
+         JLMh1Qi7cN+8CYMI2Qyj0fiW8fcV5xFwxYovx88d2GcoFc5uLdVKg23d7jXEvlJ2mQRr
+         MxkJ4qvJA+OvnMp/ISh4j+UEW284owCuXCXZKlhm53mSOX81o5EeyGdTHaAKHNx7Ptbd
+         ZheCQGuKN66M56Q8O266lVcOR+mbQQ5t5nknnsDng16Kqz7vH95R2+HASuchIO0KTqoY
+         JD77dxiiapMYCwrggpc0TxlcbeLs04BlUGsTdtTJaiN+Q1MMz3KifU1R3kQtul8HM7oY
+         +vLw==
+X-Gm-Message-State: AOAM530CO/Lvxe61mfft6t3RPNTf1qLO7WaUItKaf4XiHPshV4oBn1nO
+        p+8/nfDFUqkrO7TYCgva1DPsTK4+eVwX8fF8qyxFh61P5S2CB+UQggKuBnaLiuVBP2RgVCW90Uy
+        56zyaIjfQbLm/Lw4gSzv6qjfVM1aeq0ZPT8q/e8s=
+X-Received: by 2002:a17:903:32c9:b0:154:3a2d:fa89 with SMTP id i9-20020a17090332c900b001543a2dfa89mr1164459plr.3.1648667759763;
+        Wed, 30 Mar 2022 12:15:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwuVXX8rsNuKbWFBBGlsKxIr2dCQWz3o3SW1jmYCbMByPw9AKu7v0w2adSLgy27rxhwPA+bmQ==
+X-Received: by 2002:a17:903:32c9:b0:154:3a2d:fa89 with SMTP id i9-20020a17090332c900b001543a2dfa89mr1164429plr.3.1648667759379;
+        Wed, 30 Mar 2022 12:15:59 -0700 (PDT)
+Received: from famine.localdomain ([50.125.80.157])
+        by smtp.gmail.com with ESMTPSA id a7-20020aa79707000000b004fb17ad3aefsm19702135pfg.108.2022.03.30.12.15.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 30 Mar 2022 12:15:58 -0700 (PDT)
+Received: by famine.localdomain (Postfix, from userid 1000)
+        id 378D160DD1; Wed, 30 Mar 2022 12:15:58 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+        by famine.localdomain (Postfix) with ESMTP id 2FD1CA0B18;
+        Wed, 30 Mar 2022 12:15:58 -0700 (PDT)
+From:   Jay Vosburgh <jay.vosburgh@canonical.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+cc:     Nikolay Aleksandrov <razor@blackwall.org>,
+        Alexandra Winter <wintera@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Roopa Prabhu <roopa@nvidia.com>,
+        bridge@lists.linux-foundation.org,
+        Ido Schimmel <idosch@nvidia.com>, Jiri Pirko <jiri@nvidia.com>
+Subject: Re: [PATCH net-next v2] veth: Support bonding events
+In-reply-to: <20220330101256.53f6ef48@kernel.org>
+References: <20220329114052.237572-1-wintera@linux.ibm.com> <20220329175421.4a6325d9@kernel.org> <d2e45c4a-ed34-10d3-58cd-01b1c19bd004@blackwall.org> <c1ec0612-063b-dbfa-e10a-986786178c93@linux.ibm.com> <20220330085154.34440715@kernel.org> <c512e765-f411-9305-013b-471a07e7f3ff@blackwall.org> <20220330101256.53f6ef48@kernel.org>
+Comments: In-reply-to Jakub Kicinski <kuba@kernel.org>
+   message dated "Wed, 30 Mar 2022 10:12:56 -0700."
+X-Mailer: MH-E 8.6+git; nmh 1.6; Emacs 29.0.50
 MIME-Version: 1.0
-Reply-To: isabellasayouba0@gmail.com
-Sender: 040stherchurch@gmail.com
-Received: by 2002:a05:6a20:691d:b0:76:6cf5:d552 with HTTP; Wed, 30 Mar 2022
- 11:23:37 -0700 (PDT)
-From:   Mrs Isabella Sayouba <isabellasayouba0@gmail.com>
-Date:   Wed, 30 Mar 2022 18:23:37 +0000
-X-Google-Sender-Auth: _Xe1kByDkvq-Dn04BagO7gok_qM
-Message-ID: <CAAzQq761QVaWKiKernxpKjqNCK+6V9mRKHBnOcqF8rXJO9Y+aA@mail.gmail.com>
-Subject: =?UTF-8?B?44GC44GE44GV44Gk44CC?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_99,BAYES_999,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE autolearn=no
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2599.1648667758.1@famine>
+Content-Transfer-Encoding: quoted-printable
+Date:   Wed, 30 Mar 2022 12:15:58 -0700
+Message-ID: <2600.1648667758@famine>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-44GC44GE44GV44Gk44CCDQoNCua2meOCkua1geOBl+OBquOBjOOCieOBk+OBruODoeODvOODq+OC
-kuabuOOBhOOBpuOBhOOBvuOBmeOAguengeOBruebruOBq+OBr+Wkp+OBjeOBquaCsuOBl+OBv+OB
-jOOBguOCiuOBvuOBmeOAguengeOBruWQjeWJjeOBr+OCpOOCtuODmeODqeODu+OCteODqOOCpuOD
-kOOBleOCk+OBp+OBmeOAguODgeODpeODi+OCuOOCouWHuui6q+OBp+OAgeODluODq+OCreODiuOD
-leOCoeOCveOBrueXhemZouOBi+OCiemAo+e1oeOCkuWPluOCiuOBvuOBmeOAguengeOBr+OBguOB
-quOBn+OBq+W/g+OCkumWi+OBhOOBpuaEn+WLleOBl+OBn+OBruOBp+OAgeOBguOBquOBn+OBq+ip
-seOBmeS7peWkluOBq+mBuOaKnuiCouOBr+OBguOCiuOBvuOBm+OCk+OAguengeOBr+OAgTIwMTHl
-ubTjgavkuqHjgY/jgarjgovliY3jgavjg5bjg6vjgq3jg4rjg5XjgqHjgr3jga7jg4Hjg6Xjg4vj
-grjjgqLlpKfkvb/jgag55bm06ZaT5YON44GE44Gm44GE44GfU2F5b3ViYQ0KQnJvd27msI/jgajn
-tZDlqZrjgZfjgb7jgZfjgZ/jgILlrZDkvpvjgarjgZfjgacxMeW5tOmWk+e1kOWpmuOBl+OBn+OA
-gg0KDQrlvbzjga/jgZ/jgaPjgZ815pel6ZaT57aa44GE44Gf55+t44GE55eF5rCX44Gu5b6M44Gn
-5q2744Gr44G+44GX44Gf44CC5b2844Gu5q275b6M44CB56eB44Gv5YaN5ama44GX44Gq44GE44GT
-44Go44Gr5rG644KB44G+44GX44Gf44CC5Lqh44GP44Gq44Gj44Gf5aSr44GM55Sf44GN44Gm44GE
-44Gf44Go44GN44CB5b2844Gv57eP6aGNODUw5LiH44OJ44Or44KS6aCQ44GR44G+44GX44Gf44CC
-DQrvvIg4MDDkuIc1MDAw44OJ44Or77yJ6KW/44Ki44OV44Oq44Kr44Gu44OW44Or44Kt44OK44OV
-44Kh44K944Gu6aaW6YO944Ov44Ks44OJ44Kl44Kw44O844Gu6YqA6KGM44Gn44CC54++5Zyo44CB
-44GT44Gu44GK6YeR44Gv44G+44Gg6YqA6KGM44Gr44GC44KK44G+44GZ44CC5b2844Gv44GT44Gu
-44GK6YeR44KS44OW44Or44Kt44OK44OV44Kh44K944Gu6Ymx5qWt44GL44KJ44Gu6YeR44Gu6Ly4
-5Ye644Gr5Yip55So44Gn44GN44KL44KI44GG44Gr44GX44G+44GX44Gf44CCDQoNCuacgOi/keOA
-geengeOBruWMu+iAheOBr+engeOBjOeZjOOBqOiEs+WNkuS4reOBruWVj+mhjOOBruOBn+OCgeOB
-qzfjg7bmnIjplpPjga/ntprjgYvjgarjgYTjgaDjgo3jgYbjgajnp4HjgavoqIDjgYTjgb7jgZfj
-gZ/jgILnp4HjgpLmnIDjgoLmgqnjgb7jgZvjgabjgYTjgovjga7jga/ohLPljZLkuK3jga7nl4Xm
-sJfjgafjgZnjgILnp4Hjga7nirbmhYvjgpLnn6XjgaPjgZ/jga7jgafjgIHnp4Hjga/jgZPjga7j
-gYrph5HjgpLjgYLjgarjgZ/jgavmuKHjgZfjgabjgIHmgbXjgb7jgozjgarjgYTkurrjgIXjga7k
-uJboqbHjgpLjgZnjgovjgZPjgajjgavjgZfjgb7jgZfjgZ/jgILjgYLjgarjgZ/jga/jgZPjga7j
-gYrph5HjgpLnp4HjgYzjgZPjgZPjgafmjIfnpLrjgZnjgovmlrnms5XjgafliKnnlKjjgZnjgovj
-gafjgZfjgofjgYbjgILnp4Hjga/jgYLjgarjgZ/jgavjgYLjgarjgZ/jga7lgIvkurrnmoTjgark
-vb/nlKjjga7jgZ/jgoHjgavnt4/jgYrph5Hjga4zMOODkeODvOOCu+ODs+ODiOOCkuWPluOBo+OB
-puassuOBl+OBhOOBp+OBmeOAguOBiumHkeOBrjcw77yF44Gv56eB44Gu5ZCN5YmN44Gn5a2k5YWQ
-6Zmi44KS5bu644Gm44CB6YCa44KK44Gu6LKn44GX44GE5Lq644CF44KS5Yqp44GR44KL44Gf44KB
-44Gr5L2/44GG44Gn44GX44KH44GG44CC56eB44Gv5a2k5YWQ44Go44GX44Gm6IKy44Gh44G+44GX
-44Gf44GM44CB56We44Gu5a6244KS57at5oyB44GZ44KL44Gf44KB44Gg44GR44Gr44CB5a625peP
-44Gr44Gv6Kqw44KC44GE44G+44Gb44KT44CC44GT44Gu55eF5rCX44GM56eB44KS44Go44Gm44KC
-6Ium44GX44KB44Gf44Gu44Gn44CB56We44GM56eB44Gu572q44KS6LWm44GX44CB5qW95ZyS44Gn
-56eB44Gu6a2C44KS5Y+X44GR5YWl44KM44KL44KI44GG44Gr44GT44KM44KS44GX44Gm44GE44KL
-44Gu44Gn44GZ44CCDQoNCui/lOS/oeOCkuWPl+OBkeWPluOCiuasoeesrOOAgeODluODq+OCreOD
-iuODleOCoeOCveOBrumKgOihjOOBrumAo+e1oeWFiOOCkuOBiuefpeOCieOBm+OBl+OBvuOBmeOA
-guOBvuOBn+OAgemKgOihjOOBruePvuWcqOOBruWPl+WPluS6uuOBp+OBguOCi+OBk+OBqOOCkuio
-vOaYjuOBmeOCi+aoqemZkOabuOOCkueZuuihjOOBmeOCi+OCiOOBhumKgOihjOmVt+OBq+aMh+ek
-uuOBl+OBvuOBmeOAguengeOBjOOBk+OBk+OBp+i/sOOBueOBn+OCiOOBhuOBq+OBguOBquOBn+OB
-jOOBneOCjOOBq+W/nOOBmOOBpuihjOWLleOBmeOCi+OBk+OBqOOCkuengeOBq+S/neiovOOBl+OB
-puOBj+OBoOOBleOBhOOAgg0KDQrjgqTjgrbjg5njg6njg7vjgrXjg6jjgqbjg5DlpKvkurrjgYvj
-gonjgIINCg==
+Jakub Kicinski <kuba@kernel.org> wrote:
+
+>On Wed, 30 Mar 2022 19:16:42 +0300 Nikolay Aleksandrov wrote:
+>> > Maybe opt-out? But assuming the event is only generated on
+>> > active/backup switch over - when would it be okay to ignore
+>> > the notification?
+>> =
+
+>> Let me just clarify, so I'm sure I've not misunderstood you. Do you mea=
+n opt-out as in
+>> make it default on? IMO that would be a problem, large scale setups wou=
+ld suddenly
+>> start propagating it to upper devices which would cause a lot of unnece=
+ssary bcast.
+>> I meant enable it only if needed, and only on specific ports (second pa=
+rt is not
+>> necessary, could be global, I think it's ok either way). I don't think =
+any setup
+>> which has many upper vlans/macvlans would ever enable this.
+>
+>That may be. I don't have a good understanding of scenarios in which
+>GARP is required and where it's not :) Goes without saying but the
+>default should follow the more common scenario.
+
+	At least from the bonding failover persective, the GARP is
+needed when there's a visible topology change (so peers learn the new
+path), a change in MAC address, or both.  I don't think it's possible to
+determine from bonding which topology changes are visible, so any
+failover gets a GARP.  The original intent as best I recall was to cover
+IP addresses configured on the bond itself or on VLANs above the bond.
+
+	If I understand the original problem description correctly, the
+bonding failover causes the connectivity issue because the network
+segments beyond the bond interfaces don't share forwarding information
+(i.e., they are completely independent).  The peer (end station or
+switch) at the far end of those network segments (where they converge)
+is unable to directly see that the "to bond eth0" port went down, and
+has no way to know that anything is awry, and thus won't find the new
+path until an ARP or forwarding entry for "veth_a2" (from the original
+diagram) times out at the peer out in the network.
+
+>> >> My concern was about the Hangbin's alternative proposal to notify al=
+l
+>> >> bridge ports. I hope in my porposal I was able to avoid infinite loo=
+ps.  =
+
+>> > =
+
+>> > Possibly I'm confused as to where the notification for bridge master
+>> > gets sent..  =
+
+>> =
+
+>> IIUC it bypasses the bridge and sends a notify peers for the veth peer =
+so it would
+>> generate a grat arp (inetdev_event -> NETDEV_NOTIFY_PEERS).
+>
+>Ack, I was basically repeating the question of where does =
+
+>the notification with dev =3D=3D br get generated.
+>
+>There is a protection in this patch to make sure the other =
+
+>end of the veth is not plugged into a bridge (i.e. is not
+>a bridge port) but there can be a macvlan on top of that
+>veth that is part of a bridge, so IIUC that check is either
+>insufficient or unnecessary.
+
+	I'm a bit concerned this is becoming a interface plumbing
+topology change whack-a-mole.
+
+	In the above, what if the veth is plugged into a bridge, and
+there's a end station on that bridge?  If it's bridges all the way down,
+where does the need for some kind of TCN mechanism stop?
+
+	Or instead of a veth it's an physical network hop (perhaps a
+tunnel; something through which notifiers do not propagate) to another
+host with another bridge, then what?
+
+	-J
+
+---
+	-Jay Vosburgh, jay.vosburgh@canonical.com
