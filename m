@@ -2,35 +2,35 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B0F64EF71D
-	for <lists+linux-s390@lfdr.de>; Fri,  1 Apr 2022 18:01:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB4574EF724
+	for <lists+linux-s390@lfdr.de>; Fri,  1 Apr 2022 18:01:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235560AbiDAPxn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 1 Apr 2022 11:53:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55860 "EHLO
+        id S1344206AbiDAPyC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 1 Apr 2022 11:54:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349961AbiDAO61 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 1 Apr 2022 10:58:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADCE91753BF;
-        Fri,  1 Apr 2022 07:45:40 -0700 (PDT)
+        with ESMTP id S1350288AbiDAO7b (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 1 Apr 2022 10:59:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 622C55A5A8;
+        Fri,  1 Apr 2022 07:47:03 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 499D760BC2;
-        Fri,  1 Apr 2022 14:45:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B44B8C34111;
-        Fri,  1 Apr 2022 14:45:38 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E98D160AC9;
+        Fri,  1 Apr 2022 14:47:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2958FC34111;
+        Fri,  1 Apr 2022 14:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648824339;
-        bh=5ctcsf1H1Wj6BrGtRe9obFjz7c8kVAlzBvY/kcXosyU=;
+        s=k20201202; t=1648824422;
+        bh=6S0elGmAHKM1RwkqoLD2Od7pEym8vSOjGtE6SypzUts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N1/2x+11aQGdDc1dOV03TFV0TgECbGqhDTUeIre86k17ea1C4jjjnTa7EcL/3LBxi
-         gNMLSkD8iI98DfS+E5pZJ+Gi3tqDGjTigDKhsJCFmvoqSf3Mz2LSPpXdqXJyyS5O/j
-         XMp2LwEkaeKjYO0Qit5bzEOsjCODFWDev4tPlbY1V0o9m9dsuRQW6NOWeT76y47jrP
-         ksnOFdVr9I6zLaE9VNcD70oCuY0BdJNwkesvnQsgKZ+mzZ2EsTkNGtWG/9ZJPGC0Yk
-         xixLaYTfsJOLePmaNu7uNd8twWEk0TtIK3xtEqDRsHeOheLcK1QkL4yZ+iKPRWvRL5
-         w9h54Ccj10Sgw==
+        b=G+V1AAw1co1PgYeber9trcpIvgPrsi2frsD398Fbk9PGJMwnoxLoWEoIauQOGyHjM
+         j4Ssx0ea1Qt0hdsCzGWAkoCnWOd/1SrDXi6kT/7+chKzOJrBAutU7Ubs/0c6lu8xKm
+         ECsqFbcyUTEksOonwFnBHzDo9YtXEDMZYhYqNyNsEC9QC4OfzirVZViZqIOrPAObTP
+         +D+S9O+4ARbozTT1/J5mOYsl+aJHNH6vPSZmtxuKTumUcn6yrygw/JjxPD2GmRcGye
+         HHvLjTSNw7b4Ws7+/G285Anj0l7FbxfzVyv1h6xVls17xJK+ENZ+YleMz4A6Q47mu4
+         /O+BBaIcLoWCQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dust Li <dust.li@linux.alibaba.com>,
@@ -38,12 +38,12 @@ Cc:     Dust Li <dust.li@linux.alibaba.com>,
         Sasha Levin <sashal@kernel.org>, kgraul@linux.ibm.com,
         kuba@kernel.org, pabeni@redhat.com, linux-s390@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 23/37] net/smc: correct settings of RMB window update limit
-Date:   Fri,  1 Apr 2022 10:44:32 -0400
-Message-Id: <20220401144446.1954694-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 19/29] net/smc: correct settings of RMB window update limit
+Date:   Fri,  1 Apr 2022 10:46:02 -0400
+Message-Id: <20220401144612.1955177-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220401144446.1954694-1-sashal@kernel.org>
-References: <20220401144446.1954694-1-sashal@kernel.org>
+In-Reply-To: <20220401144612.1955177-1-sashal@kernel.org>
+References: <20220401144612.1955177-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -90,10 +90,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index 12672019f76c..66cdfd5725ac 100644
+index 6add3094ea9e..4d421407d6fc 100644
 --- a/net/smc/smc_core.c
 +++ b/net/smc/smc_core.c
-@@ -734,7 +734,7 @@ static struct smc_buf_desc *smc_buf_get_slot(int compressed_bufsize,
+@@ -709,7 +709,7 @@ static struct smc_buf_desc *smc_buf_get_slot(int compressed_bufsize,
   */
  static inline int smc_rmb_wnd_update_limit(int rmbe_size)
  {
