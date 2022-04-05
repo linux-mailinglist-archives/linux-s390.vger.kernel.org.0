@@ -2,156 +2,243 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A56D4F4A04
-	for <lists+linux-s390@lfdr.de>; Wed,  6 Apr 2022 02:40:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14B604F4A0F
+	for <lists+linux-s390@lfdr.de>; Wed,  6 Apr 2022 02:40:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231991AbiDEWdy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 Apr 2022 18:33:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48960 "EHLO
+        id S237542AbiDEWeH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 Apr 2022 18:34:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1442334AbiDEPhb (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Apr 2022 11:37:31 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2884710E043;
-        Tue,  5 Apr 2022 06:51:43 -0700 (PDT)
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 235DWRjZ003272;
-        Tue, 5 Apr 2022 13:51:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=70f3++uodWHlr/PXmHHWDTclVF91IG0xsbEDXHos37A=;
- b=DMdIq0bl6/8VKmrHbW7wM6dIBwQofXy30Ekze1jv+W36eX+v5tx38d0A7JrvYQIWAqWs
- PytJ8x1Um5W6COeLdTOTjrKrvx55uz+eFvaEmAwmTcd3hsmZ+l/KPIR1c6LSkyNDf9GG
- NHU1IOLwoMwSjbRn1mU4/qaf7Tnb94wzU2LaJ2XMEM7MCj9QX3J39+MEYLPptgBhkdxV
- NYlBZOvKhCZoCk5sUf8f7Tp66XBW2ziCgb5x6cFJcM3MzCqiypsVEiUERf4IMM/ogsud
- 0MIhodjCZiOrsQVZeJSa4SMZ2pVoGjNzCL6nBDDxwXpqKad4yjGzQMfGGoJ+syPKayTX 0A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3f8ph20rn4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Apr 2022 13:51:42 +0000
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 235DWvRX004595;
-        Tue, 5 Apr 2022 13:51:42 GMT
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3f8ph20rmn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Apr 2022 13:51:41 +0000
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 235DmwQM029536;
-        Tue, 5 Apr 2022 13:51:40 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma02wdc.us.ibm.com with ESMTP id 3f6e49fny5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Apr 2022 13:51:40 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 235DpdFA46072108
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Apr 2022 13:51:39 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CA3D728065;
-        Tue,  5 Apr 2022 13:51:39 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E77E428074;
-        Tue,  5 Apr 2022 13:51:34 +0000 (GMT)
-Received: from [9.211.32.125] (unknown [9.211.32.125])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  5 Apr 2022 13:51:34 +0000 (GMT)
-Message-ID: <26fa1eef-8c89-8819-b12c-3b8caaf40bb2@linux.ibm.com>
-Date:   Tue, 5 Apr 2022 09:51:34 -0400
+        with ESMTP id S1446274AbiDEPoY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Apr 2022 11:44:24 -0400
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A92E6C78;
+        Tue,  5 Apr 2022 07:13:10 -0700 (PDT)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-2eb43ad7909so85992257b3.2;
+        Tue, 05 Apr 2022 07:13:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0m0X8qD7jgaOpFhSCX1pI9/lBF4aFgFkK0POJ3FtM5M=;
+        b=oop02PYzQjf4I81Lgk4YHXpzi42n6WQveIpvF1+LxhlRXlBzom659lzoHZVZW8RA4f
+         i9VrfhAx+htfKK6+HHav6cGsfp4pSaozu8Y6va4FPwBKBNMvEfW+HIzvD+s/5zv6kcAW
+         VScgyYuKNHatNNWNwYAwo6vDB7QMJuXlQTtcVWaNAvf6kQ8oldpg8FL6M4jmKQigbaMn
+         ef4nPOFy981kzrUeawhcNAkHuyoSdOROd6truwdQ7qTV638O5j5Cy3JEpNKaudeHfSxw
+         yZyz733yGUe1tlEMIjAQ2fw6FmB5P7yGvYAP4M9tiFmwZcQlN/RSGjWE5DSu/pPna7AN
+         D3tA==
+X-Gm-Message-State: AOAM533eKEhvmfbZ+W3FKVOMlBuGOh9pe6H4UDEObRCxRmXaINPnLL0u
+        s0AWfQ4CEYNywmH6p/kDPe/lNr1oHF8ud6O3NpwSivjT
+X-Google-Smtp-Source: ABdhPJxwMh75H+q2lMm7lfhlZkhQSxK3Xl3vxLiAsuHwCOepfUfgE7YhAm+UQ8tjNWYOfmUWiErC4e6KhAn6L+k5ZXk=
+X-Received: by 2002:a81:1257:0:b0:2eb:97cf:a4a2 with SMTP id
+ 84-20020a811257000000b002eb97cfa4a2mr2865951yws.149.1649167989258; Tue, 05
+ Apr 2022 07:13:09 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v5 10/21] KVM: s390: pci: add basic kvm_zdev structure
-Content-Language: en-US
-To:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        linux-s390@vger.kernel.org
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        farman@linux.ibm.com, pmorel@linux.ibm.com,
-        borntraeger@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, vneethv@linux.ibm.com,
-        oberpar@linux.ibm.com, freude@linux.ibm.com, thuth@redhat.com,
-        pasic@linux.ibm.com, pbonzini@redhat.com, corbet@lwn.net,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-References: <20220404174349.58530-1-mjrosato@linux.ibm.com>
- <20220404174349.58530-11-mjrosato@linux.ibm.com>
- <8fc611271c6156dee5c5f5b5c2f583d2d7774843.camel@linux.ibm.com>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-In-Reply-To: <8fc611271c6156dee5c5f5b5c2f583d2d7774843.camel@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Qt5-YCCO2ZAkFtw-CyjLutRvAHpvHu4x
-X-Proofpoint-ORIG-GUID: abzCw4HVKfcXKNf_D465BhRHBCQe8tNw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-04-05_02,2022-04-05_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- clxscore=1015 priorityscore=1501 adultscore=0 mlxlogscore=898 phishscore=0
- suspectscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2204050079
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20220403054822.16868-1-rdunlap@infradead.org> <20220403054822.16868-2-rdunlap@infradead.org>
+In-Reply-To: <20220403054822.16868-2-rdunlap@infradead.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 5 Apr 2022 16:12:58 +0200
+Message-ID: <CAJZ5v0gZvd_Uw02_K7fWGYFtTncSTxdeoR6z=PQ5e0DM255k8A@mail.gmail.com>
+Subject: Re: [PATCH 1/3 v3] Docs: admin/kernel-parameters: edit a few boot options
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        sparclinux@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        linux-ia64@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 4/5/22 4:20 AM, Niklas Schnelle wrote:
-> On Mon, 2022-04-04 at 13:43 -0400, Matthew Rosato wrote:
->> This structure will be used to carry kvm passthrough information related to
->> zPCI devices.
->>
->> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
->> ---
->>   arch/s390/include/asm/pci.h |  3 +++
->>   arch/s390/kvm/Makefile      |  1 +
->>   arch/s390/kvm/pci.c         | 38 +++++++++++++++++++++++++++++++++++++
->>   arch/s390/kvm/pci.h         | 21 ++++++++++++++++++++
->>   4 files changed, 63 insertions(+)
->>   create mode 100644 arch/s390/kvm/pci.c
->>   create mode 100644 arch/s390/kvm/pci.h
->>
->> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
->> index 4c5b8fbc2079..9eb20cebaa18 100644
->> --- a/arch/s390/include/asm/pci.h
->> +++ b/arch/s390/include/asm/pci.h
->> @@ -97,6 +97,7 @@ struct zpci_bar_struct {
->>   };
->>   
->>   struct s390_domain;
->> +struct kvm_zdev;
->>   
->>   #define ZPCI_FUNCTIONS_PER_BUS 256
->>   struct zpci_bus {
->> @@ -190,6 +191,8 @@ struct zpci_dev {
->>   	struct dentry	*debugfs_dev;
->>   
->>   	struct s390_domain *s390_domain; /* s390 IOMMU domain data */
->> +
->> +	struct kvm_zdev *kzdev; /* passthrough data */
->>   };
-> 
-> The struct zpci_dev tries to use semantic groups in its formatting.
-> It's not perfect and we probably need to clean this up to remove some
-> holes in the future. For now let's put the new kzdev without a blank
-> line together with s390_domain and add a "section comment" like
-> "IOMMU and passthrough".
-> Also I'd drop the "... data" part of the line end comment or even drop
-> it entirely, the name is pretty clear already when combined with the
-> section comment.
+On Sun, Apr 3, 2022 at 7:48 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> Clean up some of admin-guide/kernel-parameters.txt:
+>
+> a. "smt" should be "smt=" (S390)
+> b. (dropped)
+> c. Sparc supports the vdso= boot option
+> d. make the tp_printk options (2) formatting similar to other options
+>    by adding spacing
+> e. add "trace_clock=" with a reference to Documentation/trace/ftrace.rst
+> f. use [IA-64] as documented instead of [ia64]
+> g. fix formatting and text for test_suspend=
+> h. fix formatting for swapaccount=
+> i. fix formatting and grammar for video.brightness_switch_enabled=
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+> Cc: Sven Schnelle <svens@linux.ibm.com>
+> Cc: linux-s390@vger.kernel.org
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: sparclinux@vger.kernel.org
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: linux-ia64@vger.kernel.org
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-acpi@vger.kernel.org
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
 
-Sure, will do
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> 
-> With that Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> 
+for the test_suspend and ACPI video pieces.
 
-Thanks!
+> ---
+> v3: add trace_clock= specifics (Steven)
+> v2: drop "smt-enabled" for arch/powerpc/ (Michael)
+>
+>  Documentation/admin-guide/kernel-parameters.txt |   47 ++++++++++----
+>  1 file changed, 36 insertions(+), 11 deletions(-)
+>
+> --- linux-next-20220331.orig/Documentation/admin-guide/kernel-parameters.txt
+> +++ linux-next-20220331/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2814,7 +2814,7 @@
+>                         different yeeloong laptops.
+>                         Example: machtype=lemote-yeeloong-2f-7inch
+>
+> -       max_addr=nn[KMG]        [KNL,BOOT,ia64] All physical memory greater
+> +       max_addr=nn[KMG]        [KNL,BOOT,IA-64] All physical memory greater
+>                         than or equal to this physical address is ignored.
+>
+>         maxcpus=        [SMP] Maximum number of processors that an SMP kernel
+> @@ -3057,7 +3057,7 @@
+>
+>         mga=            [HW,DRM]
+>
+> -       min_addr=nn[KMG]        [KNL,BOOT,ia64] All physical memory below this
+> +       min_addr=nn[KMG]        [KNL,BOOT,IA-64] All physical memory below this
+>                         physical address is ignored.
+>
+>         mini2440=       [ARM,HW,KNL]
+> @@ -5388,7 +5388,7 @@
+>                                 1: Fast pin select (default)
+>                                 2: ATC IRMode
+>
+> -       smt             [KNL,S390] Set the maximum number of threads (logical
+> +       smt=            [KNL,S390] Set the maximum number of threads (logical
+>                         CPUs) to use per physical CPU on systems capable of
+>                         symmetric multithreading (SMT). Will be capped to the
+>                         actual hardware limit.
+> @@ -5774,8 +5774,9 @@
+>                         This parameter controls use of the Protected
+>                         Execution Facility on pSeries.
+>
+> -       swapaccount=[0|1]
+> -                       [KNL] Enable accounting of swap in memory resource
+> +       swapaccount=    [KNL]
+> +                       Format: [0|1]
+> +                       Enable accounting of swap in memory resource
+>                         controller if no parameter or 1 is given or disable
+>                         it if 0 is given (See Documentation/admin-guide/cgroup-v1/memory.rst)
+>
+> @@ -5821,7 +5822,8 @@
+>
+>         tdfx=           [HW,DRM]
+>
+> -       test_suspend=   [SUSPEND][,N]
+> +       test_suspend=   [SUSPEND]
+> +                       Format: { "mem" | "standby" | "freeze" }[,N]
+>                         Specify "mem" (for Suspend-to-RAM) or "standby" (for
+>                         standby suspend) or "freeze" (for suspend type freeze)
+>                         as the system sleep state during system startup with
+> @@ -5908,6 +5910,28 @@
+>         trace_buf_size=nn[KMG]
+>                         [FTRACE] will set tracing buffer size on each cpu.
+>
+> +       trace_clock=    [FTRACE] Set the clock used for tracing events
+> +                       at boot up.
+> +                       local - Use the per CPU time stamp counter
+> +                               (converted into nanoseconds). Fast, but
+> +                               depending on the architecture, may not be
+> +                               in sync between CPUs.
+> +                       global - Event time stamps are synchronize across
+> +                               CPUs. May be slower than the local clock,
+> +                               but better for some race conditions.
+> +                       counter - Simple counting of events (1, 2, ..)
+> +                               note, some counts may be skipped due to the
+> +                               infrastructure grabbing the clock more than
+> +                               once per event.
+> +                       uptime - Use jiffies as the time stamp.
+> +                       perf - Use the same clock that perf uses.
+> +                       mono - Use ktime_get_mono_fast_ns() for time stamps.
+> +                       mono_raw - Use ktime_get_raw_fast_ns() for time
+> +                               stamps.
+> +                       boot - Use ktime_get_boot_fast_ns() for time stamps.
+> +                       Architectures may add more clocks. See
+> +                       Documentation/trace/ftrace.rst for more details.
+> +
+>         trace_event=[event-list]
+>                         [FTRACE] Set and start specified trace events in order
+>                         to facilitate early boot debugging. The event-list is a
+> @@ -5930,7 +5954,7 @@
+>                         See also Documentation/trace/ftrace.rst "trace options"
+>                         section.
+>
+> -       tp_printk[FTRACE]
+> +       tp_printk       [FTRACE]
+>                         Have the tracepoints sent to printk as well as the
+>                         tracing ring buffer. This is useful for early boot up
+>                         where the system hangs or reboots and does not give the
+> @@ -5952,7 +5976,7 @@
+>                         frequency tracepoints such as irq or sched, can cause
+>                         the system to live lock.
+>
+> -       tp_printk_stop_on_boot[FTRACE]
+> +       tp_printk_stop_on_boot [FTRACE]
+>                         When tp_printk (above) is set, it can cause a lot of noise
+>                         on the console. It may be useful to only include the
+>                         printing of events during boot up, as user space may
+> @@ -6301,7 +6325,7 @@
+>                                         HIGHMEM regardless of setting
+>                                         of CONFIG_HIGHPTE.
+>
+> -       vdso=           [X86,SH]
+> +       vdso=           [X86,SH,SPARC]
+>                         On X86_32, this is an alias for vdso32=.  Otherwise:
+>
+>                         vdso=1: enable VDSO (the default)
+> @@ -6327,11 +6351,12 @@
+>         video=          [FB] Frame buffer configuration
+>                         See Documentation/fb/modedb.rst.
+>
+> -       video.brightness_switch_enabled= [0,1]
+> +       video.brightness_switch_enabled= [ACPI]
+> +                       Format: [0|1]
+>                         If set to 1, on receiving an ACPI notify event
+>                         generated by hotkey, video driver will adjust brightness
+>                         level and then send out the event to user space through
+> -                       the allocated input device; If set to 0, video driver
+> +                       the allocated input device. If set to 0, video driver
+>                         will only send out the event without touching backlight
+>                         brightness level.
+>                         default: 1
