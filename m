@@ -2,243 +2,164 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 14B604F4A0F
-	for <lists+linux-s390@lfdr.de>; Wed,  6 Apr 2022 02:40:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B89AF4F49F8
+	for <lists+linux-s390@lfdr.de>; Wed,  6 Apr 2022 02:36:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237542AbiDEWeH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 Apr 2022 18:34:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46592 "EHLO
+        id S231608AbiDEWdf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 Apr 2022 18:33:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1446274AbiDEPoY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Apr 2022 11:44:24 -0400
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A92E6C78;
-        Tue,  5 Apr 2022 07:13:10 -0700 (PDT)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-2eb43ad7909so85992257b3.2;
-        Tue, 05 Apr 2022 07:13:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0m0X8qD7jgaOpFhSCX1pI9/lBF4aFgFkK0POJ3FtM5M=;
-        b=oop02PYzQjf4I81Lgk4YHXpzi42n6WQveIpvF1+LxhlRXlBzom659lzoHZVZW8RA4f
-         i9VrfhAx+htfKK6+HHav6cGsfp4pSaozu8Y6va4FPwBKBNMvEfW+HIzvD+s/5zv6kcAW
-         VScgyYuKNHatNNWNwYAwo6vDB7QMJuXlQTtcVWaNAvf6kQ8oldpg8FL6M4jmKQigbaMn
-         ef4nPOFy981kzrUeawhcNAkHuyoSdOROd6truwdQ7qTV638O5j5Cy3JEpNKaudeHfSxw
-         yZyz733yGUe1tlEMIjAQ2fw6FmB5P7yGvYAP4M9tiFmwZcQlN/RSGjWE5DSu/pPna7AN
-         D3tA==
-X-Gm-Message-State: AOAM533eKEhvmfbZ+W3FKVOMlBuGOh9pe6H4UDEObRCxRmXaINPnLL0u
-        s0AWfQ4CEYNywmH6p/kDPe/lNr1oHF8ud6O3NpwSivjT
-X-Google-Smtp-Source: ABdhPJxwMh75H+q2lMm7lfhlZkhQSxK3Xl3vxLiAsuHwCOepfUfgE7YhAm+UQ8tjNWYOfmUWiErC4e6KhAn6L+k5ZXk=
-X-Received: by 2002:a81:1257:0:b0:2eb:97cf:a4a2 with SMTP id
- 84-20020a811257000000b002eb97cfa4a2mr2865951yws.149.1649167989258; Tue, 05
- Apr 2022 07:13:09 -0700 (PDT)
+        with ESMTP id S1454194AbiDEP6B (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Apr 2022 11:58:01 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACC2B169B2F;
+        Tue,  5 Apr 2022 08:03:30 -0700 (PDT)
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 235DWSsS015100;
+        Tue, 5 Apr 2022 15:03:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=kWjQMYfk1AG+xyWV+LOmEg/Nsxt7nzoqkaOys+fqmaI=;
+ b=Ox2JSU3zeaNG8Q6/LL1VQ58mhM27hRLVD5FXxgT5WgHuXw3ON0ebnQL0Slaygi3GmqiG
+ 6wCJd4FiM6aMrbKRGjvAaB/Apm/l3iJsPJV+27CITNSAqrc2EaCl60b+0bOPvBe/fiFJ
+ AD4/0QZTFpfRzh0hnwvcqEBmMZAdVV4+lEnAEN4IdQksY8RPsShsdRU1MeN2CWpVElyN
+ UA8afs4jnR4Kbl61KG2uzfuDKuEKOienpYBwRBr7TPxxGI5tJ4Cxyun9zWMjjNQqyMgx
+ CLtZd4erinolr5wL0FOajZuIrNLkdKgEmlZztRfBcUvWMGBNXsjU/WCxJ5ADJHm68SJs Gw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3f8n6qmeyt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 Apr 2022 15:03:29 +0000
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 235DWXQc015608;
+        Tue, 5 Apr 2022 15:03:29 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3f8n6qmexq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 Apr 2022 15:03:29 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 235F3CCP009010;
+        Tue, 5 Apr 2022 15:03:27 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 3f6e48x10y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 Apr 2022 15:03:26 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 235F3Nok38207980
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 Apr 2022 15:03:23 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6F437A4040;
+        Tue,  5 Apr 2022 15:03:23 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 57A37A404D;
+        Tue,  5 Apr 2022 15:03:22 +0000 (GMT)
+Received: from [9.171.66.169] (unknown [9.171.66.169])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  5 Apr 2022 15:03:22 +0000 (GMT)
+Message-ID: <2978f1c7-e299-a385-9ef3-5ee796b134e4@linux.ibm.com>
+Date:   Tue, 5 Apr 2022 17:06:23 +0200
 MIME-Version: 1.0
-References: <20220403054822.16868-1-rdunlap@infradead.org> <20220403054822.16868-2-rdunlap@infradead.org>
-In-Reply-To: <20220403054822.16868-2-rdunlap@infradead.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 5 Apr 2022 16:12:58 +0200
-Message-ID: <CAJZ5v0gZvd_Uw02_K7fWGYFtTncSTxdeoR6z=PQ5e0DM255k8A@mail.gmail.com>
-Subject: Re: [PATCH 1/3 v3] Docs: admin/kernel-parameters: edit a few boot options
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        linux-ia64@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH v5 14/21] KVM: s390: pci: provide routines for
+ enabling/disabling interrupt forwarding
+Content-Language: en-US
+To:     Matthew Rosato <mjrosato@linux.ibm.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        linux-s390@vger.kernel.org
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        farman@linux.ibm.com, borntraeger@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        agordeev@linux.ibm.com, svens@linux.ibm.com, frankja@linux.ibm.com,
+        david@redhat.com, imbrenda@linux.ibm.com, vneethv@linux.ibm.com,
+        oberpar@linux.ibm.com, freude@linux.ibm.com, thuth@redhat.com,
+        pasic@linux.ibm.com, pbonzini@redhat.com, corbet@lwn.net,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20220404174349.58530-1-mjrosato@linux.ibm.com>
+ <20220404174349.58530-15-mjrosato@linux.ibm.com>
+ <9a551f04c3878ecb3a26fed6aff2834fbfe41f18.camel@linux.ibm.com>
+ <7196af99-fcfa-c9a6-a245-c15268c6851b@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+In-Reply-To: <7196af99-fcfa-c9a6-a245-c15268c6851b@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Ch0IAO81t8SfZ7nOV3dnHL24lRQ8XSIM
+X-Proofpoint-GUID: bAcl5T6iJp8Wwm6dPQSQjmGwA7Wo8-7X
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-04-05_04,2022-04-05_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 mlxscore=0
+ suspectscore=0 bulkscore=0 adultscore=0 phishscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2202240000 definitions=main-2204050084
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H5,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun, Apr 3, 2022 at 7:48 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Clean up some of admin-guide/kernel-parameters.txt:
->
-> a. "smt" should be "smt=" (S390)
-> b. (dropped)
-> c. Sparc supports the vdso= boot option
-> d. make the tp_printk options (2) formatting similar to other options
->    by adding spacing
-> e. add "trace_clock=" with a reference to Documentation/trace/ftrace.rst
-> f. use [IA-64] as documented instead of [ia64]
-> g. fix formatting and text for test_suspend=
-> h. fix formatting for swapaccount=
-> i. fix formatting and grammar for video.brightness_switch_enabled=
->
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-> Cc: Sven Schnelle <svens@linux.ibm.com>
-> Cc: linux-s390@vger.kernel.org
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: sparclinux@vger.kernel.org
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linux-ia64@vger.kernel.org
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-acpi@vger.kernel.org
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-for the test_suspend and ACPI video pieces.
+On 4/5/22 15:48, Matthew Rosato wrote:
+> On 4/5/22 9:39 AM, Niklas Schnelle wrote:
+>> On Mon, 2022-04-04 at 13:43 -0400, Matthew Rosato wrote:
+>>> These routines will be wired into a kvm ioctl in order to respond to
+>>> requests to enable / disable a device for Adapter Event Notifications /
+>>> Adapter Interuption Forwarding.
+>>>
+>>> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+>>> ---
+>>>   arch/s390/kvm/pci.c      | 247 +++++++++++++++++++++++++++++++++++++++
+>>>   arch/s390/kvm/pci.h      |   1 +
+>>>   arch/s390/pci/pci_insn.c |   1 +
+>>>   3 files changed, 249 insertions(+)
+>>>
+>>> diff --git a/arch/s390/kvm/pci.c b/arch/s390/kvm/pci.c
+>>> index 01bd8a2f503b..f0fd68569a9d 100644
+>>> --- a/arch/s390/kvm/pci.c
+>>> +++ b/arch/s390/kvm/pci.c
+>>> @@ -11,6 +11,7 @@
+>>>   #include <linux/pci.h>
+>>>   #include <asm/pci.h>
+>>>   #include <asm/pci_insn.h>
+>>> +#include <asm/pci_io.h>
+>>>   #include "pci.h"
+>>>   struct zpci_aift *aift;
+>>> @@ -152,6 +153,252 @@ int kvm_s390_pci_aen_init(u8 nisc)
+>>>       return rc;
+>>>   }
+>>> +/* Modify PCI: Register floating adapter interruption forwarding */
+>>> +static int kvm_zpci_set_airq(struct zpci_dev *zdev)
+>>> +{
+>>> +    u64 req = ZPCI_CREATE_REQ(zdev->fh, 0, ZPCI_MOD_FC_REG_INT);
+>>> +    struct zpci_fib fib = {};
+>>
+>> Hmm this one uses '{}' as initializer while all current callers of
+>> zpci_mod_fc() use '{0}'. As far as I know the empty braces are a GNU
+>> extension so should work for the kernel but for consistency I'd go with
+>> '{0}' or possibly '{.foo = bar, ...}' where that is more readable.
+>> There too uninitialized fields will be set to 0. Unless of course there
+>> is a conflicting KVM convention that I don't know about.
+> 
+> No convention that I'm aware of, I previously had fib = {0} based on the 
+> same rationale you describe and changed to fib = {} per review request 
+> from Pierre a few versions back.  I don't have a strong preference, but 
+> I did not note any functional difference between the two and see a bunch 
+> of examples of both methods throughout the kernel.
+> 
 
-> ---
-> v3: add trace_clock= specifics (Steven)
-> v2: drop "smt-enabled" for arch/powerpc/ (Michael)
->
->  Documentation/admin-guide/kernel-parameters.txt |   47 ++++++++++----
->  1 file changed, 36 insertions(+), 11 deletions(-)
->
-> --- linux-next-20220331.orig/Documentation/admin-guide/kernel-parameters.txt
-> +++ linux-next-20220331/Documentation/admin-guide/kernel-parameters.txt
-> @@ -2814,7 +2814,7 @@
->                         different yeeloong laptops.
->                         Example: machtype=lemote-yeeloong-2f-7inch
->
-> -       max_addr=nn[KMG]        [KNL,BOOT,ia64] All physical memory greater
-> +       max_addr=nn[KMG]        [KNL,BOOT,IA-64] All physical memory greater
->                         than or equal to this physical address is ignored.
->
->         maxcpus=        [SMP] Maximum number of processors that an SMP kernel
-> @@ -3057,7 +3057,7 @@
->
->         mga=            [HW,DRM]
->
-> -       min_addr=nn[KMG]        [KNL,BOOT,ia64] All physical memory below this
-> +       min_addr=nn[KMG]        [KNL,BOOT,IA-64] All physical memory below this
->                         physical address is ignored.
->
->         mini2440=       [ARM,HW,KNL]
-> @@ -5388,7 +5388,7 @@
->                                 1: Fast pin select (default)
->                                 2: ATC IRMode
->
-> -       smt             [KNL,S390] Set the maximum number of threads (logical
-> +       smt=            [KNL,S390] Set the maximum number of threads (logical
->                         CPUs) to use per physical CPU on systems capable of
->                         symmetric multithreading (SMT). Will be capped to the
->                         actual hardware limit.
-> @@ -5774,8 +5774,9 @@
->                         This parameter controls use of the Protected
->                         Execution Facility on pSeries.
->
-> -       swapaccount=[0|1]
-> -                       [KNL] Enable accounting of swap in memory resource
-> +       swapaccount=    [KNL]
-> +                       Format: [0|1]
-> +                       Enable accounting of swap in memory resource
->                         controller if no parameter or 1 is given or disable
->                         it if 0 is given (See Documentation/admin-guide/cgroup-v1/memory.rst)
->
-> @@ -5821,7 +5822,8 @@
->
->         tdfx=           [HW,DRM]
->
-> -       test_suspend=   [SUSPEND][,N]
-> +       test_suspend=   [SUSPEND]
-> +                       Format: { "mem" | "standby" | "freeze" }[,N]
->                         Specify "mem" (for Suspend-to-RAM) or "standby" (for
->                         standby suspend) or "freeze" (for suspend type freeze)
->                         as the system sleep state during system startup with
-> @@ -5908,6 +5910,28 @@
->         trace_buf_size=nn[KMG]
->                         [FTRACE] will set tracing buffer size on each cpu.
->
-> +       trace_clock=    [FTRACE] Set the clock used for tracing events
-> +                       at boot up.
-> +                       local - Use the per CPU time stamp counter
-> +                               (converted into nanoseconds). Fast, but
-> +                               depending on the architecture, may not be
-> +                               in sync between CPUs.
-> +                       global - Event time stamps are synchronize across
-> +                               CPUs. May be slower than the local clock,
-> +                               but better for some race conditions.
-> +                       counter - Simple counting of events (1, 2, ..)
-> +                               note, some counts may be skipped due to the
-> +                               infrastructure grabbing the clock more than
-> +                               once per event.
-> +                       uptime - Use jiffies as the time stamp.
-> +                       perf - Use the same clock that perf uses.
-> +                       mono - Use ktime_get_mono_fast_ns() for time stamps.
-> +                       mono_raw - Use ktime_get_raw_fast_ns() for time
-> +                               stamps.
-> +                       boot - Use ktime_get_boot_fast_ns() for time stamps.
-> +                       Architectures may add more clocks. See
-> +                       Documentation/trace/ftrace.rst for more details.
-> +
->         trace_event=[event-list]
->                         [FTRACE] Set and start specified trace events in order
->                         to facilitate early boot debugging. The event-list is a
-> @@ -5930,7 +5954,7 @@
->                         See also Documentation/trace/ftrace.rst "trace options"
->                         section.
->
-> -       tp_printk[FTRACE]
-> +       tp_printk       [FTRACE]
->                         Have the tracepoints sent to printk as well as the
->                         tracing ring buffer. This is useful for early boot up
->                         where the system hangs or reboots and does not give the
-> @@ -5952,7 +5976,7 @@
->                         frequency tracepoints such as irq or sched, can cause
->                         the system to live lock.
->
-> -       tp_printk_stop_on_boot[FTRACE]
-> +       tp_printk_stop_on_boot [FTRACE]
->                         When tp_printk (above) is set, it can cause a lot of noise
->                         on the console. It may be useful to only include the
->                         printing of events during boot up, as user space may
-> @@ -6301,7 +6325,7 @@
->                                         HIGHMEM regardless of setting
->                                         of CONFIG_HIGHPTE.
->
-> -       vdso=           [X86,SH]
-> +       vdso=           [X86,SH,SPARC]
->                         On X86_32, this is an alias for vdso32=.  Otherwise:
->
->                         vdso=1: enable VDSO (the default)
-> @@ -6327,11 +6351,12 @@
->         video=          [FB] Frame buffer configuration
->                         See Documentation/fb/modedb.rst.
->
-> -       video.brightness_switch_enabled= [0,1]
-> +       video.brightness_switch_enabled= [ACPI]
-> +                       Format: [0|1]
->                         If set to 1, on receiving an ACPI notify event
->                         generated by hotkey, video driver will adjust brightness
->                         level and then send out the event to user space through
-> -                       the allocated input device; If set to 0, video driver
-> +                       the allocated input device. If set to 0, video driver
->                         will only send out the event without touching backlight
->                         brightness level.
->                         default: 1
+Was stupid of me to comment that, as you said there are no difference, 
+so do as you want.
+
+
+-- 
+Pierre Morel
+IBM Lab Boeblingen
