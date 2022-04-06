@@ -2,243 +2,205 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EADD64F68D8
-	for <lists+linux-s390@lfdr.de>; Wed,  6 Apr 2022 20:19:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9C614F6A94
+	for <lists+linux-s390@lfdr.de>; Wed,  6 Apr 2022 21:52:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240150AbiDFSMK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 6 Apr 2022 14:12:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45456 "EHLO
+        id S232643AbiDFTyp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 Apr 2022 15:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240288AbiDFSMD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Apr 2022 14:12:03 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C51E1CEA70;
-        Wed,  6 Apr 2022 09:49:03 -0700 (PDT)
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 236GmoeX027503;
-        Wed, 6 Apr 2022 16:48:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=J/ySBrEZ3U6k45cbB8swX7zNGgUHrk7eH1vaVC17t0E=;
- b=R1ucG1yEV2i7PrPyCyty1ruD/yff32pWEpfM73aDX1zBi/69radN+wD36jomZsp4OLPT
- QxN8sSV4axzfSMkQ9ZwGhm2ilffpq3lSFI7L2z2sqoytkK96xashtXsNtQS5AeJAcMTn
- pT/bWisvWMuFfwhPgMdz2D+1u/K8MdEfyLSEFzDLi3mCmCCeh1c8230X2bByVRY1+3Sw
- Y6OKJf4gEkczXnH0e7fKi0Mm/PkohCshh8kdv6PcIxxGgemW/1BqEMsXO9gGPBZ7VNOr
- AD/yWSTLFOFUvZJ6quO8td4PabOE5kvMv0XuHVBUentjDaeZzKXqDjmyOiuHFDVx3uaN bg== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3f8txywub8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Apr 2022 16:48:56 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 236GhGI1007164;
-        Wed, 6 Apr 2022 16:44:42 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04fra.de.ibm.com with ESMTP id 3f6e48xrrx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Apr 2022 16:44:42 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 236Gikui45285744
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Apr 2022 16:44:46 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 008A14C052;
-        Wed,  6 Apr 2022 16:44:39 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3FCE64C044;
-        Wed,  6 Apr 2022 16:44:38 +0000 (GMT)
-Received: from [9.145.170.20] (unknown [9.145.170.20])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  6 Apr 2022 16:44:38 +0000 (GMT)
-Message-ID: <6208840a-bb97-6b45-7b8e-80ad79849129@linux.ibm.com>
-Date:   Wed, 6 Apr 2022 18:44:37 +0200
-Subject: Re: [PATCH V2] s390: Simplify the calculation of variables
-Content-Language: en-US
-To:     Heiko Carstens <hca@linux.ibm.com>,
-        Haowen Bai <baihaowen@meizu.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <Ykq2H+POaGs0GHVU@osiris>
- <1649212651-32038-1-git-send-email-baihaowen@meizu.com>
- <Yk1TOpjLnmUcRQt3@osiris>
-From:   Peter Oberparleiter <oberpar@linux.ibm.com>
-In-Reply-To: <Yk1TOpjLnmUcRQt3@osiris>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -zcfcv6cSSOWPx79FCW8EweoJJnrqR7M
-X-Proofpoint-ORIG-GUID: -zcfcv6cSSOWPx79FCW8EweoJJnrqR7M
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        with ESMTP id S235231AbiDFTx1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Apr 2022 15:53:27 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2052.outbound.protection.outlook.com [40.107.236.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E133717AAC;
+        Wed,  6 Apr 2022 10:17:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FuYZT6B696M50d1HOQ77Hv9Klmy4tlFKTgfO9M8rhE87nx06cSEm79L+wuDjIfs7BehBGIEg6MykLISQVWkXVak/qYz1sJ6KsZhmPiqErluDmMwgA4FAvlqG16GD4f6a36qV/yV24st2T3FV2jGsvt+77uDGwVZslPp7rQZtcDRrnzpjvKF1ceMbdawpvYZcu0bmeYbfE5XanY3aHyCiOc8QhGw8Bq6JMbUW5Xr4VdXi1Qow8w9Z3HOJpwSbSysWF2yUTy5OOxZGebn+ND/EAyGHhcUztVrxNI0/flUoLU9UOKAwq6aNpQzpWrQODjhus7spfOqWoyzuqQ5g0lXAiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oeLl9tvWkv1qk9DIx32ykxtv58qBigg9/OSGVp/1wac=;
+ b=aH9monxweDt7w6bJyP/K9wbh747KVKBxO9F1QxYr14wvEhxjoSwnnEGiz+6OK0FRr095sfQWLW5FKo0P/8J0LsqeYv4XCW7lvQEpnwOoLV6KyFAo/G+M767okd1xR7U97V8oZ9ipTmsu9vxh6Mx8exjy2pfE9IGfTSqAsefeFS4IcndahGloelzBinEo3SYHVgyuC7horTlslLTm8MS3+faOn7iFJ8XvB1HPLUc4EqHrXDQxfgAMkZYCEM6vKRPgERtN45+WuUpD/ZWvH99Q9sqW9mRq0X29s7iLiWxGtMvRkdc0WOt1tzjd0IOTTsct8jS3ZEMhtVDudujzL1Cw7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oeLl9tvWkv1qk9DIx32ykxtv58qBigg9/OSGVp/1wac=;
+ b=UfKHKxG1d8xArB5IfCMwFeSVkWHNvN6ZoDXInLY+1mL/flaZFAA2V/DJ7oSstsa3nvOX6nTH+Z6OQyjin0IoT0IL+0NhIToPueQ92BUSn1g51MlPj5vVDyEkg/NNPWnmY4JNWl6EGemzkCOE1mVpf9ip/xpfjX6FMcvQPVr/Gx/VP+si10wA8x8nzQFRNx9n1WglSbxFQ5YopkpgVDiL1jPNCtSYNaAykgu0V1CbZg9nfZkyoCPhtu5wgBa9T0DoTfvPG8cwGtV/l8JprRWWX+L2D1dc5zyYhqVyRrHSNpFitwsbTD0Ov+jB/nT/powQnilAUCGcT3XgQehna2CfDQ==
+Received: from MN2PR12MB2941.namprd12.prod.outlook.com (2603:10b6:208:a9::12)
+ by BN9PR12MB5210.namprd12.prod.outlook.com (2603:10b6:408:11b::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.31; Wed, 6 Apr
+ 2022 17:17:33 +0000
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+ by MN2PR12MB2941.namprd12.prod.outlook.com (2603:10b6:208:a9::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.31; Wed, 6 Apr
+ 2022 17:17:32 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::cdfb:f88e:410b:9374]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::cdfb:f88e:410b:9374%6]) with mapi id 15.20.5144.021; Wed, 6 Apr 2022
+ 17:17:32 +0000
+Date:   Wed, 6 Apr 2022 14:17:29 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Christian Benvenuti <benve@cisco.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        iommu@lists.linux-foundation.org, Jason Wang <jasowang@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Nelson Escobar <neescoba@cisco.com>, netdev@vger.kernel.org,
+        Rob Clark <robdclark@gmail.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        virtualization@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+Subject: Re: [PATCH 1/5] iommu: Replace uses of IOMMU_CAP_CACHE_COHERENCY
+ with dev_is_dma_coherent()
+Message-ID: <20220406171729.GJ2120790@nvidia.com>
+References: <1-v1-ef02c60ddb76+12ca2-intel_no_snoop_jgg@nvidia.com>
+ <db5a6daa-bfe9-744f-7fc5-d5167858bc3e@arm.com>
+ <20220406142432.GF2120790@nvidia.com>
+ <20220406151823.GG2120790@nvidia.com>
+ <20220406155056.GA30433@lst.de>
+ <20220406160623.GI2120790@nvidia.com>
+ <20220406161031.GA31790@lst.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220406161031.GA31790@lst.de>
+X-ClientProxiedBy: SJ0PR03CA0077.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::22) To MN2PR12MB4192.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::15)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-04-06_09,2022-04-06_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1011
- impostorscore=0 phishscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
- priorityscore=1501 adultscore=0 mlxscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2204060079
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3f1ac694-fac8-438b-cc54-08da17f155e1
+X-MS-TrafficTypeDiagnostic: MN2PR12MB2941:EE_|BN9PR12MB5210:EE_
+X-Microsoft-Antispam-PRVS: <MN2PR12MB2941B021E620A7C040D8451BC2E79@MN2PR12MB2941.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pbKkRM6k6BKdjHJ5SUFjR0yzAa0me7MANlDXy+wbfPzWoTpAJoqa+tfirTv5Uc/BNuWy/CvZphmSesHz46oBffVU00uK9J6oajch6vh3iACC9RHNf20wU6iK9w1zHyfNKq3b62yDUEAwJrb78ddCYJj9gnvmnUnpKBRPl/yYdtxqUeFwkAyhu9L3boUU6wpg0Y1Br7xXdcK9bsy/hTrC2TzFzjh3tuV0O/qrWtXLJIOf0dQLSdcyYB8ufMBcMn8p+FcYiKJASFjcBiSh7j3b0Bka1ALOL/j9BGSg2fXnOHqoodzlmI7PCxvYoMs04qNXtjlkq+Hf65jovEUz/CIooOhzVwSGZN1g6KqF3AICeZNROTKURa1s57EygrIuDJKNb8MmEUsGZsRMkikvffJaEFgmQUfvgEXyWaEFiznXMBtulWFXTUOaB4U97XYs5aHclyv3LGTUvDE0kiwEKdaAIfk8hoRKp8fiUTDBI2/4DDeoVbe/RC2g4i/gBWDr7KpDLYoiyh+xdzgD3gXs1LxLCMTRaVTGM5yNFBeh7wFVYPf9bNxV52k8CwTpgV9Be/FpyeSdWhIhVyIo3B6ujbJIDNW1IWlQMq87fKYh2sCBf+oAkAlVW+JETWaZZt7Eb2F3oMC0oEpn7LImNJvM3SlvSA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB2941.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(36756003)(54906003)(6486002)(508600001)(6512007)(6916009)(6506007)(7416002)(5660300002)(6666004)(2906002)(316002)(33656002)(2616005)(8936002)(186003)(26005)(66556008)(38100700002)(66476007)(1076003)(4326008)(8676002)(66946007)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?CruKPwALXC+pMgw47IfKLFNSsNg8c5oOxaEX9A3fjWAtxB4N5jnrhMp5p3SY?=
+ =?us-ascii?Q?xU1diFLhvKejWsS5JWqE2z+bU/icnaIiM7OA0Qw+rJHSUaMMZmVrwVWFezhr?=
+ =?us-ascii?Q?9FmW4jBbCRLC8wUTsjjL5fBD+XCF48Ry9K5r5jF9YyLNCHd6Trx8+wN2C9RF?=
+ =?us-ascii?Q?NdXjNUt9y4oRZzIhjKX7zrxvzwQi4fWkqXFY5MqQkrNNpH8Yvq988tNq2s27?=
+ =?us-ascii?Q?GHR3comhc9UqabyJ1+BPRmyLT7GBksOQLKaXn71j6L+12vgG1AmfeuLWod8P?=
+ =?us-ascii?Q?S5FRiR+GJNus/Ox+4By7NsV1UCOBBjdmoVsrdoK/MQU/l/G40Zn9vVXJT6XK?=
+ =?us-ascii?Q?F9WVvECoIfk4w4vvy5RSRki9xWNXVfu4HsDKuYNSabiK+b+bMn0UhXuIPuhs?=
+ =?us-ascii?Q?U5jZa+L2bb2WqoMS8xOhIqW7AmULduuT0C/Nt4DrIXDtarHLikmzGPWEg4m0?=
+ =?us-ascii?Q?J8+PikVKQWVRll7peckSDIhFyujakq3aEIcss6bKK8z/AcHp1m7XJ4sfKAO0?=
+ =?us-ascii?Q?iZ53P64Wkx75BICsZZFX/WGIEOqTgxpmKoBXelA2k0VhudhuCp7chLwpPsXM?=
+ =?us-ascii?Q?3a0z2VGqM5FHo8wT76ECUAoV4bOPScR6jUqgTIQoRKCC+OSzA+WyimudRDMV?=
+ =?us-ascii?Q?+YMbi6T3bxTN4uPUcmlK5Mp0yt4CJXjxJ9VjZFiGEozHKDYeptijgdyibxZV?=
+ =?us-ascii?Q?4pF8J3N3/wj4hwGG0nmrLQgO6hjPebS9niV0mugvl4aprFlUtS50YbIynWVT?=
+ =?us-ascii?Q?O8AnqsASfIbP3fGka3yghQmc1nPFmTE/nkCk3+HwrTggjcG3u2D/pgJSVr53?=
+ =?us-ascii?Q?QQSkx0mJ7phFYFNdeZ/l7CshfytuYxo2A9xMh3W27/OgiIVWxBgysaY8zviY?=
+ =?us-ascii?Q?AVRXwA7Pr/6h/pIEpy9lviS0yZmPvIvNxCREyktFC25Y/uSj+Q7Ki9X5eONS?=
+ =?us-ascii?Q?zHc3CwXDvUEgVu56B0ixj7yn7zYDYaooufNoid5gu7lQQIM3uh7JxCt0DZ8G?=
+ =?us-ascii?Q?ls6/hhtIcCpL/dFiYvX0SQy4J/cUylh493OSLGVFbgUe7U4XYFmRt12QBt2/?=
+ =?us-ascii?Q?pNrQFZASS4X0CEtW8RN07YFoLRgnvAbnfiSKyF/8GZG3LKSIdBachYOP5vSa?=
+ =?us-ascii?Q?VVkKOkjuGu41IifiLGJ30yBPGYxssfofd3DK9f0sjtDKZp1nP6ZsAUt8rk9L?=
+ =?us-ascii?Q?gPGL3GqcAN17M/rA7ZCbfF8R6okSeWW9l4cBRNTFOWbmyHA+vDxe5u2Cdxc0?=
+ =?us-ascii?Q?EjCLxcyFlt/Cs8AI1X2KbUQpn8jLiqUNwaGVvHkTurAX08X10QU+iWuzdzoc?=
+ =?us-ascii?Q?+Jk1mPH2XXaVcp8wlt+hr7OfSM5h4o9ae3C+qDmQFkWY0g/Xp8YAia16kNev?=
+ =?us-ascii?Q?1poKA8xgSfowSvFdwhesszvLoYAReYBllLHiauzGdhTc7hOMAHB9zWv5IvcV?=
+ =?us-ascii?Q?J5V2C8rz3zurv2odKeNoFG+9ElJwhQYfDFZAyuN5MC4mBsuGb+bKJlqrkEAU?=
+ =?us-ascii?Q?7NbA1gqEQEcSBnkaJjamUtl4NjiWuRb73pNkbrkxESfXdRYgJglmpIkupAIs?=
+ =?us-ascii?Q?fPZxkx0DiKUQgQ1AKcvOXKhZjdas7SJDJ5zbLGhdVHZtneC+z9mNPVmoJNfA?=
+ =?us-ascii?Q?9GGWdoqtN8NWtkHbwoSqd/R5FZxngYf3/5iIfeZ6N+rywdxJ6o/QpcQtJqUl?=
+ =?us-ascii?Q?irDRx8g84mBzjhDKRfCf2ioE7xqzR+8Hs2srmU7+iV/lkYHM9B4/dr/v8Y/Q?=
+ =?us-ascii?Q?01hXCVKe4A=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f1ac694-fac8-438b-cc54-08da17f155e1
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2022 17:17:32.4584
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vg5+MnYZRge10j7/r9zB02aLHjHFyRMV+J4DyfviJyzq1iOkDN17GKT6QmrqlYJD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5210
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 06.04.2022 10:45, Heiko Carstens wrote:
-> On Wed, Apr 06, 2022 at 10:37:31AM +0800, Haowen Bai wrote:
->> Fix the following coccicheck warnings:
->> ./arch/s390/include/asm/scsw.h:695:47-49: WARNING
->>  !A || A && B is equivalent to !A || B
->>
->> I apply a readable version just to get rid of a warning.
->>
->> Signed-off-by: Haowen Bai <baihaowen@meizu.com>
->> ---
->> V1->V2: apply a readable and simple version as suggestion.
->>
->>  arch/s390/include/asm/scsw.h | 47 ++++++++++++++++++++++++++++++--------------
->>  1 file changed, 32 insertions(+), 15 deletions(-)
+On Wed, Apr 06, 2022 at 06:10:31PM +0200, Christoph Hellwig wrote:
+> On Wed, Apr 06, 2022 at 01:06:23PM -0300, Jason Gunthorpe wrote:
+> > On Wed, Apr 06, 2022 at 05:50:56PM +0200, Christoph Hellwig wrote:
+> > > On Wed, Apr 06, 2022 at 12:18:23PM -0300, Jason Gunthorpe wrote:
+> > > > > Oh, I didn't know about device_get_dma_attr()..
+> > > 
+> > > Which is completely broken for any non-OF, non-ACPI plaform.
+> > 
+> > I saw that, but I spent some time searching and could not find an
+> > iommu driver that would load independently of OF or ACPI. ie no IOMMU
+> > platform drivers are created by board files. Things like Intel/AMD
+> > discover only from ACPI, etc.
 > 
-> [full quote below]
-> 
-> Vineeth, Peter, could one of you please Review and or ACK the patch
-> below?
+> s390?
 
-This patch changes scsw->cmd access to scsw->tm access, which is
-incorrect, so I cannot ACK them as is.
+Ah, I missed looking in s390, hyperv and virtio.. 
 
-Also I'm somewhat torn on the general question if these functions should
-be changed:
+hyperv is not creating iommu_domains, just IRQ remapping
 
-- the current implementation is unreadable => change it
-- the current implementation works => keep it
-- improvement patches like this one seem to appear regularly and consume
-  time in reviewing => change it
+virtio is using OF
 
-If there was a new version that really improved readability, this would
-be really welcome. The problem is that the definition of readability is
-special for these functions: each of these functions implement a
-validity check based on text from the s390 Principles of Operations
-(PoP) document [1]. "Readable" for myself would mean: I can easily
-correlate the code to the text from the PoP so that I can spot errors or
-adjust code to changed text.
+And s390 indeed doesn't obviously have OF or ACPI parts..
 
-I'm adding some examples how that could look like below. My question to
-the original author would be, if this is something they could implement,
-or if we'd rather do that at some point in time in the future by ourselves.
+This seems like it would be consistent with other things:
 
->> diff --git a/arch/s390/include/asm/scsw.h b/arch/s390/include/asm/scsw.h
->> index a7c3ccf681da..b7e65f96de3c 100644
->> --- a/arch/s390/include/asm/scsw.h
->> +++ b/arch/s390/include/asm/scsw.h
->> @@ -508,9 +508,13 @@ static inline int scsw_cmd_is_valid_zcc(union scsw *scsw)
->>   */
->>  static inline int scsw_cmd_is_valid_ectl(union scsw *scsw)
->>  {
->> -	return (scsw->cmd.stctl & SCSW_STCTL_STATUS_PEND) &&
->> -	       !(scsw->cmd.stctl & SCSW_STCTL_INTER_STATUS) &&
->> -	       (scsw->cmd.stctl & SCSW_STCTL_ALERT_STATUS);
->> +	if (!(scsw->tm.stctl & SCSW_STCTL_STATUS_PEND))
->> +		return 0;
->> +	if (scsw->tm.stctl & SCSW_STCTL_INTER_STATUS)
->> +		return 0;
->> +	if (scsw->tm.stctl & SCSW_STCTL_ALERT_STATUS)
->> +		return 1;
->> +	return 0;
->>  }
+enum dev_dma_attr device_get_dma_attr(struct device *dev)
+{
+	const struct fwnode_handle *fwnode = dev_fwnode(dev);
+	struct acpi_device *adev = to_acpi_device_node(fwnode);
 
-Here's the PoP text that is the base for this function (note ECTL=E):
+	if (is_of_node(fwnode)) {
+		if (of_dma_is_coherent(to_of_node(fwnode)))
+			return DEV_DMA_COHERENT;
+		return DEV_DMA_NON_COHERENT;
+	} else if (adev) {
+		return acpi_get_dma_attr(adev);
+	}
 
-"The E bit is meaningful whenever the subchannel is status pending with
-alert status either alone or together with primary status, secondary
-status, or both."
+	/* Platform is always DMA coherent */
+	if (!IS_ENABLED(CONFIG_ARCH_HAS_SYNC_DMA_FOR_DEVICE) &&
+	    !IS_ENABLED(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU) &&
+	    !IS_ENABLED(CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU_ALL) &&
+	    device_iommu_mapped(dev))
+		return DEV_DMA_COHERENT;
+	return DEV_DMA_NOT_SUPPORTED;
+}
+EXPORT_SYMBOL_GPL(device_get_dma_attr);
 
-A readable version for me would therefore contain code that can easily
-be matched against that text, e.g. something like:
+ie s390 has no of or acpi but the entire platform is known DMA
+coherent at config time so allow it. Not sure we need the
+device_iommu_mapped() or not.
 
-/* Must be status pending. */
-if (!(scsw->cmd.stctl & SCSW_STCTL_STATUS_PEND))
-  return 0;
+We could alternatively use existing device_get_dma_attr() as a default
+with an iommu wrapper and push the exception down through the iommu
+driver and s390 can override it.
 
-/* Must have alert status. */
-if (!(scsw->cmd.stctl & SCSW_STCTL_ALERT_STATUS))
-  return 0;
-
-/* Must be alone or together with primary, secondary or both,
- * => no intermediate status. */
-if (scsw->cmd.stctl & SCSW_STCTL_INTER_STATUS)
-  return 0;
-
-return 1;
-
->>  /**
->> @@ -522,10 +526,15 @@ static inline int scsw_cmd_is_valid_ectl(union scsw *scsw)
->>   */
->>  static inline int scsw_cmd_is_valid_pno(union scsw *scsw)
->>  {
->> -	return (scsw->cmd.fctl != 0) &&
->> -	       (scsw->cmd.stctl & SCSW_STCTL_STATUS_PEND) &&
->> -	       (!(scsw->cmd.stctl & SCSW_STCTL_INTER_STATUS) ||
->> -		  (scsw->cmd.actl & SCSW_ACTL_SUSPENDED));
->> +	if (!scsw->tm.fctl)
->> +		return 0;
->> +	if (!(scsw->tm.stctl & SCSW_STCTL_STATUS_PEND))
->> +		return 0;
->> +	if (!(scsw->tm.stctl & SCSW_STCTL_INTER_STATUS))
->> +		return 1;
->> +	if (scsw->tm.actl & SCSW_ACTL_SUSPENDED)
->> +		return 1;
->> +	return 0;
->>  }
-
-Here's the associated PoP text for this function (note: PNO=N)
-
-"The N bit is meaningful whenever the status-control field contains any
-of the indications listed below and at least one basic I/O function is
-also indicated at the subchannel:
-- Status pending with any combination of primary, secondary, or alert
-  status
-- Status pending alone
-- Status pending with intermediate status when the subchannel is also
-  suspended"
-
-Again a readable version could look like:
-
-/* Must indicate at least one I/O function. */
-if (!scsw->cmd.fctl)
-  return 0;
-
-/* Must be status pending. */
-if (!(scsw->cmd.stctl & SCSW_STCTL_STATUS_PEND))
-  return 0;
-
-/* Can be status pending alone, or with any combination of primary,
- * secondary and alert => no intermediate status. */
-if (!(scsw->cmd.stctl & SCSW_STCTL_INTER_STATUS))
-  return 1;
-
-/* If intermediate, must be suspended. */
-if (scsw->cmd.actl & SCSW_ACTL_SUSPENDED)
-  return 1;
-
-return 0;
-
-The _tm_ functions below should be changed in the exact same way, while
-accessing the corresponding data fields in scsw->tm instead of scsw->cmd.
-
->>  static inline int scsw_tm_is_valid_ectl(union scsw *scsw)
->>  static inline int scsw_tm_is_valid_pno(union scsw *scsw)
-
-[1] https://www.ibm.com/support/pages/zarchitecture-principles-operation
-
--- 
-Peter Oberparleiter
-Linux on IBM Z Development - IBM Germany R&D
+Thanks,
+Jason
