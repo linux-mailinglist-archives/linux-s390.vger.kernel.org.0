@@ -2,125 +2,118 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 516024FDC13
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Apr 2022 13:00:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5B8F4FDC97
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Apr 2022 13:05:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357577AbiDLKMM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 12 Apr 2022 06:12:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55570 "EHLO
+        id S241996AbiDLKcZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 12 Apr 2022 06:32:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238810AbiDLIkQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 Apr 2022 04:40:16 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8301E386
-        for <linux-s390@vger.kernel.org>; Tue, 12 Apr 2022 01:07:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649750819;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DBLeI4YaJokPAygbCEyNRovV9qI9o815SAPbEDuub1s=;
-        b=VP9HZnPHLYUq6O48lYJyPj0sRZTUzOvDq5xC1hh2gT1KfiJqTh9mXjWAQTznaI6q49ZEup
-        vi1vGSEhve5OJ77U+K8s93ar34n609+dX6xeRAy0ivS96kiQg/9klXitrG+EgqSI8ITU5o
-        f9fTTMHfVJYyszfl5ACV6rJY7J4Ba+c=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-639-KKyosC0LO_21WxMRyL9xEQ-1; Tue, 12 Apr 2022 04:06:57 -0400
-X-MC-Unique: KKyosC0LO_21WxMRyL9xEQ-1
-Received: by mail-wm1-f70.google.com with SMTP id n21-20020a05600c4f9500b0038e3b0aa367so632438wmq.1
-        for <linux-s390@vger.kernel.org>; Tue, 12 Apr 2022 01:06:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=DBLeI4YaJokPAygbCEyNRovV9qI9o815SAPbEDuub1s=;
-        b=EyxCPYq5160XrK5nVEJ4Ev+XmAQRA4O2gf6IEFL3fsIvki8nxs6griaFRBOZ3x8Wu7
-         S79yvVcK72Nv6zEfPjy0/R3sEd8qYgLips8Suppk9aajhFh+5XDfZaGqJRVrNldV4V2p
-         IzvmX07E9TUIdOn4clb4nDkdtBfOK69/DfSFb7tTnPzbXhYJH4Fw40ftrezsJELASsAZ
-         WLamBMFq0fACyHVHw4G4wjogHAfl0HQndJtbx1zUnFXAJNVAoc4WrmuXKVlS/NY737Ms
-         8FhC1tP6Fyfsl4X7d0mUcWBVF60iDZYh8vGzloqve8SgNM7h279yu+PVTWsTpQNVlhsu
-         tbRw==
-X-Gm-Message-State: AOAM530w2LA6oS5JT1z777gONVXNSEdwU6BlRGtWFjPMXDwkWer/Al8l
-        S09IhhZwIyWPT1aQ+UXsiQ3aVhbUkW/L8v227Ix3GZxiWenhED5Qg3pTcC880TCQO5Zkj3L+jq8
-        m19zEFhq5t0gTw1qB65m/HA==
-X-Received: by 2002:a05:600c:1990:b0:38c:c0a2:c0ab with SMTP id t16-20020a05600c199000b0038cc0a2c0abmr2917259wmq.72.1649750816567;
-        Tue, 12 Apr 2022 01:06:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyirCPyskdO5e2sY0gyTYmwZZqPERZLETq+FzC5u7mRnrRXPXUpZycQcZI40q4HP90YIRcMxQ==
-X-Received: by 2002:a05:600c:1990:b0:38c:c0a2:c0ab with SMTP id t16-20020a05600c199000b0038cc0a2c0abmr2917245wmq.72.1649750816394;
-        Tue, 12 Apr 2022 01:06:56 -0700 (PDT)
-Received: from [10.33.192.183] (nat-pool-str-t.redhat.com. [149.14.88.106])
-        by smtp.gmail.com with ESMTPSA id i19-20020a05600c355300b0038e1d69af52sm1660404wmq.7.2022.04.12.01.06.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Apr 2022 01:06:55 -0700 (PDT)
-Message-ID: <e3574fa6-c69f-deb2-397f-ef1f6f6c59f0@redhat.com>
-Date:   Tue, 12 Apr 2022 10:06:54 +0200
+        with ESMTP id S1381003AbiDLK0A (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 Apr 2022 06:26:00 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B790E54BD1;
+        Tue, 12 Apr 2022 02:29:48 -0700 (PDT)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23C8BrgY012804;
+        Tue, 12 Apr 2022 09:29:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=n0N8LxyFzTgRl4eQsM8PZ39uWTWdh0NanMX95mTnDPE=;
+ b=TFxs5u1w1pobIWd/T1oHTqNK6fXJvFsah5uBKdE5XMWAc2/FMHW+vs5QSZVh/75fUe9A
+ VSmUjsofSGfANm/U81XsCPHWPOd9QYtcZnXJMTWCtaiTGeAT2XLMkySIdhwdmixIq3Av
+ QTOMxN2ZmGOogJAlDvahO93GiCDx8lUM8fz5/Y7XSQ/r89UrlxBK94N53du7H75ULlsz
+ ETrP8QW9JeZFzFV2MXBk0y61dd+cqlR8U0tDs//6VdOwC6p9vAznbUR0sPp10UjPvCKH
+ ErhViuibH4IkgiRfhDGHlT9hgoKi8jsPQPTUZvwZ9fZsMIsQkZg/jTKudj+IGsxupQK2 tA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fd5puhkup-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Apr 2022 09:29:48 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23C99u5S003084;
+        Tue, 12 Apr 2022 09:29:47 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fd5puhku4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Apr 2022 09:29:47 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23C9BmZ3020039;
+        Tue, 12 Apr 2022 09:29:45 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 3fb1s8unv2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Apr 2022 09:29:45 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23C9TgMT38928866
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Apr 2022 09:29:42 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 07593AE045;
+        Tue, 12 Apr 2022 09:29:42 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B8250AE04D;
+        Tue, 12 Apr 2022 09:29:41 +0000 (GMT)
+Received: from t46lp57.lnxne.boe (unknown [9.152.108.100])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Apr 2022 09:29:41 +0000 (GMT)
+From:   Nico Boehr <nrb@linux.ibm.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     frankja@linux.ibm.com, imbrenda@linux.ibm.com, thuth@redhat.com
+Subject: [kvm-unit-tests PATCH v1 1/3] s390x: epsw: fix report_pop_prefix() when running under non-QEMU
+Date:   Tue, 12 Apr 2022 11:29:40 +0200
+Message-Id: <20220412092941.20742-1-nrb@linux.ibm.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [kvm-unit-tests PATCH v1 3/4] s390x: don't run migration tests
- under PV
-Content-Language: en-US
-To:     Nico Boehr <nrb@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Cc:     frankja@linux.ibm.com, imbrenda@linux.ibm.com
-References: <20220411100750.2868587-1-nrb@linux.ibm.com>
- <20220411100750.2868587-4-nrb@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-In-Reply-To: <20220411100750.2868587-4-nrb@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: GI1b6Mzn6PW_BdQ0kp1KvIP5ZzEyQDpX
+X-Proofpoint-GUID: 3861WgmHBG1xtGVo7Lk_hC_qJZ7wyVuA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-04-12_02,2022-04-11_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
+ bulkscore=0 impostorscore=0 priorityscore=1501 clxscore=1015
+ suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204120042
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 11/04/2022 12.07, Nico Boehr wrote:
-> PV doesn't support migration, so don't run the migration tests there.
-> 
-> Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
-> ---
->   s390x/run               | 5 +++++
->   scripts/s390x/func.bash | 2 +-
->   2 files changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/s390x/run b/s390x/run
-> index 2bcdabbaa14f..24138f6803be 100755
-> --- a/s390x/run
-> +++ b/s390x/run
-> @@ -20,6 +20,11 @@ if [ "${1: -7}" = ".pv.bin" ] || [ "${TESTNAME: -3}" = "_PV" ] && [ "$ACCEL" = "
->   	exit 2
->   fi
->   
-> +if [ "${1: -7}" = ".pv.bin" ] || [ "${TESTNAME: -3}" = "_PV" ] && [ "$MIGRATION" = "yes" ]; then
-> +	echo "Migration isn't supported under Protected Virtualization"
-> +	exit 2
-> +fi
-> +
->   M='-machine s390-ccw-virtio'
->   M+=",accel=$ACCEL"
->   command="$qemu -nodefaults -nographic $M"
-> diff --git a/scripts/s390x/func.bash b/scripts/s390x/func.bash
-> index bf799a567c3b..2a941bbb0794 100644
-> --- a/scripts/s390x/func.bash
-> +++ b/scripts/s390x/func.bash
-> @@ -21,7 +21,7 @@ function arch_cmd_s390x()
->   	"$cmd" "$testname" "$groups" "$smp" "$kernel" "$opts" "$arch" "$check" "$accel" "$timeout"
->   
->   	# run PV test case
-> -	if [ "$ACCEL" = 'tcg' ]; then
-> +	if [ "$ACCEL" = 'tcg' ] || find_word "migration" "$groups"; then
->   		return
->   	fi
->   	kernel=${kernel%.elf}.pv.bin
+When we don't run in QEMU, we didn't push a prefix, hence pop won't work. Fix
+this by pushing the prefix before the QEMU check.
 
-Acked-by: Thomas Huth <thuth@redhat.com>
+Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
+---
+ s390x/epsw.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/s390x/epsw.c b/s390x/epsw.c
+index 5b73f4b3db6c..d8090d95a486 100644
+--- a/s390x/epsw.c
++++ b/s390x/epsw.c
+@@ -97,13 +97,13 @@ static void test_epsw(void)
+ 
+ int main(int argc, char **argv)
+ {
++	report_prefix_push("epsw");
++
+ 	if (!host_is_kvm() && !host_is_tcg()) {
+ 		report_skip("Not running under QEMU");
+ 		goto done;
+ 	}
+ 
+-	report_prefix_push("epsw");
+-
+ 	test_epsw();
+ 
+ done:
+-- 
+2.31.1
 
