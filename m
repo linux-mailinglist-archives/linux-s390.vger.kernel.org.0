@@ -2,68 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AB264FF165
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Apr 2022 10:07:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B27A4FF28C
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Apr 2022 10:48:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233364AbiDMIJT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 13 Apr 2022 04:09:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59702 "EHLO
+        id S230149AbiDMIt6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 Apr 2022 04:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232900AbiDMIJS (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 13 Apr 2022 04:09:18 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AA35F22B30
-        for <linux-s390@vger.kernel.org>; Wed, 13 Apr 2022 01:06:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649837216;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3oVDDbPJyK3HgpM5oKcpbE9J9tBIr9ChlAXnnhFjPGo=;
-        b=gJC5s0JqK4lyM37n36IrLWfBtiOXEI6nKZ18sEA2mnPWomobBk9zy0jUZZy6OpObY1kjXW
-        cQj8ROv8QwWHt3gT6mXKfA4lPyF7js+UNoyehPBa7iA5HnClb6wvKBwddH+oQgvuWH1zRJ
-        b87rdP8b7fek7UbiMV5Qyz/varvOyIc=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-647-s1HBGSIWNkGFo7-aKTKeSA-1; Wed, 13 Apr 2022 04:06:50 -0400
-X-MC-Unique: s1HBGSIWNkGFo7-aKTKeSA-1
-Received: by mail-pg1-f197.google.com with SMTP id b18-20020a63d812000000b0037e1aa59c0bso719796pgh.12
-        for <linux-s390@vger.kernel.org>; Wed, 13 Apr 2022 01:06:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=3oVDDbPJyK3HgpM5oKcpbE9J9tBIr9ChlAXnnhFjPGo=;
-        b=U0c6xmdgH+LrXPxU6MZ5PIH2MNdDsczBqsPtWch6OZ9SUUIqCf5VEoDRyVuBDCuI2e
-         y9daAoK1o+NJz0TJ4paz4+GeQHjyKBQf9oUA/0LeVa4w1WukckSomNLJby+a/AkJZMsb
-         vFNbTw/5AzUN6GbQ4WgdwTncZCqkVewIMtwACejCrnlXUuROHZTWXJUrprmNAGnXNjvD
-         akds/xru/IEb7N1RWXNBc1jaHujo6AIJhYeiakM5pN4DbW8tetfw0wcUDa3C823/dx8A
-         SSAKUsCDEXhfL98KVESX2i8BcvihVGlRiIsaTyvtnr5dyRp1p6wzsiJ6sPIgBZQJU9ys
-         r7cw==
-X-Gm-Message-State: AOAM531R4x1WGgS+ntN9vk3OzczxlwiaGp690GslKpoQntbABTWRIprB
-        UR8Z8/UfKx1M+V9glhSWEtNFfEshoqiNQPjvEKpGJnEqByPwJeFoFNRFfsJF1L29u8b8ObA9YbE
-        Gr+yY00NaK3sXlnah4GndIw==
-X-Received: by 2002:a17:90b:1e06:b0:1cb:b742:ba0d with SMTP id pg6-20020a17090b1e0600b001cbb742ba0dmr9526927pjb.24.1649837209902;
-        Wed, 13 Apr 2022 01:06:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxA8440BQVqz6KdwXBOHrMtT4WnGyMxsQffyGtbEDMm0ObQF/C2qu9IScvqE/FloA/61fylAQ==
-X-Received: by 2002:a17:90b:1e06:b0:1cb:b742:ba0d with SMTP id pg6-20020a17090b1e0600b001cbb742ba0dmr9526892pjb.24.1649837209610;
-        Wed, 13 Apr 2022 01:06:49 -0700 (PDT)
-Received: from [10.72.13.223] ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id p10-20020a17090a680a00b001c7bf7d32f9sm1982517pjj.55.2022.04.13.01.06.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Apr 2022 01:06:49 -0700 (PDT)
-Message-ID: <96d1fe97-2e8a-ae8a-a35f-bba2ce0f44b4@redhat.com>
-Date:   Wed, 13 Apr 2022 16:06:33 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.7.0
-Subject: Re: [PATCH v9 32/32] virtio_net: support set_ringparam
-Content-Language: en-US
-To:     Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        virtualization@lists.linux-foundation.org
+        with ESMTP id S229513AbiDMIt5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 13 Apr 2022 04:49:57 -0400
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4D293D1CC;
+        Wed, 13 Apr 2022 01:47:35 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=33;SR=0;TI=SMTPD_---0V9yvgPd_1649839648;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0V9yvgPd_1649839648)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 13 Apr 2022 16:47:30 +0800
+Message-ID: <1649838917.6726515-10-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH v9 31/32] virtio_net: support rx/tx queue resize
+Date:   Wed, 13 Apr 2022 16:35:17 +0800
+From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To:     Jason Wang <jasowang@redhat.com>
 Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
         Anton Ivanov <anton.ivanov@cambridgegreys.com>,
         "Michael S. Tsirkin" <mst@redhat.com>,
@@ -90,17 +49,18 @@ Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
         linux-um@lists.infradead.org, netdev@vger.kernel.org,
         platform-driver-x86@vger.kernel.org,
         linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org
+        kvm@vger.kernel.org, bpf@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
 References: <20220406034346.74409-1-xuanzhuo@linux.alibaba.com>
- <20220406034346.74409-33-xuanzhuo@linux.alibaba.com>
-From:   Jason Wang <jasowang@redhat.com>
-In-Reply-To: <20220406034346.74409-33-xuanzhuo@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+ <20220406034346.74409-32-xuanzhuo@linux.alibaba.com>
+ <122008a6-1e79-14d3-1478-59f96464afc9@redhat.com>
+In-Reply-To: <122008a6-1e79-14d3-1478-59f96464afc9@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -108,90 +68,241 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-在 2022/4/6 上午11:43, Xuan Zhuo 写道:
-> Support set_ringparam based on virtio queue reset.
+On Wed, 13 Apr 2022 16:00:18 +0800, Jason Wang <jasowang@redhat.com> wrote:
 >
-> Users can use ethtool -G eth0 <ring_num> to modify the ring size of
-> virtio-net.
+> =E5=9C=A8 2022/4/6 =E4=B8=8A=E5=8D=8811:43, Xuan Zhuo =E5=86=99=E9=81=93:
+> > This patch implements the resize function of the rx, tx queues.
+> > Based on this function, it is possible to modify the ring num of the
+> > queue.
+> >
+> > There may be an exception during the resize process, the resize may
+> > fail, or the vq can no longer be used. Either way, we must execute
+> > napi_enable(). Because napi_disable is similar to a lock, napi_enable
+> > must be called after calling napi_disable.
+> >
+> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+> > ---
+> >   drivers/net/virtio_net.c | 81 ++++++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 81 insertions(+)
+> >
+> > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > index b8bf00525177..ba6859f305f7 100644
+> > --- a/drivers/net/virtio_net.c
+> > +++ b/drivers/net/virtio_net.c
+> > @@ -251,6 +251,9 @@ struct padded_vnet_hdr {
+> >   	char padding[4];
+> >   };
+> >
+> > +static void virtnet_sq_free_unused_buf(struct virtqueue *vq, void *buf=
+);
+> > +static void virtnet_rq_free_unused_buf(struct virtqueue *vq, void *buf=
+);
+> > +
+> >   static bool is_xdp_frame(void *ptr)
+> >   {
+> >   	return (unsigned long)ptr & VIRTIO_XDP_FLAG;
+> > @@ -1369,6 +1372,15 @@ static void virtnet_napi_enable(struct virtqueue=
+ *vq, struct napi_struct *napi)
+> >   {
+> >   	napi_enable(napi);
+> >
+> > +	/* Check if vq is in reset state. The normal reset/resize process will
+> > +	 * be protected by napi. However, the protection of napi is only enab=
+led
+> > +	 * during the operation, and the protection of napi will end after the
+> > +	 * operation is completed. If re-enable fails during the process, vq
+> > +	 * will remain unavailable with reset state.
+> > +	 */
+> > +	if (vq->reset)
+> > +		return;
 >
-> Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-
-
-Acked-by: Jason Wang <jasowang@redhat.com>
-
-(One thing that I see is that, when resize fails, the param reported via 
-get_ringparam might be wrong, this is a corner case but might worth to 
-fix in the future).
-
-
-> ---
->   drivers/net/virtio_net.c | 47 ++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 47 insertions(+)
 >
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index ba6859f305f7..37e4e27f1e4e 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -2264,6 +2264,52 @@ static void virtnet_get_ringparam(struct net_device *dev,
->   	ring->tx_pending = virtqueue_get_vring_size(vi->sq[0].vq);
->   }
->   
-> +static int virtnet_set_ringparam(struct net_device *dev,
-> +				 struct ethtool_ringparam *ring,
-> +				 struct kernel_ethtool_ringparam *kernel_ring,
-> +				 struct netlink_ext_ack *extack)
-> +{
-> +	struct virtnet_info *vi = netdev_priv(dev);
-> +	u32 rx_pending, tx_pending;
-> +	struct receive_queue *rq;
-> +	struct send_queue *sq;
-> +	int i, err;
-> +
-> +	if (ring->rx_mini_pending || ring->rx_jumbo_pending)
-> +		return -EINVAL;
-> +
-> +	rx_pending = virtqueue_get_vring_size(vi->rq[0].vq);
-> +	tx_pending = virtqueue_get_vring_size(vi->sq[0].vq);
-> +
-> +	if (ring->rx_pending == rx_pending &&
-> +	    ring->tx_pending == tx_pending)
-> +		return 0;
-> +
-> +	if (ring->rx_pending > virtqueue_get_vring_max_size(vi->rq[0].vq))
-> +		return -EINVAL;
-> +
-> +	if (ring->tx_pending > virtqueue_get_vring_max_size(vi->sq[0].vq))
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < vi->max_queue_pairs; i++) {
-> +		rq = vi->rq + i;
-> +		sq = vi->sq + i;
-> +
-> +		if (ring->tx_pending != tx_pending) {
-> +			err = virtnet_tx_resize(vi, sq, ring->tx_pending);
-> +			if (err)
-> +				return err;
-> +		}
-> +
-> +		if (ring->rx_pending != rx_pending) {
-> +			err = virtnet_rx_resize(vi, rq, ring->rx_pending);
-> +			if (err)
-> +				return err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
->   
->   static void virtnet_get_drvinfo(struct net_device *dev,
->   				struct ethtool_drvinfo *info)
-> @@ -2497,6 +2543,7 @@ static const struct ethtool_ops virtnet_ethtool_ops = {
->   	.get_drvinfo = virtnet_get_drvinfo,
->   	.get_link = ethtool_op_get_link,
->   	.get_ringparam = virtnet_get_ringparam,
-> +	.set_ringparam = virtnet_set_ringparam,
->   	.get_strings = virtnet_get_strings,
->   	.get_sset_count = virtnet_get_sset_count,
->   	.get_ethtool_stats = virtnet_get_ethtool_stats,
+> I don't get when could we hit this condition.
 
+
+In patch 23, the code to implement re-enable vq is as follows:
+
++static int vp_modern_enable_reset_vq(struct virtqueue *vq)
++{
++	struct virtio_pci_device *vp_dev =3D to_vp_device(vq->vdev);
++	struct virtio_pci_modern_device *mdev =3D &vp_dev->mdev;
++	struct virtio_pci_vq_info *info;
++	unsigned long flags, index;
++	int err;
++
++	if (!vq->reset)
++		return -EBUSY;
++
++	index =3D vq->index;
++	info =3D vp_dev->vqs[index];
++
++	/* check queue reset status */
++	if (vp_modern_get_queue_reset(mdev, index) !=3D 1)
++		return -EBUSY;
++
++	err =3D vp_active_vq(vq, info->msix_vector);
++	if (err)
++		return err;
++
++	if (vq->callback) {
++		spin_lock_irqsave(&vp_dev->lock, flags);
++		list_add(&info->node, &vp_dev->virtqueues);
++		spin_unlock_irqrestore(&vp_dev->lock, flags);
++	} else {
++		INIT_LIST_HEAD(&info->node);
++	}
++
++	vp_modern_set_queue_enable(&vp_dev->mdev, index, true);
++
++	if (vp_dev->per_vq_vectors && info->msix_vector !=3D VIRTIO_MSI_NO_VECTOR)
++		enable_irq(pci_irq_vector(vp_dev->pci_dev, info->msix_vector));
++
++	vq->reset =3D false;
++
++	return 0;
++}
+
+
+There are three situations where an error will be returned. These are the
+situations I want to handle.
+
+But I'm rethinking the question, and I feel like you're right, although the
+hardware setup may fail. We can no longer sync with the hardware. But using=
+ it
+as a normal vq doesn't have any problems.
+
+>
+>
+> > +
+> >   	/* If all buffers were filled by other side before we napi_enabled, =
+we
+> >   	 * won't get another interrupt, so process any outstanding packets n=
+ow.
+> >   	 * Call local_bh_enable after to trigger softIRQ processing.
+> > @@ -1413,6 +1425,15 @@ static void refill_work(struct work_struct *work)
+> >   		struct receive_queue *rq =3D &vi->rq[i];
+> >
+> >   		napi_disable(&rq->napi);
+> > +
+> > +		/* Check if vq is in reset state. See more in
+> > +		 * virtnet_napi_enable()
+> > +		 */
+> > +		if (rq->vq->reset) {
+> > +			virtnet_napi_enable(rq->vq, &rq->napi);
+> > +			continue;
+> > +		}
+>
+>
+> Can we do something similar in virtnet_close() by canceling the work?
+
+I think there is no need to cancel the work here, because napi_disable will=
+ wait
+for the napi_enable of the resize. So if the re-enable failed vq is used as=
+ a normal
+vq, this logic can be removed.
+
+
+>
+>
+> > +
+> >   		still_empty =3D !try_fill_recv(vi, rq, GFP_KERNEL);
+> >   		virtnet_napi_enable(rq->vq, &rq->napi);
+> >
+> > @@ -1523,6 +1544,10 @@ static void virtnet_poll_cleantx(struct receive_=
+queue *rq)
+> >   	if (!sq->napi.weight || is_xdp_raw_buffer_queue(vi, index))
+> >   		return;
+> >
+> > +	/* Check if vq is in reset state. See more in virtnet_napi_enable() */
+> > +	if (sq->vq->reset)
+> > +		return;
+>
+>
+> We've disabled TX napi, any chance we can still hit this?
+
+Same as above.
+
+>
+>
+> > +
+> >   	if (__netif_tx_trylock(txq)) {
+> >   		do {
+> >   			virtqueue_disable_cb(sq->vq);
+> > @@ -1769,6 +1794,62 @@ static netdev_tx_t start_xmit(struct sk_buff *sk=
+b, struct net_device *dev)
+> >   	return NETDEV_TX_OK;
+> >   }
+> >
+> > +static int virtnet_rx_resize(struct virtnet_info *vi,
+> > +			     struct receive_queue *rq, u32 ring_num)
+> > +{
+> > +	int err;
+> > +
+> > +	napi_disable(&rq->napi);
+> > +
+> > +	err =3D virtqueue_resize(rq->vq, ring_num, virtnet_rq_free_unused_buf=
+);
+> > +	if (err)
+> > +		goto err;
+> > +
+> > +	if (!try_fill_recv(vi, rq, GFP_KERNEL))
+> > +		schedule_delayed_work(&vi->refill, 0);
+> > +
+> > +	virtnet_napi_enable(rq->vq, &rq->napi);
+> > +	return 0;
+> > +
+> > +err:
+> > +	netdev_err(vi->dev,
+> > +		   "reset rx reset vq fail: rx queue index: %td err: %d\n",
+> > +		   rq - vi->rq, err);
+> > +	virtnet_napi_enable(rq->vq, &rq->napi);
+> > +	return err;
+> > +}
+> > +
+> > +static int virtnet_tx_resize(struct virtnet_info *vi,
+> > +			     struct send_queue *sq, u32 ring_num)
+> > +{
+> > +	struct netdev_queue *txq;
+> > +	int err, qindex;
+> > +
+> > +	qindex =3D sq - vi->sq;
+> > +
+> > +	virtnet_napi_tx_disable(&sq->napi);
+> > +
+> > +	txq =3D netdev_get_tx_queue(vi->dev, qindex);
+> > +	__netif_tx_lock_bh(txq);
+> > +	netif_stop_subqueue(vi->dev, qindex);
+> > +	__netif_tx_unlock_bh(txq);
+> > +
+> > +	err =3D virtqueue_resize(sq->vq, ring_num, virtnet_sq_free_unused_buf=
+);
+> > +	if (err)
+> > +		goto err;
+> > +
+> > +	netif_start_subqueue(vi->dev, qindex);
+> > +	virtnet_napi_tx_enable(vi, sq->vq, &sq->napi);
+> > +	return 0;
+> > +
+> > +err:
+>
+>
+> I guess we can still start the queue in this case? (Since we don't
+> change the queue if resize fails).
+
+Yes, you are right.
+
+Thanks.
+
+>
+>
+> > +	netdev_err(vi->dev,
+> > +		   "reset tx reset vq fail: tx queue index: %td err: %d\n",
+> > +		   sq - vi->sq, err);
+> > +	virtnet_napi_tx_enable(vi, sq->vq, &sq->napi);
+> > +	return err;
+> > +}
+> > +
+> >   /*
+> >    * Send command via the control virtqueue and check status.  Commands
+> >    * supported by the hypervisor, as indicated by feature bits, should
+>
