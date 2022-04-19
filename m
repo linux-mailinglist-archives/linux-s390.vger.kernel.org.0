@@ -2,122 +2,205 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B030C5068DB
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Apr 2022 12:37:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E953D506ACC
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Apr 2022 13:35:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348807AbiDSKkC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 Apr 2022 06:40:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43060 "EHLO
+        id S1343524AbiDSLiQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 Apr 2022 07:38:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238239AbiDSKkB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 Apr 2022 06:40:01 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B91372B19F;
-        Tue, 19 Apr 2022 03:37:15 -0700 (PDT)
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23J9L0pq028174;
-        Tue, 19 Apr 2022 10:37:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=yC4FBruC+6vmK802CppACHaf5lBfmmagRdOytRhheOQ=;
- b=kX5fFS9LM6gl99AwAiFuCnczuIWq16fpxRKaOlSjfp+NI/mhhYZZ+ebFx5NwAxrnHBnn
- 5xwnj2E/iHCV8p5jmDYPqMjf2dZesBHRuc1IXe7bZynVAWjFvNbZzP1IV2QtA2dJmhDR
- qHpceCNU00/OO+R/tYjTdnZQYRh0SUyCKMTzWG1APo6vOxY06myW5xipjlewnCj+PNUU
- D/5hkoCDKDQjmREUO6Z5LwnRpAOBNf62ZcbxWBBi8EN4rUtJe7QljhJ1KHJfcDOEv8Ql
- ujf46z4vnLM81B5rugkyX6n5XQRztOWknBOUyXppsE7GJm1+U28kzw/nvWZ1sAp2hK53 SQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fg79x3u1s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Apr 2022 10:37:05 +0000
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23JAb4FI026940;
-        Tue, 19 Apr 2022 10:37:04 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fg79x3u13-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Apr 2022 10:37:04 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23JAb2Ei032472;
-        Tue, 19 Apr 2022 10:37:02 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 3ffne8m6g9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Apr 2022 10:37:02 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23JAb0tA33423738
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Apr 2022 10:37:00 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F10EDA4084;
-        Tue, 19 Apr 2022 10:36:59 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80DC1A4085;
-        Tue, 19 Apr 2022 10:36:59 +0000 (GMT)
-Received: from [9.171.65.20] (unknown [9.171.65.20])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 19 Apr 2022 10:36:59 +0000 (GMT)
-Message-ID: <ed643c3d-6ad0-1b3c-1fe3-9157e7aa5859@linux.ibm.com>
-Date:   Tue, 19 Apr 2022 12:37:12 +0200
+        with ESMTP id S1351345AbiDSLhc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 Apr 2022 07:37:32 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B69B5FBC
+        for <linux-s390@vger.kernel.org>; Tue, 19 Apr 2022 04:34:49 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id r13so32271981ejd.5
+        for <linux-s390@vger.kernel.org>; Tue, 19 Apr 2022 04:34:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+RS2KaOerzQuwGLCJlNRvQqdlqz9kGKXmmE/o8hIMxc=;
+        b=KQats4yWut+GAInZpgo6wlkPKVDagbM3R0tOSjC/tXzsGfNp7h99Zs58vCptEscTpK
+         mbbyQT/so7ThPQX6ZBwVgU/6/OMYPhZ3b8NWVo58v/AWgjGj/c13IinU0JZUxgsLmUbX
+         wtYV4iKZ7ZxkIIXJYr27Z/OtYMBaCbJnYhLBGRpddVl1U1LTnJSB6NA88CzMeSaiqqqr
+         2PHKBRlsALK1YRRnJegN2W7zECiyg6PKkD33wHtut9O6mBuGtDG4eNOOmh7evJgldNFD
+         daON6jPbeCRx5RgbYuUVlqa5xdPtHbcMYVioGRHSRAffliIvrFMlh5w4Z4HpNMVbB8RB
+         CtMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+RS2KaOerzQuwGLCJlNRvQqdlqz9kGKXmmE/o8hIMxc=;
+        b=rbkuICHeczPUhOSP+gyYKsH34Qft+OWUwpFq1wujNcPSllFT4zVAeE5lAcaQwdC6CP
+         WRrxwm/zMixe/hO0DIYzKgYT8wXID629TRspnI6bZkmrA/t0sgB2tvsZm9ZbUPV+Jrud
+         FiisXj9WAx4+HPq71XTAnXQQt6eoNG9wi6mqUyM7xyYeC7aQ4PCPEjNlNKiDqh+ODz1h
+         sSB4+2A7+rjnVXNoRqJy5mel0PpqLhnUDx2nVRT//L+LeFr8xHe9WAie/Yyu1oLqWCC8
+         CL7nDzx2Vm6mL3nFKM8gUy3UaelqwiK5oIyUnTf08tSY32SjMzAABNfPDOEOw/g3HKUC
+         XVjQ==
+X-Gm-Message-State: AOAM532f9N3yheJLwoLDWIEQM7QSuerb/NvxSiY1kGB2mrMjYNmFlO0j
+        yasgKYu4UrLo58wWlJ4+9V1Hdw==
+X-Google-Smtp-Source: ABdhPJzqToh0YQRiewe8EqLT6PK01CMGRMmUim2jYYjkDbBJ++z/iu7RXEodKQaWchfKBfcBWKLKsQ==
+X-Received: by 2002:a17:907:6e90:b0:6ef:ef41:ac10 with SMTP id sh16-20020a1709076e9000b006efef41ac10mr750787ejc.187.1650368087470;
+        Tue, 19 Apr 2022 04:34:47 -0700 (PDT)
+Received: from localhost.localdomain (xdsl-188-155-176-92.adslplus.ch. [188.155.176.92])
+        by smtp.gmail.com with ESMTPSA id ce21-20020a170906b25500b006e89869cbf9sm5608802ejb.105.2022.04.19.04.34.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Apr 2022 04:34:46 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Stuart Yoder <stuyoder@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v7 00/12] Fix broken usage of driver_override (and kfree of static memory)
+Date:   Tue, 19 Apr 2022 13:34:23 +0200
+Message-Id: <20220419113435.246203-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH] net/smc: sync err info when TCP connection is refused
-Content-Language: en-US
-To:     Tony Lu <tonylu@linux.alibaba.com>, yacanliu@163.com
-Cc:     davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, liuyacan <liuyacan@corp.netease.com>
-References: <20220417123307.1094747-1-yacanliu@163.com>
- <Yl6Nnvnrvqv3ofES@TonyMac-Alibaba>
-From:   Karsten Graul <kgraul@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <Yl6Nnvnrvqv3ofES@TonyMac-Alibaba>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 9GZAdY8RLP3kRzLJHUpw4rQi3LJ89Rd-
-X-Proofpoint-ORIG-GUID: tTdBiRFx4PYqPSNgyd4cloEcdp8i9IBd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-19_04,2022-04-15_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- priorityscore=1501 bulkscore=0 mlxlogscore=999 spamscore=0 phishscore=0
- adultscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2204190058
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H4,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 19/04/2022 12:23, Tony Lu wrote:
-> On Sun, Apr 17, 2022 at 08:33:07PM +0800, yacanliu@163.com wrote:
->> From: liuyacan <liuyacan@corp.netease.com>
->>
->> In the current implementation, when TCP initiates a connection
->> to an unavailable [ip,port], ECONNREFUSED will be stored in the
->> TCP socket, but SMC will not. However, some apps (like curl) use
->> getsockopt(,,SO_ERROR,,) to get the error information, which makes
->> them miss the error message and behave strangely.
->>
->> Signed-off-by: liuyacan <liuyacan@corp.netease.com>
-> 
-> This fix works for me. I have tested it with curl for unavailable
-> address.
-> 
-> This patch missed net or net-next tag, I think net is preferred.
-> 
-> Reviewed-by: Tony Lu <tonylu@linux.alibaba.com>
-> 
-> Thank you,
-> Tony Lu
+Hi,
 
-Thank you both for the fix and the test!
+This is a continuation of my old patchset from 2019. [1]
+Back then, few drivers set driver_override wrong. I fixed Exynos
+in a different way after discussions. QCOM NGD was not fixed
+and a new user appeared - IMX SCU.
 
-Acked-by: Karsten Graul <kgraul@linux.ibm.com>
+It seems "char *" in driver_override looks too consty, so we
+tend to make a mistake of storing there string literals.
+
+Changes since latest v7
+=======================
+1. Patch #1: remove out_free label, document clearing override in kerneldoc and
+   in code-comments (Andy).
+2. Patch #12 (rpmsg): do not duplicate string (Biju).
+
+Changes since latest v6
+=======================
+1. Patch #1: Don't check for !dev and handle len==0 (Andy).
+2. New patch #11 (rpmsg): split constifying of local variable to a new patch.
+
+Changes since latest v5
+=======================
+1. Patch #11 (rpmsg): split from previous patch 11 - easier to understand the
+   need of it.
+2. Fix build issue in patch 12 (rpmsg).
+
+Changes since latest v4
+=======================
+1. Correct commit msgs and comments after Andy's review.
+2. Re-order code in new helper (patch #1) (Andy).
+3. Add tags.
+
+Changes since latest v3
+=======================
+1. Wrap comments, extend comment in driver_set_override() about newline.
+2. Minor commit msg fixes.
+3. Add tags.
+
+Changes since latest v2
+=======================
+1. Make all driver_override fields as "const char *", just like SPI
+   and VDPA. (Mark)
+2. Move "count" check to the new helper and add "count" argument. (Michael)
+3. Fix typos in docs, patch subject. Extend doc. (Michael, Bjorn)
+4. Compare pointers to reduce number of string readings in the helper.
+5. Fix clk-imx return value.
+
+Changes since latest v1 (not the old 2019 solution):
+====================================================
+https://lore.kernel.org/all/708eabb1-7b35-d525-d4c3-451d4a3de84f@rasmusvillemoes.dk/
+1. Add helper for setting driver_override.
+2. Use the helper.
+
+Dependencies (and stable):
+==========================
+1. All patches, including last three fixes, depend on the first patch
+   introducing the helper.
+2. The last three commits - fixes - are probably not backportable
+   directly, because of this dependency. I don't know how to express
+   this dependency here, since stable-kernel-rules.rst mentions only commits as
+   possible dependencies.
+
+[1] https://lore.kernel.org/all/1550484960-2392-3-git-send-email-krzk@kernel.org/
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (12):
+  driver: platform: Add helper for safer setting of driver_override
+  amba: Use driver_set_override() instead of open-coding
+  fsl-mc: Use driver_set_override() instead of open-coding
+  hv: Use driver_set_override() instead of open-coding
+  PCI: Use driver_set_override() instead of open-coding
+  s390/cio: Use driver_set_override() instead of open-coding
+  spi: Use helper for safer setting of driver_override
+  vdpa: Use helper for safer setting of driver_override
+  clk: imx: scu: Fix kfree() of static memory on setting driver_override
+  slimbus: qcom-ngd: Fix kfree() of static memory on setting
+    driver_override
+  rpmsg: Constify local variable in field store macro
+  rpmsg: Fix kfree() of static memory on setting driver_override
+
+ drivers/amba/bus.c              | 28 ++-----------
+ drivers/base/driver.c           | 69 +++++++++++++++++++++++++++++++++
+ drivers/base/platform.c         | 28 ++-----------
+ drivers/bus/fsl-mc/fsl-mc-bus.c | 25 ++----------
+ drivers/clk/imx/clk-scu.c       |  7 +++-
+ drivers/hv/vmbus_drv.c          | 28 ++-----------
+ drivers/pci/pci-sysfs.c         | 28 ++-----------
+ drivers/rpmsg/rpmsg_core.c      |  3 +-
+ drivers/rpmsg/rpmsg_internal.h  | 13 ++++++-
+ drivers/rpmsg/rpmsg_ns.c        | 14 ++++++-
+ drivers/s390/cio/cio.h          |  6 ++-
+ drivers/s390/cio/css.c          | 28 ++-----------
+ drivers/slimbus/qcom-ngd-ctrl.c | 13 ++++++-
+ drivers/spi/spi.c               | 26 ++-----------
+ drivers/vdpa/vdpa.c             | 29 ++------------
+ include/linux/amba/bus.h        |  6 ++-
+ include/linux/device/driver.h   |  2 +
+ include/linux/fsl/mc.h          |  6 ++-
+ include/linux/hyperv.h          |  6 ++-
+ include/linux/pci.h             |  6 ++-
+ include/linux/platform_device.h |  6 ++-
+ include/linux/rpmsg.h           |  6 ++-
+ include/linux/spi/spi.h         |  2 +
+ include/linux/vdpa.h            |  4 +-
+ 24 files changed, 184 insertions(+), 205 deletions(-)
+
+-- 
+2.32.0
+
