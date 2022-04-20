@@ -2,107 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12D60508E33
-	for <lists+linux-s390@lfdr.de>; Wed, 20 Apr 2022 19:15:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1AD3508F42
+	for <lists+linux-s390@lfdr.de>; Wed, 20 Apr 2022 20:17:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380992AbiDTRRG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 20 Apr 2022 13:17:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33796 "EHLO
+        id S235976AbiDTSTp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 20 Apr 2022 14:19:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380948AbiDTRRE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 20 Apr 2022 13:17:04 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 098D8457A9;
-        Wed, 20 Apr 2022 10:14:18 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 53D461F380;
-        Wed, 20 Apr 2022 17:14:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1650474856; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cCyVaEehkrahTF4ZZE0t6pBOtUmw5LLz8/1wxeHDxX4=;
-        b=K7U7yAPVtWoeKBCvI9IM0SUrBd3SuNQlXwbO69YYMvu/uQgJCBHLxvJUvYDJUM+CzMgGQE
-        RVSlZxkoXhp1TqU71hUtulLocxn+2wyVtaobkUyEwzAopoea+zPD+x5OcZ/P14F7mUWQ0X
-        9jy/5tEGm6a4qWbujDTO1fyNpFdYlOg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1650474856;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cCyVaEehkrahTF4ZZE0t6pBOtUmw5LLz8/1wxeHDxX4=;
-        b=NwzWMKJRWqBiYsMEpHY2LSE0kR5L5AsWQDr46B/AzDDh+7ae+1bOHK7cbVF3M3crtt+AoJ
-        6QSH0t6rY1IUvWBg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9E94C13A30;
-        Wed, 20 Apr 2022 17:14:15 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id cLLMJWc/YGJFYAAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Wed, 20 Apr 2022 17:14:15 +0000
-Message-ID: <e1b61853-143a-3691-2e6d-4fea5c049562@suse.cz>
-Date:   Wed, 20 Apr 2022 19:14:15 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v2 2/8] mm/debug_vm_pgtable: add tests for
- __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-Content-Language: en-US
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Yang Shi <shy828301@gmail.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>, Michal Hocko <mhocko@kernel.org>,
-        Nadav Amit <namit@vmware.com>, Rik van Riel <riel@surriel.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Donald Dutile <ddutile@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>, Jan Kara <jack@suse.cz>,
-        Liang Zhang <zhangliang5@huawei.com>,
-        Pedro Gomes <pedrodemargomes@gmail.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        with ESMTP id S233570AbiDTSTo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 20 Apr 2022 14:19:44 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE519FD3;
+        Wed, 20 Apr 2022 11:16:57 -0700 (PDT)
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23KI0shV020011;
+        Wed, 20 Apr 2022 18:16:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=8uhPUsPO5Owws7Bjf6Vxskq3KKfsHHNUxbKMMmLdx1w=;
+ b=dD9snOoj4/Mxwdxj8LyF7NCKVbgAb4Ho82D65ezMhtMUp/YkYJGJVKxaFVA5b8BAm2g5
+ dy4AJKj4EfrqSHyHflSBFgSSYvGut5wU+c53f9GapKA6Wt9aJlO/Ss7pTn4gbZzxHrVY
+ eZaKu0yT3wZUWyX0+/duP7RBufYMFpybihsxnHpbr4pz+me/ChUO7DEKLjWrg+sU05IX
+ 1ax6c2mcrF1zPqmGCsrDIyvR+BPEHDXsGe0gzTMsTO3OlvfzlA+0dCOJRzj/je5RNUTk
+ rmMWh8Wy57gS1FYmxv3etJaX4LUvXZt/kCdJeIYq+7jLR2tRh24sFGvHzpHojrkwtUnM FA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fjm2hd514-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Apr 2022 18:16:45 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23KIGjQq020248;
+        Wed, 20 Apr 2022 18:16:45 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fjm2hd50g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Apr 2022 18:16:45 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23KIEACN029771;
+        Wed, 20 Apr 2022 18:16:43 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 3ffn2hxqh3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Apr 2022 18:16:42 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23KIGdr551118570
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Apr 2022 18:16:39 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ACA84A405F;
+        Wed, 20 Apr 2022 18:16:39 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 54986A405C;
+        Wed, 20 Apr 2022 18:16:39 +0000 (GMT)
+Received: from osiris (unknown [9.145.42.46])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 20 Apr 2022 18:16:39 +0000 (GMT)
+Date:   Wed, 20 Apr 2022 20:16:37 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Pingfan Liu <kernelfans@gmail.com>
+Cc:     linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        linux-mm@kvack.org, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-References: <20220329164329.208407-1-david@redhat.com>
- <20220329164329.208407-3-david@redhat.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20220329164329.208407-3-david@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-8.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/9] s390/irq: utilize RCU instead of irq_lock_sparse()
+ in show_msi_interrupt()
+Message-ID: <YmBOBRMWlk4H11sc@osiris>
+References: <20220420140521.45361-1-kernelfans@gmail.com>
+ <20220420140521.45361-5-kernelfans@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220420140521.45361-5-kernelfans@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Tmdi8VJ_xmfYAKJR6QOD66jCxD7Tamwm
+X-Proofpoint-ORIG-GUID: 5YrumQ7X8EDTWkf9JoF7AxUiYVLL9Ho-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-20_05,2022-04-20_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 clxscore=1011 lowpriorityscore=0 adultscore=0
+ suspectscore=0 mlxlogscore=658 spamscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204200107
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -110,52 +94,35 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 3/29/22 18:43, David Hildenbrand wrote:
-> Let's test that __HAVE_ARCH_PTE_SWP_EXCLUSIVE works as expected.
+On Wed, Apr 20, 2022 at 10:05:16PM +0800, Pingfan Liu wrote:
+> irq_desc can be accessed safely in RCU read section as demonstrated by
+> kstat_irqs_usr(). And raw_spin_lock_irqsave() context can provide a rcu
+> read section, which can be utilized to get rid of irq_lock_sparse().
 > 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+> Cc: Sven Schnelle <svens@linux.ibm.com>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: linux-kernel@vger.kernel.org
+> To: linux-s390@vger.kernel.org
 > ---
->  mm/debug_vm_pgtable.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  arch/s390/kernel/irq.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 > 
-> diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
-> index db2abd9e415b..55f1a8dc716f 100644
-> --- a/mm/debug_vm_pgtable.c
-> +++ b/mm/debug_vm_pgtable.c
-> @@ -837,6 +837,19 @@ static void __init pmd_soft_dirty_tests(struct pgtable_debug_args *args) { }
->  static void __init pmd_swap_soft_dirty_tests(struct pgtable_debug_args *args) { }
->  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+> diff --git a/arch/s390/kernel/irq.c b/arch/s390/kernel/irq.c
+> index 3033f616e256..6302dc7874cf 100644
+> --- a/arch/s390/kernel/irq.c
+> +++ b/arch/s390/kernel/irq.c
+> @@ -205,12 +205,13 @@ static void show_msi_interrupt(struct seq_file *p, int irq)
+>  	unsigned long flags;
+>  	int cpu;
 >  
-> +static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
-> +{
-> +#ifdef __HAVE_ARCH_PTE_SWP_EXCLUSIVE
-> +	pte_t pte = pfn_pte(args->fixed_pte_pfn, args->page_prot);
-> +
-> +	pr_debug("Validating PTE swap exclusive\n");
-> +	pte = pte_swp_mkexclusive(pte);
-> +	WARN_ON(!pte_swp_exclusive(pte));
+> -	irq_lock_sparse();
+> +	raw_spin_lock_irqsave(&desc->lock, flags);
+>  	desc = irq_to_desc(irq);
 
-I guess only this WARN_ON must be guarded by the #ifdef, but doesn't matter
-that much - won't gain significantly more test coverage.
-
-> +	pte = pte_swp_clear_exclusive(pte);
-> +	WARN_ON(pte_swp_exclusive(pte));
-> +#endif /* __HAVE_ARCH_PTE_SWP_EXCLUSIVE */
-> +}
-> +
->  static void __init pte_swap_tests(struct pgtable_debug_args *args)
->  {
->  	swp_entry_t swp;
-> @@ -1288,6 +1301,8 @@ static int __init debug_vm_pgtable(void)
->  	pte_swap_soft_dirty_tests(&args);
->  	pmd_swap_soft_dirty_tests(&args);
->  
-> +	pte_swap_exclusive_tests(&args);
-> +
->  	pte_swap_tests(&args);
->  	pmd_swap_tests(&args);
->  
-
+How is this supposed to work? desc get's initialized after its random
+stack value has been used as a pointer to lock something...
