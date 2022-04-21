@@ -2,99 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6FEC509D00
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Apr 2022 12:01:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09B87509C9F
+	for <lists+linux-s390@lfdr.de>; Thu, 21 Apr 2022 11:47:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1388002AbiDUKC6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 21 Apr 2022 06:02:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60394 "EHLO
+        id S1387818AbiDUJs0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 21 Apr 2022 05:48:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1388077AbiDUKC5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 Apr 2022 06:02:57 -0400
-X-Greylist: delayed 720 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 21 Apr 2022 03:00:06 PDT
-Received: from corp-front09-corp.i.nease.net (corp-front09-corp.i.nease.net [59.111.134.159])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B754A199;
-        Thu, 21 Apr 2022 03:00:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=corp.netease.com; s=s210401; h=Received:From:To:Cc:Subject:
-        Date:Message-Id:MIME-Version:Content-Transfer-Encoding; bh=YFvbv
-        yq+VCvdHQqmn2kiqnIUVvbxcDPO7+3LCOe1kPc=; b=JTBf6cQKutfbKxV9WeMpX
-        bzNcqNn+jBBL1UrIYAOwoQiLKnWYAAXZOrsIVDrZucCfJ7c938asvNlMxLE4FPXq
-        SKeB7da7YIBg/LuNDVJS7CTKa5RazLM9yFtfM+42Qnx2ifjNum/VJSCpJvSxPIO6
-        9J2o04xJkLz8KJds44ADLU=
-Received: from pubt1-k8s74.yq.163.org (unknown [115.238.122.38])
-        by corp-front09-corp.i.nease.net (Coremail) with SMTP id nxDICgCHjGGMJmFiMCBSAA--.46336S2;
-        Thu, 21 Apr 2022 17:40:29 +0800 (HKT)
-From:   liuyacan@corp.netease.com
-To:     kgraul@linux.ibm.com, davem@davemloft.net, kuba@kernel.org,
-        pabeni@redhat.com
-Cc:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, liuyacan <liuyacan@corp.netease.com>,
-        Tony Lu <tonylu@linux.alibaba.com>
-Subject: [PATCH net] net/smc: sync err code when tcp connection was refused
-Date:   Thu, 21 Apr 2022 17:40:27 +0800
-Message-Id: <20220421094027.683992-1-liuyacan@corp.netease.com>
-X-Mailer: git-send-email 2.20.1
+        with ESMTP id S1387820AbiDUJsY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 Apr 2022 05:48:24 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2837C1FA5E;
+        Thu, 21 Apr 2022 02:45:35 -0700 (PDT)
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23L9j2jT013411;
+        Thu, 21 Apr 2022 09:45:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=1YGqo0Pq2bosapwQS3AMb2KuFAn0jGkFAeewTEQOx+g=;
+ b=FL4ThNaqWNRpeVK9nBaSVJM7X6ej2RoovsktOm2TaDULC+8dQDXDjh+74KgP3ugbCeM+
+ 7sHi3zpueRCFG01InvQYUkLoF6huqY+OHbDzgHJrgFZPczjz4s+ZwEtI4w7s5BeSPQWG
+ 5Ch7fsTuIqRiMcd+N2+RVxcf9mp6GiRO8MhfapwXZ2+Y4CxodQ7/j5qN/q9uzHRqKHIe
+ 7z3q89JDTKFESb9z0Mpy5Lnm/M51R/3yIbcLTlxaM6797QWSVsQdgUoLMwjInm5qAcx1
+ l9fZevvfEYtQq4fuho8htNr9gelTdvRJ+uwadPYyJ+YsW0UG5Y4ST8rjFs9hTsHraJXU 1A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fjn0xhmyj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Apr 2022 09:45:34 +0000
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23L9jYmk016177;
+        Thu, 21 Apr 2022 09:45:34 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fjn0xhmxv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Apr 2022 09:45:34 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23L9dAZs027620;
+        Thu, 21 Apr 2022 09:45:31 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 3ffne8qm4p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Apr 2022 09:45:31 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23L9jS0N56230160
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Apr 2022 09:45:28 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C17F811C050;
+        Thu, 21 Apr 2022 09:45:28 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 082F311C054;
+        Thu, 21 Apr 2022 09:45:28 +0000 (GMT)
+Received: from linux7.. (unknown [9.114.12.92])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 21 Apr 2022 09:45:27 +0000 (GMT)
+From:   Steffen Eiden <seiden@linux.ibm.com>
+To:     Thomas Huth <thuth@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [kvm-unit-tests PATCH v4 0/5] s390x: Attestation tests
+Date:   Thu, 21 Apr 2022 09:45:22 +0000
+Message-Id: <20220421094527.32261-1-seiden@linux.ibm.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: nxDICgCHjGGMJmFiMCBSAA--.46336S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZr48CF15CFy5KF1rtFWkZwb_yoWkuFbEkF
-        1Ig3WxGa1jvr1rC3y7ZrsxZwsYqa48CrWrWrnIyrWkt3409w45ZFs5urn8Gwn7Cr4a9Fnx
-        Jw45Kas5C34IyjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbXAYjxAI6xCIbckI1I0E57IF64kEYxAxM7AC8VAFwI0_Gr0_Xr1l
-        1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0I
-        I2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0
-        Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7
-        xvwVC2z280aVCY1x0267AKxVW0oVCq3wAawVAFpfBj4fn0lVCYm3Zqqf926ryUJw1UKr1v
-        6r18M2kK6xCIbVAIwIAEc20F6c8GOVW8Jr15Jr4le2I262IYc4CY6c8Ij28IcVAaY2xG8w
-        AqjxCE34x0Y48IcwAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lw4CEc2x0rVAKj4xxMx02cVAKzwCY0x0Ix7I2
-        Y4AK64vIr41l42xK82IYc2Ij64vIr41l4x8a64kIII0Yj41l4I8I3I0E4IkC6x0Yz7v_Jr
-        0_Gr1l4IxY624lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-        zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-        4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-        CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIda
-        VFxhVjvjDU0xZFpf9x0pRp6wAUUUUU=
-X-CM-SenderInfo: 5olx5txfdqquhrush05hwht23hof0z/1tbiBQADCVt76hFlaAABsY
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: dDQKKEBLWZgEfJJouc2mZp-n5fSQM97Y
+X-Proofpoint-ORIG-GUID: 2Lf2QT2GbJQnTmlLkc4cisU8ySs_5hGN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-20_06,2022-04-20_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=986 bulkscore=0
+ impostorscore=0 suspectscore=0 mlxscore=0 spamscore=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 malwarescore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204210052
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: liuyacan <liuyacan@corp.netease.com>
+This series adds some test in s390x/uv-guest.c verifying error paths of the
+Request Attestation Measurement UVC.
+Also adds a test in s390x/uv-host.c to verify that the
+Request Attestation Measurement UVC cannot be called in guest1.
 
-In the current implementation, when TCP initiates a connection
-to an unavailable [ip,port], ECONNREFUSED will be stored in the
-TCP socket, but SMC will not. However, some apps (like curl) use
-getsockopt(,,SO_ERROR,,) to get the error information, which makes
-them miss the error message and behave strangely.
+Additionally, adds a shared bit test and removes duplicated tests.
 
-Fixes: 50717a37db03 ("net/smc: nonblocking connect rework")
-Signed-off-by: liuyacan <liuyacan@corp.netease.com>
-Reviewed-by: Tony Lu <tonylu@linux.alibaba.com>
-Acked-by: Karsten Graul <kgraul@linux.ibm.com>
----
- net/smc/af_smc.c | 2 ++
- 1 file changed, 2 insertions(+)
+v3->v4:
+  * renamed PATCH 1
+  * moved attestation guest tests into own file
+  * rebased onto current master
 
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index fc7b6eb22..bbb1a4ce5 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -1475,6 +1475,8 @@ static void smc_connect_work(struct work_struct *work)
- 		smc->sk.sk_state = SMC_CLOSED;
- 		if (rc == -EPIPE || rc == -EAGAIN)
- 			smc->sk.sk_err = EPIPE;
-+		else if (rc == -ECONNREFUSED)
-+			smc->sk.sk_err = ECONNREFUSED;
- 		else if (signal_pending(current))
- 			smc->sk.sk_err = -sock_intr_errno(timeo);
- 		sock_put(&smc->sk); /* passive closing */
+v2->v3:
+  * added test for share bits as new PATCH 4/5
+  * added r-b from Claudio in PATCH 1/4
+  * replaced all u* with uint*_t
+  * incorporated misc feedback from Claudio
+
+v1->v2:
+  * renamed 'uv_get_info(void)' to 'uv_get_query_data(void)'
+  * renamed various fields in 'struct uv_arcb_v1'
+  * added a test for invalid additional size
+  * added r-b from Janosch in PATCH 1/4
+  * added r-b from Janosch in PATCH 3/4
+
+Steffen Eiden (5):
+  s390x: uv-host: Add invalid command attestation check
+  s390x: lib: Add QUI getter
+  s390x: uv-guest: remove duplicated checks
+  s390x: uv-guest: add share bit test
+  s390x: uv-guest: Add attestation tests
+
+ lib/s390x/asm/uv.h |  28 +++++-
+ lib/s390x/uv.c     |   8 ++
+ lib/s390x/uv.h     |   1 +
+ s390x/Makefile     |   1 +
+ s390x/pv-attest.c  | 225 +++++++++++++++++++++++++++++++++++++++++++++
+ s390x/uv-guest.c   |  49 ++++++----
+ s390x/uv-host.c    |   1 +
+ 7 files changed, 293 insertions(+), 20 deletions(-)
+ create mode 100644 s390x/pv-attest.c
+
 -- 
-2.20.1
+2.30.2
 
