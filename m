@@ -2,133 +2,105 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80F8350B204
-	for <lists+linux-s390@lfdr.de>; Fri, 22 Apr 2022 09:51:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6741A50B267
+	for <lists+linux-s390@lfdr.de>; Fri, 22 Apr 2022 09:59:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1445078AbiDVHxN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 22 Apr 2022 03:53:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33406 "EHLO
+        id S1445381AbiDVIAn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 22 Apr 2022 04:00:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345341AbiDVHxM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 22 Apr 2022 03:53:12 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A2171FA4F;
-        Fri, 22 Apr 2022 00:50:19 -0700 (PDT)
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23M63htL021975;
-        Fri, 22 Apr 2022 07:50:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=txtBH824a3s768FgaAIM8rFrTacKlbUmsfWAk+cWCn8=;
- b=lwwi0oVf/sjAqxDwHGv49QIi3qRw/y+tLglOx5SrWxEHcyHT4FhMkzlJ7GEhcZJTmUig
- bM7fEfgEBOwb+0tu851jIqGX1boo0WWYf65y7WeUqyyE63EugKYGyUs+cnCB9y+Hj/qm
- UvkjI74h0B5uCxgHF4L1Krp9K47Xiu/yeoU6el8ux1GJKVEDLSYlv5h9S4ZCJkQkYC1h
- s5Q8m3SAbdb9ILI5hRxA3lhhWl8My23GZdx5AXgehl5IIXkrvWc6ppHNxygbo7ZCfMx+
- 0ab4dNuw8jowbJM7Z+cHMXhRGsA+rm7g97sArpXN4/LbecMC2wTPGteREE3J1YBIsfhY 2g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fjyk5c7e4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Apr 2022 07:50:18 +0000
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23M7h2Gw027825;
-        Fri, 22 Apr 2022 07:50:18 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3fjyk5c7dm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Apr 2022 07:50:18 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23M7nBMg006853;
-        Fri, 22 Apr 2022 07:50:15 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 3ffne8rygd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 22 Apr 2022 07:50:15 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23M7oC1c48038308
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Apr 2022 07:50:12 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 51E6A52052;
-        Fri, 22 Apr 2022 07:50:12 +0000 (GMT)
-Received: from li-ca45c2cc-336f-11b2-a85c-c6e71de567f1.ibm.com (unknown [9.171.50.202])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 125735204E;
-        Fri, 22 Apr 2022 07:50:12 +0000 (GMT)
-Message-ID: <b7044e507dc7828f4c75d737b190a33800645666.camel@linux.ibm.com>
-Subject: Re: [kvm-unit-tests PATCH v3 1/4] lib: s390x: add support for SCLP
- console read
-From:   Nico Boehr <nrb@linux.ibm.com>
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Cc:     imbrenda@linux.ibm.com, thuth@redhat.com
-Date:   Fri, 22 Apr 2022 09:50:11 +0200
-In-Reply-To: <d8e6d465-3a8a-db75-1244-ed574efd9f59@linux.ibm.com>
-References: <20220420134557.1307305-1-nrb@linux.ibm.com>
-         <20220420134557.1307305-2-nrb@linux.ibm.com>
-         <d8e6d465-3a8a-db75-1244-ed574efd9f59@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: b4W-k5qhw243tniL1PiHaMr8hXm-He7I
-X-Proofpoint-GUID: xPPSDLIDvEoPS2L7d_En6ArbNMqhDk8F
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-04-22_02,2022-04-21_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- phishscore=0 mlxscore=0 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 impostorscore=0 mlxlogscore=999 spamscore=0
- adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2204220033
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S1445370AbiDVIAB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 22 Apr 2022 04:00:01 -0400
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B0EA527F5;
+        Fri, 22 Apr 2022 00:56:29 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R661e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VAlrUan_1650614179;
+Received: from e02h04404.eu6sqa(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0VAlrUan_1650614179)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 22 Apr 2022 15:56:27 +0800
+From:   Wen Gu <guwen@linux.alibaba.com>
+To:     kgraul@linux.ibm.com, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net 0/2] net/smc: Two fixes for smc fallback
+Date:   Fri, 22 Apr 2022 15:56:17 +0800
+Message-Id: <1650614179-11529-1-git-send-email-guwen@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 2022-04-21 at 16:29 +0200, Janosch Frank wrote:
-> 
-[...]
-> > diff --git a/lib/s390x/sclp-console.c b/lib/s390x/sclp-console.c
-> > index fa36a6a42381..8c4bf68cbbab 100644
-> > --- a/lib/s390x/sclp-console.c
-> > +++ b/lib/s390x/sclp-console.c
-[...]
-> > +       read_buf_end = sccb->ebh.length -
-> > event_buffer_ascii_recv_header_len;
-> 
-> Isn't this more like a length of the current read buffer contents?
+This patch set includes two fixes for smc fallback:
 
-Right, thanks, length is a much better name. 
+Patch 1/2 introduces some simple helpers to wrap the replacement
+and restore of clcsock's callback functions. Make sure that only
+the original callbacks will be saved and not overwritten.
 
-[...]
-> > diff --git a/lib/s390x/sclp.h b/lib/s390x/sclp.h
-> > index fead007a6037..e48a5a3df20b 100644
-> > --- a/lib/s390x/sclp.h
-> > +++ b/lib/s390x/sclp.h
-> > @@ -313,6 +313,14 @@ typedef struct ReadEventData {
-> >         uint32_t mask;
-> >   } __attribute__((packed)) ReadEventData;
-> >   
-> > +#define SCLP_EVENT_ASCII_TYPE_DATA_STREAM_FOLLOWS 0
-> 
-> Hrm, I'm not completely happy with the naming here since I confused
-> it 
-> to the ebh->type when looking up the constants. But now I understand
-> why 
-> you chose it.
+Patch 2/2 fixes a syzbot reporting slab-out-of-bound issue where
+smc_fback_error_report() accesses the already freed smc sock (see
+https://lore.kernel.org/r/00000000000013ca8105d7ae3ada@google.com/).
+The patch fixes it by resetting sk_user_data and restoring clcsock
+callback functions timely in fallback situation.
 
-Yeah, it sure is confusing.
+But it should be noted that although patch 2/2 can fix the issue
+of 'slab-out-of-bounds/use-after-free in smc_fback_error_report',
+it can't pass the syzbot reproducer test. Because after applying
+these two patches in upstream, syzbot reproducer triggered another
+known issue like this:
 
-Maybe it is better if we leave out the "type" entirely, but this might
-make it harder to understand where it's coming from:
-SCLP_ASCII_RECEIVE_DATA_STREAM_FOLLOWS
+==================================================================
+BUG: KASAN: use-after-free in tcp_retransmit_timer+0x2ef3/0x3360 net/ipv4/tcp_timer.c:511
+Read of size 8 at addr ffff888020328380 by task udevd/4158
 
-Another alternative I thought about is using enums, it won't fix the
-naming, but at least it might be clearer to which type it belongs.
+CPU: 1 PID: 4158 Comm: udevd Not tainted 5.18.0-rc3-syzkaller-00074-gb05a5683eba6-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+  __dump_stack lib/dump_stack.c:88 [inline]
+  dump_stack_lvl+0xcd/0x134 lib/dump_stack.c:106
+  print_address_description.constprop.0.cold+0xeb/0x467 mm/kasan/report.c:313
+  print_report mm/kasan/report.c:429 [inline]
+  kasan_report.cold+0xf4/0x1c6 mm/kasan/report.c:491
+  tcp_retransmit_timer+0x2ef3/0x3360 net/ipv4/tcp_timer.c:511
+  tcp_write_timer_handler+0x5e6/0xbc0 net/ipv4/tcp_timer.c:622
+  tcp_write_timer+0xa2/0x2b0 net/ipv4/tcp_timer.c:642
+  call_timer_fn+0x1a5/0x6b0 kernel/time/timer.c:1421
+  expire_timers kernel/time/timer.c:1466 [inline]
+  __run_timers.part.0+0x679/0xa80 kernel/time/timer.c:1737
+  __run_timers kernel/time/timer.c:1715 [inline]
+  run_timer_softirq+0xb3/0x1d0 kernel/time/timer.c:1750
+  __do_softirq+0x29b/0x9c2 kernel/softirq.c:558
+  invoke_softirq kernel/softirq.c:432 [inline]
+  __irq_exit_rcu+0x123/0x180 kernel/softirq.c:637
+  irq_exit_rcu+0x5/0x20 kernel/softirq.c:649
+  sysvec_apic_timer_interrupt+0x93/0xc0 arch/x86/kernel/apic/apic.c:1097
+ </IRQ>
+ ...
+(detail report can be found in https://syzkaller.appspot.com/text?tag=CrashReport&x=15406b44f00000)
 
-Let me know what you think.
+IMHO, the above issue is the same as this known one: https://syzkaller.appspot.com/bug?extid=694120e1002c117747ed,
+and it doesn't seem to be related with SMC. The discussion about this known issue is ongoing and can be found in
+https://lore.kernel.org/bpf/000000000000f75af905d3ba0716@google.com/T/.
+
+And I added the temporary solution mentioned in the above discussion on
+top of my two patches, the syzbot reproducer of 'slab-out-of-bounds/
+use-after-free in smc_fback_error_report' no longer triggers any issue.
+
+Wen Gu (2):
+  net/smc: Only save the original clcsock callback functions
+  net/smc: Fix slab-out-of-bounds issue in fallback
+
+ net/smc/af_smc.c    | 135 ++++++++++++++++++++++++++++++++++++----------------
+ net/smc/smc.h       |  29 +++++++++++
+ net/smc/smc_close.c |   5 +-
+ 3 files changed, 126 insertions(+), 43 deletions(-)
+
+-- 
+1.8.3.1
+
