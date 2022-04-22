@@ -2,246 +2,127 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8391C50B264
-	for <lists+linux-s390@lfdr.de>; Fri, 22 Apr 2022 09:59:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01C2B50B288
+	for <lists+linux-s390@lfdr.de>; Fri, 22 Apr 2022 10:09:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1445403AbiDVIAl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 22 Apr 2022 04:00:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39730 "EHLO
+        id S230261AbiDVIFO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 22 Apr 2022 04:05:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1445412AbiDVIAB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 22 Apr 2022 04:00:01 -0400
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24247527FC;
-        Fri, 22 Apr 2022 00:56:30 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VAlrUeF_1650614188;
-Received: from e02h04404.eu6sqa(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0VAlrUeF_1650614188)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 22 Apr 2022 15:56:28 +0800
-From:   Wen Gu <guwen@linux.alibaba.com>
-To:     kgraul@linux.ibm.com, davem@davemloft.net, kuba@kernel.org
-Cc:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net 2/2] net/smc: Fix slab-out-of-bounds issue in fallback
-Date:   Fri, 22 Apr 2022 15:56:19 +0800
-Message-Id: <1650614179-11529-3-git-send-email-guwen@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1650614179-11529-1-git-send-email-guwen@linux.alibaba.com>
-References: <1650614179-11529-1-git-send-email-guwen@linux.alibaba.com>
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S1445436AbiDVIFN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 22 Apr 2022 04:05:13 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A871527D6;
+        Fri, 22 Apr 2022 01:02:21 -0700 (PDT)
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23M7CGLC020150;
+        Fri, 22 Apr 2022 08:02:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=k8IqdTJREoNElLpuXIY1bxU0Qimegc2GWe9c0tCwUlY=;
+ b=Ceoc6EwH+O+a99xtFFIJkJR1xXG8m1XQNzm37X93sb+sdafRVWKogzQ3PMeYD0/ve5zv
+ GPCSY0v1od54ZWqdRzAUi84c9QDzt38a9/m3OEOAIlDmAD85VElHRIvoaU8KhaiV78dd
+ KhzgIjDY+8jY61Kj2CiN5QkAwLenQu+B6lqQeOHJ0U6Mw+u3Fz3+chfSWa0XXTKZI/vE
+ KBlUgoCwDlRvuoBv6gvKCEx4tTCJltSbqsFzbj/wDBf+NaXcpF/A9sxzqqzfvYv44tlh
+ cO6wpnYibyEivdypOJjOjlMQAI2gxsPYXlsafZ3f8mLFFfEOOc8Ka09kr75lpSXbc1Th 5w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fk1yeu654-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 Apr 2022 08:02:20 +0000
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 23M7Pfmi008771;
+        Fri, 22 Apr 2022 08:02:20 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3fk1yeu61d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 Apr 2022 08:02:20 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23M7xTCE027466;
+        Fri, 22 Apr 2022 08:02:03 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma06fra.de.ibm.com with ESMTP id 3ffn2hy536-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 22 Apr 2022 08:02:03 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23M820U337945784
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Apr 2022 08:02:00 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7BCCCAE04D;
+        Fri, 22 Apr 2022 08:02:00 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 31E3AAE045;
+        Fri, 22 Apr 2022 08:02:00 +0000 (GMT)
+Received: from [9.145.85.218] (unknown [9.145.85.218])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 22 Apr 2022 08:01:59 +0000 (GMT)
+Message-ID: <35766f5c-cf7a-ecd8-6183-ea683eb9ff49@linux.ibm.com>
+Date:   Fri, 22 Apr 2022 10:01:59 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [kvm-unit-tests PATCH v3 1/4] lib: s390x: add support for SCLP
+ console read
+Content-Language: en-US
+To:     Nico Boehr <nrb@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Cc:     imbrenda@linux.ibm.com, thuth@redhat.com
+References: <20220420134557.1307305-1-nrb@linux.ibm.com>
+ <20220420134557.1307305-2-nrb@linux.ibm.com>
+ <d8e6d465-3a8a-db75-1244-ed574efd9f59@linux.ibm.com>
+ <b7044e507dc7828f4c75d737b190a33800645666.camel@linux.ibm.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+In-Reply-To: <b7044e507dc7828f4c75d737b190a33800645666.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: o_POifjnSehYHFrQcR4CNrxOnO0GN592
+X-Proofpoint-GUID: kSBgBwWc2Os_6o59cVdSOAuauqA_k5gJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-22_02,2022-04-21_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ bulkscore=0 suspectscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 phishscore=0 mlxscore=0 clxscore=1015 adultscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204220036
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-syzbot reported a slab-out-of-bounds/use-after-free issue,
-which was caused by accessing an already freed smc sock in
-fallback-specific callback functions of clcsock.
-
-This patch fixes the issue by restoring fallback-specific
-callback functions to original ones and resetting clcsock
-sk_user_data to NULL before freeing smc sock.
-
-Meanwhile, this patch introduces sk_callback_lock to make
-the access and assignment to sk_user_data mutually exclusive.
-
-Reported-by: syzbot+b425899ed22c6943e00b@syzkaller.appspotmail.com
-Fixes: 341adeec9ada ("net/smc: Forward wakeup to smc socket waitqueue after fallback")
-Link: https://lore.kernel.org/r/00000000000013ca8105d7ae3ada@google.com/
-Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
----
- net/smc/af_smc.c    | 80 ++++++++++++++++++++++++++++++++++++++---------------
- net/smc/smc_close.c |  2 ++
- 2 files changed, 59 insertions(+), 23 deletions(-)
-
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index 7ee356f..6eb3421 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -243,11 +243,27 @@ struct proto smc_proto6 = {
- };
- EXPORT_SYMBOL_GPL(smc_proto6);
- 
-+static void smc_fback_restore_callbacks(struct smc_sock *smc)
-+{
-+	struct sock *clcsk = smc->clcsock->sk;
-+
-+	write_lock_bh(&clcsk->sk_callback_lock);
-+	clcsk->sk_user_data = NULL;
-+
-+	smc_clcsock_restore_cb(&clcsk->sk_state_change, &smc->clcsk_state_change);
-+	smc_clcsock_restore_cb(&clcsk->sk_data_ready, &smc->clcsk_data_ready);
-+	smc_clcsock_restore_cb(&clcsk->sk_write_space, &smc->clcsk_write_space);
-+	smc_clcsock_restore_cb(&clcsk->sk_error_report, &smc->clcsk_error_report);
-+
-+	write_unlock_bh(&clcsk->sk_callback_lock);
-+}
-+
- static void smc_restore_fallback_changes(struct smc_sock *smc)
- {
- 	if (smc->clcsock->file) { /* non-accepted sockets have no file yet */
- 		smc->clcsock->file->private_data = smc->sk.sk_socket;
- 		smc->clcsock->file = NULL;
-+		smc_fback_restore_callbacks(smc);
- 	}
- }
- 
-@@ -745,48 +761,57 @@ static void smc_fback_forward_wakeup(struct smc_sock *smc, struct sock *clcsk,
- 
- static void smc_fback_state_change(struct sock *clcsk)
- {
--	struct smc_sock *smc =
--		smc_clcsock_user_data(clcsk);
-+	struct smc_sock *smc;
- 
--	if (!smc)
--		return;
--	smc_fback_forward_wakeup(smc, clcsk, smc->clcsk_state_change);
-+	read_lock_bh(&clcsk->sk_callback_lock);
-+	smc = smc_clcsock_user_data(clcsk);
-+	if (smc)
-+		smc_fback_forward_wakeup(smc, clcsk,
-+					 smc->clcsk_state_change);
-+	read_unlock_bh(&clcsk->sk_callback_lock);
- }
- 
- static void smc_fback_data_ready(struct sock *clcsk)
- {
--	struct smc_sock *smc =
--		smc_clcsock_user_data(clcsk);
-+	struct smc_sock *smc;
- 
--	if (!smc)
--		return;
--	smc_fback_forward_wakeup(smc, clcsk, smc->clcsk_data_ready);
-+	read_lock_bh(&clcsk->sk_callback_lock);
-+	smc = smc_clcsock_user_data(clcsk);
-+	if (smc)
-+		smc_fback_forward_wakeup(smc, clcsk,
-+					 smc->clcsk_data_ready);
-+	read_unlock_bh(&clcsk->sk_callback_lock);
- }
- 
- static void smc_fback_write_space(struct sock *clcsk)
- {
--	struct smc_sock *smc =
--		smc_clcsock_user_data(clcsk);
-+	struct smc_sock *smc;
- 
--	if (!smc)
--		return;
--	smc_fback_forward_wakeup(smc, clcsk, smc->clcsk_write_space);
-+	read_lock_bh(&clcsk->sk_callback_lock);
-+	smc = smc_clcsock_user_data(clcsk);
-+	if (smc)
-+		smc_fback_forward_wakeup(smc, clcsk,
-+					 smc->clcsk_write_space);
-+	read_unlock_bh(&clcsk->sk_callback_lock);
- }
- 
- static void smc_fback_error_report(struct sock *clcsk)
- {
--	struct smc_sock *smc =
--		smc_clcsock_user_data(clcsk);
-+	struct smc_sock *smc;
- 
--	if (!smc)
--		return;
--	smc_fback_forward_wakeup(smc, clcsk, smc->clcsk_error_report);
-+	read_lock_bh(&clcsk->sk_callback_lock);
-+	smc = smc_clcsock_user_data(clcsk);
-+	if (smc)
-+		smc_fback_forward_wakeup(smc, clcsk,
-+					 smc->clcsk_error_report);
-+	read_unlock_bh(&clcsk->sk_callback_lock);
- }
- 
- static void smc_fback_replace_callbacks(struct smc_sock *smc)
- {
- 	struct sock *clcsk = smc->clcsock->sk;
- 
-+	write_lock_bh(&clcsk->sk_callback_lock);
- 	clcsk->sk_user_data = (void *)((uintptr_t)smc | SK_USER_DATA_NOCOPY);
- 
- 	smc_clcsock_replace_cb(&clcsk->sk_state_change, smc_fback_state_change,
-@@ -797,6 +822,8 @@ static void smc_fback_replace_callbacks(struct smc_sock *smc)
- 			       &smc->clcsk_write_space);
- 	smc_clcsock_replace_cb(&clcsk->sk_error_report, smc_fback_error_report,
- 			       &smc->clcsk_error_report);
-+
-+	write_unlock_bh(&clcsk->sk_callback_lock);
- }
- 
- static int smc_switch_to_fallback(struct smc_sock *smc, int reason_code)
-@@ -2368,17 +2395,20 @@ static void smc_tcp_listen_work(struct work_struct *work)
- 
- static void smc_clcsock_data_ready(struct sock *listen_clcsock)
- {
--	struct smc_sock *lsmc =
--		smc_clcsock_user_data(listen_clcsock);
-+	struct smc_sock *lsmc;
- 
-+	read_lock_bh(&listen_clcsock->sk_callback_lock);
-+	lsmc = smc_clcsock_user_data(listen_clcsock);
- 	if (!lsmc)
--		return;
-+		goto out;
- 	lsmc->clcsk_data_ready(listen_clcsock);
- 	if (lsmc->sk.sk_state == SMC_LISTEN) {
- 		sock_hold(&lsmc->sk); /* sock_put in smc_tcp_listen_work() */
- 		if (!queue_work(smc_tcp_ls_wq, &lsmc->tcp_listen_work))
- 			sock_put(&lsmc->sk);
- 	}
-+out:
-+	read_unlock_bh(&listen_clcsock->sk_callback_lock);
- }
- 
- static int smc_listen(struct socket *sock, int backlog)
-@@ -2410,10 +2440,12 @@ static int smc_listen(struct socket *sock, int backlog)
- 	/* save original sk_data_ready function and establish
- 	 * smc-specific sk_data_ready function
- 	 */
-+	write_lock_bh(&smc->clcsock->sk->sk_callback_lock);
- 	smc->clcsock->sk->sk_user_data =
- 		(void *)((uintptr_t)smc | SK_USER_DATA_NOCOPY);
- 	smc_clcsock_replace_cb(&smc->clcsock->sk->sk_data_ready,
- 			       smc_clcsock_data_ready, &smc->clcsk_data_ready);
-+	write_unlock_bh(&smc->clcsock->sk->sk_callback_lock);
- 
- 	/* save original ops */
- 	smc->ori_af_ops = inet_csk(smc->clcsock->sk)->icsk_af_ops;
-@@ -2428,9 +2460,11 @@ static int smc_listen(struct socket *sock, int backlog)
- 
- 	rc = kernel_listen(smc->clcsock, backlog);
- 	if (rc) {
-+		write_lock_bh(&smc->clcsock->sk->sk_callback_lock);
- 		smc_clcsock_restore_cb(&smc->clcsock->sk->sk_data_ready,
- 				       &smc->clcsk_data_ready);
- 		smc->clcsock->sk->sk_user_data = NULL;
-+		write_unlock_bh(&smc->clcsock->sk->sk_callback_lock);
- 		goto out;
- 	}
- 	sk->sk_max_ack_backlog = backlog;
-diff --git a/net/smc/smc_close.c b/net/smc/smc_close.c
-index 7bd1ef5..31db743 100644
---- a/net/smc/smc_close.c
-+++ b/net/smc/smc_close.c
-@@ -214,9 +214,11 @@ int smc_close_active(struct smc_sock *smc)
- 		sk->sk_state = SMC_CLOSED;
- 		sk->sk_state_change(sk); /* wake up accept */
- 		if (smc->clcsock && smc->clcsock->sk) {
-+			write_lock_bh(&smc->clcsock->sk->sk_callback_lock);
- 			smc_clcsock_restore_cb(&smc->clcsock->sk->sk_data_ready,
- 					       &smc->clcsk_data_ready);
- 			smc->clcsock->sk->sk_user_data = NULL;
-+			write_unlock_bh(&smc->clcsock->sk->sk_callback_lock);
- 			rc = kernel_sock_shutdown(smc->clcsock, SHUT_RDWR);
- 		}
- 		smc_close_cleanup_listen(sk);
--- 
-1.8.3.1
-
+T24gNC8yMi8yMiAwOTo1MCwgTmljbyBCb2VociB3cm90ZToNCj4gT24gVGh1LCAyMDIyLTA0
+LTIxIGF0IDE2OjI5ICswMjAwLCBKYW5vc2NoIEZyYW5rIHdyb3RlOg0KPj4NCj4gWy4uLl0N
+Cj4+PiBkaWZmIC0tZ2l0IGEvbGliL3MzOTB4L3NjbHAtY29uc29sZS5jIGIvbGliL3MzOTB4
+L3NjbHAtY29uc29sZS5jDQo+Pj4gaW5kZXggZmEzNmE2YTQyMzgxLi44YzRiZjY4Y2JiYWIg
+MTAwNjQ0DQo+Pj4gLS0tIGEvbGliL3MzOTB4L3NjbHAtY29uc29sZS5jDQo+Pj4gKysrIGIv
+bGliL3MzOTB4L3NjbHAtY29uc29sZS5jDQo+IFsuLi5dDQo+Pj4gK8KgwqDCoMKgwqDCoMKg
+cmVhZF9idWZfZW5kID0gc2NjYi0+ZWJoLmxlbmd0aCAtDQo+Pj4gZXZlbnRfYnVmZmVyX2Fz
+Y2lpX3JlY3ZfaGVhZGVyX2xlbjsNCj4+DQo+PiBJc24ndCB0aGlzIG1vcmUgbGlrZSBhIGxl
+bmd0aCBvZiB0aGUgY3VycmVudCByZWFkIGJ1ZmZlciBjb250ZW50cz8NCj4gDQo+IFJpZ2h0
+LCB0aGFua3MsIGxlbmd0aCBpcyBhIG11Y2ggYmV0dGVyIG5hbWUuDQo+IA0KPiBbLi4uXQ0K
+Pj4+IGRpZmYgLS1naXQgYS9saWIvczM5MHgvc2NscC5oIGIvbGliL3MzOTB4L3NjbHAuaA0K
+Pj4+IGluZGV4IGZlYWQwMDdhNjAzNy4uZTQ4YTVhM2RmMjBiIDEwMDY0NA0KPj4+IC0tLSBh
+L2xpYi9zMzkweC9zY2xwLmgNCj4+PiArKysgYi9saWIvczM5MHgvc2NscC5oDQo+Pj4gQEAg
+LTMxMyw2ICszMTMsMTQgQEAgdHlwZWRlZiBzdHJ1Y3QgUmVhZEV2ZW50RGF0YSB7DQo+Pj4g
+IMKgwqDCoMKgwqDCoMKgwqB1aW50MzJfdCBtYXNrOw0KPj4+ICDCoCB9IF9fYXR0cmlidXRl
+X18oKHBhY2tlZCkpIFJlYWRFdmVudERhdGE7DQo+Pj4gICAgDQo+Pj4gKyNkZWZpbmUgU0NM
+UF9FVkVOVF9BU0NJSV9UWVBFX0RBVEFfU1RSRUFNX0ZPTExPV1MgMA0KPj4NCj4+IEhybSwg
+SSdtIG5vdCBjb21wbGV0ZWx5IGhhcHB5IHdpdGggdGhlIG5hbWluZyBoZXJlIHNpbmNlIEkg
+Y29uZnVzZWQNCj4+IGl0DQo+PiB0byB0aGUgZWJoLT50eXBlIHdoZW4gbG9va2luZyB1cCB0
+aGUgY29uc3RhbnRzLiBCdXQgbm93IEkgdW5kZXJzdGFuZA0KPj4gd2h5DQo+PiB5b3UgY2hv
+c2UgaXQuDQo+IA0KPiBZZWFoLCBpdCBzdXJlIGlzIGNvbmZ1c2luZy4NCj4gDQo+IE1heWJl
+IGl0IGlzIGJldHRlciBpZiB3ZSBsZWF2ZSBvdXQgdGhlICJ0eXBlIiBlbnRpcmVseSwgYnV0
+IHRoaXMgbWlnaHQNCj4gbWFrZSBpdCBoYXJkZXIgdG8gdW5kZXJzdGFuZCB3aGVyZSBpdCdz
+IGNvbWluZyBmcm9tOg0KPiBTQ0xQX0FTQ0lJX1JFQ0VJVkVfREFUQV9TVFJFQU1fRk9MTE9X
+Uw0KPiANCj4gQW5vdGhlciBhbHRlcm5hdGl2ZSBJIHRob3VnaHQgYWJvdXQgaXMgdXNpbmcg
+ZW51bXMsIGl0IHdvbid0IGZpeCB0aGUNCj4gbmFtaW5nLCBidXQgYXQgbGVhc3QgaXQgbWln
+aHQgYmUgY2xlYXJlciB0byB3aGljaCB0eXBlIGl0IGJlbG9uZ3MuDQo+IA0KPiBMZXQgbWUg
+a25vdyB3aGF0IHlvdSB0aGluay4NCg0KSXQgc2hvdWxkIGJlIGZpbmUgYXMgaXMuIEkgZG9u
+J3QgZXhwZWN0IHRoYXQgd2UgaGF2ZSB0byB0b3VjaCB0aGlzIGZpbGUgDQp2ZXJ5IG9mdGVu
+Lg0K
