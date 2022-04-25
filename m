@@ -2,77 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43AA150DBF7
-	for <lists+linux-s390@lfdr.de>; Mon, 25 Apr 2022 11:06:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9D1B50DD83
+	for <lists+linux-s390@lfdr.de>; Mon, 25 Apr 2022 12:02:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240883AbiDYJHI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 25 Apr 2022 05:07:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39292 "EHLO
+        id S237576AbiDYKF2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 25 Apr 2022 06:05:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241263AbiDYJGw (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 25 Apr 2022 05:06:52 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5420E3B3DC;
-        Mon, 25 Apr 2022 02:02:02 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id x18so19871020wrc.0;
-        Mon, 25 Apr 2022 02:02:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=9t0HgoYfqKZIbnosS9/A6elnAUUEJHQis7OqIO8CjYM=;
-        b=jEX7v0HF7e+RNysnH8IwY2eiHAH7j0itFrYEU9tR8vc4jupq9quEZ9Z0Rs8qZvrdMM
-         DXBCcQBJRc+6vxKA636VhIoqhRqZL5hYnuW+Wbsp2jWjzVX5T2My7pmkAWdVH+rbISHM
-         3TYBSGsBPO8N3l2eT8SHav7FqfnOq/q0HYwGNcX+WEELqKhqORdcsljwQi9bVsKYBqde
-         M7sUGlpvZo8Re2YiIHzdG//i5EQWKCuRXhoAS3pfXOscpBwtf31zkCdIu9UrzP7NqHuu
-         HXaK36Ye+oNYg3ZvuaS0n/E+gmOBXvtH2LjsGCmzh6dCIKdLNm7+OfZKWEHXT1uKf2/w
-         JfJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=9t0HgoYfqKZIbnosS9/A6elnAUUEJHQis7OqIO8CjYM=;
-        b=qAC5KXNszQGvYhedNj49/TcdcR5RJS0Dn2S7IJD0HBbdMFi59tv1f/vT5qP6T7T9hf
-         ZiDcy5GWbZMxFv4bDdJuV7D9sXRhXq0LEtML2xyd5PouJRkq3kaeE7FpLwLxU2qG2twR
-         NCW49knVAotMXwecqi/VSrmKXlvqMLXDmvkwJqvZyOW50p0UlAwQjv/BQoZUja7VnWqr
-         BHrgl/gFshQcvlVT8gV0pkLbis5nXsjbiP0KP/8KDJjYsRXHIf2ZZPzc81FrfEFLPshJ
-         oH7M0lWcmzAnxwc/qSeQ3pxq1RfzvIkKn9VvgWTWhoBVG3RkoMZdRxJX5WT6QJBdJiTW
-         1FsA==
-X-Gm-Message-State: AOAM530nf2ex4b6NZrP4p3CI7+vR3ykGyPFfiAanZoWAvtqSfndlJKAc
-        +la6AdjC6GEU6CSmVVehRsDDF5rDnDBM9g==
-X-Google-Smtp-Source: ABdhPJxhhXFOV4O8t4UT6CiS5ozM8qdiTViUASxd0Me3fCLBcNOlbxYsmFSgBUMuN8Qnv+OdFxmM3w==
-X-Received: by 2002:a5d:4882:0:b0:207:97dd:111c with SMTP id g2-20020a5d4882000000b0020797dd111cmr14047154wrq.115.1650877320109;
-        Mon, 25 Apr 2022 02:02:00 -0700 (PDT)
-Received: from [192.168.0.210] (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.googlemail.com with ESMTPSA id m7-20020adfe0c7000000b002060e7bbe49sm9966505wri.45.2022.04.25.02.01.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Apr 2022 02:01:59 -0700 (PDT)
-Message-ID: <097f369b-3f3c-9eb6-a446-24f46e4ec59f@gmail.com>
-Date:   Mon, 25 Apr 2022 10:01:58 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: ctcm: rename READ/WRITE defines to avoid redefinitions
-Content-Language: en-US
-To:     Alexandra Winter <wintera@linux.ibm.com>,
-        Wenjia Zhang <wenjia@linux.ibm.com>,
+        with ESMTP id S240866AbiDYKFI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 25 Apr 2022 06:05:08 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B66431121;
+        Mon, 25 Apr 2022 03:02:02 -0700 (PDT)
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23P8bA8V017221;
+        Mon, 25 Apr 2022 10:01:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=yJ1zH/5or4oymVpE6MpywAGJV0sLnLwAeYGgNXujOL8=;
+ b=dWVxAJAz+HE8ivoCl8W0bOjuORNpod8q4Qkj3TavutRtDVY1XxRbMLUkpG6HDeRZmkSs
+ VrBQcKOF7A6ROkeOuhGQiCe7gbiM8vCBKepsyxTCN4S/ziyKhfKvcJTjR4FNvALYy7dq
+ DoXl9Hea+zosN4de4+vd4Uxgr4f2abmg8miSuBYJrEFf3FXJGoCXSttU8bSj6r56FWan
+ ggUDG5DJETjGhssmEFUmaaqbiHbaYv+bnwB0S98zDfMJrNt2YD/afAyCoAijgrop37BS
+ LpJuRk+BdfXOZ/WjjRMAEHxGmI5RJ9I2aip5ZoB/AJ2nESmnvSXneimp4fBLfArlNVMI eA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fmtt75xkj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 25 Apr 2022 10:01:58 +0000
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 23P9sQ43010172;
+        Mon, 25 Apr 2022 10:01:58 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fmtt75xju-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 25 Apr 2022 10:01:57 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23P9rKOR010822;
+        Mon, 25 Apr 2022 10:01:55 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 3fm938t5p7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 25 Apr 2022 10:01:55 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23PA1qB746858678
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Apr 2022 10:01:52 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 215764203F;
+        Mon, 25 Apr 2022 10:01:52 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A56F742047;
+        Mon, 25 Apr 2022 10:01:51 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 25 Apr 2022 10:01:51 +0000 (GMT)
+From:   Janis Schoetterl-Glausch <scgl@linux.ibm.com>
+To:     Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     Christian Borntraeger <borntraeger@linux.ibm.com>,
-        linux-s390@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <ae612043-0252-e8c3-0773-912f116421c1@gmail.com>
- <3572a765-17b4-b2df-e3d5-0d30485c4c67@linux.ibm.com>
-From:   "Colin King (gmail)" <colin.i.king@gmail.com>
-In-Reply-To: <3572a765-17b4-b2df-e3d5-0d30485c4c67@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH v2 0/2] Dirtying, failing memop: don't indicate suppression
+Date:   Mon, 25 Apr 2022 12:01:45 +0200
+Message-Id: <20220425100147.1755340-1-scgl@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 4VQjVuQ6EtulenyNeAdKeaZfUj349-xi
+X-Proofpoint-ORIG-GUID: IplMkzRrx3fmY94QmOmdYV35_zj0R7q5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-25_05,2022-04-22_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 adultscore=0 mlxlogscore=739 mlxscore=0
+ suspectscore=0 spamscore=0 clxscore=1015 phishscore=0 impostorscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2204250040
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,60 +95,28 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 25/04/2022 09:38, Alexandra Winter wrote:
-> 
-> 
-> On 24.04.22 20:58, Colin King (gmail) wrote:
->> Hi,
->>
->> static analysis with cppcheck detected a potential null pointer deference with the following commit:
->>
->> commit 3c09e2647b5e1f1f9fd383971468823c2505e1b0
->> Author: Ursula Braun <ursula.braun@de.ibm.com>
->> Date:   Thu Aug 12 01:58:28 2010 +0000
->>
->>      ctcm: rename READ/WRITE defines to avoid redefinitions
->>
->>
->> The analysis is as follows:
->>
->> drivers/s390/net/ctcm_sysfs.c:43:8: note: Assuming that condition 'priv' is not redundant
->>   if (!(priv && priv->channel[CTCM_READ] && ndev)) {
->>         ^
->> drivers/s390/net/ctcm_sysfs.c:42:9: note: Null pointer dereference
->>   ndev = priv->channel[CTCM_READ]->netdev;
->>
->> The code in question is as follows:
->>
->>          ndev = priv->channel[CTCM_READ]->netdev;
->>
->>          ^^ priv may be null, as per check below but it is being dereferenced when assigning ndev
->>
->>          if (!(priv && priv->channel[CTCM_READ] && ndev)) {
->>                  CTCM_DBF_TEXT(SETUP, CTC_DBF_ERROR, "bfnondev");
->>                  return -ENODEV;
->>          }
->>
->> Colin
-> 
-> Thank you very much for reporting this, we will provide a patch.
+If a memop fails due to key checked protection, after already having
+written to the guest, don't indicate suppression to the guest, as that
+would imply that memory wasn't modified.
 
-Thanks for working on a fix. Much appreciated.
+This could be considered a fix to the code introducing storage key
+support, however this is a bug in KVM only if we emulate an
+instructions writing to an operand spanning multiple pages, which I
+don't believe we do.
 
-> 
-> Do you have any special requests for the Reported-by flag? Or is
-> Reported-by: Colin King (gmail) <colin.i.king@gmail.com>
-> fine with you?
-> 
+v1 -> v2
+ * Reword commit message of patch 1
 
-Can I have:
+Janis Schoetterl-Glausch (2):
+  KVM: s390: Don't indicate suppression on dirtying, failing memop
+  KVM: s390: selftest: Test suppression indication on key prot exception
 
-Reported by: Colin Ian King <colin.i.king@gmail.com>
+ arch/s390/kvm/gaccess.c                   | 47 ++++++++++++++---------
+ tools/testing/selftests/kvm/s390x/memop.c | 43 ++++++++++++++++++++-
+ 2 files changed, 70 insertions(+), 20 deletions(-)
 
-Thank you!
 
-Colin
-
-> Kind regards
-> Alexandra
+base-commit: af2d861d4cd2a4da5137f795ee3509e6f944a25b
+-- 
+2.32.0
 
