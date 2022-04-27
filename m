@@ -2,253 +2,153 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 523225117D2
-	for <lists+linux-s390@lfdr.de>; Wed, 27 Apr 2022 14:47:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C2A6511746
+	for <lists+linux-s390@lfdr.de>; Wed, 27 Apr 2022 14:46:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234522AbiD0Mku (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 27 Apr 2022 08:40:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49832 "EHLO
+        id S234420AbiD0Mm4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 27 Apr 2022 08:42:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234504AbiD0Mku (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 27 Apr 2022 08:40:50 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 549FC56231;
-        Wed, 27 Apr 2022 05:37:35 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id B6DD5210EE;
-        Wed, 27 Apr 2022 12:37:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1651063053; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=d22YrOMPBSG2LqHBjxLzc0tJfU7q81NPH2zO5tSL0mM=;
-        b=q06ozFDFlaFSTobMQ3P/xZuon2vddB3c0eG1Eo0R4D4mYhCCCGMzY7stC9ykSNGY+myWq9
-        rteYXR3odqwpyzFZhoNlJ747E68r2Sbvc6Z3GtEAbfm9yJXDdNxeNzNqDf0geOtV2vXZUy
-        IL+n+/zq+cXUXm+HBmiQLhY+Yypu5Yk=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EC00013A39;
-        Wed, 27 Apr 2022 12:37:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id puMuOAw5aWLKQAAAMHmgww
-        (envelope-from <jgross@suse.com>); Wed, 27 Apr 2022 12:37:32 +0000
-Message-ID: <2a340424-29e6-8ad8-0181-f70450eecb80@suse.com>
-Date:   Wed, 27 Apr 2022 14:37:32 +0200
+        with ESMTP id S234489AbiD0Mmz (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 27 Apr 2022 08:42:55 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D3E31514;
+        Wed, 27 Apr 2022 05:39:41 -0700 (PDT)
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23RB3B2G012983;
+        Wed, 27 Apr 2022 12:39:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=u0nadIK7z0bvpO1bTNMb/ymcluSbpnagZ6CWDk9UtSE=;
+ b=sIadZoA/anY4/hFkalao9hQoO7DEBj/Jw2G0A1HVMAPl9SkXNQU9ARkk7trCynosipkz
+ TZIpb0Wq9546JwJD52/rqN7mZCa3C8tNMIx4W/UTI4zcWCJ51lSZAkGj6+Tr3EiCi0YJ
+ Xhu7U6pq4k0WeJ2/7qfgJrHCyiXG5kJRqiOcztXC3n+VHEYIOndZ2mSqIFx5N1Wqp1x/
+ q05Jardgx3hqs3fhEKgpe0aPTimqscdpD/85fsReqSj65sURPcjRfuyOI0qk79/hWw1R
+ 70MFfNqL0oXcVQm5/g3MwwbF5yejS9/MGNqBiqUSaZ1iTOi7kIyNka0tjXRTv6AWc37J Hw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fpssq50rc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Apr 2022 12:39:41 +0000
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 23RCWEYU002605;
+        Wed, 27 Apr 2022 12:39:40 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fpssq50qq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Apr 2022 12:39:40 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 23RCWsLP006510;
+        Wed, 27 Apr 2022 12:39:38 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 3fm938wxwx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 Apr 2022 12:39:38 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 23RCdZ8H49676694
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 Apr 2022 12:39:35 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 54E1B11C054;
+        Wed, 27 Apr 2022 12:39:35 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD67211C04A;
+        Wed, 27 Apr 2022 12:39:34 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.10.176])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 27 Apr 2022 12:39:34 +0000 (GMT)
+Date:   Wed, 27 Apr 2022 14:39:33 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>
+Cc:     Thomas Huth <thuth@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [kvm-unit-tests PATCH v6 1/3] s390x: Give name to return value
+ of tprot()
+Message-ID: <20220427143933.0593212d@p-imbrenda>
+In-Reply-To: <9869b838-0070-ae67-737f-2bd3d0e21d60@linux.ibm.com>
+References: <20220427100611.2119860-1-scgl@linux.ibm.com>
+        <20220427100611.2119860-2-scgl@linux.ibm.com>
+        <20220427131449.61cce697@p-imbrenda>
+        <9869b838-0070-ae67-737f-2bd3d0e21d60@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Content-Language: en-US
-To:     Borislav Petkov <bp@alien8.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Oleksandr Tyshchenko <olekstysh@gmail.com>
-References: <20220426134021.11210-1-jgross@suse.com>
- <20220426134021.11210-3-jgross@suse.com> <Ymgtb2dSNYz7DBqx@zn.tnic>
- <1c1a4a7d-a273-c3b0-3683-195f6e09a027@suse.com> <Ymk2/N/DdAyxQnV0@zn.tnic>
-From:   Juergen Gross <jgross@suse.com>
-Subject: Re: [PATCH 2/2] virtio: replace
- arch_has_restricted_virtio_memory_access()
-In-Reply-To: <Ymk2/N/DdAyxQnV0@zn.tnic>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------4yxVWCWCnmvq93XMZ043V0iC"
-X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: JF7C5GvI5xkmmQnnGmRU57Xgqup7RynR
+X-Proofpoint-ORIG-GUID: fK6gJdmeZJrxiDYTvtD7iXMr6SNjkXgU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-04-27_04,2022-04-27_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 mlxscore=0 phishscore=0 suspectscore=0 adultscore=0
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 mlxlogscore=989
+ malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2202240000 definitions=main-2204270082
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------4yxVWCWCnmvq93XMZ043V0iC
-Content-Type: multipart/mixed; boundary="------------Yxp0WC7XOxZjxaCFpkqA4mo2";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: Borislav Petkov <bp@alien8.de>, Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-arch@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-hyperv@vger.kernel.org,
- virtualization@lists.linux-foundation.org, Arnd Bergmann <arnd@arndb.de>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>,
- Stephen Hemminger <sthemmin@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, "Michael S. Tsirkin"
- <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Christoph Hellwig <hch@infradead.org>,
- Oleksandr Tyshchenko <olekstysh@gmail.com>
-Message-ID: <2a340424-29e6-8ad8-0181-f70450eecb80@suse.com>
-Subject: Re: [PATCH 2/2] virtio: replace
- arch_has_restricted_virtio_memory_access()
-References: <20220426134021.11210-1-jgross@suse.com>
- <20220426134021.11210-3-jgross@suse.com> <Ymgtb2dSNYz7DBqx@zn.tnic>
- <1c1a4a7d-a273-c3b0-3683-195f6e09a027@suse.com> <Ymk2/N/DdAyxQnV0@zn.tnic>
-In-Reply-To: <Ymk2/N/DdAyxQnV0@zn.tnic>
+On Wed, 27 Apr 2022 14:04:52 +0200
+Janis Schoetterl-Glausch <scgl@linux.ibm.com> wrote:
 
---------------Yxp0WC7XOxZjxaCFpkqA4mo2
-Content-Type: multipart/mixed; boundary="------------oWVjbTvpdC4UikamiFuIK0Ns"
+> On 4/27/22 13:14, Claudio Imbrenda wrote:
+> > On Wed, 27 Apr 2022 12:06:09 +0200
+> > Janis Schoetterl-Glausch <scgl@linux.ibm.com> wrote:
+> >   
+> >> Improve readability by making the return value of tprot() an enum.
+> >>
+> >> No functional change intended.  
+> > 
+> > Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> > 
+> > but see nit below
+> >   
+> >>
+> >> Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
+> >> ---
+> >>  lib/s390x/asm/arch_def.h | 11 +++++++++--
+> >>  lib/s390x/sclp.c         |  6 +++---
+> >>  s390x/tprot.c            | 24 ++++++++++++------------
+> >>  3 files changed, 24 insertions(+), 17 deletions(-)  
+> 
+> [...]
+> 
+> >> diff --git a/s390x/tprot.c b/s390x/tprot.c
+> >> index 460a0db7..8eb91c18 100644
+> >> --- a/s390x/tprot.c
+> >> +++ b/s390x/tprot.c
+> >> @@ -20,26 +20,26 @@ static uint8_t pagebuf[PAGE_SIZE] __attribute__((aligned(PAGE_SIZE)));
+> >>  
+> >>  static void test_tprot_rw(void)
+> >>  {
+> >> -	int cc;
+> >> +	enum tprot_permission permission;
+> >>  
+> >>  	report_prefix_push("Page read/writeable");
+> >>  
+> >> -	cc = tprot((unsigned long)pagebuf, 0);
+> >> -	report(cc == 0, "CC = 0");
+> >> +	permission = tprot((unsigned long)pagebuf, 0);
+> >> +	report(permission == TPROT_READ_WRITE, "CC = 0");  
+> > 
+> > here and in all similar cases below: does it still make sense to have
+> > "CC = 0" as message at this point? Maybe a more descriptive one would
+> > be better  
+> 
+> I thought about it, but decided against it. Firstly, because I preferred
+> not to do any functional changes and secondly, I could not think of anything
+> better. The prefix already tells you the meaning of the cc, so I don't know
+> what to print that would not be redundant.
+> 
+> [...]
 
---------------oWVjbTvpdC4UikamiFuIK0Ns
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-T24gMjcuMDQuMjIgMTQ6MjgsIEJvcmlzbGF2IFBldGtvdiB3cm90ZToNCj4gT24gV2VkLCBB
-cHIgMjcsIDIwMjIgYXQgMDg6Mzc6MzFBTSArMDIwMCwgSnVlcmdlbiBHcm9zcyB3cm90ZToN
-Cj4+IE9uIDI2LjA0LjIyIDE5OjM1LCBCb3Jpc2xhdiBQZXRrb3Ygd3JvdGU6DQo+Pj4gT24g
-VHVlLCBBcHIgMjYsIDIwMjIgYXQgMDM6NDA6MjFQTSArMDIwMCwgSnVlcmdlbiBHcm9zcyB3
-cm90ZToNCj4+Pj4gICAgLyogcHJvdGVjdGVkIHZpcnR1YWxpemF0aW9uICovDQo+Pj4+ICAg
-IHN0YXRpYyB2b2lkIHB2X2luaXQodm9pZCkNCj4+Pj4gICAgew0KPj4+PiAgICAJaWYgKCFp
-c19wcm90X3ZpcnRfZ3Vlc3QoKSkNCj4+Pj4gICAgCQlyZXR1cm47DQo+Pj4+ICsJcGxhdGZv
-cm1fc2V0X2ZlYXR1cmUoUExBVEZPUk1fVklSVElPX1JFU1RSSUNURURfTUVNX0FDQ0VTUyk7
-DQo+Pj4NCj4+PiBLaW5kYSBsb25nLWlzaCBmb3IgbXkgdGFzdGUuIEknbGwgcHJvYmFibHkg
-Y2FsbCBpdDoNCj4+Pg0KPj4+IAlwbGF0Zm9ybV9zZXQoKQ0KPj4+DQo+Pj4gYXMgaXQgaXMg
-aW1wbGljaXQgdGhhdCBpdCBzZXRzIGEgZmVhdHVyZSBiaXQuDQo+Pg0KPj4gT2theSwgZmlu
-ZSB3aXRoIG1lLg0KPj4NCj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvbW0vbWVt
-X2VuY3J5cHRfaWRlbnRpdHkuYyBiL2FyY2gveDg2L21tL21lbV9lbmNyeXB0X2lkZW50aXR5
-LmMNCj4+Pj4gaW5kZXggYjQzYmMyNGQyYmI2Li42MDQzYmE2Y2QxN2QgMTAwNjQ0DQo+Pj4+
-IC0tLSBhL2FyY2gveDg2L21tL21lbV9lbmNyeXB0X2lkZW50aXR5LmMNCj4+Pj4gKysrIGIv
-YXJjaC94ODYvbW0vbWVtX2VuY3J5cHRfaWRlbnRpdHkuYw0KPj4+PiBAQCAtNDAsNiArNDAs
-NyBAQA0KPj4+PiAgICAjaW5jbHVkZSA8bGludXgvbW0uaD4NCj4+Pj4gICAgI2luY2x1ZGUg
-PGxpbnV4L21lbV9lbmNyeXB0Lmg+DQo+Pj4+ICAgICNpbmNsdWRlIDxsaW51eC9jY19wbGF0
-Zm9ybS5oPg0KPj4+PiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtLWZlYXR1cmUuaD4NCj4+
-Pj4gICAgI2luY2x1ZGUgPGFzbS9zZXR1cC5oPg0KPj4+PiAgICAjaW5jbHVkZSA8YXNtL3Nl
-Y3Rpb25zLmg+DQo+Pj4+IEBAIC01NjYsNiArNTY3LDEwIEBAIHZvaWQgX19pbml0IHNtZV9l
-bmFibGUoc3RydWN0IGJvb3RfcGFyYW1zICpicCkNCj4+Pj4gICAgCX0gZWxzZSB7DQo+Pj4+
-ICAgIAkJLyogU0VWIHN0YXRlIGNhbm5vdCBiZSBjb250cm9sbGVkIGJ5IGEgY29tbWFuZCBs
-aW5lIG9wdGlvbiAqLw0KPj4+PiAgICAJCXNtZV9tZV9tYXNrID0gbWVfbWFzazsNCj4+Pj4g
-Kw0KPj4+PiArCQkvKiBTZXQgcmVzdHJpY3RlZCBtZW1vcnkgYWNjZXNzIGZvciB2aXJ0aW8u
-ICovDQo+Pj4+ICsJCXBsYXRmb3JtX3NldF9mZWF0dXJlKFBMQVRGT1JNX1ZJUlRJT19SRVNU
-UklDVEVEX01FTV9BQ0NFU1MpOw0KPj4+DQo+Pj4gSHVoLCB3aGF0IGRvZXMgdGhhdCBoYXZl
-IHRvIGRvIHdpdGggU01FPw0KPj4NCj4+IEkgcGlja2VkIHRoZSBmdW5jdGlvbiB3aGVyZSBz
-ZXZfc3RhdHVzIGlzIGJlaW5nIHNldCwgYXMgdGhpcyBzZWVtZWQgdG8gYmUNCj4+IHRoZSBj
-b3JyZWN0IHBsYWNlIHRvIHNldCB0aGUgZmVhdHVyZSBiaXQuDQo+IA0KPiBXaGF0IEkgZG9u
-J3QgdW5kZXJzdGFuZCBpcyB3aGF0IGRvZXMgcmVzdHJpY3RlZCBtZW1vcnkgYWNjZXNzIGhh
-dmUgdG8gZG8NCj4gd2l0aCBBTUQgU0VWIGFuZCBob3cgZG9lcyBwbGF5IHRvZ2V0aGVyIHdp
-dGggd2hhdCB5b3UgZ3V5cyBhcmUgdHJ5aW5nIHRvDQo+IGRvPw0KPiANCj4gVGhlIGJpZyBw
-aWN0dXJlIHBscy4NCg0KQWgsIG9rYXkuDQoNCkZvciBzdXBwb3J0IG9mIHZpcnRpbyB3aXRo
-IFhlbiB3ZSB3YW50IHRvIG5vdCBvbmx5IHN1cHBvcnQgdGhlIHZpcnRpbw0KZGV2aWNlcyBs
-aWtlIEtWTSwgYnV0IHVzZSBncmFudHMgZm9yIGxldHRpbmcgdGhlIGd1ZXN0IGRlY2lkZSB3
-aGljaA0KcGFnZXMgYXJlIGFsbG93ZWQgdG8gYmUgbWFwcGVkIGJ5IHRoZSBiYWNrZW5kIChk
-b20wKS4NCg0KSW5zdGVhZCBvZiBwaHlzaWNhbCBndWVzdCBhZGRyZXNzZXMgdGhlIGd1ZXN0
-IHdpbGwgdXNlIGdyYW50LWlkcyAocGx1cw0Kb2Zmc2V0KS4gSW4gb3JkZXIgdG8gYmUgYWJs
-ZSB0byBoYW5kbGUgdGhpcyBhdCB0aGUgYmFzaWMgdmlydGlvIGxldmVsDQppbnN0ZWFkIG9m
-IHRoZSBzaW5nbGUgdmlydGlvIGRldmljZSBkcml2ZXJzLCB3ZSBuZWVkIHRvIHVzZSBkZWRp
-Y2F0ZWQNCmRtYS1vcHMuIEFuZCB0aG9zZSB3aWxsIGJlIHVzZWQgYnkgdmlydGlvIG9ubHks
-IGlmIHRoZSAicmVzdHJpY3RlZA0KdmlydGlvIG1lbW9yeSByZXF1ZXN0IiBmbGFnIGlzIHNl
-dCwgd2hpY2ggaXMgdXNlZCBieSBTRVYsIHRvby4gSW4gb3JkZXINCnRvIGxldCB2aXJ0aW8g
-c2V0IHRoaXMgZmxhZywgd2UgbmVlZCBhIHdheSB0byBjb21tdW5pY2F0ZSB0byB2aXJ0aW8N
-CnRoYXQgdGhlIHJ1bm5pbmcgc3lzdGVtIGlzIGVpdGhlciBhIFNFViBndWVzdCBvciBhIFhl
-biBndWVzdC4NCg0KSFRILA0KDQoNCkp1ZXJnZW4NCg==
---------------oWVjbTvpdC4UikamiFuIK0Ns
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjri
-oyspZKOBycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2
-kaV2KL9650I1SJvedYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i
-1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/B
-BLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xqG7/377qptDmrk42GlSK
-N4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR3Jvc3Mg
-PGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsE
-FgIDAQIeAQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4F
-UGNQH2lvWAUy+dnyThpwdtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3Tye
-vpB0CA3dbBQp0OW0fgCetToGIQrg0MbD1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u
-+6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbvoPHZ8SlM4KWm8rG+lIkGurq
-qu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v5QL+qHI3EIP
-tyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVy
-Z2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJ
-CAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4
-RF7HoZhPVPogNVbC4YA6lW7DrWf0teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz7
-8X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC/nuAFVGy+67q2DH8As3KPu0344T
-BDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0LhITTd9jLzdDad1pQ
-SToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLmXBK
-7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkM
-nQfvUewRz80hSnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMB
-AgAjBQJTjHDXAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/
-Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJnFOXgMLdBQgBlVPO3/D9R8LtF9DBAFPN
-hlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1jnDkfJZr6jrbjgyoZHi
-w/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0N51N5Jf
-VRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwP
-OoE+lotufe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK
-/1xMI3/+8jbO0tsn1tqSEUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1
-c2UuZGU+wsB5BBMBAgAjBQJTjHDrAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgEC
-F4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3g3OZUEBmDHVVbqMtzwlmNC4
-k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5dM7wRqzgJpJ
-wK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu
-5D+jLRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzB
-TNh30FVKK1EvmV2xAKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37Io
-N1EblHI//x/e2AaIHpzK5h88NEawQsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6
-AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpWnHIs98ndPUDpnoxWQugJ6MpMncr
-0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZRwgnBC5mVM6JjQ5x
-Dk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNVbVF
-LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mm
-we0icXKLkpEdIXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0I
-v3OOImwTEe4co3c1mwARAQABwsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMv
-Q/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEwTbe8YFsw2V/Buv6Z4Mysln3nQK5ZadD
-534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1vJzQ1fOU8lYFpZXTXIH
-b+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8VGiwXvT
-yJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqc
-suylWsviuGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5B
-jR/i1DG86lem3iBDXzXsZDn8R38=3D
-=3D2wuH
------END PGP PUBLIC KEY BLOCK-----
-
---------------oWVjbTvpdC4UikamiFuIK0Ns--
-
---------------Yxp0WC7XOxZjxaCFpkqA4mo2--
-
---------------4yxVWCWCnmvq93XMZ043V0iC
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmJpOQwFAwAAAAAACgkQsN6d1ii/Ey/b
-Cgf+OFbFg23c2x3esEwpLFGK2DbchkAtehLhMC4hV+WOchRjx+cNrrBmB5wRJyksEWRaRa42I31A
-vA84qya9Pv4iTNIBKA2BC8IQzwrveSLvxnQRupbnf8Pp55rLd7Q6MJ4GwSOn3JSh9gotleHr1v4+
-W5Hr7/cycD30NMenQC39VauZmXbAimQjTtB+ziwCp/vBikBp9Nmw6Rb2JbK4n9vhdsSM6vzkO/Ee
-16up4ta/88swh/qYj7ECcjAZ5Z8QjEkGE9aIe9iSejlhMrkfNcHsRv3PpBQZt3S3xBx1eTgDOxbK
-py0az+PKVoqhazEOve+t2II48euW2CiDFjIcZaPYjA==
-=uG7B
------END PGP SIGNATURE-----
-
---------------4yxVWCWCnmvq93XMZ043V0iC--
+fair enough
