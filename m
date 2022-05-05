@@ -2,159 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4741251B60E
-	for <lists+linux-s390@lfdr.de>; Thu,  5 May 2022 04:43:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BE6351B90A
+	for <lists+linux-s390@lfdr.de>; Thu,  5 May 2022 09:30:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239810AbiEECqG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 May 2022 22:46:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52694 "EHLO
+        id S1344808AbiEEHdm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 5 May 2022 03:33:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239791AbiEECqE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 May 2022 22:46:04 -0400
-Received: from mail-vs1-xe36.google.com (mail-vs1-xe36.google.com [IPv6:2607:f8b0:4864:20::e36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB1244D9E9
-        for <linux-s390@vger.kernel.org>; Wed,  4 May 2022 19:42:26 -0700 (PDT)
-Received: by mail-vs1-xe36.google.com with SMTP id a127so3005512vsa.3
-        for <linux-s390@vger.kernel.org>; Wed, 04 May 2022 19:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=TxHlq8yop8LH/FlkX6AhN8L6sqaOjtwhTLWOKH2lmRQ=;
-        b=AN+C5OaBX9rsIG/YOpu5xZq7/VB8wXw6MEILuJsJJx93W6jJIGruqLObp5FFLDSnWl
-         3U/D7EjOAdNFKr5gyrEsEafseWvgDBCKU3+cN7elsfS7RMh084n8CaHIKlYDXsqcuTdK
-         7CoDEzPvefzsxgdIhx83vF5/oO3YbJ/a6lio+kgeMb0d6s0xPamDS3R6Dn4AxCY8v/Kr
-         zFPq/9/648pqThK8fXse3nymqfSZoU7DsNUS8GRpjeVo93alLjhbW3z/OgdaDMfC/OYf
-         pDgw4+4w+uP+Yz4MdLL9I16gxtnl7h6kH9EcagHJC8pE8wuixPn9UQuHdtt6+U8VomLt
-         r5/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=TxHlq8yop8LH/FlkX6AhN8L6sqaOjtwhTLWOKH2lmRQ=;
-        b=kz5XNcugR7aEsyva4+fqa4KtuSZRLbuUxZ+rNB/IOlFpWq689cjLAgVLZdIMvVMX+S
-         Swmbv5ntfcP/YO2W2okLgaGqdYc2CCDm+PZTr8AZddQHVxy87uOTTBx2LnphqVtpcpBQ
-         VVr9lFa4Say27UXmil9OKqtn4O+169unHw32f2kEgPY0GimrC571XQvh15WFyHROASIh
-         N6wQJX2wO8sZI8wTCODo+RpdryZceJT/WtkS07b6oIVj5XfcfXm1P1VOiLt/DyXaIgnu
-         /1cL5jTELNWIYNAxbjlOxjhdPIRf+aSH7WLQ9lub3zcr/B4MA6vJYPy4YZZu4rykYINP
-         7RlA==
-X-Gm-Message-State: AOAM533FaFRyotN5kknG9GSBy/nsqo5+wzaESIKvvBFyWU7eHPnYzACX
-        myefH8rVPsHorrAx0sCHZMl0f4IiVyTktfnGAQY=
-X-Google-Smtp-Source: ABdhPJxUrrmxTaPjBq7XrryqE7Y5JalZ+N4PJFdvW74W4Bwf6J/vNYDE2ALkqwym7qxhWOXdX4fOj1Tw/az3MtAZfJw=
-X-Received: by 2002:a67:fe17:0:b0:32c:e77e:c3b4 with SMTP id
- l23-20020a67fe17000000b0032ce77ec3b4mr7612274vsr.11.1651718545550; Wed, 04
- May 2022 19:42:25 -0700 (PDT)
+        with ESMTP id S1344847AbiEEHdk (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 May 2022 03:33:40 -0400
+Received: from condef-08.nifty.com (condef-08.nifty.com [202.248.20.73])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40FD24833E
+        for <linux-s390@vger.kernel.org>; Thu,  5 May 2022 00:29:48 -0700 (PDT)
+Received: from conuserg-12.nifty.com ([10.126.8.75])by condef-08.nifty.com with ESMTP id 2457QJiB012682
+        for <linux-s390@vger.kernel.org>; Thu, 5 May 2022 16:26:19 +0900
+Received: from grover.sesame (133-32-177-133.west.xps.vectant.ne.jp [133.32.177.133]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 2457Neni019426;
+        Thu, 5 May 2022 16:23:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 2457Neni019426
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1651735421;
+        bh=mq8Yk8ot1m2mhjLX32XL2W0Bgs0dGB51vVKxKbSTMUk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=T77AYbWp+W8B/eXgnFGulan20TeHw3N6W7RIXt54h6dPGoOqBWyaZNhM/USm2COY1
+         1ai4VjljO6SS+KIZdz9zDlbPcqhQnBQeKneHyAHJdZ84G+BLsISEwrf5tO5Dr/i9PB
+         F94bzoe3Oo0TSu1N115G9q5JVECDckPxmFdLpg9iBzUQAI0aY2wPXdhmYVFSHyMMFO
+         q9se3e2KHp4ASisYM7uhuvaAfDDmUKe07fp1pOQ7PQebdARYuQLzr56U6xU38UYJDq
+         pBOrMk+PhVZ1hXHhscAEgaCyhjpTKX5PIofvTZP38NtlwKytBpwbg0AN2yAxcYmtWJ
+         JIz/mJfS9d9Bw==
+X-Nifty-SrcIP: [133.32.177.133]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
+        Nicolas Schier a <nicolas@fjasle.eu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-um@lists.infradead.org,
+        linux-s390@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH v3 00/15] kbuild: yet another series of cleanups (modpost, LTO, MODULE_REL_CRCS)
+Date:   Thu,  5 May 2022 16:22:29 +0900
+Message-Id: <20220505072244.1155033-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Received: by 2002:a59:c501:0:b0:2ab:54ee:cb22 with HTTP; Wed, 4 May 2022
- 19:42:24 -0700 (PDT)
-Reply-To: revmikelivecom842@gmail.com
-From:   "DR.ADAMS ROSE" <michael1james333@gmail.com>
-Date:   Wed, 4 May 2022 19:42:24 -0700
-Message-ID: <CAFzT2rQLhDdOsuoAb4gh0ZopPvZaRgu5msCoi38dLMHFRnt6RQ@mail.gmail.com>
-Subject: Attention Beneficiary.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.9 required=5.0 tests=ADVANCE_FEE_2_NEW_FRM_MNY,
-        BAYES_50,DEAR_BENEFICIARY,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-        DKIM_VALID_EF,FILL_THIS_FORM,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-        FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,LOTS_OF_MONEY,MONEY_FORM,
-        MONEY_FRAUD_3,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:e36 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [revmikelivecom842[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [michael1james333[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [michael1james333[at]gmail.com]
-        *  0.0 DEAR_BENEFICIARY BODY: Dear Beneficiary:
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  0.2 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  0.0 FILL_THIS_FORM Fill in a form with personal information
-        *  0.0 MONEY_FORM Lots of money if you fill out a form
-        *  2.0 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-        *  0.0 ADVANCE_FEE_2_NEW_FRM_MNY Advance Fee fraud form and lots of
-        *      money
-        *  0.0 MONEY_FRAUD_3 Lots of money and several fraud phrases
-X-Spam-Level: *******
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_SOFTFAIL,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Attention Beneficiary.
+
+This is the third batch of cleanups in this development cycle.
+
+Major changes in v3:
+
+ - Generate symbol CRCs as C code, and remove CONFIG_MODULE_REL_CRCS.
+
+Major changes in v2:
+
+ - V1 did not work with CONFIG_MODULE_REL_CRCS.
+   I fixed this for v2.
+
+ - Reflect some review comments in v1
+
+ - Refactor the code more
+
+ - Avoid too long argument error
 
 
-Your Bank Draft worth of ($4.5million)has been credited in ATM VISA
+Masahiro Yamada (15):
+  modpost: mitigate false-negatives for static EXPORT_SYMBOL checks
+  modpost: change the license of EXPORT_SYMBOL to bool type
+  modpost: merge add_{intree_flag,retpoline,staging_flag} to add_header
+  modpost: move *.mod.c generation to write_mod_c_files()
+  kbuild: generate a list of objects in vmlinux
+  kbuild: record symbol versions in *.cmd files
+  modpost: extract symbol versions from *.cmd files
+  kbuild: link symbol CRCs at final link, removing
+    CONFIG_MODULE_REL_CRCS
+  kbuild: stop merging *.symversions
+  genksyms: adjust the output format to modpost
+  kbuild: do not create *.prelink.o for Clang LTO or IBT
+  modpost: simplify the ->is_static initialization
+  modpost: use hlist for hash table implementation
+  kbuild: make built-in.a rule robust against too long argument error
+  kbuild: make *.mod rule robust against too long argument error
 
-CARD by the issuing Bank, be inform that you can not withdraw more
+ arch/powerpc/Kconfig         |   1 -
+ arch/s390/Kconfig            |   1 -
+ arch/um/Kconfig              |   1 -
+ include/asm-generic/export.h |  22 +-
+ include/linux/export.h       |  30 +--
+ include/linux/symversion.h   |  13 +
+ init/Kconfig                 |   4 -
+ kernel/module.c              |  10 +-
+ scripts/Kbuild.include       |   4 +
+ scripts/Makefile.build       | 118 +++------
+ scripts/Makefile.lib         |   7 -
+ scripts/Makefile.modfinal    |   5 +-
+ scripts/Makefile.modpost     |   9 +-
+ scripts/genksyms/genksyms.c  |  18 +-
+ scripts/link-vmlinux.sh      |  46 ++--
+ scripts/mod/file2alias.c     |   2 -
+ scripts/mod/list.h           |  52 ++++
+ scripts/mod/modpost.c        | 449 ++++++++++++++++++++---------------
+ scripts/mod/modpost.h        |   2 +
+ 19 files changed, 402 insertions(+), 392 deletions(-)
+ create mode 100644 include/linux/symversion.h
 
-than
+-- 
+2.32.0
 
-$20,000 per day this is what the Bank said you will see the rest
-
-details when you receive it ,I have also registered your ATM VISA CARD
-
-Sum ($4.5million) with (DHL) Express Company reconfirm your contact
-
-information as follows.
-
-
-Your full name
-
-Delivery Address
-
-Telephone Number
-
-Your state and
-
-Your Country.
-
-Contact person REV.MIKE EDWARD
-
-Email; ( revmikelivecom842@gmail.com)
-
-Phone number +234-9015065394
-
-
-So I have pay for delivering and insurance charges, I paid it, so the
-
-only money you will pay them is security keeping fee which the state said
-
-that I will not pay for, but the keeping fee is $125 dollars,and
-
-I deposited it yesterday been 4/05/2022, And I did not contact you
-
-yesterday due to low connection, so that is why i did not pay for
-
-keeping fee, So I want you to contact urgent to avoid increase of
-
-their keeping fee.
-
-
-Your faith fully
-
-DR.ADAMS ROSE.
