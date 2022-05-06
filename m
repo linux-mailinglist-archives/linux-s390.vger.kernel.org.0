@@ -2,106 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 417FF51DFD0
-	for <lists+linux-s390@lfdr.de>; Fri,  6 May 2022 21:49:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E726551E0AD
+	for <lists+linux-s390@lfdr.de>; Fri,  6 May 2022 23:06:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242556AbiEFTx1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 6 May 2022 15:53:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54774 "EHLO
+        id S1444327AbiEFVJi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 6 May 2022 17:09:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229881AbiEFTx0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 May 2022 15:53:26 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F8C6A42A;
-        Fri,  6 May 2022 12:49:41 -0700 (PDT)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 246JR4Tv013111;
-        Fri, 6 May 2022 19:49:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=d9tDzOxYoFTHwKqeI3nR0c9QSnmMLpO3R25jvjp2BoU=;
- b=oBf02/jq4fdEQVxkleC/MlOIWitIXlmDNmH6iVaz73a4/RTmhqoaHsbr3LmNhQhQcKbq
- SDAuG8CfY0NM448DClIM0MywyPbSyX7qhzdeBcRRbUpkj4cqIboWLXuPQ2jDEZ4eBo1S
- FSlI4aYBhrZrwcGzWHE9z7gdx4kKZyr6RB5eY4Fl1IRPW2aOtXDmu+Z5txJtXKQN5Uae
- ID2WhS+8VmbgKyGO2nuNLtVcvVBEkIp8a5dfix6sTuPQ6b6fvY79JJ5Rm0uJ00rMJCww
- 7VAGORGtMzpq93DNidNcxeYmlJtdEKMjZP6xgJpj0h7gInZae6mr9TjEWMPs9yxbcb1J aw== 
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fw9ug0anm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 May 2022 19:49:12 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 246JnAs3021632;
-        Fri, 6 May 2022 19:49:10 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma03fra.de.ibm.com with ESMTP id 3fscdk6mwa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 May 2022 19:49:10 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 246JZfNT55247200
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 May 2022 19:35:41 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E162111C050;
-        Fri,  6 May 2022 19:49:06 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9394F11C04A;
-        Fri,  6 May 2022 19:49:06 +0000 (GMT)
-Received: from osiris (unknown [9.145.25.133])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  6 May 2022 19:49:06 +0000 (GMT)
-Date:   Fri, 6 May 2022 21:49:04 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH 1/2] entry: Rename arch_check_user_regs() to
- arch_enter_from_user_mode()
-Message-ID: <YnV7sD3r/PzY+1lA@osiris>
-References: <20220504062351.2954280-1-tmricht@linux.ibm.com>
- <20220504062351.2954280-2-tmricht@linux.ibm.com>
- <87bkwah2p1.ffs@tglx>
+        with ESMTP id S1444419AbiEFVJV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 May 2022 17:09:21 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E23661C92B
+        for <linux-s390@vger.kernel.org>; Fri,  6 May 2022 14:05:35 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id p6so8051879plr.12
+        for <linux-s390@vger.kernel.org>; Fri, 06 May 2022 14:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:in-reply-to:references:from:date:message-id
+         :subject:to;
+        bh=VSSUIwdzgxQxnEkB7+u7pnweyPajIQMP3nQqWYs8VX0=;
+        b=gmmgqd2enKSblS7bCmnm2ivMD5ZTgpfnW/j/MNizwci6pH3rJEQXq3L9+ZdKL4HUTr
+         YB+Dhjpe2MkKztjhU+UDqenquKjwj+pPKOCMhVrtxmSec4u8GzSTlKnYmXQROsqwJ7YF
+         fpyt4ZWxoGKOIdNHSzn6X8527WsL9seFFIUc417Aceaz0HyqyfLzhrTyiK1hfEoe7bgf
+         O66BH+VPp/USBREXReLf48zIB9vdsgcsn+kPDpodP7afE/7TIv51GGMLWkNAhK51uLVF
+         lGR5deZqynPeLivFeL+j4lPiytJOppTfXKPKuEkvtzBoRNP5faKFInL0FLuVz9LTzW90
+         0CuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:in-reply-to:references
+         :from:date:message-id:subject:to;
+        bh=VSSUIwdzgxQxnEkB7+u7pnweyPajIQMP3nQqWYs8VX0=;
+        b=HvOSXtFZyvF5JpdV9SylVWrtQVYaQVu/cF8XkQ1OswtjpIY9V2uqTYS12I8bgMUmjw
+         1gfdKJZiijb45R1LHtuRQtEovtg5L7LfHCjz1BM0mSJtHJoUNvFu1Z3LlK8yG9n4UBAG
+         e/p4JdKQHenM3UamR5CLPWFviozOuwFWyqQetq96kb+xCeWp8/rP5rit8F5HrVcZgweB
+         FtePjyoPGbDhLKyy2tFEP6P/X/hQ9MXodt1+d3A/jVTo9oxZ0Lgb1rqQnpzCl19rWRUa
+         wjU4tRUnMLf4emlV83avUWXDcHz/DAHQVnWg2+fgHFx5SgjdcRKh2MefvJZu7v8P7312
+         /dLg==
+X-Gm-Message-State: AOAM533FZy+Mm29jsELrGcYB3jhSGjn+Htgb0y7Copk1du+9BHye+g5O
+        mEcRjT6HT7rU8E++/hyzWQ+mmNBAEP0YfoMLQA==
+X-Google-Smtp-Source: ABdhPJyqTkc39jIaJ9/Rbqdi6sONfGmoHQRCW6ADRHNTA3OhSOJwlsoTVRnEtva6v71BUuTBbiWSrg7BAnP42QBwIqU=
+X-Received: by 2002:a17:902:a501:b0:153:f956:29f0 with SMTP id
+ s1-20020a170902a50100b00153f95629f0mr5598333plq.120.1651871135500; Fri, 06
+ May 2022 14:05:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87bkwah2p1.ffs@tglx>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: k95cZwgzi8r50lA6U3iXLeytjjD2Udxx
-X-Proofpoint-ORIG-GUID: k95cZwgzi8r50lA6U3iXLeytjjD2Udxx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-06_07,2022-05-06_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- mlxlogscore=710 impostorscore=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 adultscore=0 phishscore=0 bulkscore=0 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205060098
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:ac4:9906:0:b0:4ba:807b:b8f3 with HTTP; Fri, 6 May 2022
+ 14:05:33 -0700 (PDT)
+Reply-To: warren001buffett@gmail.com
+In-Reply-To: <CAD_xG_pvNZK6BFCW+28Xv4DE=_5rbDZXDok2BYNn9xw6Ma7iow@mail.gmail.com>
+References: <CAD_xG_pvNZK6BFCW+28Xv4DE=_5rbDZXDok2BYNn9xw6Ma7iow@mail.gmail.com>
+From:   Warren Buffett <guidayema@gmail.com>
+Date:   Fri, 6 May 2022 21:05:33 +0000
+Message-ID: <CAD_xG_o-NeOti3yu7R9R5-myJ=Pi4nnU5Tuumw-xPcT-nT8e=Q@mail.gmail.com>
+Subject: Fwd: My name is Warren Buffett, an American businessman.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:641 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4985]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [guidayema[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, May 06, 2022 at 09:38:02PM +0200, Thomas Gleixner wrote:
-> On Wed, May 04 2022 at 08:23, Thomas Richter wrote:
-> > From: Sven Schnelle <svens@linux.ibm.com>
-> >
-> > arch_check_user_regs() is used at the moment to verify that struct pt_regs
-> > contains valid values when entering the kernel from userspace. s390 needs
-> > a place in the generic entry code to modify a cpu data structure when
-> > switching from userspace to kernel mode. As arch_check_user_regs() is
-> > exactly this, rename it to arch_enter_from_user_mode().
-> >
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Andy Lutomirski <luto@kernel.org>
-> > Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-> 
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+My name is Warren Buffett, an American businessman and investor I have
+something important to discuss with you.
 
-Is it ok for you if this gets routed via the s390 tree?
+Mr. Warren Buffett
+warren001buffett@gmail.com
+Chief Executive Officer: Berkshire Hathaway
+aphy/Warren-Edward-Buffett
