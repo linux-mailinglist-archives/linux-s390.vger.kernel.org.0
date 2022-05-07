@@ -2,112 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1A4151E1F8
-	for <lists+linux-s390@lfdr.de>; Sat,  7 May 2022 01:40:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B193251E30B
+	for <lists+linux-s390@lfdr.de>; Sat,  7 May 2022 03:32:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376555AbiEFWtU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 6 May 2022 18:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54460 "EHLO
+        id S1445187AbiEGBgC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 6 May 2022 21:36:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355180AbiEFWtT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 May 2022 18:49:19 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3D9A6178;
-        Fri,  6 May 2022 15:45:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 16CA3B839F2;
-        Fri,  6 May 2022 22:45:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0507C385A9;
-        Fri,  6 May 2022 22:45:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651877131;
-        bh=ftQi9qulEY2Jbu8EVZNt2L7N4exOH1BNtakTytErLyc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=c8d3OOqMGXj57v4mi+9T4R02tGJd+aIpFoPUq1lqiKNoidczMWLbMRGQHKRaqxEDb
-         3iar4mxH9WpOaj+4EFGsZFgsrMl4Nv28WRylquof1j76ehM95x7wvKGXEzugGX0aUU
-         o7cFkxS9vIYv/2cBM5QeE32yx9Lec7fw/pJvbdkna+mYV15ezSV487sy6eTtQbqVVp
-         mpya6rWs3lYSY0H2tJaoWp4dV4mrxtsDMH6POX7AhX5ivnT/Mc5eYCQNQkhPk30Vvi
-         AGBNyp4l9x8+gUIW6Q2Iz1L+Ds6Db3DRBK+xMurkRKps68aO5G1dO6DiVKnTJTxTYp
-         JmZdd9U6zUszA==
-Date:   Fri, 6 May 2022 15:45:28 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, clang-built-linux@googlegroups.com,
-        linux-kernel@vger.kernel.org, Nicolas Schier a <nicolas@fjasle.eu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-um@lists.infradead.org,
-        linux-s390@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v3 00/15] kbuild: yet another series of cleanups
- (modpost, LTO, MODULE_REL_CRCS)
-Message-ID: <YnWlCH2tfr5YMb1/@dev-arch.thelio-3990X>
-References: <20220505072244.1155033-1-masahiroy@kernel.org>
+        with ESMTP id S236738AbiEGBgA (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 May 2022 21:36:00 -0400
+Received: from out199-4.us.a.mail.aliyun.com (out199-4.us.a.mail.aliyun.com [47.90.199.4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F90058E7E;
+        Fri,  6 May 2022 18:32:12 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=30;SR=0;TI=SMTPD_---0VCUCndB_1651887123;
+Received: from 30.236.9.83(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VCUCndB_1651887123)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 07 May 2022 09:32:05 +0800
+Message-ID: <971cfb54-f5a6-921c-b0c5-195a5daed0fb@linux.alibaba.com>
+Date:   Sat, 7 May 2022 09:32:46 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220505072244.1155033-1-masahiroy@kernel.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: Re: [PATCH 3/3] mm: rmap: Fix CONT-PTE/PMD size hugetlb issue when
+ unmapping
+To:     Mike Kravetz <mike.kravetz@oracle.com>, akpm@linux-foundation.org,
+        catalin.marinas@arm.com, will@kernel.org
+Cc:     tsbogend@alpha.franken.de, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+        davem@davemloft.net, arnd@arndb.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org
+References: <cover.1651216964.git.baolin.wang@linux.alibaba.com>
+ <c91e04ebb792ef7b72966edea8bd6fa2dfa5bfa7.1651216964.git.baolin.wang@linux.alibaba.com>
+ <f64f0d4f-f0fc-f07c-3c17-96f124da21e4@oracle.com>
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <f64f0d4f-f0fc-f07c-3c17-96f124da21e4@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-13.0 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Masahiro,
 
-On Thu, May 05, 2022 at 04:22:29PM +0900, Masahiro Yamada wrote:
-> 
-> This is the third batch of cleanups in this development cycle.
-> 
-> Major changes in v3:
-> 
->  - Generate symbol CRCs as C code, and remove CONFIG_MODULE_REL_CRCS.
-> 
-> Major changes in v2:
-> 
->  - V1 did not work with CONFIG_MODULE_REL_CRCS.
->    I fixed this for v2.
-> 
->  - Reflect some review comments in v1
-> 
->  - Refactor the code more
-> 
->  - Avoid too long argument error
-> 
-> 
-> Masahiro Yamada (15):
->   modpost: mitigate false-negatives for static EXPORT_SYMBOL checks
->   modpost: change the license of EXPORT_SYMBOL to bool type
->   modpost: merge add_{intree_flag,retpoline,staging_flag} to add_header
->   modpost: move *.mod.c generation to write_mod_c_files()
->   kbuild: generate a list of objects in vmlinux
->   kbuild: record symbol versions in *.cmd files
->   modpost: extract symbol versions from *.cmd files
->   kbuild: link symbol CRCs at final link, removing
->     CONFIG_MODULE_REL_CRCS
->   kbuild: stop merging *.symversions
->   genksyms: adjust the output format to modpost
->   kbuild: do not create *.prelink.o for Clang LTO or IBT
->   modpost: simplify the ->is_static initialization
->   modpost: use hlist for hash table implementation
->   kbuild: make built-in.a rule robust against too long argument error
->   kbuild: make *.mod rule robust against too long argument error
 
-I merged this series into mainline and tested an Arch Linux
-x86_64 configuration and Fedora aarch64 configuration with ThinLTO and
-saw no new warnings or issues. Modules loaded just fine in QEMU for Arch
-Linux and I did not notice any boot issues or warnings.
+On 5/7/2022 2:55 AM, Mike Kravetz wrote:
+> On 4/29/22 01:14, Baolin Wang wrote:
+>> On some architectures (like ARM64), it can support CONT-PTE/PMD size
+>> hugetlb, which means it can support not only PMD/PUD size hugetlb:
+>> 2M and 1G, but also CONT-PTE/PMD size: 64K and 32M if a 4K page
+>> size specified.
+>>
+>> When unmapping a hugetlb page, we will get the relevant page table
+>> entry by huge_pte_offset() only once to nuke it. This is correct
+>> for PMD or PUD size hugetlb, since they always contain only one
+>> pmd entry or pud entry in the page table.
+>>
+>> However this is incorrect for CONT-PTE and CONT-PMD size hugetlb,
+>> since they can contain several continuous pte or pmd entry with
+>> same page table attributes, so we will nuke only one pte or pmd
+>> entry for this CONT-PTE/PMD size hugetlb page.
+>>
+>> And now we only use try_to_unmap() to unmap a poisoned hugetlb page,
+> 
+> Since try_to_unmap can be called for non-hugetlb pages, perhaps the following
+> is more accurate?
+> 
+> try_to_unmap is only passed a hugetlb page in the case where the
+> hugetlb page is poisoned.
 
-Tested-by: Nathan Chancellor <nathan@kernel.org>
+Yes, will update in next version.
 
-Cheers,
-Nathan
+> It does concern me that this assumption is built into the code as
+> pointed out in your discussion with Gerald.  Should we perhaps add
+> a VM_BUG_ON() to make sure the passed huge page is poisoned?  This
+> would be in the same 'if block' where we call
+> adjust_range_if_pmd_sharing_possible.
+Good point. Will do in next version. Thanks.
