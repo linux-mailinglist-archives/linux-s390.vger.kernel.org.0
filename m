@@ -2,125 +2,271 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DD85520424
-	for <lists+linux-s390@lfdr.de>; Mon,  9 May 2022 20:06:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C14F3520512
+	for <lists+linux-s390@lfdr.de>; Mon,  9 May 2022 21:14:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240021AbiEISJv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 May 2022 14:09:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56240 "EHLO
+        id S240452AbiEITQs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 May 2022 15:16:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240018AbiEISJt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 May 2022 14:09:49 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B603553700
-        for <linux-s390@vger.kernel.org>; Mon,  9 May 2022 11:05:53 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id a30so5089410ljq.9
-        for <linux-s390@vger.kernel.org>; Mon, 09 May 2022 11:05:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AN921NaxNkeCgd+/kg15uAVOqAqbEenfNO325PUsS6k=;
-        b=cdkkVkNwsvU59Cj0woYu6dSdwau5E9ePg+8kIJ1M1Frwv+LedGaW6DLtMwkXpMZL2B
-         r7hFwQ3ahDz+IJdG4IjbhLPOcTwEoyXCnRmAW2WdhUgxhcdRUNGXAuadJ4tWcsACiMSL
-         D+ZDP9Q++d5BAfIHETxhJRtnfnDfJwFx7k8npnx59zIQ50VN28X5Urs8CGSBmjf10Azm
-         KbxvSubWCFWIqArNH+Eap4Ab+N6ITHlwC+yZnZQK/CX+oo0khGclKQwTivaiOeVCWJ1F
-         QPgepFDot07kcqaOrupthXZjZwE3bspAHq+AIGDvC0XPGQqrRHf5JYMmMeJ86QLYBcxh
-         6SFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AN921NaxNkeCgd+/kg15uAVOqAqbEenfNO325PUsS6k=;
-        b=XShOV2zIfgHFYqJ0bGTzuWKpK1Kk8j+ANo8xKzSS/i2Cfk4alpJ49yecbznq/IFp7i
-         Eh8+F/WO23s+lioYUF+Li1ThorERaJ18lZRNjrES7viE5k9ToJZIKE/56tefY4khvIsU
-         HQL60dzVdcCrKn0Nwgjke30xLKw66mqUV3LqIN65pOaYzbVeikAZA6PpmTFDopayviFc
-         42K2ZZqndutEPrEho2kkGMsuG6Cyr26QgQpdhnoUiwkCdn8yol0AnFnGHxItkrepBlfl
-         ztVWRtX7rDktuOE+4zk13xRN+ANl/st1qMhWdOEHAbJGxkcAmF3f1SBSlq7qXjKWRr1W
-         rHnQ==
-X-Gm-Message-State: AOAM532PNiffIg5Uvb/nEOmXpjkAvxUnPuu0IetuJGh9XLLPWOAfra29
-        2SMaLpaWLHpId6xWXqnhD4NHYlZ84mTq5Ixs6HCCAA==
-X-Google-Smtp-Source: ABdhPJwPwqycR8l/3eeVmCel1hLEu82x6SiaXLmDlHX2zoI+YX9jdJy+XCg/b2Ed5906efBN4BZfCg1kx4JD8JBVFLI=
-X-Received: by 2002:a05:651c:552:b0:250:5c23:d0f2 with SMTP id
- q18-20020a05651c055200b002505c23d0f2mr11376317ljp.239.1652119550281; Mon, 09
- May 2022 11:05:50 -0700 (PDT)
+        with ESMTP id S240455AbiEITQr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 May 2022 15:16:47 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9DE4B435;
+        Mon,  9 May 2022 12:12:52 -0700 (PDT)
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 249J8p3a023191;
+        Mon, 9 May 2022 19:12:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=DZzbJiIk8wIAoTuwwMQq7KRXqh2P/xm57Dp1M/M0xs0=;
+ b=IvUL5tKMINtn2cb43bg1gLUvbBDBqoKQN8efrjBBHiUdwKrv4+fR82Z0nlqAVABrmffa
+ bltkm7qFfVQ0r0I1zsohL1SzUU+BErZaixjdPyhMbk/ecIDifwdWoBI7Em5FcX7CZwu0
+ t/iiW6BpGnR0RMAMf7GBUFRzGrBAaqGSNAOry54hK6zZsGsGXvyTvfHnPxx6Yfocyq/L
+ FPQLWUn6MtG/dqLPOF5K3Ffmzo7boaK4S+OQw6aYQYlLkssD7OzX3HxQ2UWhjp4/rucm
+ KjdmErh58canyJ4g1GBXvMq7BxUlNLwT07wD/DK7WTLiKHXxTNjKNuQZVnC/HqT7yjqx ZA== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fy7s4s7gs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 May 2022 19:12:51 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 249Iv8Yq028759;
+        Mon, 9 May 2022 19:12:49 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma06ams.nl.ibm.com with ESMTP id 3fwg1j2xs6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 May 2022 19:12:49 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 249IxEjl48366030
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 May 2022 18:59:14 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A74DAE04D;
+        Mon,  9 May 2022 19:12:46 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7A0FAE045;
+        Mon,  9 May 2022 19:12:45 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.15.58])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  9 May 2022 19:12:45 +0000 (GMT)
+Date:   Mon, 9 May 2022 21:11:40 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        borntraeger@linux.ibm.com
+Subject: Re: [PATCH 7/9] kvm: s390: Add CPU dump functionality
+Message-ID: <20220509211140.38f49000@p-imbrenda>
+In-Reply-To: <20220428130102.230790-8-frankja@linux.ibm.com>
+References: <20220428130102.230790-1-frankja@linux.ibm.com>
+        <20220428130102.230790-8-frankja@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20220508190631.2386038-1-masahiroy@kernel.org> <20220508190631.2386038-11-masahiroy@kernel.org>
-In-Reply-To: <20220508190631.2386038-11-masahiroy@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 9 May 2022 11:05:38 -0700
-Message-ID: <CAKwvOdkhcJB8Bnrt51siRefWe+ZSvHagCs2G011PzkkrD3cxQw@mail.gmail.com>
-Subject: Re: [PATCH v4 10/14] kbuild: check static EXPORT_SYMBOL* by script
- instead of modpost
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-modules@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, clang-built-linux@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Ru6ROCiHgraWSlFUVpWgEdF43EuZAd7D
+X-Proofpoint-GUID: Ru6ROCiHgraWSlFUVpWgEdF43EuZAd7D
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-09_05,2022-05-09_02,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ mlxscore=0 bulkscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
+ adultscore=0 impostorscore=0 suspectscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2205090100
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun, May 8, 2022 at 12:10 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> diff --git a/scripts/check-local-export b/scripts/check-local-export
-> new file mode 100755
-> index 000000000000..d1721fa63057
-> --- /dev/null
-> +++ b/scripts/check-local-export
-> @@ -0,0 +1,48 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# Copyright (C) 2022 Masahiro Yamada
+On Thu, 28 Apr 2022 13:01:00 +0000
+Janosch Frank <frankja@linux.ibm.com> wrote:
+
+> The previous patch introduced the per-VM dump functions now let's
+> focus on dumping the VCPU state via the newly introduced
+> KVM_S390_PV_CPU_COMMAND ioctl which mirrors the VM UV ioctl and can be
+> extended with new commands later.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  arch/s390/kvm/kvm-s390.c | 73 ++++++++++++++++++++++++++++++++++++++++
+>  arch/s390/kvm/kvm-s390.h |  1 +
+>  arch/s390/kvm/pv.c       | 16 +++++++++
+>  include/uapi/linux/kvm.h |  5 +++
+>  4 files changed, 95 insertions(+)
+> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 8984e8db33b4..d15ce38bef14 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -5149,6 +5149,52 @@ long kvm_arch_vcpu_async_ioctl(struct file *filp,
+>  	return -ENOIOCTLCMD;
+>  }
+>  
+> +static int kvm_s390_handle_pv_vcpu_dump(struct kvm_vcpu *vcpu,
+> +					struct kvm_pv_cmd *cmd)
+> +{
+> +	struct kvm_s390_pv_dmp dmp;
+> +	void *data;
+> +	int ret;
 > +
-> +set -e
-> +set -o pipefail
+> +	/* Dump initialization is a prerequisite */
+> +	if (!vcpu->kvm->arch.pv.dumping)
+> +		return -EINVAL;
 > +
-> +declare -A symbol_types
-> +declare -a export_symbols
+> +	if (copy_from_user(&dmp, (__u8 __user *)cmd->data, sizeof(dmp)))
+> +		return -EFAULT;
 > +
-> +exit_code=0
+> +	/* We only handle this subcmd right now */
+> +	if (dmp.subcmd != KVM_PV_DUMP_CPU)
+> +		return -EINVAL;
 > +
-> +while read value type name
-> +do
-> +       # to avoid error for clang LTO; $name may be empty
-> +       if [[ $value = -* && -z $name ]]; then
-> +               continue
-> +       fi
+> +	/* CPU dump length is the same as create cpu storage donation. */
+> +	if (dmp.buff_len != uv_info.guest_cpu_stor_len)
+> +		return -EINVAL;
 > +
-> +       # The first field (value) may be empty. If so, fix it up.
-> +       if [[ -z $name ]]; then
-> +          name=${type}
-> +          type=${value}
-> +       fi
+> +	data = vzalloc(uv_info.guest_cpu_stor_len);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	ret = kvm_s390_pv_dump_cpu(vcpu, data, &cmd->rc, &cmd->rrc);
+> +
+> +	VCPU_EVENT(vcpu, 3, "PROTVIRT DUMP CPU %d rc %x rrc %x",
+> +		   vcpu->vcpu_id, cmd->rc, cmd->rrc);
+> +
+> +	if (ret) {
+> +		vfree(data);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* On success copy over the dump data */
+> +	if (copy_to_user((__u8 __user *)dmp.buff_addr, data, uv_info.guest_cpu_stor_len)) {
+> +		vfree(data);
+> +		return -EFAULT;
+> +	}
+> +
+> +	vfree(data);
+> +	return 0;
+> +}
+> +
+>  long kvm_arch_vcpu_ioctl(struct file *filp,
+>  			 unsigned int ioctl, unsigned long arg)
+>  {
+> @@ -5313,6 +5359,33 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>  					   irq_state.len);
+>  		break;
+>  	}
+> +	case KVM_S390_PV_CPU_COMMAND: {
+> +		struct kvm_pv_cmd cmd;
+> +
+> +		r = -EINVAL;
+> +		if (!is_prot_virt_host())
+> +			break;
+> +
+> +		r = -EFAULT;
+> +		if (copy_from_user(&cmd, argp, sizeof(cmd)))
+> +			break;
+> +
+> +		r = -EINVAL;
+> +		if (cmd.flags)
+> +			break;
+> +
+> +		/* We only handle this cmd right now */
+> +		if (cmd.cmd != KVM_PV_DUMP)
+> +			break;
+> +
+> +		r = kvm_s390_handle_pv_vcpu_dump(vcpu, &cmd);
+> +
+> +		/* Always copy over UV rc / rrc data */
+> +		if (copy_to_user((__u8 __user *)argp, &cmd.rc,
+> +				 sizeof(cmd.rc) + sizeof(cmd.rrc)))
+> +			r = -EFAULT;
+> +		break;
+> +	}
+>  	default:
+>  		r = -ENOTTY;
+>  	}
+> diff --git a/arch/s390/kvm/kvm-s390.h b/arch/s390/kvm/kvm-s390.h
+> index 2868dd0bba25..a39815184350 100644
+> --- a/arch/s390/kvm/kvm-s390.h
+> +++ b/arch/s390/kvm/kvm-s390.h
+> @@ -250,6 +250,7 @@ int kvm_s390_pv_set_sec_parms(struct kvm *kvm, void *hdr, u64 length, u16 *rc,
+>  int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned long size,
+>  		       unsigned long tweak, u16 *rc, u16 *rrc);
+>  int kvm_s390_pv_set_cpu_state(struct kvm_vcpu *vcpu, u8 state);
+> +int kvm_s390_pv_dump_cpu(struct kvm_vcpu *vcpu, void *buff, u16 *rc, u16 *rrc);
+>  int kvm_s390_pv_dump_stor_state(struct kvm *kvm, void __user *buff_user,
+>  				u64 *gaddr, u64 buff_user_len, u16 *rc, u16 *rrc);
+>  
+> diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
+> index d1635ed50078..9ab8192b9b23 100644
+> --- a/arch/s390/kvm/pv.c
+> +++ b/arch/s390/kvm/pv.c
+> @@ -299,6 +299,22 @@ int kvm_s390_pv_set_cpu_state(struct kvm_vcpu *vcpu, u8 state)
+>  	return 0;
+>  }
+>  
+> +int kvm_s390_pv_dump_cpu(struct kvm_vcpu *vcpu, void *buff, u16 *rc, u16 *rrc)
+> +{
+> +	struct uv_cb_dump_cpu uvcb = {
+> +		.header.cmd = UVC_CMD_DUMP_CPU,
+> +		.header.len = sizeof(uvcb),
+> +		.cpu_handle = vcpu->arch.pv.handle,
+> +		.dump_area_origin = (u64)buff,
+> +	};
+> +	int cc;
+> +
+> +	cc = uv_call_sched(0, (u64)&uvcb);
 
-Consider adding examples of output from NM as comments where you're
-handling special cases.
+it's a small amount of data, but you use the _sched variant?
 
-Aren't BOTH from LTO?  The first case is:
+and, why aren't you using the _sched variant in the previous patch (for
+DUMP_COMPLETE)?
 
----------------- T strncpy
+to be clear: I think the right thing is to always use the _sched
+variant unless there is a good reason not to (so please fix the previous
+patch)
 
-while the second is
+> +	*rc = uvcb.header.rc;
+> +	*rrc = uvcb.header.rrc;
+> +	return cc;
+> +}
+> +
+>  /* Size of the cache for the storage state dump data. 1MB for now */
+>  #define DUMP_BUFF_LEN HPAGE_SIZE
+>  
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index b34850907291..108bc7b7a71b 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1144,6 +1144,7 @@ struct kvm_ppc_resize_hpt {
+>  #define KVM_CAP_S390_MEM_OP_EXTENSION 211
+>  #define KVM_CAP_PMU_CAPABILITY 212
+>  #define KVM_CAP_DISABLE_QUIRKS2 213
+> +#define KVM_CAP_S390_PROTECTED_DUMP 214
+>  
+>  #ifdef KVM_CAP_IRQ_ROUTING
+>  
+> @@ -1649,6 +1650,7 @@ enum pv_cmd_dmp_id {
+>  	KVM_PV_DUMP_INIT,
+>  	KVM_PV_DUMP_CONFIG_STOR_STATE,
+>  	KVM_PV_DUMP_COMPLETE,
+> +	KVM_PV_DUMP_CPU,
+>  };
+>  
+>  struct kvm_s390_pv_dmp {
+> @@ -2110,4 +2112,7 @@ struct kvm_stats_desc {
+>  /* Available with KVM_CAP_XSAVE2 */
+>  #define KVM_GET_XSAVE2		  _IOR(KVMIO,  0xcf, struct kvm_xsave)
+>  
+> +/* Available with KVM_CAP_S390_PROTECTED_DUMP */
+> +#define KVM_S390_PV_CPU_COMMAND	_IOWR(KVMIO, 0xd0, struct kvm_pv_cmd)
+> +
+>  #endif /* __LINUX_KVM_H */
 
-                 U strncpy
-
-IIUC?
-
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
--- 
-Thanks,
-~Nick Desaulniers
