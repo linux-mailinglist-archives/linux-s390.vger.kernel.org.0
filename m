@@ -2,177 +2,240 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9A045203CB
-	for <lists+linux-s390@lfdr.de>; Mon,  9 May 2022 19:51:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D3E8520508
+	for <lists+linux-s390@lfdr.de>; Mon,  9 May 2022 21:14:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239066AbiEIRzB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 May 2022 13:55:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56484 "EHLO
+        id S240469AbiEITQu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 May 2022 15:16:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236598AbiEIRzB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 May 2022 13:55:01 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20EA31534
-        for <linux-s390@vger.kernel.org>; Mon,  9 May 2022 10:51:04 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id m23so17998036ljc.0
-        for <linux-s390@vger.kernel.org>; Mon, 09 May 2022 10:51:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z6h/UbBcSsy6Cwv/zRBUg+8oIkiwnR5qcB1QDqTp6w8=;
-        b=lOajRfE7fyP+ep3MKFGW9mQh4e9I1Uiq21usbZezTUhM7EFdhg1SnvvNjY4eG59ULs
-         V4Owko+szwUqUWwUMOPZ7L4L7x5m3g1Mm7rbCdqAjqtaLm5FvW/K5dfZdN0XW5hf65HO
-         78imLtJfT6cP2hesjWXVSZsQU4pIUmnZcKDPw9almOyM+aeGj7565UrKRLWpVcmNrEwe
-         xJkgCcUXrlopAOgqZYayw1LQ0mSuw5EChiwGNUaBuTsB3BXNrjGOYu+K76TLXsRGHsBe
-         eQK1QSxvGw/P89SyjP0B19ZHce6iDYv7Nz+kMtnMo+aOblb0/ntvWz3HsYVV84q3HMkk
-         YVZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z6h/UbBcSsy6Cwv/zRBUg+8oIkiwnR5qcB1QDqTp6w8=;
-        b=qOBfhnah/S5ByDOtuapt6x57MfUakkW6AGQvm5e4Jmae+oVwvIyB9gjwD/ODprv+9J
-         7xYEp5etsQJS+3Vur1Kwf/EgA20guDHwJEOhjwXuzqFXYHMMDTeZs+q7A3xfYm1jgmwv
-         94i8niGpzLcIQ2H5Zf3Yw9YD9PoFItoqA/v9hxzTA2uRzyPyvLGy8irX1itWiOKGb+f1
-         JoscALK8N2ODEm3lLJIlifzB+Uwbi/b6083bbR+JMK7UgGQCB4ii5SGcSMRQOnxf5CHo
-         PsJ7YkrH6Gh1huHWKLRkCEKgPJosJfZj3URrCcwPjXYjdJGd3csrUjv8EpVv1emRqfYe
-         22pw==
-X-Gm-Message-State: AOAM532T4HTDTs96a8HjrtMtrjSsA5BaMkjXTHzSwG+poqDceaD4Tc+Y
-        vHITdzZ2V5dS8BDSqRywLaVQnNb9XnsCyO9e1NysCQ==
-X-Google-Smtp-Source: ABdhPJzH0GFY+4K8szx4KHcz2z6G62DNfHvef1hX/KTMFMx//VA0v3aill5VeXt5HmS0uJd9IHn4xVPu7N0kN8BJZnI=
-X-Received: by 2002:a2e:a7c8:0:b0:24f:700a:4df5 with SMTP id
- x8-20020a2ea7c8000000b0024f700a4df5mr11176691ljp.472.1652118662391; Mon, 09
- May 2022 10:51:02 -0700 (PDT)
+        with ESMTP id S240455AbiEITQt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 May 2022 15:16:49 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E8343496;
+        Mon,  9 May 2022 12:12:54 -0700 (PDT)
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 249HA6KE020601;
+        Mon, 9 May 2022 19:12:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=NxVKeT3/4FMx+SWo5h3AD/LWZZgED5cgPvWxO6p2GRA=;
+ b=kPgeWgFzljOy8HNX4SkI4Nz3XNjDBPFWO+6Zg8MD+TezVgqNwb34VdLIjmEAlT4Q52nd
+ qtHLGPClrAeB9kcDvyoVsv0E94FyHzz9UyAwgIxfJ9q1s1vsMPQVIKzHh3F5XrcxWbK6
+ 74k4YYYJ8jgnUecDxRRWEeitKLkrW52CXrsLSV42S+/5ppVSSPso1GB0ytVZ6cn7cO1/
+ wVOLMWGaJMIlAgs8UjGLn68XdGv0qaaILWn6zbJmRgJnewMdacH5aUs51gIJh6adF/CR
+ iYODlSpNZteyMGlKUP2gYg2MepKoOh1CP47M2/YYJdXJM5cfDlbncKlbq4CY+Ifpu8pc 7Q== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3fy4mqx07b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 May 2022 19:12:53 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 249Iv5BZ010586;
+        Mon, 9 May 2022 19:12:51 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 3fwgd8txxa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 May 2022 19:12:51 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 249JCmVZ29950366
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 May 2022 19:12:48 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3CA5FAE051;
+        Mon,  9 May 2022 19:12:48 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA360AE045;
+        Mon,  9 May 2022 19:12:47 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.15.58])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  9 May 2022 19:12:47 +0000 (GMT)
+Date:   Mon, 9 May 2022 17:25:33 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        borntraeger@linux.ibm.com
+Subject: Re: [PATCH 3/9] KVM: s390: pv: Add query interface
+Message-ID: <20220509172533.633a95ee@p-imbrenda>
+In-Reply-To: <20220428130102.230790-4-frankja@linux.ibm.com>
+References: <20220428130102.230790-1-frankja@linux.ibm.com>
+        <20220428130102.230790-4-frankja@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20220508190631.2386038-1-masahiroy@kernel.org> <20220508190631.2386038-7-masahiroy@kernel.org>
-In-Reply-To: <20220508190631.2386038-7-masahiroy@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 9 May 2022 10:50:50 -0700
-Message-ID: <CAKwvOdm_oSLHddWWSzF5UuYrLCsAwF8AwbUGotUnPvV+6JkSkg@mail.gmail.com>
-Subject: Re: [PATCH v4 06/14] kbuild: link symbol CRCs at final link, removing CONFIG_MODULE_REL_CRCS
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-modules@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Ard Biesheuvel <ardb@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        clang-built-linux <llvm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Weasl6hmw4qHMyAaDunHtM4nRn10bplQ
+X-Proofpoint-ORIG-GUID: Weasl6hmw4qHMyAaDunHtM4nRn10bplQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-09_05,2022-05-09_02,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
+ suspectscore=0 lowpriorityscore=0 spamscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2205090100
+X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
- On Sun, May 8, 2022 at 12:10 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> diff --git a/include/asm-generic/export.h b/include/asm-generic/export.h
-> index 07a36a874dca..51ce72ce80fa 100644
-> --- a/include/asm-generic/export.h
-> +++ b/include/asm-generic/export.h
-> @@ -2,6 +2,14 @@
->  #ifndef __ASM_GENERIC_EXPORT_H
->  #define __ASM_GENERIC_EXPORT_H
->
-> +/*
-> + * This comment block is used by fixdep. Please do not remove.
+On Thu, 28 Apr 2022 13:00:56 +0000
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-I don't know much about fixdep. How does that work, if you could summarize?
-
-> + *
-> + * When CONFIG_MODVERSIONS is changed from n to y, all source files having
-> + * EXPORT_SYMBOL variants must be re-compiled because genksyms is run as a
-> + * side effect of the .o build rule.
-> + */
-> +
->  #ifndef KSYM_FUNC
->  #define KSYM_FUNC(x) x
->  #endif
-> @@ -12,9 +20,6 @@
->  #else
->  #define KSYM_ALIGN 4
->  #endif
-> -#ifndef KCRC_ALIGN
-> -#define KCRC_ALIGN 4
-> -#endif
-
-The #ifndef is there because arch/m68k/include/asm/export.h:1 defines
-KCRC_ALIGN. You should delete that, too.
-
-> diff --git a/scripts/genksyms/genksyms.c b/scripts/genksyms/genksyms.c
-> index 4827c5abe5b7..6e6933ae7911 100644
-> --- a/scripts/genksyms/genksyms.c
-> +++ b/scripts/genksyms/genksyms.c
-> @@ -33,7 +33,7 @@ char *cur_filename;
->  int in_source_file;
->
->  static int flag_debug, flag_dump_defs, flag_reference, flag_dump_types,
-> -          flag_preserve, flag_warnings, flag_rel_crcs;
-> +          flag_preserve, flag_warnings;
->
->  static int errors;
->  static int nsyms;
-> @@ -681,10 +681,7 @@ void export_symbol(const char *name)
->                         fputs(">\n", debugfile);
->
->                 /* Used as a linker script. */
-
-^ Does this comment still apply?
-
-> -               printf(!flag_rel_crcs ? "__crc_%s = 0x%08lx;\n" :
-> -                      "SECTIONS { .rodata : ALIGN(4) { "
-> -                      "__crc_%s = .; LONG(0x%08lx); } }\n",
-> -                      name, crc);
-> +               printf("__crc_%s = 0x%08lx;\n", name, crc);
->         }
+> Some of the query information is already available via sysfs but
+> having a IOCTL makes the information easier to retrieve.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  arch/s390/kvm/kvm-s390.c | 76 ++++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/kvm.h | 25 +++++++++++++
+>  2 files changed, 101 insertions(+)
+> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 76ad6408cb2c..23352d45a386 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -2224,6 +2224,42 @@ static int kvm_s390_cpus_to_pv(struct kvm *kvm, u16 *rc, u16 *rrc)
+>  	return r;
 >  }
->
-> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> index eceb3ee7ec06..6aee2401f3ad 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -88,11 +88,6 @@ modpost_link()
->                 gen_initcalls
->                 lds="-T .tmp_initcalls.lds"
->
-> -               if is_enabled CONFIG_MODVERSIONS; then
-> -                       gen_symversions
-
-^ this is the only caller of gen_symversions, right? Then
-gen_symversions can be cleaned up, too?
-
-> -                       lds="${lds} -T .tmp_symversions.lds"
-> -               fi
-> -
->                 # This might take a while, so indicate that we're doing
->                 # an LTO link
->                 info LTO ${1}
-> @@ -183,6 +178,10 @@ vmlinux_link()
->                 libs="${KBUILD_VMLINUX_LIBS}"
->         fi
->
-> +       if is_enabled CONFIG_MODULES; then
-> +               objs="${objs} .vmlinux.export.o"
-> +       fi
+>  
+> +/*
+> + * Here we provide user space with a direct interface to query UV
+> + * related data like UV maxima and available features as well as
+> + * feature specific data.
+> + *
+> + * To facilitate future extension of the data structures we'll try to
+> + * write data up to the maximum requested length.
+> + */
+> +static ssize_t kvm_s390_handle_pv_info(struct kvm_s390_pv_info *info)
+> +{
+> +	ssize_t len_min;
 > +
->         if [ "${SRCARCH}" = "um" ]; then
->                 wl=-Wl,
->                 ld="${CC}"
-> @@ -312,6 +311,7 @@ cleanup()
->         rm -f vmlinux.o
->         rm -f .vmlinux.d
->         rm -f .vmlinux.objs
-> +       rm -f .vmlinux.export.c
+> +	switch (info->header.id) {
+> +	case KVM_PV_INFO_VM: {
+> +		len_min =  sizeof(info->header) + sizeof(info->vm);
+> +
+> +		if (info->header.len_max < len_min)
+> +			return -EINVAL;
+> +
+> +		memcpy(info->vm.inst_calls_list,
+> +		       uv_info.inst_calls_list,
+> +		       sizeof(uv_info.inst_calls_list));
+> +
+> +		/* It's max cpuidm not max cpus so it's off by one */
 
-Probably can drop the `rm -f .tmp_symversions.lds` here, too?
--- 
-Thanks,
-~Nick Desaulniers
+s/cpuidm/cpuid,/ ? (and then also s/cpus/cpus,/)
+
+> +		info->vm.max_cpus = uv_info.max_guest_cpu_id + 1;
+> +		info->vm.max_guests = uv_info.max_num_sec_conf;
+> +		info->vm.max_guest_addr = uv_info.max_sec_stor_addr;
+> +		info->vm.feature_indication = uv_info.uv_feature_indications;
+> +
+> +		return len_min;
+> +	}
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+>  static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
+>  {
+>  	int r = 0;
+> @@ -2360,6 +2396,46 @@ static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
+>  			     cmd->rc, cmd->rrc);
+>  		break;
+>  	}
+> +	case KVM_PV_INFO: {
+> +		struct kvm_s390_pv_info info = {};
+> +		ssize_t data_len;
+> +
+> +		/*
+> +		 * No need to check the VM protection here.
+> +		 *
+> +		 * Maybe user space wants to query some of the data
+> +		 * when the VM is still unprotected. If we see the
+> +		 * need to fence a new data command we can still
+> +		 * return an error in the info handler.
+> +		 */
+> +
+> +		r = -EFAULT;
+> +		if (copy_from_user(&info, argp, sizeof(info.header)))
+> +			break;
+> +
+> +		r = -EINVAL;
+> +		if (info.header.len_max < sizeof(info.header))
+> +			break;
+> +
+> +		data_len = kvm_s390_handle_pv_info(&info);
+> +		if (data_len < 0) {
+> +			r = data_len;
+> +			break;
+> +		}
+> +		/*
+> +		 * If a data command struct is extended (multiple
+> +		 * times) this can be used to determine how much of it
+> +		 * is valid.
+> +		 */
+> +		info.header.len_written = data_len;
+> +
+> +		r = -EFAULT;
+> +		if (copy_to_user(argp, &info, data_len))
+> +			break;
+> +
+> +		r = 0;
+> +		break;
+> +	}
+>  	default:
+>  		r = -ENOTTY;
+>  	}
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 91a6fe4e02c0..59e4fb6c7a34 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1645,6 +1645,30 @@ struct kvm_s390_pv_unp {
+>  	__u64 tweak;
+>  };
+>  
+> +enum pv_cmd_info_id {
+> +	KVM_PV_INFO_VM,
+> +};
+> +
+> +struct kvm_s390_pv_info_vm {
+> +	__u64 inst_calls_list[4];
+> +	__u64 max_cpus;
+> +	__u64 max_guests;
+> +	__u64 max_guest_addr;
+> +	__u64 feature_indication;
+> +};
+> +
+> +struct kvm_s390_pv_info_header {
+> +	__u32 id;
+> +	__u32 len_max;
+> +	__u32 len_written;
+> +	__u32 reserved;
+> +};
+> +
+> +struct kvm_s390_pv_info {
+> +	struct kvm_s390_pv_info_header header;
+> +	struct kvm_s390_pv_info_vm vm;
+> +};
+> +
+>  enum pv_cmd_id {
+>  	KVM_PV_ENABLE,
+>  	KVM_PV_DISABLE,
+> @@ -1653,6 +1677,7 @@ enum pv_cmd_id {
+>  	KVM_PV_VERIFY,
+>  	KVM_PV_PREP_RESET,
+>  	KVM_PV_UNSHARE_ALL,
+> +	KVM_PV_INFO,
+>  };
+>  
+>  struct kvm_pv_cmd {
+
