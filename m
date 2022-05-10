@@ -2,159 +2,170 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AFFD52165A
-	for <lists+linux-s390@lfdr.de>; Tue, 10 May 2022 15:04:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FAE45218A9
+	for <lists+linux-s390@lfdr.de>; Tue, 10 May 2022 15:35:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242220AbiEJNIu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 May 2022 09:08:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36458 "EHLO
+        id S241748AbiEJNjg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 May 2022 09:39:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233776AbiEJNIr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 10 May 2022 09:08:47 -0400
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A17281368;
-        Tue, 10 May 2022 06:04:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ERCDIneY1Q4o8JFrn6huil0jOKhd5NF1nm9+poeBUGY=; b=C1bwe/Dp28hHJCcth6j9FIvLRX
-        pDXbwTw3GNkAuVoDVZ2t1Ig0Ha8VAgFyN1qfYHmoUYQVyDRHd7IRdBkOHux1OzR9Q7hmNC/ZbkDNy
-        i9N1ZP1KkXJYzqp8Xch5cykWJAl8GjhN23tq785F2kRMcqVY6TftmyHyPJZTtkL8PDJb7GYsR63+v
-        CyHpUemygecHOqy6UnkI5sacYa9DSfBokIBgO1vbgxAO3Lo/ZpYDMcX65a4mJHituF1N7bEMHTqnl
-        wjibh2hSmhpgeMzHripimwe7gT4RuGZfcia5HzNoWvLT/w9CiRN4l1p9e5qQ/+lp5TdT6UNVMzl77
-        9RtLUAvA==;
-Received: from [177.183.162.244] (helo=[192.168.0.5])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1noPXc-0005Ct-K8; Tue, 10 May 2022 15:04:40 +0200
-Message-ID: <c23f408f-d030-b599-19b4-8561d511ef73@igalia.com>
-Date:   Tue, 10 May 2022 10:04:08 -0300
+        with ESMTP id S244122AbiEJNgv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 10 May 2022 09:36:51 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14C622D625B;
+        Tue, 10 May 2022 06:25:25 -0700 (PDT)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24ACfalb019066;
+        Tue, 10 May 2022 13:25:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=ZKuJhZQQuq6V768XjVGu5HUJKjxgMf1arVRizgrdFHc=;
+ b=c83CGJpO1Sv58+hCMuhALQmgSVx1+e8j9aFrx5Lr7enTTbcc9jd+4Kf2rUtEf+pxKyn9
+ /hblLio/NPJv2XscnQnfycCoovJ3ahhTTEz76JJsmdBp4EQwqvfsuiS+Eiz0XrZnBb5R
+ 39M+ckw9ZNlGN3WjnYu7Iz9V+fwkdxo8CIeddkoYOuif+41NbTlYCgpn9RPhh9DWlf33
+ 1GmFHllUbolJQ5DQASNA6tDgdoZx7NI++suh/bnCe4QKTQ2z0jT2di9+puTfBkFT18fX
+ Prs+WgUN9EnpGcOMKDLeCIAcoqYbCUThDdjav4mqQL37yOFNy3R/TedvKQy2OeusWn9x Ug== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fyncevehd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 May 2022 13:25:15 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24ADFe1A019023;
+        Tue, 10 May 2022 13:25:15 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3fyncevegt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 May 2022 13:25:15 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24ADDr0o013009;
+        Tue, 10 May 2022 13:25:13 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03fra.de.ibm.com with ESMTP id 3fwgd8u718-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 May 2022 13:25:13 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24ADPAcx50856382
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 May 2022 13:25:10 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4F14A4053;
+        Tue, 10 May 2022 13:25:09 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A4D2AA4040;
+        Tue, 10 May 2022 13:25:09 +0000 (GMT)
+Received: from li-ca45c2cc-336f-11b2-a85c-c6e71de567f1.ibm.com (unknown [9.171.29.124])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 10 May 2022 13:25:09 +0000 (GMT)
+Message-ID: <d87472c1556d8503bdda9e1cec26b5d910468cbc.camel@linux.ibm.com>
+Subject: Re: [kvm-unit-tests PATCH v1 2/2] s390x: add cmm migration test
+From:   Nico Boehr <nrb@linux.ibm.com>
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, thuth@redhat.com
+Date:   Tue, 10 May 2022 15:25:09 +0200
+In-Reply-To: <20220509155821.07279b39@p-imbrenda>
+References: <20220509120805.437660-1-nrb@linux.ibm.com>
+         <20220509120805.437660-3-nrb@linux.ibm.com>
+         <20220509155821.07279b39@p-imbrenda>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH 04/30] firmware: google: Convert regular spinlock into
- trylock on panic path
-Content-Language: en-US
-To:     Petr Mladek <pmladek@suse.com>, Evan Green <evgreen@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, bhe@redhat.com,
-        kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org, netdev@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net, rcu@vger.kernel.org,
-        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
-        x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
-        halves@canonical.com, fabiomirmar@gmail.com,
-        alejandro.j.jimenez@oracle.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Jonathan Corbet <corbet@lwn.net>, d.hatayama@jp.fujitsu.com,
-        dave.hansen@linux.intel.com, dyoung@redhat.com,
-        feng.tang@intel.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de,
-        Kees Cook <keescook@chromium.org>, luto@kernel.org,
-        mhiramat@kernel.org, mingo@redhat.com, paulmck@kernel.org,
-        peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, Alan Stern <stern@rowland.harvard.edu>,
-        Thomas Gleixner <tglx@linutronix.de>, vgoyal@redhat.com,
-        vkuznets@redhat.com, Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        David Gow <davidgow@google.com>,
-        Julius Werner <jwerner@chromium.org>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-5-gpiccoli@igalia.com>
- <CAE=gft5Pq25L4KFoPWbftkPF-JN1ex2yws77mMJ4GQnn9W0L2g@mail.gmail.com>
- <adcf6d0e-c37c-6ede-479e-29959d03d8c0@igalia.com> <YnpOv4hAPV4b+6v4@alley>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <YnpOv4hAPV4b+6v4@alley>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: MXsa_cEVXrShH0-A0vrRaLZHsV3_XbI-
+X-Proofpoint-ORIG-GUID: RZRy3GDQrfpaDFJdhP6U2TlHpboJzeFT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-10_01,2022-05-10_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ clxscore=1015 impostorscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2205100060
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 10/05/2022 08:38, Petr Mladek wrote:
-> [...]
-> I see two more alternative solutions:
+On Mon, 2022-05-09 at 15:58 +0200, Claudio Imbrenda wrote:
+> > +       for (i = 0; i < NUM_PAGES; i++) {
+> > +               switch(i % 4) {
+> > +                       case 0:
+> > +                               essa(ESSA_SET_STABLE, (unsigned
+> > long)pagebuf[i]);
+> > +                       break;
+> > +                       case 1:
+> > +                               essa(ESSA_SET_UNUSED, (unsigned
+> > long)pagebuf[i]);
+> > +                       break;
+> > +                       case 2:
+> > +                               essa(ESSA_SET_VOLATILE, (unsigned
+> > long)pagebuf[i]);
+> > +                       break;
+> > +                       case 3:
+> > +                               essa(ESSA_SET_POT_VOLATILE,
+> > (unsigned long)pagebuf[i]);
+> > +                       break;
 > 
-> 1st variant is a trick already used in console write() callbacks.
-> They do trylock() when oops_in_progress is set. They remember
-> the result to prevent double unlock when printing Oops messages and
-> the system will try to continue working. For example:
+> const int essa_commands[4] = {ESSA_SET_STABLE, ESSA_SET_UNUSED, ...
 > 
-> pl011_console_write(struct console *co, const char *s, unsigned int count)
-> {
-> [...]
-> 	int locked = 1;
-> [...]
-> 	if (uap->port.sysrq)
-> 		locked = 0;
-> 	else if (oops_in_progress)
-> 		locked = spin_trylock(&uap->port.lock);
-> 	else
-> 		spin_lock(&uap->port.lock);
+> for (i = 0; i < NUM_PAGES; i++)
+>         essa(essa_commands[i % 4], ...
 > 
-> [...]
-> 
-> 	if (locked)
-> 		spin_unlock(&uap->port.lock);
-> }
-> 
-> 
-> 2nd variant is to check panic_cpu variable. It is used in printk.c.
-> We might move the function to panic.h:
-> 
-> static bool panic_in_progress(void)
-> {
-> 	return unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID);
-> }
-> 
-> and then do:
-> 
-> 	if (panic_in_progress()) {
-> 		...
+> I think it would look more compact and more readable
 
-Thanks for the review Petr! I feel alternative two is way better, it
-checks for panic - the oops_in_progress isn't really enough, since we
-can call panic() directly, not necessarily through an oops path, correct?
+I like your idea a lot, but the compiler doesn't :-(:
 
-For me, we could stick with the lock check, but I'll defer to Evan - I
-didn't work the V2 patch yet, what do you prefer Evan?
+/home/nrb/kvm-unit-tests/lib/asm/cmm.h: In function ‘main’:
+/home/nrb/kvm-unit-tests/lib/asm/cmm.h:32:9: error: ‘asm’ operand 2
+probably does not match constraints [-Werror]
+   32 |         asm volatile(".insn
+rrf,0xb9ab0000,%[extr_state],%[addr],%[new_state],0" \
+      |         ^~~
+/home/nrb/kvm-unit-tests/lib/asm/cmm.h:32:9: error: impossible
+constraint in ‘asm’
 
+To satify the "i" constraint, new_state needs to be a compile time
+constant, which it won't be any more with your suggestion
+unfortunately. 
 
-> [...]
-> As already mentioned in the other reply, panic() sometimes stops
-> the other CPUs using NMI, for example, see kdump_nmi_shootdown_cpus().
-> 
-> Another situation is when the CPU using the lock ends in some
-> infinite loop because something went wrong. The system is in
-> an unpredictable state during panic().
-> 
-> I am not sure if this is possible with the code under gsmi_dev.lock
-> but such things really happen during panic() in other subsystems.
-> Using trylock in the panic() code path is a good practice.
-> 
-> Best Regards,
-> Petr
+We can do crazy stuff like this in cmm.h:
 
-Makes total sense, thanks for confirming!
-Cheers,
+#define __essa(state) \
+	asm volatile(".insn
+rrf,0xb9ab0000,%[extr_state],%[addr],%[new_state],0" \
+			: [extr_state] "=d" (extr_state) \
+			: [addr] "a" (paddr), [new_state] "i"
+(state));
+static unsigned long essa(uint8_t state, unsigned long paddr)
+{
+	uint64_t extr_state = 0;
 
+	switch(state) {
+		case ESSA_SET_STABLE:
+			__essa(ESSA_SET_STABLE);
+		break;
+		case ESSA_SET_UNUSED:
+			__essa(ESSA_SET_UNUSED);
+		break;
+		case ESSA_SET_VOLATILE:
+			__essa(ESSA_SET_VOLATILE);
+		break;
+		case ESSA_SET_POT_VOLATILE:
+			__essa(ESSA_SET_POT_VOLATILE);
+		break;
+	}
 
-Guilherme
+	return (unsigned long)extr_state;
+}
+
+But that essentially just shifts the readability problem to a different
+file. What do you think?
+
+Or we make essa a marco, which doesn't sound like a particularily
+attractive alternative either.
