@@ -2,56 +2,56 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17DC4523D62
-	for <lists+linux-s390@lfdr.de>; Wed, 11 May 2022 21:28:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CF18523DB5
+	for <lists+linux-s390@lfdr.de>; Wed, 11 May 2022 21:40:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346811AbiEKT17 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 11 May 2022 15:27:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54054 "EHLO
+        id S1347045AbiEKTkY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 11 May 2022 15:40:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346835AbiEKT15 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 11 May 2022 15:27:57 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25F613818A
-        for <linux-s390@vger.kernel.org>; Wed, 11 May 2022 12:27:53 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id g16so3898561lja.3
-        for <linux-s390@vger.kernel.org>; Wed, 11 May 2022 12:27:53 -0700 (PDT)
+        with ESMTP id S1347065AbiEKTkX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 11 May 2022 15:40:23 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE72219F69
+        for <linux-s390@vger.kernel.org>; Wed, 11 May 2022 12:40:21 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id o22so3013326ljp.8
+        for <linux-s390@vger.kernel.org>; Wed, 11 May 2022 12:40:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SW6iq+qYhyOT6jikrCxFTwADR0TMZdkkRDPETazGaSM=;
-        b=nB3Xvk21FevH9/hA9Yk7i5EiWu5T7wG775A1abZsEReiLLe3bbhxjmdCJPypSFradb
-         cFh5Gp4yTjPKn9AaewWZ/cnRXM3lpD1ZJfEq+C2UO7zBZ8d9EccVMseanvn4dga9Wu1t
-         VPzaF/qFDbZQqFB1CaIWIXSzVB1K9OkNxjty5qGxMCBa0C0Y6lvequVJsxLt6qMJOrpr
-         Pxuib0rhCsTJUsdyArRGSYyQOpbdWLQqEDdIqWh/RtIEfieUrbha3yEGRWYWj3W68NHV
-         3R7XHUO0/HGijPUcjkbZtAATUyb7CrfyPk5orQ70v0A8YyGJ0bd/Jd7GmtiPm6uygzfp
-         CIHQ==
+        bh=s0WHnwC/LKH7P9lNbxHLOT0Ey/YFu5D9xNYFJTYtZ1Q=;
+        b=Fvz5uPtJHUorCw5qkY372eQ60ClhKlpeLwO1xjhAL9PQHj9vflc26CO74tkzg7EmAI
+         FEHbyF3V9YbZQYUmxvm1RNGhLDcIjYqTBqP4pZiVRnOpH7gUtNFeTmFleqdhViv3AS3i
+         q3If8KCbEwTyPf7Uo6YzYZ1DgplKvn07+Q5FTK3v4nApvYHZxE1K0C9zkXE0CAEZsylG
+         /vV6IuLMlkcjNQ0IVy3QsNh5mor400xpsLkIzUSChrp4HwfNkleiWjE/UsdexJvxUSKo
+         7XcpLaapmKfq6RqUk63VDmyq5ZCSDITSYlTLQDsqe8Nq/YlTdnTooSQfbfWhq1VOhG6a
+         uP7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SW6iq+qYhyOT6jikrCxFTwADR0TMZdkkRDPETazGaSM=;
-        b=SiYXYPLlGf2pyF4Ddatac+9HI9ts0aFNMH6xzUC4361ERe5ZZgrkwW0zovT32WwfH/
-         +Y+hTEwBDQEkg/Qejem5F3rmCHlNxo9daF8ZpxWWzBV3lWitjLLadOW90lMiunipCL5i
-         bX8MWGYrnmYcLM5e6kc3YQbPZCEyhTO5p+FifDTEYJ88vuX6WO2C/gqsj1TbaFGppWyu
-         A4RQwacQeMq9VEBJh7Dw00eU8QvNEqzLpzD1Vp9l2Jaz7EFbQHOMgCHFBpdum2xajZN1
-         6upWFwhQGHduD+qlR4rZzrIrULdwrw0zyikuJJUWdIH0+oiid5WDfCGXyBAMiqqm5DQi
-         gvTw==
-X-Gm-Message-State: AOAM5316xmo/ss0qi4uJ5uCmh852fMeMKOkwKOLdpHkvP+H6J5H9BjXK
-        tkmDxEOHGbwo2rtQ0pDFbjqnI9Qz597ceyjbkjK7zw==
-X-Google-Smtp-Source: ABdhPJydB8FVx07Gzpsea2mcu0GzM5Al7+CTg9CTEqkX8nYWBBx0ISM+XN60+ObYsYrs9KAMSUaYIZ1zXLZ2/xAGu8o=
-X-Received: by 2002:a2e:a7c8:0:b0:24f:700a:4df5 with SMTP id
- x8-20020a2ea7c8000000b0024f700a4df5mr17838500ljp.472.1652297271133; Wed, 11
- May 2022 12:27:51 -0700 (PDT)
+        bh=s0WHnwC/LKH7P9lNbxHLOT0Ey/YFu5D9xNYFJTYtZ1Q=;
+        b=nhh3eGXCQsMJwkn5g3xs64N5vg1/3trynxWyEkW00wX+cbzEM/SxxQ/Ur9K/mjH5NZ
+         eKmkgWOyifyaqzRzGD0D4V2rUEaYXt8b5sw5PIKqqd706YB9QYqB8AzNhYLMsQyGy63v
+         eYM+mzQdRcDoGe/k5VhOzrjijp9qd4cyAzWAv4pTbOdv0v/5RrBZBrgLOE/YsNM+d7IT
+         3upahJhCCsn8A84za3lz+4NAERETFrcbNNSl1KSgy52x/iV+xstyY5JpcBkBP5T9HD1W
+         ny+fzZ59MNWMpAiFfS57FWBNUIaQC/YDtL2P/WSINz2fh32Xe/F0jBJnby70eKMlUxa2
+         +FHg==
+X-Gm-Message-State: AOAM533T8oFX3rH+OHUZUlvdqam4XHaLGUrIomGkt7nK6SYeYquvCoZ/
+        wB5jSXZA6a7LMxBynZlo9X7AX2lmfpy4mxiNx3LHLw==
+X-Google-Smtp-Source: ABdhPJz0NVpIZePVvZ3oOx6+FO7jLpzyA7B8CJCC9CbYcQngiEhIKV2dTdoUVdm176erPVni03DBhy5q0Zs/JvZO3y4=
+X-Received: by 2002:a05:651c:101:b0:250:896d:f870 with SMTP id
+ a1-20020a05651c010100b00250896df870mr17878467ljb.235.1652298019389; Wed, 11
+ May 2022 12:40:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220511120532.2228616-1-hca@linux.ibm.com> <20220511120532.2228616-9-hca@linux.ibm.com>
-In-Reply-To: <20220511120532.2228616-9-hca@linux.ibm.com>
+References: <20220511120532.2228616-1-hca@linux.ibm.com> <20220511120532.2228616-8-hca@linux.ibm.com>
+In-Reply-To: <20220511120532.2228616-8-hca@linux.ibm.com>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 11 May 2022 12:27:39 -0700
-Message-ID: <CAKwvOd=EQa9tyWUi-ZfKrK-AABDRG7=TErHK+yb+_Z_dkjrmfQ@mail.gmail.com>
-Subject: Re: [PATCH 8/8] scripts/min-tool-version.sh: raise minimum clang
- version to 14.0.0 for s390
+Date:   Wed, 11 May 2022 12:40:07 -0700
+Message-ID: <CAKwvOdn3Mdn9ek-7EotHmd6Wb7C5rzZnOxAQVtbQEd2LBBZGRg@mail.gmail.com>
+Subject: Re: [PATCH 7/8] s390/boot: do not emit debug info for assembly with
+ llvm's IAS
 To:     Heiko Carstens <hca@linux.ibm.com>
 Cc:     Vasily Gorbik <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
@@ -67,8 +67,8 @@ Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -77,45 +77,42 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 On Wed, May 11, 2022 at 5:05 AM Heiko Carstens <hca@linux.ibm.com> wrote:
 >
-> Before version 14.0.0 llvm's integrated assembler fails to handle some
-> displacement variants:
+> Commit ee6d777d3e93 ("s390/decompressor: support extra debug flags")
+> added extra debug flags, in particular debug info is created,
+> depending on config options.
 >
-> arch/s390/purgatory/head.S:108:10: error: invalid operand for instruction
->  lg %r11,kernel_type-.base_crash(%r13)
+> With llvm's IAS this causes this compile warning:
 >
-> Instead of working around this and given that this is already fixed
-> raise the minimum clang version from 13.0.0 to 14.0.0.
-
-Do you have the commit in LLVM that fixed this? Might be nice to link
-to the particular commit in the commit message. Either way:
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
-
-(Thanks for the series, will pull down and test!)
-
-If you have a github account, let me know it if you'd like to be cc'ed
-when we wire this up in our CI.
-
+> arch/s390/boot/head.S:38:1: warning: DWARF2 only supports one section per compilation unit
+> .section ".head.text","ax"
+> ^
+>
+> This is a known problem and was addressed with a commit b8a9092330da
+> ("Kbuild: do not emit debug info for assembly with LLVM_IAS=1").
+> Just do the same for s390 to get rid of this warning.
 >
 > Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 > ---
->  scripts/min-tool-version.sh | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  arch/s390/Makefile | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> diff --git a/scripts/min-tool-version.sh b/scripts/min-tool-version.sh
-> index 53fe64856015..f1e8358ec19a 100755
-> --- a/scripts/min-tool-version.sh
-> +++ b/scripts/min-tool-version.sh
-> @@ -24,9 +24,8 @@ icc)
->         echo 16.0.3
->         ;;
->  llvm)
-> -       # https://lore.kernel.org/r/YMtib5hKVyNknZt3@osiris/
->         if [ "$SRCARCH" = s390 ]; then
-> -               echo 13.0.0
-> +               echo 14.0.0
->         else
->                 echo 11.0.0
->         fi
+> diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+> index c59efc83f020..d73611b35164 100644
+> --- a/arch/s390/Makefile
+> +++ b/arch/s390/Makefile
+> @@ -20,7 +20,9 @@ LDFLAGS_vmlinux       := -pie
+>  endif
+>  aflags_dwarf   := -Wa,-gdwarf-2
+
+^ or can we use a more modern variant of dwarf, like at least dwarf-4?
+
+>  KBUILD_AFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -D__ASSEMBLY__
+> +ifndef CONFIG_AS_IS_LLVM
+>  KBUILD_AFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),$(aflags_dwarf))
+> +endif
+>  KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2 -mpacked-stack
+>  KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
+>  KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float -mbackchain
 > --
 > 2.32.0
 >
