@@ -2,63 +2,57 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FD9F5253B1
-	for <lists+linux-s390@lfdr.de>; Thu, 12 May 2022 19:30:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAE5F525454
+	for <lists+linux-s390@lfdr.de>; Thu, 12 May 2022 20:00:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347982AbiELRas (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 May 2022 13:30:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37510 "EHLO
+        id S1351936AbiELSAr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 May 2022 14:00:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351619AbiELRaq (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 May 2022 13:30:46 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0805109D;
-        Thu, 12 May 2022 10:30:41 -0700 (PDT)
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24CHRp7a011280;
-        Thu, 12 May 2022 17:30:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=12Vomm7rfRWXq7hx4VWQjYxycMVePLS4XFiektWNuiA=;
- b=F5SnwWttT1ozSEaRcy7dP9v7bnsigqPNlHynGVTypdma84CehaAzGIZu+sAqVgyYCJr7
- XpzF70QY+QPbs/o8CA18nmt803ArbVuu0K6TlApZB8QK5Gf4aXZvXSuPtd3accH1y6Pm
- lJwoXUSBxBpS8XZiFLkSXGszm77cLIa8JGCkxWRlW/ul8Ws3tzocuQ739UXmXIEl0f7Y
- WEezBb0MMLIeFdUvIvDa0njCGi2WWpmw/WOYF9Db1AqlgZDjJedMdNdCb89Du0ipOnwg
- 3NhBX40csjQQK1atFiadv2HwOsk6Vk+8X6aD/BCJoBq2uAjJWDi/HEDknzNfdYQzdxMI Dg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3g16af8hcd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 May 2022 17:30:38 +0000
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24CHSieR014855;
-        Thu, 12 May 2022 17:30:38 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3g16af8hbp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 May 2022 17:30:38 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24CHHx8W017330;
-        Thu, 12 May 2022 17:30:36 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04fra.de.ibm.com with ESMTP id 3g0ma1h3xc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 May 2022 17:30:36 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24CHUWGn35324210
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 May 2022 17:30:32 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F2F38AE04D;
-        Thu, 12 May 2022 17:30:31 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85631AE053;
-        Thu, 12 May 2022 17:30:31 +0000 (GMT)
-Received: from osiris (unknown [9.145.44.123])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 12 May 2022 17:30:31 +0000 (GMT)
-Date:   Thu, 12 May 2022 19:30:30 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
+        with ESMTP id S1357215AbiELSAr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 May 2022 14:00:47 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BC3FCC1
+        for <linux-s390@vger.kernel.org>; Thu, 12 May 2022 11:00:45 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id d19so10465024lfj.4
+        for <linux-s390@vger.kernel.org>; Thu, 12 May 2022 11:00:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PIUIK3/vvssf4wL4R4yeMIIg3nsvqklAR/DEjJ1CAm4=;
+        b=ccasTpHZqLRg0Dkgl8Ihu4LaomzXbUhwYSh1fwRbe5hvyv4gVY5MRM6btJfuT2HkgD
+         Yfi29F8Xw/4nJhGRIxPC7ziiFvTkipDqhk8NfYiUg6jk+ewv+1gk0EonjuGtuVANyW8h
+         vP6to6PHdIMhqQ/8akSnGCCvG0Bf1mX88xHMGhC6oqXD1/bi/NFoYXkXLRRtEHoxoYEm
+         sxgVee4bXilSSl6hpnr1z3ahGsqGv/qGqmqpW3c/48bJj8sBZ+AwMgVVIMQ1h+8lBiXT
+         msJz6LS8qOAWudNX7tX3gdjeEzGOZPg/LmNbdtS0fpr9orjDAUfFWBeKzwHfTEFNFx8l
+         DLpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PIUIK3/vvssf4wL4R4yeMIIg3nsvqklAR/DEjJ1CAm4=;
+        b=usOb/ToZXu+Ml8YZnnDAl32r7NUk8HTAzFOKU9sNAs11RB0fJMYu73audzlHFl8S6t
+         cQ20nmXzOD3Xe4yElEJK6dGVYfXoLOd026oEPxFzUjH79EEg0Wz1LDNa29XEVha5gSb7
+         DlyoV9lj26bE8Kl3pfOwwfMwW2ar5nWb9hUJLZr1V0+yaiilrn62gm6OQhIfeMz2UIkV
+         M0sIcaFc9jgBBafGR6xWDWtB4PV3kujPbdnZ/DLpu0m5gYvhBJEsQ4i18j0MVIzzmvwb
+         xqV2vISYfzxEPjrsTG1/ZJ0TxAqFxlXWCmLt/afyoETy2f/bU0GXgw7ptJjI9SCh0GmD
+         mu5Q==
+X-Gm-Message-State: AOAM532Kqo4+FHl3SMJxTMQIhZM8oreCnxaav+ft/IfjNjWAwGCqHpZG
+        mustchyLYTL8/WNJHOjjVEc5az5S50ssNhD5wirQhg==
+X-Google-Smtp-Source: ABdhPJxOG/NkXFVV6nAx9ClTAlKcpWSaUzyjdt+9an0VWAbc3h3vB+4ksHhR80k/qq0QPRjiAIdB7WGAx6fvI2/ho1A=
+X-Received: by 2002:ac2:5e86:0:b0:473:d044:60f5 with SMTP id
+ b6-20020ac25e86000000b00473d04460f5mr667320lfq.87.1652378443079; Thu, 12 May
+ 2022 11:00:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220511120532.2228616-1-hca@linux.ibm.com> <20220511120532.2228616-4-hca@linux.ibm.com>
+ <Yn1CLcsu9I0M8IEM@osiris>
+In-Reply-To: <Yn1CLcsu9I0M8IEM@osiris>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 12 May 2022 11:00:31 -0700
+Message-ID: <CAKwvOdmSBNsA7C2ZCGDEmuxCituSQ=HPJx=9+AsBAOYfkSZRPA@mail.gmail.com>
+Subject: Re: [PATCH 3/8] s390/entry: shorten OUTSIDE macro
+To:     Heiko Carstens <hca@linux.ibm.com>
 Cc:     Vasily Gorbik <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
         Jonas Paulsson <paulsson@linux.vnet.ibm.com>,
@@ -69,71 +63,53 @@ Cc:     Vasily Gorbik <gor@linux.ibm.com>,
         Andreas Krebbel <krebbel@linux.ibm.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 7/8] s390/boot: do not emit debug info for assembly with
- llvm's IAS
-Message-ID: <Yn1ENkc1EhHob6+x@osiris>
-References: <20220511120532.2228616-1-hca@linux.ibm.com>
- <20220511120532.2228616-8-hca@linux.ibm.com>
- <CAKwvOdn3Mdn9ek-7EotHmd6Wb7C5rzZnOxAQVtbQEd2LBBZGRg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdn3Mdn9ek-7EotHmd6Wb7C5rzZnOxAQVtbQEd2LBBZGRg@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 9r0CY21jMeVAH1bAfy1VTpl15ioUyYvM
-X-Proofpoint-ORIG-GUID: mrGTfFF7mxrbq85IbDp0Fzwor2Xl6DPT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-12_14,2022-05-12_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- mlxlogscore=999 lowpriorityscore=0 clxscore=1015 malwarescore=0
- bulkscore=0 adultscore=0 phishscore=0 suspectscore=0 priorityscore=1501
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205120079
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, May 11, 2022 at 12:40:07PM -0700, Nick Desaulniers wrote:
-> On Wed, May 11, 2022 at 5:05 AM Heiko Carstens <hca@linux.ibm.com> wrote:
-> >
-> > Commit ee6d777d3e93 ("s390/decompressor: support extra debug flags")
-> > added extra debug flags, in particular debug info is created,
-> > depending on config options.
-> >
-> > With llvm's IAS this causes this compile warning:
-> >
-> > arch/s390/boot/head.S:38:1: warning: DWARF2 only supports one section per compilation unit
-> > .section ".head.text","ax"
-> > ^
-> >
-> > This is a known problem and was addressed with a commit b8a9092330da
-> > ("Kbuild: do not emit debug info for assembly with LLVM_IAS=1").
-> > Just do the same for s390 to get rid of this warning.
+On Thu, May 12, 2022 at 10:22 AM Heiko Carstens <hca@linux.ibm.com> wrote:
+>
+> On Wed, May 11, 2022 at 02:05:27PM +0200, Heiko Carstens wrote:
+> > Since the minimum architecture level has been raised to z10 a shorter
+> > instruction sequence can be used to implement the OUTSIDE macro. This
+> > also reduces the number of used registers within that macro to one.
 > >
 > > Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 > > ---
-> >  arch/s390/Makefile | 2 ++
-> >  1 file changed, 2 insertions(+)
+> >  arch/s390/kernel/entry.S | 8 +++-----
+> >  1 file changed, 3 insertions(+), 5 deletions(-)
 > >
-> > diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-> > index c59efc83f020..d73611b35164 100644
-> > --- a/arch/s390/Makefile
-> > +++ b/arch/s390/Makefile
-> > @@ -20,7 +20,9 @@ LDFLAGS_vmlinux       := -pie
-> >  endif
-> >  aflags_dwarf   := -Wa,-gdwarf-2
-> 
-> ^ or can we use a more modern variant of dwarf, like at least dwarf-4?
+> > diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
+> > index a6b45eaa3450..e1664b45090f 100644
+> > --- a/arch/s390/kernel/entry.S
+> > +++ b/arch/s390/kernel/entry.S
+> > @@ -169,11 +169,9 @@ _LPP_OFFSET      = __LC_LPP
+> >        * @outside_label: jump here if @reg is outside of [@start..@end)
+> >        */
+> >       .macro OUTSIDE reg,start,end,outside_label
+> > -     lgr     %r14,\reg
+> > -     larl    %r13,\start
+> > -     slgr    %r14,%r13
+> > -     lghi    %r13,\end - \start
+> > -     clgr    %r14,%r13
+> > +     larl    %r14,\start
+> > +     slgrk   %r14,\reg,%r14
+> > +     clgfi   %r14,\end - \start
+>
+> Clever me.. slgrk was added with z196, and not z10.
+> So dropping this patch.
 
-For now I would like that this works the same like what you introduced
-with commit b8a9092330da ("Kbuild: do not emit debug info for assembly
-with LLVM_IAS=1").
-
-I wouldn't like to have dwarf-4 enabled only for this single file, and
-disabled for all other asm files (assuming that dwarf-4 works).
+How do the version numbers work for SystemZ? Is there a list/reference
+you could link me to?  If it's too deep a rabbit hole, then nevermind,
+but I would like to learn a little more about the architecture.
+-- 
+Thanks,
+~Nick Desaulniers
