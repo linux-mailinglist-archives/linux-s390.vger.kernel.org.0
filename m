@@ -2,127 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BA6F524E21
-	for <lists+linux-s390@lfdr.de>; Thu, 12 May 2022 15:22:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B909524E7D
+	for <lists+linux-s390@lfdr.de>; Thu, 12 May 2022 15:42:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354324AbiELNWZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 May 2022 09:22:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44988 "EHLO
+        id S1354531AbiELNmo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 May 2022 09:42:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354317AbiELNWY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 May 2022 09:22:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7AE6F541B5
-        for <linux-s390@vger.kernel.org>; Thu, 12 May 2022 06:22:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652361741;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iGoOIUCJGa4SaOfudTG7yQQEUS0BOq99bUpZYAujLo0=;
-        b=WOjP8MdPqu3LOsfahT82zc8xugEfFIT7nCLCVDa+gNXt75X+itV3ea4MPbXhUbiGFqNn1R
-        gopb+V303EGReu1GRKgJA866a/gKyvlz3Iaduty4afXgHptcI2kUeRUl/c+y6typ1h2tzH
-        ac7lB01acVU5UNs6HuDLMrlR6EY+rR8=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-121-T_nAhSk3NPWilPckr5RXCQ-1; Thu, 12 May 2022 09:22:20 -0400
-X-MC-Unique: T_nAhSk3NPWilPckr5RXCQ-1
-Received: by mail-wm1-f72.google.com with SMTP id g14-20020a1c4e0e000000b0039425ef54d6so1661166wmh.9
-        for <linux-s390@vger.kernel.org>; Thu, 12 May 2022 06:22:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent
-         :content-language:to:cc:references:from:organization:subject
-         :in-reply-to:content-transfer-encoding;
-        bh=iGoOIUCJGa4SaOfudTG7yQQEUS0BOq99bUpZYAujLo0=;
-        b=M2JcGHXpRHHOsWdDT4nptPPoTcnmzNWdEe+pTUWvZA4YoPmbY0AOEeR62THQ7mE4wj
-         RZoO3L18Ptfo53bZzeeT+/FyXy84l+z/nF22jDp4TAsdCv0XINGnl/MwB7JB0Hh6N8M1
-         9e71boT+EpOnJDyL3pUCIPReIOZuX4fHvtYZixftIcpSI27W5IRGLwdlR2Rf82rWQwZn
-         Yq2dkOqAKtYLh8x0V4vVweH6SzIF4PNE0z3RzfrcbDAZueaEW4lorpv7sMywvmUFt+0T
-         cFhk3Eie6g/ijf/7VKSJ8HoyyuvGUNgs4b6G2+umcuOm2yAcoEBD9o3ly5tZD7YZtv61
-         shzA==
-X-Gm-Message-State: AOAM532F0pqwBIBs4pQNFdm7G1vJor3HNO3YLBYd4+L/vU8tYu9JCDvQ
-        74JA/QhatZer8E8AHJUWcrmdIk9ADoI6eKOFCqEaOazQwFZ4WoZgf+MpOekK0rsv+d+vWNCX10b
-        xFdhrDcEdFFrnK/cP3WPZaw==
-X-Received: by 2002:a5d:5746:0:b0:20c:dbc2:397d with SMTP id q6-20020a5d5746000000b0020cdbc2397dmr7981049wrw.658.1652361739078;
-        Thu, 12 May 2022 06:22:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx+hXYu6vzpLOJq39B+H7C8rDVvQP/gQANCQfbt9DiMWxcg2qD5+fl3H5Fdy+4EFw8qj6gfWw==
-X-Received: by 2002:a5d:5746:0:b0:20c:dbc2:397d with SMTP id q6-20020a5d5746000000b0020cdbc2397dmr7981034wrw.658.1652361738823;
-        Thu, 12 May 2022 06:22:18 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c701:d200:ee5d:1275:f171:136d? (p200300cbc701d200ee5d1275f171136d.dip0.t-ipconnect.de. [2003:cb:c701:d200:ee5d:1275:f171:136d])
-        by smtp.gmail.com with ESMTPSA id o11-20020a5d408b000000b0020c9520a940sm4946313wrp.54.2022.05.12.06.22.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 May 2022 06:22:18 -0700 (PDT)
-Message-ID: <77f6f5e7-5945-c478-0e41-affed62252eb@redhat.com>
-Date:   Thu, 12 May 2022 15:22:17 +0200
+        with ESMTP id S1354533AbiELNmm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 May 2022 09:42:42 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1626162CD1;
+        Thu, 12 May 2022 06:42:41 -0700 (PDT)
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24CC1rYL003778;
+        Thu, 12 May 2022 13:42:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=rEZOKojTTThAvghjjgKfvYBgH3Aqz+CoBHgXPZ3iK4E=;
+ b=e3kY1zYQ9lWBmpMDF4yByQz4oe4jN/4jTk8CcdInGrGe93gmWrj/RLuekb3u9HMXzpot
+ Rp2Flbky3kQJjcD4skUsSyhl3FIvKH8p0Qs0Z/dlYUqOpLen9Ha62WULxkRqnQViRE/C
+ eisGQJ0WOqLPHMH/AgazIS+D8+Dc+VzNVNVNbBrotVkMlb40pJZpBpEusM02lmzFwAPl
+ bo6Btterge/GA01mw45g1XhtvR5eDlv1fi88JphSrgSlLMyE42+7aNjhe2WxXfOrLFA0
+ i9PZ8g8KdPRQQOLjRIx16YT/lcESGeYxnhwUvVrcASbo2o5OcmWmQC9CpOOL7+xtGYWF xQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g11vr2h4f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 May 2022 13:42:40 +0000
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24CDZeVO012104;
+        Thu, 12 May 2022 13:42:40 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g11vr2h3j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 May 2022 13:42:40 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24CDdFPj029006;
+        Thu, 12 May 2022 13:42:37 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 3fwgd8y4c1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 May 2022 13:42:37 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24CDgYMU48038394
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 May 2022 13:42:34 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C9154C046;
+        Thu, 12 May 2022 13:42:34 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E011A4C040;
+        Thu, 12 May 2022 13:42:33 +0000 (GMT)
+Received: from t46lp57.lnxne.boe (unknown [9.152.108.100])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 12 May 2022 13:42:33 +0000 (GMT)
+From:   Nico Boehr <nrb@linux.ibm.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     frankja@linux.ibm.com, imbrenda@linux.ibm.com, thuth@redhat.com
+Subject: [kvm-unit-tests PATCH v3 0/2] s390x: add migration test for CMM
+Date:   Thu, 12 May 2022 15:42:31 +0200
+Message-Id: <20220512134233.1416490-1-nrb@linux.ibm.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Content-Language: en-US
-To:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     Sven Schnelle <svens@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org
-References: <20220512131019.2594948-1-scgl@linux.ibm.com>
- <20220512131019.2594948-2-scgl@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH v3 1/2] KVM: s390: Don't indicate suppression on dirtying,
- failing memop
-In-Reply-To: <20220512131019.2594948-2-scgl@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ypP94GmM5S4Lbx_QBH3yEH8afEt19T-W
+X-Proofpoint-ORIG-GUID: tsBL3JkZRAMDBy4MfJXLK3ElXGJ3xXuo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-12_10,2022-05-12_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 suspectscore=0 bulkscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=890 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2202240000 definitions=main-2205120065
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 12.05.22 15:10, Janis Schoetterl-Glausch wrote:
-> If user space uses a memop to emulate an instruction and that
-> memop fails, the execution of the instruction ends.
-> Instruction execution can end in different ways, one of which is
-> suppression, which requires that the instruction execute like a no-op.
-> A writing memop that spans multiple pages and fails due to key
-> protection may have modified guest memory, as a result, the likely
-> correct ending is termination. Therefore, do not indicate a
-> suppressing instruction ending in this case.
+v2->v3:
+---
+* remove unneeded include asm-offsets.h (Thanks Claudio)
+* change prefix of test to match filename (migration-cmm instead of
+  cmm-migration)
 
-I think that is possibly problematic handling.
+v1->v2:
+---
+* Rename cmm-migration.c to migration-cmm.c (Thanks Janosch)
+* Replace switch-case with unrolled loop (Thanks Claudio)
+* Migrate even when ESSA is not available so we don't hang forever
 
-In TCG we stumbled in similar issues in the past for MVC when crossing
-page boundaries. Failing after modifying the first page already
-seriously broke some user space, because the guest would retry the
-instruction after fixing up the fault reason on the second page: if
-source and destination operands overlap, you'll be in trouble because
-the input parameters already changed.
+Upon migration, we expect the CMM page states to be preserved. Add a test which
+checks for that.
 
-For this reason, in TCG we make sure that all accesses are valid before
-starting modifications.
+The new test gets a new file so the existing cmm test can still run when the
+prerequisites for running migration tests aren't given (netcat). Therefore, move
+some definitions to a common header to be able to re-use them.
 
-See target/s390x/tcg/mem_helper.c:do_helper_mvc with access_prepare()
-and friends as an example.
+Nico Boehr (2):
+  lib: s390x: add header for CMM related defines
+  s390x: add cmm migration test
 
-Now, I don't know how to tackle that for KVM, I just wanted to raise
-awareness that injecting an interrupt after modifying page content is
-possible dodgy and dangerous.
+ lib/s390x/asm/cmm.h   | 50 ++++++++++++++++++++++++++++
+ s390x/Makefile        |  1 +
+ s390x/cmm.c           | 25 ++------------
+ s390x/migration-cmm.c | 77 +++++++++++++++++++++++++++++++++++++++++++
+ s390x/unittests.cfg   |  4 +++
+ 5 files changed, 135 insertions(+), 22 deletions(-)
+ create mode 100644 lib/s390x/asm/cmm.h
+ create mode 100644 s390x/migration-cmm.c
 
 -- 
-Thanks,
-
-David / dhildenb
+2.31.1
 
