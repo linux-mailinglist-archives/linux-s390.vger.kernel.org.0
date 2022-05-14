@@ -2,43 +2,35 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 735BF527051
-	for <lists+linux-s390@lfdr.de>; Sat, 14 May 2022 11:37:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48E705270A9
+	for <lists+linux-s390@lfdr.de>; Sat, 14 May 2022 12:28:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231373AbiENJhC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 14 May 2022 05:37:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51790 "EHLO
+        id S231915AbiENK17 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 14 May 2022 06:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231331AbiENJhB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 14 May 2022 05:37:01 -0400
-Received: from out199-17.us.a.mail.aliyun.com (out199-17.us.a.mail.aliyun.com [47.90.199.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A6C61B8;
-        Sat, 14 May 2022 02:36:58 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=guangguan.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0VD6nEFN_1652521014;
-Received: from 30.15.218.194(mailfrom:guangguan.wang@linux.alibaba.com fp:SMTPD_---0VD6nEFN_1652521014)
+        with ESMTP id S231826AbiENK16 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 14 May 2022 06:27:58 -0400
+Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0117A39144;
+        Sat, 14 May 2022 03:27:55 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=guangguan.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0VD6nQiA_1652524072;
+Received: from localhost.localdomain(mailfrom:guangguan.wang@linux.alibaba.com fp:SMTPD_---0VD6nQiA_1652524072)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 14 May 2022 17:36:55 +0800
-Message-ID: <8a2be07b-acf6-1148-e299-8196c18cfeed@linux.alibaba.com>
-Date:   Sat, 14 May 2022 17:36:53 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.8.1
-Subject: Re: [PATCH net-next 1/2] net/smc: send cdc msg inline if qp has
- sufficient inline space
-Content-Language: en-US
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     kgraul@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220513071551.22065-1-guangguan.wang@linux.alibaba.com>
- <20220513071551.22065-2-guangguan.wang@linux.alibaba.com>
- <Yn9GB3QwHiY/vtdc@unreal>
+          Sat, 14 May 2022 18:27:53 +0800
 From:   Guangguan Wang <guangguan.wang@linux.alibaba.com>
-In-Reply-To: <Yn9GB3QwHiY/vtdc@unreal>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-10.7 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+To:     kgraul@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, leon@kernel.org
+Cc:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 0/2] net/smc: send and write inline optimization for smc
+Date:   Sat, 14 May 2022 18:27:37 +0800
+Message-Id: <20220514102739.41252-1-guangguan.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -47,47 +39,42 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Send cdc msgs and write data inline if qp has sufficent inline
+space, helps latency reducing. 
 
+In my test environment, which are 2 VMs running on the same
+physical host and whose NICs(ConnectX-4Lx) are working on
+SR-IOV mode, qperf shows 0.4us-1.3us improvement in latency.
 
-On 2022/5/14 14:02, Leon Romanovsky wrote:
->> diff --git a/net/smc/smc_wr.c b/net/smc/smc_wr.c
->> index 24be1d03fef9..8a2f9a561197 100644
->> --- a/net/smc/smc_wr.c
->> +++ b/net/smc/smc_wr.c
->> @@ -554,10 +554,11 @@ void smc_wr_remember_qp_attr(struct smc_link *lnk)
->>  static void smc_wr_init_sge(struct smc_link *lnk)
->>  {
->>  	int sges_per_buf = (lnk->lgr->smc_version == SMC_V2) ? 2 : 1;
->> +	bool send_inline = (lnk->qp_attr.cap.max_inline_data >= SMC_WR_TX_SIZE);
-> 
-> When will it be false? You are creating QPs with max_inline_data == SMC_WR_TX_SIZE?
-> 
->>  	u32 i;
->>  
->>  	for (i = 0; i < lnk->wr_tx_cnt; i++) {
->> -		lnk->wr_tx_sges[i].addr =
->> +		lnk->wr_tx_sges[i].addr = send_inline ? (u64)(&lnk->wr_tx_bufs[i]) :
->>  			lnk->wr_tx_dma_addr + i * SMC_WR_BUF_SIZE;
->>  		lnk->wr_tx_sges[i].length = SMC_WR_TX_SIZE;
->>  		lnk->wr_tx_sges[i].lkey = lnk->roce_pd->local_dma_lkey;
->> @@ -575,6 +576,8 @@ static void smc_wr_init_sge(struct smc_link *lnk)
->>  		lnk->wr_tx_ibs[i].opcode = IB_WR_SEND;
->>  		lnk->wr_tx_ibs[i].send_flags =
->>  			IB_SEND_SIGNALED | IB_SEND_SOLICITED;
->> +		if (send_inline)
->> +			lnk->wr_tx_ibs[i].send_flags |= IB_SEND_INLINE;
-> 
-> If you try to transfer data == SMC_WR_TX_SIZE, you will get -ENOMEM error.
-> IB drivers check that length < qp->max_inline_data.
-> 
-> Thanks
-> 
+Test command:
+server: smc_run taskset -c 1 qperf
+client: smc_run taskset -c 1 qperf <server ip> -oo \
+		msg_size:1:2K:*2 -t 30 -vu tcp_lat
 
-Got it. 
+The results shown below:
+msgsize     before       after
+1B          11.9 us      10.6 us (-1.3 us)
+2B          11.7 us      10.7 us (-1.0 us)
+4B          11.7 us      10.7 us (-1.0 us)
+8B          11.6 us      10.6 us (-1.0 us)
+16B         11.7 us      10.7 us (-1.0 us)
+32B         11.7 us      10.6 us (-1.1 us)
+64B         11.7 us      11.2 us (-0.5 us)
+128B        11.6 us      11.2 us (-0.4 us)
+256B        11.8 us      11.2 us (-0.6 us)
+512B        11.8 us      11.3 us (-0.5 us)
+1KB         11.9 us      11.5 us (-0.4 us)
+2KB         12.1 us      11.5 us (-0.6 us)
 
-I should create qps with max_inline_data == 0, and get the actual max_inline_data by query_qp.
-And I should use lnk->qp_attr.cap.max_inline_data > SMC_WR_TX_SIZE to decide whether to send inline or not.
+Guangguan Wang (2):
+  net/smc: send cdc msg inline if qp has sufficient inline space
+  net/smc: rdma write inline if qp has sufficient inline space
 
-Thank you.
+ net/smc/smc_ib.c |  1 +
+ net/smc/smc_tx.c | 17 ++++++++++++-----
+ net/smc/smc_wr.c |  5 ++++-
+ 3 files changed, 17 insertions(+), 6 deletions(-)
 
+-- 
+2.24.3 (Apple Git-128)
 
