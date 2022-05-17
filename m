@@ -2,98 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3F9D52A485
-	for <lists+linux-s390@lfdr.de>; Tue, 17 May 2022 16:16:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FC6F52A4DF
+	for <lists+linux-s390@lfdr.de>; Tue, 17 May 2022 16:31:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348535AbiEQOQi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 May 2022 10:16:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41082 "EHLO
+        id S1348986AbiEQObJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 May 2022 10:31:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348916AbiEQOQc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 17 May 2022 10:16:32 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F35BB84A;
-        Tue, 17 May 2022 07:16:30 -0700 (PDT)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24HEBrnZ001891;
-        Tue, 17 May 2022 14:16:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=poQ0fLGeTUMqcgsQcFOgOQUX0YzDAx/XXbaudYffUW4=;
- b=G2n80nGUZCUzR+wWm54A7//zzyHfT9OffPf7n5u5wok5NStttggX04V2PteDMnkfM55s
- 1ERzhQCBZ3oqhlYT/TyFdLB56hz4DrYUH7Sn7d3LYxDnHT8gJtEW8tYiSVWuXm+iCeex
- B0JV45FZD2mXOE7Gxnq/bTGRhOedA7bekSGnTLmYE+fIYOPMVRb4YcCkX2mfqkKCinvy
- tIQML7Qmdx4vs1BgbSGEKIM3JpYE4QP6KwM/IqqxMSiGrgRcJfg9YPBxVDYSj+bv6CqV
- vkTLGZ/1HHtJgnfIPDwqhNbbHyCZ4ge+zJfa5iFbLoZ8SC+2629iPm8cU8WSDGJp9A35 0A== 
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g4d8mg3rn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 May 2022 14:16:29 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24HE8Q26001124;
-        Tue, 17 May 2022 14:16:27 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma02fra.de.ibm.com with ESMTP id 3g2428kg0b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 May 2022 14:16:27 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24HEGOtO45285782
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 May 2022 14:16:24 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41C3FA404D;
-        Tue, 17 May 2022 14:16:24 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B97AA4040;
-        Tue, 17 May 2022 14:16:24 +0000 (GMT)
-Received: from [9.152.224.153] (unknown [9.152.224.153])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 May 2022 14:16:23 +0000 (GMT)
-Message-ID: <0bdd55d1-536f-802f-a938-5999d5287e6b@linux.ibm.com>
-Date:   Tue, 17 May 2022 16:16:23 +0200
+        with ESMTP id S1348965AbiEQObE (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 17 May 2022 10:31:04 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6827D19018
+        for <linux-s390@vger.kernel.org>; Tue, 17 May 2022 07:31:02 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id w4so24997925wrg.12
+        for <linux-s390@vger.kernel.org>; Tue, 17 May 2022 07:31:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wVhR+tLTgWRBv165klscGkwBvwtkGY4K+gXBpaEt39o=;
+        b=AVNWGASSw6V5RUrPE0Xe922Dr1PoPah/DHCQjXENO9s0HFGB/eYpWl6axQWl/QnFZH
+         uRmMiarJD/nw2TwKyvyACE+uNu/LtM636YM+bXBmDWbMz/LvizwmSvb0uhzKoKggSF9I
+         RddWK4xmLBsCErMkW0NkfvF8unM5J4Sy7tB4XDdauDZT+qkVIm80Ijx7DdSpJQlMeNUQ
+         9MruKiM1t0I8MvBJdkw8JEuhdV4K7V79+VHa98U7QbGacXpl6JEqLz3ahlSfKlJq2FYV
+         w4pzBlJMAMO9CapLPiqmyQnhrxlET8Is5fQXqESFEI2JcPHofkbd9BYb47Gp15j9BJBN
+         XJ8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wVhR+tLTgWRBv165klscGkwBvwtkGY4K+gXBpaEt39o=;
+        b=aS26LMdOQtkgW9M/WRgkNswaPnO8iA/lEsKRuw9K63fWz83bLz87dufm/btmFcQ8We
+         JDzg45PS0YxtjxUWen7iXDdQau42rVPFEv+yVfNGhM+kgYu7KpxKfceUZdaqW2/++NRV
+         /EKNokMjnmejgcrC/h3D1BWJVwEDAQzxvOaGLbMMbftku1XcAxIg9HK37SMsX0UjI3RM
+         C37HsLX9pY4yXHQeUlYat5hwG1NMeTTyuU3ugs4mWxEtxrouWR/pQUmSytdJoMrmGcSK
+         cnZYSS90EHX5cR+TA3hpCM5i0bjjXMszapIT46laog5HTuRzCpyAGS0LNHRd7KbzW2++
+         qU8Q==
+X-Gm-Message-State: AOAM532phzWPfpB/QjPEuI8t9qZmSLRVzeV5YxlxNMm6OEsDXuZJ8DFT
+        RvEGu2dhysVwE6dPXhqw77zB0w==
+X-Google-Smtp-Source: ABdhPJy3hzj7GtXAEMbX3XakDsp6tLitaXQroFjB5zMWxiGotgppusI9e/fS5ffNwObVzm/mABJOww==
+X-Received: by 2002:adf:ef8a:0:b0:20d:1028:3c36 with SMTP id d10-20020adfef8a000000b0020d10283c36mr6256611wro.481.1652797860454;
+        Tue, 17 May 2022 07:31:00 -0700 (PDT)
+Received: from localhost ([2a00:79e0:9d:4:b946:2cd:4ff6:1fbf])
+        by smtp.gmail.com with ESMTPSA id m6-20020a05600c460600b003942a244f2fsm1956398wmo.8.2022.05.17.07.30.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 May 2022 07:30:59 -0700 (PDT)
+From:   Jann Horn <jannh@google.com>
+To:     Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] s390/crypto: fix scatterwalk_unmap() callers in AES-GCM
+Date:   Tue, 17 May 2022 16:30:47 +0200
+Message-Id: <20220517143047.3054498-1-jannh@google.com>
+X-Mailer: git-send-email 2.36.0.550.gb090851708-goog
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v5 05/10] KVM: s390: pv: Add query dump information
-Content-Language: en-US
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, borntraeger@linux.ibm.com,
-        imbrenda@linux.ibm.com
-References: <20220516090817.1110090-1-frankja@linux.ibm.com>
- <20220516090817.1110090-6-frankja@linux.ibm.com>
-From:   Steffen Eiden <seiden@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <20220516090817.1110090-6-frankja@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: NozlinstRYgn69gxzuj2uVTf4jIDUxVQ
-X-Proofpoint-ORIG-GUID: NozlinstRYgn69gxzuj2uVTf4jIDUxVQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-17_03,2022-05-17_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- mlxlogscore=731 lowpriorityscore=0 adultscore=0 suspectscore=0 spamscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 impostorscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205170087
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+The argument of scatterwalk_unmap() is supposed to be the void* that was
+returned by the previous scatterwalk_map() call.
+The s390 AES-GCM implementation was instead passing the pointer to the
+struct scatter_walk.
 
+This doesn't actually break anything because scatterwalk_unmap() only uses
+its argument under CONFIG_HIGHMEM and ARCH_HAS_FLUSH_ON_KUNMAP.
 
-On 5/16/22 11:08, Janosch Frank wrote:
-> The dump API requires userspace to provide buffers into which we will
-> store data. The dump information added in this patch tells userspace
-> how big those buffers need to be.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: Steffen Eiden <seiden@linux.ibm.com>
+Note that I have not tested this patch in any way, not even compile-tested
+it.
+
+Fixes: bf7fa038707c ("s390/crypto: add s390 platform specific aes gcm suppo=
+rt.")
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+IDK which tree this has to go through - s390 or crypto?
+maybe s390 is better, since they can actually test it?
+
+ arch/s390/crypto/aes_s390.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
+index 54c7536f2482..1023e9d43d44 100644
+--- a/arch/s390/crypto/aes_s390.c
++++ b/arch/s390/crypto/aes_s390.c
+@@ -701,7 +701,7 @@ static inline void _gcm_sg_unmap_and_advance(struct gcm=
+_sg_walk *gw,
+ 					     unsigned int nbytes)
+ {
+ 	gw->walk_bytes_remain -=3D nbytes;
+-	scatterwalk_unmap(&gw->walk);
++	scatterwalk_unmap(gw->walk_ptr);
+ 	scatterwalk_advance(&gw->walk, nbytes);
+ 	scatterwalk_done(&gw->walk, 0, gw->walk_bytes_remain);
+ 	gw->walk_ptr =3D NULL;
+@@ -776,7 +776,7 @@ static int gcm_out_walk_go(struct gcm_sg_walk *gw, unsi=
+gned int minbytesneeded)
+ 		goto out;
+ 	}
+=20
+-	scatterwalk_unmap(&gw->walk);
++	scatterwalk_unmap(gw->walk_ptr);
+ 	gw->walk_ptr =3D NULL;
+=20
+ 	gw->ptr =3D gw->buf;
+
+base-commit: 42226c989789d8da4af1de0c31070c96726d990c
+--=20
+2.36.0.550.gb090851708-goog
+
