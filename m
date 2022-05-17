@@ -2,147 +2,169 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4B2E52A0DD
-	for <lists+linux-s390@lfdr.de>; Tue, 17 May 2022 13:57:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 705AB52A10A
+	for <lists+linux-s390@lfdr.de>; Tue, 17 May 2022 14:02:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345761AbiEQL4x (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 May 2022 07:56:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41438 "EHLO
+        id S1345642AbiEQMBj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 May 2022 08:01:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345716AbiEQL4V (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 17 May 2022 07:56:21 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57BA265EF;
-        Tue, 17 May 2022 04:56:19 -0700 (PDT)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24HBM335012613;
-        Tue, 17 May 2022 11:56:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=o9L9/ukF/ryeTfjj7Se/m4P3HTqUokRQnQxujg/L0kA=;
- b=I5mArOKZksEz5yzIuNYEQiaaaPPgzz3zP7QbZWhVLgVH8T1BXAJS1crfoEdOoCToCiZO
- 1dRxGeRoxYW3s5b5eI6RFDLDfQ2P/i456sn3DgW/9N6ZzjCOJXGvHk+8axGDTjLcwT8N
- VI75Jb1XIJbHhdReSYHplqmS7gad0M6NhFLZQsAJTSOyghMN/oMg/yfeKm/9k9WcrrOt
- GOrAoVDv6MlI7FxEy57/MiyPYSxOoslTC9LZEyXLwU0gqRz4O70neRcqN2oCgBlVwbBm
- vx88WiUubGlsooSpPPqMKsffNurnnZk6IXhs4/Ie6AGkvp59hYT23s3tRpsYfanOZXom vw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g4artgn5d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 May 2022 11:56:18 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24HBfmT7024445;
-        Tue, 17 May 2022 11:56:18 GMT
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g4artgn4a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 May 2022 11:56:17 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24HBqvfv003708;
-        Tue, 17 May 2022 11:56:14 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma05fra.de.ibm.com with ESMTP id 3g24293aae-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 May 2022 11:56:14 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24HBuBch57868566
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 May 2022 11:56:11 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18267A404D;
-        Tue, 17 May 2022 11:56:11 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CFE05A4040;
-        Tue, 17 May 2022 11:56:10 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 May 2022 11:56:10 +0000 (GMT)
-From:   Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-To:     Thomas Huth <thuth@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [kvm-unit-tests PATCH v2 4/4] s390x: Test effect of storage keys on diag 308
-Date:   Tue, 17 May 2022 13:56:07 +0200
-Message-Id: <20220517115607.3252157-5-scgl@linux.ibm.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220517115607.3252157-1-scgl@linux.ibm.com>
-References: <20220517115607.3252157-1-scgl@linux.ibm.com>
+        with ESMTP id S1346352AbiEQMBX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 17 May 2022 08:01:23 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2062.outbound.protection.outlook.com [40.107.236.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7272403DE;
+        Tue, 17 May 2022 05:01:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=epX0ArgfEn8Jv3DapfO6lzXI1W9Omq7e7704YZ/zXRxN5De5l4iZyBXL2mG/Zl7Kcwpljdp3DUXR07avCsC+CjAK445heylYzzMg2cou45AcXHfTFov2xhHSGTSo+15JmBoUML3lrwruw96NFKvt4dAp2N30vbc4iFcUOLdeOG6cXkLV6xfewaylwptv9wdKpbGtT19vD8iWR2OOqYUdrvgoSAHr2cbyBjVpD99yZJsRns87k1RNkurXF6nB2eb4gxJgBNbZLVCU3iBLEMElMQ92xHofB+gQrBSfdOOg41FXtQMkdCW05QDxEfI2tXdbU6O0sGjABMtEKXcv097TIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=e15/Vfv+/l+o17HK9zvaOr7RLLrFBjxHQSAXcpN6JjQ=;
+ b=VfRf3PU7OpXl3bl8qZwO36xcY4U8fCqpVqPgwp8hKtDzOhvl6wAfsXtvcmP9U+WaDKu7O38aOBWHPZNIyM+RnV4edG1nDO/R2IsRjZM5rhBkP4O739UvIfUVW2yugJ9f66np3xADlByzqtyhxGxzioEIOPUmSrxip6u8O09mzxJteQl4TKR2R7UxoaMcBF7Cgu/C9jbpFbqrkHoWsCCtVt3w3CqC9KGI+w18FFRjz018vMFlvnpNnogbFnW+XrgQ2zKZ+vxxKBRo7IxRrcknZQ+v98c17A2ZBfFk7wYKbZPyVueOWZ2GBXJFshH5nAm4uTeCKN9NLcT/oUs/tZ4zRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e15/Vfv+/l+o17HK9zvaOr7RLLrFBjxHQSAXcpN6JjQ=;
+ b=OMZ4s6VMoIp6SrzqYAk490sSYC8BGpykiz4hX8dOTB2FBC9KU4kxkWZTRNudqPC7EmHMnboO/c6vzR7OcxewjcE4O3aXUfBj5ejldya8kcBF686SX402TesNwjnZWemxnEbPQ4vXJBGZMoSXiek4k39rBUX48KOf59qO/PgStOCOUl4TuHAm6llQ8DwQ5U/OFxOSsc3R+BmassQGsTQNxwHD2NpY+DWJjcanOZubCoAS7W3qmSCaTmrN/jLbitxRIaZQTTA6APkOjgw+Ou3LkxqSSY7LfX/mu3jVbEG1p2dK7nCXfan8BgxsSpO64HaGNngUwvag81T66sCjqjPz2Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+ by BYAPR12MB2693.namprd12.prod.outlook.com (2603:10b6:a03:6a::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.14; Tue, 17 May
+ 2022 12:01:12 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::ec2d:9167:1b47:2db2]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::ec2d:9167:1b47:2db2%5]) with mapi id 15.20.5250.018; Tue, 17 May 2022
+ 12:01:12 +0000
+Date:   Tue, 17 May 2022 09:01:10 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
+        linux-s390@vger.kernel.org, alex.williamson@redhat.com,
+        cohuck@redhat.com, schnelle@linux.ibm.com, farman@linux.ibm.com,
+        pmorel@linux.ibm.com, borntraeger@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        agordeev@linux.ibm.com, svens@linux.ibm.com, frankja@linux.ibm.com,
+        david@redhat.com, imbrenda@linux.ibm.com, vneethv@linux.ibm.com,
+        oberpar@linux.ibm.com, freude@linux.ibm.com, thuth@redhat.com,
+        pasic@linux.ibm.com, pbonzini@redhat.com, corbet@lwn.net,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v7 17/22] vfio-pci/zdev: add open/close device hooks
+Message-ID: <20220517120110.GS1343366@nvidia.com>
+References: <20220513191509.272897-1-mjrosato@linux.ibm.com>
+ <20220513191509.272897-18-mjrosato@linux.ibm.com>
+ <20220516172734.GE1343366@nvidia.com>
+ <YoM+3z6+9yMeLMJn@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YoM+3z6+9yMeLMJn@infradead.org>
+X-ClientProxiedBy: BL1P223CA0007.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:208:2c4::12) To MN2PR12MB4192.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6gMla2h8NMrbGBLxb6uty4aRBu80avpw
-X-Proofpoint-GUID: VNB8iT1LcHYkrOcZTV60GBsCToDXtvZb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-17_02,2022-05-17_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 adultscore=0 bulkscore=0 suspectscore=0 impostorscore=0
- clxscore=1015 priorityscore=1501 malwarescore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205170069
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5d4c7c51-988e-4b7e-3e08-08da37fcefdc
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2693:EE_
+X-Microsoft-Antispam-PRVS: <BYAPR12MB26937098EBEBCFA0EC689E0BC2CE9@BYAPR12MB2693.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yzQ2a8wvRTgH79hRB/lClggrVlDuhnYQZuxmeWsNebFUyN/GEWIyI8lJV01rKarR8V5QmLaYs/PE5P8ScGwzeHcmnkpHBiUaHcjiccIVr3wGiJh9tyohjIDiAIzvATfaD8yIuZ/CcPceuJZdJcB3Wi4I7WLzby7TvACZtSyakKlpaHXNUKDl7ITL/fq88ddiOvWXIXP0YKbD0OsfZow6XQDnXXbXuFpjdplvxI+B8W0unUajSCbD0aAQO6JT6hVG0aFHbqJeYyGRVJi9lLJkV8OypMYzoKuMc0WAQC3lMbP+cVfExm+RIjEIZfLL1j4I5EgXxn+uIGM/HdlbJ3FtvlWoTO0KCO4yYvPsNwHaizs0yXO+4GZNDoXPzY09bR6pmXriTZV2U7cycoSlfZI4s8aUL0HWrBo1lcLs/2GMtEKOvE/S2BTk8wAOKXKjtrt+Zb29qoB8xrg/XsWbxeUzPvvsBmd82qE6N8x1aSBd71GSkTmh64MnsFPOdOOzl1Itj99AThRNPaeSbnYh42Enhh4f4xFwqGbsu/MQZUBLfzLwMC1R8AkPRgSxwtLNNPMbw1kuZpjAQvC2DgWb1XaHvJAztUNgYwdt605nRRtq/iDSTEOBHYMMsmjyicclafwyJWe261O1RYWyCsAH78dPUdPosURhiKbdIYEwPCfITgEkZvVpxBJYlIjKG+gWkWau0Mh1wwYOD5oXcDxTv2c8gHtoO/W1YG1FMjV+T2GzcUs=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(8676002)(66556008)(66476007)(6506007)(66946007)(4326008)(2906002)(38100700002)(33656002)(2616005)(83380400001)(7416002)(508600001)(6486002)(966005)(5660300002)(6916009)(6512007)(26005)(186003)(1076003)(36756003)(86362001)(316002)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XbniLP5N1UU3Csb/HcpxhcCaC+BCdIzQGQ/b9iG/LStXoDD6Ws8CBzgzJZVr?=
+ =?us-ascii?Q?MF6xEqKbULiDPp2lp6m3NA1UaQf5PcP1XbNFbG8YDZMj6ewQstyIOx9CLObY?=
+ =?us-ascii?Q?BHHdcTMQkg1NbbSz2Th7uY523SFGP8CYAxAvIuRHW9Aw9WMz2hn9tbBIYQHQ?=
+ =?us-ascii?Q?p7M72kgIV8UqjkK3K3rSBCjn/gYkJV3WKh0RxCOeNiOQjS4jhJPgECr1UJuz?=
+ =?us-ascii?Q?o7GmiEZ7VpCp1o3/E8amfng4cdlE/+FyH5y+uAjdh8K5qwr/w6shUNmGyDFr?=
+ =?us-ascii?Q?1R/PzENSXlNljNRn7Yuyy5FgqeqbBg82ESG96qvcUJplSAv9+Vras+UEWVBX?=
+ =?us-ascii?Q?vx+rPmgKjuJaZQHLcvHkMlRalh3thjacXr7C4hzZxVQaiqyeSpVh3VmRT50C?=
+ =?us-ascii?Q?5NvG+JTHSDRpwu2tAVKMRoV15QRQ6OvHkBNEDKxD4SPiTNcJxpAtvNeY19iJ?=
+ =?us-ascii?Q?EXXJvTKc0CkVXcxczkHKOP6hoJ5iuLlUHp9aTheyxtJxFEqkNaWo0mIywiDN?=
+ =?us-ascii?Q?1KboflvwrmYS3i4lnGuNXtzrvYt6pxVY1W/sYjNUp0ScbaiuuEc8ppcu8vog?=
+ =?us-ascii?Q?as3aQXSNbjxn+H/lFVxpZPCvJWwOuuOoXa9gnSCIXtrko/cP6T7EOp7XPjMm?=
+ =?us-ascii?Q?Z31A49h6xQw+g9KWi+M2WZVuXp0ZQuz2QJQC91p1ye7iYE6AuYqydWXEz1SH?=
+ =?us-ascii?Q?GXTuP6CMWspKf48nt/nEbhUYs4o+4mq/RXwMLLvBmNSweIyfp9ef7YS45xLt?=
+ =?us-ascii?Q?XJ9Wf66+IryauGoslc2u3FoYRd9sNG8hqxVZBymrNy2Z+tlFvnvui+MM0Ffs?=
+ =?us-ascii?Q?AtDRV8JBqeFSE+Tm7sJ8jRtCUHh0XO9AM3BzCdqWCpaCzmXKGKwioHOZQjxR?=
+ =?us-ascii?Q?NMJgMzZJDoXfmrqHSUQgHqouoOGrLsb5jf4pjCwcBIyAmviTjKFrTsfiEFIh?=
+ =?us-ascii?Q?zk3PjmZnZQk3n9NQ20FJ+u4QFrVgGmmelhZRqTRdOM6y3rzBsG5PNUUQINl5?=
+ =?us-ascii?Q?kRj8RVOU/ocdiWZczsK7MFUfqLx7KNX/ydYoFvkWo6Xc78K3+iUYK0UasHiB?=
+ =?us-ascii?Q?TTMWX2deTzvuTxFrnJkkFvZn78ffbK2lyKHdAKLGGjRB9nZX+fRu7MCIyghX?=
+ =?us-ascii?Q?gL65nS3qatjSBJ1h1dJn9R3YvxS+lHRckuIdHECYfCY7zptPPC1gCjgbr7YF?=
+ =?us-ascii?Q?eu7aJSssl33KMztACjJw6vn4DsVOMOkVZ69MBK8eesYFlBPY248N48+K1tiH?=
+ =?us-ascii?Q?guOZcm2A9UH3/o6dKx2EQbjBTtyYmZdab1F5YfJkP2Bj/ePxU00rY+u+019P?=
+ =?us-ascii?Q?S98igaeCABqjGzsVjKwYl1cMhzlKB1ggOymxkp7g6IAjLfgYYg39cVK36jHc?=
+ =?us-ascii?Q?vcUe/K12wJVGG7+aNY/9YgTXEitz+ws7x5aFhjsWKqCJ/QFfw+oqEHPAtitI?=
+ =?us-ascii?Q?h/lhQF30pSV4XWtEaaqIODnW/N13TTcgnFyosu3d2S8gfdO63GA5JRpXMF/E?=
+ =?us-ascii?Q?FQiivsSfeeY0TUxL/3EJkCk30J64YBrzOVtgBLXUCmXQIC0Yu0gDmBlJK0fX?=
+ =?us-ascii?Q?US2kvobWnBvdqsfo7n0QlUYZhmegWV77a4anwXbdA6u/P1t/1km32icYaYEU?=
+ =?us-ascii?Q?Og91UKwY/kJMB+qf6caOko13A9FrxUY3UsHnBzus1tzcdc5Q2YDXFuJy8eu8?=
+ =?us-ascii?Q?BYj4exzHGrOwy8IWuZM3BS8/ZLuWiODDjBzRQ6n3eBVWAyhe5dzRCZ7EZztQ?=
+ =?us-ascii?Q?sM05PkuZpA=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d4c7c51-988e-4b7e-3e08-08da37fcefdc
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2022 12:01:12.3551
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zlAH+dQ6v1nACd9T4mjuZs9sM9FZd910ygUETfYTPxVftOX/FOvOeWzuORQjY9th
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2693
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Test that key-controlled protection does not apply to diag 308.
+On Mon, May 16, 2022 at 11:21:19PM -0700, Christoph Hellwig wrote:
+> On Mon, May 16, 2022 at 02:27:34PM -0300, Jason Gunthorpe wrote:
+> > Normally you'd want to do what is kvm_s390_pci_register_kvm() here,
+> > where a failure can be propogated but then you have a race condition
+> > with the kvm.
+> > 
+> > Blech, maybe it is time to just fix this race condition permanently,
+> > what do you think? (I didn't even compile it)
+> 
+> This is roughly were I was planning to get to, with one difference:
+> I don't think we need or even want the VFIO_DEVICE_NEEDS_KVM flag.
+> Instead just propagation ->kvm to the device whenever it is set and
+> let drivers that have a hard requirements on it like gvt fail if it
+> isn't there.
 
-Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
----
- s390x/skey.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+I did it so we didn't uselessly hold a ref on the kvm object, but
+maybe that is not relevant.
 
-diff --git a/s390x/skey.c b/s390x/skey.c
-index 60ae8158..c2d28ffd 100644
---- a/s390x/skey.c
-+++ b/s390x/skey.c
-@@ -285,6 +285,31 @@ static void test_store_cpu_address(void)
- 	report_prefix_pop();
- }
- 
-+static void test_diag_308(void)
-+{
-+	uint16_t response;
-+	uint32_t (*ipib)[1024] = (void *)pagebuf;
-+
-+	report_prefix_push("DIAG 308");
-+	(*ipib)[0] = 0; /* Invalid length */
-+	set_storage_key(ipib, 0x28, 0);
-+	/* key-controlled protection does not apply */
-+	asm volatile (
-+		"lr	%%r2,%[ipib]\n\t"
-+		"spka	0x10\n\t"
-+		"diag	%%r2,%[code],0x308\n\t"
-+		"spka	0\n\t"
-+		"lr	%[response],%%r3\n"
-+		: [response] "=d" (response)
-+		: [ipib] "d" (ipib),
-+		  [code] "d" (5)
-+		: "%r2", "%r3"
-+	);
-+	report(response == 0x402, "no exception on fetch, response: invalid IPIB");
-+	set_storage_key(ipib, 0x00, 0);
-+	report_prefix_pop();
-+}
-+
- /*
-  * Perform CHANNEL SUBSYSTEM CALL (CHSC)  instruction while temporarily executing
-  * with access key 1.
-@@ -714,6 +739,7 @@ int main(void)
- 	test_chg();
- 	test_test_protection();
- 	test_store_cpu_address();
-+	test_diag_308();
- 	test_channel_subsystem_call();
- 
- 	setup_vm();
--- 
-2.33.1
+> The other question is if we even need an extra reference per device,
+> can't we hold the group reference until all devices are gone
+> anyway?  That would remove the need to include kvm_host.h in the
+> vfio code.
 
+The device does now hold a reference on the group fd after this patch
+series:
+
+https://lore.kernel.org/r/0-v2-d035a1842d81+1bf-vfio_group_locking_jgg@nvidia.com
+
+However the group does not hold a reference on the KVM, it has a
+set/remove interface toward KVM and can have its group->kvm pointer
+NULL'd via an ioctl at any time.
+
+So, the semantic here is that the KVM is captured when the device FD
+opens and then is immutable for the lifetime of that device FD even if
+the group FD's KVM is reassigned or removed.
+
+And I realize that it is all botched, this needs to check and respect
+the open_count which requires nesting the locks..
+
+Jason
