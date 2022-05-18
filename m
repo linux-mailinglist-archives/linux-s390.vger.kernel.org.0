@@ -2,153 +2,219 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0759752B303
-	for <lists+linux-s390@lfdr.de>; Wed, 18 May 2022 09:10:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 275AF52B37C
+	for <lists+linux-s390@lfdr.de>; Wed, 18 May 2022 09:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231530AbiERGvk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 May 2022 02:51:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
+        id S232224AbiERHeM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 May 2022 03:34:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231859AbiERGvW (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 18 May 2022 02:51:22 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 994E612AD5;
-        Tue, 17 May 2022 23:51:05 -0700 (PDT)
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24I6fjc5016984;
-        Wed, 18 May 2022 06:51:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=mime-version : date :
- from : to : subject : reply-to : in-reply-to : references : message-id :
- content-type : content-transfer-encoding; s=pp1;
- bh=NbY09xWXg9+yIVklR6/+BeWHEQALFJnWz2JOVSnd4iI=;
- b=e0RbybpdloMudrc7yxVmWiX0gmf/MUTsHuH0YO4omh7EV1qzSLzDVSN3db4qh+H1/3Kc
- J8tImjE7lf4BHRPu9w0ya5t2LAEpvgA0BU22U2AIkfzQZ6av9nmhk3k1HnG/Lwar+4Rj
- gre56subsB7uoIc3NRMYMuT3Jpcv3oFpf90MbUQyNECZ6h+F+m2yZ149DDredHpxOcUK
- TEf5r3SOhtfFBaFb0kXxjX0W8VXwaeabGy54uflEweDHg1Fn3gnpNovSKKvSLuG1LoBU
- la/A1Z72vKBBp4OfdElgLRQo4arF3AKJq2NNe+FBkeyzuII1nKUaCKCmS2niiB1G5C1e hg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g4urmg68h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 May 2022 06:51:00 +0000
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24I6hg0h032084;
-        Wed, 18 May 2022 06:51:00 GMT
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g4urmg67s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 May 2022 06:51:00 +0000
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24I6Wp99026748;
-        Wed, 18 May 2022 06:50:59 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma05wdc.us.ibm.com with ESMTP id 3g242aarun-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 May 2022 06:50:59 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24I6owP64916092
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 May 2022 06:50:58 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 45C6FB2071;
-        Wed, 18 May 2022 06:50:58 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C17F6B2064;
-        Wed, 18 May 2022 06:50:57 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.10.229.42])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 18 May 2022 06:50:57 +0000 (GMT)
+        with ESMTP id S232127AbiERHeH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 18 May 2022 03:34:07 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D294CC5E55;
+        Wed, 18 May 2022 00:34:04 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 8990E1F9A4;
+        Wed, 18 May 2022 07:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1652859243; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YR5rOhmSURb4d/IKXy5VZg8z1ImD01Us4xBpVFtyoqU=;
+        b=apiSUoAwUbqeAccPNQ19K+RPeAfjpiC+Kw09kP9gYD08Bjqn9sy6l8W4iwyq6IQeI6Aplp
+        +YIfJeRJqbcdQptzveOcUb8Q0R7nuJcbMiyUrGxQWxZdDf/W1Ubmr612J8Zmj7lPwrkx5l
+        wG1cTFsW35nAwzkY9hs+1GgrMVmINpw=
+Received: from suse.cz (unknown [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id AA6042C142;
+        Wed, 18 May 2022 07:33:59 +0000 (UTC)
+Date:   Wed, 18 May 2022 09:33:57 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     Evan Green <evgreen@chromium.org>, David Gow <davidgow@google.com>,
+        Julius Werner <jwerner@chromium.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Sebastian Reichel <sre@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>, bhe@redhat.com,
+        kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-edac@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
+        netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
+        rcu@vger.kernel.org, sparclinux@vger.kernel.org,
+        xen-devel@lists.xenproject.org, x86@kernel.org,
+        kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
+        fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Jonathan Corbet <corbet@lwn.net>, d.hatayama@jp.fujitsu.com,
+        dave.hansen@linux.intel.com, dyoung@redhat.com,
+        feng.tang@intel.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
+        jgross@suse.com, john.ogness@linutronix.de,
+        Kees Cook <keescook@chromium.org>, luto@kernel.org,
+        mhiramat@kernel.org, mingo@redhat.com, paulmck@kernel.org,
+        peterz@infradead.org, rostedt@goodmis.org,
+        senozhatsky@chromium.org, Alan Stern <stern@rowland.harvard.edu>,
+        Thomas Gleixner <tglx@linutronix.de>, vgoyal@redhat.com,
+        vkuznets@redhat.com, Will Deacon <will@kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dexuan Cui <decui@microsoft.com>,
+        Doug Berger <opendmb@gmail.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mihai Carabas <mihai.carabas@oracle.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Paul Mackerras <paulus@samba.org>, Pavel Machek <pavel@ucw.cz>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        zhenwei pi <pizhenwei@bytedance.com>,
+        Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 19/30] panic: Add the panic hypervisor notifier list
+Message-ID: <YoShZVYNAdvvjb7z@alley>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-20-gpiccoli@igalia.com>
+ <YoJZVZl/MH0KiE/J@alley>
+ <ad082ce7-db50-13bb-3dbb-9b595dfa78be@igalia.com>
+ <CAE=gft7ds+dHfEkRz8rnSH1EbTpGTpKbi5Wxj9DW0Jr5mX_j4w@mail.gmail.com>
+ <YoOi9PFK/JnNwH+D@alley>
+ <b9ec2fc8-216f-f261-8417-77b6dd95e25c@igalia.com>
 MIME-Version: 1.0
-Date:   Wed, 18 May 2022 08:50:57 +0200
-From:   Harald Freudenberger <freude@linux.ibm.com>
-To:     undisclosed-recipients:;
-Subject: Re: [PATCH] s390/crypto: fix scatterwalk_unmap() callers in AES-GCM
-Reply-To: freude@linux.ibm.com
-In-Reply-To: <YoPi5eH+oFJ2anQh@osiris>
-References: <20220517143047.3054498-1-jannh@google.com>
- <YoPi5eH+oFJ2anQh@osiris>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <96f311d4cb0b95752cfefd424fe0f7c3@linux.ibm.com>
-X-Sender: freude@linux.ibm.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: _Q5VPIp3Opuw5KPtLJUfChcbSSX-ACeZ
-X-Proofpoint-ORIG-GUID: 7WCvDsC_mOUQCbivMcFgd3xmxSfWo3pt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-18_02,2022-05-17_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- phishscore=0 mlxlogscore=779 clxscore=1015 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205180035
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b9ec2fc8-216f-f261-8417-77b6dd95e25c@igalia.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2022-05-17 20:01, Heiko Carstens wrote:
-> On Tue, May 17, 2022 at 04:30:47PM +0200, Jann Horn wrote:
->> The argument of scatterwalk_unmap() is supposed to be the void* that 
->> was
->> returned by the previous scatterwalk_map() call.
->> The s390 AES-GCM implementation was instead passing the pointer to the
->> struct scatter_walk.
->> 
->> This doesn't actually break anything because scatterwalk_unmap() only 
->> uses
->> its argument under CONFIG_HIGHMEM and ARCH_HAS_FLUSH_ON_KUNMAP.
->> 
->> Note that I have not tested this patch in any way, not even 
->> compile-tested
->> it.
->> 
->> Fixes: bf7fa038707c ("s390/crypto: add s390 platform specific aes gcm 
->> support.")
->> Signed-off-by: Jann Horn <jannh@google.com>
->> ---
->> IDK which tree this has to go through - s390 or crypto?
->> maybe s390 is better, since they can actually test it?
->> 
->>  arch/s390/crypto/aes_s390.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue 2022-05-17 13:37:58, Guilherme G. Piccoli wrote:
+> On 17/05/2022 10:28, Petr Mladek wrote:
+> > [...]
+> >>> Disagree here. I'm looping Google maintainers, so they can comment.
+> >>> (CCed Evan, David, Julius)
+> >>>
+> >>> This notifier is clearly a hypervisor notification mechanism. I've fixed
+> >>> a locking stuff there (in previous patch), I feel it's low-risk but even
+> >>> if it's mid-risk, the class of such callback remains a perfect fit with
+> >>> the hypervisor list IMHO.
+> >>
+> >> This logs a panic to our "eventlog", a tiny logging area in SPI flash
+> >> for critical and power-related events. In some cases this ends up
+ > >> being the only clue we get in a Chromebook feedback report that a
+> >> panic occurred, so from my perspective moving it to the front of the
+> >> line seems like a good idea.
+> > 
+> > IMHO, this would really better fit into the pre-reboot notifier list:
+> > 
+> >    + the callback stores the log so it is similar to kmsg_dump()
+> >      or console_flush_on_panic()
+> > 
+> >    + the callback should be proceed after "info" notifiers
+> >      that might add some other useful information.
+> > 
+> > Honestly, I am not sure what exactly hypervisor callbacks do. But I
+> > think that they do not try to extract the kernel log because they
+> > would need to handle the internal format.
+> > 
 > 
-> This can go via the s390 tree, however I'd like to have an ACK from
-> Harald, who wrote the original code.
+> I guess the main point in your response is : "I am not sure what exactly
+> hypervisor callbacks do". We need to be sure about the semantics of such
+> list, and agree on that.
 > 
->> diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
->> index 54c7536f2482..1023e9d43d44 100644
->> --- a/arch/s390/crypto/aes_s390.c
->> +++ b/arch/s390/crypto/aes_s390.c
->> @@ -701,7 +701,7 @@ static inline void 
->> _gcm_sg_unmap_and_advance(struct gcm_sg_walk *gw,
->>  					     unsigned int nbytes)
->>  {
->>  	gw->walk_bytes_remain -= nbytes;
->> -	scatterwalk_unmap(&gw->walk);
->> +	scatterwalk_unmap(gw->walk_ptr);
->>  	scatterwalk_advance(&gw->walk, nbytes);
->>  	scatterwalk_done(&gw->walk, 0, gw->walk_bytes_remain);
->>  	gw->walk_ptr = NULL;
->> @@ -776,7 +776,7 @@ static int gcm_out_walk_go(struct gcm_sg_walk *gw, 
->> unsigned int minbytesneeded)
->>  		goto out;
->>  	}
->> 
->> -	scatterwalk_unmap(&gw->walk);
->> +	scatterwalk_unmap(gw->walk_ptr);
->>  	gw->walk_ptr = NULL;
->> 
->>  	gw->ptr = gw->buf;
->> 
->> base-commit: 42226c989789d8da4af1de0c31070c96726d990c
->> --
->> 2.36.0.550.gb090851708-goog
->> 
-Give me a chance to test this and when the testcases all pass, I'll give 
-a green light....
+> So, my opinion about this first list, that we call "hypervisor list",
+> is: it contains callbacks that
+> 
+> (1) should run early, preferably before kdump (or even if kdump isn't
+> set, should run ASAP);
+> 
+> (2) these callbacks perform some communication with an abstraction that
+> runs "below" the kernel, like a firmware or hypervisor. Classic example:
+> pvpanic, that communicates with VMM (usually qemu) and allow such VMM to
+> snapshot the full guest memory, for example.
+> 
+> (3) Should be low-risk. What defines risk is the level of reliability of
+> subsequent operations - if the callback have 50% of chance of "bricking"
+> the system totally and prevent kdump / kmsg_dump() / reboot , this is
+> high risk one for example.
+> 
+> Some good fits IMO: pvpanic, sstate_panic_event() [sparc], fadump in
+> powerpc, etc.
+> 
+> So, this is a good case for the Google notifier as well - it's not
+> collecting data like the dmesg (hence your second bullet seems to not
+> apply here, info notifiers won't add info to be collected by gsmi). It
+> is a firmware/hypervisor/whatever-gsmi-is notification mechanism, that
+> tells such "lower" abstraction a panic occurred. It seems low risk and
+> we want it to run ASAP, if possible.
+
+" 
+> >> This logs a panic to our "eventlog", a tiny logging area in SPI flash
+> >> for critical and power-related events. In some cases this ends up
+
+I see. I somehow assumed that it was about the kernel log because
+Evans wrote:
+
+  "This logs a panic to our "eventlog", a tiny logging area in SPI flash
+   for critical and power-related events. In some cases this ends up"
+
+
+Anyway, I would distinguish it the following way.
+
+  + If the notifier is preserving kernel log then it should be ideally
+    treated as kmsg_dump().
+
+  + It the notifier is saving another debugging data then it better
+    fits into the "hypervisor" notifier list.
+
+
+Regarding the reliability. From my POV, any panic notifier enabled
+in a generic kernel should be reliable with more than 99,9%.
+Otherwise, they should not be in the notifier list at all.
+
+An exception would be a platform-specific notifier that is
+called only on some specific platform and developers maintaining
+this platform agree on this.
+
+The value "99,9%" is arbitrary. I am not sure if it is realistic
+even in the other code, for example, console_flush_on_panic()
+or emergency_restart(). I just want to point out that the border
+should be rather high. Otherwise we would back in the situation
+where people would want to disable particular notifiers.
+
+Best Regards,
+Petr
