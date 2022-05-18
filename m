@@ -2,153 +2,214 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F82B52B60F
+	by mail.lfdr.de (Postfix) with ESMTP id DDBF952B611
 	for <lists+linux-s390@lfdr.de>; Wed, 18 May 2022 11:29:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233698AbiERJDi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 May 2022 05:03:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47168 "EHLO
+        id S234014AbiERJUG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 May 2022 05:20:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233672AbiERJDi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 18 May 2022 05:03:38 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4753E1238A8;
-        Wed, 18 May 2022 02:03:37 -0700 (PDT)
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24I8isbW017356;
-        Wed, 18 May 2022 09:03:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=mime-version : date :
- from : to : subject : reply-to : in-reply-to : references : message-id :
- content-type : content-transfer-encoding; s=pp1;
- bh=5b9ExFuV/mdbXBcWZ/YTWQ8xvIPBld8ClYxJkOjjqFQ=;
- b=sqwyNbO3CE+rC7+zMxgccmjhhR53iMoeId7JVnXtt0+SLjU3h7qRfvCTu7Jk3sT0muZl
- sAT3zUIm6J8WjVmY/Gph2VWo/3ZP7beHmoJ23SdNjuPItewc+k9MU0EKqexfc8XIOEJP
- ZsealRbOxzpn8c2wPDhFpYOxP3bSC270ieS/dTPYHZAp5OlDO+hnYnSodlZ3lA8BG/A3
- Or3StUKx0tvPgULlOip/Ulf+mUyR4RnUlYxOhALrqSa9pZoqP4pHbWTAea8NEZcTQzzx
- 6JhHA9HQHMzGJGyYnIOEfnVie66PvHauH5w1GTQqXNpxGQPlNoDVL0ccRlAOs0na/nu1 BA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g4wjh8css-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 May 2022 09:03:34 +0000
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24I93XcF013967;
-        Wed, 18 May 2022 09:03:33 GMT
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g4wjh8a9d-10
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 May 2022 09:03:33 +0000
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24I8QeWP021832;
-        Wed, 18 May 2022 08:30:32 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01dal.us.ibm.com with ESMTP id 3g242b9xhc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 May 2022 08:30:32 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24I8UVaS22348232
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 May 2022 08:30:31 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7FB88112065;
-        Wed, 18 May 2022 08:30:31 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 05A65112063;
-        Wed, 18 May 2022 08:30:31 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.10.229.42])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 18 May 2022 08:30:30 +0000 (GMT)
+        with ESMTP id S234045AbiERJUD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 18 May 2022 05:20:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 61C4A14916A
+        for <linux-s390@vger.kernel.org>; Wed, 18 May 2022 02:19:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1652865599;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FfQDoCx9YIWbfG5ICgqi0/8r2euHWDbQ6lJ6poxNOJI=;
+        b=ZkjXhH/NcCwRG4rvdYS3MEITDDOBZzCaALIlKD4MfDw4KQeOn1t5ZfbBE/xt4u/ATIUcK9
+        9Xc5T+TMPAcC10vT8bPs+QtDprhiG7TZJvw/zIpsKndQcwNXLinbh3zhMMzVcZL1s7QoXv
+        O++SHnUrlhnOOKA0xmp9wmYzMJypjrc=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-395-O3A9AJa3NUO4yvQtxeNJ9w-1; Wed, 18 May 2022 05:19:50 -0400
+X-MC-Unique: O3A9AJa3NUO4yvQtxeNJ9w-1
+Received: by mail-wm1-f72.google.com with SMTP id k35-20020a05600c1ca300b003946a9764baso2626081wms.1
+        for <linux-s390@vger.kernel.org>; Wed, 18 May 2022 02:19:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=FfQDoCx9YIWbfG5ICgqi0/8r2euHWDbQ6lJ6poxNOJI=;
+        b=G/HcSY7HyjBu3Kc216veoEX+zjAMzWmkbG+hqlnHC6glZXSTkLYvDLUgOqTaavUt7X
+         b3l4WLGxZAAbTlhZqVdjMd2f+jUcskcglzPFIv0gfK3WXNBu0xhYoSlr4F0kjSHl88mB
+         P5qD4NF3ksXzgDZWjMf2WwkKYuT81/PI5JpvDQ0frd3JYK2gQdqU6Uc8AUtTLYPv35bY
+         TjCGwDNN18UOeHPd5IDf2KPWDpJXleU56Q6/Yiyfr70fO+d7ov0kLIppnth+RZtGIHqo
+         tHovaoYEfVJSOrMmNIN1D2tNhLEMx2msjcw7jpYwz9Med8djoeUwcuEQVJotPM9JPOhp
+         RilQ==
+X-Gm-Message-State: AOAM530+yOPxAuusTfGWQ2GqGQj4yXpuM1MQB4r1PwmnU85+SUu77u/J
+        vG3dHbVaxL85P8dt9POyxyulLO0eJUPST8qqjREI0gyMf9K/Qn575XJ05Ko8QQSzLgbqcdHPQYU
+        LvqTi+jZ9T4iKVoYFAqlNng==
+X-Received: by 2002:a5d:620c:0:b0:20c:f50a:dafa with SMTP id y12-20020a5d620c000000b0020cf50adafamr19134854wru.460.1652865589422;
+        Wed, 18 May 2022 02:19:49 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzHrtbhj492w0kHpkAlu6o5m/V/peik9KAB4tIG5515RWJkzoHRSpTFHl1FPFzCrDotK9xN7A==
+X-Received: by 2002:a5d:620c:0:b0:20c:f50a:dafa with SMTP id y12-20020a5d620c000000b0020cf50adafamr19134831wru.460.1652865589144;
+        Wed, 18 May 2022 02:19:49 -0700 (PDT)
+Received: from [10.33.192.183] (nat-pool-str-t.redhat.com. [149.14.88.106])
+        by smtp.gmail.com with ESMTPSA id p14-20020a05600c1d8e00b0039456fb80b3sm3774686wms.43.2022.05.18.02.19.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 May 2022 02:19:48 -0700 (PDT)
+Message-ID: <a44b1bd2-db54-6c8a-d80f-e2cc645207b2@redhat.com>
+Date:   Wed, 18 May 2022 11:19:47 +0200
 MIME-Version: 1.0
-Date:   Wed, 18 May 2022 10:30:30 +0200
-From:   Harald Freudenberger <freude@linux.ibm.com>
-To:     undisclosed-recipients:;
-Subject: Re: [PATCH] s390/crypto: fix scatterwalk_unmap() callers in AES-GCM
-Reply-To: freude@linux.ibm.com
-In-Reply-To: <YoPi5eH+oFJ2anQh@osiris>
-References: <20220517143047.3054498-1-jannh@google.com>
- <YoPi5eH+oFJ2anQh@osiris>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <b07a2e97b1198007ea170a91cecbd9d1@linux.ibm.com>
-X-Sender: freude@linux.ibm.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 9EUW4Wyvf76gYoLAuzxu8q96O3eUjMhp
-X-Proofpoint-ORIG-GUID: 0rNeDyJbJunPJw4CkZwJGcEECBwMHQ_t
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-18_03,2022-05-17_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- mlxscore=0 priorityscore=1501 adultscore=0 clxscore=1015 bulkscore=0
- impostorscore=0 lowpriorityscore=0 mlxlogscore=799 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205180048
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH v7 20/22] KVM: s390: add KVM_S390_ZPCI_OP to manage guest
+ zPCI devices
+Content-Language: en-US
+To:     Matthew Rosato <mjrosato@linux.ibm.com>, linux-s390@vger.kernel.org
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        schnelle@linux.ibm.com, farman@linux.ibm.com, pmorel@linux.ibm.com,
+        borntraeger@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, vneethv@linux.ibm.com,
+        oberpar@linux.ibm.com, freude@linux.ibm.com, pasic@linux.ibm.com,
+        pbonzini@redhat.com, corbet@lwn.net, jgg@nvidia.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20220513191509.272897-1-mjrosato@linux.ibm.com>
+ <20220513191509.272897-21-mjrosato@linux.ibm.com>
+ <7b13aca2-fb3e-3b84-8d3d-e94966fac5f2@redhat.com>
+ <0c6a4f7b-f43a-8f4c-49bb-db10ca010f1f@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+In-Reply-To: <0c6a4f7b-f43a-8f4c-49bb-db10ca010f1f@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2022-05-17 20:01, Heiko Carstens wrote:
-> On Tue, May 17, 2022 at 04:30:47PM +0200, Jann Horn wrote:
->> The argument of scatterwalk_unmap() is supposed to be the void* that 
->> was
->> returned by the previous scatterwalk_map() call.
->> The s390 AES-GCM implementation was instead passing the pointer to the
->> struct scatter_walk.
->> 
->> This doesn't actually break anything because scatterwalk_unmap() only 
->> uses
->> its argument under CONFIG_HIGHMEM and ARCH_HAS_FLUSH_ON_KUNMAP.
->> 
->> Note that I have not tested this patch in any way, not even 
->> compile-tested
->> it.
->> 
->> Fixes: bf7fa038707c ("s390/crypto: add s390 platform specific aes gcm 
->> support.")
->> Signed-off-by: Jann Horn <jannh@google.com>
->> ---
->> IDK which tree this has to go through - s390 or crypto?
->> maybe s390 is better, since they can actually test it?
->> 
->>  arch/s390/crypto/aes_s390.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
+On 16/05/2022 17.35, Matthew Rosato wrote:
+> On 5/16/22 5:52 AM, Thomas Huth wrote:
+>> On 13/05/2022 21.15, Matthew Rosato wrote:
+>>> The KVM_S390_ZPCI_OP ioctl provides a mechanism for managing
+>>> hardware-assisted virtualization features for s390X zPCI passthrough.
+>>
+>> s/s390X/s390x/
+>>
+>>> Add the first 2 operations, which can be used to enable/disable
+>>> the specified device for Adapter Event Notification interpretation.
+>>>
+>>> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+>>> ---
+>>>   Documentation/virt/kvm/api.rst | 45 +++++++++++++++++++
+>>>   arch/s390/kvm/kvm-s390.c       | 23 ++++++++++
+>>>   arch/s390/kvm/pci.c            | 81 ++++++++++++++++++++++++++++++++++
+>>>   arch/s390/kvm/pci.h            |  2 +
+>>>   include/uapi/linux/kvm.h       | 31 +++++++++++++
+>>>   5 files changed, 182 insertions(+)
+>>>
+>>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+>>> index 4a900cdbc62e..a7cd5ebce031 100644
+>>> --- a/Documentation/virt/kvm/api.rst
+>>> +++ b/Documentation/virt/kvm/api.rst
+>>> @@ -5645,6 +5645,51 @@ enabled with ``arch_prctl()``, but this may change 
+>>> in the future.
+>>>   The offsets of the state save areas in struct kvm_xsave follow the 
+>>> contents
+>>>   of CPUID leaf 0xD on the host.
+>>> +4.135 KVM_S390_ZPCI_OP
+>>> +--------------------
+>>> +
+>>> +:Capability: KVM_CAP_S390_ZPCI_OP
+>>> +:Architectures: s390
+>>> +:Type: vcpu ioctl
+>>
+>> vcpu? ... you're wiring it up in  kvm_arch_vm_ioctl() later, so I assume 
+>> it's rather a VM ioctl?
 > 
-> This can go via the s390 tree, however I'd like to have an ACK from
-> Harald, who wrote the original code.
+> Yup, VM ioctl, bad copy/paste job...
 > 
->> diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
->> index 54c7536f2482..1023e9d43d44 100644
->> --- a/arch/s390/crypto/aes_s390.c
->> +++ b/arch/s390/crypto/aes_s390.c
->> @@ -701,7 +701,7 @@ static inline void 
->> _gcm_sg_unmap_and_advance(struct gcm_sg_walk *gw,
->>  					     unsigned int nbytes)
->>  {
->>  	gw->walk_bytes_remain -= nbytes;
->> -	scatterwalk_unmap(&gw->walk);
->> +	scatterwalk_unmap(gw->walk_ptr);
->>  	scatterwalk_advance(&gw->walk, nbytes);
->>  	scatterwalk_done(&gw->walk, 0, gw->walk_bytes_remain);
->>  	gw->walk_ptr = NULL;
->> @@ -776,7 +776,7 @@ static int gcm_out_walk_go(struct gcm_sg_walk *gw, 
->> unsigned int minbytesneeded)
->>  		goto out;
->>  	}
->> 
->> -	scatterwalk_unmap(&gw->walk);
->> +	scatterwalk_unmap(gw->walk_ptr);
->>  	gw->walk_ptr = NULL;
->> 
->>  	gw->ptr = gw->buf;
->> 
->> base-commit: 42226c989789d8da4af1de0c31070c96726d990c
->> --
->> 2.36.0.550.gb090851708-goog
->> 
-Ok, tests pass. Here is my Acked-by: Harald Freudenberger 
-<freude@linux.ibm.com>
+>>
+>>> +:Parameters: struct kvm_s390_zpci_op (in)
+>>> +:Returns: 0 on success, <0 on error
+>>> +
+>>> +Used to manage hardware-assisted virtualization features for zPCI devices.
+>>> +
+>>> +Parameters are specified via the following structure::
+>>> +
+>>> +  struct kvm_s390_zpci_op {
+>>> +    /* in */
+>>
+>> If all is "in", why is there a copy_to_user() in the code later?
+>>
+> 
+> Oh no, this is a leftover from a prior version...  Good catch.  There should 
+> no longer be a copy_to_user.
+> 
+>>> +    __u32 fh;        /* target device */
+>>> +    __u8  op;        /* operation to perform */
+>>> +    __u8  pad[3];
+>>> +    union {
+>>> +        /* for KVM_S390_ZPCIOP_REG_AEN */
+>>> +        struct {
+>>> +            __u64 ibv;    /* Guest addr of interrupt bit vector */
+>>> +            __u64 sb;    /* Guest addr of summary bit */
+>>
+>> If this is really a vcpu ioctl, what kind of addresses are you talking 
+>> about here? virtual addresses? real addresses? absolute addresses?
+> 
+> It's a VM ioctl.  These are guest kernel physical addresses that are later 
+> pinned in arch/s390/kvm/pci.c:kvm_s390_pci_aif_enable() as part of handling 
+> the ioctl.
+> 
+>>
+>>> +            __u32 flags;
+>>> +            __u32 noi;    /* Number of interrupts */
+>>> +            __u8 isc;    /* Guest interrupt subclass */
+>>> +            __u8 sbo;    /* Offset of guest summary bit vector */
+>>> +            __u16 pad;
+>>> +        } reg_aen;
+>>> +        __u64 reserved[8];
+>>> +    } u;
+>>> +  };
+>>> +
+>>> +The type of operation is specified in the "op" field.
+>>> +KVM_S390_ZPCIOP_REG_AEN is used to register the VM for adapter event
+>>> +notification interpretation, which will allow firmware delivery of adapter
+>>> +events directly to the vm, with KVM providing a backup delivery mechanism;
+>>> +KVM_S390_ZPCIOP_DEREG_AEN is used to subsequently disable interpretation of
+>>> +adapter event notifications.
+>>> +
+>>> +The target zPCI function must also be specified via the "fh" field. For the
+>>> +KVM_S390_ZPCIOP_REG_AEN operation, additional information to establish 
+>>> firmware
+>>> +delivery must be provided via the "reg_aen" struct.
+>>> +
+>>> +The "reserved" field is meant for future extensions.
+>>
+>> Maybe also mention the "pad" fields? And add should these also be 
+>> initialized to 0 by the calling userspace program?
+> 
+> Sure, I can mention them.  And yes, I agree that userspace should initialize 
+> them to 0, I'll update the QEMU series accordingly.
+
+I just spotted the corresponding patch in the QEMU series, and I think it 
+should already be fine there, since you're using "= { ... }" while declaring 
+the variables:
+
++int s390_pci_kvm_aif_disable(S390PCIBusDevice *pbdev)
++{
++    struct kvm_s390_zpci_op args = {
++        .fh = pbdev->fh,
++        .op = KVM_S390_ZPCIOP_DEREG_AEN
++    };
+
+That means unspecified fields will be set to 0 by the compiler already, as 
+far as I know.
+
+  Thomas
+
