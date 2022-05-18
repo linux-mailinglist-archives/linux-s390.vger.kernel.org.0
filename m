@@ -2,291 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A28B752E0BE
-	for <lists+linux-s390@lfdr.de>; Fri, 20 May 2022 01:45:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 906C952E414
+	for <lists+linux-s390@lfdr.de>; Fri, 20 May 2022 06:52:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343735AbiESXpT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 19 May 2022 19:45:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48880 "EHLO
+        id S1345435AbiETEwa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 20 May 2022 00:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343740AbiESXpR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 19 May 2022 19:45:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4119411E1D6
-        for <linux-s390@vger.kernel.org>; Thu, 19 May 2022 16:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1653003914;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xcqeqNHBqLaEPFvaMSIdVsHM/2ssgjepqSc89Z+McDY=;
-        b=cH1jZ7B9s6QPsLL95flJcVUTqhu/a/tgBUpghaM5U6BI16PpGbL0aFbZt3tCOe0LuHUd1p
-        9Ag8XSB23ERy2dy9dibS8wRkFYY7oTZKGNoiOANIJKG3KWOtYWosuDQR4zKR+E6Ce+bJCZ
-        dO967Y0vDCSFGo7+e6Ic1TcGvCPGhxs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-671-51qE-HMZMJ-_l5k-QlXFHg-1; Thu, 19 May 2022 19:45:10 -0400
-X-MC-Unique: 51qE-HMZMJ-_l5k-QlXFHg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A41B685A5AA;
-        Thu, 19 May 2022 23:45:07 +0000 (UTC)
-Received: from localhost (ovpn-12-42.pek2.redhat.com [10.72.12.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4ABA5492C14;
-        Thu, 19 May 2022 23:45:06 +0000 (UTC)
-Date:   Fri, 20 May 2022 07:45:02 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     "michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Dave Young <dyoung@redhat.com>, d.hatayama@jp.fujitsu.com,
-        akpm@linux-foundation.org, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
-        netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
-        rcu@vger.kernel.org, sparclinux@vger.kernel.org,
-        xen-devel@lists.xenproject.org, x86@kernel.org,
-        kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
-        fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
-        andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
-        corbet@lwn.net, dave.hansen@linux.intel.com, feng.tang@intel.com,
-        gregkh@linuxfoundation.org, hidehiro.kawai.ez@hitachi.com,
-        jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
-        luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
-        paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-        senozhatsky@chromium.org, stern@rowland.harvard.edu,
-        tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
-        will@kernel.org
-Subject: Re: [PATCH 24/30] panic: Refactor the panic path
-Message-ID: <20220519234502.GA194232@MiWiFi-R3L-srv>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-25-gpiccoli@igalia.com>
- <Yn0TnsWVxCcdB2yO@alley>
- <d313eec2-96b6-04e3-35cd-981f103d010e@igalia.com>
+        with ESMTP id S1345428AbiETEwX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 20 May 2022 00:52:23 -0400
+X-Greylist: delayed 1096 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 19 May 2022 21:52:16 PDT
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02hn2233.outbound.protection.partner.outlook.cn [139.219.17.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0373D66FA1;
+        Thu, 19 May 2022 21:52:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dTgGc0h/0At8MBttzBkK8Ng18cD+wAmbmz35rRkzX2XuiAckWJA0l1KXg8aLkYfgPi7sDokHr+gmzTfIOQwiuhqYCylSHEqPt4cwrvgFr0m85bRiUMvUETEKTlm2tUySZxPlti+0GU9By9/3mxtOUO/cUjSSKmn595kW29RMwYjYtkiypQRgPmuVxyfcb9fdrJBYHRPYr8r98y/a+ZOGc7Cz05b0xj0XOGRFR/5K2M2Cwk6d50WHTQe/WWhbyj2nzaSrEa3wSi8zTbAhTmFZgTNxODWIAMQF2tutBJ8+w3lTD0TPpI8pR1KexM3pWkefgXNuSL/aAK10aamR2eAVhA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XHa7Vpxtm/u3S4otqoZTmpXUuVJNGmaT4A6UJUMDuKo=;
+ b=jIaZzQhQA82X+a0w7q6rEhMwvvJys6dL9lzHi1YcEHPXS0ShHMMxGO/E4kwE5RFdGDsxNV/sDXzSRe5V7FiQcHL7Ts3xOoARSBxYkYqqvuNArc6vqgtGlFu+AzSbLh8oMxVQ9FPDfsbHSlaWFqdvxPZX/f2splna30cRSGNYvSwZ4FzRM49vG68NhNSeZxr5lh/6ufXPq8Z5seuvKGxNF+4vTk6EHcPf3VXZLySJiwb6dS6lBwDOhGTkERmYJy+B1dkjzVFh2cEISar82BftErG47D2dGJELAvGzNLcV/KfE5uLQShbBvdXYkyqL2DULEUdgNIrISQpbX7mJZzo/Dg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=gientech.com; dmarc=pass action=none header.from=gientech.com;
+ dkim=pass header.d=gientech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gientech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XHa7Vpxtm/u3S4otqoZTmpXUuVJNGmaT4A6UJUMDuKo=;
+ b=foLc+ZHUrkiTBblRVDfCc5ao8/S+6hbc/DEoLKcVaPpPajKnX4z7jSqL3SVfuMywUWqjNX+MXQpx8lfrn58abX8BQ7LyfzpBFg7lGTgSn3OWVF6ByZHmCqQIQruFX9tY6ITLzTeCdVYTr3g07IyxdRCBQpaevPHM0jyKGIrqu23jo48JVXDsd/H8mBYChEC31FE1W17JIWlGPi7Yn9hvE5K4PslZrcVIsfkoq8jh5tyLdDvbf3AlnqATiYXQwFGngzOSFF+k3dXhjkcz2T09rHYyBYW90HKJldrCOPFwxUy0umrG6snFvwq5WbkBpNfCmPYPNQe80G+qndcTRfokPA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=gientech.com;
+Received: from SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn (10.43.110.19) by
+ SHXPR01MB0575.CHNPR01.prod.partner.outlook.cn (10.43.109.207) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5273.15; Fri, 20 May 2022 04:19:12 +0000
+Received: from SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn ([10.43.110.19])
+ by SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn ([10.43.110.19]) with mapi
+ id 15.20.5273.017; Fri, 20 May 2022 04:19:12 +0000
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Ree
+To:     Recipients <cuidong.liu@gientech.com>
+From:   "J Wu" <cuidong.liu@gientech.com>
+Date:   Wed, 18 May 2022 21:19:15 +0000
+Reply-To: contact@jimmywu.online
+X-ClientProxiedBy: BJSPR01CA0002.CHNPR01.prod.partner.outlook.cn
+ (10.43.34.142) To SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn
+ (10.43.110.19)
+Message-ID: <SHXPR01MB06238D40DEF6AAD61B0227D389D19@SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d313eec2-96b6-04e3-35cd-981f103d010e@igalia.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 41ca1767-fbf2-4795-4231-08da39141d61
+X-MS-TrafficTypeDiagnostic: SHXPR01MB0575:EE_
+X-Microsoft-Antispam-PRVS: <SHXPR01MB05757B59B2D012F5EB1E390D89D39@SHXPR01MB0575.CHNPR01.prod.partner.outlook.cn>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?2HAd0fwgQDXkUZsGOEW4k34pXdmeGj4x7s+V0ucJJ4+0gri2WmjmZnuBM0?=
+ =?iso-8859-1?Q?vwoY9h8ruvMfbVR52dwMpwwjF3PjR7nWXSXKTJLbveOT/OOiyP2rOkOTVf?=
+ =?iso-8859-1?Q?/PsCHnU7yKCeKnLH2iLW5+7FxP6daDPy34OXIZ3/GIFtlNsB5aAFX0mp5k?=
+ =?iso-8859-1?Q?97q76D9I63IVoNUqzQ7cyar+J7q5Gz6MZhEV4qf7vBq98Ywv8wsUnf5M+b?=
+ =?iso-8859-1?Q?qkIBcJeSR85lKdc6JVTKjnymWzx4dhPlGXcMOmVHpDiVcODvy84XoZ19vA?=
+ =?iso-8859-1?Q?rsiS8UO425yUlZzB/bmJ0XXUo5zxtJuP+ASQ7bttTVyVcWv8rn0Ug04yX9?=
+ =?iso-8859-1?Q?FHOkBofWyrZB1A6Fw8Rv3soQkWwFv805wG8/2OO/ztl8FlkwCjSfVfX3Qr?=
+ =?iso-8859-1?Q?7ta+6oUgAlRo6uQqaGTaEWebQUUMbF7mhUgeJKmy4sAXhso+1OizEWc870?=
+ =?iso-8859-1?Q?N47RC4/V9QyM/2jjKTqzSMUng2a+Q9qtexDhPq+Qo11YjqDiVdh/doiGGf?=
+ =?iso-8859-1?Q?utMHTDSXL3bU+iw6D6CzELrMB6LY61pDs6hoz13FBQjUZ4mfKSJb2yNnfR?=
+ =?iso-8859-1?Q?82/QueIVmOzx1ejFP7jCP/elAFg1pBYlfvdh1+yTuDgQIAAe7ihfXMBNu1?=
+ =?iso-8859-1?Q?DhTATPMOvBpWIVTrbORhG3TRia/8X35kKPMtL/S46PiqHlkvQaAw3N8R25?=
+ =?iso-8859-1?Q?nRyhHQ6XWxEldG+T/lTJ1FIBp8K6ec2W5DQjrxKTLNAbVsrplJBZAqLce9?=
+ =?iso-8859-1?Q?vq9U0DNC8yjtnQRZCnpFf881vbxkMOtVoYCfU8mXBGFaw+M3nr449bpnDs?=
+ =?iso-8859-1?Q?qIGmckV+DkVHmvj3/ctn02kTdqbdAvBnaYItZ1rWXoJWs4qXYJ1UsmUjpw?=
+ =?iso-8859-1?Q?GeGB/wzThmlKYdWhtvsN0JBNQbYTe1ZH8D8E+0i8PDqV8D71Mr35xcRfzi?=
+ =?iso-8859-1?Q?WtzDAfGQlkAj4OOtAvygcuyTrK2vyO6ss3tCHD0jpvba29iyAMJxYCbKG+?=
+ =?iso-8859-1?Q?w5ELAWO/hsrNSfLYPgjkWziv/hV7NdoR60shxlV9dRs5Ywvg+EUdvKY+rB?=
+ =?iso-8859-1?Q?7Q=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:5;SRV:;IPV:NLI;SFV:SPM;H:SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:OSPM;SFS:(13230001)(366004)(7696005)(52116002)(40160700002)(19618925003)(38100700002)(6200100001)(558084003)(38350700002)(26005)(8936002)(8676002)(4270600006)(40180700001)(9686003)(6862004)(66946007)(7406005)(66556008)(7416002)(55016003)(7366002)(66476007)(186003)(86362001)(2906002)(508600001)(7116003)(3480700007)(33656002)(62346012);DIR:OUT;SFP:1501;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?6m47vHuf/0UBnw9LibOUdsnIfmAruF36JKfn1tgu4grukT4hnZWiw5hvE9?=
+ =?iso-8859-1?Q?9Vv9ls/8Fdx709ZJdfi0AtnYCnY3DnppEVWL/3JwZpZpqAMd+AOSLonxgZ?=
+ =?iso-8859-1?Q?j44XCnFpe0KXi9D/V+11FBhM64kJXv/a/KI8MRje1MWhEYjFEka1OrJzo4?=
+ =?iso-8859-1?Q?HGeQ6tuCkcXxCyEw5ObqL8y8XLjCh6ggbAN0Siktlc3NYgcVC9iD9qDryp?=
+ =?iso-8859-1?Q?+HCJLqZM1j9QBMuzJUR4tYsHLdSIij0JwdH9ybyEyoBbUSySTQTgKk0Mpf?=
+ =?iso-8859-1?Q?sJQXUrASo0euRv2NTSAjnEF50OdOI9MoHsM9j86I8wQwN0pDhf25jeCPlJ?=
+ =?iso-8859-1?Q?PJKCzbozxjy7xKoDRMNdYgd60GH0RU07edJnjK/DMndUDLDoRhpPJKIQHc?=
+ =?iso-8859-1?Q?um4U9qnjP/yTmhhGGJ0bV/+ZXe99ZcnpjlE9GhNHM85Bv12SkZM0ousRl2?=
+ =?iso-8859-1?Q?j5hb2r5OmOvzYrpSUPc8hB6low05FFDDBCyRdF/PDmjnhm10URBsOszZmS?=
+ =?iso-8859-1?Q?Wf8Zep1qfz897pLFq6JALjGHmmIllqp5N5OeyLFWkyOnZF/LTR32mjoZbg?=
+ =?iso-8859-1?Q?QPsxrbuxJpRK35ZSmX6lZDEvqwgaAaLAnvkWnyO22S6mryutx4WYPszi78?=
+ =?iso-8859-1?Q?a4F9MGxm0jYp8TE46NcIg7YypeGQme4quh+Hl3DEZUnY1o/RFcCJ8mo3uQ?=
+ =?iso-8859-1?Q?2KhjgzlxS4zmXDO+8C2qFI3SQoa5kshmRK/bUuTIOZkp8hM+sQyDD2WfrY?=
+ =?iso-8859-1?Q?HqnLi9Ya6ShG+UIsRIndFqrFxnKIKAWQvdVVeZMAl0r1LsXqn9lRqGaOOi?=
+ =?iso-8859-1?Q?L/rvCHRtOaG8NN0AzYg2G32OxvN/7F2D2DEh4d2dZJhXz+rKK60AMG0WQp?=
+ =?iso-8859-1?Q?4dgnhHteSpD7702Qwd+xVBwXQT8t1uQ5VLB7VeVfsj9gzAjeRG3dPTX3SQ?=
+ =?iso-8859-1?Q?pG9YyFOnd1KEFSeSQijJ12hDt527v0eTjmZUyGQ47NL8VuanUF7GFtiuR9?=
+ =?iso-8859-1?Q?tq2jN4xFxNyFbmuaGJdZqLj7Ibja8FxR9yyJM/rKIy6XZd0CX2F3IOYVCr?=
+ =?iso-8859-1?Q?ad3RBmaTwUJsQz9Zzmj0zNxzxelisTeF0Ca50tIiXebIwgkW3kdc77h5l1?=
+ =?iso-8859-1?Q?L0wYuAj3sOQz0c2EI6l8DNLqrnrSwioDsoybp9p5M5FXjthIN6hh5M3ZCd?=
+ =?iso-8859-1?Q?dhLLAcb9iQ/D86VeUjgZpSUlg/+xJF/p4PuzF0UlvUrUTj7di6D2/+R9jb?=
+ =?iso-8859-1?Q?IfM7EUwnkm6Ev9UEoTrpOqNFfOeg6K/ifwnW5KU7kaMDHBe7pyim7Go2A3?=
+ =?iso-8859-1?Q?2rA7iOiWLwIdGh4cJzn9BbdeSy3FHGfYq5iLYHlIVcb2oNSAYjmK2mp/f0?=
+ =?iso-8859-1?Q?E+IANm02fXX9Tg1NNNX8O+wQBlMMgy2Zu5aZlunScS95YdBd3R4sDjm1/v?=
+ =?iso-8859-1?Q?NwQSTv0rdTzvP7iDIftbNCTM6ociCiAETUViKxR/nGaIivR+bEG+7YD0Vn?=
+ =?iso-8859-1?Q?eAI/Fu/lQT+W0SesbBwgZD/+GmcKA8cjpUMFe6c0Ofl4xa4uIU64/GrPVu?=
+ =?iso-8859-1?Q?HGH5toj4UVlzAGpZ82NknoLtJRJIZK78+fQHMO1sWbpUZ828sh7nVWoB19?=
+ =?iso-8859-1?Q?WUfT6ORQ2koZBzLDRbeI/EKirVHyLDRCFxVSXDqSoyoZ5xuDe46LIgHaVH?=
+ =?iso-8859-1?Q?eU85FZCjjzu5cW1bHrpVXR1iU0zaRt3vZH7Ur58OZw25PB+tAz2Vzl7r8v?=
+ =?iso-8859-1?Q?WDLQ=3D=3D?=
+X-OriginatorOrg: gientech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41ca1767-fbf2-4795-4231-08da39141d61
+X-MS-Exchange-CrossTenant-AuthSource: SHXPR01MB0623.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2022 21:19:38.2482
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 89592e53-6f9d-4b93-82b1-9f8da689f1b4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: k0DUz4TNoHO9cM0vkzNpHWdemcLULpCXtHA3c6a0BN6Aea57Y2GajnwScipA1Nv/Q+ZyJyP/DCFexWvIgzQlyc256IuC6ZL5cypLU3ro7vM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SHXPR01MB0575
+X-Spam-Status: No, score=3.3 required=5.0 tests=BAYES_50,DATE_IN_PAST_24_48,
+        DKIM_INVALID,DKIM_SIGNED,FORGED_SPF_HELO,KHOP_HELO_FCRDNS,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 05/15/22 at 07:47pm, Guilherme G. Piccoli wrote:
-> On 12/05/2022 11:03, Petr Mladek wrote:
-...... 
-> > OK, the question is how to make it better. Let's start with
-> > a clear picture of the problem:
-> > 
-> > 1. panic() has basically two funtions:
-> > 
-> >       + show/store debug information (optional ways and amount)
-> >       + do something with the system (reboot, stay hanged)
-> > 
-> > 
-> > 2. There are 4 ways how to show/store the information:
-> > 
-> >       + tell hypervisor to store what it is interested about
-> >       + crash_dump
-> >       + kmsg_dump()
-> >       + consoles
-> > 
-> >   , where crash_dump and consoles are special:
-> > 
-> >      + crash_dump does not return. Instead it ends up with reboot.
-> > 
-> >      + Consoles work transparently. They just need an extra flush
-> >        before reboot or staying hanged.
-> > 
-> > 
-> > 3. The various notifiers do things like:
-> > 
-> >      + tell hypervisor about the crash
-> >      + print more information (also stop watchdogs)
-> >      + prepare system for reboot (touch some interfaces)
-> >      + prepare system for staying hanged (blinking)
-> > 
-> >    Note that it pretty nicely matches the 4 notifier lists.
-> > 
-> 
-> I really appreciate the summary skill you have, to convert complex
-> problems in very clear and concise ideas. Thanks for that, very useful!
-> I agree with what was summarized above.
-
-I want to say the similar words to Petr's reviewing comment when I went
-through the patches and traced each reviewing sub-thread to try to
-catch up. Petr has reivewed this series so carefully and given many
-comments I want to ack immediately.
-
-I agree with most of the suggestions from Petr to this patch, except of
-one tiny concern, please see below inline comment.
-
-> 
-> 
-> > Now, we need to decide about the ordering. The main area is how
-> > to store the debug information. Consoles are transparent so
-> > the quesition is about:
-> > 
-> >      + hypervisor
-> >      + crash_dump
-> >      + kmsg_dump
-> > 
-> > Some people need none and some people want all. There is a
-> > risk that system might hung at any stage. This why people want to
-> > make the order configurable.
-> > 
-> > But crash_dump() does not return when it succeeds. And kmsg_dump()
-> > users havn't complained about hypervisor problems yet. So, that
-> > two variants might be enough:
-> > 
-> >     + crash_dump (hypervisor, kmsg_dump as fallback)
-> >     + hypervisor, kmsg_dump, crash_dump
-> > 
-> > One option "panic_prefer_crash_dump" should be enough.
-> > And the code might look like:
-> > 
-> > void panic()
-> > {
-> > [...]
-> > 	dump_stack();
-> > 	kgdb_panic(buf);
-> > 
-> > 	< ---  here starts the reworked code --- >
-> > 
-> > 	/* crash dump is enough when enabled and preferred. */
-> > 	if (panic_prefer_crash_dump)
-> > 		__crash_kexec(NULL);
-
-I like the proposed skeleton of panic() and code style suggested by
-Petr very much. About panic_prefer_crash_dump which might need be added,
-I hope it has a default value true. This makes crash_dump execute at
-first by default just as before, unless people specify
-panic_prefer_crash_dump=0|n|off to disable it. Otherwise we need add
-panic_prefer_crash_dump=1 in kernel and in our distros to enable kdump,
-this is inconsistent with the old behaviour.
-
-> > 
-> > 	/* Stop other CPUs and focus on handling the panic state. */
-> > 	if (has_kexec_crash_image)
-> > 		crash_smp_send_stop();
-> > 	else
-> > 		smp_send_stop()
-> > 
-> 
-> Here we have a very important point. Why do we need 2 variants of SMP
-> CPU stopping functions? I disagree with that - my understanding of this
-> after some study in architectures is that the crash_() variant is
-> "stronger", should work in all cases and if not, we should fix that -
-> that'd be a bug.
-> 
-> Such variant either maps to smp_send_stop() (in various architectures,
-> including XEN/x86) or overrides the basic function with more proper
-> handling for panic() case...I don't see why we still need such
-> distinction, if you / others have some insight about that, I'd like to
-> hear =)
-> 
-> 
-> > 	/* Notify hypervisor about the system panic. */
-> > 	atomic_notifier_call_chain(&panic_hypervisor_list, 0, NULL);
-> > 
-> > 	/*
-> > 	 * No need to risk extra info when there is no kmsg dumper
-> > 	 * registered.
-> > 	 */
-> > 	if (!has_kmsg_dumper())
-> > 		__crash_kexec(NULL);
-> > 
-> > 	/* Add extra info from different subsystems. */
-> > 	atomic_notifier_call_chain(&panic_info_list, 0, NULL);
-> > 
-> > 	kmsg_dump(KMSG_DUMP_PANIC);
-> > 	__crash_kexec(NULL);
-> > 
-> > 	/* Flush console */
-> > 	unblank_screen();
-> > 	console_unblank();
-> > 	debug_locks_off();
-> > 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
-> > 
-> > 	if (panic_timeout > 0) {
-> > 		delay()
-> > 	}
-> > 
-> > 	/*
-> > 	 * Prepare system for eventual reboot and allow custom
-> > 	 * reboot handling.
-> > 	 */
-> > 	atomic_notifier_call_chain(&panic_reboot_list, 0, NULL);
-> 
-> You had the order of panic_reboot_list VS. consoles flushing inverted.
-> It might make sense, although I didn't do that in V1...
-> Are you OK in having a helper for console flushing, as I did in V1? It
-> makes code of panic() a bit less polluted / more focused I feel.
-> 
-> 
-> > 
-> > 	if (panic_timeout != 0) {
-> > 		reboot();
-> > 	}
-> > 
-> > 	/*
-> > 	 * Prepare system for the infinite waiting, for example,
-> > 	 * setup blinking.
-> > 	 */
-> > 	atomic_notifier_call_chain(&panic_loop_list, 0, NULL);
-> > 
-> > 	infinite_loop();
-> > }
-> > 
-> > 
-> > __crash_kexec() is there 3 times but otherwise the code looks
-> > quite straight forward.
-> > 
-> > Note 1: I renamed the two last notifier list. The name 'post-reboot'
-> > 	did sound strange from the logical POV ;-)
-> > 
-> > Note 2: We have to avoid the possibility to call "reboot" list
-> > 	before kmsg_dump(). All callbacks providing info
-> > 	have to be in the info list. It a callback combines
-> > 	info and reboot functionality then it should be split.
-> > 
-> > 	There must be another way to calm down problematic
-> > 	info callbacks. And it has to be solved when such
-> > 	a problem is reported. Is there any known issue, please?
-> > 
-> > It is possible that I have missed something important.
-> > But I would really like to make the logic as simple as possible.
-> 
-> OK, I agree with you! It's indeed simpler and if others agree, I can
-> happily change the logic to what you proposed. Although...currently the
-> "crash_kexec_post_notifiers" allows to call _all_ panic_reboot_list
-> callbacks _before kdump_.
-> 
-> We need to mention this change in the commit messages, but I really
-> would like to hear the opinions of heavy users of notifiers (as
-> Michael/Hyper-V) and the kdump interested parties (like Baoquan / Dave
-> Young / Hayatama). If we all agree on such approach, will change that
-> for V2 =)
-> 
-> Thanks again Petr, for the time spent in such detailed review!
-> Cheers,
-> 
-> 
-> Guilherme
-> 
-
+Can you do a job with me?
