@@ -2,67 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ECFA52C70E
-	for <lists+linux-s390@lfdr.de>; Thu, 19 May 2022 01:01:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B363C52C8C1
+	for <lists+linux-s390@lfdr.de>; Thu, 19 May 2022 02:39:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbiERW6M (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 May 2022 18:58:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46470 "EHLO
+        id S232228AbiESAjV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 May 2022 20:39:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231182AbiERW5V (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 18 May 2022 18:57:21 -0400
-Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01D4C6472C
-        for <linux-s390@vger.kernel.org>; Wed, 18 May 2022 15:57:06 -0700 (PDT)
-Received: by mail-ot1-x336.google.com with SMTP id z15-20020a9d65cf000000b00605f064482cso2397325oth.6
-        for <linux-s390@vger.kernel.org>; Wed, 18 May 2022 15:57:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=mZ3wqB4NmL7z6lpFr/h15h1rYqsZKafJnUpMVahbEPg=;
-        b=ovbcf3BPb/ZrA/FpQ+ZjErGDIEZ9sF3fYOxqsE4Z0xdiTlYY9UY36hS3ty6MLllddq
-         FdZzNc2PcFHW5cwKZ0FlQqx6F8uTY06Ab/cmT+eL89dkm6I4fHT5v6DDGzwY+fqIjM8b
-         RjeYQt93Ckr4p0lPVWY342OwWKznH6xDl4nV36uj7bwrBPcHFh3ePzF5GNEmu/mQBhIV
-         GwWDekgJIDWSV60014hyLdzt2NtjUStY8MI6SiwBWMH8LEBnRGkE0W6Db0zUE9IYWmDQ
-         Ifd6nbhkESdcIbQrjo3sdEfmdPtb1VAIHCw/LAZv1DOtvQwqLYnhML4dVDmuoYeMmVFn
-         q7TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=mZ3wqB4NmL7z6lpFr/h15h1rYqsZKafJnUpMVahbEPg=;
-        b=0Cwb736z0m//42lbN+CykezL2emeWsPKYNlcY5hosfsjrW81P0LrJyevFEe0TExeMm
-         kIwiPIrLX8unbyWLU9rgkoKo0mvk6doK/2YXZpwu7xHXKI8ZToPOUskoawWv/8n8UhMb
-         JA2TAyiXC5H3meHi/rSPajNt4ZYzehgvoEaU69vTJca3R3YzdLt+AncYltdsRmhQcP+j
-         IdAE2gKbNI+qA2B5yd17Bb+HvYQHUOB2EoA/Qbfj0kJU/bI/vQW21AqngKZqAiqAzQn5
-         aazz3PoHjTrPQb7RcXKATeixtPzM225cRhw8T4u/Rygji8oL8uemnk6dQ1qnEYVm+iFH
-         eg/A==
-X-Gm-Message-State: AOAM532ubSpF4C3g3SbeLktbzIbji7Xm+2Tk/wGOoVznWeO/jQDBYZXS
-        NZDoi2g3YF+3i6Q96h7jRGFsHPwmL5LX+dOmb5o1zTFsDVcAsigrce0FIxCY
-X-Google-Smtp-Source: ABdhPJyyLDAg+sVdsLTxwEXiZ5avjedwK/uWMP/Y3UWcChEjwDE+iXuY4kOycHY8vIqM/rcV0hLTcVdg0IN0RAQYgBc=
-X-Received: by 2002:a5b:f87:0:b0:64a:9aa6:e181 with SMTP id
- q7-20020a5b0f87000000b0064a9aa6e181mr1852277ybh.157.1652914614913; Wed, 18
- May 2022 15:56:54 -0700 (PDT)
+        with ESMTP id S232283AbiESAjN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 18 May 2022 20:39:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3AA0A1582B
+        for <linux-s390@vger.kernel.org>; Wed, 18 May 2022 17:39:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1652920751;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dhPoiNFlWhE/EG2LfPsngTKf/wXSwPmET9DKcPeU2e0=;
+        b=eRZc/op9FmFNVYkP+CLWhQs1ica0gZG2G3FtPTqpLB4K5A69F+Szpuk9sCazIR4svDr6/Q
+        gX6cRfvf3OyIXpmq3N2KABfR0Zp9V7w6EP2lXPhBpkHETUClcBY62UN08dhrdVI8xRlAEl
+        lfvemDtsXZaWXRAzgYWApCGmEaQYCW0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-650-L87-ln_FMa6BzS8tUYo5IA-1; Wed, 18 May 2022 20:39:07 -0400
+X-MC-Unique: L87-ln_FMa6BzS8tUYo5IA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 021A48015BA;
+        Thu, 19 May 2022 00:39:07 +0000 (UTC)
+Received: from localhost (ovpn-12-103.pek2.redhat.com [10.72.12.103])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BD749492C3B;
+        Thu, 19 May 2022 00:39:05 +0000 (UTC)
+Date:   Thu, 19 May 2022 08:39:02 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Heiko Carstens <hca@linux.ibm.com>, akpm@linux-foundation.org,
+        zohar@linux.ibm.com
+Cc:     Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org,
+        keyrings@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Michal Suchanek <msuchanek@suse.de>,
+        Dave Young <dyoung@redhat.com>, Will Deacon <will@kernel.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Mimi Zohar <zohar@linux.ibm.com>, Chun-Yi Lee <jlee@suse.com>,
+        stable@vger.kernel.org, Philipp Rudo <prudo@linux.ibm.com>,
+        linux-security-module@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        "open list:S390" <linux-s390@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 4/4] kexec, KEYS, s390: Make use of built-in and
+ secondary keyring for signature verification
+Message-ID: <20220519003902.GE156677@MiWiFi-R3L-srv>
+References: <20220512070123.29486-1-coxu@redhat.com>
+ <20220512070123.29486-5-coxu@redhat.com>
+ <YoTYm6Fo1vBUuJGu@osiris>
 MIME-Version: 1.0
-Received: by 2002:a05:7000:7143:0:0:0:0 with HTTP; Wed, 18 May 2022 15:56:53
- -0700 (PDT)
-Reply-To: tonywenn@asia.com
-From:   Tony Wen <weboutloock4@gmail.com>
-Date:   Thu, 19 May 2022 06:56:53 +0800
-Message-ID: <CAE2_YrD=5bo8j9+ah-xptEBBV-HEC4=Gb0SRHf996phiopc3WQ@mail.gmail.com>
-Subject: engage
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.4 required=5.0 tests=BAYES_40,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YoTYm6Fo1vBUuJGu@osiris>
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Can I engage your services?
+On 05/18/22 at 01:29pm, Heiko Carstens wrote:
+> On Thu, May 12, 2022 at 03:01:23PM +0800, Coiby Xu wrote:
+> > From: Michal Suchanek <msuchanek@suse.de>
+> > 
+> > commit e23a8020ce4e ("s390/kexec_file: Signature verification prototype")
+> > adds support for KEXEC_SIG verification with keys from platform keyring
+> > but the built-in keys and secondary keyring are not used.
+> > 
+> > Add support for the built-in keys and secondary keyring as x86 does.
+> > 
+> > Fixes: e23a8020ce4e ("s390/kexec_file: Signature verification prototype")
+> > Cc: stable@vger.kernel.org
+> > Cc: Philipp Rudo <prudo@linux.ibm.com>
+> > Cc: kexec@lists.infradead.org
+> > Cc: keyrings@vger.kernel.org
+> > Cc: linux-security-module@vger.kernel.org
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com>
+> > Acked-by: Baoquan He <bhe@redhat.com>
+> > Signed-off-by: Coiby Xu <coxu@redhat.com>
+> > ---
+> >  arch/s390/kernel/machine_kexec_file.c | 18 +++++++++++++-----
+> >  1 file changed, 13 insertions(+), 5 deletions(-)
+> 
+> As far as I can tell this doesn't have any dependency to the other
+> patches in this series, so should I pick this up for the s390 tree, or
+> how will this go upstream?
+
+Thanks, Heiko.
+
+I want to ask Mimi if this can be taken into KEYS-ENCRYPTED tree.
+Otherwise I will ask Andrew to help pick this whole series.
+
+Surely, this patch 4 can be taken into s390 seperately since it's
+independent, both looks good.
+
+Thanks
+Baoquan
+
