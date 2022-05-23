@@ -2,95 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C96C5316F5
-	for <lists+linux-s390@lfdr.de>; Mon, 23 May 2022 22:52:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22009531917
+	for <lists+linux-s390@lfdr.de>; Mon, 23 May 2022 22:54:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230098AbiEWTch (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 23 May 2022 15:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50010 "EHLO
+        id S229613AbiEWTn7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 May 2022 15:43:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230297AbiEWTbt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 23 May 2022 15:31:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C3EB59157F
-        for <linux-s390@vger.kernel.org>; Mon, 23 May 2022 12:15:26 -0700 (PDT)
+        with ESMTP id S231600AbiEWTg5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 23 May 2022 15:36:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3B5D0E15DC
+        for <linux-s390@vger.kernel.org>; Mon, 23 May 2022 12:24:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1653333325;
+        s=mimecast20190719; t=1653333866;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k/0kz+ejxdczhCliiE6lC8QVlLMBxfRksui59KA65qM=;
-        b=ghjL8dJL9ZbzcCvAUvsdbRACzFhnJffgkeMFEb+STnm97fZsziW/uniV90CIR7fyReI/r1
-        72O1AtruJoyMUhnAOjF7qIxXnR3D+pMWnJExDfdkch+m4ZY3bjpiyXUE2tGV4PisSYgDH8
-        XwV2sV0viaMZxypyMR5k3D3lxfuHCME=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+         content-transfer-encoding:content-transfer-encoding;
+        bh=InjuNukk5AWJl2Wwz5sSwlsD5KfOc4voU8ewp772j2k=;
+        b=GrNwTVKUyt1FTuEVBPp2ansDLgYFgC+mOAwx+vS91TkPWzrCM53tySTFNzrUrDM+VGDVJO
+        dRE1rIDiEcb8K3K6LJQ92mO3r5RAaQCK3ZhIEkXz5Xz6GMdEp2txdEa59ssetmKVdpI9lm
+        XB+DrFmTgnBkYQmWF/24WOjyqDEd/DU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-453-yuQtKMYMPF--uQgpBEvwnA-1; Mon, 23 May 2022 15:15:24 -0400
-X-MC-Unique: yuQtKMYMPF--uQgpBEvwnA-1
-Received: by mail-ej1-f72.google.com with SMTP id gh15-20020a170906e08f00b006fea2a22319so4036227ejb.20
-        for <linux-s390@vger.kernel.org>; Mon, 23 May 2022 12:15:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=k/0kz+ejxdczhCliiE6lC8QVlLMBxfRksui59KA65qM=;
-        b=h0yxYQZqDv1ZrqF8iuwJaZOmt1bmbcxOTsoKUGj9aoSI7yxs7vuQvh1Fi+Clvjlxfw
-         5A9u2J1b5QAvLx8X4CG9Ap6OFwqQ4a86+e7Nz4UtM/169TrZ2FXFJfb5uyKlRhYv57iQ
-         K5bc19bKWDqkflfnpjUFzrbOmx/R9IVQhGw1Vg2SquKM+wYHygo4w0Lif9G0hBVTAMxk
-         aIV6OA3r5pmQioxkN+gjPaahAmwNy5DiOb0E5eqVGodCSXIQnfJ1q1ERy6F/81nLEBFt
-         MrchMU5iUKZrf2vzz2hF/iO7rL6VNMlDK/fPiXWJqxjdoFWI+qjXwWFWg28+uXiMipQI
-         sePw==
-X-Gm-Message-State: AOAM533MJd4MtoruqKL1fW40rW0BnNM+re798P2sbXxA/WHpMXQxYAYF
-        pej2scEOh1twkqxYRdcYthu1pl+zjT0Vxdjsu0u+dWRAQqgNF00LMKd0aLbmi4ESof6X5xWydBN
-        dSyl+XUpKFA7MZOwGTt29gw==
-X-Received: by 2002:a17:907:6d15:b0:6fd:d985:889b with SMTP id sa21-20020a1709076d1500b006fdd985889bmr21549077ejc.753.1653333323221;
-        Mon, 23 May 2022 12:15:23 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxgkCPhcAB33EYPZ90yGnEhKwoYAq64BHcNEOKNWqNDyz59/iBOtrFdjzxw5hQFuZHG1dBu+g==
-X-Received: by 2002:a17:907:6d15:b0:6fd:d985:889b with SMTP id sa21-20020a1709076d1500b006fdd985889bmr21549058ejc.753.1653333323039;
-        Mon, 23 May 2022 12:15:23 -0700 (PDT)
-Received: from ?IPV6:2001:b07:6468:f312:9af8:e5f5:7516:fa89? ([2001:b07:6468:f312:9af8:e5f5:7516:fa89])
-        by smtp.googlemail.com with ESMTPSA id c21-20020aa7c995000000b0042aaacd4edasm8624567edt.26.2022.05.23.12.15.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 May 2022 12:15:22 -0700 (PDT)
-Message-ID: <a1d7d9f9-bb9d-1b98-a073-85d835be0341@redhat.com>
-Date:   Mon, 23 May 2022 21:15:19 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [GIT PULL 0/4] KVM: s390: Fix and feature for 5.19
-Content-Language: en-US
-To:     Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
-        Thomas Huth <thuth@redhat.com>
-References: <20220523095625.13913-1-borntraeger@linux.ibm.com>
+ us-mta-216-vlreVST7O8GEWgS7BFZBbw-1; Mon, 23 May 2022 15:24:20 -0400
+X-MC-Unique: vlreVST7O8GEWgS7BFZBbw-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6C37F811E78;
+        Mon, 23 May 2022 19:24:20 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4634D492C3B;
+        Mon, 23 May 2022 19:24:20 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
-In-Reply-To: <20220523095625.13913-1-borntraeger@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Christian Borntraeger <borntraeger@linux.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH] s390/uv_uapi: depend on CONFIG_S390
+Date:   Mon, 23 May 2022 15:24:20 -0400
+Message-Id: <20220523192420.151184-1-pbonzini@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 5/23/22 11:56, Christian Borntraeger wrote:
->    git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-next-5.19-1
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ drivers/s390/char/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Pulled, thanks.
-
-Paolo
+diff --git a/drivers/s390/char/Kconfig b/drivers/s390/char/Kconfig
+index ef8f41833c1a..108e8eb06249 100644
+--- a/drivers/s390/char/Kconfig
++++ b/drivers/s390/char/Kconfig
+@@ -103,6 +103,7 @@ config SCLP_OFB
+ config S390_UV_UAPI
+ 	def_tristate m
+ 	prompt "Ultravisor userspace API"
++        depends on S390
+ 	help
+ 	  Selecting exposes parts of the UV interface to userspace
+ 	  by providing a misc character device at /dev/uv.
+-- 
+2.31.1
 
