@@ -2,106 +2,224 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61844531A4D
-	for <lists+linux-s390@lfdr.de>; Mon, 23 May 2022 22:55:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E743D531BD8
+	for <lists+linux-s390@lfdr.de>; Mon, 23 May 2022 22:56:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229645AbiEWTnT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 23 May 2022 15:43:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38026 "EHLO
+        id S232084AbiEWUEo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 May 2022 16:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234009AbiEWTmU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 23 May 2022 15:42:20 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65F711C03
-        for <linux-s390@vger.kernel.org>; Mon, 23 May 2022 12:39:15 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id b5so6949752plx.10
-        for <linux-s390@vger.kernel.org>; Mon, 23 May 2022 12:39:15 -0700 (PDT)
+        with ESMTP id S232076AbiEWUEn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 23 May 2022 16:04:43 -0400
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26722880D2
+        for <linux-s390@vger.kernel.org>; Mon, 23 May 2022 13:04:40 -0700 (PDT)
+Received: by mail-yb1-xb2c.google.com with SMTP id s14so27423ybc.10
+        for <linux-s390@vger.kernel.org>; Mon, 23 May 2022 13:04:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9i0mf5EWjId+dJhDG42zI0t8gO1U5xR/fPTtg8h/guQ=;
-        b=G67mgEOcbKAzzfRqWT2tyqM6K9pitcq9pbTVcwT0LjmKZNi0oiqVsX8V97hEFwl2hf
-         AMnpF3tfbp0thJvNCE4CX5dI4O8ELTGwmxs1K5fhCNP737yCqZGbfIr/xW9c33Xf+LOK
-         scdJ+18kS7hWnfRSUS9ItgijmeteaopgZF3uU=
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u1AipD1OfrmQcB3YUOaC7P4EIOVqCxquxh0+AE+xuhM=;
+        b=bQzOkbeNz00bM35Ce99+u6O7FvwcbMq3CbiwHzibWAm6u6rINPbk7M+Gwf+K9Rpfqf
+         Bf403twpWA0WD0G/TeiGjK7xOqCHIbbjcEyaY7BokFUQ+zKuBOPZ4uuNji6TV8e8F0C1
+         OiSHL6d1UFbmnZn05rjy7t5aWkkhI9KCK9PlriUExXYqGdsnCTQfyAuJZt5YfiCD5x4p
+         PKKVhF6lcNgu2psiwb4uusrHWD7/H5PDQpYT3YIO6SB5vgxXpWhixe5z1M+Sg7r5WGTG
+         kStV8jBQu/gFdCpVP2vrKt9lgnlvuXrGHW8QBgL9FPZgCDY30zwKLwvPAhDhx3FPGx8x
+         PsTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9i0mf5EWjId+dJhDG42zI0t8gO1U5xR/fPTtg8h/guQ=;
-        b=Pcp01eSQBsYq+1shLT73U4iCm1SU2fMacoZkppaFoe2xDvqYrLb88pDqMrD8QrP7tW
-         J8kz/5d5BHch6c1DAFAbX2COWW9a+GzeXC3X46v01Ud1RkxJNwRlYPXUG2iKXYbzMWUg
-         66i+BzFocpbLDM2dNpjTguZRVyWIbW9c6mmiL8CV/GPYezyEM/qdYQdkgyvDG/f9eBD3
-         NR0/aIB98beDJY6ADhtZG9jlMq0kNHML9e/wYa17T/tebMvmjJ1fdPQ/WKH5Sayk4sia
-         8nNY1FM6Z5UYa1YmvCGBavnXN1jEp7SY9epmeMyvW1f7AXPjjdikISt+jlOl4Q3U2Ptq
-         Q5pA==
-X-Gm-Message-State: AOAM533rHEOpyDMQVpfnUYoUS883r+VqTwjaE6fR1VRavgz0W3ntiPux
-        vxbrWhcYO/Skow1o4n4ew8H0eg==
-X-Google-Smtp-Source: ABdhPJwpmlrfLvCqOEAWUHk/iFb9vTBCFvDV+XiSslGuIShWmQMdDaruCMB2aTz4o4uZEjpK38rAug==
-X-Received: by 2002:a17:902:f605:b0:14d:9e11:c864 with SMTP id n5-20020a170902f60500b0014d9e11c864mr24236615plg.54.1653334755308;
-        Mon, 23 May 2022 12:39:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a9-20020a62bd09000000b0051827128aeasm7543246pff.131.2022.05.23.12.39.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 May 2022 12:39:14 -0700 (PDT)
-Date:   Mon, 23 May 2022 12:39:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Maninder Singh <maninder1.s@samsung.com>, pmladek@suse.com,
-        bcain@quicinc.com, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, satishkh@cisco.com, sebaddel@cisco.com,
-        kartilak@cisco.com, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        mcgrof@kernel.org, jason.wessel@windriver.com,
-        daniel.thompson@linaro.org, dianders@chromium.org,
-        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, mhiramat@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, will@kernel.org, longman@redhat.com,
-        boqun.feng@gmail.com, rostedt@goodmis.org,
-        senozhatsky@chromium.org, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, akpm@linux-foundation.org, arnd@arndb.de,
-        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-modules@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net, v.narang@samsung.com,
-        onkarnath.1@samsung.com
-Subject: Re: [PATCH 0/5] kallsyms: make kallsym APIs more safe with scnprintf
-Message-ID: <202205231238.FAF6D28@keescook>
-References: <CGME20220520083715epcas5p400b11adef4d540756c985feb20ba29bc@epcas5p4.samsung.com>
- <20220520083701.2610975-1-maninder1.s@samsung.com>
- <YonTOL4zC4CytVrn@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u1AipD1OfrmQcB3YUOaC7P4EIOVqCxquxh0+AE+xuhM=;
+        b=EKPTn2RaI+x/I/+gXRIbJazUqDED7t4o8oRsqcitYB17iEwxyIXUQuVdvhSmn9mCfX
+         dJeL7sJNkFiMeRX7JP57RJGhJAcskxPS1RRwo6rWf1/eyhZwYkpMy0/e5cG/32IQSOpC
+         g1o/bRrk/YhLeDMzHbaXeG+5cWM37JutrNGD/zl87y0g5Ah/iE9YMfKWfgwtNmlL723q
+         TeQsG07vxOJTPDtmdr+OSfB1vI4Z+eA21n5ShmJwYblhj1xAYZr1hQEzn1rwqsrmylqm
+         ExFR4itLwRbH6H996kebvZ71m2w/L5AyHwV0j3NzDcvqlIu9dIQ8hTO9Lik7t8oENSwR
+         H4lA==
+X-Gm-Message-State: AOAM5313LKMyH6WEB09KkNyXnH1acxz4xcpay65+iHfGHcrzT9OBWpMM
+        08f8UH4jCcv7dfcyLomD0emWD8JI63DYT+LT8PjjoA==
+X-Google-Smtp-Source: ABdhPJzqi3uJx736pHwpoReDWxmaiJiRfwvNOrYnqDbU07+DT5iV9p+v8KIvHm54c3ZBoXT3vDZcWATWAm//Q1iK/LY=
+X-Received: by 2002:a05:6902:70e:b0:64f:2e28:d64a with SMTP id
+ k14-20020a056902070e00b0064f2e28d64amr23757981ybt.80.1653336279141; Mon, 23
+ May 2022 13:04:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YonTOL4zC4CytVrn@infradead.org>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+References: <20220429220933.1350374-1-saravanak@google.com>
+ <YogkhvFGVcjNQ21Z@dev-arch.thelio-3990X> <CAGETcx9nvBs1b4M=2hBhrLX_2-rzLtAmV9WfTXu0MC7JnsBvwA@mail.gmail.com>
+ <YogsiMCDupNUhMgL@dev-fedora.thelio-3990X> <CAGETcx-JyWwoGA3o8eep7E29Cm4DcVT6D1JFJh72jLcqm_mjCQ@mail.gmail.com>
+ <Youleo3Ganxbc1sq@dev-arch.thelio-3990X>
+In-Reply-To: <Youleo3Ganxbc1sq@dev-arch.thelio-3990X>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 23 May 2022 13:04:03 -0700
+Message-ID: <CAGETcx-sL08h2toEyxY6ztc6xNuJiPok6iDEeuJ1mOA3nvE+vA@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Extend deferred probe timeout on driver registration
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kernel-team@android.com,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, May 21, 2022 at 11:07:52PM -0700, Christoph Hellwig wrote:
-> On Fri, May 20, 2022 at 02:06:56PM +0530, Maninder Singh wrote:
-> > kallsyms functionality depends on KSYM_NAME_LEN directly.
-> > but if user passed array length lesser than it, sprintf
-> > can cause issues of buffer overflow attack.
-> > 
-> > So changing *sprint* and *lookup* APIs in this patch set
-> > to have buffer size as an argument and replacing sprintf with
-> > scnprintf.
-> 
-> This is still a pretty horrible API.  Passing something like
-> a struct seq_buf seems like the much better API here.  Also with
-> the amount of arguments and by reference passing it might be worth
-> to pass them as a structure while you're at it.
+On Mon, May 23, 2022 at 8:17 AM Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> On Fri, May 20, 2022 at 05:15:55PM -0700, Saravana Kannan wrote:
+> > On Fri, May 20, 2022 at 5:04 PM Nathan Chancellor <nathan@kernel.org> wrote:
+> > >
+> > > On Fri, May 20, 2022 at 04:49:48PM -0700, Saravana Kannan wrote:
+> > > > On Fri, May 20, 2022 at 4:30 PM Nathan Chancellor <nathan@kernel.org> wrote:
+> > > > >
+> > > > > Hi Saravana,
+> > > > >
+> > > > > On Fri, Apr 29, 2022 at 03:09:32PM -0700, Saravana Kannan wrote:
+> > > > > > The deferred probe timer that's used for this currently starts at
+> > > > > > late_initcall and runs for driver_deferred_probe_timeout seconds. The
+> > > > > > assumption being that all available drivers would be loaded and
+> > > > > > registered before the timer expires. This means, the
+> > > > > > driver_deferred_probe_timeout has to be pretty large for it to cover the
+> > > > > > worst case. But if we set the default value for it to cover the worst
+> > > > > > case, it would significantly slow down the average case. For this
+> > > > > > reason, the default value is set to 0.
+> > > > > >
+> > > > > > Also, with CONFIG_MODULES=y and the current default values of
+> > > > > > driver_deferred_probe_timeout=0 and fw_devlink=on, devices with missing
+> > > > > > drivers will cause their consumer devices to always defer their probes.
+> > > > > > This is because device links created by fw_devlink defer the probe even
+> > > > > > before the consumer driver's probe() is called.
+> > > > > >
+> > > > > > Instead of a fixed timeout, if we extend an unexpired deferred probe
+> > > > > > timer on every successful driver registration, with the expectation more
+> > > > > > modules would be loaded in the near future, then the default value of
+> > > > > > driver_deferred_probe_timeout only needs to be as long as the worst case
+> > > > > > time difference between two consecutive module loads.
+> > > > > >
+> > > > > > So let's implement that and set the default value to 10 seconds when
+> > > > > > CONFIG_MODULES=y.
+> > > > > >
+> > > > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > > > > Cc: Rob Herring <robh@kernel.org>
+> > > > > > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > > > > Cc: Will Deacon <will@kernel.org>
+> > > > > > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> > > > > > Cc: Kevin Hilman <khilman@kernel.org>
+> > > > > > Cc: Thierry Reding <treding@nvidia.com>
+> > > > > > Cc: Mark Brown <broonie@kernel.org>
+> > > > > > Cc: Pavel Machek <pavel@ucw.cz>
+> > > > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > > > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > > > > Cc: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > > > Cc: linux-gpio@vger.kernel.org
+> > > > > > Cc: linux-pm@vger.kernel.org
+> > > > > > Cc: iommu@lists.linux-foundation.org
+> > > > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > > >
+> > > > > I bisected a boot hang with ARCH=s390 defconfig in QEMU down to this
+> > > > > change as commit 2b28a1a84a0e ("driver core: Extend deferred probe
+> > > > > timeout on driver registration") in next-20220520 (bisect log below).
+> > > > >
+> > > > > $ make -skj"$(nproc)" ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- defconfig bzImage
+> > > > >
+> > > > > $ timeout --foreground 15m stdbuf -oL -eL \
+> > > > > qemu-system-s390x \
+> > > > > -initrd ... \
+> > > > > -M s390-ccw-virtio \
+> > > > > -display none \
+> > > > > -kernel arch/s390/boot/bzImage \
+> > > > > -m 512m \
+> > > > > -nodefaults \
+> > > > > -serial mon:stdio
+> > > > > ...
+> > > > > [    2.077303] In-situ OAM (IOAM) with IPv6
+> > > > > [    2.077639] NET: Registered PF_PACKET protocol family
+> > > > > [    2.078063] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+> > > > > [    2.078795] Key type dns_resolver registered
+> > > > > [    2.079317] cio: Channel measurement facility initialized using format extended (mode autodetected)
+> > > > > [    2.081494] Discipline DIAG cannot be used without z/VM
+> > > > > [  260.626363] random: crng init done
+> > > > > qemu-system-s390x: terminating on signal 15 from pid 3815762 (timeout)
+> > > > >
+> > > > > We have a simple rootfs available if necessary:
+> > > > >
+> > > > > https://github.com/ClangBuiltLinux/boot-utils/raw/bc0d17785eb67f1edd0ee0a134970a807895f741/images/s390/rootfs.cpio.zst
+> > > > >
+> > > > > If there is any other information I can provide, please let me know!
+> > > >
+> > > > Hmm... strange. Can you please try the following command line options
+> > > > and tell me which of these has the issue and which don't?
+> > >
+> > > Sure thing!
+> > >
+> > > > 1) deferred_probe_timeout=0
+> > >
+> > > No issue.
+> > >
+> > > > 2) deferred_probe_timeout=1
+> > > > 3) deferred_probe_timeout=300
+> > >
+> > > Both of these appear to hang in the same way, I let each sit for five
+> > > minutes.
+> >
+> > Strange that a sufficiently large timeout isn't helping. Is it trying
+> > to boot off a network mount? I'll continue looking into this next
+> > week.
+>
+> I don't think so, it seems like doing that requires some extra flags
+> that we do not have:
+>
+> https://wiki.qemu.org/Features/S390xNetworkBoot
+>
+> If you need any additional information or want something tested, please
+> let me know!
 
-Yeah, I agree. It really seems like seq_buf would be nicer.
+I'll try to get qemu going on my end, but I'm not too confident I'll
+be able to get to it in a timely fashion. So if you can help figure
+out where this boot process is hanging, that'd be very much
+appreciated.
 
--- 
-Kees Cook
+Couple of suggestions for debugging:
+
+Can you add a log to "wait_for_device_probe()" and see if that's
+getting called right before the boot process hangs? If it does, can
+you get a stacktrace (I just add a WARN_ON(1) when I need a stack
+trace)? It's unlikely this is the case because
+deferred_probe_timeout=1 still causes an issue for you, but I'd be
+good to rule out.
+
+Let's try to rule out if deferred_probe_extend_timeout() is causing
+some issues. So, without my patch, what happens if you set:
+deferred_probe_timeout=1
+deferred_probe_timeout=300
+
+If deferred_probe_timeout=1 causes an issue even without my patch,
+then in addition, can you try commenting out the call to
+fw_devlink_drivers_done() inside deferred_probe_timeout_work_func()
+and try again?
+
+Thanks a lot for reporting and helping debug this issue.
+
+-Saravana
