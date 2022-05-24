@@ -2,92 +2,66 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90F88532C5F
-	for <lists+linux-s390@lfdr.de>; Tue, 24 May 2022 16:41:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1826C532AB8
+	for <lists+linux-s390@lfdr.de>; Tue, 24 May 2022 14:57:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235753AbiEXOkr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 May 2022 10:40:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44564 "EHLO
+        id S233588AbiEXM5i (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 May 2022 08:57:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235060AbiEXOkq (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 May 2022 10:40:46 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80C8C8FF90;
-        Tue, 24 May 2022 07:40:45 -0700 (PDT)
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24ODoKVq019690;
-        Tue, 24 May 2022 14:40:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=AWmwG0/S/BRP/SUjFpFjATNaYnxz1l+/KwNEieF0G8Q=;
- b=ilAn4qimMmuSnCDyO0VOjQ+t2kRPYIalqmM0/4suHdLjxmUbIGtJyr1aOxtSYNF3tY4c
- 1RpiiIlOwUo/fvGTva4xhshudsTNjxEEQqDvtmKuA4WAGB18PNgMlSVNkaIm+rZYO1Ys
- rbY3V7fIWXpSfzRvxk1dQ3DLziumIesK7OTy54o6rNmfBmlD1+0m6kZp2P2jwCgbf9b9
- 3UKf0YLOeuKaHOovLDzANUaQm5aTtOMToNXxLRcbDMg/OUSzjUf84fU65JHpCp1d77mf
- Xx5hBHth2IX3wANA4XUdy4gvVzZM8oIFAqNC0obbcWP+l1L2o2d1Xm+vvOI2UuaREY8k ug== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g903bt6dc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 May 2022 14:40:44 +0000
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24ODpfSQ027689;
-        Tue, 24 May 2022 14:40:44 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g903bt6cx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 May 2022 14:40:43 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24OEYxcE011190;
-        Tue, 24 May 2022 14:40:42 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 3g6qq9cn19-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 May 2022 14:40:42 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24OEecF822217064
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 May 2022 14:40:38 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E51011C054;
-        Tue, 24 May 2022 14:40:38 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22E1311C04C;
-        Tue, 24 May 2022 14:40:38 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.1.98])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 24 May 2022 14:40:38 +0000 (GMT)
-Date:   Tue, 24 May 2022 14:49:11 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-Cc:     Thomas Huth <thuth@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests PATCH 2/3] s390x: lib: SOP facility query
- function
-Message-ID: <20220524144911.39c99888@p-imbrenda>
-In-Reply-To: <20220520190850.3445768-3-scgl@linux.ibm.com>
-References: <20220520190850.3445768-1-scgl@linux.ibm.com>
-        <20220520190850.3445768-3-scgl@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-redhat-linux-gnu)
+        with ESMTP id S232013AbiEXM5h (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 May 2022 08:57:37 -0400
+Received: from corp-front09-corp.i.nease.net (corp-front09-corp.i.nease.net [59.111.134.159])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8809027FF6;
+        Tue, 24 May 2022 05:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=corp.netease.com; s=s210401; h=Received:From:To:Cc:Subject:
+        Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Type:
+        Content-Transfer-Encoding; bh=Yt7B0KucM2nqy+KyVy3N/Gqg5XShwOIM39
+        x08j9SOA0=; b=RsFe2cG2ulHWNUz/b9CMyHQi+1UkeiICypCPbvQ5kahiXcpymN
+        tpwjeSfpnFI31x/ENuttA9vJlPRnr62RS97/srA0cnPxGaeXqoXBB0QU6FRx0xkD
+        lef2CnUFJR9zCJVVTNQejVhX7hslIiZeUlt18us8WTOe25XcdFo6zGi48=
+Received: from pubt1-k8s74.yq.163.org (unknown [115.238.122.38])
+        by corp-front09-corp.i.nease.net (Coremail) with SMTP id nxDICgDn6V411oxiVBZhAA--.16490S2;
+        Tue, 24 May 2022 20:57:26 +0800 (HKT)
+From:   liuyacan@corp.netease.com
+To:     kgraul@linux.ibm.com
+Cc:     davem@davemloft.net, guangguan.wang@linux.alibaba.com,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        pabeni@redhat.com
+Subject: Re: [PATCH net-next v2] net/smc: align the connect behaviour with TCP
+Date:   Tue, 24 May 2022 20:57:25 +0800
+Message-Id: <20220524125725.951315-1-liuyacan@corp.netease.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <26d43c65-1f23-5b83-6377-3327854387c4@linux.ibm.com>
+References: <26d43c65-1f23-5b83-6377-3327854387c4@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: LvNXF6sRq0GrejiuPLpXLC0oRdcPzGXQ
-X-Proofpoint-GUID: 6nAFYwjAnKVmx-hNN6zIJCZxU3wlkjox
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-24_07,2022-05-23_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- bulkscore=0 clxscore=1015 mlxscore=0 impostorscore=0 priorityscore=1501
- lowpriorityscore=0 phishscore=0 mlxlogscore=999 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2205240074
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: nxDICgDn6V411oxiVBZhAA--.16490S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCw1UWF1DGr45Zw4UAFyUGFg_yoWrXr1Upr
+        yIka9akrWDJr13urnIv3WDCFsayws5JF45GryxWFy8CwnFvFnxJrZ7KrWj9a17ZFykGryU
+        Zr48ZFZxKFZ8A37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUJGb7IF0VCFI7km07C26c804VAKzcIF0wAYjsxI4VWDJwAYFVCj
+        jxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67
+        AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IY
+        x2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4vE1TuYJxuj
+        qTIEc-sFP3VYkVW5Jr1DJw4UKVWUGwAawVACjsI_Ar4v6c8GOVW06r1DJrWUAwAawVACjs
+        I_Ar4v6c8GOVWY6r1DJrWUAwAawVCFI7vE04vSzxk24VAqrcv_Gr1UXr18M2vj6xkI62vS
+        6c8GOVWUtr1rJFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCE34x0Y48IcwAqx4xG64
+        xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j
+        6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwAKzVCY07xG64k0F24l7I
+        0Y64k_MxkI7II2jI8vz4vEwIxGrwCF04k20xvY0x0EwIxGrwCF72vEw2IIxxk0rwCFx2Iq
+        xVCFs4IE7xkEbVWUJVW8JwCFI7vE0wC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+        vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+        x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
+        xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+        wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j6wZ7UUUUU=
+X-CM-SenderInfo: 5olx5txfdqquhrush05hwht23hof0z/1tbiBQAQCVt761lFGAAFsW
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -95,95 +69,78 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 20 May 2022 21:08:49 +0200
-Janis Schoetterl-Glausch <scgl@linux.ibm.com> wrote:
-
-> Add function returning which suppression-on-protection facility is
-> installed.
+> > 
+> > 
+> > On 2022/5/23 20:24, Karsten Graul wrote:
+> >> On 13/05/2022 04:24, Guangguan Wang wrote:
+> >>> Connect with O_NONBLOCK will not be completed immediately
+> >>> and returns -EINPROGRESS. It is possible to use selector/poll
+> >>> for completion by selecting the socket for writing. After select
+> >>> indicates writability, a second connect function call will return
+> >>> 0 to indicate connected successfully as TCP does, but smc returns
+> >>> -EISCONN. Use socket state for smc to indicate connect state, which
+> >>> can help smc aligning the connect behaviour with TCP.
+> >>>
+> >>> Signed-off-by: Guangguan Wang <guangguan.wang@linux.alibaba.com>
+> >>> Acked-by: Karsten Graul <kgraul@linux.ibm.com>
+> >>> ---
+> >>>  net/smc/af_smc.c | 50 ++++++++++++++++++++++++++++++++++++++++++++----
+> >>>  1 file changed, 46 insertions(+), 4 deletions(-)
+> >>>
+> >>> diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+> >>> index fce16b9d6e1a..5f70642a8044 100644
+> >>> --- a/net/smc/af_smc.c
+> >>> +++ b/net/smc/af_smc.c
+> >>> @@ -1544,9 +1544,29 @@ static int smc_connect(struct socket *sock, struct sockaddr *addr,
+> >>>  		goto out_err;
+> >>>  
+> >>>  	lock_sock(sk);
+> >>> +	switch (sock->state) {
+> >>> +	default:
+> >>> +		rc = -EINVAL;
+> >>> +		goto out;
+> >>> +	case SS_CONNECTED:
+> >>> +		rc = sk->sk_state == SMC_ACTIVE ? -EISCONN : -EINVAL;
+> >>> +		goto out;
+> >>> +	case SS_CONNECTING:
+> >>> +		if (sk->sk_state == SMC_ACTIVE)
+> >>> +			goto connected;
+> >>
+> >> I stumbled over this when thinking about the fallback processing. If for whatever reason
+> >> fallback==true during smc_connect(), the "if (smc->use_fallback)" below would set sock->state
+> >> to e.g. SS_CONNECTED. But in the fallback case sk_state keeps SMC_INIT. So during the next call
+> >> the SS_CONNECTING case above would break because sk_state in NOT SMC_ACTIVE, and we would end
+> >> up calling kernel_connect() again. Which seems to be no problem when kernel_connect() returns 
+> >> -EISCONN and we return this to the caller. But is this how it should work, or does it work by chance?
+> >>
+> > 
+> > Since the sk_state keeps SMC_INIT and does not correctly indicate the state of clcsock, it should end
+> > up calling kernel_connect() again to get the actual connection state of clcsock.
+> > 
+> > And I'm sorry there is a problem that if sock->state==SS_CONNECTED and sk_state==SMC_INIT, further call
+> > of smc_connect will return -EINVAL where -EISCONN is preferred. 
+> > The steps to reproduce:
+> > 1）switch fallback before connect, such as setsockopt TCP_FASTOPEN
+> > 2）connect with noblocking and returns -EINPROGRESS. (sock->state changes to SS_CONNECTING)
+> > 3) end up calling connect with noblocking again and returns 0. (kernel_connect() returns 0 and sock->state changes to
+> >    SS_CONNECTED but sk->sk_state stays SMC_INIT)
+> > 4) call connect again, maybe by mistake, will return -EINVAL, but -EISCONN is preferred.
+> > 
+> > What do you think about if we synchronize the sk_state to SMC_ACTIVE instead of keeping SMC_INIT when clcsock
+> > connected successfully in fallback case described above.
+> > 
+> > ...
 > 
-> Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-
-> ---
->  lib/s390x/asm/facility.h | 21 +++++++++++++++++++++
->  lib/s390x/sclp.h         |  4 ++++
->  lib/s390x/sclp.c         |  2 ++
->  3 files changed, 27 insertions(+)
+> I start thinking that the fix in 86434744 introduced a problem. Before that fix a connect with
+> fallback always reached __smc_connect() and on top of that function in case of fallback
+> smc_connect_fallback() is called, which itself sets sk_state to SMC_ACTIVE.
 > 
-> diff --git a/lib/s390x/asm/facility.h b/lib/s390x/asm/facility.h
-> index 49380203..a66fe56a 100644
-> --- a/lib/s390x/asm/facility.h
-> +++ b/lib/s390x/asm/facility.h
-> @@ -12,6 +12,7 @@
->  #include <asm/facility.h>
->  #include <asm/arch_def.h>
->  #include <bitops.h>
-> +#include <sclp.h>
->  
->  #define NB_STFL_DOUBLEWORDS 32
->  extern uint64_t stfl_doublewords[];
-> @@ -42,4 +43,24 @@ static inline void setup_facilities(void)
->  		stfle(stfl_doublewords, NB_STFL_DOUBLEWORDS);
->  }
->  
-> +enum supp_on_prot_facility {
-> +	SOP_NONE,
-> +	SOP_BASIC,
-> +	SOP_ENHANCED_1,
-> +	SOP_ENHANCED_2,
-> +};
-> +
-> +static inline enum supp_on_prot_facility get_supp_on_prot_facility(void)
-> +{
-> +	if (sclp_facilities.has_esop) {
-> +		if (test_facility(131)) /* side-effect-access facility */
-> +			return SOP_ENHANCED_2;
-> +		else
-> +			return SOP_ENHANCED_1;
-> +	}
-> +	if (sclp_facilities.has_sop)
-> +		return SOP_BASIC;
-> +	return SOP_NONE;
-> +}
-> +
->  #endif
-> diff --git a/lib/s390x/sclp.h b/lib/s390x/sclp.h
-> index 3488f4d2..853529bf 100644
-> --- a/lib/s390x/sclp.h
-> +++ b/lib/s390x/sclp.h
-> @@ -123,7 +123,9 @@ struct sclp_facilities {
->  	uint64_t has_cei : 1;
->  
->  	uint64_t has_diag318 : 1;
-> +	uint64_t has_sop : 1;
->  	uint64_t has_gsls : 1;
-> +	uint64_t has_esop : 1;
->  	uint64_t has_cmma : 1;
->  	uint64_t has_64bscao : 1;
->  	uint64_t has_esca : 1;
-> @@ -134,7 +136,9 @@ struct sclp_facilities {
->  };
->  
->  /* bit number within a certain byte */
-> +#define SCLP_FEAT_80_BIT_SOP		2
->  #define SCLP_FEAT_85_BIT_GSLS		0
-> +#define SCLP_FEAT_85_BIT_ESOP		6
->  #define SCLP_FEAT_98_BIT_KSS		7
->  #define SCLP_FEAT_116_BIT_64BSCAO	0
->  #define SCLP_FEAT_116_BIT_CMMA		1
-> diff --git a/lib/s390x/sclp.c b/lib/s390x/sclp.c
-> index b8204c5f..e6017f64 100644
-> --- a/lib/s390x/sclp.c
-> +++ b/lib/s390x/sclp.c
-> @@ -152,7 +152,9 @@ void sclp_facilities_setup(void)
->  	cpu = sclp_get_cpu_entries();
->  	if (read_info->offset_cpu > 134)
->  		sclp_facilities.has_diag318 = read_info->byte_134_diag318;
-> +	sclp_facilities.has_sop = sclp_feat_check(80, SCLP_FEAT_80_BIT_SOP);
->  	sclp_facilities.has_gsls = sclp_feat_check(85, SCLP_FEAT_85_BIT_GSLS);
-> +	sclp_facilities.has_esop = sclp_feat_check(85, SCLP_FEAT_85_BIT_ESOP);
->  	sclp_facilities.has_kss = sclp_feat_check(98, SCLP_FEAT_98_BIT_KSS);
->  	sclp_facilities.has_cmma = sclp_feat_check(116, SCLP_FEAT_116_BIT_CMMA);
->  	sclp_facilities.has_64bscao = sclp_feat_check(116, SCLP_FEAT_116_BIT_64BSCAO);
+> 86434744 removed that code path and I wonder what it actually fixed, because at this time the 
+> fallback check in __smc_connect() was already present.
+> 
+> Without that "goto out;" the state would be set correctly in smc_connect_fallback(), and the 
+> socket close processing would work as expected.
+
+I think it is OK without that "goto out;". And I guess the purpose of "goto out;" is to avoid calling __smc_connect(), 
+because it is impossible to establish an rdma channel at this time.
 
