@@ -2,467 +2,187 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11092532C5B
-	for <lists+linux-s390@lfdr.de>; Tue, 24 May 2022 16:40:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8B87532C64
+	for <lists+linux-s390@lfdr.de>; Tue, 24 May 2022 16:42:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238187AbiEXOkp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 May 2022 10:40:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44552 "EHLO
+        id S236688AbiEXOmE convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Tue, 24 May 2022 10:42:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235060AbiEXOko (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 May 2022 10:40:44 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC098FF90;
-        Tue, 24 May 2022 07:40:43 -0700 (PDT)
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24ODnmK0004805;
-        Tue, 24 May 2022 14:40:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=Rqk5AZRuQUuDmqnFemaWHIYSCCaRwUJvoWUer3sBm7k=;
- b=IKeYAsCr5smOZjfcnZ/RZnuEgPjxok8ukGujR+XOnC+nhVG0SHHs44+v/NO+gGTJP02C
- mYqniAW/QTcBPyyjArd01lhPDS3jU0Vnxvlb/XKi9rpCc1PHvOrRHkZed7MsOuAelJqP
- a8EUKABpFEt314AtywROeN55zcZI01hmMrndbz0Vt54msjWEJUWKiLk0AAktSZ9zCGX9
- WKP0uxwqW3OMrLGQPgAdwPHfoGS2mOBe2TggrZCtHcDC3g9sE8L6cqeMDdxPEVaIyDuL
- fiEPCzEl9IwGFpdAWwSjQZI9YaPyeBV8ES+BmovIs9vna9Sv6IN13ogBuVhcM5C1bqXx ew== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g8ypp2ueh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 May 2022 14:40:42 +0000
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24ODtQTC002962;
-        Tue, 24 May 2022 14:40:42 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g8ypp2udq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 May 2022 14:40:42 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24OEYptE016945;
-        Tue, 24 May 2022 14:40:40 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 3g6qq9bsep-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 May 2022 14:40:39 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24OEeaTh50528550
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 May 2022 14:40:36 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78F9111C04C;
-        Tue, 24 May 2022 14:40:36 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 158F811C058;
-        Tue, 24 May 2022 14:40:36 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.1.98])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 24 May 2022 14:40:36 +0000 (GMT)
-Date:   Tue, 24 May 2022 16:40:30 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-Cc:     Thomas Huth <thuth@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests PATCH 3/3] s390x: Rework TEID decoding and
- usage
-Message-ID: <20220524164030.6adb45bf@p-imbrenda>
-In-Reply-To: <20220520190850.3445768-4-scgl@linux.ibm.com>
-References: <20220520190850.3445768-1-scgl@linux.ibm.com>
-        <20220520190850.3445768-4-scgl@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-redhat-linux-gnu)
+        with ESMTP id S235060AbiEXOl6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 May 2022 10:41:58 -0400
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92F394CD4A;
+        Tue, 24 May 2022 07:41:52 -0700 (PDT)
+Received: from ip5b412258.dynamic.kabel-deutschland.de ([91.65.34.88] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1ntVj5-0000Re-B6; Tue, 24 May 2022 16:41:35 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Guo Ren <guoren@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-csky@vger.kernel.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Guo Ren <guoren@linux.alibaba.com>
+Subject: Re: [PATCH V9 20/20] riscv: compat: Add COMPAT Kbuild skeletal support
+Date:   Tue, 24 May 2022 16:41:34 +0200
+Message-ID: <14633832.tv2OnDr8pf@diego>
+In-Reply-To: <20220523230039.GA238308@roeck-us.net>
+References: <20220322144003.2357128-1-guoren@kernel.org> <44686961.fMDQidcC6G@diego> <20220523230039.GA238308@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: vKzIbRguzEjOrKAnR6_G_Y8AQ7u2gbWb
-X-Proofpoint-GUID: iwXSqBWbS-4IhrBHnofCO5BfB-ZcwQ_e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-24_07,2022-05-23_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- phishscore=0 adultscore=0 priorityscore=1501 suspectscore=0 spamscore=0
- mlxscore=0 clxscore=1015 mlxlogscore=999 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205240074
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 20 May 2022 21:08:50 +0200
-Janis Schoetterl-Glausch <scgl@linux.ibm.com> wrote:
+Am Dienstag, 24. Mai 2022, 01:00:39 CEST schrieb Guenter Roeck:
+> On Tue, May 24, 2022 at 12:40:06AM +0200, Heiko Stübner wrote:
+> > Hi Guenter,
+> > 
+> > Am Montag, 23. Mai 2022, 18:18:47 CEST schrieb Guenter Roeck:
+> > > On 5/23/22 08:18, Guo Ren wrote:
+> > > > I tested Palmer's branch, it's okay:
+> > > > 8810d7feee5a (HEAD -> for-next, palmer/for-next) riscv: Don't output a
+> > > > bogus mmu-type on a no MMU kernel
+> > > > 
+> > > > I also tested linux-next, it's okay:
+> > > > 
+> > > > rv64_rootfs:
+> > > > # uname -a
+> > > > Linux buildroot 5.18.0-next-20220523 #7 SMP Mon May 23 11:15:17 EDT
+> > > > 2022 riscv64 GNU/Linux
+> > > > #
+> > > 
+> > > That is is ok with one setup doesn't mean it is ok with
+> > > all setups. It is not ok with my root file system (from
+> > > https://github.com/groeck/linux-build-test/tree/master/rootfs/riscv64),
+> > > with qemu v6.2.
+> > 
+> > That is very true that it shouldn't fail on any existing (qemu-)platform,
+> > but as I remember also testing Guo's series on both riscv32 and riscv64
+> > qemu platforms in the past, I guess it would be really helpful to get more
+> > information about the failing platform you're experiencing so that we can
+> > find the source of the issue.
+> > 
+> > As it looks like you both tested the same kernel source, I guess the only
+> > differences could be in the qemu-version, kernel config and rootfs.
+> > Is your rootfs something you can share or that can be rebuilt easily?
+> > 
+> I provided a link to my root file system above. The link points to two
+> root file systems, for initrd (cpio archive) and for ext2.
+> I also mentioned above that I used qemu v6.2. And below I said
+> 
+> > My root file system uses musl.
+> 
+> I attached the buildroot configuration below. The buildroot version,
+> if I remember correctly, was 2021.02.
+> 
+> Kernel configuration is basically defconfig. However, I do see one
+> detail that is possibly special in my configuration.
+> 
+>     # The latest kernel assumes SBI version 0.3, but that doesn't match qemu
+>     # at least up to version 6.2 and results in hangup/crashes during reboot
+>     # with sifive_u emulations.
+>     enable_config "${defconfig}" CONFIG_RISCV_SBI_V01
+> 
+> Hope that helps,
 
-> The translation-exception identification (TEID) contains information to
-> identify the cause of certain program exceptions, including translation
-> exceptions occurring during dynamic address translation, as well as
-> protection exceptions.
-> The meaning of fields in the TEID is complex, depending on the exception
-> occurring and various potentially installed facilities.
-> 
-> Rework the type describing the TEID, in order to ease decoding.
-> Change the existing code interpreting the TEID and extend it to take the
-> installed suppression-on-protection facility into account.
-> 
-> Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
+Actually it doesn't seem rootfs-specific at all.
+
+Merged was this v9, but the version I last tested was one of the earlier
+ones, so it looks like something really broke meanwhile.
+
+I tested both linux-next-20220524 and palmer's for-next on a very recent
+qemu - master from april if I remember correctly together with a
+Debian-based rootfs mounted as nfsroot inside qemu.
+
+With CONFIG_COMPAT=y (aka using defconfig directly) I get:
+[   12.957612] VFS: Mounted root (nfs filesystem) on device 0:15.
+[   12.967260] devtmpfs: mounted
+[   13.101186] Freeing unused kernel image (initmem) memory: 2168K
+[   13.110914] Run /sbin/init as init process
+[   13.343810] Unable to handle kernel paging request at virtual address ff60007265776f78
+[   13.347271] Oops [#1]
+[   13.347749] Modules linked in:
+[   13.348689] CPU: 0 PID: 1 Comm: init Not tainted 5.18.0-next-20220524 #1
+[   13.349864] Hardware name: riscv-virtio,qemu (DT)
+[   13.350706] epc : special_mapping_fault+0x4c/0x8e
+[   13.351639]  ra : __do_fault+0x28/0x11c
+[   13.352311] epc : ffffffff801210e6 ra : ffffffff8011712a sp : ff2000000060bd10
+[   13.353276]  gp : ffffffff810df030 tp : ff600000012a8000 t0 : ffffffff80008acc
+[   13.354063]  t1 : ffffffff80c001d8 t2 : ffffffff80c00258 s0 : ff2000000060bd20
+[   13.354886]  s1 : ff2000000060bd68 a0 : ff600000013165f0 a1 : ff60000001ec2450
+[   13.355675]  a2 : ff2000000060bd68 a3 : 0000000000000000 a4 : ff6000003f0337c8
+[   13.356822]  a5 : ff60007265776f70 a6 : ff60000001ec2450 a7 : 0000000000000007
+[   13.357689]  s2 : ff60000001ec2450 s3 : ff60000001ec2450 s4 : ff2000000060bd68
+[   13.358487]  s5 : ff60000001ec2450 s6 : 0000000000000254 s7 : 000000000000000c
+[   13.359305]  s8 : 000000000000000f s9 : 000000000000000d s10: ff60000001e4c080
+[   13.360102]  s11: 000000000000000d t3 : 00ffffffbbeab000 t4 : 000000006ffffdff
+[   13.361557]  t5 : 000000006ffffe35 t6 : 000000000000000a
+[   13.362229] status: 0000000200000120 badaddr: ff60007265776f78 cause: 000000000000000d
+[   13.363504] [<ffffffff8011712a>] __do_fault+0x28/0x11c
+[   13.364464] [<ffffffff8011b346>] __handle_mm_fault+0x71c/0x9ea
+[   13.365577] [<ffffffff8011b696>] handle_mm_fault+0x82/0x136
+[   13.366275] [<ffffffff80008bec>] do_page_fault+0x120/0x31c
+[   13.366906] [<ffffffff800032f4>] ret_from_exception+0x0/0xc
+[   13.368763] ---[ end trace 0000000000000000 ]---
+[   13.368763] ---[ end trace 0000000000000000 ]---
+[   13.369598] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+[   13.369933] SMP: stopping secondary CPUs
+
+
+Turning CONFIG_COMPAT off, results in the system booting normally again.
+
+
+Heiko
+
+
 > ---
->  lib/s390x/asm/interrupt.h | 66 ++++++++++++++++++++++++++--------
->  lib/s390x/fault.h         | 30 ++++------------
->  lib/s390x/fault.c         | 74 +++++++++++++++++++++++++++------------
->  lib/s390x/interrupt.c     |  2 +-
->  s390x/edat.c              | 20 +++++++----
->  5 files changed, 124 insertions(+), 68 deletions(-)
+> BR2_riscv=y
+> BR2_TOOLCHAIN_BUILDROOT_MUSL=y
+> BR2_KERNEL_HEADERS_4_19=y
+> BR2_BINUTILS_VERSION_2_32_X=y
+> BR2_TARGET_RUN_TESTSCRIPT=y
+> BR2_SHUTDOWN_COMMAND_POWEROFF=y
+> BR2_SYSTEM_DHCP="eth0"
+> BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y
+> BR2_PACKAGE_STRACE=y
+> BR2_PACKAGE_I2C_TOOLS=y
+> BR2_PACKAGE_PCIUTILS=y
+> BR2_PACKAGE_DTC=y
+> BR2_PACKAGE_DTC_PROGRAMS=y
+> BR2_PACKAGE_IPROUTE2=y
+> BR2_TARGET_ROOTFS_BTRFS=y
+> BR2_TARGET_ROOTFS_CPIO=y
+> BR2_TARGET_ROOTFS_CPIO_GZIP=y
+> BR2_TARGET_ROOTFS_EXT2=y
+> BR2_TARGET_ROOTFS_EXT2_SIZE="16M"
+> BR2_TARGET_ROOTFS_EXT2_GZIP=y
+> BR2_TARGET_ROOTFS_ISO_GZIP=y
+> BR2_TARGET_ROOTFS_SQUASHFS=y
+> # BR2_TARGET_ROOTFS_TAR is not set
 > 
-> diff --git a/lib/s390x/asm/interrupt.h b/lib/s390x/asm/interrupt.h
-> index d9ab0bd7..8d5bfbf9 100644
-> --- a/lib/s390x/asm/interrupt.h
-> +++ b/lib/s390x/asm/interrupt.h
-> @@ -20,23 +20,61 @@
->  
->  union teid {
->  	unsigned long val;
-> -	struct {
-> -		unsigned long addr:52;
-> -		unsigned long fetch:1;
-> -		unsigned long store:1;
-> -		unsigned long reserved:6;
-> -		unsigned long acc_list_prot:1;
-> -		/*
-> -		 * depending on the exception and the installed facilities,
-> -		 * the m field can indicate several different things,
-> -		 * including whether the exception was triggered by a MVPG
-> -		 * instruction, or whether the addr field is meaningful
-> -		 */
-> -		unsigned long m:1;
-> -		unsigned long asce_id:2;
-> +	union {
-> +		/* common fields DAT exc & protection exc */
-> +		struct {
-> +			uint64_t addr			: 52 -  0;
-> +			uint64_t acc_exc_f_s		: 54 - 52;
-> +			uint64_t side_effect_acc	: 55 - 54;
-> +			uint64_t /* reserved */		: 55 - 54;
-
-shouldn't this ^ be 62 - 55 ?
-
-> +			uint64_t asce_id		: 64 - 62;
-> +		};
-> +		/* DAT exc */
-> +		struct {
-> +			uint64_t /* pad */		: 61 -  0;
-> +			uint64_t dat_move_page		: 62 - 61;
-> +		};
-> +		/* suppression on protection */
-> +		struct {
-> +			uint64_t /* pad */		: 60 -  0;
-> +			uint64_t sop_acc_list		: 61 - 60;
-> +			uint64_t sop_teid_predictable	: 62 - 61;
-> +		};
-> +		/* enhanced suppression on protection 1 */
-> +		struct {
-> +			uint64_t /* pad */		: 61 -  0;
-
-60 - 0
-
-> +			uint64_t esop1_acc_list_or_dat	: 62 - 61;
-
-61 - 60
-
-and then:
-
-uint64_t esop1_teid_predictable : 62 - 61;
-
-> +		};
-> +		/* enhanced suppression on protection 2 */
-> +		struct {
-> +			uint64_t /* pad */		: 56 -  0;
-> +			uint64_t esop2_prot_code_0	: 57 - 56;
-> +			uint64_t /* pad */		: 60 - 57;
-> +			uint64_t esop2_prot_code_1	: 61 - 60;
-> +			uint64_t esop2_prot_code_2	: 62 - 61;
-> +		};
->  	};
->  };
->  
-> +enum prot_code {
-> +	PROT_KEY_LAP,
-> +	PROT_DAT,
-> +	PROT_KEY,
-> +	PROT_ACC_LIST,
-> +	PROT_LAP,
-> +	PROT_IEP,
-
-I would still also define two PROT_INVALID or PROT_RESERVED
-
-just to avoid surprises
-
-> +};
-> +
-> +static inline enum prot_code teid_esop2_prot_code(union teid teid)
-> +{
-> +	int code = 0;
-> +
-> +	code = code << 1 | teid.esop2_prot_code_0;
-> +	code = code << 1 | teid.esop2_prot_code_1;
-> +	code = code << 1 | teid.esop2_prot_code_2;
-> +	return (enum prot_code)code;
-
-return (enum prot_code)(teid.esop2_prot_code_0 << 2 |
-			teid.esop2_prot_code_1 << 1 |
-			teid.esop2_prot_code_2);
-
-> +}
-> +
->  void register_pgm_cleanup_func(void (*f)(void));
->  void handle_pgm_int(struct stack_frame_int *stack);
->  void handle_ext_int(struct stack_frame_int *stack);
-> diff --git a/lib/s390x/fault.h b/lib/s390x/fault.h
-> index 726da2f0..867997f2 100644
-> --- a/lib/s390x/fault.h
-> +++ b/lib/s390x/fault.h
-> @@ -11,32 +11,16 @@
->  #define _S390X_FAULT_H_
->  
->  #include <bitops.h>
-> +#include <asm/facility.h>
-> +#include <asm/interrupt.h>
->  
->  /* Instruction execution prevention, i.e. no-execute, 101 */
-> -static inline bool prot_is_iep(uint64_t teid)
-> +static inline bool prot_is_iep(union teid teid)
->  {
-> -	if (test_bit_inv(56, &teid) && !test_bit_inv(60, &teid) && test_bit_inv(61, &teid))
-> -		return true;
-> -
-> -	return false;
-> -}
-> -
-> -/* Standard DAT exception, 001 */
-> -static inline bool prot_is_datp(uint64_t teid)
-> -{
-> -	if (!test_bit_inv(56, &teid) && !test_bit_inv(60, &teid) && test_bit_inv(61, &teid))
-> -		return true;
-> -
-> -	return false;
-> -}
-> -
-> -/* Low-address protection exception, 100 */
-> -static inline bool prot_is_lap(uint64_t teid)
-> -{
-> -	if (test_bit_inv(56, &teid) && !test_bit_inv(60, &teid) && !test_bit_inv(61, &teid))
-> -		return true;
-> -
-> -	return false;
-> +	if (!test_facility(130))
-> +		return false;
-> +	/* IEP installed -> ESOP2 installed */
-> +	return teid_esop2_prot_code(teid) == PROT_IEP;
->  }
->  
->  void print_decode_teid(uint64_t teid);
-> diff --git a/lib/s390x/fault.c b/lib/s390x/fault.c
-> index efa62fcb..02b3c098 100644
-> --- a/lib/s390x/fault.c
-> +++ b/lib/s390x/fault.c
-> @@ -13,35 +13,63 @@
->  #include <asm/page.h>
->  #include <fault.h>
->  
-> -/* Decodes the protection exceptions we'll most likely see */
-> -static void print_decode_pgm_prot(uint64_t teid)
-> -{
-> -	if (prot_is_lap(teid)) {
-> -		printf("Type: LAP\n");
-> -		return;
-> -	}
-> -
-> -	if (prot_is_iep(teid)) {
-> -		printf("Type: IEP\n");
-> -		return;
-> -	}
->  
-> -	if (prot_is_datp(teid)) {
-> -		printf("Type: DAT\n");
-> -		return;
-> +static void print_decode_pgm_prot(union teid teid, bool dat)
-> +{
-> +	switch (get_supp_on_prot_facility()) {
-> +	case SOP_NONE:
-> +		printf("Type: ?\n");
-> +		break;
-> +	case SOP_BASIC:
-> +		if (teid.sop_teid_predictable && dat && teid.sop_acc_list)
-> +			printf("Type: ACC\n");
-> +		else
-> +			printf("Type: ?\n");
-> +		break;
-> +	case SOP_ENHANCED_1:
-> +		if (teid.esop1_acc_list_or_dat) {
-> +			if (teid.sop_acc_list)
-> +				printf("Type: ACC\n");
-> +			else
-> +				printf("Type: DAT\n");
-> +		} else {
-> +			printf("Type: KEY or LAP\n");
-> +		}
-> +		break;
-> +	case SOP_ENHANCED_2:
-> +		switch (teid_esop2_prot_code(teid)) {
-
-I wonder if it weren't easier to do
-
-static const char * const prot_strings[6] = {"KEY or LAP", "DAT", ...};
-printf("Type: %s\n", prot_strings[teid_esop2_prot_code(teid)]);
-
-> +		case PROT_KEY_LAP:
-> +			printf("Type: KEY or LAP\n");
-> +			break;
-> +		case PROT_DAT:
-> +			printf("Type: DAT\n");
-> +			break;
-> +		case PROT_KEY:
-> +			printf("Type: KEY\n");
-> +			break;
-> +		case PROT_ACC_LIST:
-> +			printf("Type: ACC\n");
-> +			break;
-> +		case PROT_LAP:
-> +			printf("Type: LAP\n");
-> +			break;
-> +		case PROT_IEP:
-> +			printf("Type: IEP\n");
-> +			break;
-> +		}
->  	}
->  }
->  
-> -void print_decode_teid(uint64_t teid)
-> +void print_decode_teid(uint64_t raw_teid)
->  {
-> -	int asce_id = teid & 3;
-> +	union teid teid = { .val = raw_teid };
->  	bool dat = lowcore.pgm_old_psw.mask & PSW_MASK_DAT;
->  
->  	printf("Memory exception information:\n");
->  	printf("DAT: %s\n", dat ? "on" : "off");
->  
->  	printf("AS: ");
-> -	switch (asce_id) {
-> +	switch (teid.asce_id) {
->  	case AS_PRIM:
->  		printf("Primary\n");
->  		break;
-> @@ -57,7 +85,7 @@ void print_decode_teid(uint64_t teid)
->  	}
->  
->  	if (lowcore.pgm_int_code == PGM_INT_CODE_PROTECTION)
-> -		print_decode_pgm_prot(teid);
-> +		print_decode_pgm_prot(teid, dat);
->  
->  	/*
->  	 * If teid bit 61 is off for these two exception the reported
-> @@ -65,10 +93,10 @@ void print_decode_teid(uint64_t teid)
->  	 */
->  	if ((lowcore.pgm_int_code == PGM_INT_CODE_SECURE_STOR_ACCESS ||
->  	     lowcore.pgm_int_code == PGM_INT_CODE_SECURE_STOR_VIOLATION) &&
-> -	    !test_bit_inv(61, &teid)) {
-> -		printf("Address: %lx, unpredictable\n ", teid & PAGE_MASK);
-> +	    !teid.sop_teid_predictable) {
-> +		printf("Address: %lx, unpredictable\n ", raw_teid & PAGE_MASK);
->  		return;
->  	}
-> -	printf("TEID: %lx\n", teid);
-> -	printf("Address: %lx\n\n", teid & PAGE_MASK);
-> +	printf("TEID: %lx\n", raw_teid);
-> +	printf("Address: %lx\n\n", raw_teid & PAGE_MASK);
-
-teid.addr << PAGE_SHIFT ?
-
->  }
-> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
-> index 6da20c44..ac3d1ecd 100644
-> --- a/lib/s390x/interrupt.c
-> +++ b/lib/s390x/interrupt.c
-> @@ -77,7 +77,7 @@ static void fixup_pgm_int(struct stack_frame_int *stack)
->  		break;
->  	case PGM_INT_CODE_PROTECTION:
->  		/* Handling for iep.c test case. */
-> -		if (prot_is_iep(lowcore.trans_exc_id))
-> +		if (prot_is_iep((union teid) { .val = lowcore.trans_exc_id }))
->  			/*
->  			 * We branched to the instruction that caused
->  			 * the exception so we can use the return
-> diff --git a/s390x/edat.c b/s390x/edat.c
-> index c6c25042..af442039 100644
-> --- a/s390x/edat.c
-> +++ b/s390x/edat.c
-> @@ -37,14 +37,20 @@ static bool check_pgm_prot(void *ptr)
->  		return false;
->  
->  	teid.val = lowcore.trans_exc_id;
-> -
-> -	/*
-> -	 * depending on the presence of the ESOP feature, the rest of the
-> -	 * field might or might not be meaningful when the m field is 0.
-> -	 */
-> -	if (!teid.m)
-> +	switch (get_supp_on_prot_facility()) {
-> +	case SOP_NONE:
->  		return true;
-> -	return (!teid.acc_list_prot && !teid.asce_id &&
-> +	case SOP_BASIC:
-> +		if (!teid.sop_teid_predictable)
-> +			return true;
-
-add:
-
-if (teid.sop_acc_list)
-	return false;
-
-> +	case SOP_ENHANCED_1:
-
-you need to handle the unpredictable case here too
-
-> +		if (!teid.esop1_acc_list_or_dat)
-> +			return false;
-
-so you return false the it is DAT... but if it is not DAT, it's
-access-control-list... 
-
-you might want to replace this whole case with:
-
-return !teid.esop1_teid_predictable;
-
-(although I don't understand why you want to exclude DAT here)
-
-> +	case SOP_ENHANCED_2:
-> +		if (teid_esop2_prot_code(teid) != 1)
-
-why not using the PROT_DAT enum?
-also, handle the PROT_ACC_LIST too
-
-also, add:
-
-if (PROT_KEY_LAP)
-	return true;
-
-because in that case you don't have the address part.
+> 
 
 
 
-but at this point I wonder if you can't just rewrite this function with
-an additional enum prot_code parameter, to specify the exact type of
-exception you're expecting
-
-> +			return false;
-> +	}
-> +	return (!teid.sop_acc_list && !teid.asce_id &&
->  		(teid.addr == ((unsigned long)ptr >> PAGE_SHIFT)));
->  }
->  
 
