@@ -2,261 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A36F532D20
-	for <lists+linux-s390@lfdr.de>; Tue, 24 May 2022 17:16:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DF19532E97
+	for <lists+linux-s390@lfdr.de>; Tue, 24 May 2022 18:08:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238824AbiEXPQM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 May 2022 11:16:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55220 "EHLO
+        id S231975AbiEXQIC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 May 2022 12:08:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238821AbiEXPQK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 May 2022 11:16:10 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B8251137;
-        Tue, 24 May 2022 08:16:08 -0700 (PDT)
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24OE4JRM028666;
-        Tue, 24 May 2022 15:16:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=BAznk0CMIHfsfbOV26xcLraAe6Z/8x2GE9mW17k3ZUk=;
- b=NLOKvvnbhK+L0bXKb8ONkSG4hvuOriqa3a9fP+Br2FTegag43Q/gsIQLlH7Mk1aXRmu8
- sEDPA/k6Nm3WRNgJiKNirCHtB1VeoZM+tUZkEKzAyuUgzt86k3m/TepnF4KOcCHvb3H2
- J+12CQrnQGYy96JOjZRDiIhTr2AS6G6CPmfcXonyqAxlnVOc2oMf9ZgwScH6PctAJ/hH
- lr6hkqN7hXKMi1RdgFXG3xSkbhFvFuik6H5RdDyN20g1NKSX0zcXY4PNomlPGHKvoje/
- JXKjuPeXx3MCoTghAIQWOQOWg5nHJbBKyIaQNyDAvgfVf2cHeTsMyZU2Bw0HsZ1STfAh OA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3g904jakd3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 May 2022 15:16:06 +0000
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24OF2fa0029656;
-        Tue, 24 May 2022 15:16:06 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3g904jakcn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 May 2022 15:16:06 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24OFD93X009033;
-        Tue, 24 May 2022 15:16:04 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma01fra.de.ibm.com with ESMTP id 3g6qq8w3gg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 May 2022 15:16:04 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24OFG1lx7602516
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 May 2022 15:16:01 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A21CA4054;
-        Tue, 24 May 2022 15:16:01 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DBB38A405B;
-        Tue, 24 May 2022 15:16:00 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.1.98])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 24 May 2022 15:16:00 +0000 (GMT)
-Date:   Tue, 24 May 2022 17:09:27 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-Cc:     Thomas Huth <thuth@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [kvm-unit-tests PATCH v3 1/3] s390x: Test TEID values in
- storage key test
-Message-ID: <20220524170927.46fbd24a@p-imbrenda>
-In-Reply-To: <20220523132406.1820550-2-scgl@linux.ibm.com>
-References: <20220523132406.1820550-1-scgl@linux.ibm.com>
-        <20220523132406.1820550-2-scgl@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-redhat-linux-gnu)
+        with ESMTP id S239712AbiEXQH5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 May 2022 12:07:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3337A762A9
+        for <linux-s390@vger.kernel.org>; Tue, 24 May 2022 09:07:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1653408469;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AjP5JPsp4sTeptQO7etKphezL1GL7XatlC7yllc+qq4=;
+        b=gBszV04dxkBikKwPnzba24F8oMtXGniV4mRYLr8ldd6XAvXs0M8WDz/Q9aXY4SuoAWePFO
+        dzIsnZ4xYfFiXkv4luf1h+thscCv+InT1bchstFtO/57oNXX3fENHq7SMiu9YuKnXbxNRb
+        +KKqeRogxNYKsS2mmOa0prFJyuey7SY=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-497-qJWhb8trMIOqfQxMlpy_Vw-1; Tue, 24 May 2022 12:07:48 -0400
+X-MC-Unique: qJWhb8trMIOqfQxMlpy_Vw-1
+Received: by mail-io1-f71.google.com with SMTP id k17-20020a5d9d51000000b006653f2bc513so2946367iok.10
+        for <linux-s390@vger.kernel.org>; Tue, 24 May 2022 09:07:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=AjP5JPsp4sTeptQO7etKphezL1GL7XatlC7yllc+qq4=;
+        b=zbQPHIDoWNEgd//JGwx7+rSqp34f4f3whnWqVQ2zDms2dcX1J12IaJbWlFBRZp7mjw
+         yA3Vmisyve0JK6vdxhhoqVAr1DTdMsUh04gzkThVJ7o2JkgcwjgrqgLqnjK9iY+wna+T
+         m5Q07W8M776QsIBgjT2pEQ/F3Mb+TKU7goAumF7SyR66wVv+v2xQq9UwKf7r24UvLEfU
+         BoCNPe1Npv8nKJO9Oh/u8kJYPbJfwtWPIf7N+/H76fo3Lw5qjX4ByGA2YrS6Ywge8Ifd
+         poGbvimQYBx+6edEBDkIzN0YDe1tu6unTDKyPmVu5FBxNz9pNJKodXNobDMe2KcXgaLd
+         umMA==
+X-Gm-Message-State: AOAM531fDHmYRPmSrbvLNe/AdAFkc1YFRiVh4+LfbCdlzyIf+YBQLngW
+        GeS55popKl+hbqeN2BeKrTpyWaOr9GHG4G26zScSoA8l+OkceygHAssJHlYCxOsnmCUSgbd5fe1
+        VdudDAd60dBP0NEz20MCx6g==
+X-Received: by 2002:a05:6e02:170a:b0:2d1:3f8b:ad75 with SMTP id u10-20020a056e02170a00b002d13f8bad75mr13606327ill.135.1653408467257;
+        Tue, 24 May 2022 09:07:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyDXCFqahhgZhF13j/01JuWAI9TkKwryMIBDz+Ojod8ivP2jLD7vfDSwtL6uq0vKB4eb0olaw==
+X-Received: by 2002:a05:6e02:170a:b0:2d1:3f8b:ad75 with SMTP id u10-20020a056e02170a00b002d13f8bad75mr13606312ill.135.1653408467062;
+        Tue, 24 May 2022 09:07:47 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id m15-20020a056e021c2f00b002cde6e352d5sm4628333ilh.31.2022.05.24.09.07.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 May 2022 09:07:46 -0700 (PDT)
+Date:   Tue, 24 May 2022 10:07:45 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     jgg@nvidia.com, cohuck@redhat.com, borntraeger@linux.ibm.com,
+        jjherne@linux.ibm.com, akrowiak@linux.ibm.com, pasic@linux.ibm.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, hch@infradead.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/1] vfio: remove VFIO_GROUP_NOTIFY_SET_KVM
+Message-ID: <20220524100745.006a3635.alex.williamson@redhat.com>
+In-Reply-To: <20220519183311.582380-1-mjrosato@linux.ibm.com>
+References: <20220519183311.582380-1-mjrosato@linux.ibm.com>
+Organization: Red Hat
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: K7IcRZ3SKSZfdKng46cXL35a-Epejb6z
-X-Proofpoint-ORIG-GUID: H0d2nSVWaNCfW51UeTc35cBFMPBBQfBl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-24_07,2022-05-23_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 impostorscore=0 phishscore=0 adultscore=0
- suspectscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2202240000 definitions=main-2205240077
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 23 May 2022 15:24:04 +0200
-Janis Schoetterl-Glausch <scgl@linux.ibm.com> wrote:
+On Thu, 19 May 2022 14:33:10 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-> On a protection exception, test that the Translation-Exception
-> Identification (TEID) values are correct given the circumstances of the
-> particular test.
-> The meaning of the TEID values is dependent on the installed
-> suppression-on-protection facility.
+> As discussed in this thread:
 > 
-> Signed-off-by: Janis Schoetterl-Glausch <scgl@linux.ibm.com>
-> ---
->  s390x/skey.c | 75 +++++++++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 69 insertions(+), 6 deletions(-)
+> https://lore.kernel.org/kvm/20220516172734.GE1343366@nvidia.com/
 > 
-> diff --git a/s390x/skey.c b/s390x/skey.c
-> index 42bf598c..5e234cde 100644
-> --- a/s390x/skey.c
-> +++ b/s390x/skey.c
-> @@ -8,6 +8,7 @@
->   *  Janosch Frank <frankja@linux.vnet.ibm.com>
->   */
->  #include <libcflat.h>
-> +#include <asm/arch_def.h>
->  #include <asm/asm-offsets.h>
->  #include <asm/interrupt.h>
->  #include <vmalloc.h>
-> @@ -158,6 +159,68 @@ static void test_test_protection(void)
->  	report_prefix_pop();
->  }
->  
-> +enum access {
-> +	ACC_STORE = 1,
-> +	ACC_FETCH = 2,
-> +	ACC_UPDATE = 3,
-> +};
-> +
-> +enum protection {
-> +	PROT_STORE = 1,
-> +	PROT_FETCH_STORE = 3,
-> +};
-> +
-> +static void check_key_prot_exc(enum access access, enum protection prot)
-> +{
-> +	union teid teid;
-> +	int access_code;
-> +
-> +	check_pgm_int_code(PGM_INT_CODE_PROTECTION);
-> +	report_prefix_push("TEID");
-> +	teid.val = lowcore.trans_exc_id;
-> +	switch (get_supp_on_prot_facility()) {
-> +	case SOP_NONE:
-> +	case SOP_BASIC:
-> +		break;
+> Let's remove VFIO_GROUP_NOTIFY_SET_KVM and instead assume the association
+> has already been established prior to device_open.  For the types today
+> that need a KVM (GVT, vfio-ap) these will fail if a KVM is not found.
+> Looking ahead, vfio-pci-zdev will optionally want the KVM association
+> (enable hardware assists) but it will not be a hard requirement (still
+> want to allow other, non-KVM userspace usage). 
+> 
+> This is built on top of vfio-next and tested with s390x-pci
+> (zdev-kvm series) and vfio-ap (GVT changes are compile-tested only)
+> 
+> Changes for v3:
+> - merge branches under if (device->open_count == 1) (Kevin)
+> - move device->open_count-- out from group_rwsem (Kevin)
+> - drop null KVM check (Christoph)
+> - remove extra kvm_{get,put}_kvm from vfio_ap_ops, it was already getting
+>   a reference (Jason)
+> - Add comment about kvm reference in vfio.h (Jason)
+> - Return -EINVAL if !kvm for vfio-ap (Tony)
+> 
+> Changes for v2:
+> - gvt no longer needs release_work, get rid of it (Christoph)
+> - a few compile fixes for gvt
+> - update commit to mention fixes gvt oops (Jason)
+> - s/down_write/down_read/ in a few spots (Jason)
+> - avoid kvm build dependency by holding group read lock over device
+>   open/close and put the onus on the driver to obtain a reference if
+>   it will actually use the kvm pointer.  Document the requirement,
+>   use lockdep_assert to ensure lock is held during register_notifer;
+>   today all callers are from driver open_device. 
+> 
+> Matthew Rosato (1):
+>   vfio: remove VFIO_GROUP_NOTIFY_SET_KVM
+> 
+>  drivers/gpu/drm/i915/gvt/gtt.c        |  4 +-
+>  drivers/gpu/drm/i915/gvt/gvt.h        |  3 -
+>  drivers/gpu/drm/i915/gvt/kvmgt.c      | 82 ++++++--------------------
+>  drivers/s390/crypto/vfio_ap_ops.c     | 35 ++---------
+>  drivers/s390/crypto/vfio_ap_private.h |  3 -
+>  drivers/vfio/vfio.c                   | 83 ++++++++++-----------------
+>  include/linux/vfio.h                  |  6 +-
+>  7 files changed, 57 insertions(+), 159 deletions(-)
 
-for basic you should check for sop_teid_predictable and sop_acc_list
+Applied to vfio next branch for v5.19.  Thanks,
 
-> +	case SOP_ENHANCED_1:
-> +		report(!teid.esop1_acc_list_or_dat, "valid protection code");
-
-actually, both values of esop1_acc_list_or_dat are wrong, since we're
-expecting neither an access list nor a dat exception.
-
-you need to check for esop1_teid_predictable instead (which you need to
-add, see comment in that patchseries)
-
-> +		break;
-> +	case SOP_ENHANCED_2:
-> +		switch (teid_esop2_prot_code(teid)) {
-> +		case PROT_KEY:
-> +			access_code = teid.acc_exc_f_s;
-
-is the f/s feature guaranteed to be present when we have esop2?
-
-can the f/s feature be present with esop1 or basic sop?
-
-> +
-> +			switch (access_code) {
-> +			case 0:
-> +				report_pass("valid access code");
-> +				break;
-> +			case 1:
-> +			case 2:
-> +				report((access & access_code) && (prot & access_code),
-> +				       "valid access code");
-> +				break;
-> +			case 3:
-> +				/*
-> +				 * This is incorrect in that reserved values
-> +				 * should be ignored, but kvm should not return
-> +				 * a reserved value and having a test for that
-> +				 * is more valuable.
-> +				 */
-> +				report_fail("valid access code");
-> +				break;
-> +			}
-> +			/* fallthrough */
-> +		case PROT_KEY_LAP:
-> +			report_pass("valid protection code");
-> +			break;
-> +		default:
-> +			report_fail("valid protection code");
-> +		}
-> +		break;
-> +	}
-> +	report_prefix_pop();
-> +}
-> +
->  /*
->   * Perform STORE CPU ADDRESS (STAP) instruction while temporarily executing
->   * with access key 1.
-> @@ -199,7 +262,7 @@ static void test_store_cpu_address(void)
->  	expect_pgm_int();
->  	*out = 0xbeef;
->  	store_cpu_address_key_1(out);
-> -	check_pgm_int_code(PGM_INT_CODE_PROTECTION);
-> +	check_key_prot_exc(ACC_STORE, PROT_STORE);
->  	report(*out == 0xbeef, "no store occurred");
->  	report_prefix_pop();
->  
-> @@ -210,7 +273,7 @@ static void test_store_cpu_address(void)
->  	expect_pgm_int();
->  	*out = 0xbeef;
->  	store_cpu_address_key_1(out);
-> -	check_pgm_int_code(PGM_INT_CODE_PROTECTION);
-> +	check_key_prot_exc(ACC_STORE, PROT_STORE);
->  	report(*out == 0xbeef, "no store occurred");
->  	report_prefix_pop();
->  
-> @@ -228,7 +291,7 @@ static void test_store_cpu_address(void)
->  	expect_pgm_int();
->  	*out = 0xbeef;
->  	store_cpu_address_key_1(out);
-> -	check_pgm_int_code(PGM_INT_CODE_PROTECTION);
-> +	check_key_prot_exc(ACC_STORE, PROT_STORE);
->  	report(*out == 0xbeef, "no store occurred");
->  	report_prefix_pop();
->  
-> @@ -314,7 +377,7 @@ static void test_set_prefix(void)
->  	set_storage_key(pagebuf, 0x28, 0);
->  	expect_pgm_int();
->  	set_prefix_key_1(prefix_ptr);
-> -	check_pgm_int_code(PGM_INT_CODE_PROTECTION);
-> +	check_key_prot_exc(ACC_FETCH, PROT_FETCH_STORE);
->  	report(get_prefix() == old_prefix, "did not set prefix");
->  	report_prefix_pop();
->  
-> @@ -327,7 +390,7 @@ static void test_set_prefix(void)
->  	install_page(root, virt_to_pte_phys(root, pagebuf), 0);
->  	set_prefix_key_1((uint32_t *)0);
->  	install_page(root, 0, 0);
-> -	check_pgm_int_code(PGM_INT_CODE_PROTECTION);
-> +	check_key_prot_exc(ACC_FETCH, PROT_FETCH_STORE);
->  	report(get_prefix() == old_prefix, "did not set prefix");
->  	report_prefix_pop();
->  
-> @@ -351,7 +414,7 @@ static void test_set_prefix(void)
->  	install_page(root, virt_to_pte_phys(root, pagebuf), 0);
->  	set_prefix_key_1((uint32_t *)&mem_all[2048]);
->  	install_page(root, 0, 0);
-> -	check_pgm_int_code(PGM_INT_CODE_PROTECTION);
-> +	check_key_prot_exc(ACC_FETCH, PROT_FETCH_STORE);
->  	report(get_prefix() == old_prefix, "did not set prefix");
->  	report_prefix_pop();
->  
+Alex
 
