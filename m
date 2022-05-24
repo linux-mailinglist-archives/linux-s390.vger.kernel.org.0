@@ -2,94 +2,433 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3C6053235A
-	for <lists+linux-s390@lfdr.de>; Tue, 24 May 2022 08:40:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA75053237E
+	for <lists+linux-s390@lfdr.de>; Tue, 24 May 2022 08:52:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233703AbiEXGkI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 May 2022 02:40:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37606 "EHLO
+        id S234220AbiEXGwO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 May 2022 02:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233558AbiEXGkG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 May 2022 02:40:06 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9494E972BD
-        for <linux-s390@vger.kernel.org>; Mon, 23 May 2022 23:40:03 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id pq9-20020a17090b3d8900b001df622bf81dso1324535pjb.3
-        for <linux-s390@vger.kernel.org>; Mon, 23 May 2022 23:40:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=+/ObZQdcudoKPi9EHyxehxS+g8fV78JSk4u1MMEObnU=;
-        b=WjhXP28oJoHL8ogK3QG2RjFsV+hZ0iHpDmHg3yHT9N9bXf7854LhjBAfm3oGVJALGd
-         M7H8Bjp0+Bdc+Q92SCenH6At1XNJLnJd5Bjq4WwpOceAoiwIRfNs5ZSbupn5dTnKEcnr
-         fOZ+f2oQJqTRA28I5lMuKe/x0++U/0W3Hc2WakkqcNBPho1bfjOFIRDymU4OOeSwHyBW
-         Iv9gsxC2DJHeNU0b9lfx/90AdYhgVbrYlD7fqNiQLAepJr2ppLa4AuD6fFlB5P2hPSrO
-         S0eQSBjSxsbDvgDrsSY8vg8sLP6V3R1ZA2DqS9KxoyDyMh6FPugCp4rOdaRvIzk5z+WE
-         aihg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=+/ObZQdcudoKPi9EHyxehxS+g8fV78JSk4u1MMEObnU=;
-        b=HOl150XWo5wgQcI613v8OFF8ByqiaG884fPG+I/WMUQJJqMRxQ7rwceQqRIFoB3VOw
-         2z1Cv7hs5Jy57A2F/tUk1Ufp7dE7xcrqwOZGI43Qpsp3NQ17j+wBUMQi3s9qcIMn3/KE
-         y9j+2YmO5FUX2QxSpDxCzOFNouloISj9AoWZg7YJsrd1jLzhH0btKvCAPUR7GtvgFofn
-         RYN4L/ztm8oN/13Hw4dcldr50Mhtps4jhodwS6zWDs1ajFAwtKyhMFMO/WSGfn89VicS
-         B1Ip1s0gXLlJKbj+m+OjH4cV1rINuaTgj94sUjgu1pdM7/6HEmNCx/cg7j2+IPYPTNzW
-         wUdQ==
-X-Gm-Message-State: AOAM532QHO1yV6QtXopG84JXcd8DpRUv8AE/YVPCcKCi1hCSk+XpFSpo
-        R8tjxGo51QpqqiHHMu46nlvOW8bkcV3v67AiWxA=
-X-Google-Smtp-Source: ABdhPJy9SV7m95QH+sEk4ynypsYPVPmGmjim6I4qUEF7RYJ4Hd3+oNUZe4cC7E8YpwEe17Im0ZXd9Ep/uPw0HweaEVU=
-X-Received: by 2002:a17:90b:3884:b0:1df:db8a:1fcf with SMTP id
- mu4-20020a17090b388400b001dfdb8a1fcfmr2996886pjb.217.1653374402873; Mon, 23
- May 2022 23:40:02 -0700 (PDT)
+        with ESMTP id S229945AbiEXGwN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 May 2022 02:52:13 -0400
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0561D84A08;
+        Mon, 23 May 2022 23:52:10 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VEGefYZ_1653375127;
+Received: from localhost(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0VEGefYZ_1653375127)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 24 May 2022 14:52:08 +0800
+From:   "D. Wythe" <alibuda@linux.alibaba.com>
+To:     kgraul@linux.ibm.com
+Cc:     kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: [RFC net-next] net/smc:introduce 1RTT to SMC
+Date:   Tue, 24 May 2022 14:52:07 +0800
+Message-Id: <1653375127-130233-1-git-send-email-alibuda@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Received: by 2002:a17:90a:e7ce:0:0:0:0 with HTTP; Mon, 23 May 2022 23:40:02
- -0700 (PDT)
-Reply-To: BAkermarrtin@gmail.com
-From:   Martin Baker <davidabula9077@gmail.com>
-Date:   Tue, 24 May 2022 06:40:02 +0000
-Message-ID: <CABMMw35sTRzV6m3nzaLUzdUjbLUybf3iWcw=0_g0m-J8gMaXFw@mail.gmail.com>
-Subject: Morning Dear,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:1035 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.4597]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [davidabula9077[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [davidabula9077[at]gmail.com]
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Morning Dear,
+From: "D. Wythe" <alibuda@linux.alibaba.com>
 
-How are you, Please my previous mail you did not reply it
+Hi Karsten,
+
+We are promoting SMC-R to the field of cloud computing, dues to the
+particularity of business on the cloud, the scale and the types of
+customer applications are unpredictable. As a participant of SMC-R, we
+also hope that SMC-R can cover more application scenarios. Therefore,
+many connection problems are exposed during this time. There are two
+main issue, one is that the establishment of a single connection takes
+longer than that of the TCP, another is that the degree of concurrency
+is low under multi-connection processing. This patch set is mainly
+optimized for the first issue, and the follow-up of the second issue
+will be synchronized in the future.
+
+In terms of communication process, under current implement, a TCP
+three-way handshake only needs 1-RTT time, while SMC-R currently
+requires 4-RTT times, including 2-RTT over IP(TCP handshake, SMC
+proposal & accept ) and 2-RTT over IB ( two times RKEY exchange), which
+is most influential factor affecting connection established time at the
+moment.
+
+We have noticed that single network interface card is mainstream on the
+cloud, dues to the advantages of cloud deployment costs and the cloud's
+own disaster recovery support. On the other hand, the emergence of RoCE
+LAG technology makes us no longer need to deal with multiple RDMA
+network interface cards by ourselves,  just like NIC bonding does. In
+Alibaba, Roce LAG is widely used for RDMA.
+
+In that case, SMC-R have only one single link, if so, the RKEY LLC
+messages that to perform information exchange in all links are no longer
+needed, the SMC Proposal & accept has already complete the exchange of
+all information needed. So we think that we can remove the RKEY exchange
+in that case, which will save us 2-RTT over IB. We call it as SMC-R 2-RTT.
+
+On the other hand, we can use TCP fast open, carry the SMC proposal data
+by TCP SYN message, reduce the time that the SMC waits for the TCP
+connection to be established. This will save us another 1-RTT over IP.
+
+Based on the above two viewpoints, in this scenario, we can compress the
+communication process of SMC-R into 1-RTT over IP, so that we can
+theoretically obtain a time close to that of TCP connection
+establishment. We call it as SMC-R 1-RTT. Of course, the specific results
+will also be affected by the implementation.
+
+In our test environment, we host two VMs on the same host for wrk/nginx
+tests, used a script similar to the following to performing test:
+
+Client.sh
+
+conn=$1
+thread=$2
+
+wrk -H ‘Connection: Close’ -c ${conn} -t ${thread} -d 10
+
+Server.sh
+
+sysctl -w net.ipv4.tcp_fastopen=3
+smc_run nginx
+
+Statistic shows that:
+
++-----------+---------------+---------------+----------------+--------------+----------------+---------------+---------------+
+|type|args  |   -c1 -t1     |   -c2 -t1     |   -c5 -t1      |  -c10 -t1    |   -c200 -t1    |  -c200 -t4    |  -c2000 -t8   |
++-----------+---------------+---------------+----------------+--------------+----------------+---------------+---------------+
+|next-next  |   4188.5qps   |   5942.04qps  |   7621.81qps   |  7678.62qps  |   8204.94qps   |  8457.57qps   |  5687.60qps   |
++-----------+---------------+---------------+----------------+--------------+----------------+---------------+---------------+
+|SMC-2RTT   |   4730.17qps  |   7394.85qps  |   11532.78qps  |  12016.22qps |   11520.81qps  |  11391.36qps  |  10364.41qps  |
++-----------+---------------+---------------+----------------+--------------+----------------+---------------+---------------+
+|SMC-1RTT   |   5702.77qps  |   9645.18qps  |   11899.20qps  |  12005.16qps |   11536.67qps  |  11420.87qps  |  10392.4qps   |
++-----------+---------------+---------------+----------------+--------------+----------------+---------------+---------------+-
+|TCP        |   6415.74qps  |   11034.10qps |   16716.21qps  |  22217.06qps |   35926.74qps  |  117460.qps   |  120291.16qps |
++-----------+---------------+---------------+----------------+--------------+----------------+---------------+---------------+
+
+It can clearly be seen that:
+
+1. In step by step short-link scenarios ( -c1 -t1 ), SMC-R after
+optimization can reach 88% of TCP. There are still many implementation
+details that can be optimized, we hope to optimize the performance of
+SMC in this scenario to 90% of TCP.
+
+2. The problem is very serious in the scenario of multi-threading and
+multi-connection, the worst case is only 10% of TCP. Even though the
+SMC-1RTT has certain optimizations for this scenario, it is clear that
+the bottleneck is not here. We are doing some prototyping to solve this,
+we hope to reach 60% of TCP in multi-threading and multi-connection
+scenarios, and SMC-1RTT is the important prerequisite for upper limit of
+subsequent optimization.
+
+In this patch set, we had only completed a simple prototype, only make
+sure SMC-1RTT can works.
+
+Sincerely, we are looking forward for you comments, please
+let us know if you have any suggestions.
+
+Thanks.
+
+Signed-off-by: D. Wythe <alibuda@linux.alibaba.com>
+---
+ net/smc/af_smc.c   | 72 ++++++++++++++++++++++++++++++++++++++++++------------
+ net/smc/smc.h      |  8 ++++++
+ net/smc/smc_clc.c  | 32 ++++++++++++++++++++----
+ net/smc/smc_core.c |  2 ++
+ net/smc/smc_pnet.c |  4 +--
+ net/smc/smc_pnet.h |  3 +++
+ 6 files changed, 98 insertions(+), 23 deletions(-)
+
+diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+index 1a556f4..bf646d1 100644
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -492,7 +492,7 @@ static int smcr_lgr_reg_rmbs(struct smc_link *link,
+ 			     struct smc_buf_desc *rmb_desc)
+ {
+ 	struct smc_link_group *lgr = link->lgr;
+-	int i, rc = 0;
++	int i, lnk = 0, rc = 0;
+ 
+ 	rc = smc_llc_flow_initiate(lgr, SMC_LLC_FLOW_RKEY);
+ 	if (rc)
+@@ -507,14 +507,20 @@ static int smcr_lgr_reg_rmbs(struct smc_link *link,
+ 		rc = smcr_link_reg_rmb(&lgr->lnk[i], rmb_desc);
+ 		if (rc)
+ 			goto out;
++		/* available link count inc */
++		lnk++;
+ 	}
+ 
+-	/* exchange confirm_rkey msg with peer */
+-	rc = smc_llc_do_confirm_rkey(link, rmb_desc);
+-	if (rc) {
+-		rc = -EFAULT;
+-		goto out;
++	/* do not exchange confirm_rkey msg since there are only one link */
++	if (lnk > 1) {
++		/* exchange confirm_rkey msg with peer */
++		rc = smc_llc_do_confirm_rkey(link, rmb_desc);
++		if (rc) {
++			rc = -EFAULT;
++			goto out;
++		}
+ 	}
++
+ 	rmb_desc->is_conf_rkey = true;
+ out:
+ 	mutex_unlock(&lgr->llc_conf_mutex);
+@@ -932,6 +938,31 @@ static int smc_find_rdma_device(struct smc_sock *smc, struct smc_init_info *ini)
+ 	return 0;
+ }
+ 
++/* just prototype code
++ * since tcp connect has not happen, using route to perform smc_pnet_find_roce_by_pnetid
++ */
++static int smc_find_rdma_device_with_dst(struct smc_sock *smc, struct smc_init_info *ini)
++{
++	struct sock *tsk = smc->clcsock->sk;
++	struct rtable *rt;
++
++	rt = ip_route_output(sock_net(tsk), smc->remote_address.v4.sin_addr.s_addr,
++			     0, 0, 0);
++
++	if (IS_ERR(rt))
++		return -ECONNRESET;
++
++	smc_pnet_find_roce_by_pnetid(rt->dst.dev, ini);
++	__builtin_prefetch(&ini->ib_dev->mac[ini->ib_port - 1]);
++
++	if (!ini->check_smcrv2 && !ini->ib_dev)
++		return SMC_CLC_DECL_NOSMCRDEV;
++	if (ini->check_smcrv2 && !ini->smcrv2.ib_dev_v2)
++		return SMC_CLC_DECL_NOSMCRDEV;
++
++	return 0;
++}
++
+ /* check if there is an ISM device available for this connection. */
+ /* called for connect and listen */
+ static int smc_find_ism_device(struct smc_sock *smc, struct smc_init_info *ini)
+@@ -1019,13 +1050,17 @@ static int smc_find_proposal_devices(struct smc_sock *smc,
+ 
+ 	/* check if there is an rdma device available */
+ 	if (!(ini->smcr_version & SMC_V1) ||
+-	    smc_find_rdma_device(smc, ini))
++	    smc_find_rdma_device_with_dst(smc, ini))
+ 		ini->smcr_version &= ~SMC_V1;
+ 	/* else RDMA is supported for this connection */
+ 
+ 	ini->smc_type_v1 = smc_indicated_type(ini->smcd_version & SMC_V1,
+ 					      ini->smcr_version & SMC_V1);
+ 
++	/* just prototype, do this for simple */
++	ini->smc_type_v2 = SMC_TYPE_N;
++	return rc;
++
+ 	/* check if there is an ism v2 device available */
+ 	if (!(ini->smcd_version & SMC_V2) ||
+ 	    !smc_ism_is_v2_capable() ||
+@@ -1492,11 +1527,7 @@ static void smc_connect_work(struct work_struct *work)
+ 		smc->sk.sk_err = smc->clcsock->sk->sk_err;
+ 	} else if ((1 << smc->clcsock->sk->sk_state) &
+ 					(TCPF_SYN_SENT | TCPF_SYN_RECV)) {
+-		rc = sk_stream_wait_connect(smc->clcsock->sk, &timeo);
+-		if ((rc == -EPIPE) &&
+-		    ((1 << smc->clcsock->sk->sk_state) &
+-					(TCPF_ESTABLISHED | TCPF_CLOSE_WAIT)))
+-			rc = 0;
++		rc = 0;
+ 	}
+ 	release_sock(smc->clcsock->sk);
+ 	lock_sock(&smc->sk);
+@@ -1580,9 +1611,10 @@ static int smc_connect(struct socket *sock, struct sockaddr *addr,
+ 		rc = -EALREADY;
+ 		goto out;
+ 	}
+-	rc = kernel_connect(smc->clcsock, addr, alen, flags);
+-	if (rc && rc != -EINPROGRESS)
+-		goto out;
++
++	/* copy remote address backup */
++	memcpy(&smc->remote_address.ss, addr, alen);
++	rc = -EINPROGRESS;
+ 
+ 	if (smc->use_fallback) {
+ 		sock->state = rc ? SS_CONNECTING : SS_CONNECTED;
+@@ -2452,9 +2484,17 @@ static int smc_listen(struct socket *sock, int backlog)
+ {
+ 	struct sock *sk = sock->sk;
+ 	struct smc_sock *smc;
+-	int rc;
++	int rc, val;
+ 
+ 	smc = smc_sk(sk);
++
++	/* enable server clcsock tcp fastopen.
++	 * just a proto type code, magic number 5 for no reason
++	 */
++	val = 5;
++	smc->clcsock->ops->setsockopt(smc->clcsock, SOL_TCP,
++				      TCP_FASTOPEN, KERNEL_SOCKPTR(&val), sizeof(val));
++
+ 	lock_sock(sk);
+ 
+ 	rc = -EINVAL;
+diff --git a/net/smc/smc.h b/net/smc/smc.h
+index 5ed765e..ef18894 100644
+--- a/net/smc/smc.h
++++ b/net/smc/smc.h
+@@ -261,6 +261,14 @@ struct smc_sock {				/* smc sock container */
+ 	int			fallback_rsn;	/* reason for fallback */
+ 	u32			peer_diagnosis; /* decline reason from peer */
+ 	atomic_t                queued_smc_hs;  /* queued smc handshakes */
++
++	union {
++		struct sockaddr		addr;
++		struct sockaddr_in	v4;
++		struct sockaddr_in6	v6;
++		struct sockaddr_storage ss;
++	} remote_address;
++
+ 	struct inet_connection_sock_af_ops		af_ops;
+ 	const struct inet_connection_sock_af_ops	*ori_af_ops;
+ 						/* original af ops */
+diff --git a/net/smc/smc_clc.c b/net/smc/smc_clc.c
+index f9f3f59..f944c67 100644
+--- a/net/smc/smc_clc.c
++++ b/net/smc/smc_clc.c
+@@ -20,6 +20,7 @@
+ #include <net/addrconf.h>
+ #include <net/sock.h>
+ #include <net/tcp.h>
++#include <net/route.h>
+ 
+ #include "smc.h"
+ #include "smc_core.h"
+@@ -486,8 +487,7 @@ static int smc_clc_prfx_set4_rcu(struct dst_entry *dst, __be32 ipv4,
+ 		return -ENODEV;
+ 
+ 	in_dev_for_each_ifa_rcu(ifa, in_dev) {
+-		if (!inet_ifa_match(ipv4, ifa))
+-			continue;
++		/* delete this for simple, just prototype code*/
+ 		prop->prefix_len = inet_mask_len(ifa->ifa_mask);
+ 		prop->outgoing_subnet = ifa->ifa_address & ifa->ifa_mask;
+ 		/* prop->ipv6_prefixes_cnt = 0; already done by memset before */
+@@ -528,10 +528,10 @@ static int smc_clc_prfx_set6_rcu(struct dst_entry *dst,
+ 
+ /* retrieve and set prefixes in CLC proposal msg */
+ static int smc_clc_prfx_set(struct socket *clcsock,
++			    struct dst_entry *dst,
+ 			    struct smc_clc_msg_proposal_prefix *prop,
+ 			    struct smc_clc_ipv6_prefix *ipv6_prfx)
+ {
+-	struct dst_entry *dst = sk_dst_get(clcsock->sk);
+ 	struct sockaddr_storage addrs;
+ 	struct sockaddr_in6 *addr6;
+ 	struct sockaddr_in *addr;
+@@ -802,7 +802,8 @@ int smc_clc_send_decline(struct smc_sock *smc, u32 peer_diag_info, u8 version)
+ }
+ 
+ /* send CLC PROPOSAL message across internal TCP socket */
+-int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
++int smc_clc_send_proposal_with_nexthop(struct smc_sock *smc,
++				       struct dst_entry *dst, struct smc_init_info *ini)
+ {
+ 	struct smc_clc_smcd_v2_extension *smcd_v2_ext;
+ 	struct smc_clc_msg_proposal_prefix *pclc_prfx;
+@@ -838,7 +839,7 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
+ 
+ 	/* retrieve ip prefixes for CLC proposal msg */
+ 	if (ini->smc_type_v1 != SMC_TYPE_N) {
+-		rc = smc_clc_prfx_set(smc->clcsock, pclc_prfx, ipv6_prfx);
++		rc = smc_clc_prfx_set(smc->clcsock, dst, pclc_prfx, ipv6_prfx);
+ 		if (rc) {
+ 			if (ini->smc_type_v2 == SMC_TYPE_N) {
+ 				kfree(pclc);
+@@ -961,6 +962,11 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
+ 	}
+ 	vec[i].iov_base = trl;
+ 	vec[i++].iov_len = sizeof(*trl);
++
++	msg.msg_flags	|= MSG_FASTOPEN;
++	msg.msg_name	= &smc->remote_address.addr;
++	msg.msg_namelen = sizeof(struct sockaddr_in);
++
+ 	/* due to the few bytes needed for clc-handshake this cannot block */
+ 	len = kernel_sendmsg(smc->clcsock, &msg, vec, i, plen);
+ 	if (len < 0) {
+@@ -975,6 +981,22 @@ int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
+ 	return reason_code;
+ }
+ 
++int smc_clc_send_proposal(struct smc_sock *smc, struct smc_init_info *ini)
++{
++	struct sock *tsk = smc->clcsock->sk;
++	struct rtable *rt;
++	int rc;
++
++	rt = ip_route_output(sock_net(tsk), smc->remote_address.v4.sin_addr.s_addr,
++			     0, 0, 0);
++
++	if (IS_ERR(rt))
++		return -ECONNRESET;
++
++	rc = smc_clc_send_proposal_with_nexthop(smc, &rt->dst, ini);
++	return rc;
++}
++
+ /* build and send CLC CONFIRM / ACCEPT message */
+ static int smc_clc_send_confirm_accept(struct smc_sock *smc,
+ 				       struct smc_clc_msg_accept_confirm_v2 *clc_v2,
+diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+index f40f6ed..ef5e5411 100644
+--- a/net/smc/smc_core.c
++++ b/net/smc/smc_core.c
+@@ -1765,6 +1765,8 @@ int smc_vlan_by_tcpsk(struct socket *clcsock, struct smc_init_info *ini)
+ 	int rc = 0;
+ 
+ 	ini->vlan_id = 0;
++	/* just for simple , prototype code */
++	return 0;
+ 	if (!dst) {
+ 		rc = -ENOTCONN;
+ 		goto out;
+diff --git a/net/smc/smc_pnet.c b/net/smc/smc_pnet.c
+index 7055ed1..6aa3304 100644
+--- a/net/smc/smc_pnet.c
++++ b/net/smc/smc_pnet.c
+@@ -1064,8 +1064,8 @@ static void smc_pnet_find_rdma_dev(struct net_device *netdev,
+  * If nothing found, check pnetid table.
+  * If nothing found, try to use handshake device
+  */
+-static void smc_pnet_find_roce_by_pnetid(struct net_device *ndev,
+-					 struct smc_init_info *ini)
++void smc_pnet_find_roce_by_pnetid(struct net_device *ndev,
++				  struct smc_init_info *ini)
+ {
+ 	u8 ndev_pnetid[SMC_MAX_PNETID_LEN];
+ 	struct net *net;
+diff --git a/net/smc/smc_pnet.h b/net/smc/smc_pnet.h
+index 80a88ee..2ffaf22 100644
+--- a/net/smc/smc_pnet.h
++++ b/net/smc/smc_pnet.h
+@@ -67,4 +67,7 @@ void smc_pnet_find_alt_roce(struct smc_link_group *lgr,
+ 			    struct smc_ib_device *known_dev);
+ bool smc_pnet_is_ndev_pnetid(struct net *net, u8 *pnetid);
+ bool smc_pnet_is_pnetid_set(u8 *pnetid);
++
++void smc_pnet_find_roce_by_pnetid(struct net_device *ndev,
++				  struct smc_init_info *ini);
+ #endif
+-- 
+1.8.3.1
+
