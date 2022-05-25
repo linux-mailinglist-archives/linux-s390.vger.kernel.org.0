@@ -2,86 +2,61 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B200534488
-	for <lists+linux-s390@lfdr.de>; Wed, 25 May 2022 21:49:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E403E53452A
+	for <lists+linux-s390@lfdr.de>; Wed, 25 May 2022 22:42:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344756AbiEYTtl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 25 May 2022 15:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47374 "EHLO
+        id S1345178AbiEYUmi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 25 May 2022 16:42:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344309AbiEYTtl (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 25 May 2022 15:49:41 -0400
-Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A211766AEC
-        for <linux-s390@vger.kernel.org>; Wed, 25 May 2022 12:49:38 -0700 (PDT)
-Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-300beab2b76so14391647b3.13
-        for <linux-s390@vger.kernel.org>; Wed, 25 May 2022 12:49:38 -0700 (PDT)
+        with ESMTP id S1344075AbiEYUmi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 25 May 2022 16:42:38 -0400
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1410B0D0A
+        for <linux-s390@vger.kernel.org>; Wed, 25 May 2022 13:42:36 -0700 (PDT)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-30026b1124bso70022557b3.1
+        for <linux-s390@vger.kernel.org>; Wed, 25 May 2022 13:42:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lcsU1M3aHmWM93+N/Pq2k69CNkfyIQUCxczoLH0OLPk=;
-        b=hGvqDCPINlCno6IGVx/RQ4/atSQ+dW08eMaP/4u4J2Rx0AU21Orr25m5AgNUJgVoBC
-         3FFOnaz5xSM9a3RRyGWmmLYgiZVdvKzEmj7vsHFg6Sh7EwGqNKrvH43xPCnlETqRbyTJ
-         rUgPCSCAGnF+I3fcFxMltq5wx33LgoLK4ERO4IR4Sot/Uaxxldi6tkX+WdLxAvCCiEtI
-         QP4xUPzpC2rlJZR8sd1n3W8vuHEHoaO4LC9YRcKisj9Uq+DszGcvpWkcK75IpZtbpf64
-         JIxJLJ+6BngIh5kjOcaFiUEdbJbMoovEHpIlAtRm4xeoQYYTe1wf9PGaYkAV8y48Abi0
-         +6Hg==
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=LDBqQh/PztHeiDiV9Pr0v62BTTaDnPQyU98FGi1REkw=;
+        b=qXByR7EufpzoGQiN06MDPIVWzdylLG3o46SZpFvmALD7dQ/PgjHu3dAOdG4vHKIlfe
+         o4pnFLvM6qO7tfMb32rqQxgUNzZp6gdeGFDkaYnNu/L384UihSeFla/OCMwsBAF3705g
+         aoIOUM85zZmqEG9ecsktReRuF0D56BtsybiDVuBWXKXg1j5P64zJQv9Dpj1ReV3CPl4j
+         5alt292Xc+TmQmAS9PrcySvzwaZnTkvZZdWEtMf296xtKREeKQCGVfeCiibW0qnTX9Qu
+         7bEy8jEeJHs+TVn/2WvP0NanfefW/JaGuBcJU8L63BJmai1/hqD3u/byWhupBBZYSYoU
+         /IYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lcsU1M3aHmWM93+N/Pq2k69CNkfyIQUCxczoLH0OLPk=;
-        b=wCT9qnvy9/V5Gi70eO+ODavAX5SBduIHHhse8v3C+zn5m75+pT7zD1Spr4qodwGUDo
-         7ukVqlQSsoMlkjsRPKmGzsBUz+yMFMoS1O9yWjtfN9HbePLEzxE+Gr5lRbi11Kn3lm4R
-         L+wnv0ff5evKLE7yTT/XkfN1i99idyuL9UR9CpApMtv7Ebmnkq5JwAKIGk/Sltc/24/0
-         9UP5UzA6P4oDLVMO7nVZAevMgEruGBABalUFB5iVbioJFp4YPgI9itA0v2tO2chfkA3Z
-         RSugaobIuXS2UG1WlCNu4+Zqla5upI6uTRaSoixDLlI1bQGExS5hHVRUEW06RkOrRU5e
-         D4lQ==
-X-Gm-Message-State: AOAM5327nXxbv0A6DwulHJeVPoXiE9vfxle9LTGT6FWLlkxgY3DLhMtp
-        weTi7rKk8Gmt4+tapjUVeXaABhVOd/8CwV8/n9NI4g==
-X-Google-Smtp-Source: ABdhPJye/LYmXdbx2DRGvhYd77idEIGqJLpVK4M7sUVcSaytWZ/KajOi10nwmyuJy9EQw0Od4wYghiCxgCclb01GpVs=
-X-Received: by 2002:a81:72c5:0:b0:300:7d0:a642 with SMTP id
- n188-20020a8172c5000000b0030007d0a642mr14402533ywc.80.1653508177547; Wed, 25
- May 2022 12:49:37 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=LDBqQh/PztHeiDiV9Pr0v62BTTaDnPQyU98FGi1REkw=;
+        b=Jw2TaHeG0DrGL2ztCb2LLb+5c+ttzuSEQ3WE7/9c4eh16CjOJ6EUlfLYXgMV96OH6+
+         JR1Ejk+he0tfpY0/vYcPtg94YcqDT3wfozF+hWGIn1+910RisPWLpzwcPNQJyL3+UAAS
+         /RLgcocAowoHcc+EbCjUdXa02TlWa2IfIMsraRVs4Ot9CvD77lDa+bIMHjcgEttTllwo
+         5Xp+1PBUyM4qiUmgOCW8j4oZyN8d63XlaHKSQRbUQg+fcZIjNL1BXxlZZfQkV0EAIgBp
+         eiSKmAqLYLJkIxSPG1Exc0o+mEIEjivG/OZ6Aye1/BJXDa3+eJkNE8lHDaZRigRni7P9
+         Xp9Q==
+X-Gm-Message-State: AOAM530+xUwpiEd6xDKAUZ4Yohg5FxzWFffzFYhAYpHVU2Gt3yjccgGX
+        QOoDf+EgNK5hvE4SaKmMRQFxAMyYLu1gnta4yBM=
+X-Google-Smtp-Source: ABdhPJwSy9gIL2rmC2eVlR4qYfk4gjTw3/aO1KuvySOFfkgG3DuJQpFytIvDDKuHulBchsUQTaGwWGCGNDaLcVgEOHA=
+X-Received: by 2002:a81:7607:0:b0:2fb:7bee:bf70 with SMTP id
+ r7-20020a817607000000b002fb7beebf70mr35495161ywc.279.1653511356175; Wed, 25
+ May 2022 13:42:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <YogkhvFGVcjNQ21Z@dev-arch.thelio-3990X> <CAGETcx9nvBs1b4M=2hBhrLX_2-rzLtAmV9WfTXu0MC7JnsBvwA@mail.gmail.com>
- <YogsiMCDupNUhMgL@dev-fedora.thelio-3990X> <CAGETcx-JyWwoGA3o8eep7E29Cm4DcVT6D1JFJh72jLcqm_mjCQ@mail.gmail.com>
- <Youleo3Ganxbc1sq@dev-arch.thelio-3990X> <CAGETcx-sL08h2toEyxY6ztc6xNuJiPok6iDEeuJ1mOA3nvE+vA@mail.gmail.com>
- <YowHNo4sBjr9ijZr@dev-arch.thelio-3990X> <CAGETcx91_WgpmwEA7mBSvUdyJV0a8ymfaNKTmXq=mAJYAjzq1A@mail.gmail.com>
- <Yo0KyWx+3oX3cMCS@linutronix.de> <CAGETcx_qTLwbjzMruLThLYV+MZD5W2Ox-QwLFQeW=eQgxzq-Hw@mail.gmail.com>
- <Yo3WvGnNk3LvLb7R@linutronix.de>
-In-Reply-To: <Yo3WvGnNk3LvLb7R@linutronix.de>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 25 May 2022 12:49:00 -0700
-Message-ID: <CAGETcx84ja_w_=vXKDOZnM8EVEcuAg1tX9Kqy57PTkDb1=H4FA@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Extend deferred probe timeout on driver registration
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Nathan Chancellor <nathan@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kernel-team@android.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, John Stultz <jstultz@google.com>
+Received: by 2002:a5b:506:0:0:0:0:0 with HTTP; Wed, 25 May 2022 13:42:35 -0700 (PDT)
+From:   Deterin Falcao <falcaodeterin@gmail.com>
+Date:   Wed, 25 May 2022 22:42:35 +0200
+Message-ID: <CABCO4Z1qRyNfOn1xz1AEWfgUaQmSXp-LftTWBPBTfu+NB_4BTA@mail.gmail.com>
+Subject: Bitte kontaktaufnahme Erforderlich !!! Please Contact Required !!!
+To:     contact@firstdiamondbk.com
+Cc:     info@firstdiamondbk.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -89,55 +64,45 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, May 25, 2022 at 12:12 AM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2022-05-24 10:46:49 [-0700], Saravana Kannan wrote:
-> > > Removing probe_timeout_waitqueue (as suggested) or setting the timeou=
-t
-> > > to 0 avoids the delay.
-> >
-> > In your case, I think it might be working as intended? Curious, what
-> > was the call stack in your case where it was blocked?
->
-> Why is then there 10sec delay during boot? The backtrace is
-> |------------[ cut here ]------------
-> |WARNING: CPU: 4 PID: 1 at drivers/base/dd.c:742 wait_for_device_probe+0x=
-30/0x110
-> |Modules linked in:
-> |CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.18.0-rc5+ #154
-> |RIP: 0010:wait_for_device_probe+0x30/0x110
-> |Call Trace:
-> | <TASK>
-> | prepare_namespace+0x2b/0x160
-> | kernel_init_freeable+0x2b3/0x2dd
-> | kernel_init+0x11/0x110
-> | ret_from_fork+0x22/0x30
-> | </TASK>
->
-> Looking closer, it can't access init. This in particular box boots
-> directly the kernel without an initramfs so the kernel later mounts
-> /dev/sda1 and everything is good.  So that seems to be the reason=E2=80=
-=A6
+Guten Tag,
 
-Hmmm... that part shouldn't matter. As long as you are hitting the
-same code path. My guess is one of them has CONFIG_MODULES enabled and
-the other doesn't.
+Ich habe mich nur gefragt, ob Sie meine vorherige E-Mail bekommen
 
-In either case, I think the patch needs to be reverted (I'll send out
-one soon), but that'll also mean I need to revert part of my patch
-(sets the timeout back to 0) or I need to fix this case:
-https://lore.kernel.org/lkml/TYAPR01MB45443DF63B9EF29054F7C41FD8C60@TYAPR01=
-MB4544.jpnprd01.prod.outlook.com/
+haben ?
 
-I'll try to do the latter if I can get something reasonable soon.
-Otherwise, I'll just do the revert + partial revert.
+Ich habe versucht, Sie per E-Mail zu erreichen.
 
--Saravana
+Kommen Sie bitte schnell zu mir zur=C3=BCck, es ist sehr wichtig.
+
+Danke
+
+Falcao Deterin
+
+falcaodeterin@gmail.com
 
 
-> My other machine with an initramfs does not show this problem.
->
-> > -Saravana
->
-> Sebastian
+
+
+
+
+
+
+----------------------------------
+
+
+
+
+Good Afternoon,
+
+I was just wondering if you got my Previous E-mail
+have ?
+
+I tried to reach you by E-mail.
+
+Please come back to me quickly, it is very Important.
+
+Thanks
+
+Falcao Deterin
+
+falcaodeterin@gmail.com
