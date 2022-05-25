@@ -2,116 +2,152 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E4D6533F61
-	for <lists+linux-s390@lfdr.de>; Wed, 25 May 2022 16:40:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 599B853410C
+	for <lists+linux-s390@lfdr.de>; Wed, 25 May 2022 18:08:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232195AbiEYOkj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 25 May 2022 10:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47260 "EHLO
+        id S245404AbiEYQIl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 25 May 2022 12:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244356AbiEYOki (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 25 May 2022 10:40:38 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF73326E5;
-        Wed, 25 May 2022 07:40:36 -0700 (PDT)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24PCviI3027497;
-        Wed, 25 May 2022 14:40:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=LOjfOmlIzo06MRjwClmtDARWrWe2NyOJ++wkHJi3UJo=;
- b=pnX8nbyHxFDhRP6rZOXdTT/wlOar3L/Ope/LOeWWQzVnbEhe+xNieeLOiDlVlcv9wcYD
- I/Ibv+d5bEAAvEPEYiccc214qosylYBeGqjO3l2pVGUASNPdbTjtZr68P365eAxwjZmY
- qqurDRWRLfsD2IS5Md+MrUi9EJnPX1CzqNnrPdLqfEGieFzcYjrQKyDDfJFBatmTWwBh
- PV2K65GjvEL8XJ/d67ypJQTUnxsjdOIE2uqxF+0M5v+6RNcx3Y4wZyzulJ77f1bN+iLR
- 2/4LP5BczOhBUTtjXaOYujxN4r+tMFB/vgZwSl+ELfY/9W4JLpVx7BtePhHKIpRmr+yj 4A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g9mx1ae20-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 May 2022 14:40:35 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 24PEIKOI030368;
-        Wed, 25 May 2022 14:40:35 GMT
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3g9mx1ae1a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 May 2022 14:40:35 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 24PEZV9m021968;
-        Wed, 25 May 2022 14:40:32 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma05fra.de.ibm.com with ESMTP id 3g93wds23w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 May 2022 14:40:32 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 24PEQLMH47317400
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 May 2022 14:26:21 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AFBA411C04C;
-        Wed, 25 May 2022 14:40:29 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E8B711C04A;
-        Wed, 25 May 2022 14:40:29 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 25 May 2022 14:40:29 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-        id 5B6B1E7925; Wed, 25 May 2022 16:40:29 +0200 (CEST)
-From:   Eric Farman <farman@linux.ibm.com>
-To:     Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@linux.ibm.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        Eric Farman <farman@linux.ibm.com>
-Subject: [PATCH 1/1] MAINTAINERS: Update s390 virtio-ccw
-Date:   Wed, 25 May 2022 16:40:28 +0200
-Message-Id: <20220525144028.2714489-2-farman@linux.ibm.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220525144028.2714489-1-farman@linux.ibm.com>
-References: <20220525144028.2714489-1-farman@linux.ibm.com>
+        with ESMTP id S234454AbiEYQIj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 25 May 2022 12:08:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE4EB2250;
+        Wed, 25 May 2022 09:08:38 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 618C9615E2;
+        Wed, 25 May 2022 16:08:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9CE4C34117;
+        Wed, 25 May 2022 16:08:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653494917;
+        bh=yKZpZ7SIZeLHb0X8nC5bqkpDaZyHuZo++7kw37oIcGQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=goVP0r/5GwDlgxrUTVvx6jhaOtTm7pWUyfqhP1hgj2iDGXU4Tiq8pzDnwCvAkgpG4
+         L1r86pR2gPdL9aCADSayVXaRv86iKfwqr3WFbWOZxdLnDhv1govZgITWE7RtDWiB5+
+         LSjycCUndGv9y0jhBd0U8lb2tsEZKd0fEkC2wJsMf/1yO50v0Dzuq7GoqJ/s9pQejc
+         wNgI7SjceSjeavb7oG9cfRxObqafmjEdCwDyFAraqlxbB1zYcaDbq+IRyVfomMK/KY
+         bNjIBroLqZ8u1NSoR6dO+y5X61zbeNatpUa3EJ8SCurI9i1y8SKf6MZABNuUT5W2GC
+         6go17gsxUHsuQ==
+Received: by mail-vk1-f177.google.com with SMTP id i25so5151556vkr.8;
+        Wed, 25 May 2022 09:08:37 -0700 (PDT)
+X-Gm-Message-State: AOAM533v0pAJ28zdQU8hf2sK+UhmFZGXe9sdHuiU9EA2ZfVlmk3zruRk
+        vHa6E66Wu59tSuKeVXx19GVavYor0eOIbeuf9Wc=
+X-Google-Smtp-Source: ABdhPJw1WHHqxuzdMTtb2eEqwRRFtvXa8jU3vxrvtrww8g1vIS4KjJWMDyxFq63Hm2BXr071eyutBaZ38+UIdXynb6U=
+X-Received: by 2002:a1f:2106:0:b0:357:a8c9:a8d6 with SMTP id
+ h6-20020a1f2106000000b00357a8c9a8d6mr5907118vkh.2.1653494913806; Wed, 25 May
+ 2022 09:08:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: o6Mbe76Rjvwvb6jlevt8QOWi3b4fD2qz
-X-Proofpoint-ORIG-GUID: 4p1QLHWs_vgEdWoBvm8n7p15Xjd0zGdS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-25_04,2022-05-25_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 clxscore=1011
- impostorscore=0 mlxlogscore=999 adultscore=0 mlxscore=0 malwarescore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2205250076
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220322144003.2357128-1-guoren@kernel.org> <20220524220646.GA3990738@roeck-us.net>
+ <6435704.4vTCxPXJkl@diego> <3418219.V25eIC5XRa@diego>
+In-Reply-To: <3418219.V25eIC5XRa@diego>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Thu, 26 May 2022 00:08:22 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTkpHLZf-+VXZE_gCn=5ZJ5FS3jOxKLVoMyL4i=baPd7Q@mail.gmail.com>
+Message-ID: <CAJF2gTTkpHLZf-+VXZE_gCn=5ZJ5FS3jOxKLVoMyL4i=baPd7Q@mail.gmail.com>
+Subject: Re: [PATCH V9 20/20] riscv: compat: Add COMPAT Kbuild skeletal support
+To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-csky@vger.kernel.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Guo Ren <guoren@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Add myself to the kernel side of virtio-ccw
+Thx Heiko & Guenter,
 
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, May 25, 2022 at 7:10 PM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
+>
+> Am Mittwoch, 25. Mai 2022, 12:57:30 CEST schrieb Heiko St=C3=BCbner:
+> > Am Mittwoch, 25. Mai 2022, 00:06:46 CEST schrieb Guenter Roeck:
+> > > On Wed, May 25, 2022 at 01:46:38AM +0800, Guo Ren wrote:
+> > > [ ... ]
+> > >
+> > > > > The problem is come from "__dls3's vdso decode part in musl's
+> > > > > ldso/dynlink.c". The ehdr->e_phnum & ehdr->e_phentsize are wrong.
+> > > > >
+> > > > > I think the root cause is from musl's implementation with the wro=
+ng
+> > > > > elf parser. I would fix that soon.
+> > > > Not elf parser, it's "aux vector just past environ[]". I think I co=
+uld
+> > > > solve this, but anyone who could help dig in is welcome.
+> > > >
+> > >
+> > > I am not sure I understand what you are saying here. Point is that my
+> > > root file system, generated with musl a year or so ago, crashes with
+> > > your patch set applied. That is a regression, even if there is a bug
+> > > in musl.
+Thx for the report, it's a valuable regression for riscv-compat.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6618e9b91b6c..1d2c6537b834 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20933,6 +20933,7 @@ F:	include/uapi/linux/virtio_crypto.h
- VIRTIO DRIVERS FOR S390
- M:	Cornelia Huck <cohuck@redhat.com>
- M:	Halil Pasic <pasic@linux.ibm.com>
-+M:	Eric Farman <farman@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- L:	virtualization@lists.linux-foundation.org
- L:	kvm@vger.kernel.org
--- 
-2.32.0
+> >
+> > Also as I said in the other part of the thread, the rootfs seems innoce=
+nt,
+> > as my completely-standard Debian riscv64 rootfs is also affected.
+> >
+> > The merged version seems to be v12 [0] - not sure how we this discussio=
+n
+> > ended up in v9, but I just tested this revision in two variants:
+> >
+> > - v5.17 + this v9 -> works nicely
+>
+> I take that back ... now going back to that build I somehow also run into
+> that issue here ... will investigate more.
+Yeah, it's my fault. I've fixed up it, please have a try:
 
+https://lore.kernel.org/linux-riscv/20220525160404.2930984-1-guoren@kernel.=
+org/T/#u
+
+>
+>
+> > - v5.18-rc6 + this v9 (rebased onto it) -> breaks the boot
+> >   The only rebase-conflict was with the introduction of restartable
+> >   sequences and removal of the tracehook include, but turning CONFIG_RS=
+EQ
+> >   off doesn't seem to affect the breakage.
+> >
+> > So it looks like something changed between 5.17 and 5.18 that causes th=
+e issue.
+> >
+> >
+> > Heiko
+> >
+> >
+> > [0] https://lore.kernel.org/all/20220405071314.3225832-1-guoren@kernel.=
+org/
+> >
+>
+>
+>
+>
+
+
+--=20
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
