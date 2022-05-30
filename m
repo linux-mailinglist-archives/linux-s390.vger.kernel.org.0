@@ -2,35 +2,35 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC6AB537D4E
-	for <lists+linux-s390@lfdr.de>; Mon, 30 May 2022 15:42:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5022D53811C
+	for <lists+linux-s390@lfdr.de>; Mon, 30 May 2022 16:28:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237630AbiE3Ngx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 May 2022 09:36:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46846 "EHLO
+        id S238610AbiE3Nwe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 May 2022 09:52:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237767AbiE3Nfo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 May 2022 09:35:44 -0400
+        with ESMTP id S239253AbiE3NvY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 May 2022 09:51:24 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 908768A049;
-        Mon, 30 May 2022 06:28:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A0A92D2B;
+        Mon, 30 May 2022 06:35:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8D23360DD5;
-        Mon, 30 May 2022 13:28:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2BB0C385B8;
-        Mon, 30 May 2022 13:28:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A684E60F27;
+        Mon, 30 May 2022 13:35:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D603EC3411E;
+        Mon, 30 May 2022 13:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653917330;
+        s=k20201202; t=1653917736;
         bh=g7XB8B2hXhx0t6vm3lGhWMstRlw7oJH8/lHkhtWU6kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nq7f64Yko1jn6fVD4WVSA9K8/lnuNwTRd0SCrIYx0z5aZyUolaEvgUkm+dst3xc0Q
-         g2l0oNwo3fmGzuZ8klXT7VY8u99IsTpotQ4twllDHijeJBVMLapd9XSQWNTsaT4sIc
-         6DYo9+u5NKH9u6tDmRanBVsZHlMLejHAl2uaTmqJoONgEkvB4pO28oKydFfF1JsCEL
-         5BrB1sHzMFjRaqQYRCBYtbFVEkbDxUyXxi4UN3gLM81Nm3N4LVwrAU2tNSkc+l+FZT
-         wNZEO3Uuw4W2dPEhBTLrj7HP0eKPzUK+ye1DleARlnDMk/EKkRHUe/PzJdCkKkddxy
-         qJ5qp5owMkJqg==
+        b=UcTUjfbrNK9PGGB6N+1VUv1HdondabMkgzzAkxaqM2PiZv4wfgl1MLuFqbdBBA2BK
+         9S1c8ZM3kYqAXq+5eO0GavyZxDdNiCGoKlOykeZWbyTT5y0muptTO9L9pcQ13mvUOx
+         XTPiuPGrvXiHNgbN8qjoVp5RpGr8MlARvFxs6HpGZPdhOoF6o8kCkJTYXCkTOkERH+
+         i21gTXVb4ZfyTNneuAKgj00XfuFhtObc6XdohWWaj10IoC4C9NIOXzea98bDj2wlNn
+         sypplksmOi1/Yfgn3OTyGCj9Huy/darqIcSwZ070ilPnOpiTZvRGo3og47ZaerfuEi
+         eooUgx94XfkSQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Heiko Carstens <hca@linux.ibm.com>,
@@ -39,12 +39,12 @@ Cc:     Heiko Carstens <hca@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, gor@linux.ibm.com,
         agordeev@linux.ibm.com, vschneid@redhat.com,
         linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.18 096/159] s390/preempt: disable __preempt_count_add() optimization for PROFILE_ALL_BRANCHES
-Date:   Mon, 30 May 2022 09:23:21 -0400
-Message-Id: <20220530132425.1929512-96-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.17 079/135] s390/preempt: disable __preempt_count_add() optimization for PROFILE_ALL_BRANCHES
+Date:   Mon, 30 May 2022 09:30:37 -0400
+Message-Id: <20220530133133.1931716-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220530132425.1929512-1-sashal@kernel.org>
-References: <20220530132425.1929512-1-sashal@kernel.org>
+In-Reply-To: <20220530133133.1931716-1-sashal@kernel.org>
+References: <20220530133133.1931716-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
