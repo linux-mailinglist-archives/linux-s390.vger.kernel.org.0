@@ -2,117 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 389BD538380
-	for <lists+linux-s390@lfdr.de>; Mon, 30 May 2022 16:40:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36C5F5384C3
+	for <lists+linux-s390@lfdr.de>; Mon, 30 May 2022 17:23:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240312AbiE3OeX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 May 2022 10:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42380 "EHLO
+        id S241637AbiE3PWy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 May 2022 11:22:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240507AbiE3O3V (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 May 2022 10:29:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03674625F;
-        Mon, 30 May 2022 06:51:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B89F60FA9;
-        Mon, 30 May 2022 13:51:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 627E7C341CB;
-        Mon, 30 May 2022 13:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653918704;
-        bh=o5pO4LCMS5/b+2fU+WThBdm9r/1xafoD8Nszr9ODGqE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OeYZ1MBW+gDSREbk03XKHKgLTj3P6ycM8Y7WY4nil7L7xfapxsnIPxyK3U5gUDz0q
-         hNbSi+CN4+qXzjaDlHN5m8ghcaB2qwldX8esNs/cJh92z9AtTtPWVVtxU9+asda1tj
-         D5gXZvDk40diYlPWXKQY0C8tPgn7OeHywSAzOdOz8lrk81dVClBp5LyAbzDb3z6tOc
-         8kRqq9WPwTByZi4MwFhC4VNCGmeIDupj8xIX5tu5r/W9/pFxI8IH4FWqf3HJ57UkL5
-         tBGw4II61fKthtiMmcA6vFotrdnmh5VLEFUpHf7FJ3jMWD6J9oBPJfxau3tOcnk93m
-         HKaHAyjVUfA9A==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, vschneid@redhat.com,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 18/29] s390/preempt: disable __preempt_count_add() optimization for PROFILE_ALL_BRANCHES
-Date:   Mon, 30 May 2022 09:50:45 -0400
-Message-Id: <20220530135057.1937286-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220530135057.1937286-1-sashal@kernel.org>
-References: <20220530135057.1937286-1-sashal@kernel.org>
+        with ESMTP id S241644AbiE3PWD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 May 2022 11:22:03 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05611C8665
+        for <linux-s390@vger.kernel.org>; Mon, 30 May 2022 07:23:32 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id y17so2529953ilj.11
+        for <linux-s390@vger.kernel.org>; Mon, 30 May 2022 07:23:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=XJqXgw0Qi4Ge6Q57wB4GlvotoYnhUuSq68y9152a6AE=;
+        b=RbLJCZVFtlwj7+Z3Y7O0qJYoBzYmhQGTvS5NB07cWgaLzfpl6yx8Kj4fQ2ftIv/z4J
+         ngANjnThxfX6oIbbTJhPgykypESQf7OjTy2kYBz1v1fjPHzS1laSAPBPVJKj3uW9csWw
+         yQJ9QY0OHMBfgiuXmszRqX7M19GcI4nUyWsNwY9mzZUaAA2IoGzn7L883g907c6jwD4V
+         NqIMl3m3/I9AGi1Jngi+1iXud+358BbC3kf4kYrRHcR7qWJfE6pDNrfrWZgiTqa63xtZ
+         RhPNiSI6Tt9IlA2KAo9braSDJGonjfWltprNqnSEuQFzgx5HEnkg7xtv5ur6zGMbz4jd
+         J93Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=XJqXgw0Qi4Ge6Q57wB4GlvotoYnhUuSq68y9152a6AE=;
+        b=gf0Lj1jYHTNCP70OmqUJRALUuFMiCCEfZx23dmWjuLt+Q9OkwveWUYtZSSRmvaKTGL
+         E04H9/65R7avm1xO7FeiWvI8XhyUSknxHV5gZeHKukS3Y2BgSeSnN8TCfnT2jMFRwduj
+         a3i3ZkmmHgElaYYfyp3CGvTfPamalrnC8Z+xmWjeskbMQp2KnzdtHijv5xG9oM3u2t6J
+         I00yZYsnMOP3uRy1uUXt0E1pwcMzBilfPus9ku2CsFKXo2X4DD+duGKPgqoKAGO6XA4+
+         bJMsQ9tUEJjGnDbdz0rHte1A6AF/SFMaqU6dk4a680L4a8VgSuU4iZH6cj2DfZyXvDWI
+         7HQA==
+X-Gm-Message-State: AOAM533G28npfnF82R/nbAyyRn/9+MhNj15NkB3957yDghE5HsaA1xNM
+        TsI7FO6DDzQxVEhH6Gcp0sTGhtfE9rCPDcrfSRU=
+X-Google-Smtp-Source: ABdhPJwkqQ/OIioqBR97/5zzSyy3lV4aE87tmDKwpi6v68YH7z0pcYmIQ2y3lvQmeJxEofabhQ+YK6IbKXKNcCfn+P0=
+X-Received: by 2002:a92:ddcb:0:b0:2cd:95b6:bede with SMTP id
+ d11-20020a92ddcb000000b002cd95b6bedemr28008470ilr.280.1653920609933; Mon, 30
+ May 2022 07:23:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:6622:f06:0:0:0:0 with HTTP; Mon, 30 May 2022 07:23:29
+ -0700 (PDT)
+Reply-To: barristerbenjamin221@gmail.com
+From:   Attorney Amadou <koadaidrissa1@gmail.com>
+Date:   Mon, 30 May 2022 07:23:29 -0700
+Message-ID: <CAOh7+P_S1KJjrGTcsy2OMG3ESqdo+WBN4sMaimz2b0zfWx46hQ@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: Yes, score=7.7 required=5.0 tests=BAYES_99,BAYES_999,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:144 listed in]
+        [list.dnswl.org]
+        *  0.2 BAYES_999 BODY: Bayes spam probability is 99.9 to 100%
+        *      [score: 1.0000]
+        *  3.5 BAYES_99 BODY: Bayes spam probability is 99 to 100%
+        *      [score: 1.0000]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [koadaidrissa1[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [barristerbenjamin221[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [koadaidrissa1[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Heiko Carstens <hca@linux.ibm.com>
-
-[ Upstream commit 63678eecec57fc51b778be3da35a397931287170 ]
-
-gcc 12 does not (always) optimize away code that should only be generated
-if parameters are constant and within in a certain range. This depends on
-various obscure kernel config options, however in particular
-PROFILE_ALL_BRANCHES can trigger this compile error:
-
-In function ‘__atomic_add_const’,
-    inlined from ‘__preempt_count_add.part.0’ at ./arch/s390/include/asm/preempt.h:50:3:
-./arch/s390/include/asm/atomic_ops.h:80:9: error: impossible constraint in ‘asm’
-   80 |         asm volatile(                                                   \
-      |         ^~~
-
-Workaround this by simply disabling the optimization for
-PROFILE_ALL_BRANCHES, since the kernel will be so slow, that this
-optimization won't matter at all.
-
-Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/s390/include/asm/preempt.h | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/arch/s390/include/asm/preempt.h b/arch/s390/include/asm/preempt.h
-index 23a14d187fb1..1aebf09fbcd8 100644
---- a/arch/s390/include/asm/preempt.h
-+++ b/arch/s390/include/asm/preempt.h
-@@ -50,10 +50,17 @@ static inline bool test_preempt_need_resched(void)
- 
- static inline void __preempt_count_add(int val)
- {
--	if (__builtin_constant_p(val) && (val >= -128) && (val <= 127))
--		__atomic_add_const(val, &S390_lowcore.preempt_count);
--	else
--		__atomic_add(val, &S390_lowcore.preempt_count);
-+	/*
-+	 * With some obscure config options and CONFIG_PROFILE_ALL_BRANCHES
-+	 * enabled, gcc 12 fails to handle __builtin_constant_p().
-+	 */
-+	if (!IS_ENABLED(CONFIG_PROFILE_ALL_BRANCHES)) {
-+		if (__builtin_constant_p(val) && (val >= -128) && (val <= 127)) {
-+			__atomic_add_const(val, &S390_lowcore.preempt_count);
-+			return;
-+		}
-+	}
-+	__atomic_add(val, &S390_lowcore.preempt_count);
- }
- 
- static inline void __preempt_count_sub(int val)
--- 
-2.35.1
-
+SGVsbG8gZGVhciBmcmllbmQuDQoNClBsZWFzZSBJIHdpbGwgbG92ZSB0byBkaXNjdXNzIHNvbWV0
+aGluZyB2ZXJ5IGltcG9ydGFudCB3aXRoIHlvdSwgSQ0Kd2lsbCBhcHByZWNpYXRlIGl0IGlmIHlv
+dSBncmFudCBtZSBhdWRpZW5jZS4NCg0KU2luY2VyZWx5Lg0KQmFycmlzdGVyIEFtYWRvdSBCZW5q
+YW1pbiBFc3EuDQouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4NCuimquaEm+OB
+quOCi+WPi+S6uuOAgeOBk+OCk+OBq+OBoeOBr+OAgg0KDQrnp4Hjga/jgYLjgarjgZ/jgajpnZ7l
+uLjjgavph43opoHjgarjgZPjgajjgavjgaTjgYTjgaboqbHjgZflkIjjgYbjga7jgYzlpKflpb3j
+gY3jgafjgZnjgIHjgYLjgarjgZ/jgYznp4HjgavogbTooYbjgpLkuI7jgYjjgabjgY/jgozjgozj
+gbDnp4Hjga/jgZ3jgozjgpLmhJ/orJ3jgZfjgb7jgZnjgIINCg0K5b+D44GL44KJ44CCDQrjg5Dj
+g6rjgrnjgr/jg7zjgqLjg57jg4njgqXjg5njg7Pjgrjjg6Pjg5/jg7NFc3HjgIINCg==
