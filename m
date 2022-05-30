@@ -2,109 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36C5F5384C3
-	for <lists+linux-s390@lfdr.de>; Mon, 30 May 2022 17:23:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C86E538570
+	for <lists+linux-s390@lfdr.de>; Mon, 30 May 2022 17:52:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241637AbiE3PWy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 May 2022 11:22:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60192 "EHLO
+        id S230285AbiE3Puz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 May 2022 11:50:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241644AbiE3PWD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 May 2022 11:22:03 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F05611C8665
-        for <linux-s390@vger.kernel.org>; Mon, 30 May 2022 07:23:32 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id y17so2529953ilj.11
-        for <linux-s390@vger.kernel.org>; Mon, 30 May 2022 07:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=XJqXgw0Qi4Ge6Q57wB4GlvotoYnhUuSq68y9152a6AE=;
-        b=RbLJCZVFtlwj7+Z3Y7O0qJYoBzYmhQGTvS5NB07cWgaLzfpl6yx8Kj4fQ2ftIv/z4J
-         ngANjnThxfX6oIbbTJhPgykypESQf7OjTy2kYBz1v1fjPHzS1laSAPBPVJKj3uW9csWw
-         yQJ9QY0OHMBfgiuXmszRqX7M19GcI4nUyWsNwY9mzZUaAA2IoGzn7L883g907c6jwD4V
-         NqIMl3m3/I9AGi1Jngi+1iXud+358BbC3kf4kYrRHcR7qWJfE6pDNrfrWZgiTqa63xtZ
-         RhPNiSI6Tt9IlA2KAo9braSDJGonjfWltprNqnSEuQFzgx5HEnkg7xtv5ur6zGMbz4jd
-         J93Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=XJqXgw0Qi4Ge6Q57wB4GlvotoYnhUuSq68y9152a6AE=;
-        b=gf0Lj1jYHTNCP70OmqUJRALUuFMiCCEfZx23dmWjuLt+Q9OkwveWUYtZSSRmvaKTGL
-         E04H9/65R7avm1xO7FeiWvI8XhyUSknxHV5gZeHKukS3Y2BgSeSnN8TCfnT2jMFRwduj
-         a3i3ZkmmHgElaYYfyp3CGvTfPamalrnC8Z+xmWjeskbMQp2KnzdtHijv5xG9oM3u2t6J
-         I00yZYsnMOP3uRy1uUXt0E1pwcMzBilfPus9ku2CsFKXo2X4DD+duGKPgqoKAGO6XA4+
-         bJMsQ9tUEJjGnDbdz0rHte1A6AF/SFMaqU6dk4a680L4a8VgSuU4iZH6cj2DfZyXvDWI
-         7HQA==
-X-Gm-Message-State: AOAM533G28npfnF82R/nbAyyRn/9+MhNj15NkB3957yDghE5HsaA1xNM
-        TsI7FO6DDzQxVEhH6Gcp0sTGhtfE9rCPDcrfSRU=
-X-Google-Smtp-Source: ABdhPJwkqQ/OIioqBR97/5zzSyy3lV4aE87tmDKwpi6v68YH7z0pcYmIQ2y3lvQmeJxEofabhQ+YK6IbKXKNcCfn+P0=
-X-Received: by 2002:a92:ddcb:0:b0:2cd:95b6:bede with SMTP id
- d11-20020a92ddcb000000b002cd95b6bedemr28008470ilr.280.1653920609933; Mon, 30
- May 2022 07:23:29 -0700 (PDT)
+        with ESMTP id S240713AbiE3Ptx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 May 2022 11:49:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B4C6466CBE
+        for <linux-s390@vger.kernel.org>; Mon, 30 May 2022 08:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1653923542;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DRdewCPW2PjLfahETyqZJaykG2Z7dGzih3m2LJk0xYA=;
+        b=EGDAlOBCn+0TAmGUILzuGqWSTRPDc0I1HTKv92R3vFhrWwog/JZ3ltK0Am+47epSTFAxsW
+        hpKPKk/BelMwdN89ueCIuAdjgalWC6Eo+q9IQsC3F8KxbzTFOAG0waBHGnxlPsyK+93Ioz
+        3GMsZNDWbvjI9e2u0PLACmPhWSmophY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-441-1sfrdPbbN7-JuiOV3jgnBw-1; Mon, 30 May 2022 11:12:19 -0400
+X-MC-Unique: 1sfrdPbbN7-JuiOV3jgnBw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 05CD785A5B9;
+        Mon, 30 May 2022 15:12:19 +0000 (UTC)
+Received: from localhost (unknown [10.39.194.233])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A6BD51410F36;
+        Mon, 30 May 2022 15:12:18 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>, mst@redhat.com,
+        jasowang@redhat.com, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, peterz@infradead.org, paulmck@kernel.org,
+        maz@kernel.org, pasic@linux.ibm.com, eperezma@redhat.com,
+        lulu@redhat.com, sgarzare@redhat.com, xuanzhuo@linux.alibaba.com,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH V6 6/9] virtio-ccw: implement synchronize_cbs()
+In-Reply-To: <20220527060120.20964-7-jasowang@redhat.com>
+Organization: Red Hat GmbH
+References: <20220527060120.20964-1-jasowang@redhat.com>
+ <20220527060120.20964-7-jasowang@redhat.com>
+User-Agent: Notmuch/0.34 (https://notmuchmail.org)
+Date:   Mon, 30 May 2022 17:12:17 +0200
+Message-ID: <87y1yjt5pq.fsf@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6622:f06:0:0:0:0 with HTTP; Mon, 30 May 2022 07:23:29
- -0700 (PDT)
-Reply-To: barristerbenjamin221@gmail.com
-From:   Attorney Amadou <koadaidrissa1@gmail.com>
-Date:   Mon, 30 May 2022 07:23:29 -0700
-Message-ID: <CAOh7+P_S1KJjrGTcsy2OMG3ESqdo+WBN4sMaimz2b0zfWx46hQ@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-X-Spam-Status: Yes, score=7.7 required=5.0 tests=BAYES_99,BAYES_999,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:144 listed in]
-        [list.dnswl.org]
-        *  0.2 BAYES_999 BODY: Bayes spam probability is 99.9 to 100%
-        *      [score: 1.0000]
-        *  3.5 BAYES_99 BODY: Bayes spam probability is 99 to 100%
-        *      [score: 1.0000]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [koadaidrissa1[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [barristerbenjamin221[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [koadaidrissa1[at]gmail.com]
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *******
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-SGVsbG8gZGVhciBmcmllbmQuDQoNClBsZWFzZSBJIHdpbGwgbG92ZSB0byBkaXNjdXNzIHNvbWV0
-aGluZyB2ZXJ5IGltcG9ydGFudCB3aXRoIHlvdSwgSQ0Kd2lsbCBhcHByZWNpYXRlIGl0IGlmIHlv
-dSBncmFudCBtZSBhdWRpZW5jZS4NCg0KU2luY2VyZWx5Lg0KQmFycmlzdGVyIEFtYWRvdSBCZW5q
-YW1pbiBFc3EuDQouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4NCuimquaEm+OB
-quOCi+WPi+S6uuOAgeOBk+OCk+OBq+OBoeOBr+OAgg0KDQrnp4Hjga/jgYLjgarjgZ/jgajpnZ7l
-uLjjgavph43opoHjgarjgZPjgajjgavjgaTjgYTjgaboqbHjgZflkIjjgYbjga7jgYzlpKflpb3j
-gY3jgafjgZnjgIHjgYLjgarjgZ/jgYznp4HjgavogbTooYbjgpLkuI7jgYjjgabjgY/jgozjgozj
-gbDnp4Hjga/jgZ3jgozjgpLmhJ/orJ3jgZfjgb7jgZnjgIINCg0K5b+D44GL44KJ44CCDQrjg5Dj
-g6rjgrnjgr/jg7zjgqLjg57jg4njgqXjg5njg7Pjgrjjg6Pjg5/jg7NFc3HjgIINCg==
+On Fri, May 27 2022, Jason Wang <jasowang@redhat.com> wrote:
+
+> This patch tries to implement the synchronize_cbs() for ccw. For the
+> vring_interrupt() that is called via virtio_airq_handler(), the
+> synchronization is simply done via the airq_info's lock. For the
+> vring_interrupt() that is called via virtio_ccw_int_handler(), a per
+> device rwlock is introduced and used in the synchronization method.
+>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Halil Pasic <pasic@linux.ibm.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> Cc: Vineeth Vijayan <vneethv@linux.ibm.com>
+> Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+> Cc: linux-s390@vger.kernel.org
+> Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/s390/virtio/virtio_ccw.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
