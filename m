@@ -2,121 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16348537EE3
-	for <lists+linux-s390@lfdr.de>; Mon, 30 May 2022 16:14:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62A02538078
+	for <lists+linux-s390@lfdr.de>; Mon, 30 May 2022 16:23:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231750AbiE3Nrh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 May 2022 09:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40278 "EHLO
+        id S238978AbiE3OMg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 May 2022 10:12:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237557AbiE3Nn1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 May 2022 09:43:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 106C89AE40;
-        Mon, 30 May 2022 06:32:09 -0700 (PDT)
+        with ESMTP id S240103AbiE3OGa (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 May 2022 10:06:30 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DA41377E1;
+        Mon, 30 May 2022 06:41:57 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C90260F5E;
-        Mon, 30 May 2022 13:32:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83CBBC385B8;
-        Mon, 30 May 2022 13:31:55 +0000 (UTC)
-Date:   Mon, 30 May 2022 14:31:52 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Will Deacon <will@kernel.org>,
-        Matt Turner <mattst88@gmail.com>, linux-s390@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brian Cain <bcain@quicinc.com>, Borislav Petkov <bp@alien8.de>,
-        linux-alpha@vger.kernel.org, Alistair Popple <apopple@nvidia.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <vgupta@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Rich Felker <dalias@libc.org>, sparclinux@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        David Hildenbrand <david@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-        linux-xtensa@linux-xtensa.org, linux-sh@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-m68k@lists.linux-m68k.org, linuxppc-dev@lists.ozlabs.org,
-        Richard Henderson <rth@twiddle.net>,
-        Guo Ren <guoren@kernel.org>, linux-parisc@vger.kernel.org,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Helge Deller <deller@gmx.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-um@lists.infradead.org, "H . Peter Anvin" <hpa@zytor.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8E616B80DB0;
+        Mon, 30 May 2022 13:41:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2149CC3411A;
+        Mon, 30 May 2022 13:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653918114;
+        bh=g7XB8B2hXhx0t6vm3lGhWMstRlw7oJH8/lHkhtWU6kk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bT3/vRkH5cjhjDJUKXeQw4Nvbp6V7cjQNZ0IGFAMpnGBZPc6/GeBBwM07g8rhe4TT
+         llhlg511jIS7Z1VyF2nK230EvmTCDMLHUidG0fP+DGDRjTGg8LLMam9eVsqZRf/seT
+         D3Hw6RulehPxmtoxXWtuko9w11kbrSOsCl/FiHlMOT5BXpQwXjzW3BBeMvUgFE6w1T
+         RYQetXq3DvAuxToBRkVCfS2pvVWS05IeaWcCtQA8EmR/ux4WrcTzjSZjqWPmG7//+4
+         ITkszc7xrZud36SaCHauurL4Hcv1yiRGwMuQMSNsnnsUELpDdYxF4BDT93sjEikPcu
+         eoNOo6BG3S+QQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
         Sven Schnelle <svens@linux.ibm.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        openrisc@lists.librecores.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-hexagon@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Stafford Horne <shorne@gmail.com>, linux-csky@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-mips@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-riscv@lists.infradead.org, Max Filippov <jcmvbkbc@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Chris Zankel <chris@zankel.net>,
-        Michal Simek <monstr@monstr.eu>, x86@kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Richard Weinberger <richard@nod.at>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v4] mm: Avoid unnecessary page fault retires on shared
- memory types
-Message-ID: <YpTHSNQxzQxwJ4vQ@arm.com>
-References: <20220527193936.30678-1-peterx@redhat.com>
+        Sasha Levin <sashal@kernel.org>, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, vschneid@redhat.com,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 065/109] s390/preempt: disable __preempt_count_add() optimization for PROFILE_ALL_BRANCHES
+Date:   Mon, 30 May 2022 09:37:41 -0400
+Message-Id: <20220530133825.1933431-65-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220530133825.1933431-1-sashal@kernel.org>
+References: <20220530133825.1933431-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220527193936.30678-1-peterx@redhat.com>
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, May 27, 2022 at 03:39:36PM -0400, Peter Xu wrote:
-> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> index 77341b160aca..e401d416bbd6 100644
-> --- a/arch/arm64/mm/fault.c
-> +++ b/arch/arm64/mm/fault.c
-> @@ -607,6 +607,10 @@ static int __kprobes do_page_fault(unsigned long far, unsigned int esr,
->  		return 0;
->  	}
->  
-> +	/* The fault is fully completed (including releasing mmap lock) */
-> +	if (fault & VM_FAULT_COMPLETED)
-> +		return 0;
-> +
->  	if (fault & VM_FAULT_RETRY) {
->  		mm_flags |= FAULT_FLAG_TRIED;
->  		goto retry;
+From: Heiko Carstens <hca@linux.ibm.com>
 
-For arm64:
+[ Upstream commit 63678eecec57fc51b778be3da35a397931287170 ]
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+gcc 12 does not (always) optimize away code that should only be generated
+if parameters are constant and within in a certain range. This depends on
+various obscure kernel config options, however in particular
+PROFILE_ALL_BRANCHES can trigger this compile error:
+
+In function ‘__atomic_add_const’,
+    inlined from ‘__preempt_count_add.part.0’ at ./arch/s390/include/asm/preempt.h:50:3:
+./arch/s390/include/asm/atomic_ops.h:80:9: error: impossible constraint in ‘asm’
+   80 |         asm volatile(                                                   \
+      |         ^~~
+
+Workaround this by simply disabling the optimization for
+PROFILE_ALL_BRANCHES, since the kernel will be so slow, that this
+optimization won't matter at all.
+
+Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/include/asm/preempt.h | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/arch/s390/include/asm/preempt.h b/arch/s390/include/asm/preempt.h
+index d9d5350cc3ec..bf15da0fedbc 100644
+--- a/arch/s390/include/asm/preempt.h
++++ b/arch/s390/include/asm/preempt.h
+@@ -46,10 +46,17 @@ static inline bool test_preempt_need_resched(void)
+ 
+ static inline void __preempt_count_add(int val)
+ {
+-	if (__builtin_constant_p(val) && (val >= -128) && (val <= 127))
+-		__atomic_add_const(val, &S390_lowcore.preempt_count);
+-	else
+-		__atomic_add(val, &S390_lowcore.preempt_count);
++	/*
++	 * With some obscure config options and CONFIG_PROFILE_ALL_BRANCHES
++	 * enabled, gcc 12 fails to handle __builtin_constant_p().
++	 */
++	if (!IS_ENABLED(CONFIG_PROFILE_ALL_BRANCHES)) {
++		if (__builtin_constant_p(val) && (val >= -128) && (val <= 127)) {
++			__atomic_add_const(val, &S390_lowcore.preempt_count);
++			return;
++		}
++	}
++	__atomic_add(val, &S390_lowcore.preempt_count);
+ }
+ 
+ static inline void __preempt_count_sub(int val)
+-- 
+2.35.1
+
