@@ -2,143 +2,143 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A45253B22E
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Jun 2022 05:42:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ED6153B74C
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Jun 2022 12:32:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233567AbiFBD0Y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 1 Jun 2022 23:26:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49796 "EHLO
+        id S232300AbiFBKan (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 2 Jun 2022 06:30:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233530AbiFBD0X (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Jun 2022 23:26:23 -0400
-Received: from out30-56.freemail.mail.aliyun.com (out30-56.freemail.mail.aliyun.com [115.124.30.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 692AF2A7A83;
-        Wed,  1 Jun 2022 20:26:21 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alibuda@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VF8hX7Z_1654140378;
-Received: from localhost(mailfrom:alibuda@linux.alibaba.com fp:SMTPD_---0VF8hX7Z_1654140378)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 02 Jun 2022 11:26:18 +0800
-Date:   Thu, 2 Jun 2022 11:26:18 +0800
-From:   "D. Wythe" <alibuda@linux.alibaba.com>
-To:     Alexandra Winter <wintera@linux.ibm.com>
-Cc:     Tony Lu <tonylu@linux.alibaba.com>,
-        Karsten Graul <kgraul@linux.ibm.com>, kuba@kernel.org,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [RFC net-next] net/smc:introduce 1RTT to SMC
-Message-ID: <20220602032618.GA96227@e02h04389.eu6sqa>
-Reply-To: "D. Wythe" <alibuda@linux.alibaba.com>
-References: <1653375127-130233-1-git-send-email-alibuda@linux.alibaba.com>
- <YoyOGlG2kVe4VA4m@TonyMac-Alibaba>
- <64439f1c-9817-befd-c11b-fa64d22620a9@linux.ibm.com>
- <7d57f299-115f-3d34-a45e-1c125a9a580a@linux.alibaba.com>
- <YpcwaNLUtPyzPBgc@TonyMac-Alibaba>
- <7fb28436-1fca-ba4c-7745-ca88d83c657b@linux.ibm.com>
+        with ESMTP id S233869AbiFBKaj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 Jun 2022 06:30:39 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7395068FAC;
+        Thu,  2 Jun 2022 03:30:25 -0700 (PDT)
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2529maG9025906;
+        Thu, 2 Jun 2022 10:30:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=P5GSW7S1bGcTV0o4nVQux7Wo07UtirM3gAsmxixkw3o=;
+ b=EkvTGvCAyrrcTolf7U6JtrfwaZC89H+2Pc3pXRmvTtwdCsg7GKqjk9aNJn5AUcP+yWhz
+ 2/EER8qC7vU7uB8zj63ArEppDQErvJiyJprR2Ij5+aGgGP+4k1YqesgdoFxM0kJXrDB1
+ 0RJcE6uLj401t5a5XVfBDKN6O7JLmDysqE9SKe7ZhJvl2IqsYXfd/U8za00MB376Xwnu
+ 4wJxp0UP9zHzo/vxASZNvaNiEEdq3AyJK/GAbjEN9OvrI9L13s8hEGdbfLlT/nPvFGfp
+ TpmkTe+yT7TQ2bLPJjnLxyhkumrYek08k0Qi3bfCltHeEFACVm997Eq6OUH5a813IxWK 0A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3getwcgpvc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jun 2022 10:30:22 +0000
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 252AUEPO032096;
+        Thu, 2 Jun 2022 10:30:22 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3getwcgpus-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jun 2022 10:30:21 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 252AKCO2030097;
+        Thu, 2 Jun 2022 10:30:19 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06ams.nl.ibm.com with ESMTP id 3gdnetthcv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jun 2022 10:30:19 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 252AUGSP15532394
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 Jun 2022 10:30:16 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6C678A4040;
+        Thu,  2 Jun 2022 10:30:16 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3008CA4055;
+        Thu,  2 Jun 2022 10:30:16 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  2 Jun 2022 10:30:16 +0000 (GMT)
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND v5 0/4]  PCI: Rework pci_scan_slot() and isolated PCI functions
+Date:   Thu,  2 Jun 2022 12:30:12 +0200
+Message-Id: <20220602103016.1499031-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=gb2312
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7fb28436-1fca-ba4c-7745-ca88d83c657b@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 1y2APSimufeVSDJ1XvyZ1vUJW44hCiF-
+X-Proofpoint-ORIG-GUID: iiizanPZKKKYT0rOTOReoknxm-Xm9NTC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-06-02_01,2022-06-02_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 impostorscore=0 bulkscore=0
+ suspectscore=0 spamscore=0 priorityscore=1501 mlxlogscore=766 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
+ definitions=main-2206020042
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jun 01, 2022 at 01:35:52PM +0200, Alexandra Winter wrote:
-> 
-> 
-> On 01.06.22 11:24, Tony Lu wrote:
-> > On Wed, Jun 01, 2022 at 02:33:09PM +0800, D. Wythe wrote:
-> >>
-> >> ÔÚ 2022/5/25 ÏÂÎç9:42, Alexandra Winter Ð´µÀ:
-> >>
-> >>> We need to carefully evaluate them and make sure everything is compatible
-> >>> with the existing implementations of SMC-D and SMC-R v1 and v2. In the
-> >>> typical s390 environment ROCE LAG is propably not good enough, as the card
-> >>> is still a single point of failure. So your ideas need to be compatible
-> >>> with link redundancy. We also need to consider that the extension of the
-> >>> protocol does not block other desirable extensions.
-> >>>
-> >>> Your prototype is very helpful for the understanding. Before submitting any
-> >>> code patches to net-next, we should agree on the details of the protocol
-> >>> extension. Maybe you could formulate your proposal in plain text, so we can
-> >>> discuss it here?
-> >>>
-> >>> We also need to inform you that several public holidays are upcoming in the
-> >>> next weeks and several of our team will be out for summer vacation, so please
-> >>> allow for longer response times.
-> >>>
-> >>> Kind regards
-> >>> Alexandra Winter
-> >>>
-> >>
-> >> Hi alls,
-> >>
-> >> In order to achieve signle-link compatibility, we must
-> >> complete at least once negotiation. We wish to provide
-> >> higher scalability while meeting this feature. There are
-> >> few ways to reach this.
-> >>
-> >> 1. Use the available reserved bits. According to
-> >> the SMC v2 protocol, there are at least 28 reserved octets
-> >> in PROPOSAL MESSAGE and at least 10 reserved octets in
-> >> ACCEPT MESSAGE are available. We can define an area in which
-> >> as a feature area, works like bitmap. Considering the subsequent
-> >> scalability, we MAY use at least 2 reserved ctets, which can support
-> >> negotiation of at least 16 features.
-> >>
-> >> 2. Unify all the areas named extension in current
-> >> SMC v2 protocol spec without reinterpreting any existing field
-> >> and field offset changes, including 'PROPOSAL V1 IP Subnet Extension',
-> >> 'PROPOSAL V2 Extension', 'PROPOSAL SMC-DV2 EXTENSION' .etc. And provides
-> >> the ability to grow dynamically as needs expand. This scheme will use
-> >> at least 10 reserved octets in the PROPOSAL MESSAGE and at least 4 reserved
-> >> octets in ACCEPT MESSAGE and CONFIRM MESSAGE. Fortunately, we only need to
-> >> use reserved fields, and the current reserved fields are sufficient. And
-> >> then we can easily add a new extension named SIGNLE LINK. Limited by space,
-> >> the details will be elaborated after the scheme is finalized.
-> > 
-> > After reading this and latest version of protocol, I agree with that the
-> > idea to provide a more flexible extension facilities. And, it's a good
-> > chance for us to set here talking about the protocol extension.
-> > 
-> > There are some potential scenarios that need flexible extensions in my
-> > mind:
-> > - other protocols support, such as iWARP / IB or new version protocol,
-> > - dozens of feature flags in the future, like this proposal. With the
-> >   growth of new feature, it could overflow bitmap.
-> > 
-> > Actually, this extension facilities are very similar to TCP options.
-> > 
-> > So what about your opinions about the solution of this? If there are
-> > some existed approaches for the future extensions, maybe this can get
-> > involved in it. Or we can start a discuss about this as this mail
-> > mentioned.
-> > 
-> > Also, I am wondering if there is plan to update the RFC7609, add the
-> > latest v2 support?
-> > 
-> > Thanks,
-> > Tony Lu
-> 
-> We have asked the SMC protocol owners about their opinion about using the
-> reserved fields for new options in particular, and about where and how to
-> discuss this in general. (including where to document the versions).
-> Please allow some time for us to come back to you.
-> 
-> Kind regards
-> Alexandra
+Hi Bjorn, Hi Jan,
 
-Thank you for the information. Before we officially push the document update,
-if you had any suggestions for the two schemes we are mentioned above,
-or which one you prefer, please keep us informed.
+In an earlier version[0], I sought to apply the existing jailhouse special case
+for isolated PCI functions to s390. As Bjorn noted in[1] there appears to be
+some potential for cleaning things up and removing duplication though.
 
-Best wishes.
-D. Wyther
+This series attempts to do this cleanup (Patches 1 and 2) followed by enabling
+isolated PCI functions for s390 (Patches 3 and 4). If need be I can of course
+split the cleanup off but for now I kept it as one as that's what I have
+been testing.
+
+Testing:
+- On s390 with SR-IOV and a ConnectX NIC with PF 1 but not PF 0 passed throug
+  i.e. the isolated function case. Also of course with just VFs and an NVMe.
+- On x86_64 on a desktop system where ARI is disabled and with an SR-IOV NIC
+  with non-contiguous VFs as well as the usual other PCI devices.
+
+Thanks,
+Niklas
+
+Changes v4 -> v5:
+- Remove unintended whitespace change in patch 1
+Changes v3 -> v4:
+- Use a do {} while loop in pci_scan_slot() as it is simpler (Bjorn)
+- Explicitly check "fn == 0" as it is not a pointer or bool (Bjorn)
+- Keep the "!dev" check in the ARI branch of next_fn() (Bjorn)
+- Moved the "fn == 0 && !dev" condition out of next_fn() into pci_scan_slot().
+  This allows us to keep the "!dev" case in the ARI branch and means there are
+  no new conditions in next_fn() making it easier to verify that its behavior
+  is equivalent to the existing code.
+- Guard the assignment of dev->multifunction with "fn > 0"
+  instead of "nr > 0". This matches the existing logic more closely and works
+  for the jailhouse case which unconditionally sets dev->multifunction for
+  "fn > 0". This also means fn == 0 is the single "first iteration" test.
+- Remove some unneeded whitespace in patch 2
+
+Changes v2 -> v3:
+- Removed now unused nr_devs variable (kernel test robot)
+
+Niklas Schnelle (4):
+  PCI: Clean up pci_scan_slot()
+  PCI: Move jailhouse's isolated function handling to pci_scan_slot()
+  PCI: Extend isolated function probing to s390
+  s390/pci: allow zPCI zbus without a function zero
+
+ arch/s390/pci/pci_bus.c    | 82 ++++++++++----------------------------
+ drivers/pci/probe.c        | 64 +++++++++++++----------------
+ include/linux/hypervisor.h |  8 ++++
+ 3 files changed, 55 insertions(+), 99 deletions(-)
+
+-- 
+2.32.0
 
