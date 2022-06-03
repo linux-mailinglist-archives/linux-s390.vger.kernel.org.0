@@ -2,179 +2,85 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D5FB53C8CD
-	for <lists+linux-s390@lfdr.de>; Fri,  3 Jun 2022 12:35:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E80BB53C95B
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Jun 2022 13:31:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234719AbiFCKfw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 Jun 2022 06:35:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58380 "EHLO
+        id S243957AbiFCL35 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 Jun 2022 07:29:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243761AbiFCKfv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Jun 2022 06:35:51 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B4693BBEE;
-        Fri,  3 Jun 2022 03:35:49 -0700 (PDT)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 253AINDM017529;
-        Fri, 3 Jun 2022 10:35:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : content-type : mime-version; s=pp1;
- bh=KrF/6NdORb5t9M1zK9SmmWbSKjZRrMIB2uKQIGHIFJo=;
- b=PxmDhQe2pbbCDaWlmeLislDzKdhK34hByl612MJNhGoid9YrD9jZFNjW9Ethhq/OqxyZ
- kmPEngx7/v6ZMrTns6Q9fxNXjATflU6Y0ZzN0Q8yCcxl2W70AZF6q42nhdxzGlwyoBAf
- ffse3Pzr5Lppucb7bhDAOidJEzJU1BPXvMSpuLSqau5BU00VQ84o3M36vw7tnbfflZNw
- bXZBIMWi0d7hmphBp+cXdBVLyUDUISTCz8y/e0w44mZ0efd295prr5bon80JqagQQ7uH
- 1hBMfXC6iW8HMSyEw58TzJou2FjOwoIhIl+Khvjl5k5rlySkzouYcTnnjNQgt57f/awL 2A== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gfge5881b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jun 2022 10:35:48 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 253AZlqW013713;
-        Fri, 3 Jun 2022 10:35:47 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04fra.de.ibm.com with ESMTP id 3gbc8yp9rn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 03 Jun 2022 10:35:46 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 253AZhIU35127698
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Jun 2022 10:35:43 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 94B2452057;
-        Fri,  3 Jun 2022 10:35:43 +0000 (GMT)
-Received: from osiris (unknown [9.145.50.93])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 4C61052051;
-        Fri,  3 Jun 2022 10:35:43 +0000 (GMT)
-Date:   Fri, 3 Jun 2022 12:35:41 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [GIT PULL] more s390 updates for 5.19 merge window
-Message-ID: <Ypnj/R48mToD7WZL@osiris>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: oZcCA2zYdX6aaB1BpyTNKp6YRqjFlvfy
-X-Proofpoint-ORIG-GUID: oZcCA2zYdX6aaB1BpyTNKp6YRqjFlvfy
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        with ESMTP id S243880AbiFCL3z (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Jun 2022 07:29:55 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4ABC3C703
+        for <linux-s390@vger.kernel.org>; Fri,  3 Jun 2022 04:29:53 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id o9so3965031wmd.0
+        for <linux-s390@vger.kernel.org>; Fri, 03 Jun 2022 04:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=PaEzrm9U0WjJMxkE+zbw8yGRv0uhjcRl9sFl9vmbKpk=;
+        b=UqOXahmL9BfB383tTJBgHu6G22xRf+OKSRgCFsT4r4tJePNVS75l6QRwzCmA/tV39Z
+         pNNA4/U3XhEQlUBwP9xsXhCTNhde6/mHCpvJYMmHdfBKG0t2xOrFaRTDAjLpmTrbIDmI
+         hZeXiHhTs1+lyNsfzFT+skZmO+T7/KjezF7/vXKef+aTrYx0XLV/bivc/5kQuEAG+1Df
+         m90IEV8xQerchxdq6MhorxMfZeeRwyieC0+DheLrXpixDxR+RT4Ie8Cb8gpWsLIK38fv
+         zneLbaZ1dmMXBVFVE7wMo42ozpaBZHn2Q3ZWBRhU2xc2y4nK5Kq9vbD5T3BzoT+7dZl6
+         43Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=PaEzrm9U0WjJMxkE+zbw8yGRv0uhjcRl9sFl9vmbKpk=;
+        b=3v+2IuNswII4qiku4bSiwietOCjiqDRGyaYgFBYJAoEoUyBHe0C+Kwxjo2ctvzJOSn
+         LSqDDwaCMAUAzypmmFy8l7tw+Ji5FTxhQ1/NM9nkc1n7hNRQJXftkSPctJX8RhjxfQQT
+         hAzPtnl+m6ld98KaNUX5EkrQiZWFSHHq2YSMj6Gn//tM8ZqJUorlyoAnzr6DYhk13lOn
+         4eR/++mYn8/UOyIm3ziduePl6aRamM12cMfefTIHZ2vuBhSyXJzOo9GnL7yVpMn/5fRv
+         ToxIDuCKPr290C0juQ1DqtYi7stiWOMAK/7tw0ELau6qPfCKNfkETq3zP5AcMXVZuP/0
+         59OA==
+X-Gm-Message-State: AOAM533r0eVGE6LA7zaxvtyY+Dm6j4XOvLPoAg3X6kpWXCabu6fER5zl
+        AzmcBI8A4JvqyUM7/MywkzrVlnQfyrSxDM+hvZ0=
+X-Google-Smtp-Source: ABdhPJw7Ih30gKUIi9ZSLyr7q/1X+eKLEGYrYm9nlCTEiNBMuWMpjKLsSv0M8Mnsi9fm9GXYBpm3HsRWYt6/RJw0ybk=
+X-Received: by 2002:a7b:cc13:0:b0:38e:67e3:db47 with SMTP id
+ f19-20020a7bcc13000000b0038e67e3db47mr37823950wmh.133.1654255792234; Fri, 03
+ Jun 2022 04:29:52 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-03_03,2022-06-03_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=5 mlxscore=0 bulkscore=5 mlxlogscore=667 adultscore=0
- clxscore=1015 priorityscore=1501 impostorscore=0 malwarescore=0
- suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2204290000 definitions=main-2206030046
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a5d:64ed:0:0:0:0:0 with HTTP; Fri, 3 Jun 2022 04:29:51 -0700 (PDT)
+Reply-To: markwillima00@gmail.com
+From:   Mark <mariamabdul888@gmail.com>
+Date:   Fri, 3 Jun 2022 04:29:51 -0700
+Message-ID: <CAP9xyD2ouspSRZHJQVxeA7d=YeBD9NoSOAN49Kw8RwOVeztQeA@mail.gmail.com>
+Subject: Re: Greetings!
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Linus,
+Hello,
 
-please pull more s390 updates for 5.19 merge window.
-Just a couple of small improvements, bug fixes and cleanups.
+Good day,
 
-Thanks,
-Heiko
+The HSBC Bank is a financial institution in United Kingdom. We
+promotes long-term,sustainable and broad-based economic growth in
+developing and emerging countries by providing financial support like
+loans and investment to large, small and
+medium-sized companies (SMEs) as well as fast-growing enterprises
+which in turn helps to create secure and permanent jobs and reduce
+poverty.
 
-The following changes since commit 94d3477897481b92874654455e263e0b1728acb5:
+If you need fund to promotes your business, project(Project Funding),
+Loan, planning, budgeting and expansion of your business(s) , do not
+hesitate to indicate your interest as we are here to serve you better
+by granting your request.
 
-  s390/head: get rid of 31 bit leftovers (2022-05-18 13:31:07 +0200)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.19-2
-
-for you to fetch changes up to e0ffcf3fe18e0310221461c08969edec2cc7628c:
-
-  s390/stack: add union to reflect kvm stack slot usages (2022-06-01 12:03:17 +0200)
-
-----------------------------------------------------------------
-more s390 updates for 5.19 merge window
-
-- Add Eric Farman as maintainer for s390 virtio drivers.
-
-- Improve machine check handling, and avoid incorrectly injecting a machine
-  check into a kvm guest.
-
-- Add cond_resched() call to gmap page table walker in order to avoid
-  possible huge latencies. Also use non-quiesing sske instruction to speed
-  up storage key handling.
-
-- Add __GFP_NORETRY to KEXEC_CONTROL_MEMORY_GFP so s390 behaves similar like
-  common code.
-
-- Get sie control block address from correct stack slot in perf event
-  code. This fixes potential random memory accesses.
-
-- Change uaccess code so that the exception handler sets the result of
-  get_user() and __get_kernel_nofault() to zero in case of a fault. Until
-  now this was done via input parameters for inline assemblies. Doing it
-  via fault handling is what most or even all other architectures are
-  doing.
-
-- Couple of other small cleanups and fixes.
-
-----------------------------------------------------------------
-Alexander Gordeev (1):
-      s390/mcck: isolate SIE instruction when setting CIF_MCCK_GUEST flag
-
-Christian Borntraeger (2):
-      s390/gmap: voluntarily schedule during key setting
-      s390/mm: use non-quiescing sske for KVM switch to keyed guest
-
-Eric Farman (1):
-      MAINTAINERS: Update s390 virtio-ccw
-
-Heiko Carstens (9):
-      s390: simplify early program check handler
-      s390: generate register offsets into pt_regs automatically
-      s390/kexec: add __GFP_NORETRY to KEXEC_CONTROL_MEMORY_GFP
-      s390/uaccess: use symbolic names for inline assembler operands
-      s390/uaccess: use exception handler to zero result on get_user() failure
-      s390/uaccess: use __noreturn instead of __attribute__((noreturn))
-      s390/uaccess: whitespace cleanup
-      s390/stack: merge empty stack frame slots
-      s390/stack: add union to reflect kvm stack slot usages
-
-Jann Horn (1):
-      s390/crypto: fix scatterwalk_unmap() callers in AES-GCM
-
-Juerg Haefliger (2):
-      s390/Kconfig: fix indentation
-      s390/Kconfig.debug: fix indentation
-
-Nico Boehr (1):
-      s390/perf: obtain sie_block from the right address
-
- MAINTAINERS                             |   1 +
- arch/s390/Kconfig                       |   8 +-
- arch/s390/Kconfig.debug                 |  12 +-
- arch/s390/crypto/aes_s390.c             |   4 +-
- arch/s390/include/asm/asm-extable.h     |  91 +++++++++-----
- arch/s390/include/asm/kexec.h           |   2 +-
- arch/s390/include/asm/processor.h       |   6 -
- arch/s390/include/asm/stacktrace.h      |  11 +-
- arch/s390/include/asm/uaccess.h         | 217 +++++++++++++++++---------------
- arch/s390/kernel/Makefile               |   2 +-
- arch/s390/kernel/asm-offsets.c          |  26 +++-
- arch/s390/kernel/early.c                |   5 +-
- arch/s390/kernel/{base.S => earlypgm.S} |  33 +----
- arch/s390/kernel/entry.S                |  23 +---
- arch/s390/kernel/entry.h                |   2 +
- arch/s390/kernel/perf_event.c           |   2 +-
- arch/s390/mm/extable.c                  |  39 +++++-
- arch/s390/mm/gmap.c                     |  14 +++
- arch/s390/mm/pgtable.c                  |   2 +-
- 19 files changed, 289 insertions(+), 211 deletions(-)
- rename arch/s390/kernel/{base.S => earlypgm.S} (52%)
+Thank you
+Mr:Mark
