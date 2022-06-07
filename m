@@ -2,131 +2,182 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7B2153F9BE
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Jun 2022 11:29:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C42AE53FAAE
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Jun 2022 12:01:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233048AbiFGJ24 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Jun 2022 05:28:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41732 "EHLO
+        id S239099AbiFGKBV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Jun 2022 06:01:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239547AbiFGJ2O (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Jun 2022 05:28:14 -0400
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DCD5C34B
-        for <linux-s390@vger.kernel.org>; Tue,  7 Jun 2022 02:28:12 -0700 (PDT)
-Received: by mail-yb1-xb32.google.com with SMTP id v22so30155474ybd.5
-        for <linux-s390@vger.kernel.org>; Tue, 07 Jun 2022 02:28:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=ohM259uqobJqtM7gttWurWj7P+4iDfPJquHax95olDY=;
-        b=gujHBVxqWIlmngbJHwwatlrY6K2BhXGLJOXKENebOL4hOCXVjvoa+7rQ+wCwOuo7nz
-         8e28HbaszMFtjrNu2xJwHUtJo1p0vWs5cPK29M2FpYQX1yrDGputAW1tF1NfmP59wawm
-         4ciGU9SnxDgRMb84mTOs96+/9zN97uENfqj9/+eZfuG77h5pSaMszmbmnWOwi9m+gNzd
-         5NtwsZACk2ULSP0cRt0MdNUxBuwzIbCfzmloCBb/Ue1QhCyZ8f6GEgrTXVIY7durHnKk
-         UWQF6j7yHnTlxlvI9xCgSzii4NusQH9ADfpyzQwiF9b+OrCBSH3adFs9TwqclNBk9aQF
-         O14A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=ohM259uqobJqtM7gttWurWj7P+4iDfPJquHax95olDY=;
-        b=Yf/6P/v81cpSfTisXLlTfjbv0609G1I1XaIGVXtnWl1EbWVrylcUL7h4fDPDULSwpb
-         FAxTbNa2CXwN3JnV10QlfFxI/5q/j9KTAUDnTZ9psOWGeuaxhSm6MXq7Wyrv3zJY+Z5g
-         cdyNCBcSm5f66TSxmMeq5M7lZK6c83eiIvRP8Y3cRbU3giNNFaNqgQbyBASN1rsLYgB7
-         s6tPTSUiM2IxtfiqPu9fNOexu70jBvp2gfLPL53gsfepcf3FCGVDTg4tRwizkxuOPlGY
-         RWs6jJ80CtHWwoJ7WDNV84JKlSeM1488epgQpoFnf0NLuyjgEQmNOZDe/Up1HKKGg4Hi
-         eq7w==
-X-Gm-Message-State: AOAM530XsXkvQqUKB+DxNPiu49lawEvHDC5q2qxl6XzxHMf1Gz5OHB+I
-        OlUVcOlqOIeXiWZJLYsE7shu0U/UgxKhi3jPeLbynlxZRAEA1ZaS
-X-Google-Smtp-Source: ABdhPJxTYNOyqQTj+pRtv7B26L++zgaw4oyR9fAzq9Xjy/qi86fDOL5mMOdKcDA6Petw4QZgBH7CHdeaexgYk1On3ls=
-X-Received: by 2002:a05:6830:919:b0:60a:fe63:e321 with SMTP id
- v25-20020a056830091900b0060afe63e321mr11494607ott.227.1654594080399; Tue, 07
- Jun 2022 02:28:00 -0700 (PDT)
+        with ESMTP id S231598AbiFGKBU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Jun 2022 06:01:20 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 176A8813EF;
+        Tue,  7 Jun 2022 03:01:19 -0700 (PDT)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2579rveZ009486;
+        Tue, 7 Jun 2022 10:01:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=DdXnFoDyvEZvRsgOCHS0FTqAN71Ch9Da1EZHst0fpM0=;
+ b=hVizCYHfuov5uAi0zCo8XmIoMYtDZ95m9e4PcvYvmlzo2fTfQogRnMNDLiUpQwpcJp2Q
+ 12KXiembdW4Ro1+L95uceXRLiehMrpx+q819VKpc+MgmylIWMqjmQi2HDykgJzd7Ebd/
+ HpS7Yv0mR4fjqUrVyU6qF8m1wJnGskGvA7UmTBlmuCrkf9psI8mXu8BBI2CX4DfIlS21
+ 6AGjrF9akqOQ0Ua+XEh2bM/uC2ypbT2s8zeWQYG4pZXocj8h+K1nvCr+UE4/YPmrD7Ib
+ 666i+SM8ynV+V5mbnCo3Kmt2cImHBdfW8VNqkjPVd12x+f06MPGjx3PSJx/Y8iqOxrmV JQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gj4evg3nk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jun 2022 10:01:18 +0000
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2579tbbo020641;
+        Tue, 7 Jun 2022 10:01:18 GMT
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gj4evg3ms-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jun 2022 10:01:18 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2579q9d0003980;
+        Tue, 7 Jun 2022 10:01:15 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma01fra.de.ibm.com with ESMTP id 3gfy19asuj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Jun 2022 10:01:15 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 257A1Cr718678070
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Jun 2022 10:01:12 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6E8C1A405B;
+        Tue,  7 Jun 2022 10:01:12 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 149CCA405C;
+        Tue,  7 Jun 2022 10:01:12 +0000 (GMT)
+Received: from [9.171.6.132] (unknown [9.171.6.132])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Jun 2022 10:01:11 +0000 (GMT)
+Message-ID: <5552dc4a-4c1f-2f01-eaa7-fa42042d4455@linux.ibm.com>
+Date:   Tue, 7 Jun 2022 12:01:11 +0200
 MIME-Version: 1.0
-Received: by 2002:a05:6358:99a5:b0:a2:a1fa:9308 with HTTP; Tue, 7 Jun 2022
- 02:28:00 -0700 (PDT)
-Reply-To: robertbaileys_spende@aol.com
-From:   Robert Baileys <mercymiji.j@gmail.com>
-Date:   Tue, 7 Jun 2022 11:28:00 +0200
-Message-ID: <CAAD1zOZ9bCDqBnjmbC3dQfgC=P2zTqAS=TP3q5qK5TFB5=Q9dQ@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=6.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:b32 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [mercymiji.j[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  0.6 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: ******
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [kvm-unit-tests PATCH v1 2/2] lib: s390x: better smp interrupt
+ checks
+Content-Language: en-US
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        pmorel@linux.ibm.com, nrb@linux.ibm.com, thuth@redhat.com
+References: <20220603154037.103733-1-imbrenda@linux.ibm.com>
+ <20220603154037.103733-3-imbrenda@linux.ibm.com>
+From:   Janis Schoetterl-Glausch <scgl@linux.ibm.com>
+In-Reply-To: <20220603154037.103733-3-imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 5CQa5OpdGeNyiYxlHUiHNHJXUl6eBpE4
+X-Proofpoint-GUID: l7VD2XkYZ83-rmERvhxMBKt6LxAgjq97
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-06-07_03,2022-06-03_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 adultscore=0 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0 malwarescore=0
+ impostorscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2204290000 definitions=main-2206070039
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---=20
-Hallo, lieber Beg=C3=BCnstigter,
+On 6/3/22 17:40, Claudio Imbrenda wrote:
+> Use per-CPU flags and callbacks for Program, Extern, and I/O interrupts
+> instead of global variables.
+> 
+> This allows for more accurate error handling; a CPU waiting for an
+> interrupt will not have it "stolen" by a different CPU that was not
+> supposed to wait for one, and now two CPUs can wait for interrupts at
+> the same time.
+> 
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> ---
+>  lib/s390x/asm/arch_def.h |  7 ++++++-
+>  lib/s390x/interrupt.c    | 38 ++++++++++++++++----------------------
+>  2 files changed, 22 insertions(+), 23 deletions(-)
+> 
+> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+> index 72553819..3a0d9c43 100644
+> --- a/lib/s390x/asm/arch_def.h
+> +++ b/lib/s390x/asm/arch_def.h
+> @@ -124,7 +124,12 @@ struct lowcore {
+>  	uint8_t		pad_0x0280[0x0308 - 0x0280];	/* 0x0280 */
+>  	uint64_t	sw_int_crs[16];			/* 0x0308 */
+>  	struct psw	sw_int_psw;			/* 0x0388 */
+> -	uint8_t		pad_0x0310[0x11b0 - 0x0398];	/* 0x0398 */
+> +	uint32_t	pgm_int_expected;		/* 0x0398 */
+> +	uint32_t	ext_int_expected;		/* 0x039c */
+> +	void		(*pgm_cleanup_func)(void);	/* 0x03a0 */
+> +	void		(*ext_cleanup_func)(void);	/* 0x03a8 */
+> +	void		(*io_int_func)(void);		/* 0x03b0 */
 
-Sie haben diese E-Mail von der Robert Bailey Foundation erhalten. Ich
-bin ein pensionierter Regierungsangestellter aus Harlem und ein
-Powerball-Lotterie-Jackpot-Gewinner von 343,8 Millionen Dollar. Ich
-bin der gr=C3=B6=C3=9Fte Jackpot-Gewinner in der Geschichte der New York Lo=
-ttery
-in Amerika. Ich habe diesen Wettbewerb am 27. Oktober 2018 gewonnen
-und m=C3=B6chte Ihnen mitteilen, dass Google in Kooperation mit Microsoft
-Ihre "E-Mail-Adresse" f=C3=BCr meine Anfrage hat und diese 3.000.000,00
-Millionen Euro kosten wird. Ich spende diese 3 Millionen Euro an Sie,
-um auch Wohlt=C3=A4tigkeitsorganisationen und armen Menschen in Ihrer
-Gemeinde zu helfen, damit wir die Welt zu einem besseren Ort f=C3=BCr alle
-machen k=C3=B6nnen. Bitte besuchen Sie die folgende Website f=C3=BCr weiter=
-e
-Informationen, damit Sie diesen 3 Mio. EUR Ausgaben nicht skeptisch
-gegen=C3=BCberstehen.
-https://nypost.com/2018/11/14/meet-the-winner-of-the-biggest-lottery-jackpo=
-t-in-new-york-history/Sie
-Weitere Best=C3=A4tigungen kann ich auch auf meinem Youtube suchen:
-https://www.youtube.com/watch?v=3DH5vT18Ysavc
-Bitte antworten Sie mir per E-Mail (robertbaileys_spende@aol.com).
-Sie m=C3=BCssen diese E-Mail sofort beantworten, damit die =C3=BCberweisend=
-e
-Bank mit dem Erhalt dieser Spende in H=C3=B6he von 3.000.000,00 Millionen
-Euro beginnen kann.
-Bitte kontaktieren Sie die untenstehende E-Mail-Adresse f=C3=BCr weitere
-Informationen, damit Sie diese Spende von der =C3=BCberweisenden Bank
-erhalten k=C3=B6nnen. E-Mail: robertbaileys_spende@aol.com
+If you switch the function pointers and the *_expected around,
+you can use bools for the latter, right?
+I think, since they're names suggest that they're bools, they should
+be. Additionally I prefer true/false over 1/0, since the latter raises
+the questions if other values are also used.
 
-Gr=C3=BC=C3=9Fe,
-Robert Bailey
-* * * * * * * * * * * * * * * *
+> +	uint8_t		pad_0x03b8[0x11b0 - 0x03b8];	/* 0x03b8 */
+>  	uint64_t	mcck_ext_sa_addr;		/* 0x11b0 */
+>  	uint8_t		pad_0x11b8[0x1200 - 0x11b8];	/* 0x11b8 */
+>  	uint64_t	fprs_sa[16];			/* 0x1200 */
+> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
+> index 27d3b767..e57946f0 100644
+> --- a/lib/s390x/interrupt.c
+> +++ b/lib/s390x/interrupt.c
+> @@ -15,14 +15,11 @@
+>  #include <fault.h>
+>  #include <asm/page.h>
+>  
+> -static bool pgm_int_expected;
+> -static bool ext_int_expected;
+> -static void (*pgm_cleanup_func)(void);
+>  static struct lowcore *lc;
+>  
+>  void expect_pgm_int(void)
+>  {
+> -	pgm_int_expected = true;
+> +	lc->pgm_int_expected = 1;
+>  	lc->pgm_int_code = 0;
+>  	lc->trans_exc_id = 0;
+>  	mb();
 
-Powerball-Jackpot-Gewinner
-E-Mail: robertbaileys_spende@aol.com
+[...]
+
+>  void handle_pgm_int(struct stack_frame_int *stack)
+>  {
+> -	if (!pgm_int_expected) {
+> +	if (!lc->pgm_int_expected) {
+>  		/* Force sclp_busy to false, otherwise we will loop forever */
+>  		sclp_handle_ext();
+>  		print_pgm_info(stack);
+>  	}
+>  
+> -	pgm_int_expected = false;
+> +	lc->pgm_int_expected = 0;
+>  
+> -	if (pgm_cleanup_func)
+> -		(*pgm_cleanup_func)();
+> +	if (lc->pgm_cleanup_func)
+> +		(*lc->pgm_cleanup_func)();
+
+[...]
+
+> +	if (lc->io_int_func)
+> +		return lc->io_int_func();
+Why is a difference between the function pointer usages here?
+
