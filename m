@@ -2,66 +2,64 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 005A454281A
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jun 2022 09:48:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4078F5427EB
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jun 2022 09:47:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231678AbiFHHXM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Jun 2022 03:23:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51062 "EHLO
+        id S232909AbiFHHWj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Jun 2022 03:22:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238283AbiFHGSC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jun 2022 02:18:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 308B42BEA
-        for <linux-s390@vger.kernel.org>; Tue,  7 Jun 2022 23:03:21 -0700 (PDT)
+        with ESMTP id S1354910AbiFHGTy (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jun 2022 02:19:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ED2A21168
+        for <linux-s390@vger.kernel.org>; Tue,  7 Jun 2022 23:19:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654668128;
+        s=mimecast20190719; t=1654669171;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UsmRmrmyC0YlUnFIqRRJkIZ3ojsOtC4OxRQHrbODTWU=;
-        b=d9KP3C87EiNwC8875uafmzStpUSq/6l6Lm1olGg2cjxHqMv45Nbm4oWiDZFzw+zm3PSABj
-        vWWZtt04d1FQWcvLdYRaBPD0r8CI+Z7OQkfGhFAV2AzY0FpGFyuju/dDmS2Ru6PnU1jBRw
-        +UMuEQsmbs2XzpugWN46z5zAHECW1r8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=2qdpgRzMUhsIWQD2m9gzx7YEZ9aS+BKgAe1jCPfxbsI=;
+        b=Nrri5V29gAi0n0GV3m1fTE+oEzQP1i34JY5XNh8Ppx87T1vvRBNBuod/P6xVc6AIN4RYqn
+        jR9gLdbsg3YjeBpT8OQatqDas0CbxhnAvsFKNeXI/QpD5QiA/unsq2JXhqFjfgqfVi9Hyt
+        HXpD02CoSCc4B9bCJRmn/pJPX8naFQs=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-591--9U629UcO9ey6xcHTbtviA-1; Wed, 08 Jun 2022 02:02:06 -0400
-X-MC-Unique: -9U629UcO9ey6xcHTbtviA-1
-Received: by mail-wm1-f69.google.com with SMTP id o23-20020a05600c511700b0039743cd8093so9484770wms.6
-        for <linux-s390@vger.kernel.org>; Tue, 07 Jun 2022 23:02:05 -0700 (PDT)
+ us-mta-602-XQbQDlI0NvaMlZijkwJmkA-1; Wed, 08 Jun 2022 02:19:29 -0400
+X-MC-Unique: XQbQDlI0NvaMlZijkwJmkA-1
+Received: by mail-wm1-f72.google.com with SMTP id e19-20020a05600c4e5300b0039c4b6acd83so5435337wmq.2
+        for <linux-s390@vger.kernel.org>; Tue, 07 Jun 2022 23:19:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:references:from:subject:in-reply-to
          :content-transfer-encoding;
-        bh=UsmRmrmyC0YlUnFIqRRJkIZ3ojsOtC4OxRQHrbODTWU=;
-        b=45a6uaPSmsXCUrp1AXO9ZIaLSOySNKq3RxEpsFbWGokNZcj10n40x0TEKMumVAwGVQ
-         1uhIuwIkgQn//j/3fiHuj1mnn0dX0AdkAM86NFJA3jj6tIZBM+lbhN3HcpQAb2Vbydo/
-         VKPdAqbXH8KquqiR2NFaHmW9K3cZsTJjeRg+kpJ8NWALYaw9/Fy6KN6N8/HnqjXkiHd3
-         sDOjiVMFObNOYg4w1zmInSINdk1c/orQr9y7d04Z7ajB5ZKFe2xZN9FcVq4E1OZlYfOw
-         ikWlOMFj8S3rKR80YoayV133TjeoK37o6ML7CQYhNRET2jHJ/ldB+8+OdNaVBlwP/Rp8
-         fi8A==
-X-Gm-Message-State: AOAM532Nv/3H1B6RD4RUBI7CqlsV3w7vsCiVyZ31DDlPHoqgnYvdA4/W
-        HXar8gqXTWUcC6v2v/uUfGQPcyOKLwPfLHSSL9v4Cd/Ncx+Gz6qUUBR16pLqTMzudA9UeEus6GL
-        cLh1zCJHQmNJr7ZWYFCbq+Q==
-X-Received: by 2002:a05:6000:147:b0:214:7d6e:cb1d with SMTP id r7-20020a056000014700b002147d6ecb1dmr24578579wrx.650.1654668125051;
-        Tue, 07 Jun 2022 23:02:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxHgUMf0DiGTalylNFpQjB5EiBfIrRc71DZVAGtXhPU6EUyeZBdyPoZS/71mmMYC1pA8jBi1g==
-X-Received: by 2002:a05:6000:147:b0:214:7d6e:cb1d with SMTP id r7-20020a056000014700b002147d6ecb1dmr24578561wrx.650.1654668124893;
-        Tue, 07 Jun 2022 23:02:04 -0700 (PDT)
+        bh=2qdpgRzMUhsIWQD2m9gzx7YEZ9aS+BKgAe1jCPfxbsI=;
+        b=e5SQ52eowuQzeZuVSdVs7ESXZzGaFmMaAXjUHPYfZEzHHlYjnKelF5Ym8tLPnIRMar
+         Ts9BEstDBRXVLbEKGJyenZbl2Fg6NIt4uO0CEmlsX3NWw9BiBt3uk2mRNUnPqqmzLjA4
+         3Wq7UOOUgGhEshBGzb5IkUZ+lnTfcj0Em3uyPN4ApVmDQcDDQ6nRhzh+dAASWkYpCWJM
+         DLcpTtLtXJOyyn4JXmn1jlKcCmSFR7op2tmMhgdEj+2FCyVXInuh68ukpkznCKELhOh6
+         D0ZpTS/phOBzdmR0kxbS0U9EkJQe+rTkTXHJlMRitKvxVUitnoKipt/JLwAaxYDYwhqV
+         6CbQ==
+X-Gm-Message-State: AOAM531gOLxjymBSdx6++kiD+MMLOHqXj9gLtw8Zj9gr/crtULe/AwBN
+        y6pNeffsQAxp+lBwFjRFG5RCrr66T9uwn4vzG4R79RVihPhV4sbyeuAreNcdsipjBDB8VYMdoLg
+        SA4ULZmvx2aEEnCQHyJKOHA==
+X-Received: by 2002:adf:d1c4:0:b0:210:1935:3dd8 with SMTP id b4-20020adfd1c4000000b0021019353dd8mr31593012wrd.229.1654669167899;
+        Tue, 07 Jun 2022 23:19:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxkaMUFdFQF32rETtSx3hpO9mEFM8hwy/9yxM+E2FB4DD6LrNRYSSbnwhOPIH9KVPr+yWRkng==
+X-Received: by 2002:adf:d1c4:0:b0:210:1935:3dd8 with SMTP id b4-20020adfd1c4000000b0021019353dd8mr31592992wrd.229.1654669167726;
+        Tue, 07 Jun 2022 23:19:27 -0700 (PDT)
 Received: from [192.168.0.3] (ip-109-42-114-66.web.vodafone.de. [109.42.114.66])
-        by smtp.gmail.com with ESMTPSA id x14-20020adff0ce000000b00210396b2eaesm24124187wro.45.2022.06.07.23.02.03
+        by smtp.gmail.com with ESMTPSA id m125-20020a1ca383000000b0039c5b4ab1b0sm3545849wme.48.2022.06.07.23.19.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jun 2022 23:02:04 -0700 (PDT)
-Message-ID: <1bdd501e-01f6-a0fb-86f3-49ec19ec5bcf@redhat.com>
-Date:   Wed, 8 Jun 2022 08:02:02 +0200
+        Tue, 07 Jun 2022 23:19:27 -0700 (PDT)
+Message-ID: <025699e6-b870-2648-d4a4-ffbc5fff22e8@redhat.com>
+Date:   Wed, 8 Jun 2022 08:19:25 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH v9 21/21] MAINTAINERS: additional files related kvm s390
- pci passthrough
 Content-Language: en-US
 To:     Matthew Rosato <mjrosato@linux.ibm.com>, linux-s390@vger.kernel.org
 Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
@@ -75,9 +73,10 @@ Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org
 References: <20220606203325.110625-1-mjrosato@linux.ibm.com>
- <20220606203325.110625-22-mjrosato@linux.ibm.com>
+ <20220606203325.110625-11-mjrosato@linux.ibm.com>
 From:   Thomas Huth <thuth@redhat.com>
-In-Reply-To: <20220606203325.110625-22-mjrosato@linux.ibm.com>
+Subject: Re: [PATCH v9 10/21] vfio/pci: introduce CONFIG_VFIO_PCI_ZDEV_KVM
+In-Reply-To: <20220606203325.110625-11-mjrosato@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -91,26 +90,47 @@ List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 06/06/2022 22.33, Matthew Rosato wrote:
-> Add entries from the s390 kvm subdirectory related to pci passthrough.
+> The current contents of vfio-pci-zdev are today only useful in a KVM
+> environment; let's tie everything currently under vfio-pci-zdev to
+> this Kconfig statement and require KVM in this case, reducing complexity
+> (e.g. symbol lookups).
 > 
-> Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
 > Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
 > ---
->   MAINTAINERS | 1 +
->   1 file changed, 1 insertion(+)
+>   drivers/vfio/pci/Kconfig      | 11 +++++++++++
+>   drivers/vfio/pci/Makefile     |  2 +-
+>   include/linux/vfio_pci_core.h |  2 +-
+>   3 files changed, 13 insertions(+), 2 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a6d3bd9d2a8d..3dd8657f5482 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -17454,6 +17454,7 @@ M:	Eric Farman <farman@linux.ibm.com>
->   L:	linux-s390@vger.kernel.org
->   L:	kvm@vger.kernel.org
->   S:	Supported
-> +F:	arch/s390/kvm/pci*
->   F:	drivers/vfio/pci/vfio_pci_zdev.c
->   F:	include/uapi/linux/vfio_zdev.h
+> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+> index 4da1914425e1..f9d0c908e738 100644
+> --- a/drivers/vfio/pci/Kconfig
+> +++ b/drivers/vfio/pci/Kconfig
+> @@ -44,6 +44,17 @@ config VFIO_PCI_IGD
+>   	  To enable Intel IGD assignment through vfio-pci, say Y.
+>   endif
 >   
+> +config VFIO_PCI_ZDEV_KVM
+> +	bool "VFIO PCI extensions for s390x KVM passthrough"
+> +	depends on S390 && KVM
+> +	default y
+> +	help
+> +	  Support s390x-specific extensions to enable support for enhancements
+> +	  to KVM passthrough capabilities, such as interpretive execution of
+> +	  zPCI instructions.
+> +
+> +	  To enable s390x KVM vfio-pci extensions, say Y.
 
-Reviewed-by: Thomas Huth <thuth@redhat.com>
+Is it still possible to disable CONFIG_VFIO_PCI_ZDEV_KVM ? Looking at the 
+later patches (e.g. 20/21 where you call kvm_s390_pci_zpci_op() from 
+kvm-s390.c), it rather seems to me that it currently cannot be disabled 
+independently (as long as KVM is enabled).
+
+So if you want to make this selectable by the user, I think you have to put 
+some more #ifdefs in the following patches.
+But if this was not meant to be selectable by the user, I think it should 
+not get a help text and rather be selected by the KVM switch in 
+arch/s390/kvm/Kconfig instead of having a "default y".
+
+  Thomas
 
