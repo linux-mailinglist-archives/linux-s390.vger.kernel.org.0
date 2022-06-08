@@ -2,149 +2,181 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85A1D542203
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jun 2022 08:45:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6389F542389
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jun 2022 08:51:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230086AbiFHEq1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Jun 2022 00:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49248 "EHLO
+        id S232763AbiFHGAo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Jun 2022 02:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230385AbiFHEpL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jun 2022 00:45:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7701B4198CB;
-        Tue,  7 Jun 2022 19:35:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D0DDB617D6;
-        Wed,  8 Jun 2022 02:35:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C190C341CA;
-        Wed,  8 Jun 2022 02:35:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654655755;
-        bh=SsXZJYgOIiq3A17Q+1LSuSeQwqdZ3RvoyU5+MSq3/LM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hwqjLkrKWHkFDtCdFJXvrJO61AzN2gPLJfiQvkuHhgiVdZ8sUQSu/YfFpp+6aBJPs
-         Oki7MSq35lmOIJUgjYcADtHTvZC3u9VTL/6NDTKTHa1EoZg4gnBCvvVNdbpLKEuVQ5
-         AkLdpdZT/+cy9w3yTEuVgFr2nDLuuzR7gRhbFROelL03jXqzAavUjhJ1fIEWLVtALX
-         VyYA9rG4HlDIZr6YAq9X0Bqw7swLUoEocSDZUj4+aHcxdE0sqDFV+zTPDOMCyZhjWU
-         B9CvPMC9RSZtjVr1PwAzvYDjeXwuiV9gFxlP/47+XrvtGq8bv5klL1pqgyrRwspYBI
-         mZJS0Im9kOtPQ==
-Received: by mail-ua1-f46.google.com with SMTP id i4so210699uaq.4;
-        Tue, 07 Jun 2022 19:35:55 -0700 (PDT)
-X-Gm-Message-State: AOAM531k5FXPAMDFOXvfQOCYkIilHKdw0wpa9z9igxJpTn67QZzMcMGT
-        TqPMy7THKxdyTfSDMl3IL7a09zdnuaT5nuZglvU=
-X-Google-Smtp-Source: ABdhPJyjCmP1RPYunONAfpy4OyLHTzEfFhrDDXKMrX2YQBASxWdxJ/Evlwtfy/6oB2o8tbfMXpKm3bYIRsx+JIom78Y=
-X-Received: by 2002:ab0:2747:0:b0:373:5408:d086 with SMTP id
- c7-20020ab02747000000b003735408d086mr18503167uap.12.1654655753666; Tue, 07
- Jun 2022 19:35:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220608000014.3054333-1-jarkko@profian.com>
-In-Reply-To: <20220608000014.3054333-1-jarkko@profian.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Wed, 8 Jun 2022 10:35:42 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTQgCn2CyZ4+VBqEEBT2b4+1KxoEXxrd+Ritk=58+U8EFA@mail.gmail.com>
-Message-ID: <CAJF2gTQgCn2CyZ4+VBqEEBT2b4+1KxoEXxrd+Ritk=58+U8EFA@mail.gmail.com>
-Subject: Re: [PATCH] kprobes: Enable tracing for mololithic kernel images
-To:     Jarkko Sakkinen <jarkko@profian.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nathaniel McCallum <nathaniel@profian.com>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        with ESMTP id S234787AbiFHFtK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jun 2022 01:49:10 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC251F7DA9;
+        Tue,  7 Jun 2022 20:38:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654659483; x=1686195483;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=QnlVviZV9Gat7xuBZ/5NkukA4Zn1vc4RDyEVLyQne8k=;
+  b=bzX0DI4T4r2rYDWeC8IWrvzvO5A9yglqa0Bh+wnpYmtpFh0E+gWkfILI
+   BxS7DxuKGS6/HMmq54LCNtKJmr/oFPYcgFbA8LkFhMkcQnhkO+k/jGtXO
+   01XGhkqDwoyQ69oxbZpqdQ07FzX2ELsygqH16RDegAafEl4P27z5yPEew
+   ekS20AmxDvX4fCmxutZgXQj5kN/3HU8kDYhu0N9m3BbvUoD3A/ANC4yLQ
+   dHnV/ht2+BOedBKzVJCxqe4Xvve9KZFc6X8/WGUEr28TxOoND9CoROoTU
+   DmRIZYZ4qaxKuB2emzqCjw3FT5bUlzjLClf/9z+etgYyhRMHVoVBhiRNe
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10371"; a="276821138"
+X-IronPort-AV: E=Sophos;i="5.91,285,1647327600"; 
+   d="scan'208";a="276821138"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2022 20:38:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,285,1647327600"; 
+   d="scan'208";a="826709943"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmsmga006.fm.intel.com with ESMTP; 07 Jun 2022 20:38:02 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Tue, 7 Jun 2022 20:38:02 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Tue, 7 Jun 2022 20:38:01 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Tue, 7 Jun 2022 20:38:01 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.108)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Tue, 7 Jun 2022 20:38:01 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QVfWJRLa7SXhKZxUY09otMB+RCMTTWSdQHFWYjo5P/9+VJGipVjRRWRJn+vxgCecUslEtFrLFzRWwzNJH35MxOgPKwZpLt0f/Mge1SWY8mBjI64EzGi4hLkHwo0T5sCYmh++WoT7aY/V/b5W8VmOIy4ImxuMCuACtmLbIBUHOpiPaYsdkYpN6ZB6A4gmkis96kgza3Da+5QSebYUyC0WWOIANSyUE6ZnRAPt+rUehQies4VKMLl3ubnDY1ZCVGKE0uE6fSrQmFbCppSAz1l6vzpPXO7R0V7fOo+HWnuUTSWw8W/U1JZsqEz+EozQgCb0rM/N+tkP92qJMvDr27Zw5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lNajbDZDyu/jqP5TJRytp7q+Wxyoap1OU2jswV+r0W0=;
+ b=LClq+q+gt22zgtWcCqkbdZv4Cfeyx64wMDJVZ6uPqupznexLfHEYdIITfYXBE4eghDI4bJjeOIQc/1YIfPMCEr+2kzxkAfBX1SM74GuJwI+htTwwLf3PkVccOQruFgWxT9fk1MS3weGnXhMmaO8xbiplMMIBoItfJXHYzRXw9aOANiqHTRXfSNr3zoq18YEo0EV5Fnq8+04tzP3t/eeeLC7tfI0Ci50lzzQydd1Z4nyYDoJhG05fTLg/uDbFbGmgZ2YS7LPrbJtbszOXR20vuVisTV44mmBfoWzHNl8IDz3RG5Q8O47q7LgmyYDP4P5Uq7QIGea3vDrKSjpJ7Khiug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by BY5PR11MB4339.namprd11.prod.outlook.com (2603:10b6:a03:1be::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.12; Wed, 8 Jun
+ 2022 03:37:59 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::a1cb:c445:9900:65c8]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::a1cb:c445:9900:65c8%7]) with mapi id 15.20.5314.019; Wed, 8 Jun 2022
+ 03:37:59 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
+        David Airlie <airlied@linux.ie>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Eric Farman" <farman@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        "Peter Oberparleiter" <oberpar@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
         Sven Schnelle <svens@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Marco Elver <elver@google.com>,
-        Dan Li <ashimida@linux.alibaba.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Song Liu <song@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Chen Zhongjin <chenzhongjin@huawei.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Mark Brown <broonie@kernel.org>,
-        Luis Machado <luis.machado@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Atsushi Nemoto <anemo@mba.ocn.ne.jp>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dave Anglin <dave.anglin@bell.net>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Daniel Axtens <dja@axtens.net>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Anup Patel <anup@brainfault.org>,
-        Atish Patra <atishp@atishpatra.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Liao Chang <liaochang1@huawei.com>,
-        Philipp Tomsich <philipp.tomsich@vrull.eu>,
-        Wu Caize <zepan@sipeed.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Alexander Egorenkov <egorenar@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Tobias Huschle <huschle@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Michael Roth <michael.roth@amd.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Aaron Tomlin <atomlin@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-modules@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>
+CC:     Christoph Hellwig <hch@lst.de>
+Subject: RE: [PATCH v2 1/2] vfio: Replace the DMA unmapping notifier with a
+ callback
+Thread-Topic: [PATCH v2 1/2] vfio: Replace the DMA unmapping notifier with a
+ callback
+Thread-Index: AQHYesLAJUYfAp21yku1uotd5dxlh61E3Frw
+Date:   Wed, 8 Jun 2022 03:37:59 +0000
+Message-ID: <BN9PR11MB52764957F9364B48412E9BD58CA49@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <0-v2-80aa110d03ce+24b-vfio_unmap_notif_jgg@nvidia.com>
+ <1-v2-80aa110d03ce+24b-vfio_unmap_notif_jgg@nvidia.com>
+In-Reply-To: <1-v2-80aa110d03ce+24b-vfio_unmap_notif_jgg@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8dcfb14c-6860-4701-765e-08da490048b2
+x-ms-traffictypediagnostic: BY5PR11MB4339:EE_
+x-microsoft-antispam-prvs: <BY5PR11MB4339FA489B235A2EBA27AE088CA49@BY5PR11MB4339.namprd11.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: x9a6oSL/Q0SoDjUrKSuTIeKLqoX6vIACWC9S8bbDpaMe/kf+Ny0YIVzu8qrNKmzoffeTcWzbPnnTVk4d9opwOJGNVJvgLnNWvmTtASodqWQqx+zU1aqfEzJZjhOFDC4XTfVQqmltfQLL5sSZh0oNqnshA1B/WUuVFcyOn6B7bq5NhaldsKQ3Cjd5NlVfVgqIO50d/GOrvkv/1h6k7nDktMKJVUYbjJLdKJ+EkAk/1tnTLf4Ba9Bandb4OnJIJLS/SN9IjTvQUgOfEldRp1xCLUOFVF0wAzuW3yZB2pr7daIiXo6r3QcKM2uabvj5MHJ9t4R5rXzw0fOnFdX4m/TxdOPohYqKibzsa5Ot8L878SxtISKKC7L7gCKBf32DKPqsiblK73uNVDX1Xvgm6hhVWAwLliKzm/HOlNJ3AZK9CwBGGrRE+c48X6CmFJ5lmFXYuKuii1ottX+DN94pYnompu/BXn9fFOE1pKuWnFcFeWu+E/uRjyNab9lHqYZ1GJxk0c+3w33UhcIAzIbn7bx39L1oiuivjjwLLI7FVuIL88rWFUMV1JcEATGVsTzJFjk3DEbv13YkAar++iUF0U/renAB4OWGbBzXEenTw/CymPTodCZK6pJlimbx3pTEhVNYFxNq7VJL+OxaDPuifxn4psnczkzbL9CBLVfGEySK0uXhPCfZrQG3imMJY6nwYvFur5G4aU7OlpncbkU0cM50sI7I8/qlABM76rIToVhcyvw=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6636002)(316002)(33656002)(52536014)(8936002)(55016003)(26005)(83380400001)(9686003)(86362001)(110136005)(6506007)(7696005)(8676002)(7416002)(64756008)(66556008)(66476007)(38100700002)(66446008)(186003)(4326008)(508600001)(122000001)(5660300002)(921005)(30864003)(38070700005)(82960400001)(2906002)(76116006)(66946007)(71200400001)(579004);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?3M8cxOkX69lpvN7xdQOYbsw/x8mm163fYnOpDTMmaM5vfP/qHEkn78KIJClN?=
+ =?us-ascii?Q?nnYJX2XiC3oZJaI+h1ReryD/IO3AwPYNqNFgsedd78O4EPAIBji3zTe1xGQ1?=
+ =?us-ascii?Q?ySuijVwX15bsnmzI5TOa4oaxLNdJ15MRZmBjkJE/uxuLUnxqGHDZsKMUQuhE?=
+ =?us-ascii?Q?NyxMAMYtyPllbkdLg7ya7jujSqTUOkHKz27CGNMO4Ta+qqpDCo6ZfxJOsqz1?=
+ =?us-ascii?Q?TFP6P92/iKB69a9tS1zy5uVjArFOTe16yksQwsFFhd6DLGI7aX6os6ZB/Cd+?=
+ =?us-ascii?Q?myDGp5P+FqbzSM0MN0baw+zPP4jezS4GB5QLOyNs1mAhmEU8eprJ1daExci5?=
+ =?us-ascii?Q?oUqXoOedHq6q4fbqopM0/1QKlytGsHNfc0xUpeoTCXGnYhR3mXZTnsv4DRTp?=
+ =?us-ascii?Q?IMBe4KLRf1nqBvtNdVxxcZzuHtFFYz/gI8gJn3wy2kdzUri0msp0brl4vMpb?=
+ =?us-ascii?Q?2K1pH1IJuRhXymwQWS1Jv1DQGzMwwyc4ud8NZZx+BW0FkbMGQNzhywhvDq2z?=
+ =?us-ascii?Q?1weeUxWffG6CbqhghytjMB8fjxYcpmGgUxFFtXQIErQ5CYWI/N0r0Nw4zGGr?=
+ =?us-ascii?Q?RAG+IIilUiYJstlG/Y0O9ZPBr+DL4U+2MSSBFM3zw+Eb4az+GdWPZeEMDSVv?=
+ =?us-ascii?Q?sVCbYi154wiR7527k6crNb+r+KybzXSsbjd/wFvSA6azCv3brz1LPTxV1yup?=
+ =?us-ascii?Q?yk2pCMAlFR0yxGhp5jwMViZu210HzCNxH3kZOm2Z0m7oVlVcP2GNgBTUwP3R?=
+ =?us-ascii?Q?MzUdvrMmg9Vo7XnDmCgQMKzKiKMDyKYoX0ApOCKxfGsyUCcJltrhnlfLc6W8?=
+ =?us-ascii?Q?xjDaNxF5MVM630z7ykHPyZeAcmbMbDeiNdpy21maI4UnXyUqD9RDIGLDuBoP?=
+ =?us-ascii?Q?IpszD2Ye5AWJal/0AB2WJ2g6JsV3T4+Vf2rrDa3/14quVyHUNrmb+cAfT549?=
+ =?us-ascii?Q?BXY22RLzdaU5Yiac+yelB+jK/NsPdQaXoibeE2R/qRthTfzOsjBShXKRSCWI?=
+ =?us-ascii?Q?ssArFKsJSW/At3FNSXnhMPQuhpKiXxMbn1vA+PXFmfJ4f7pYC6/g7QH+EDm3?=
+ =?us-ascii?Q?Q/OUZ2BKTkzlnuFeuxU64a2a04XZDU8bWl8Ae2Vh1fiVla4lyHla8/3d7kJ9?=
+ =?us-ascii?Q?YoFPOxOAjPoYSREAi/Sq3n6W92qg4yzIMBKXqatN1k2cxdghCDS5/+JPquIV?=
+ =?us-ascii?Q?0d52aprKCCsU6+vSeLtqaEZVPInJSwRsgBZ9QdDWBeFdBdOaQB4LsX5jfqmc?=
+ =?us-ascii?Q?Z3P6G2LkRQDDYW0D1JizOmu5qSVjelsJj+TH1hsUlJnEuOtXZb2IZZpvynCC?=
+ =?us-ascii?Q?ApHdjGxXzoFV+ZmfJ3pkCFwq+XMkMZQL+spouTY3yxiere3fEU2wivKYxIQr?=
+ =?us-ascii?Q?D7SbZD3wOEtxiuJT7RnQjaCAdnMY40hIPxoAdvl0mei3337JNlPU+L4qojfw?=
+ =?us-ascii?Q?BLOYgHJzUWyR/PkT/VzYmQu5FSd3nyr9ndY7YMy4y0nS2eIDRdsbhlUkhqx9?=
+ =?us-ascii?Q?fX+h40skirP/zZyODQY2e1Gou5/U6V1dVMLghYGPChB6/eKYuxLqCCo+s2n8?=
+ =?us-ascii?Q?pYeWWI4D6D5U9Mod6Kv+Z6NL920W9wQ3pj6Z6MGrrvgVFOTawDRcf2Gex3v3?=
+ =?us-ascii?Q?q/UerrG/cN0by7Fi9eBq3GIqtn2GX9bmotnQHMz0TAe5R8Lik3sgOlFXGjZR?=
+ =?us-ascii?Q?IbDPqkush5sckQcf6Hi6kajJg0y+VtKrJgMBAl0L/USzOfz+aYXrZ55uF7+0?=
+ =?us-ascii?Q?QrBu+AnSSA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8dcfb14c-6860-4701-765e-08da490048b2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jun 2022 03:37:59.4673
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OIxLmn3RBlBQL3sHSS6mGatsL8c5w0le6Za7iMXYK+LgecefywMhp4Hs07jKlzyGvCpW8yYcNgAWuJOvNAbRcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4339
+X-OriginatorOrg: intel.com
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -152,1194 +184,685 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-.
+> From: Jason Gunthorpe
+> Sent: Wednesday, June 8, 2022 7:02 AM
+>=20
+> Instead of having drivers register the notifier with explicit code just
+> have them provide a dma_unmap callback op in their driver ops and rely on
+> the core code to wire it up.
+>=20
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 
-On Wed, Jun 8, 2022 at 8:02 AM Jarkko Sakkinen <jarkko@profian.com> wrote:
->
-> Tracing with kprobes while running a monolithic kernel is currently
-> impossible because CONFIG_KPROBES is dependent of CONFIG_MODULES.  This
-> dependency is a result of kprobes code using the module allocator for the
-> trampoline code.
->
-> Detaching kprobes from modules helps to squeeze down the user space,
-> e.g. when developing new core kernel features, while still having all
-> the nice tracing capabilities.
->
-> For kernel/ and arch/*, move module_alloc() and module_memfree() to
-> module_alloc.c, and compile as part of vmlinux when either CONFIG_MODULES
-> or CONFIG_KPROBES is enabled.  In addition, flag kernel module specific
-> code with CONFIG_MODULES.
->
-> As the result, kprobes can be used with a monolithic kernel.
-It's strange when MODULES is n, but vmlinux still obtains module_alloc.
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
 
-Maybe we need a kprobe_alloc, right?
-
-
->
-> Signed-off-by: Jarkko Sakkinen <jarkko@profian.com>
 > ---
-> Tested with the help of BuildRoot and QEMU:
-> - arm (function tracer)
-> - arm64 (function tracer)
-> - mips (function tracer)
-> - powerpc (function tracer)
-> - riscv (function tracer)
-> - s390 (function tracer)
-> - sparc (function tracer)
-> - x86 (function tracer)
-> - sh (function tracer, for the "pure" kernel/modules_alloc.c path)
-> ---
->  arch/Kconfig                       |  1 -
->  arch/arm/kernel/Makefile           |  5 +++
->  arch/arm/kernel/module.c           | 32 ----------------
->  arch/arm/kernel/module_alloc.c     | 42 ++++++++++++++++++++
->  arch/arm64/kernel/Makefile         |  5 +++
->  arch/arm64/kernel/module.c         | 47 -----------------------
->  arch/arm64/kernel/module_alloc.c   | 57 ++++++++++++++++++++++++++++
->  arch/mips/kernel/Makefile          |  5 +++
->  arch/mips/kernel/module.c          |  9 -----
->  arch/mips/kernel/module_alloc.c    | 18 +++++++++
->  arch/parisc/kernel/Makefile        |  5 +++
->  arch/parisc/kernel/module.c        | 11 ------
->  arch/parisc/kernel/module_alloc.c  | 23 +++++++++++
->  arch/powerpc/kernel/Makefile       |  5 +++
->  arch/powerpc/kernel/module.c       | 37 ------------------
->  arch/powerpc/kernel/module_alloc.c | 47 +++++++++++++++++++++++
->  arch/riscv/kernel/Makefile         |  5 +++
->  arch/riscv/kernel/module.c         | 10 -----
->  arch/riscv/kernel/module_alloc.c   | 19 ++++++++++
->  arch/s390/kernel/Makefile          |  5 +++
->  arch/s390/kernel/module.c          | 17 ---------
->  arch/s390/kernel/module_alloc.c    | 33 ++++++++++++++++
->  arch/sparc/kernel/Makefile         |  5 +++
->  arch/sparc/kernel/module.c         | 30 ---------------
->  arch/sparc/kernel/module_alloc.c   | 39 +++++++++++++++++++
->  arch/x86/kernel/Makefile           |  5 +++
->  arch/x86/kernel/module.c           | 50 ------------------------
->  arch/x86/kernel/module_alloc.c     | 61 ++++++++++++++++++++++++++++++
->  kernel/Makefile                    |  5 +++
->  kernel/kprobes.c                   | 10 +++++
->  kernel/module/main.c               | 17 ---------
->  kernel/module_alloc.c              | 26 +++++++++++++
->  kernel/trace/trace_kprobe.c        | 10 ++++-
->  33 files changed, 434 insertions(+), 262 deletions(-)
->  create mode 100644 arch/arm/kernel/module_alloc.c
->  create mode 100644 arch/arm64/kernel/module_alloc.c
->  create mode 100644 arch/mips/kernel/module_alloc.c
->  create mode 100644 arch/parisc/kernel/module_alloc.c
->  create mode 100644 arch/powerpc/kernel/module_alloc.c
->  create mode 100644 arch/riscv/kernel/module_alloc.c
->  create mode 100644 arch/s390/kernel/module_alloc.c
->  create mode 100644 arch/sparc/kernel/module_alloc.c
->  create mode 100644 arch/x86/kernel/module_alloc.c
->  create mode 100644 kernel/module_alloc.c
->
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index fcf9a41a4ef5..e8e3e7998a2e 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -39,7 +39,6 @@ config GENERIC_ENTRY
->
->  config KPROBES
->         bool "Kprobes"
-> -       depends on MODULES
->         depends on HAVE_KPROBES
->         select KALLSYMS
->         select TASKS_RCU if PREEMPTION
-> diff --git a/arch/arm/kernel/Makefile b/arch/arm/kernel/Makefile
-> index 553866751e1a..d2bb954cd54f 100644
-> --- a/arch/arm/kernel/Makefile
-> +++ b/arch/arm/kernel/Makefile
-> @@ -44,6 +44,11 @@ obj-$(CONFIG_CPU_IDLE)               += cpuidle.o
->  obj-$(CONFIG_ISA_DMA_API)      += dma.o
->  obj-$(CONFIG_FIQ)              += fiq.o fiqasm.o
->  obj-$(CONFIG_MODULES)          += armksyms.o module.o
-> +ifeq ($(CONFIG_MODULES),y)
-> +obj-y                          += module_alloc.o
-> +else
-> +obj-$(CONFIG_KPROBES)          += module_alloc.o
-> +endif
->  obj-$(CONFIG_ARM_MODULE_PLTS)  += module-plts.o
->  obj-$(CONFIG_ISA_DMA)          += dma-isa.o
->  obj-$(CONFIG_PCI)              += bios32.o isa.o
-> diff --git a/arch/arm/kernel/module.c b/arch/arm/kernel/module.c
-> index d59c36dc0494..054e799e7091 100644
-> --- a/arch/arm/kernel/module.c
-> +++ b/arch/arm/kernel/module.c
-> @@ -22,38 +22,6 @@
->  #include <asm/unwind.h>
->  #include <asm/opcodes.h>
->
-> -#ifdef CONFIG_XIP_KERNEL
-> -/*
-> - * The XIP kernel text is mapped in the module area for modules and
-> - * some other stuff to work without any indirect relocations.
-> - * MODULES_VADDR is redefined here and not in asm/memory.h to avoid
-> - * recompiling the whole kernel when CONFIG_XIP_KERNEL is turned on/off.
+>  drivers/gpu/drm/i915/gvt/gvt.h        |   1 -
+>  drivers/gpu/drm/i915/gvt/kvmgt.c      |  75 ++++-----------
+>  drivers/s390/cio/vfio_ccw_ops.c       |  41 ++-------
+>  drivers/s390/cio/vfio_ccw_private.h   |   1 -
+>  drivers/s390/crypto/vfio_ap_ops.c     |  53 ++---------
+>  drivers/s390/crypto/vfio_ap_private.h |   3 -
+>  drivers/vfio/vfio.c                   | 126 +++++++++-----------------
+>  drivers/vfio/vfio.h                   |   5 +
+>  include/linux/vfio.h                  |  21 +----
+>  9 files changed, 87 insertions(+), 239 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/i915/gvt/gvt.h b/drivers/gpu/drm/i915/gvt/gv=
+t.h
+> index aee1a45da74bcb..705689e6401197 100644
+> --- a/drivers/gpu/drm/i915/gvt/gvt.h
+> +++ b/drivers/gpu/drm/i915/gvt/gvt.h
+> @@ -226,7 +226,6 @@ struct intel_vgpu {
+>  	unsigned long nr_cache_entries;
+>  	struct mutex cache_lock;
+>=20
+> -	struct notifier_block iommu_notifier;
+>  	atomic_t released;
+>=20
+>  	struct kvm_page_track_notifier_node track_node;
+> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c
+> b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> index e2f6c56ab3420c..ecd5bb37b63a2a 100644
+> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
+> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> @@ -729,34 +729,25 @@ int intel_gvt_set_edid(struct intel_vgpu *vgpu, int
+> port_num)
+>  	return ret;
+>  }
+>=20
+> -static int intel_vgpu_iommu_notifier(struct notifier_block *nb,
+> -				     unsigned long action, void *data)
+> +static void intel_vgpu_dma_unmap(struct vfio_device *vfio_dev, u64 iova,
+> +				 u64 length)
+>  {
+> -	struct intel_vgpu *vgpu =3D
+> -		container_of(nb, struct intel_vgpu, iommu_notifier);
+> -
+> -	if (action =3D=3D VFIO_IOMMU_NOTIFY_DMA_UNMAP) {
+> -		struct vfio_iommu_type1_dma_unmap *unmap =3D data;
+> -		struct gvt_dma *entry;
+> -		unsigned long iov_pfn, end_iov_pfn;
+> +	struct intel_vgpu *vgpu =3D vfio_dev_to_vgpu(vfio_dev);
+> +	struct gvt_dma *entry;
+> +	u64 iov_pfn =3D iova >> PAGE_SHIFT;
+> +	u64 end_iov_pfn =3D iov_pfn + length / PAGE_SIZE;
+>=20
+> -		iov_pfn =3D unmap->iova >> PAGE_SHIFT;
+> -		end_iov_pfn =3D iov_pfn + unmap->size / PAGE_SIZE;
+> +	mutex_lock(&vgpu->cache_lock);
+> +	for (; iov_pfn < end_iov_pfn; iov_pfn++) {
+> +		entry =3D __gvt_cache_find_gfn(vgpu, iov_pfn);
+> +		if (!entry)
+> +			continue;
+>=20
+> -		mutex_lock(&vgpu->cache_lock);
+> -		for (; iov_pfn < end_iov_pfn; iov_pfn++) {
+> -			entry =3D __gvt_cache_find_gfn(vgpu, iov_pfn);
+> -			if (!entry)
+> -				continue;
+> -
+> -			gvt_dma_unmap_page(vgpu, entry->gfn, entry-
+> >dma_addr,
+> -					   entry->size);
+> -			__gvt_cache_remove_entry(vgpu, entry);
+> -		}
+> -		mutex_unlock(&vgpu->cache_lock);
+> +		gvt_dma_unmap_page(vgpu, entry->gfn, entry->dma_addr,
+> +				   entry->size);
+> +		__gvt_cache_remove_entry(vgpu, entry);
+>  	}
+> -
+> -	return NOTIFY_OK;
+> +	mutex_unlock(&vgpu->cache_lock);
+>  }
+>=20
+>  static bool __kvmgt_vgpu_exist(struct intel_vgpu *vgpu)
+> @@ -783,36 +774,20 @@ static bool __kvmgt_vgpu_exist(struct intel_vgpu
+> *vgpu)
+>  static int intel_vgpu_open_device(struct vfio_device *vfio_dev)
+>  {
+>  	struct intel_vgpu *vgpu =3D vfio_dev_to_vgpu(vfio_dev);
+> -	unsigned long events;
+> -	int ret;
+> -
+> -	vgpu->iommu_notifier.notifier_call =3D intel_vgpu_iommu_notifier;
+>=20
+> -	events =3D VFIO_IOMMU_NOTIFY_DMA_UNMAP;
+> -	ret =3D vfio_register_notifier(vfio_dev, VFIO_IOMMU_NOTIFY, &events,
+> -				     &vgpu->iommu_notifier);
+> -	if (ret !=3D 0) {
+> -		gvt_vgpu_err("vfio_register_notifier for iommu failed: %d\n",
+> -			ret);
+> -		goto out;
+> -	}
+> -
+> -	ret =3D -EEXIST;
+>  	if (vgpu->attached)
+> -		goto undo_iommu;
+> +		return -EEXIST;
+>=20
+> -	ret =3D -ESRCH;
+>  	if (!vgpu->vfio_device.kvm ||
+>  	    vgpu->vfio_device.kvm->mm !=3D current->mm) {
+>  		gvt_vgpu_err("KVM is required to use Intel vGPU\n");
+> -		goto undo_iommu;
+> +		return -ESRCH;
+>  	}
+>=20
+>  	kvm_get_kvm(vgpu->vfio_device.kvm);
+>=20
+> -	ret =3D -EEXIST;
+>  	if (__kvmgt_vgpu_exist(vgpu))
+> -		goto undo_iommu;
+> +		return -EEXIST;
+>=20
+>  	vgpu->attached =3D true;
+>=20
+> @@ -831,12 +806,6 @@ static int intel_vgpu_open_device(struct vfio_device
+> *vfio_dev)
+>=20
+>  	atomic_set(&vgpu->released, 0);
+>  	return 0;
+> -
+> -undo_iommu:
+> -	vfio_unregister_notifier(vfio_dev, VFIO_IOMMU_NOTIFY,
+> -				 &vgpu->iommu_notifier);
+> -out:
+> -	return ret;
+>  }
+>=20
+>  static void intel_vgpu_release_msi_eventfd_ctx(struct intel_vgpu *vgpu)
+> @@ -853,8 +822,6 @@ static void
+> intel_vgpu_release_msi_eventfd_ctx(struct intel_vgpu *vgpu)
+>  static void intel_vgpu_close_device(struct vfio_device *vfio_dev)
+>  {
+>  	struct intel_vgpu *vgpu =3D vfio_dev_to_vgpu(vfio_dev);
+> -	struct drm_i915_private *i915 =3D vgpu->gvt->gt->i915;
+> -	int ret;
+>=20
+>  	if (!vgpu->attached)
+>  		return;
+> @@ -864,11 +831,6 @@ static void intel_vgpu_close_device(struct
+> vfio_device *vfio_dev)
+>=20
+>  	intel_gvt_release_vgpu(vgpu);
+>=20
+> -	ret =3D vfio_unregister_notifier(&vgpu->vfio_device,
+> VFIO_IOMMU_NOTIFY,
+> -				       &vgpu->iommu_notifier);
+> -	drm_WARN(&i915->drm, ret,
+> -		 "vfio_unregister_notifier for iommu failed: %d\n", ret);
+> -
+>  	debugfs_remove(debugfs_lookup(KVMGT_DEBUGFS_FILENAME,
+> vgpu->debugfs));
+>=20
+>  	kvm_page_track_unregister_notifier(vgpu->vfio_device.kvm,
+> @@ -1610,6 +1572,7 @@ static const struct vfio_device_ops
+> intel_vgpu_dev_ops =3D {
+>  	.write		=3D intel_vgpu_write,
+>  	.mmap		=3D intel_vgpu_mmap,
+>  	.ioctl		=3D intel_vgpu_ioctl,
+> +	.dma_unmap	=3D intel_vgpu_dma_unmap,
+>  };
+>=20
+>  static int intel_vgpu_probe(struct mdev_device *mdev)
+> diff --git a/drivers/s390/cio/vfio_ccw_ops.c
+> b/drivers/s390/cio/vfio_ccw_ops.c
+> index b49e2e9db2dc6f..09e0ce7b72324c 100644
+> --- a/drivers/s390/cio/vfio_ccw_ops.c
+> +++ b/drivers/s390/cio/vfio_ccw_ops.c
+> @@ -44,31 +44,19 @@ static int vfio_ccw_mdev_reset(struct
+> vfio_ccw_private *private)
+>  	return ret;
+>  }
+>=20
+> -static int vfio_ccw_mdev_notifier(struct notifier_block *nb,
+> -				  unsigned long action,
+> -				  void *data)
+> +static void vfio_ccw_dma_unmap(struct vfio_device *vdev, u64 iova, u64
+> length)
+>  {
+>  	struct vfio_ccw_private *private =3D
+> -		container_of(nb, struct vfio_ccw_private, nb);
+> -
+> -	/*
+> -	 * Vendor drivers MUST unpin pages in response to an
+> -	 * invalidation.
+> -	 */
+> -	if (action =3D=3D VFIO_IOMMU_NOTIFY_DMA_UNMAP) {
+> -		struct vfio_iommu_type1_dma_unmap *unmap =3D data;
+> -
+> -		if (!cp_iova_pinned(&private->cp, unmap->iova))
+> -			return NOTIFY_OK;
+> +		container_of(vdev, struct vfio_ccw_private, vdev);
+>=20
+> -		if (vfio_ccw_mdev_reset(private))
+> -			return NOTIFY_BAD;
+> +	/* Drivers MUST unpin pages in response to an invalidation. */
+> +	if (!cp_iova_pinned(&private->cp, iova))
+> +		return;
+>=20
+> -		cp_free(&private->cp);
+> -		return NOTIFY_OK;
+> -	}
+> +	if (vfio_ccw_mdev_reset(private))
+> +		return;
+>=20
+> -	return NOTIFY_DONE;
+> +	cp_free(&private->cp);
+>  }
+>=20
+>  static ssize_t name_show(struct mdev_type *mtype,
+> @@ -178,19 +166,11 @@ static int vfio_ccw_mdev_open_device(struct
+> vfio_device *vdev)
+>  {
+>  	struct vfio_ccw_private *private =3D
+>  		container_of(vdev, struct vfio_ccw_private, vdev);
+> -	unsigned long events =3D VFIO_IOMMU_NOTIFY_DMA_UNMAP;
+>  	int ret;
+>=20
+> -	private->nb.notifier_call =3D vfio_ccw_mdev_notifier;
+> -
+> -	ret =3D vfio_register_notifier(vdev, VFIO_IOMMU_NOTIFY,
+> -				     &events, &private->nb);
+> -	if (ret)
+> -		return ret;
+> -
+>  	ret =3D vfio_ccw_register_async_dev_regions(private);
+>  	if (ret)
+> -		goto out_unregister;
+> +		return ret;
+>=20
+>  	ret =3D vfio_ccw_register_schib_dev_regions(private);
+>  	if (ret)
+> @@ -204,7 +184,6 @@ static int vfio_ccw_mdev_open_device(struct
+> vfio_device *vdev)
+>=20
+>  out_unregister:
+>  	vfio_ccw_unregister_dev_regions(private);
+> -	vfio_unregister_notifier(vdev, VFIO_IOMMU_NOTIFY, &private->nb);
+>  	return ret;
+>  }
+>=20
+> @@ -222,7 +201,6 @@ static void vfio_ccw_mdev_close_device(struct
+> vfio_device *vdev)
+>=20
+>  	cp_free(&private->cp);
+>  	vfio_ccw_unregister_dev_regions(private);
+> -	vfio_unregister_notifier(vdev, VFIO_IOMMU_NOTIFY, &private->nb);
+>  }
+>=20
+>  static ssize_t vfio_ccw_mdev_read_io_region(struct vfio_ccw_private
+> *private,
+> @@ -645,6 +623,7 @@ static const struct vfio_device_ops vfio_ccw_dev_ops
+> =3D {
+>  	.write =3D vfio_ccw_mdev_write,
+>  	.ioctl =3D vfio_ccw_mdev_ioctl,
+>  	.request =3D vfio_ccw_mdev_request,
+> +	.dma_unmap =3D vfio_ccw_dma_unmap,
+>  };
+>=20
+>  struct mdev_driver vfio_ccw_mdev_driver =3D {
+> diff --git a/drivers/s390/cio/vfio_ccw_private.h
+> b/drivers/s390/cio/vfio_ccw_private.h
+> index 7272eb78861244..2627791c9006d4 100644
+> --- a/drivers/s390/cio/vfio_ccw_private.h
+> +++ b/drivers/s390/cio/vfio_ccw_private.h
+> @@ -98,7 +98,6 @@ struct vfio_ccw_private {
+>  	struct completion	*completion;
+>  	atomic_t		avail;
+>  	struct mdev_device	*mdev;
+> -	struct notifier_block	nb;
+>  	struct ccw_io_region	*io_region;
+>  	struct mutex		io_mutex;
+>  	struct vfio_ccw_region *region;
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c
+> b/drivers/s390/crypto/vfio_ap_ops.c
+> index a7d2a95796d360..bb1a1677c5c230 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -1226,34 +1226,14 @@ static int vfio_ap_mdev_set_kvm(struct
+> ap_matrix_mdev *matrix_mdev,
+>  	return 0;
+>  }
+>=20
+> -/**
+> - * vfio_ap_mdev_iommu_notifier - IOMMU notifier callback
+> - *
+> - * @nb: The notifier block
+> - * @action: Action to be taken
+> - * @data: data associated with the request
+> - *
+> - * For an UNMAP request, unpin the guest IOVA (the NIB guest address we
+> - * pinned before). Other requests are ignored.
+> - *
+> - * Return: for an UNMAP request, NOFITY_OK; otherwise NOTIFY_DONE.
 > - */
-> -#undef MODULES_VADDR
-> -#define MODULES_VADDR  (((unsigned long)_exiprom + ~PMD_MASK) & PMD_MASK)
-> -#endif
-> -
-> -#ifdef CONFIG_MMU
-> -void *module_alloc(unsigned long size)
-> -{
-> -       gfp_t gfp_mask = GFP_KERNEL;
-> -       void *p;
-> -
-> -       /* Silence the initial allocation */
-> -       if (IS_ENABLED(CONFIG_ARM_MODULE_PLTS))
-> -               gfp_mask |= __GFP_NOWARN;
-> -
-> -       p = __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
-> -                               gfp_mask, PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
-> -                               __builtin_return_address(0));
-> -       if (!IS_ENABLED(CONFIG_ARM_MODULE_PLTS) || p)
-> -               return p;
-> -       return __vmalloc_node_range(size, 1,  VMALLOC_START, VMALLOC_END,
-> -                               GFP_KERNEL, PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
-> -                               __builtin_return_address(0));
-> -}
-> -#endif
-> -
->  bool module_init_section(const char *name)
+> -static int vfio_ap_mdev_iommu_notifier(struct notifier_block *nb,
+> -				       unsigned long action, void *data)
+> +static void vfio_ap_mdev_dma_unmap(struct vfio_device *vdev, u64 iova,
+> +				   u64 length)
 >  {
->         return strstarts(name, ".init") ||
-> diff --git a/arch/arm/kernel/module_alloc.c b/arch/arm/kernel/module_alloc.c
-> new file mode 100644
-> index 000000000000..c3cfb2b60575
-> --- /dev/null
-> +++ b/arch/arm/kernel/module_alloc.c
-> @@ -0,0 +1,42 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2002 Russell King.
-> + * Modified for nommu by Hyok S. Choi
-> + *
-> + * Module allocation method suggested by Andi Kleen.
-> + */
-> +
-> +#include <linux/mm.h>
-> +#include <linux/vmalloc.h>
-> +
-> +#ifdef CONFIG_XIP_KERNEL
-> +/*
-> + * The XIP kernel text is mapped in the module area for modules and
-> + * some other stuff to work without any indirect relocations.
-> + * MODULES_VADDR is redefined here and not in asm/memory.h to avoid
-> + * recompiling the whole kernel when CONFIG_XIP_KERNEL is turned on/off.
-> + */
-> +#undef MODULES_VADDR
-> +#define MODULES_VADDR  (((unsigned long)_exiprom + ~PMD_MASK) & PMD_MASK)
-> +#endif
-> +
-> +#ifdef CONFIG_MMU
-> +void *module_alloc(unsigned long size)
-> +{
-> +       gfp_t gfp_mask = GFP_KERNEL;
-> +       void *p;
-> +
-> +       /* Silence the initial allocation */
-> +       if (IS_ENABLED(CONFIG_ARM_MODULE_PLTS))
-> +               gfp_mask |= __GFP_NOWARN;
-> +
-> +       p = __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
-> +                               gfp_mask, PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
-> +                               __builtin_return_address(0));
-> +       if (!IS_ENABLED(CONFIG_ARM_MODULE_PLTS) || p)
-> +               return p;
-> +       return __vmalloc_node_range(size, 1,  VMALLOC_START, VMALLOC_END,
-> +                               GFP_KERNEL, PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
-> +                               __builtin_return_address(0));
-> +}
-> +#endif
-> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-> index fa7981d0d917..d61c02da857e 100644
-> --- a/arch/arm64/kernel/Makefile
-> +++ b/arch/arm64/kernel/Makefile
-> @@ -43,6 +43,11 @@ obj-$(CONFIG_COMPAT)                 += sigreturn32.o
->  obj-$(CONFIG_KUSER_HELPERS)            += kuser32.o
->  obj-$(CONFIG_FUNCTION_TRACER)          += ftrace.o entry-ftrace.o
->  obj-$(CONFIG_MODULES)                  += module.o
-> +ifeq ($(CONFIG_MODULES),y)
-> +obj-y                                  += module_alloc.o
-> +else
-> +obj-$(CONFIG_KPROBES)                  += module_alloc.o
-> +endif
->  obj-$(CONFIG_ARM64_MODULE_PLTS)                += module-plts.o
->  obj-$(CONFIG_PERF_EVENTS)              += perf_regs.o perf_callchain.o
->  obj-$(CONFIG_HW_PERF_EVENTS)           += perf_event.o
-> diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-> index f2d4bb14bfab..d2a979746da0 100644
-> --- a/arch/arm64/kernel/module.c
-> +++ b/arch/arm64/kernel/module.c
-> @@ -20,53 +20,6 @@
->  #include <asm/insn.h>
->  #include <asm/sections.h>
->
-> -void *module_alloc(unsigned long size)
-> -{
-> -       u64 module_alloc_end = module_alloc_base + MODULES_VSIZE;
-> -       gfp_t gfp_mask = GFP_KERNEL;
-> -       void *p;
+> -	struct ap_matrix_mdev *matrix_mdev;
 > -
-> -       /* Silence the initial allocation */
-> -       if (IS_ENABLED(CONFIG_ARM64_MODULE_PLTS))
-> -               gfp_mask |= __GFP_NOWARN;
+> -	matrix_mdev =3D container_of(nb, struct ap_matrix_mdev,
+> iommu_notifier);
 > -
-> -       if (IS_ENABLED(CONFIG_KASAN_GENERIC) ||
-> -           IS_ENABLED(CONFIG_KASAN_SW_TAGS))
-> -               /* don't exceed the static module region - see below */
-> -               module_alloc_end = MODULES_END;
+> -	if (action =3D=3D VFIO_IOMMU_NOTIFY_DMA_UNMAP) {
+> -		struct vfio_iommu_type1_dma_unmap *unmap =3D data;
+> -		unsigned long g_pfn =3D unmap->iova >> PAGE_SHIFT;
 > -
-> -       p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
-> -                               module_alloc_end, gfp_mask, PAGE_KERNEL, VM_DEFER_KMEMLEAK,
-> -                               NUMA_NO_NODE, __builtin_return_address(0));
-> -
-> -       if (!p && IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
-> -           (IS_ENABLED(CONFIG_KASAN_VMALLOC) ||
-> -            (!IS_ENABLED(CONFIG_KASAN_GENERIC) &&
-> -             !IS_ENABLED(CONFIG_KASAN_SW_TAGS))))
-> -               /*
-> -                * KASAN without KASAN_VMALLOC can only deal with module
-> -                * allocations being served from the reserved module region,
-> -                * since the remainder of the vmalloc region is already
-> -                * backed by zero shadow pages, and punching holes into it
-> -                * is non-trivial. Since the module region is not randomized
-> -                * when KASAN is enabled without KASAN_VMALLOC, it is even
-> -                * less likely that the module region gets exhausted, so we
-> -                * can simply omit this fallback in that case.
-> -                */
-> -               p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
-> -                               module_alloc_base + SZ_2G, GFP_KERNEL,
-> -                               PAGE_KERNEL, 0, NUMA_NO_NODE,
-> -                               __builtin_return_address(0));
-> -
-> -       if (p && (kasan_alloc_module_shadow(p, size, gfp_mask) < 0)) {
-> -               vfree(p);
-> -               return NULL;
-> -       }
-> -
-> -       /* Memory is intended to be executable, reset the pointer tag. */
-> -       return kasan_reset_tag(p);
-> -}
-> -
->  enum aarch64_reloc_op {
->         RELOC_OP_NONE,
->         RELOC_OP_ABS,
-> diff --git a/arch/arm64/kernel/module_alloc.c b/arch/arm64/kernel/module_alloc.c
-> new file mode 100644
-> index 000000000000..0340c8c0b782
-> --- /dev/null
-> +++ b/arch/arm64/kernel/module_alloc.c
-> @@ -0,0 +1,57 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2012 ARM Limited
-> + *
-> + * Author: Will Deacon <will.deacon@arm.com>
-> + */
-> +
-> +#include <linux/mm.h>
-> +#include <linux/moduleloader.h>
-> +#include <linux/vmalloc.h>
-> +
-> +void *module_alloc(unsigned long size)
-> +{
-> +       u64 module_alloc_end = module_alloc_base + MODULES_VSIZE;
-> +       gfp_t gfp_mask = GFP_KERNEL;
-> +       void *p;
-> +
-> +       /* Silence the initial allocation */
-> +       if (IS_ENABLED(CONFIG_ARM64_MODULE_PLTS))
-> +               gfp_mask |= __GFP_NOWARN;
-> +
-> +       if (IS_ENABLED(CONFIG_KASAN_GENERIC) ||
-> +           IS_ENABLED(CONFIG_KASAN_SW_TAGS))
-> +               /* don't exceed the static module region - see below */
-> +               module_alloc_end = MODULES_END;
-> +
-> +       p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
-> +                               module_alloc_end, gfp_mask, PAGE_KERNEL, VM_DEFER_KMEMLEAK,
-> +                               NUMA_NO_NODE, __builtin_return_address(0));
-> +
-> +       if (!p && IS_ENABLED(CONFIG_ARM64_MODULE_PLTS) &&
-> +           (IS_ENABLED(CONFIG_KASAN_VMALLOC) ||
-> +            (!IS_ENABLED(CONFIG_KASAN_GENERIC) &&
-> +             !IS_ENABLED(CONFIG_KASAN_SW_TAGS))))
-> +               /*
-> +                * KASAN without KASAN_VMALLOC can only deal with module
-> +                * allocations being served from the reserved module region,
-> +                * since the remainder of the vmalloc region is already
-> +                * backed by zero shadow pages, and punching holes into it
-> +                * is non-trivial. Since the module region is not randomized
-> +                * when KASAN is enabled without KASAN_VMALLOC, it is even
-> +                * less likely that the module region gets exhausted, so we
-> +                * can simply omit this fallback in that case.
-> +                */
-> +               p = __vmalloc_node_range(size, MODULE_ALIGN, module_alloc_base,
-> +                               module_alloc_base + SZ_2G, GFP_KERNEL,
-> +                               PAGE_KERNEL, 0, NUMA_NO_NODE,
-> +                               __builtin_return_address(0));
-> +
-> +       if (p && (kasan_alloc_module_shadow(p, size, gfp_mask) < 0)) {
-> +               vfree(p);
-> +               return NULL;
-> +       }
-> +
-> +       /* Memory is intended to be executable, reset the pointer tag. */
-> +       return kasan_reset_tag(p);
-> +}
-> diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
-> index 7c96282bff2e..cb9297b613a1 100644
-> --- a/arch/mips/kernel/Makefile
-> +++ b/arch/mips/kernel/Makefile
-> @@ -38,6 +38,11 @@ obj-$(CONFIG_SYNC_R4K)               += sync-r4k.o
->  obj-$(CONFIG_DEBUG_FS)         += segment.o
->  obj-$(CONFIG_STACKTRACE)       += stacktrace.o
->  obj-$(CONFIG_MODULES)          += module.o
-> +ifeq ($(CONFIG_MODULES),y)
-> +obj-y                          += module_alloc.o
-> +else
-> +obj-$(CONFIG_KPROBES)          += module_alloc.o
-> +endif
->
->  obj-$(CONFIG_FTRACE_SYSCALLS)  += ftrace.o
->  obj-$(CONFIG_FUNCTION_TRACER)  += mcount.o ftrace.o
-> diff --git a/arch/mips/kernel/module.c b/arch/mips/kernel/module.c
-> index 14f46d17500a..214b2d1868a5 100644
-> --- a/arch/mips/kernel/module.c
-> +++ b/arch/mips/kernel/module.c
-> @@ -31,15 +31,6 @@ struct mips_hi16 {
->  static LIST_HEAD(dbe_list);
->  static DEFINE_SPINLOCK(dbe_lock);
->
-> -#ifdef MODULE_START
-> -void *module_alloc(unsigned long size)
-> -{
-> -       return __vmalloc_node_range(size, 1, MODULE_START, MODULE_END,
-> -                               GFP_KERNEL, PAGE_KERNEL, 0, NUMA_NO_NODE,
-> -                               __builtin_return_address(0));
-> -}
-> -#endif
-> -
->  static void apply_r_mips_32(u32 *location, u32 base, Elf_Addr v)
->  {
->         *location = base + v;
-> diff --git a/arch/mips/kernel/module_alloc.c b/arch/mips/kernel/module_alloc.c
-> new file mode 100644
-> index 000000000000..582ab5ed8916
-> --- /dev/null
-> +++ b/arch/mips/kernel/module_alloc.c
-> @@ -0,0 +1,18 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + *  Copyright (C) 2001 Rusty Russell.
-> + *  Copyright (C) 2003, 2004 Ralf Baechle (ralf@linux-mips.org)
-> + *  Copyright (C) 2005 Thiemo Seufer
-> + */
-> +
-> +#include <linux/mm.h>
-> +#include <linux/vmalloc.h>
-> +
-> +#ifdef MODULE_START
-> +void *module_alloc(unsigned long size)
-> +{
-> +       return __vmalloc_node_range(size, 1, MODULE_START, MODULE_END,
-> +                               GFP_KERNEL, PAGE_KERNEL, 0, NUMA_NO_NODE,
-> +                               __builtin_return_address(0));
-> +}
-> +#endif
-> diff --git a/arch/parisc/kernel/Makefile b/arch/parisc/kernel/Makefile
-> index d0bfac89a842..cd38083ae077 100644
-> --- a/arch/parisc/kernel/Makefile
-> +++ b/arch/parisc/kernel/Makefile
-> @@ -25,6 +25,11 @@ obj-$(CONFIG_SMP)    += smp.o
->  obj-$(CONFIG_PA11)     += pci-dma.o
->  obj-$(CONFIG_PCI)      += pci.o
->  obj-$(CONFIG_MODULES)  += module.o
-> +ifeq ($(CONFIG_MODULES),y)
-> +obj-y                  += module_alloc.o
-> +else
-> +obj-$(CONFIG_KPROBES)  += module_alloc.o
-> +endif
->  obj-$(CONFIG_64BIT)    += sys_parisc32.o signal32.o
->  obj-$(CONFIG_STACKTRACE)+= stacktrace.o
->  obj-$(CONFIG_AUDIT)    += audit.o
-> diff --git a/arch/parisc/kernel/module.c b/arch/parisc/kernel/module.c
-> index 7df140545b22..c81e63e2549b 100644
-> --- a/arch/parisc/kernel/module.c
-> +++ b/arch/parisc/kernel/module.c
-> @@ -192,17 +192,6 @@ static inline int reassemble_22(int as22)
->                 ((as22 & 0x0003ff) << 3));
+> -		vfio_unpin_pages(&matrix_mdev->vdev, &g_pfn, 1);
+> -		return NOTIFY_OK;
+> -	}
+> +	struct ap_matrix_mdev *matrix_mdev =3D
+> +		container_of(vdev, struct ap_matrix_mdev, vdev);
+> +	unsigned long g_pfn =3D iova >> PAGE_SHIFT;
+>=20
+> -	return NOTIFY_DONE;
+> +	vfio_unpin_pages(&matrix_mdev->vdev, &g_pfn, 1);
 >  }
->
-> -void *module_alloc(unsigned long size)
-> -{
-> -       /* using RWX means less protection for modules, but it's
-> -        * easier than trying to map the text, data, init_text and
-> -        * init_data correctly */
-> -       return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
-> -                                   GFP_KERNEL,
-> -                                   PAGE_KERNEL_RWX, 0, NUMA_NO_NODE,
-> -                                   __builtin_return_address(0));
-> -}
-> -
->  #ifndef CONFIG_64BIT
->  static inline unsigned long count_gots(const Elf_Rela *rela, unsigned long n)
+>=20
+>  /**
+> @@ -1380,27 +1360,11 @@ static int vfio_ap_mdev_open_device(struct
+> vfio_device *vdev)
 >  {
-> diff --git a/arch/parisc/kernel/module_alloc.c b/arch/parisc/kernel/module_alloc.c
-> new file mode 100644
-> index 000000000000..4e4e4ce1132e
-> --- /dev/null
-> +++ b/arch/parisc/kernel/module_alloc.c
-> @@ -0,0 +1,23 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Linux/PA-RISC Project
-> + * Copyright (C) 2003 Randolph Chung <tausq at debian . org>
-> + * Copyright (C) 2008 Helge Deller <deller@gmx.de>
-> + */
-> +
-> +#include <linux/mm.h>
-> +#include <linux/moduleloader.h>
-> +#include <linux/vmalloc.h>
-> +
-> +void *module_alloc(unsigned long size)
-> +{
-> +       /*
-> +        * Using RWX means less protection for modules, but it's
-> +        * easier than trying to map the text, data, init_text and
-> +        * init_data correctly.
-> +        */
-> +       return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
-> +                                   GFP_KERNEL,
-> +                                   PAGE_KERNEL_RWX, 0, NUMA_NO_NODE,
-> +                                   __builtin_return_address(0));
-> +}
-> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-> index 2e2a2a9bcf43..5a811cdf230b 100644
-> --- a/arch/powerpc/kernel/Makefile
-> +++ b/arch/powerpc/kernel/Makefile
-> @@ -103,6 +103,11 @@ obj-$(CONFIG_HIBERNATION)  += swsusp_$(BITS).o
->  endif
->  obj64-$(CONFIG_HIBERNATION)    += swsusp_asm64.o
->  obj-$(CONFIG_MODULES)          += module.o module_$(BITS).o
-> +ifeq ($(CONFIG_MODULES),y)
-> +obj-y                          += module_alloc.o
-> +else
-> +obj-$(CONFIG_KPROBES)          += module_alloc.o
-> +endif
->  obj-$(CONFIG_44x)              += cpu_setup_44x.o
->  obj-$(CONFIG_PPC_FSL_BOOK3E)   += cpu_setup_fsl_booke.o
->  obj-$(CONFIG_PPC_DOORBELL)     += dbell.o
-> diff --git a/arch/powerpc/kernel/module.c b/arch/powerpc/kernel/module.c
-> index f6d6ae0a1692..b30e00964a60 100644
-> --- a/arch/powerpc/kernel/module.c
-> +++ b/arch/powerpc/kernel/module.c
-> @@ -88,40 +88,3 @@ int module_finalize(const Elf_Ehdr *hdr,
->
->         return 0;
+>  	struct ap_matrix_mdev *matrix_mdev =3D
+>  		container_of(vdev, struct ap_matrix_mdev, vdev);
+> -	unsigned long events;
+> -	int ret;
+>=20
+>  	if (!vdev->kvm)
+>  		return -EINVAL;
+>=20
+> -	ret =3D vfio_ap_mdev_set_kvm(matrix_mdev, vdev->kvm);
+> -	if (ret)
+> -		return ret;
+> -
+> -	matrix_mdev->iommu_notifier.notifier_call =3D
+> vfio_ap_mdev_iommu_notifier;
+> -	events =3D VFIO_IOMMU_NOTIFY_DMA_UNMAP;
+> -	ret =3D vfio_register_notifier(vdev, VFIO_IOMMU_NOTIFY, &events,
+> -				     &matrix_mdev->iommu_notifier);
+> -	if (ret)
+> -		goto err_kvm;
+> -	return 0;
+> -
+> -err_kvm:
+> -	vfio_ap_mdev_unset_kvm(matrix_mdev);
+> -	return ret;
+> +	return vfio_ap_mdev_set_kvm(matrix_mdev, vdev->kvm);
 >  }
-> -
-> -static __always_inline void *
-> -__module_alloc(unsigned long size, unsigned long start, unsigned long end, bool nowarn)
-> -{
-> -       pgprot_t prot = strict_module_rwx_enabled() ? PAGE_KERNEL : PAGE_KERNEL_EXEC;
-> -       gfp_t gfp = GFP_KERNEL | (nowarn ? __GFP_NOWARN : 0);
-> -
-> -       /*
-> -        * Don't do huge page allocations for modules yet until more testing
-> -        * is done. STRICT_MODULE_RWX may require extra work to support this
-> -        * too.
-> -        */
-> -       return __vmalloc_node_range(size, 1, start, end, gfp, prot,
-> -                                   VM_FLUSH_RESET_PERMS,
-> -                                   NUMA_NO_NODE, __builtin_return_address(0));
-> -}
-> -
-> -void *module_alloc(unsigned long size)
-> -{
-> -#ifdef MODULES_VADDR
-> -       unsigned long limit = (unsigned long)_etext - SZ_32M;
-> -       void *ptr = NULL;
-> -
-> -       BUILD_BUG_ON(TASK_SIZE > MODULES_VADDR);
-> -
-> -       /* First try within 32M limit from _etext to avoid branch trampolines */
-> -       if (MODULES_VADDR < PAGE_OFFSET && MODULES_END > limit)
-> -               ptr = __module_alloc(size, limit, MODULES_END, true);
-> -
-> -       if (!ptr)
-> -               ptr = __module_alloc(size, MODULES_VADDR, MODULES_END, false);
-> -
-> -       return ptr;
-> -#else
-> -       return __module_alloc(size, VMALLOC_START, VMALLOC_END, false);
-> -#endif
-> -}
-> diff --git a/arch/powerpc/kernel/module_alloc.c b/arch/powerpc/kernel/module_alloc.c
-> new file mode 100644
-> index 000000000000..48541c27ce46
-> --- /dev/null
-> +++ b/arch/powerpc/kernel/module_alloc.c
-> @@ -0,0 +1,47 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + *  Kernel module help for powerpc.
-> + *  Copyright (C) 2001, 2003 Rusty Russell IBM Corporation.
-> + *  Copyright (C) 2008 Freescale Semiconductor, Inc.
-> + */
-> +
-> +#include <linux/mm.h>
-> +#include <linux/moduleloader.h>
-> +#include <linux/vmalloc.h>
-> +
-> +static __always_inline void *
-> +__module_alloc(unsigned long size, unsigned long start, unsigned long end, bool nowarn)
-> +{
-> +       pgprot_t prot = strict_module_rwx_enabled() ? PAGE_KERNEL : PAGE_KERNEL_EXEC;
-> +       gfp_t gfp = GFP_KERNEL | (nowarn ? __GFP_NOWARN : 0);
-> +
-> +       /*
-> +        * Don't do huge page allocations for modules yet until more testing
-> +        * is done. STRICT_MODULE_RWX may require extra work to support this
-> +        * too.
-> +        */
-> +       return __vmalloc_node_range(size, 1, start, end, gfp, prot,
-> +                                   VM_FLUSH_RESET_PERMS,
-> +                                   NUMA_NO_NODE, __builtin_return_address(0));
-> +}
-> +
-> +void *module_alloc(unsigned long size)
-> +{
-> +#ifdef MODULES_VADDR
-> +       unsigned long limit = (unsigned long)_etext - SZ_32M;
-> +       void *ptr = NULL;
-> +
-> +       BUILD_BUG_ON(TASK_SIZE > MODULES_VADDR);
-> +
-> +       /* First try within 32M limit from _etext to avoid branch trampolines */
-> +       if (MODULES_VADDR < PAGE_OFFSET && MODULES_END > limit)
-> +               ptr = __module_alloc(size, limit, MODULES_END, true);
-> +
-> +       if (!ptr)
-> +               ptr = __module_alloc(size, MODULES_VADDR, MODULES_END, false);
-> +
-> +       return ptr;
-> +#else
-> +       return __module_alloc(size, VMALLOC_START, VMALLOC_END, false);
-> +#endif
-> +}
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index c71d6591d539..7af346ae575e 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
-> @@ -61,6 +61,11 @@ obj-$(CONFIG_SMP)            += cpu_ops.o
->
->  obj-$(CONFIG_RISCV_BOOT_SPINWAIT) += cpu_ops_spinwait.o
->  obj-$(CONFIG_MODULES)          += module.o
-> +ifeq ($(CONFIG_MODULES),y)
-> +obj-y                          += module_alloc.o
-> +else
-> +obj-$(CONFIG_KPROBES)          += module_alloc.o
-> +endif
->  obj-$(CONFIG_MODULE_SECTIONS)  += module-sections.o
->
->  obj-$(CONFIG_CPU_PM)           += suspend_entry.o suspend.o
-> diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
-> index 91fe16bfaa07..1621d5e458f7 100644
-> --- a/arch/riscv/kernel/module.c
-> +++ b/arch/riscv/kernel/module.c
-> @@ -419,16 +419,6 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
->         return 0;
+>=20
+>  static void vfio_ap_mdev_close_device(struct vfio_device *vdev)
+> @@ -1408,8 +1372,6 @@ static void vfio_ap_mdev_close_device(struct
+> vfio_device *vdev)
+>  	struct ap_matrix_mdev *matrix_mdev =3D
+>  		container_of(vdev, struct ap_matrix_mdev, vdev);
+>=20
+> -	vfio_unregister_notifier(vdev, VFIO_IOMMU_NOTIFY,
+> -				 &matrix_mdev->iommu_notifier);
+>  	vfio_ap_mdev_unset_kvm(matrix_mdev);
 >  }
->
-> -#if defined(CONFIG_MMU) && defined(CONFIG_64BIT)
-> -void *module_alloc(unsigned long size)
-> -{
-> -       return __vmalloc_node_range(size, 1, MODULES_VADDR,
-> -                                   MODULES_END, GFP_KERNEL,
-> -                                   PAGE_KERNEL, 0, NUMA_NO_NODE,
-> -                                   __builtin_return_address(0));
-> -}
-> -#endif
-> -
->  static const Elf_Shdr *find_section(const Elf_Ehdr *hdr,
->                                     const Elf_Shdr *sechdrs,
->                                     const char *name)
-> diff --git a/arch/riscv/kernel/module_alloc.c b/arch/riscv/kernel/module_alloc.c
-> new file mode 100644
-> index 000000000000..ed87ed048713
-> --- /dev/null
-> +++ b/arch/riscv/kernel/module_alloc.c
-> @@ -0,0 +1,19 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + *  Copyright (C) 2017 Zihao Yu
-> + */
-> +
-> +#include <linux/mm.h>
-> +#include <linux/moduleloader.h>
-> +#include <linux/vmalloc.h>
-> +#include <asm/sections.h>
-> +
-> +#if defined(CONFIG_MMU) && defined(CONFIG_64BIT)
-> +void *module_alloc(unsigned long size)
-> +{
-> +       return __vmalloc_node_range(size, 1, MODULES_VADDR,
-> +                                   MODULES_END, GFP_KERNEL,
-> +                                   PAGE_KERNEL, 0, NUMA_NO_NODE,
-> +                                   __builtin_return_address(0));
-> +}
-> +#endif
-> diff --git a/arch/s390/kernel/Makefile b/arch/s390/kernel/Makefile
-> index 27d6b3c7aa06..71e73e34b441 100644
-> --- a/arch/s390/kernel/Makefile
-> +++ b/arch/s390/kernel/Makefile
-> @@ -48,6 +48,11 @@ obj-$(CONFIG_SYSFS)          += nospec-sysfs.o
->  CFLAGS_REMOVE_nospec-branch.o  += $(CC_FLAGS_EXPOLINE)
->
->  obj-$(CONFIG_MODULES)          += module.o
-> +ifeq ($(CONFIG_MODULES),y)
-> +obj-y                          += module_alloc.o
-> +else
-> +obj-$(CONFIG_KPROBES)          += module_alloc.o
-> +endif
->  obj-$(CONFIG_SCHED_TOPOLOGY)   += topology.o
->  obj-$(CONFIG_NUMA)             += numa.o
->  obj-$(CONFIG_AUDIT)            += audit.o
-> diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
-> index 26125a9c436d..e15f09fa50e2 100644
-> --- a/arch/s390/kernel/module.c
-> +++ b/arch/s390/kernel/module.c
-> @@ -35,23 +35,6 @@
->
->  #define PLT_ENTRY_SIZE 22
->
-> -void *module_alloc(unsigned long size)
-> -{
-> -       gfp_t gfp_mask = GFP_KERNEL;
-> -       void *p;
-> -
-> -       if (PAGE_ALIGN(size) > MODULES_LEN)
-> -               return NULL;
-> -       p = __vmalloc_node_range(size, MODULE_ALIGN, MODULES_VADDR, MODULES_END,
-> -                                gfp_mask, PAGE_KERNEL_EXEC, VM_DEFER_KMEMLEAK, NUMA_NO_NODE,
-> -                                __builtin_return_address(0));
-> -       if (p && (kasan_alloc_module_shadow(p, size, gfp_mask) < 0)) {
-> -               vfree(p);
-> -               return NULL;
-> -       }
-> -       return p;
-> -}
-> -
->  #ifdef CONFIG_FUNCTION_TRACER
->  void module_arch_cleanup(struct module *mod)
->  {
-> diff --git a/arch/s390/kernel/module_alloc.c b/arch/s390/kernel/module_alloc.c
-> new file mode 100644
-> index 000000000000..e4c4175fb759
-> --- /dev/null
-> +++ b/arch/s390/kernel/module_alloc.c
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + *  Kernel module help for s390.
-> + *
-> + *  S390 version
-> + *    Copyright IBM Corp. 2002, 2003
-> + *    Author(s): Arnd Bergmann (arndb@de.ibm.com)
-> + *              Martin Schwidefsky (schwidefsky@de.ibm.com)
-> + *
-> + *  based on i386 version
-> + *    Copyright (C) 2001 Rusty Russell.
-> + */
-> +
-> +#include <linux/mm.h>
-> +#include <linux/moduleloader.h>
-> +#include <linux/vmalloc.h>
-> +
-> +void *module_alloc(unsigned long size)
-> +{
-> +       gfp_t gfp_mask = GFP_KERNEL;
-> +       void *p;
-> +
-> +       if (PAGE_ALIGN(size) > MODULES_LEN)
-> +               return NULL;
-> +       p = __vmalloc_node_range(size, MODULE_ALIGN, MODULES_VADDR, MODULES_END,
-> +                                gfp_mask, PAGE_KERNEL_EXEC, VM_DEFER_KMEMLEAK, NUMA_NO_NODE,
-> +                                __builtin_return_address(0));
-> +       if (p && (kasan_alloc_module_shadow(p, size, gfp_mask) < 0)) {
-> +               vfree(p);
-> +               return NULL;
-> +       }
-> +       return p;
-> +}
-> diff --git a/arch/sparc/kernel/Makefile b/arch/sparc/kernel/Makefile
-> index d3a0e072ebe8..53905c00a094 100644
-> --- a/arch/sparc/kernel/Makefile
-> +++ b/arch/sparc/kernel/Makefile
-> @@ -89,6 +89,11 @@ obj-$(CONFIG_SUN_PM)      += apc.o pmc.o
->
->  obj-$(CONFIG_MODULES)     += module.o
->  obj-$(CONFIG_MODULES)     += sparc_ksyms.o
-> +ifeq ($(CONFIG_MODULES),y)
-> +obj-y                     += module_alloc.o
-> +else
-> +obj-$(CONFIG_KPROBES)     += module_alloc.o
-> +endif
->  obj-$(CONFIG_SPARC_LED)   += led.o
->  obj-$(CONFIG_KGDB)        += kgdb_$(BITS).o
->
-> diff --git a/arch/sparc/kernel/module.c b/arch/sparc/kernel/module.c
-> index df39580f398d..f2babc69f189 100644
-> --- a/arch/sparc/kernel/module.c
-> +++ b/arch/sparc/kernel/module.c
-> @@ -21,36 +21,6 @@
->
->  #include "entry.h"
->
-> -#ifdef CONFIG_SPARC64
-> -
-> -#include <linux/jump_label.h>
-> -
-> -static void *module_map(unsigned long size)
-> -{
-> -       if (PAGE_ALIGN(size) > MODULES_LEN)
-> -               return NULL;
-> -       return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
-> -                               GFP_KERNEL, PAGE_KERNEL, 0, NUMA_NO_NODE,
-> -                               __builtin_return_address(0));
-> -}
-> -#else
-> -static void *module_map(unsigned long size)
-> -{
-> -       return vmalloc(size);
-> -}
-> -#endif /* CONFIG_SPARC64 */
-> -
-> -void *module_alloc(unsigned long size)
-> -{
-> -       void *ret;
-> -
-> -       ret = module_map(size);
-> -       if (ret)
-> -               memset(ret, 0, size);
-> -
-> -       return ret;
-> -}
-> -
->  /* Make generic code ignore STT_REGISTER dummy undefined symbols.  */
->  int module_frob_arch_sections(Elf_Ehdr *hdr,
->                               Elf_Shdr *sechdrs,
-> diff --git a/arch/sparc/kernel/module_alloc.c b/arch/sparc/kernel/module_alloc.c
-> new file mode 100644
-> index 000000000000..4bacf8cff012
-> --- /dev/null
-> +++ b/arch/sparc/kernel/module_alloc.c
-> @@ -0,0 +1,39 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Kernel module help for sparc64.
-> + *
-> + * Copyright (C) 2001 Rusty Russell.
-> + * Copyright (C) 2002 David S. Miller.
-> + */
-> +
-> +#include <linux/mm.h>
-> +#include <linux/moduleloader.h>
-> +#include <linux/vmalloc.h>
-> +
-> +#ifdef CONFIG_SPARC64
-> +#include <linux/jump_label.h>
-> +
-> +static void *module_map(unsigned long size)
-> +{
-> +       if (PAGE_ALIGN(size) > MODULES_LEN)
-> +               return NULL;
-> +       return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
-> +                               GFP_KERNEL, PAGE_KERNEL, 0, NUMA_NO_NODE,
-> +                               __builtin_return_address(0));
-> +}
-> +#else
-> +static void *module_map(unsigned long size)
-> +{
-> +       return vmalloc(size);
-> +}
-> +#endif /* CONFIG_SPARC64 */
-> +
-> +void *module_alloc(unsigned long size)
-> +{
-> +       void *ret;
-> +
-> +       ret = module_map(size);
-> +       if (ret)
-> +               memset(ret, 0, size);
-> +
-> +       return ret;
-> +}
-> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> index 03364dc40d8d..1f0304140f44 100644
-> --- a/arch/x86/kernel/Makefile
-> +++ b/arch/x86/kernel/Makefile
-> @@ -108,6 +108,11 @@ obj-$(CONFIG_KEXEC_FILE)   += kexec-bzimage64.o
->  obj-$(CONFIG_CRASH_DUMP)       += crash_dump_$(BITS).o
->  obj-y                          += kprobes/
->  obj-$(CONFIG_MODULES)          += module.o
-> +ifeq ($(CONFIG_MODULES),y)
-> +obj-y                          += module_alloc.o
-> +else
-> +obj-$(CONFIG_KPROBES)          += module_alloc.o
-> +endif
->  obj-$(CONFIG_X86_32)           += doublefault_32.o
->  obj-$(CONFIG_KGDB)             += kgdb.o
->  obj-$(CONFIG_VM86)             += vm86_32.o
-> diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
-> index b98ffcf4d250..40bb10b5a68d 100644
-> --- a/arch/x86/kernel/module.c
-> +++ b/arch/x86/kernel/module.c
-> @@ -36,56 +36,6 @@ do {                                                 \
->  } while (0)
->  #endif
->
-> -#ifdef CONFIG_RANDOMIZE_BASE
-> -static unsigned long module_load_offset;
-> -
-> -/* Mutex protects the module_load_offset. */
-> -static DEFINE_MUTEX(module_kaslr_mutex);
-> -
-> -static unsigned long int get_module_load_offset(void)
-> -{
-> -       if (kaslr_enabled()) {
-> -               mutex_lock(&module_kaslr_mutex);
-> -               /*
-> -                * Calculate the module_load_offset the first time this
-> -                * code is called. Once calculated it stays the same until
-> -                * reboot.
-> -                */
-> -               if (module_load_offset == 0)
-> -                       module_load_offset =
-> -                               (get_random_int() % 1024 + 1) * PAGE_SIZE;
-> -               mutex_unlock(&module_kaslr_mutex);
-> -       }
-> -       return module_load_offset;
-> -}
-> -#else
-> -static unsigned long int get_module_load_offset(void)
-> -{
-> -       return 0;
-> -}
-> -#endif
-> -
-> -void *module_alloc(unsigned long size)
-> -{
-> -       gfp_t gfp_mask = GFP_KERNEL;
-> -       void *p;
-> -
-> -       if (PAGE_ALIGN(size) > MODULES_LEN)
-> -               return NULL;
-> -
-> -       p = __vmalloc_node_range(size, MODULE_ALIGN,
-> -                                   MODULES_VADDR + get_module_load_offset(),
-> -                                   MODULES_END, gfp_mask,
-> -                                   PAGE_KERNEL, VM_DEFER_KMEMLEAK, NUMA_NO_NODE,
-> -                                   __builtin_return_address(0));
-> -       if (p && (kasan_alloc_module_shadow(p, size, gfp_mask) < 0)) {
-> -               vfree(p);
-> -               return NULL;
-> -       }
-> -
-> -       return p;
-> -}
-> -
->  #ifdef CONFIG_X86_32
->  int apply_relocate(Elf32_Shdr *sechdrs,
->                    const char *strtab,
-> diff --git a/arch/x86/kernel/module_alloc.c b/arch/x86/kernel/module_alloc.c
-> new file mode 100644
-> index 000000000000..a7df2af1467a
-> --- /dev/null
-> +++ b/arch/x86/kernel/module_alloc.c
-> @@ -0,0 +1,61 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + *  Kernel module help for x86.
-> + *  Copyright (C) 2001 Rusty Russell.
-> + */
-> +
-> +#include <linux/mm.h>
-> +#include <linux/moduleloader.h>
-> +#include <linux/random.h>
-> +#include <linux/vmalloc.h>
-> +#include <asm/setup.h>
-> +
-> +#ifdef CONFIG_RANDOMIZE_BASE
-> +static unsigned long module_load_offset;
-> +
-> +/* Mutex protects the module_load_offset. */
-> +static DEFINE_MUTEX(module_kaslr_mutex);
-> +
-> +static unsigned long get_module_load_offset(void)
-> +{
-> +       if (kaslr_enabled()) {
-> +               mutex_lock(&module_kaslr_mutex);
-> +               /*
-> +                * Calculate the module_load_offset the first time this
-> +                * code is called. Once calculated it stays the same until
-> +                * reboot.
-> +                */
-> +               if (module_load_offset == 0)
-> +                       module_load_offset =
-> +                               (get_random_int() % 1024 + 1) * PAGE_SIZE;
-> +               mutex_unlock(&module_kaslr_mutex);
-> +       }
-> +       return module_load_offset;
-> +}
-> +#else
-> +static unsigned long get_module_load_offset(void)
-> +{
-> +       return 0;
-> +}
-> +#endif
-> +
-> +void *module_alloc(unsigned long size)
-> +{
-> +       gfp_t gfp_mask = GFP_KERNEL;
-> +       void *p;
-> +
-> +       if (PAGE_ALIGN(size) > MODULES_LEN)
-> +               return NULL;
-> +
-> +       p = __vmalloc_node_range(size, MODULE_ALIGN,
-> +                                   MODULES_VADDR + get_module_load_offset(),
-> +                                   MODULES_END, gfp_mask,
-> +                                   PAGE_KERNEL, VM_DEFER_KMEMLEAK, NUMA_NO_NODE,
-> +                                   __builtin_return_address(0));
-> +       if (p && (kasan_alloc_module_shadow(p, size, gfp_mask) < 0)) {
-> +               vfree(p);
-> +               return NULL;
-> +       }
-> +
-> +       return p;
-> +}
-> diff --git a/kernel/Makefile b/kernel/Makefile
-> index 318789c728d3..2981fe42060d 100644
-> --- a/kernel/Makefile
-> +++ b/kernel/Makefile
-> @@ -53,6 +53,11 @@ obj-y += livepatch/
->  obj-y += dma/
->  obj-y += entry/
->  obj-$(CONFIG_MODULES) += module/
-> +ifeq ($(CONFIG_MODULES),y)
-> +obj-y += module_alloc.o
-> +else
-> +obj-$(CONFIG_KPROBES) += module_alloc.o
-> +endif
->
->  obj-$(CONFIG_KCMP) += kcmp.o
->  obj-$(CONFIG_FREEZER) += freezer.o
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index f214f8c088ed..3f9876374cd3 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1569,6 +1569,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
->                 goto out;
->         }
->
-> +#ifdef CONFIG_MODULES
->         /* Check if 'p' is probing a module. */
->         *probed_mod = __module_text_address((unsigned long) p->addr);
->         if (*probed_mod) {
-> @@ -1592,6 +1593,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
->                         ret = -ENOENT;
->                 }
->         }
-> +#endif
-> +
->  out:
->         preempt_enable();
->         jump_label_unlock();
-> @@ -2475,6 +2478,7 @@ int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
->         return 0;
->  }
->
-> +#ifdef CONFIG_MODULES
->  /* Remove all symbols in given area from kprobe blacklist */
->  static void kprobe_remove_area_blacklist(unsigned long start, unsigned long end)
->  {
-> @@ -2492,6 +2496,7 @@ static void kprobe_remove_ksym_blacklist(unsigned long entry)
->  {
->         kprobe_remove_area_blacklist(entry, entry + 1);
->  }
-> +#endif /* CONFIG_MODULES */
->
->  int __weak arch_kprobe_get_kallsym(unsigned int *symnum, unsigned long *value,
->                                    char *type, char *sym)
-> @@ -2557,6 +2562,7 @@ static int __init populate_kprobe_blacklist(unsigned long *start,
->         return ret ? : arch_populate_kprobe_blacklist();
->  }
->
-> +#ifdef CONFIG_MODULES
->  static void add_module_kprobe_blacklist(struct module *mod)
->  {
->         unsigned long start, end;
-> @@ -2658,6 +2664,7 @@ static struct notifier_block kprobe_module_nb = {
->         .notifier_call = kprobes_module_callback,
->         .priority = 0
+>=20
+> @@ -1461,6 +1423,7 @@ static const struct vfio_device_ops
+> vfio_ap_matrix_dev_ops =3D {
+>  	.open_device =3D vfio_ap_mdev_open_device,
+>  	.close_device =3D vfio_ap_mdev_close_device,
+>  	.ioctl =3D vfio_ap_mdev_ioctl,
+> +	.dma_unmap =3D vfio_ap_mdev_dma_unmap,
 >  };
-> +#endif /* CONFIG_MODULES */
->
->  void kprobe_free_init_mem(void)
->  {
-> @@ -2717,8 +2724,11 @@ static int __init init_kprobes(void)
->         err = arch_init_kprobes();
->         if (!err)
->                 err = register_die_notifier(&kprobe_exceptions_nb);
-> +
-> +#ifdef CONFIG_MODULES
->         if (!err)
->                 err = register_module_notifier(&kprobe_module_nb);
-> +#endif
->
->         kprobes_initialized = (err == 0);
->         kprobe_sysctls_init();
-> diff --git a/kernel/module/main.c b/kernel/module/main.c
-> index fed58d30725d..7fa182b78550 100644
-> --- a/kernel/module/main.c
-> +++ b/kernel/module/main.c
-> @@ -1121,16 +1121,6 @@ resolve_symbol_wait(struct module *mod,
->         return ksym;
+>=20
+>  static struct mdev_driver vfio_ap_matrix_driver =3D {
+> diff --git a/drivers/s390/crypto/vfio_ap_private.h
+> b/drivers/s390/crypto/vfio_ap_private.h
+> index a26efd804d0df3..abb59d59f81b20 100644
+> --- a/drivers/s390/crypto/vfio_ap_private.h
+> +++ b/drivers/s390/crypto/vfio_ap_private.h
+> @@ -81,8 +81,6 @@ struct ap_matrix {
+>   * @node:	allows the ap_matrix_mdev struct to be added to a list
+>   * @matrix:	the adapters, usage domains and control domains assigned
+> to the
+>   *		mediated matrix device.
+> - * @iommu_notifier: notifier block used for specifying callback function=
+ for
+> - *		    handling the VFIO_IOMMU_NOTIFY_DMA_UNMAP even
+>   * @kvm:	the struct holding guest's state
+>   * @pqap_hook:	the function pointer to the interception handler for
+> the
+>   *		PQAP(AQIC) instruction.
+> @@ -92,7 +90,6 @@ struct ap_matrix_mdev {
+>  	struct vfio_device vdev;
+>  	struct list_head node;
+>  	struct ap_matrix matrix;
+> -	struct notifier_block iommu_notifier;
+>  	struct kvm *kvm;
+>  	crypto_hook pqap_hook;
+>  	struct mdev_device *mdev;
+> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
+> index 61e71c1154be67..f005b644ab9e69 100644
+> --- a/drivers/vfio/vfio.c
+> +++ b/drivers/vfio/vfio.c
+> @@ -1077,8 +1077,20 @@ static void vfio_device_unassign_container(struct
+> vfio_device *device)
+>  	up_write(&device->group->group_rwsem);
 >  }
->
-> -void __weak module_memfree(void *module_region)
-> -{
-> -       /*
-> -        * This memory may be RO, and freeing RO memory in an interrupt is not
-> -        * supported by vmalloc.
-> -        */
-> -       WARN_ON(in_interrupt());
-> -       vfree(module_region);
-> -}
-> -
->  void __weak module_arch_cleanup(struct module *mod)
->  {
->  }
-> @@ -1606,13 +1596,6 @@ static void dynamic_debug_remove(struct module *mod, struct _ddebug *debug)
->                 ddebug_remove_module(mod->name);
->  }
->
-> -void * __weak module_alloc(unsigned long size)
-> -{
-> -       return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
-> -                       GFP_KERNEL, PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS,
-> -                       NUMA_NO_NODE, __builtin_return_address(0));
-> -}
-> -
->  bool __weak module_init_section(const char *name)
->  {
->         return strstarts(name, ".init");
-> diff --git a/kernel/module_alloc.c b/kernel/module_alloc.c
-> new file mode 100644
-> index 000000000000..26a4c60998ad
-> --- /dev/null
-> +++ b/kernel/module_alloc.c
-> @@ -0,0 +1,26 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2002 Richard Henderson
-> + * Copyright (C) 2001 Rusty Russell, 2002, 2010 Rusty Russell IBM.
-> + */
-> +
-> +#include <linux/mm.h>
-> +#include <linux/moduleloader.h>
-> +#include <linux/vmalloc.h>
-> +
-> +void * __weak module_alloc(unsigned long size)
+>=20
+> +static int vfio_iommu_notifier(struct notifier_block *nb, unsigned long
+> action,
+> +			       void *data)
 > +{
-> +       return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
-> +                       GFP_KERNEL, PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS,
-> +                       NUMA_NO_NODE, __builtin_return_address(0));
+> +	struct vfio_device *vfio_device =3D
+> +		container_of(nb, struct vfio_device, iommu_nb);
+> +	struct vfio_iommu_type1_dma_unmap *unmap =3D data;
+> +
+> +	vfio_device->ops->dma_unmap(vfio_device, unmap->iova, unmap-
+> >size);
+> +	return NOTIFY_OK;
 > +}
 > +
-> +void __weak module_memfree(void *module_region)
-> +{
-> +       /*
-> +        * This memory may be RO, and freeing RO memory in an interrupt is not
-> +        * supported by vmalloc.
-> +        */
-> +       WARN_ON(in_interrupt());
-> +       vfree(module_region);
-> +}
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 93507330462c..050b2975332e 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -101,6 +101,7 @@ static nokprobe_inline bool trace_kprobe_has_gone(struct trace_kprobe *tk)
->         return kprobe_gone(&tk->rp.kp);
->  }
->
-> +#ifdef CONFIG_MODULES
->  static nokprobe_inline bool trace_kprobe_within_module(struct trace_kprobe *tk,
->                                                  struct module *mod)
+>  static struct file *vfio_device_open(struct vfio_device *device)
 >  {
-> @@ -109,11 +110,13 @@ static nokprobe_inline bool trace_kprobe_within_module(struct trace_kprobe *tk,
->
->         return strncmp(module_name(mod), name, len) == 0 && name[len] == ':';
->  }
-> +#endif /* CONFIG_MODULES */
->
->  static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
+> +	struct vfio_iommu_driver *iommu_driver;
+>  	struct file *filep;
+>  	int ret;
+>=20
+> @@ -1109,6 +1121,18 @@ static struct file *vfio_device_open(struct
+> vfio_device *device)
+>  			if (ret)
+>  				goto err_undo_count;
+>  		}
+> +
+> +		iommu_driver =3D device->group->container->iommu_driver;
+> +		if (device->ops->dma_unmap && iommu_driver &&
+> +		    iommu_driver->ops->register_notifier) {
+> +			unsigned long events =3D
+> VFIO_IOMMU_NOTIFY_DMA_UNMAP;
+> +
+> +			device->iommu_nb.notifier_call =3D
+> vfio_iommu_notifier;
+> +			iommu_driver->ops->register_notifier(
+> +				device->group->container->iommu_data,
+> &events,
+> +				&device->iommu_nb);
+> +		}
+> +
+>  		up_read(&device->group->group_rwsem);
+>  	}
+>  	mutex_unlock(&device->dev_set->lock);
+> @@ -1143,8 +1167,16 @@ static struct file *vfio_device_open(struct
+> vfio_device *device)
+>  err_close_device:
+>  	mutex_lock(&device->dev_set->lock);
+>  	down_read(&device->group->group_rwsem);
+> -	if (device->open_count =3D=3D 1 && device->ops->close_device)
+> +	if (device->open_count =3D=3D 1 && device->ops->close_device) {
+>  		device->ops->close_device(device);
+> +
+> +		iommu_driver =3D device->group->container->iommu_driver;
+> +		if (device->ops->dma_unmap && iommu_driver &&
+> +		    iommu_driver->ops->register_notifier)
+> +			iommu_driver->ops->unregister_notifier(
+> +				device->group->container->iommu_data,
+> +				&device->iommu_nb);
+> +	}
+>  err_undo_count:
+>  	device->open_count--;
+>  	if (device->open_count =3D=3D 0 && device->kvm)
+> @@ -1339,12 +1371,20 @@ static const struct file_operations
+> vfio_group_fops =3D {
+>  static int vfio_device_fops_release(struct inode *inode, struct file *fi=
+lep)
 >  {
-> +       bool ret = false;
-> +#ifdef CONFIG_MODULES
->         char *p;
-> -       bool ret;
->
->         if (!tk->symbol)
->                 return false;
-> @@ -125,6 +128,7 @@ static nokprobe_inline bool trace_kprobe_module_exist(struct trace_kprobe *tk)
->         ret = !!find_module(tk->symbol);
->         rcu_read_unlock_sched();
->         *p = ':';
-> +#endif /* CONFIG_MODULES */
->
->         return ret;
+>  	struct vfio_device *device =3D filep->private_data;
+> +	struct vfio_iommu_driver *iommu_driver;
+>=20
+>  	mutex_lock(&device->dev_set->lock);
+>  	vfio_assert_device_open(device);
+>  	down_read(&device->group->group_rwsem);
+>  	if (device->open_count =3D=3D 1 && device->ops->close_device)
+>  		device->ops->close_device(device);
+> +
+> +	iommu_driver =3D device->group->container->iommu_driver;
+> +	if (device->ops->dma_unmap && iommu_driver &&
+> +	    iommu_driver->ops->register_notifier)
+> +		iommu_driver->ops->unregister_notifier(
+> +			device->group->container->iommu_data,
+> +			&device->iommu_nb);
+>  	up_read(&device->group->group_rwsem);
+>  	device->open_count--;
+>  	if (device->open_count =3D=3D 0)
+> @@ -2027,90 +2067,6 @@ int vfio_dma_rw(struct vfio_device *device,
+> dma_addr_t user_iova, void *data,
 >  }
-> @@ -668,6 +672,7 @@ static int register_trace_kprobe(struct trace_kprobe *tk)
->         return ret;
->  }
->
-> +#ifdef CONFIG_MODULES
->  /* Module notifier call back, checking event on the module */
->  static int trace_kprobe_module_callback(struct notifier_block *nb,
->                                        unsigned long val, void *data)
-> @@ -702,6 +707,7 @@ static struct notifier_block trace_kprobe_module_nb = {
->         .notifier_call = trace_kprobe_module_callback,
->         .priority = 1   /* Invoked after kprobe module callback */
+>  EXPORT_SYMBOL(vfio_dma_rw);
+>=20
+> -static int vfio_register_iommu_notifier(struct vfio_group *group,
+> -					unsigned long *events,
+> -					struct notifier_block *nb)
+> -{
+> -	struct vfio_container *container;
+> -	struct vfio_iommu_driver *driver;
+> -	int ret;
+> -
+> -	lockdep_assert_held_read(&group->group_rwsem);
+> -
+> -	container =3D group->container;
+> -	driver =3D container->iommu_driver;
+> -	if (likely(driver && driver->ops->register_notifier))
+> -		ret =3D driver->ops->register_notifier(container->iommu_data,
+> -						     events, nb);
+> -	else
+> -		ret =3D -ENOTTY;
+> -
+> -	return ret;
+> -}
+> -
+> -static int vfio_unregister_iommu_notifier(struct vfio_group *group,
+> -					  struct notifier_block *nb)
+> -{
+> -	struct vfio_container *container;
+> -	struct vfio_iommu_driver *driver;
+> -	int ret;
+> -
+> -	lockdep_assert_held_read(&group->group_rwsem);
+> -
+> -	container =3D group->container;
+> -	driver =3D container->iommu_driver;
+> -	if (likely(driver && driver->ops->unregister_notifier))
+> -		ret =3D driver->ops->unregister_notifier(container-
+> >iommu_data,
+> -						       nb);
+> -	else
+> -		ret =3D -ENOTTY;
+> -
+> -	return ret;
+> -}
+> -
+> -int vfio_register_notifier(struct vfio_device *device,
+> -			   enum vfio_notify_type type, unsigned long *events,
+> -			   struct notifier_block *nb)
+> -{
+> -	struct vfio_group *group =3D device->group;
+> -	int ret;
+> -
+> -	if (!nb || !events || (*events =3D=3D 0) ||
+> -	    !vfio_assert_device_open(device))
+> -		return -EINVAL;
+> -
+> -	switch (type) {
+> -	case VFIO_IOMMU_NOTIFY:
+> -		ret =3D vfio_register_iommu_notifier(group, events, nb);
+> -		break;
+> -	default:
+> -		ret =3D -EINVAL;
+> -	}
+> -	return ret;
+> -}
+> -EXPORT_SYMBOL(vfio_register_notifier);
+> -
+> -int vfio_unregister_notifier(struct vfio_device *device,
+> -			     enum vfio_notify_type type,
+> -			     struct notifier_block *nb)
+> -{
+> -	struct vfio_group *group =3D device->group;
+> -	int ret;
+> -
+> -	if (!nb || !vfio_assert_device_open(device))
+> -		return -EINVAL;
+> -
+> -	switch (type) {
+> -	case VFIO_IOMMU_NOTIFY:
+> -		ret =3D vfio_unregister_iommu_notifier(group, nb);
+> -		break;
+> -	default:
+> -		ret =3D -EINVAL;
+> -	}
+> -	return ret;
+> -}
+> -EXPORT_SYMBOL(vfio_unregister_notifier);
+> -
+>  /*
+>   * Module/class support
+>   */
+> diff --git a/drivers/vfio/vfio.h b/drivers/vfio/vfio.h
+> index a6713022115155..cb2e4e9baa8fe8 100644
+> --- a/drivers/vfio/vfio.h
+> +++ b/drivers/vfio/vfio.h
+> @@ -33,6 +33,11 @@ enum vfio_iommu_notify_type {
+>  	VFIO_IOMMU_CONTAINER_CLOSE =3D 0,
 >  };
-> +#endif /* CONFIG_MODULES */
->
->  static int __trace_kprobe_create(int argc, const char *argv[])
->  {
-> @@ -1896,8 +1902,10 @@ static __init int init_kprobe_trace_early(void)
->         if (ret)
->                 return ret;
->
-> +#ifdef CONFIG_MODULES
->         if (register_module_notifier(&trace_kprobe_module_nb))
->                 return -EINVAL;
-> +#endif /* CONFIG_MODULES */
->
->         return 0;
->  }
+>=20
+> +/* events for register_notifier() */
+> +enum {
+> +	VFIO_IOMMU_NOTIFY_DMA_UNMAP =3D 1,
+> +};
+> +
+>  /**
+>   * struct vfio_iommu_driver_ops - VFIO IOMMU driver callbacks
+>   */
+> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> index aa888cc517578e..b76623e3b92fca 100644
+> --- a/include/linux/vfio.h
+> +++ b/include/linux/vfio.h
+> @@ -44,6 +44,7 @@ struct vfio_device {
+>  	unsigned int open_count;
+>  	struct completion comp;
+>  	struct list_head group_next;
+> +	struct notifier_block iommu_nb;
+>  };
+>=20
+>  /**
+> @@ -60,6 +61,8 @@ struct vfio_device {
+>   * @match: Optional device name match callback (return: 0 for no-match, =
+>0
+> for
+>   *         match, -errno for abort (ex. match with insufficient or incor=
+rect
+>   *         additional args)
+> + * @dma_unmap: Called when userspace unmaps IOVA from the container
+> + *             this device is attached to.
+>   * @device_feature: Optional, fill in the VFIO_DEVICE_FEATURE ioctl
+>   * @migration_set_state: Optional callback to change the migration state=
+ for
+>   *         devices that support migration. It's mandatory for
+> @@ -85,6 +88,7 @@ struct vfio_device_ops {
+>  	int	(*mmap)(struct vfio_device *vdev, struct vm_area_struct
+> *vma);
+>  	void	(*request)(struct vfio_device *vdev, unsigned int count);
+>  	int	(*match)(struct vfio_device *vdev, char *buf);
+> +	void	(*dma_unmap)(struct vfio_device *vdev, u64 iova, u64
+> length);
+>  	int	(*device_feature)(struct vfio_device *device, u32 flags,
+>  				  void __user *arg, size_t argsz);
+>  	struct file *(*migration_set_state)(
+> @@ -154,23 +158,6 @@ extern int vfio_unpin_pages(struct vfio_device
+> *device, unsigned long *user_pfn,
+>  extern int vfio_dma_rw(struct vfio_device *device, dma_addr_t user_iova,
+>  		       void *data, size_t len, bool write);
+>=20
+> -/* each type has independent events */
+> -enum vfio_notify_type {
+> -	VFIO_IOMMU_NOTIFY =3D 0,
+> -};
+> -
+> -/* events for VFIO_IOMMU_NOTIFY */
+> -#define VFIO_IOMMU_NOTIFY_DMA_UNMAP	BIT(0)
+> -
+> -extern int vfio_register_notifier(struct vfio_device *device,
+> -				  enum vfio_notify_type type,
+> -				  unsigned long *required_events,
+> -				  struct notifier_block *nb);
+> -extern int vfio_unregister_notifier(struct vfio_device *device,
+> -				    enum vfio_notify_type type,
+> -				    struct notifier_block *nb);
+> -
+> -
+>  /*
+>   * Sub-module helpers
+>   */
 > --
 > 2.36.1
->
 
-
--- 
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
