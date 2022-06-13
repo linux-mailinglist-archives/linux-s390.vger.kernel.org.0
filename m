@@ -2,128 +2,82 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2229549B40
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Jun 2022 20:15:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D53CA549D10
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jun 2022 21:11:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244554AbiFMSPg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 13 Jun 2022 14:15:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53832 "EHLO
+        id S1345951AbiFMTLi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 13 Jun 2022 15:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245066AbiFMSPG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 13 Jun 2022 14:15:06 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC182D1E7;
-        Mon, 13 Jun 2022 07:10:15 -0700 (PDT)
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25DDahxw011975;
-        Mon, 13 Jun 2022 14:10:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=QfLKbMb7cIw5v3tYJr7zvKgdZRe+cbXtG2HPvLS7uXA=;
- b=orOdpHcoYEetDFdNRR2goTxBPczi12XtuaxAYglXudznr7Y2CHaK6CjBHPkC4l+8KlUh
- SRhEPzQqtDelomIcgC0L7eBiu0/FpSCurSzznHq9TSAbRIZtHW9jctwU/yGib7FpAgU9
- 0ktawcEgUORBdz+iQzarax/KVD7G8gmLTSF+hBZdg5Tpq3aCcIT1S9pe7MMETCsDFsek
- 4FT1KAQWuT9wGP0baOJt5OVkSQ1GJ3P3sD3J54u+UqBt5NrInMTvvy7s5j8geBuLgj5e
- KVkCq/3bh1f2dhwzy8Cy+4Lttl4Q3EQ59a3pMyDAMkjc2GOIiohTxP4v5YM51lBNHObp 2A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gp3jtm8ay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jun 2022 14:10:06 +0000
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25DCxPlj014688;
-        Mon, 13 Jun 2022 14:10:06 GMT
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gp3jtm8ae-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jun 2022 14:10:06 +0000
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25DE6bxk012087;
-        Mon, 13 Jun 2022 14:10:05 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma05wdc.us.ibm.com with ESMTP id 3gmjp9wt7s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jun 2022 14:10:05 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25DEA4AP27132370
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jun 2022 14:10:04 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 72D1CAE05F;
-        Mon, 13 Jun 2022 14:10:04 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE785AE060;
-        Mon, 13 Jun 2022 14:10:00 +0000 (GMT)
-Received: from farman-thinkpad-t470p (unknown [9.211.62.157])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 13 Jun 2022 14:10:00 +0000 (GMT)
-Message-ID: <291fe7935b24273d9fdd9425a9ce02bb1f1d5448.camel@linux.ibm.com>
-Subject: Re: [PATCH v1 14/18] vfio/mdev: Add mdev available instance
- checking to the core
-From:   Eric Farman <farman@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>,
-        "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>, Neo Jia <cjia@nvidia.com>,
-        Dheeraj Nigam <dnigam@nvidia.com>,
-        Tarun Gupta <targupta@nvidia.com>
-Date:   Mon, 13 Jun 2022 10:08:29 -0400
-In-Reply-To: <20220613064655.GA493@lst.de>
-References: <20220602171948.2790690-1-farman@linux.ibm.com>
-         <20220602171948.2790690-15-farman@linux.ibm.com>
-         <63a87e1e-7d99-b091-4c6b-fa25dd7c5211@nvidia.com>
-         <c818e1ef24c466a3b1d14d4ab10163d5e349a3b4.camel@linux.ibm.com>
-         <BN9PR11MB5276228F26CC7B9EBE13489B8CA69@BN9PR11MB5276.namprd11.prod.outlook.com>
-         <20220613064655.GA493@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 92wx5Go0EIdAsXRaqR1Re3qeer1xW2_s
-X-Proofpoint-ORIG-GUID: 69G2lwM_-sgVqYGmHSSm_BmNJgrkptaC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-13_06,2022-06-13_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 suspectscore=0 phishscore=0
- mlxlogscore=966 impostorscore=0 clxscore=1015 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
- definitions=main-2206130063
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S1351938AbiFMTK0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 13 Jun 2022 15:10:26 -0400
+Received: from conuserg-10.nifty.com (conuserg-10.nifty.com [210.131.2.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 165655044D;
+        Mon, 13 Jun 2022 10:09:39 -0700 (PDT)
+Received: from grover.sesame (133-32-177-133.west.xps.vectant.ne.jp [133.32.177.133]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id 25DH9AWg022790;
+        Tue, 14 Jun 2022 02:09:10 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 25DH9AWg022790
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1655140151;
+        bh=9Q9bxsPVmhKwllUyQfLhby20MugRprrtgLBKGwhNpWw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DSyTHOZfbTmmeaf0xcRHSWqL20l8v7gw/xJof5PN0P2NEWvfjDZbIH8hrOWnHxFwz
+         9o84Exx/1/8hjLJmO3n2ADPktDPQKMd/tS9OPXJW7ycZBanwz5RhZeiN8pedfx0/Kg
+         5LZQeQA9wXWKSfggX73/S/dRAd54bW0SaXK/WGDrOCYri0AOxF2HKJNHJHJD8CU+VY
+         B2MONiSIYxs+S7kLNskxlcuYGJLjfdgchAipDvGN3fRdUvFZHTmFdqVwKH6sWyQtMI
+         3yBHIakI3PGCH4HWyTJRqFznstgR0zo2kd1IYbCp0F7cmm92tsE6IL8CkuA6Bpe6Cw
+         pc4QGfcATOqfA==
+X-Nifty-SrcIP: [133.32.177.133]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] s390: remove unneeded 'select BUILD_BIN2C'
+Date:   Tue, 14 Jun 2022 02:09:00 +0900
+Message-Id: <20220613170902.1775211-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_SOFTFAIL,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 2022-06-13 at 08:46 +0200, Christoph Hellwig wrote:
-> On Fri, Jun 10, 2022 at 07:43:46AM +0000, Tian, Kevin wrote:
-> > btw with those latest changes [1] we don't need .get_available()
-> > then,
-> > as mdev type is now added by mdev driver one-by-one then the
-> > available instance can be provided directly in that path.
-> 
-> Yes, we can probably add a helper to add the vailable attibrute,
-> which
-> takes the number of instances.  Is it ok if I just add a version of
-> this
-> patch and the device_api one to my series, and we rebase this series
-> on top of it?  I'll try to get out a new version ASAP.
+Since commit 4c0f032d4963 ("s390/purgatory: Omit use of bin2c"),
+s390 builds the purgatory without using bin2c.
 
-That's fine with me. Thanks!
+Remove 'select BUILD_BIN2C' to avoid the unneeded build of bin2c.
 
-Eric
+Fixes: 4c0f032d4963 ("s390/purgatory: Omit use of bin2c")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
+ arch/s390/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 91c0b80a8bf0..8cd9e56c629b 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -484,7 +484,6 @@ config KEXEC
+ config KEXEC_FILE
+ 	bool "kexec file based system call"
+ 	select KEXEC_CORE
+-	select BUILD_BIN2C
+ 	depends on CRYPTO
+ 	depends on CRYPTO_SHA256
+ 	depends on CRYPTO_SHA256_S390
+-- 
+2.32.0
 
