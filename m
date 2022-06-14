@@ -2,222 +2,160 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E232D54AEFE
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jun 2022 13:05:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73D8254AF35
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jun 2022 13:20:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243359AbiFNLFb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Jun 2022 07:05:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56830 "EHLO
+        id S1356267AbiFNLUF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Jun 2022 07:20:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241526AbiFNLFa (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Jun 2022 07:05:30 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F83E427C7;
-        Tue, 14 Jun 2022 04:05:29 -0700 (PDT)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25E9r2vJ001765;
-        Tue, 14 Jun 2022 11:05:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=CnX0mQNoGiPeHfBu13OM9XfUOR80CVwSXQ7qy7N+sHY=;
- b=YPXTd4x1A3V1TQFsve8NM3z9AunEdCZdqAI7xXJT3B9VBP6AKx5d1hKN95Ok9oYHH68o
- UcX5JL4sj3sfHKu8rDM9l206/2WLiY5FoRrTjP7clqb1U0VpE+jQtmmL1m6FLoERIuHG
- a0PXhPlfezeL2ittc4wEoNG5DJN3Bbpgk/4JI017juRSG61pMkHUuvDAzUmNp1KSmuPh
- kYx7YXG8Ofu6N0z5TLKF6Q/ZgJ/pcCAtF4SxwhdPxOViJqVzccP7+zPiwGgZVFDVDCZR
- ddHgbwkJVQSWH29bMlfmOfxxf2brTsWd/d4ZaTnB0JJh18NmkNEm+wKpreouTudoIsQ9 Aw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gpr3f1rdk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jun 2022 11:05:28 +0000
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25EAmPGC019687;
-        Tue, 14 Jun 2022 11:05:27 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gpr3f1rcs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jun 2022 11:05:27 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25EAomnN032376;
-        Tue, 14 Jun 2022 11:05:25 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04fra.de.ibm.com with ESMTP id 3gmjp8u95w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Jun 2022 11:05:25 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25EB5MM715663516
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Jun 2022 11:05:22 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6F74942041;
-        Tue, 14 Jun 2022 11:05:22 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C41A42045;
-        Tue, 14 Jun 2022 11:05:22 +0000 (GMT)
-Received: from a46lp57.lnxne.boe (unknown [9.152.108.100])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Jun 2022 11:05:22 +0000 (GMT)
-From:   Nico Boehr <nrb@linux.ibm.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
-Cc:     frankja@linux.ibm.com, imbrenda@linux.ibm.com, thuth@redhat.com,
-        scgl@linux.ibm.com
-Subject: [kvm-unit-tests PATCH v6 1/1] s390x: add migration test for storage keys
-Date:   Tue, 14 Jun 2022 13:05:21 +0200
-Message-Id: <20220614110521.123205-2-nrb@linux.ibm.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220614110521.123205-1-nrb@linux.ibm.com>
-References: <20220614110521.123205-1-nrb@linux.ibm.com>
+        with ESMTP id S1356220AbiFNLUB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Jun 2022 07:20:01 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 92BC8245A0;
+        Tue, 14 Jun 2022 04:20:00 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 260EE15DB;
+        Tue, 14 Jun 2022 04:20:00 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.41.154])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 47D093F73B;
+        Tue, 14 Jun 2022 04:19:42 -0700 (PDT)
+Date:   Tue, 14 Jun 2022 12:19:29 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        vgupta@kernel.org, linux@armlinux.org.uk,
+        ulli.kroll@googlemail.com, linus.walleij@linaro.org,
+        shawnguo@kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        tony@atomide.com, khilman@kernel.org, catalin.marinas@arm.com,
+        will@kernel.org, guoren@kernel.org, bcain@quicinc.com,
+        chenhuacai@kernel.org, kernel@xen0n.name, geert@linux-m68k.org,
+        sammy@sammy.net, monstr@monstr.eu, tsbogend@alpha.franken.de,
+        dinguyen@kernel.org, jonas@southpole.se,
+        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+        James.Bottomley@HansenPartnership.com, deller@gmx.de,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, ysato@users.sourceforge.jp, dalias@libc.org,
+        davem@davemloft.net, richard@nod.at,
+        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, jgross@suse.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com,
+        pv-drivers@vmware.com, boris.ostrovsky@oracle.com,
+        chris@zankel.net, jcmvbkbc@gmail.com, rafael@kernel.org,
+        lenb@kernel.org, pavel@ucw.cz, gregkh@linuxfoundation.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, anup@brainfault.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, Arnd Bergmann <arnd@arndb.de>,
+        yury.norov@gmail.com, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, rostedt@goodmis.org, pmladek@suse.com,
+        senozhatsky@chromium.org, john.ogness@linutronix.de,
+        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
+        josh@joshtriplett.org, mathieu.desnoyers@efficios.com,
+        jiangshanlai@gmail.com, joel@joelfernandes.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-xtensa@linux-xtensa.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arch@vger.kernel.org,
+        rcu@vger.kernel.org
+Subject: Re: [PATCH 00/36] cpuidle,rcu: Cleanup the mess
+Message-ID: <YqhuwQjmZyOVSiLI@FVFF77S0Q05N>
+References: <20220608142723.103523089@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: s71FgHgDPsEJ-rAiBhNT87FsYJgk6uWc
-X-Proofpoint-GUID: GKxYjrEKHY190MqAPChrINxSh-LWTH5-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-14_03,2022-06-13_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 adultscore=0 phishscore=0 priorityscore=1501 clxscore=1015
- bulkscore=0 suspectscore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2206140044
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220608142723.103523089@infradead.org>
+X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Upon migration, we expect storage keys set by the guest to be preserved, so add
-a test for it.
+On Wed, Jun 08, 2022 at 04:27:23PM +0200, Peter Zijlstra wrote:
+> Hi All! (omg so many)
 
-We keep 128 pages and set predictable storage keys. Then, we migrate and check
-that they can be read back and match the value originally set.
+Hi Peter,
 
-Signed-off-by: Nico Boehr <nrb@linux.ibm.com>
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Thomas Huth <thuth@redhat.com>
----
- s390x/Makefile         |  1 +
- s390x/migration-skey.c | 83 ++++++++++++++++++++++++++++++++++++++++++
- s390x/unittests.cfg    |  4 ++
- 3 files changed, 88 insertions(+)
- create mode 100644 s390x/migration-skey.c
+Sorry for the delay; my plate has also been rather full recently. I'm beginning
+to page this in now.
 
-diff --git a/s390x/Makefile b/s390x/Makefile
-index 1877c8a6e86e..efd5e0c13102 100644
---- a/s390x/Makefile
-+++ b/s390x/Makefile
-@@ -33,6 +33,7 @@ tests += $(TEST_DIR)/adtl-status.elf
- tests += $(TEST_DIR)/migration.elf
- tests += $(TEST_DIR)/pv-attest.elf
- tests += $(TEST_DIR)/migration-cmm.elf
-+tests += $(TEST_DIR)/migration-skey.elf
- 
- pv-tests += $(TEST_DIR)/pv-diags.elf
- 
-diff --git a/s390x/migration-skey.c b/s390x/migration-skey.c
-new file mode 100644
-index 000000000000..b7bd82581abe
---- /dev/null
-+++ b/s390x/migration-skey.c
-@@ -0,0 +1,83 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Storage Key migration tests
-+ *
-+ * Copyright IBM Corp. 2022
-+ *
-+ * Authors:
-+ *  Nico Boehr <nrb@linux.ibm.com>
-+ */
-+
-+#include <libcflat.h>
-+#include <asm/facility.h>
-+#include <asm/page.h>
-+#include <asm/mem.h>
-+#include <asm/interrupt.h>
-+#include <hardware.h>
-+
-+#define NUM_PAGES 128
-+static uint8_t pagebuf[NUM_PAGES][PAGE_SIZE] __attribute__((aligned(PAGE_SIZE)));
-+
-+static void test_migration(void)
-+{
-+	union skey expected_key, actual_key;
-+	int i, key_to_set, key_mismatches = 0;
-+
-+	for (i = 0; i < NUM_PAGES; i++) {
-+		/*
-+		 * Storage keys are 7 bit, lowest bit is always returned as zero
-+		 * by iske.
-+		 * This loop will set all 7 bits which means we set fetch
-+		 * protection as well as reference and change indication for
-+		 * some keys.
-+		 */
-+		key_to_set = i * 2;
-+		set_storage_key(pagebuf[i], key_to_set, 1);
-+	}
-+
-+	puts("Please migrate me, then press return\n");
-+	(void)getchar();
-+
-+	for (i = 0; i < NUM_PAGES; i++) {
-+		actual_key.val = get_storage_key(pagebuf[i]);
-+		expected_key.val = i * 2;
-+
-+		/*
-+		 * The PoP neither gives a guarantee that the reference bit is
-+		 * accurate nor that it won't be cleared by hardware. Hence we
-+		 * don't rely on it and just clear the bits to avoid compare
-+		 * errors.
-+		 */
-+		actual_key.str.rf = 0;
-+		expected_key.str.rf = 0;
-+
-+		/* don't log anything when key matches to avoid spamming the log */
-+		if (actual_key.val != expected_key.val) {
-+			key_mismatches++;
-+			report_fail("page %d expected_key=0x%x actual_key=0x%x", i, expected_key.val, actual_key.val);
-+		}
-+	}
-+
-+	report(!key_mismatches, "skeys after migration match");
-+}
-+
-+int main(void)
-+{
-+	report_prefix_push("migration-skey");
-+	if (test_facility(169)) {
-+		report_skip("storage key removal facility is active");
-+
-+		/*
-+		 * If we just exit and don't ask migrate_cmd to migrate us, it
-+		 * will just hang forever. Hence, also ask for migration when we
-+		 * skip this test altogether.
-+		 */
-+		puts("Please migrate me, then press return\n");
-+		(void)getchar();
-+	} else {
-+		test_migration();
-+	}
-+
-+	report_prefix_pop();
-+	return report_summary();
-+}
-diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
-index 9b97d0471bcf..8e52f560bb1e 100644
---- a/s390x/unittests.cfg
-+++ b/s390x/unittests.cfg
-@@ -180,3 +180,7 @@ smp = 2
- [migration-cmm]
- file = migration-cmm.elf
- groups = migration
-+
-+[migration-skey]
-+file = migration-skey.elf
-+groups = migration
--- 
-2.36.1
+> These here few patches mostly clear out the utter mess that is cpuidle vs rcuidle.
+> 
+> At the end of the ride there's only 2 real RCU_NONIDLE() users left
+> 
+>   arch/arm64/kernel/suspend.c:            RCU_NONIDLE(__cpu_suspend_exit());
+>   drivers/perf/arm_pmu.c:                 RCU_NONIDLE(armpmu_start(event, PERF_EF_RELOAD));
 
+The latter of these is necessary because apparently PM notifiers are called
+with RCU not watching. Is that still the case today (or at the end of this
+series)? If so, that feels like fertile land for more issues (yaey...). If not,
+we should be able to drop this.
+
+I can go dig into that some more.
+
+>   kernel/cfi.c:   RCU_NONIDLE({
+> 
+> (the CFI one is likely dead in the kCFI rewrite) and there's only a hand full
+> of trace_.*_rcuidle() left:
+> 
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_disable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_enable_rcuidle(CALLER_ADDR0, caller_addr);
+>   kernel/trace/trace_preemptirq.c:                        trace_irq_disable_rcuidle(CALLER_ADDR0, caller_addr);
+>   kernel/trace/trace_preemptirq.c:                trace_preempt_enable_rcuidle(a0, a1);
+>   kernel/trace/trace_preemptirq.c:                trace_preempt_disable_rcuidle(a0, a1);
+> 
+> All of them are in 'deprecated' code that is unused for GENERIC_ENTRY.
+
+I think those are also unused on arm64 too?
+
+If not, I can go attack that.
+
+> I've touched a _lot_ of code that I can't test and likely broken some of it :/
+> In particular, the whole ARM cpuidle stuff was quite involved with OMAP being
+> the absolute 'winner'.
+> 
+> I'm hoping Mark can help me sort the remaining ARM64 bits as he moves that to
+> GENERIC_ENTRY.
+
+Moving to GENERIC_ENTRY as a whole is going to take a tonne of work
+(refactoring both arm64 and the generic portion to be more amenable to each
+other), but we can certainly move closer to that for the bits that matter here.
+
+Maybe we want a STRICT_ENTRY option to get rid of all the deprecated stuff that
+we can select regardless of GENERIC_ENTRY to make that easier.
+
+> I've also got a note that says ARM64 can probably do a WFE based
+> idle state and employ TIF_POLLING_NRFLAG to avoid some IPIs.
+
+Possibly; I'm not sure how much of a win that'll be given that by default we'll
+have a ~10KHz WFE wakeup from the timer, but we could take a peek.
+
+Thanks,
+Mark.
