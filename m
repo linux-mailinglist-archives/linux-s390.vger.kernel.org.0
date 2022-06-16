@@ -2,79 +2,111 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CD4954DF04
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jun 2022 12:26:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB6D554DFF7
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jun 2022 13:25:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376598AbiFPKZs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jun 2022 06:25:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41942 "EHLO
+        id S234971AbiFPLZT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jun 2022 07:25:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376550AbiFPKZn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Jun 2022 06:25:43 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11D8E5DA3F
-        for <linux-s390@vger.kernel.org>; Thu, 16 Jun 2022 03:25:41 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id t25so1518903lfg.7
-        for <linux-s390@vger.kernel.org>; Thu, 16 Jun 2022 03:25:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=lLG88JCPgF7Yhflf4FNi4GQedsSNMbwmPtgneUr9Mu0=;
-        b=ABukwHqeSM98uGcshbCxcb5wQWHGiHfFagypt7/loMb9v2FDjwcTgJrhBtRxVWf1v2
-         BXStPbBsgYSqnUGGl7zGBKM5CMLd7osq6XxwDfWGiMcFn4Pi67uCFUXjvoArP/U14XOy
-         mQeS4UYPV1T6X+0EnR/uBN8wVFg+Gtbvf3f6qSheDv1gjHNHTXbbedH61hcExrUHexoJ
-         rx1Jgk5bVM9b9AL2u7FDe7guhHcyiN+kbqYLFek60/qjs7XvLdFeOWURUBV0kwO8CI+7
-         Cgd19SBjyhxlRHqwqo9b9KDCVX/Ur+QyoWeFC2a2uxKLH7+bPAsMu0Sd6y37iHP37kUl
-         Kx9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=lLG88JCPgF7Yhflf4FNi4GQedsSNMbwmPtgneUr9Mu0=;
-        b=TVs5QXOXGVnXs0DB65djkW/Dzk3TQcTA74ripm9BSKL2yc1Rvm/E6B04cBpaiR3N13
-         aJJ/oEUHymtYW/QE4EZ6WG4LK9XkfRrhn9/UZjZcNIKAlYLjcKH91TYg7/osVikzmzHq
-         x8yQVgNL4hTiUeTAEYBJMRUMI9F2CgnR7t62Q/cIquxRQ8MRVjqm/NYdkbqMKf9I23oN
-         0xMm+26nBlatNVdNMseZ4tvIVLhkwqGFhvoLJmI3hPwxRBVEHlugLOcJbTu4f3VOM+mN
-         rbajb903hjuB0mSr3vKYcaSQkdMfLnO2KzNU/gtVOuud7/8+ej0uT9jLWjLjpRmSdPVN
-         eYxQ==
-X-Gm-Message-State: AJIora+Q+S0WjiLVqS1VvvqIYPrv5VlhEkGsZMy9LvBXVF+PhBmYEWm+
-        QmaXgFXViYO/yKA+kjAEJS0t2wpabIrqGvCey/w=
-X-Google-Smtp-Source: AGRyM1v58shGjEx7x4KAdFNHXuS9Ixy8KMeEpc8k/MiglXee1uXZfo7fZhbkGUuLzTt8pK6QeU3FZUcLi8QQvzcrZAY=
-X-Received: by 2002:a19:ca0c:0:b0:479:46c:2917 with SMTP id
- a12-20020a19ca0c000000b00479046c2917mr2283112lfg.160.1655375140632; Thu, 16
- Jun 2022 03:25:40 -0700 (PDT)
+        with ESMTP id S1376442AbiFPLZS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Jun 2022 07:25:18 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E849D5DE46;
+        Thu, 16 Jun 2022 04:25:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8F2CAB82360;
+        Thu, 16 Jun 2022 11:25:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30ACCC34114;
+        Thu, 16 Jun 2022 11:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655378715;
+        bh=iIk2YS5z65pjvpfKrUKwRuHJctWgL1FjnG556xx/xV0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ceqGBWqVUrt6dyOkV2RGVN1XXwmlKVQ4sllwi+WyxWWVVQrAqpZygZBxXykX1FgEp
+         K1wEVpFQHojUm0ufK7sjR3+x6BasaudcVJ6P9GCayrYVDoXLubotPG7kmuheZjQc1k
+         cjid70BIz96LbbYL4dkeijs4bquJuVz7yZ19d9grrB+4WagEjr2xpiwTK5aamv4prw
+         J7xEoyn8lJqdbQGCJAvfVHDFSsmUAehPBSm0h8E9Pxd/mr37jVmEAA5DUKAPmVweGy
+         az2jFmPfO+Cj0JvGhU/9LPwnmcFuG2qoVv126pgUNfdSzR7xCV1ykrNq81PsX4n1si
+         hTmdXSqwlUbjA==
+Received: by mail-ot1-f54.google.com with SMTP id y16-20020a9d5190000000b0060c1292a5b9so816256otg.3;
+        Thu, 16 Jun 2022 04:25:15 -0700 (PDT)
+X-Gm-Message-State: AJIora+HNLWsZLLlTda+6E1yFV412SprlGhz1+81WZoszaGIOcoZ3h2A
+        iEETB8jUsMYcgMKdgBdy2DHHgZmLPQk1WkPG2Ww=
+X-Google-Smtp-Source: AGRyM1sq6WhQFq4kYMdW/m0PJWq0sNgWE09mDloXs/0UqdIfemWCq+RA5+Bc450OKx4Yj2EjPEeqDY5pIUAi1ElWO/4=
+X-Received: by 2002:a9d:37a3:0:b0:60c:5427:1f56 with SMTP id
+ x32-20020a9d37a3000000b0060c54271f56mr1824706otb.71.1655378714352; Thu, 16
+ Jun 2022 04:25:14 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a05:6520:28c2:b0:1f3:cf5:e20d with HTTP; Thu, 16 Jun 2022
- 03:25:39 -0700 (PDT)
-Reply-To: clmloans9@gmail.com
-From:   MR ANTHONY EDWARD <bashirusman02021@gmail.com>
-Date:   Thu, 16 Jun 2022 11:25:39 +0100
-Message-ID: <CAGOBX5aJbCGJvAx_fa099PFZmXDUdUgW9p6nY_cgZy+0W2JLtg@mail.gmail.com>
-Subject: DARLEHENSANGEBOT
-To:     undisclosed-recipients:;
+References: <20220615154142.1574619-1-ardb@kernel.org> <20220615154142.1574619-4-ardb@kernel.org>
+In-Reply-To: <20220615154142.1574619-4-ardb@kernel.org>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 16 Jun 2022 13:25:02 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFfVi8sYXR0z42v72XfTBaQ9jaDAzuLuK=TBKHUqKkEPA@mail.gmail.com>
+Message-ID: <CAMj1kXFfVi8sYXR0z42v72XfTBaQ9jaDAzuLuK=TBKHUqKkEPA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] jump_label: make initial NOP patching the special case
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        "open list:S390" <linux-s390@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=4.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: ****
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---=20
-Ben=C3=B6tigen Sie ein Gesch=C3=A4ftsdarlehen oder ein Darlehen jeglicher A=
-rt?
-Wenn ja, kontaktieren Sie uns
+On Wed, 15 Jun 2022 at 17:41, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> Instead of defaulting to patching NOP opcodes at init time, and leaving
+> it to the architectures to override this if this is not needed, switch
+> to a model where doing nothing is the default. This is the common case
+> by far, as only MIPS requires NOP patching at init time. On all other
+> architectures, the correct encodings are emitted by the compiler and so
+> no initial patching is needed.
+>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  Documentation/staging/static-keys.rst |  3 ---
+>  arch/arc/kernel/jump_label.c          | 13 -------------
+>  arch/arm/kernel/jump_label.c          |  6 ------
+>  arch/arm64/kernel/jump_label.c        | 11 -----------
+>  arch/mips/include/asm/jump_label.h    |  2 ++
+>  arch/parisc/kernel/jump_label.c       | 11 -----------
+>  arch/riscv/kernel/jump_label.c        | 12 ------------
+>  arch/s390/kernel/jump_label.c         |  5 -----
+>  arch/x86/kernel/jump_label.c          | 13 -------------
+>  kernel/jump_label.c                   | 14 +++++---------
+>  10 files changed, 7 insertions(+), 83 deletions(-)
+>
 
-*Vollst=C3=A4ndiger Name:
-* Ben=C3=B6tigte Menge:
-*Leihdauer:
-*Mobiltelefon:
-*Land:
+This needs the following hunk as well, as spotted by the bot:
+
+--- a/include/linux/jump_label.h
++++ b/include/linux/jump_label.h
+@@ -220,8 +220,6 @@ extern void jump_label_lock(void);
+ extern void jump_label_unlock(void);
+ extern void arch_jump_label_transform(struct jump_entry *entry,
+                                      enum jump_label_type type);
+-extern void arch_jump_label_transform_static(struct jump_entry *entry,
+-                                            enum jump_label_type type);
+ extern bool arch_jump_label_transform_queue(struct jump_entry *entry,
+                                            enum jump_label_type type);
+ extern void arch_jump_label_transform_apply(void);
+
+Let me know if I need to resend for this.
