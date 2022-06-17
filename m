@@ -2,69 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8476054FBB6
-	for <lists+linux-s390@lfdr.de>; Fri, 17 Jun 2022 18:56:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB47054FC2E
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Jun 2022 19:24:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382449AbiFQQzj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 17 Jun 2022 12:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
+        id S231235AbiFQRXg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 17 Jun 2022 13:23:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382738AbiFQQzi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 17 Jun 2022 12:55:38 -0400
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00EAA15801;
-        Fri, 17 Jun 2022 09:55:37 -0700 (PDT)
-Received: by mail-pl1-f179.google.com with SMTP id t2so4360695pld.4;
-        Fri, 17 Jun 2022 09:55:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=NQvpbNnhd1Hb0j8v30FPXqT+MFqFElEXEqSS6ck3brY=;
-        b=aCyqpQX7dhesop7GetkwFHh8dcccktPV24/VIY3oi+Tzas62t+A1YHIjj0QufjxfDz
-         QBQYzKzZrc3NSnlM0d7OKLXOCj0C7pcm4gc+IJ7UldmYe/Zi5x8yq1vKRfIvj4gGP28L
-         XCYVrFA8Cn8i3Ydrk71gisuIMbLRM5SaaWbHdMq044aUbaYF8TV2kzUp+qtZtlF4BoHm
-         Tqn2DJvJX/XvIcePhAZBdgT4/bfIOuhQpT12JW1Z4amhh5Ax3gCMdv3UHxy64fn36IYg
-         RmI7ik9MM7z+KtFlPPfCphUGmXT6cCxZuEDk7tv1P9GpLtFUYvp/aaw3T3k5QUvbJDLV
-         q2aQ==
-X-Gm-Message-State: AJIora+ix3kQrVLYkT4FEQX0u8Iq4xujKRk1b2yGA0mReu7QRyBAt+wb
-        6OdOIq2e89u/pGzG9Vr67/w=
-X-Google-Smtp-Source: AGRyM1uVwwnPkhP6RYNzI5TunYKnnEx27Gq+Jz+noCToEfYq5XweGJSbPYfjWq1VJ+qXOBF2dFKLpw==
-X-Received: by 2002:a17:90a:784f:b0:1ea:fa7d:7013 with SMTP id y15-20020a17090a784f00b001eafa7d7013mr7943869pjl.222.1655484936639;
-        Fri, 17 Jun 2022 09:55:36 -0700 (PDT)
-Received: from ?IPV6:2620:15c:211:201:5d24:3188:b21f:5671? ([2620:15c:211:201:5d24:3188:b21f:5671])
-        by smtp.gmail.com with ESMTPSA id x1-20020a170902820100b001690b65b2absm3014083pln.175.2022.06.17.09.55.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jun 2022 09:55:35 -0700 (PDT)
-Message-ID: <c6a0eb8d-ad51-01b1-bc17-758acc37f216@acm.org>
-Date:   Fri, 17 Jun 2022 09:55:34 -0700
+        with ESMTP id S1382906AbiFQRXe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 17 Jun 2022 13:23:34 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADBB918383;
+        Fri, 17 Jun 2022 10:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655486613; x=1687022613;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5r0rapPYszeZBBEbJ/ZlpHIsTYM/ozOqcBVhPIANdrM=;
+  b=eO+bj2hEeWAUudtg5CU9yl9fxz0asyamHWOeYHJ1EqkZMBoywm3DB07O
+   aGX083DvfOXZPN2ZXOmJI1ZgcaGukg1qroBnoGQ44xP2o8WFM+BeCkroY
+   rh4bWzzWk+OKKYO7SlwsYvamyMbMbntL3o0TRfPYlxn71wfwPsUjPs997
+   VpHzLjF8EJp3GU56yeCLC9Cd98FD81sLzoTPTPSA04zuJncDwl5qnKvvp
+   dDxBqAAkjRdtKVR1jj6BBg4lxGKmo83PxNNP67U5qSyrpa7eiLOlP28Ua
+   zGd05SBQxpAtIZDuL2dJMWgkX3KRRT8yqKE2dqZYhJkiV9k/NWy6nmCbr
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="259358208"
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="259358208"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 10:06:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="560563793"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 17 Jun 2022 10:06:50 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o2FQn-000Pcp-M0;
+        Fri, 17 Jun 2022 17:06:49 +0000
+Date:   Sat, 18 Jun 2022 01:06:42 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     kbuild-all@lists.01.org, Muchun Song <songmuchun@bytedance.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Michal Hocko <mhocko@suse.com>, Peter Xu <peterx@redhat.com>,
+        Naoya Horiguchi <naoya.horiguchi@linux.dev>,
+        James Houghton <jthoughton@google.com>,
+        Mina Almasry <almasrymina@google.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        catalin.marinas@arm.com, will@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [PATCH 1/4] hugetlb: skip to end of PT page mapping when pte not
+ present
+Message-ID: <202206180021.rcc4B1by-lkp@intel.com>
+References: <20220616210518.125287-2-mike.kravetz@oracle.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 5/5] blk-mq: Drop 'reserved' member of busy_tag_iter_fn
-Content-Language: en-US
-To:     John Garry <john.garry@huawei.com>, axboe@kernel.dk,
-        damien.lemoal@opensource.wdc.com, hch@lst.de, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, hare@suse.de, satishkh@cisco.com,
-        sebaddel@cisco.com, kartilak@cisco.com
-Cc:     linux-rdma@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-scsi@vger.kernel.org, mpi3mr-linuxdrv.pdl@broadcom.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nbd@other.debian.org
-References: <1655463320-241202-1-git-send-email-john.garry@huawei.com>
- <1655463320-241202-6-git-send-email-john.garry@huawei.com>
- <017cae1e-b45f-04fd-d34c-22ae736b28e5@acm.org>
- <a18fa379-5a9b-ff45-3be4-b253efd96a50@huawei.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <a18fa379-5a9b-ff45-3be4-b253efd96a50@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220616210518.125287-2-mike.kravetz@oracle.com>
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,30 +81,73 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 6/17/22 09:42, John Garry wrote:
-> On 17/06/2022 17:33, Bart Van Assche wrote:
->> On 6/17/22 03:55, John Garry wrote:
->>> @@ -276,7 +275,7 @@ static bool bt_iter(struct sbitmap *bitmap, 
->>> unsigned int bitnr, void *data)
->>>       else
->>>           tags = hctx->tags;
->>> -    if (!reserved)
->>> +    if (!iter_data->reserved)
->>>           bitnr += tags->nr_reserved_tags;
->>>       /*
->>>        * We can hit rq == NULL here, because the tagging functions
->>
->> Is the above change really necessary?
-> 
-> It's not totally necessary. Since local variable 'reserved' would now 
-> only be used once I thought it was better to get rid of it.
-> 
-> I can keep it if you really think that is better.
+Hi Mike,
 
-I'd prefer that these changes are either left out or that these are 
-moved into a separate patch. I think that will make this patch series 
-easier to review.
+I love your patch! Yet something to improve:
 
-Thanks,
+[auto build test ERROR on soc/for-next]
+[also build test ERROR on linus/master v5.19-rc2 next-20220617]
+[cannot apply to arm64/for-next/core arm/for-next kvmarm/next xilinx-xlnx/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-Bart.
+url:    https://github.com/intel-lab-lkp/linux/commits/Mike-Kravetz/hugetlb-speed-up-linear-address-scanning/20220617-050726
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
+config: i386-debian-10.3 (https://download.01.org/0day-ci/archive/20220618/202206180021.rcc4B1by-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/4c647687607f10fece04967b8180c0dadaf765e6
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Mike-Kravetz/hugetlb-speed-up-linear-address-scanning/20220617-050726
+        git checkout 4c647687607f10fece04967b8180c0dadaf765e6
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   mm/hugetlb.c: In function 'hugetlb_mask_last_page':
+>> mm/hugetlb.c:6901:9: error: duplicate case value
+    6901 |         case PUD_SIZE:
+         |         ^~~~
+   mm/hugetlb.c:6899:9: note: previously used here
+    6899 |         case P4D_SIZE:
+         |         ^~~~
+
+
+vim +6901 mm/hugetlb.c
+
+  6886	
+  6887	/*
+  6888	 * Return a mask that can be used to update an address to the last huge
+  6889	 * page in a page table page mapping size.  Used to skip non-present
+  6890	 * page table entries when linearly scanning address ranges.  Architectures
+  6891	 * with unique huge page to page table relationships can define their own
+  6892	 * version of this routine.
+  6893	 */
+  6894	unsigned long hugetlb_mask_last_page(struct hstate *h)
+  6895	{
+  6896		unsigned long hp_size = huge_page_size(h);
+  6897	
+  6898		switch (hp_size) {
+  6899		case P4D_SIZE:
+  6900			return PGDIR_SIZE - P4D_SIZE;
+> 6901		case PUD_SIZE:
+  6902			return P4D_SIZE - PUD_SIZE;
+  6903		case PMD_SIZE:
+  6904			return PUD_SIZE - PMD_SIZE;
+  6905		default:
+  6906			break; /* Should never happen */
+  6907		}
+  6908	
+  6909		return ~(0UL);
+  6910	}
+  6911	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
