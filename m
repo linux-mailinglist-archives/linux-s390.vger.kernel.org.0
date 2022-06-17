@@ -2,448 +2,616 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8F0954EE2C
-	for <lists+linux-s390@lfdr.de>; Fri, 17 Jun 2022 01:57:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D839154EEC2
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Jun 2022 03:25:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379477AbiFPXxn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jun 2022 19:53:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47168 "EHLO
+        id S1379492AbiFQBZQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jun 2022 21:25:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379523AbiFPXxh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Jun 2022 19:53:37 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2077.outbound.protection.outlook.com [40.107.220.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B0F962116;
-        Thu, 16 Jun 2022 16:53:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f63Hc8jfWwy8sHpiYALaMYbPc9McSlVDRL9tOueDHLE79CXkLu/h+OIbX/99lAjLVwPlP4SL4lbOz+4KafGxF4IZQt9MOTJ3v0Jt5ZRiofBURQTjb4XBy6mtcAB2i9ECAvMatlZ0mfbFDvE0/c8DnsSsH9bPHrQvLLTF4glaQsBPBUQuNfo2zsw0H6bmv0vdFo26PQdSEw+AfZB2Y+wjN/WvKCx6L9HWkAX2ThZRs8lqr+ou64pC7fwt/AyLqizuEuH4jUHIH+J/iAvZo9n93GSlO0eTdVI9eWse35/YjDyQYQbrRHrplpOnSvTU1oImuoj6CV8WJSKU6O4jRliEOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eNlV434ffnm9p6HOycKD2zrW5XaWt8DVttM8mV+9+e0=;
- b=IFfDR5JoqSNWmSD2LehCW5z/i51lbDSUdIQRwXkqGn7wJYK3UNeEMALXdwEeqJ53G47qoFqYVdmzKorelKsF2+w6O3bYXdXiB7kaNgYYAlioVc9+/T7+7LWhZSKBXXudFVYYuWxGmrcC/5sdc413XWS+Z2GQDgRY9axmmvW1qu//EKPQAQQVoJbFx9sL+aV4YFC+tb6zoL0CseVyRRcBLnSZOLgfypWHT1axvHbLaXolhwJVzMRz2zZswK+yPUtR9sJGyP2xBhEeFKblmOE5pz+VNqp59esyUGcJ/xD+56GMbztCe47+RimEsRgcSihtO5yPtvTrIXSxEzlyJenuOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 12.22.5.235) smtp.rcpttodomain=linux.ibm.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eNlV434ffnm9p6HOycKD2zrW5XaWt8DVttM8mV+9+e0=;
- b=qUIcMAWGsqJG5nnjVorKUbCm3LKd0sKHz5tQ3UA886Su/GIZlOZFj1CsXXjxZy/ZWY/0liNbw0MzGwRlswroV2Y3YAQkKEtwzcu/tDzNwSaClv4JmF/rBK3jnamlriBLNfa8s9Q1nxlBz1UG2ENk1R6K3IUNAIhnOJaxVc1DXh9xfJakYgu3svvFO+L2XQxIUv6frPjD6yNy9kZfmnDZsHNI76a3+x+sycmlUwif7T0YaULmn26MD4S5GuFcTCJnTbglGOaWjUw98dgfhCvO/UOCuekQIio3UhD4dLcRIU07GDGGd7ut6pxF30ktCTvURJUfrCeTC7fPSNmA7ZWcTw==
-Received: from BN9PR03CA0108.namprd03.prod.outlook.com (2603:10b6:408:fd::23)
- by MN2PR12MB3037.namprd12.prod.outlook.com (2603:10b6:208:c2::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.13; Thu, 16 Jun
- 2022 23:53:31 +0000
-Received: from BN8NAM11FT035.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:fd:cafe::48) by BN9PR03CA0108.outlook.office365.com
- (2603:10b6:408:fd::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.14 via Frontend
- Transport; Thu, 16 Jun 2022 23:53:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.235)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 12.22.5.235 as permitted sender) receiver=protection.outlook.com;
- client-ip=12.22.5.235; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (12.22.5.235) by
- BN8NAM11FT035.mail.protection.outlook.com (10.13.177.116) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.5332.12 via Frontend Transport; Thu, 16 Jun 2022 23:53:31 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.32; Thu, 16 Jun
- 2022 23:53:30 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Thu, 16 Jun
- 2022 16:53:29 -0700
-Received: from Asurada-Nvidia.nvidia.com (10.127.8.11) by mail.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server id 15.2.986.22 via Frontend
- Transport; Thu, 16 Jun 2022 16:53:27 -0700
-From:   Nicolin Chen <nicolinc@nvidia.com>
-To:     <kwankhede@nvidia.com>, <corbet@lwn.net>, <hca@linux.ibm.com>,
-        <gor@linux.ibm.com>, <agordeev@linux.ibm.com>,
-        <borntraeger@linux.ibm.com>, <svens@linux.ibm.com>,
-        <zhenyuw@linux.intel.com>, <zhi.a.wang@intel.com>,
-        <jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
-        <rodrigo.vivi@intel.com>, <tvrtko.ursulin@linux.intel.com>,
-        <airlied@linux.ie>, <daniel@ffwll.ch>, <farman@linux.ibm.com>,
-        <mjrosato@linux.ibm.com>, <pasic@linux.ibm.com>,
-        <vneethv@linux.ibm.com>, <oberpar@linux.ibm.com>,
-        <freude@linux.ibm.com>, <akrowiak@linux.ibm.com>,
-        <jjherne@linux.ibm.com>, <alex.williamson@redhat.com>,
-        <cohuck@redhat.com>, <jgg@nvidia.com>, <kevin.tian@intel.com>
-CC:     <jchrist@linux.ibm.com>, <kvm@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>,
-        <intel-gvt-dev@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>
-Subject: [RFT][PATCH v1 6/6] vfio: Replace phys_pfn with phys_page for vfio_pin_pages()
-Date:   Thu, 16 Jun 2022 16:52:12 -0700
-Message-ID: <20220616235212.15185-7-nicolinc@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220616235212.15185-1-nicolinc@nvidia.com>
-References: <20220616235212.15185-1-nicolinc@nvidia.com>
+        with ESMTP id S1379483AbiFQBZP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Jun 2022 21:25:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1AF8C62BF0
+        for <linux-s390@vger.kernel.org>; Thu, 16 Jun 2022 18:25:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1655429111;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BQGX/Ix68YfbBp0c+Si8nHbxwT1FQh3eLuEkJNgTbTE=;
+        b=WX777eCJEkXJ2BrI0JN2rA2m2X49zEhiaJ3NssRlGT8jhHm0OIEMo5rBbv+eLWcwLHRz6e
+        EGrhE7qMBlTb73zzuUizSmhEn2PVIDMG/KumN2GK1ne4Ii23MpoEBtaFxuG9WgCVuGf6gf
+        kPmPLvmvUCvOSW+Qw96tCJGtFaXJVe8=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-173-RH6efRLVO7aa2mlRxtNhmQ-1; Thu, 16 Jun 2022 21:25:10 -0400
+X-MC-Unique: RH6efRLVO7aa2mlRxtNhmQ-1
+Received: by mail-lf1-f71.google.com with SMTP id h35-20020a0565123ca300b00479113319f9so1599852lfv.0
+        for <linux-s390@vger.kernel.org>; Thu, 16 Jun 2022 18:25:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BQGX/Ix68YfbBp0c+Si8nHbxwT1FQh3eLuEkJNgTbTE=;
+        b=5TI622MnS0ajXjIoI0F9rts1Cxp+opI5WKpcKkly0mMUoPj1GSugsWlPOTLPHD4nc3
+         UsAl+95pozdqAPOrzZOgRYTauJKUAftWYJviwA9L3MsVJi6vHyEWbjWqHThxymzHvzX6
+         PW14aA1k4+PYWDHyH1xd3kPcKvId3hiiuTyhgQzngQQ9Pn1BQQfmm6TCFHBn4TIEo5rg
+         WeeaD41zWYyG3/m1V5JayWKIuujeTTgIqqU6oKG/l9LNFhZ15AhEk9v2Gg8wbIadQVPH
+         cVO792GE3hZlcvIGR8QURyQHcSDsJB0LINZHRNu+WfOhzcH88PJAwlBkFgEu0heCXo01
+         CuAQ==
+X-Gm-Message-State: AJIora+bRmQQijrJl5qy0SFz/ESRRlhkZS/9fl/Pnt1g6BSffWokPGmt
+        NZ/rGVUArwI6SRIY2UGzZZClLJp9qCW2Dhz1UJjUvh6Lk0tLPQ67OgaRF/oe0lFJGjrJa57tj3a
+        iwEjqh8N0fjY7CtxkSITN1jrHLENYqJCyWXYRJA==
+X-Received: by 2002:a05:6512:a8f:b0:479:63e5:d59f with SMTP id m15-20020a0565120a8f00b0047963e5d59fmr4283371lfu.124.1655429108831;
+        Thu, 16 Jun 2022 18:25:08 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1udRD+KyfOu2KbeC63nR32f26e2qESbLyjm9RK6JunVIw9AxsvYTn80HQKElFBeyoyYZmnQ4NCdUGHbSXrAzD8=
+X-Received: by 2002:a05:6512:a8f:b0:479:63e5:d59f with SMTP id
+ m15-20020a0565120a8f00b0047963e5d59fmr4283356lfu.124.1655429108611; Thu, 16
+ Jun 2022 18:25:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 40cfe9b5-8c6e-41fd-f994-08da4ff36abb
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3037:EE_
-X-Microsoft-Antispam-PRVS: <MN2PR12MB303726A93DF599C6213236D6ABAC9@MN2PR12MB3037.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: e1PM9/XpuQz0VT9Zz8LtzMMr5inCFsipRkFkM0hQeAzqOVsvq6jYTandZ8Wbm8CSlMHJN+BtdVSkgxjGyLoJrtizA5TDLvHi/L4VC/m+GcuMqvmBjIhLyPOY+KHki8H+aOrF+mGD/9SU3ijwB0Bs1u5c4vBTS0epIx+5hxI9H8mLIW7Nemnk+e1xx7chexjuxt3LbxV5rupqHghvX7alc0UAPj23MseEBiYekpttBXP8EMzF6zAfeCIfXaiRB/LQI+WZr3L6eOBFYAB/bgcG2+afk0rKLESYrTSuJsfGjNfm3adRGTbQCxzImCrK4VUh/g+YKmILli16ru6C/uRiiIlfvBcoTBWipayUFAhaxnN9xt22Unt+9yToLxfZMcq/oWdYCkLhlLMAXABz7BNt1km5sQGM+Jdz1ynivHAWwf6EvwUng3Zf7CDI0tdUepptph9ZfLfIRzs/uXt6epyrnSDCzHuU5idmanNJRovJkOA0i5Otl9704TWMz7ev3U0J7Fhb9LzgS440BXzt2lDo3CZeAeXNuiYugv/gkLTPf2JBL92fEZZBiv7Std1r0XDmCkF3th4syfnyobdXSEyDfERQHwa0aw8cGxgI01YNI5qdZws4yZwPVtPqJqM9RiM+GH52gpBPUvXMzs6A1wP5TP6ZTEzVV0lkVLfweCBzIhoWk8atB1Ev+N3NQH1sn1aK/0DSKV1sE4fpRBSWrnlQB8qS4yvn6BHxOtHsHgS9kXXqr9IzroZljrRh1wek+Pu/rgKBjmEHwAg7shiEwlkF2Q==
-X-Forefront-Antispam-Report: CIP:12.22.5.235;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230016)(4636009)(40470700004)(46966006)(36840700001)(7696005)(2616005)(40460700003)(26005)(2906002)(82310400005)(30864003)(8936002)(7416002)(7406005)(36756003)(110136005)(5660300002)(508600001)(4326008)(8676002)(81166007)(356005)(921005)(86362001)(186003)(36860700001)(1076003)(83380400001)(316002)(54906003)(70586007)(70206006)(47076005)(426003)(336012)(6666004)(36900700001)(2101003)(83996005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2022 23:53:31.0197
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40cfe9b5-8c6e-41fd-f994-08da4ff36abb
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.235];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT035.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3037
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+References: <CACGkMEs05ZisiPW+7H6Omp80MzmZWZCpc1mf5Vd99C3H-KUtgA@mail.gmail.com>
+ <20220613041416-mutt-send-email-mst@kernel.org> <CACGkMEsT_fWdPxN1cTWOX=vu-ntp3Xo4j46-ZKALeSXr7DmJFQ@mail.gmail.com>
+ <20220613045606-mutt-send-email-mst@kernel.org> <CACGkMEtAQck7Nr6SP_pD0MGT3njnwZSyT=xPyYzUU3c5GNNM_w@mail.gmail.com>
+ <CACGkMEvUFJkC=mnvL2PSH6-3RMcJUk84f-9X46JVcj2vTAr4SQ@mail.gmail.com>
+ <20220613052644-mutt-send-email-mst@kernel.org> <CACGkMEstGvhETXThuwO+tLVBuRgQb8uC_6DdAM8ZxOi5UKBRbg@mail.gmail.com>
+ <20220614114839-mutt-send-email-mst@kernel.org> <CACGkMEthExrqFNkOzLGwaffvHw=Tc3MXPtTTiRsnpFDGKPRP=A@mail.gmail.com>
+ <20220616130945-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20220616130945-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Date:   Fri, 17 Jun 2022 09:24:57 +0800
+Message-ID: <CACGkMEuSX-wg-VQzVLRhE_9wmQVpCQo5cxQ-by3N6v7gaBNsrg@mail.gmail.com>
+Subject: Re: [PATCH V6 8/9] virtio: harden vring IRQ
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     virtualization <virtualization@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        eperezma <eperezma@redhat.com>, Cindy Lu <lulu@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        linux-s390@vger.kernel.org, conghui.chen@intel.com,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        netdev <netdev@vger.kernel.org>, pankaj.gupta.linux@gmail.com,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        sudeep.holla@arm.com, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Most of the callers of vfio_pin_pages() want "struct page *" and the
-low-level mm code to pin pages returns a list of "struct page *" too.
-So there's no gain in converting "struct page *" to PFN in between.
+On Fri, Jun 17, 2022 at 1:11 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Wed, Jun 15, 2022 at 09:38:18AM +0800, Jason Wang wrote:
+> > On Tue, Jun 14, 2022 at 11:49 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > >
+> > > On Tue, Jun 14, 2022 at 03:40:21PM +0800, Jason Wang wrote:
+> > > > On Mon, Jun 13, 2022 at 5:28 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > >
+> > > > > On Mon, Jun 13, 2022 at 05:14:59PM +0800, Jason Wang wrote:
+> > > > > > On Mon, Jun 13, 2022 at 5:08 PM Jason Wang <jasowang@redhat.com> wrote:
+> > > > > > >
+> > > > > > > On Mon, Jun 13, 2022 at 4:59 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > > > > >
+> > > > > > > > On Mon, Jun 13, 2022 at 04:51:08PM +0800, Jason Wang wrote:
+> > > > > > > > > On Mon, Jun 13, 2022 at 4:19 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > > > > > > >
+> > > > > > > > > > On Mon, Jun 13, 2022 at 04:07:09PM +0800, Jason Wang wrote:
+> > > > > > > > > > > On Mon, Jun 13, 2022 at 3:23 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Mon, Jun 13, 2022 at 01:26:59PM +0800, Jason Wang wrote:
+> > > > > > > > > > > > > On Sat, Jun 11, 2022 at 1:12 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > On Fri, May 27, 2022 at 02:01:19PM +0800, Jason Wang wrote:
+> > > > > > > > > > > > > > > This is a rework on the previous IRQ hardening that is done for
+> > > > > > > > > > > > > > > virtio-pci where several drawbacks were found and were reverted:
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > 1) try to use IRQF_NO_AUTOEN which is not friendly to affinity managed IRQ
+> > > > > > > > > > > > > > >    that is used by some device such as virtio-blk
+> > > > > > > > > > > > > > > 2) done only for PCI transport
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > The vq->broken is re-used in this patch for implementing the IRQ
+> > > > > > > > > > > > > > > hardening. The vq->broken is set to true during both initialization
+> > > > > > > > > > > > > > > and reset. And the vq->broken is set to false in
+> > > > > > > > > > > > > > > virtio_device_ready(). Then vring_interrupt() can check and return
+> > > > > > > > > > > > > > > when vq->broken is true. And in this case, switch to return IRQ_NONE
+> > > > > > > > > > > > > > > to let the interrupt core aware of such invalid interrupt to prevent
+> > > > > > > > > > > > > > > IRQ storm.
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > The reason of using a per queue variable instead of a per device one
+> > > > > > > > > > > > > > > is that we may need it for per queue reset hardening in the future.
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > Note that the hardening is only done for vring interrupt since the
+> > > > > > > > > > > > > > > config interrupt hardening is already done in commit 22b7050a024d7
+> > > > > > > > > > > > > > > ("virtio: defer config changed notifications"). But the method that is
+> > > > > > > > > > > > > > > used by config interrupt can't be reused by the vring interrupt
+> > > > > > > > > > > > > > > handler because it uses spinlock to do the synchronization which is
+> > > > > > > > > > > > > > > expensive.
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > > > > > > > > > > > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > > > > > > > > > > > > > Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> > > > > > > > > > > > > > > Cc: Marc Zyngier <maz@kernel.org>
+> > > > > > > > > > > > > > > Cc: Halil Pasic <pasic@linux.ibm.com>
+> > > > > > > > > > > > > > > Cc: Cornelia Huck <cohuck@redhat.com>
+> > > > > > > > > > > > > > > Cc: Vineeth Vijayan <vneethv@linux.ibm.com>
+> > > > > > > > > > > > > > > Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+> > > > > > > > > > > > > > > Cc: linux-s390@vger.kernel.org
+> > > > > > > > > > > > > > > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > Jason, I am really concerned by all the fallout.
+> > > > > > > > > > > > > > I propose adding a flag to suppress the hardening -
+> > > > > > > > > > > > > > this will be a debugging aid and a work around for
+> > > > > > > > > > > > > > users if we find more buggy drivers.
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > suppress_interrupt_hardening ?
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > I can post a patch but I'm afraid if we disable it by default, it
+> > > > > > > > > > > > > won't be used by the users so there's no way for us to receive the bug
+> > > > > > > > > > > > > report. Or we need a plan to enable it by default.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > It's rc2, how about waiting for 1 and 2 rc? Or it looks better if we
+> > > > > > > > > > > > > simply warn instead of disable it by default.
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Thanks
+> > > > > > > > > > > >
+> > > > > > > > > > > > I meant more like a flag in struct virtio_driver.
+> > > > > > > > > > > > For now, could you audit all drivers which don't call _ready?
+> > > > > > > > > > > > I found 5 of these:
+> > > > > > > > > > > >
+> > > > > > > > > > > > drivers/bluetooth/virtio_bt.c
+> > > > > > > > > > >
+> > > > > > > > > > > This driver seems to be fine, it doesn't use the device/vq in its probe().
+> > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > But it calls hci_register_dev and that in turn queues all kind of
+> > > > > > > > > > work. Also, can linux start using the device immediately after
+> > > > > > > > > > it's registered?
+> > > > > > > > >
+> > > > > > > > > So I think the driver is allowed to queue before DRIVER_OK.
+> > > > > > > >
+> > > > > > > > it's not allowed to kick
+> > > > > > >
+> > > > > > > Yes.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > > If yes,
+> > > > > > > > > the only side effect is the delay of the tx interrupt after DRIVER_OK
+> > > > > > > > > for a well behaved device.
+> > > > > > > >
+> > > > > > > > your patches drop the interrupt though, it won't be just delayed.
+> > > > > > >
+> > > > > > > For a well behaved device, it can only trigger the interrupt after DRIVER_OK.
+> > > > > > >
+> > > > > > > So for virtio bt, it works like:
+> > > > > > >
+> > > > > > > 1) driver queue buffer and kick
+> > > > > > > 2) driver set DRIVER_OK
+> > > > > > > 3) device start to process the buffer
+> > > > > > > 4) device send an notification
+> > > > > > >
+> > > > > > > The only risk is that the virtqueue could be filled before DRIVER_OK,
+> > > > > > > or anything I missed?
+> > > > > >
+> > > > > > btw, hci has an open and close method and we do rx refill in
+> > > > > > hdev->open, so we're probably fine here.
+> > > > > >
+> > > > > > Thanks
+> > > > >
+> > > > >
+> > > > > Sounds good. Now to audit the rest of them from this POV ;)
+> > > >
+> > > > Adding maintainers.
+> > > >
+> > > > >
+> > > > >  drivers/i2c/busses/i2c-virtio.c
+> > > >
+> > > > It looks to me the device could be used immediately after
+> > > > i2c_add_adapter() return. So we probably need to add
+> > > > virtio_device_ready() before that. Fortunately, there's no rx vq in
+> > > > i2c and the callback looks safe if the callback is called before the
+> > > > i2c registration and after virtio_device_ready().
+> > > >
+> > > > >  drivers/net/caif/caif_virtio.c
+> > > >
+> > > > A networking device, RX is backed by vringh so we don't need to
+> > > > refill. TX is backed by virtio and is available until ndo_open. So
+> > > > it's fine to let the core to set DRIVER_OK after probe().
+> > > >
+> > > > >  drivers/nvdimm/virtio_pmem.c
+> > > >
+> > > > It doesn't use interrupt so far, so it has nothing to do with the IRQ hardening.
+> > > >
+> > > > But the device could be used by the subsystem immediately after
+> > > > nvdimm_pmem_region_create(), this means the flush could be issued
+> > > > before DRIVER_OK. We need virtio_device_ready() before. We don't have
+> > > > a RX virtqueue and the callback looks safe if the callback is called
+> > > > after virtio_device_ready() but before the nvdimm region creating.
+> > > >
+> > > > And it looks to me there's a race between the assignment of
+> > > > provider_data and virtio_pmem_flush(). If the flush was issued before
+> > > > the assignment we will end up with a NULL pointer dereference. This is
+> > > > something we need to fix.
+> > > >
+> > > > >  arm_scmi
+> > > >
+> > > > It looks to me the singleton device could be used by SCMI immediately after
+> > > >
+> > > >         /* Ensure initialized scmi_vdev is visible */
+> > > >         smp_store_mb(scmi_vdev, vdev);
+> > > >
+> > > > So we probably need to do virtio_device_ready() before that. It has an
+> > > > optional rx queue but the filling is done after the above assignment,
+> > > > so it's safe. And the callback looks safe is a callback is triggered
+> > > > after virtio_device_ready() buy before the above assignment.
+> > > >
+> > > > >  virtio_rpmsg_bus.c
+> > > > >
+> > > >
+> > > > This is somehow more complicated. It has an rx queue, the rx filling
+> > > > is done before virtio_device_ready() but the kick is done after. And
+> > > > it looks to me the device could be used by subsystem immediately
+> > > > rpmsg_virtio_add_ctrl_dev() returns.
+> > > >
+> > > > This means, if we do virtio_device_ready() after
+> > > > rpmsg_virtio_add_ctrl_dev(), we may get kick before DRIVER_OK. If we
+> > > > do virtio_device_ready() before rpmsg_virtio_add_ctrl_dev(), there's a
+> > > > race between the callbacks and rpmsg_virtio_add_ctrl_dev() that could
+> > > > be exploited.
+> > > >
+> > > > It requires more thoughts.
+> > > >
+> > > > Thanks
+> > >
+> > > I think at this point let's do it before so we at least do not
+> > > get a regression with your patches, add a big comment and work
+> > > on fixing properly in the next Linux version. Do you think you can
+> > > commit to a full fix in the next linux version?
+> >
+> > I think it should be ok.
+> >
+> > If I understand you correctly, you meant to disable the hardening in
+> > this release?
+> >
+> > (Actually, my understanding is that since we are developing mainline
+> > instead of a downstream version with a hardening features, bug reports
+> > are somehow expected, especially consider most of the bugs are not
+> > related to hardening itself)
+>
+>
+> Absolutely. Question is do you think we can fix everything by the
+> release?
 
-Replace the output parameter phys_pfn list with a phys_page list, to
-simplify callers. This also allows us to replace the vfio_iommu_type1
-implementation with a more efficient one.
+Probably not, I'm auditing all the virtio drivers and it seems we have
+many issues:
 
-For now, also update vfio_iommu_type1 to fit this new parameter too.
+1) race between subsystem registration/use and virtio_device_ready()
+2) race between notifications and subsystem registerstiation/use
 
-Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
----
- .../driver-api/vfio-mediated-device.rst       |  2 +-
- drivers/gpu/drm/i915/gvt/kvmgt.c              | 19 ++++++-------------
- drivers/s390/cio/vfio_ccw_cp.c                | 19 +++++++++----------
- drivers/s390/crypto/vfio_ap_ops.c             |  7 ++++---
- drivers/vfio/vfio.c                           |  8 ++++----
- drivers/vfio/vfio.h                           |  2 +-
- drivers/vfio/vfio_iommu_type1.c               | 19 +++++++++++--------
- include/linux/vfio.h                          |  2 +-
- 8 files changed, 37 insertions(+), 41 deletions(-)
+And it looks to me even virtio-net has this race.
 
-diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
-index d28f8bcbfbc6..070e51bb0bb6 100644
---- a/Documentation/driver-api/vfio-mediated-device.rst
-+++ b/Documentation/driver-api/vfio-mediated-device.rst
-@@ -263,7 +263,7 @@ The following APIs are provided for translating user pfn to host pfn in a VFIO
- driver::
- 
- 	int vfio_pin_pages(struct vfio_device *device, dma_addr_t iova,
--				  int npage, int prot, unsigned long *phys_pfn);
-+				  int npage, int prot, struct page **phys_page);
- 
- 	int vfio_unpin_pages(struct vfio_device *device, dma_addr_t iova,
- 				    int npage);
-diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-index c9bdc3901f1e..669432999676 100644
---- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-+++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-@@ -243,7 +243,7 @@ static void gvt_unpin_guest_page(struct intel_vgpu *vgpu, unsigned long gfn,
- static int gvt_pin_guest_page(struct intel_vgpu *vgpu, unsigned long gfn,
- 		unsigned long size, struct page **page)
- {
--	unsigned long base_pfn = 0;
-+	struct page *base_page = NULL;
- 	int total_pages;
- 	int npage;
- 	int ret;
-@@ -255,26 +255,19 @@ static int gvt_pin_guest_page(struct intel_vgpu *vgpu, unsigned long gfn,
- 	 */
- 	for (npage = 0; npage < total_pages; npage++) {
- 		unsigned long cur_iova = (gfn + npage) << PAGE_SHIFT;
--		unsigned long pfn;
-+		struct page *cur_page;
- 
- 		ret = vfio_pin_pages(&vgpu->vfio_device, cur_iova, 1,
--				     IOMMU_READ | IOMMU_WRITE, &pfn);
-+				     IOMMU_READ | IOMMU_WRITE, &cur_page);
- 		if (ret != 1) {
- 			gvt_vgpu_err("vfio_pin_pages failed for iova 0x%lx, ret %d\n",
- 				     cur_iova, ret);
- 			goto err;
- 		}
- 
--		if (!pfn_valid(pfn)) {
--			gvt_vgpu_err("pfn 0x%lx is not mem backed\n", pfn);
--			npage++;
--			ret = -EFAULT;
--			goto err;
--		}
--
- 		if (npage == 0)
--			base_pfn = pfn;
--		else if (base_pfn + npage != pfn) {
-+			base_page = cur_page;
-+		else if (base_page + npage != cur_page) {
- 			gvt_vgpu_err("The pages are not continuous\n");
- 			ret = -EINVAL;
- 			npage++;
-@@ -282,7 +275,7 @@ static int gvt_pin_guest_page(struct intel_vgpu *vgpu, unsigned long gfn,
- 		}
- 	}
- 
--	*page = pfn_to_page(base_pfn);
-+	*page = base_page;
- 	return 0;
- err:
- 	gvt_unpin_guest_page(vgpu, gfn, npage * PAGE_SIZE);
-diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-index 12cbe66721af..92be288dff74 100644
---- a/drivers/s390/cio/vfio_ccw_cp.c
-+++ b/drivers/s390/cio/vfio_ccw_cp.c
-@@ -24,8 +24,8 @@ struct pfn_array {
- 	unsigned long		pa_iova;
- 	/* Array that stores PFNs of the pages need to pin. */
- 	unsigned long		*pa_iova_pfn;
--	/* Array that receives PFNs of the pages pinned. */
--	unsigned long		*pa_pfn;
-+	/* Array that receives the pinned pages. */
-+	struct page		**pa_page;
- 	/* Number of pages pinned from @pa_iova. */
- 	int			pa_nr;
- };
-@@ -73,19 +73,19 @@ static int pfn_array_alloc(struct pfn_array *pa, u64 iova, unsigned int len)
- 
- 	pa->pa_iova_pfn = kcalloc(pa->pa_nr,
- 				  sizeof(*pa->pa_iova_pfn) +
--				  sizeof(*pa->pa_pfn),
-+				  sizeof(*pa->pa_page),
- 				  GFP_KERNEL);
- 	if (unlikely(!pa->pa_iova_pfn)) {
- 		pa->pa_nr = 0;
- 		return -ENOMEM;
- 	}
--	pa->pa_pfn = pa->pa_iova_pfn + pa->pa_nr;
-+	pa->pa_page = (struct page **)pa->pa_iova_pfn + pa->pa_nr;
- 
- 	pa->pa_iova_pfn[0] = pa->pa_iova >> PAGE_SHIFT;
--	pa->pa_pfn[0] = -1ULL;
-+	pa->pa_page[0] = NULL;
- 	for (i = 1; i < pa->pa_nr; i++) {
- 		pa->pa_iova_pfn[i] = pa->pa_iova_pfn[i - 1] + 1;
--		pa->pa_pfn[i] = -1ULL;
-+		pa->pa_page[i] = NULL;
- 	}
- 
- 	return 0;
-@@ -147,7 +147,7 @@ static int pfn_array_pin(struct pfn_array *pa, struct vfio_device *vdev)
- 
- 		ret = vfio_pin_pages(vdev, *first << PAGE_SHIFT, npage,
- 				     IOMMU_READ | IOMMU_WRITE,
--				     &pa->pa_pfn[pinned]);
-+				     &pa->pa_page[pinned]);
- 		if (ret < 0) {
- 			goto err_out;
- 		} else if (ret > 0 && ret != npage) {
-@@ -200,7 +200,7 @@ static inline void pfn_array_idal_create_words(
- 	 */
- 
- 	for (i = 0; i < pa->pa_nr; i++)
--		idaws[i] = pa->pa_pfn[i] << PAGE_SHIFT;
-+		idaws[i] = page_to_phys(pa->pa_page[i]);
- 
- 	/* Adjust the first IDAW, since it may not start on a page boundary */
- 	idaws[0] += pa->pa_iova & (PAGE_SIZE - 1);
-@@ -251,8 +251,7 @@ static long copy_from_iova(struct vfio_device *vdev, void *to, u64 iova,
- 
- 	l = n;
- 	for (i = 0; i < pa.pa_nr; i++) {
--		struct page *page = pfn_to_page(pa.pa_pfn[i]);
--		void *from = kmap_local_page(page);
-+		void *from = kmap_local_page(pa.pa_page[i]);
- 
- 		m = PAGE_SIZE;
- 		if (i == 0) {
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 8a2018ab3cf0..e73bdb57bc90 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -243,9 +243,10 @@ static struct ap_queue_status vfio_ap_irq_enable(struct vfio_ap_queue *q,
- 	struct ap_qirq_ctrl aqic_gisa = {};
- 	struct ap_queue_status status = {};
- 	struct kvm_s390_gisa *gisa;
-+	struct page *h_page;
- 	int nisc;
- 	struct kvm *kvm;
--	unsigned long g_pfn, h_pfn;
-+	unsigned long g_pfn;
- 	phys_addr_t h_nib;
- 	int ret;
- 
-@@ -259,7 +260,7 @@ static struct ap_queue_status vfio_ap_irq_enable(struct vfio_ap_queue *q,
- 	}
- 
- 	ret = vfio_pin_pages(&q->matrix_mdev->vdev, g_pfn << PAGE_SHIFT, 1,
--			     IOMMU_READ | IOMMU_WRITE, &h_pfn);
-+			     IOMMU_READ | IOMMU_WRITE, &h_page);
- 	switch (ret) {
- 	case 1:
- 		break;
-@@ -275,7 +276,7 @@ static struct ap_queue_status vfio_ap_irq_enable(struct vfio_ap_queue *q,
- 	kvm = q->matrix_mdev->kvm;
- 	gisa = kvm->arch.gisa_int.origin;
- 
--	h_nib = (h_pfn << PAGE_SHIFT) | (nib & ~PAGE_MASK);
-+	h_nib = page_to_phys(h_page) | (nib & ~PAGE_MASK);
- 	aqic_gisa.gisc = isc;
- 
- 	nisc = kvm_s390_gisc_register(kvm, isc);
-diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-index e8dbb0122e20..7eee8048e231 100644
---- a/drivers/vfio/vfio.c
-+++ b/drivers/vfio/vfio.c
-@@ -1917,18 +1917,18 @@ EXPORT_SYMBOL(vfio_set_irqs_validate_and_prepare);
-  * @npage [in]   : count of pages to be pinned.  This count should not
-  *		   be greater VFIO_PIN_PAGES_MAX_ENTRIES.
-  * @prot [in]    : protection flags
-- * @phys_pfn[out]: array of host PFNs
-+ * @phys_page[out]: array of host pages
-  * Return error or number of pages pinned.
-  */
- int vfio_pin_pages(struct vfio_device *device, dma_addr_t iova,
--		   int npage, int prot, unsigned long *phys_pfn)
-+		   int npage, int prot, struct page **phys_page)
- {
- 	struct vfio_container *container;
- 	struct vfio_group *group = device->group;
- 	struct vfio_iommu_driver *driver;
- 	int ret;
- 
--	if (!phys_pfn || !npage || !vfio_assert_device_open(device))
-+	if (!phys_page || !npage || !vfio_assert_device_open(device))
- 		return -EINVAL;
- 
- 	if (npage > VFIO_PIN_PAGES_MAX_ENTRIES)
-@@ -1943,7 +1943,7 @@ int vfio_pin_pages(struct vfio_device *device, dma_addr_t iova,
- 	if (likely(driver && driver->ops->pin_pages))
- 		ret = driver->ops->pin_pages(container->iommu_data,
- 					     group->iommu_group, iova,
--					     npage, prot, phys_pfn);
-+					     npage, prot, phys_page);
- 	else
- 		ret = -ENOTTY;
- 
-diff --git a/drivers/vfio/vfio.h b/drivers/vfio/vfio.h
-index 6bd5304ee0b7..758a0a91a066 100644
---- a/drivers/vfio/vfio.h
-+++ b/drivers/vfio/vfio.h
-@@ -52,7 +52,7 @@ struct vfio_iommu_driver_ops {
- 				     struct iommu_group *group,
- 				     dma_addr_t user_iova,
- 				     int npage, int prot,
--				     unsigned long *phys_pfn);
-+				     struct page **phys_page);
- 	int		(*unpin_pages)(void *iommu_data,
- 				       dma_addr_t user_iova, int npage);
- 	int		(*register_notifier)(void *iommu_data,
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index d027ed8441a9..841b1803e313 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -830,7 +830,7 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
- 				      struct iommu_group *iommu_group,
- 				      dma_addr_t user_iova,
- 				      int npage, int prot,
--				      unsigned long *phys_pfn)
-+				      struct page **phys_page)
- {
- 	struct vfio_iommu *iommu = iommu_data;
- 	struct vfio_iommu_group *group;
-@@ -840,7 +840,7 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
- 	bool do_accounting;
- 	dma_addr_t iova;
- 
--	if (!iommu || !phys_pfn)
-+	if (!iommu || !phys_page)
- 		return -EINVAL;
- 
- 	/* Supported for v2 version only */
-@@ -879,6 +879,7 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
- 	do_accounting = list_empty(&iommu->domain_list);
- 
- 	for (i = 0; i < npage; i++) {
-+		unsigned long phys_pfn;
- 		struct vfio_pfn *vpfn;
- 
- 		iova = user_iova + PAGE_SIZE * i;
-@@ -895,23 +896,25 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
- 
- 		vpfn = vfio_iova_get_vfio_pfn(dma, iova);
- 		if (vpfn) {
--			phys_pfn[i] = vpfn->pfn;
-+			phys_page[i] = pfn_to_page(vpfn->pfn);
- 			continue;
- 		}
- 
- 		remote_vaddr = dma->vaddr + (iova - dma->iova);
--		ret = vfio_pin_page_external(dma, remote_vaddr, &phys_pfn[i],
-+		ret = vfio_pin_page_external(dma, remote_vaddr, &phys_pfn,
- 					     do_accounting);
- 		if (ret)
- 			goto pin_unwind;
- 
--		ret = vfio_add_to_pfn_list(dma, iova, phys_pfn[i]);
-+		ret = vfio_add_to_pfn_list(dma, iova, phys_pfn);
- 		if (ret) {
--			if (put_pfn(phys_pfn[i], dma->prot) && do_accounting)
-+			if (put_pfn(phys_pfn, dma->prot) && do_accounting)
- 				vfio_lock_acct(dma, -1, true);
- 			goto pin_unwind;
- 		}
- 
-+		phys_page[i] = pfn_to_page(phys_pfn);
-+
- 		if (iommu->dirty_page_tracking) {
- 			unsigned long pgshift = __ffs(iommu->pgsize_bitmap);
- 
-@@ -934,14 +937,14 @@ static int vfio_iommu_type1_pin_pages(void *iommu_data,
- 	goto pin_done;
- 
- pin_unwind:
--	phys_pfn[i] = 0;
-+	phys_page[i] = NULL;
- 	for (j = 0; j < i; j++) {
- 		dma_addr_t iova;
- 
- 		iova = user_iova + PAGE_SIZE * j;
- 		dma = vfio_find_dma(iommu, iova, PAGE_SIZE);
- 		vfio_unpin_page_external(dma, iova, do_accounting);
--		phys_pfn[j] = 0;
-+		phys_page[j] = NULL;
- 	}
- pin_done:
- 	mutex_unlock(&iommu->lock);
-diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-index 99c3bf52c4da..7bc18802bf39 100644
---- a/include/linux/vfio.h
-+++ b/include/linux/vfio.h
-@@ -148,7 +148,7 @@ extern bool vfio_file_has_dev(struct file *file, struct vfio_device *device);
- #define VFIO_PIN_PAGES_MAX_ENTRIES	(PAGE_SIZE/sizeof(unsigned long))
- 
- extern int vfio_pin_pages(struct vfio_device *device, dma_addr_t iova,
--			  int npage, int prot, unsigned long *phys_pfn);
-+			  int npage, int prot, struct page **phys_page);
- extern int vfio_unpin_pages(struct vfio_device *device, dma_addr_t iova,
- 			    int npage);
- extern int vfio_dma_rw(struct vfio_device *device, dma_addr_t iova,
--- 
-2.17.1
+So I think I will post a patch to disable this like below for this release.
+
+> At least for rpmsg we don't seem to have a handle on it yet.
+
+Yes.
+
+>
+>
+> > Thanks
+> >
+> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > index 13a7348cedff..7ef3115efbad 100644
+> > --- a/drivers/virtio/virtio_ring.c
+> > +++ b/drivers/virtio/virtio_ring.c
+> > @@ -1688,7 +1688,7 @@ static struct virtqueue *vring_create_virtqueue_packed(
+> >         vq->we_own_ring = true;
+> >         vq->notify = notify;
+> >         vq->weak_barriers = weak_barriers;
+> > -       vq->broken = true;
+> > +       vq->broken = false;
+> >         vq->last_used_idx = 0;
+> >         vq->event_triggered = false;
+> >         vq->num_added = 0;
+>
+>
+> and drop it on reset?
+
+Right.
+
+Thanks
+
+>
+> > >
+> > >
+> > > > >
+> > > > >
+> > > > > > >
+> > > > > > > >
+> > > > > > > > > If not, we need to clarify it in the spec
+> > > > > > > > > and call virtio_device_ready() before subsystem registration.
+> > > > > > > >
+> > > > > > > > hmm, i don't get what we need to clarify
+> > > > > > >
+> > > > > > > E.g the driver is not allowed to kick or after DRIVER_OK should the
+> > > > > > > device only process the buffer after a kick after DRIVER_OK (I think
+> > > > > > > no)?
+> > > > > > >
+> > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > > > drivers/gpu/drm/virtio/virtgpu_drv.c
+> > > > > > > > > > >
+> > > > > > > > > > > It calles virtio_device_ready() in virtio_gpu_init(), and it looks to
+> > > > > > > > > > > me the code is correct.
+> > > > > > > > > >
+> > > > > > > > > > OK.
+> > > > > > > > > >
+> > > > > > > > > > > > drivers/i2c/busses/i2c-virtio.c
+> > > > > > > > > > > > drivers/net/caif/caif_virtio.c
+> > > > > > > > > > > > drivers/nvdimm/virtio_pmem.c
+> > > > > > > > > > >
+> > > > > > > > > > > The above looks fine and we have three more:
+> > > > > > > > > > >
+> > > > > > > > > > > arm_scmi: probe() doesn't use vq
+> > > > > > > > > > > mac80211_hwsim.c: doesn't use vq (only fill rx), but it kicks the rx,
+> > > > > > > > > > > it looks to me we need a device_ready before the kick.
+> > > > > > > > > > > virtio_rpmsg_bus.c: doesn't use vq
+> > > > > > > > > > >
+> > > > > > > > > > > I will post a patch for mac80211_hwsim.c.
+> > > > > > > > > > > Thanks
+> > > > > > > > > >
+> > > > > > > > > > Same comments for all of the above. Might linux not start using the
+> > > > > > > > > > device once it's registered?
+> > > > > > > > >
+> > > > > > > > > It depends on the specific subsystem.
+> > > > > > > > >
+> > > > > > > > > For the subsystem that can't use the device immediately, calling
+> > > > > > > > > virtio_device_ready() after the subsystem's registration should be
+> > > > > > > > > fine. E.g for the networking subsystem, the TX won't happen if
+> > > > > > > > > ndo_open() is not called, calling virtio_device_ready() after
+> > > > > > > > > netdev_register() seems to be fine.
+> > > > > > > >
+> > > > > > > > exactly
+> > > > > > > >
+> > > > > > > > > For the subsystem that can use the device immediately, if the
+> > > > > > > > > subsystem does not depend on the result of a request in the probe to
+> > > > > > > > > proceed, we are still fine. Since those requests will be proceed after
+> > > > > > > > > DRIVER_OK.
+> > > > > > > >
+> > > > > > > > Well first won't driver code normally kick as well?
+> > > > > > >
+> > > > > > > Kick itself is not blocked.
+> > > > > > >
+> > > > > > > > And without kick, won't everything just be blocked?
+> > > > > > >
+> > > > > > > It depends on the subsystem. E.g driver can choose to use a callback
+> > > > > > > instead of polling the used buffer in the probe.
+> > > > > > >
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > > For the rest we need to do virtio_device_ready() before registration.
+> > > > > > > > >
+> > > > > > > > > Thanks
+> > > > > > > >
+> > > > > > > > Then we can get an interrupt for an unregistered device.
+> > > > > > >
+> > > > > > > It depends on the device. For the device that doesn't have an rx queue
+> > > > > > > (or device to driver queue), we are fine:
+> > > > > > >
+> > > > > > > E.g in virtio-blk:
+> > > > > > >
+> > > > > > >         virtio_device_ready(vdev);
+> > > > > > >
+> > > > > > >         err = device_add_disk(&vdev->dev, vblk->disk, virtblk_attr_groups);
+> > > > > > >         if (err)
+> > > > > > >                 goto out_cleanup_disk;
+> > > > > > >
+> > > > > > > Thanks
+> > > > > > >
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > > >
+> > > > > > > > > > > >
+> > > > > > > > > > > >
+> > > > > > > > > > > >
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > ---
+> > > > > > > > > > > > > > >  drivers/s390/virtio/virtio_ccw.c       |  4 ++++
+> > > > > > > > > > > > > > >  drivers/virtio/virtio.c                | 15 ++++++++++++---
+> > > > > > > > > > > > > > >  drivers/virtio/virtio_mmio.c           |  5 +++++
+> > > > > > > > > > > > > > >  drivers/virtio/virtio_pci_modern_dev.c |  5 +++++
+> > > > > > > > > > > > > > >  drivers/virtio/virtio_ring.c           | 11 +++++++----
+> > > > > > > > > > > > > > >  include/linux/virtio_config.h          | 20 ++++++++++++++++++++
+> > > > > > > > > > > > > > >  6 files changed, 53 insertions(+), 7 deletions(-)
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+> > > > > > > > > > > > > > > index c188e4f20ca3..97e51c34e6cf 100644
+> > > > > > > > > > > > > > > --- a/drivers/s390/virtio/virtio_ccw.c
+> > > > > > > > > > > > > > > +++ b/drivers/s390/virtio/virtio_ccw.c
+> > > > > > > > > > > > > > > @@ -971,6 +971,10 @@ static void virtio_ccw_set_status(struct virtio_device *vdev, u8 status)
+> > > > > > > > > > > > > > >       ccw->flags = 0;
+> > > > > > > > > > > > > > >       ccw->count = sizeof(status);
+> > > > > > > > > > > > > > >       ccw->cda = (__u32)(unsigned long)&vcdev->dma_area->status;
+> > > > > > > > > > > > > > > +     /* We use ssch for setting the status which is a serializing
+> > > > > > > > > > > > > > > +      * instruction that guarantees the memory writes have
+> > > > > > > > > > > > > > > +      * completed before ssch.
+> > > > > > > > > > > > > > > +      */
+> > > > > > > > > > > > > > >       ret = ccw_io_helper(vcdev, ccw, VIRTIO_CCW_DOING_WRITE_STATUS);
+> > > > > > > > > > > > > > >       /* Write failed? We assume status is unchanged. */
+> > > > > > > > > > > > > > >       if (ret)
+> > > > > > > > > > > > > > > diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
+> > > > > > > > > > > > > > > index aa1eb5132767..95fac4c97c8b 100644
+> > > > > > > > > > > > > > > --- a/drivers/virtio/virtio.c
+> > > > > > > > > > > > > > > +++ b/drivers/virtio/virtio.c
+> > > > > > > > > > > > > > > @@ -220,6 +220,15 @@ static int virtio_features_ok(struct virtio_device *dev)
+> > > > > > > > > > > > > > >   * */
+> > > > > > > > > > > > > > >  void virtio_reset_device(struct virtio_device *dev)
+> > > > > > > > > > > > > > >  {
+> > > > > > > > > > > > > > > +     /*
+> > > > > > > > > > > > > > > +      * The below virtio_synchronize_cbs() guarantees that any
+> > > > > > > > > > > > > > > +      * interrupt for this line arriving after
+> > > > > > > > > > > > > > > +      * virtio_synchronize_vqs() has completed is guaranteed to see
+> > > > > > > > > > > > > > > +      * vq->broken as true.
+> > > > > > > > > > > > > > > +      */
+> > > > > > > > > > > > > > > +     virtio_break_device(dev);
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > So make this conditional
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > +     virtio_synchronize_cbs(dev);
+> > > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > >       dev->config->reset(dev);
+> > > > > > > > > > > > > > >  }
+> > > > > > > > > > > > > > >  EXPORT_SYMBOL_GPL(virtio_reset_device);
+> > > > > > > > > > > > > > > @@ -428,6 +437,9 @@ int register_virtio_device(struct virtio_device *dev)
+> > > > > > > > > > > > > > >       dev->config_enabled = false;
+> > > > > > > > > > > > > > >       dev->config_change_pending = false;
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > +     INIT_LIST_HEAD(&dev->vqs);
+> > > > > > > > > > > > > > > +     spin_lock_init(&dev->vqs_list_lock);
+> > > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > >       /* We always start by resetting the device, in case a previous
+> > > > > > > > > > > > > > >        * driver messed it up.  This also tests that code path a little. */
+> > > > > > > > > > > > > > >       virtio_reset_device(dev);
+> > > > > > > > > > > > > > > @@ -435,9 +447,6 @@ int register_virtio_device(struct virtio_device *dev)
+> > > > > > > > > > > > > > >       /* Acknowledge that we've seen the device. */
+> > > > > > > > > > > > > > >       virtio_add_status(dev, VIRTIO_CONFIG_S_ACKNOWLEDGE);
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > -     INIT_LIST_HEAD(&dev->vqs);
+> > > > > > > > > > > > > > > -     spin_lock_init(&dev->vqs_list_lock);
+> > > > > > > > > > > > > > > -
+> > > > > > > > > > > > > > >       /*
+> > > > > > > > > > > > > > >        * device_add() causes the bus infrastructure to look for a matching
+> > > > > > > > > > > > > > >        * driver.
+> > > > > > > > > > > > > > > diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+> > > > > > > > > > > > > > > index c9699a59f93c..f9a36bc7ac27 100644
+> > > > > > > > > > > > > > > --- a/drivers/virtio/virtio_mmio.c
+> > > > > > > > > > > > > > > +++ b/drivers/virtio/virtio_mmio.c
+> > > > > > > > > > > > > > > @@ -253,6 +253,11 @@ static void vm_set_status(struct virtio_device *vdev, u8 status)
+> > > > > > > > > > > > > > >       /* We should never be setting status to 0. */
+> > > > > > > > > > > > > > >       BUG_ON(status == 0);
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > +     /*
+> > > > > > > > > > > > > > > +      * Per memory-barriers.txt, wmb() is not needed to guarantee
+> > > > > > > > > > > > > > > +      * that the the cache coherent memory writes have completed
+> > > > > > > > > > > > > > > +      * before writing to the MMIO region.
+> > > > > > > > > > > > > > > +      */
+> > > > > > > > > > > > > > >       writel(status, vm_dev->base + VIRTIO_MMIO_STATUS);
+> > > > > > > > > > > > > > >  }
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > diff --git a/drivers/virtio/virtio_pci_modern_dev.c b/drivers/virtio/virtio_pci_modern_dev.c
+> > > > > > > > > > > > > > > index 4093f9cca7a6..a0fa14f28a7f 100644
+> > > > > > > > > > > > > > > --- a/drivers/virtio/virtio_pci_modern_dev.c
+> > > > > > > > > > > > > > > +++ b/drivers/virtio/virtio_pci_modern_dev.c
+> > > > > > > > > > > > > > > @@ -467,6 +467,11 @@ void vp_modern_set_status(struct virtio_pci_modern_device *mdev,
+> > > > > > > > > > > > > > >  {
+> > > > > > > > > > > > > > >       struct virtio_pci_common_cfg __iomem *cfg = mdev->common;
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > +     /*
+> > > > > > > > > > > > > > > +      * Per memory-barriers.txt, wmb() is not needed to guarantee
+> > > > > > > > > > > > > > > +      * that the the cache coherent memory writes have completed
+> > > > > > > > > > > > > > > +      * before writing to the MMIO region.
+> > > > > > > > > > > > > > > +      */
+> > > > > > > > > > > > > > >       vp_iowrite8(status, &cfg->device_status);
+> > > > > > > > > > > > > > >  }
+> > > > > > > > > > > > > > >  EXPORT_SYMBOL_GPL(vp_modern_set_status);
+> > > > > > > > > > > > > > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > > > > > > > > > > > > > > index 9c231e1fded7..13a7348cedff 100644
+> > > > > > > > > > > > > > > --- a/drivers/virtio/virtio_ring.c
+> > > > > > > > > > > > > > > +++ b/drivers/virtio/virtio_ring.c
+> > > > > > > > > > > > > > > @@ -1688,7 +1688,7 @@ static struct virtqueue *vring_create_virtqueue_packed(
+> > > > > > > > > > > > > > >       vq->we_own_ring = true;
+> > > > > > > > > > > > > > >       vq->notify = notify;
+> > > > > > > > > > > > > > >       vq->weak_barriers = weak_barriers;
+> > > > > > > > > > > > > > > -     vq->broken = false;
+> > > > > > > > > > > > > > > +     vq->broken = true;
+> > > > > > > > > > > > > > >       vq->last_used_idx = 0;
+> > > > > > > > > > > > > > >       vq->event_triggered = false;
+> > > > > > > > > > > > > > >       vq->num_added = 0;
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > and make this conditional
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > @@ -2134,8 +2134,11 @@ irqreturn_t vring_interrupt(int irq, void *_vq)
+> > > > > > > > > > > > > > >               return IRQ_NONE;
+> > > > > > > > > > > > > > >       }
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > -     if (unlikely(vq->broken))
+> > > > > > > > > > > > > > > -             return IRQ_HANDLED;
+> > > > > > > > > > > > > > > +     if (unlikely(vq->broken)) {
+> > > > > > > > > > > > > > > +             dev_warn_once(&vq->vq.vdev->dev,
+> > > > > > > > > > > > > > > +                           "virtio vring IRQ raised before DRIVER_OK");
+> > > > > > > > > > > > > > > +             return IRQ_NONE;
+> > > > > > > > > > > > > > > +     }
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > >       /* Just a hint for performance: so it's ok that this can be racy! */
+> > > > > > > > > > > > > > >       if (vq->event)
+> > > > > > > > > > > > > > > @@ -2177,7 +2180,7 @@ struct virtqueue *__vring_new_virtqueue(unsigned int index,
+> > > > > > > > > > > > > > >       vq->we_own_ring = false;
+> > > > > > > > > > > > > > >       vq->notify = notify;
+> > > > > > > > > > > > > > >       vq->weak_barriers = weak_barriers;
+> > > > > > > > > > > > > > > -     vq->broken = false;
+> > > > > > > > > > > > > > > +     vq->broken = true;
+> > > > > > > > > > > > > > >       vq->last_used_idx = 0;
+> > > > > > > > > > > > > > >       vq->event_triggered = false;
+> > > > > > > > > > > > > > >       vq->num_added = 0;
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > and make this conditional
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+> > > > > > > > > > > > > > > index 25be018810a7..d4edfd7d91bb 100644
+> > > > > > > > > > > > > > > --- a/include/linux/virtio_config.h
+> > > > > > > > > > > > > > > +++ b/include/linux/virtio_config.h
+> > > > > > > > > > > > > > > @@ -256,6 +256,26 @@ void virtio_device_ready(struct virtio_device *dev)
+> > > > > > > > > > > > > > >       unsigned status = dev->config->get_status(dev);
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > >       BUG_ON(status & VIRTIO_CONFIG_S_DRIVER_OK);
+> > > > > > > > > > > > > > > +
+> > > > > > > > > > > > > > > +     /*
+> > > > > > > > > > > > > > > +      * The virtio_synchronize_cbs() makes sure vring_interrupt()
+> > > > > > > > > > > > > > > +      * will see the driver specific setup if it sees vq->broken
+> > > > > > > > > > > > > > > +      * as false (even if the notifications come before DRIVER_OK).
+> > > > > > > > > > > > > > > +      */
+> > > > > > > > > > > > > > > +     virtio_synchronize_cbs(dev);
+> > > > > > > > > > > > > > > +     __virtio_unbreak_device(dev);
+> > > > > > > > > > > > > > > +     /*
+> > > > > > > > > > > > > > > +      * The transport should ensure the visibility of vq->broken
+> > > > > > > > > > > > > > > +      * before setting DRIVER_OK. See the comments for the transport
+> > > > > > > > > > > > > > > +      * specific set_status() method.
+> > > > > > > > > > > > > > > +      *
+> > > > > > > > > > > > > > > +      * A well behaved device will only notify a virtqueue after
+> > > > > > > > > > > > > > > +      * DRIVER_OK, this means the device should "see" the coherenct
+> > > > > > > > > > > > > > > +      * memory write that set vq->broken as false which is done by
+> > > > > > > > > > > > > > > +      * the driver when it sees DRIVER_OK, then the following
+> > > > > > > > > > > > > > > +      * driver's vring_interrupt() will see vq->broken as false so
+> > > > > > > > > > > > > > > +      * we won't lose any notification.
+> > > > > > > > > > > > > > > +      */
+> > > > > > > > > > > > > > >       dev->config->set_status(dev, status | VIRTIO_CONFIG_S_DRIVER_OK);
+> > > > > > > > > > > > > > >  }
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > --
+> > > > > > > > > > > > > > > 2.25.1
+> > > > > > > > > > > > > >
+> > > > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > >
+> > > > >
+> > >
+>
 
