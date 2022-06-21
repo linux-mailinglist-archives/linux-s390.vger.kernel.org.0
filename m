@@ -2,118 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 855BC5536E6
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Jun 2022 17:55:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AEF255376D
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Jun 2022 18:09:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353269AbiFUPwb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Jun 2022 11:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34246 "EHLO
+        id S1353723AbiFUQI6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 Jun 2022 12:08:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353266AbiFUPwF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 Jun 2022 11:52:05 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 768D22D1ED;
-        Tue, 21 Jun 2022 08:52:04 -0700 (PDT)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25LEnwb4035928;
-        Tue, 21 Jun 2022 15:52:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : content-transfer-encoding
- : mime-version; s=pp1; bh=zc2bn5fhqwKgZBnqIu0vVtEw3IUYFo7BSDMiVQKSDYw=;
- b=mrIcBNmJrywUO1aph30VJzY53kHwV0xGlO2DlqTQAFwyaVT5dNqyY5jZCXXBRzyjsAPQ
- C6yAPans4/qLFMW2boah8MO/r0CKXKPPkpduV0eLpNaHJi9fUiSD2X2OIyKV02qezzVP
- gsf+FEVPPSu6Ut4S35cOeLGb96JhqS1jLfPvISLxep78hga5kyInu/Fopabsetxtetuz
- yjsjs9QQHSEhivBmztvIiM4IdwviDYmFkfBPHNU3kE2iEYvMtTw5Z/wpETaXcP0jTxtf
- B+mluyaI/wzNtbUacDU17Yer3sHpOJeF5gGpStfV7rE9QHV535CjVUJdX+s0Os/p4mc0 Vw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gug3mhw7d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jun 2022 15:52:02 +0000
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25LEnwAs035925;
-        Tue, 21 Jun 2022 15:52:01 GMT
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gug3mhw6u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jun 2022 15:52:01 +0000
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25LFZdCl010359;
-        Tue, 21 Jun 2022 15:52:01 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma01dal.us.ibm.com with ESMTP id 3gs6b9j1wp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Jun 2022 15:52:00 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25LFpxhN24772868
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jun 2022 15:51:59 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9352E136053;
-        Tue, 21 Jun 2022 15:51:59 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 881BA13604F;
-        Tue, 21 Jun 2022 15:51:58 +0000 (GMT)
-Received: from li-fed795cc-2ab6-11b2-a85c-f0946e4a8dff.ibm.com.com (unknown [9.160.18.227])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Jun 2022 15:51:58 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     jjherne@linux.ibm.com, freude@linux.ibm.com,
-        borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
-        pasic@linux.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com, fiuczy@linux.ibm.com
-Subject: [PATCH v20 20/20] MAINTAINERS: pick up all vfio_ap docs for VFIO AP maintainers
-Date:   Tue, 21 Jun 2022 11:51:34 -0400
-Message-Id: <20220621155134.1932383-21-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20220621155134.1932383-1-akrowiak@linux.ibm.com>
-References: <20220621155134.1932383-1-akrowiak@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: xW97XOdoDbVVKbjSBr_RUUEoKAT4jSg4
-X-Proofpoint-GUID: TFsm6TX5g7jx6kdauQwyPKL23b5smZKM
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 2 URL's were un-rewritten
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-21_08,2022-06-21_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
- phishscore=0 spamscore=0 clxscore=1015 mlxscore=0 mlxlogscore=868
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2206210066
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S1353760AbiFUQI1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 Jun 2022 12:08:27 -0400
+Received: from smtpbg.qq.com (smtpbg138.qq.com [106.55.201.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45CF25C65;
+        Tue, 21 Jun 2022 09:08:19 -0700 (PDT)
+X-QQ-mid: bizesmtp62t1655827686to343lxy
+Received: from ubuntu.localdomain ( [106.117.99.68])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Wed, 22 Jun 2022 00:07:58 +0800 (CST)
+X-QQ-SSF: 0100000000000090B000000A0000000
+X-QQ-FEAT: Adk7n3szVYEqyBKaH0TqoCnv6w0LLs8B+sZnb3JzA9sPZkYwk44BPKyCQZIbV
+        m3uXraRAi8ZBYJsnRXF0LXWgJZ/kyNnINTxP3PUG+V0z4URhBj0+RukupFeMASTkJzvGivA
+        LFJJokb2/dSS0uvs4/Y5KxC7lOv+hXLPeUmJFU6jqL+I/C1EVN/u7S+v6gdN5rOQ7WolKPW
+        obXgT+9jMYg3OUX4qDVrDZCqSfwdJAqaMnISEHp8jwFQEQvQhwLH+6WR+FhUKBefXDtNhWR
+        rXNlVvs3DPelYr73kavGIbqqbk/XXzBdDBeYai2CJLy65t
+X-QQ-GoodBg: 0
+From:   Jiang Jian <jiangjian@cdjrlc.com>
+To:     wintera@linux.ibm.com, wenjia@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com
+Cc:     borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jiang Jian <jiangjian@cdjrlc.com>
+Subject: [PATCH] s390/net: Fix duplicate 'the' in two places
+Date:   Wed, 22 Jun 2022 00:07:56 +0800
+Message-Id: <20220621160756.16226-1-jiangjian@cdjrlc.com>
+X-Mailer: git-send-email 2.17.1
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:cdjrlc.com:qybgspam:qybgspam10
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_PASS,T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-A new document, Documentation/s390/vfio-ap-locking.rst was added. Make sure
-the new document is picked up for the VFIO AP maintainers by using a
-wildcard: Documentation/s390/vfio-ap*.
+file: drivers/s390/net/qeth_core_main.c
+line: 3568
+                /*
+                 * there's no outstanding PCI any more, so we
+                 * have to request a PCI to be sure the the PCI
+                 * will wake at some time in the future then we
+                 * can flush packed buffers that might still be
+                 * hanging around, which can happen if no
+                 * further send was requested by the stack
+                 */
+changed to:
+		/*
+                 * there's no outstanding PCI any more, so we
+                 * have to request a PCI to be sure the PCI
+                 * will wake at some time in the future. Then we
+                 * can flush packed buffers that might still be
+                 * hanging around, which can happen if no
+                 * further send was requested by the stack
+                 */
 
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+Signed-off-by: Jiang Jian <jiangjian@cdjrlc.com>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/net/qeth_core_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3cf9842d9233..fbe417746e22 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17453,7 +17453,7 @@ M:	Jason Herne <jjherne@linux.ibm.com>
- L:	linux-s390@vger.kernel.org
- S:	Supported
- W:	http://www.ibm.com/developerworks/linux/linux390/
--F:	Documentation/s390/vfio-ap.rst
-+F:	Documentation/s390/vfio-ap*
- F:	drivers/s390/crypto/vfio_ap*
- 
- S390 VFIO-CCW DRIVER
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index 9e54fe76a9b2..5248f97ee7a6 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -3565,8 +3565,8 @@ static void qeth_flush_buffers(struct qeth_qdio_out_q *queue, int index,
+ 			if (!atomic_read(&queue->set_pci_flags_count)) {
+ 				/*
+ 				 * there's no outstanding PCI any more, so we
+-				 * have to request a PCI to be sure the the PCI
+-				 * will wake at some time in the future then we
++                 * have to request a PCI to be sure the PCI
++                 * will wake at some time in the future. Then we
+ 				 * can flush packed buffers that might still be
+ 				 * hanging around, which can happen if no
+ 				 * further send was requested by the stack
 -- 
-2.35.3
+2.17.1
 
