@@ -2,184 +2,330 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3580455D228
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Jun 2022 15:10:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AED255DFE7
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Jun 2022 15:31:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236714AbiF0OIK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 Jun 2022 10:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48474 "EHLO
+        id S237550AbiF0Ocm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 Jun 2022 10:32:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236741AbiF0OII (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 27 Jun 2022 10:08:08 -0400
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87CC411440
-        for <linux-s390@vger.kernel.org>; Mon, 27 Jun 2022 07:08:07 -0700 (PDT)
-Received: by mail-yb1-xb2c.google.com with SMTP id p7so15523131ybm.7
-        for <linux-s390@vger.kernel.org>; Mon, 27 Jun 2022 07:08:07 -0700 (PDT)
+        with ESMTP id S235525AbiF0Ock (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 27 Jun 2022 10:32:40 -0400
+Received: from esa.hc3962-90.iphmx.com (esa.hc3962-90.iphmx.com [216.71.142.165])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96ED42646;
+        Mon, 27 Jun 2022 07:32:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Sjw8Rq/SzvseVodDwQxp2+Q31Mr0tWQ4MKXsdJlU2cg=;
-        b=FNybrAKvk56tbmhGsNSol/sAk2WPCD9f/EnbfNGtYtTRxuDjK5KtlipdfEkdZ15GfR
-         2ZVGGTdXYE8JCJ73vYP045eGq1ZtgwuqKnC0ysZD0ffk/M8eLDDCoTK1+7MXH1UF8v/h
-         OmIFdtZQE8XN4VDlxAbc8cd3FHUJNWruSpWTHLSObfVxTcKInOj0mpwlSAwvhmGxXebU
-         htw640mczpUob+epPmy+ZAgZAg+JzC04mGFtVp1P15GuAjDL9Th+UMRsWwSWJZoe9+Qs
-         Q+mBhAat4RLw+HLV2uKp/c2ZKyCFZSW8QC8lGFgH/kagAIAnnCPkRitYGr0ZKOhtxwRN
-         x7BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sjw8Rq/SzvseVodDwQxp2+Q31Mr0tWQ4MKXsdJlU2cg=;
-        b=PPi9NHSEKtOE9ZG0WdCXJGG3VXGdhDeZMDR7mxRemV2PLBE5Lz6cGzMCzL71XZbyxJ
-         /iLKLgI6ngz0Ulvb4IBjOC7XYycIRisXWpumsAZkKwNhVnm8brmXkb72/EbRwiExa/zB
-         1PqRTVAlZ0L7InXMhrpnsl1x64A339PgC/txvMHxu1jIBOA8C44cMxldJGj4cUWtkubR
-         +/x4nFvjSqpbWugFVRQvF1S/NKRUbhuNUQnLEjEQ9kbODRoM8vHHqyCgz1izpM5qQy+s
-         SYkcBegcSfliWkw00TbTFL8+QnkbtWo12QkmQvKLUMqWQo71uhLe2kXgAmJwYx9VeAfP
-         /x8g==
-X-Gm-Message-State: AJIora+upLNLTD1cSGBikx2qmZAb+SRU21gS8IcN7m/lxq6it5FXN53l
-        7RvITQeEMYo5qU8EywStgfY5w/rPZYr86OSUF/G0aw==
-X-Google-Smtp-Source: AGRyM1uowX5w9MG4KUhH5mzYPs/nJYOessQKIWZ2T27hbR78LZ0upAkQZTZYPIlSVQsuDxp8yWRUmqzbJ4KyVb5DKSc=
-X-Received: by 2002:a25:d957:0:b0:66c:9476:708f with SMTP id
- q84-20020a25d957000000b0066c9476708fmr10600680ybg.427.1656338886354; Mon, 27
- Jun 2022 07:08:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <CADvbK_csvmkKe46hT9792=+Qcjor2EvkkAnr--CJK3NGX-N9BQ@mail.gmail.com>
- <CADvbK_eQUmb942vC+bG+NRzM1ki1LiCydEDR1AezZ35Jvsdfnw@mail.gmail.com>
- <20220623185730.25b88096@kernel.org> <CANn89iLidqjiiV8vxr7KnUg0JvfoS9+TRGg=8ANZ8NBRjeQxsQ@mail.gmail.com>
- <CALvZod7kULCvHAuk53FE-XBOi4-BbLdY3HCg6jfCZTJDxYsZow@mail.gmail.com>
- <20220624070656.GE79500@shbuild999.sh.intel.com> <20220624144358.lqt2ffjdry6p5u4d@google.com>
- <20220625023642.GA40868@shbuild999.sh.intel.com> <20220627023812.GA29314@shbuild999.sh.intel.com>
- <CANn89i+6NPujMyiQxriZRt6vhv6hNrAntXxi1uOhJ0SSqnJ47w@mail.gmail.com> <20220627123415.GA32052@shbuild999.sh.intel.com>
-In-Reply-To: <20220627123415.GA32052@shbuild999.sh.intel.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Mon, 27 Jun 2022 16:07:55 +0200
-Message-ID: <CANn89iJAoYCebNbXpNMXRoDUkFMhg9QagetVU9NZUq+GnLMgqQ@mail.gmail.com>
-Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Shakeel Butt <shakeelb@google.com>, Linux MM <linux-mm@kvack.org>,
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qccesdkim1;
+  t=1656340359; x=1656945159;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=eYXH/ctB6v6XAcg42LM5ozEFN2HdhzgzZ+oK7wTjzCM=;
+  b=QoJXUa/b01FhK9zt2z0c8Xn88yu5jEQ5ltCECRuG2lL3D1yw5uU7v5pV
+   jas0PXwbfEvJn1mY4xy44T3k+Ogot+GcW2RojVZ6Vx6/VgspqnqONegH3
+   XhT+u0VuZj9ZuVbDXO54E2j1A5WdtmVF/otOXPnC926aSXfKQFtiuSWwi
+   8=;
+Received: from mail-bn8nam11lp2168.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.168])
+  by ob1.hc3962-90.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 14:32:34 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cGOW8HUQIVaBTKpLWO+C4aPx6X9Xj3tooAfUWy+sPob781xwBfm+C7JsnAksVL3znA9fm8u9Q75Yeyd1o3Tge/tgaB1QffUppb747SaJw7lnJLJEB2Xolc+JaNjb7JGObqPkaNoXE5DSopsiW9Mz+IgZg7Q6LgK8dem1EfY/Dom8edgAwsjSPNiacB+Hm2wzLwIUdwES/SUxe7yPv5rnwHaMz/wspCxkPKRIaycwdqM2wHSk9mY5u492fZdBRANCSJlUmUMbcg8VJ4szN2By0Hj7ofjbjGE+lD1M2HU+LUA6MB3sN16m1uRBbHyqicSMhC2JSQuKZ7BagnmJAqeNhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eYXH/ctB6v6XAcg42LM5ozEFN2HdhzgzZ+oK7wTjzCM=;
+ b=NZV31S8FY6LC+g0g4cS2e7+2EXToeuvX68UC8oiP7n15GL6EZoAyZ1Mk1LHHX6fJX7VbAv+uimUrpPyQNsAC0kPaga/El4ds1wJy/cUhoO9f/AUWI9p0aAw7xE0g616srjc8/TO5zPLlR3p3S5f1GWXxGuJrdLgScP+KM8s9alFA7vwQIrE/EWOEIOGH6W24mSg5e2A4jrxGMnrxSVeZBY3/bdNKpW6zIyQUWeApbFkcPIz5rVzVthWopVzFqCLjm8u8BWNFFMjxBwObIj6EtyDtdfBdxIB5F+UnczM9fuBx4/wn2aVBgcNsgo2gZa+FV5t69Qn33EI2GYHVUGr4hg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=quicinc.com; dmarc=pass action=none header.from=quicinc.com;
+ dkim=pass header.d=quicinc.com; arc=none
+Received: from SN6PR02MB4205.namprd02.prod.outlook.com (2603:10b6:805:35::17)
+ by DM6PR02MB6138.namprd02.prod.outlook.com (2603:10b6:5:1fd::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.18; Mon, 27 Jun
+ 2022 14:32:29 +0000
+Received: from SN6PR02MB4205.namprd02.prod.outlook.com
+ ([fe80::f4c0:89e2:789d:ceb1]) by SN6PR02MB4205.namprd02.prod.outlook.com
+ ([fe80::f4c0:89e2:789d:ceb1%7]) with mapi id 15.20.5373.016; Mon, 27 Jun 2022
+ 14:32:29 +0000
+From:   Brian Cain <bcain@quicinc.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+CC:     "hch@infradead.org" <hch@infradead.org>,
+        "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Xin Long <lucien.xin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        kernel test robot <oliver.sang@intel.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        linux-s390@vger.kernel.org, MPTCP Upstream <mptcp@lists.linux.dev>,
-        "linux-sctp @ vger . kernel . org" <linux-sctp@vger.kernel.org>,
-        lkp@lists.01.org, kbuild test robot <lkp@intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Yin Fengwei <fengwei.yin@intel.com>, Ying Xu <yinxu@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "openrisc@lists.librecores.org" <openrisc@lists.librecores.org>,
+        "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>,
+        "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>,
+        "linux-hexagon@vger.kernel.org" <linux-hexagon@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
+        "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Brian Cain <bcain@codeaurora.org>
+Subject: RE: [PATCH V5 12/26] hexagon/mm: Enable ARCH_HAS_VM_GET_PAGE_PROT
+Thread-Topic: [PATCH V5 12/26] hexagon/mm: Enable ARCH_HAS_VM_GET_PAGE_PROT
+Thread-Index: AQHYieNaF68nviM9AEWMdUsq7TAcg61jUU0Q
+Date:   Mon, 27 Jun 2022 14:32:29 +0000
+Message-ID: <SN6PR02MB4205D2460F6DB1F3C82999BDB8B99@SN6PR02MB4205.namprd02.prod.outlook.com>
+References: <20220627045833.1590055-1-anshuman.khandual@arm.com>
+ <20220627045833.1590055-13-anshuman.khandual@arm.com>
+In-Reply-To: <20220627045833.1590055-13-anshuman.khandual@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=quicinc.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d4ab36eb-bfe6-4b73-98a3-08da5849dd6d
+x-ms-traffictypediagnostic: DM6PR02MB6138:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6LCBwa4CDTnSlgl6CnuvSHylK43fGHMLoBG839b+bXfVd5N7nYAqXddIKZqfMqXLDn6rdkMCP1/tZanVPeTPStEENKwpoEwvg8a0U6B/0/Ru8PHLp8EMwwlxlorNMwaAPhooSIHXe7nn8Z1ShjJ0dbEY2E3yX75YVCgoONo8/wT4Yp6zLqRil2kKMbKONi36XpqRJ62+CwUUA0rs8EYeg183Y/Nnzo8iYxACJkCAvv6uMW4GQlZO+IT8CgIrtpAaFh8vh4oq3k8339e0GqYlzOjkOwDqIfJDV4g3950HVCaF7gJRK8W/YV4c/M2sTtKAnZAzAp8OJnCivz55DqELuL+WRsKJOQvqZmwJdVdEcUS6HnSuyQZEjzX5c2CuBF6vVaMKBpkmRnBRlZn7mQhLMmQIGEtZhKClBhltEqaQAUMuE6h2rHsyU/HNe6/zj7Pniiyg77NtFG695+ENaEfPLLX8eBmdMPen7Wsl95DYcmW5egsFZmfXQ3rmNkz7xZxIotgUiku9DQAVGXvhGg6rFa8TTWNy7DcQXB5Hq57Qi/2nig5m7DruO8mx/x339XgDAo+wpIhkdysR0Xb3viQDLPnLEFX/NFqwRO8f6S1hJLGrZtxw3nCBuS7djTB/OYrEh0bRQbCS+XpS+5u74i+LLi89/GWkJbV0rSokF7YMuKyr2wfVZbnYPBfFLPEMyl/NZ8/npwsOHL3S22bC/riomYaiHfFjkhVIB3H8V/MO4W1u+CO6mrQ6oqQ+S6hzCuM98onf4SChF/QNMNhu2JlgX6H5pEuPIykBm/FLc1PIeTw=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR02MB4205.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(136003)(376002)(396003)(366004)(39860400002)(7696005)(64756008)(7416002)(66556008)(83380400001)(76116006)(71200400001)(66946007)(41300700001)(110136005)(8676002)(38100700002)(122000001)(316002)(5660300002)(26005)(54906003)(9686003)(86362001)(186003)(55016003)(2906002)(33656002)(4326008)(66446008)(66476007)(38070700005)(52536014)(6506007)(478600001)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?fjdQUrKtASc2PpuHSL32JID+E3A8OdplJEurfWMCyWe1Ev0UAJb0kdJj2NuG?=
+ =?us-ascii?Q?TlHv362lWxFoa5ALdsalq6xQWXSkO1YHoSJZY1k/rgx3J9dRCpUpxJtleWXj?=
+ =?us-ascii?Q?ODdcjBHLqnp8WDg5wZVvpSO+GL8oXGAHwTr/ZjunTHyCIIEI/9QixrMCTsHp?=
+ =?us-ascii?Q?7c5StcktmyuahjQeoeWVM/YQY8NsrQovteH2B/LvMZ6KGp024b0F7uUisWfq?=
+ =?us-ascii?Q?+qQB1c1bIgNNH1WqYoZcu5gHJp337FDnuLe4nTqkDp3+cY42e2lP7jx6P9YY?=
+ =?us-ascii?Q?GhUh5g+n8x8YRQt8Mpul/tlamczbwc/Dwh4pMotReDzXA8otSpw7fHIgqXj+?=
+ =?us-ascii?Q?P7RlC0kVsZ7z5Az84FNGanwqy/bzikZoZYizroHVA/rmaC8EOzC2Rk4CkyXv?=
+ =?us-ascii?Q?bZ8kSJGpToeh8O0GmHov5z2+/y3o2y0WWRvHOajDZXYB/5DpQZml+CgrN7Hs?=
+ =?us-ascii?Q?Ou7iPMNFH+llQl3dtFofdGRcVZgRRKlKlNZvlTdLRUHpOwDGNi0x4k1zyEWN?=
+ =?us-ascii?Q?TF6mzhZU4b3NFyGD/uG4/FWlbwgB4dV/IAL5MjjYug+4Z6P3IHUynKxDFbKz?=
+ =?us-ascii?Q?ld/E9TkW1XZdKvkO805FstbIC4WtHsR0/erVsqP5MBSsRIJ7vfXLHYU284GL?=
+ =?us-ascii?Q?kdVdT4aFiZsFORwOYvCuACAo9COWGeNV3AvFy+QxZwnsExzUgKcqqFc/wnRS?=
+ =?us-ascii?Q?GQV6446YR4t9ooSnxQksthTEWeRWBNqkPTXe030jVc4yT5zeAXe5X6aGyEBN?=
+ =?us-ascii?Q?VI6sPh+1rOEjS2/J4/GyFcbxW36qPqW4WWtKI1CL5lCH8A2N764ShZOKmoJx?=
+ =?us-ascii?Q?IT0TMj8HZaeNiFuU5jCbUTJZPm6ARtU4eRp8rJdPWp0mCzU48npI4j0ga/bT?=
+ =?us-ascii?Q?ns61D7TIBY98KX+NRDwu9anufHWBA8F45bVSPmvVsqouV9T0cN2z8tRtILcN?=
+ =?us-ascii?Q?YBWCpGRq6B53gAqpAP6ERpRWDnbmS3zzNz4gElNUQsUiiyE62DhXwx4eoerU?=
+ =?us-ascii?Q?3tClec7saJePlwbyuI+e7R5ysSR0cNnqLnHZtSU5Oa6iJpykIqtef0MYYRvE?=
+ =?us-ascii?Q?p/wuhHMG5ys9bOxu3CpQudb2iDo7EvXruu0mrNxQVkF0f3sSBvgIRwQZH/3S?=
+ =?us-ascii?Q?4eGoZhjEfrowgTio9EVAdKZ9FsSLrTfax+q5bW6C3PSaZB5F3Qv6ki+OZD9a?=
+ =?us-ascii?Q?cnSVWsU72bjIXvLVSmM8lepIJhvSBbsCMXg1MaBU86su0Ipiqyzwh0IoO+SU?=
+ =?us-ascii?Q?hm0J0op3lWe/SWrxgDhzur+2KBstLAH5JpBTlQ6tlwaY1xSc4UbI1eslgG6Y?=
+ =?us-ascii?Q?WQEZ8lV1EFXR1uWVEJVZCI+SE98u4nI7h1aEw2t8DqveVLGyxF19c9SCNhJD?=
+ =?us-ascii?Q?Oeflzg69bdYlLrdLheBQyDg5nnoRfnNJneD0CpPbrXYWggRXTSRPXggodcn3?=
+ =?us-ascii?Q?N9RgBCFjUkp8ohtO/cnQgW1IdvFSX31rCJuDpOsg3nf7aFjqVYxX8wYadu2Q?=
+ =?us-ascii?Q?XngHluuV8mZbArW9Q+q6i7T3IuXo9L920bB2loJhgUKHY6vu6HLBscmSIbM+?=
+ =?us-ascii?Q?uA7yYrM07LaCL9dzQfTN1fZctgrOxlZODvGqAb+s?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: quicinc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4205.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4ab36eb-bfe6-4b73-98a3-08da5849dd6d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2022 14:32:29.6681
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 98e9ba89-e1a1-4e38-9007-8bdabc25de1d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yz3IG0XM+MN1EUq2d+bRK8OLWKZV1yEnYf/4cni8BG9mK0RhLJTaLfTZn2doXORgMtR06QceXTPWnrNZpZNkrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6138
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jun 27, 2022 at 2:34 PM Feng Tang <feng.tang@intel.com> wrote:
->
-> On Mon, Jun 27, 2022 at 10:46:21AM +0200, Eric Dumazet wrote:
-> > On Mon, Jun 27, 2022 at 4:38 AM Feng Tang <feng.tang@intel.com> wrote:
-> [snip]
-> > > > >
-> > > > > Thanks Feng. Can you check the value of memory.kmem.tcp.max_usage_in_bytes
-> > > > > in /sys/fs/cgroup/memory/system.slice/lkp-bootstrap.service after making
-> > > > > sure that the netperf test has already run?
-> > > >
-> > > > memory.kmem.tcp.max_usage_in_bytes:0
-> > >
-> > > Sorry, I made a mistake that in the original report from Oliver, it
-> > > was 'cgroup v2' with a 'debian-11.1' rootfs.
-> > >
-> > > When you asked about cgroup info, I tried the job on another tbox, and
-> > > the original 'job.yaml' didn't work, so I kept the 'netperf' test
-> > > parameters and started a new job which somehow run with a 'debian-10.4'
-> > > rootfs and acutally run with cgroup v1.
-> > >
-> > > And as you mentioned cgroup version does make a big difference, that
-> > > with v1, the regression is reduced to 1% ~ 5% on different generations
-> > > of test platforms. Eric mentioned they also got regression report,
-> > > but much smaller one, maybe it's due to the cgroup version?
-> >
-> > This was using the current net-next tree.
-> > Used recipe was something like:
-> >
-> > Make sure cgroup2 is mounted or mount it by mount -t cgroup2 none $MOUNT_POINT.
-> > Enable memory controller by echo +memory > $MOUNT_POINT/cgroup.subtree_control.
-> > Create a cgroup by mkdir $MOUNT_POINT/job.
-> > Jump into that cgroup by echo $$ > $MOUNT_POINT/job/cgroup.procs.
-> >
-> > <Launch tests>
-> >
-> > The regression was smaller than 1%, so considered noise compared to
-> > the benefits of the bug fix.
->
-> Yes, 1% is just around noise level for a microbenchmark.
->
-> I went check the original test data of Oliver's report, the tests was
-> run 6 rounds and the performance data is pretty stable (0Day's report
-> will show any std deviation bigger than 2%)
->
-> The test platform is a 4 sockets 72C/144T machine, and I run the
-> same job (nr_tasks = 25% * nr_cpus) on one CascadeLake AP (4 nodes)
-> and one Icelake 2 sockets platform, and saw 75% and 53% regresson on
-> them.
->
-> In the first email, there is a file named 'reproduce', it shows the
-> basic test process:
->
-> "
->   use 'performane' cpufre  governor for all CPUs
->
->   netserver -4 -D
->   modprobe sctp
->   netperf -4 -H 127.0.0.1 -t SCTP_STREAM_MANY -c -C -l 300 -- -m 10K  &
->   netperf -4 -H 127.0.0.1 -t SCTP_STREAM_MANY -c -C -l 300 -- -m 10K  &
->   netperf -4 -H 127.0.0.1 -t SCTP_STREAM_MANY -c -C -l 300 -- -m 10K  &
->   (repeat 36 times in total)
->   ...
->
-> "
->
-> Which starts 36 (25% of nr_cpus) netperf clients. And the clients number
-> also matters, I tried to increase the client number from 36 to 72(50%),
-> and the regression is changed from 69.4% to 73.7%"
->
+> -----Original Message-----
+> From: Anshuman Khandual <anshuman.khandual@arm.com>
+...
+> WARNING: This email originated from outside of Qualcomm. Please be wary
+> of any links or attachments, and do not enable macros.
+>=20
+> This enables ARCH_HAS_VM_GET_PAGE_PROT on the platform and exports
+> standard
+> vm_get_page_prot() implementation via DECLARE_VM_GET_PAGE_PROT,
+> which looks
+> up a private and static protection_map[] array. Subsequently all __SXXX a=
+nd
+> __PXXX macros can be dropped which are no longer needed.
+>=20
+> Cc: Brian Cain <bcain@codeaurora.org>
+> Cc: linux-hexagon@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  arch/hexagon/Kconfig               |  1 +
+>  arch/hexagon/include/asm/pgtable.h | 27 -------------------
+>  arch/hexagon/mm/init.c             | 42 ++++++++++++++++++++++++++++++
+>  3 files changed, 43 insertions(+), 27 deletions(-)
+>=20
+> diff --git a/arch/hexagon/Kconfig b/arch/hexagon/Kconfig
+> index 54eadf265178..bc4ceecd0588 100644
+> --- a/arch/hexagon/Kconfig
+> +++ b/arch/hexagon/Kconfig
+> @@ -6,6 +6,7 @@ config HEXAGON
+>         def_bool y
+>         select ARCH_32BIT_OFF_T
+>         select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+> +       select ARCH_HAS_VM_GET_PAGE_PROT
+>         select ARCH_NO_PREEMPT
+>         select DMA_GLOBAL_POOL
+>         # Other pending projects/to-do items.
+> diff --git a/arch/hexagon/include/asm/pgtable.h
+> b/arch/hexagon/include/asm/pgtable.h
+> index 0610724d6a28..f7048c18b6f9 100644
+> --- a/arch/hexagon/include/asm/pgtable.h
+> +++ b/arch/hexagon/include/asm/pgtable.h
+> @@ -126,33 +126,6 @@ extern unsigned long _dflt_cache_att;
+>   */
+>  #define CACHEDEF       (CACHE_DEFAULT << 6)
+>=20
+> -/* Private (copy-on-write) page protections. */
+> -#define __P000 __pgprot(_PAGE_PRESENT | _PAGE_USER | CACHEDEF)
+> -#define __P001 __pgprot(_PAGE_PRESENT | _PAGE_USER | _PAGE_READ |
+> CACHEDEF)
+> -#define __P010 __P000  /* Write-only copy-on-write */
+> -#define __P011 __P001  /* Read/Write copy-on-write */
+> -#define __P100 __pgprot(_PAGE_PRESENT | _PAGE_USER | \
+> -                       _PAGE_EXECUTE | CACHEDEF)
+> -#define __P101 __pgprot(_PAGE_PRESENT | _PAGE_USER |
+> _PAGE_EXECUTE | \
+> -                       _PAGE_READ | CACHEDEF)
+> -#define __P110 __P100  /* Write/execute copy-on-write */
+> -#define __P111 __P101  /* Read/Write/Execute, copy-on-write */
+> -
+> -/* Shared page protections. */
+> -#define __S000 __P000
+> -#define __S001 __P001
+> -#define __S010 __pgprot(_PAGE_PRESENT | _PAGE_USER | \
+> -                       _PAGE_WRITE | CACHEDEF)
+> -#define __S011 __pgprot(_PAGE_PRESENT | _PAGE_USER | _PAGE_READ |
+> \
+> -                       _PAGE_WRITE | CACHEDEF)
+> -#define __S100 __pgprot(_PAGE_PRESENT | _PAGE_USER | \
+> -                       _PAGE_EXECUTE | CACHEDEF)
+> -#define __S101 __P101
+> -#define __S110 __pgprot(_PAGE_PRESENT | _PAGE_USER | \
+> -                       _PAGE_EXECUTE | _PAGE_WRITE | CACHEDEF)
+> -#define __S111 __pgprot(_PAGE_PRESENT | _PAGE_USER | _PAGE_READ |
+> \
+> -                       _PAGE_EXECUTE | _PAGE_WRITE | CACHEDEF)
+> -
+>  extern pgd_t swapper_pg_dir[PTRS_PER_PGD];  /* located in head.S */
+>=20
+>  /*  HUGETLB not working currently  */
+> diff --git a/arch/hexagon/mm/init.c b/arch/hexagon/mm/init.c
+> index 3167a3b5c97b..146115c9de61 100644
+> --- a/arch/hexagon/mm/init.c
+> +++ b/arch/hexagon/mm/init.c
+> @@ -234,3 +234,45 @@ void __init setup_arch_memory(void)
+>          *  which is called by start_kernel() later on in the process
+>          */
+>  }
+> +
+> +static const pgprot_t protection_map[16] =3D {
+> +       [VM_NONE]                                       =3D __pgprot(_PAG=
+E_PRESENT |
+> _PAGE_USER |
+> +                                                                  CACHED=
+EF),
+> +       [VM_READ]                                       =3D __pgprot(_PAG=
+E_PRESENT |
+> _PAGE_USER |
+> +                                                                  _PAGE_=
+READ | CACHEDEF),
+> +       [VM_WRITE]                                      =3D __pgprot(_PAG=
+E_PRESENT |
+> _PAGE_USER |
+> +                                                                  CACHED=
+EF),
+> +       [VM_WRITE | VM_READ]                            =3D __pgprot(_PAG=
+E_PRESENT |
+> _PAGE_USER |
+> +                                                                  _PAGE_=
+READ | CACHEDEF),
+> +       [VM_EXEC]                                       =3D __pgprot(_PAG=
+E_PRESENT |
+> _PAGE_USER |
+> +                                                                  _PAGE_=
+EXECUTE | CACHEDEF),
+> +       [VM_EXEC | VM_READ]                             =3D __pgprot(_PAG=
+E_PRESENT |
+> _PAGE_USER |
+> +                                                                  _PAGE_=
+EXECUTE | _PAGE_READ |
+> +                                                                  CACHED=
+EF),
+> +       [VM_EXEC | VM_WRITE]                            =3D __pgprot(_PAG=
+E_PRESENT |
+> _PAGE_USER |
+> +                                                                  _PAGE_=
+EXECUTE | CACHEDEF),
+> +       [VM_EXEC | VM_WRITE | VM_READ]                  =3D
+> __pgprot(_PAGE_PRESENT | _PAGE_USER |
+> +                                                                  _PAGE_=
+EXECUTE | _PAGE_READ |
+> +                                                                  CACHED=
+EF),
+> +       [VM_SHARED]                                     =3D __pgprot(_PAG=
+E_PRESENT |
+> _PAGE_USER |
+> +                                                                  CACHED=
+EF),
+> +       [VM_SHARED | VM_READ]                           =3D __pgprot(_PAG=
+E_PRESENT |
+> _PAGE_USER |
+> +                                                                  _PAGE_=
+READ | CACHEDEF),
+> +       [VM_SHARED | VM_WRITE]                          =3D __pgprot(_PAG=
+E_PRESENT |
+> _PAGE_USER |
+> +                                                                  _PAGE_=
+WRITE | CACHEDEF),
+> +       [VM_SHARED | VM_WRITE | VM_READ]                =3D
+> __pgprot(_PAGE_PRESENT | _PAGE_USER |
+> +                                                                  _PAGE_=
+READ | _PAGE_WRITE |
+> +                                                                  CACHED=
+EF),
+> +       [VM_SHARED | VM_EXEC]                           =3D __pgprot(_PAG=
+E_PRESENT |
+> _PAGE_USER |
+> +                                                                  _PAGE_=
+EXECUTE | CACHEDEF),
+> +       [VM_SHARED | VM_EXEC | VM_READ]                 =3D
+> __pgprot(_PAGE_PRESENT | _PAGE_USER |
+> +                                                                  _PAGE_=
+EXECUTE | _PAGE_READ |
+> +                                                                  CACHED=
+EF),
+> +       [VM_SHARED | VM_EXEC | VM_WRITE]                =3D
+> __pgprot(_PAGE_PRESENT | _PAGE_USER |
+> +                                                                  _PAGE_=
+EXECUTE | _PAGE_WRITE |
+> +                                                                  CACHED=
+EF),
+> +       [VM_SHARED | VM_EXEC | VM_WRITE | VM_READ]      =3D
+> __pgprot(_PAGE_PRESENT | _PAGE_USER |
+> +                                                                  _PAGE_=
+READ | _PAGE_EXECUTE |
+> +                                                                  _PAGE_=
+WRITE | CACHEDEF)
+> +};
+> +DECLARE_VM_GET_PAGE_PROT
+> --
+> 2.25.1
 
-This seems like a lot of opportunities for memcg folks :)
-
-struct page_counter has poor field placement [1], and no per-cpu cache.
-
-[1] "atomic_long_t usage" is sharing cache line with read mostly fields.
-
-(struct mem_cgroup also has poor field placement, mainly because of
-struct page_counter)
-
-    28.69%  [kernel]       [k] copy_user_enhanced_fast_string
-    16.13%  [kernel]       [k] intel_idle_irq
-     6.46%  [kernel]       [k] page_counter_try_charge
-     6.20%  [kernel]       [k] __sk_mem_reduce_allocated
-     5.68%  [kernel]       [k] try_charge_memcg
-     5.16%  [kernel]       [k] page_counter_cancel
-
-
-
-> Thanks,
-> Feng
->
-> > >
-> > > Thanks,
-> > > Feng
+Acked-by: Brian Cain <bcain@quicinc.com>
