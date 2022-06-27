@@ -2,172 +2,260 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CB1555C232
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Jun 2022 14:46:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 722CD55CC02
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Jun 2022 15:00:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237469AbiF0Oc3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 Jun 2022 10:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49100 "EHLO
+        id S235785AbiF0Osb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 Jun 2022 10:48:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235525AbiF0Oc2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 27 Jun 2022 10:32:28 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18672FC2;
-        Mon, 27 Jun 2022 07:32:28 -0700 (PDT)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25RDfnph017001;
-        Mon, 27 Jun 2022 14:32:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=cNpka3XyxVZJwBSSjgtvDjM1yCmeeGaF1A25JBDFjSc=;
- b=pEoF+ouh3niMqisHbRUzRYGJoHNGG5ZqjXmRCUEp5XATVsJho+l5lK1FOB59PDwNlBSs
- ENPQTHnWlAWNxnIBUifDKsUCNFdJGXF99yQTswADo7OfE6HjDhxwLd44iF16S+UKTwfh
- wdgKSpO1QYJslSlTJtq4X1p/I3cNLxfRe0XVXdlBAjAlqqN/cT8P1poBk9163cJ32Pyb
- AIVFt/pF/K2xr8AJHF31Pa+vL5YJXVGOjw+z+sph8D67MOrfHuoBAqQ8r78Nb+C5gudR
- K+9HZscwTg7vaxdcSViQznsJ2jpEo9F/8+i7m301qB7gyPElqsrIeb8R0X6iMJLJH8ZV /Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gydnjsnve-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jun 2022 14:32:26 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25RDjOqX005928;
-        Mon, 27 Jun 2022 14:32:26 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gydnjsntj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jun 2022 14:32:26 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25REKo8K015802;
-        Mon, 27 Jun 2022 14:32:23 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 3gwt08tc17-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Jun 2022 14:32:23 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25REVN0821102938
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Jun 2022 14:31:23 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 626D411C04C;
-        Mon, 27 Jun 2022 14:32:20 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4FDA11C04A;
-        Mon, 27 Jun 2022 14:32:19 +0000 (GMT)
-Received: from [9.171.84.214] (unknown [9.171.84.214])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 27 Jun 2022 14:32:19 +0000 (GMT)
-Message-ID: <cac6d852-5f0c-adca-1db7-1775d7814217@linux.ibm.com>
-Date:   Mon, 27 Jun 2022 16:36:47 +0200
+        with ESMTP id S235431AbiF0Osa (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 27 Jun 2022 10:48:30 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07AA8DE8D;
+        Mon, 27 Jun 2022 07:48:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656341309; x=1687877309;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GZMliLRlHleESM1HM8TNKFzFHDsF5p46y9U7WBnfrg8=;
+  b=R72+llGxHVb5SnZpGDreeaXa2EHFd8xxGNZJRn2+fu4VhXu+1y8vrf4w
+   ijIHVHdBhs9LMgZ5sndjECu7I5ZbDpPQ6RcE60c3bj/tLBWHl6PuX+Bi0
+   v9OH1rymlvA35bizrB5LmKYPmQvHhhaATKab4Odb2eMI00XHgWrr8eL9b
+   2DX+i9zZJwiR1/Vx8QFJOsFZX1cwMmS4XmnmdMc1Qrj1cY/hIUtItLv7a
+   yDQFpHZWZdQAY+Gsu87AtWt84O7d/t9kM1gY9zdg/ucrZjfA5sV3CPzJE
+   JjnsKpiRN1l+icjNjiOxTuXyO6z6bU7wJS6KQ+m+hTYMj4yxDGgbIIHrS
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10390"; a="280224472"
+X-IronPort-AV: E=Sophos;i="5.92,226,1650956400"; 
+   d="scan'208";a="280224472"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2022 07:48:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,226,1650956400"; 
+   d="scan'208";a="679604256"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.138])
+  by FMSMGA003.fm.intel.com with ESMTP; 27 Jun 2022 07:48:23 -0700
+Date:   Mon, 27 Jun 2022 22:48:22 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Shakeel Butt <shakeelb@google.com>, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        kernel test robot <oliver.sang@intel.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        network dev <netdev@vger.kernel.org>,
+        linux-s390@vger.kernel.org, MPTCP Upstream <mptcp@lists.linux.dev>,
+        "linux-sctp @ vger . kernel . org" <linux-sctp@vger.kernel.org>,
+        lkp@lists.01.org, kbuild test robot <lkp@intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Yin Fengwei <fengwei.yin@intel.com>, Ying Xu <yinxu@redhat.com>
+Subject: Re: [net] 4890b686f4: netperf.Throughput_Mbps -69.4% regression
+Message-ID: <20220627144822.GA20878@shbuild999.sh.intel.com>
+References: <20220623185730.25b88096@kernel.org>
+ <CANn89iLidqjiiV8vxr7KnUg0JvfoS9+TRGg=8ANZ8NBRjeQxsQ@mail.gmail.com>
+ <CALvZod7kULCvHAuk53FE-XBOi4-BbLdY3HCg6jfCZTJDxYsZow@mail.gmail.com>
+ <20220624070656.GE79500@shbuild999.sh.intel.com>
+ <20220624144358.lqt2ffjdry6p5u4d@google.com>
+ <20220625023642.GA40868@shbuild999.sh.intel.com>
+ <20220627023812.GA29314@shbuild999.sh.intel.com>
+ <CANn89i+6NPujMyiQxriZRt6vhv6hNrAntXxi1uOhJ0SSqnJ47w@mail.gmail.com>
+ <20220627123415.GA32052@shbuild999.sh.intel.com>
+ <CANn89iJAoYCebNbXpNMXRoDUkFMhg9QagetVU9NZUq+GnLMgqQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v10 2/3] KVM: s390: guest support for topology function
-Content-Language: en-US
-To:     Janis Schoetterl-Glausch <scgl@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, cohuck@redhat.com,
-        david@redhat.com, thuth@redhat.com, imbrenda@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, wintera@linux.ibm.com,
-        seiden@linux.ibm.com, nrb@linux.ibm.com
-References: <20220620125437.37122-1-pmorel@linux.ibm.com>
- <20220620125437.37122-3-pmorel@linux.ibm.com>
- <258450b3-e8e0-9868-4b38-1c39421cef05@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-In-Reply-To: <258450b3-e8e0-9868-4b38-1c39421cef05@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6JD0Jyd9m0d1vu9uUnD74XOusL4hqrba
-X-Proofpoint-GUID: FqWq4lWNu2KbHNwZM7CljJKCvBsBpP24
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-06-27_06,2022-06-24_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- clxscore=1015 mlxscore=0 malwarescore=0 impostorscore=0 priorityscore=1501
- suspectscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
- definitions=main-2206270064
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89iJAoYCebNbXpNMXRoDUkFMhg9QagetVU9NZUq+GnLMgqQ@mail.gmail.com>
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 6/24/22 17:09, Janis Schoetterl-Glausch wrote:
-> On 6/20/22 14:54, Pierre Morel wrote:
->> We report a topology change to the guest for any CPU hotplug.
->>
->> The reporting to the guest is done using the Multiprocessor
->> Topology-Change-Report (MTCR) bit of the utility entry in the guest's
->> SCA which will be cleared during the interpretation of PTF.
->>
->> On every vCPU creation we set the MCTR bit to let the guest know the
->> next time he uses the PTF with command 2 instruction that the
->> topology changed and that he should use the STSI(15.1.x) instruction
->> to get the topology details.
->>
->> STSI(15.1.x) gives information on the CPU configuration topology.
->> Let's accept the interception of STSI with the function code 15 and
->> let the userland part of the hypervisor handle it when userland
->> support the CPU Topology facility.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
->>   arch/s390/include/asm/kvm_host.h | 11 ++++++++---
->>   arch/s390/kvm/kvm-s390.c         | 27 ++++++++++++++++++++++++++-
->>   arch/s390/kvm/priv.c             | 15 +++++++++++----
->>   arch/s390/kvm/vsie.c             |  3 +++
->>   4 files changed, 48 insertions(+), 8 deletions(-)
->>
-> [...]
+On Mon, Jun 27, 2022 at 04:07:55PM +0200, Eric Dumazet wrote:
+> On Mon, Jun 27, 2022 at 2:34 PM Feng Tang <feng.tang@intel.com> wrote:
+> >
+> > On Mon, Jun 27, 2022 at 10:46:21AM +0200, Eric Dumazet wrote:
+> > > On Mon, Jun 27, 2022 at 4:38 AM Feng Tang <feng.tang@intel.com> wrote:
+> > [snip]
+> > > > > >
+> > > > > > Thanks Feng. Can you check the value of memory.kmem.tcp.max_usage_in_bytes
+> > > > > > in /sys/fs/cgroup/memory/system.slice/lkp-bootstrap.service after making
+> > > > > > sure that the netperf test has already run?
+> > > > >
+> > > > > memory.kmem.tcp.max_usage_in_bytes:0
+> > > >
+> > > > Sorry, I made a mistake that in the original report from Oliver, it
+> > > > was 'cgroup v2' with a 'debian-11.1' rootfs.
+> > > >
+> > > > When you asked about cgroup info, I tried the job on another tbox, and
+> > > > the original 'job.yaml' didn't work, so I kept the 'netperf' test
+> > > > parameters and started a new job which somehow run with a 'debian-10.4'
+> > > > rootfs and acutally run with cgroup v1.
+> > > >
+> > > > And as you mentioned cgroup version does make a big difference, that
+> > > > with v1, the regression is reduced to 1% ~ 5% on different generations
+> > > > of test platforms. Eric mentioned they also got regression report,
+> > > > but much smaller one, maybe it's due to the cgroup version?
+> > >
+> > > This was using the current net-next tree.
+> > > Used recipe was something like:
+> > >
+> > > Make sure cgroup2 is mounted or mount it by mount -t cgroup2 none $MOUNT_POINT.
+> > > Enable memory controller by echo +memory > $MOUNT_POINT/cgroup.subtree_control.
+> > > Create a cgroup by mkdir $MOUNT_POINT/job.
+> > > Jump into that cgroup by echo $$ > $MOUNT_POINT/job/cgroup.procs.
+> > >
+> > > <Launch tests>
+> > >
+> > > The regression was smaller than 1%, so considered noise compared to
+> > > the benefits of the bug fix.
+> >
+> > Yes, 1% is just around noise level for a microbenchmark.
+> >
+> > I went check the original test data of Oliver's report, the tests was
+> > run 6 rounds and the performance data is pretty stable (0Day's report
+> > will show any std deviation bigger than 2%)
+> >
+> > The test platform is a 4 sockets 72C/144T machine, and I run the
+> > same job (nr_tasks = 25% * nr_cpus) on one CascadeLake AP (4 nodes)
+> > and one Icelake 2 sockets platform, and saw 75% and 53% regresson on
+> > them.
+> >
+> > In the first email, there is a file named 'reproduce', it shows the
+> > basic test process:
+> >
+> > "
+> >   use 'performane' cpufre  governor for all CPUs
+> >
+> >   netserver -4 -D
+> >   modprobe sctp
+> >   netperf -4 -H 127.0.0.1 -t SCTP_STREAM_MANY -c -C -l 300 -- -m 10K  &
+> >   netperf -4 -H 127.0.0.1 -t SCTP_STREAM_MANY -c -C -l 300 -- -m 10K  &
+> >   netperf -4 -H 127.0.0.1 -t SCTP_STREAM_MANY -c -C -l 300 -- -m 10K  &
+> >   (repeat 36 times in total)
+> >   ...
+> >
+> > "
+> >
+> > Which starts 36 (25% of nr_cpus) netperf clients. And the clients number
+> > also matters, I tried to increase the client number from 36 to 72(50%),
+> > and the regression is changed from 69.4% to 73.7%"
+> >
 > 
->> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->> index 8fcb56141689..95b96019ca8e 100644
->> --- a/arch/s390/kvm/kvm-s390.c
->> +++ b/arch/s390/kvm/kvm-s390.c
->> @@ -1691,6 +1691,25 @@ static int kvm_s390_get_cpu_model(struct kvm *kvm, struct kvm_device_attr *attr)
->>   	return ret;
->>   }
->>
->> +/**
->> + * kvm_s390_sca_set_mtcr
->> + * @kvm: guest KVM description
->> + *
->> + * Is only relevant if the topology facility is present,
->> + * the caller should check KVM facility 11
->> + *
->> + * Updates the Multiprocessor Topology-Change-Report to signal
->> + * the guest with a topology change.
->> + */
->> +static void kvm_s390_sca_set_mtcr(struct kvm *kvm)
->> +{
->> +	struct bsca_block *sca = kvm->arch.sca; /* SCA version doesn't matter */
->> +
->> +	ipte_lock(kvm);
+> This seems like a lot of opportunities for memcg folks :)
 > 
-> Why do we need to take the ipte lock here and in patch 3?
+> struct page_counter has poor field placement [1], and no per-cpu cache.
+> 
+> [1] "atomic_long_t usage" is sharing cache line with read mostly fields.
+> 
+> (struct mem_cgroup also has poor field placement, mainly because of
+> struct page_counter)
+> 
+>     28.69%  [kernel]       [k] copy_user_enhanced_fast_string
+>     16.13%  [kernel]       [k] intel_idle_irq
+>      6.46%  [kernel]       [k] page_counter_try_charge
+>      6.20%  [kernel]       [k] __sk_mem_reduce_allocated
+>      5.68%  [kernel]       [k] try_charge_memcg
+>      5.16%  [kernel]       [k] page_counter_cancel
 
-That is a good question.
-I fear I was tired as I understood that from the documentation, after 
-re-reading, we need an interlocked-update not an ipte lock update.
-... I have to change that
+Yes, I also analyzed the perf-profile data, and made some layout changes
+which could recover the changes from 69% to 40%.
 
+7c80b038d23e1f4c 4890b686f4088c90432149bd6de 332b589c49656a45881bca4ecc0
+---------------- --------------------------- --------------------------- 
+     15722           -69.5%       4792           -40.8%       9300        netperf.Throughput_Mbps
+ 
+
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index 1bfcfb1af352..aa37bd39116c 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -179,14 +179,13 @@ struct cgroup_subsys_state {
+ 	atomic_t online_cnt;
+ 
+ 	/* percpu_ref killing and RCU release */
+-	struct work_struct destroy_work;
+ 	struct rcu_work destroy_rwork;
+-
++	struct cgroup_subsys_state *parent;
++	struct work_struct destroy_work;
+ 	/*
+ 	 * PI: the parent css.	Placed here for cache proximity to following
+ 	 * fields of the containing structure.
+ 	 */
+-	struct cgroup_subsys_state *parent;
+ };
+ 
+ /*
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 9ecead1042b9..963b88ab9930 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -239,9 +239,6 @@ struct mem_cgroup {
+ 	/* Private memcg ID. Used to ID objects that outlive the cgroup */
+ 	struct mem_cgroup_id id;
+ 
+-	/* Accounted resources */
+-	struct page_counter memory;		/* Both v1 & v2 */
+-
+ 	union {
+ 		struct page_counter swap;	/* v2 only */
+ 		struct page_counter memsw;	/* v1 only */
+@@ -251,6 +248,9 @@ struct mem_cgroup {
+ 	struct page_counter kmem;		/* v1 only */
+ 	struct page_counter tcpmem;		/* v1 only */
+ 
++	/* Accounted resources */
++	struct page_counter memory;		/* Both v1 & v2 */
++
+ 	/* Range enforcement for interrupt charges */
+ 	struct work_struct high_work;
+ 
+@@ -313,7 +313,6 @@ struct mem_cgroup {
+ 	atomic_long_t		memory_events[MEMCG_NR_MEMORY_EVENTS];
+ 	atomic_long_t		memory_events_local[MEMCG_NR_MEMORY_EVENTS];
+ 
+-	unsigned long		socket_pressure;
+ 
+ 	/* Legacy tcp memory accounting */
+ 	bool			tcpmem_active;
+@@ -349,6 +348,7 @@ struct mem_cgroup {
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ 	struct deferred_split deferred_split_queue;
+ #endif
++	unsigned long		socket_pressure;
+ 
+ 	struct mem_cgroup_per_node *nodeinfo[];
+ };
+
+And some of these are specific for network and may not be a universal
+win, though I think the 'cgroup_subsys_state' could keep the
+read-mostly 'parent' away from following written-mostly counters.
+
+Btw, I tried your debug patch which compiled fail with 0Day's kbuild
+system, but it did compile ok on my local machine.
+
+Thanks,
+Feng
 
 > 
->> +	sca->utility |= SCA_UTILITY_MTCR;
->> +	ipte_unlock(kvm);
->> +}
-> 
-> [...]
-> 
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
+> > Thanks,
+> > Feng
+> >
+> > > >
+> > > > Thanks,
+> > > > Feng
