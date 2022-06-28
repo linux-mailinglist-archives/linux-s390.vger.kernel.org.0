@@ -2,91 +2,53 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A98E55C8EC
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Jun 2022 14:56:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D353D55D821
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Jun 2022 15:19:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245355AbiF1Gov (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 28 Jun 2022 02:44:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53380 "EHLO
+        id S244420AbiF1HC6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 Jun 2022 03:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbiF1Gou (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 28 Jun 2022 02:44:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 43F8F13DF6
-        for <linux-s390@vger.kernel.org>; Mon, 27 Jun 2022 23:44:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1656398688;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hKKhmAVY6ZLU32yFo246MjjcA6QB3q+Asrc/tb9AagA=;
-        b=FWCGJqg5msDnwZD0HXb37xFn4rZJnRa1NBrjulXChbQpXZ0+RvnfXDUaROncqdfjI8bReT
-        8ePxKVow7na5aCdCDIWjgSqN/n6Gs4um23RAjAjYlztefRXrvcc5k+EE1UQMvfUPuaG4t9
-        +SnZukzymjNxBQirLKq8bwd38Ecq2K4=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-459-aqgf6hkhOga0d7-jHEq2QQ-1; Tue, 28 Jun 2022 02:44:46 -0400
-X-MC-Unique: aqgf6hkhOga0d7-jHEq2QQ-1
-Received: by mail-wr1-f72.google.com with SMTP id e5-20020adff345000000b0021b9f00e882so1498502wrp.6
-        for <linux-s390@vger.kernel.org>; Mon, 27 Jun 2022 23:44:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hKKhmAVY6ZLU32yFo246MjjcA6QB3q+Asrc/tb9AagA=;
-        b=AUyJvSDOXCDrWcxcldLkrhtEjEzKdHgf9DFqYIR02eIPsD/BjZuZYtEztFdjcbDDNH
-         C/e8CTqrC8o8pbNCYHr0YSTEazE7a3iRW1L63wXpDdglhooEtwMrhe88egPWDEiCi+l7
-         D89m2eraFoQMMWzvDFAxQ8PVEnYrRchDmwZonMACoOafBXemByejIUKIgJP8LkWHDiwh
-         f2d6muvuDdI/5Pz/VCkgfqoPTrU/XCdW9UqPXGIeJX+7aMKqlFb/sn4x3fM9PQ5PbOrg
-         krKs25zOJg3CxIr29YBBIQjTZPc0OXH3BAcztTz9UB+zfAb8VlqZKMzbM5D8/AtF/X5z
-         1hiA==
-X-Gm-Message-State: AJIora8UXgaVsmqO9ln6udsvjI6yg9YN/jU0nuiiOHkpTQNz1lrQ4mxc
-        41xFLd0ZcYzHyZpoeiVY94cDOEzHOVq8hS8vkt1GpvVXjrNYAjPYcLDV766KPgNlAKdlmrANHrX
-        kTfIWFvkvHAQFreAFnwwE2g==
-X-Received: by 2002:a05:600c:4e90:b0:39c:7ec6:c7d2 with SMTP id f16-20020a05600c4e9000b0039c7ec6c7d2mr19756877wmq.140.1656398685548;
-        Mon, 27 Jun 2022 23:44:45 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1uIze8DJsIvzB3CNFTFD7nxCkijrxeoiA7/FaJ3ir6OLO+Z+2vAtNLsCgnTCLoOO1PL/wj22A==
-X-Received: by 2002:a05:600c:4e90:b0:39c:7ec6:c7d2 with SMTP id f16-20020a05600c4e9000b0039c7ec6c7d2mr19756849wmq.140.1656398685292;
-        Mon, 27 Jun 2022 23:44:45 -0700 (PDT)
-Received: from redhat.com ([2.52.23.204])
-        by smtp.gmail.com with ESMTPSA id l15-20020a05600c1d0f00b003a04962ad3esm9243219wms.31.2022.06.27.23.44.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 23:44:44 -0700 (PDT)
-Date:   Tue, 28 Jun 2022 02:44:40 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390@vger.kernel.org,
-        virtualization <virtualization@lists.linux-foundation.org>,
-        kvm <kvm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH V3] virtio: disable notification hardening by default
-Message-ID: <20220628023832-mutt-send-email-mst@kernel.org>
-References: <20220624022622-mutt-send-email-mst@kernel.org>
- <CACGkMEuurobpUWmDL8zmZ6T6Ygc0OEMx6vx2EDCSoGNnZQ0r-w@mail.gmail.com>
- <20220627024049-mutt-send-email-mst@kernel.org>
- <CACGkMEvrDXDN7FH1vKoYCob2rkxUsctE_=g61kzHSZ8tNNr6vA@mail.gmail.com>
- <20220627053820-mutt-send-email-mst@kernel.org>
- <CACGkMEvcs+9_SHmO1s3nyzgU7oq7jhU2gircVVR3KDsGDikh5Q@mail.gmail.com>
- <20220628004614-mutt-send-email-mst@kernel.org>
- <CACGkMEsC4A+3WejLSOZoH3enXtai=+JyRNbxcpzK4vODYzhaFw@mail.gmail.com>
- <20220628022035-mutt-send-email-mst@kernel.org>
- <CACGkMEt=go5qAH+P0to6yyE2dPhyfFmOQP0jfuj=57PmD7Y3zg@mail.gmail.com>
+        with ESMTP id S1343892AbiF1HCk (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 28 Jun 2022 03:02:40 -0400
+X-Greylist: delayed 909 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 28 Jun 2022 00:02:38 PDT
+Received: from sender-of-o52.zoho.in (sender-of-o52.zoho.in [103.117.158.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D913327152
+        for <linux-s390@vger.kernel.org>; Tue, 28 Jun 2022 00:02:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1656398840; cv=none; 
+        d=zohomail.in; s=zohoarc; 
+        b=elbxiBPgCFU3Q1HeSZO3T8aGAHTd7WBPWTrQUtxH99UOQQGLfonylpAqEMnGaIDrFkx1synYywGZACJw7PgHKxxO9hlGJKeerQQCm/hKb1JPoOOMzoyYiqgRj3EK8UyrRbV6eG+v9UthpEgczMsTUiYzdIoIot9+8bU4Q6GlCzE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
+        t=1656398840; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=HRFI+eRTirvZRFeTRPwa50gFz5/7YOJxbkzkaz1APeo=; 
+        b=UD7QxIJjRGdKPD2/0fdixEKyX7I8dLW/lSOmSrR9WClyT+GMpSadNyOMElXveJlBDkuuqkxi8PLxfqL1AdjXpXU9egqqqVl4CKObe087P891gOOuRn2Nvf/us3Y/OcAWVePlFFY4+InQZxeE8QsXWyODIiV4rOXkZKuIvc7BB+U=
+ARC-Authentication-Results: i=1; mx.zohomail.in;
+        dkim=pass  header.i=siddh.me;
+        spf=pass  smtp.mailfrom=code@siddh.me;
+        dmarc=pass header.from=<code@siddh.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1656398840;
+        s=zmail; d=siddh.me; i=code@siddh.me;
+        h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+        bh=HRFI+eRTirvZRFeTRPwa50gFz5/7YOJxbkzkaz1APeo=;
+        b=IwR5aSq0pFdUwm9fE5cj4I1c+7n4CBylMdgFHnPZL55IuDKWZaR/7Lemx8vDSMLZ
+        sUNrNz6su04MiJ53GAkTSRKaMnfTSYQLdJyJXZ0VNzot50G3mLVIv8HlVkaWzg2OGhO
+        FN9M0IxMSWe8cUV0SXdXlWw9Jf1cSVXponQ5TpzA=
+Received: from localhost.localdomain (103.249.233.51 [103.249.233.51]) by mx.zoho.in
+        with SMTPS id 1656398838723609.1768701113493; Tue, 28 Jun 2022 12:17:18 +0530 (IST)
+From:   Siddh Raman Pant <code@siddh.me>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org
+Message-ID: <20220628064621.14427-1-code@siddh.me>
+Subject: [PATCH] MAINTAINERS: Add tools/testing/crypto/chacha20-s390/
+Date:   Tue, 28 Jun 2022 12:16:21 +0530
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACGkMEt=go5qAH+P0to6yyE2dPhyfFmOQP0jfuj=57PmD7Y3zg@mail.gmail.com>
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf8
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -94,19 +56,34 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 02:32:19PM +0800, Jason Wang wrote:
-> > Question is are there drivers which kick before they are ready
-> > to handle callbacks?
-> 
-> Let me try to have a look at all the drivers to answer this.
+This adds the maintainers' information for the
+s390 ChaCha20 self-test module.
 
-One thing to note is that I consider hardening probe and
-hardening remove separate features. I think that at this point
-for secured guests it is prudent to outright block device
-removal - we have been finding races in removal for years.
-Note sure there's a flag for that but it's probably not too hard to add
-e.g. to pci core.
+Signed-off-by: Siddh Raman Pant <code@siddh.me>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
--- 
-MST
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fe5daf141501..0fcacd715b1c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17438,6 +17438,14 @@ F:=09Documentation/s390/
+ F:=09arch/s390/
+ F:=09drivers/s390/
+=20
++S390 CHACHA20 SELFTEST
++M:=09Vladis Dronov <vdronov@redhat.com>
++M:=09Herbert Xu <herbert@gondor.apana.org.au>
++R:=09Harald Freudenberger <freude@linux.ibm.com>
++L:=09linux-s390@vger.kernel.org
++S:=09Supported
++F:=09tools/testing/crypto/chacha20-s390/
++
+ S390 COMMON I/O LAYER
+ M:=09Vineeth Vijayan <vneethv@linux.ibm.com>
+ M:=09Peter Oberparleiter <oberpar@linux.ibm.com>
+--=20
+2.35.1
+
 
