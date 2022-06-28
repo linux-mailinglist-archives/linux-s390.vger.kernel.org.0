@@ -2,203 +2,280 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87FB955E737
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Jun 2022 18:32:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25D9655E8E2
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Jun 2022 18:37:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346043AbiF1NuE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 28 Jun 2022 09:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55724 "EHLO
+        id S1346906AbiF1N4a (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 Jun 2022 09:56:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239560AbiF1NuD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 28 Jun 2022 09:50:03 -0400
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2073.outbound.protection.outlook.com [40.107.101.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C336ECE0C;
-        Tue, 28 Jun 2022 06:50:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LSHLLYA9tRqu3PmNwnPObA1PuseIB/uigp0XUmeYX6v8IA4MyPvitxyzz6X7igXAgLU8OctQZvm3Dq6uYnHHt6ew/RdRoHj0e2tuzvBYcEy4migTuLsEUmQO0gc7soE49Crw9oWS/YRjDHkutjZ8PK9kGe9ydH1rURHMzxQyJ5k1vTuYoATtaPTGPgv4zIgHUYOpkFeBRUcpD102/iKuqJBL0mjwKaYw3Fvg6kCBnrYPV1hBGzoMLhkxR+9a9YyWZIitC8cA6wShYUW5/FJ2U9J8e3ACa7Bqw1X0n8AXJl8KR+RjZYRJ1kAtjoN3kj7hQ2FbNfB/X/zMBWg8qE1iWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IjGPUmm+iAsADgV8wJqr9BjOERwlMuCUHxq5t5ZEEN8=;
- b=jwrWl1HBKIRmYbflVbPDfUhkWnE2zMVIf2H/ho6RZxcvMEVcaOmmKfUraJLuIFPE9hKt7MzjCf4lknd3tZsMVFxFXbUy3kgzhMZczi8ANV2IN5FEQZdgmK/oN7cm1lnKzDk1enJdjB6Stzp4m5NdaAMCZqiLmMn5qVQB0T7A3pgH9uZC++9zp63E7/OAuh8T7F+aci3EfbN5HAbVXKL3Zf4IOKvmrc+HNz/aJE9zmC4I7d1Ahvx4IJ39az6Ztp7yxfb0A2PZm6PS+hMAeK1roih3NZTQGWf2ygmd149tYHZPpvbwbqBo+pXevbHgXSm3//H0qR1Yqs7vRh33eiRuZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IjGPUmm+iAsADgV8wJqr9BjOERwlMuCUHxq5t5ZEEN8=;
- b=ecFtCjtKX9ExcZJSjnvKpeFvvm70vxVv09AqGsPFSb2xP9nNZ7LUSoROPhr5tl7zbkJp7jwjDie4HDyb47nIe5hvxg7hc+cnWWhzx6UTIqcwyVTglv7N/XDKrVm5UdeR+CSAkcYjIKyD9hnkcf2cDLClYg0H4mjkTvpToEZvUgTXxwFrjt/mzY5ZKTo1n5Sc6XD+GMzRFIgG2+I3PmEdz92JJ7N5Q7Hv9dgZVaeNN5fimKnnIG8E09aZqkudN1ysmTYUynsyOEOwBdnifsOHgPJwGuol3/znsCQDLgbJTMBdBSHy+2hVbLlSLXPQMT+lI1jHO66arx4rr9pwEmHw/Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by IA1PR12MB6459.namprd12.prod.outlook.com (2603:10b6:208:3a9::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5373.17; Tue, 28 Jun
- 2022 13:49:59 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::ac35:7c4b:3282:abfb]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::ac35:7c4b:3282:abfb%3]) with mapi id 15.20.5373.022; Tue, 28 Jun 2022
- 13:49:59 +0000
-Date:   Tue, 28 Jun 2022 10:49:58 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     Christian Borntraeger <borntraeger@linux.ibm.com>,
-        linux-s390@vger.kernel.org, alex.williamson@redhat.com,
-        cohuck@redhat.com, schnelle@linux.ibm.com, farman@linux.ibm.com,
-        pmorel@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, vneethv@linux.ibm.com,
-        oberpar@linux.ibm.com, freude@linux.ibm.com, thuth@redhat.com,
-        pasic@linux.ibm.com, pbonzini@redhat.com, corbet@lwn.net,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v9 00/21] KVM: s390: enable zPCI for interpretive
- execution
-Message-ID: <20220628134958.GB693670@nvidia.com>
-References: <20220606203325.110625-1-mjrosato@linux.ibm.com>
- <f86e2e05-114a-cc9e-8f3a-96b36889063d@linux.ibm.com>
- <c98e7c10-272c-2bbb-6909-046d57d721d1@linux.ibm.com>
- <425d3030-94e2-efeb-60fd-08516443a06a@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <425d3030-94e2-efeb-60fd-08516443a06a@linux.ibm.com>
-X-ClientProxiedBy: MN2PR16CA0033.namprd16.prod.outlook.com
- (2603:10b6:208:134::46) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+        with ESMTP id S1345871AbiF1N42 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 28 Jun 2022 09:56:28 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1DE83336A;
+        Tue, 28 Jun 2022 06:56:26 -0700 (PDT)
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25SDlZCO004943;
+        Tue, 28 Jun 2022 13:56:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=ocerpo6p3qpLGTD1Ez40+aMfMK2E6M9KcJydSKCbZpM=;
+ b=NynpNfjAd6XJd0TMTXzDj4e2254a6vRLkpM/c91twuckwOhk1ASb0QMlL1KnLQM+KbY2
+ xP3EDO8E12lF5b4RkAtq+qPnetTfLGrn6uQF3D/AfWn9dWBS9sDFpwaoOT49EOJkpHja
+ VlUZMODbRqN7LL/SuxyG5VExXaYRy1Na/90vI7fuHfo2jW8sNTOcBhYVQktDfzBwvK7C
+ Ro07hD818ubVa0pM04X3+VmM9UPWPl+NSi6MfXllFZhaWtF1coPIP2u9z2M6Y8rjbOBq
+ pcnmd0CWNXNsuUDqZyy9lAvB/TqJYXob4EzlRWKSA7qaWMOC75yJyQHJD+SwjY4LGcUs 5Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3h02uc899j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jun 2022 13:56:26 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25SDqNkI026638;
+        Tue, 28 Jun 2022 13:56:25 GMT
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3h02uc898g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jun 2022 13:56:25 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25SDoQFU025966;
+        Tue, 28 Jun 2022 13:56:23 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma02fra.de.ibm.com with ESMTP id 3gwt08upsp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Jun 2022 13:56:23 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25SDuKK119333426
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Jun 2022 13:56:20 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EB1994C044;
+        Tue, 28 Jun 2022 13:56:19 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 86F624C040;
+        Tue, 28 Jun 2022 13:56:19 +0000 (GMT)
+Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.40])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Jun 2022 13:56:19 +0000 (GMT)
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, frankja@linux.ibm.com, thuth@redhat.com,
+        pasic@linux.ibm.com, david@redhat.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, scgl@linux.ibm.com,
+        mimu@linux.ibm.com, nrb@linux.ibm.com
+Subject: [PATCH v12 00/18] KVM: s390: pv: implement lazy destroy for reboot
+Date:   Tue, 28 Jun 2022 15:56:01 +0200
+Message-Id: <20220628135619.32410-1-imbrenda@linux.ibm.com>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4e64f8ce-6711-4fc7-72ca-08da590d17a4
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6459:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oGwcuUbRDa27f51/gJACHrcrIsdY5UZljJLwbJA28WPzOSUctdP6G5uXW9xnwJ2FeThBuTz1GUbfq4z3hS0z4YQiujQhbLUA4jMjcQFtQduQ8253WZLxdFJ1BWB+8RYDd0u078Zbbaf/9g7VIHZzHZqAJa4KHpu0jtYqZ3hL3de8aEIn5ZRqeCkqBClzsszADR3fXDJQ56ptRVdtU4H51uQOSBnSLvGuxnZQNEAEy52Pb0d22jx9t3vBYpjJxFxJa+FSL9JuqBoCEO13vtehTNQX2q+5RdSHAY5veuz0h+YrqQv7Djt6t0po8Dn4xJkN0lTUMev7WntsH9NWrPNQ1h6qYcYQ5TLFIuQ0vFnq6n7pzEA6C69kY4Wrok7a90+Sy8VvCt88H7JaRtiQYEG8CdwLkY16Qzw4AMGeIFnQwwNcqq3p7C81J4/jnB4I22YaqBi7VkfZItPy5LR3pQlawy4rNdF38ca+P8D2a3BWrBVUIpTEkjE2dDykXFPOr8p7GEvZb3ho2HQnC5tsHWYn8XuFZ+kwjtJ2bWyellQXf5krxU0DicLDZheuRWvl0EEaiNlmqtxYbKkvkwy2luhIROdkuQdk5mWJlm37h+aig8b+IfwlyUmI7KahLDLhg5uul0+aTZF63Ewz0xUrUojBpjMCZoCAmypPLkcs2kPDnvUnmdXsQRcpIstl6GpWVrz2qG2xLzaIzsKyGxzHEU0WkNC04/M8MqN9TXYsOfuUhDjElE7LQSqa8H7hC2yDVUEjuOA8f9Ff4p36r3NUhwlcSCJJVRbyGUFIII2s4w6Rl+0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(39860400002)(346002)(396003)(136003)(376002)(2616005)(53546011)(41300700001)(1076003)(5660300002)(38100700002)(6512007)(26005)(86362001)(83380400001)(478600001)(36756003)(66946007)(33656002)(2906002)(186003)(66476007)(8676002)(4326008)(66556008)(6506007)(6486002)(7416002)(8936002)(6916009)(316002)(27376004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RGJ5ZlJoK3FHWEc1aWljRmVuRDZ4RnY2SkpBNStBMi85V3E5MHJrczExRFZr?=
- =?utf-8?B?blhSTUd6dFJncTQvNDhEZUpycG02VGN0c2pHSEdzZ2JuUTl4WHpJcW9Ibmh6?=
- =?utf-8?B?V2hxQUU4NTFHSldYdE53Q0dlcEthYWpGamJwdWk2VVN1T0NJdVpIcldNVFov?=
- =?utf-8?B?NFJjaExIeGVWR05HNEpRcHVGdFN2WlU1OHBjOFVZZVJ2VXh4K3o0dzFQM2NE?=
- =?utf-8?B?VmM2akdwd2dvNGZXNGhmR3MrekMrQXBsTStyZkR6RGdaVUdtRGMvc25McUpD?=
- =?utf-8?B?OS9XRkVRc1ZDdXFNK3FKT1kwd0d4ckdoSzFseTU2UFZoTTl5V1RnMEE5YjFs?=
- =?utf-8?B?SHdwQmF0S0tiT1dxckZGMG4xelRTcUhhTVIvNDNSV04wNnFaME5lWE53TzhB?=
- =?utf-8?B?cW1NTHM4ZWt1bDkwOTNNUk11cXQzcTVFdWE2dE5Cd2xTRk9xVEhDVG4xUWNO?=
- =?utf-8?B?NkppSmkrRzI5cDZQaXdXcUtCMzFsQ3F3YjJja09zR0NUK2RFYUt2YkdHbkZ0?=
- =?utf-8?B?VC80QnhURGdUbFV5OG83aVkrL2hIdDlkc09WUTZoYlFZa1NoREdaYXRpUGIx?=
- =?utf-8?B?NTdpSG1zZlN0TC9Ra1loYlZRTldBL1hBZUxhclNBR1Q4SFdEUWJlS1FuQTBM?=
- =?utf-8?B?dkNHZkJ4dlNvNktLRGtRa1B0OHYvalRML295czMrcS9Sb0RFTitDNTVqeWZX?=
- =?utf-8?B?Nk5MRDZTa0N0T0xXbVdnbXZ4UTVuM01KT01Kdk5pSmxHNWN5eXBUalNHKzNP?=
- =?utf-8?B?ZnlmS1cvblRiblEySEtUYml2SFBybzl2eXI2YTNhbWtYNkdRNnBucGRuN1NE?=
- =?utf-8?B?dERDdTJKQUpjVDBIWVUvTVJUUEExU0JFblh4S2I5dEtvdlFOQ1hBZ00yTDBD?=
- =?utf-8?B?QXQvZk9ZdEV3NVNZQjNzbDNIU21GNkRPdUJTcHRKUzZBVDNmRXZ4eUZabERQ?=
- =?utf-8?B?clJ3YVh2U0lZVWsxeGxZbEJVVEorYUFpVUlBbjhtNzNJSjdVa2JMa3BqV0l5?=
- =?utf-8?B?VjkyTFd3U0NhRW04NFp2VFYxL3hLS0RNWkFVcS9DbHRSNnUwYkF4V0VqUkhr?=
- =?utf-8?B?YlUzelpoR3QzVGJCL2dmRW5QQ09vdEpnVmxJV2VBQmZKYVhmWURVWGpHMCt0?=
- =?utf-8?B?S21jZWVhc29sdVF6aElJbWhWVUk2K3llK2duYzlOYVFxOHUrc0t3WTdmNE12?=
- =?utf-8?B?eUtxTHNzVHhMYVdacFdQbmxxNXZEMVprMG9YbHNpTzZORE1kTU9UNDR5ZGlr?=
- =?utf-8?B?bXdWVHJNdUdiMzV4a2tjd09kTXByMXJpUFJycmVnNTA3a21vNENjTXlyckRL?=
- =?utf-8?B?eTBBTDB5ek02OU5kMVNEK1ZpN20zQVdkWW9GYzlYQkxqeTNlRXJ6WTFDck1r?=
- =?utf-8?B?dGkzMUdTNFlLWVhBaU04VXNjdVhJT0lkQUNkR0xEWVg0YkRJWkdMeGp0aFNi?=
- =?utf-8?B?NSt1RURtZXRiOTNKS0Vzbkl0bGlQZngvbDg5Uml2Ri9jNzkxOU5MOCtQSmo5?=
- =?utf-8?B?bFhGaHB3S3pmK1p0bHZKZWdFT29PSEpPZGdmVEpTWWljbmRUV1pUa0VJemdL?=
- =?utf-8?B?aTluQWVpQ1FaQzFGYWRYTnNsUlM0VktDVU9tVHkyVm05Qk54NGNnVDRQd0pQ?=
- =?utf-8?B?SkZScTVuWnNtRnd4NDViMmozcENvMFRyOG4wNlBoemJUV3ZLdmRDZFhJb1F0?=
- =?utf-8?B?bkliREs2ZHZXa2RPOGluRWlrTlpYOGlhSEg0Vys5RG14YURxa3FqRWl1bzd3?=
- =?utf-8?B?a0RZblhsUG1saGFZaTdoSTVxMVRaRVB1QU9IWlU5UnhTM3FzbmZGcXdWOXBp?=
- =?utf-8?B?N054U090SSt0TGw2aFdyYnNFSEE5WW15OTdkcmJtSGRjeWhMTktTNDM0UUJO?=
- =?utf-8?B?bkxMMW1ZS1BsWTRRVHpSUFdTZDZPbTl3SDBXQ0pRK3pmYkRZRU9GVmErR2VW?=
- =?utf-8?B?S1Z6WVdURlJEcW9TUW9VaTJGTVhPVDRFdXUrWWhHZnIzSkNESDNURDQwYWQr?=
- =?utf-8?B?MUpZNVo1dWNkRU9iNVJRSmQxeHVUemJhcnBVeHpJMjNXeWVFWkt0U0lkbHY5?=
- =?utf-8?B?RXN4OE42eGRLQ1pzMHhNeUpMeWlvdGdlb2tERlNWSG1ZRW5QLzlUV0dKYnd1?=
- =?utf-8?Q?SHrsnJyR7bQkZyrwLp0xkQQ1F?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e64f8ce-6711-4fc7-72ca-08da590d17a4
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2022 13:49:59.3708
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n6gghgjz2DjikQueBie0IRvPYDDUELfzUUeZSe5HRPm3r4qUODL8Ynr8Ce1LNv1K
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6459
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: bLnBD9-Eo_sZlOnXtSow5zhL-Z_i5ire
+X-Proofpoint-ORIG-GUID: obsKCcvMP9IfeOEMLFvKM4d912_w4T86
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-06-28_07,2022-06-28_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ malwarescore=0 impostorscore=0 spamscore=0 priorityscore=1501 bulkscore=0
+ adultscore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
+ definitions=main-2206280057
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 09:40:01AM -0400, Matthew Rosato wrote:
-> On 6/28/22 8:35 AM, Christian Borntraeger wrote:
-> > Am 27.06.22 um 22:57 schrieb Matthew Rosato:
-> > > On 6/6/22 4:33 PM, Matthew Rosato wrote:
-> > > > Enable interpretive execution of zPCI instructions + adapter
-> > > > interruption
-> > > > forwarding for s390x KVM vfio-pci.  This is done by triggering a routine
-> > > > when the VFIO group is associated with the KVM guest, transmitting to
-> > > > firmware a special token (GISA designation) to enable that
-> > > > specific guest
-> > > > for interpretive execution on that zPCI device.  Load/store
-> > > > interpreation
-> > > > enablement is then controlled by userspace (based upon whether or not a
-> > > > SHM bit is placed in the virtual function handle).  Adapter Event
-> > > > Notification interpretation is controlled from userspace via a new KVM
-> > > > ioctl.
-> > > > 
-> > > > By allowing intepretation of zPCI instructions and firmware delivery of
-> > > > interrupts to guests, we can reduce the frequency of guest SIE exits for
-> > > > zPCI.
-> > > > 
-> > > >  From the perspective of guest configuration, you passthrough
-> > > > zPCI devices
-> > > > in the same manner as before, with intepretation support being used by
-> > > > default if available in kernel+qemu.
-> > > > 
-> > > > Will follow up with a link the most recent QEMU series.
-> > > > 
-> > > > Changelog v8->v9:
-> > > > - Rebase on top of 5.19-rc1, adjust ioctl and capability defines
-> > > > - s/kzdev = 0/kzdev = NULL/ (Alex)
-> > > > - rename vfio_pci_zdev_open to vfio_pci_zdev_open_device (Jason)
-> > > > - rename vfio_pci_zdev_release to vfio_pci_zdev_close_device (Jason)
-> > > > - make vfio_pci_zdev_close_device return void, instead WARN_ON or ignore
-> > > >    errors in lower level function (kvm_s390_pci_unregister_kvm) (Jason)
-> > > > - remove notifier accidentally left in struct zpci_dev + associated
-> > > >    include statment (Jason)
-> > > > - Remove patch 'KVM: s390: introduce CPU feature for zPCI
-> > > > Interpretation'
-> > > >    based on discussion in QEMU thread.
-> > > > 
-> > > 
-> > > Ping -- I'm hoping this can make the next merge window, but there
-> > > are still 2 patches left without any review tag (16 & 17).
-> > 
-> > Yes, I will queue this (as is). Ideally you would rebase this on top of
-> > kvm/next but I can also do while applying.
-> > Let me know if you want to respin with the Nits from Pierre.
-> 
-> Ah, sorry -- I assume you mean Paolo's kvm/next?  I tried now and see some
-> conflicts with the ioctl patch.
-> 
-> Why don't I rebase on top of kvm/next along with these couple of changes
-> from Pierre and send this as a v10 for you to queue.
-> 
-> While at it, there's one other issue to be aware of -- There will also be
-> small merge conflicts with a patch that just hit vfio-next, "vfio:
-> de-extern-ify function prototypes" - My series already avoids adding externs
-> to new prototypes, but adjacent code changes will cause a conflict with
-> patches 10 and 17.
-> 
-> Not sure what the best way to proceed there is.
+Previously, when a protected VM was rebooted or when it was shut down,
+its memory was made unprotected, and then the protected VM itself was
+destroyed. Looping over the whole address space can take some time,
+considering the overhead of the various Ultravisor Calls (UVCs). This
+means that a reboot or a shutdown would take a potentially long amount
+of time, depending on the amount of used memory.
 
-You should use a branch based on vfio-next and send a Git PR to Christian
-and Alex
+This patchseries implements a deferred destroy mechanism for protected
+guests. When a protected guest is destroyed, its memory can be cleared
+in background, allowing the guest to restart or terminate significantly
+faster than before.
 
-Jason
+There are 2 possibilities when a protected VM is torn down:
+* it still has an address space associated (reboot case)
+* it does not have an address space anymore (shutdown case)
+
+For the reboot case, two new commands are available for the
+KVM_S390_PV_COMMAND:
+
+KVM_PV_ASYNC_CLEANUP_PREPARE: prepares the current protected VM for
+asynchronous teardown. The current VM will then continue immediately
+as non-protected. If a protected VM had already been set aside without
+starting the teardown process, this call will fail. In this case the
+userspace process should issue a normal KVM_PV_DISABLE
+
+KVM_PV_ASYNC_CLEANUP_PERFORM: tears down the protected VM previously
+set aside for asychronous teardown. This PV command should ideally be
+issued by userspace from a separate thread. If a fatal signal is
+received (or the process terminates naturally), the command will
+terminate immediately without completing. The rest of the normal KVM
+teardown process will take care of properly cleaning up all leftovers.
+
+The idea is that userspace should first issue the
+KVM_PV_ASYNC_CLEANUP_PREPARE command, and in case of success, create a
+new thread and issue KVM_PV_ASYNC_CLEANUP_PERFORM from there. This also
+allows for proper accounting of the CPU time needed for the
+asynchronous teardown.
+
+This means that the same address space can have memory belonging to
+more than one protected guest, although only one will be running, the
+others will in fact not even have any CPUs.
+
+The shutdown case should be dealt with in userspace (e.g. using
+clone(CLONE_VM)).
+
+A module parameter is also provided to disable the new functionality,
+which is otherwise enabled by default. This should not be an issue
+since the new functionality is opt-in anyway. This is mainly thought to
+aid debugging.
+
+v11->v12
+* rebase
+* fix and improve comments and documentation
+* introduce the module parameter at the end of the series
+* merge old patch 14 and 15
+* minor cosmetic changes to improve readability
+* renamed some functions and constants (including in uapi)
+* use the lock instead of xchg
+* kvm_s390_pv_deinit_cleanup_all will now cleanup all leftovers, while
+  kvm_s390_pv_deinit will destroy the current protected VM without
+  further action
+* kvm_s390_pv_deinit_cleanup_all now called unconditionally when KVM
+  is being torn down
+* fix small memory leak if kvm_s390_pv_deinit_vm_fast fails
+
+v10->v11
+* rebase
+* improve comments and patch descriptions
+* rename s390_remove_old_asce to s390_unlist_old_asce
+* rename DESTROY_LOOP_THRESHOLD to GATHER_GET_PAGES
+* rename module parameter lazy_destroy to async_destroy
+* move the WRITE_ONCE to be right after the UVC in patch 13
+* improve handling leftover secure VMs in patch 14
+* lock only when needed in patch 15, instead of always locking and then
+  unlocking and locking again
+* refactor should_export_before_import to make it more readable
+
+v9->v10
+* improved and expanded comments, fix typos
+* add new patch: perform destroy configuration UVC before clearing
+  memory for unconditional deinit_vm (instead of afterwards)
+* explicitly initialize kvm->arch.pv.async_deinit in kvm_arch_init_vm
+* do not try to call the destroy fast UVC in the MMU notifier if it is
+  not available
+
+v8->v9
+* rebased
+* added dependency on MMU_NOTIFIER for KVM in arch/s390/kvm/Kconfig
+* add support for the Destroy Secure Configuration Fast UVC
+* minor fixes
+
+v7->v8
+* switched patches 8 and 9
+* improved comments, documentation and patch descriptions
+* remove mm notifier when the struct kvm is torn down
+* removed useless locks in the mm notifier
+* use _ASCE_ORIGIN instead of PAGE_MASK for ASCEs
+* cleanup of some compiler warnings
+* remove some harmless but useless duplicate code
+* the last parameter of __s390_uv_destroy_range is now bool
+* rename the KVM capability to KVM_CAP_S390_PROTECTED_ASYNC_DISABLE
+
+v6->v7
+* moved INIT_LIST_HEAD inside spinlock in patch 1
+* improved commit messages in patch 2
+* added missing locks in patch 3
+* added and expanded some comments in patch 11
+* rebased
+
+v5->v6
+* completely reworked the series
+* removed kernel thread for asynchronous teardown
+* added new commands to KVM_S390_PV_COMMAND ioctl
+
+v4->v5
+* fixed and improved some patch descriptions
+* added some comments to better explain what's going on
+* use vma_lookup instead of find_vma
+* rename is_protected to protected_count since now it's used as a counter
+
+v3->v4
+* added patch 2
+* split patch 3
+* removed the shutdown part -- will be a separate patchseries
+* moved the patch introducing the module parameter
+
+v2->v3
+* added definitions for CC return codes for the UVC instruction
+* improved make_secure_pte:
+  - renamed rc to cc
+  - added comments to explain why returning -EAGAIN is ok
+* fixed kvm_s390_pv_replace_asce and kvm_s390_pv_remove_old_asce:
+  - renamed
+  - added locking
+  - moved to gmap.c
+* do proper error management in do_secure_storage_access instead of
+  trying again hoping to get a different exception
+* fix outdated patch descriptions
+
+v1->v2
+* rebased on a more recent kernel
+* improved/expanded some patch descriptions
+* improves/expanded some comments
+* added patch 1, which prevents stall notification when the system is
+  under heavy load.
+* rename some members of struct deferred_priv to improve readability
+* avoid an use-after-free bug of the struct mm in case of shutdown
+* add missing return when lazy destroy is disabled
+* add support for OOM notifier
+
+Claudio Imbrenda (18):
+  KVM: s390: pv: leak the topmost page table when destroy fails
+  KVM: s390: pv: handle secure storage violations for protected guests
+  KVM: s390: pv: handle secure storage exceptions for normal guests
+  KVM: s390: pv: refactor s390_reset_acc
+  KVM: s390: pv: usage counter instead of flag
+  KVM: s390: pv: add export before import
+  KVM: s390: pv: clear the state without memset
+  KVM: s390: pv: Add kvm_s390_cpus_from_pv to kvm-s390.h and add
+    documentation
+  KVM: s390: pv: add mmu_notifier
+  s390/mm: KVM: pv: when tearing down, try to destroy protected pages
+  KVM: s390: pv: refactoring of kvm_s390_pv_deinit_vm
+  KVM: s390: pv: destroy the configuration before its memory
+  KVM: s390: pv: asynchronous destroy for reboot
+  KVM: s390: pv: api documentation for asynchronous destroy
+  KVM: s390: pv: add KVM_CAP_S390_PROTECTED_ASYNC_DISABLE
+  KVM: s390: pv: avoid export before import if possible
+  KVM: s390: pv: support for Destroy fast UVC
+  KVM: s390: pv: module parameter to fence asynchronous destroy
+
+ Documentation/virt/kvm/api.rst      |  31 ++-
+ arch/s390/include/asm/gmap.h        |  39 ++-
+ arch/s390/include/asm/kvm_host.h    |   4 +
+ arch/s390/include/asm/mmu.h         |   2 +-
+ arch/s390/include/asm/mmu_context.h |   2 +-
+ arch/s390/include/asm/pgtable.h     |  21 +-
+ arch/s390/include/asm/uv.h          |  11 +
+ arch/s390/kernel/uv.c               |  85 ++++++
+ arch/s390/kvm/Kconfig               |   1 +
+ arch/s390/kvm/kvm-s390.c            | 101 +++++++-
+ arch/s390/kvm/kvm-s390.h            |   4 +
+ arch/s390/kvm/pv.c                  | 384 +++++++++++++++++++++++++++-
+ arch/s390/mm/fault.c                |  23 +-
+ arch/s390/mm/gmap.c                 | 177 +++++++++++--
+ include/uapi/linux/kvm.h            |   3 +
+ 15 files changed, 825 insertions(+), 63 deletions(-)
+
+-- 
+2.36.1
+
