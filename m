@@ -2,333 +2,153 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82EC956243A
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Jun 2022 22:37:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38B9056273D
+	for <lists+linux-s390@lfdr.de>; Fri,  1 Jul 2022 01:44:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237227AbiF3UhF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Jun 2022 16:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59302 "EHLO
+        id S231388AbiF3XoT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Jun 2022 19:44:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236967AbiF3Ug7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Jun 2022 16:36:59 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2527D45519;
-        Thu, 30 Jun 2022 13:36:58 -0700 (PDT)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25UJX0vD022321;
-        Thu, 30 Jun 2022 20:36:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=jhlBGWWZA7EqJvCGbnRXRCBRrNuXvnvjVKbiEHnqDC8=;
- b=qn6SOyBl+TshkEWWwJpsizQXhXLu4noHb5XQ1hL2QoGogtcC9v3+MFVp0Mkw7LJfR+Ba
- 0gBm3fa7MTSBHX85HPdOsInhZuI2gjUFIe+nkDI92AwmyjBKFaJfmRqUx4Rag7wDtIUN
- DGOellEjePQOpB3HsR+E4+meXW4m3wq36JostkonpumY6mVjbfw+7ENywNYnuE5/HpnD
- BQAmoOW83wCWMAIBVCNQq3TFcNI5EMmRdvIeagg5uES6hi7sHgPfumrSIJ7IHWNEXVr5
- 374yuBlYkdxDshjZT+Y+DaY8H2X9RqkSd7Dede3BqShg6ApO5W4x6eL8mumiG7/zlkpa jg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3h1j392297-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jun 2022 20:36:55 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25UJY6te030906;
-        Thu, 30 Jun 2022 20:36:54 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3h1j39228c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jun 2022 20:36:54 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25UKL9Mf010061;
-        Thu, 30 Jun 2022 20:36:53 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04fra.de.ibm.com with ESMTP id 3gwt096fvg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 30 Jun 2022 20:36:52 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25UKanXC16253226
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jun 2022 20:36:49 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6990CA4054;
-        Thu, 30 Jun 2022 20:36:49 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47A16A405B;
-        Thu, 30 Jun 2022 20:36:49 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 30 Jun 2022 20:36:49 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-        id 109F9E02D1; Thu, 30 Jun 2022 22:36:49 +0200 (CEST)
-From:   Eric Farman <farman@linux.ibm.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>,
+        with ESMTP id S230310AbiF3XoT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Jun 2022 19:44:19 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2084.outbound.protection.outlook.com [40.107.220.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A670313BB;
+        Thu, 30 Jun 2022 16:44:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RZDubsS8zNcdIAqbxYGMBkPwRnU/UkrLQiDvnSH7ojYNjRjuL31cpWPtgA+8Lg8AXFfcpAPcqMvzZxKgWEqn5WxVeuHRZo7g+tpWWZ8YbGCjlucGbF5IfFTzW66+g9jiJDbI31FA3s5+OTQv5tKm9ZF+65Vgyfk9a+fb7HwPyQ8YHccwi8HYbZxNuNgQHZe97++5IajF9rUCXOy66tbA7at6wT/awLxBzU2udYO37O5Wly+re932gZ+byAQtp/f8TXmC6KlJopoGC9sCB+/Pw8iOZo/X8kFNazbxXzzyAou/DfP9fm1NoKrNZ4GuFw8AqFeqIaN5Gi8I6TIKGZsY8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8ThiCwWD73k0/5iUyogczMz517on0EPPXyN3KVIEfvc=;
+ b=ZHDElqUVIOx8cd+snOTvLEyJ+4GJaIe42RKXDiipcR/J6DlIbvlTVDcvCPLcl1GV7iiYLEmGd1IZau+j1Klhu+9sOu4LiQR7Xu1ZsuWMZAtwQNzTgTJxFg5Ll+jdfDjHa+y2RKzm7HGb74aGe2a+2Ry1DmwLYBQLK/zO2wj9VkVcrygkpImI5ted0uasESSLYf32THEzJHSu/KIJik/SmvqWgJnevUIMdswaLYC52sPUhlavC6rxDCceJtyBzWN2uCWqSALsRPjzPGxNJzSMoJ2Gi3CfP5fe4hwBGbsp+Cx2yuZjHQi2tBQhK9cZPubPBNCqqICA51HKoYwDwVkrog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8ThiCwWD73k0/5iUyogczMz517on0EPPXyN3KVIEfvc=;
+ b=Rt9YLz/EAoakn6EBwQlpxWkGkCsdljdiF3UUU+TaNckxHeUwvLP5wM0u9dyjPeIa0z9Dq4l4zYAhN96WxERd2GQ8zCdpk5Z6cqfcbdK6pXfXwa+kYXXX1jx+QocTUfDdEGDKeB8eD97++SCUhO6B23quVqhhO4XPSAM2SICznUi7pIX/dRIV6bK7V/Vs6R6dbZWOrExqw4wDb78/1vzFHF+Xcn13D70oVoLmsUO+S0Y1ALH9qc/Q/KO8PXZghiX9TalhN6lgcsRApG/hbv/X4TX+rZ+vgdSm70XNCeQ2niS4oYmPHmDSfUMue2oYGuQkknv/KnBSDIaw8IHDZ2LSxg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+ by CY5PR12MB6621.namprd12.prod.outlook.com (2603:10b6:930:43::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.14; Thu, 30 Jun
+ 2022 23:44:13 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::ac35:7c4b:3282:abfb]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::ac35:7c4b:3282:abfb%3]) with mapi id 15.20.5395.015; Thu, 30 Jun 2022
+ 23:44:13 +0000
+Date:   Thu, 30 Jun 2022 20:44:11 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
         Alex Williamson <alex.williamson@redhat.com>,
         Cornelia Huck <cohuck@redhat.com>,
         Halil Pasic <pasic@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
-Subject: [PATCH v3 11/11] vfio/ccw: Move FSM open/close to MDEV open/close
-Date:   Thu, 30 Jun 2022 22:36:47 +0200
-Message-Id: <20220630203647.2529815-12-farman@linux.ibm.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220630203647.2529815-1-farman@linux.ibm.com>
+        linux-s390@vger.kernel.org, Kirti Wankhede <kwankhede@nvidia.com>
+Subject: Re: [PATCH v3 00/11] s390/vfio-ccw rework
+Message-ID: <20220630234411.GM693670@nvidia.com>
 References: <20220630203647.2529815-1-farman@linux.ibm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220630203647.2529815-1-farman@linux.ibm.com>
+X-ClientProxiedBy: BL1PR13CA0002.namprd13.prod.outlook.com
+ (2603:10b6:208:256::7) To MN2PR12MB4192.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: hCkGemxhXL2eZ4KXIRtrCYNZFahe9yZi
-X-Proofpoint-GUID: RzDka_P7HRHRDgHqGXV78xFqBZcROOc8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-06-30_14,2022-06-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxscore=0 suspectscore=0 impostorscore=0 phishscore=0 priorityscore=1501
- clxscore=1015 mlxlogscore=999 spamscore=0 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2206300077
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: acc1941d-ba98-4631-b57a-08da5af26fb7
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6621:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8ZHIT7qr5h6QipyL+FYesq8eyvRmkaSSUINN4b6943tIUo6t3EFdv9wf1k2v1mnRaOc8kAHbQLLpoVqEKOSKIyth3HrgQeKR9M+WHHxoBvbi+VQeza0XJ50zEcQ63Rw9vKhiGufPsHFcNURLj+bVzDY9W4t34rP8EA6U+JLrTNOP4o8CD0YhYzxr3GgYnpUqSDtihixBgl/bWNqaoB8CTpk5Hbm+qz9jzeQScIYsrWyeaaars6HK4nlpgVZwyCerX3lvnb6S8BgI/m45H5Wtf7X8vptjinxrg4B4B1lxvJ7bHkGVy/RRFDzTRrE2uwC/w2mQ745849BqQYNmYhfHks1Sfu2VQ7CpzIQLxm7MGjTASLcojmsRtqbY3at0hYmWl7Th4bswHqiNzYiY9rHboIR4yT5clyqFN7YuYI4taFF8uXrJuBF8VxWzofxnYte0ALIU1rLJ+0isO8C4Vj/S7Ooxi6N33f5yWd1MN8UH55MaG7VNjsrthpd72QbyN0IX9ZYDs1SHdfEJJnWESLa03zAI8dqtVccTda75Yw1qM/E9tuWnPoArnR4sDGdZjpvlGbgwnUs15aN4V3x2ukO+OaBS8WNNa18SJ+CCHvCxeWDnyUTcPD4TjAFJnNSRius+mpQL7MJXOW7jmF/r5eTFczD6G/A/pWpDcER1X3CjWbDlzwv0Iu2YNnqt8PsGNJYWjU3dFhWK3OogCz62Hl2kaaySvnqiYk0leyJrJ+uZF8BQdJzK4Z3AeeOgplC/PP9EY9mjr2TvfLfj+k094xcqJYtXd+MMZYzpz9HrAmNOatTxr2NN+0Tg9ek4oygUBgQo5KSzY1dD/0GMCkcxvPN39clBglRpcYDJDwoQvvlS88+8ep0PM5YpecCgC4DgR5HT/J8kIvKuD244sUtZewnI3A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(346002)(396003)(376002)(136003)(39860400002)(366004)(6486002)(478600001)(966005)(2906002)(4326008)(26005)(6512007)(6916009)(316002)(54906003)(8936002)(86362001)(5660300002)(8676002)(2616005)(107886003)(66556008)(1076003)(36756003)(66946007)(66476007)(33656002)(83380400001)(186003)(6506007)(38100700002)(41300700001)(27376004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/9YH30lXtC9sW3TBTa3O3Nbw8f+YXpJDLhkCTuh0XDo2vkcOHjm2Q274iBS4?=
+ =?us-ascii?Q?RJA5ViSx7hM7u/5EREuN5Tdct2KDeLHBmcEOVbeESi4EY5oahtUPPOR061lK?=
+ =?us-ascii?Q?DEL31zNZMXsH8XY/Uxv2vnFAZzfeymQr/6T3H4nzy7V35+3PImwjHaC1uye8?=
+ =?us-ascii?Q?+ieeI1stK+mcX9r/ah6Jta/GrqhzdadHGstn8qzQy8SyMee0f8/uRh42vlaZ?=
+ =?us-ascii?Q?8XkPkXD1Opq4QUqYuwUbadgPUlj7IFbchh7oJNmsziBzjZOSdpn0NqoncaMz?=
+ =?us-ascii?Q?9iHQBQXZwaKAeyBWX80DOcDvyUtKA+RoGQr2AntXvyuQwxlBzvDW7xA/Anhq?=
+ =?us-ascii?Q?1cUETkHWNyc8XtDAohbWhL8LtRgRACew392fvYGqWFiiq9+QqluKgc+0YUdK?=
+ =?us-ascii?Q?Thx/olkk/J04bJrgY2/UNieyqFKtq3VnOEheKPmBioPmYji7zsXnBxdl71Mr?=
+ =?us-ascii?Q?3BlUp5Re0eUX89AAyVxoGwcr4Q4XVtAwVcAP39oPqFfWSsilGQxXbKIQMCZf?=
+ =?us-ascii?Q?B/OiD5gi7wdnrUu1dyinVv8Cs9mzPOWygrL4dMQx0ht+vB6zngK0Kb0uLgsn?=
+ =?us-ascii?Q?ro32RcZ76LwKC4xmITBHrUKAdHpvHUKVE4ZiUCWOD+Vku8M6dudvgEC947oA?=
+ =?us-ascii?Q?QZkrEFdlnFBPFOBWsQMu5WB4juWdBFAixuOIaiTtHQWSXE27sDNBHjoHgKNc?=
+ =?us-ascii?Q?8tzgXgs5vKHkZ+rxjuqt1WE9aSg4fNlANVQyqns03Vod2ySs3jHd0IR/2ZW/?=
+ =?us-ascii?Q?WIyFHvluoKPFhVBQ78tmQCh6WIX7faVl9ezsAlnSus5dFqFKmW9QfuPfKT3M?=
+ =?us-ascii?Q?pGG/JIc7SXjE5GaM5tD9wLKf+AX6zpRX6PNA1bJscmgACA0ta8d0FDdFvNgG?=
+ =?us-ascii?Q?QWNceyWefVaH90TJuOwFRGRzAcP4D7PSJmHc0BKdVEo+77tjyWgpNZT9XXMg?=
+ =?us-ascii?Q?fTFzBEIr0RQ+oJyIdb8n7KkMF+pf3Qb05fTddlEF04yC1qiceKSaBnjS4ksO?=
+ =?us-ascii?Q?XhV5cd65xTn41a1G9Ebfi7w/V2gBhOsPj1Sl8uxpDFCHp/ih5NxAtSitrs8C?=
+ =?us-ascii?Q?IAov6Fp6t3xWFXnOtZMjbichyun0JLhhkFMPKA65kfmoMbQlTJU4vOgC6qij?=
+ =?us-ascii?Q?rPkAdoMHwvCELQS1TQg8omZoyok54gDv+Qt5Z0x+sSd6zi+zjBy0DATuiXYc?=
+ =?us-ascii?Q?Z/UIfWca7JX1ImBjGoIOu3+naQwwVOKONmsE3WrFxocFFkBl1ktBbGrMtfLW?=
+ =?us-ascii?Q?M2h5gn2sNhw/RJaokhsYLOmh4qTYQhAxlkTmmjDPRs118qNv2nf+ZNUSiFek?=
+ =?us-ascii?Q?WfDuFzIfqZalmHM/SXfPM5xULBiebF4WZ3KAjLtX06T7sYQeyN8/oe2mtkhk?=
+ =?us-ascii?Q?uZxwfG+5fwbFvs4Jw5OnZQ+du7+dIv2DN9IuL9RluS4HcVqeF/aqV1M07php?=
+ =?us-ascii?Q?eWK2DMNjQ9XUjXHwl7x72j2D8qoCdat7miqZ4tpLG0B2g0SX10Wv1KMTJ6Sa?=
+ =?us-ascii?Q?KWRM5g8PQfbMVAUzJlkibJ0KWNHf63bXCbH8oXchHM4N00HVkv3TY6IQAitu?=
+ =?us-ascii?Q?Tok+5rOu6TvAyYe6bUt9ICcgDiYP68XOqYpZzPfr?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: acc1941d-ba98-4631-b57a-08da5af26fb7
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2022 23:44:13.0961
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: V+XH6ke9fRIze4eJBahubwpIIfVrPIncK0y8v0bwSyWPfek94EfY5ui+0pvk03W9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6621
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Part of the confusion that has existed is the FSM lifecycle of
-subchannels between the common CSS driver and the vfio-ccw driver.
-During configuration, the FSM state goes from NOT_OPER to STANDBY
-to IDLE, but then back to NOT_OPER. For example:
+On Thu, Jun 30, 2022 at 10:36:36PM +0200, Eric Farman wrote:
+> Here's an updated pass through the first chunk of vfio-ccw rework.
+> 
+> As with v2, this is all internal to vfio-ccw, with the exception of
+> the removal of mdev_uuid from include/linux/mdev.h in patch 1.
+> 
+> There is one conflict with the vfio-next branch [2], on patch 6.
 
-	vfio_ccw_sch_probe:		VFIO_CCW_STATE_NOT_OPER
-	vfio_ccw_sch_probe:		VFIO_CCW_STATE_STANDBY
-	vfio_ccw_mdev_probe:		VFIO_CCW_STATE_IDLE
-	vfio_ccw_mdev_remove:		VFIO_CCW_STATE_NOT_OPER
-	vfio_ccw_sch_remove:		VFIO_CCW_STATE_NOT_OPER
-	vfio_ccw_sch_shutdown:		VFIO_CCW_STATE_NOT_OPER
+What tree do you plan to take it through?
 
-Rearrange the open/close events to align with the mdev open/close,
-to better manage the memory and state of the devices as time
-progresses. Specifically, make mdev_open() perform the FSM open,
-and mdev_close() perform the FSM close instead of reset (which is
-both close and open).
+> The remainder of the work that Jason Gunthorpe originally started [1]
+> in this space remains for a future day.
 
-This makes the NOT_OPER state a dead-end path, indicating the
-device is probably not recoverable without fully probing and
-re-configuring the device.
+Lets see.. These were already applied:
 
-This has the nice side-effect of removing a number of special-cases
-where the FSM state is managed outside of the FSM itself (such as
-the aforementioned mdev_close() routine).
+  vfio/ccw: Remove unneeded GFP_DMA
+  vfio/ccw: Use functions for alloc/free of the vfio_ccw_private
+  vfio/ccw: Pass vfio_ccw_private not mdev_device to various functions
+  vfio/ccw: Convert to use vfio_register_emulated_iommu_dev()
 
-Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
----
- drivers/s390/cio/vfio_ccw_drv.c | 11 +++--------
- drivers/s390/cio/vfio_ccw_fsm.c | 32 +++++++++++++++++++++++---------
- drivers/s390/cio/vfio_ccw_ops.c | 26 +++++++++++---------------
- 3 files changed, 37 insertions(+), 32 deletions(-)
+This series replaces this one:
+  vfio/ccw: Make the FSM complete and synchronize it to the mdev
 
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index f98c9915e73d..4804101ccb0f 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -138,7 +138,7 @@ static struct vfio_ccw_private *vfio_ccw_alloc_private(struct subchannel *sch)
- 
- 	private->sch = sch;
- 	mutex_init(&private->io_mutex);
--	private->state = VFIO_CCW_STATE_NOT_OPER;
-+	private->state = VFIO_CCW_STATE_STANDBY;
- 	INIT_LIST_HEAD(&private->crw);
- 	INIT_WORK(&private->io_work, vfio_ccw_sch_io_todo);
- 	INIT_WORK(&private->crw_work, vfio_ccw_crw_todo);
-@@ -222,21 +222,15 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
- 
- 	dev_set_drvdata(&sch->dev, private);
- 
--	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_OPEN);
--	if (private->state == VFIO_CCW_STATE_NOT_OPER)
--		goto out_free;
--
- 	ret = mdev_register_device(&sch->dev, &vfio_ccw_mdev_driver);
- 	if (ret)
--		goto out_disable;
-+		goto out_free;
- 
- 	VFIO_CCW_MSG_EVENT(4, "bound to subchannel %x.%x.%04x\n",
- 			   sch->schid.cssid, sch->schid.ssid,
- 			   sch->schid.sch_no);
- 	return 0;
- 
--out_disable:
--	cio_disable_subchannel(sch);
- out_free:
- 	dev_set_drvdata(&sch->dev, NULL);
- 	vfio_ccw_free_private(private);
-@@ -264,6 +258,7 @@ static void vfio_ccw_sch_shutdown(struct subchannel *sch)
- 	struct vfio_ccw_private *private = dev_get_drvdata(&sch->dev);
- 
- 	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_CLOSE);
-+	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_NOT_OPER);
- }
- 
- /**
-diff --git a/drivers/s390/cio/vfio_ccw_fsm.c b/drivers/s390/cio/vfio_ccw_fsm.c
-index 89eb3feffa41..472e77f1bb6e 100644
---- a/drivers/s390/cio/vfio_ccw_fsm.c
-+++ b/drivers/s390/cio/vfio_ccw_fsm.c
-@@ -175,6 +175,7 @@ static void fsm_notoper(struct vfio_ccw_private *private,
- 	 */
- 	css_sched_sch_todo(sch, SCH_TODO_UNREG);
- 	private->state = VFIO_CCW_STATE_NOT_OPER;
-+	cp_free(&private->cp);
- }
- 
- /*
-@@ -379,9 +380,16 @@ static void fsm_open(struct vfio_ccw_private *private,
- 	spin_lock_irq(sch->lock);
- 	sch->isc = VFIO_CCW_ISC;
- 	ret = cio_enable_subchannel(sch, (u32)(unsigned long)sch);
--	if (!ret)
--		private->state = VFIO_CCW_STATE_STANDBY;
-+	if (ret)
-+		goto err_unlock;
-+
-+	private->state = VFIO_CCW_STATE_IDLE;
- 	spin_unlock_irq(sch->lock);
-+	return;
-+
-+err_unlock:
-+	spin_unlock_irq(sch->lock);
-+	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_NOT_OPER);
- }
- 
- static void fsm_close(struct vfio_ccw_private *private,
-@@ -393,16 +401,22 @@ static void fsm_close(struct vfio_ccw_private *private,
- 	spin_lock_irq(sch->lock);
- 
- 	if (!sch->schib.pmcw.ena)
--		goto out_unlock;
-+		goto err_unlock;
- 
- 	ret = cio_disable_subchannel(sch);
- 	if (ret == -EBUSY)
- 		vfio_ccw_sch_quiesce(sch);
-+	if (ret)
-+		goto err_unlock;
- 
--out_unlock:
--	private->state = VFIO_CCW_STATE_NOT_OPER;
-+	private->state = VFIO_CCW_STATE_STANDBY;
- 	spin_unlock_irq(sch->lock);
- 	cp_free(&private->cp);
-+	return;
-+
-+err_unlock:
-+	spin_unlock_irq(sch->lock);
-+	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_NOT_OPER);
- }
- 
- /*
-@@ -414,16 +428,16 @@ fsm_func_t *vfio_ccw_jumptable[NR_VFIO_CCW_STATES][NR_VFIO_CCW_EVENTS] = {
- 		[VFIO_CCW_EVENT_IO_REQ]		= fsm_io_error,
- 		[VFIO_CCW_EVENT_ASYNC_REQ]	= fsm_async_error,
- 		[VFIO_CCW_EVENT_INTERRUPT]	= fsm_disabled_irq,
--		[VFIO_CCW_EVENT_OPEN]		= fsm_open,
-+		[VFIO_CCW_EVENT_OPEN]		= fsm_nop,
- 		[VFIO_CCW_EVENT_CLOSE]		= fsm_nop,
- 	},
- 	[VFIO_CCW_STATE_STANDBY] = {
- 		[VFIO_CCW_EVENT_NOT_OPER]	= fsm_notoper,
- 		[VFIO_CCW_EVENT_IO_REQ]		= fsm_io_error,
- 		[VFIO_CCW_EVENT_ASYNC_REQ]	= fsm_async_error,
--		[VFIO_CCW_EVENT_INTERRUPT]	= fsm_irq,
--		[VFIO_CCW_EVENT_OPEN]		= fsm_notoper,
--		[VFIO_CCW_EVENT_CLOSE]		= fsm_close,
-+		[VFIO_CCW_EVENT_INTERRUPT]	= fsm_disabled_irq,
-+		[VFIO_CCW_EVENT_OPEN]		= fsm_open,
-+		[VFIO_CCW_EVENT_CLOSE]		= fsm_notoper,
- 	},
- 	[VFIO_CCW_STATE_IDLE] = {
- 		[VFIO_CCW_EVENT_NOT_OPER]	= fsm_notoper,
-diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
-index 4673b7ddfe20..bc2176421dc5 100644
---- a/drivers/s390/cio/vfio_ccw_ops.c
-+++ b/drivers/s390/cio/vfio_ccw_ops.c
-@@ -24,17 +24,12 @@ static int vfio_ccw_mdev_reset(struct vfio_ccw_private *private)
- 	/*
- 	 * If the FSM state is seen as Not Operational after closing
- 	 * and re-opening the mdev, return an error.
--	 *
--	 * Otherwise, change the FSM from STANDBY to IDLE which is
--	 * normally done by vfio_ccw_mdev_probe() in current lifecycle.
- 	 */
- 	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_CLOSE);
- 	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_OPEN);
- 	if (private->state == VFIO_CCW_STATE_NOT_OPER)
- 		return -EINVAL;
- 
--	private->state = VFIO_CCW_STATE_IDLE;
--
- 	return 0;
- }
- 
-@@ -121,8 +116,6 @@ static int vfio_ccw_mdev_probe(struct mdev_device *mdev)
- 	vfio_init_group_dev(&private->vdev, &mdev->dev,
- 			    &vfio_ccw_dev_ops);
- 
--	private->state = VFIO_CCW_STATE_IDLE;
--
- 	VFIO_CCW_MSG_EVENT(2, "sch %x.%x.%04x: create\n",
- 			   private->sch->schid.cssid,
- 			   private->sch->schid.ssid,
-@@ -137,7 +130,6 @@ static int vfio_ccw_mdev_probe(struct mdev_device *mdev)
- err_atomic:
- 	vfio_uninit_group_dev(&private->vdev);
- 	atomic_inc(&private->avail);
--	private->state = VFIO_CCW_STATE_STANDBY;
- 	return ret;
- }
- 
-@@ -165,6 +157,10 @@ static int vfio_ccw_mdev_open_device(struct vfio_device *vdev)
- 	unsigned long events = VFIO_IOMMU_NOTIFY_DMA_UNMAP;
- 	int ret;
- 
-+	/* Device cannot simply be opened again from this state */
-+	if (private->state == VFIO_CCW_STATE_NOT_OPER)
-+		return -EINVAL;
-+
- 	private->nb.notifier_call = vfio_ccw_mdev_notifier;
- 
- 	ret = vfio_register_notifier(vdev, VFIO_IOMMU_NOTIFY,
-@@ -184,6 +180,12 @@ static int vfio_ccw_mdev_open_device(struct vfio_device *vdev)
- 	if (ret)
- 		goto out_unregister;
- 
-+	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_OPEN);
-+	if (private->state == VFIO_CCW_STATE_NOT_OPER) {
-+		ret = -EINVAL;
-+		goto out_unregister;
-+	}
-+
- 	return ret;
- 
- out_unregister:
-@@ -197,13 +199,7 @@ static void vfio_ccw_mdev_close_device(struct vfio_device *vdev)
- 	struct vfio_ccw_private *private =
- 		container_of(vdev, struct vfio_ccw_private, vdev);
- 
--	if ((private->state != VFIO_CCW_STATE_NOT_OPER) &&
--	    (private->state != VFIO_CCW_STATE_STANDBY)) {
--		if (!vfio_ccw_mdev_reset(private))
--			private->state = VFIO_CCW_STATE_STANDBY;
--		/* The state will be NOT_OPER on error. */
--	}
--
-+	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_CLOSE);
- 	vfio_ccw_unregister_dev_regions(private);
- 	vfio_unregister_notifier(vdev, VFIO_IOMMU_NOTIFY, &private->nb);
- }
--- 
-2.32.0
+Christoph recently re-posted this:
+https://lore.kernel.org/kvm/20220628051435.695540-10-hch@lst.de/
+  vfio/mdev: Consolidate all the device_api sysfs into the core code
 
+So this is still left ?
+  vfio/ccw: Remove private->mdev
+  vfio: Export vfio_device_try_get()
+  vfio/ccw: Move the lifecycle of the struct vfio_ccw_private to the
+    mdev
+
+IIRC Kevin's team needs those for their device FD patches?
+
+Thanks,
+Jason
