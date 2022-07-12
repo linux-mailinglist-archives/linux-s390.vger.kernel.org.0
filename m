@@ -2,151 +2,146 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E096C571799
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Jul 2022 12:52:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6FB557182F
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Jul 2022 13:12:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232353AbiGLKwb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 12 Jul 2022 06:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38156 "EHLO
+        id S232575AbiGLLMl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 12 Jul 2022 07:12:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232330AbiGLKwa (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 Jul 2022 06:52:30 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95BFEAE397;
-        Tue, 12 Jul 2022 03:52:29 -0700 (PDT)
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26CAhmfp013021;
-        Tue, 12 Jul 2022 10:52:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=J2qnig8Gw6JMhiv1+zcuwBOemTwC4BF1Iyens8utySo=;
- b=VnJp5h9et4TVbW7kIhix1qquqVt5NIfT1HTYd1NRjTmuDucNWoAEEg1UQLB8tJQDcsrQ
- v8q1mHkqMaK0CAONolKoimJvVNvDYUJAxyS3zc4kNLPdPYalSyNbZUZC0AyfjDpguvn3
- FoYQwFNc35z76rLM+1u2bGJtyr51sCU3eyFD53J6cqCj5+xqHUrCWTk3N9xl8xfiVavn
- tppxClaFa24JIDtr7B2z9hFGZ324iAAVfwAa7QvA6Tuw5vuRVFQ+vt7ZmZC5kTD/HII5
- 3eiNpmJkM5iel5fEWUoBXnD83DlaQvVep8uOqMDSm68Gtlx0/aqMlEH7Aq8LJIFl3wSI Kw== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h96jysfsv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Jul 2022 10:52:27 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 26CAqPe5003414;
-        Tue, 12 Jul 2022 10:52:25 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 3h70xhv2rp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Jul 2022 10:52:25 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 26CAqMKZ25297306
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Jul 2022 10:52:22 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7D1C111C04A;
-        Tue, 12 Jul 2022 10:52:22 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2445611C04C;
-        Tue, 12 Jul 2022 10:52:22 +0000 (GMT)
-Received: from a46lp73.lnxne.boe (unknown [9.152.108.100])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Jul 2022 10:52:22 +0000 (GMT)
-From:   Steffen Eiden <seiden@linux.ibm.com>
-To:     Heiko Carstens <hca@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     nrb@linux.ibm.com
-Subject: [PATCH 3/3] s390/uvdevice: autoload module based on CPU facility
-Date:   Tue, 12 Jul 2022 12:52:20 +0200
-Message-Id: <20220712105220.325010-4-seiden@linux.ibm.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20220712105220.325010-1-seiden@linux.ibm.com>
-References: <20220712105220.325010-1-seiden@linux.ibm.com>
+        with ESMTP id S232228AbiGLLMj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 Jul 2022 07:12:39 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A79B184D
+        for <linux-s390@vger.kernel.org>; Tue, 12 Jul 2022 04:12:36 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id w22so415316ply.12
+        for <linux-s390@vger.kernel.org>; Tue, 12 Jul 2022 04:12:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Qb55Kbq0y4vwgfIg3wFDxJyNQoImybJoWJeGkFEBt8Y=;
+        b=1j7HJgDk+BOlvIrPto5v/w0UyoFz/lnQv9wgfOdsMphjfRFqT2DIg1DRCHe62jotIw
+         Wcd/TP+YDwzfz1hnJ6brTDEGw2ZuVW3aJM4o1q8Q0gS/+iGgF/XMxyvjeSCbVzLv2yv/
+         AZOOfT7iwDEcacqkH1Rg/gSvMy7ht63jN/2WIxL6byrFEmQFcJ+MCxNo/6iVX5tgrM46
+         jeNMwF7+1ZlSigpdyBSpowNoE2GVGisPcjq7xOSY0ZJs36ILM/NQQSm4zFPQUpdNls/C
+         2lw78hd8AKVpILhM+sGMlgeveyvYN0B+WRx8Por5mmiOEpPIllo6NLOIUa7ziMhmBgP1
+         rMMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Qb55Kbq0y4vwgfIg3wFDxJyNQoImybJoWJeGkFEBt8Y=;
+        b=V9kEsqDYC2uBPwIcnOKrmkux7amGgjR5iPvQH/qhufcQm/vz4QGD3BLNqUB+o0jJjF
+         NNFW5gqOYAIKPH7ngpBhQSqwEGu9fqOB8UMrAaSHmMRML+uaj2UmshQFCmOH9T+u3unN
+         KSajgdZ9fd/uo2WIGxrm8zadT62GvZrZDQrBT0IJn5wCmmbBMg1tDBzPrvs74Oy6CQbF
+         +1lhVtUvKtNELLvD7779Bl5xEoRE61g0DYH8JjJCp17SK24iueZIg5GbhnkW7HGu6gVk
+         unufZVsqYdyZUfzx+28h5PIVweYuDxuDY8w9M/V9eTAqVX9cGZKzMghfF+hyc7CU/dXL
+         a0bQ==
+X-Gm-Message-State: AJIora+LB1hef1Fo6gL/LH55X9vg9gT+o822fHs+oTp0hoHxZ50G9ABF
+        Us1a+dxjXnh/Ke2Cc9Vlpm8QJw==
+X-Google-Smtp-Source: AGRyM1uY3FpE7QhDTBbilYTgVnALa3bIqWVrC/zDtaL3RXmhC1OZWn1T+qY6Y660eckXwBBY0oBkyA==
+X-Received: by 2002:a17:90b:2c0b:b0:1ef:aa42:f19b with SMTP id rv11-20020a17090b2c0b00b001efaa42f19bmr3729663pjb.211.1657624355862;
+        Tue, 12 Jul 2022 04:12:35 -0700 (PDT)
+Received: from [10.4.113.6] ([139.177.225.234])
+        by smtp.gmail.com with ESMTPSA id t7-20020a17090340c700b0016c59b38254sm1550585pld.127.2022.07.12.04.12.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Jul 2022 04:12:35 -0700 (PDT)
+Message-ID: <41ae31a7-6998-be88-858c-744e31a76b2a@bytedance.com>
+Date:   Tue, 12 Jul 2022 19:12:18 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: mdNDKtarlkAZ5t4gVuuQ1YCoMOv1elk9
-X-Proofpoint-ORIG-GUID: mdNDKtarlkAZ5t4gVuuQ1YCoMOv1elk9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-12_05,2022-07-12_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 impostorscore=0 spamscore=0 malwarescore=0
- mlxscore=0 clxscore=1015 phishscore=0 priorityscore=1501
- lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2206140000 definitions=main-2207120039
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.11.0
+Subject: Re: [PATCH v2 0/5] mm, oom: Introduce per numa node oom for
+ CONSTRAINT_{MEMORY_POLICY,CPUSET}
+Content-Language: en-US
+To:     Michal Hocko <mhocko@suse.com>, Gang Li <ligang.bdlg@bytedance.com>
+Cc:     akpm@linux-foundation.org, surenb@google.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+        keescook@chromium.org, rostedt@goodmis.org, mingo@redhat.com,
+        peterz@infradead.org, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, david@redhat.com, imbrenda@linux.ibm.com,
+        adobriyan@gmail.com, yang.yang29@zte.com.cn, brauner@kernel.org,
+        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
+        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
+        Liam.Howlett@oracle.com, ohoono.kwon@samsung.com,
+        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
+        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
+        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
+        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
+        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
+        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
+        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        hezhongkun.hzk@bytedance.com
+References: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
+ <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
+From:   Abel Wu <wuyun.abel@bytedance.com>
+In-Reply-To: <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Make sure the uvdevice driver will be automatically loaded when
-facility 158 is available.
+Hi Michal,
 
-Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
----
- arch/s390/include/asm/cpufeature.h | 1 +
- arch/s390/kernel/cpufeature.c      | 1 +
- drivers/s390/char/uvdevice.c       | 5 ++---
- 3 files changed, 4 insertions(+), 3 deletions(-)
+On 7/8/22 4:54 PM, Michal Hocko Wrote:
+> On Fri 08-07-22 16:21:24, Gang Li wrote:
+>> TLDR
+>> ----
+>> If a mempolicy or cpuset is in effect, out_of_memory() will select victim
+>> on specific node to kill. So that kernel can avoid accidental killing on
+>> NUMA system.
+> 
+> We have discussed this in your previous posting and an alternative
+> proposal was to use cpusets to partition NUMA aware workloads and
+> enhance the oom killer to be cpuset aware instead which should be a much
+> easier solution.
+> 
+>> Problem
+>> -------
+>> Before this patch series, oom will only kill the process with the highest
+>> memory usage by selecting process with the highest oom_badness on the
+>> entire system.
+>>
+>> This works fine on UMA system, but may have some accidental killing on NUMA
+>> system.
+>>
+>> As shown below, if process c.out is bind to Node1 and keep allocating pages
+>> from Node1, a.out will be killed first. But killing a.out did't free any
+>> mem on Node1, so c.out will be killed then.
+>>
+>> A lot of AMD machines have 8 numa nodes. In these systems, there is a
+>> greater chance of triggering this problem.
+> 
+> Please be more specific about existing usecases which suffer from the
+> current OOM handling limitations.
 
-diff --git a/arch/s390/include/asm/cpufeature.h b/arch/s390/include/asm/cpufeature.h
-index aa8081dad411..4b17f876ab54 100644
---- a/arch/s390/include/asm/cpufeature.h
-+++ b/arch/s390/include/asm/cpufeature.h
-@@ -33,6 +33,7 @@ enum {
- 	S390_CPU_FEATURE_NNPA,
- 	S390_CPU_FEATURE_PCI_MIO,
- 	S390_CPU_FEATURE_SIE,
-+	S390_CPU_FEATURE_UV,
- 	MAX_CPU_FEATURES
- };
- 
-diff --git a/arch/s390/kernel/cpufeature.c b/arch/s390/kernel/cpufeature.c
-index e70b29804db4..0b854d37edcb 100644
---- a/arch/s390/kernel/cpufeature.c
-+++ b/arch/s390/kernel/cpufeature.c
-@@ -42,6 +42,7 @@ static struct s390_cpu_feature s390_cpu_features[MAX_CPU_FEATURES] = {
- 	[S390_CPU_FEATURE_NNPA]		= {.type = TYPE_HWCAP, .num = HWCAP_NR_NNPA},
- 	[S390_CPU_FEATURE_PCI_MIO]	= {.type = TYPE_HWCAP, .num = HWCAP_NR_PCI_MIO},
- 	[S390_CPU_FEATURE_SIE]		= {.type = TYPE_HWCAP, .num = HWCAP_NR_SIE},
-+	[S390_CPU_FEATURE_UV]		= {.type = TYPE_FACILITY, .num = 158},
- };
- 
- /*
-diff --git a/drivers/s390/char/uvdevice.c b/drivers/s390/char/uvdevice.c
-index 66505d7166a6..1d40457c7b10 100644
---- a/drivers/s390/char/uvdevice.c
-+++ b/drivers/s390/char/uvdevice.c
-@@ -27,6 +27,7 @@
- #include <linux/stddef.h>
- #include <linux/vmalloc.h>
- #include <linux/slab.h>
-+#include <linux/cpufeature.h>
- 
- #include <asm/uvdevice.h>
- #include <asm/uv.h>
-@@ -244,12 +245,10 @@ static void __exit uvio_dev_exit(void)
- 
- static int __init uvio_dev_init(void)
- {
--	if (!test_facility(158))
--		return -ENXIO;
- 	return misc_register(&uvio_dev_miscdev);
- }
- 
--module_init(uvio_dev_init);
-+module_cpu_feature_match(S390_CPU_FEATURE_UV, uvio_dev_init);
- module_exit(uvio_dev_exit);
- 
- MODULE_AUTHOR("IBM Corporation");
--- 
-2.35.3
+I was just going through the mail list and happen to see this. There
+is another usecase for us about per-numa memory usage.
 
+Say we have several important latency-critical services sitting inside
+different NUMA nodes without intersection. The need for memory of these
+LC services varies, so the free memory of each node is also different.
+Then we launch several background containers without cpuset constrains
+to eat the left resources. Now the problem is that there doesn't seem
+like a proper memory policy available to balance the usage between the
+nodes, which could lead to memory-heavy LC services suffer from high
+memory pressure and fails to meet the SLOs.
+
+It's quite appreciated if you can shed some light on this!
+
+Thanks & BR,
+Abel
