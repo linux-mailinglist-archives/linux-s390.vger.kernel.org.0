@@ -2,97 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 100C0573131
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Jul 2022 10:34:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28A4B573149
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Jul 2022 10:40:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234789AbiGMIei (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 13 Jul 2022 04:34:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43882 "EHLO
+        id S234486AbiGMIkA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 Jul 2022 04:40:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235599AbiGMIe2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 13 Jul 2022 04:34:28 -0400
+        with ESMTP id S231648AbiGMIj5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 13 Jul 2022 04:39:57 -0400
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 127799C246;
-        Wed, 13 Jul 2022 01:34:27 -0700 (PDT)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26D7DlBq003605;
-        Wed, 13 Jul 2022 08:34:26 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3514FD7A4B;
+        Wed, 13 Jul 2022 01:39:57 -0700 (PDT)
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26D8aowm006521;
+        Wed, 13 Jul 2022 08:39:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=d1V82yQlwjqpMUJ5k4dTMJp3PzuooeX+wrvhExobG0U=;
- b=ImAA7f+l7+Msp2P93jOy7JuK6nh+DWEF0anaUi47G9iXOzeOf3onXJ82buYzs5V/XHnZ
- XmlWZWeq5oWN+d0OBnv2V/XpuYWYY11QrvkqeXp05inGsCCvary5Ic91HOAhZ756NhzI
- oF//a1dyt6EYnMA6WZduo4IKZrp8uxz4rZRPAb+9FowfJpuRIAkQur8PMpS0X6bx60Qt
- droPes76qpxfLCpnSJpMgnk6f+Ryz4klOENbq7eVq2+o341jzGafPScoIbLpEV5h+9VN
- 2mGoP3KfmkjotKX8lB84iBi4wEJNJYcu6vIL5JCFR+PX+Tr32+xlm7fzCgjAF3TSNmNa tg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h99r0sfu9-1
+ bh=TizzkofkPLYM5cfAMGlOfFOMezl4jD6xmSbVX7fi9YU=;
+ b=YHeQ7VoFeaMtu13RvDV+1/JKhSTQcFXFQzFJYrhgQGlIUzoBR43zkfvzO5VOcyhktNFx
+ ZfEcKxaI8CuEmuSxTDPGUwnn1ypgv+ax12Tn6TUGW9zVCUU3MeJmCYcaBIyR/2C4fp/F
+ pEc6Z1cmxMH1s4E6nvdV5ZSnJa/bZo7mtxq+lWKWTFNIt5lcNWWIyI3emmRM0R1Ur50w
+ JSSimNl1/6s/ISUbPJwmnk0x1sV5v2nv/Mbjiue4JSKF/3svSgFllfWHhPKh83UdbmkR
+ 2hmyMCJvex+PAn5elrAC0bfJ/uST0l4BVeElPhE7I9uvcMtLgEWKfkAfBJC+rkurs8PJ 7Q== 
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h9t2qh01t-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Jul 2022 08:34:26 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 26D8PKM3025192;
-        Wed, 13 Jul 2022 08:34:25 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h99r0sfn7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Jul 2022 08:34:25 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 26D8KpFO001616;
-        Wed, 13 Jul 2022 08:34:21 GMT
+        Wed, 13 Jul 2022 08:39:53 +0000
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 26D8LZsV012148;
+        Wed, 13 Jul 2022 08:39:51 GMT
 Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma01fra.de.ibm.com with ESMTP id 3h71a8vmng-1
+        by ppma05fra.de.ibm.com with ESMTP id 3h71a8v1hr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 Jul 2022 08:34:21 +0000
+        Wed, 13 Jul 2022 08:39:50 +0000
 Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 26D8YI0v22348200
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 26D8dlgU17367388
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Jul 2022 08:34:18 GMT
+        Wed, 13 Jul 2022 08:39:47 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0599C42042;
-        Wed, 13 Jul 2022 08:34:18 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D83FC4203F;
+        Wed, 13 Jul 2022 08:39:47 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 518AB4203F;
-        Wed, 13 Jul 2022 08:34:17 +0000 (GMT)
-Received: from [9.145.184.105] (unknown [9.145.184.105])
+        by IMSVA (Postfix) with ESMTP id 7BD5942045;
+        Wed, 13 Jul 2022 08:39:47 +0000 (GMT)
+Received: from [9.152.224.153] (unknown [9.152.224.153])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 13 Jul 2022 08:34:17 +0000 (GMT)
-Message-ID: <899e5148-8e65-8260-6f3c-546b4f5a650f@linux.ibm.com>
-Date:   Wed, 13 Jul 2022 10:34:16 +0200
+        Wed, 13 Jul 2022 08:39:47 +0000 (GMT)
+Message-ID: <02b6537d-97e6-c27b-7621-c5b116995a00@linux.ibm.com>
+Date:   Wed, 13 Jul 2022 10:39:47 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v12 2/3] KVM: s390: guest support for topology function
+ Thunderbird/91.8.0
+Subject: Re: [PATCH 3/3] s390/uvdevice: autoload module based on CPU facility
 Content-Language: en-US
-To:     Pierre Morel <pmorel@linux.ibm.com>,
-        Janis Schoetterl-Glausch <scgl@linux.ibm.com>,
-        kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com, cohuck@redhat.com, david@redhat.com,
-        thuth@redhat.com, imbrenda@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, wintera@linux.ibm.com, seiden@linux.ibm.com,
-        nrb@linux.ibm.com
-References: <20220711084148.25017-1-pmorel@linux.ibm.com>
- <20220711084148.25017-3-pmorel@linux.ibm.com>
- <92c6d13c-4494-de56-83f4-9d7384444008@linux.ibm.com>
- <1884bc26-b91b-83a7-7f8b-96b6090a0bac@linux.ibm.com>
- <6124248a-24be-b43a-f827-b6bebf9e7f3d@linux.ibm.com>
- <5c3d9637-7739-1323-8630-433ff8cb4dc4@linux.ibm.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-In-Reply-To: <5c3d9637-7739-1323-8630-433ff8cb4dc4@linux.ibm.com>
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, nrb@linux.ibm.com
+References: <20220712105220.325010-1-seiden@linux.ibm.com>
+ <20220712105220.325010-4-seiden@linux.ibm.com>
+ <20220712184924.0d80c474@p-imbrenda>
+From:   Steffen Eiden <seiden@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20220712184924.0d80c474@p-imbrenda>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: HR-EGR8ZxR55fs0wCDbhaHqk_WsAgFmr
-X-Proofpoint-ORIG-GUID: UlRAFTx--TVwF_GpxPj6oyCVWkjppV2Y
+X-Proofpoint-GUID: Bm1QkXzouI91UwL-R4sSteIHhti0ChGY
+X-Proofpoint-ORIG-GUID: Bm1QkXzouI91UwL-R4sSteIHhti0ChGY
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
  definitions=2022-07-12_14,2022-07-13_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 mlxlogscore=999
- impostorscore=0 mlxscore=0 clxscore=1015 spamscore=0 malwarescore=0
- lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2206140000 definitions=main-2207130035
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 suspectscore=0
+ clxscore=1015 priorityscore=1501 phishscore=0 malwarescore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2206140000 definitions=main-2207130035
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -103,32 +93,88 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Wy4uLl0NCj4+Pj4+ICAgwqAgKy8qKg0KPj4+Pj4gKyAqIGt2bV9zMzkwX3VwZGF0ZV90b3Bv
-bG9neV9jaGFuZ2VfcmVwb3J0IC0gdXBkYXRlIENQVSB0b3BvbG9neSBjaGFuZ2UgcmVwb3J0
-DQo+Pj4+PiArICogQGt2bTogZ3Vlc3QgS1ZNIGRlc2NyaXB0aW9uDQo+Pj4+PiArICogQHZh
-bDogc2V0IG9yIGNsZWFyIHRoZSBNVENSIGJpdA0KPj4+Pj4gKyAqDQo+Pj4+PiArICogVXBk
-YXRlcyB0aGUgTXVsdGlwcm9jZXNzb3IgVG9wb2xvZ3ktQ2hhbmdlLVJlcG9ydCBiaXQgdG8g
-c2lnbmFsDQo+Pj4+PiArICogdGhlIGd1ZXN0IHdpdGggYSB0b3BvbG9neSBjaGFuZ2UuDQo+
-Pj4+PiArICogVGhpcyBpcyBvbmx5IHJlbGV2YW50IGlmIHRoZSB0b3BvbG9neSBmYWNpbGl0
-eSBpcyBwcmVzZW50Lg0KPj4+Pj4gKyAqDQo+Pj4+PiArICogVGhlIFNDQSB2ZXJzaW9uLCBi
-c2NhIG9yIGVzY2EsIGRvZXNuJ3QgbWF0dGVyIGFzIG9mZnNldCBpcyB0aGUgc2FtZS4NCj4+
-Pj4+ICsgKi8NCj4+Pj4+ICtzdGF0aWMgdm9pZCBrdm1fczM5MF91cGRhdGVfdG9wb2xvZ3lf
-Y2hhbmdlX3JlcG9ydChzdHJ1Y3Qga3ZtICprdm0sIGJvb2wgdmFsKQ0KPj4+Pj4gK3sNCj4+
-Pj4+ICvCoMKgwqAgdW5pb24gc2NhX3V0aWxpdHkgbmV3LCBvbGQ7DQo+Pj4+PiArwqDCoMKg
-IHN0cnVjdCBic2NhX2Jsb2NrICpzY2E7DQo+Pj4+PiArDQo+Pj4+PiArwqDCoMKgIHJlYWRf
-bG9jaygma3ZtLT5hcmNoLnNjYV9sb2NrKTsNCj4+Pj4+ICvCoMKgwqAgZG8gew0KPj4+Pj4g
-K8KgwqDCoMKgwqDCoMKgIHNjYSA9IGt2bS0+YXJjaC5zY2E7DQo+Pj4+DQo+Pj4+IEkgZmlu
-ZCB0aGlzIGFzc2lnbm1lbnQgYmVpbmcgaW4gdGhlIGxvb3AgdW5pbnR1aXRpdmUsIGJ1dCBp
-dCBzaG91bGQgbm90IG1ha2UgYSBkaWZmZXJlbmNlLg0KPj4+DQo+Pj4gVGhlIHByaWNlIHdv
-dWxkIGJlIGFuIHVnbHkgY2FzdC4NCj4+DQo+PiBJIGRvbid0IGdldCB3aGF0IHlvdSBtZWFu
-LiBOb3RoaW5nIGFib3V0IHRoZSB0eXBlcyBjaGFuZ2VzIGlmIHlvdSBtb3ZlIGl0IGJlZm9y
-ZSB0aGUgbG9vcC4NCj4gDQo+IFllcyByaWdodCwgZGlkIHdyb25nIHVuZGVyc3RhbmQuDQo+
-IEl0IGlzIGJldHRlciBiZWZvcmUuDQpXaXRoIHRoZSBhc3NpZ25tZW50IG1vdmVkIG9uZSBs
-aW5lIHVwOg0KUmV2aWV3ZWQtYnk6IEphbm9zY2ggRnJhbmsgPGZyYW5ramFAbGludXguaWJt
-LmNvbT4NCg0KPiANCj4+Pg0KPj4+DQo+Pj4+DQo+Pj4+PiArwqDCoMKgwqDCoMKgwqAgb2xk
-ID0gUkVBRF9PTkNFKHNjYS0+dXRpbGl0eSk7DQo+Pj4+PiArwqDCoMKgwqDCoMKgwqAgbmV3
-ID0gb2xkOw0KPj4+Pj4gK8KgwqDCoMKgwqDCoMKgIG5ldy5tdGNyID0gdmFsOw0KPj4+Pj4g
-K8KgwqDCoCB9IHdoaWxlIChjbXB4Y2hnKCZzY2EtPnV0aWxpdHkudmFsLCBvbGQudmFsLCBu
-ZXcudmFsKSAhPSBvbGQudmFsKTsNCj4+Pj4+ICvCoMKgwqAgcmVhZF91bmxvY2soJmt2bS0+
-YXJjaC5zY2FfbG9jayk7DQo+Pj4+PiArfQ0KPj4+Pj4gKw0KPj4+PiBbLi4uXQ0KPj4+Pg0K
-Pj4+DQo+Pj4NCj4+DQo+IA0KDQo=
+
+
+On 7/12/22 18:49, Claudio Imbrenda wrote:
+> On Tue, 12 Jul 2022 12:52:20 +0200
+> Steffen Eiden <seiden@linux.ibm.com> wrote:
+> 
+>> Make sure the uvdevice driver will be automatically loaded when
+>> facility 158 is available.
+>>
+>> Signed-off-by: Steffen Eiden <seiden@linux.ibm.com>
+>> ---
+>>   arch/s390/include/asm/cpufeature.h | 1 +
+>>   arch/s390/kernel/cpufeature.c      | 1 +
+>>   drivers/s390/char/uvdevice.c       | 5 ++---
+>>   3 files changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/s390/include/asm/cpufeature.h b/arch/s390/include/asm/cpufeature.h
+>> index aa8081dad411..4b17f876ab54 100644
+>> --- a/arch/s390/include/asm/cpufeature.h
+>> +++ b/arch/s390/include/asm/cpufeature.h
+>> @@ -33,6 +33,7 @@ enum {
+>>   	S390_CPU_FEATURE_NNPA,
+>>   	S390_CPU_FEATURE_PCI_MIO,
+>>   	S390_CPU_FEATURE_SIE,
+>> +	S390_CPU_FEATURE_UV,
+>>   	MAX_CPU_FEATURES
+>>   };
+>>   
+>> diff --git a/arch/s390/kernel/cpufeature.c b/arch/s390/kernel/cpufeature.c
+>> index e70b29804db4..0b854d37edcb 100644
+>> --- a/arch/s390/kernel/cpufeature.c
+>> +++ b/arch/s390/kernel/cpufeature.c
+>> @@ -42,6 +42,7 @@ static struct s390_cpu_feature s390_cpu_features[MAX_CPU_FEATURES] = {
+>>   	[S390_CPU_FEATURE_NNPA]		= {.type = TYPE_HWCAP, .num = HWCAP_NR_NNPA},
+>>   	[S390_CPU_FEATURE_PCI_MIO]	= {.type = TYPE_HWCAP, .num = HWCAP_NR_PCI_MIO},
+>>   	[S390_CPU_FEATURE_SIE]		= {.type = TYPE_HWCAP, .num = HWCAP_NR_SIE},
+>> +	[S390_CPU_FEATURE_UV]		= {.type = TYPE_FACILITY, .num = 158},
+>>   };
+>>   
+>>   /*
+>> diff --git a/drivers/s390/char/uvdevice.c b/drivers/s390/char/uvdevice.c
+>> index 66505d7166a6..1d40457c7b10 100644
+>> --- a/drivers/s390/char/uvdevice.c
+>> +++ b/drivers/s390/char/uvdevice.c
+>> @@ -27,6 +27,7 @@
+>>   #include <linux/stddef.h>
+>>   #include <linux/vmalloc.h>
+>>   #include <linux/slab.h>
+>> +#include <linux/cpufeature.h>
+>>   
+>>   #include <asm/uvdevice.h>
+>>   #include <asm/uv.h>
+>> @@ -244,12 +245,10 @@ static void __exit uvio_dev_exit(void)
+>>   
+>>   static int __init uvio_dev_init(void)
+>>   {
+>> -	if (!test_facility(158))
+>> -		return -ENXIO;
+>>   	return misc_register(&uvio_dev_miscdev);
+>>   }
+>>   
+>> -module_init(uvio_dev_init);
+>> +module_cpu_feature_match(S390_CPU_FEATURE_UV, uvio_dev_init);
+> 
+> does this still prevent manual loading when the feature is not present?
+yes.
+
+Have a look at the macro definition at 'include/linux/cpufeature.h':
+
+Use module_cpu_feature_match(feature, module_init_function) to 
+
+declare that 
+
+[snip]
+b) the module must not be loaded if CPU feature 'feature' is not present 
+
+    (not even by manual insmod).
+
+The test 'facility(158)' just moved to cpu_have_feature() in 
+'/arch/s390/kernel/cpufeature.c'.
+> 
+>>   module_exit(uvio_dev_exit);
+>>   
+>>   MODULE_AUTHOR("IBM Corporation");
+> 
