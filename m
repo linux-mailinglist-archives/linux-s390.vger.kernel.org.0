@@ -2,120 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20D55574562
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Jul 2022 08:59:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A05857473D
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Jul 2022 10:38:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234894AbiGNG7T (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Jul 2022 02:59:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41206 "EHLO
+        id S237386AbiGNIiK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Jul 2022 04:38:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231828AbiGNG7K (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Jul 2022 02:59:10 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAD242B190;
-        Wed, 13 Jul 2022 23:59:07 -0700 (PDT)
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26E6hmqE029727;
-        Thu, 14 Jul 2022 06:59:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : to : cc : references : from : subject : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=GeT64NfS5k2tAgpLSlglGCY4PhITfWskpQ5HmZ6QoX0=;
- b=llRSFn46x1quPK2wDOzYtg4bRovel3Od3mm+NjR7etSyuLFCYTZdEjKlxMzmj5X686DE
- aJEDEQJ5ptUSKLJe4ccGIHUMLjsbgv4CiScPQmTIyFW+9noxNc5/aSAxUopTqJPqtddj
- IjVoNK+rh/3c9qer5S9Vm7InluTtCikAO+Az49Vos6fJhysoHA7KfaLOX+hM7A1PZoiK
- G+yo49sM6DMJSYeL59zHRR4d7yTfYEHCdSRGeTCuIfMNhPi/HsVwiWJ5K1dEjuwIkLFv
- V8t9WjXx8DIthy3b4F5Y6u9XIUO9NUxPqggDb3CnO0X4dPJmyYoPGb/NUD19Orww3RIc nA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hae4frak9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Jul 2022 06:59:06 +0000
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 26E6nwxg023864;
-        Thu, 14 Jul 2022 06:59:06 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hae4frajq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Jul 2022 06:59:06 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 26E6rSpI004319;
-        Thu, 14 Jul 2022 06:59:04 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma06fra.de.ibm.com with ESMTP id 3h8ncnh5vr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 Jul 2022 06:59:04 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 26E6vS6b22020368
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Jul 2022 06:57:28 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 18C19A4054;
-        Thu, 14 Jul 2022 06:59:01 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9FA22A405C;
-        Thu, 14 Jul 2022 06:59:00 +0000 (GMT)
-Received: from [9.145.62.186] (unknown [9.145.62.186])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Jul 2022 06:59:00 +0000 (GMT)
-Message-ID: <abed8069-220a-ee32-b4fa-3cff935b539c@linux.ibm.com>
-Date:   Thu, 14 Jul 2022 08:59:00 +0200
+        with ESMTP id S236882AbiGNIhR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Jul 2022 04:37:17 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6ACA3ED4A
+        for <linux-s390@vger.kernel.org>; Thu, 14 Jul 2022 01:37:14 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id t25so1633034lfg.7
+        for <linux-s390@vger.kernel.org>; Thu, 14 Jul 2022 01:37:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=H3bGT1ZyGPu3PRQJlJHyQI9TvTjBPuNSyHjFOzNfiP0=;
+        b=eOKhIHPUU5qPTZbjyQcWfvRUY0zDAP8hnIUzGBjF2Jn5DfdNsbEWN2bt7ALPYmKFVp
+         Dxr1gDHkbIBW6Zt+nHPJYVynuk8AW0yQZ/Zbg6Hs/Db/0s9SnaRXX8dPxs4FUxGCTJqt
+         PUYZva9zdBfTCaw+ACjLsUUgRvbYiV1yKAF3EhOBh+YW55bYBsAw2vjNobpxCrdB648X
+         A9Vj0WSfJubet8viXTg/I9X1Zmn6KwP7YNCJiSogQMOb5VTL9XQBYGsxHSC28kklqMwQ
+         Xqm1mx/as6lOSd/UexvuUJPMkR0uIfSfLSUsGSd7SP6mXh7BeziDYVk18AfHAMhcFado
+         ZNLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=H3bGT1ZyGPu3PRQJlJHyQI9TvTjBPuNSyHjFOzNfiP0=;
+        b=LyyMizCIUC/B/a0RPQq6i/flwhXzlBxozACWbOfnWLKDOUTrd3HXmb1F24kFvnVenV
+         l/2dXeGDgzCxBnnlXoX26ebEMZn7aQHUpvIJknmB94/5UoVsRwmes0wR8mQiwhrAHnNW
+         ScNJG1l3Pv0Z15gflq78aP99qYacABUraaCCyKii/hY2Nm/AwSuRcmvw/vQd4eObR4/d
+         ZQp3e2zXSQkhV35HKZhdZ0BIDqJEp631ZNhChSdNR2zkJ1LUG1qF2zYoDU00eR0EZr73
+         rbuErSbRT9HEeqlwq6VeqWEkncUI55WTTj4dJAlqA7vRj5RTckXHME3sA+uhyyKkzvPW
+         u8zw==
+X-Gm-Message-State: AJIora9OBO09IxZfLiND5L5HFKoxHb1WzmNaiJmbgSs4wp2AGgGGsVfr
+        id40QZ1JA/2rSsEGHdFhRHIT0ccx/r66lSt0XfM=
+X-Google-Smtp-Source: AGRyM1suH6kpL0bxxrdPqBdRw7fjg6QmbYsIJ5KtUWeYknhIH8CIkHpjEQ1bnLxbFcENJg0E8wYhVlYhJeESVTPizkI=
+X-Received: by 2002:a05:6512:12c8:b0:489:efbf:18d1 with SMTP id
+ p8-20020a05651212c800b00489efbf18d1mr4734610lfg.192.1657787832538; Thu, 14
+ Jul 2022 01:37:12 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Content-Language: en-US
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, thuth@redhat.com, pasic@linux.ibm.com,
-        david@redhat.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, scgl@linux.ibm.com,
-        mimu@linux.ibm.com, nrb@linux.ibm.com
-References: <20220628135619.32410-1-imbrenda@linux.ibm.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-Subject: Re: [PATCH v12 00/18] KVM: s390: pv: implement lazy destroy for
- reboot
-In-Reply-To: <20220628135619.32410-1-imbrenda@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: XNyKNM8aZ2gI7zY6NPWPZb6wPeL7o6gm
-X-Proofpoint-ORIG-GUID: eCzD25cLDywZLHhs-OJ0w9_idvUGfNkH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-14_04,2022-07-13_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 malwarescore=0 clxscore=1015 bulkscore=0 spamscore=0
- phishscore=0 adultscore=0 mlxscore=0 mlxlogscore=972 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2206140000 definitions=main-2207140025
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Received: by 2002:a2e:9041:0:0:0:0:0 with HTTP; Thu, 14 Jul 2022 01:37:11
+ -0700 (PDT)
+Reply-To: abdwabbomaddahm@gmail.com
+From:   Abdwabbo Maddah <abdwabbomaddah746@gmail.com>
+Date:   Thu, 14 Jul 2022 09:37:11 +0100
+Message-ID: <CAFC-3icPrpmNqEMcqzAOFvzCPc-r5yv89mNAZ9SsCQvcOZ=+9g@mail.gmail.com>
+Subject: Get back to me... URGENT
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:132 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4900]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [abdwabbomaddah746[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [abdwabbomaddah746[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 6/28/22 15:56, Claudio Imbrenda wrote:
-> Previously, when a protected VM was rebooted or when it was shut down,
-> its memory was made unprotected, and then the protected VM itself was
-> destroyed. Looping over the whole address space can take some time,
-> considering the overhead of the various Ultravisor Calls (UVCs). This
-> means that a reboot or a shutdown would take a potentially long amount
-> of time, depending on the amount of used memory.
-> 
-> This patchseries implements a deferred destroy mechanism for protected
-> guests. When a protected guest is destroyed, its memory can be cleared
-> in background, allowing the guest to restart or terminate significantly
-> faster than before.
-> 
-
-Patches 1-12 have spent a considerable amount of time in the CI and I'd 
-like to queue them to be able to focus on the rest of the series.
-
-Patch 9 will need two small fixups since there are two conflicts where a 
-line was introduced before your addition of the include and the struct 
-kvm_s390_pv mmu_notifier member. I.e. it's more of a patch history 
-problem than a real conflict.
-
-I'd fix that up when queuing if you're ok with it?
+-- 
+Dear,
+I had sent you a mail but i don't think you received it that's why am
+writing you again.It is important you get back to me as soon as you
+can.
+Abd-Wabbo Maddah
