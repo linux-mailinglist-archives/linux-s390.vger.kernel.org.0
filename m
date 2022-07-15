@@ -2,74 +2,73 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E881578274
-	for <lists+linux-s390@lfdr.de>; Mon, 18 Jul 2022 14:38:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 995265783F1
+	for <lists+linux-s390@lfdr.de>; Mon, 18 Jul 2022 15:41:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233637AbiGRMiq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 Jul 2022 08:38:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57424 "EHLO
+        id S234411AbiGRNl0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 Jul 2022 09:41:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230249AbiGRMip (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Jul 2022 08:38:45 -0400
-Received: from smtpbg.qq.com (biz-43-154-54-12.mail.qq.com [43.154.54.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F08CA463;
-        Mon, 18 Jul 2022 05:38:40 -0700 (PDT)
-X-QQ-mid: bizesmtp90t1658147897tcggymxm
+        with ESMTP id S234393AbiGRNl0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Jul 2022 09:41:26 -0400
+Received: from smtpbg.qq.com (unknown [43.155.67.158])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 337D81EEFF;
+        Mon, 18 Jul 2022 06:41:20 -0700 (PDT)
+X-QQ-mid: bizesmtp75t1658151665taug2ewd
 Received: from localhost.localdomain ( [171.223.96.21])
         by bizesmtp.qq.com (ESMTP) with 
-        id ; Mon, 18 Jul 2022 20:38:15 +0800 (CST)
+        id ; Mon, 18 Jul 2022 21:41:03 +0800 (CST)
 X-QQ-SSF: 01000000002000E0U000C00A0000020
-X-QQ-FEAT: lp8jUtqYSiDdRSj78y6Q9aGn5VjwF/dx4jHhwpgxYRE0Sf/tq9V596ETLvsJy
-        U4zpB334unK4JNHyW4wBx6YgA/TM0Dl1Gyma9jjQJDIQd+8iD6ihzpQEJrJQaCQ3RiOvk+O
-        2SHV+kMJaP68oZfZUKK3aHfglcztl2aED8aDMXuQbFqxS+xjVihWZ357V3eo1Ly0iGpo3Qn
-        eMuTj11tQ8wLWDSyCSAmcZdqreEEkcFpZQobMZsCapt001Bjlo94ld8t6TTHhqeTLD4LJ7e
-        CVjS0jf48HgkSxK7RrFmj3Ql4F1hj3v1IkWYA2O7sHagWqs9NqSRvruGvDwNN6bv1qWgDwR
-        F/ZtYb35sp/5Cnl7qV7mwCOoE9nup1M/OQ2vcC0VrpZyUpVS/mPhur31LkWdfDudsEvwHBx
-        N6ly0IIiugM=
+X-QQ-FEAT: hoArX50alxFc5E7cYNVFeEf19y0Vrv/Cr+6UgenvfNYC34MNwrA09JARm/6x9
+        ga7+d27j0ePKlyoHgHiD9jxLyIBY1n6HL+eQw+juaXzLHqFmm7nxmM50BP4F6qjkYQNODkM
+        V522Pi6TNEUDZOsyPrROwbqv/bnSS2+IcDGEKlLA73cC/6O04pKYDgh8KZmxIRKIK5aWVgo
+        RvJr1/4BcOmJBRpwp8neGSE5HcTVkHPTeoV81rIku4NF7XQpfsKoPeBDgfsLTmkAvuc+JgB
+        uKZgpCqbxASCDX4dL+D0trX67wjQrpy1YxApORypnMPvNXQ7ZS0igAtURg4ieGxcwUX22Qk
+        qFxq8ebQevWnEoMfcZtuiyXHi0GQDYc6mZ+xBTCd6UihIpD3SEx8tx5VLxzxZ+wx4OOa0PB
+        cSNOfguORdwRWxLok94NMw==
 X-QQ-GoodBg: 0
 From:   Jason Wang <wangborong@cdjrlc.com>
 To:     svens@linux.ibm.com
 Cc:     hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jason Wang <wangborong@cdjrlc.com>
-Subject: [PATCH] s390/delay: Fix comment typo
-Date:   Fri, 15 Jul 2022 12:36:10 +0800
-Message-Id: <20220715043610.17229-1-wangborong@cdjrlc.com>
+        borntraeger@linux.ibm.com, baihaowen@meizu.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Wang <wangborong@cdjrlc.com>
+Subject: [PATCH] s390/tape: Fix comment typo
+Date:   Fri, 15 Jul 2022 13:38:38 +0800
+Message-Id: <20220715053838.5005-1-wangborong@cdjrlc.com>
 X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtp:cdjrlc.com:qybglogicsvr:qybglogicsvr6
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,RDNS_DYNAMIC,
-        SPF_PASS,T_SPF_HELO_TEMPERROR autolearn=no autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,RDNS_NONE,SPF_PASS,
+        T_SPF_HELO_TEMPERROR autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The double `that' is duplicated in line 19, remove one.
+The double `that' is duplicated in line 551, remove one.
 
 Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
 ---
- arch/s390/lib/delay.c | 2 +-
+ drivers/s390/char/tape_34xx.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/lib/delay.c b/arch/s390/lib/delay.c
-index f7f5adea8940..c32bc8f7c1fd 100644
---- a/arch/s390/lib/delay.c
-+++ b/arch/s390/lib/delay.c
-@@ -16,7 +16,7 @@ void __delay(unsigned long loops)
-         /*
-          * To end the bloody studid and useless discussion about the
-          * BogoMips number I took the liberty to define the __delay
--         * function in a way that that resulting BogoMips number will
-+         * function in a way that resulting BogoMips number will
-          * yield the megahertz number of the cpu. The important function
-          * is udelay and that is done using the tod clock. -- martin.
-          */
+diff --git a/drivers/s390/char/tape_34xx.c b/drivers/s390/char/tape_34xx.c
+index 38cc1565d6ae..751945fb6793 100644
+--- a/drivers/s390/char/tape_34xx.c
++++ b/drivers/s390/char/tape_34xx.c
+@@ -548,7 +548,7 @@ tape_34xx_unit_check(struct tape_device *device, struct tape_request *request,
+ 	case 0x2e:
+ 		/*
+ 		 * Not capable. This indicates either that the drive fails
+-		 * reading the format id mark or that that format specified
++		 * reading the format id mark or that format specified
+ 		 * is not supported by the drive.
+ 		 */
+ 		dev_warn (&device->cdev->dev, "The tape unit cannot process "
 -- 
 2.35.1
-
 
