@@ -2,101 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA870579850
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Jul 2022 13:23:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2DD6579F55
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Jul 2022 15:13:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233381AbiGSLXy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 Jul 2022 07:23:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59912 "EHLO
+        id S243194AbiGSNNr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 Jul 2022 09:13:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229784AbiGSLXx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 Jul 2022 07:23:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B6311EC66
-        for <linux-s390@vger.kernel.org>; Tue, 19 Jul 2022 04:23:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 304F861592
-        for <linux-s390@vger.kernel.org>; Tue, 19 Jul 2022 11:23:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E0F8C341C6;
-        Tue, 19 Jul 2022 11:23:50 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-        dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="KhIGxU2h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-        t=1658229829;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4Xltzb52NGnbPY2VCaaF/R/ZpzfmeAtXwV9zVBung+Y=;
-        b=KhIGxU2h0HKUqv/emgeI3pJlq9Pqu4JPRj7VQ0Q2YhC8lVGFx7oEkGzGTggAwKWLhK/ukf
-        get3jHK5gGGmE+YNCI46/3B3pMs1BEtUJHVuGm9+h6l6CZ3swvA3v4/Q6zv7onlrgFzfnM
-        ulBtJyCzQwEyq3lAnV4lMSbZ/oRMQhw=
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id cb59bb4f (TLSv1.3:AEAD-AES256-GCM-SHA384:256:NO);
-        Tue, 19 Jul 2022 11:23:48 +0000 (UTC)
-Date:   Tue, 19 Jul 2022 13:23:46 +0200
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-s390@vger.kernel.org, qemu-devel@nongnu.org,
-        Thomas Huth <thuth@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Holger Dengler <dengler@linux.ibm.com>
-Subject: Re: [PATCH qemu] target/s390x: support PRNO_TRNG instruction
-Message-ID: <YtaUQkVUPVHt+v0Z@zx2c4.com>
-References: <20220712164627.581570-1-Jason@zx2c4.com>
- <8326327a-e55e-3aba-049f-b925282f95a8@redhat.com>
+        with ESMTP id S243500AbiGSNNc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 Jul 2022 09:13:32 -0400
+Received: from smtpbg.qq.com (biz-43-154-54-12.mail.qq.com [43.154.54.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D965120B1;
+        Tue, 19 Jul 2022 05:30:18 -0700 (PDT)
+X-QQ-mid: bizesmtp82t1658233738tg1qho8c
+Received: from localhost.localdomain ( [171.223.96.21])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Tue, 19 Jul 2022 20:28:57 +0800 (CST)
+X-QQ-SSF: 01000000002000F0U000C00A0000020
+X-QQ-FEAT: DoD8xN2rKozhiQNtJHhOlHcWfNXQgthF76gR62nSuR1BQTbE1ZbBHWLk/AJ8s
+        3j545u/dr3eNqhYXeYVm2v+4KNQyOOWslAx7CTrKPP2O1NvncR0wIt3AhiBw+gAbYWOUkx8
+        CvjypKcwNVCjo9V4rrUuk9rWeXRoSUTSeiK3uFPh2aMVQGxlMejZiQIqtVxSaipvo03yHDK
+        lhFAzTAsZOdbEeSnc/tHCCDnDYtpwh/mesTjJiZ3PXQsdAAwTIpShY0osvIQds5KVrNm226
+        W3xgeqWdhka821B6mpJ5ukHNT4uDC7ypa8iKpfBIrxL9iLWl4lo6Gq9jzOZ7xJ7pKaLV67k
+        +ACoW+kbIpHJbWEUv0jYSZtT4fNudrcdmJLjEYso2+fB2R5i3XpGatvKFRVGCFnBkasWU1N
+        AtDwevQ/f8k=
+X-QQ-GoodBg: 0
+From:   Jason Wang <wangborong@cdjrlc.com>
+To:     svens@linux.ibm.com
+Cc:     wintera@linux.ibm.com, wenjia@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Wang <wangborong@cdjrlc.com>
+Subject: [PATCH] s390/net: Fix comment typo
+Date:   Sat, 16 Jul 2022 12:27:00 +0800
+Message-Id: <20220716042700.39915-1-wangborong@cdjrlc.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <8326327a-e55e-3aba-049f-b925282f95a8@redhat.com>
-X-Spam-Status: No, score=-6.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:cdjrlc.com:qybglogicsvr:qybglogicsvr6
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,RDNS_DYNAMIC,
+        SPF_PASS,T_SPF_HELO_TEMPERROR autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi David,
+The double `the' is duplicated in the comment, remove one.
 
-Thanks for your feedback. I'll CC you on v+1. Note that I don't know
-very much about s390x, so I may require some slight hand holding, but
-let's see how far I can get...
+Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
+---
+ drivers/s390/net/qeth_core_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Tue, Jul 19, 2022 at 11:54:04AM +0200, David Hildenbrand wrote:
-> How is that warning avoided now? We have to sort that out first -- either by
-> removing that dependency (easy) or implementing SHA-512 (hard).
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index 9e54fe76a9b2..35d4b398c197 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -3565,7 +3565,7 @@ static void qeth_flush_buffers(struct qeth_qdio_out_q *queue, int index,
+ 			if (!atomic_read(&queue->set_pci_flags_count)) {
+ 				/*
+ 				 * there's no outstanding PCI any more, so we
+-				 * have to request a PCI to be sure the the PCI
++				 * have to request a PCI to be sure the PCI
+ 				 * will wake at some time in the future then we
+ 				 * can flush packed buffers that might still be
+ 				 * hanging around, which can happen if no
+-- 
+2.35.1
 
-Ahhh... Well, I can do either one I guess. Implementing SHA512 isn't
-really that hard. I can cook up a short enough software implementation
-of that which we could plonk into crypto_helper.c fairly minimally. Of
-course, then those instructions would have to be wired up. So maybe I'll
-try removing the dependency for v2 instead, and we'll see what you and
-Thomas think of that.
-
-> > +static void fill_buf_random(CPUS390XState *env, uintptr_t ra,
-> > +                            uint64_t buf, uint64_t len)
-> > +{
-> > +        uint64_t addr = wrap_address(env, buf);
-> > +        uint8_t tmp[256];
-> > +
-> > +        while (len) {
-> > +                size_t block = MIN(len, sizeof(tmp));
-> > +                qemu_guest_getrandom_nofail(tmp, block);
-> > +                for (size_t i = 0; i < block; ++i)
-> > +                        cpu_stb_data_ra(env, addr++, tmp[i], ra);
-> 
-> 
-> There seems to be something missing regarding exception + register handling.
-
-Thanks, missed this. I'll do that.
-
-> Further, to be 100% correct you might have to wrap the address whenever
-> you increment it.
-
-Ack.
-
-Jason
