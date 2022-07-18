@@ -2,78 +2,162 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B731578A10
-	for <lists+linux-s390@lfdr.de>; Mon, 18 Jul 2022 21:01:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 430C0578CC7
+	for <lists+linux-s390@lfdr.de>; Mon, 18 Jul 2022 23:33:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234750AbiGRTBe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 Jul 2022 15:01:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55720 "EHLO
+        id S235338AbiGRVdu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 Jul 2022 17:33:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234362AbiGRTB2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Jul 2022 15:01:28 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECFB22F67E
-        for <linux-s390@vger.kernel.org>; Mon, 18 Jul 2022 12:01:17 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id r3so22570736ybr.6
-        for <linux-s390@vger.kernel.org>; Mon, 18 Jul 2022 12:01:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=h0ZslgqQ94UM3iGDYCZGEx8ZwvbYHY5ZrQARiO/Kpbc=;
-        b=IQXHlBQ3jHSYUTt89EYBBYMpS/rXYtHBaNUJ6e2ZzB07/ETpvOJM0/ZijryokIEfDh
-         oJG0jiachEiIldTcksV5XzU+dy3csOVeMrzVRYAIpdf4PUrGYfI/KNNvcLIWjvmc8oHa
-         yWKlPWKnOFkuEw2Mq2CzZYpqcRK9kJ+LygeUXE0izxh4s3I+nauj1w40rP+480vJCi+X
-         rAPSoEvo8wXV23cydMjOZnuzBivYToT/OwjRuq1iqX/8Isb8Rqougy46FnOdoQuh9Z/u
-         z7xKihQATs9EIIDqpmGAQl/2n//vpMk3ZDpLHQioaLk/1hVBrL4som/CgeyT77yPFwbn
-         VU6A==
+        with ESMTP id S235478AbiGRVdn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Jul 2022 17:33:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A84AB32476
+        for <linux-s390@vger.kernel.org>; Mon, 18 Jul 2022 14:33:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1658180021;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=McBcNHr9RW9GxlAu+UJlcdP1dYuV9WY6CAhxiggXqkA=;
+        b=bj+g3v+xxlhVzd5TTwBjGl+3/N0pYoI5t0Tix1m7eYOabfJ3k07cHjtxMhMwl49kl0UG/S
+        kTcA3MScVSAQggNl6etPOiqjzGaYo9AKDPZsej+sGaCB9HsjMoqqoNy3ZZyDQa6kzxtfTv
+        q7hxkv2KFxUwKNVx9u4mmTpvH3hsh3g=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-550-D45myUqyNSi0L9yj__4enw-1; Mon, 18 Jul 2022 17:33:34 -0400
+X-MC-Unique: D45myUqyNSi0L9yj__4enw-1
+Received: by mail-il1-f197.google.com with SMTP id n16-20020a056e02141000b002dabb875f0aso8249425ilo.10
+        for <linux-s390@vger.kernel.org>; Mon, 18 Jul 2022 14:33:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=h0ZslgqQ94UM3iGDYCZGEx8ZwvbYHY5ZrQARiO/Kpbc=;
-        b=0HLB9jlH//jDeEjTHRLYnIFdGO1kHF/LGl2LvKH7gmL0Il727mrqWak94kUc7oPIXm
-         zVxybUmNQeZyVM8sVtzJGP400L0eCeDgfpfDOQc1J5yaYNFDGsrKRK874aKKV+gxkD1d
-         0LGGO6PDYyTVRjLtXa3eMIbc8wuGa+ZSn+bJKTq7F9UPNp+2KUSuGHnXrpKjsTlJ/8ET
-         46eDmeb+o7/3I3JaRxCeeOmmbaomZKnKcj3Rg15Ts+z8qbwYC+/6cR0EZ8ppWvz1XDnR
-         N34efHG5vPu8MuXvCWMnDkGfz3HzmKQRSATPvzlZxo9VkI19ndqhO3UmfPTJIjBwn8K9
-         KiCw==
-X-Gm-Message-State: AJIora9rnnqSyVdmGmqY2gZLVdFVHjwP+/6E0NY8xLkTiOEu/P1Xeh0H
-        7gMc7lfqXYXdQZx1LneB8PAfWWYHi4ft0K0VcR5upix2YI/S7A==
-X-Google-Smtp-Source: AGRyM1sOF4caZ/Mzb7i1HwUB8dyXYAmjf9y+Pd1nVHRKiUHeMR6opOrMc10oZNu5DLkN2HS0cpkKNGEh0T+MU99Jmes=
-X-Received: by 2002:a81:5747:0:b0:31d:1bb8:65b7 with SMTP id
- l68-20020a815747000000b0031d1bb865b7mr30830046ywb.168.1658170865217; Mon, 18
- Jul 2022 12:01:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=McBcNHr9RW9GxlAu+UJlcdP1dYuV9WY6CAhxiggXqkA=;
+        b=PJgHot0wh+kmq4otBCW96jy7aOTgoxxGMwZu/cBmv8jBmOxIfPwBi+LteZZ2Qxx5Gs
+         PjyFhn95HJGBYZzthX+jDFKJ5sKyW7Iz2lWtTEh5UpNqXqDzdz5R9wBYrZhFIoR5qfi1
+         QOiG02gfWCWjPtfqF+3py8lEl+yPyEOv497M08ULh8fe7KoGeGocKbNZGoPFa/y8erEw
+         5UQGF83OtljIOe3s0R3OYQ2TmUgUfpeVI9cMonZq7d/Z96Z5jaM2SrSHwMZsMToWdk6+
+         g5NPKR0JQif/EW0ecpQaKbTDtyJxhE5N/e2oqTQLjGatxWVNs+2F822kgmfkbotXF9Q3
+         Mfaw==
+X-Gm-Message-State: AJIora8iHb+tMvchU8GimfbMZOL/26nVsaRHz0AHSzRQcUfN8aNWKHcc
+        iDyJrUsHY6pWDWAnB9mZXCO3LZAHnNihwhTzHoqKmnlPz4yGuOX84n01DwEfrBOC8hZdguoVLl6
+        8TeDvkyllYfrfc/PbZgithA==
+X-Received: by 2002:a6b:3e83:0:b0:678:e63b:355d with SMTP id l125-20020a6b3e83000000b00678e63b355dmr13719285ioa.134.1658180014077;
+        Mon, 18 Jul 2022 14:33:34 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1sDrGa8ze2j/q2lwFrndLWdf63qIpnOAVsNqsBc/gBPGdJhX41ARLJ2Yuy3bl7gy/bKR3KwsA==
+X-Received: by 2002:a6b:3e83:0:b0:678:e63b:355d with SMTP id l125-20020a6b3e83000000b00678e63b355dmr13719265ioa.134.1658180013803;
+        Mon, 18 Jul 2022 14:33:33 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id d190-20020a6bb4c7000000b0066961821575sm6386751iof.34.2022.07.18.14.33.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Jul 2022 14:33:33 -0700 (PDT)
+Date:   Mon, 18 Jul 2022 15:33:31 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Kirti Wankhede <kwankhede@nvidia.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, intel-gvt-dev@lists.freedesktop.org
+Subject: Re: simplify the mdev interface v6
+Message-ID: <20220718153331.18a52e31.alex.williamson@redhat.com>
+In-Reply-To: <20220718054348.GA22345@lst.de>
+References: <20220709045450.609884-1-hch@lst.de>
+        <20220718054348.GA22345@lst.de>
+Organization: Red Hat
 MIME-Version: 1.0
-Received: by 2002:a05:6919:4004:b0:cc:50ff:b3d8 with HTTP; Mon, 18 Jul 2022
- 12:01:04 -0700 (PDT)
-Reply-To: lilywilliam989@gmail.com
-From:   Lily William <sgtalberts@gmail.com>
-Date:   Mon, 18 Jul 2022 11:01:04 -0800
-Message-ID: <CALPTejMFgL0Bg7jCKa7j+5KxVv_jnSM4ZPq-QhHCiUpG_ZswsQ@mail.gmail.com>
-Subject: Hi Dear,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Dear,
+On Mon, 18 Jul 2022 07:43:48 +0200
+Christoph Hellwig <hch@lst.de> wrote:
 
-My name is Dr Lily William from the United States.I am a French and
-American nationality (dual) living in the U.S and sometimes in France
-for Work Purpose.
+> Alex, does this series look good to you now?
 
-I hope you consider my friend request. I will share some of my pics
-and more details about myself when I get your response.
+It does.  I was hoping we'd get a more complete set acks from the mdev
+driver owners, but I'll grab this within the next day or two with
+whatever additional reviews come in by then.  Thanks,
 
-Thanks
+Alex
 
-With love
-Lily
+> On Sat, Jul 09, 2022 at 06:54:36AM +0200, Christoph Hellwig wrote:
+> > Hi all,
+> > 
+> > this series signigicantly simplies the mdev driver interface by following
+> > the patterns for device model interaction used elsewhere in the kernel.
+> > 
+> > Changes since v5:
+> >  - rebased to the latest vfio/next branch
+> >  - drop the last patch again
+> >  - make sure show_available_instances works properly for the internallly
+> >    tracked case
+> > 
+> > Changes since v4:
+> >  - move the kobject_put later in mdev_device_release 
+> >  - add a Fixes tag for the first patch
+> >  - add another patch to remove an extra kobject_get/put
+> > 
+> > Changes since v3:
+> >  - make the sysfs_name and pretty_name fields pointers instead of arrays
+> >  - add an i915 cleanup to prepare for the above
+> > 
+> > Changes since v2:
+> >  - rebased to vfio/next
+> >  - fix a pre-existing memory leak in i915 instead of making it worse
+> >  - never manipulate if ->available_instances if drv->get_available is
+> >    provided
+> >  - keep a parent reference for the mdev_type
+> >  - keep a few of the sysfs.c helper function around
+> >  - improve the documentation for the parent device lifetime
+> >  - minor spellig / formatting fixes
+> > 
+> > Changes since v1:
+> >  - embedd the mdev_parent into a different sub-structure in i916
+> >  - remove headers now inclued by mdev.h from individual source files
+> >  - pass an array of mdev_types to mdev_register_parent
+> >  - add additional patches to implement all attributes on the
+> >    mdev_type in the core code
+> > 
+> > Diffstat:
+> >  Documentation/driver-api/vfio-mediated-device.rst |   26 +-
+> >  Documentation/s390/vfio-ap.rst                    |    2 
+> >  Documentation/s390/vfio-ccw.rst                   |    2 
+> >  drivers/gpu/drm/i915/gvt/aperture_gm.c            |   20 +-
+> >  drivers/gpu/drm/i915/gvt/gvt.h                    |   42 ++--
+> >  drivers/gpu/drm/i915/gvt/kvmgt.c                  |  168 ++++-------------
+> >  drivers/gpu/drm/i915/gvt/vgpu.c                   |  210 +++++++---------------
+> >  drivers/s390/cio/cio.h                            |    4 
+> >  drivers/s390/cio/vfio_ccw_drv.c                   |   12 -
+> >  drivers/s390/cio/vfio_ccw_ops.c                   |   51 -----
+> >  drivers/s390/cio/vfio_ccw_private.h               |    2 
+> >  drivers/s390/crypto/vfio_ap_ops.c                 |   68 +------
+> >  drivers/s390/crypto/vfio_ap_private.h             |    6 
+> >  drivers/vfio/mdev/mdev_core.c                     |  190 ++++---------------
+> >  drivers/vfio/mdev/mdev_driver.c                   |    7 
+> >  drivers/vfio/mdev/mdev_private.h                  |   32 ---
+> >  drivers/vfio/mdev/mdev_sysfs.c                    |  189 ++++++++++---------
+> >  include/linux/mdev.h                              |   77 ++++----
+> >  samples/vfio-mdev/mbochs.c                        |  103 +++-------
+> >  samples/vfio-mdev/mdpy.c                          |  115 +++---------
+> >  samples/vfio-mdev/mtty.c                          |   94 +++------
+> >  21 files changed, 463 insertions(+), 957 deletions(-)  
+> ---end quoted text---
+> 
+
