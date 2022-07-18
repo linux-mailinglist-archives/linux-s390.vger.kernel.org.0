@@ -2,138 +2,138 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 072445781C2
-	for <lists+linux-s390@lfdr.de>; Mon, 18 Jul 2022 14:11:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59DEA5782A8
+	for <lists+linux-s390@lfdr.de>; Mon, 18 Jul 2022 14:45:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234719AbiGRMLy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 Jul 2022 08:11:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59420 "EHLO
+        id S235131AbiGRMph (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 Jul 2022 08:45:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234801AbiGRMLx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Jul 2022 08:11:53 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A15AABF6F;
-        Mon, 18 Jul 2022 05:11:52 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id D8AC71FB7D;
-        Mon, 18 Jul 2022 12:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1658146310; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=V6D6pW7KOU2kPWCiZd07qffFGU6SpyCb2tbQHBnWrPk=;
-        b=EXPnzUbilMMA5F7I79PNHtjTgfbMNI9Re7xNL324QWOc5NRzwccoapCXDua4tdUktLRmBD
-        bqJJ6Pj+LoonmpjEJP9fMbxhYEWaV4vgH0QQoo2JU/UFNvQwduA0OeLIzlzuT7gU37fUAA
-        HHZbVqI9QkVqm/m53IDyVIhn0W+WGW0=
-Received: from suse.cz (unknown [10.100.201.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id E612B2C141;
-        Mon, 18 Jul 2022 12:11:45 +0000 (UTC)
-Date:   Mon, 18 Jul 2022 14:11:44 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Abel Wu <wuyun.abel@bytedance.com>
-Cc:     Gang Li <ligang.bdlg@bytedance.com>, akpm@linux-foundation.org,
-        surenb@google.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, viro@zeniv.linux.org.uk,
-        ebiederm@xmission.com, keescook@chromium.org, rostedt@goodmis.org,
-        mingo@redhat.com, peterz@infradead.org, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, david@redhat.com,
-        imbrenda@linux.ibm.com, adobriyan@gmail.com,
-        yang.yang29@zte.com.cn, brauner@kernel.org,
-        stephen.s.brennan@oracle.com, zhengqi.arch@bytedance.com,
-        haolee.swjtu@gmail.com, xu.xin16@zte.com.cn,
-        Liam.Howlett@oracle.com, ohoono.kwon@samsung.com,
-        peterx@redhat.com, arnd@arndb.de, shy828301@gmail.com,
-        alex.sierra@amd.com, xianting.tian@linux.alibaba.com,
-        willy@infradead.org, ccross@google.com, vbabka@suse.cz,
-        sujiaxun@uniontech.com, sfr@canb.auug.org.au,
-        vasily.averin@linux.dev, mgorman@suse.de, vvghjk1234@gmail.com,
-        tglx@linutronix.de, luto@kernel.org, bigeasy@linutronix.de,
-        fenghua.yu@intel.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        hezhongkun.hzk@bytedance.com
-Subject: Re: [PATCH v2 0/5] mm, oom: Introduce per numa node oom for
- CONSTRAINT_{MEMORY_POLICY,CPUSET}
-Message-ID: <YtVOAGga+B3CmFKC@dhcp22.suse.cz>
-References: <20220708082129.80115-1-ligang.bdlg@bytedance.com>
- <YsfwyTHE/5py1kHC@dhcp22.suse.cz>
- <41ae31a7-6998-be88-858c-744e31a76b2a@bytedance.com>
- <Ys14oIHL85d/T7s+@dhcp22.suse.cz>
- <6f6a2257-3b60-e312-3ee3-fb08b972dbf2@bytedance.com>
+        with ESMTP id S235156AbiGRMpf (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Jul 2022 08:45:35 -0400
+Received: from out30-57.freemail.mail.aliyun.com (out30-57.freemail.mail.aliyun.com [115.124.30.57])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C45AB9C;
+        Mon, 18 Jul 2022 05:45:33 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=tonylu@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0VJlyRhm_1658148329;
+Received: from localhost(mailfrom:tonylu@linux.alibaba.com fp:SMTPD_---0VJlyRhm_1658148329)
+          by smtp.aliyun-inc.com;
+          Mon, 18 Jul 2022 20:45:30 +0800
+Date:   Mon, 18 Jul 2022 20:45:28 +0800
+From:   Tony Lu <tonylu@linux.alibaba.com>
+To:     Wenjia Zhang <wenjia@linux.ibm.com>
+Cc:     Wen Gu <guwen@linux.alibaba.com>, kgraul@linux.ibm.com,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2 0/6] net/smc: Introduce virtually contiguous
+ buffers for SMC-R
+Message-ID: <YtVV6IWF0cKxJaWe@TonyMac-Alibaba>
+Reply-To: Tony Lu <tonylu@linux.alibaba.com>
+References: <1657791845-1060-1-git-send-email-guwen@linux.alibaba.com>
+ <345053d6-5ecb-066d-8eeb-7637da1d7370@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6f6a2257-3b60-e312-3ee3-fb08b972dbf2@bytedance.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <345053d6-5ecb-066d-8eeb-7637da1d7370@linux.ibm.com>
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue 12-07-22 23:00:55, Abel Wu wrote:
+On Thu, Jul 14, 2022 at 05:16:47PM +0200, Wenjia Zhang wrote:
 > 
-> On 7/12/22 9:35 PM, Michal Hocko Wrote:
-> > On Tue 12-07-22 19:12:18, Abel Wu wrote:
-> > [...]
-> > > I was just going through the mail list and happen to see this. There
-> > > is another usecase for us about per-numa memory usage.
-> > > 
-> > > Say we have several important latency-critical services sitting inside
-> > > different NUMA nodes without intersection. The need for memory of these
-> > > LC services varies, so the free memory of each node is also different.
-> > > Then we launch several background containers without cpuset constrains
-> > > to eat the left resources. Now the problem is that there doesn't seem
-> > > like a proper memory policy available to balance the usage between the
-> > > nodes, which could lead to memory-heavy LC services suffer from high
-> > > memory pressure and fails to meet the SLOs.
+> 
+> On 14.07.22 11:43, Wen Gu wrote:
+> > On long-running enterprise production servers, high-order contiguous
+> > memory pages are usually very rare and in most cases we can only get
+> > fragmented pages.
 > > 
-> > I do agree that cpusets would be rather clumsy if usable at all in a
-> > scenario when you are trying to mix NUMA bound workloads with those
-> > that do not have any NUMA proferences. Could you be more specific about
-> > requirements here though?
-> 
-> Yes, these LC services are highly sensitive to memory access latency
-> and bandwidth, so they are provisioned by NUMA node granule to meet
-> their performance requirements. While on the other hand, they usually
-> do not make full use of cpu/mem resources which increases the TCO of
-> our IDCs, so we have to co-locate them with background tasks.
-> 
-> Some of these LC services are memory-bound but leave much of cpu's
-> capacity unused. In this case we hope the co-located background tasks
-> to consume some leftover without introducing obvious mm overhead to
-> the LC services.
+> > When replacing TCP with SMC-R in such production scenarios, attempting
+> > to allocate high-order physically contiguous sndbufs and RMBs may result
+> > in frequent memory compaction, which will cause unexpected hung issue
+> > and further stability risks.
+> > 
+> > So this patch set is aimed to allow SMC-R link group to use virtually
+> > contiguous sndbufs and RMBs to avoid potential issues mentioned above.
+> > Whether to use physically or virtually contiguous buffers can be set
+> > by sysctl smcr_buf_type.
+> > 
+> > Note that using virtually contiguous buffers will bring an acceptable
+> > performance regression, which can be mainly divided into two parts:
+> > 
+> > 1) regression in data path, which is brought by additional address
+> >     translation of sndbuf by RNIC in Tx. But in general, translating
+> >     address through MTT is fast. According to qperf test, this part
+> >     regression is basically less than 10% in latency and bandwidth.
+> >     (see patch 5/6 for details)
+> > 
+> > 2) regression in buffer initialization and destruction path, which is
+> >     brought by additional MR operations of sndbufs. But thanks to link
+> >     group buffer reuse mechanism, the impact of this kind of regression
+> >     decreases as times of buffer reuse increases.
+> > 
+> > Patch set overview:
+> > - Patch 1/6 and 2/6 mainly about simplifying and optimizing DMA sync
+> >    operation, which will reduce overhead on the data path, especially
+> >    when using virtually contiguous buffers;
+> > - Patch 3/6 and 4/6 introduce a sysctl smcr_buf_type to set the type
+> >    of buffers in new created link group;
+> > - Patch 5/6 allows SMC-R to use virtually contiguous sndbufs and RMBs,
+> >    including buffer creation, destruction, MR operation and access;
+> > - patch 6/6 extends netlink attribute for buffer type of SMC-R link group;
+> > 
+> > v1->v2:
+> > - Patch 5/6 fixes build issue on 32bit;
+> > - Patch 3/6 adds description of new sysctl in smc-sysctl.rst;
+> > 
+> > Guangguan Wang (2):
+> >    net/smc: remove redundant dma sync ops
+> >    net/smc: optimize for smc_sndbuf_sync_sg_for_device and
+> >      smc_rmb_sync_sg_for_cpu
+> > 
+> > Wen Gu (4):
+> >    net/smc: Introduce a sysctl for setting SMC-R buffer type
+> >    net/smc: Use sysctl-specified types of buffers in new link group
+> >    net/smc: Allow virtually contiguous sndbufs or RMBs for SMC-R
+> >    net/smc: Extend SMC-R link group netlink attribute
+> > 
+> >   Documentation/networking/smc-sysctl.rst |  13 ++
+> >   include/net/netns/smc.h                 |   1 +
+> >   include/uapi/linux/smc.h                |   1 +
+> >   net/smc/af_smc.c                        |  68 +++++++--
+> >   net/smc/smc_clc.c                       |   8 +-
+> >   net/smc/smc_clc.h                       |   2 +-
+> >   net/smc/smc_core.c                      | 246 +++++++++++++++++++++-----------
+> >   net/smc/smc_core.h                      |  20 ++-
+> >   net/smc/smc_ib.c                        |  44 +++++-
+> >   net/smc/smc_ib.h                        |   2 +
+> >   net/smc/smc_llc.c                       |  33 +++--
+> >   net/smc/smc_rx.c                        |  92 +++++++++---
+> >   net/smc/smc_sysctl.c                    |  11 ++
+> >   net/smc/smc_tx.c                        |  10 +-
+> >   14 files changed, 404 insertions(+), 147 deletions(-)
+> > 
+> This idea is very cool! Thank you for your effort! But we still need to
+> verify if this solution can run well on our system. I'll come to you soon.
 
-This are some tough requirements and I am afraid far from any typical
-usage. So I believe that you need a careful tunning much more than a
-policy which I really have hard time to imagine wrt semantic TBH.
- 
-> > Let's say you run those latency critical services with "simple" memory
-> > policies and mix them with the other workload without any policies in
-> > place so they compete over memory. It is not really clear to me how can
-> > you achieve any reasonable QoS in such an environment. Your latency
-> > critical servises will be more constrained than the non-critical ones
-> > yet they are more demanding AFAIU.
-> 
-> Yes, the QoS over memory is the biggest block in the way (the other
-> resources are relatively easier). For now, we hacked a new mpol to
-> achieve weighted-interleave behavior to balance the memory usage across
-> NUMA nodes, and only set memcg protections to the LC services. If the
-> memory pressure is still high, the background tasks will be killed.
-> Ideas? Thanks!
+Hi Wenjia,
 
-It is not really clear what the new memory policy does and what is the
-semantic of it from your description. Memory protection (via memcg) of
-your sensitive workload makes sense but it would require proper setting
-of background jobs as well. As soon as you hit the global direct reclaim
-then the memory protection won't safe your sensitve workload.
+We have noticed that SMC community is becoming more active recently.
+More and more companies have shown their interests in SMC.
+Correspondingly, patches are also increasing. We (Alibaba) are trying to
+apply SMC into cloud production environment, extending its abilities and
+enhancing the performance. We also contributed some work to community in
+the past period of time. So we are more than happy to help review SMC
+patches together. If you need, we are very glad to be reviewers to share
+the review work.
 
--- 
-Michal Hocko
-SUSE Labs
+Hope to hear from you, thank you.
+
+Best wishes,
+Tony Lu
