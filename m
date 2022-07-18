@@ -2,282 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BFC6B5783B1
-	for <lists+linux-s390@lfdr.de>; Mon, 18 Jul 2022 15:28:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55FF15783FB
+	for <lists+linux-s390@lfdr.de>; Mon, 18 Jul 2022 15:42:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231132AbiGRN2g (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 18 Jul 2022 09:28:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52722 "EHLO
+        id S234598AbiGRNmJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 18 Jul 2022 09:42:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230394AbiGRN2f (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Jul 2022 09:28:35 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BE8140EC;
-        Mon, 18 Jul 2022 06:28:34 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4LmjSL1J1JzFq9F;
-        Mon, 18 Jul 2022 21:27:30 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 18 Jul 2022 21:28:30 +0800
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>, x86 <x86@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Darren Hart <darren@os.amperecomputing.com>,
-        <huzhanyuan@oppo.com>,
-        =?UTF-8?B?5p2O5Z+56ZSLKHdpbmsp?= <lipeifeng@oppo.com>,
-        =?UTF-8?B?5byg6K+X5piOKFNpbW9uIFpoYW5nKQ==?= 
-        <zhangshiming@oppo.com>, =?UTF-8?B?6YOt5YGl?= <guojian@oppo.com>,
-        real mz <realmz6@gmail.com>, <linux-mips@vger.kernel.org>,
-        <openrisc@lists.librecores.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-riscv@lists.infradead.org>, <linux-s390@vger.kernel.org>,
-        <yangyicong@hisilicon.com>, "tiantao (H)" <tiantao6@hisilicon.com>
-Subject: Re: [PATCH v2 0/4] mm: arm64: bring up BATCHED_UNMAP_TLB_FLUSH
-To:     Barry Song <21cnbao@gmail.com>, <xhao@linux.alibaba.com>
-References: <20220711034615.482895-1-21cnbao@gmail.com>
- <24f5e25b-3946-b92a-975b-c34688005398@linux.alibaba.com>
- <CAGsJ_4zjnmQV6LT3yo--K-qD-92=hBmgfK121=n-Y0oEFX8RnQ@mail.gmail.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <8e603deb-7023-5de5-c958-8911971aec24@huawei.com>
-Date:   Mon, 18 Jul 2022 21:28:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S234524AbiGRNmB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 18 Jul 2022 09:42:01 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79180205F8;
+        Mon, 18 Jul 2022 06:42:00 -0700 (PDT)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26IDN1je031402;
+        Mon, 18 Jul 2022 13:41:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=FPy+DYCthLkQP4vs5sUDtj7RP5kqgPiS+tdgo1D1oxE=;
+ b=FVCYPaWGIhoxvHw2hTxYlsxV5sWSNhb6jCd+Jy8Ol8Z8tOYIO0tP2XrSoMubKzLvBCSU
+ H0wAwLK+l/1cHqN93YNKJbNl6X2Xh0jyvW8KnL7rxMtEwsNeOtLndgB9SueULFxrFqxp
+ V6KYtGwgtE7Kky/wDojhTSUFWfXUI0YE15wLglHBcpjmr78ojbnZdTlJYV3HPrdwEL/C
+ /f05rBuTeMRI/lygV5/vziUH7NP4jV8l/K0315RZFcLj4ymXKblbNdvsFJTFsUTloT9b
+ OU7UCctyACy2SZA17yJEku7N/bu0tJXofohQFC+ax/UKVNpKfYleSvAxLH71UvCqgu+u Pw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3hd8bw0upn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Jul 2022 13:41:53 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 26IDPxpu011600;
+        Mon, 18 Jul 2022 13:41:40 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3hd8bw0u3h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Jul 2022 13:41:40 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 26IDKQF8004421;
+        Mon, 18 Jul 2022 13:41:27 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04fra.de.ibm.com with ESMTP id 3hbmy8j1ah-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 18 Jul 2022 13:41:26 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 26IDfNok18874710
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 18 Jul 2022 13:41:23 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9EA8411C069;
+        Mon, 18 Jul 2022 13:41:23 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8CD3811C064;
+        Mon, 18 Jul 2022 13:41:23 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 18 Jul 2022 13:41:23 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+        id 6DE64E01D7; Mon, 18 Jul 2022 15:32:41 +0200 (CEST)
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Matthew Wilcox <willy@infradead.org>,
+        Alexander Egorenkov <egorenar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>
+Cc:     Baoquan He <bhe@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH v3 0/3] s390/crash: support multi-segment iterators
+Date:   Mon, 18 Jul 2022 15:32:38 +0200
+Message-Id: <cover.1658148067.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <CAGsJ_4zjnmQV6LT3yo--K-qD-92=hBmgfK121=n-Y0oEFX8RnQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 3QtOpRPL_YcJt0TJb1QrmJDg6qiPeZVb
+X-Proofpoint-ORIG-GUID: M3jVHJ3tNiOSDZM-P796BAXY_X_xJWEU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-18_12,2022-07-18_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 adultscore=0 spamscore=0 impostorscore=0 mlxscore=0
+ bulkscore=0 mlxlogscore=999 malwarescore=0 lowpriorityscore=0
+ suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2206140000 definitions=main-2207180058
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2022/7/14 12:51, Barry Song wrote:
-> On Thu, Jul 14, 2022 at 3:29 PM Xin Hao <xhao@linux.alibaba.com> wrote:
->>
->> Hi barry.
->>
->> I do some test on Kunpeng arm64 machine use Unixbench.
->>
->> The test  result as below.
->>
->> One core, we can see the performance improvement above +30%.
-> 
-> I am really pleased to see the 30%+ improvement on unixbench on single core.
-> 
->> ./Run -c 1 -i 1 shell1
->> w/o
->> System Benchmarks Partial Index              BASELINE RESULT INDEX
->> Shell Scripts (1 concurrent)                     42.4 5481.0 1292.7
->> ========
->> System Benchmarks Index Score (Partial Only)                         1292.7
->>
->> w/
->> System Benchmarks Partial Index              BASELINE RESULT INDEX
->> Shell Scripts (1 concurrent)                     42.4 6974.6 1645.0
->> ========
->> System Benchmarks Index Score (Partial Only)                         1645.0
->>
->>
->> But with whole cores, there have little performance degradation above -5%
-> 
-> That is sad as we might get more concurrency between mprotect(), madvise(),
-> mremap(), zap_pte_range() and the deferred tlbi.
-> 
->>
->> ./Run -c 96 -i 1 shell1
->> w/o
->> Shell Scripts (1 concurrent)                  80765.5 lpm   (60.0 s, 1
->> samples)
->> System Benchmarks Partial Index              BASELINE RESULT INDEX
->> Shell Scripts (1 concurrent)                     42.4 80765.5 19048.5
->> ========
->> System Benchmarks Index Score (Partial Only)                        19048.5
->>
->> w
->> Shell Scripts (1 concurrent)                  76333.6 lpm   (60.0 s, 1
->> samples)
->> System Benchmarks Partial Index              BASELINE RESULT INDEX
->> Shell Scripts (1 concurrent)                     42.4 76333.6 18003.2
->> ========
->> System Benchmarks Index Score (Partial Only)                        18003.2
->>
->> ----------------------------------------------------------------------------------------------
->>
->>
->> After discuss with you, and do some changes in the patch.
->>
->> ndex a52381a680db..1ecba81f1277 100644
->> --- a/mm/rmap.c
->> +++ b/mm/rmap.c
->> @@ -727,7 +727,11 @@ void flush_tlb_batched_pending(struct mm_struct *mm)
->>          int flushed = batch >> TLB_FLUSH_BATCH_FLUSHED_SHIFT;
->>
->>          if (pending != flushed) {
->> +#ifdef CONFIG_ARCH_HAS_MM_CPUMASK
->>                  flush_tlb_mm(mm);
->> +#else
->> +               dsb(ish);
->> +#endif
->>
-> 
-> i was guessing the problem might be flush_tlb_batched_pending()
-> so i asked you to change this to verify my guess.
-> 
+Hi Matthew et al,
 
-flush_tlb_batched_pending() looks like the critical path for this issue then the code
-above can mitigate this.
+This series completes 5d8de293c224 ("vmcore: convert copy_oldmem_page() to
+take an iov_iter") for s390.
 
-I cannot reproduce this on a 2P 128C Kunpeng920 server. The kernel is based on the
-v5.19-rc6 and unixbench of version 5.1.3. The result of `./Run -c 128 -i 1 shell1` is:
-      iter-1      iter-2     iter-3
-w/o  17708.1     17637.1    17630.1
-w    17766.0     17752.3    17861.7
+@Matthew,
+  Please, let me know if you are not okay with Suggested-by tag in patch 3.
 
-And flush_tlb_batched_pending()isn't the hot spot with the patch:
-   7.00%  sh        [kernel.kallsyms]      [k] ptep_clear_flush
-   4.17%  sh        [kernel.kallsyms]      [k] ptep_set_access_flags
-   2.43%  multi.sh  [kernel.kallsyms]      [k] ptep_clear_flush
-   1.98%  sh        [kernel.kallsyms]      [k] _raw_spin_unlock_irqrestore
-   1.69%  sh        [kernel.kallsyms]      [k] next_uptodate_page
-   1.66%  sort      [kernel.kallsyms]      [k] ptep_clear_flush
-   1.56%  multi.sh  [kernel.kallsyms]      [k] ptep_set_access_flags
-   1.27%  sh        [kernel.kallsyms]      [k] page_counter_cancel
-   1.11%  sh        [kernel.kallsyms]      [k] page_remove_rmap
-   1.06%  sh        [kernel.kallsyms]      [k] perf_event_alloc
+Changes since v2:
+  - Matthew Wilcox suggestion is adopted, with that...
+  - copy_to_iter() is used instead of custom implementation;
 
-Hi Xin Hao,
+Changes since v1:
+  - number of bytes left to copy on fail fixed;
 
-I'm not sure the test setup as well as the config is same with yours. (96C vs 128C
-should not be the reason I think). Did you check that the 5% is a fluctuation or
-not? It'll be helpful if more information provided for reproducing this issue.
+Thanks!
 
-Thanks.
+Alexander Gordeev (3):
+  s390/crash: move copy_to_user_real() to crash_dump.c
+  s390/crash: use static swap buffer for copy_to_user_real()
+  s390/crash: support multi-segment iterators
 
->      /*
->>                   * If the new TLB flushing is pending during flushing, leave
->>                   * mm->tlb_flush_batched as is, to avoid losing flushing.
->>
->> there have a performance improvement with whole cores, above +30%
-> 
-> But I don't think it is a proper patch. There is no guarantee the cpu calling
-> flush_tlb_batched_pending is exactly the cpu sending the deferred
-> tlbi. so the solution is unsafe. But since this temporary code can bring the
-> 30%+ performance improvement back for high concurrency, we have huge
-> potential to finally make it.
-> 
-> Unfortunately I don't have an arm64 server to debug on this. I only have
-> 8 cores which are unlikely to reproduce regression which happens in
-> high concurrency with 96 parallel tasks.
-> 
-> So I'd ask if @yicong or someone else working on kunpeng or other
-> arm64 servers  is able to actually debug and figure out a proper
-> patch for this, then add the patch as 5/5 into this series?
-> 
->>
->> ./Run -c 96 -i 1 shell1
->> 96 CPUs in system; running 96 parallel copies of tests
->>
->> Shell Scripts (1 concurrent)                 109229.0 lpm   (60.0 s, 1 samples)
->> System Benchmarks Partial Index              BASELINE       RESULT    INDEX
->> Shell Scripts (1 concurrent)                     42.4     109229.0  25761.6
->>                                                                     ========
->> System Benchmarks Index Score (Partial Only)                        25761.6
->>
->>
->> Tested-by: Xin Hao<xhao@linux.alibaba.com>
-> 
-> Thanks for your testing!
-> 
->>
->> Looking forward to your next version patch.
->>
->> On 7/11/22 11:46 AM, Barry Song wrote:
->>> Though ARM64 has the hardware to do tlb shootdown, the hardware
->>> broadcasting is not free.
->>> A simplest micro benchmark shows even on snapdragon 888 with only
->>> 8 cores, the overhead for ptep_clear_flush is huge even for paging
->>> out one page mapped by only one process:
->>> 5.36%  a.out    [kernel.kallsyms]  [k] ptep_clear_flush
->>>
->>> While pages are mapped by multiple processes or HW has more CPUs,
->>> the cost should become even higher due to the bad scalability of
->>> tlb shootdown.
->>>
->>> The same benchmark can result in 16.99% CPU consumption on ARM64
->>> server with around 100 cores according to Yicong's test on patch
->>> 4/4.
->>>
->>> This patchset leverages the existing BATCHED_UNMAP_TLB_FLUSH by
->>> 1. only send tlbi instructions in the first stage -
->>>       arch_tlbbatch_add_mm()
->>> 2. wait for the completion of tlbi by dsb while doing tlbbatch
->>>       sync in arch_tlbbatch_flush()
->>> My testing on snapdragon shows the overhead of ptep_clear_flush
->>> is removed by the patchset. The micro benchmark becomes 5% faster
->>> even for one page mapped by single process on snapdragon 888.
->>>
->>>
->>> -v2:
->>> 1. Collected Yicong's test result on kunpeng920 ARM64 server;
->>> 2. Removed the redundant vma parameter in arch_tlbbatch_add_mm()
->>>     according to the comments of Peter Zijlstra and Dave Hansen
->>> 3. Added ARCH_HAS_MM_CPUMASK rather than checking if mm_cpumask
->>>     is empty according to the comments of Nadav Amit
->>>
->>> Thanks, Yicong, Peter, Dave and Nadav for your testing or reviewing
->>> , and comments.
->>>
->>> -v1:
->>> https://lore.kernel.org/lkml/20220707125242.425242-1-21cnbao@gmail.com/
->>>
->>> Barry Song (4):
->>>    Revert "Documentation/features: mark BATCHED_UNMAP_TLB_FLUSH doesn't
->>>      apply to ARM64"
->>>    mm: rmap: Allow platforms without mm_cpumask to defer TLB flush
->>>    mm: rmap: Extend tlbbatch APIs to fit new platforms
->>>    arm64: support batched/deferred tlb shootdown during page reclamation
->>>
->>>   Documentation/features/arch-support.txt       |  1 -
->>>   .../features/vm/TLB/arch-support.txt          |  2 +-
->>>   arch/arm/Kconfig                              |  1 +
->>>   arch/arm64/Kconfig                            |  1 +
->>>   arch/arm64/include/asm/tlbbatch.h             | 12 ++++++++++
->>>   arch/arm64/include/asm/tlbflush.h             | 23 +++++++++++++++++--
->>>   arch/loongarch/Kconfig                        |  1 +
->>>   arch/mips/Kconfig                             |  1 +
->>>   arch/openrisc/Kconfig                         |  1 +
->>>   arch/powerpc/Kconfig                          |  1 +
->>>   arch/riscv/Kconfig                            |  1 +
->>>   arch/s390/Kconfig                             |  1 +
->>>   arch/um/Kconfig                               |  1 +
->>>   arch/x86/Kconfig                              |  1 +
->>>   arch/x86/include/asm/tlbflush.h               |  3 ++-
->>>   mm/Kconfig                                    |  3 +++
->>>   mm/rmap.c                                     | 14 +++++++----
->>>   17 files changed, 59 insertions(+), 9 deletions(-)
->>>   create mode 100644 arch/arm64/include/asm/tlbbatch.h
->>>
->> --
->> Best Regards!
->> Xin Hao
->>
-> 
-> Thanks
-> Barry
-> .
-> 
+ arch/s390/include/asm/os_info.h |  17 ++++-
+ arch/s390/include/asm/sclp.h    |   4 +-
+ arch/s390/include/asm/uaccess.h |   1 -
+ arch/s390/kernel/crash_dump.c   | 111 +++++++-------------------------
+ arch/s390/mm/maccess.c          |  26 --------
+ drivers/s390/char/zcore.c       |  59 +++++++----------
+ 6 files changed, 65 insertions(+), 153 deletions(-)
+
+-- 
+2.34.1
+
