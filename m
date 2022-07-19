@@ -2,106 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46F1157A668
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Jul 2022 20:23:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD5FD57AA2D
+	for <lists+linux-s390@lfdr.de>; Wed, 20 Jul 2022 01:02:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240087AbiGSSXA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 Jul 2022 14:23:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53196 "EHLO
+        id S237741AbiGSXCc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 Jul 2022 19:02:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232167AbiGSSW7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 Jul 2022 14:22:59 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B38BB5C95A;
-        Tue, 19 Jul 2022 11:22:58 -0700 (PDT)
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26JILZW4015729;
-        Tue, 19 Jul 2022 18:22:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=p7ZfL372p62Nd8OeP/At/fzW4tY4F1hA/so2twznn8c=;
- b=UlcHwQJFn3UDflCOhV3whpd+Rpb99nFQ0udhlyYCjdiNvSLkVQvzICZTTESsA+mOqHp4
- L0M6ze8Mt/YnLcQHRe9GMPmZgHQmmER5W2xv/ayhDMh5FnB2uB2aQZKagOHpubunkbiQ
- c05DMO5niN8m9HpPDxMoTUggYFWbRsyAeLrqLB3lZ37IIUdFHg514nExAo+Sz7H+5II6
- VinhutZlfAD41hYShHH/dhyGfpsgJnyvkVPp78R7DU4F0UdGtu8xSktm7HXc+UMjL4aZ
- i6uVwMwLNMwoC41OFWZN4Bso5j1C8Wj9+fA3qmtYptf6uk3+IOe3xBig551+qFNFIRY7 Rg== 
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3he1auhhev-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Jul 2022 18:22:49 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 26JIKrXO003754;
-        Tue, 19 Jul 2022 18:22:47 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 3hbmy8vku2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Jul 2022 18:22:47 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 26JIKxUU22806964
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Jul 2022 18:20:59 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2397242041;
-        Tue, 19 Jul 2022 18:22:44 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9EE9C42045;
-        Tue, 19 Jul 2022 18:22:43 +0000 (GMT)
-Received: from li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com (unknown [9.145.22.197])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 19 Jul 2022 18:22:43 +0000 (GMT)
-Date:   Tue, 19 Jul 2022 20:22:38 +0200
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Jason Wang <wangborong@cdjrlc.com>
-Cc:     svens@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        borntraeger@linux.ibm.com, baihaowen@meizu.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/tape: Fix comment typo
-Message-ID: <Ytb2bqHq1D3EFXAB@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
-References: <20220715053838.5005-1-wangborong@cdjrlc.com>
+        with ESMTP id S240481AbiGSXCJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 Jul 2022 19:02:09 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C447C61B16
+        for <linux-s390@vger.kernel.org>; Tue, 19 Jul 2022 16:02:02 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id i14so29275961yba.1
+        for <linux-s390@vger.kernel.org>; Tue, 19 Jul 2022 16:02:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=YeEFrOpnueqp49lpSsCtkyhW66cD5QzqZPU5hyS5TkM=;
+        b=IidRqp259LnIGwKSY8eSnwY2pSvVpnXgD6l4DtZ0nS1en5/eIODexxA8HY1P3fOj1G
+         k3L2dqT2adyYNMP0Xveqboy+8rHiXHxkUk7eN+Z4c1u4A1dmYZTv8XeBq3Mcqc8JpY/J
+         Y+FZqCw+ctBHW93xydCMO1T2zbJgKE6zi4yOKnSgCU0wXAb68jTgzbksOw/WF0fuySr4
+         IszSqaPAblIoqFUVbDoenHDcU4oM8zz2T2X2YOFu4paIHinYHYAEpHDagNDILO9VwXpP
+         1+8RZDNcKixJbUOVKzMHhr00ZyE0o1uffduD4Jla0qSaybMZB4f9mMaQZtZwFiKbVkVp
+         7loA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=YeEFrOpnueqp49lpSsCtkyhW66cD5QzqZPU5hyS5TkM=;
+        b=eMNbhODRhK+fdHGZKCuocQLP4oTjgg4ryO8XcDX2bG16sQwkdSs0qR4XvILGQr+Djr
+         T3xURr6qQZgw9bMuGoB4J28MCJukrMkI05vgla+OnvnsAAMqmq7w+dbVV2Iot7SJLIa9
+         To6Vw5M6Eu7OKfF9gmnAagrVL+GbkizQQnawfsFV4WtMD0wV28782WzI9X5xpp1VK2NF
+         q2yf6TUL+mrR+SA/eP5sGwaZqfT6QRIgXkZm1ZYE2HudyFTynI4ektmhPThtSljK/cP9
+         OepjLco0qMmjb97XgZGlQnUivCfFrvsYij1LWSUj9/GkVEc4TVemYjdP6xlAOU1ZBpEf
+         AWUQ==
+X-Gm-Message-State: AJIora8m2PkGT9/ZRXwhP/1xVvMZtBSuGf8Thgdmn8SZa9gfH+ogyEQS
+        wv1XM0za9GlPVkJYXp4AHwkfbYf1YUrqdnHcRMc=
+X-Google-Smtp-Source: AGRyM1sl0J4NyfzC2f29bqXT9oPchs8cDVndRHRbS2Q3refz6ns6Y35SIupBWILMCNYHx3pJ+wk7AlhI9UdwA1sMqK0=
+X-Received: by 2002:a25:850b:0:b0:66c:d287:625a with SMTP id
+ w11-20020a25850b000000b0066cd287625amr35727355ybk.31.1658271721069; Tue, 19
+ Jul 2022 16:02:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220715053838.5005-1-wangborong@cdjrlc.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: pGiSmfAWDxqQx15So2liKhxr3mlvwBES
-X-Proofpoint-ORIG-GUID: pGiSmfAWDxqQx15So2liKhxr3mlvwBES
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-19_06,2022-07-19_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 mlxscore=0 adultscore=0 suspectscore=0 bulkscore=0
- phishscore=0 spamscore=0 clxscore=1011 impostorscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2206140000 definitions=main-2207190076
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Sender: belloashawu72@gmail.com
+Received: by 2002:a05:7000:26b1:0:0:0:0 with HTTP; Tue, 19 Jul 2022 16:02:00
+ -0700 (PDT)
+From:   Lisa Williams <lw23675851@gmail.com>
+Date:   Wed, 20 Jul 2022 00:02:00 +0100
+X-Google-Sender-Auth: BO4DmyfvjRINBOwOOpcYOq24sHk
+Message-ID: <CAOjupQKQ6zRjFB_6SefXkEmKaf0_dwC_KfS2LmZFQLFEaDr30A@mail.gmail.com>
+Subject: My name is Dr Lisa Williams
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=0.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Jul 15, 2022 at 01:38:38PM +0800, Jason Wang wrote:
-> The double `that' is duplicated in line 551, remove one.
-> 
-> Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
-> ---
->  drivers/s390/char/tape_34xx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/s390/char/tape_34xx.c b/drivers/s390/char/tape_34xx.c
-> index 38cc1565d6ae..751945fb6793 100644
-> --- a/drivers/s390/char/tape_34xx.c
-> +++ b/drivers/s390/char/tape_34xx.c
-> @@ -548,7 +548,7 @@ tape_34xx_unit_check(struct tape_device *device, struct tape_request *request,
->  	case 0x2e:
->  		/*
->  		 * Not capable. This indicates either that the drive fails
-> -		 * reading the format id mark or that that format specified
-> +		 * reading the format id mark or that format specified
->  		 * is not supported by the drive.
->  		 */
->  		dev_warn (&device->cdev->dev, "The tape unit cannot process "
+Hi Dear,
 
-Applied, thanks!
+My name is Dr Lisa Williams from the United States.I am a French and
+American nationality (dual) living in the U.S and sometimes in France
+for Work Purpose.
+
+I hope you consider my friend request. I will share some of my pics
+and more details about myself when I get your response.
+
+Thanks
+
+With love
+Lisa
