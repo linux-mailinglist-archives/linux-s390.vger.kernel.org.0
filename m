@@ -2,167 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF087582160
-	for <lists+linux-s390@lfdr.de>; Wed, 27 Jul 2022 09:44:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F25125826A2
+	for <lists+linux-s390@lfdr.de>; Wed, 27 Jul 2022 14:31:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230431AbiG0HoV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 27 Jul 2022 03:44:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44076 "EHLO
+        id S233320AbiG0MbM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 27 Jul 2022 08:31:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231279AbiG0HoJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 27 Jul 2022 03:44:09 -0400
-Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0E73FA0F;
-        Wed, 27 Jul 2022 00:44:06 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0VKZx5Pm_1658907838;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0VKZx5Pm_1658907838)
-          by smtp.aliyun-inc.com;
-          Wed, 27 Jul 2022 15:43:59 +0800
-Message-ID: <1658907413.1860468-2-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH v13 16/42] virtio_ring: split: introduce virtqueue_resize_split()
-Date:   Wed, 27 Jul 2022 15:36:53 +0800
-From:   Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        linux-um@lists.infradead.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, bpf@vger.kernel.org,
-        kangjie.xu@linux.alibaba.com,
-        virtualization@lists.linux-foundation.org
-References: <20220726072225.19884-1-xuanzhuo@linux.alibaba.com>
- <20220726072225.19884-17-xuanzhuo@linux.alibaba.com>
- <15aa26f2-f8af-5dbd-f2b2-9270ad873412@redhat.com>
-In-Reply-To: <15aa26f2-f8af-5dbd-f2b2-9270ad873412@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S233217AbiG0Max (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 27 Jul 2022 08:30:53 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD1E9DED8;
+        Wed, 27 Jul 2022 05:30:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 28979B82079;
+        Wed, 27 Jul 2022 12:30:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D6F86C43141;
+        Wed, 27 Jul 2022 12:30:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658925014;
+        bh=f5AJxP6vd3oTSMKZOl9+kEqsHXwzsoOifz5qBPWfD6g=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=MQ6DajxM+o3xZuNlbsi4rXGCEO7sXnCWCuRqoSFvARa+tMw2bspiwIilAZWUpuF57
+         iIy9379M9frHKYuqRfFdgehcLn88ivpZBb/7recb4OIX9J3160PkIRTbS+4vSW5kHB
+         Hxk/CY6i2DUpf2oJvrV9b0ZaPWEYfI6pw8gHehOKB914KBdgM2B9J+8UDWjrtR9133
+         gsMNeY8fD2tJ+pM131T37ELzznJrD7sZhiEZzef9VfB5dHZTOC5SwW7ClSGhRFhIAj
+         9QRKiogO6ZwocTevfnwKrfUL7hEnmbeMl2oSS57Q8Dcz5e8cv58UA8Sv/sdr4Vpcgj
+         fw8C9Iu2seLdw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C3208C43143;
+        Wed, 27 Jul 2022 12:30:14 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/4] net/smc: updates 2022-7-25
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <165892501479.3549.10641686148790679354.git-patchwork-notify@kernel.org>
+Date:   Wed, 27 Jul 2022 12:30:14 +0000
+References: <20220725141000.70347-1-wenjia@linux.ibm.com>
+In-Reply-To: <20220725141000.70347-1-wenjia@linux.ibm.com>
+To:     Wenjia Zhang <wenjia@linux.ibm.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, hca@linux.ibm.com,
+        kgraul@linux.ibm.com, wintera@linux.ibm.com, raspl@linux.ibm.com
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 27 Jul 2022 11:12:19 +0800, Jason Wang <jasowang@redhat.com> wrote:
->
-> =E5=9C=A8 2022/7/26 15:21, Xuan Zhuo =E5=86=99=E9=81=93:
-> > virtio ring split supports resize.
-> >
-> > Only after the new vring is successfully allocated based on the new num,
-> > we will release the old vring. In any case, an error is returned,
-> > indicating that the vring still points to the old vring.
-> >
-> > In the case of an error, re-initialize(virtqueue_reinit_split()) the
-> > virtqueue to ensure that the vring can be used.
-> >
-> > Signed-off-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-> > Acked-by: Jason Wang <jasowang@redhat.com>
-> > ---
-> >   drivers/virtio/virtio_ring.c | 34 ++++++++++++++++++++++++++++++++++
-> >   1 file changed, 34 insertions(+)
-> >
-> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> > index b6fda91c8059..58355e1ac7d7 100644
-> > --- a/drivers/virtio/virtio_ring.c
-> > +++ b/drivers/virtio/virtio_ring.c
-> > @@ -220,6 +220,7 @@ static struct virtqueue *__vring_new_virtqueue(unsi=
-gned int index,
-> >   					       void (*callback)(struct virtqueue *),
-> >   					       const char *name);
-> >   static struct vring_desc_extra *vring_alloc_desc_extra(unsigned int n=
-um);
-> > +static void vring_free(struct virtqueue *_vq);
-> >
-> >   /*
-> >    * Helpers.
-> > @@ -1117,6 +1118,39 @@ static struct virtqueue *vring_create_virtqueue_=
-split(
-> >   	return vq;
-> >   }
-> >
-> > +static int virtqueue_resize_split(struct virtqueue *_vq, u32 num)
-> > +{
-> > +	struct vring_virtqueue_split vring_split =3D {};
-> > +	struct vring_virtqueue *vq =3D to_vvq(_vq);
-> > +	struct virtio_device *vdev =3D _vq->vdev;
-> > +	int err;
-> > +
-> > +	err =3D vring_alloc_queue_split(&vring_split, vdev, num,
-> > +				      vq->split.vring_align,
-> > +				      vq->split.may_reduce_num);
-> > +	if (err)
-> > +		goto err;
->
->
-> I think we don't need to do anything here?
+Hello:
 
-Am I missing something?
+This series was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
 
->
->
-> > +
-> > +	err =3D vring_alloc_state_extra_split(&vring_split);
-> > +	if (err) {
-> > +		vring_free_split(&vring_split, vdev);
-> > +		goto err;
->
->
-> I suggest to move vring_free_split() into a dedicated error label.
+On Mon, 25 Jul 2022 16:09:56 +0200 you wrote:
+> Hi Dave & Jakub,
+> 
+> please apply the following patches to netdev's net-next tree.
+> 
+> These patches do some preparation to make ISM available for uses beyond
+> SMC-D, and a bunch of cleanups.
+> 
+> [...]
 
-Will change.
+Here is the summary with links:
+  - [net-next,1/4] net/smc: Eliminate struct smc_ism_position
+    https://git.kernel.org/netdev/net-next/c/eb481b02bd18
+  - [net-next,2/4] s390/ism: Cleanups
+    https://git.kernel.org/netdev/net-next/c/0a2f4f9893c8
+  - [net-next,3/4] net/smc: Pass on DMBE bit mask in IRQ handler
+    https://git.kernel.org/netdev/net-next/c/8b2fed8e2712
+  - [net-next,4/4] net/smc: Enable module load on netlink usage
+    https://git.kernel.org/netdev/net-next/c/28ec53f3a830
 
-Thanks.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
->
-> Thanks
->
->
-> > +	}
-> > +
-> > +	vring_free(&vq->vq);
-> > +
-> > +	virtqueue_vring_init_split(&vring_split, vq);
-> > +
-> > +	virtqueue_init(vq, vring_split.vring.num);
-> > +	virtqueue_vring_attach_split(vq, &vring_split);
-> > +
-> > +	return 0;
-> > +
-> > +err:
-> > +	virtqueue_reinit_split(vq);
-> > +	return -ENOMEM;
-> > +}
-> > +
-> >
-> >   /*
-> >    * Packed ring specific functions - *_packed().
->
