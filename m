@@ -2,128 +2,100 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BCFF58A656
-	for <lists+linux-s390@lfdr.de>; Fri,  5 Aug 2022 09:06:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0382858AA19
+	for <lists+linux-s390@lfdr.de>; Fri,  5 Aug 2022 13:27:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240169AbiHEHGf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 5 Aug 2022 03:06:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40912 "EHLO
+        id S240626AbiHEL1H (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 5 Aug 2022 07:27:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240258AbiHEHGI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 5 Aug 2022 03:06:08 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC6241F605;
-        Fri,  5 Aug 2022 00:06:06 -0700 (PDT)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2756hbNo024239;
-        Fri, 5 Aug 2022 07:05:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=6ALatlPnA1QxQRbC705c9MjKoCFtKmnqmoMFwulymG4=;
- b=rkC1ixulDOzOsXeQUEdZ+BMu1bej5S6ZZBc9CZhN4TQC7e3z+qyOtCAurvg8xa8sak7g
- 0IDb2jXTzxXE75wmk07BCeZc3SWHgDLKpNljUbv8fV7PInkeVw7iTviGDYV0ctiJpLDU
- CErCgQBEjmBvqAxnbAibo36c5aOhOFoSQlF5TCj8oQUlmR81tdNsaH0IKyudvoS2y76q
- qGs+g2C3DsEhQ8J7+5wc+c9GBaiBEs+Gs8IKTfQcbypoSeu993Kfj7vv2EXjMYH8akb2
- vwuU8Hn0brGlhKEuKBtsI7jPMcOxTYjNP1nzX2VNiHv7g4kMaSfZH7Tk6rXdjXEklDxw 7g== 
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hrx6m8n5m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Aug 2022 07:05:53 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 27575pA8018275;
-        Fri, 5 Aug 2022 07:05:51 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma01fra.de.ibm.com with ESMTP id 3hrf218tfv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 05 Aug 2022 07:05:51 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 27575mNg28901722
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 5 Aug 2022 07:05:48 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D971A4054;
-        Fri,  5 Aug 2022 07:05:48 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 233C6A405C;
-        Fri,  5 Aug 2022 07:05:48 +0000 (GMT)
-Received: from [9.145.46.72] (unknown [9.145.46.72])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  5 Aug 2022 07:05:48 +0000 (GMT)
-Message-ID: <7735d444-5041-ccde-accc-5a69af2f2731@linux.ibm.com>
-Date:   Fri, 5 Aug 2022 09:05:47 +0200
+        with ESMTP id S240629AbiHEL1G (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 5 Aug 2022 07:27:06 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF373B7F7
+        for <linux-s390@vger.kernel.org>; Fri,  5 Aug 2022 04:27:00 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-324ec5a9e97so21230197b3.7
+        for <linux-s390@vger.kernel.org>; Fri, 05 Aug 2022 04:27:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=muUdW2iF3NLjwFcKkUArmJmVBNuXYz5InLqAh5elhfQ=;
+        b=BqACUvNC35ZzRLm/C6CVkq5r/zaFsGTvsAO0hZSVg8BAxcVRE7Jku2TiCV9wYArHsW
+         lazyBkRVvwkxA6jIWH9TP0Ix5AY88RAeP4vIhF3mn4nPG09XsM8Ic9nYfju15LtJ8xc0
+         jzDDIkbpczrNSnqZl22wcCagCd7ew1rHjf114dqIwKA+dxtngpGjuvzXtoygrBlhEgqn
+         r0pODtohqfXDfViiXU2LpEsUbNSqGCWjY6alVmjk4wY0RWPA6Vs6gPQ64BA6GvXzwFyy
+         eTSuwWE0LpQ6i22+qppRXlLaaI2TjosKB+LEh4KCaD+H6BNWBN5IIGwoE9p7ryGCqk2y
+         MxTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=muUdW2iF3NLjwFcKkUArmJmVBNuXYz5InLqAh5elhfQ=;
+        b=hOMtDIo26KoV3AfvNRsUJCgrR5lhe40RnIV3Mpw0ZrGA1OvXsqOfZJdmqhAVVtCrIU
+         YwPI7h4ZZ5m13vDzXsK5sYcw2CAW+iost0ZD+vcvG4oOKg63SThep0oG0lFQFWHKAQfJ
+         XnIWWkRNMZ3Uf+Xon8tcm+Lvmmmrx2JLTB4W2FIXXVCDorHhA5QFyZ9C1bmjFLRb4CtA
+         ZvQlnS4OV+C/xEZaZotjda16gwyFhXDf52ce7FWrVDais9/zbHAHZkiB9+lqg56Zow/u
+         5oMWUNtjRFqR8I4KoHTNsuO0Kvn74q6PeTh6QAYvOsehrrIxyrSxvxENn8lKpdUZdriU
+         Tcjg==
+X-Gm-Message-State: ACgBeo3YvcheNkmUAU9BAi8ocKdPvs5A5XI7i6yHdHgH/QL2zdst1B5g
+        OH44+8SJmCcrUpFVxOvF+5euYutz6ybJqxNvnYw=
+X-Google-Smtp-Source: AA6agR6aEJ88XvyOeTtvXE7q/gen0/geDK2rX8ZL9TOc/6x8rjDMk5k7ZugmgYlTx/51zPCtCnSDiZwGffzTWodw9P0=
+X-Received: by 2002:a81:6d4d:0:b0:328:3b8d:2f6e with SMTP id
+ i74-20020a816d4d000000b003283b8d2f6emr5531728ywc.37.1659698819995; Fri, 05
+ Aug 2022 04:26:59 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.12.0
-Subject: Re: [PATCH net 1/2] s390/qeth: update cached link_info for ethtool
-Content-Language: en-US
-To:     Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Thorsten Winkler <twinkler@linux.ibm.com>
-References: <20220803144015.52946-1-wintera@linux.ibm.com>
- <20220803144015.52946-2-wintera@linux.ibm.com> <YuqR8HGEe2vWsxNz@lunn.ch>
- <dae87dee-67b0-30ce-91c0-a81eae8ec66f@linux.ibm.com>
- <YuvEu9/bzLGU2sTA@lunn.ch> <20220804132742.73f8bfda@kernel.org>
-From:   Alexandra Winter <wintera@linux.ibm.com>
-In-Reply-To: <20220804132742.73f8bfda@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: c8YJKOvEXvk_uJ6n4CqvuGWuBKcT1ekN
-X-Proofpoint-GUID: c8YJKOvEXvk_uJ6n4CqvuGWuBKcT1ekN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-05_01,2022-08-04_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- spamscore=0 mlxscore=0 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 bulkscore=0 phishscore=0 suspectscore=0 clxscore=1015
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2206140000 definitions=main-2208050035
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:7010:5087:b0:2e8:760f:3500 with HTTP; Fri, 5 Aug 2022
+ 04:26:59 -0700 (PDT)
+Reply-To: rolandnyemih200@gmail.com
+From:   Rowland Nyemih <fralaimetals100@gmail.com>
+Date:   Fri, 5 Aug 2022 12:26:59 +0100
+Message-ID: <CA+5KX21qD7xz962CyFE+jsHLRM9-cDOQr8_kDcNE-vWcVAV46A@mail.gmail.com>
+Subject: Rowland
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:112f listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [fralaimetals100[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [fralaimetals100[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [rolandnyemih200[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 04.08.22 22:27, Jakub Kicinski wrote:
-> On Thu, 4 Aug 2022 15:08:11 +0200 Andrew Lunn wrote:
->> On Thu, Aug 04, 2022 at 10:53:33AM +0200, Alexandra Winter wrote:
->>> Thank you Andrew for the review. I fully understand your point.
->>> I would like to propose that I put that on my ToDo list and fix
->>> that in a follow-on patch to net-next.
->>>
->>> The fields in the link_info control blocks are used today to generate
->>> other values (e.g. supported speed) which will not work with *_UNKNOWN,
->>> so the follow-on patch will be more than just 2 lines.  
->>
->> So it sounds like your code is all backwards around. If you know what
->> the hardware is, you know the supported link modes are, assuming its
->> not an SFP and the SFP module is not plugged in. Those link modes
->> should be independent of if the link is up or not. speed/duplex is
->> only valid when the link is up and negotiation has finished.
-> 
-> To make sure I understand - the code depends on the speed and duplex
-> being set to something specific when the device is _down_? Can this be
-> spelled out more clearly in the commit message?
-This was a discussion about existing code. We display default speed and
-duplex even when the device is down. And this patch does not change that
-behaviour. Andrew rightfully pointed out that this should (eventually) be
-changed.
-> 
->> Since this is for net, than yes, maybe it would be best to go with a
->> minimal patch to make your backwards around code work. But for
->> net-next, you really should fix this properly. 
-> 
-> Then again this patch doesn't look like a regression fix (and does not
-> have a fixes tag). Channeling my inner Greg I'd say - fix this right and
-> then worry about backports later. 
-This patch is a pre-req for [PATCH net 2/2] s390/qeth: use cached link_info for ethtool
-2/2 is the regression fix.
-Guidance is welcome. Should I merge them into a single commit?
-Or clarify in the commit message of 1/1 that this is a preparation for 2/2?
+HI,
+Good day.
+Kindly confirm to me if this is your correct email Address and get
+back to me for our interest.
+Sincerely,
+Rowland Nyemih
