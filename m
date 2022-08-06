@@ -2,289 +2,158 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 234C658B4B6
-	for <lists+linux-s390@lfdr.de>; Sat,  6 Aug 2022 11:08:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF47258B565
+	for <lists+linux-s390@lfdr.de>; Sat,  6 Aug 2022 14:24:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbiHFJIZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 6 Aug 2022 05:08:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60304 "EHLO
+        id S231575AbiHFMYM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 6 Aug 2022 08:24:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbiHFJIY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 6 Aug 2022 05:08:24 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227E715FDE;
-        Sat,  6 Aug 2022 02:08:23 -0700 (PDT)
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2768jhnU026056;
-        Sat, 6 Aug 2022 09:08:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : content-type : mime-version; s=pp1;
- bh=0o3euISHPiEteHjC1OMKd2mlhilLFyLNMqnIIHsUxHY=;
- b=dev41uGp+IsFp+MtRYa5akNEEucAft/ENiFkawRLXd1Jqt8d6CO+bBEU/gefM9SmGgUz
- 9+j0o9ZAJ/Rmq9FoC7dwVpposTxA2KMcEbwGOkgcvimi2+BwAb147mD0AUKWsTMOiNcr
- 4+kNhtFUmwz6cIMf4BJ2dpv/GSC/NoFum3x9HxoYye7c7s2EZzsZzc1iAzijK4Oo9vER
- 5dZW7Dx8Xx6wO2aIXaVrQUXVnZsKx1050Gq91Akwjy7WBAMYbgtwb7FL/H9tlS2cVeRB
- S4yjG2s6sdue3hEC1o2E9lmOVUx8HW+FgkQN+Z3T1b+xFZ2NFebGWAz8Wg80j8rKeLyi 3g== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hsn2u0ac6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 06 Aug 2022 09:08:21 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 27690pcc031566;
-        Sat, 6 Aug 2022 09:03:19 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06fra.de.ibm.com with ESMTP id 3hsfjhr3s9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 06 Aug 2022 09:03:19 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 27693VJj33816978
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 6 Aug 2022 09:03:31 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F7E8A404D;
-        Sat,  6 Aug 2022 09:03:15 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5A0A4A4053;
-        Sat,  6 Aug 2022 09:03:15 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat,  6 Aug 2022 09:03:15 +0000 (GMT)
-Date:   Sat, 6 Aug 2022 11:03:14 +0200
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
-Subject: [GIT PULL] s390 updates for 5.20 merge window
-Message-ID: <Yu4uUqpvcXGfGpy8@tuxmaker.boeblingen.de.ibm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: TCtJzbYRqor_0kgMnbnNPKHKiUqs9HFu
-X-Proofpoint-ORIG-GUID: TCtJzbYRqor_0kgMnbnNPKHKiUqs9HFu
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        with ESMTP id S230321AbiHFMYK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 6 Aug 2022 08:24:10 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1725BDE8B;
+        Sat,  6 Aug 2022 05:24:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1659788630;
+        bh=2Q7uVoi9etUHQcg6k8CWD2qINr2lwPxkOfHfz7vCqgM=;
+        h=X-UI-Sender-Class:From:To:Subject:Date;
+        b=dFXsfITa8u0yUy3ATKvqfVosIu2sxDMttJpXYT3TExqQp1qxFdgnoUQjeMpqd5gQ/
+         QQMHQiWm6SdRlU8OgFdbjAzlUKw2mQ1dhutjmaGiPsYC8liv37JyMFe1/qpAHknbYv
+         DYlmqzk0EIASiPY1ep0YZABrkVCvEuXaXAojiaVs=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from p100.fritz.box ([92.116.170.46]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M2wGs-1oGzSU1xXg-003PL9; Sat, 06
+ Aug 2022 14:23:50 +0200
+From:   Helge Deller <deller@gmx.de>
+To:     linux-s390@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 0/3] Dump command line of faulting process to syslog
+Date:   Sat,  6 Aug 2022 14:23:45 +0200
+Message-Id: <20220806122348.82584-1-deller@gmx.de>
+X-Mailer: git-send-email 2.37.1
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-06_03,2022-08-05_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 adultscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 clxscore=1015 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2206140000 definitions=main-2208060047
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:SFsa6Df2ppv7VmXIO81pLmiWdYqA+5p7hjdVr9P8sJdlxgTdXyx
+ 4V3iT2wC6bHvXC7t2xifm5y+1XtJi7CeGrvmNskRuT+NUD70O1J5kP8BJ76oKwyi2IlzJAr
+ BeVqMiWEYJvxsEVrSmCLgUqGp4CJmeKFij/TJWDQe8IoiingusSdIpMlpJ9baRQDqGsZIjv
+ Umt6qVYh0t5eerHTwNAng==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:waMzHaSporw=:pQQ6T0vUgoaQCVoAd7gFx7
+ H8ZBcdX2uzjCQClblhUib7tkJIHgOxIQohRDHqxhIWZdiWr4boLS/sQ9PTFwgAk6Um8zRnRMM
+ Gg+BqEmCX1lSXMxIdAQ1Z0zSn2q4mfQHHg6J8mp/spSzeBmtzqjUl46qQjwi7cGbNrkM3aoEQ
+ 2KYtL6YvPbn6Fw5G82JRCMl5znSrsBdw7aAQthAWmvEB6mlk0lAi3QEeXCPJf9bbseBNg99h2
+ mVJPPfovCvwh465Yq5qtGD+OqVQf5KeCtLQSW+oarzW6uEgb+orvD34GckkJ/HUjA9kWbHtS4
+ PeNa3ok49xe/PRcLCQ+L65pnUgJwAI3rnYhzzk0PHuPyVpPyYSXlqKgfnWAblvHPckqrjplua
+ xhrWpIQjOznlPKvGjTbm3ALXChSVyEuamC85KXGhk1LUrtGbvJYDwbpMe2SfX6HKyF7QXDeEI
+ qyI+XTnEzuUzhoJe410UWCc8rxeLSdkToyTtrnCit02WglwTPgxoXqO9iejf1FAlIVJ/JsB9I
+ jtC2YV+S0rVcC4LBhHpJF2KECzMZImJWt6nGr1tFUu9gWF7hnSyKfBlGihnnYmTCDrlhJ+cMQ
+ 0/H4LZKXvI/3hW4Cen8Xi9YINAQ01GjOdEsAo9m1YrsjnRgGiKIW6qpUoIP8RSmViT9zyMZrJ
+ 8sOHniLPOdPeHP0xTSZ5HAcZqIqYDN/UEVZgllQjDrlUq90JW7wh8AufIIJ5KTCw2i/94zRjC
+ /O3NtijzwGRs8wAtY20v7nhukQBt/c2Wc7uwnB0fC4rk4/RCM1ogUYyKidgHgyX54VlaW3Rbw
+ nimX0uG44H8ll17vPZdKe/deUwIe5Jk7VFvUnt42qnnBzUP/OOgRVPOQwLzLTm+/vpy+gZYN9
+ 87oJQANgA7w/dJmnp0pvs0mRgAV3jXhoyEguzuw1x1JWxWb0Im7/ToAJOq2amhQfeZVVQWEQi
+ HfSiHrbgxVk4SM5aifHPQ4GYREukr8JSjjSscgDJaupYeFWtv6m/mkWt6qBtEyZqPmJRkN01n
+ +9RmeFlvcC5tQ9ZRZOxyjKnn9f/LpeYVvd1XBc6k8iviKZgjzN8iIz15z+oMOCq+ykV/7gpEM
+ 7dtXolVTvvRrkiLCJgrNc2tjARUPGdMGI/3X0z8o+CrNmWV0eVzMu7/FQ==
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLACK autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Linus,
+This patch series allows the arch-specific kernel fault handlers to dump
+the command line parameters of the faulting process.
 
-please pull s390 updates for the 5.20 merge window.
+The motivation for this patch is that it's sometimes quite hard to find ou=
+t and
+annoying to not know which program *exactly* faulted when looking at the s=
+yslog.
 
-Note a trivial conflict between commit:
+Some examples from the syslog are:
 
-  49b0109fb399 ("s390/vfio-ap: introduce shadow APCB")
+On parisc:
+   do_page_fault() command=3D'cc1' type=3D15 address=3D0x00000000 in libc-=
+2.33.so[f6abb000+184000]
+   CPU: 1 PID: 13472 Comm: cc1 Tainted: G            E     5.10.133+ #45
+   Hardware name: 9000/785/C8000
 
-and commit:
+-> We see the "cc1" compiler crashed, but it would be useful to know which=
+ file was compiled.
 
-  ce4b4657ff18 ("vfio: Replace the DMA unmapping notifier with a callback")
+With this patch series, the kernel now prints in addition:
+   cc1[13472] cmdline: /usr/lib/gcc/hppa-linux-gnu/12/cc1 -quiet @/tmp/ccR=
+kFSfY -imultilib . -imultiarch hppa-linux-gnu -D USE_MINIINTERPRETER -D NO=
+_REGS -D _HPUX_SOURCE -D NOSMP -D THREADED_RTS -include /build/ghc/ghc-9.0=
+.2/includes/dist-install/build/ghcversion.h -iquote compiler/GHC/Iface -qu=
+iet -dumpdir /tmp/ghc13413_0/ -dumpbase ghc_5.hc -dumpbase-ext .hc -O -Wim=
+plicit -fno-PIC -fwrapv -fno-builtin -fno-strict-aliasing -o /tmp/ghc13413=
+_0/ghc_5.s
 
-from the vfio tree, which was resolved in linux-next and is
-not yet in your tree.
+-> now we know that cc1 crashed while compiling some haskell code.
 
-The changes below were put into vmcore-iov_iter branch and pulled by
-Al Viro into work.iov_iter branch of the vfs tree to avoid conflicts
-with ITER_UBUF stuff:
+Another parisc example:
+   do_page_fault() command=3D'ld.so.1' type=3D15 address=3D0x565921d8 in l=
+ibc.so[f7339000+1bb000]
+   CPU: 1 PID: 1151 Comm: cc1 Tainted: G            E     5.10.133+ #45
+   Hardware name: 9000/785/C8000
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.iov_iter
+-> apparently here a program from the glibc testsuite segfaulted.
 
-  ebbc95701691 s390/crash: support multi-segment iterators
-  6d2e5a4a13da s390/crash: use static swap buffer for copy_to_user_real()
-  d6da67378198 s390/crash: move copy_to_user_real() to crash_dump.c
-  9ffed254d938 s390/zcore: fix race when reading from hardware system area
-  f6749da17a34 s390/crash: fix incorrect number of bytes to copy to user space
-  86caa4b67895 s390/crash: remove redundant panic() on save area allocation failure
-  7190d84966b3 s390/mm: remove unused tprot() function
-  af2debd58bd7 s390/crash: make copy_oldmem_page() return number of bytes copied
-  cc02e6e21aa5 s390/crash: add missing iterator advance in copy_oldmem_page()
+With this patch we now additionally get:
+   ld.so.1[1151] cmdline: /home/gnu/glibc/objdir/elf/ld.so.1 --library-pat=
+h /home/gnu/glibc/objdir:/home/gnu/glibc/objdir/math:/home/gnu/
+        /home/gnu/glibc/objdir/malloc/tst-safe-linking-malloc-hugetlb1
 
-I also reverted last-minute these commits:
+-> it was the tst-safe-linking-malloc-hugetlb1 testcase which faulted.
 
-  e409b7f19172 s390/smp,ptdump: add absolute lowcore markers
-  7d06fed77b7d s390/smp: rework absolute lowcore access
-  6f5c672d17f5 s390/smp: enforce lowcore protection on CPU restart
+An example of a typical x86 fault shows up as:
+   crash[2326]: segfault at 0 ip 0000561a7969c12e sp 00007ffe97a05630 erro=
+r 6 in crash[561a7969c000+1000]
+   Code: 68 ff ff ff c6 05 19 2f 00 00 01 5d c3 0f 1f 80 00 00 00 00 c3 0f=
+ 1f 80 00 00 00 00 e9 7b ff ff ff 55 48 89 e5 b8 00 00 00 00 <c7> 00 01 00=
+ 00 00 b8 00 00 00 00 5d c3 0f 1f 44 00 00 41 57 4c 8d
 
-Thank you,
-Alexander
+-> with this patch we now will see the whole command line:
+   crash[2326] cmdline: ./crash test_write_to_page_0
 
-The following changes since commit a111daf0c53ae91e71fd2bfe7497862d14132e3e:
+The patches are relatively small, and reuses functions which are used
+to create the output for the /proc/<pid>/cmdline files.
 
-  Linux 5.19-rc3 (2022-06-19 15:06:47 -0500)
+In this version 2 of the patch set, all or parts of the command line isn't
+shown if the value of the kptr_restrict sysctl >=3D 1.
 
-are available in the Git repository at:
+Thanks!
+Helge
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.20-1
+=2D--
 
-for you to fetch changes up to 953503751a426413ea8aee2299ae3ee971b70d9b:
+Changes compared to v1 of this patchset:
+=2D---------------------------------------
+- Don't dump all or parts of the commandline depending on the
+  kptr_restrict sysctl value (suggested by Josh Triplett).
+- Patch sent to more arch mailing lists
 
-  Revert "s390/smp: enforce lowcore protection on CPU restart" (2022-08-06 09:29:46 +0200)
+Helge Deller (3):
+  proc: Add get_task_cmdline_kernel() function
+  lib/dump_stack: Add dump_stack_print_cmdline() and wire up in
+    dump_stack_print_info()
+  x86/fault: Dump command line of faulting process to syslog
 
-----------------------------------------------------------------
-s390 updates for 5.20 merge window
+ arch/x86/mm/fault.c     |  2 ++
+ fs/proc/base.c          | 68 +++++++++++++++++++++++++++--------------
+ include/linux/printk.h  |  5 +++
+ include/linux/proc_fs.h |  5 +++
+ lib/dump_stack.c        | 34 +++++++++++++++++++++
+ 5 files changed, 91 insertions(+), 23 deletions(-)
 
-- Rework copy_oldmem_page() callback to take an iov_iter.
-  This includes few prerequisite updates and fixes to the
-  oldmem reading code. That is the series on vmcore-iov_iter
-  branch shared with Al Viro.
+=2D-
+2.37.1
 
-- Rework cpufeature implementation to allow for various CPU feature
-  indications, which is not only limited to hardware capabilities,
-  but also allows CPU facilities.
-
-- Use the cpufeature rework to autoload Ultravisor module when CPU
-  facility 158 is available.
-
-- Add ELF note type for encrypted CPU state of a protected virtual CPU.
-  The zgetdump tool from s390-tools package will decrypt the CPU state
-  using a Customer Communication Key and overwrite respective notes to
-  make the data accessible for crash and other debugging tools.
-
-- Use vzalloc() instead of vmalloc() + memset() in ChaCha20 crypto test.
-
-- Fix incorrect recovery of kretprobe modified return address in stacktrace.
-
-- Switch the NMI handler to use generic irqentry_nmi_enter() and
-  irqentry_nmi_exit() helper functions.
-
-- Rework the cryptographic Adjunct Processors (AP) pass-through design
-  to support dynamic changes to the AP matrix of a running guest as well
-  as to implement more of the AP architecture.
-
-- Minor boot code cleanups.
-
-- Grammar and typo fixes to hmcdrv and tape drivers.
-
-----------------------------------------------------------------
-Alexander Gordeev (19):
-  s390/crash: add missing iterator advance in copy_oldmem_page()
-  s390/crash: make copy_oldmem_page() return number of bytes copied
-  s390/mm: remove unused tprot() function
-  s390/crash: remove redundant panic() on save area allocation failure
-  s390/crash: fix incorrect number of bytes to copy to user space
-  s390/zcore: fix race when reading from hardware system area
-  s390/crash: move copy_to_user_real() to crash_dump.c
-  s390/crash: use static swap buffer for copy_to_user_real()
-  s390/crash: support multi-segment iterators
-  s390/docs: fix warnings for vfio_ap driver lock usage doc
-  s390/docs: fix warnings for vfio_ap driver doc
-  s390/smp: enforce lowcore protection on CPU restart
-  s390/boot: cleanup adjust_to_uv_max() function
-  s390/setup: rearrange absolute lowcore initialization
-  s390/smp: rework absolute lowcore access
-  s390/smp,ptdump: add absolute lowcore markers
-  Revert "s390/smp,ptdump: add absolute lowcore markers"
-  Revert "s390/smp: rework absolute lowcore access"
-  Revert "s390/smp: enforce lowcore protection on CPU restart"
-
-Heiko Carstens (2):
-  s390/cpufeature: rework to allow more than only hwcap bits
-  s390/cpufeature: allow for facility bits
-
-Janosch Frank (1):
-  s390: add ELF note type for encrypted CPU state of a PV VCPU
-
-Jason Wang (1):
-  s390/tape: fix comment typo
-
-Randy Dunlap (1):
-  s390/hmcdrv: fix Kconfig "its" grammar
-
-Siddh Raman Pant (1):
-  tools/testing/crypto: Use vzalloc instead of vmalloc+memset
-
-Steffen Eiden (1):
-  s390/uvdevice: autoload module based on CPU facility
-
-Sumanth Korikkar (1):
-  s390/unwind: fix fgraph return address recovery
-
-Sven Schnelle (1):
-  s390/nmi: use irqentry_nmi_enter()/irqentry_nmi_exit()
-
-Tony Krowiak (20):
-  s390/vfio-ap: use new AP bus interface to search for queue devices
-  s390/vfio-ap: move probe and remove callbacks to vfio_ap_ops.c
-  s390/vfio-ap: manage link between queue struct and matrix mdev
-  s390/vfio-ap: introduce shadow APCB
-  s390/vfio-ap: refresh guest's APCB by filtering AP resources assigned
-    to mdev
-  s390/vfio-ap: allow assignment of unavailable AP queues to mdev device
-  s390/vfio-ap: rename matrix_dev->lock mutex to matrix_dev->mdevs_lock
-  s390/vfio-ap: introduce new mutex to control access to the KVM pointer
-  s390/vfio-ap: use proper locking order when setting/clearing KVM
-    pointer
-  s390/vfio-ap: prepare for dynamic update of guest's APCB on
-    assign/unassign
-  s390/vfio-ap: prepare for dynamic update of guest's APCB on queue
-    probe/remove
-  s390/vfio-ap: allow hot plug/unplug of AP devices when
-    assigned/unassigned
-  s390/vfio-ap: hot plug/unplug of AP devices when probed/removed
-  s390/vfio-ap: reset queues after adapter/domain unassignment
-  s390/vfio-ap: implement in-use callback for vfio_ap driver
-  s390/vfio-ap: sysfs attribute to display the guest's matrix
-  s390/vfio-ap: handle config changed and scan complete notification
-  s390/vfio-ap: update docs to include dynamic config support
-  s390/Docs: new doc describing lock usage by the vfio_ap device driver
-  MAINTAINERS: pick up all vfio_ap docs for VFIO AP maintainers
-
- Documentation/s390/index.rst                  |    1 +
- Documentation/s390/vfio-ap-locking.rst        |  115 ++
- Documentation/s390/vfio-ap.rst                |  498 ++++--
- MAINTAINERS                                   |    2 +-
- arch/s390/boot/startup.c                      |   10 +-
- arch/s390/boot/uv.c                           |    5 +-
- arch/s390/boot/uv.h                           |    7 +-
- arch/s390/crypto/aes_s390.c                   |    2 +-
- arch/s390/crypto/chacha-glue.c                |    2 +-
- arch/s390/crypto/crc32-vx.c                   |    2 +-
- arch/s390/crypto/des_s390.c                   |    2 +-
- arch/s390/crypto/ghash_s390.c                 |    2 +-
- arch/s390/crypto/prng.c                       |    2 +-
- arch/s390/crypto/sha1_s390.c                  |    2 +-
- arch/s390/crypto/sha256_s390.c                |    2 +-
- arch/s390/crypto/sha3_256_s390.c              |    2 +-
- arch/s390/crypto/sha3_512_s390.c              |    2 +-
- arch/s390/crypto/sha512_s390.c                |    2 +-
- arch/s390/include/asm/cpufeature.h            |   23 +-
- arch/s390/include/asm/mmu.h                   |   14 -
- arch/s390/include/asm/os_info.h               |   17 +-
- arch/s390/include/asm/sclp.h                  |    4 +-
- arch/s390/include/asm/uaccess.h               |    1 -
- arch/s390/include/asm/unwind.h                |    2 +-
- arch/s390/kernel/Makefile                     |    2 +-
- arch/s390/kernel/cpufeature.c                 |   46 +
- arch/s390/kernel/crash_dump.c                 |  108 +-
- arch/s390/kernel/nmi.c                        |    8 +-
- arch/s390/kernel/processor.c                  |   10 -
- arch/s390/kernel/setup.c                      |   13 +-
- arch/s390/mm/maccess.c                        |   26 -
- drivers/char/hw_random/s390-trng.c            |    2 +-
- drivers/s390/char/Kconfig                     |    2 +-
- drivers/s390/char/tape_34xx.c                 |    2 +-
- drivers/s390/char/uvdevice.c                  |    5 +-
- drivers/s390/char/zcore.c                     |   55 +-
- drivers/s390/crypto/ap_bus.c                  |   31 +-
- drivers/s390/crypto/pkey_api.c                |    2 +-
- drivers/s390/crypto/vfio_ap_drv.c             |  124 +-
- drivers/s390/crypto/vfio_ap_ops.c             | 1441 +++++++++++++----
- drivers/s390/crypto/vfio_ap_private.h         |   47 +-
- include/uapi/linux/elf.h                      |    1 +
- .../crypto/chacha20-s390/test-cipher.c        |    9 +-
- 43 files changed, 1842 insertions(+), 813 deletions(-)
- create mode 100644 Documentation/s390/vfio-ap-locking.rst
- create mode 100644 arch/s390/kernel/cpufeature.c
